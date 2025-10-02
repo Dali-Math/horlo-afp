@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Clock } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: "Horlo-AFP - Plateforme d'apprentissage de l'horlogerie",
@@ -14,22 +15,25 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className="flex flex-col min-h-screen">
-        <header className="bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg sticky top-0 z-50">
-          <nav className="container mx-auto px-4 py-4">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <a href="/" className="text-2xl font-bold hover:text-blue-300 transition-colors">
-                ⌚ Horlo-AFP
+        <header className="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
+          <nav className="container mx-auto px-6 py-4">
+            <div className="flex items-center justify-between">
+              <a href="/" className="flex items-center gap-3 group">
+                <Clock className="w-8 h-8 text-amber-600" strokeWidth={1.5} />
+                <span className="text-2xl font-bold text-gray-900 group-hover:text-amber-600 transition-colors">
+                  Horlo-AFP
+                </span>
               </a>
-              <div className="flex flex-wrap gap-4 text-sm md:text-base">
-                <a href="/theorie" className="hover:text-blue-300 hover:underline transition-colors">Théorie</a>
-                <a href="/pratique" className="hover:text-blue-300 hover:underline transition-colors">Pratique</a>
-                <a href="/quiz" className="hover:text-blue-300 hover:underline transition-colors">Quiz</a>
-                <a href="/outils" className="hover:text-blue-300 hover:underline transition-colors">Outils</a>
-                <a href="/ressources" className="hover:text-blue-300 hover:underline transition-colors">Ressources</a>
-                <a href="/podcasts" className="hover:text-blue-300 hover:underline transition-colors">Podcasts</a>
-                <a href="/culture" className="hover:text-blue-300 hover:underline transition-colors">Culture</a>
-                <a href="/evenements" className="hover:text-blue-300 hover:underline transition-colors">Événements</a>
-                <a href="/communaute" className="hover:text-blue-300 hover:underline transition-colors">Communauté</a>
+              <div className="flex gap-8 text-sm font-medium">
+                <a href="/theorie" className="text-gray-700 hover:text-amber-600 transition-colors">Théorie</a>
+                <a href="/pratique" className="text-gray-700 hover:text-amber-600 transition-colors">Pratique</a>
+                <a href="/quiz" className="text-gray-700 hover:text-amber-600 transition-colors">Quiz</a>
+                <a href="/outils" className="text-gray-700 hover:text-amber-600 transition-colors">Outils</a>
+                <a href="/ressources" className="text-gray-700 hover:text-amber-600 transition-colors">Ressources</a>
+                <a href="/podcasts" className="text-gray-700 hover:text-amber-600 transition-colors">Podcasts</a>
+                <a href="/culture" className="text-gray-700 hover:text-amber-600 transition-colors">Culture</a>
+                <a href="/evenements" className="text-gray-700 hover:text-amber-600 transition-colors">Événements</a>
+                <a href="/communaute" className="text-gray-700 hover:text-amber-600 transition-colors">Communauté</a>
               </div>
             </div>
           </nav>
@@ -49,22 +53,22 @@ export default function RootLayout({
               <div>
                 <h4 className="font-semibold mb-3">Navigation</h4>
                 <ul className="space-y-2 text-sm text-slate-300">
-                  <li><a href="/theorie" className="hover:text-blue-300 transition-colors">Théorie</a></li>
-                  <li><a href="/pratique" className="hover:text-blue-300 transition-colors">Pratique</a></li>
-                  <li><a href="/ressources" className="hover:text-blue-300 transition-colors">Ressources</a></li>
+                  <li><a href="/theorie" className="hover:text-amber-400 transition-colors">Théorie</a></li>
+                  <li><a href="/pratique" className="hover:text-amber-400 transition-colors">Pratique</a></li>
+                  <li><a href="/ressources" className="hover:text-amber-400 transition-colors">Ressources</a></li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-semibold mb-3">Communauté</h4>
                 <ul className="space-y-2 text-sm text-slate-300">
-                  <li><a href="/communaute" className="hover:text-blue-300 transition-colors">Forums</a></li>
-                  <li><a href="/evenements" className="hover:text-blue-300 transition-colors">Événements</a></li>
-                  <li><a href="/podcasts" className="hover:text-blue-300 transition-colors">Podcasts</a></li>
+                  <li><a href="/communaute" className="hover:text-amber-400 transition-colors">Forums</a></li>
+                  <li><a href="/evenements" className="hover:text-amber-400 transition-colors">Événements</a></li>
+                  <li><a href="/podcasts" className="hover:text-amber-400 transition-colors">Podcasts</a></li>
                 </ul>
               </div>
             </div>
             <div className="border-t border-slate-700 mt-8 pt-6 text-center text-sm text-slate-400">
-              <p>© 2025 Horlo-AFP. Tous droits réservés.</p>
+              © 2025 Horlo-AFP. Tous droits réservés.
             </div>
           </div>
         </footer>
