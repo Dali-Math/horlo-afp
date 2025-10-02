@@ -279,7 +279,7 @@ export default function WeeklyPlanner({ userId, onDataChange }: WeeklyPlannerPro
   const SubjectBadge = ({ subject }: { subject: string }) => {
     const { Icon, color } = findSubject(subject);
     return (
-      <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: `${color}10`, color }}>
+      <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: `${color}22`, color }}>
         <Icon className="h-3.5 w-3.5" />
         {subject}
       </span>
@@ -287,8 +287,7 @@ export default function WeeklyPlanner({ userId, onDataChange }: WeeklyPlannerPro
   };
 
   const CloseToast = () => (
-    <button
-      onClick={() => setToast(null)}
+    <button onClick={() => setToast(null)}
       className="rounded-full p-1 text-white/80 transition hover:bg-white/20 hover:text-white"
       aria-label="Fermer"
     >
@@ -302,13 +301,11 @@ export default function WeeklyPlanner({ userId, onDataChange }: WeeklyPlannerPro
     <div className="font-inter">
       {/* Toast */}
       {toast && (
-        <div
-          className={`fixed right-4 top-4 z-50 flex items-center gap-2 rounded-full px-3 py-2 text-sm shadow-lg transition ${
-            toast.type === "success" ? "bg-emerald-500 text-white" : "bg-amber-500 text-white"
-          }`}
-        >
+        <div className={`fixed right-4 top-4 z-50 flex items-center gap-2 rounded-full px-3 py-2 text-sm shadow-lg transition ${
+          toast.type === "success" ? "bg-emerald-500 text-white" : "bg-amber-500 text-white"
+        }`}>
           <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-white/90" />
-          <span>{toast.message}</span>
+          {toast.message}
           <CloseToast />
         </div>
       )}
@@ -328,8 +325,8 @@ export default function WeeklyPlanner({ userId, onDataChange }: WeeklyPlannerPro
           </button>
           <button
             onClick={handleExportPDF}
-            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-amber-400 to-amber-500 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-amber-600/20 transition hover:from-amber-500 hover:to-amber-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-300 active:scale-[.99]"
             title="Exporter en PDF"
+            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-amber-400 to-amber-500 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-amber-600/20 transition hover:from-amber-500 hover:to-amber-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-300 active:scale-[.99]"
           >
             <Download className="h-4 w-4" /> Export PDF
           </button>
@@ -371,4 +368,4 @@ export default function WeeklyPlanner({ userId, onDataChange }: WeeklyPlannerPro
                       key={`${day}-${time}`}
                       onDragOver={onDragOver}
                       onDrop={(e) => onDrop(e, day, time)}
-                      className="h-16 min-w-28 rounded-lg border border-slate
+                      className="h-16 min-w-28 rounded-lg border border-slate-
