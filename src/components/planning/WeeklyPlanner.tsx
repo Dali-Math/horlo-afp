@@ -1,316 +1,368 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, updateDoc, deleteDoc, doc, query, where, getDocs } from 'firebase/firestore';
-import { Plus, Edit2, Trash2, Save, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { db } from "@/lib/firebase";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import {
+  Plus,
+  Trash2,
+  Save,
+  X,
+  GraduationCap,
+  Wrench,
+  LayoutGrid,
+  BookOpen,
+  Briefcase,
+  Rocket,
+  MoreHorizontal,
+  Download,
+} from "lucide-react";
 
-interface PlanningEvent {
+// Swiss Digital aesthetic + Inter font + SaaS look
+// - Rounded cards, soft shadows
+// - White/gray/blue base with gold accent for primary action
+
+export type PlanningEvent = {
   id?: string;
   userId: string;
-  day: string;
-  time: string;
+  day: string; // "Lundi" ...
+  time: string; // "08:00" ...
   subject: string;
   description: string;
-  color: string;
-}
+  color: string; // hex
+};
 
-interface WeeklyPlannerProps {
+type WeeklyPlannerProps = {
   userId: string;
-  onDataChange: (data: any[]) => void;
-}
+  onDataChange: (data: PlanningEvent[]) => void;
+};
 
-const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+const DAYS = [
+  "Lundi",
+  "Mardi",
+  "Mercredi",
+  "Jeudi",
+  "Vendredi",
+  "Samedi",
+  "Dimanche",
+] as const;
+
 const TIME_SLOTS = [
-  '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', 
-  '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'
+  "08:00",
+  "09:00",
+  "10:00",
+  "11:00",
+  "12:00",
+  "13:00",
+  "14:00",
+  "15:00",
+  "16:00",
+  "17:00",
+  "18:00",
+  "19:00",
+] as const;
+
+const SUBJECTS: { name: string; color: string; Icon: React.ComponentType<any> }[] = [
+  { name: "Théorie", color: "#1E3A8A", Icon: BookOpen }, // deep blue
+  { name: "Pratique", color: "#0EA5E9", Icon: Wrench }, // sky blue
+  { name: "CAO/DAO", color: "#7C3AED", Icon: LayoutGrid }, // purple
+  { name: "Histoire", color: "#475569", Icon: GraduationCap }, // slate
+  { name: "Stage", color: "#0F766E", Icon: Briefcase }, // teal
+  { name: "Projet", color: "#F59E0B", Icon: Rocket }, // gold-ish
+  { name: "Autre", color: "#334155", Icon: MoreHorizontal }, // dark slate
 ];
 
-const SUBJECT_COLORS = [
-  { name: 'Théorie', color: '#3B82F6' },
-  { name: 'Pratique', color: '#10B981' },
-  { name: 'CAO/DAO', color: '#8B5CF6' },
-  { name: 'Histoire', color: '#F59E0B' },
-  { name: 'Stage', color: '#EF4444' },
-  { name: 'Projet', color: '#EC4899' },
-  { name: 'Autre', color: '#6B7280' },
-];
+const findSubject = (name?: string) => SUBJECTS.find((s) => s.name === name) ?? SUBJECTS[0];
 
 export default function WeeklyPlanner({ userId, onDataChange }: WeeklyPlannerProps) {
   const [events, setEvents] = useState<PlanningEvent[]>([]);
   const [editingEvent, setEditingEvent] = useState<PlanningEvent | null>(null);
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
   const [formData, setFormData] = useState<Partial<PlanningEvent>>({
-    day: '',
-    time: '',
-    subject: '',
-    description: '',
-    color: SUBJECT_COLORS[0].color
+    day: "",
+    time: "",
+    subject: "",
+    description: "",
+    color: findSubject("Théorie").color,
   });
 
+  // DnD helper
+  const dragRef = useRef<PlanningEvent | null>(null);
+
   useEffect(() => {
-    loadEvents();
+    void loadEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   useEffect(() => {
     onDataChange(events);
-  }, [events]);
+  }, [events, onDataChange]);
 
   const loadEvents = async () => {
     try {
-      const q = query(collection(db, 'planning'), where('userId', '==', userId));
-      const querySnapshot = await getDocs(q);
-      const loadedEvents: PlanningEvent[] = [];
-      querySnapshot.forEach((doc) => {
-        loadedEvents.push({ id: doc.id, ...doc.data() } as PlanningEvent);
-      });
-      setEvents(loadedEvents);
-    } catch (error) {
-      console.error('Erreur de chargement:', error);
+      const q = query(collection(db, "planning"), where("userId", "==", userId));
+      const snap = await getDocs(q);
+      const loaded: PlanningEvent[] = [];
+      snap.forEach((d) => loaded.push({ id: d.id, ...(d.data() as Omit<PlanningEvent, "id">) }));
+      setEvents(loaded);
+    } catch (e) {
+      console.error(e);
+      setToast({ type: "error", message: "Erreur de chargement" });
     } finally {
       setLoading(false);
     }
   };
 
+  const resetForm = () =>
+    setFormData({ day: "", time: "", subject: "", description: "", color: findSubject("Théorie").color });
+
+  const openAdd = (prefill?: Partial<PlanningEvent>) => {
+    setEditingEvent(null);
+    setFormData({ ...{ day: "", time: "", subject: "", description: "", color: findSubject("Théorie").color }, ...prefill });
+    setShowModal(true);
+  };
+
+  const openEdit = (ev: PlanningEvent) => {
+    setEditingEvent(ev);
+    setFormData(ev);
+    setShowModal(true);
+  };
+
   const handleAddEvent = async () => {
     if (!formData.day || !formData.time || !formData.subject) return;
-    
     try {
-      const eventData = {
+      const s = findSubject(formData.subject);
+      const payload: PlanningEvent = {
         userId,
-        day: formData.day,
-        time: formData.time,
-        subject: formData.subject,
-        description: formData.description || '',
-        color: formData.color || SUBJECT_COLORS[0].color
+        day: String(formData.day),
+        time: String(formData.time),
+        subject: String(formData.subject),
+        description: String(formData.description ?? ""),
+        color: String(formData.color ?? s.color),
       };
-      
-      const docRef = await addDoc(collection(db, 'planning'), eventData);
-      setEvents([...events, { id: docRef.id, ...eventData }]);
-      setShowAddModal(false);
+      const ref = await addDoc(collection(db, "planning"), payload);
+      setEvents((prev) => [...prev, { ...payload, id: ref.id }]);
+      setShowModal(false);
       resetForm();
-    } catch (error) {
-      console.error('Erreur d\'ajout:', error);
+      setToast({ type: "success", message: "Cours ajouté" });
+    } catch (e) {
+      console.error(e);
+      setToast({ type: "error", message: "Échec de l'ajout" });
     }
   };
 
   const handleUpdateEvent = async () => {
     if (!editingEvent?.id) return;
-    
     try {
-      const eventRef = doc(db, 'planning', editingEvent.id);
-      await updateDoc(eventRef, {
+      const payload = {
         day: formData.day,
         time: formData.time,
         subject: formData.subject,
         description: formData.description,
-        color: formData.color
-      });
-      
-      setEvents(events.map(e => 
-        e.id === editingEvent.id 
-          ? { ...e, ...formData } as PlanningEvent
-          : e
-      ));
+        color: formData.color,
+      } as Partial<PlanningEvent>;
+      await updateDoc(doc(db, "planning", editingEvent.id), payload as any);
+      setEvents((prev) => prev.map((e) => (e.id === editingEvent.id ? { ...e, ...(payload as any) } : e)));
+      setShowModal(false);
       setEditingEvent(null);
       resetForm();
-    } catch (error) {
-      console.error('Erreur de mise à jour:', error);
+      setToast({ type: "success", message: "Cours mis à jour" });
+    } catch (e) {
+      console.error(e);
+      setToast({ type: "error", message: "Échec de la mise à jour" });
     }
   };
 
-  const handleDeleteEvent = async (eventId: string) => {
+  const handleDeleteEvent = async (id: string) => {
     try {
-      await deleteDoc(doc(db, 'planning', eventId));
-      setEvents(events.filter(e => e.id !== eventId));
-    } catch (error) {
-      console.error('Erreur de suppression:', error);
+      await deleteDoc(doc(db, "planning", id));
+      setEvents((prev) => prev.filter((e) => e.id !== id));
+      setToast({ type: "success", message: "Cours supprimé" });
+    } catch (e) {
+      console.error(e);
+      setToast({ type: "error", message: "Échec de la suppression" });
     }
   };
 
-  const resetForm = () => {
-    setFormData({
-      day: '',
-      time: '',
-      subject: '',
-      description: '',
-      color: SUBJECT_COLORS[0].color
-    });
+  const getEventForSlot = (day: string, time: string) => events.find((e) => e.day === day && e.time === time);
+
+  // Drag & drop
+  const onDragStart = (e: React.DragEvent, item: PlanningEvent) => {
+    dragRef.current = item;
+    e.dataTransfer.effectAllowed = "move";
+  };
+  const onDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+  const onDrop = async (e: React.DragEvent, day: string, time: string) => {
+    e.preventDefault();
+    const item = dragRef.current;
+    dragRef.current = null;
+    if (!item || (item.day === day && item.time === time)) return;
+    const prev = events;
+    setEvents((p) => p.map((x) => (x.id === item.id ? { ...x, day, time } : x)));
+    try {
+      if (item.id) await updateDoc(doc(db, "planning", item.id), { day, time });
+      setToast({ type: "success", message: "Cours déplacé" });
+    } catch (err) {
+      console.error(err);
+      setEvents(prev);
+      setToast({ type: "error", message: "Déplacement échoué" });
+    }
   };
 
-  const getEventForSlot = (day: string, time: string) => {
-    return events.find(e => e.day === day && e.time === time);
+  // Export PDF using html2canvas + jsPDF (must be installed in app)
+  const exportRef = useRef<HTMLDivElement>(null);
+  const handleExportPDF = async () => {
+    try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf" as any),
+      ]);
+      const el = exportRef.current;
+      if (!el) return;
+      const canvas = await html2canvas(el, { scale: 2, backgroundColor: "#ffffff" });
+      const img = canvas.toDataURL("image/png");
+      const pdf = new (jsPDF as any)({ orientation: "landscape", unit: "pt", format: "a4" });
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+      const imgW = pageW - 80;
+      const imgH = (canvas.height * imgW) / canvas.width;
+      const y = (pageH - imgH) / 2;
+      pdf.addImage(img, "PNG", 40, y, imgW, imgH, undefined, "FAST");
+      pdf.save("planning.pdf");
+      setToast({ type: "success", message: "PDF exporté" });
+    } catch (e) {
+      console.error(e);
+      setToast({ type: "error", message: "Échec de l'export PDF" });
+    }
   };
 
-  if (loading) {
-    return <div className="p-6 text-center">Chargement...</div>;
-  }
+  const SubjectSelect = useMemo(
+    () =>
+      function SubjectSelectInner({ value, onChange }: { value?: string; onChange: (v: string) => void }) {
+        return (
+          <div className="relative">
+            <select
+              value={value ?? ""}
+              onChange={(e) => onChange(e.target.value)}
+              className="w-full appearance-none rounded-lg border border-slate-200 bg-white/80 px-3 py-2 pr-9 text-sm text-slate-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            >
+              <option value="">Sélectionner</option>
+              {SUBJECTS.map((s) => (
+                <option key={s.name} value={s.name}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+            <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400">
+              <MoreHorizontal className="h-4 w-4" />
+            </span>
+          </div>
+        );
+      },
+    []
+  );
+
+  const SubjectBadge = ({ subject }: { subject: string }) => {
+    const { Icon, color } = findSubject(subject);
+    return (
+      <span
+        className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
+        style={{ backgroundColor: `${color}10`, color }}
+      >
+        <Icon className="h-3.5 w-3.5" />
+        {subject}
+      </span>
+    );
+  };
+
+  const CloseToast = () => (
+    <button
+      onClick={() => setToast(null)}
+      className="rounded-full p-1 text-white/80 transition hover:bg-white/20 hover:text-white"
+      aria-label="Fermer"
+    >
+      <X className="h-3.5 w-3.5" />
+    </button>
+  );
+
+  if (loading) return <div className="p-6 text-center text-slate-600">Chargement…</div>;
 
   return (
-    <div className="p-6">
+    <div className="font-inter">
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed right-4 top-4 z-50 flex items-center gap-2 rounded-full px-3 py-2 text-sm shadow-lg transition ${toast.type === "success" ? "bg-emerald-500 text-white" : "bg-amber-500 text-white"}`}>
+          <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-white/90"></span>
+          <span>{toast.message}</span>
+          <CloseToast />
+        </div>
+      )}
+
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-800">Planning de la semaine</h2>
-        <Button
-          onClick={() => setShowAddModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white flex items-center"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Ajouter un cours
-        </Button>
+      <div className="mb-4 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+        <div>
+          <h2 className="text-xl font-semibold tracking-tight text-slate-900">Planning de la semaine</h2>
+          <p className="text-sm text-slate-500">Glissez-déposez pour réorganiser. Cliquez pour éditer.</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => openAdd()}
+            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white shadow-sm ring-1 ring-blue-700/10 transition hover:bg-blue-700 hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300 active:scale-[.99]"
+          >
+            <Plus className="h-4 w-4" /> Ajouter un cours
+          </button>
+          <button
+            onClick={handleExportPDF}
+            className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-amber-400 to-amber-500 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-amber-600/20 transition hover:from-amber-500 hover:to-amber-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-300 active:scale-[.99]"
+            title="Exporter en PDF"
+          >
+            <Download className="h-4 w-4" /> Export PDF
+          </button>
+        </div>
       </div>
 
-      {/* Planning Grid */}
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
+      {/* Planner Card */}
+      <div
+        ref={exportRef}
+        className="overflow-x-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-xl shadow-slate-900/5 ring-1 ring-black/0"
+      >
+        <table className="w-full min-w-[720px] border-collapse text-sm">
           <thead>
             <tr>
-              <th className="border border-gray-300 bg-gray-100 p-2 text-sm font-semibold text-gray-700 w-24">Heure</th>
-              {DAYS.map(day => (
-                <th key={day} className="border border-gray-300 bg-gray-100 p-2 text-sm font-semibold text-gray-700">
+              <th className="w-20 select-none rounded-lg bg-slate-50 p-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
+                Heure
+              </th>
+              {DAYS.map((day) => (
+                <th
+                  key={day}
+                  className="select-none rounded-lg bg-slate-50 p-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-600"
+                >
                   {day}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {TIME_SLOTS.map(time => (
+            {TIME_SLOTS.map((time) => (
               <tr key={time}>
-                <td className="border border-gray-300 bg-gray-50 p-2 text-sm font-medium text-gray-600 text-center">
+                <td className="whitespace-nowrap bg-slate-50/60 p-2 text-center text-xs font-medium text-slate-500">
                   {time}
                 </td>
-                {DAYS.map(day => {
-                  const event = getEventForSlot(day, time);
-                  return (
-                    <td key={`${day}-${time}`} className="border border-gray-300 p-1 h-20">
-                      {event ? (
-                        <div 
-                          className="h-full rounded p-2 relative group cursor-pointer"
-                          style={{ backgroundColor: event.color + '20', borderLeft: `4px solid ${event.color}` }}
-                          onClick={() => {
-                            setEditingEvent(event);
-                            setFormData(event);
-                          }}
-                        >
-                          <div className="text-sm font-semibold" style={{ color: event.color }}>
-                            {event.subject}
-                          </div>
-                          <div className="text-xs text-gray-600 truncate">
-                            {event.description}
-                          </div>
-                          <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteEvent(event.id!);
-                              }}
-                              className="bg-red-500 hover:bg-red-600 text-white rounded p-1"
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </button>
-                          </div>
-                        </div>
-                      ) : null}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Add/Edit Modal */}
-      {(showAddModal || editingEvent) && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">
-              {editingEvent ? 'Éditer le cours' : 'Ajouter un cours'}
-            </h3>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Jour</label>
-                <select
-                  value={formData.day}
-                  onChange={(e) => setFormData({ ...formData, day: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg p-2"
-                >
-                  <option value="">Sélectionner</option>
-                  {DAYS.map(day => <option key={day} value={day}>{day}</option>)}
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Heure</label>
-                <select
-                  value={formData.time}
-                  onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg p-2"
-                >
-                  <option value="">Sélectionner</option>
-                  {TIME_SLOTS.map(time => <option key={time} value={time}>{time}</option>)}
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Matière</label>
-                <select
-                  value={formData.subject}
-                  onChange={(e) => {
-                    const selected = SUBJECT_COLORS.find(s => s.name === e.target.value);
-                    setFormData({ 
-                      ...formData, 
-                      subject: e.target.value,
-                      color: selected?.color || SUBJECT_COLORS[0].color
-                    });
-                  }}
-                  className="w-full border border-gray-300 rounded-lg p-2"
-                >
-                  <option value="">Sélectionner</option>
-                  {SUBJECT_COLORS.map(subj => (
-                    <option key={subj.name} value={subj.name}>{subj.name}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg p-2"
-                  rows={3}
-                  placeholder="Détails du cours..."
-                />
-              </div>
-            </div>
-            
-            <div className="flex justify-end space-x-3 mt-6">
-              <Button
-                onClick={() => {
-                  setShowAddModal(false);
-                  setEditingEvent(null);
-                  resetForm();
-                }}
-                variant="outline"
-              >
-                <X className="h-4 w-4 mr-2" />
-                Annuler
-              </Button>
-              <Button
-                onClick={editingEvent ? handleUpdateEvent : handleAddEvent}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                <Save className="h-4 w-4 mr-2" />
-                {editingEvent ? 'Mettre à jour' : 'Ajouter'}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+                {DAYS.map((day) => {
+                  const ev = getEventForSlot(day, time);
+                  const color = ev ? findSubject(ev.subject).color : undefined
