@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { db } from "@/lib/firebase";
 import {
@@ -26,10 +25,6 @@ import {
   MoreHorizontal,
   Download,
 } from "lucide-react";
-
-// Swiss Digital aesthetic + Inter font + SaaS look
-// - Rounded cards, soft shadows
-// - White/gray/blue base with gold accent for primary action
 
 export type PlanningEvent = {
   id?: string;
@@ -72,25 +67,29 @@ const TIME_SLOTS = [
 ] as const;
 
 const SUBJECTS: { name: string; color: string; Icon: React.ComponentType<any> }[] = [
-  { name: "Théorie", color: "#1E3A8A", Icon: BookOpen }, // deep blue
-  { name: "Pratique", color: "#0EA5E9", Icon: Wrench }, // sky blue
-  { name: "CAO/DAO", color: "#7C3AED", Icon: LayoutGrid }, // purple
-  { name: "Histoire", color: "#475569", Icon: GraduationCap }, // slate
-  { name: "Stage", color: "#0F766E", Icon: Briefcase }, // teal
-  { name: "Projet", color: "#F59E0B", Icon: Rocket }, // gold-ish
-  { name: "Autre", color: "#334155", Icon: MoreHorizontal }, // dark slate
+  { name: "Théorie", color: "#1E3A8A", Icon: BookOpen },
+  { name: "Pratique", color: "#0EA5E9", Icon: Wrench },
+  { name: "CAO/DAO", color: "#7C3AED", Icon: LayoutGrid },
+  { name: "Histoire", color: "#475569", Icon: GraduationCap },
+  { name: "Stage", color: "#0F766E", Icon: Briefcase },
+  { name: "Projet", color: "#F59E0B", Icon: Rocket },
+  { name: "Autre", color: "#334155", Icon: MoreHorizontal },
 ];
 
 const findSubject = (name?: string) => SUBJECTS.find((s) => s.name === name) ?? SUBJECTS[0];
 
+type PlanningEventState = PlanningEvent[];
+
+type PartialPlanning = Partial<PlanningEvent>;
+
 export default function WeeklyPlanner({ userId, onDataChange }: WeeklyPlannerProps) {
-  const [events, setEvents] = useState<PlanningEvent[]>([]);
+  const [events, setEvents] = useState<PlanningEventState>([]);
   const [editingEvent, setEditingEvent] = useState<PlanningEvent | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
-  const [formData, setFormData] = useState<Partial<PlanningEvent>>({
+  const [formData, setFormData] = useState<PartialPlanning>({
     day: "",
     time: "",
     subject: "",
@@ -128,7 +127,7 @@ export default function WeeklyPlanner({ userId, onDataChange }: WeeklyPlannerPro
   const resetForm = () =>
     setFormData({ day: "", time: "", subject: "", description: "", color: findSubject("Théorie").color });
 
-  const openAdd = (prefill?: Partial<PlanningEvent>) => {
+  const openAdd = (prefill?: PartialPlanning) => {
     setEditingEvent(null);
     setFormData({ ...{ day: "", time: "", subject: "", description: "", color: findSubject("Théorie").color }, ...prefill });
     setShowModal(true);
@@ -166,13 +165,13 @@ export default function WeeklyPlanner({ userId, onDataChange }: WeeklyPlannerPro
   const handleUpdateEvent = async () => {
     if (!editingEvent?.id) return;
     try {
-      const payload = {
+      const payload: PartialPlanning = {
         day: formData.day,
         time: formData.time,
         subject: formData.subject,
         description: formData.description,
         color: formData.color,
-      } as Partial<PlanningEvent>;
+      };
       await updateDoc(doc(db, "planning", editingEvent.id), payload as any);
       setEvents((prev) => prev.map((e) => (e.id === editingEvent.id ? { ...e, ...(payload as any) } : e)));
       setShowModal(false);
@@ -280,10 +279,7 @@ export default function WeeklyPlanner({ userId, onDataChange }: WeeklyPlannerPro
   const SubjectBadge = ({ subject }: { subject: string }) => {
     const { Icon, color } = findSubject(subject);
     return (
-      <span
-        className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
-        style={{ backgroundColor: `${color}10`, color }}
-      >
+      <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium" style={{ backgroundColor: `${color}10`, color }}>
         <Icon className="h-3.5 w-3.5" />
         {subject}
       </span>
@@ -306,8 +302,12 @@ export default function WeeklyPlanner({ userId, onDataChange }: WeeklyPlannerPro
     <div className="font-inter">
       {/* Toast */}
       {toast && (
-        <div className={`fixed right-4 top-4 z-50 flex items-center gap-2 rounded-full px-3 py-2 text-sm shadow-lg transition ${toast.type === "success" ? "bg-emerald-500 text-white" : "bg-amber-500 text-white"}`}>
-          <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-white/90"></span>
+        <div
+          className={`fixed right-4 top-4 z-50 flex items-center gap-2 rounded-full px-3 py-2 text-sm shadow-lg transition ${
+            toast.type === "success" ? "bg-emerald-500 text-white" : "bg-amber-500 text-white"
+          }`}
+        >
+          <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-white/90" />
           <span>{toast.message}</span>
           <CloseToast />
         </div>
@@ -365,4 +365,10 @@ export default function WeeklyPlanner({ userId, onDataChange }: WeeklyPlannerPro
                 </td>
                 {DAYS.map((day) => {
                   const ev = getEventForSlot(day, time);
-                  const color = ev ? findSubject(ev.subject).color : undefined
+                  const color = ev ? findSubject(ev.subject).color : undefined;
+                  return (
+                    <td
+                      key={`${day}-${time}`}
+                      onDragOver={onDragOver}
+                      onDrop={(e) => onDrop(e, day, time)}
+                      className="h-16 min-w-28 rounded-lg border border-slate
