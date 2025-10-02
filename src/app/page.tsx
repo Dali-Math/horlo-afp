@@ -18,49 +18,48 @@ export default function Home() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Image with Blur */}
+        {/* Background with elegant gradient simulating blurred watch imagery */}
         <div className="absolute inset-0 z-0">
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: 'url(/image.jpg)',
-              filter: 'blur(8px)',
-              transform: 'scale(1.1)'
-            }}
-          />
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-gray-800 to-slate-900"></div>
+          {/* Subtle pattern overlay */}
+          <div className="absolute inset-0 opacity-20" style={{
+            backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 30%, rgba(212, 175, 55, 0.2) 0%, transparent 50%)',
+            filter: 'blur(60px)'
+          }}></div>
+          <div className="absolute inset-0 bg-black/40"></div>
         </div>
-
+        
         {/* Content */}
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center text-white">
-          {/* Logo */}
-          <div className="flex items-center justify-center mb-8 animate-fade-in">
-            <Clock className="w-20 h-20 text-amber-500 mr-4" strokeWidth={1.5} />
-            <h1 className="text-6xl md:text-8xl font-bold tracking-tight">
-              Horlo-AFP
-            </h1>
-          </div>
-
-          {/* Main Title */}
-          <h2 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in-delay">
-            Maîtrisez l'Art Horloger Suisse
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
+          {/* Main Title with White and Gold */}
+          <h1 className="text-6xl md:text-8xl font-bold mb-6 animate-fade-in">
+            <span className="text-white">Horlo</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-500">-AFP</span>
+          </h1>
+          
+          <h2 className="text-3xl md:text-5xl font-bold mb-8 animate-fade-in-delay">
+            <span className="text-white">Maîtrisez l'</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-500">Art Horloger</span>
+            <span className="text-white"> Suisse</span>
           </h2>
-
-          <p className="text-xl md:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in-delay-2">
-            Excellence · Précision · Tradition
+          
+          <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in-delay-2">
+            <span className="text-amber-400 font-semibold">Excellence</span> · 
+            <span className="text-amber-400 font-semibold"> Précision</span> · 
+            <span className="text-amber-400 font-semibold"> Tradition</span>
           </p>
-
+          
           {/* CTA Buttons */}
           <div className="flex flex-wrap justify-center gap-6 animate-fade-in-delay-2">
             <Link
               href="/theorie"
-              className="px-10 py-5 bg-gradient-to-r from-amber-500 to-yellow-600 text-white text-lg font-semibold rounded-lg hover:from-amber-600 hover:to-yellow-700 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-amber-500/50"
+              className="px-10 py-5 bg-gradient-to-r from-amber-500 to-yellow-600 text-white text-lg font-bold rounded-lg hover:from-amber-600 hover:to-yellow-700 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-amber-500/50"
             >
               Commencer
             </Link>
             <Link
               href="/communaute"
-              className="px-10 py-5 bg-white/10 backdrop-blur-md text-white text-lg font-semibold rounded-lg border-2 border-white/30 hover:bg-white/20 transform hover:scale-105 transition-all duration-300 shadow-2xl"
+              className="px-10 py-5 bg-white/10 backdrop-blur-md text-white text-lg font-bold rounded-lg border-2 border-amber-500/50 hover:bg-white/20 hover:border-amber-400 transform hover:scale-105 transition-all duration-300 shadow-2xl"
             >
               Rejoindre la communauté
             </Link>
@@ -85,16 +84,16 @@ export default function Home() {
                   animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`
                 }}
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${section.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+                <div className={`absolute inset-0 bg-gradient-to-br ${section.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
                 
                 <div className="relative p-6">
                   <div className="flex items-start justify-between mb-4">
-                    <div className={`p-3 bg-gradient-to-br ${section.color} rounded-lg shadow-md text-white transform group-hover:scale-110 transition-transform duration-300`}>
+                    <div className={`p-3 rounded-lg shadow-md bg-gradient-to-br ${section.color} text-white transform transition-transform duration-300 group-hover:scale-110`}>
                       <Icon className="w-6 h-6" strokeWidth={2} />
                     </div>
                     <div className="text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </div>
                   </div>
@@ -107,7 +106,7 @@ export default function Home() {
                   </p>
                 </div>
                 
-                <div className="h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+                <div className="h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
               </Link>
             );
           })}
