@@ -5,10 +5,48 @@ export default function OutilsPage() {
         <h1 className="text-5xl font-bold mb-4 text-indigo-900">Outils en ligne</h1>
         <p className="text-xl text-gray-700 mb-8">Outils numériques gratuits pour apprendre et pratiquer l'horlogerie.</p>
 
+        {/* Section Suisse/Francophone prioritaire */}
+        <section className="mb-12 bg-white rounded-lg shadow-lg p-6">
+          <h2 className="text-3xl font-bold mb-6 text-indigo-800">Ressources suisses et francophones</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="p-4 bg-emerald-50 rounded-lg flex gap-3">
+              <span aria-hidden className="text-emerald-700 text-2xl">🩺</span>
+              <div>
+                <h3 className="text-xl font-semibold mb-1 text-emerald-900">Base Chronos — Clinique Horlogère</h3>
+                <p className="text-gray-700 mb-2">Base de connaissances technique (pannes, diagnostics, procédures) orientée pratique atelier.</p>
+                <a className="text-emerald-700 hover:underline" href="https://www.cliniquehorlogere.ch/fr/base-chronos.html" target="_blank" rel="noopener noreferrer">→ Base Chronos (cliniquehorlogere.ch)</a>
+              </div>
+            </div>
+            <div className="p-4 bg-sky-50 rounded-lg flex gap-3">
+              <span aria-hidden className="text-sky-700 text-2xl">📚</span>
+              <div>
+                <h3 className="text-xl font-semibold mb-1 text-sky-900">Banque de données de chronométrie — SSC</h3>
+                <p className="text-gray-700 mb-2">Références scientifiques et publications de la Société Suisse de Chronométrie.</p>
+                <a className="text-sky-700 hover:underline" href="https://www.ssc.ch/publications/banque-de-donnees-chronometrie" target="_blank" rel="noopener noreferrer">→ SSC – Banque de données</a>
+              </div>
+            </div>
+            <div className="p-4 bg-indigo-50 rounded-lg flex gap-3 md:col-span-2">
+              <span aria-hidden className="text-indigo-700 text-2xl">🗞️</span>
+              <div>
+                <h3 className="text-xl font-semibold mb-1 text-indigo-900">Horlogerie-Suisse</h3>
+                <p className="text-gray-700 mb-2">Portail francophone: revues, dossiers techniques, annonces et forums de discussion.</p>
+                <a className="text-indigo-700 hover:underline" href="https://horlogerie-suisse.com" target="_blank" rel="noopener noreferrer">→ horlogerie-suisse.com</a>
+              </div>
+            </div>
+            <div className="p-4 bg-amber-50 rounded-lg flex gap-3 md:col-span-2">
+              <span aria-hidden className="text-amber-700 text-2xl">🏷️</span>
+              <div>
+                <h3 className="text-xl font-semibold mb-1 text-amber-900">Liste des marques et mouvements</h3>
+                <p className="text-gray-700 mb-2">Répertoire francophone des marques, manufactures et calibres associés.</p>
+                <a className="text-amber-700 hover:underline" href="https://www.suissemontre.com/marques_et_manufactures/liste_marques.php" target="_blank" rel="noopener noreferrer">→ suissmontre.com – Marques & mouvements</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Simulateurs et outils 3D */}
         <section className="mb-12 bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-3xl font-bold mb-6 text-indigo-800">Simulateurs et Outils 3D</h2>
-
           <div className="space-y-4">
             <div className="p-4 bg-blue-50 rounded-lg">
               <h3 className="text-xl font-semibold mb-2 text-blue-900">TinkerCAD</h3>
@@ -36,7 +74,6 @@ export default function OutilsPage() {
         {/* Calculateurs horlogers */}
         <section className="mb-12 bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-3xl font-bold mb-6 text-indigo-800">Calculateurs Horlogers</h2>
-
           <div className="space-y-4">
             <div className="p-4 bg-green-50 rounded-lg">
               <h3 className="text-xl font-semibold mb-2 text-green-900">Calculateur de Train d'Engrenages</h3>
@@ -59,7 +96,6 @@ export default function OutilsPage() {
         {/* Outils de Diagnostic */}
         <section className="mb-12 bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-3xl font-bold mb-6 text-indigo-800">Outils de Diagnostic</h2>
-
           <div className="space-y-4">
             <div className="p-4 bg-purple-50 rounded-lg">
               <h3 className="text-xl font-semibold mb-2 text-purple-900">WatchTracker (app mobile)</h3>
@@ -79,28 +115,9 @@ export default function OutilsPage() {
           </div>
         </section>
 
-        {/* Applications mobiles gratuites */}
-        <section className="mb-12 bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-3xl font-bold mb-6 text-indigo-800">Applications Mobiles Gratuites</h2>
-
-          <div className="space-y-4">
-            <div className="p-4 bg-amber-50 rounded-lg">
-              <h3 className="text-xl font-semibold mb-2 text-amber-900">Watch Tuner</h3>
-              <p className="text-gray-700 mb-2">Application Android/iOS pour régler les montres mécaniques</p>
-              <a className="text-amber-600 hover:underline" href="https://play.google.com/store/apps/details?id=com.kaibader.tuner" rel="noopener noreferrer" target="_blank">→ Watch Tuner Android</a>
-            </div>
-            <div className="p-4 bg-amber-50 rounded-lg">
-              <h3 className="text-xl font-semibold mb-2 text-amber-900">Horology Toolbox</h3>
-              <p className="text-gray-700 mb-2">Boîte à outils complète pour horlogers</p>
-              <a className="text-amber-600 hover:underline" href="https://apps.apple.com/app/horology-toolbox/id1543689712" rel="noopener noreferrer" target="_blank">→ Horology Toolbox iOS</a>
-            </div>
-          </div>
-        </section>
-
         {/* Ressources techniques en ligne */}
         <section className="mb-12 bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-3xl font-bold mb-6 text-indigo-800">Ressources Techniques en Ligne</h2>
-
           <div className="space-y-4">
             <div className="p-4 bg-indigo-50 rounded-lg">
               <h3 className="text-xl font-semibold mb-2 text-indigo-900">Animations interactives de physique et d’électricité (Université de Nantes)</h3>
@@ -110,7 +127,7 @@ export default function OutilsPage() {
             <div className="p-4 bg-indigo-50 rounded-lg">
               <h3 className="text-xl font-semibold mb-2 text-indigo-900">Ranfft's Watch Database</h3>
               <p className="text-gray-700 mb-2">Base de données complète de calibres horlogers</p>
-              <a className="text-indigo-600 hover:underline" href="http://www.ranfft.de/cgi-bin/bidfun-db.cgi?10&amp;ranfft&amp;&amp;2uswk" rel="noopener noreferrer" target="_blank">→ Ranfft Database</a>
+              <a className="text-indigo-600 hover:underline" href="http://www.ranfft.de/cgi-bin/bidfun-db.cgi?10&ranfft&&2uswk" rel="noopener noreferrer" target="_blank">→ Ranfft Database</a>
             </div>
             <div className="p-4 bg-indigo-50 rounded-lg">
               <h3 className="text-xl font-semibold mb-2 text-indigo-900">Mikrolisk - Movement Database</h3>
@@ -133,7 +150,6 @@ export default function OutilsPage() {
         {/* Outils de dessin technique */}
         <section className="mb-12 bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-3xl font-bold mb-6 text-indigo-800">Outils de Dessin Technique</h2>
-
           <div className="space-y-4">
             <div className="p-4 bg-cyan-50 rounded-lg">
               <h3 className="text-xl font-semibold mb-2 text-cyan-900">Inkscape</h3>
