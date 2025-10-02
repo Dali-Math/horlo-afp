@@ -28,27 +28,15 @@ export default function Home() {
           }}></div>
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
-        
+
         {/* Content */}
         <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
-          {/* Main Title with White and Gold */}
-          <h1 className="text-6xl md:text-8xl font-bold mb-6 animate-fade-in">
-            <span className="text-white">Horlo</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-500">-AFP</span>
+          {/* Main Title - Horlogerie Suisse */}
+          <h1 className="text-6xl md:text-8xl font-bold mb-12 animate-fade-in">
+            <span className="text-white">Horlogerie </span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-500">Suisse</span>
           </h1>
-          
-          <h2 className="text-3xl md:text-5xl font-bold mb-8 animate-fade-in-delay">
-            <span className="text-white">Maîtrisez l'</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-500">Art Horloger</span>
-            <span className="text-white"> Suisse</span>
-          </h2>
-          
-          <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in-delay-2">
-            <span className="text-amber-400 font-semibold">Excellence</span> · 
-            <span className="text-amber-400 font-semibold"> Précision</span> · 
-            <span className="text-amber-400 font-semibold"> Tradition</span>
-          </p>
-          
+
           {/* CTA Buttons */}
           <div className="flex flex-wrap justify-center gap-6 animate-fade-in-delay-2">
             <Link
@@ -71,7 +59,7 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-6 py-16">
         <h2 className="text-4xl font-bold text-center mb-4 text-gray-900">Explorez nos sections</h2>
         <p className="text-center text-gray-600 mb-12 text-lg">Des ressources complètes pour votre formation en horlogerie</p>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sections.map((section, index) => {
             const Icon = section.icon;
@@ -85,19 +73,19 @@ export default function Home() {
                 }}
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${section.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
-                
+
                 <div className="relative p-6">
                   <div className="flex items-start justify-between mb-4">
-                    <div className={`p-3 rounded-lg shadow-md bg-gradient-to-br ${section.color} text-white transform transition-transform duration-300 group-hover:scale-110`}>
+                    <div className={`p-3 rounded-lg shadow-md text-white bg-gradient-to-br ${section.color} transform group-hover:scale-110 transition-transform duration-300`}>
                       <Icon className="w-6 h-6" strokeWidth={2} />
                     </div>
                     <div className="text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
                       </svg>
                     </div>
                   </div>
-                  
+
                   <h3 className="text-2xl font-bold mb-2 text-gray-900 group-hover:text-amber-600 transition-colors duration-300">
                     {section.name}
                   </h3>
@@ -105,7 +93,7 @@ export default function Home() {
                     {section.desc}
                   </p>
                 </div>
-                
+
                 <div className="h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
               </Link>
             );
