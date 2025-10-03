@@ -10,11 +10,11 @@ export default function Certification() {
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Bouton retour */}
         <div className="mb-8">
-          <button 
+          <button
             onClick={() => router.back()}
             className="inline-flex items-center px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors cursor-pointer"
           >
-            ← Retour aux ressources
+            ← Retour
           </button>
         </div>
 
