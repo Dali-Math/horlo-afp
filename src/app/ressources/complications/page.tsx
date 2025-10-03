@@ -15,7 +15,7 @@ export default function Complications() {
           className="inline-flex items-center gap-2 text-red-400 hover:text-red-300 mb-8 transition-colors cursor-pointer bg-transparent border-none"
         >
           <ArrowLeft className="w-5 h-5" />
-          Retour aux ressources pratiques
+          Retour
         </button>
 
         {/* Encadré explicatif */}
