@@ -1,8 +1,8 @@
 'use client';
-
 import React from 'react';
 import { ArrowLeft, Wrench, Sparkles, Info } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function OutilsHorlogers() {
   return (
@@ -10,7 +10,7 @@ export default function OutilsHorlogers() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Bouton retour */}
         <Link
-          href="/ressources"
+          href="/pratique"
           className="inline-flex items-center gap-2 mb-8 text-slate-300 hover:text-white transition-colors group"
         >
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
@@ -49,11 +49,13 @@ export default function OutilsHorlogers() {
           </div>
         </div>
 
-        {/* Image test */}
+        {/* Image PDF */}
         <div className="mb-16 rounded-2xl overflow-hidden shadow-2xl">
-          <img
-            src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=1200&auto=format&fit=crop"
-            alt="Outils horlogers - Tournevis et instruments de précision"
+          <Image
+            src="/images/outils-horlogers.jpg"
+            alt="Outils horlogers : tournevis, brucelles, huiliers"
+            width={1200}
+            height={400}
             className="w-full h-80 object-cover"
           />
         </div>
