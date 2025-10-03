@@ -1,149 +1,72 @@
 'use client';
 import React from 'react';
-import { ArrowLeft, Wrench, Sparkles, Info } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ArrowLeft, Info, Download } from 'lucide-react';
 
-export default function OutilsHorlogers() {
+export default function OutilsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Bouton retour */}
         <Link
-          href="/pratique"
+          href="/ressources"
           className="inline-flex items-center gap-2 mb-8 text-slate-300 hover:text-white transition-colors group"
         >
-          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+          <ArrowLeft className="w-5 h-5 -ml-1 group-hover:-translate-x-1 transition-transform" />
           <span>Retour aux Ressources</span>
         </Link>
 
-        {/* En-tête */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-3 mb-6">
-            <Wrench className="w-12 h-12 text-amber-500" />
-            <h1 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 bg-clip-text text-transparent">
-              Outils Horlogers
-            </h1>
-          </div>
-          <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-            Découvrez les instruments essentiels du maître horloger : tournevis, brucelles,
-            échappemètre et outils de précision pour l'assemblage et la réparation.
+        {/* Titre et description courte */}
+        <header className="mb-8">
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">Outils Horlogers</h1>
+          <p className="mt-3 text-slate-300 max-w-2xl">
+            Aperçu synthétique des outils fondamentaux utilisés en atelier: brucelles, tournevis,
+            huiliers et instruments de contrôle pour l’assemblage et la maintenance des mouvements.
           </p>
-        </div>
+        </header>
 
         {/* Encadré explicatif */}
-        <div className="mb-12 bg-gradient-to-br from-blue-900/40 to-indigo-900/40 backdrop-blur-sm border border-blue-700/50 rounded-2xl p-8">
+        <section className="mb-10 bg-gradient-to-br from-blue-900/40 to-indigo-900/40 backdrop-blur-sm border border-blue-700/50 rounded-2xl p-6">
           <div className="flex items-start gap-4">
-            <Info className="w-6 h-6 text-blue-400 flex-shrink-0 mt-1" />
+            <Info className="w-6 h-6 text-blue-300 mt-1 shrink-0" />
             <div>
-              <h2 className="text-2xl font-bold text-blue-300 mb-3">Précision et Savoir-Faire</h2>
-              <p className="text-slate-300 leading-relaxed mb-3">
-                L'horlogerie exige des outils d'une précision extrême. Chaque instrument est conçu
-                pour manipuler des composants miniatures avec délicatesse et exactitude.
-              </p>
-              <p className="text-slate-300 leading-relaxed">
-                Du tournevis horloger aux brucelles en passant par l'échappemètre, ces outils sont
-                le prolongement de la main de l'artisan et garantissent la qualité du travail.
+              <h2 className="text-xl font-semibold text-blue-200">Objectif pédagogique</h2>
+              <p className="mt-2 text-slate-200">
+                Identifier le rôle de chaque outil, les bonnes pratiques de manipulation et les
+                précautions de sécurité pour préserver les organes du mouvement et garantir la
+                précision des interventions.
               </p>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Image PDF */}
-        <div className="mb-16 rounded-2xl overflow-hidden shadow-2xl">
+        {/* Image pédagogique */}
+        <figure className="mb-8 rounded-2xl overflow-hidden shadow-2xl border border-slate-700/50">
           <Image
             src="/images/outils-horlogers.jpg"
-            alt="Outils horlogers : tournevis, brucelles, huiliers"
-            width={1200}
-            height={400}
-            className="w-full h-80 object-cover"
+            alt="Planche pédagogique: outils horlogers (tournevis, brucelles, huiliers)"
+            width={1600}
+            height={900}
+            className="w-full h-auto"
+            priority
           />
-        </div>
+          <figcaption className="sr-only">Planche pédagogique suisse des outils horlogers</figcaption>
+        </figure>
 
-        {/* Liste synthétique des outils */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Tournevis */}
-          <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-amber-500/50 transition-all">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Wrench className="w-6 h-6 text-amber-400" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-amber-400 mb-2">Tournevis Horlogers</h3>
-                <p className="text-slate-300 leading-relaxed">
-                  Instruments de précision avec lames interchangeables, adaptés à différentes tailles
-                  de vis. Essentiels pour l'ouverture des boîtiers et l'assemblage des mouvements.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Brucelles */}
-          <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-amber-500/50 transition-all">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Sparkles className="w-6 h-6 text-amber-400" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-amber-400 mb-2">Brucelles</h3>
-                <p className="text-slate-300 leading-relaxed">
-                  Pinces ultra-fines permettant de manipuler les pièces miniatures sans les endommager.
-                  Disponibles en différentes formes : droites, courbées, antiamagnétiques.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Échappemètre */}
-          <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-amber-500/50 transition-all">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Wrench className="w-6 h-6 text-amber-400" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-amber-400 mb-2">Échappemètre</h3>
-                <p className="text-slate-300 leading-relaxed">
-                  Appareil de mesure acoustique permettant de contrôler la précision du mouvement,
-                  détecter les défauts d'échappement et vérifier la régularité de la marche.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Huiliers */}
-          <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-amber-500/50 transition-all">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Sparkles className="w-6 h-6 text-amber-400" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-amber-400 mb-2">Huiliers</h3>
-                <p className="text-slate-300 leading-relaxed">
-                  Outils de lubrification permettant de déposer des quantités infinitésimales d'huile
-                  sur les pivots et rouages. Garantissent le bon fonctionnement et la longévité.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Outils à forger les dards */}
-          <div className="md:col-span-2 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 hover:border-amber-500/50 transition-all">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Wrench className="w-6 h-6 text-amber-400" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-amber-400 mb-2">Outils à Forger les Dards</h3>
-                <p className="text-slate-300 leading-relaxed">
-                  Équipement spécialisé pour façonner et ajuster les dards des aiguilles. Permet de
-                  créer l'ouverture précise nécessaire à leur fixation sur les axes du mouvement.
-                  Nécessite maîtrise et expérience pour un travail irréprochable.
-                </p>
-              </div>
-            </div>
-          </div>
+        {/* Bouton de téléchargement PDF */}
+        <div className="mt-6">
+          <Link
+            href="/pdf/outils.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500 text-slate-900 font-medium hover:bg-amber-400 transition-colors"
+          >
+            <Download className="w-5 h-5" />
+            Télécharger le PDF pédagogique
+          </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
