@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
-import { Plus, Pencil, Trash2, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
+import { Plus, Pencil, Trash2, ChevronLeft, ChevronRight, Calendar, FileText, Download, ExternalLink } from 'lucide-react';
 
 type PlanningEntry = {
   id: string;
@@ -19,7 +19,6 @@ function startOfWeek(date = new Date()) {
   d.setHours(0, 0, 0, 0);
   return d;
 }
-
 function formatDate(d: Date) {
   return d.toLocaleDateString('fr-CH', { day: '2-digit', month: '2-digit' });
 }
@@ -34,21 +33,22 @@ export default function PlanningPage() {
   const [entries, setEntries] = useState<PlanningEntry[]>([]);
   const [editing, setEditing] = useState<PlanningEntry | null>(null);
   const [showForm, setShowForm] = useState(false);
-
   const storageKey = 'horlo-afp-planning-v1';
+
   useEffect(() => {
-    try { const raw = localStorage.getItem(storageKey); if (raw) setEntries(JSON.parse(raw)); } catch {}
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (raw) setEntries(JSON.parse(raw));
+    } catch {}
   }, []);
   useEffect(() => {
     try { localStorage.setItem(storageKey, JSON.stringify(entries)); } catch {}
   }, [entries]);
 
   const weekDays = useMemo(() => Array.from({ length: 7 }, (_, i) => { const d = new Date(currentWeekStart); d.setDate(currentWeekStart.getDate() + i); return d; }), [currentWeekStart]);
-
   function nextWeek() { const d = new Date(currentWeekStart); d.setDate(d.getDate() + 7); setCurrentWeekStart(d); }
   function prevWeek() { const d = new Date(currentWeekStart); d.setDate(d.getDate() - 7); setCurrentWeekStart(d); }
   function thisWeek() { setCurrentWeekStart(startOfWeek(new Date())); }
-
   function openCreate(dayIdx?: number) {
     setEditing({ id: crypto.randomUUID(), title: '', day: typeof dayIdx === 'number' ? dayIdx : selectedDay, start: '08:00', end: '09:00', color: '#d4af37', description: '' });
     setShowForm(true);
@@ -62,11 +62,33 @@ export default function PlanningPage() {
     setEntries((prev) => (prev.some((x) => x.id === editing.id) ? prev.map((x) => (x.id === editing.id ? editing : x)) : [...prev, editing]));
     setShowForm(false); setEditing(null);
   }
-
   const dayEntries = useMemo(() => entries.filter((e) => e.day === selectedDay).sort((a, b) => a.start.localeCompare(b.start)), [entries, selectedDay]);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
+      {/* Section Planning officiel - lien vers le PDF */}
+      <div className="mb-6 border rounded-lg p-4 bg-amber-50/50">
+        <div className="flex items-start gap-3">
+          <FileText className="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" />
+          <div className="flex-1">
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">Planning Officiel Formation HORL1S925</h2>
+            <p className="text-sm text-gray-600 mb-3">
+              Planning provisoire susceptible de modifications. Formation modulaire en Horlogerie - Module de Base.
+              451 périodes réparties sur 8 matières de septembre 2025 à mai 2026.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <a href="/pdfs/250919_HORL1_S925.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 text-sm font-medium transition">
+                <Download className="w-4 h-4" /> Télécharger le planning (PDF)
+              </a>
+              <a href="/pdfs/250919_HORL1_S925.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 border border-amber-600 text-amber-600 rounded-md hover:bg-amber-50 text-sm font-medium transition">
+                <ExternalLink className="w-4 h-4" /> Consulter en ligne
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Barre d'outils du planning interactif */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-center gap-3">
           <Calendar className="w-5 h-5 text-amber-600" />
@@ -74,11 +96,11 @@ export default function PlanningPage() {
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <div className="inline-flex rounded-md shadow-sm border border-gray-200 overflow-hidden">
-            <button onClick={prevWeek} className="px-3 py-2 hover:bg-gray-50" aria-label="Semaine précédente">
+            <button aria-label="Semaine précédente" className="px-3 py-2 hover:bg-gray-50" onClick={prevWeek}>
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <button onClick={thisWeek} className="px-3 py-2 border-l border-r border-gray-200 hover:bg-gray-50">Cette semaine</button>
-            <button onClick={nextWeek} className="px-3 py-2 hover:bg-gray-50" aria-label="Semaine suivante">
+            <button className="px-3 py-2 border-l border-r border-gray-200 hover:bg-gray-50" onClick={thisWeek}>Cette semaine</button>
+            <button aria-label="Semaine suivante" className="px-3 py-2 hover:bg-gray-50" onClick={nextWeek}>
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
@@ -92,6 +114,7 @@ export default function PlanningPage() {
         </div>
       </div>
 
+      {/* Sélecteur de jours */}
       <div className="mt-4 grid grid-cols-7 gap-2 text-center text-sm">
         {weekDays.map((d, i) => (
           <button key={i} onClick={() => { setSelectedDay(i); if (view === 'week') setView('day'); }} className={`rounded-md border py-2 ${selectedDay === i ? 'bg-amber-50 border-amber-300 text-amber-900' : 'bg-white hover:bg-gray-50'}`}>
@@ -101,16 +124,17 @@ export default function PlanningPage() {
         ))}
       </div>
 
+      {/* Vue semaine */}
       {view === 'week' ? (
         <div className="mt-4 overflow-x-auto">
           <div className="min-w-[720px] grid grid-cols-8 border rounded-md">
             <div className="bg-gray-50 p-2 text-xs text-gray-600">Heures</div>
-            {DAYS.map((d) => (<div key={d} className="bg-gray-50 p-2 text-xs text-gray-600 text-center">{d}</div>))}
+            {DAYS.map((d) => (<div className="bg-gray-50 p-2 text-xs text-gray-600 text-center" key={d}>{d}</div>))}
             {HOURS.map((h) => (
               <>
-                <div key={`h-${h}`} className="border-t p-2 text-xs text-gray-500">{String(h).padStart(2, '0')}:00</div>
+                <div className="border-t p-2 text-xs text-gray-500" key={`h-${h}`}>{String(h).padStart(2, '0')}:00</div>
                 {DAYS.map((_, dayIdx) => (
-                  <div key={`c-${h}-${dayIdx}`} className="border-t border-l relative h-16 hover:bg-amber-50/40 cursor-pointer" onDoubleClick={() => openCreate(dayIdx)} title="Double-clic pour ajouter">
+                  <div className="border-t border-l relative h-16 hover:bg-amber-50/40 cursor-pointer" key={`c-${h}-${dayIdx}`} onDoubleClick={() => openCreate(dayIdx)} title="Double-clic pour ajouter">
                     {entries.filter((e) => e.day === dayIdx && e.start <= `${String(h).padStart(2, '0')}:59` && e.end >= `${String(h).padStart(2, '0')}:00`).map((e) => (
                       <div key={e.id} onClick={(ev) => { ev.stopPropagation(); openEdit(e); }} className="absolute left-1 right-1 top-1 rounded-md text-xs text-white shadow" style={{ backgroundColor: e.color || '#d4af37' }}>
                         <div className="px-2 py-1 truncate">{e.title} <span className="opacity-80">({e.start}–{e.end})</span></div>
@@ -123,10 +147,11 @@ export default function PlanningPage() {
           </div>
         </div>
       ) : (
+        /* Vue journée */
         <div className="mt-4 grid gap-3 lg:grid-cols-3">
           <div className="lg:col-span-2 border rounded-md">
             {HOURS.map((h) => (
-              <div key={h} className="grid grid-cols-[80px,1fr] border-t first:border-t-0">
+              <div className="grid grid-cols-[80px,1fr] border-t first:border-t-0" key={h}>
                 <div className="p-2 text-xs text-gray-500 bg-gray-50">{String(h).padStart(2, '0')}:00</div>
                 <div className="p-2 min-h-[3rem]">
                   {dayEntries.filter((e) => e.start <= `${String(h).padStart(2, '0')}:59` && e.end >= `${String(h).padStart(2, '0')}:00`).map((e) => (
@@ -152,7 +177,7 @@ export default function PlanningPage() {
             <ul className="space-y-2 text-sm">
               {dayEntries.length === 0 && <li className="text-gray-500">Aucune tâche pour ce jour.</li>}
               {dayEntries.map((e) => (
-                <li key={e.id} className="border rounded p-2 flex items-center justify-between">
+                <li className="border rounded p-2 flex items-center justify-between" key={e.id}>
                   <div className="min-w-0">
                     <div className="font-medium truncate">{e.title}</div>
                     <div className="text-xs text-gray-500">{e.start}–{e.end}</div>
@@ -168,6 +193,7 @@ export default function PlanningPage() {
         </div>
       )}
 
+      {/* Modale de création/édition */}
       {showForm && editing && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-2 sm:p-6">
           <div className="w-full max-w-lg bg-white rounded-lg shadow-lg">
@@ -196,22 +222,4 @@ export default function PlanningPage() {
                   <input type="color" className="w-full h-10 border rounded" value={editing.color || '#d4af37'} onChange={(e) => setEditing({ ...editing, color: e.target.value })} />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-700 mb-1">Début</label>
-                  <input type="time" className="w-full border rounded px-3 py-2 text-sm" value={editing.start} onChange={(e) => setEditing({ ...editing, start: e.target.value })} />
-                </div>
-                <div>
-                  <label className="block text-sm text-gray-700 mb-1">Fin</label>
-                  <input type="time" className="w-full border rounded px-3 py-2 text-sm" value={editing.end} onChange={(e) => setEditing({ ...editing, end: e.target.value })} />
-                </div>
-              </div>
-            </div>
-            <div className="border-t px-4 py-3 flex items-center justify-end gap-2">
-              <button className="px-3 py-2 rounded border hover:bg-gray-50" onClick={() => { setShowForm(false); setEditing(null); }}>Annuler</button>
-              <button className="px-3 py-2 rounded bg-amber-600 text-white hover:bg-amber-700" onClick={save}>Enregistrer</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+                  <label className="block text-sm text-gray-700 mb-1">
