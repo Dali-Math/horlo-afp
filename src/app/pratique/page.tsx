@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function PratiqueHorlogere() {
+export default function Page() {
   const categories = [
     {
       title: "Tutoriels Vidéo Pratiques",
@@ -69,7 +69,6 @@ export default function PratiqueHorlogere() {
         <p className="text-center text-gray-700 mb-10">
           Ressources pour l'apprentissage pratique et les compétences techniques
         </p>
-
         <div className="grid md:grid-cols-2 gap-6">
           {categories.map((cat, index) => (
             <div
