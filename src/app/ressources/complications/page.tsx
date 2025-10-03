@@ -1,20 +1,22 @@
-import React from 'react';
-import Link from 'next/link';
+"use client";
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowLeft, Download } from 'lucide-react';
 
 export default function Complications() {
+  const router = useRouter();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Bouton retour */}
-        <Link
-          href="/pratique"
-          className="inline-flex items-center gap-2 text-red-400 hover:text-red-300 mb-8 transition-colors"
+        <button
+          onClick={() => router.back()}
+          className="inline-flex items-center gap-2 text-red-400 hover:text-red-300 mb-8 transition-colors cursor-pointer bg-transparent border-none"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span>Retour aux ressources pratiques</span>
-        </Link>
+          Retour aux ressources pratiques
+        </button>
 
         {/* Encadré explicatif */}
         <div className="bg-slate-800/50 rounded-lg p-6 sm:p-8 backdrop-blur-sm border border-slate-700 mb-8">
@@ -47,19 +49,19 @@ export default function Complications() {
           <div className="space-y-4 text-slate-300">
             <div>
               <h3 className="font-semibold text-lg text-red-300 mb-2">Le Chronographe</h3>
-              <p>Fonction de chronométrage indépendante permettant de mesurer des intervalles de temps avec précision.</p>
+              Fonction de chronométrage indépendante permettant de mesurer des intervalles de temps avec précision.
             </div>
             <div>
               <h3 className="font-semibold text-lg text-red-300 mb-2">Le Calendrier Perpétuel</h3>
-              <p>Affiche la date en tenant compte automatiquement des mois de différentes longueurs et des années bissextiles.</p>
+              Affiche la date en tenant compte automatiquement des mois de différentes longueurs et des années bissextiles.
             </div>
             <div>
               <h3 className="font-semibold text-lg text-red-300 mb-2">La Répétition Minutes</h3>
-              <p>Complication sonore égrenant les heures, quarts et minutes sur demande par un système de marteaux et timbres.</p>
+              Complication sonore égrenant les heures, quarts et minutes sur demande par un système de marteaux et timbres.
             </div>
             <div>
               <h3 className="font-semibold text-lg text-red-300 mb-2">Le Tourbillon</h3>
-              <p>Mécanisme compensant les effets de la gravité sur la précision de la montre, inventé par Abraham-Louis Breguet.</p>
+              Mécanisme compensant les effets de la gravité sur la précision de la montre, inventé par Abraham-Louis Breguet.
             </div>
           </div>
         </div>
@@ -72,7 +74,7 @@ export default function Complications() {
             className="inline-flex items-center gap-3 bg-red-500 hover:bg-red-600 text-white font-semibold px-8 py-4 rounded-lg transition-all transform hover:scale-105 shadow-lg"
           >
             <Download className="w-6 h-6" />
-            <span>Télécharger le guide PDF des complications</span>
+            Télécharger le guide PDF des complications
           </a>
         </div>
       </div>
