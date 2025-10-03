@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Clock, BookOpen, Wrench, Brain, FileText, Headphones, Award, Calendar, Users, TrendingUp, Star, BarChart3 } from 'lucide-react';
+import { Clock, BookOpen, Wrench, Brain, FileText, Headphones, Award, Calendar, Users } from 'lucide-react';
 
 // HeroSection Component
 function HeroSection() {
@@ -49,52 +49,45 @@ function HeroSection() {
   );
 }
 
-// StatsSection Component
-function StatsSection() {
-  const stats = [
-    { number: "5,230+", label: "Étudiants formés", icon: Users },
-    { number: "98%", label: "Taux de réussite", icon: TrendingUp },
-    { number: "150+", label: "Heures de contenu", icon: Clock },
-    { number: "4.9/5", label: "Note moyenne", icon: Star }
-  ];
-
+// MissionSection Component
+function MissionSection() {
   return (
-    <section className="bg-gradient-to-br from-amber-50 to-yellow-50 py-20">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Nos résultats parlent d'eux-mêmes
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Une formation reconnue par les professionnels de l'horlogerie suisse
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {stats.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
-              <div
-                key={index}
-                className="text-center group"
-                style={{
-                  animation: `fadeInUp 0.6s ease-out ${index * 0.2}s both`
-                }}
-              >
-                <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-gray-100">
-                  <div className="bg-gradient-to-br from-amber-500 to-yellow-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <Icon className="w-8 h-8 text-white" strokeWidth={2} />
-                  </div>
-                  <div className="text-4xl md:text-5xl font-bold text-gray-900 mb-3 group-hover:text-amber-600 transition-colors duration-300">
-                    {stat.number}
-                  </div>
-                  <div className="text-lg text-gray-600 font-medium">
-                    {stat.label}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+    <section className="bg-yellow-50 py-12">
+      <div className="max-w-5xl mx-auto px-6 text-center">
+        <h2 className="text-3xl font-bold mb-4">Notre mission</h2>
+        <p className="text-gray-700 mb-10">
+          Partager le savoir-faire horloger suisse à travers des ressources pédagogiques 
+          fiables, structurées et accessibles librement.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white rounded-xl shadow p-6">
+            <span className="text-3xl">📘</span>
+            <h3 className="font-semibold mt-2">Documentation claire</h3>
+            <p className="text-sm text-gray-600">
+              Basée sur les standards suisses
+            </p>
+          </div>
+          <div className="bg-white rounded-xl shadow p-6">
+            <span className="text-3xl">🕰️</span>
+            <h3 className="font-semibold mt-2">Méthodes horlogères</h3>
+            <p className="text-sm text-gray-600">
+              Gestes, outils, réglages et complications
+            </p>
+          </div>
+          <div className="bg-white rounded-xl shadow p-6">
+            <span className="text-3xl">📊</span>
+            <h3 className="font-semibold mt-2">Organisation</h3>
+            <p className="text-sm text-gray-600">
+              Contenu structuré par thématiques
+            </p>
+          </div>
+          <div className="bg-white rounded-xl shadow p-6">
+            <span className="text-3xl">🌍</span>
+            <h3 className="font-semibold mt-2">Accès libre</h3>
+            <p className="text-sm text-gray-600">
+              Pour étudiants, passionnés et professionnels
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -141,12 +134,12 @@ function FeaturesSection() {
               <div className={`absolute inset-0 bg-gradient-to-br ${section.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
               <div className="relative p-8">
                 <div className="flex items-start justify-between mb-6">
-                  <div className={`p-4 rounded-xl shadow-lg text-white bg-gradient-to-br ${section.color} transform group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`p-4 rounded-xl bg-gradient-to-br ${section.color} text-white shadow-lg transform transition-transform duration-300 group-hover:scale-110`}>
                     <Icon className="w-7 h-7" strokeWidth={2} />
                   </div>
                   <div className="text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
                 </div>
@@ -170,7 +163,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <HeroSection />
-      <StatsSection />
+      <MissionSection />
       <FeaturesSection />
       
       {/* Call to Action */}
