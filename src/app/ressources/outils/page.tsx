@@ -1,28 +1,29 @@
-'use client';
-import React from 'react';
-import Link from 'next/link';
+"use client";
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowLeft, Info, Download } from 'lucide-react';
 
 export default function OutilsPage() {
+  const router = useRouter();
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Bouton retour */}
-        <Link
-          href="/ressources"
-          className="inline-flex items-center gap-2 mb-8 text-slate-300 hover:text-white transition-colors group"
+        <button
+          onClick={() => router.back()}
+          className="inline-flex items-center gap-2 mb-8 text-slate-300 hover:text-white transition-colors group cursor-pointer bg-transparent border-none"
         >
           <ArrowLeft className="w-5 h-5 -ml-1 group-hover:-translate-x-1 transition-transform" />
           <span>Retour aux Ressources</span>
-        </Link>
+        </button>
 
         {/* Titre et description courte */}
         <header className="mb-8">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">Outils Horlogers</h1>
           <p className="mt-3 text-slate-300 max-w-2xl">
             Aperçu synthétique des outils fondamentaux utilisés en atelier: brucelles, tournevis,
-            huiliers et instruments de contrôle pour l’assemblage et la maintenance des mouvements.
+            huiliers et instruments de contrôle pour l'assemblage et la maintenance des mouvements.
           </p>
         </header>
 
@@ -56,7 +57,7 @@ export default function OutilsPage() {
 
         {/* Bouton de téléchargement PDF */}
         <div className="mt-6">
-          <Link
+          <a
             href="/pdf/outils.pdf"
             target="_blank"
             rel="noopener noreferrer"
@@ -64,7 +65,7 @@ export default function OutilsPage() {
           >
             <Download className="w-5 h-5" />
             Télécharger le PDF pédagogique
-          </Link>
+          </a>
         </div>
       </div>
     </main>
