@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { Clock, Wrench, BookOpen, Hammer, Zap, Award } from 'lucide-react';
 
 const categories = [
@@ -8,7 +9,8 @@ const categories = [
     title: 'Gestes de base',
     description: 'Maîtrisez les techniques fondamentales',
     color: 'from-amber-500 to-yellow-600',
-    items: ['Rodage', 'Huilage', 'Démontage', 'Remontage']
+    items: ['Rodage', 'Huilage', 'Démontage', 'Remontage'],
+    link: '/ressources/gestes'
   },
   {
     id: 'outils',
@@ -16,7 +18,8 @@ const categories = [
     title: 'Maniement d\'outils',
     description: 'Apprenez à utiliser l\'outillage horloger',
     color: 'from-blue-500 to-indigo-600',
-    items: ['Tournevis', 'Brucelles', 'Loupe', 'Établi']
+    items: ['Tournevis', 'Brucelles', 'Loupe', 'Établi'],
+    link: '/ressources/outils'
   },
   {
     id: 'regulation',
@@ -24,7 +27,8 @@ const categories = [
     title: 'Réglage et précision',
     description: 'Techniques de réglage avancées',
     color: 'from-purple-500 to-pink-600',
-    items: ['Mise à l\'heure', 'Réglage précision', 'Calibrage']
+    items: ['Mise à l\'heure', 'Réglage précision', 'Calibrage'],
+    link: '/ressources/reglage'
   },
   {
     id: 'complications',
@@ -32,7 +36,8 @@ const categories = [
     title: 'Complications',
     description: 'Mécanismes complexes expliqués',
     color: 'from-red-500 to-orange-600',
-    items: ['Chronographe', 'Quantième', 'Phases de lune']
+    items: ['Chronographe', 'Quantième', 'Phases de lune'],
+    link: '/ressources/complications'
   },
   {
     id: 'tutorials',
@@ -40,7 +45,8 @@ const categories = [
     title: 'Tutoriels guidés',
     description: 'Pas à pas détaillés avec photos',
     color: 'from-green-500 to-emerald-600',
-    items: ['Débutant', 'Intermédiaire', 'Avancé']
+    items: ['Débutant', 'Intermédiaire', 'Avancé'],
+    link: '/ressources/tutoriels'
   },
   {
     id: 'certification',
@@ -48,7 +54,8 @@ const categories = [
     title: 'Certification',
     description: 'Validez vos compétences pratiques',
     color: 'from-teal-500 to-cyan-600',
-    items: ['Examens', 'Diplômes', 'Badges']
+    items: ['Examens', 'Diplômes', 'Badges'],
+    link: '/ressources/certification'
   }
 ];
 
@@ -86,7 +93,7 @@ export default function PratiqueHorlogere() {
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Icon Circle */}
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${category.color} flex items-center justify-center mb-6 group-hover:rotate-12 transition-transform duration-500 shadow-lg`}>
+                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${category.color} flex items-center justify-center mb-6 shadow-lg transition-transform duration-500 group-hover:rotate-12`}>
                   <Icon className="w-8 h-8 text-white" />
                 </div>
 
@@ -102,19 +109,21 @@ export default function PratiqueHorlogere() {
                 <ul className="space-y-2 mb-6">
                   {category.items.map((item, idx) => (
                     <li key={idx} className="flex items-center text-sm text-slate-300">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-3" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-3"></span>
                       {item}
                     </li>
                   ))}
                 </ul>
 
                 {/* CTA Button */}
-                <button className="w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-amber-500/50">
-                  Explorer
-                </button>
+                <Link href={category.link}>
+                  <button className="w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-amber-500/50">
+                    Explorer
+                  </button>
+                </Link>
 
                 {/* Hover Glow */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-500/0 via-amber-500/5 to-amber-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-500/0 via-amber-500/5 to-amber-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
               </div>
             );
           })}
