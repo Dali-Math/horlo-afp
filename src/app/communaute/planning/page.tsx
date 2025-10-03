@@ -19,6 +19,7 @@ function startOfWeek(date = new Date()) {
   d.setHours(0, 0, 0, 0);
   return d;
 }
+
 function formatDate(d: Date) {
   return d.toLocaleDateString('fr-CH', { day: '2-digit', month: '2-digit' });
 }
@@ -41,20 +42,30 @@ export default function PlanningPage() {
       if (raw) setEntries(JSON.parse(raw));
     } catch {}
   }, []);
+
   useEffect(() => {
-    try { localStorage.setItem(storageKey, JSON.stringify(entries)); } catch {}
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(entries));
+    } catch {}
   }, [entries]);
 
-  const weekDays = useMemo(() => Array.from({ length: 7 }, (_, i) => { const d = new Date(currentWeekStart); d.setDate(currentWeekStart.getDate() + i); return d; }), [currentWeekStart]);
+  const weekDays = useMemo(
+    () => Array.from({ length: 7 }, (_, i) => { const d = new Date(currentWeekStart); d.setDate(currentWeekStart.getDate() + i); return d; }),
+    [currentWeekStart]
+  );
+
   function nextWeek() { const d = new Date(currentWeekStart); d.setDate(d.getDate() + 7); setCurrentWeekStart(d); }
   function prevWeek() { const d = new Date(currentWeekStart); d.setDate(d.getDate() - 7); setCurrentWeekStart(d); }
   function thisWeek() { setCurrentWeekStart(startOfWeek(new Date())); }
+
   function openCreate(dayIdx?: number) {
     setEditing({ id: crypto.randomUUID(), title: '', day: typeof dayIdx === 'number' ? dayIdx : selectedDay, start: '08:00', end: '09:00', color: '#1e3a8a', description: '' });
     setShowForm(true);
   }
+
   function openEdit(item: PlanningEntry) { setEditing({ ...item }); setShowForm(true); }
   function remove(id: string) { setEntries((e) => e.filter((x) => x.id !== id)); }
+
   function save() {
     if (!editing) return;
     if (!editing.title.trim()) return alert('Titre requis');
@@ -62,6 +73,7 @@ export default function PlanningPage() {
     setEntries((prev) => (prev.some((x) => x.id === editing.id) ? prev.map((x) => (x.id === editing.id ? editing : x)) : [...prev, editing]));
     setShowForm(false); setEditing(null);
   }
+
   const dayEntries = useMemo(() => entries.filter((e) => e.day === selectedDay).sort((a, b) => a.start.localeCompare(b.start)), [entries, selectedDay]);
 
   return (
@@ -77,10 +89,10 @@ export default function PlanningPage() {
               451 périodes réparties sur 8 matières de septembre 2025 à mai 2026.
             </p>
             <div className="flex flex-wrap gap-2">
-              <a className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 text-sm font-medium transition" href="/pdfs/250919_HORL1_S925.pdf" target="_blank" rel="noopener noreferrer">
+              <a className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 text-sm font-medium transition" href="/pdfs/250919_HORL1_S925.pdf" rel="noopener noreferrer" target="_blank">
                 <Download className="w-4 h-4" /> Télécharger le planning (PDF)
               </a>
-              <a className="inline-flex items-center gap-2 px-4 py-2 border border-amber-600 text-amber-700 rounded-md hover:bg-amber-50 text-sm font-medium transition" href="/pdfs/250919_HORL1_S925.pdf" target="_blank" rel="noopener noreferrer">
+              <a className="inline-flex items-center gap-2 px-4 py-2 border border-amber-600 text-amber-700 rounded-md hover:bg-amber-50 text-sm font-medium transition" href="/pdfs/250919_HORL1_S925.pdf" rel="noopener noreferrer" target="_blank">
                 <ExternalLink className="w-4 h-4" /> Consulter en ligne
               </a>
             </div>
@@ -104,10 +116,12 @@ export default function PlanningPage() {
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
+
           <div className="inline-flex rounded-md overflow-hidden border border-slate-200 bg-white">
             <button onClick={() => setView('week')} className={`px-3 py-2 text-sm ${view === 'week' ? 'bg-amber-600 text-white' : 'bg-white hover:bg-slate-50 text-slate-700'}`}>Semaine</button>
             <button onClick={() => setView('day')} className={`px-3 py-2 text-sm ${view === 'day' ? 'bg-amber-600 text-white' : 'bg-white hover:bg-slate-50 text-slate-700'}`}>Journée</button>
           </div>
+
           <button onClick={() => openCreate()} className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-amber-600 text-white hover:bg-amber-700 active:scale-[.99]">
             <Plus className="w-4 h-4" /> Nouvelle tâche
           </button>
@@ -155,7 +169,7 @@ export default function PlanningPage() {
                 <div className="p-2 text-xs text-slate-500 bg-slate-50">{String(h).padStart(2, '0')}:00</div>
                 <div className="p-2 min-h-[3rem] bg-white">
                   {dayEntries.filter((e) => e.start <= `${String(h).padStart(2, '0')}:59` && e.end >= `${String(h).padStart(2, '0')}:00`).map((e) => (
-                    <div key={e.id} className="mb-2 rounded-md text-xs text-slate-900 shadow border border-slate-200 bg-white flex items-center justify-between" style={{ backgroundColor: e.color || '#f8fafc' }}>
+                    <div className="mb-2 rounded-md text-xs text-slate-900 shadow border border-slate-200 bg-white flex items-center justify-between" key={e.id} style={{ backgroundColor: e.color }}>
                       <div className="px-2 py-1 truncate">{e.title} <span className="opacity-70">({e.start}–{e.end})</span></div>
                       <div className="flex items-center gap-1 pr-1">
                         <button className="p-1 hover:bg-slate-50 rounded" onClick={() => openEdit(e)} aria-label="Modifier"><Pencil className="w-4 h-4 text-slate-700" /></button>
@@ -204,14 +218,13 @@ export default function PlanningPage() {
             <div className="p-4 space-y-3">
               <div>
                 <label className="block text-sm text-slate-700 mb-1">Titre</label>
-                <input className="w-full border rounded px-3 py-2 text-sm bg-white text-slate-900 placeholder:text-slate-400" value={editing.title} onChange={(e) => setEditing({ ...editing, title: e.target.value })} placeholder="Ex: Révision du calibre" />
+                <input className="w-full border rounded px-3 py-2 text-sm bg-white text-slate-900 placeholder:text-slate-400" onChange={(e) => setEditing({ ...editing, title: e.target.value })} value={editing.title} placeholder="Ex: Révision du calibre" />
               </div>
               <div>
                 <label className="block text-sm text-slate-700 mb-1">Description</label>
-                <textarea className="w-full border rounded px-3 py-2 text-sm resize-y bg-white text-slate-900 placeholder:text-slate-400" rows={3} value={editing.description || ''} onChange={(e) => setEditing({ ...editing, description: e.target.value })} placeholder="Détails, matériel, objectifs..." />
+                <textarea className="w-full border rounded px-3 py-2 text-sm resize-y bg-white text-slate-900 placeholder:text-slate-400" rows={3} onChange={(e) => setEditing({ ...editing, description: e.target.value })} value={editing.description} placeholder="Détails, matériel, objectifs..." />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm text-slate-700 mb-1">Jour</label>
-                  <select className="w-full border rounded px-3 py-2 text-sm bg-white text-slate-900" value={editing.day} onChange={(e) => setEditing({ ...editing, day: Number(e.target.value) })}>
-                    {DAYS.map((d, idx) => (<
+                  <select className="w-full border rounded px-3 py-2 text-sm bg-white text-slate-900" onChange={(e) => setEditing({ ...editing, day: Number(e.target.value) })} value={
