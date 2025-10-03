@@ -1,18 +1,21 @@
 "use client";
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 export default function Certification() {
+  const router = useRouter();
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Bouton retour */}
         <div className="mb-8">
-          <Link href="/ressources">
-            <span className="inline-flex items-center px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors">
-              ← Retour aux ressources
-            </span>
-          </Link>
+          <button 
+            onClick={() => router.back()}
+            className="inline-flex items-center px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors cursor-pointer"
+          >
+            ← Retour aux ressources
+          </button>
         </div>
 
         {/* Encadré explicatif */}
@@ -40,15 +43,17 @@ export default function Certification() {
         <section className="space-y-6 max-w-3xl mx-auto">
           <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
             <h2 className="text-xl font-semibold text-cyan-400 mb-2">AFP — Attestation Fédérale de Formation Professionnelle</h2>
-            <p className="text-slate-300">Parcours de 2 ans axé sur les bases de l’horlogerie (démontage, remontage, outillage, contrôle qualité élémentaire). Idéal pour une entrée rapide et pratique dans le métier, avec accompagnement en entreprise.</p>
+            <p className="text-slate-300">Parcours de 2 ans axé sur les bases de l'horlogerie (démontage, remontage, outillage, contrôle qualité élémentaire). Idéal pour une entrée rapide et pratique dans le métier, avec accompagnement en entreprise.</p>
           </div>
+
           <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
             <h2 className="text-xl font-semibold text-cyan-400 mb-2">CFC — Certificat Fédéral de Capacité</h2>
             <p className="text-slate-300">Formation complète sur 3 ans couvrant la production, le réglage, la maintenance et le contrôle qualité avancé. Référence pour exercer comme horloger·ère de production ou praticien·ne.</p>
           </div>
+
           <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
             <h2 className="text-xl font-semibold text-cyan-400 mb-2">WOSTEP — Formations spécialisées</h2>
-            <p className="text-slate-300">Modules avancés pour professionnels: complications, chronographes, tourbillons, échappements, ainsi que des volets gestion d’atelier et certification.</p>
+            <p className="text-slate-300">Modules avancés pour professionnels: complications, chronographes, tourbillons, échappements, ainsi que des volets gestion d'atelier et certification.</p>
           </div>
         </section>
 
