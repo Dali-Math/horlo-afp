@@ -14,7 +14,7 @@ export default function TutorielsGuides() {
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           Retour à Pratique
         </Link>
-
+        
         {/* Encadré pédagogique */}
         <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-slate-700/50">
           <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-transparent">
@@ -60,6 +60,7 @@ export default function TutorielsGuides() {
                   <li>Contrôles de qualité (jeu, pivots, endshake)</li>
                 </ol>
               </div>
+
               <div className="bg-slate-800/40 rounded-xl p-5 border border-slate-700/50">
                 <h3 className="text-xl font-semibold text-white mb-3">Remontage et huilage</h3>
                 <ol className="list-decimal list-inside text-slate-300 space-y-2">
@@ -69,7 +70,7 @@ export default function TutorielsGuides() {
                   <li>Pose de l'ancre et test de liberté</li>
                   <li>Pose du balancier-spiral</li>
                   <li>Côté cadran : minuterie et lubrification (9501)</li>
-                  <li>Réglage de base (amplitude > 270°, delta < 10 s/j)</li>
+                  <li>Réglage de base (amplitude &gt; 270°, delta &lt; 10 s/j)</li>
                   <li>Contrôle final et mise en boîte</li>
                 </ol>
               </div>
