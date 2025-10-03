@@ -70,7 +70,7 @@ export default function TutorielsGuides() {
                   <li>Pose de l'ancre et test de liberté</li>
                   <li>Pose du balancier-spiral</li>
                   <li>Côté cadran : minuterie et lubrification (9501)</li>
-                  <li>Réglage de base (amplitude &gt; 270°, delta &lt; 10 s/j)</li>
+                  <li>Réglage de base (amplitude > 270°, delta < 10 s/j)</li>
                   <li>Contrôle final et mise en boîte</li>
                 </ol>
               </div>
