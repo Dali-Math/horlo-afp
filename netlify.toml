@@ -7,9 +7,3 @@
 
 [build.environment]
   NODE_VERSION = "20"
-
-# Redirect all routes to Next.js for dynamic routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
