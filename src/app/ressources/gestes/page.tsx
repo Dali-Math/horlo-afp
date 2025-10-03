@@ -15,7 +15,7 @@ export default function GestesDeBase() {
           className="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 mb-8 transition-colors cursor-pointer bg-transparent border-none"
         >
           <ArrowLeft className="w-5 h-5" />
-          Retour aux ressources
+          Retour
         </button>
 
         {/* Titre */}
