@@ -1,6 +1,6 @@
 export default function RessourcesPage() {
   return (
-    <div className="min-h-screen bg-[#f6f8fa]" style={{ backgroundColor: '#f6f8fa' }}>
+    <div style={{ minHeight: '100vh', background: '#f0f2f5' }}>
       <div className="container mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">📚 Ressources</h1>
         <p className="text-lg text-gray-700 mb-8">
