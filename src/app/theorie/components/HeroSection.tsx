@@ -29,7 +29,7 @@ export default function HeroSection() {
               <span className="bg-gradient-to-r from-gold-400 via-yellow-300 to-gold-500 bg-clip-text text-transparent">
                 Théorie Horlogère
               </span>
-              <br/>
+              <br />
               <span className="text-white">Professionnelle</span>
             </h1>
 
@@ -66,8 +66,8 @@ export default function HeroSection() {
               {/* Gear Wheel SVG */}
               <svg className="w-full h-full" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                 {/* Main gear */}
-                <g className="animate-spin-slow" style={{transformOrigin: 'center'}}>
-                  <circle cx="100" cy="100" r="60" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2"/>
+                <g className="animate-spin-slow" style={{transformOrigin: '100px 100px'}}>
+                  <circle cx="100" cy="100" r="60" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" />
                   {[...Array(12)].map((_, i) => (
                     <rect 
                       key={i}
@@ -82,7 +82,7 @@ export default function HeroSection() {
                       }}
                     />
                   ))}
-                  <circle cx="100" cy="100" r="15" fill="rgba(251, 191, 36, 0.4)" stroke="rgba(255,255,255,0.6)" strokeWidth="2"/>
+                  <circle cx="100" cy="100" r="15" fill="rgba(251, 191, 36, 0.4)" stroke="rgba(255,255,255,0.6)" strokeWidth="2" />
                 </g>
 
                 {/* Bridge/Pont de montre */}
@@ -92,19 +92,19 @@ export default function HeroSection() {
                   stroke="rgba(255,255,255,0.5)" 
                   strokeWidth="1.5"
                 />
-                <circle cx="65" cy="85" r="3" fill="rgba(251, 191, 36, 0.6)"/>
-                <circle cx="135" cy="85" r="3" fill="rgba(251, 191, 36, 0.6)"/>
+                <circle cx="65" cy="85" r="3" fill="rgba(251, 191, 36, 0.6)" />
+                <circle cx="135" cy="85" r="3" fill="rgba(251, 191, 36, 0.6)" />
 
                 {/* Compass/Compas */}
                 <g className="opacity-70">
-                  <line x1="160" y1="150" x2="160" y2="120" stroke="rgba(255,255,255,0.6)" strokeWidth="2"/>
-                  <line x1="160" y1="120" x2="175" y2="155" stroke="rgba(251, 191, 36, 0.6)" strokeWidth="2"/>
-                  <circle cx="160" cy="120" r="3" fill="rgba(255,255,255,0.8)"/>
+                  <line x1="160" y1="150" x2="160" y2="120" stroke="rgba(255,255,255,0.6)" strokeWidth="2" />
+                  <line x1="160" y1="120" x2="175" y2="155" stroke="rgba(251, 191, 36, 0.6)" strokeWidth="2" />
+                  <circle cx="160" cy="120" r="3" fill="rgba(255,255,255,0.8)" />
                 </g>
 
                 {/* Small decorative gear */}
                 <g className="animate-reverse-spin" style={{transformOrigin: '45px 160px'}}>
-                  <circle cx="45" cy="160" r="20" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5"/>
+                  <circle cx="45" cy="160" r="20" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
                   {[...Array(8)].map((_, i) => (
                     <rect 
                       key={i}
@@ -119,7 +119,7 @@ export default function HeroSection() {
                       }}
                     />
                   ))}
-                  <circle cx="45" cy="160" r="6" fill="rgba(251, 191, 36, 0.3)"/>
+                  <circle cx="45" cy="160" r="6" fill="rgba(251, 191, 36, 0.3)" />
                 </g>
               </svg>
 
@@ -128,28 +128,6 @@ export default function HeroSection() {
               <div className="absolute top-1/4 -right-4 w-2 h-2 bg-white/60 rounded-full animate-pulse"></div>
               <div className="absolute -bottom-4 right-1/4 w-3 h-3 bg-gold-500 rounded-full animate-ping"></div>
               <div className="absolute bottom-1/4 -left-4 w-2 h-2 bg-white/50 rounded-full animate-bounce"></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Stats Section */}
-        <div className="mt-16 pt-12 border-t border-white/20">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-3xl font-bold text-gold-400 mb-2">50+</div>
-              <div className="text-white/80 text-sm">Cours Théoriques</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-white mb-2">10k+</div>
-              <div className="text-white/80 text-sm">Étudiants Formés</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-gold-400 mb-2">95%</div>
-              <div className="text-white/80 text-sm">Taux de Réussite</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-white mb-2">24/7</div>
-              <div className="text-white/80 text-sm">Support Expert</div>
             </div>
           </div>
         </div>
