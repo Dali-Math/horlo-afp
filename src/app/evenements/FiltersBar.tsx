@@ -1,6 +1,5 @@
 'use client';
-
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import {
   Calendar,
@@ -8,9 +7,10 @@ import {
   Wrench,
   Presentation,
   Image as ImageIcon,
+  Sparkles,
 } from 'lucide-react';
 
-type FilterCategory = 'Agenda' | 'Salons' | 'Ateliers' | 'Conférences' | 'Expositions';
+type FilterCategory = 'Tous' | 'Salons' | 'Ateliers' | 'Conférences' | 'Expositions';
 
 interface FilterItem {
   id: FilterCategory;
@@ -19,19 +19,22 @@ interface FilterItem {
 }
 
 const filters: FilterItem[] = [
-  { id: 'Agenda', label: 'Agenda', icon: Calendar },
+  { id: 'Tous', label: 'Tous', icon: Sparkles },
   { id: 'Salons', label: 'Salons', icon: Store },
   { id: 'Ateliers', label: 'Ateliers', icon: Wrench },
   { id: 'Conférences', label: 'Conférences', icon: Presentation },
   { id: 'Expositions', label: 'Expositions', icon: ImageIcon },
 ];
 
-export default function FiltersBar() {
-  const [selectedFilter, setSelectedFilter] = useState<FilterCategory>('Agenda');
+interface FiltersBarProps {
+  selectedCategory: string;
+  onCategoryChange: (category: string) => void;
+}
 
+export default function FiltersBar({ selectedCategory, onCategoryChange }: FiltersBarProps) {
   return (
     <section
-      className="w-full py-8 bg-dark-900"
+      className="w-full py-8 bg-gradient-to-b from-gray-900 to-gray-800"
       aria-label="Filtres d'événements"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,20 +47,20 @@ export default function FiltersBar() {
           >
             {filters.map((filter) => {
               const Icon = filter.icon;
-              const isSelected = selectedFilter === filter.id;
+              const isSelected = selectedCategory === filter.id;
 
               return (
                 <motion.button
                   key={filter.id}
-                  onClick={() => setSelectedFilter(filter.id)}
+                  onClick={() => onCategoryChange(filter.id)}
                   className={`
                     flex flex-col items-center gap-2 px-6 py-4 rounded-lg
                     transition-all duration-300
-                    focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500
+                    focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500
                     ${
                       isSelected
-                        ? 'bg-dark-800 text-gold-500 shadow-[0_0_20px_rgba(212,175,55,0.4)]'
-                        : 'bg-dark-800/50 text-light-100 hover:text-gold-500 hover:shadow-[0_0_15px_rgba(212,175,55,0.2)]'
+                        ? 'bg-gray-800 text-yellow-500 shadow-[0_0_20px_rgba(234,179,8,0.4)]'
+                        : 'bg-gray-800/50 text-gray-100 hover:text-yellow-500 hover:shadow-[0_0_15px_rgba(234,179,8,0.2)]'
                     }
                   `}
                   role="tab"
@@ -77,13 +80,12 @@ export default function FiltersBar() {
                   {/* Icon above label */}
                   <Icon
                     className={`w-5 h-5 ${
-                      isSelected ? 'text-gold-500' : 'text-light-100'
+                      isSelected ? 'text-yellow-500' : 'text-gray-100'
                     }`}
                     aria-hidden="true"
                   />
-
                   {/* Label */}
-                  <span className="text-sm font-medium whitespace-nowrap">
+                  <span className="text-sm font-medium whitespace-nowrap font-['Inter']">
                     {filter.label}
                   </span>
                 </motion.button>
