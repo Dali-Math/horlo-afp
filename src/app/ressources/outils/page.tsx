@@ -11,11 +11,11 @@ export default function OutilsPage() {
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Bouton retour */}
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push('/pratique')}
           className="inline-flex items-center gap-2 mb-8 text-slate-300 hover:text-white transition-colors group cursor-pointer bg-transparent border-none"
         >
           <ArrowLeft className="w-5 h-5 -ml-1 group-hover:-translate-x-1 transition-transform" />
-          <span>Retour aux Ressources</span>
+          Retour aux Ressources
         </button>
 
         {/* Titre et description courte */}
