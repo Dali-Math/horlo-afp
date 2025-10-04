@@ -1,10 +1,10 @@
 "use client";
-
 import React from 'react';
 import Link from 'next/link';
 import { Clock, Wrench, BookOpen, Hammer, Zap, Award, Download, PlayCircle, FileText } from 'lucide-react';
 
-const SWISS_YT_EMBED = "https://www.youtube.com/embed/videoseries?list=PLSWISS_OFFICIAL_PLAYLIST_ID";
+// Local video path for banner
+const BANNER_VIDEO_SRC = "/videos/Mécanique processus de réparation de montres. Poche ouverte montre-bracelet — Vidéo de stock par ©rrudenkois - 449602546.mp4";
 
 const gallery = [
   { src: '/pratique/gestes/rodage-1.jpg', alt: 'Rodage - étape 1' },
@@ -49,25 +49,25 @@ function SectionTitle({ children, subtitle }: { children: React.ReactNode; subti
 export default function PratiqueHorlogere() {
   return (
     <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_100%_0%,rgba(255,0,0,.08),transparent_60%),radial-gradient(1000px_500px_at_0%_100%,rgba(255,255,255,.06),transparent_60%),linear-gradient(135deg,#0f172a,#0b1220)] text-white">
-
-      {/* Swiss banner video */}
+      {/* Banner video (local, autoplay loop, muted, no controls) */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none opacity-20 bg-[url('/swiss/pattern-cross.svg')] bg-[length:40px_40px]"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/10 shadow-xl">
-            <iframe
-              className="w-full h-full"
-              src={SWISS_YT_EMBED}
-              title="Horlogerie Suisse officielle"
-              loading="lazy"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
+          <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-black">
+            <video
+              className="w-full h-full object-cover"
+              src={BANNER_VIDEO_SRC}
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls={false}
+              poster="/images/black-poster.png"
             />
           </div>
           <div className="mt-4 flex items-center gap-3 text-slate-300">
             <PlayCircle className="w-5 h-5 text-red-400" />
-            <p>Vidéos officielles de l’horlogerie suisse — inspiration et excellence.</p>
+            Vidéo d’ouverture locale — mécanique horlogère en boucle.
           </div>
         </div>
       </section>
@@ -83,7 +83,7 @@ export default function PratiqueHorlogere() {
                 className="group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-red-400/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-red-500/20"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className={`w-16 h-16 flex items-center justify-center mb-6 rounded-2xl shadow-lg bg-gradient-to-br ${category.color}`}>
+                <div className="w-16 h-16 flex items-center justify-center mb-6 rounded-2xl shadow-lg bg-gradient-to-br from-red-500/20 to-red-600/10">
                   <Icon className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-red-300 transition-colors">{category.title}</h3>
@@ -96,7 +96,7 @@ export default function PratiqueHorlogere() {
                     </li>
                   ))}
                 </ul>
-                <Link href={category.link} className="block">
+                <Link className="block" href={category.link}>
                   <button className="w-full py-3 px-4 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-red-500/40">
                     Explorer
                   </button>
@@ -113,7 +113,7 @@ export default function PratiqueHorlogere() {
         <SectionTitle subtitle="Images pédagogiques HD et animations">Galerie des gestes</SectionTitle>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {gallery.map((item, idx) => (
-            <div key={idx} className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/10">
+            <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/10" key={idx}>
               <img src={item.src} alt={item.alt} className="object-cover w-full h-full hover:scale-105 transition-transform duration-300" />
             </div>
           ))}
@@ -125,7 +125,7 @@ export default function PratiqueHorlogere() {
         <SectionTitle subtitle="Pas à pas en vidéo avec fiches PDF téléchargeables">Tutoriels vidéo</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {tutorials.map((tuto) => (
-            <div key={tuto.id} className="bg-slate-900/60 border border-white/10 rounded-2xl overflow-hidden hover:border-red-400/40 transition">
+            <div className="bg-slate-900/60 border border-white/10 rounded-2xl overflow-hidden hover:border-red-400/40 transition" key={tuto.id}>
               <div className="aspect-video w-full">
                 <iframe
                   className="w-full h-full"
@@ -140,11 +140,11 @@ export default function PratiqueHorlogere() {
               <div className="p-5">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-semibold text-white">{tuto.title}</h3>
-                  <span className="text-xs px-2 py-0.5 rounded bg-white/10 text-slate-200">{tuto.level}</span>
+                  <span className="text-xs px-2 py-0.5 rounded bg白/10 text-slate-200">{tuto.level}</span>
                 </div>
                 <p className="text-sm text-slate-400 mb-4">Durée ~ {tuto.duration}</p>
                 <div className="flex items-center gap-3">
-                  <Link href={tuto.pdf} target="_blank" rel="noopener" className="inline-flex items-center gap-2 text-sm font-medium text-red-300 hover:text-white">
+                  <Link className="inline-flex items-center gap-2 text-sm font-medium text-red-300 hover:text-white" href={tuto.pdf} rel="noopener" target="_blank">
                     <Download className="w-4 h-4" /> Télécharger le PDF
                   </Link>
                 </div>
@@ -174,7 +174,7 @@ export default function PratiqueHorlogere() {
             src="/pdfs/huilage.pdf"
             width="100%"
             height="500px"
-            style={{ border: "1px solid #ccc", borderRadius: "0.75rem" }}
+            style={{ border: '1px solid #ccc', borderRadius: '0.75rem' }}
             title="Guide huilage montre mécanique"
             className="mt-4 rounded-xl"
           />
@@ -198,7 +198,7 @@ export default function PratiqueHorlogere() {
                   <div className="font-semibold text-white leading-tight">{pdf.title}</div>
                   <div className="text-xs text-slate-400">PDF illustré</div>
                 </div>
-                <Link href={pdf.href} target="_blank" rel="noopener" className="inline-flex items-center gap-2 text-sm font-medium text-red-300 hover:text-white">
+                <Link className="inline-flex items-center gap-2 text-sm font-medium text-red-300 hover:text-white" href={pdf.href} rel="noopener" target="_blank">
                   <Download className="w-4 h-4" />
                 </Link>
               </div>
@@ -213,7 +213,7 @@ export default function PratiqueHorlogere() {
           <div className="bg-gradient-to-r from-slate-800/60 to-slate-900/60 backdrop-blur-sm rounded-2xl p-10 border border-slate-700/50">
             <h2 className="text-3xl font-bold mb-4 text-white">Prêt à perfectionner vos compétences ?</h2>
             <p className="text-slate-300 mb-8 max-w-2xl">Rejoignez notre communauté et accédez à des centaines de tutoriels exclusifs</p>
-            <Link href="/communaute" className="inline-block">
+            <Link className="inline-block" href="/communaute">
               <button className="px-8 py-4 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-red-500/40">
                 Commencer maintenant
               </button>
