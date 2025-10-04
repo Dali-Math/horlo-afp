@@ -6,7 +6,7 @@ import { useEffect } from "react";
 export default function PrecisionBalance() {
   const router = useRouter();
 
-  // ✨ Animation d’apparition au scroll
+  // ✨ Animation fluide à l’apparition
   useEffect(() => {
     const elements = document.querySelectorAll(".fade-in-scroll");
     const observer = new IntersectionObserver(
@@ -27,30 +27,35 @@ export default function PrecisionBalance() {
     return () => observer.disconnect();
   }, []);
 
+  // 🧩 Sections avec images externes
   const sections = [
     {
       titre: "1. Vérification du spiral",
       texte:
         "Le spiral doit être parfaitement centré, parallèle au balancier et exempt de toute déformation. Sa planéité garantit un battement régulier et précis.",
-      image: "/images/balance-spiral.jpg",
+      image:
+        "https://archive.horlogerie-suisse.com/Theoriehorlogerie/images/remontage/petit/106-0636_IMG.jpg",
     },
     {
       titre: "2. Ajustement des vis du balancier",
       texte:
         "Les vis de réglage situées sur la serge du balancier permettent d’équilibrer sa rotation. Tournez-les par paires opposées pour corriger les déséquilibres.",
-      image: "/images/balance-vis.jpg",
+      image:
+        "https://archive.horlogerie-suisse.com/Theoriehorlogerie/images/remontage/petit/106-0639_IMG.jpg",
     },
     {
       titre: "3. Réglage thermique",
       texte:
         "Les variations de température affectent la marche. Certains balanciers bimétalliques compensent ces effets grâce à une conception spécifique.",
-      image: "/images/balance-thermique.jpg",
+      image:
+        "https://archive.horlogerie-suisse.com/Theoriehorlogerie/images/remontage/petit/106-0648_IMG.jpg",
     },
     {
       titre: "4. Contrôle final sur vibrographe",
       texte:
         "Placez le mouvement sur le vibrographe et mesurez l’amplitude, la dérive et la symétrie du tic-tac. Ajustez jusqu’à atteindre les tolérances établies.",
-      image: "/images/balance-vibrographe.jpg",
+      image:
+        "https://archive.horlogerie-suisse.com/Theoriehorlogerie/images/remontage/petit/106-0653_IMG.jpg",
     },
   ];
 
@@ -58,7 +63,7 @@ export default function PrecisionBalance() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="max-w-6xl mx-auto px-4 py-16 space-y-12">
 
-        {/* Navigation haut */}
+        {/* 🔙 Navigation haut */}
         <div className="flex justify-between items-center fade-in-scroll opacity-0 translate-y-8 scale-95 transition-all duration-700 ease-out">
           <button
             onClick={() => router.push("/precision")}
@@ -69,7 +74,7 @@ export default function PrecisionBalance() {
           </button>
         </div>
 
-        {/* Titre principal */}
+        {/* 🏷️ Titre principal */}
         <div className="text-center fade-in-scroll opacity-0 translate-y-8 scale-95 transition-all duration-700 ease-out">
           <h1 className="text-4xl font-bold mb-4 text-amber-400">
             Ajustement de la précision — Réglage du balancier
@@ -80,7 +85,7 @@ export default function PrecisionBalance() {
           </p>
         </div>
 
-        {/* Sections pédagogiques */}
+        {/* 📘 Sections pédagogiques */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {sections.map((item, idx) => (
             <div
@@ -102,7 +107,7 @@ export default function PrecisionBalance() {
           ))}
         </div>
 
-        {/* Bloc final + PDF */}
+        {/* 🧾 Bloc final + bouton PDF */}
         <div className="text-center bg-slate-800/50 border border-slate-700 rounded-lg p-6 fade-in-scroll opacity-0 translate-y-8 scale-95 transition-all duration-700 ease-out">
           <h3 className="text-amber-400 text-2xl font-bold mb-4">
             Fin du module de réglage
@@ -114,17 +119,17 @@ export default function PrecisionBalance() {
           </p>
 
           <a
-            href="/pdfs/precision-balance.pdf"
+            href="https://archive.horlogerie-suisse.com/Theoriehorlogerie/remontage2.html"
             target="_blank"
             rel="noopener"
             className="inline-flex items-center gap-3 bg-amber-500 hover:bg-amber-600 text-white font-semibold px-8 py-4 rounded-lg transition-all transform hover:scale-105 shadow-lg"
           >
             <Download className="w-6 h-6" />
-            Télécharger la fiche PDF
+            Consulter la fiche complète
           </a>
         </div>
 
-        {/* Navigation bas */}
+        {/* 🔚 Navigation bas */}
         <div className="flex justify-between items-center pt-8 border-t border-slate-700 fade-in-scroll opacity-0 translate-y-8 scale-95 transition-all duration-700 ease-out">
           <button
             onClick={() => router.push("/precision")}
