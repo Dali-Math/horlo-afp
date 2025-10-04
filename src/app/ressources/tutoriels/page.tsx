@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Download } from 'lucide-react';
@@ -70,22 +72,23 @@ export default function TutorielsGuides() {
                   <li>Pose de l'ancre et test de liberté</li>
                   <li>Pose du balancier-spiral</li>
                   <li>Côté cadran : minuterie et lubrification (9501)</li>
-                  <li>Réglage de base (amplitude > 270°, delta < 10 s/j)</li>
+                  <li>Réglage de base (amplitude &gt; 270°, delta &lt; 10 s/j)</li>
                   <li>Contrôle final et mise en boîte</li>
                 </ol>
               </div>
             </div>
           </div>
 
-          {/* Bouton téléchargement PDF */}
+          {/* Bouton consultation PDF */}
           <div className="text-center">
             <a
               href="/documents/tutoriels.pdf"
-              download="tutoriels.pdf"
+              target="_blank"
+              rel="noopener"
               className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/50"
             >
               <Download className="w-5 h-5" />
-              Télécharger le tutoriel PDF
+              Consulter le tutoriel PDF
             </a>
           </div>
         </div>
