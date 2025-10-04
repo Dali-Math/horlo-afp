@@ -78,24 +78,25 @@ export default function GestesDeBase() {
         <div className="mb-12">
           <h2 className="text-2xl font-bold mb-6 text-amber-400">Étapes du remontage</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              "/images/remontage1.jpg",
-              "/images/remontage2.jpg",
-              "/images/remontage3.jpg",
-              "/images/remontage4.jpg",
-              "/images/remontage5.jpg",
-              "/images/remontage6.jpg",
-              "/images/remontage7.jpg",
-              "/images/remontage8.jpg",
-            ].map((src, idx) => (
-              <img
-                key={idx}
-                src={src}
-                alt={`Remontage - étape ${idx + 1}`}
-                className="rounded-xl object-cover w-full"
-              />
-            ))}
-          </div>
+  {[
+    "/images/remontage1.jpg",
+    "/images/remontage2.jpg",
+    "/images/remontage3.jpg",
+    "/images/remontage4.jpg",
+    "/images/remontage5.jpg",
+    "/images/remontage6.jpg",
+    "/images/remontage7.jpg",
+    "/images/remontage8.jpg",
+  ].map((src, idx) => (
+    <img
+      key={idx}
+      src={src}
+      alt={`Remontage ${idx + 1}`}
+      className="rounded-xl border border-gray-700 object-cover w-full h-auto"
+    />
+  ))}
+</div>
+
         </div>
 
         {/* Bouton de consultation PDF */}
