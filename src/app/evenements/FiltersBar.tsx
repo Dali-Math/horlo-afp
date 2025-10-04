@@ -33,9 +33,12 @@ interface FiltersBarProps {
 
 export default function FiltersBar({ selectedCategory, onCategoryChange }: FiltersBarProps) {
   return (
-    <section
+    <motion.section
       className="w-full py-8 bg-gradient-to-b from-gray-900 to-gray-800"
       aria-label="Filtres d'événements"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Horizontal scrollable container on mobile */}
@@ -45,7 +48,7 @@ export default function FiltersBar({ selectedCategory, onCategoryChange }: Filte
             role="tablist"
             aria-label="Catégories d'événements"
           >
-            {filters.map((filter) => {
+            {filters.map((filter, index) => {
               const Icon = filter.icon;
               const isSelected = selectedCategory === filter.id;
 
@@ -68,10 +71,11 @@ export default function FiltersBar({ selectedCategory, onCategoryChange }: Filte
                   aria-controls={`panel-${filter.id}`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    duration: 0.3,
+                    duration: 0.4,
+                    delay: index * 0.1,
                     type: 'spring',
                     stiffness: 300,
                     damping: 20,
@@ -105,6 +109,6 @@ export default function FiltersBar({ selectedCategory, onCategoryChange }: Filte
           scrollbar-width: none;
         }
       `}</style>
-    </section>
+    </motion.section>
   );
 }
