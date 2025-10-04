@@ -1,10 +1,8 @@
 'use client';
-
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { questions, Question } from './questions';
 
 type GameState = 'welcome' | 'playing' | 'gameOver';
-
 interface GameStats {
   correctAnswers: number;
   totalQuestions: number;
@@ -18,7 +16,7 @@ export default function YesNoGame() {
   const [score, setScore] = useState<GameStats>({
     correctAnswers: 0,
     totalQuestions: 0,
-    wrongAnswers: 0
+    wrongAnswers: 0,
   });
   const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
   const [showExplanation, setShowExplanation] = useState(false);
@@ -27,7 +25,37 @@ export default function YesNoGame() {
     explanation: string;
   } | null>(null);
 
-  // Mélanger les questions au début du jeu
+  // TIMER state
+  const [timeLeft, setTimeLeft] = useState(20);
+  const [timeUp, setTimeUp] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const clearTimer = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
+  const startTimer = () => {
+    clearTimer();
+    setTimeLeft(20);
+    setTimeUp(false);
+    intervalRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearTimer();
+          setTimeUp(true);
+          // Auto-fault when time reaches 0
+          handleAnswer(false, true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  // Shuffle questions at game start
   const shuffleQuestions = () => {
     const shuffled = [...questions].sort(() => Math.random() - 0.5);
     setShuffledQuestions(shuffled);
@@ -35,34 +63,60 @@ export default function YesNoGame() {
 
   const startGame = () => {
     if (playerName.trim() === '') return;
-    
     shuffleQuestions();
     setGameState('playing');
     setCurrentQuestionIndex(0);
     setScore({ correctAnswers: 0, totalQuestions: 0, wrongAnswers: 0 });
     setShowExplanation(false);
     setLastAnswer(null);
+    startTimer();
   };
 
-  const handleAnswer = (answer: boolean) => {
+  const proceedAfterAnswer = () => {
+    // Move to next question or end game after showing explanation
+    setTimeout(() => {
+      if (score.wrongAnswers >= 3) {
+        setGameState('gameOver');
+        setShowExplanation(false);
+        return;
+      }
+      if (currentQuestionIndex < shuffledQuestions.length - 1) {
+        setCurrentQuestionIndex((idx) => idx + 1);
+        setShowExplanation(false);
+        setLastAnswer(null);
+        startTimer(); // reset timer for next question
+      } else {
+        setGameState('gameOver');
+        setShowExplanation(false);
+      }
+    }, 2500);
+  };
+
+  const handleAnswer = (answer: boolean, fromTimeout: boolean = false) => {
+    // Prevent multiple answers while explanation is showing
+    if (showExplanation) return;
+
     const currentQuestion = shuffledQuestions[currentQuestionIndex];
     const isCorrect = answer === currentQuestion.correctAnswer;
-    
+
     const newStats = {
       ...score,
       totalQuestions: score.totalQuestions + 1,
       correctAnswers: isCorrect ? score.correctAnswers + 1 : score.correctAnswers,
-      wrongAnswers: isCorrect ? score.wrongAnswers : score.wrongAnswers + 1
+      wrongAnswers: isCorrect ? score.wrongAnswers : score.wrongAnswers + 1,
     };
-    
+
     setScore(newStats);
     setLastAnswer({
       correct: isCorrect,
-      explanation: currentQuestion.explanation
+      explanation: fromTimeout ? 'Temps écoulé !' : currentQuestion.explanation,
     });
     setShowExplanation(true);
-    
-    // GameOver si 3 mauvaises réponses
+
+    // stop timer upon answer or timeout
+    clearTimer();
+
+    // GameOver if 3 wrong answers
     if (newStats.wrongAnswers >= 3) {
       setTimeout(() => {
         setGameState('gameOver');
@@ -70,19 +124,9 @@ export default function YesNoGame() {
       }, 3000);
       return;
     }
-    
-    // Question suivante après 2.5 secondes
-    setTimeout(() => {
-      if (currentQuestionIndex < shuffledQuestions.length - 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setShowExplanation(false);
-        setLastAnswer(null);
-      } else {
-        // Toutes les questions terminées
-        setGameState('gameOver');
-        setShowExplanation(false);
-      }
-    }, 2500);
+
+    // Next question after 2.5 seconds
+    proceedAfterAnswer();
   };
 
   const resetGame = () => {
@@ -92,7 +136,21 @@ export default function YesNoGame() {
     setScore({ correctAnswers: 0, totalQuestions: 0, wrongAnswers: 0 });
     setShowExplanation(false);
     setLastAnswer(null);
+    setTimeLeft(20);
+    setTimeUp(false);
+    clearTimer();
   };
+
+  // Start or reset timer when question index changes while playing
+  useEffect(() => {
+    if (gameState === 'playing') {
+      startTimer();
+    } else {
+      clearTimer();
+    }
+    return () => clearTimer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameState]);
 
   const currentQuestion = shuffledQuestions[currentQuestionIndex];
 
@@ -103,12 +161,8 @@ export default function YesNoGame() {
           <div className="bg-white rounded-2xl shadow-2xl p-8 text-center border border-indigo-200">
             <div className="mb-6">
               <div className="text-6xl mb-4">🎯</div>
-              <h1 className="text-4xl font-bold text-indigo-900 mb-2">
-                Quiz Vrai/Faux Horlogerie
-              </h1>
-              <p className="text-lg text-slate-600 mb-6">
-                Testez vos connaissances en horlogerie !
-              </p>
+              <h1 className="text-4xl font-bold text-indigo-900 mb-2">Quiz Vrai/Faux Horlogerie</h1>
+              <p className="text-lg text-slate-600 mb-6">Testez vos connaissances en horlogerie !</p>
               <div className="bg-indigo-50 rounded-lg p-4 mb-6 text-left">
                 <h3 className="font-semibold text-indigo-800 mb-2">📋 Règles du jeu :</h3>
                 <ul className="text-sm text-indigo-700 space-y-1">
@@ -116,13 +170,13 @@ export default function YesNoGame() {
                   <li>• Vous avez droit à 3 erreurs maximum</li>
                   <li>• Score affiché en temps réel</li>
                   <li>• Explication après chaque réponse</li>
+                  <li>• 20 secondes par question</li>
                 </ul>
               </div>
             </div>
-            
             <div className="space-y-4">
               <div>
-                <label htmlFor="playerName" className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-700 mb-2" htmlFor="playerName">
                   Entrez votre pseudo :
                 </label>
                 <input
@@ -130,13 +184,12 @@ export default function YesNoGame() {
                   type="text"
                   value={playerName}
                   onChange={(e) => setPlayerName(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && startGame()}
+                  onKeyDown={(e) => e.key === 'Enter' && startGame()}
                   className="w-full px-4 py-3 border-2 border-indigo-200 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none text-center text-lg"
                   placeholder="Mon pseudo..."
                   maxLength={20}
                 />
               </div>
-              
               <button
                 onClick={startGame}
                 disabled={playerName.trim() === ''}
@@ -150,17 +203,12 @@ export default function YesNoGame() {
 
         {gameState === 'playing' && currentQuestion && (
           <div className="bg-white rounded-2xl shadow-2xl p-8 border border-indigo-200">
-            {/* Header avec score */}
             <div className="mb-6 text-center">
               <div className="flex justify-between items-center mb-4">
-                <div className="text-lg font-medium text-slate-600">
-                  👤 {playerName}
-                </div>
-                <div className="text-lg font-medium text-slate-600">
-                  Question {currentQuestionIndex + 1}/{shuffledQuestions.length}
-                </div>
+                <div className="text-lg font-medium text-slate-600">👤 {playerName}</div>
+                <div className="text-lg font-medium text-slate-600">Question {currentQuestionIndex + 1}/{shuffledQuestions.length}</div>
               </div>
-              
+
               <div className="flex justify-center space-x-6 text-sm">
                 <div className="flex items-center space-x-2">
                   <span className="text-green-600 font-bold">✅ {score.correctAnswers}</span>
@@ -174,15 +222,16 @@ export default function YesNoGame() {
                   <span className="text-yellow-600 font-bold">⚠️ {3 - score.wrongAnswers}</span>
                   <span className="text-slate-500">Chances</span>
                 </div>
+                <div className="flex items-center space-x-2">
+                  <span className={timeLeft <= 5 ? 'text-red-600 font-bold' : 'text-blue-600 font-bold'}>⏱️ {timeLeft}s</span>
+                  <span className="text-slate-500">Temps</span>
+                </div>
               </div>
             </div>
 
-            {/* Question */}
             <div className="mb-8">
               <div className="bg-slate-50 rounded-lg p-6 mb-6">
-                <h2 className="text-xl font-semibold text-slate-800 leading-relaxed">
-                  {currentQuestion.question}
-                </h2>
+                <h2 className="text-xl font-semibold text-slate-800 leading-relaxed">{currentQuestion.question}</h2>
               </div>
 
               {!showExplanation && (
@@ -203,24 +252,16 @@ export default function YesNoGame() {
               )}
             </div>
 
-            {/* Explication */}
             {showExplanation && lastAnswer && (
-              <div className={`rounded-lg p-6 border-2 ${
-                lastAnswer.correct 
-                  ? 'bg-green-50 border-green-200 text-green-800' 
-                  : 'bg-red-50 border-red-200 text-red-800'
-              }`}>
+              <div className={`${lastAnswer.correct ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'} border-2 rounded-lg p-6`}>
                 <div className="flex items-center space-x-2 mb-3">
-                  <span className="text-2xl">
-                    {lastAnswer.correct ? '✅' : '❌'}
-                  </span>
-                  <span className="font-bold text-lg">
-                    {lastAnswer.correct ? 'Bonne réponse !' : 'Fausse réponse'}
-                  </span>
+                  <span className="text-2xl">{lastAnswer.correct ? '✅' : '❌'}</span>
+                  <span className="font-bold text-lg">{lastAnswer.correct ? 'Bonne réponse !' : 'Fausse réponse'}</span>
                 </div>
-                <p className="leading-relaxed">
-                  {lastAnswer.explanation}
-                </p>
+                <p className="leading-relaxed">{lastAnswer.explanation}</p>
+                {timeUp && (
+                  <p className="mt-2 text-sm text-slate-500">Temps écoulé !</p>
+                )}
               </div>
             )}
           </div>
@@ -229,18 +270,11 @@ export default function YesNoGame() {
         {gameState === 'gameOver' && (
           <div className="bg-white rounded-2xl shadow-2xl p-8 text-center border border-indigo-200">
             <div className="mb-6">
-              <div className="text-6xl mb-4">
-                {score.wrongAnswers >= 3 ? '💥' : '🎉'}
-              </div>
-              <h2 className="text-3xl font-bold text-slate-800 mb-4">
-                {score.wrongAnswers >= 3 ? 'Game Over !' : 'Quiz terminé !'}
-              </h2>
-              <p className="text-lg text-slate-600 mb-6">
-                Bien joué {playerName} !
-              </p>
+              <div className="text-6xl mb-4">{score.wrongAnswers >= 3 ? '💥' : '🎉'}</div>
+              <h2 className="text-3xl font-bold text-slate-800 mb-4">{score.wrongAnswers >= 3 ? 'Game Over !' : 'Quiz terminé !'}</h2>
+              <p className="text-lg text-slate-600 mb-6">Bien joué {playerName} !</p>
             </div>
 
-            {/* Statistiques */}
             <div className="bg-slate-50 rounded-lg p-6 mb-6">
               <h3 className="text-xl font-semibold text-slate-800 mb-4">📊 Vos résultats</h3>
               <div className="grid grid-cols-3 gap-4 text-center">
@@ -253,9 +287,7 @@ export default function YesNoGame() {
                   <div className="text-sm text-slate-600">Fausses</div>
                 </div>
                 <div className="bg-white rounded-lg p-4 shadow">
-                  <div className="text-2xl font-bold text-blue-600">
-                    {Math.round((score.correctAnswers / score.totalQuestions) * 100) || 0}%
-                  </div>
+                  <div className="text-2xl font-bold text-blue-600">{Math.round((score.correctAnswers / score.totalQuestions) * 100) || 0}%</div>
                   <div className="text-sm text-slate-600">Précision</div>
                 </div>
               </div>
@@ -268,7 +300,6 @@ export default function YesNoGame() {
               >
                 🔄 Rejouer
               </button>
-              
               <a
                 href="/quiz"
                 className="block w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-4 px-8 rounded-lg text-lg transition-all duration-200 border border-slate-300"
