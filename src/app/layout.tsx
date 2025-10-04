@@ -32,10 +32,10 @@ export default function RootLayout({
       </head>
       <body className="flex flex-col min-h-screen">
         <header className="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
-          <nav className="container mx-auto px-4 sm:px-6 py-4">
+          <nav className="container mx-auto px-4 sm:px-6 py-4" style={{ fontFamily: "'Oswald', sans-serif" }}>
             <div className="flex items-center justify-between">
               {/* Logo */}
-              <a href="/" className="flex items-center gap-2 sm:gap-3 group">
+              <a className="flex items-center gap-2 sm:gap-3 group" href="/">
                 <Clock className="w-7 h-7 sm:w-8 sm:h-8 text-amber-600" strokeWidth={1.5} />
                 <span className="text-xl sm:text-2xl font-bold text-gray-900 group-hover:text-amber-600 transition-colors">
                   Horlo-AFP
@@ -100,23 +100,26 @@ export default function RootLayout({
                 <h3 className="text-xl font-bold mb-3">Horlo-AFP</h3>
                 <p className="text-sm text-slate-300">Plateforme d'apprentissage de l'horlogerie complète et accessible.</p>
               </div>
+              
               <div>
                 <h4 className="font-semibold mb-3">Navigation</h4>
                 <ul className="space-y-2 text-sm text-slate-300">
-                  <li><a href="/theorie" className="hover:text-amber-400 transition-colors">Théorie</a></li>
-                  <li><a href="/pratique" className="hover:text-amber-400 transition-colors">Pratique</a></li>
-                  <li><a href="/ressources" className="hover:text-amber-400 transition-colors">Ressources</a></li>
+                  <a className="hover:text-amber-400 transition-colors" href="/theorie">Théorie</a>
+                  <a className="hover:text-amber-400 transition-colors" href="/pratique">Pratique</a>
+                  <a className="hover:text-amber-400 transition-colors" href="/ressources">Ressources</a>
                 </ul>
               </div>
+              
               <div>
                 <h4 className="font-semibold mb-3">Communauté</h4>
                 <ul className="space-y-2 text-sm text-slate-300">
-                  <li><a href="/communaute" className="hover:text-amber-400 transition-colors">Forums</a></li>
-                  <li><a href="/evenements" className="hover:text-amber-400 transition-colors">Événements</a></li>
-                  <li><a href="/podcasts" className="hover:text-amber-400 transition-colors">Podcasts</a></li>
+                  <a className="hover:text-amber-400 transition-colors" href="/communaute">Forums</a>
+                  <a className="hover:text-amber-400 transition-colors" href="/evenements">Événements</a>
+                  <a className="hover:text-amber-400 transition-colors" href="/podcasts">Podcasts</a>
                 </ul>
               </div>
             </div>
+            
             <div className="border-t border-slate-700 mt-8 pt-6 text-center text-sm text-slate-400">
               © 2025 Horlo-AFP. Tous droits réservés.
             </div>
