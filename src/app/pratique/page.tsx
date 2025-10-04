@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Clock, Wrench, BookOpen, Hammer, Zap, Award, Download, PlayCircle, FileText } from 'lucide-react';
 
 // Local video path for banner
-const BANNER_VIDEO_SRC = "/videos/Mécanique processus de réparation de montres. Poche ouverte montre-bracelet — Vidéo de stock par ©rrudenkois - 449602546.mp4";
+const BANNER_VIDEO_SRC = "/videos/Editor — Clideo.mp4";
 
 const gallery = [
   { src: '/pratique/gestes/rodage-1.jpg', alt: 'Rodage - étape 1' },
@@ -53,7 +53,7 @@ export default function PratiqueHorlogere() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none opacity-20 bg-[url('/swiss/pattern-cross.svg')] bg-[length:40px_40px]"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-black">
+          <div className="w-full aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-black">
             <video
               className="w-full h-full object-cover"
               src={BANNER_VIDEO_SRC}
@@ -101,6 +101,7 @@ export default function PratiqueHorlogere() {
                     Explorer
                   </button>
                 </Link>
+
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-red-500/0 via-red-500/5 to-red-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
               </div>
             );
@@ -140,7 +141,7 @@ export default function PratiqueHorlogere() {
               <div className="p-5">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-semibold text-white">{tuto.title}</h3>
-                  <span className="text-xs px-2 py-0.5 rounded bg白/10 text-slate-200">{tuto.level}</span>
+                  <span className="text-xs px-2 py-0.5 rounded bg-white/10 text-slate-200">{tuto.level}</span>
                 </div>
                 <p className="text-sm text-slate-400 mb-4">Durée ~ {tuto.duration}</p>
                 <div className="flex items-center gap-3">
@@ -186,9 +187,9 @@ export default function PratiqueHorlogere() {
         <SectionTitle subtitle="Téléchargez les supports illustrés en haute résolution">Ressources PDF</SectionTitle>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {pdfCards.map((pdf) => (
-            <div key={pdf.id} className="group relative bg-slate-900/60 border border-white/10 rounded-2xl overflow-hidden hover:border-red-400/40 transition">
+            <div className="group relative bg-slate-900/60 border border-white/10 rounded-2xl overflow-hidden hover:border-red-400/40 transition" key={pdf.id}>
               <div className="relative aspect-[3/4] w-full">
-                <img src={pdf.cover} alt={`Couverture ${pdf.title}`} className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
+                <img src={pdf.cover} alt={`Couverture - ${pdf.title}`} className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div className="absolute bottom-3 left-3 text-xs px-2 py-0.5 rounded bg-white/10 text-slate-200 border border-white/10">{pdf.pages} pages</div>
               </div>
