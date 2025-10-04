@@ -1,29 +1,15 @@
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import HeaderSection from "./HeaderSection";
 import TimelineHorlogerie from "./TimelineHorlogerie";
 
 export default function CulturePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-950 via-neutral-900 to-black text-neutral-100">
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]">
-          <Image src="/textures/guilloche-dark.jpg" alt="Motif guilloché" fill className="object-cover" priority />
-        </div>
-        <div className="container mx-auto px-4 py-20 relative">
-          <div className="max-w-3xl">
-            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">Culture horlogère</h1>
-            <p className="mt-4 text-lg text-neutral-300">Histoire, musées, films et ressources pour comprendre les arts et métiers du temps.</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a href="#histoire" className="px-4 py-2 rounded-full bg-amber-500/20 text-amber-300 ring-1 ring-amber-400/30 hover:bg-amber-400/25 transition">Histoire</a>
-              <a href="#musees" className="px-4 py-2 rounded-full bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-400/30 hover:bg-emerald-400/20 transition">Musées</a>
-              <a href="#videos" className="px-4 py-2 rounded-full bg-sky-500/15 text-sky-300 ring-1 ring-sky-400/30 hover:bg-sky-400/20 transition">Vidéos</a>
-              <a href="#lignes-du-temps" className="px-4 py-2 rounded-full bg-fuchsia-500/15 text-fuchsia-300 ring-1 ring-fuchsia-400/30 hover:bg-fuchsia-400/20 transition">Lignes du temps</a>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* HeaderSection Component */}
+      <HeaderSection />
 
       {/* TimelineHorlogerie Component */}
       <TimelineHorlogerie />
@@ -33,25 +19,34 @@ export default function CulturePage() {
         <div className="grid md:grid-cols-5 gap-10 items-start">
           <div className="md:col-span-2">
             <h2 className="text-3xl font-bold">📜 Histoire de l'horlogerie</h2>
-            <p className="mt-3 text-neutral-300">Des cadrans solaires aux mouvements automatiques: jalons techniques, pionniers et styles.</p>
+            <p className="mt-3 text-neutral-300">
+              Des cadrans solaires aux mouvements automatiques: jalons techniques, pionniers et styles.
+            </p>
             <ul className="mt-6 space-y-4">
               <li className="border-l-2 border-amber-400 pl-4">
                 <h3 className="font-semibold">Encyclopédie FHH</h3>
                 <p className="text-sm text-neutral-300">Chronologies, biographies et techniques majeures.</p>
-                <a href="https://www.hautehorlogerie.org/en/encyclopaedia/" target="_blank" rel="noreferrer" className="text-amber-300 hover:underline">hautehorlogerie.org/encyclopaedia</a>
+                <a href="https://www.hautehorlogerie.org/en/encyclopaedia/" target="_blank" rel="noreferrer" className="text-amber-300 hover:underline">
+                  hautehorlogerie.org/encyclopaedia
+                </a>
               </li>
               <li className="border-l-2 border-amber-400 pl-4">
                 <h3 className="font-semibold">British Museum – Horology</h3>
                 <p className="text-sm text-neutral-300">Collections historiques et articles éducatifs.</p>
-                <a href="https://www.britishmuseum.org/collection/galleries/horology" target="_blank" rel="noreferrer" className="text-amber-300 hover:underline">britishmuseum.org/horology</a>
+                <a href="https://www.britishmuseum.org/collection/galleries/horology" target="_blank" rel="noreferrer" className="text-amber-300 hover:underline">
+                  britishmuseum.org/horology
+                </a>
               </li>
               <li className="border-l-2 border-amber-400 pl-4">
                 <h3 className="font-semibold">Watch‑Wiki</h3>
                 <p className="text-sm text-neutral-300">Histoire de marques, calibres et artisans.</p>
-                <a href="https://watch-wiki.org/" target="_blank" rel="noreferrer" className="text-amber-300 hover:underline">watch-wiki.org</a>
+                <a href="https://watch-wiki.org/" target="_blank" rel="noreferrer" className="text-amber-300 hover:underline">
+                  watch-wiki.org
+                </a>
               </li>
             </ul>
           </div>
+
           {/* Interactive timeline */}
           <div className="md:col-span-3">
             <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur p-6">
@@ -68,7 +63,9 @@ export default function CulturePage() {
                     { date: "2020s", label: "Micro‑rotors, silicium" },
                   ].map((e, i) => (
                     <li key={i} className="group">
-                      <div className="h-12 w-12 grid place-items-center rounded-full bg-amber-400/20 text-amber-200 ring-1 ring-amber-400/40 group-hover:bg-amber-400/25 transition">{e.date}</div>
+                      <div className="h-12 w-12 grid place-items-center rounded-full bg-amber-400/20 text-amber-200 ring-1 ring-amber-400/40 group-hover:bg-amber-400/25 transition">
+                        {e.date}
+                      </div>
                       <p className="mt-2 text-sm text-neutral-300 group-hover:text-white">{e.label}</p>
                     </li>
                   ))}
@@ -111,15 +108,21 @@ export default function CulturePage() {
             <h2 className="text-3xl font-bold">🎬 Documentaires et vidéos</h2>
             <ul className="mt-4 space-y-3">
               <li>
-                <a href="https://www.youtube.com/results?search_query=documentaire+horlogerie" target="_blank" rel="noreferrer" className="text-sky-300 hover:underline">YouTube – Documentaires horlogers</a>
+                <a href="https://www.youtube.com/results?search_query=documentaire+horlogerie" target="_blank" rel="noreferrer" className="text-sky-300 hover:underline">
+                  YouTube – Documentaires horlogers
+                </a>
                 <span className="text-neutral-400"> — Sélections gratuites.</span>
               </li>
               <li>
-                <a href="https://www.arte.tv/fr/search/?q=horlogerie" target="_blank" rel="noreferrer" className="text-sky-300 hover:underline">Arte – Horlogerie</a>
+                <a href="https://www.arte.tv/fr/search/?q=horlogerie" target="_blank" rel="noreferrer" className="text-sky-300 hover:underline">
+                  Arte – Horlogerie
+                </a>
                 <span className="text-neutral-400"> — Programmes culturels et historiques.</span>
               </li>
               <li>
-                <a href="https://www.rts.ch/play/tv/recherche?query=horlogerie" target="_blank" rel="noreferrer" className="text-sky-300 hover:underline">RTS – Horlogerie</a>
+                <a href="https://www.rts.ch/play/tv/recherche?query=horlogerie" target="_blank" rel="noreferrer" className="text-sky-300 hover:underline">
+                  RTS – Horlogerie
+                </a>
                 <span className="text-neutral-400"> — Reportages suisses sur les métiers.</span>
               </li>
             </ul>
@@ -141,9 +144,18 @@ export default function CulturePage() {
             <div className="sticky top-6 rounded-xl border border-white/10 bg-white/5 p-5">
               <h3 className="font-semibold">Lexique rapide</h3>
               <dl className="mt-3 space-y-2 text-sm">
-                <div className="flex gap-2"><dt className="text-amber-300">Échappement</dt><dd className="text-neutral-300">Organe qui régule les oscillations et distribue l'énergie.</dd></div>
-                <div className="flex gap-2"><dt className="text-amber-300">Tourbillon</dt><dd className="text-neutral-300">Cage tournante compensant les écarts de gravité.</dd></div>
-                <div className="flex gap-2"><dt className="text-amber-300">Complication</dt><dd className="text-neutral-300">Fonction additionnelle au-delà des heures/minutes/secondes.</dd></div>
+                <div className="flex gap-2">
+                  <dt className="text-amber-300">Échappement</dt>
+                  <dd className="text-neutral-300">Organe qui régule les oscillations et distribue l'énergie.</dd>
+                </div>
+                <div className="flex gap-2">
+                  <dt className="text-amber-300">Tourbillon</dt>
+                  <dd className="text-neutral-300">Cage tournante compensant les écarts de gravité.</dd>
+                </div>
+                <div className="flex gap-2">
+                  <dt className="text-amber-300">Complication</dt>
+                  <dd className="text-neutral-300">Fonction additionnelle au-delà des heures/minutes/secondes.</dd>
+                </div>
               </dl>
             </div>
           </aside>
@@ -158,9 +170,15 @@ export default function CulturePage() {
             <p className="text-neutral-300 mt-2">Découvrez la théorie, les outils et la pratique de l'horlogerie moderne.</p>
           </div>
           <div className="flex gap-3">
-            <Link href="/theorie" className="px-4 py-2 rounded-md bg-amber-500 text-black font-semibold hover:brightness-110">Théorie</Link>
-            <Link href="/outils" className="px-4 py-2 rounded-md bg-white/10 hover:bg-white/15 ring-1 ring-white/15">Outils</Link>
-            <Link href="/pratique" className="px-4 py-2 rounded-md bg-white/10 hover:bg-white/15 ring-1 ring-white/15">Pratique</Link>
+            <Link href="/theorie" className="px-4 py-2 rounded-md bg-amber-500 text-black font-semibold hover:brightness-110">
+              Théorie
+            </Link>
+            <Link href="/outils" className="px-4 py-2 rounded-md bg-white/10 hover:bg-white/15 ring-1 ring-white/15">
+              Outils
+            </Link>
+            <Link href="/pratique" className="px-4 py-2 rounded-md bg-white/10 hover:bg-white/15 ring-1 ring-white/15">
+              Pratique
+            </Link>
           </div>
         </div>
       </section>
