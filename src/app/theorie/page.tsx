@@ -22,17 +22,22 @@ export default function Theorie() {
             </div>
             <ul className="space-y-3">
               <li>
-                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="https://www.hautehorlogerie.org/fr/encyclopedie/" target="_blank">Encyclopédie FHH</a>
+                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="https://www.hautehorlogerie.org/fr/encyclopedie/" target="_blank">
+                  Encyclopédie FHH
+                </a>
               </li>
               <li>
-                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="https://www.federation-horlogerie.ch/fr/formation" target="_blank">Manuels FH</a>
+                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="https://www.federation-horlogerie.ch/fr/formation" target="_blank">
+                  Manuels FH
+                </a>
               </li>
               <li>
-                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="https://archive.org/search?query=horology" target="_blank">Archives Techniques</a>
+                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="https://archive.org/search?query=horology" target="_blank">
+                  Archives Techniques
+                </a>
               </li>
             </ul>
           </div>
-
           {/* Communication Technique */}
           <div className="bg-white rounded-2xl shadow-lg border border-gold-200 hover:shadow-xl transition-all duration-300 p-8">
             <div className="flex items-center mb-6">
@@ -45,7 +50,7 @@ export default function Theorie() {
             </div>
             <ul className="space-y-3">
               <li>
-                <a className="text-blue-600 hover:text-gold-600 transition-colors flex items-center gap-2" href="/pdfs/communication-technique/ETA-6497.pdf" target="_blank">
+                <a className="text-blue-600 hover:text-gold-600 transition-colors flex items-center gap-2" href="/pdfs/communication-technique/ETA%206497.pdf" target="_blank">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
@@ -54,7 +59,6 @@ export default function Theorie() {
               </li>
             </ul>
           </div>
-
           {/* Vidéos */}
           <div className="bg-white rounded-2xl shadow-lg border border-gold-200 hover:shadow-xl transition-all duration-300 p-8">
             <div className="flex items-center mb-6">
