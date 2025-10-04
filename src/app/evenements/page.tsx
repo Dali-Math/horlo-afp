@@ -10,7 +10,7 @@ export type Event = {
   location: string;
   description: string;
   category: string;
-  link?: string; // ✅ Ajout pour corriger le typage
+  link?: string;
 };
 
 type EventCardProps = {
@@ -26,29 +26,24 @@ export default function EventCard({ event, index }: EventCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
     >
-      {/* Titre */}
       <h3 className="font-['Bebas_Neue'] text-2xl text-amber-400 mb-2 group-hover:text-amber-300 transition-colors">
         {event.title}
       </h3>
 
-      {/* Date */}
       <div className="flex items-center text-gray-400 text-sm mb-1">
         <CalendarDays className="w-4 h-4 mr-2 text-amber-400" />
         {event.date}
       </div>
 
-      {/* Lieu */}
       <div className="flex items-center text-gray-400 text-sm mb-3">
         <MapPin className="w-4 h-4 mr-2 text-amber-400" />
         {event.location}
       </div>
 
-      {/* Description */}
       <p className="text-gray-300 text-sm font-['Inter'] leading-relaxed mb-4">
         {event.description}
       </p>
 
-      {/* Bouton d’action */}
       {event.link && (
         <motion.a
           href={event.link}
