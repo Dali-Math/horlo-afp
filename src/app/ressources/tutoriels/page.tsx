@@ -9,7 +9,7 @@ export default function TutorielsGuides() {
         {/* Bouton retour */}
         <Link
           className="inline-flex items-center gap-2 text-slate-400 hover:text-amber-400 transition-colors mb-8 group"
-          href="/ressources"
+          href="/pratique"
         >
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           Retour aux Ressources
@@ -22,7 +22,7 @@ export default function TutorielsGuides() {
           </h1>
           {/* Image */}
           <div className="mb-8 rounded-xl overflow-hidden">
-            <img
+            <img 
               src="/images/unitas-6497.jpg"
               alt="Mouvement Unitas 6497 en atelier suisse"
               className="w-full h-auto object-cover"
