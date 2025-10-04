@@ -46,7 +46,7 @@ export default function YesNoGame() {
         if (prev <= 1) {
           clearTimer();
           setTimeUp(true);
-          // Auto-fault when time reaches 0
+          // Auto-fault when time reaches 0 (timeout is always wrong)
           handleAnswer(false, true);
           return 0;
         }
@@ -92,14 +92,18 @@ export default function YesNoGame() {
     }, 2500);
   };
 
+  // ANSWER HANDLER
+  // If fromTimeout is true, it must ALWAYS be counted as wrong
   const handleAnswer = (answer: boolean, fromTimeout: boolean = false) => {
     // Prevent multiple answers while explanation is showing
     if (showExplanation) return;
 
     const currentQuestion = shuffledQuestions[currentQuestionIndex];
-    const isCorrect = answer === currentQuestion.correctAnswer;
 
-    const newStats = {
+    // Force incorrect on timeout, regardless of the correct answer
+    const isCorrect = fromTimeout ? false : answer === currentQuestion.correctAnswer;
+
+    const newStats: GameStats = {
       ...score,
       totalQuestions: score.totalQuestions + 1,
       correctAnswers: isCorrect ? score.correctAnswers + 1 : score.correctAnswers,
@@ -141,7 +145,7 @@ export default function YesNoGame() {
     clearTimer();
   };
 
-  // Start or reset timer when question index changes while playing
+  // Start or reset timer when game state changes
   useEffect(() => {
     if (gameState === 'playing') {
       startTimer();
@@ -166,14 +170,15 @@ export default function YesNoGame() {
               <div className="bg-indigo-50 rounded-lg p-4 mb-6 text-left">
                 <h3 className="font-semibold text-indigo-800 mb-2">📋 Règles du jeu :</h3>
                 <ul className="text-sm text-indigo-700 space-y-1">
-                  <li>• Répondez par VRAI ou FAUX aux questions</li>
-                  <li>• Vous avez droit à 3 erreurs maximum</li>
-                  <li>• Score affiché en temps réel</li>
-                  <li>• Explication après chaque réponse</li>
-                  <li>• 20 secondes par question</li>
+                  • Répondez par VRAI ou FAUX aux questions
+                  • Vous avez droit à 3 erreurs maximum
+                  • Score affiché en temps réel
+                  • Explication après chaque réponse
+                  • 20 secondes par question
                 </ul>
               </div>
             </div>
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2" htmlFor="playerName">
@@ -223,7 +228,7 @@ export default function YesNoGame() {
                   <span className="text-slate-500">Chances</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className={timeLeft <= 5 ? 'text-red-600 font-bold' : 'text-blue-600 font-bold'}>⏱️ {timeLeft}s</span>
+                  <span className="font-bold">⏱️ {timeLeft}s</span>
                   <span className="text-slate-500">Temps</span>
                 </div>
               </div>
@@ -274,7 +279,6 @@ export default function YesNoGame() {
               <h2 className="text-3xl font-bold text-slate-800 mb-4">{score.wrongAnswers >= 3 ? 'Game Over !' : 'Quiz terminé !'}</h2>
               <p className="text-lg text-slate-600 mb-6">Bien joué {playerName} !</p>
             </div>
-
             <div className="bg-slate-50 rounded-lg p-6 mb-6">
               <h3 className="text-xl font-semibold text-slate-800 mb-4">📊 Vos résultats</h3>
               <div className="grid grid-cols-3 gap-4 text-center">
@@ -292,7 +296,6 @@ export default function YesNoGame() {
                 </div>
               </div>
             </div>
-
             <div className="space-y-4">
               <button
                 onClick={resetGame}
