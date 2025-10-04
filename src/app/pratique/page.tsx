@@ -161,7 +161,17 @@ export default function PratiqueHorlogere() {
       </section>
 
       {/* PDF cards */}
-      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      const pdfCards = [
+  {
+    id: 'pdf-huilage',
+    title: 'Guide complet du huilage',
+    cover: '/pdf/previews/huilage-cover.jpg', // Utilise une image de preview si disponible
+    href: '/pdfs/huilage.pdf',
+    pages: 12 // Adapte selon le nombre de pages du PDF
+  },
+  // ... autres PDF existants
+]
+     <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <SectionTitle subtitle="Téléchargez les supports illustrés en haute résolution">Ressources PDF</SectionTitle>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {pdfCards.map((pdf) => (
@@ -178,8 +188,10 @@ export default function PratiqueHorlogere() {
                   <div className="font-semibold text-white leading-tight">{pdf.title}</div>
                   <div className="text-xs text-slate-400">PDF illustré</div>
                 </div>
-                <Link href={pdf.href} className="inline-flex items-center gap-2 text-sm font-medium text-red-300 hover:text-white">
-                  <Download className="w-4 h-4" />
+                <Link href={pdf.href} className="inline-flex items-center gap-2 text-sm font-medium text-red-300 hover:text-white" target="_blank" rel="noopener">
+             Consulter le PDF
+                </Link>
+
                 </Link>
               </div>
             </div>
