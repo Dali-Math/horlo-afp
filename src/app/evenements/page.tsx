@@ -1,148 +1,67 @@
 'use client';
 
-import { useState } from 'react';
-import HeroSection from './HeroSection';
-import FiltersBar from './FiltersBar';
-import EventCard, { Event } from './EventCard';
-import CallToActionSection from './CallToActionSection';
+import { motion } from 'framer-motion';
+import { CalendarDays, MapPin, Info } from 'lucide-react';
 
-// Mock event data
-const mockEvents: Event[] = [
-  {
-    id: '1',
-    title: 'Watches & Wonders Geneva',
-    date: '31 mars - 5 avril 2025',
-    location: 'Genève, Suisse',
-    description: 'Le plus grand salon international de l\'horlogerie. Découvrez les dernières nouveautés des marques prestigieuses, assistez à des conférences et explorez l\'univers de la haute horlogerie.',
-    category: 'Salons',
-    link: 'https://www.watchesandwonders.com/',
-  },
-  {
-    id: '2',
-    title: 'Journées des Métiers d\'Horlogerie',
-    date: '15-16 novembre 2025',
-    location: 'La Chaux-de-Fonds, Suisse',
-    description: 'Portes ouvertes des écoles d\'horlogerie. Ateliers d\'initiation gratuits, démonstrations de métiers, rencontres avec des professionnels et visite des installations de formation.',
-    category: 'Ateliers',
-    link: 'https://www.orientation.ch/',
-  },
-  {
-    id: '3',
-    title: 'Salon Belles Montres Paris',
-    date: '8-10 décembre 2025',
-    location: 'Paris, France',
-    description: 'Salon dédié aux montres vintage et contemporaines. Expositions, conférences techniques, ateliers de restauration et rencontres avec des collectionneurs passionnés.',
-    category: 'Salons',
-    link: 'https://www.carrefourhorloger.com/',
-  },
-  {
-    id: '4',
-    title: 'Ateliers MIH - Musée International',
-    date: 'Tous les samedis',
-    location: 'La Chaux-de-Fonds, Suisse',
-    description: 'Ateliers pédagogiques mensuels au Musée International d\'Horlogerie. Découverte des mécanismes, histoire de l\'horlogerie, et initiations pratiques pour tous les âges.',
-    category: 'Ateliers',
-    link: 'https://www.mih.ch/',
-  },
-  {
-    id: '5',
-    title: 'MunichTime Watch Fair',
-    date: '24-26 octobre 2025',
-    location: 'Munich, Allemagne',
-    description: 'Foire horlogère internationale avec focus sur les marques indépendantes. Conférences techniques, masterclasses, et opportunités de networking avec des horlogers innovants.',
-    category: 'Salons',
-    link: 'https://www.munichtime.de/',
-  },
-];
+export type Event = {
+  id: string;
+  title: string;
+  date: string;
+  location: string;
+  description: string;
+  category: string;
+  link?: string; // ✅ Ajout pour corriger le typage
+};
 
-export default function EvenementsPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('Tous');
+type EventCardProps = {
+  event: Event;
+  index: number;
+};
 
-  // Filter events based on selected category
-  const filteredEvents = selectedCategory === 'Tous'
-    ? mockEvents
-    : mockEvents.filter(event => event.category === selectedCategory);
-
+export default function EventCard({ event, index }: EventCardProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-900 via-zinc-800 to-zinc-900">
-      {/* Hero Section */}
-      <HeroSection />
+    <motion.div
+      className="group bg-zinc-800/60 border border-amber-500/20 rounded-xl p-6 shadow-lg hover:shadow-amber-500/10 transition-all duration-300"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1, duration: 0.5 }}
+    >
+      {/* Titre */}
+      <h3 className="font-['Bebas_Neue'] text-2xl text-amber-400 mb-2 group-hover:text-amber-300 transition-colors">
+        {event.title}
+      </h3>
 
-      {/* Filters Bar */}
-      <FiltersBar 
-        selectedCategory={selectedCategory} 
-        onCategoryChange={setSelectedCategory}
-      />
+      {/* Date */}
+      <div className="flex items-center text-gray-400 text-sm mb-1">
+        <CalendarDays className="w-4 h-4 mr-2 text-amber-400" />
+        {event.date}
+      </div>
 
-      {/* Events Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {filteredEvents.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredEvents.map((event, index) => (
-              <EventCard key={event.id} event={event} index={index} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-16">
-            <p className="text-xl text-gray-400 font-['Inter']">
-              Aucun événement disponible dans cette catégorie.
-            </p>
-          </div>
-        )}
-      </section>
+      {/* Lieu */}
+      <div className="flex items-center text-gray-400 text-sm mb-3">
+        <MapPin className="w-4 h-4 mr-2 text-amber-400" />
+        {event.location}
+      </div>
 
-      {/* Call to Action Section */}
-      <CallToActionSection />
+      {/* Description */}
+      <p className="text-gray-300 text-sm font-['Inter'] leading-relaxed mb-4">
+        {event.description}
+      </p>
 
-      {/* External Agenda Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pb-20">
-        <div className="bg-gradient-to-br from-zinc-800/70 to-zinc-900/70 backdrop-blur-sm rounded-xl border border-amber-500/30 p-8 shadow-2xl">
-          <h2 className="font-['Bebas_Neue'] text-3xl text-amber-400 tracking-wide mb-6">
-            📅 Agendas Externes & Ressources
-          </h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            <a
-              href="https://www.fh-pressroom.ch/fr/agenda"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group p-4 bg-zinc-800/50 rounded-lg border border-zinc-700 hover:border-amber-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/20"
-            >
-              <h3 className="font-['Bebas_Neue'] text-lg text-amber-400 mb-2">
-                Fédération Horlogère
-              </h3>
-              <p className="text-sm text-gray-400 font-['Inter']">
-                Événements et salons en Suisse
-              </p>
-            </a>
-            <a
-              href="https://www.hautehorlogerie.org/fr/actualites/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group p-4 bg-zinc-800/50 rounded-lg border border-zinc-700 hover:border-amber-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/20"
-            >
-              <h3 className="font-['Bebas_Neue'] text-lg text-amber-400 mb-2">
-                FHH Actualités
-              </h3>
-              <p className="text-sm text-gray-400 font-['Inter']">
-                Conférences et expositions
-              </p>
-            </a>
-            <a
-              href="https://www.bhi.co.uk/horology-events/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group p-4 bg-zinc-800/50 rounded-lg border border-zinc-700 hover:border-amber-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/20"
-            >
-              <h3 className="font-['Bebas_Neue'] text-lg text-amber-400 mb-2">
-                BHI Horology Events
-              </h3>
-              <p className="text-sm text-gray-400 font-['Inter']">
-                Rencontres et salons (UK)
-              </p>
-            </a>
-          </div>
-        </div>
-      </section>
-    </div>
+      {/* Bouton d’action */}
+      {event.link && (
+        <motion.a
+          href={event.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.98 }}
+          className="inline-flex items-center gap-2 text-amber-400 font-medium hover:text-amber-300 transition-colors"
+        >
+          <Info className="w-4 h-4" />
+          En savoir plus
+        </motion.a>
+      )}
+    </motion.div>
   );
 }
