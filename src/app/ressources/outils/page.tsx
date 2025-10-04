@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { ArrowLeft, Info, Download } from 'lucide-react';
+import { ArrowLeft, Info, Wrench, ExternalLink } from 'lucide-react';
 
 export default function OutilsPage() {
   const router = useRouter();
@@ -45,7 +45,7 @@ export default function OutilsPage() {
         {/* Image pédagogique */}
         <figure className="mb-8 rounded-2xl overflow-hidden shadow-2xl border border-slate-700/50">
           <Image
-            src="/images/outils-horlogers.jpg"
+            src="/images/tournevis_horlogerie.jpg"
             alt="Planche pédagogique: outils horlogers (tournevis, brucelles, huiliers)"
             width={1600}
             height={900}
@@ -55,16 +55,17 @@ export default function OutilsPage() {
           <figcaption className="sr-only">Planche pédagogique suisse des outils horlogers</figcaption>
         </figure>
 
-        {/* Bouton de téléchargement PDF */}
+        {/* Bouton vers le guide externe */}
         <div className="mt-6">
           <a
-            href="/pdf/outils.pdf"
+            href="https://www.mon-petit-horloger.fr/outils-horlogerie-guide/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-500 text-slate-900 font-medium hover:bg-amber-400 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-500 transition-colors shadow-lg hover:shadow-xl"
           >
-            <Download className="w-5 h-5" />
-            Télécharger le PDF pédagogique
+            <Wrench className="w-5 h-5" />
+            Outils Horlogers
+            <ExternalLink className="w-4 h-4" />
           </a>
         </div>
       </div>
