@@ -1,28 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+/* Import Google Fonts - Atelier Horloger Theme */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
+  /* Palette "atelier horloger" - sombre et doré */
+  --background: #0b0c10;  /* Noir profond */
+  --background-secondary: #1c1e26;  /* Charbon */
+  --foreground: #f3f4f6;  /* Gris très clair */
+  --foreground-muted: #b8b8b8;  /* Gris moyen */
+  
+  /* Or classique */
   --gold: #d4af37;
   --gold-light: #f7d070;
   --gold-dark: #b8941f;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #fafafa;
+    /* Mode clair optionnel - conserve le thème sombre dominant */
+    --background: #0b0c10;
+    --foreground: #f3f4f6;
   }
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -54,6 +62,26 @@ body {
   }
 }
 
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+  }
+}
+
 .animate-fade-in {
   animation: fadeIn 1s ease-out;
 }
@@ -66,13 +94,13 @@ body {
   animation: fadeIn 1s ease-out 0.6s both;
 }
 
-/* Scrollbar styling */
+/* Scrollbar styling - thème sombre doré */
 ::-webkit-scrollbar {
   width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: #1c1e26;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -88,4 +116,13 @@ body {
 ::selection {
   background-color: rgba(212, 175, 55, 0.3);
   color: inherit;
+}
+
+/* Atelier horloger - Gold accents */
+.gold-border {
+  border: 1px solid var(--gold);
+}
+
+.gold-glow {
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
 }
