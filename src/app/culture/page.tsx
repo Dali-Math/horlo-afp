@@ -1,77 +1,166 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+
 export default function CulturePage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">🏛️ Culture</h1>
-        <p className="text-lg text-gray-700 mb-8">
-          Histoire de l’horlogerie, musées, documentaires et ressources culturelles pour comprendre les arts et métiers du temps.
-        </p>
-
-        {/* Histoire de l’horlogerie */}
-        <section className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">📜 Histoire de l’horlogerie</h2>
-          <div className="space-y-4">
-            <div className="border-l-4 border-yellow-500 pl-4">
-              <h3 className="font-semibold text-lg">Encyclopédie FHH</h3>
-              <p className="text-gray-600">Chronologies, biographies et techniques horlogères majeures.</p>
-              <a className="text-blue-600 hover:underline" href="https://www.hautehorlogerie.org/en/encyclopaedia/" target="_blank" rel="noopener noreferrer">hautehorlogerie.org/encyclopaedia</a>
-            </div>
-            <div className="border-l-4 border-yellow-500 pl-4">
-              <h3 className="font-semibold text-lg">British Museum - Horology</h3>
-              <p className="text-gray-600">Collections historiques d’horlogerie et articles éducatifs.</p>
-              <a className="text-blue-600 hover:underline" href="https://www.britishmuseum.org/collection/galleries/horology" target="_blank" rel="noopener noreferrer">britishmuseum.org/horology</a>
-            </div>
-            <div className="border-l-4 border-yellow-500 pl-4">
-              <h3 className="font-semibold text-lg">Watch Wiki</h3>
-              <p className="text-gray-600">Histoire de marques, calibres et artisans.</p>
-              <a className="text-blue-600 hover:underline" href="https://watch-wiki.org/" target="_blank" rel="noopener noreferrer">watch-wiki.org</a>
+    <div className="min-h-screen bg-gradient-to-b from-neutral-950 via-neutral-900 to-black text-neutral-100">
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]">
+          <Image src="/textures/guilloche-dark.jpg" alt="Motif guilloché" fill className="object-cover" priority />
+        </div>
+        <div className="container mx-auto px-4 py-20 relative">
+          <div className="max-w-3xl">
+            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">Culture horlogère</h1>
+            <p className="mt-4 text-lg text-neutral-300">Histoire, musées, films et ressources pour comprendre les arts et métiers du temps.</p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href="#histoire" className="px-4 py-2 rounded-full bg-amber-500/20 text-amber-300 ring-1 ring-amber-400/30 hover:bg-amber-400/25 transition">Histoire</a>
+              <a href="#musees" className="px-4 py-2 rounded-full bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-400/30 hover:bg-emerald-400/20 transition">Musées</a>
+              <a href="#videos" className="px-4 py-2 rounded-full bg-sky-500/15 text-sky-300 ring-1 ring-sky-400/30 hover:bg-sky-400/20 transition">Vidéos</a>
+              <a href="#lignes-du-temps" className="px-4 py-2 rounded-full bg-fuchsia-500/15 text-fuchsia-300 ring-1 ring-fuchsia-400/30 hover:bg-fuchsia-400/20 transition">Lignes du temps</a>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Musées */}
-        <section className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">🖼️ Musées</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="border rounded-lg p-4">
-              <h3 className="font-semibold text-lg">MIH - Musée International d’Horlogerie (La Chaux‑de‑Fonds)</h3>
-              <p className="text-gray-600">Collection mondiale dédiée au temps et à l’horlogerie.</p>
-              <a className="text-blue-600 hover:underline" href="https://www.mih.ch/" target="_blank" rel="noopener noreferrer">mih.ch</a>
-            </div>
-            <div className="border rounded-lg p-4">
-              <h3 className="font-semibold text-lg">Musée Patek Philippe (Genève)</h3>
-              <p className="text-gray-600">Pièces historiques, automates et montres compliquées.</p>
-              <a className="text-blue-600 hover:underline" href="https://www.patek.com/en/company/patek-philippe-museum" target="_blank" rel="noopener noreferrer">patek.com/museum</a>
-            </div>
-            <div className="border rounded-lg p-4">
-              <h3 className="font-semibold text-lg">Musée d’Horlogerie du Locle - Château des Monts</h3>
-              <p className="text-gray-600">Patrimoine horloger jurassien et expositions temporaires.</p>
-              <a className="text-blue-600 hover:underline" href="https://www.mhl-monts.ch/" target="_blank" rel="noopener noreferrer">mhl-monts.ch</a>
-            </div>
-            <div className="border rounded-lg p-4">
-              <h3 className="font-semibold text-lg">Musée des Arts et Métiers (Paris)</h3>
-              <p className="text-gray-600">Instruments scientifiques, régulateurs et pendules.</p>
-              <a className="text-blue-600 hover:underline" href="https://www.arts-et-metiers.net/" target="_blank" rel="noopener noreferrer">arts-et-metiers.net</a>
+      {/* Section: Histoire */}
+      <section id="histoire" className="container mx-auto px-4 py-16">
+        <div className="grid md:grid-cols-5 gap-10 items-start">
+          <div className="md:col-span-2">
+            <h2 className="text-3xl font-bold">📜 Histoire de l’horlogerie</h2>
+            <p className="mt-3 text-neutral-300">Des cadrans solaires aux mouvements automatiques: jalons techniques, pionniers et styles.</p>
+            <ul className="mt-6 space-y-4">
+              <li className="border-l-2 border-amber-400 pl-4">
+                <h3 className="font-semibold">Encyclopédie FHH</h3>
+                <p className="text-sm text-neutral-300">Chronologies, biographies et techniques majeures.</p>
+                <a className="text-amber-300 hover:underline" target="_blank" rel="noreferrer" href="https://www.hautehorlogerie.org/en/encyclopaedia/">hautehorlogerie.org/encyclopaedia</a>
+              </li>
+              <li className="border-l-2 border-amber-400 pl-4">
+                <h3 className="font-semibold">British Museum – Horology</h3>
+                <p className="text-sm text-neutral-300">Collections historiques et articles éducatifs.</p>
+                <a className="text-amber-300 hover:underline" target="_blank" rel="noreferrer" href="https://www.britishmuseum.org/collection/galleries/horology">britishmuseum.org/horology</a>
+              </li>
+              <li className="border-l-2 border-amber-400 pl-4">
+                <h3 className="font-semibold">Watch‑Wiki</h3>
+                <p className="text-sm text-neutral-300">Histoire de marques, calibres et artisans.</p>
+                <a className="text-amber-300 hover:underline" target="_blank" rel="noreferrer" href="https://watch-wiki.org/">watch-wiki.org</a>
+              </li>
+            </ul>
+          </div>
+          {/* Interactive timeline */}
+          <div className="md:col-span-3">
+            <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur p-6">
+              <h3 className="font-semibold mb-3">Lignes du temps</h3>
+              <div className="relative overflow-x-auto" id="lignes-du-temps">
+                <ol className="flex min-w-[720px] gap-8">
+                  {[
+                    { date: "XVIe", label: "Échappement à verge" },
+                    { date: "1761", label: "Chronomètre de marine" },
+                    { date: "1868", label: "Première montre-bracelet" },
+                    { date: "1923", label: "Remontage automatique" },
+                    { date: "1969", label: "Quartz Astron" },
+                    { date: "1983", label: "Swatch" },
+                    { date: "2020s", label: "Micro‑rotors, silicium" },
+                  ].map((e, i) => (
+                    <li key={i} className="group">
+                      <div className="h-12 w-12 grid place-items-center rounded-full bg-amber-400/20 text-amber-200 ring-1 ring-amber-400/40 group-hover:bg-amber-400/25 transition">{e.date}</div>
+                      <p className="mt-2 text-sm text-neutral-300 group-hover:text-white">{e.label}</p>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+              <p className="mt-3 text-xs text-neutral-400">Faites glisser horizontalement pour parcourir.</p>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Documentaires et vidéos */}
-        <section className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">🎬 Documentaires et vidéos</h2>
-          <ul className="list-disc pl-6 space-y-2 text-gray-700">
-            <li>
-              <a className="text-blue-600 hover:underline" href="https://www.youtube.com/results?search_query=horlogerie+documentaire" target="_blank" rel="noopener noreferrer">YouTube – Documentaires horlogers</a> – sélections gratuites.
-            </li>
-            <li>
-              <a className="text-blue-600 hover:underline" href="https://www.arte.tv/fr/search/?q=horlogerie" target="_blank" rel="noopener noreferrer">Arte – Horlogerie</a> – programmes culturels et historiques.
-            </li>
-            <li>
-              <a className="text-blue-600 hover:underline" href="https://www.rts.ch/play/tv/recherche?query=horlogerie" target="_blank" rel="noopener noreferrer">RTS – Horlogerie</a> – reportages suisses sur les métiers.
-            </li>
-          </ul>
-        </section>
-      </div>
+      {/* Section: Musées */}
+      <section id="musees" className="container mx-auto px-4 pb-4">
+        <h2 className="text-3xl font-bold">🖼️ Musées</h2>
+        <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            { title: "MIH – La Chaux‑de‑Fonds", desc: "Collection mondiale dédiée au temps et à l’horlogerie.", href: "https://www.mih.ch/", img: "/musees/mih.jpg" },
+            { title: "Musée Patek Philippe – Genève", desc: "Pièces historiques, automates et grandes complications.", href: "https://www.patek.com/en/company/museum", img: "/musees/patek.jpg" },
+            { title: "Château des Monts – Le Locle", desc: "Patrimoine jurassien et expositions temporaires.", href: "https://www.mhl-monts.ch/", img: "/musees/monts.jpg" },
+            { title: "Arts et Métiers – Paris", desc: "Instruments scientifiques, régulateurs et pendules.", href: "https://www.arts-et-metiers.net/", img: "/musees/aem.jpg" },
+          ].map((m, i) => (
+            <a key={i} href={m.href} target="_blank" rel="noreferrer" className="group relative overflow-hidden rounded-xl ring-1 ring-white/10 bg-white/5 hover:bg-white/10 transition block">
+              <div className="aspect-[16/10] relative">
+                <Image src={m.img} alt={m.title} fill className="object-cover opacity-80 group-hover:opacity-100 transition" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+              </div>
+              <div className="p-4">
+                <h3 className="font-semibold tracking-wide">{m.title}</h3>
+                <p className="text-sm text-neutral-300">{m.desc}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      {/* Section: Films et vidéos */}
+      <section id="videos" className="container mx-auto px-4 py-16">
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <h2 className="text-3xl font-bold">🎬 Documentaires et vidéos</h2>
+            <ul className="mt-4 space-y-3">
+              <li>
+                <a className="text-sky-300 hover:underline" target="_blank" rel="noreferrer" href="https://www.youtube.com/results?search_query=documentaire+horlogerie">YouTube – Documentaires horlogers</a>
+                <span className="text-neutral-400"> — Sélections gratuites.</span>
+              </li>
+              <li>
+                <a className="text-sky-300 hover:underline" target="_blank" rel="noreferrer" href="https://www.arte.tv/fr/search/?q=horlogerie">Arte – Horlogerie</a>
+                <span className="text-neutral-400"> — Programmes culturels et historiques.</span>
+              </li>
+              <li>
+                <a className="text-sky-300 hover:underline" target="_blank" rel="noreferrer" href="https://www.rts.ch/play/tv/recherche?query=horlogerie">RTS – Horlogerie</a>
+                <span className="text-neutral-400"> — Reportages suisses sur les métiers.</span>
+              </li>
+            </ul>
+            <div className="mt-8 grid sm:grid-cols-2 gap-4">
+              {[
+                { id: "breguet", title: "L’art du guillochage", thumb: "/videos/guilloche.jpg" },
+                { id: "tourbillon", title: "Comprendre le tourbillon", thumb: "/videos/tourbillon.jpg" },
+              ].map((v) => (
+                <div key={v.id} className="relative overflow-hidden rounded-xl ring-1 ring-white/10 bg-white/5">
+                  <Image src={v.thumb} alt={v.title} width={800} height={450} className="w-full h-auto object-cover" />
+                  <div className="absolute inset-0 flex items-end p-4 bg-gradient-to-t from-black/60 via-black/20 to-transparent">
+                    <p className="font-medium">{v.title}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <aside className="lg:col-span-1">
+            <div className="sticky top-6 rounded-xl border border-white/10 bg-white/5 p-5">
+              <h3 className="font-semibold">Lexique rapide</h3>
+              <dl className="mt-3 space-y-2 text-sm">
+                <div className="flex gap-2"><dt className="text-amber-300">Échappement</dt><dd className="text-neutral-300">Organe qui régule les oscillations et distribue l’énergie.</dd></div>
+                <div className="flex gap-2"><dt className="text-amber-300">Tourbillon</dt><dd className="text-neutral-300">Cage tournante compensant les écarts de gravité.</dd></div>
+                <div className="flex gap-2"><dt className="text-amber-300">Complication</dt><dd className="text-neutral-300">Fonction additionnelle au-delà des heures/minutes/secondes.</dd></div>
+              </dl>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      {/* Call to action */}
+      <section className="container mx-auto px-4 pb-24">
+        <div className="rounded-2xl bg-gradient-to-r from-amber-500/20 to-fuchsia-500/20 ring-1 ring-white/10 p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div>
+            <h3 className="text-2xl font-bold">Poursuivre l’exploration</h3>
+            <p className="text-neutral-300 mt-2">Découvrez la théorie, les outils et la pratique de l’horlogerie moderne.</p>
+          </div>
+          <div className="flex gap-3">
+            <Link href="/theorie" className="px-4 py-2 rounded-md bg-amber-500 text-black font-semibold hover:brightness-110">Théorie</Link>
+            <Link href="/outils" className="px-4 py-2 rounded-md bg-white/10 hover:bg-white/15 ring-1 ring-white/15">Outils</Link>
+            <Link href="/pratique" className="px-4 py-2 rounded-md bg-white/10 hover:bg-white/15 ring-1 ring-white/15">Pratique</Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
