@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Clock, Wrench, BookOpen, Hammer, Zap, Award, Download, PlayCircle, FileText } from 'lucide-react';
 
-const SWISS_YT_EMBED = "https://www.youtube.com/embed/videoseries?list=PLSWISS_OFFICIAL_PLAYLIST_ID"; // TODO: replace with official playlist ID
+const SWISS_YT_EMBED = "https://www.youtube.com/embed/videoseries?list=PLSWISS_OFFICIAL_PLAYLIST_ID"; // Ajoute le bon ID YouTube ici
 
 const gallery = [
   { src: '/pratique/gestes/rodage-1.jpg', alt: 'Rodage - étape 1' },
@@ -20,10 +20,16 @@ const tutorials = [
   { id: 'tuto-avance', title: 'Chronographe: contrôle et réglage', video: 'https://www.youtube.com/embed/VIDEO_ID_3', pdf: '/pdf/tutoriels/chronographe-reglage.pdf', duration: '22:10', level: 'Avancé' },
 ];
 
+// --------- Ajoute ton PDF huilage ici ---------
 const pdfCards = [
-  { id: 'pdf-rodage', title: 'Guide complet du rodage', cover: '/pdf/previews/rodage-cover.jpg', href: '/pdf/rodage-guide.pdf', pages: 24 },
-  { id: 'pdf-outils', title: 'Maniement des outils horlogers', cover: '/pdf/previews/outils-cover.jpg', href: '/pdf/outils-maniement.pdf', pages: 32 },
-  { id: 'pdf-reglage', title: 'Réglage & précision', cover: '/pdf/previews/reglage-cover.jpg', href: '/pdf/reglage-precision.pdf', pages: 28 },
+  {
+    id: 'pdf-huilage',
+    title: 'Guide complet du huilage',
+    cover: '/pdf/previews/huilage-cover.jpg', // Image preview optionnelle
+    href: '/pdfs/huilage.pdf',
+    pages: 12
+  },
+  // Ajoute ici les autres PDF de la même façon...
 ];
 
 const categories = [
@@ -35,12 +41,10 @@ const categories = [
   { id: 'certification', icon: Award, title: 'Certification', description: 'Validez vos compétences pratiques', color: 'from-teal-500 to-cyan-600', items: ['Examens', 'Diplômes', 'Badges'], link: '/ressources/certification' },
 ];
 
-function SectionTitle({ children, subtitle }: { children: React.ReactNode; subtitle?: string }) {
+function SectionTitle({ children, subtitle }) {
   return (
     <div className="text-center mb-10">
-      <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-red-500 via-white to-red-500 bg-clip-text text-transparent">
-        {children}
-      </h2>
+      <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-red-500 via-white to-red-500 bg-clip-text text-transparent">{children}</h2>
       {subtitle && <p className="mt-2 text-slate-300">{subtitle}</p>}
     </div>
   );
@@ -54,8 +58,7 @@ export default function PratiqueHorlogere() {
         <div className="absolute inset-0 pointer-events-none opacity-20 bg-[url('/swiss/pattern-cross.svg')] bg-[length:40px_40px]"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/10 shadow-xl">
-            <iframe
-              className="w-full h-full"
+            <iframe className="w-full h-full"
               src={SWISS_YT_EMBED}
               title="Horlogerie Suisse officielle"
               loading="lazy"
@@ -77,11 +80,8 @@ export default function PratiqueHorlogere() {
           {categories.map((category, index) => {
             const Icon = category.icon;
             return (
-              <div
-                key={category.id}
-                className="group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-red-400/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-red-500/20"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
+              <div key={category.id} className="group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-red-400/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-red-500/20"
+                style={{ animationDelay: `${index * 100}ms` }}>
                 <div className={`w-16 h-16 flex items-center justify-center mb-6 rounded-2xl shadow-lg bg-gradient-to-br ${category.color}`}>
                   <Icon className="w-8 h-8 text-white" />
                 </div>
@@ -130,8 +130,7 @@ export default function PratiqueHorlogere() {
           {tutorials.map((tuto) => (
             <div key={tuto.id} className="bg-slate-900/60 border border-white/10 rounded-2xl overflow-hidden hover:border-red-400/40 transition">
               <div className="aspect-video w-full">
-                <iframe
-                  className="w-full h-full"
+                <iframe className="w-full h-full"
                   src={tuto.video}
                   title={tuto.title}
                   loading="lazy"
@@ -147,10 +146,10 @@ export default function PratiqueHorlogere() {
                 </div>
                 <p className="text-sm text-slate-400 mb-4">Durée ~ {tuto.duration}</p>
                 <div className="flex items-center gap-3">
-                  <Link href={tuto.pdf} className="inline-flex items-center gap-2 text-sm font-medium text-red-300 hover:text-white">
+                  <Link href={tuto.pdf} className="inline-flex items-center gap-2 text-sm font-medium text-red-300 hover:text-white" target="_blank" rel="noopener">
                     <Download className="w-4 h-4" /> Télécharger le PDF
                   </Link>
-                  <Link href={tuto.pdf} className="ml-auto inline-flex items-center gap-2 text-xs text-slate-300 hover:text-white">
+                  <Link href={tuto.pdf} className="ml-auto inline-flex items-center gap-2 text-xs text-slate-300 hover:text-white" target="_blank" rel="noopener">
                     <FileText className="w-4 h-4" /> Détail
                   </Link>
                 </div>
@@ -161,17 +160,7 @@ export default function PratiqueHorlogere() {
       </section>
 
       {/* PDF cards */}
-      const pdfCards = [
-  {
-    id: 'pdf-huilage',
-    title: 'Guide complet du huilage',
-    cover: '/pdf/previews/huilage-cover.jpg', // Utilise une image de preview si disponible
-    href: '/pdfs/huilage.pdf',
-    pages: 12 // Adapte selon le nombre de pages du PDF
-  },
-  // ... autres PDF existants
-]
-     <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <SectionTitle subtitle="Téléchargez les supports illustrés en haute résolution">Ressources PDF</SectionTitle>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {pdfCards.map((pdf) => (
@@ -189,9 +178,7 @@ export default function PratiqueHorlogere() {
                   <div className="text-xs text-slate-400">PDF illustré</div>
                 </div>
                 <Link href={pdf.href} className="inline-flex items-center gap-2 text-sm font-medium text-red-300 hover:text-white" target="_blank" rel="noopener">
-             Consulter le PDF
-                </Link>
-
+                  Consulter le PDF
                 </Link>
               </div>
             </div>
