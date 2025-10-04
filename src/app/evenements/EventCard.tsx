@@ -1,8 +1,8 @@
 'use client';
-
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Sparkles } from 'lucide-react';
 import Image from 'next/image';
+import { useState } from 'react';
 
 export type Event = {
   id: string;
@@ -20,13 +20,42 @@ interface EventCardProps {
 }
 
 export default function EventCard({ event, index }: EventCardProps) {
+  const [rotateX, setRotateX] = useState(0);
+  const [rotateY, setRotateY] = useState(0);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateXValue = ((y - centerY) / centerY) * -10;
+    const rotateYValue = ((x - centerX) / centerX) * 10;
+
+    setRotateX(rotateXValue);
+    setRotateY(rotateYValue);
+  };
+
+  const handleMouseLeave = () => {
+    setRotateX(0);
+    setRotateY(0);
+  };
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       whileHover={{ scale: 1.02, y: -4 }}
-      className="group relative bg-gradient-to-br from-gray-900/70 to-gray-800/70 backdrop-blur-sm rounded-xl border border-yellow-600/30 overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-yellow-500/20 transition-all duration-300"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        transformStyle: 'preserve-3d',
+        transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+        transition: 'transform 0.1s ease-out'
+      }}
+      className="group relative bg-gradient-to-br from-gray-900/70 to-gray-800/70 backdrop-blur-sm rounded-xl border border-yellow-600/30 overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-yellow-500/20"
     >
       {/* Image or Icon Section */}
       <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900">
@@ -39,7 +68,7 @@ export default function EventCard({ event, index }: EventCardProps) {
           />
         ) : (
           <div className="flex items-center justify-center h-full">
-            <Sparkles 
+            <Sparkles
               className="w-16 h-16 text-yellow-500/50 animate-pulse" 
               strokeWidth={1.5}
             />
@@ -47,7 +76,7 @@ export default function EventCard({ event, index }: EventCardProps) {
         )}
         
         {/* Gold Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-80" />
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-80"></div>
         
         {/* Category Badge */}
         {event.category && (
@@ -60,7 +89,7 @@ export default function EventCard({ event, index }: EventCardProps) {
       </div>
 
       {/* Content Section */}
-      <div className="p-6 space-y-4">
+      <div className="p-6 space-y-4" style={{ transform: 'translateZ(20px)' }}>
         {/* Title */}
         <h3 className="font-['Bebas_Neue'] text-2xl text-yellow-400 tracking-wide leading-tight group-hover:text-yellow-300 transition-colors">
           {event.title}
@@ -99,7 +128,7 @@ export default function EventCard({ event, index }: EventCardProps) {
 
       {/* Hover Glow Effect */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 via-yellow-400/10 to-yellow-500/5 blur-xl" />
+        <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 via-yellow-400/10 to-yellow-500/5 blur-xl"></div>
       </div>
     </motion.article>
   );
