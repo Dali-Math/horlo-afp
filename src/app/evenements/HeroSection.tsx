@@ -1,20 +1,33 @@
 "use client";
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function HeroSection() {
+  const [scrollY, setScrollY] = useState(0);
+  const { scrollYProgress } = useScroll();
+  
+  // Parallax effect: background moves slower than foreground
+  const bgY = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+
   return (
     <>
       <section className="relative min-h-[60vh] flex items-center justify-center bg-gradient-to-b from-amber-950/40 via-gray-900 to-black overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/20 via-gray-900 to-black">
-        {/* Decorative background elements - gold gradient blur */}
-        <div className="absolute inset-0 opacity-10">
+        {/* Decorative background elements with parallax - gold gradient blur */}
+        <motion.div 
+          className="absolute inset-0 opacity-10"
+          style={{ y: bgY, scale: bgScale }}
+        >
           <div className="absolute top-20 left-10 w-64 h-64 bg-amber-500 rounded-full blur-3xl"></div>
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-600 rounded-full blur-3xl"></div>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-amber-400 rounded-full blur-3xl"></div>
-        </div>
+        </motion.div>
 
-        {/* Event-themed decorative overlay pattern - subtle texture */}
-        <div className="absolute inset-0 opacity-5">
+        {/* Event-themed decorative overlay pattern with parallax - subtle texture */}
+        <motion.div 
+          className="absolute inset-0 opacity-5"
+          style={{ y: useTransform(scrollYProgress, [0, 1], [0, 50]) }}
+        >
           <div
             className="w-full h-full"
             style={{
@@ -22,7 +35,7 @@ export default function HeroSection() {
                                radial-gradient(circle at 80% 30%, rgba(180, 83, 9, 0.3) 0%, transparent 50%)`
             }}
           ></div>
-        </div>
+        </motion.div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center space-y-8">
