@@ -2,11 +2,9 @@
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Download } from "lucide-react";
 import { useEffect } from "react";
-
 export default function PrecisionBalance() {
   const router = useRouter();
-
-  // ✨ Animation fluide à l’apparition
+  // ✨ Animation fluide à l'apparition
   useEffect(() => {
     const elements = document.querySelectorAll(".fade-in-scroll");
     const observer = new IntersectionObserver(
@@ -26,7 +24,6 @@ export default function PrecisionBalance() {
     elements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
-
   // 🧩 Sections avec images externes
   const sections = [
     {
@@ -39,7 +36,7 @@ export default function PrecisionBalance() {
     {
       titre: "2. Ajustement des vis du balancier",
       texte:
-        "Les vis de réglage situées sur la serge du balancier permettent d’équilibrer sa rotation. Tournez-les par paires opposées pour corriger les déséquilibres.",
+        "Les vis de réglage situées sur la serge du balancier permettent d'équilibrer sa rotation. Tournez-les par paires opposées pour corriger les déséquilibres.",
       image:
         "https://archive.horlogerie-suisse.com/Theoriehorlogerie/images/remontage/petit/106-0639_IMG.jpg",
     },
@@ -53,27 +50,24 @@ export default function PrecisionBalance() {
     {
       titre: "4. Contrôle final sur vibrographe",
       texte:
-        "Placez le mouvement sur le vibrographe et mesurez l’amplitude, la dérive et la symétrie du tic-tac. Ajustez jusqu’à atteindre les tolérances établies.",
+        "Placez le mouvement sur le vibrographe et mesurez l'amplitude, la dérive et la symétrie du tic-tac. Ajustez jusqu'à atteindre les tolérances établies.",
       image:
         "https://archive.horlogerie-suisse.com/Theoriehorlogerie/images/remontage/petit/106-0653_IMG.jpg",
     },
   ];
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       <div className="max-w-6xl mx-auto px-4 py-16 space-y-12">
-
         {/* 🔙 Navigation haut */}
         <div className="flex justify-between items-center fade-in-scroll opacity-0 translate-y-8 scale-95 transition-all duration-700 ease-out">
           <button
-            onClick={() => router.push("/precision")}
+            onClick={() => router.push("/pratique")}
             className="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 transition"
           >
             <ArrowLeft className="w-5 h-5" />
             Précision et réglage
           </button>
         </div>
-
         {/* 🏷️ Titre principal */}
         <div className="text-center fade-in-scroll opacity-0 translate-y-8 scale-95 transition-all duration-700 ease-out">
           <h1 className="text-4xl font-bold mb-4 text-amber-400">
@@ -84,7 +78,6 @@ export default function PrecisionBalance() {
             régulière du mouvement à travers la maîtrise du balancier et du spiral.
           </p>
         </div>
-
         {/* 📘 Sections pédagogiques */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {sections.map((item, idx) => (
@@ -106,7 +99,6 @@ export default function PrecisionBalance() {
             </div>
           ))}
         </div>
-
         {/* 🧾 Bloc final + bouton PDF */}
         <div className="text-center bg-slate-800/50 border border-slate-700 rounded-lg p-6 fade-in-scroll opacity-0 translate-y-8 scale-95 transition-all duration-700 ease-out">
           <h3 className="text-amber-400 text-2xl font-bold mb-4">
@@ -114,10 +106,9 @@ export default function PrecisionBalance() {
           </h3>
           <p className="text-slate-300 max-w-3xl mx-auto mb-6">
             Le balancier est le cœur battant de la montre. Sa justesse dépend de
-            l’équilibre, de la tension du spiral et du soin apporté à chaque
+            l'équilibre, de la tension du spiral et du soin apporté à chaque
             ajustement. Une régulation parfaite demande patience et expérience.
           </p>
-
           <a
             href="https://archive.horlogerie-suisse.com/Theoriehorlogerie/remontage2.html"
             target="_blank"
@@ -128,11 +119,10 @@ export default function PrecisionBalance() {
             Consulter la fiche complète
           </a>
         </div>
-
         {/* 🔚 Navigation bas */}
         <div className="flex justify-between items-center pt-8 border-t border-slate-700 fade-in-scroll opacity-0 translate-y-8 scale-95 transition-all duration-700 ease-out">
           <button
-            onClick={() => router.push("/precision")}
+            onClick={() => router.push("/pratique")}
             className="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 transition"
           >
             <ArrowLeft className="w-5 h-5" />
