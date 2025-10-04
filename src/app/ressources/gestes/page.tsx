@@ -40,7 +40,7 @@ export default function GestesDeBase() {
           </div>
         </div>
 
-        {/* Visuel */}
+        {/* Visuel principal */}
         <div className="mb-12 rounded-lg overflow-hidden shadow-2xl">
           <Image
             src="/images/gestes-horlogerie.jpg"
@@ -74,15 +74,40 @@ export default function GestesDeBase() {
           </div>
         </div>
 
-        {/* Bouton téléchargement PDF */}
+        {/* Galerie remontage - intégration de toutes les étapes */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold mb-6 text-amber-400">Étapes du remontage</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              "/images/remontage1.jpg",
+              "/images/remontage2.jpg",
+              "/images/remontage3.jpg",
+              "/images/remontage4.jpg",
+              "/images/remontage5.jpg",
+              "/images/remontage6.jpg",
+              "/images/remontage7.jpg",
+              "/images/remontage8.jpg",
+            ].map((src, idx) => (
+              <img
+                key={idx}
+                src={src}
+                alt={`Remontage - étape ${idx + 1}`}
+                className="rounded-xl object-cover w-full"
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Bouton de consultation PDF */}
         <div className="flex justify-center">
           <a
             href="/pdfs/gestes.pdf"
-            download
+            target="_blank"
+            rel="noopener"
             className="inline-flex items-center gap-3 bg-amber-500 hover:bg-amber-600 text-white font-semibold px-8 py-4 rounded-lg transition-all transform hover:scale-105 shadow-lg"
           >
             <Download className="w-6 h-6" />
-            Télécharger le guide PDF
+            Consulter le guide PDF
           </a>
         </div>
       </div>
