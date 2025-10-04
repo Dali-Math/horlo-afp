@@ -1,8 +1,10 @@
 'use client';
+
 import { useState } from 'react';
 import HeroSection from './HeroSection';
 import FiltersBar from './FiltersBar';
 import EventCard, { Event } from './EventCard';
+import CallToActionSection from './CallToActionSection';
 
 // Mock event data
 const mockEvents: Event[] = [
@@ -62,7 +64,7 @@ export default function EvenementsPage() {
     : mockEvents.filter(event => event.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-b from-zinc-900 via-zinc-800 to-zinc-900">
       {/* Hero Section */}
       <HeroSection />
 
@@ -89,10 +91,13 @@ export default function EvenementsPage() {
         )}
       </section>
 
+      {/* Call to Action Section */}
+      <CallToActionSection />
+
       {/* External Agenda Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="bg-gradient-to-br from-gray-800/70 to-gray-900/70 backdrop-blur-sm rounded-xl border border-yellow-600/30 p-8">
-          <h2 className="font-['Bebas_Neue'] text-3xl text-yellow-400 tracking-wide mb-6">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pb-20">
+        <div className="bg-gradient-to-br from-zinc-800/70 to-zinc-900/70 backdrop-blur-sm rounded-xl border border-amber-500/30 p-8 shadow-2xl">
+          <h2 className="font-['Bebas_Neue'] text-3xl text-amber-400 tracking-wide mb-6">
             📅 Agendas Externes & Ressources
           </h2>
           <div className="grid md:grid-cols-3 gap-4">
@@ -100,9 +105,9 @@ export default function EvenementsPage() {
               href="https://www.fh-pressroom.ch/fr/agenda"
               target="_blank"
               rel="noopener noreferrer"
-              className="group p-4 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-yellow-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/20"
+              className="group p-4 bg-zinc-800/50 rounded-lg border border-zinc-700 hover:border-amber-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/20"
             >
-              <h3 className="font-['Bebas_Neue'] text-lg text-yellow-400 mb-2">
+              <h3 className="font-['Bebas_Neue'] text-lg text-amber-400 mb-2">
                 Fédération Horlogère
               </h3>
               <p className="text-sm text-gray-400 font-['Inter']">
@@ -113,9 +118,9 @@ export default function EvenementsPage() {
               href="https://www.hautehorlogerie.org/fr/actualites/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group p-4 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-yellow-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/20"
+              className="group p-4 bg-zinc-800/50 rounded-lg border border-zinc-700 hover:border-amber-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/20"
             >
-              <h3 className="font-['Bebas_Neue'] text-lg text-yellow-400 mb-2">
+              <h3 className="font-['Bebas_Neue'] text-lg text-amber-400 mb-2">
                 FHH Actualités
               </h3>
               <p className="text-sm text-gray-400 font-['Inter']">
@@ -126,9 +131,9 @@ export default function EvenementsPage() {
               href="https://www.bhi.co.uk/horology-events/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group p-4 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-yellow-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/20"
+              className="group p-4 bg-zinc-800/50 rounded-lg border border-zinc-700 hover:border-amber-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/20"
             >
-              <h3 className="font-['Bebas_Neue'] text-lg text-yellow-400 mb-2">
+              <h3 className="font-['Bebas_Neue'] text-lg text-amber-400 mb-2">
                 BHI Horology Events
               </h3>
               <p className="text-sm text-gray-400 font-['Inter']">
