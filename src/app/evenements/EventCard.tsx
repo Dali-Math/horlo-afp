@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Calendar, MapPin, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
-export interface Event {
+export type Event = {
   id: string;
   title: string;
   date: string;
