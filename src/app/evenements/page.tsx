@@ -1,72 +1,143 @@
+'use client';
+import { useState } from 'react';
+import HeroSection from './HeroSection';
+import FiltersBar from './FiltersBar';
+import EventCard, { Event } from './EventCard';
+
+// Mock event data
+const mockEvents: Event[] = [
+  {
+    id: '1',
+    title: 'Watches & Wonders Geneva',
+    date: '31 mars - 5 avril 2025',
+    location: 'Genève, Suisse',
+    description: 'Le plus grand salon international de l\'horlogerie. Découvrez les dernières nouveautés des marques prestigieuses, assistez à des conférences et explorez l\'univers de la haute horlogerie.',
+    category: 'Salons',
+    link: 'https://www.watchesandwonders.com/',
+  },
+  {
+    id: '2',
+    title: 'Journées des Métiers d\'Horlogerie',
+    date: '15-16 novembre 2025',
+    location: 'La Chaux-de-Fonds, Suisse',
+    description: 'Portes ouvertes des écoles d\'horlogerie. Ateliers d\'initiation gratuits, démonstrations de métiers, rencontres avec des professionnels et visite des installations de formation.',
+    category: 'Ateliers',
+    link: 'https://www.orientation.ch/',
+  },
+  {
+    id: '3',
+    title: 'Salon Belles Montres Paris',
+    date: '8-10 décembre 2025',
+    location: 'Paris, France',
+    description: 'Salon dédié aux montres vintage et contemporaines. Expositions, conférences techniques, ateliers de restauration et rencontres avec des collectionneurs passionnés.',
+    category: 'Salons',
+    link: 'https://www.carrefourhorloger.com/',
+  },
+  {
+    id: '4',
+    title: 'Ateliers MIH - Musée International',
+    date: 'Tous les samedis',
+    location: 'La Chaux-de-Fonds, Suisse',
+    description: 'Ateliers pédagogiques mensuels au Musée International d\'Horlogerie. Découverte des mécanismes, histoire de l\'horlogerie, et initiations pratiques pour tous les âges.',
+    category: 'Ateliers',
+    link: 'https://www.mih.ch/',
+  },
+  {
+    id: '5',
+    title: 'MunichTime Watch Fair',
+    date: '24-26 octobre 2025',
+    location: 'Munich, Allemagne',
+    description: 'Foire horlogère internationale avec focus sur les marques indépendantes. Conférences techniques, masterclasses, et opportunités de networking avec des horlogers innovants.',
+    category: 'Salons',
+    link: 'https://www.munichtime.de/',
+  },
+];
+
 export default function EvenementsPage() {
+  const [selectedCategory, setSelectedCategory] = useState<string>('Tous');
+
+  // Filter events based on selected category
+  const filteredEvents = selectedCategory === 'Tous'
+    ? mockEvents
+    : mockEvents.filter(event => event.category === selectedCategory);
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">🗓️ Événements</h1>
-        <p className="text-lg text-gray-700 mb-8">
-          Agenda, ateliers gratuits, journées portes ouvertes et salons pour découvrir et pratiquer l’horlogerie.
-        </p>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+      {/* Hero Section */}
+      <HeroSection />
 
-        {/* Agenda et Calendriers */}
-        <section className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">📅 Agenda et calendriers</h2>
-          <ul className="list-disc pl-6 space-y-2 text-gray-700">
-            <li>
-              <a className="text-blue-600 hover:underline" href="https://www.fh-pressroom.ch/fr/agenda" target="_blank" rel="noopener noreferrer">Fédération Horlogère – Agenda</a> – événements et salons en Suisse.
-            </li>
-            <li>
-              <a className="text-blue-600 hover:underline" href="https://www.hautehorlogerie.org/fr/actualites/" target="_blank" rel="noopener noreferrer">FHH – Actualités et événements</a> – conférences et expositions.
-            </li>
-            <li>
-              <a className="text-blue-600 hover:underline" href="https://www.bhi.co.uk/horology-events/" target="_blank" rel="noopener noreferrer">BHI – Horology Events</a> – rencontres et salons (UK).
-            </li>
-          </ul>
-        </section>
+      {/* Filters Bar */}
+      <FiltersBar 
+        selectedCategory={selectedCategory} 
+        onCategoryChange={setSelectedCategory}
+      />
 
-        {/* Ateliers gratuits et portes ouvertes */}
-        <section className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">🛠️ Ateliers gratuits et portes ouvertes</h2>
-          <div className="space-y-3">
-            <div className="border-l-4 border-green-500 pl-4">
-              <h3 className="font-semibold text-lg">Journées des Métiers – Écoles d’horlogerie</h3>
-              <p className="text-gray-600">Découverte des formations, ateliers d’initiation et visites.</p>
-              <a className="text-blue-600 hover:underline" href="https://www.orientation.ch/" target="_blank" rel="noopener noreferrer">orientation.ch</a>
-            </div>
-            <div className="border-l-4 border-green-500 pl-4">
-              <h3 className="font-semibold text-lg">Musées – démonstrations et ateliers</h3>
-              <p className="text-gray-600">Ex: MIH, MHL – activités pédagogiques régulières.</p>
-              <a className="text-blue-600 hover:underline" href="https://www.mih.ch/" target="_blank" rel="noopener noreferrer">mih.ch</a>
-            </div>
+      {/* Events Grid */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {filteredEvents.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredEvents.map((event, index) => (
+              <EventCard key={event.id} event={event} index={index} />
+            ))}
           </div>
-        </section>
-
-        {/* Salons et foires */}
-        <section className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">🏟️ Salons et foires</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="border rounded-lg p-4">
-              <h3 className="font-semibold text-lg">Watches and Wonders (Genève)</h3>
-              <p className="text-gray-600">Grand rendez‑vous annuel de l’horlogerie.</p>
-              <a className="text-blue-600 hover:underline" href="https://www.watchesandwonders.com/" target="_blank" rel="noopener noreferrer">watchesandwonders.com</a>
-            </div>
-            <div className="border rounded-lg p-4">
-              <h3 className="font-semibold text-lg">Dubai Watch Week</h3>
-              <p className="text-gray-600">Événements éducatifs, masterclasses et conférences ouvertes.</p>
-              <a className="text-blue-600 hover:underline" href="https://www.dubaiwatchweek.com/" target="_blank" rel="noopener noreferrer">dubaiwatchweek.com</a>
-            </div>
-            <div className="border rounded-lg p-4">
-              <h3 className="font-semibold text-lg">MunichTime / ViennaTime</h3>
-              <p className="text-gray-600">Foires régionales dédiées aux nouveautés et rencontres.</p>
-              <a className="text-blue-600 hover:underline" href="https://www.munichtime.de/" target="_blank" rel="noopener noreferrer">munichtime.de</a>
-            </div>
-            <div className="border rounded-lg p-4">
-              <h3 className="font-semibold text-lg">Salon Belles Montres (Paris)</h3>
-              <p className="text-gray-600">Expositions, conférences et ateliers pour passionnés.</p>
-              <a className="text-blue-600 hover:underline" href="https://www.carrefourhorloger.com/" target="_blank" rel="noopener noreferrer">carrefourhorloger.com</a>
-            </div>
+        ) : (
+          <div className="text-center py-16">
+            <p className="text-xl text-gray-400 font-['Inter']">
+              Aucun événement disponible dans cette catégorie.
+            </p>
           </div>
-        </section>
-      </div>
+        )}
+      </section>
+
+      {/* External Agenda Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="bg-gradient-to-br from-gray-800/70 to-gray-900/70 backdrop-blur-sm rounded-xl border border-yellow-600/30 p-8">
+          <h2 className="font-['Bebas_Neue'] text-3xl text-yellow-400 tracking-wide mb-6">
+            📅 Agendas Externes & Ressources
+          </h2>
+          <div className="grid md:grid-cols-3 gap-4">
+            <a
+              href="https://www.fh-pressroom.ch/fr/agenda"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group p-4 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-yellow-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/20"
+            >
+              <h3 className="font-['Bebas_Neue'] text-lg text-yellow-400 mb-2">
+                Fédération Horlogère
+              </h3>
+              <p className="text-sm text-gray-400 font-['Inter']">
+                Événements et salons en Suisse
+              </p>
+            </a>
+            <a
+              href="https://www.hautehorlogerie.org/fr/actualites/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group p-4 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-yellow-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/20"
+            >
+              <h3 className="font-['Bebas_Neue'] text-lg text-yellow-400 mb-2">
+                FHH Actualités
+              </h3>
+              <p className="text-sm text-gray-400 font-['Inter']">
+                Conférences et expositions
+              </p>
+            </a>
+            <a
+              href="https://www.bhi.co.uk/horology-events/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group p-4 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-yellow-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/20"
+            >
+              <h3 className="font-['Bebas_Neue'] text-lg text-yellow-400 mb-2">
+                BHI Horology Events
+              </h3>
+              <p className="text-sm text-gray-400 font-['Inter']">
+                Rencontres et salons (UK)
+              </p>
+            </a>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
