@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import HeroSection from './HeroSection';
 import FiltersBar from './FiltersBar';
@@ -7,6 +6,7 @@ import ResourceCard from './ResourceCard';
 import ExternalLinksCTA from './ExternalLinksCTA';
 
 type Category = 'all' | 'technique' | 'historique' | 'glossaire' | 'pdf' | 'externe';
+type ActionType = 'internal' | 'external' | 'download';
 
 interface Resource {
   id: number;
@@ -15,22 +15,24 @@ interface Resource {
   description: string;
   buttonText: string;
   buttonIcon: string;
+  actionType: ActionType;
   link: string;
 }
 
 export default function RessourcesPage() {
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
 
-  // Complete resources data with various categories
+  // Complete resources data with hybrid action types
   const resources: Resource[] = [
     {
       id: 1,
       category: 'technique',
       title: 'Guide du chronographe',
-      description: 'PDF complet expliquant le fonctionnement du chronographe mécanique.',
-      buttonText: 'Télécharger',
-      buttonIcon: '📄',
-      link: '#',
+      description: 'Découvrez le fonctionnement du chronographe mécanique, un mécanisme emblématique de l\'horlogerie.',
+      buttonText: 'Lire l\'article',
+      buttonIcon: '📖',
+      actionType: 'internal',
+      link: '/ressources/chronographe',
     },
     {
       id: 2,
@@ -38,17 +40,19 @@ export default function RessourcesPage() {
       title: 'Les grandes maisons suisses',
       description: "Article retraçant l'évolution des manufactures horlogères depuis le XIXe siècle.",
       buttonText: "Lire l'article",
-      buttonIcon: '🌐',
-      link: '#',
+      buttonIcon: '📖',
+      actionType: 'internal',
+      link: '/ressources/maisons-suisses',
     },
     {
       id: 3,
       category: 'glossaire',
       title: '100 termes essentiels',
-      description: "Glossaire interactif des termes techniques de l'horlogerie.",
+      description: "Dictionnaire officiel de la Fondation de la Haute Horlogerie.",
       buttonText: 'Consulter',
-      buttonIcon: '📘',
-      link: '#',
+      buttonIcon: '🔍',
+      actionType: 'external',
+      link: 'https://www.hautehorlogerie.org/fr/encyclopedie/dictionnaire/',
     },
     {
       id: 4,
@@ -56,8 +60,9 @@ export default function RessourcesPage() {
       title: 'Planche de démontage calibre ETA',
       description: 'Document PDF haute résolution pour les étudiants AFP.',
       buttonText: 'Télécharger',
-      buttonIcon: '⬇️',
-      link: '#',
+      buttonIcon: '📄',
+      actionType: 'download',
+      link: '/docs/planche-demontage-eta.pdf',
     },
     {
       id: 5,
@@ -66,34 +71,28 @@ export default function RessourcesPage() {
       description: "Liens vers des documents et catalogues d'époque (Fondation Haute Horlogerie).",
       buttonText: 'Visiter le site',
       buttonIcon: '🌍',
-      link: '#',
+      actionType: 'external',
+      link: 'https://www.hautehorlogerie.org/fr/fondation/',
     },
     {
       id: 6,
       category: 'technique',
-      title: 'Mécanismes de répétition',
-      description: 'Analyse technique des complications sonnantes et répétitions minutes.',
-      buttonText: 'Télécharger',
-      buttonIcon: '📄',
-      link: '#',
+      title: 'Termes techniques essentiels',
+      description: 'Glossaire complet des termes techniques de l\'horlogerie pour débutants et professionnels.',
+      buttonText: 'Lire l\'article',
+      buttonIcon: '📖',
+      actionType: 'internal',
+      link: '/ressources/termes-techniques',
     },
     {
       id: 7,
-      category: 'historique',
-      title: 'Histoire de la montre-bracelet',
-      description: "De la montre de poche à la montre-bracelet moderne : une évolution fascinante.",
-      buttonText: "Lire l'article",
-      buttonIcon: '🌐',
-      link: '#',
-    },
-    {
-      id: 8,
       category: 'pdf',
-      title: 'Schémas techniques - Calibre automatique',
-      description: 'Plans détaillés des mécanismes de remontage automatique.',
+      title: 'Guide PDF du chronographe',
+      description: 'Téléchargez le guide complet du chronographe au format PDF.',
       buttonText: 'Télécharger',
       buttonIcon: '📄',
-      link: '#',
+      actionType: 'download',
+      link: '/docs/guide-chronographe.pdf',
     },
   ];
 
@@ -123,7 +122,7 @@ export default function RessourcesPage() {
       >
         {filteredResources.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredResources.map((resource, index) => (
+            {filteredResources.map((resource) => (
               <ResourceCard
                 key={resource.id}
                 category={resource.category}
@@ -131,6 +130,7 @@ export default function RessourcesPage() {
                 description={resource.description}
                 buttonText={resource.buttonText}
                 buttonIcon={resource.buttonIcon}
+                actionType={resource.actionType}
                 link={resource.link}
               />
             ))}
