@@ -2,7 +2,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Download, Play } from 'lucide-react';
-
 export default function TutorielsGuides() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
@@ -21,7 +20,6 @@ export default function TutorielsGuides() {
           <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-600 bg-clip-text text-transparent">
             Démontage et remontage du mouvement Unitas 6497
           </h1>
-
           {/* Image */}
           <div className="mb-8 rounded-xl overflow-hidden">
             <img
@@ -30,7 +28,6 @@ export default function TutorielsGuides() {
               className="w-full h-auto object-cover"
             />
           </div>
-
           {/* Description */}
           <div className="mb-8">
             <p className="text-slate-300 leading-relaxed mb-4">
@@ -43,7 +40,6 @@ export default function TutorielsGuides() {
               appliquées dans les ateliers horlogers suisses.
             </p>
           </div>
-
           {/* Étapes principales */}
           <div className="mb-8">
             <h2 className="text-2xl font-semibold text-emerald-400 mb-4">Étapes principales</h2>
@@ -61,7 +57,6 @@ export default function TutorielsGuides() {
                   <li>Contrôles de qualité (jeu, pivots, endshake)</li>
                 </ol>
               </div>
-
               <div className="bg-slate-800/40 rounded-xl p-5 border border-slate-700/50">
                 <h3 className="text-xl font-semibold text-white mb-3">Remontage et huilage</h3>
                 <ol className="list-decimal list-inside text-slate-300 space-y-2">
@@ -77,9 +72,8 @@ export default function TutorielsGuides() {
               </div>
             </div>
           </div>
-
-          {/* Boutons consultation PDF et Vidéo */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          {/* Bouton consultation PDF */}
+          <div className="flex justify-center mb-8">
             <a
               href="/pdfs/tutoriels/Remontage_mouvement%20Unitas%206497.pdf"
               target="_blank"
@@ -89,16 +83,39 @@ export default function TutorielsGuides() {
               <Download className="w-5 h-5" />
               Consulter le tutoriel PDF
             </a>
-            
-            <a
-              href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-red-500/50"
-            >
-              <Play className="w-5 h-5" />
-              Consulter la vidéo
-            </a>
+          </div>
+          {/* Consulter les vidéos */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold text-emerald-400 mb-6 text-center">Consulter les vidéos</h2>
+            <div className="flex flex-col gap-4 items-center">
+              <a
+                href="https://www.youtube.com/watch?v=mlo7muAlynE"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-red-500/50 w-full max-w-md"
+              >
+                <Play className="w-5 h-5" />
+                Montage du mouvement ETA 6497
+              </a>
+              <a
+                href="https://www.youtube.com/watch?v=yQtXTtmp7jg"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-red-500/50 w-full max-w-md"
+              >
+                <Play className="w-5 h-5" />
+                Démontage d'un mouvement ETA 6497
+              </a>
+              <a
+                href="https://www.youtube.com/watch?v=ARb8Vo4refs"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-red-500/50 w-full max-w-md"
+              >
+                <Play className="w-5 h-5" />
+                Lubrification d'un mouvement mécanique
+              </a>
+            </div>
           </div>
         </div>
       </div>
