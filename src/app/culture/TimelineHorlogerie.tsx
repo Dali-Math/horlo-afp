@@ -1,13 +1,14 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import { Clock, Crown, Sparkles, Gauge, Wrench, Watch, Gem, Trophy, Zap, Smartphone } from 'lucide-react';
 
 interface TimelineEvent {
   year: string;
   title: string;
   description: string;
-  icon?: string;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 const timelineData: TimelineEvent[] = [
@@ -15,201 +16,245 @@ const timelineData: TimelineEvent[] = [
     year: '3500 av. J.-C.',
     title: 'Cadrans solaires',
     description: 'Les premières méthodes de mesure du temps utilisent l\'ombre du soleil pour indiquer les heures de la journée.',
-    icon: '☀️'
+    icon: Clock
   },
   {
     year: '1400',
     title: 'Horloges mécaniques',
     description: 'Apparition des premières horloges mécaniques dans les églises et tours municipales européennes.',
-    icon: '⛪'
+    icon: Sparkles
   },
   {
     year: '1510',
     title: 'Montre portable',
     description: 'Peter Henlein crée les premières montres portables, marquant le début de l\'horlogerie personnelle.',
-    icon: '⌚'
+    icon: Watch
   },
   {
     year: '1675',
     title: 'Spiral réglant',
     description: 'Christian Huygens invente le spiral réglant, révolutionnant la précision horlogère.',
-    icon: '🔄'
+    icon: Gauge
   },
   {
     year: '1755',
     title: 'Échappement à ancre',
     description: 'Thomas Mudge perfectionne l\'échappement à ancre, amélioration majeure de la régulation.',
-    icon: '⚙️'
+    icon: Wrench
   },
   {
     year: '1839',
     title: 'Patek Philippe',
     description: 'Fondation de Patek Philippe, une des manufactures horlogères les plus prestigieuses.',
-    icon: '👑'
+    icon: Crown
   },
   {
     year: '1868',
     title: 'Montre-bracelet',
     description: 'Patek Philippe crée la première montre-bracelet pour la Comtesse Koscowicz de Hongrie.',
-    icon: '💎'
+    icon: Gem
   },
   {
     year: '1905',
     title: 'Rolex',
     description: 'Hans Wilsdorf fonde Rolex, qui deviendra synonyme de luxe et de précision horlogère.',
-    icon: '🏆'
+    icon: Trophy
   },
   {
     year: '1969',
     title: 'Quartz',
     description: 'Seiko lance la première montre à quartz, révolutionnant l\'industrie avec une précision inégalée.',
-    icon: '⚡'
+    icon: Zap
   },
   {
     year: '2015',
     title: 'Smartwatch',
     description: 'L\'Apple Watch popularise les montres connectées, fusionnant technologie et horlogerie.',
-    icon: '📱'
+    icon: Smartphone
   }
 ];
 
 export default function TimelineHorlogerie() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  // Track scroll progress for the progress bar
+  useEffect(() => {
+    const handleScroll = () => {
+      if (scrollContainerRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+        const maxScroll = scrollWidth - clientWidth;
+        const progress = maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0;
+        setScrollProgress(progress);
+      }
+    };
+
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      return () => container.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
 
   return (
-    <div className="w-full bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 py-20 px-4 overflow-hidden">
+    <div className="w-full bg-dark-900 py-20 px-4 overflow-hidden">
+      {/* Section Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         className="text-center mb-16"
       >
-        <h2 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-400 bg-clip-text text-transparent mb-4" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+        <h2 className="font-bebas text-5xl md:text-6xl text-gold mb-4 animate-fade-in">
           Histoire de l'Horlogerie
         </h2>
-        <p className="text-slate-400 text-lg" style={{ fontFamily: 'Inter, sans-serif' }}>
+        <p className="font-inter text-light-200 text-lg animate-fade-in-up">
           Un voyage à travers les siècles
         </p>
       </motion.div>
 
       {/* Timeline Container */}
       <div className="relative">
-        {/* Horizontal Line */}
-        <div className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-500/30 to-transparent transform -translate-y-1/2 hidden md:block" />
+        {/* Horizontal Golden Line */}
+        <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-gold/40 to-transparent transform -translate-y-1/2 hidden md:block pointer-events-none"></div>
 
         {/* Scrollable Timeline */}
-        <div className="overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-amber-600">
+        <div
+          ref={scrollContainerRef}
+          className="overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-thin scrollbar-track-dark-800 scrollbar-thumb-gold"
+          style={{ scrollBehavior: 'smooth' }}
+        >
           <div className="flex gap-8 md:gap-16 px-4 md:px-8 min-w-max">
-            {timelineData.map((event, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-                className="flex-shrink-0 w-72 snap-center"
-              >
-                <div className="relative">
-                  {/* Event Card */}
-                  <motion.div
-                    whileHover={{ scale: 1.05, y: -10 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
-                    className={`relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 border-2 transition-all duration-300 ${
-                      hoveredIndex === index
-                        ? 'border-amber-500 shadow-2xl shadow-amber-500/50'
-                        : 'border-slate-700 shadow-lg'
-                    }`}
-                  >
-                    {/* Glow Effect */}
-                    {hoveredIndex === index && (
-                      <motion.div
-                        layoutId="glow"
-                        className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-500/20 to-yellow-500/20 blur-xl -z-10"
-                        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                      />
-                    )}
-
-                    {/* Icon */}
+            {timelineData.map((event, index) => {
+              const Icon = event.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.5 }}
+                  transition={{ delay: index * 0.1, duration: 0.6 }}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  className="flex-shrink-0 w-72 snap-center"
+                >
+                  <div className="relative">
+                    {/* Event Card */}
                     <motion.div
-                      animate={{
-                        rotate: hoveredIndex === index ? [0, 10, -10, 0] : 0
-                      }}
-                      transition={{ duration: 0.5 }}
-                      className="text-5xl mb-4 text-center"
+                      whileHover={{ scale: 1.05, y: -10 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                      className={`relative bg-dark-800/90 backdrop-blur rounded-2xl p-6 border-2 transition-all duration-300 ${hoveredIndex === index
+                          ? 'gold-border shadow-2xl shadow-gold/30 gold-glow'
+                          : 'border-white/10 shadow-lg'
+                        }`}
                     >
-                      {event.icon}
-                    </motion.div>
+                      {/* Golden Glow Effect on Hover */}
+                      {hoveredIndex === index && (
+                        <motion.div
+                          layoutId="timeline-glow"
+                          className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gold/10 to-gold-light/10 blur-xl -z-10"
+                          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                        />
+                      )}
 
-                    {/* Year */}
-                    <h3
-                      className="text-2xl font-bold text-amber-400 mb-2 text-center"
-                      style={{ fontFamily: 'Space Grotesk, sans-serif' }}
-                    >
-                      {event.year}
-                    </h3>
-
-                    {/* Title */}
-                    <h4
-                      className="text-xl font-semibold text-white mb-3 text-center"
-                      style={{ fontFamily: 'Space Grotesk, sans-serif' }}
-                    >
-                      {event.title}
-                    </h4>
-
-                    {/* Description - Shows on hover */}
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{
-                        opacity: hoveredIndex === index ? 1 : 0,
-                        height: hoveredIndex === index ? 'auto' : 0
-                      }}
-                      transition={{ duration: 0.3 }}
-                      className="overflow-hidden"
-                    >
-                      <p
-                        className="text-slate-300 text-sm leading-relaxed"
-                        style={{ fontFamily: 'Inter, sans-serif' }}
-                      >
-                        {event.description}
-                      </p>
-                    </motion.div>
-
-                    {/* Dot indicator */}
-                    <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 hidden md:block">
+                      {/* Lucide Icon */}
                       <motion.div
                         animate={{
-                          scale: hoveredIndex === index ? [1, 1.5, 1] : 1,
-                          boxShadow: hoveredIndex === index
-                            ? '0 0 20px rgba(251, 191, 36, 0.8)'
-                            : '0 0 0px rgba(251, 191, 36, 0)'
+                          rotate: hoveredIndex === index ? [0, 10, -10, 0] : 0,
+                          scale: hoveredIndex === index ? 1.1 : 1
                         }}
                         transition={{ duration: 0.5 }}
-                        className="w-4 h-4 rounded-full bg-amber-500 border-4 border-slate-900"
-                      />
-                    </div>
-                  </motion.div>
-                </div>
-              </motion.div>
-            ))}
+                        className="flex justify-center mb-4"
+                      >
+                        <div className={`p-3 rounded-full ${
+                          hoveredIndex === index 
+                            ? 'bg-gold/20 animate-glow' 
+                            : 'bg-white/5'
+                        } transition-all duration-300`}>
+                          <Icon className={`w-8 h-8 ${
+                            hoveredIndex === index 
+                              ? 'text-gold-light' 
+                              : 'text-gold'
+                          } transition-colors duration-300`} />
+                        </div>
+                      </motion.div>
+
+                      {/* Year - Golden Circle Badge */}
+                      <div className="flex justify-center mb-4">
+                        <motion.div
+                          animate={{
+                            scale: hoveredIndex === index ? [1, 1.1, 1] : 1,
+                            boxShadow: hoveredIndex === index
+                              ? '0 0 30px rgba(212, 175, 55, 0.6)'
+                              : '0 0 0px rgba(212, 175, 55, 0)'
+                          }}
+                          transition={{ duration: 0.4 }}
+                          className="w-24 h-24 rounded-full bg-gradient-to-br from-gold via-gold-light to-gold-dark flex items-center justify-center border-4 border-dark-900 shadow-lg"
+                        >
+                          <h3 className="font-bebas text-lg text-dark-900 text-center leading-tight">
+                            {event.year}
+                          </h3>
+                        </motion.div>
+                      </div>
+
+                      {/* Title */}
+                      <h4 className="font-oswald text-xl font-semibold text-light-100 mb-3 text-center">
+                        {event.title}
+                      </h4>
+
+                      {/* Description */}
+                      <motion.div
+                        initial={{ opacity: 0.7, height: 'auto' }}
+                        animate={{
+                          opacity: hoveredIndex === index ? 1 : 0.7
+                        }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden"
+                      >
+                        <p className="font-inter text-light-200 text-sm leading-relaxed text-center">
+                          {event.description}
+                        </p>
+                      </motion.div>
+
+                      {/* Connection Dot to Timeline */}
+                      <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 hidden md:block">
+                        <motion.div
+                          animate={{
+                            scale: hoveredIndex === index ? [1, 1.5, 1] : 1,
+                            boxShadow: hoveredIndex === index
+                              ? '0 0 20px rgba(212, 175, 55, 0.8)'
+                              : '0 0 0px rgba(212, 175, 55, 0)'
+                          }}
+                          transition={{ duration: 0.5 }}
+                          className="w-5 h-5 rounded-full bg-gold border-4 border-dark-900 shadow-lg animate-glow"
+                        />
+                      </div>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Scroll Hint */}
-        <motion.div
-          initial={{ opacity: 1 }}
-          animate={{ opacity: [1, 0.5, 1] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          className="text-center mt-8 text-slate-500 text-sm md:hidden"
-          style={{ fontFamily: 'Inter, sans-serif' }}
-        >
-          ← Faites défiler →
-        </motion.div>
+        {/* Scroll Progress Bar */}
+        <div className="mt-8 px-4 md:px-8">
+          <div className="relative w-full h-2 bg-dark-800 rounded-full overflow-hidden border border-white/10">
+            <motion.div
+              className="absolute left-0 top-0 h-full bg-gradient-to-r from-gold via-gold-light to-gold rounded-full shadow-lg shadow-gold/50"
+              style={{ width: `${scrollProgress}%` }}
+              transition={{ duration: 0.1 }}
+            />
+          </div>
+          <p className="font-inter text-light-200/60 text-xs text-center mt-2">
+            Faites défiler horizontalement pour explorer l'histoire
+          </p>
+        </div>
       </div>
 
-      {/* Bottom gradient decoration */}
-      <div className="mt-16 h-1 w-full bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
+      {/* Bottom Golden Divider */}
+      <div className="mt-16 h-0.5 w-full bg-gradient-to-r from-transparent via-gold/50 to-transparent"></div>
     </div>
   );
 }
