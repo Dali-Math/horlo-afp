@@ -1,8 +1,7 @@
 "use client";
-
 import React from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Download } from 'lucide-react';
+import { ArrowLeft, Download, Play } from 'lucide-react';
 
 export default function TutorielsGuides() {
   return (
@@ -79,8 +78,8 @@ export default function TutorielsGuides() {
             </div>
           </div>
 
-          {/* Bouton consultation PDF */}
-          <div className="text-center">
+          {/* Boutons consultation PDF et Vidéo */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a
               href="/pdfs/tutoriels/Remontage_mouvement%20Unitas%206497.pdf"
               target="_blank"
@@ -89,6 +88,16 @@ export default function TutorielsGuides() {
             >
               <Download className="w-5 h-5" />
               Consulter le tutoriel PDF
+            </a>
+            
+            <a
+              href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-red-500/50"
+            >
+              <Play className="w-5 h-5" />
+              Consulter la vidéo
             </a>
           </div>
         </div>
