@@ -20,15 +20,11 @@ export default function YesNoGame() {
   });
   const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
   const [showExplanation, setShowExplanation] = useState(false);
-  const [lastAnswer, setLastAnswer] = useState<{
-    correct: boolean;
-    explanation: string;
-  } | null>(null);
-
-  // TIMER state
+  const [lastAnswer, setLastAnswer] = useState<{ correct: boolean; explanation: string } | null>(null);
   const [timeLeft, setTimeLeft] = useState(20);
   const [timeUp, setTimeUp] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const answeredRef = useRef(false); // ✅ empêche de répondre deux fois à la même question
 
   const clearTimer = () => {
     if (intervalRef.current) {
@@ -41,13 +37,13 @@ export default function YesNoGame() {
     clearTimer();
     setTimeLeft(20);
     setTimeUp(false);
+    answeredRef.current = false;
     intervalRef.current = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearTimer();
           setTimeUp(true);
-          // Auto-fault when time reaches 0 (timeout is always wrong)
-          handleAnswer(false, true);
+          handleAnswer(false, true); // ✅ chaque timeout sera toujours compté comme faux
           return 0;
         }
         return prev - 1;
@@ -55,7 +51,6 @@ export default function YesNoGame() {
     }, 1000);
   };
 
-  // Shuffle questions at game start
   const shuffleQuestions = () => {
     const shuffled = [...questions].sort(() => Math.random() - 0.5);
     setShuffledQuestions(shuffled);
@@ -73,7 +68,6 @@ export default function YesNoGame() {
   };
 
   const proceedAfterAnswer = () => {
-    // Move to next question or end game after showing explanation
     setTimeout(() => {
       if (score.wrongAnswers >= 3) {
         setGameState('gameOver');
@@ -84,7 +78,7 @@ export default function YesNoGame() {
         setCurrentQuestionIndex((idx) => idx + 1);
         setShowExplanation(false);
         setLastAnswer(null);
-        startTimer(); // reset timer for next question
+        startTimer();
       } else {
         setGameState('gameOver');
         setShowExplanation(false);
@@ -92,44 +86,35 @@ export default function YesNoGame() {
     }, 2500);
   };
 
-  // ANSWER HANDLER
-  // If fromTimeout is true, it must ALWAYS be counted as wrong
   const handleAnswer = (answer: boolean, fromTimeout: boolean = false) => {
-    // Prevent multiple answers while explanation is showing
-    if (showExplanation) return;
+    if (answeredRef.current) return; // ✅ bloque les réponses multiples
+    answeredRef.current = true;
 
     const currentQuestion = shuffledQuestions[currentQuestionIndex];
-
-    // Force incorrect on timeout, regardless of the correct answer
     const isCorrect = fromTimeout ? false : answer === currentQuestion.correctAnswer;
 
-    const newStats: GameStats = {
-      ...score,
-      totalQuestions: score.totalQuestions + 1,
-      correctAnswers: isCorrect ? score.correctAnswers + 1 : score.correctAnswers,
-      wrongAnswers: isCorrect ? score.wrongAnswers : score.wrongAnswers + 1,
-    };
+    setScore((prev) => {
+      const newStats = {
+        correctAnswers: isCorrect ? prev.correctAnswers + 1 : prev.correctAnswers,
+        totalQuestions: prev.totalQuestions + 1,
+        wrongAnswers: isCorrect ? prev.wrongAnswers : prev.wrongAnswers + 1,
+      };
 
-    setScore(newStats);
+      if (newStats.wrongAnswers >= 3) {
+        clearTimer();
+        setTimeout(() => setGameState('gameOver'), 2000);
+      }
+
+      return newStats;
+    });
+
     setLastAnswer({
       correct: isCorrect,
-      explanation: fromTimeout ? 'Temps écoulé !' : currentQuestion.explanation,
+      explanation: fromTimeout ? '⏰ Temps écoulé !' : currentQuestion.explanation,
     });
+
     setShowExplanation(true);
-
-    // stop timer upon answer or timeout
     clearTimer();
-
-    // GameOver if 3 wrong answers
-    if (newStats.wrongAnswers >= 3) {
-      setTimeout(() => {
-        setGameState('gameOver');
-        setShowExplanation(false);
-      }, 3000);
-      return;
-    }
-
-    // Next question after 2.5 seconds
     proceedAfterAnswer();
   };
 
@@ -145,15 +130,10 @@ export default function YesNoGame() {
     clearTimer();
   };
 
-  // Start or reset timer when game state changes
   useEffect(() => {
-    if (gameState === 'playing') {
-      startTimer();
-    } else {
-      clearTimer();
-    }
+    if (gameState === 'playing') startTimer();
+    else clearTimer();
     return () => clearTimer();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameState]);
 
   const currentQuestion = shuffledQuestions[currentQuestionIndex];
@@ -170,10 +150,10 @@ export default function YesNoGame() {
               <div className="bg-indigo-50 rounded-lg p-4 mb-6 text-left">
                 <h3 className="font-semibold text-indigo-800 mb-2">📋 Règles du jeu :</h3>
                 <ul className="text-sm text-indigo-700 space-y-1">
-                  • Répondez par VRAI ou FAUX aux questions
-                  • Vous avez droit à 3 erreurs maximum
-                  • Score affiché en temps réel
-                  • Explication après chaque réponse
+                  • Répondez par VRAI ou FAUX aux questions  
+                  • Vous avez droit à 3 erreurs maximum  
+                  • Score affiché en temps réel  
+                  • Explication après chaque réponse  
                   • 20 secondes par question
                 </ul>
               </div>
@@ -190,7 +170,7 @@ export default function YesNoGame() {
                   value={playerName}
                   onChange={(e) => setPlayerName(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && startGame()}
-                  className="w-full px-4 py-3 border-2 border-indigo-200 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none text-center text-lg"
+                  className="w-full px-4 py-3 border-2 border-indigo-200 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none text-center text-lg bg-white text-gray-900 placeholder-gray-400 shadow-sm dark:bg-slate-800 dark:text-white dark:placeholder-slate-400"
                   placeholder="Mon pseudo..."
                   maxLength={20}
                 />
@@ -211,7 +191,9 @@ export default function YesNoGame() {
             <div className="mb-6 text-center">
               <div className="flex justify-between items-center mb-4">
                 <div className="text-lg font-medium text-slate-600">👤 {playerName}</div>
-                <div className="text-lg font-medium text-slate-600">Question {currentQuestionIndex + 1}/{shuffledQuestions.length}</div>
+                <div className="text-lg font-medium text-slate-600">
+                  Question {currentQuestionIndex + 1}/{shuffledQuestions.length}
+                </div>
               </div>
 
               <div className="flex justify-center space-x-6 text-sm">
@@ -258,15 +240,20 @@ export default function YesNoGame() {
             </div>
 
             {showExplanation && lastAnswer && (
-              <div className={`${lastAnswer.correct ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'} border-2 rounded-lg p-6`}>
+              <div
+                className={`${
+                  lastAnswer.correct
+                    ? 'bg-green-50 border-green-200 text-green-800'
+                    : 'bg-red-50 border-red-200 text-red-800'
+                } border-2 rounded-lg p-6`}
+              >
                 <div className="flex items-center space-x-2 mb-3">
                   <span className="text-2xl">{lastAnswer.correct ? '✅' : '❌'}</span>
-                  <span className="font-bold text-lg">{lastAnswer.correct ? 'Bonne réponse !' : 'Fausse réponse'}</span>
+                  <span className="font-bold text-lg">
+                    {lastAnswer.correct ? 'Bonne réponse !' : 'Fausse réponse'}
+                  </span>
                 </div>
                 <p className="leading-relaxed">{lastAnswer.explanation}</p>
-                {timeUp && (
-                  <p className="mt-2 text-sm text-slate-500">Temps écoulé !</p>
-                )}
               </div>
             )}
           </div>
@@ -276,7 +263,9 @@ export default function YesNoGame() {
           <div className="bg-white rounded-2xl shadow-2xl p-8 text-center border border-indigo-200">
             <div className="mb-6">
               <div className="text-6xl mb-4">{score.wrongAnswers >= 3 ? '💥' : '🎉'}</div>
-              <h2 className="text-3xl font-bold text-slate-800 mb-4">{score.wrongAnswers >= 3 ? 'Game Over !' : 'Quiz terminé !'}</h2>
+              <h2 className="text-3xl font-bold text-slate-800 mb-4">
+                {score.wrongAnswers >= 3 ? 'Game Over !' : 'Quiz terminé !'}
+              </h2>
               <p className="text-lg text-slate-600 mb-6">Bien joué {playerName} !</p>
             </div>
             <div className="bg-slate-50 rounded-lg p-6 mb-6">
@@ -291,7 +280,9 @@ export default function YesNoGame() {
                   <div className="text-sm text-slate-600">Fausses</div>
                 </div>
                 <div className="bg-white rounded-lg p-4 shadow">
-                  <div className="text-2xl font-bold text-blue-600">{Math.round((score.correctAnswers / score.totalQuestions) * 100) || 0}%</div>
+                  <div className="text-2xl font-bold text-blue-600">
+                    {Math.round((score.correctAnswers / score.totalQuestions) * 100) || 0}%
+                  </div>
                   <div className="text-sm text-slate-600">Précision</div>
                 </div>
               </div>
