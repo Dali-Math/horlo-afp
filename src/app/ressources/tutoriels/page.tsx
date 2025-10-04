@@ -82,7 +82,7 @@ export default function TutorielsGuides() {
           {/* Bouton consultation PDF */}
           <div className="text-center">
             <a
-              href="/ressources/tutoriels/Remontage_mouvement%20Unitas%206497.pdf"
+              href="/pdfs/tutoriels/Remontage_mouvement%20Unitas%206497.pdf"
               target="_blank"
               rel="noopener"
               className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/50"
