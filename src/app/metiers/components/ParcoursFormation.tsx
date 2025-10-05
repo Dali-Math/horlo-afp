@@ -1,28 +1,25 @@
 'use client';
-
 import { motion } from 'framer-motion';
-import { FaTools, FaCertificate, FaGraduationCap, FaIndustry } from 'react-icons/fa';
+import { FaTools, FaClock, FaStar } from 'react-icons/fa';
 
 const etapes = [
   {
     icon: FaTools,
-    titre: 'Atelier',
-    description: 'Premiers pas dans l’univers horloger',
+    titre: 'AFP',
+    duree: '2 ans',
+    description: 'Découverte du métier et des outils',
   },
   {
-    icon: FaCertificate,
-    titre: 'AFP (2 ans)',
-    description: 'Attestation de Formation Professionnelle',
+    icon: FaClock,
+    titre: 'CFC',
+    duree: '4 ans',
+    description: 'Maîtrise des techniques horlogères',
   },
   {
-    icon: FaGraduationCap,
-    titre: 'CFC (4 ans)',
-    description: 'Certificat Fédéral de Capacité',
-  },
-  {
-    icon: FaIndustry,
+    icon: FaStar,
     titre: 'Spécialisation',
-    description: 'Manufacture / Maîtrise',
+    duree: 'Modules complémentaires',
+    description: 'Haute horlogerie, micromécanique, contrôle qualité',
   },
 ];
 
@@ -50,35 +47,52 @@ export default function ParcoursFormation() {
           Le chemin vers l'excellence horlogère, étape par étape.
         </motion.p>
 
-        {/* Frise horizontale */}
+        {/* Frise horizontale desktop / verticale mobile */}
         <div className="relative">
-          {/* Ligne de connexion */}
-          <div className="absolute top-1/2 left-0 right-0 h-1 bg-[#E2B44F]/30 transform -translate-y-1/2 hidden md:block" />
-          
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-4">
+          {/* Ligne de connexion dorée - horizontale sur desktop, verticale sur mobile */}
+          <motion.div
+            className="absolute md:top-1/2 md:left-0 md:right-0 md:h-1 md:w-full left-1/2 top-0 bottom-0 w-1 h-full md:transform md:-translate-y-1/2 transform -translate-x-1/2 bg-gradient-to-r md:bg-gradient-to-r bg-gradient-to-b from-[#E2B44F]/20 via-[#E2B44F] to-[#E2B44F]/20 md:block"
+            initial={{ scaleX: 0, scaleY: 0 }}
+            whileInView={{ scaleX: 1, scaleY: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, delay: 0.3 }}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8">
             {etapes.map((etape, index) => {
               const Icon = etape.icon;
               return (
                 <motion.div
                   key={index}
                   className="relative flex flex-col items-center text-center"
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  transition={{ duration: 0.7, delay: 0.4 + index * 0.2 }}
                 >
-                  {/* Icône */}
-                  <div className="relative z-10 w-24 h-24 rounded-full bg-[#1A1A1A] border-4 border-[#E2B44F] flex items-center justify-center mb-4 hover:scale-110 transition-transform duration-300">
-                    <Icon className="text-[#E2B44F] text-3xl" />
-                  </div>
+                  {/* Icône avec effet hover */}
+                  <motion.div
+                    className="relative z-10 w-28 h-28 rounded-full bg-gradient-to-br from-[#1A1A1A] to-[#0a0a0a] border-4 border-[#E2B44F] flex items-center justify-center mb-6 shadow-lg shadow-[#E2B44F]/20 hover:shadow-[#E2B44F]/40 transition-all duration-300"
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Icon className="text-[#E2B44F] text-4xl" />
+                  </motion.div>
 
                   {/* Titre */}
-                  <h3 className="text-xl font-bold text-[#E2B44F] mb-2">
+                  <h3 className="text-2xl font-bold text-[#E2B44F] mb-2">
                     {etape.titre}
                   </h3>
 
+                  {/* Durée */}
+                  <p className="text-base text-[#E2B44F]/80 font-semibold mb-3">
+                    {etape.duree}
+                  </p>
+
                   {/* Description */}
-                  <p className="text-sm text-[#d1d1d1]">{etape.description}</p>
+                  <p className="text-sm text-[#d1d1d1] leading-relaxed max-w-xs">
+                    {etape.description}
+                  </p>
                 </motion.div>
               );
             })}
