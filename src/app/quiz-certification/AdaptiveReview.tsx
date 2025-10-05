@@ -1,10 +1,16 @@
 'use client';
 
-export default function AdaptiveReview() {
+interface AdaptiveReviewProps {
+  answers: Record<number, string>;
+  score: number;
+}
+
+export default function AdaptiveReview({ answers, score }: AdaptiveReviewProps) {
   return (
     <div>
       <h2>Adaptive Review Placeholder</h2>
-      <p>Le composant est prêt à être implémenté.</p>
+      <p>Score actuel : {score}</p>
+      <p>Nombre de réponses : {Object.keys(answers).length}</p>
     </div>
   );
 }
