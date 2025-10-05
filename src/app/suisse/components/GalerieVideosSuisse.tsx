@@ -29,9 +29,9 @@ const galleryImages = [
     title: "Rouages & Complications",
   },
   {
-    src: "https://images.unsplash.com/photo-1564594744081-8f2c8e6ae26f?w=800&q=80",
-    alt: "Assemblage montre de luxe",
-    title: "Assemblage Final",
+    src: "https://images.unsplash.com/photo-1612817159949-195b6eb9a3fb?w=800&q=80",
+  alt: "Horloger assemblant une montre de luxe",
+  title: "Assemblage Final",
   },
 ];
 
