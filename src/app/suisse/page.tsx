@@ -4,6 +4,7 @@ import CarteInteractiveSuisse from "./components/CarteInteractiveSuisse";
 import RessourcesSuisse from "./components/RessourcesSuisse";
 import GalerieVideosSuisse from "./components/GalerieVideosSuisse";
 import CitationsSuisse from "./components/CitationsSuisse";
+import AttestationAFP from "./components/AttestationAFP";
 import QuizSuisse from "./components/QuizSuisse";
 import FooterSuisse from "./components/FooterSuisse";
 
@@ -16,6 +17,7 @@ export default function SuissePage() {
       <RessourcesSuisse />
       <GalerieVideosSuisse />
       <CitationsSuisse />
+      <AttestationAFP />
       <QuizSuisse />
       <FooterSuisse />
     </div>
