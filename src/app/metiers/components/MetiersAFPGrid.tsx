@@ -1,5 +1,4 @@
 'use client';
-
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
@@ -44,7 +43,7 @@ const metiers = [
 
 export default function MetiersAFPGrid() {
   return (
-    <section id="metiers-afp" className="py-20 px-6 bg-[#0a0a0a]">
+    <section className="py-20 px-6 bg-[#0a0a0a]" id="metiers-afp">
       <div className="max-w-7xl mx-auto">
         <motion.h2
           className="text-4xl md:text-5xl font-bold text-[#E2B44F] text-center mb-4"
