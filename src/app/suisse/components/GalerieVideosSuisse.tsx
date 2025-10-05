@@ -9,7 +9,7 @@ const galleryImages = [
     title: "Atelier Traditionnel",
   },
   {
-    src: "https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=800&q=80",
+    src: "https://i.imgur.com/HuRhm0G.jpeg",
     alt: "Montre suisse de luxe détail du mouvement",
     title: "Mouvement Mécanique",
   },
