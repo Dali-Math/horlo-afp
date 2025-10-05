@@ -1,5 +1,4 @@
 'use client';
-
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
@@ -82,8 +81,8 @@ export default function GalerieVideosMetiers() {
               {item.type === 'image' ? (
                 <>
                   <Image
-                    src={item.src}
-                    alt={item.alt}
+                    src={item.src || "/default.jpg"}
+                    alt={item.alt || "Image métier"}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
