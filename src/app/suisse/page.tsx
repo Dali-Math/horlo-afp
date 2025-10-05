@@ -1,5 +1,4 @@
 "use client";
-
 import { motion } from "framer-motion";
 import { Download, ExternalLink } from "lucide-react";
 
@@ -60,12 +59,12 @@ const documents = [
   {
     title: "Guide des métiers d'horlogerie",
     icon: "📄",
-    url: "/docs/metiers-horlogerie.pdf",
+    url: "/pdfs/metiers-horlogerie.pdf",
   },
   {
     title: "Rapport FHH sur l'innovation suisse",
     icon: "📄",
-    url: "/docs/rapport-fhh.pdf",
+    url: "/pdfs/rapport-fhh.pdf.pdf",
   },
 ];
 
@@ -124,7 +123,6 @@ export default function SuissePage() {
           >
             📜 Histoire & Évolution
           </motion.h2>
-
           <div className="space-y-6">
             {timelineData.map((item, index) => (
               <motion.div
@@ -166,7 +164,6 @@ export default function SuissePage() {
           >
             Les piliers de l'excellence horlogère suisse
           </motion.p>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {institutions.map((inst, index) => (
               <motion.div
@@ -210,24 +207,40 @@ export default function SuissePage() {
           >
             📘 Documents & Guides suisses
           </motion.h2>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {documents.map((doc, index) => (
-              <motion.a
+              <motion.div
                 key={index}
-                href={doc.url}
-                download
                 variants={cardVariant}
                 whileHover={{ scale: 1.05 }}
-                className="flex items-center gap-4 bg-[#0b0c10] border border-amber-600/30 rounded-lg p-6 hover:border-amber-500 transition-all duration-300 hover:shadow-[0_0_30px_rgba(251,191,36,0.2)] cursor-pointer"
+                className="flex flex-col gap-4 bg-[#0b0c10] border border-amber-600/30 rounded-lg p-6 hover:border-amber-500 transition-all duration-300 hover:shadow-[0_0_30px_rgba(251,191,36,0.2)]"
               >
-                <div className="text-4xl">{doc.icon}</div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-amber-400 text-lg mb-1">{doc.title}</h3>
-                  <p className="text-gray-400 text-sm">Télécharger le PDF</p>
+                <div className="flex items-center gap-4">
+                  <div className="text-4xl">{doc.icon}</div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-amber-400 text-lg mb-1">{doc.title}</h3>
+                  </div>
                 </div>
-                <Download className="text-amber-400" size={24} />
-              </motion.a>
+                <div className="flex flex-col gap-2">
+                  <a
+                    href={doc.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-400 hover:to-blue-500 transition-all duration-300"
+                  >
+                    <ExternalLink size={18} />
+                    Consulter le document
+                  </a>
+                  <a
+                    href={doc.url}
+                    download
+                    className="text-sm text-gray-400 hover:text-amber-400 transition-colors duration-200 text-center"
+                  >
+                    <Download className="inline-block mr-1" size={14} />
+                    Télécharger le PDF
+                  </a>
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
