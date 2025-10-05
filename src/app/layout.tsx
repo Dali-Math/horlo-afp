@@ -17,6 +17,7 @@ export default function RootLayout({
     { href: '/quiz', label: 'Quiz' },
     { href: '/outils', label: 'Outils' },
     { href: '/ressources', label: 'Ressources' },
+    { href: '/suisse', label: '🇨🇭 Horlogerie Suisse' }, // ✅ ajout ici
     { href: '/podcasts', label: 'Podcasts' },
     { href: '/culture', label: 'Culture' },
     { href: '/evenements', label: 'Événements' },
