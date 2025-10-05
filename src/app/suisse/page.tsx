@@ -1,14 +1,7 @@
 "use client";
 
-import { Metadata } from "next";
 import { motion } from "framer-motion";
 import { Download, ExternalLink } from "lucide-react";
-
-// SEO Metadata
-export const metadata: Metadata = {
-  title: "Horlogerie Suisse | AFP Horlogerie",
-  description: "Découvrez l'histoire, les grandes manufactures, les savoir-faire et les écoles qui ont fait de la Suisse le berceau mondial de l'horlogerie."
-};
 
 // Animation variants
 const fadeUpVariant = {
@@ -79,6 +72,7 @@ const documents = [
 export default function SuissePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] via-[#0f0f0f] to-[#1a1a1a] text-gray-100">
+      
       {/* 1. HERO SECTION */}
       <motion.section
         initial="hidden"
@@ -86,10 +80,8 @@ export default function SuissePage() {
         variants={fadeUpVariant}
         className="relative pt-32 pb-20 px-6 overflow-hidden"
       >
-        {/* Background texture */}
         <div className="absolute inset-0 bg-[url('/textures/metal-brushed.jpg')] opacity-5"></div>
         
-        {/* Content */}
         <div className="relative max-w-5xl mx-auto text-center z-10">
           <motion.h1
             className="font-bebas text-6xl md:text-8xl tracking-wider mb-6"
@@ -116,7 +108,6 @@ export default function SuissePage() {
           </motion.p>
         </div>
 
-        {/* Gold separator */}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-50"></div>
       </motion.section>
 
