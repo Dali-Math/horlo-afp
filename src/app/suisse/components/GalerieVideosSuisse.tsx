@@ -36,7 +36,7 @@ const galleryImages = [
 ];
 
 const videos = [
-  { id: "HNrLetbecQ0", title: "L'Art de l'Horlogerie Suisse" },
+  { id: "feKWzl-yKso", title: "L'Art de l'Horlogerie Suisse" },
   { id: "JIc1kIVpSBo", title: "Fabrication d'une Montre Mécanique" },
 ];
 
