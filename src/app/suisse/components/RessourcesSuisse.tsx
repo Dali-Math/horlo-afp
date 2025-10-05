@@ -34,10 +34,10 @@ const resources = [
     logo: "PP"
   },
   {
-    name: "CIFOM - École d'Horlogerie",
-    description: "Centre de formation professionnelle en horlogerie à Neuchâtel",
-    url: "https://www.cifom.ch",
-    logo: "CIFOM"
+    name: "CIFOM – École d'Horlogerie (CPNE)",
+  description: "Centre d’horlogerie intégré au CPNE, formation professionnelle en horlogerie et microtechnique.",
+  url: "https://www.cpne.ch/",
+  logo: "CIFOM"
   },
   {
     name: "Écoles Techniques - Le Locle",
