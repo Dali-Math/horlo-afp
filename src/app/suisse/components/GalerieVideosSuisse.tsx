@@ -29,7 +29,7 @@ const galleryImages = [
     title: "Rouages & Complications",
   },
   {
-    src: "https://imgur.com/a/3EJsyCk",
+    src: "https://i.imgur.com/nYuPbKP.jpeg",
     alt: "Horloger assemblant une montre de luxe",
     title: "Assemblage Final",
   },
