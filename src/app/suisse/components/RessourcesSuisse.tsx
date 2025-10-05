@@ -16,10 +16,10 @@ const resources = [
     logo: "FH"
   },
   {
-    name: "Association Française de la Précision",
-    description: "Promotion de la microtechnique et de l'horlogerie en France",
-    url: "https://www.afprecision.fr",
-    logo: "AFP"
+  name: "Attestation fédérale de formation professionnelle (AFP)",
+  description: "Formation professionnelle suisse reconnue par la Confédération, centrée sur la pratique et la microtechnique.",
+  url: "https://www.orientation.ch/dyn/show/2101",
+  logo: "AFP",
   },
   {
     name: "Musée International d'Horlogerie",
