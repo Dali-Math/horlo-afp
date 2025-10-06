@@ -17,21 +17,20 @@ const videos: Video[] = [
     youtubeId: 'HNrLetbecQ0',
   },
   {
-    {
-  id: '2',
-  title: 'Comment régler une montre avec un timegrapher (et améliorer sa précision sans appareil)',
-  duration: '13:18',
-  youtubeId: 'vz_1rhl1lvY',
+    id: '2',
+    title: 'Comment régler une montre avec un timegrapher (et améliorer sa précision sans appareil)',
+    duration: '13:18',
+    youtubeId: 'vz_1rhl1lvY',
   },
   {
     id: '3',
-  title: 'Comment fonctionne une montre mécanique',
-  duration: '10:21',
-  youtubeId: '9_QsCLYs2mY',
+    title: 'Comment fonctionne une montre mécanique',
+    duration: '10:21',
+    youtubeId: '9_QsCLYs2mY',
   },
   {
     id: '4',
-    title: "Restauration d’une montre ancienne",
+    title: 'Restauration d’une montre ancienne',
     duration: '18:12',
     youtubeId: 'tjd6eZc3oRs',
   },
@@ -75,20 +74,14 @@ export default function VideosSection() {
           🎥 Vidéos & documentaires
         </h2>
         <p className="text-lg md:text-xl text-gray-300 font-inter max-w-3xl mx-auto">
-          Découvre les gestes et l’histoire de l’horlogerie à travers des vidéos
-          immersives et éducatives.
+          Découvre les gestes et l’histoire de l’horlogerie à travers des vidéos immersives et éducatives.
         </p>
       </div>
 
       {/* Grille des vidéos */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
         {videos.map((video, index) => (
-          <VideoCard
-            key={video.id}
-            video={video}
-            index={index}
-            isVisible={isVisible}
-          />
+          <VideoCard key={video.id} video={video} index={index} isVisible={isVisible} />
         ))}
       </div>
 
