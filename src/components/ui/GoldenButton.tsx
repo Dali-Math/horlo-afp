@@ -1,16 +1,15 @@
 "use client";
-import { motion, MotionProps } from "framer-motion";
-import { ButtonHTMLAttributes } from "react";
+import { motion } from "framer-motion";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-interface GoldenButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    MotionProps {
+interface GoldenButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
   label: string;
   href?: string;
+  children?: ReactNode;
 }
 
 export default function GoldenButton({ label, href, ...props }: GoldenButtonProps) {
-  const MotionButton = motion.button; // ✅ corrige les types Framer + HTML
+  const MotionButton = motion.button;
 
   const content = (
     <MotionButton
