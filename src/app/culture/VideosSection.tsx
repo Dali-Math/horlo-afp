@@ -12,9 +12,9 @@ interface Video {
 const videos: Video[] = [
   {
     id: '1',
-    title: 'Initiation au démontage',
+    title: 'Tout savoir sur le vocabulaire horloger',
     duration: '12:34',
-    youtubeId: 'HNrLetbecQ0',
+    youtubeId: 'b58ViTgZQNI',
   },
   {
     id: '2',
