@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BookOpen, FileText, Library, Download, ExternalLink } from "lucide-react";
+import { BookOpen, FileText, Library } from "lucide-react";
 
 interface ResourceCardProps {
   icon: React.ReactNode;
@@ -22,38 +22,23 @@ const ResourceCard = ({ icon, title, description, link, isExternal = true }: Res
       className="relative group"
     >
       <div className="relative bg-dark-800/60 backdrop-blur-sm border border-gold-500/20 rounded-lg p-6 h-full transition-all duration-300 hover:border-gold-500/50 hover:shadow-[0_0_30px_rgba(212,175,55,0.3)]">
-        {/* Icon */}
         <div className="mb-4 text-gold-500 group-hover:text-gold-400 transition-colors">
           {icon}
         </div>
 
-        {/* Title */}
         <h3 className="font-['Bebas_Neue'] text-2xl text-gold-500 mb-3 tracking-wide">
           {title}
         </h3>
 
-        {/* Description */}
         <p className="text-gray-300 text-sm mb-6 leading-relaxed">
           {description}
         </p>
 
-        {/* Button */}
-        <a
-          href={link}
-          target={isExternal ? "_blank" : "_self"}
-          rel={isExternal ? "noopener noreferrer" : undefined}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500/10 border border-gold-500/30 rounded-md text-gold-500 text-sm font-medium hover:bg-gold-500/20 hover:border-gold-500/50 transition-all duration-300 group/btn"
-        >
-          <span>{isExternal ? "Accéder" : "Télécharger"}</span>
-          {isExternal ? (
-            <ExternalLink className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-          ) : (
-            <Download className="w-4 h-4 group-hover/btn:translate-y-1 transition-transform" />
-          )}
-        </a>
-
-        {/* Glow effect on hover */}
-        <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-gold-500/0 via-gold-500/0 to-gold-500/0 group-hover:from-gold-500/5 group-hover:via-gold-500/10 group-hover:to-gold-500/5 transition-all duration-300 pointer-events-none" />
+        <iframe
+          src={link}
+          allow="autoplay"
+          className="w-full h-64 rounded-md border border-gold-500/20 shadow-inner"
+        />
       </div>
     </motion.div>
   );
@@ -63,44 +48,42 @@ export default function LibrarySection() {
   const resources = [
     {
       icon: <Library className="w-12 h-12" />,
-      title: "Bibliothèque FHH",
-      description: "Accédez à la collection complète de la Fondation de la Haute Horlogerie avec des ouvrages de référence et publications spécialisées.",
-      link: "https://www.hautehorlogerie.org/fr/encyclopedie/",
-      isExternal: true,
+      title: "L’Horlogerie suisse",
+      description:
+        "Un aperçu historique et technique de l’excellence horlogère helvétique.",
+      link: "https://drive.google.com/file/d/1a6CVAT_aQ55yom734HTry25hbUWkSJKm/preview",
     },
     {
       icon: <FileText className="w-12 h-12" />,
-      title: "Glossaire Technique",
-      description: "Dictionnaire complet des termes horlogers, complications et techniques de fabrication pour maîtriser le vocabulaire professionnel.",
-      link: "#",
-      isExternal: false,
+      title: "Swiss Horlogerie 2019",
+      description:
+        "Document moderne présentant le savoir-faire, la précision et les métiers de l’horlogerie suisse.",
+      link: "https://drive.google.com/file/d/1pc7-I4fklvulSWPLOvHtLrPS-JxnA2sq/preview",
     },
     {
       icon: <BookOpen className="w-12 h-12" />,
-      title: "WOSTEP Docs",
-      description: "Documentation officielle et ressources pédagogiques de la Watchmakers of Switzerland Training and Educational Program.",
-      link: "https://wostep.ch/",
-      isExternal: true,
+      title: "Manuel de quatrième classe",
+      description:
+        "Ressource pédagogique utilisée dans la formation horlogère suisse (AFP/CFC).",
+      link: "https://drive.google.com/file/d/1q3A-AlPaD5Ro0Hc1T6EhM1HaMQxsfc5q/preview",
     },
     {
       icon: <BookOpen className="w-12 h-12" />,
-      title: "Livres Anciens",
-      description: "Collection de traités historiques et manuscrits d'horlogerie numérisés, témoins de l'évolution de l'art horloger.",
-      link: "#",
-      isExternal: false,
+      title: "Manuel de l’horloger (1863)",
+      description:
+        "Chef-d’œuvre classique de Louis M. Le Normand, couvrant théorie, échappements et réglages.",
+      link: "https://drive.google.com/file/d/1-VmMkeg7FvgpJqUq7tMnLvRO4yQYQbFq/preview",
     },
   ];
 
   return (
     <section className="relative py-20 bg-gradient-to-b from-dark-950 to-dark-970 overflow-hidden">
-      {/* Background decorative elements */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-20 left-10 w-64 h-64 bg-gold-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-gold-500/10 rounded-full blur-3xl" />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        {/* Title */}
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -113,7 +96,6 @@ export default function LibrarySection() {
           </span>
         </motion.h2>
 
-        {/* Subtitle */}
         <motion.p
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -121,11 +103,10 @@ export default function LibrarySection() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-center text-gray-300 text-lg max-w-3xl mx-auto mb-16"
         >
-          Explore les ressources techniques, dictionnaires et ouvrages de référence en horlogerie.
+          Consulte les ressources techniques et historiques de l’horlogerie suisse — accessibles directement en ligne.
         </motion.p>
 
-        {/* Resource Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {resources.map((resource, index) => (
             <ResourceCard key={index} {...resource} />
           ))}
