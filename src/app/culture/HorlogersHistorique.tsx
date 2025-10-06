@@ -1,155 +1,249 @@
 'use client';
-import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+
+import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
+import Fuse from 'fuse.js';
 
 interface Horloger {
   nom: string;
   anneeFondation?: string;
+  periode?: string; // XVIIIe siècle, XIXe siècle, XXe siècle
   ville?: string;
   bio: string;
   imageUrl: string;
 }
 
+const containerVariants = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 16 },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, delay: i * 0.04, ease: 'easeOut' },
+  }),
+};
+
+const gold = '#E2B44F';
+
 export default function HorlogersHistorique() {
-  const [horlogers, setHorlogers] = useState<Horloger[]>([]);
+  const [all, setAll] = useState<Horloger[]>([]);
   const [loading, setLoading] = useState(true);
+  const [q, setQ] = useState('');
+  const [ville, setVille] = useState<string>('');
+  const [periode, setPeriode] = useState<string>('');
 
   useEffect(() => {
-    // Load horlogers data from JSON file
-    fetch('/data/horlogers.json')
-      .then((res) => res.json())
-      .then((data) => {
-        setHorlogers(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error loading horlogers data:', error);
-        setLoading(false);
-      });
+    let alive = true;
+    (async () => {
+      try {
+        const res = await fetch('/data/horlogers.json', { cache: 'no-store' });
+        const data: Horloger[] = await res.json();
+        if (!alive) return;
+        setAll(data);
+      } catch (e) {
+        console.error('Error loading horlogers.json', e);
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
   }, []);
 
-  if (loading) {
-    return (
-      <section className="relative py-20 px-6 bg-[#0a0a0a]">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="text-gray-400 text-lg">Chargement des horlogers...</p>
-        </div>
-      </section>
-    );
-  }
+  // Build filters lists (unique villes and periodes)
+  const villes = useMemo(() => {
+    const s = new Set<string>();
+    all.forEach((h) => h.ville && h.ville.split(',').forEach(v => s.add(v.trim())));
+    return Array.from(s).sort((a, b) => a.localeCompare(b));
+  }, [all]);
+
+  const periodes = useMemo(() => {
+    const s = new Set<string>();
+    all.forEach((h) => h.periode && s.add(h.periode));
+    return Array.from(s).sort();
+  }, [all]);
+
+  // Fuse search over name, bio, ville, periode
+  const fuse = useMemo(() => {
+    return new Fuse(all, {
+      includeScore: true,
+      threshold: 0.34, // precise but forgiving
+      ignoreLocation: true,
+      keys: [
+        { name: 'nom', weight: 0.6 },
+        { name: 'bio', weight: 0.25 },
+        { name: 'ville', weight: 0.1 },
+        { name: 'periode', weight: 0.05 },
+      ],
+    });
+  }, [all]);
+
+  const filtered = useMemo(() => {
+    const base: Horloger[] = q.trim() ? fuse.search(q).map(r => r.item) : all;
+    return base.filter((h) => {
+      const okVille = ville ? (h.ville || '').toLowerCase().includes(ville.toLowerCase()) : true;
+      const okPeriode = periode ? (h.periode || '') === periode : true;
+      return okVille && okPeriode;
+    });
+  }, [all, fuse, q, ville, periode]);
+
+  const countText = loading ? 'Chargement…' : `${filtered.length} résultat${filtered.length > 1 ? 's' : ''}`;
 
   return (
-    <section className="relative py-20 px-6 bg-[#0a0a0a]">
+    <section className="relative py-16 md:py-20 px-6 bg-[#0A0A0A]">
       <div className="max-w-7xl mx-auto">
-        {/* Animated Title */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="text-center mb-16"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          className="text-center mb-10 md:mb-14"
         >
           <h2
-            className="text-5xl md:text-6xl font-bebas text-[#E2B44F] mb-4"
-            style={{
-              textShadow: '0 0 30px rgba(226, 180, 79, 0.4), 0 0 60px rgba(226, 180, 79, 0.2)'
-            }}
+            className="text-4xl md:text-6xl font-bebas tracking-wide mb-3 text-[${gold}]"
+            style={{ color: gold, textShadow: `0 0 24px ${gold}66, 0 0 48px ${gold}33` }}
           >
-            ⌚ Horlogers suisses du XIXᵉ au XXᵉ siècle
+            ⌚ Maîtres horlogers suisses
           </h2>
-          <p className="text-gray-400 text-lg max-w-3xl mx-auto font-inter">
-            Découvrez les maîtres horlogers qui ont façonné l'excellence suisse et marqué l'histoire de l'horlogerie mondiale.
+          <p className="text-gray-400 text-base md:text-lg max-w-3xl mx-auto font-inter">
+            Explorez les figures marquantes de l'horlogerie et filtrez par ville, période ou mots-clés.
           </p>
         </motion.div>
 
-        {/* Horlogers Grid - 3 columns desktop, 2 tablet, 1 mobile */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {horlogers.map((horloger, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.05 }}
-              whileHover={{ y: -8, transition: { duration: 0.3 } }}
-              className="group relative bg-black/60 backdrop-blur-sm rounded-xl overflow-hidden border border-[#E2B44F]/20 hover:border-[#E2B44F]/50 transition-all duration-300"
-              style={{
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
-              }}
-            >
-              {/* Hover Glow Effect */}
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                style={{
-                  background: 'radial-gradient(circle at center, rgba(226, 180, 79, 0.15) 0%, transparent 70%)'
-                }}
-              />
-
-              {/* Image Container */}
-              <div className="relative w-full h-48 bg-neutral-900 overflow-hidden">
-                <Image
-                  src={horloger.imageUrl}
-                  alt={horloger.nom}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-                {/* Image Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              </div>
-
-              {/* Content */}
-              <div className="relative p-6">
-                {/* Name */}
-                <h3
-                  className="text-2xl font-bebas text-[#E2B44F] mb-2 group-hover:text-[#f0c97d] transition-colors duration-300"
-                  style={{
-                    textShadow: '0 0 20px rgba(226, 180, 79, 0.0)'
-                  }}
-                >
-                  <span className="group-hover:drop-shadow-[0_0_20px_rgba(226,180,79,0.6)] transition-all duration-300">
-                    {horloger.nom}
-                  </span>
-                </h3>
-
-                {/* Meta Info */}
-                <div className="flex flex-wrap gap-3 mb-3 text-sm text-gray-400">
-                  {horloger.anneeFondation && (
-                    <span className="inline-flex items-center gap-1">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                      {horloger.anneeFondation}
-                    </span>
-                  )}
-                  {horloger.ville && (
-                    <span className="inline-flex items-center gap-1">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      {horloger.ville}
-                    </span>
-                  )}
-                </div>
-
-                {/* Bio */}
-                <p className="text-gray-300 leading-relaxed text-sm font-inter line-clamp-3">
-                  {horloger.bio}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+        {/* Controls */}
+        <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="relative group">
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Rechercher un horloger, une innovation…"
+              className="w-full rounded-lg bg-black/60 border border-[#E2B44F]/25 text-gray-100 placeholder-gray-400 px-4 py-3 outline-none focus:border-[#E2B44F]/60 focus:ring-0 transition-colors"
+            />
+            <div className="pointer-events-none absolute inset-0 rounded-lg group-focus-within:shadow-[0_0_0_2px_rgba(226,180,79,0.25)]" />
+          </div>
+          <select
+            value={ville}
+            onChange={(e) => setVille(e.target.value)}
+            className="w-full rounded-lg bg-black/60 border border-[#E2B44F]/25 text-gray-100 px-4 py-3 outline-none focus:border-[#E2B44F]/60"
+          >
+            <option value="">Toutes les villes</option>
+            {villes.map((v) => (
+              <option key={v} value={v}>{v}</option>
+            ))}
+          </select>
+          <select
+            value={periode}
+            onChange={(e) => setPeriode(e.target.value)}
+            className="w-full rounded-lg bg_black/60 border border-[#E2B44F]/25 text-gray-100 px-4 py-3 outline-none focus:border-[#E2B44F]/60"
+          >
+            <option value="">Toutes les périodes</option>
+            {periodes.map((p) => (
+              <option key={p} value={p}>{p}</option>
+            ))}
+          </select>
         </div>
 
-        {/* Empty State */}
-        {horlogers.length === 0 && !loading && (
-          <div className="text-center py-12">
-            <p className="text-gray-400 text-lg font-inter">
-              Aucun horloger disponible pour le moment.
-            </p>
-          </div>
+        {/* Results count and reset */}
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-sm text-gray-400">{countText}</span>
+          <button
+            onClick={() => { setQ(''); setVille(''); setPeriode(''); }}
+            className="text-xs md:text-sm text-gray-300 hover:text-white border border-[#E2B44F]/30 hover:border-[#E2B44F]/60 rounded-md px-3 py-1 transition-colors"
+          >
+            Réinitialiser
+          </button>
+        </div>
+
+        {/* Grid */}
+        {loading ? (
+          <div className="py-12 text-center text-gray-400">Chargement des horlogers…</div>
+        ) : (
+          <AnimatePresence mode="popLayout">
+            {filtered.length === 0 ? (
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="py-16 text-center"
+              >
+                <p className="text-gray-400">Aucun résultat. Essayez d'autres filtres.</p>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="grid"
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, amount: 0.1 }}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+              >
+                {filtered.map((h, i) => (
+                  <motion.article
+                    key={h.nom + i}
+                    custom={i}
+                    variants={cardVariants}
+                    className="group relative bg-black/60 rounded-xl overflow-hidden border border-[#E2B44F]/20 hover:border-[#E2B44F]/50 transition-all duration-300"
+                    style={{ boxShadow: '0 6px 24px rgba(0,0,0,0.5)' }}
+                    whileHover={{ y: -6 }}
+                  >
+                    {/* Glow */}
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                      style={{ background: 'radial-gradient(circle at 50% 30%, rgba(226,180,79,0.14), transparent 60%)' }}
+                    />
+
+                    {/* Image */}
+                    <div className="relative w-full h-48 bg-neutral-900">
+                      <Image
+                        src={h.imageUrl}
+                        alt={h.nom}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        priority={i < 3}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                      {/* Badges */}
+                      <div className="absolute bottom-2 left-2 flex flex-wrap gap-2">
+                        {h.periode && (
+                          <span className="text-[10px] uppercase tracking-wide bg-black/60 border border-[#E2B44F]/40 text-gray-200 px-2 py-1 rounded">
+                            {h.periode}
+                          </span>
+                        )}
+                        {h.ville && (
+                          <span className="text-[10px] uppercase tracking-wide bg-black/60 border border-[#E2B44F]/40 text-gray-200 px-2 py-1 rounded">
+                            {h.ville}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-6">
+                      <h3
+                        className="text-2xl font-bebas mb-1"
+                        style={{ color: gold }}
+                      >
+                        <span className="group-hover:drop-shadow-[0_0_18px_rgba(226,180,79,0.6)] transition-all">{h.nom}</span>
+                      </h3>
+                      {h.anneeFondation && (
+                        <div className="text-sm text-gray-400 mb-2">Fondation: {h.anneeFondation}</div>
+                      )}
+                      <p className="text-gray-300 leading-relaxed text-sm line-clamp-3">
+                        {h.bio}
+                      </p>
+                    </div>
+                  </motion.article>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         )}
       </div>
     </section>
