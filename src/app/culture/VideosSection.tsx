@@ -24,9 +24,9 @@ const videos: Video[] = [
   },
   {
     id: '3',
-    title: "Histoire de l’échappement",
-    duration: '15:20',
-    youtubeId: 'M6n2gCk_0yM',
+  title: 'Comment fonctionne une montre mécanique',
+  duration: '10:21',
+  youtubeId: '9_QsCLYs2mY',
   },
   {
     id: '4',
