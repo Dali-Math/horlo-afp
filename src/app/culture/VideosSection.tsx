@@ -17,10 +17,12 @@ const videos: Video[] = [
     youtubeId: 'HNrLetbecQ0',
   },
   {
-    id: '2',
-    title: 'Chronographe – réglage',
-    duration: '8:45',
-    youtubeId: 'rGmJj6eK7f4',
+    {
+  id: '2',
+  title: 'Comment régler une montre avec un timegrapher (et améliorer sa précision sans appareil)',
+  duration: '13:18',
+  youtubeId: 'vz_1rhl1lvY',
+},
   },
   {
     id: '3',
