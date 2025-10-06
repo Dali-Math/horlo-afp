@@ -7,7 +7,6 @@ interface Video {
   title: string;
   duration: string;
   youtubeId: string;
-  pdfUrl?: string;
 }
 
 const videos: Video[] = [
@@ -15,27 +14,25 @@ const videos: Video[] = [
     id: '1',
     title: 'Initiation au démontage',
     duration: '12:34',
-    youtubeId: 'dQw4w9WgXcQ',
-    pdfUrl: '/docs/demontage.pdf',
+    youtubeId: 'HNrLetbecQ0',
   },
   {
     id: '2',
     title: 'Chronographe – réglage',
     duration: '8:45',
-    youtubeId: 'dQw4w9WgXcQ',
+    youtubeId: 'rGmJj6eK7f4',
   },
   {
     id: '3',
-    title: 'Histoire de l\'échappement',
+    title: "Histoire de l’échappement",
     duration: '15:20',
-    youtubeId: 'dQw4w9WgXcQ',
-    pdfUrl: '/docs/echappement.pdf',
+    youtubeId: 'M6n2gCk_0yM',
   },
   {
     id: '4',
-    title: 'Restauration d\'une montre ancienne',
+    title: "Restauration d’une montre ancienne",
     duration: '18:12',
-    youtubeId: 'dQw4w9WgXcQ',
+    youtubeId: '8mF9sVu2XyE',
   },
 ];
 
@@ -46,21 +43,13 @@ export default function VideosSection() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
+        if (entry.isIntersecting) setIsVisible(true);
       },
       { threshold: 0.1 }
     );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
+    if (sectionRef.current) observer.observe(sectionRef.current);
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
+      if (sectionRef.current) observer.unobserve(sectionRef.current);
     };
   }, []);
 
@@ -69,12 +58,10 @@ export default function VideosSection() {
       ref={sectionRef}
       className="relative w-full min-h-screen py-20 px-6 bg-gradient-to-b from-dark-950 to-dark-970 overflow-hidden"
     >
-      {/* Animated Title */}
+      {/* Titre principal animé */}
       <div
         className={`max-w-7xl mx-auto text-center mb-6 transition-all duration-1000 ${
-          isVisible
-            ? 'opacity-100 translate-y-0'
-            : 'opacity-0 translate-y-8'
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >
         <h2
@@ -87,12 +74,12 @@ export default function VideosSection() {
           🎥 Vidéos & documentaires
         </h2>
         <p className="text-lg md:text-xl text-gray-300 font-inter max-w-3xl mx-auto">
-          Découvre les gestes et l'histoire de l'horlogerie à travers des vidéos
-          sélectionnées.
+          Découvre les gestes et l’histoire de l’horlogerie à travers des vidéos
+          immersives et éducatives.
         </p>
       </div>
 
-      {/* Video Grid */}
+      {/* Grille des vidéos */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
         {videos.map((video, index) => (
           <VideoCard
@@ -106,14 +93,13 @@ export default function VideosSection() {
 
       <style jsx global>{`
         @keyframes glow {
-          0%,
-          100% {
+          0%, 100% {
             text-shadow: 0 0 20px rgba(212, 175, 55, 0.4),
-              0 0 40px rgba(212, 175, 55, 0.2);
+                         0 0 40px rgba(212, 175, 55, 0.2);
           }
           50% {
             text-shadow: 0 0 30px rgba(212, 175, 55, 0.6),
-              0 0 60px rgba(212, 175, 55, 0.3);
+                         0 0 60px rgba(212, 175, 55, 0.3);
           }
         }
       `}</style>
@@ -148,7 +134,7 @@ function VideoCard({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Video Thumbnail or Player */}
+      {/* Player YouTube */}
       <div className="relative aspect-video bg-dark-900">
         {showPlayer ? (
           <iframe
@@ -184,7 +170,7 @@ function VideoCard({
         )}
       </div>
 
-      {/* Video Info */}
+      {/* Infos */}
       <div className="p-6">
         <div className="flex items-center justify-between mb-3">
           <h3
@@ -204,23 +190,12 @@ function VideoCard({
           </span>
         </div>
 
-        <div className="flex gap-3">
-          <button
-            onClick={() => setShowPlayer(true)}
-            className="flex-1 py-3 px-6 bg-gradient-to-r from-gold-600 to-gold-500 text-dark-950 font-inter font-semibold rounded-md transition-all duration-300 hover:from-gold-500 hover:to-gold-400 hover:shadow-lg hover:shadow-gold-500/50"
-          >
-            ▶ Regarder
-          </button>
-          {video.pdfUrl && (
-            <a
-              href={video.pdfUrl}
-              download
-              className="py-3 px-6 bg-dark-700/50 border border-gold-500/30 text-gold-300 font-inter font-semibold rounded-md transition-all duration-300 hover:bg-dark-700 hover:border-gold-500/50 hover:text-gold-200"
-            >
-              📄 PDF
-            </a>
-          )}
-        </div>
+        <button
+          onClick={() => setShowPlayer(true)}
+          className="w-full py-3 px-6 bg-gradient-to-r from-gold-600 to-gold-500 text-dark-950 font-inter font-semibold rounded-md transition-all duration-300 hover:from-gold-500 hover:to-gold-400 hover:shadow-lg hover:shadow-gold-500/50"
+        >
+          ▶ Regarder
+        </button>
       </div>
     </div>
   );
