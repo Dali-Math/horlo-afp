@@ -22,7 +22,6 @@ const videos: Video[] = [
   title: 'Comment régler une montre avec un timegrapher (et améliorer sa précision sans appareil)',
   duration: '13:18',
   youtubeId: 'vz_1rhl1lvY',
-},
   },
   {
     id: '3',
