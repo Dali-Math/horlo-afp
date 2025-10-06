@@ -4,6 +4,7 @@ import HeaderSection from "./HeaderSection";
 import TimelineHorlogerie from "./TimelineHorlogerie";
 import HistorySection from "./HistorySection";
 import MuseumsSection from "./MuseumsSection";
+import HorlogersHistorique from "./HorlogersHistorique";
 import VideosSection from "./VideosSection";
 import LibrarySection from "./LibrarySection";
 
@@ -12,22 +13,25 @@ export default function CulturePage() {
     <div className="min-h-screen bg-gradient-to-b from-neutral-950 via-neutral-900 to-black text-neutral-100">
       {/* Hero Header with visual introduction */}
       <HeaderSection />
-
+      
       {/* Interactive Timeline of Watchmaking */}
       <TimelineHorlogerie />
-
+      
       {/* History Section with encyclopedic resources */}
       <HistorySection />
-
+      
       {/* Museums Section with visual cards */}
       <MuseumsSection />
-
+      
+      {/* Swiss Watchmakers Historical Section */}
+      <HorlogersHistorique />
+      
       {/* Videos & Documentaries Section */}
       <VideosSection />
-
+      
       {/* Library & Reading Resources Section */}
       <LibrarySection />
-
+      
       {/* Call to Action - Navigation to other sections */}
       <section className="container mx-auto px-4 pb-24">
         <div className="rounded-2xl bg-gradient-to-r from-amber-500/20 to-fuchsia-500/20 ring-1 ring-white/10 p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 transition-all duration-500 hover:ring-white/20 hover:shadow-2xl hover:shadow-amber-500/10">
