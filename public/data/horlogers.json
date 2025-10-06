@@ -2,13 +2,23 @@
   {
     "nom": "Abraham-Louis Breguet",
     "anneeFondation": "1775",
+    "periode": "XVIIIe siècle",
     "ville": "Paris / Neuchâtel",
     "bio": "Inventeur du tourbillon et du ressort spiral, considéré comme l'un des plus grands horlogers de tous les temps. Ses créations ont révolutionné l'horlogerie moderne.",
     "imageUrl": "/images/horlogers/breguet.jpg"
   },
   {
+    "nom": "Abraham-Louis Perrelet",
+    "anneeFondation": "1770",
+    "periode": "XVIIIe siècle",
+    "ville": "Le Locle",
+    "bio": "Inventeur de la montre à remontage automatique par masse oscillante, révolutionnant le principe de l'auto-remontage.",
+    "imageUrl": "/images/horlogers/perrelet.jpg"
+  },
+  {
     "nom": "Antoine LeCoultre",
     "anneeFondation": "1833",
+    "periode": "XIXe siècle",
     "ville": "Le Sentier, Vallée de Joux",
     "bio": "Fondateur de la manufacture Jaeger-LeCoultre, pionnier dans la création de calibres miniatures et de montres de précision.",
     "imageUrl": "/images/horlogers/lecoultre.jpg"
@@ -16,34 +26,31 @@
   {
     "nom": "Patek Philippe",
     "anneeFondation": "1839",
+    "periode": "XIXe siècle",
     "ville": "Genève",
     "bio": "Manufacture de prestige fondée par Antoni Patek et Adrien Philippe. Célèbre pour ses complications horlogères et son savoir-faire inégalé.",
     "imageUrl": "/images/horlogers/patek.jpg"
   },
   {
+    "nom": "Charles-Felicien Tissot",
+    "anneeFondation": "1853",
+    "periode": "XIXe siècle",
+    "ville": "Le Locle",
+    "bio": "Fondateur de Tissot, manufacture innovante qui a su allier tradition horlogère suisse et accessibilité, devenant l'une des marques les plus vendues au monde.",
+    "imageUrl": "/images/horlogers/tissot.jpg"
+  },
+  {
     "nom": "Charles-Édouard Heuer",
     "anneeFondation": "1860",
+    "periode": "XIXe siècle",
     "ville": "Saint-Imier",
     "bio": "Créateur de TAG Heuer, pionnier du chronométrage sportif et de l'innovation dans les chronographes mécaniques.",
     "imageUrl": "/images/horlogers/heuer.jpg"
   },
   {
-    "nom": "Jules-Louis Audemars & Edward-Auguste Piguet",
-    "anneeFondation": "1875",
-    "ville": "Le Brassus, Vallée de Joux",
-    "bio": "Fondateurs d'Audemars Piguet, spécialisés dans les montres de haute complication et les pièces uniques. Créateurs de la légendaire Royal Oak.",
-    "imageUrl": "/images/horlogers/audemars-piguet.jpg"
-  },
-  {
-    "nom": "Hans Wilsdorf",
-    "anneeFondation": "1905",
-    "ville": "Londres / Genève",
-    "bio": "Fondateur de Rolex, visionnaire qui a démocratisé la montre-bracelet et créé des modèles iconiques comme la Submariner et la Daytona.",
-    "imageUrl": "/images/horlogers/wilsdorf.jpg"
-  },
-  {
     "nom": "Louis-Ulysse Chopard",
     "anneeFondation": "1860",
+    "periode": "XIXe siècle",
     "ville": "Sonvilier",
     "bio": "Fondateur de Chopard, manufacture renommée pour ses montres de précision et ses créations joaillières de luxe.",
     "imageUrl": "/images/horlogers/chopard.jpg"
@@ -51,36 +58,41 @@
   {
     "nom": "Georges Favre-Jacot",
     "anneeFondation": "1865",
+    "periode": "XIXe siècle",
     "ville": "Le Locle",
     "bio": "Fondateur de Zenith, pionnier de l'industrialisation horlogère et créateur du célèbre calibre El Primero, premier chronographe automatique à haute fréquence.",
     "imageUrl": "/images/horlogers/zenith.jpg"
   },
   {
-    "nom": "François Borgel",
-    "anneeFondation": "1891",
-    "ville": "Genève",
-    "bio": "Inventeur du boîtier vissant étanche, une innovation majeure pour la protection des mouvements horlogers contre l'humidité.",
-    "imageUrl": "/images/horlogers/borgel.jpg"
-  },
-  {
-    "nom": "Charles-Felicien Tissot",
-    "anneeFondation": "1853",
-    "ville": "Le Locle",
-    "bio": "Fondateur de Tissot, manufacture innovante qui a su allier tradition horlogère suisse et accessibilité, devenant l'une des marques les plus vendues au monde.",
-    "imageUrl": "/images/horlogers/tissot.jpg"
+    "nom": "Jules-Louis Audemars & Edward-Auguste Piguet",
+    "anneeFondation": "1875",
+    "periode": "XIXe siècle",
+    "ville": "Le Brassus, Vallée de Joux",
+    "bio": "Fondateurs d'Audemars Piguet, spécialisés dans les montres de haute complication et les pièces uniques. Créateurs de la légendaire Royal Oak.",
+    "imageUrl": "/images/horlogers/audemars-piguet.jpg"
   },
   {
     "nom": "Léon Breitling",
     "anneeFondation": "1884",
+    "periode": "XIXe siècle",
     "ville": "Saint-Imier",
     "bio": "Créateur de Breitling, spécialisé dans les chronographes et les instruments de précision pour l'aviation et le sport.",
     "imageUrl": "/images/horlogers/breitling.jpg"
   },
   {
-    "nom": "Abraham-Louis Perrelet",
-    "anneeFondation": "1770",
-    "ville": "Le Locle",
-    "bio": "Inventeur de la montre à remontage automatique par masse oscillante, révolutionnant le principe de l'auto-remontage.",
-    "imageUrl": "/images/horlogers/perrelet.jpg"
+    "nom": "François Borgel",
+    "anneeFondation": "1891",
+    "periode": "XIXe siècle",
+    "ville": "Genève",
+    "bio": "Inventeur du boîtier vissant étanche, une innovation majeure pour la protection des mouvements horlogers contre l'humidité.",
+    "imageUrl": "/images/horlogers/borgel.jpg"
+  },
+  {
+    "nom": "Hans Wilsdorf",
+    "anneeFondation": "1905",
+    "periode": "XXe siècle",
+    "ville": "Londres / Genève",
+    "bio": "Fondateur de Rolex, visionnaire qui a démocratisé la montre-bracelet et créé des modèles iconiques comme la Submariner et la Daytona.",
+    "imageUrl": "/images/horlogers/wilsdorf.jpg"
   }
 ]
