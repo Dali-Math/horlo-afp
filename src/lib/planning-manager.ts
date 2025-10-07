@@ -7,7 +7,7 @@ export function parsePlanning(pdfBuffer: ArrayBuffer): any {
       console.warn("Fichier PDF vide ou illisible");
       return [];
     }
-    
+
     // Tentative de décodage du contenu avec protection
     let text = "";
     try {
@@ -16,22 +16,22 @@ export function parsePlanning(pdfBuffer: ArrayBuffer): any {
       console.warn("Impossible de décoder le PDF :", e);
       return [];
     }
-    
+
     if (!text || text.length === 0) {
       console.warn("Aucun texte détecté dans le PDF");
       return [];
     }
-    
+
     // Simulation de conversion vers JSON (à remplacer par extraction réelle)
     // TODO: Implémenter le vrai parsing du PDF
     const parsed = [{ id: 1, heure: "08:00", matiere: "Horlogerie", salle: "A12" }];
-    
+
     // Vérification que parsed est bien un array
     if (!parsed || !Array.isArray(parsed)) {
       console.warn("Parsing invalide :", parsed);
       return [];
     }
-    
+
     return parsed;
   } catch (error) {
     console.error("Erreur dans parsePlanning :", error);
@@ -74,7 +74,6 @@ export class PlanningManager {
         console.warn("oldPlanning invalide dans compareAndMerge");
         oldPlanning = [];
       }
-
       if (!newCourses || !Array.isArray(newCourses)) {
         console.warn("newCourses invalide dans compareAndMerge");
         newCourses = [];
@@ -84,11 +83,9 @@ export class PlanningManager {
       const added = newCourses.filter(
         (c: any) => !oldPlanning.some((p: any) => p.id === c.id)
       );
-
       const removed = oldPlanning.filter(
         (p: any) => !newCourses.some((c: any) => c.id === p.id)
       );
-
       const updated = newCourses.filter((c: any) =>
         oldPlanning.some(
           (p: any) =>
@@ -116,17 +113,21 @@ export class PlanningManager {
     }
   }
 
-  createPlanning(courses: any): any {
+  createPlanning(parsedData: any): any {
     try {
-      // Create a new planning from courses
-      if (!courses) {
-        console.warn("Courses invalide dans createPlanning");
-        return [];
+      // Safe defaults if parsedData missing expected fields
+      if (!parsedData || typeof parsedData.totalCourses === 'undefined') {
+        console.warn('Planning invalide ou incomplet :', parsedData);
+        return { totalCourses: 0, courses: [] };
       }
-      return courses;
+
+      return {
+        totalCourses: parsedData.totalCourses,
+        courses: parsedData.courses || [],
+      };
     } catch (error) {
       console.error("Erreur dans createPlanning :", error);
-      return [];
+      return { totalCourses: 0, courses: [] };
     }
   }
 
