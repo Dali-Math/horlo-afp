@@ -14,67 +14,70 @@ export default function PartnersSection() {
   ];
 
   return (
-    <section className="relative py-20 bg-[#0A0A0A] overflow-hidden">
+    <section className="relative py-32 bg-[#0A0A0A] overflow-hidden flex flex-col items-center justify-center">
       {/* Halo central doré */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-[700px] h-[700px] bg-[#E2B44F]/10 rounded-full blur-[120px]" />
       </div>
 
-      {/* Titre */}
+      {/* Titre au centre */}
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
-        className="text-center text-4xl md:text-6xl font-bebas tracking-wide text-[#E2B44F] mb-14 drop-shadow-[0_0_25px_rgba(226,180,79,0.4)]"
+        className="text-center text-4xl md:text-6xl font-bebas tracking-wide text-[#E2B44F] mb-14 drop-shadow-[0_0_25px_rgba(226,180,79,0.4)] z-10"
       >
         Avec le soutien des grandes maisons horlogères
       </motion.h2>
 
-      {/* Carrousel horizontal infini */}
-      <div className="relative overflow-hidden max-w-7xl mx-auto">
-        <div className="flex animate-scroll gap-16 justify-center items-center">
-          {[...partners, ...partners].map((partner, i) => (
-            <div
-              key={i}
-              className="relative w-[140px] h-[140px] flex items-center justify-center shrink-0 group"
-            >
-              <Image
-                src={partner.logo}
-                alt={partner.name}
-                width={140}
-                height={140}
-                unoptimized
-                priority={i === 0}
-                className="object-contain opacity-90 group-hover:opacity-100 transition duration-500 drop-shadow-[0_0_12px_rgba(226,180,79,0.25)]"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src =
-                    "/images/partners/fallback.png";
+      {/* Cercle de logos tournants */}
+      <div className="relative w-[500px] h-[500px] flex items-center justify-center">
+        <div className="absolute w-full h-full animate-rotate-slow">
+          {partners.map((partner, i) => {
+            const angle = (i / partners.length) * 2 * Math.PI;
+            const x = Math.cos(angle) * 200; // rayon horizontal
+            const y = Math.sin(angle) * 200; // rayon vertical
+            return (
+              <div
+                key={i}
+                className="absolute"
+                style={{
+                  transform: `translate(${x}px, ${y}px)`,
                 }}
-              />
-            </div>
-          ))}
+              >
+                <Image
+                  src={partner.logo}
+                  alt={partner.name}
+                  width={90}
+                  height={90}
+                  unoptimized
+                  className="object-contain opacity-90 hover:opacity-100 transition duration-500 drop-shadow-[0_0_12px_rgba(226,180,79,0.25)]"
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
 
       {/* Légende */}
-      <p className="mt-12 text-center text-sm text-slate-400">
+      <p className="mt-12 text-center text-sm text-slate-400 z-10">
         Ressources gratuites et open-source pour la formation en horlogerie.
       </p>
 
-      {/* Animation CSS */}
+      {/* Animation rotation */}
       <style jsx global>{`
-        @keyframes scroll {
-          from {
-            transform: translateX(0);
+        @keyframes rotate-slow {
+          0% {
+            transform: rotate(0deg);
           }
-          to {
-            transform: translateX(-50%);
+          100% {
+            transform: rotate(360deg);
           }
         }
-        .animate-scroll {
-          animation: scroll 25s linear infinite;
-          width: max-content;
+        .animate-rotate-slow {
+          animation: rotate-slow 40s linear infinite;
+          transform-origin: center center;
         }
       `}</style>
     </section>
