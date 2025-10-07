@@ -15,9 +15,9 @@ export default function PartnersSection() {
 
   return (
     <section className="relative py-20 bg-[#0A0A0A] overflow-hidden">
-      {/* Halo décoratif */}
-      <div className="absolute inset-0">
-        <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#E2B44F]/10 rounded-full blur-3xl" />
+      {/* Halo central doré */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-[700px] h-[700px] bg-[#E2B44F]/10 rounded-full blur-[120px]" />
       </div>
 
       {/* Titre */}
@@ -26,36 +26,40 @@ export default function PartnersSection() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
-        className="text-center text-4xl md:text-6xl font-bebas tracking-wider text-[#E2B44F] mb-14 drop-shadow-[0_0_25px_rgba(226,180,79,0.5)]"
+        className="text-center text-4xl md:text-6xl font-bebas tracking-wide text-[#E2B44F] mb-14 drop-shadow-[0_0_25px_rgba(226,180,79,0.4)]"
       >
         Maisons horlogères genevoises
       </motion.h2>
 
-      {/* Grille logos */}
-      <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-10 place-items-center">
+      {/* Logos */}
+      <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-10 place-items-center">
         {partners.map((partner, i) => (
           <motion.div
             key={partner.name}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: i * 0.1 }}
             viewport={{ once: true }}
             className="relative group flex items-center justify-center"
           >
-            <div className="relative w-[160px] sm:w-[180px] md:w-[200px] h-[100px] sm:h-[120px] md:h-[140px] flex items-center justify-center">
-              {/* Effet lumineux doré */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E2B44F]/40 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shine rounded-lg" />
+            <div className="relative w-[140px] h-[140px] flex items-center justify-center">
+              {/* Reflet doré animé */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E2B44F]/30 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shine rounded-xl" />
               <Image
                 src={partner.logo}
                 alt={partner.name}
                 fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 200px"
-                className="object-contain opacity-80 group-hover:opacity-100 transition duration-500"
+                className="object-contain opacity-85 group-hover:opacity-100 transition duration-500 drop-shadow-[0_0_15px_rgba(226,180,79,0.25)]"
               />
             </div>
           </motion.div>
         ))}
       </div>
+
+      {/* Légende */}
+      <p className="mt-12 text-center text-sm text-slate-400">
+        Ressources gratuites et open-source pour la formation en horlogerie.
+      </p>
 
       <style jsx global>{`
         @keyframes shine {
