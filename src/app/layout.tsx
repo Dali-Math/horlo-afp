@@ -36,7 +36,7 @@ export default function RootLayout({
           <nav className="container mx-auto px-4 sm:px-6 py-4" style={{ fontFamily: "'Oswald', sans-serif" }}>
             <div className="flex items-center justify-between">
               {/* Logo */}
-              <a className="flex items-center gap-2 sm:gap-3 group" href="/">
+              <a href="/" className="flex items-center gap-2 sm:gap-3 group">
                 <Clock className="w-7 h-7 sm:w-8 sm:h-8 text-amber-600" strokeWidth={1.5} />
                 <span className="text-xl sm:text-2xl font-bold text-gray-900 group-hover:text-amber-600 transition-colors">
                   Horlo-AFP
@@ -108,6 +108,7 @@ export default function RootLayout({
                   <a className="hover:text-amber-400 transition-colors" href="/theorie">Théorie</a>
                   <a className="hover:text-amber-400 transition-colors" href="/pratique">Pratique</a>
                   <a className="hover:text-amber-400 transition-colors" href="/ressources">Ressources</a>
+                  <a href="/contact" className="text-gray-400 hover:text-[#E2B44F] transition-colors duration-200">✉️ Contact</a>
                 </ul>
               </div>
               
