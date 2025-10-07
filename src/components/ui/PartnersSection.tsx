@@ -3,34 +3,34 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 const partners = [
-  { src: "/images/partners/rolex.jpg", alt: "Rolex" },
+  { src: "/images/partners/rolex.png", alt: "Rolex" },
   { src: "/images/partners/patek.png", alt: "Patek Philippe" },
   { src: "/images/partners/audemars.png", alt: "Audemars Piguet" },
   { src: "/images/partners/vacheron.png", alt: "Vacheron Constantin" },
   { src: "/images/partners/chopard.png", alt: "Chopard" },
-  { src: "/images/partners/piaget.jpg", alt: "Piaget" },
+  { src: "/images/partners/piaget.png", alt: "Piaget" },
   { src: "/images/partners/muller.png", alt: "Franck Muller" },
 ];
 
 export default function PartnersSection() {
   return (
-    <section className="relative bg-[#0A0A0A] py-16 overflow-hidden">
-      <div className="text-center mb-10">
+    <section className="relative bg-[#0A0A0A] py-20 overflow-hidden">
+      <div className="text-center mb-12">
         <h2
-          className="text-3xl md:text-4xl font-semibold text-[#E2B44F] tracking-wide mb-6"
-          style={{ textShadow: "0 0 12px rgba(226,180,79,0.6)" }}
+          className="text-3xl md:text-4xl font-semibold text-[#E2B44F]"
+          style={{ textShadow: "0 0 15px rgba(226,180,79,0.7)" }}
         >
           Avec le soutien des grandes maisons horlogères
         </h2>
       </div>
 
-      {/* Bande dorée animée */}
+      {/* Bande animée */}
       <motion.div
-        className="flex items-center justify-around gap-16 px-6"
+        className="flex items-center justify-around gap-20 px-8"
         animate={{ x: ["0%", "-50%"] }}
         transition={{
           repeat: Infinity,
-          duration: 30,
+          duration: 35,
           ease: "linear",
         }}
       >
@@ -43,7 +43,7 @@ export default function PartnersSection() {
             <Image
               src={p.src}
               alt={p.alt}
-              width={160}
+              width={180}
               height={100}
               className="object-contain opacity-80 hover:opacity-100 transition-all"
             />
