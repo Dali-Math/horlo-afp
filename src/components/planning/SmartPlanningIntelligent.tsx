@@ -67,7 +67,6 @@ export default function SmartPlanningIntelligent() {
         toast.error('Veuillez sélectionner un fichier PDF valide.');
         return;
       }
-
       setIsLoading(!isUpdate);
       setIsUpdating(isUpdate);
 
@@ -78,10 +77,8 @@ export default function SmartPlanningIntelligent() {
           toast.error('Le fichier PDF est vide.');
           return;
         }
-
         // Primary parser path (existing behavior)
         extractedCourses = await pdfParser.parsePDF(file);
-
         // Validate parsing result before proceeding
         if (!Array.isArray(extractedCourses) || extractedCourses.length === 0) {
           toast.error('Le planning PDF est vide ou non reconnu.');
@@ -104,7 +101,6 @@ export default function SmartPlanningIntelligent() {
             toast.error('Erreur lors de la mise à jour du planning.');
             return;
           }
-
           finalPlanning = changes.newPlanning as PlanningData;
           const { added, modified, removed } = changes.summary || { added: 0, modified: 0, removed: 0 };
           const totalChanges = (added || 0) + (modified || 0) + (removed || 0);
@@ -115,7 +111,6 @@ export default function SmartPlanningIntelligent() {
           }
         } else {
           finalPlanning = planningManager.createPlanning(extractedCourses) as PlanningData;
-          // Defensive check: ensure totalCourses exists before using it
           if (!finalPlanning || typeof (finalPlanning as any).metadata?.totalCourses === 'undefined') {
             toast.error('Le planning importé ne contient pas de données exploitables');
             setIsLoading(false);
@@ -175,21 +170,13 @@ export default function SmartPlanningIntelligent() {
     }
   }, []);
 
-  const handleImportClick = () => {
-    fileInputRef.current?.click();
-  };
+  const triggerFileInput = () => fileInputRef.current?.click();
+  const triggerUpdateFileInput = () => updateFileInputRef.current?.click();
 
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
-  };
+  // Render conditions based on courses, not only metadata
+  const coursesCount = planning?.courses?.length ?? 0;
 
-  const triggerUpdateFileInput = () => {
-    updateFileInputRef.current?.click();
-  };
-
-  // Fallback when no planning yet OR totalCourses is 0
-  const totalCourses = (planning as any)?.metadata?.totalCourses ?? 0;
-  if (!planning || totalCourses === 0) {
+  if (!planning || coursesCount === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-6 py-16">
         <p className="text-gray-300">Aucun planning disponible</p>
@@ -201,7 +188,7 @@ export default function SmartPlanningIntelligent() {
           ref={fileInputRef}
         />
         <button
-          onClick={handleImportClick}
+          onClick={triggerFileInput}
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition"
         >
           📤 Importer mon planning PDF
@@ -224,7 +211,7 @@ export default function SmartPlanningIntelligent() {
           ref={fileInputRef}
         />
         <button
-          onClick={handleImportClick}
+          onClick={triggerFileInput}
           className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition"
         >
           📤 Importer mon planning PDF
@@ -234,7 +221,11 @@ export default function SmartPlanningIntelligent() {
   }
 
   return (
-    <motion.div className="max-w-7xl mx-auto space-y-8" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+    <motion.div
+      className="max-w-7xl mx-auto space-y-8"
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
       {/* Planning Management Panel */}
       <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
@@ -258,6 +249,7 @@ export default function SmartPlanningIntelligent() {
           <div className="flex flex-col sm:flex-row gap-3">
             <input accept=".pdf" className="hidden" onChange={handleInitialUpload} ref={fileInputRef} type="file" />
             <input accept=".pdf" className="hidden" onChange={handleUpdateUpload} ref={updateFileInputRef} type="file" />
+
             <motion.button
               className="flex items-center space-x-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-50"
               disabled={isLoading}
@@ -268,6 +260,7 @@ export default function SmartPlanningIntelligent() {
               <Upload size={18} />
               Importer
             </motion.button>
+
             <motion.button
               className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-50"
               disabled={isUpdating}
@@ -278,6 +271,7 @@ export default function SmartPlanningIntelligent() {
               {isUpdating ? <RefreshCw className="animate-spin" size={18} /> : <RefreshCw size={18} />}
               {isUpdating ? 'Mise à jour...' : '🔄 Mettre à jour'}
             </motion.button>
+
             <motion.button
               className="flex items-center space-x-2 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white px-4 py-2 rounded-lg font-medium"
               onClick={handleReset}
@@ -315,12 +309,40 @@ export default function SmartPlanningIntelligent() {
             </div>
           </div>
         )}
+
+        {/* Courses Table (conditional on courses presence) */}
+        {coursesCount > 0 ? (
+          <table className="w-full border border-gray-700 text-sm text-white mt-6">
+            <thead className="bg-[#E2B44F]/20">
+              <tr>
+                <th className="p-2 text-left">Matière</th>
+                <th className="p-2 text-left">Professeur</th>
+                <th className="p-2 text-left">Salle</th>
+              </tr>
+            </thead>
+            <tbody>
+              {planning!.courses.map((c, i) => (
+                <tr key={i} className="border-t border-gray-700 hover:bg-[#E2B44F]/10">
+                  <td className="p-2 text-[#E2B44F] font-semibold">{c.subject}</td>
+                  <td className="p-2">{c.teacher}</td>
+                  <td className="p-2">{c.room || '-'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="text-gray-300">Aucun planning disponible</p>
+        )}
       </div>
 
       {/* Calendar Display */}
       {planning && (
         <AnimatePresence>
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+          >
             <PlanningCalendar planning={planning} />
           </motion.div>
         </AnimatePresence>
