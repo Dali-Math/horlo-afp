@@ -44,9 +44,24 @@ export default function SmartPlanningIntelligent() {
   const planningManager = new PlanningManager();
   const pdfParser = new PDFParser();
 
-  // Load existing planning on component mount
+  // Load existing planning on component mount (localStorage with guard)
   useEffect(() => {
-    loadExistingPlanning();
+    try {
+      const saved = localStorage.getItem('planning');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.courses) setPlanning(parsed);
+      }
+    } catch (err) {
+      console.error('Erreur lors du chargement du planning :', err);
+      setPlanning({
+        // minimal safe shape to avoid crashes elsewhere
+        // @ts-ignore - lastUpdated can be string when coming from storage
+        lastUpdated: new Date(),
+        courses: [],
+        metadata: { totalCourses: 0, subjects: [], teachers: [], rooms: [] },
+      } as unknown as PlanningData);
+    }
   }, []);
 
   const loadExistingPlanning = useCallback(async () => {
@@ -97,6 +112,7 @@ export default function SmartPlanningIntelligent() {
           time: c.time || '',
           day: c.day || '',
         })) as CourseData[];
+
         extractedCourses = extracted;
 
         // Validate parsing result before proceeding
@@ -117,12 +133,13 @@ export default function SmartPlanningIntelligent() {
           },
         });
       } catch (error) {
-        console.error('Erreur pendant l\'analyse du PDF :', error);
+        console.error("Erreur pendant l'analyse du PDF :", error);
         toast.error('Erreur de lecture du planning. Vérifie ton fichier PDF.');
         return;
       }
 
       let finalPlanning: PlanningData | undefined;
+
       try {
         if (isUpdate && planning) {
           let changes;
@@ -133,9 +150,11 @@ export default function SmartPlanningIntelligent() {
             toast.error('Erreur lors de la mise à jour du planning.');
             return;
           }
+
           finalPlanning = changes.newPlanning as PlanningData;
           const { added, modified, removed } = changes.summary || { added: 0, modified: 0, removed: 0 };
           const totalChanges = (added || 0) + (modified || 0) + (removed || 0);
+
           if (totalChanges === 0) {
             toast.success('Aucune modification détectée dans votre planning.');
           } else {
@@ -143,12 +162,14 @@ export default function SmartPlanningIntelligent() {
           }
         } else {
           finalPlanning = planningManager.createPlanning(extractedCourses) as PlanningData;
+
           if (!finalPlanning || typeof (finalPlanning as any).metadata?.totalCourses === 'undefined') {
             toast.error('Le planning importé ne contient pas de données exploitables');
             setIsLoading(false);
             setIsUpdating(false);
             return;
           }
+
           toast.success(`Planning importé avec succès ! ${(finalPlanning as any).metadata.totalCourses} cours détectés.`);
         }
       } catch (error) {
@@ -205,15 +226,17 @@ export default function SmartPlanningIntelligent() {
   const triggerFileInput = () => fileInputRef.current?.click();
   const triggerUpdateFileInput = () => updateFileInputRef.current?.click();
 
-  // Render guard: avoid any map/length on undefined
-  if (!planning || !Array.isArray(planning.courses) || planning.courses.length === 0) {
+  const handleImportClick = () => {
+    triggerFileInput();
+  };
+
+  // Universal guard to prevent any crash if planning is null/invalid
+  if (!planning || !Array.isArray((planning as any).courses)) {
     return (
-      <div className="flex flex-col items-center justify-center gap-6 py-16">
-        <p className="text-gray-300">Aucun planning chargé pour le moment.</p>
-        <input type="file" accept=".pdf" className="hidden" onChange={handleInitialUpload} ref={fileInputRef} />
-        <button onClick={triggerFileInput} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition">
-          📤 Importer mon planning PDF
-        </button>
+      <div className="text-center text-gray-400 py-20">
+        <p>Aucun planning chargé ou données non disponibles.</p>
+        <input accept=".pdf" className="hidden" onChange={handleInitialUpload} ref={fileInputRef} type="file" />
+        <button onClick={handleImportClick} className="btn-primary mt-6">Importer mon planning PDF</button>
       </div>
     );
   }
@@ -222,12 +245,10 @@ export default function SmartPlanningIntelligent() {
   if (typeof (planning as any).metadata?.totalCourses === 'undefined') {
     toast.error('Le planning importé ne contient pas de données exploitables');
     return (
-      <div className="flex flex-col items-center justify-center gap-6 py-16">
-        <p className="text-gray-300">Aucun planning chargé pour le moment.</p>
-        <input type="file" accept=".pdf" className="hidden" onChange={handleInitialUpload} ref={fileInputRef} />
-        <button onClick={triggerFileInput} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition">
-          📤 Importer mon planning PDF
-        </button>
+      <div className="text-center text-gray-400 py-20">
+        <p>Aucun planning chargé ou données non disponibles.</p>
+        <input accept=".pdf" className="hidden" onChange={handleInitialUpload} ref={fileInputRef} type="file" />
+        <button onClick={handleImportClick} className="btn-primary mt-6">Importer mon planning PDF</button>
       </div>
     );
   }
@@ -240,8 +261,8 @@ export default function SmartPlanningIntelligent() {
           <div className="mb-4 lg:mb-0">
             <h2 className="text-2xl font-bold text-white mb-2 flex items-center">📅 Mon Planning</h2>
             <div className="text-sm text-slate-300">
-              Dernière mise à jour :{' '}
-              {new Date(planning.lastUpdated).toLocaleDateString('fr-FR', {
+              Dernière mise à jour:{' '}
+              {new Date(planning.lastUpdated as any).toLocaleDateString('fr-FR', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric',
