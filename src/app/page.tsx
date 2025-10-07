@@ -203,7 +203,7 @@ function PartnersSection() {
         transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
       >
         {[...partners, ...partners].map((p, i) => (
-          <motion.div key={i} className="grayscale hover:grayscale-0 transition-all duration-700" whileHover={{ scale: 1.2 }}>
+          <motion.div key={i} className="grayscale hover:grayscale-0 transition-all duration-700" whileHover={{ scale: 3 }}>
             <Image src={p.src} alt={p.alt} width={180} height={100} className="object-contain opacity-85 hover:opacity-100 transition-all" />
           </motion.div>
         ))}
