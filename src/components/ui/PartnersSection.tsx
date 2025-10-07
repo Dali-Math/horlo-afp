@@ -12,12 +12,9 @@ export default function PartnersSection() {
     { name: "Franck Muller", logo: "/images/partners/muller.png" },
   ];
 
-  // 🌀 On répète 5 fois la liste pour couvrir les écrans larges
-  const loopedPartners = Array(5).fill(partners).flat();
-
   return (
     <section className="relative py-20 bg-[#0A0A0A] overflow-hidden">
-      {/* Halo doré */}
+      {/* Halo décoratif */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-[700px] h-[700px] bg-[#E2B44F]/10 rounded-full blur-[120px]" />
       </div>
@@ -29,11 +26,29 @@ export default function PartnersSection() {
 
       {/* Carrousel infini */}
       <div className="relative w-full overflow-hidden">
-        <div className="flex animate-scroll gap-16 px-10 whitespace-nowrap">
-          {loopedPartners.map((partner, i) => (
+        <div className="flex w-max animate-marquee">
+          {[...partners, ...partners].map((partner, i) => (
             <div
-              key={`${partner.name}-${i}`}
-              className="flex-shrink-0 flex flex-col items-center"
+              key={i}
+              className="flex-shrink-0 mx-12 flex flex-col items-center"
+            >
+              <Image
+                src={partner.logo}
+                alt={partner.name}
+                width={120}
+                height={120}
+                unoptimized
+                className="object-contain opacity-85 hover:opacity-100 transition duration-500 drop-shadow-[0_0_15px_rgba(226,180,79,0.3)]"
+              />
+            </div>
+          ))}
+        </div>
+        {/* Deuxième bande collée pour continuité */}
+        <div className="flex w-max animate-marquee2 absolute top-0 left-0">
+          {[...partners, ...partners].map((partner, i) => (
+            <div
+              key={`dup-${i}`}
+              className="flex-shrink-0 mx-12 flex flex-col items-center"
             >
               <Image
                 src={partner.logo}
@@ -54,7 +69,7 @@ export default function PartnersSection() {
       </p>
 
       <style jsx global>{`
-        @keyframes scroll {
+        @keyframes marquee {
           0% {
             transform: translateX(0);
           }
@@ -62,11 +77,19 @@ export default function PartnersSection() {
             transform: translateX(-50%);
           }
         }
-
-        .animate-scroll {
-          animation: scroll 60s linear infinite;
-          display: inline-flex;
-          will-change: transform;
+        @keyframes marquee2 {
+          0% {
+            transform: translateX(50%);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
+        .animate-marquee {
+          animation: marquee 40s linear infinite;
+        }
+        .animate-marquee2 {
+          animation: marquee2 40s linear infinite;
         }
       `}</style>
     </section>
