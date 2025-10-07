@@ -1,7 +1,10 @@
 "use client";
 import Image from "next/image";
+import { useEffect, useRef } from "react";
 
 export default function PartnersSection() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   const partners = [
     { name: "Rolex", logo: "/images/partners/rolex.png" },
     { name: "Patek Philippe", logo: "/images/partners/patek.png" },
@@ -12,9 +15,18 @@ export default function PartnersSection() {
     { name: "Franck Muller", logo: "/images/partners/muller.png" },
   ];
 
+  // ✅ duplique la bande automatiquement pour continuité parfaite
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const clone = container.innerHTML;
+    container.innerHTML += clone;
+  }, []);
+
   return (
     <section className="relative py-20 bg-[#0A0A0A] overflow-hidden">
-      {/* Halo décoratif */}
+      {/* Halo doré */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-[700px] h-[700px] bg-[#E2B44F]/10 rounded-full blur-[120px]" />
       </div>
@@ -24,31 +36,13 @@ export default function PartnersSection() {
         Avec le soutien des grandes maisons horlogères
       </h2>
 
-      {/* Carrousel infini */}
-      <div className="relative w-full overflow-hidden">
-        <div className="flex w-max animate-marquee">
-          {[...partners, ...partners].map((partner, i) => (
+      {/* Bande défilante continue */}
+      <div className="overflow-hidden">
+        <div ref={scrollRef} className="flex gap-16 animate-loop">
+          {partners.map((partner, i) => (
             <div
               key={i}
-              className="flex-shrink-0 mx-12 flex flex-col items-center"
-            >
-              <Image
-                src={partner.logo}
-                alt={partner.name}
-                width={120}
-                height={120}
-                unoptimized
-                className="object-contain opacity-85 hover:opacity-100 transition duration-500 drop-shadow-[0_0_15px_rgba(226,180,79,0.3)]"
-              />
-            </div>
-          ))}
-        </div>
-        {/* Deuxième bande collée pour continuité */}
-        <div className="flex w-max animate-marquee2 absolute top-0 left-0">
-          {[...partners, ...partners].map((partner, i) => (
-            <div
-              key={`dup-${i}`}
-              className="flex-shrink-0 mx-12 flex flex-col items-center"
+              className="flex-shrink-0 flex flex-col items-center justify-center"
             >
               <Image
                 src={partner.logo}
@@ -69,7 +63,7 @@ export default function PartnersSection() {
       </p>
 
       <style jsx global>{`
-        @keyframes marquee {
+        @keyframes loop {
           0% {
             transform: translateX(0);
           }
@@ -77,19 +71,10 @@ export default function PartnersSection() {
             transform: translateX(-50%);
           }
         }
-        @keyframes marquee2 {
-          0% {
-            transform: translateX(50%);
-          }
-          100% {
-            transform: translateX(0);
-          }
-        }
-        .animate-marquee {
-          animation: marquee 40s linear infinite;
-        }
-        .animate-marquee2 {
-          animation: marquee2 40s linear infinite;
+        .animate-loop {
+          animation: loop 40s linear infinite;
+          width: max-content;
+          will-change: transform;
         }
       `}</style>
     </section>
