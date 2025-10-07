@@ -1,4 +1,8 @@
-function PartnersSection() {
+"use client";
+import Image from "next/image";
+import { motion } from "framer-motion";
+
+export default function PartnersSection() {
   const partners = [
     { src: "/images/partners/rolex.png", alt: "Rolex" },
     { src: "/images/partners/patek.png", alt: "Patek Philippe" },
@@ -11,20 +15,22 @@ function PartnersSection() {
 
   return (
     <section className="relative bg-[#0A0A0A] py-20 overflow-hidden">
-      {/* Halo central */}
+      {/* Halo global */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-[900px] h-[900px] bg-[#E2B44F]/10 rounded-full blur-[160px]" />
       </div>
 
-      {/* Overlay noir transparent (spotlight) */}
-      <div className="absolute inset-0 bg-black/0 transition-all duration-700 group-hover:bg-black/70 z-[5]" />
-
-      <div className="text-center mb-12 relative z-10">
-        <h2 className="text-3xl md:text-4xl font-semibold text-[#E2B44F]" style={{ textShadow: "0 0 15px rgba(226,180,79,0.7)" }}>
+      {/* Titre */}
+      <div className="text-center mb-14 relative z-10">
+        <h2
+          className="text-3xl md:text-4xl font-semibold text-[#E2B44F]"
+          style={{ textShadow: "0 0 15px rgba(226,180,79,0.7)" }}
+        >
           Avec le soutien des grandes maisons horlogères
         </h2>
       </div>
 
+      {/* Logos en mouvement */}
       <motion.div
         className="flex items-center justify-around gap-20 px-8 relative z-20"
         animate={{ x: ["0%", "-50%"] }}
@@ -33,10 +39,13 @@ function PartnersSection() {
         {[...partners, ...partners].map((p, i) => (
           <motion.div
             key={i}
-            className="relative group flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-[1200ms]"
-            whileHover={{ scale: 1 }}
+            className="relative group flex items-center justify-center transition-all duration-[1200ms]"
           >
-            <div className="relative">
+            {/* Fond assombri local */}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/80 transition-all duration-700 rounded-full blur-3xl scale-150 z-[1]" />
+
+            {/* Logo */}
+            <div className="relative z-[2]">
               <Image
                 src={p.src}
                 alt={p.alt}
@@ -44,8 +53,8 @@ function PartnersSection() {
                 height={100}
                 className="object-contain opacity-85 transition-transform duration-[1400ms] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-[30] group-hover:opacity-100 drop-shadow-[0_0_80px_rgba(226,180,79,1)]"
               />
-              {/* halo doré local */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-50 group-hover:blur-2xl transition duration-700 bg-[#E2B44F]/40 rounded-full" />
+              {/* Halo doré individuel */}
+              <div className="absolute inset-0 rounded-full bg-[#E2B44F]/40 blur-3xl opacity-0 group-hover:opacity-80 transition-all duration-700" />
             </div>
           </motion.div>
         ))}
