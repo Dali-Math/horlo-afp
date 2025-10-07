@@ -94,6 +94,19 @@ body {
   animation: fadeIn 1s ease-out 0.6s both;
 }
 
+/* Animation infinite carousel logos */
+@keyframes carousel {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.animate-carousel {
+  animation: carousel 24s linear infinite;
+}
+
 /* Scrollbar styling - thème sombre doré */
 ::-webkit-scrollbar {
   width: 12px;
