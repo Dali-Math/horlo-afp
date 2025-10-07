@@ -1,6 +1,6 @@
 "use client";
-
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -23,7 +23,23 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="flex flex-wrap justify-center gap-6 py-4 bg-white text-black border-b border-gray-200">
+    <nav className="flex flex-wrap items-center justify-between px-6 py-4 bg-[#0A0A0A] text-white border-b border-gray-800">
+      {/* Logo and Brand */}
+      <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
+        <Image
+          src="/logos/Logo.jpg"
+          alt="HorloLearn Logo"
+          width={50}
+          height={50}
+          className="rounded-full"
+          priority
+        />
+        <div className="flex flex-col">
+          <span className="text-xl font-bold text-white">HorloLearn</span>
+          <span className="text-xs text-[#E2B44F]">Pour les passionnés et apprentis horlogers</span>
+        </div>
+      </Link>
+
       {/* Desktop Navigation */}
       <div className="hidden lg:flex gap-6 xl:gap-8 text-sm font-medium">
         {navLinks.map(({ href, label }) => (
@@ -44,7 +60,7 @@ export default function Navbar() {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="lg:hidden p-2 text-gray-700 hover:text-[#E2B44F] transition-colors"
+        className="lg:hidden p-2 text-white hover:text-[#E2B44F] transition-colors"
         aria-label="Toggle menu"
       >
         {mobileMenuOpen ? (
@@ -56,7 +72,7 @@ export default function Navbar() {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="lg:hidden w-full mt-4 pb-4 border-t border-gray-200 pt-4">
+        <div className="lg:hidden w-full mt-4 pb-4 border-t border-gray-800 pt-4">
           <div className="flex flex-col space-y-3">
             {navLinks.map(({ href, label }) => (
               <Link
@@ -64,8 +80,8 @@ export default function Navbar() {
                 href={href}
                 className={`transition-colors duration-200 py-2 px-2 rounded ${
                   pathname === href
-                    ? "text-[#E2B44F] font-semibold bg-amber-50 border-l-4 border-[#E2B44F]"
-                    : "text-gray-700 hover:text-[#E2B44F] hover:bg-amber-50"
+                    ? "text-[#E2B44F] font-semibold bg-gray-900 border-l-4 border-[#E2B44F]"
+                    : "text-gray-300 hover:text-[#E2B44F] hover:bg-gray-900"
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
