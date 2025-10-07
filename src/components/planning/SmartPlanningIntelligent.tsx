@@ -37,8 +37,8 @@ export default function SmartPlanningIntelligent() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [hasExistingPlanning, setHasExistingPlanning] = useState(false);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const updateFileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const updateFileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Initialize planning manager and PDF parser
   const planningManager = new PlanningManager();
@@ -47,29 +47,24 @@ export default function SmartPlanningIntelligent() {
   // Load existing planning on component mount (localStorage with guard)
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('planning');
+      const saved = localStorage.getItem("planning");
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed && parsed.courses) setPlanning(parsed);
       }
     } catch (err) {
-      console.error('Erreur lors du chargement du planning :', err);
-      setPlanning({
-        // minimal safe shape to avoid crashes elsewhere
-        // @ts-ignore - lastUpdated can be string when coming from storage
-        lastUpdated: new Date(),
-        courses: [],
-        metadata: { totalCourses: 0, subjects: [], teachers: [], rooms: [] },
-      } as unknown as PlanningData);
+      console.error("Erreur lors du chargement du planning :", err);
+      // Minimal safe shape so the app never crashes on first render
+      setPlanning({ totalCourses: 0, courses: [] } as any);
     }
   }, []);
 
   const loadExistingPlanning = useCallback(async () => {
     try {
       const existingPlanning = await localforage.getItem<PlanningData>('smart-planning-data');
-      if (existingPlanning && Array.isArray(existingPlanning.courses)) {
+      if (existingPlanning && Array.isArray((existingPlanning as any).courses)) {
         setPlanning(existingPlanning);
-        setHasExistingPlanning(existingPlanning.courses.length > 0);
+        setHasExistingPlanning((existingPlanning as any).courses.length > 0);
       } else {
         setPlanning(null);
         setHasExistingPlanning(false);
@@ -92,7 +87,6 @@ export default function SmartPlanningIntelligent() {
       setIsUpdating(isUpdate);
 
       let extractedCourses: CourseData[] = [];
-
       try {
         const arrayBuffer = await file.arrayBuffer();
         if (!arrayBuffer || (arrayBuffer as ArrayBuffer).byteLength === 0) {
@@ -131,7 +125,7 @@ export default function SmartPlanningIntelligent() {
             teachers: Array.from(new Set(extractedCourses.map(c => c.teacher).filter(Boolean))),
             rooms: Array.from(new Set(extractedCourses.map(c => c.room).filter(Boolean))),
           },
-        });
+        } as any);
       } catch (error) {
         console.error("Erreur pendant l'analyse du PDF :", error);
         toast.error('Erreur de lecture du planning. Vérifie ton fichier PDF.');
@@ -139,12 +133,11 @@ export default function SmartPlanningIntelligent() {
       }
 
       let finalPlanning: PlanningData | undefined;
-
       try {
         if (isUpdate && planning) {
           let changes;
           try {
-            changes = planningManager.compareAndMerge(planning, extractedCourses);
+            changes = planningManager.compareAndMerge(planning as any, extractedCourses);
           } catch (err) {
             console.error('Erreur pendant la mise à jour du planning :', err);
             toast.error('Erreur lors de la mise à jour du planning.');
@@ -154,7 +147,6 @@ export default function SmartPlanningIntelligent() {
           finalPlanning = changes.newPlanning as PlanningData;
           const { added, modified, removed } = changes.summary || { added: 0, modified: 0, removed: 0 };
           const totalChanges = (added || 0) + (modified || 0) + (removed || 0);
-
           if (totalChanges === 0) {
             toast.success('Aucune modification détectée dans votre planning.');
           } else {
@@ -162,14 +154,12 @@ export default function SmartPlanningIntelligent() {
           }
         } else {
           finalPlanning = planningManager.createPlanning(extractedCourses) as PlanningData;
-
           if (!finalPlanning || typeof (finalPlanning as any).metadata?.totalCourses === 'undefined') {
             toast.error('Le planning importé ne contient pas de données exploitables');
             setIsLoading(false);
             setIsUpdating(false);
             return;
           }
-
           toast.success(`Planning importé avec succès ! ${(finalPlanning as any).metadata.totalCourses} cours détectés.`);
         }
       } catch (error) {
@@ -225,7 +215,6 @@ export default function SmartPlanningIntelligent() {
 
   const triggerFileInput = () => fileInputRef.current?.click();
   const triggerUpdateFileInput = () => updateFileInputRef.current?.click();
-
   const handleImportClick = () => {
     triggerFileInput();
   };
@@ -235,7 +224,6 @@ export default function SmartPlanningIntelligent() {
     return (
       <div className="text-center text-gray-400 py-20">
         <p>Aucun planning chargé ou données non disponibles.</p>
-        <input accept=".pdf" className="hidden" onChange={handleInitialUpload} ref={fileInputRef} type="file" />
         <button onClick={handleImportClick} className="btn-primary mt-6">Importer mon planning PDF</button>
       </div>
     );
@@ -247,7 +235,6 @@ export default function SmartPlanningIntelligent() {
     return (
       <div className="text-center text-gray-400 py-20">
         <p>Aucun planning chargé ou données non disponibles.</p>
-        <input accept=".pdf" className="hidden" onChange={handleInitialUpload} ref={fileInputRef} type="file" />
         <button onClick={handleImportClick} className="btn-primary mt-6">Importer mon planning PDF</button>
       </div>
     );
@@ -262,7 +249,7 @@ export default function SmartPlanningIntelligent() {
             <h2 className="text-2xl font-bold text-white mb-2 flex items-center">📅 Mon Planning</h2>
             <div className="text-sm text-slate-300">
               Dernière mise à jour:{' '}
-              {new Date(planning.lastUpdated as any).toLocaleDateString('fr-FR', {
+              {new Date((planning as any).lastUpdated as any).toLocaleDateString('fr-FR', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric',
@@ -274,8 +261,8 @@ export default function SmartPlanningIntelligent() {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3">
-            <input accept=".pdf" className="hidden" onChange={handleInitialUpload} ref={fileInputRef} type="file" />
-            <input accept=".pdf" className="hidden" onChange={handleUpdateUpload} ref={updateFileInputRef} type="file" />
+            <input ref={fileInputRef} type="file" accept=".pdf" className="hidden" onChange={handleInitialUpload} />
+            <input ref={updateFileInputRef} type="file" accept=".pdf" className="hidden" onChange={handleUpdateUpload} />
 
             <motion.button className="flex items-center space-x-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-50" disabled={isLoading} onClick={triggerFileInput} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Upload size={18} />
@@ -298,28 +285,28 @@ export default function SmartPlanningIntelligent() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-blue-500/20 rounded-lg p-4 text-center">
             <FileText className="mx-auto mb-2 text-blue-400" size={24} />
-            <div className="text-2xl font-bold text-white">{planning.metadata.totalCourses}</div>
+            <div className="text-2xl font-bold text-white">{(planning as any).metadata.totalCourses}</div>
             <div className="text-sm text-slate-300">Cours</div>
           </div>
           <div className="bg-green-500/20 rounded-lg p-4 text-center">
             <CheckCircle className="mx-auto mb-2 text-green-400" size={24} />
-            <div className="text-2xl font-bold text-white">{planning.metadata.subjects.length}</div>
+            <div className="text-2xl font-bold text-white">{(planning as any).metadata.subjects.length}</div>
             <div className="text-sm text-slate-300">Matières</div>
           </div>
           <div className="bg-purple-500/20 rounded-lg p-4 text-center">
             <Clock className="mx-auto mb-2 text-purple-400" size={24} />
-            <div className="text-2xl font-bold text-white">{planning.metadata.teachers.length}</div>
+            <div className="text-2xl font-bold text-white">{(planning as any).metadata.teachers.length}</div>
             <div className="text-sm text-slate-300">Professeurs</div>
           </div>
           <div className="bg-orange-500/20 rounded-lg p-4 text-center">
             <AlertTriangle className="mx-auto mb-2 text-orange-400" size={24} />
-            <div className="text-2xl font-bold text-white">{planning.metadata.rooms.length}</div>
+            <div className="text-2xl font-bold text-white">{(planning as any).metadata.rooms.length}</div>
             <div className="text-sm text-slate-300">Salles</div>
           </div>
         </div>
 
         {/* Courses Table (strict guard) */}
-        {Array.isArray(planning.courses) && planning.courses.length > 0 ? (
+        {Array.isArray((planning as any).courses) && (planning as any).courses.length > 0 ? (
           <table className="w-full border border-gray-700 text-sm text-white mt-6">
             <thead className="bg-[#E2B44F]/20">
               <tr>
@@ -329,7 +316,7 @@ export default function SmartPlanningIntelligent() {
               </tr>
             </thead>
             <tbody>
-              {planning.courses.map((c, i) => (
+              {(planning as any).courses.map((c: any, i: number) => (
                 <tr className="border-t border-gray-700 hover:bg-[#E2B44F]/10" key={i}>
                   <td className="p-2 text-[#E2B44F] font-semibold">{c.subject}</td>
                   <td className="p-2">{c.teacher}</td>
@@ -346,7 +333,7 @@ export default function SmartPlanningIntelligent() {
       {/* Calendar Display */}
       <AnimatePresence>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }}>
-          <PlanningCalendar planning={planning} />
+          <PlanningCalendar planning={planning as any} />
         </motion.div>
       </AnimatePresence>
     </motion.div>
