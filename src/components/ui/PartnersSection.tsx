@@ -24,29 +24,32 @@ export default function PartnersSection() {
 
   return (
     <section className="relative py-20 bg-[#0A0A0A] overflow-hidden">
+      {/* Halo doré */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-[700px] h-[700px] bg-[#E2B44F]/10 rounded-full blur-[120px]" />
       </div>
 
+      {/* Titre */}
       <h2 className="text-center text-4xl md:text-6xl font-bebas tracking-wider text-[#E2B44F] mb-14 drop-shadow-[0_0_25px_rgba(226,180,79,0.5)]">
         Avec le soutien des grandes maisons horlogères
       </h2>
 
+      {/* Logos défilants */}
       <div className="overflow-hidden">
         <div ref={scrollRef} className="flex gap-16 animate-loop">
           {partners.map((partner, i) => (
             <div
               key={i}
-              className="flex-shrink-0 flex flex-col items-center justify-center group transition-all duration-500"
+              className="flex-shrink-0 flex flex-col items-center justify-center group"
             >
-              <div className="relative">
+              <div className="relative transition-transform duration-700 ease-out group-hover:z-50">
                 <Image
                   src={partner.logo}
                   alt={partner.name}
                   width={120}
                   height={120}
                   unoptimized
-                  className="object-contain opacity-85 transition-transform duration-700 ease-out group-hover:scale-[2.5] group-hover:opacity-100 drop-shadow-[0_0_15px_rgba(226,180,79,0.3)] group-hover:drop-shadow-[0_0_35px_rgba(226,180,79,0.6)]"
+                  className="object-contain opacity-85 transition-transform duration-700 ease-out group-hover:scale-[4.5] group-hover:opacity-100 drop-shadow-[0_0_20px_rgba(226,180,79,0.4)] group-hover:drop-shadow-[0_0_60px_rgba(226,180,79,0.8)]"
                 />
               </div>
             </div>
