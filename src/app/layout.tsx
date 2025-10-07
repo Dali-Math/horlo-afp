@@ -17,7 +17,7 @@ export default function RootLayout({
     { href: '/quiz', label: 'Quiz' },
     { href: '/outils', label: 'Outils' },
     { href: '/ressources', label: 'Ressources' },
-    { href: '/suisse', label: '🇨🇭 Horlogerie Suisse' }, // ✅ ajout ici
+    { href: '/suisse', label: '🇨🇭 Horlogerie Suisse' },
     { href: '/podcasts', label: 'Podcasts' },
     { href: '/culture', label: 'Culture' },
     { href: '/evenements', label: 'Événements' },
@@ -94,38 +94,33 @@ export default function RootLayout({
           {children}
         </main>
         
-        <footer className="bg-slate-900 text-white py-8 mt-auto">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-              <div>
-                <h3 className="text-xl font-bold mb-3">Horlo-AFP</h3>
-                <p className="text-sm text-slate-300">Plateforme d'apprentissage de l'horlogerie complète et accessible.</p>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold mb-3">Navigation</h4>
-                <ul className="space-y-2 text-sm text-slate-300">
-                  <a className="hover:text-amber-400 transition-colors" href="/theorie">Théorie</a>
-                  <a className="hover:text-amber-400 transition-colors" href="/pratique">Pratique</a>
-                  <a className="hover:text-amber-400 transition-colors" href="/ressources">Ressources</a>
-                  <a href="/contact" className="text-gray-400 hover:text-[#E2B44F] transition-colors duration-200">✉️ Contact</a>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold mb-3">Communauté</h4>
-                <ul className="space-y-2 text-sm text-slate-300">
-                  <a className="hover:text-amber-400 transition-colors" href="/communaute">Forums</a>
-                  <a className="hover:text-amber-400 transition-colors" href="/evenements">Événements</a>
-                  <a className="hover:text-amber-400 transition-colors" href="/podcasts">Podcasts</a>
-                </ul>
-              </div>
-            </div>
+        <footer className="bg-[#0a0a0a] border-t border-gray-800 py-10 text-gray-400">
+          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
             
-            <div className="border-t border-slate-700 mt-8 pt-6 text-center text-sm text-slate-400">
-              © 2025 Horlo-AFP. Tous droits réservés.
+            <div>
+              <h3 className="font-semibold text-white mb-3">Navigation</h3>
+              <a href="/theorie" className="block hover:text-[#E2B44F]">Théorie</a>
+              <a href="/pratique" className="block hover:text-[#E2B44F]">Pratique</a>
+              <a href="/ressources" className="block hover:text-[#E2B44F]">Ressources</a>
             </div>
+
+            <div>
+              <h3 className="font-semibold text-white mb-3">Communauté</h3>
+              <a href="/forums" className="block hover:text-[#E2B44F]">Forums</a>
+              <a href="/evenements" className="block hover:text-[#E2B44F]">Événements</a>
+              <a href="/podcasts" className="block hover:text-[#E2B44F]">Podcasts</a>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-white mb-3">Contact</h3>
+              <a href="/contact" className="block text-[#E2B44F] font-semibold">✉️ Me contacter</a>
+            </div>
+
           </div>
+
+          <p className="mt-8 text-center text-sm text-gray-500">
+            © 2025 Horlo-AFP. Tous droits réservés.
+          </p>
         </footer>
       </body>
     </html>
