@@ -176,8 +176,8 @@ export function PlanningCalendar({ planning }: PlanningCalendarProps) {
 
                   {/* Courses */}
                   {coursesByDay[day]?.map((course, index) => {
-                    const topPosition = getTimePosition(course.startTime) * 8; // 8px per unit
-                    const height = getCourseDuration(course.startTime, course.endTime) * 8;
+                    const topPosition = getTimePosition(course.startTime!) * 8; // 8px per unit
+                    const height = getCourseDuration(course.startTime!, course.endTime!) * 8;
                     
                     return (
                       <motion.div
@@ -196,7 +196,7 @@ export function PlanningCalendar({ planning }: PlanningCalendarProps) {
                           {course.subject}
                         </div>
                         <div className="text-white/90 text-xs truncate">
-                          {formatTime(course.startTime)} - {formatTime(course.endTime)}
+                          {formatTime(course.startTime!)} - {formatTime(course.endTime!)}
                         </div>
                         {height > 50 && (
                           <>
@@ -250,7 +250,7 @@ export function PlanningCalendar({ planning }: PlanningCalendarProps) {
               <div className="flex items-center space-x-2 text-slate-300">
                 <Clock size={16} />
                 <span>
-                  {formatTime(selectedCourse.startTime)} - {formatTime(selectedCourse.endTime)}
+                  {formatTime(selectedCourse.startTime!)} - {formatTime(selectedCourse.endTime!)}
                 </span>
               </div>
               
