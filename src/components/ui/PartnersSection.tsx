@@ -40,20 +40,18 @@ export default function PartnersSection() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: i * 0.1 }}
             viewport={{ once: true }}
-            className="relative group flex items-center justify-center"
+            className="relative group flex flex-col items-center justify-center text-center"
           >
-            <div className="relative w-[140px] h-[140px] flex items-center justify-center">
-              {/* Reflet doré animé */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E2B44F]/30 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shine rounded-xl" />
-              <Image
-  src={partner.logo}
-  alt={partner.name}
-  width={140}
-  height={140}
-  className="object-contain opacity-85 group-hover:opacity-100 transition duration-500 drop-shadow-[0_0_15px_rgba(226,180,79,0.25)]"
-/>
-
-            </div>
+            <Image
+              src={partner.logo}
+              alt={partner.name}
+              width={140}
+              height={140}
+              priority
+              unoptimized
+              className="object-contain opacity-90 group-hover:opacity-100 transition duration-500 drop-shadow-[0_0_12px_rgba(226,180,79,0.25)]"
+            />
+            <span className="mt-3 text-xs text-gray-400">{partner.name}</span>
           </motion.div>
         ))}
       </div>
@@ -62,20 +60,6 @@ export default function PartnersSection() {
       <p className="mt-12 text-center text-sm text-slate-400">
         Ressources gratuites et open-source pour la formation en horlogerie.
       </p>
-
-      <style jsx global>{`
-        @keyframes shine {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(100%);
-          }
-        }
-        .animate-shine {
-          animation: shine 1.6s linear;
-        }
-      `}</style>
     </section>
   );
 }
