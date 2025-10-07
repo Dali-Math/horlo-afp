@@ -9,6 +9,7 @@ interface PlanningCalendarProps {
 }
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+
 const TIME_SLOTS = [
   '08:00', '08:30', '09:00', '09:30', '10:00', '10:30',
   '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
@@ -60,7 +61,7 @@ export function PlanningCalendar({ planning }: PlanningCalendarProps) {
 
     // Sort courses by start time within each day
     Object.keys(grouped).forEach(day => {
-      grouped[day].sort((a, b) => a.startTime.localeCompare(b.startTime));
+      grouped[day].sort((a, b) => (a.startTime || "").localeCompare(b.startTime || ""));
     });
 
     return grouped;
@@ -150,7 +151,7 @@ export function PlanningCalendar({ planning }: PlanningCalendarProps) {
             {/* Time Labels */}
             <div className="absolute left-0 top-0 bottom-0 w-20">
               {TIME_SLOTS.map((time, index) => (
-                <div 
+                <div
                   key={time}
                   className="text-slate-400 text-xs py-2 text-right pr-2"
                   style={{ height: '32px' }}
@@ -163,7 +164,7 @@ export function PlanningCalendar({ planning }: PlanningCalendarProps) {
             {/* Days Grid */}
             <div className="ml-20 grid grid-cols-7 gap-2">
               {DAYS.map(day => (
-                <div key={day} className="relative border-l border-slate-600 pl-2" style={{ minHeight: '768px' }}>
+                <div key={day} className="relative border-l border-slate-600 pl-2" style={{ minHeight: `${TIME_SLOTS.length * 32}px` }}>
                   {/* Hour Lines */}
                   {TIME_SLOTS.map((_, index) => (
                     <div
