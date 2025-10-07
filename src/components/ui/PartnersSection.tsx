@@ -26,11 +26,11 @@ export default function PartnersSection() {
     <section className="relative py-20 bg-[#0A0A0A] overflow-hidden">
       {/* Halo doré */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-[700px] h-[700px] bg-[#E2B44F]/10 rounded-full blur-[120px]" />
+        <div className="w-[800px] h-[800px] bg-[#E2B44F]/10 rounded-full blur-[150px]" />
       </div>
 
       {/* Titre */}
-      <h2 className="text-center text-4xl md:text-6xl font-bebas tracking-wider text-[#E2B44F] mb-14 drop-shadow-[0_0_25px_rgba(226,180,79,0.5)]">
+      <h2 className="text-center text-4xl md:text-6xl font-bebas tracking-wider text-[#E2B44F] mb-14 drop-shadow-[0_0_30px_rgba(226,180,79,0.5)]">
         Avec le soutien des grandes maisons horlogères
       </h2>
 
@@ -40,17 +40,19 @@ export default function PartnersSection() {
           {partners.map((partner, i) => (
             <div
               key={i}
-              className="flex-shrink-0 flex flex-col items-center justify-center group"
+              className="flex-shrink-0 flex flex-col items-center justify-center group relative"
             >
-              <div className="relative transition-transform duration-700 ease-out group-hover:z-50">
+              <div className="relative transition-transform duration-[1200ms] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:z-50">
                 <Image
                   src={partner.logo}
                   alt={partner.name}
                   width={120}
                   height={120}
                   unoptimized
-                  className="object-contain opacity-85 transition-transform duration-700 ease-out group-hover:scale-[4.5] group-hover:opacity-100 drop-shadow-[0_0_20px_rgba(226,180,79,0.4)] group-hover:drop-shadow-[0_0_60px_rgba(226,180,79,0.8)]"
+                  className="object-contain opacity-85 transition-transform duration-[1200ms] ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-[30] group-hover:opacity-100 group-hover:drop-shadow-[0_0_180px_rgba(226,180,79,1)]"
                 />
+                {/* Fond doré au survol */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-40 group-hover:blur-3xl transition duration-700 bg-[#E2B44F]/40 rounded-full" />
               </div>
             </div>
           ))}
