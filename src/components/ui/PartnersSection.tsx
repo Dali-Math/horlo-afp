@@ -46,11 +46,13 @@ export default function PartnersSection() {
               {/* Reflet doré animé */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E2B44F]/30 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shine rounded-xl" />
               <Image
-                src={partner.logo}
-                alt={partner.name}
-                fill
-                className="object-contain opacity-85 group-hover:opacity-100 transition duration-500 drop-shadow-[0_0_15px_rgba(226,180,79,0.25)]"
-              />
+  src={partner.logo}
+  alt={partner.name}
+  width={140}
+  height={140}
+  className="object-contain opacity-85 group-hover:opacity-100 transition duration-500 drop-shadow-[0_0_15px_rgba(226,180,79,0.25)]"
+/>
+
             </div>
           </motion.div>
         ))}
