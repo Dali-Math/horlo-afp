@@ -31,39 +31,52 @@ export default function PartnersSection() {
         Avec le soutien des grandes maisons horlogères
       </motion.h2>
 
-      {/* Logos */}
-      <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-10 place-items-center">
-        {partners.map((partner, i) => (
-          <motion.div
-            key={partner.name}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: i * 0.1 }}
-            viewport={{ once: true }}
-            className="relative group flex flex-col items-center justify-center text-center"
-          >
-            <Image
-              src={partner.logo}
-              alt={partner.name}
-              width={140}
-              height={140}
-              priority={i === 0}
-              unoptimized
-              className="object-contain opacity-90 group-hover:opacity-100 transition duration-500 drop-shadow-[0_0_12px_rgba(226,180,79,0.25)]"
-              // Optionnel : fallback si tu ajoutes "/images/partners/fallback.png"
-              onError={(e) => {
-                e.currentTarget.src = "/images/partners/fallback.png";
-              }}
-            />
-            <span className="mt-3 text-xs text-gray-400">{partner.name}</span>
-          </motion.div>
-        ))}
+      {/* Carrousel horizontal infini */}
+      <div className="relative overflow-hidden max-w-7xl mx-auto">
+        <div className="flex animate-scroll gap-16 justify-center items-center">
+          {[...partners, ...partners].map((partner, i) => (
+            <div
+              key={i}
+              className="relative w-[140px] h-[140px] flex items-center justify-center shrink-0 group"
+            >
+              <Image
+                src={partner.logo}
+                alt={partner.name}
+                width={140}
+                height={140}
+                unoptimized
+                priority={i === 0}
+                className="object-contain opacity-90 group-hover:opacity-100 transition duration-500 drop-shadow-[0_0_12px_rgba(226,180,79,0.25)]"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src =
+                    "/images/partners/fallback.png";
+                }}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Légende */}
       <p className="mt-12 text-center text-sm text-slate-400">
         Ressources gratuites et open-source pour la formation en horlogerie.
       </p>
+
+      {/* Animation CSS */}
+      <style jsx global>{`
+        @keyframes scroll {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
+        }
+        .animate-scroll {
+          animation: scroll 25s linear infinite;
+          width: max-content;
+        }
+      `}</style>
     </section>
   );
 }
