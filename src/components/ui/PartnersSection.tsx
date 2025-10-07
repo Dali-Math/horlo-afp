@@ -4,13 +4,13 @@ import { motion } from "framer-motion";
 
 export default function PartnersSection() {
   const partners = [
-    { name: "Rolex", logo: "/logos/rolex.png" },
-    { name: "Patek Philippe", logo: "/logos/patek.png" },
-    { name: "Audemars Piguet", logo: "/logos/audemars.png" },
-    { name: "Vacheron Constantin", logo: "/logos/vacheron.png" },
-    { name: "Piaget", logo: "/logos/piaget.png" },
-    { name: "Chopard", logo: "/logos/chopard.png" },
-    { name: "Franck Muller", logo: "/logos/muller.png" },
+    { name: "Rolex", logo: "/images/partners/rolex.png" },
+    { name: "Patek Philippe", logo: "/images/partners/patek.png" },
+    { name: "Audemars Piguet", logo: "/images/partners/audemars.png" },
+    { name: "Vacheron Constantin", logo: "/images/partners/vacheron.png" },
+    { name: "Piaget", logo: "/images/partners/piaget.png" },
+    { name: "Chopard", logo: "/images/partners/chopard.png" },
+    { name: "Franck Muller", logo: "/images/partners/muller.png" },
   ];
 
   return (
@@ -48,10 +48,11 @@ export default function PartnersSection() {
               width={140}
               height={140}
               priority={i === 0}
-              unoptimized // utile si CDN pose problème sur les assets statiques
+              unoptimized
               className="object-contain opacity-90 group-hover:opacity-100 transition duration-500 drop-shadow-[0_0_12px_rgba(226,180,79,0.25)]"
+              // Optionnel : fallback si tu ajoutes "/images/partners/fallback.png"
               onError={(e) => {
-                e.currentTarget.src = "/logos/fallback.png"; // mets un fallback si tu ajoutes ce fichier
+                e.currentTarget.src = "/images/partners/fallback.png";
               }}
             />
             <span className="mt-3 text-xs text-gray-400">{partner.name}</span>
