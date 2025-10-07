@@ -13,37 +13,36 @@ export default function PartnersSection() {
   ];
 
   return (
-    <section className="relative py-32 bg-[#0A0A0A] overflow-hidden flex flex-col items-center justify-center">
-      {/* Halo central */}
+    <section className="relative flex flex-col items-center justify-center py-32 bg-[#0A0A0A] overflow-hidden">
+      {/* Halo doré */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-[700px] h-[700px] bg-[#E2B44F]/10 rounded-full blur-[120px]" />
       </div>
 
       {/* Titre au centre */}
-      <h2 className="text-center text-4xl md:text-6xl font-bebas tracking-wide text-[#E2B44F] mb-20 drop-shadow-[0_0_25px_rgba(226,180,79,0.4)] z-10">
+      <h2 className="text-center text-4xl md:text-6xl font-bebas tracking-wide text-[#E2B44F] mb-24 drop-shadow-[0_0_25px_rgba(226,180,79,0.4)] z-10">
         Avec le soutien des grandes maisons horlogères
       </h2>
 
-      {/* Cercle d'orbite */}
-      <div className="relative w-[500px] h-[500px] flex items-center justify-center">
-        <div className="absolute w-full h-full animate-rotate">
+      {/* Conteneur du cercle */}
+      <div className="relative w-[500px] h-[500px]">
+        <div className="absolute inset-0 animate-orbit">
           {partners.map((partner, i) => (
             <div
               key={i}
               className="absolute top-1/2 left-1/2"
               style={{
-                transform: `rotate(${(360 / partners.length) * i}deg) translate(200px) rotate(-${
-                  (360 / partners.length) * i
-                }deg)`,
+                transform: `rotate(${(360 / partners.length) * i}deg) translateX(200px) rotate(-${(360 / partners.length) * i}deg)`,
+                transformOrigin: "center center",
               }}
             >
               <Image
                 src={partner.logo}
                 alt={partner.name}
-                width={90}
-                height={90}
+                width={100}
+                height={100}
                 unoptimized
-                className="object-contain opacity-90 hover:opacity-100 transition duration-500 drop-shadow-[0_0_15px_rgba(226,180,79,0.3)]"
+                className="object-contain opacity-90 hover:opacity-100 transition duration-500 drop-shadow-[0_0_12px_rgba(226,180,79,0.25)]"
               />
             </div>
           ))}
@@ -51,13 +50,12 @@ export default function PartnersSection() {
       </div>
 
       {/* Légende */}
-      <p className="mt-12 text-center text-sm text-slate-400">
+      <p className="mt-14 text-center text-sm text-slate-400">
         Ressources gratuites et open-source pour la formation en horlogerie.
       </p>
 
-      {/* Animation */}
       <style jsx global>{`
-        @keyframes rotate {
+        @keyframes orbit {
           from {
             transform: rotate(0deg);
           }
@@ -66,8 +64,8 @@ export default function PartnersSection() {
           }
         }
 
-        .animate-rotate {
-          animation: rotate 40s linear infinite;
+        .animate-orbit {
+          animation: orbit 40s linear infinite;
           transform-origin: center center;
         }
       `}</style>
