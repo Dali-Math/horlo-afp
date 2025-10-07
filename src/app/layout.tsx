@@ -1,8 +1,6 @@
 'use client';
-
 import type { Metadata } from "next";
 import "./globals.css";
-import { Clock } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 
 export default function RootLayout({
@@ -13,26 +11,17 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <head>
-        <title>Horlo-AFP - Plateforme d'apprentissage de l'horlogerie</title>
-        <meta name="description" content="Apprenez l'horlogerie de A à Z avec notre plateforme complète" />
+        <title>HorloLearn - Pour les passionnés et apprentis horlogers</title>
+        <meta name="description" content="HorloLearn : plateforme d'apprentissage complète pour les passionnés et apprentis horlogers AFP, CFC ou autodidactes." />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta property="og:title" content="HorloLearn - Pour les passionnés et apprentis horlogers" />
+        <meta property="og:description" content="Plateforme d'apprentissage pour les passionnés et apprentis horlogers" />
+        <meta property="og:image" content="/logos/Logo.jpg" />
+        <link rel="icon" href="/logos/Logo.jpg" />
       </head>
       <body className="flex flex-col min-h-screen">
-        <header className="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
-          <div className="container mx-auto px-4 sm:px-6 py-4" style={{ fontFamily: "'Oswald', sans-serif" }}>
-            <div className="flex items-center justify-between">
-              {/* Logo */}
-              <a href="/" className="flex items-center gap-2 sm:gap-3 group">
-                <Clock className="w-7 h-7 sm:w-8 sm:h-8 text-amber-600" strokeWidth={1.5} />
-                <span className="text-xl sm:text-2xl font-bold text-gray-900 group-hover:text-amber-600 transition-colors">
-                  Horlo-AFP
-                </span>
-              </a>
-            </div>
-          </div>
-          {/* Navigation Bar with active link highlighting */}
-          <Navbar />
-        </header>
+        {/* Navigation Bar with HorloLearn branding */}
+        <Navbar />
         
         <main className="flex-grow">
           {children}
@@ -56,10 +45,11 @@ export default function RootLayout({
             <div>
               <h3 className="font-semibold text-white mb-3">Contact</h3>
               <a className="block text-[#E2B44F] font-semibold" href="/contact">✉️ Me contacter</a>
+              <p className="mt-2 text-sm">Pour les passionnés et apprentis horlogers</p>
             </div>
           </div>
           <p className="mt-8 text-center text-sm text-gray-500">
-            © 2025 Horlo-AFP. Tous droits réservés.
+            © 2025 HorloLearn. Tous droits réservés.
           </p>
         </footer>
       </body>
