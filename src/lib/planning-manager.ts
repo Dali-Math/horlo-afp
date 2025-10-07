@@ -10,3 +10,27 @@ export function updatePlanning(oldPlanning: any, newPlanning: any): any {
   // Placeholder implementation
   return {};
 }
+
+// Temporary PlanningManager class
+export class PlanningManager {
+  constructor() {
+    // Placeholder constructor
+  }
+
+  parsePlanning(pdfBuffer: ArrayBuffer): any {
+    return parsePlanning(pdfBuffer);
+  }
+
+  updatePlanning(oldPlanning: any, newPlanning: any): any {
+    return updatePlanning(oldPlanning, newPlanning);
+  }
+
+  // Additional placeholder methods that might be expected
+  loadPlanning(): any {
+    return {};
+  }
+
+  savePlanning(planning: any): boolean {
+    return true;
+  }
+}
