@@ -2,58 +2,74 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-const partners = [
-  { src: "/images/partners/rolex.png", alt: "Rolex" },
-  { src: "/images/partners/patek.png", alt: "Patek Philippe" },
-  { src: "/images/partners/audemars.png", alt: "Audemars Piguet" },
-  { src: "/images/partners/vacheron.png", alt: "Vacheron Constantin" },
-  { src: "/images/partners/chopard.png", alt: "Chopard" },
-  { src: "/images/partners/piaget.png", alt: "Piaget" },
-  { src: "/images/partners/muller.png", alt: "Franck Muller" },
-];
-
 export default function PartnersSection() {
+  const partners = [
+    { name: "Rolex", logo: "/logos/rolex.png" },
+    { name: "Patek Philippe", logo: "/logos/patek.png" },
+    { name: "Audemars Piguet", logo: "/logos/audemars.png" },
+    { name: "Vacheron Constantin", logo: "/logos/vacheron.png" },
+    { name: "Piaget", logo: "/logos/piaget.png" },
+    { name: "Chopard", logo: "/logos/chopard.png" },
+    { name: "Franck Muller", logo: "/logos/muller.png" },
+  ];
+
   return (
-    <section className="relative bg-[#0A0A0A] py-20 overflow-hidden">
-      <div className="text-center mb-12">
-        <h2
-          className="text-3xl md:text-4xl font-semibold text-[#E2B44F]"
-          style={{ textShadow: "0 0 15px rgba(226,180,79,0.7)" }}
-        >
-          Avec le soutien des grandes maisons horlogères
-        </h2>
+    <section className="relative py-20 bg-[#0A0A0A] overflow-hidden">
+      {/* Halo décoratif */}
+      <div className="absolute inset-0">
+        <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#E2B44F]/10 rounded-full blur-3xl" />
       </div>
 
-      {/* Bande animée */}
-      <motion.div
-        className="flex items-center justify-around gap-20 px-8"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{
-          repeat: Infinity,
-          duration: 35,
-          ease: "linear",
-        }}
+      {/* Titre */}
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+        className="text-center text-4xl md:text-6xl font-bebas tracking-wider text-[#E2B44F] mb-14 drop-shadow-[0_0_25px_rgba(226,180,79,0.5)]"
       >
-        {[...partners, ...partners].map((p, i) => (
+        Maisons horlogères genevoises
+      </motion.h2>
+
+      {/* Grille logos */}
+      <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-10 place-items-center">
+        {partners.map((partner, i) => (
           <motion.div
-            key={i}
-            className="grayscale hover:grayscale-0 transition-all duration-500"
-            whileHover={{ scale: 1.05 }}
+            key={partner.name}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: i * 0.1 }}
+            viewport={{ once: true }}
+            className="relative group flex items-center justify-center"
           >
-            <Image
-              src={p.src}
-              alt={p.alt}
-              width={180}
-              height={100}
-              className="object-contain opacity-80 hover:opacity-100 transition-all"
-            />
+            <div className="relative w-[160px] sm:w-[180px] md:w-[200px] h-[100px] sm:h-[120px] md:h-[140px] flex items-center justify-center">
+              {/* Effet lumineux doré */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E2B44F]/40 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shine rounded-lg" />
+              <Image
+                src={partner.logo}
+                alt={partner.name}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 200px"
+                className="object-contain opacity-80 group-hover:opacity-100 transition duration-500"
+              />
+            </div>
           </motion.div>
         ))}
-      </motion.div>
+      </div>
 
-      <p className="text-center text-gray-400 mt-10 text-sm">
-        Ressources gratuites et open-source pour la formation en horlogerie.
-      </p>
+      <style jsx global>{`
+        @keyframes shine {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
+        }
+        .animate-shine {
+          animation: shine 1.6s linear;
+        }
+      `}</style>
     </section>
   );
 }
