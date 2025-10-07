@@ -63,7 +63,6 @@ export default function SmartPlanningIntelligent() {
 
   const handleFileUpload = useCallback(
     async (file: File, isUpdate = false) => {
-      console.log('handleFileUpload start', { name: file?.name, size: file?.size, type: file?.type, isUpdate });
       if (!file || file.type !== 'application/pdf') {
         toast.error('Veuillez sélectionner un fichier PDF valide.');
         return;
@@ -74,31 +73,22 @@ export default function SmartPlanningIntelligent() {
 
       let extractedCourses: CourseData[] = [];
       try {
-        console.log('parsePlanning start: reading arrayBuffer');
-        const arrayBuffer = await file.arrayBuffer().catch((err) => {
-          console.error('arrayBuffer read error:', err);
-          throw new Error('Lecture du fichier PDF impossible.');
-        });
-
+        const arrayBuffer = await file.arrayBuffer();
         if (!arrayBuffer || (arrayBuffer as ArrayBuffer).byteLength === 0) {
-          console.warn('arrayBuffer is empty');
           toast.error('Le fichier PDF est vide.');
           return;
         }
 
-        console.log('PDFParser.parsePDF start');
         // Primary parser path (existing behavior)
         extractedCourses = await pdfParser.parsePDF(file);
-        console.log('PDFParser.parsePDF end', { count: extractedCourses?.length });
 
         // Validate parsing result before proceeding
         if (!Array.isArray(extractedCourses) || extractedCourses.length === 0) {
-          console.error('Parsed result invalid or empty');
           toast.error('Le planning PDF est vide ou non reconnu.');
           return;
         }
       } catch (error) {
-        console.error('Erreur pendant l\'analyse du PDF :', error);
+        console.error("Erreur pendant l'analyse du PDF :", error);
         toast.error('Erreur de lecture du planning. Vérifie ton fichier PDF.');
         return;
       }
@@ -106,7 +96,6 @@ export default function SmartPlanningIntelligent() {
       let finalPlanning: PlanningData | undefined;
       try {
         if (isUpdate && planning) {
-          console.log('compareAndMerge start');
           let changes;
           try {
             changes = planningManager.compareAndMerge(planning, extractedCourses);
@@ -125,10 +114,8 @@ export default function SmartPlanningIntelligent() {
             toast.success(`Planning mis à jour ! ${added} ajouts, ${modified} modifications, ${removed} suppressions.`);
           }
         } else {
-          console.log('createPlanning start');
           finalPlanning = planningManager.createPlanning(extractedCourses) as PlanningData;
           // Defensive check: ensure totalCourses exists before using it
-          // If missing, show clear message and avoid crash
           if (!finalPlanning || typeof (finalPlanning as any).metadata?.totalCourses === 'undefined') {
             toast.error('Le planning importé ne contient pas de données exploitables');
             setIsLoading(false);
@@ -144,7 +131,6 @@ export default function SmartPlanningIntelligent() {
       }
 
       if (!finalPlanning) {
-        console.error('finalPlanning undefined - abort render');
         toast.error("Impossible d'afficher le planning.");
         return;
       }
@@ -189,6 +175,10 @@ export default function SmartPlanningIntelligent() {
     }
   }, []);
 
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
@@ -197,56 +187,54 @@ export default function SmartPlanningIntelligent() {
     updateFileInputRef.current?.click();
   };
 
-  // Defensive render: before any usage of planning.metadata.totalCourses
-  if (!hasExistingPlanning && !planning) {
+  // Fallback when no planning yet OR totalCourses is 0
+  const totalCourses = (planning as any)?.metadata?.totalCourses ?? 0;
+  if (!planning || totalCourses === 0) {
     return (
-      <motion.div
-        className="max-w-4xl mx-auto"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 p-8">
-          <div className="text-center mb-8">
-            <Calendar className="mx-auto mb-4 text-blue-400" size={64} />
-            <h2 className="text-3xl font-bold text-white mb-4">Importez votre premier planning</h2>
-            <p className="text-slate-300 max-w-2xl mx-auto">
-              Téléchargez votre fichier PDF de planning scolaire pour commencer.
-              Notre système analysera automatiquement vos cours, horaires et salles.
-            </p>
-          </div>
-          <div className="flex flex-col items-center space-y-6">
-            <input
-              type="file"
-              accept=".pdf"
-              className="hidden"
-              onChange={handleInitialUpload}
-              ref={fileInputRef}
-            />
-            <motion.button
-              className="flex items-center space-x-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl font-semibold disabled:opacity-50"
-              disabled={isLoading}
-              onClick={triggerFileInput}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {isLoading ? <RefreshCw className="animate-spin" size={24} /> : <Upload size={24} />}
-              {isLoading ? 'Analyse en cours...' : '📄 Importer mon planning PDF'}
-            </motion.button>
-            <div className="text-sm text-slate-400">Format accepté : PDF uniquement • Taille max : 10 MB</div>
-          </div>
-        </div>
-      </motion.div>
+      <div className="flex flex-col items-center justify-center gap-6 py-16">
+        <p className="text-gray-300">Aucun planning disponible</p>
+        <input
+          type="file"
+          accept=".pdf"
+          className="hidden"
+          onChange={handleInitialUpload}
+          ref={fileInputRef}
+        />
+        <button
+          onClick={handleImportClick}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition"
+        >
+          📤 Importer mon planning PDF
+        </button>
+      </div>
     );
   }
 
-  // New guard when planning exists but missing totalCourses
-  if (!planning || typeof (planning as any).metadata?.totalCourses === 'undefined') {
+  // Guard: planning exists but missing totalCourses metadata entirely
+  if (typeof (planning as any).metadata?.totalCourses === 'undefined') {
     toast.error('Le planning importé ne contient pas de données exploitables');
-    return <p className="text-gray-400 mt-6">Aucun planning disponible</p>;
+    return (
+      <div className="flex flex-col items-center justify-center gap-6 py-16">
+        <p className="text-gray-300">Aucun planning disponible</p>
+        <input
+          type="file"
+          accept=".pdf"
+          className="hidden"
+          onChange={handleInitialUpload}
+          ref={fileInputRef}
+        />
+        <button
+          onClick={handleImportClick}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition"
+        >
+          📤 Importer mon planning PDF
+        </button>
+      </div>
+    );
   }
 
   return (
-    <motion.div className="max-w-7xl mx-auto space-y-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+    <motion.div className="max-w-7xl mx-auto space-y-8" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
       {/* Planning Management Panel */}
       <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
@@ -268,8 +256,8 @@ export default function SmartPlanningIntelligent() {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3">
-            <input type="file" accept=".pdf" className="hidden" onChange={handleInitialUpload} ref={fileInputRef} />
-            <input type="file" accept=".pdf" className="hidden" onChange={handleUpdateUpload} ref={updateFileInputRef} />
+            <input accept=".pdf" className="hidden" onChange={handleInitialUpload} ref={fileInputRef} type="file" />
+            <input accept=".pdf" className="hidden" onChange={handleUpdateUpload} ref={updateFileInputRef} type="file" />
             <motion.button
               className="flex items-center space-x-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-50"
               disabled={isLoading}
