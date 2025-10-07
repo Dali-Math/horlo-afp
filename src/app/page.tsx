@@ -1,4 +1,5 @@
-// src/app/page.tsx (partie PartnersSection)
+import { motion } from "framer-motion";
+import Image from "next/image";
 
 function PartnersSection() {
   const partners = [
@@ -10,7 +11,6 @@ function PartnersSection() {
     { src: "/images/partners/piaget.png", alt: "Piaget" },
     { src: "/images/partners/muller.png", alt: "Franck Muller" },
   ];
-
   return (
     <section className="relative bg-[#0A0A0A] py-20 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#0A0A0A] to-[#141414] animate-[shine_8s_linear_infinite]" />
@@ -35,9 +35,8 @@ function PartnersSection() {
                 rest: { opacity: 0, scale: 1 },
                 hover: { opacity: 0.45, scale: 3 },
               }}
-              transition={{ duration: 0.25, ease: "easeInOut" }}
+              transition={{ duration: 0.27, ease: "easeInOut" }}
               className="absolute inset-0 rounded-xl bg-black pointer-events-none z-0"
-              style={{ boxShadow: "0 0 40px 40px #000" }}
             />
             {/* logo animé */}
             <motion.div
@@ -45,7 +44,7 @@ function PartnersSection() {
                 rest: { scale: 1, zIndex: 1 },
                 hover: { scale: 20, zIndex: 10 },
               }}
-              transition={{ duration: 0.28, ease: "easeInOut" }}
+              transition={{ duration: 0.33, ease: "easeInOut" }}
               className="relative z-10"
             >
               <Image src={p.src} alt={p.alt} width={180} height={100} className="object-contain" unoptimized />
