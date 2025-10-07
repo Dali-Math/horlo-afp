@@ -4,20 +4,22 @@ import { useState } from "react";
 export default function ContactPage() {
   const [status, setStatus] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setStatus("Envoi en cours...");
     const form = e.currentTarget;
-    const formData = new FormData(form);
-    const name = formData.get("name");
-    const email = formData.get("email");
-    const message = formData.get("message");
-    const subject = "Suggestion pour le site Horlo-AFP";
-    const body = `Nom: ${name}\nEmail: ${email}\n\nMessage:\n${message}`;
-    window.location.href = `mailto:contact.horlogeries@gmail.com?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-    setStatus("Message prêt à être envoyé !");
-    form.reset();
+    const data = new FormData(form);
+    const res = await fetch("https://formspree.io/f/mvgwbgry", {
+      method: "POST",
+      body: data,
+      headers: { Accept: "application/json" },
+    });
+    if (res.ok) {
+      setStatus("✅ Message envoyé avec succès !");
+      form.reset();
+    } else {
+      setStatus("❌ Erreur lors de l'envoi. Réessaie plus tard.");
+    }
   };
 
   return (
@@ -32,8 +34,10 @@ export default function ContactPage() {
           <input type="text" name="name" placeholder="Votre nom" required className="w-full p-3 rounded bg-[#1a1a1a] border border-gray-700" />
           <input type="email" name="email" placeholder="Votre email" required className="w-full p-3 rounded bg-[#1a1a1a] border border-gray-700" />
           <textarea name="message" placeholder="Votre message" required className="w-full p-3 h-40 rounded bg-[#1a1a1a] border border-gray-700" />
-          <button type="submit" className="bg-[#E2B44F] text-black px-6 py-3 rounded font-bold hover:bg-[#f0ca67]">Envoyer</button>
-          {status && <p className="text-green-400 mt-3">{status}</p>}
+          <button type="submit" className="bg-[#E2B44F] text-black px-6 py-3 rounded font-bold hover:bg-[#f0ca67]">
+            Envoyer
+          </button>
+          {status && <p className="mt-3 text-green-400">{status}</p>}
         </form>
       </div>
     </section>
