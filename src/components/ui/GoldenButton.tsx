@@ -2,21 +2,24 @@
 import { motion } from "framer-motion";
 import type { ButtonHTMLAttributes } from "react";
 
-type GoldenButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+interface GoldenButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   href?: string;
-};
+}
 
 export default function GoldenButton({ label, href, ...props }: GoldenButtonProps) {
+  // Contournement propre : on utilise motion('button') sans typage générique
+  const MotionButton = motion("button" as any);
+
   const content = (
-    <motion.button
+    <MotionButton
       type="button"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.97 }}
-      className={`relative overflow-hidden px-6 py-3 font-semibold text-[#E2B44F] border border-[#E2B44F]/40 rounded-md tracking-wide transition-all duration-300 bg-gradient-to-r from-[#1a1a1a] via-black to-[#1a1a1a] hover:shadow-[0_0_20px_rgba(226,180,79,0.4)] ${props.className || ""}`}
       {...props}
+      className={`relative overflow-hidden px-6 py-3 font-semibold text-[#E2B44F] border border-[#E2B44F]/40 rounded-md tracking-wide transition-all duration-300 bg-gradient-to-r from-[#1a1a1a] via-black to-[#1a1a1a] hover:shadow-[0_0_20px_rgba(226,180,79,0.4)] ${props.className || ""}`}
     >
-      {/* Lueur dorée */}
+      {/* Effet lumineux doré */}
       <motion.span
         className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E2B44F]/25 to-transparent"
         initial={{ x: "-100%" }}
@@ -24,7 +27,7 @@ export default function GoldenButton({ label, href, ...props }: GoldenButtonProp
         transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
       />
       <span className="relative z-10">{label}</span>
-    </motion.button>
+    </MotionButton>
   );
 
   return href ? (
