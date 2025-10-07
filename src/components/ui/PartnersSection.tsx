@@ -12,9 +12,6 @@ export default function PartnersSection() {
     { name: "Franck Muller", logo: "/images/partners/muller.png" },
   ];
 
-  // 🌀 On répète la liste 4 fois pour garantir une boucle fluide
-  const loopedPartners = Array(4).fill(partners).flat();
-
   return (
     <section className="relative py-20 bg-[#0A0A0A] overflow-hidden">
       {/* Halo doré */}
@@ -27,22 +24,26 @@ export default function PartnersSection() {
         Avec le soutien des grandes maisons horlogères
       </h2>
 
-      {/* Carrousel infini */}
+      {/* Bande défilante infinie */}
       <div className="relative w-full overflow-hidden">
-        <div className="flex animate-scroll gap-16 px-10 whitespace-nowrap">
-          {loopedPartners.map((partner, i) => (
-            <div
-              key={`${partner.name}-${i}`}
-              className="flex-shrink-0 flex flex-col items-center"
-            >
-              <Image
-                src={partner.logo}
-                alt={partner.name}
-                width={120}
-                height={120}
-                unoptimized
-                className="object-contain opacity-85 hover:opacity-100 transition duration-500 drop-shadow-[0_0_15px_rgba(226,180,79,0.3)]"
-              />
+        <div className="flex whitespace-nowrap animate-scroll">
+          {[...Array(3)].map((_, idx) => (
+            <div key={idx} className="flex items-center gap-16 px-8">
+              {partners.map((partner, i) => (
+                <div
+                  key={`${partner.name}-${idx}-${i}`}
+                  className="flex-shrink-0 flex flex-col items-center"
+                >
+                  <Image
+                    src={partner.logo}
+                    alt={partner.name}
+                    width={120}
+                    height={120}
+                    unoptimized
+                    className="object-contain opacity-85 hover:opacity-100 transition duration-500 drop-shadow-[0_0_15px_rgba(226,180,79,0.3)]"
+                  />
+                </div>
+              ))}
             </div>
           ))}
         </div>
@@ -59,7 +60,7 @@ export default function PartnersSection() {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-25%);
+            transform: translateX(-33.333%);
           }
         }
 
