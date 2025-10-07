@@ -52,6 +52,11 @@ export class PlanningManager {
     };
   }
 
+  createPlanning(courses: any): any {
+    // Create a new planning from courses
+    return courses;
+  }
+
   // Additional placeholder methods that might be expected
   loadPlanning(): any {
     return {};
