@@ -12,12 +12,12 @@ export default function PartnersSection() {
     { name: "Franck Muller", logo: "/images/partners/muller.png" },
   ];
 
-  // 🌀 On double automatiquement la liste
-  const loopedPartners = [...partners, ...partners];
+  // 🌀 On répète la liste 4 fois pour garantir une boucle fluide
+  const loopedPartners = Array(4).fill(partners).flat();
 
   return (
     <section className="relative py-20 bg-[#0A0A0A] overflow-hidden">
-      {/* Halo décoratif */}
+      {/* Halo doré */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-[700px] h-[700px] bg-[#E2B44F]/10 rounded-full blur-[120px]" />
       </div>
@@ -41,7 +41,7 @@ export default function PartnersSection() {
                 width={120}
                 height={120}
                 unoptimized
-                className="object-contain opacity-80 hover:opacity-100 transition duration-500 drop-shadow-[0_0_15px_rgba(226,180,79,0.3)]"
+                className="object-contain opacity-85 hover:opacity-100 transition duration-500 drop-shadow-[0_0_15px_rgba(226,180,79,0.3)]"
               />
             </div>
           ))}
@@ -59,12 +59,12 @@ export default function PartnersSection() {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-50%);
+            transform: translateX(-25%);
           }
         }
 
         .animate-scroll {
-          animation: scroll 40s linear infinite;
+          animation: scroll 45s linear infinite;
           display: inline-flex;
           will-change: transform;
         }
