@@ -44,7 +44,7 @@ export default function PartnersSection() {
             <motion.div
               variants={{
                 rest: { scale: 1, zIndex: 1 },
-                hover: { scale: 20, zIndex: 10 },
+                hover: { scale: 3, zIndex: 10 },   // ⬅️ Passe de 20 à 3 ici
               }}
               transition={{ duration: 0.33, ease: "easeInOut" }}
               className="relative z-10"
