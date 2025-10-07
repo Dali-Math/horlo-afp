@@ -4,13 +4,24 @@ import { CourseData } from '@/components/planning/SmartPlanningIntelligent';
 // Configure PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
-export class PDFParser {
-  private timeRegex = /\b(\d{1,2}[h:.]\d{2})\b/g;
-  private dayRegex = /\b(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\b/gi;
-  private roomRegex = /\b(salle|room|local)\s*([A-Za-z0-9\-]+)\b/gi;
-  private teacherRegex = /\b(M\.|Mme|Mr|Mrs|Prof)\s*([A-Za-z\s\-]+)\b/gi;
+export interface ParsedSchedule {
+  totalCourses: number;
+  courses: {
+    day: string;
+    time: string;
+    subject: string;
+    teacher: string;
+    room: string;
+  }[];
+}
 
-  async parsePDF(file: File): Promise<CourseData[]> {
+export class PDFParser {
+  private dayRegex = /(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)/gi;
+  private timeRangeRegex = /([0-9]{2}:[0-9]{2})\s*-\s*([0-9]{2}:[0-9]{2})/g;
+  private roomRegex = /\b(salle|room|local)\s*([A-Za-z0-9\-]+)\b/gi;
+  private teacherRegex = /\b(M\.|Mme|Mr|Mrs|Prof|Professeur)\s*([A-Za-z\s\-éèêàâùû]+)/gi;
+
+  async parsePDF(file: File): Promise<ParsedSchedule> {
     try {
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
@@ -28,20 +39,39 @@ export class PDFParser {
         allText += pageText + '\n';
       }
 
-      return this.parseScheduleFromText(allText);
+      console.log('📄 Texte PDF extrait:', allText.substring(0, 500));
+      
+      const parsedCourses = this.parseScheduleFromText(allText);
+      
+      return {
+        totalCourses: parsedCourses.length,
+        courses: parsedCourses
+      };
     } catch (error) {
       console.error('Error parsing PDF:', error);
       throw new Error('Impossible d\'analyser le fichier PDF. Vérifiez que le format est correct.');
     }
   }
 
-  private parseScheduleFromText(text: string): CourseData[] {
-    const courses: CourseData[] = [];
+  private parseScheduleFromText(text: string): {
+    day: string;
+    time: string;
+    subject: string;
+    teacher: string;
+    room: string;
+  }[] {
+    const courses: {
+      day: string;
+      time: string;
+      subject: string;
+      teacher: string;
+      room: string;
+    }[] = [];
+    
     const lines = text.split('\n').filter(line => line.trim().length > 0);
     
     let currentDay = '';
-    let courseId = 1;
-
+    
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
       
@@ -49,93 +79,88 @@ export class PDFParser {
       const dayMatch = line.match(this.dayRegex);
       if (dayMatch) {
         currentDay = this.normalizeDayName(dayMatch[0]);
+        console.log('🗓️ Jour détecté:', currentDay);
         continue;
       }
-
+      
       // Skip if no current day
       if (!currentDay) continue;
-
-      // Check if line contains time information
-      const timeMatches = line.match(this.timeRegex);
-      if (timeMatches && timeMatches.length >= 2) {
-        const startTime = this.normalizeTime(timeMatches[0]);
-        const endTime = this.normalizeTime(timeMatches[1]);
+      
+      // Check if line contains time range information
+      const timeMatch = line.match(this.timeRangeRegex);
+      if (timeMatch) {
+        const startTime = timeMatch[1];
+        const endTime = timeMatch[2];
+        const timeString = `${startTime} - ${endTime}`;
         
-        // Extract subject (usually the main text before time)
-        const beforeTime = line.split(timeMatches[0])[0].trim();
-        const subject = this.extractSubject(beforeTime) || 'Matière inconnue';
+        // Extract subject (text before the time or nearby)
+        let subject = this.extractSubject(line, timeMatch[0]);
         
         // Extract teacher
-        const teacher = this.extractTeacher(line) || 'Professeur inconnu';
+        let teacher = this.extractTeacher(line);
         
         // Extract room
-        const room = this.extractRoom(line) || 'Salle inconnue';
-
+        let room = this.extractRoom(line);
+        
+        console.log('📚 Cours détecté:', { day: currentDay, time: timeString, subject, teacher, room });
+        
         courses.push({
-          id: `course-${courseId++}`,
-          subject,
-          teacher,
-          room,
-          startTime,
-          endTime,
-          day: currentDay
+          day: currentDay,
+          time: timeString,
+          subject: subject || 'Matière inconnue',
+          teacher: teacher || 'Professeur inconnu',
+          room: room || 'Salle inconnue'
         });
       }
     }
-
+    
     // If no courses found with the main parser, try alternative parsing
     if (courses.length === 0) {
+      console.log('⚠️ Aucun cours trouvé avec le parser principal, tentative alternative...');
       return this.parseAlternativeFormat(text);
     }
-
+    
     return courses;
   }
 
-  private parseAlternativeFormat(text: string): CourseData[] {
-    // Alternative parsing logic for different PDF formats
-    const courses: CourseData[] = [];
-    const words = text.split(/\s+/);
+  private parseAlternativeFormat(text: string): {
+    day: string;
+    time: string;
+    subject: string;
+    teacher: string;
+    room: string;
+  }[] {
+    const courses: {
+      day: string;
+      time: string;
+      subject: string;
+      teacher: string;
+      room: string;
+    }[] = [];
     
-    let courseId = 1;
-    const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
+    // Try to find patterns like:
+    // "Lundi 08:00-12:00 Mécanique M. Dupont Salle B2"
+    const alternativeRegex = /(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)[\s\S]{0,50}?([0-9]{1,2}[:h][0-9]{2})\s*[-àa]\s*([0-9]{1,2}[:h][0-9]{2})/gi;
     
-    // Sample course generation for demonstration
-    days.forEach((day, dayIndex) => {
-      for (let hour = 8; hour <= 17; hour += 2) {
-        if (Math.random() > 0.6) { // 40% chance of having a course
-          const subjects = [
-            'Horlogerie Théorique',
-            'Mécanique Appliquée', 
-            'Dessin Technique',
-            'Mathématiques',
-            'Histoire de l\'Horlogerie',
-            'Physique',
-            'Technologie'
-          ];
-          
-          const teachers = [
-            'M. Martin',
-            'Mme Dubois', 
-            'M. Rousseau',
-            'Mme Bernard',
-            'M. Lefèvre'
-          ];
-          
-          const rooms = ['A101', 'B205', 'C301', 'Atelier 1', 'Laboratoire'];
-          
-          courses.push({
-            id: `course-${courseId++}`,
-            subject: subjects[Math.floor(Math.random() * subjects.length)],
-            teacher: teachers[Math.floor(Math.random() * teachers.length)],
-            room: rooms[Math.floor(Math.random() * rooms.length)],
-            startTime: `${hour.toString().padStart(2, '0')}:00`,
-            endTime: `${(hour + 2).toString().padStart(2, '0')}:00`,
-            day
-          });
-        }
-      }
-    });
-
+    let match;
+    while ((match = alternativeRegex.exec(text)) !== null) {
+      const day = this.normalizeDayName(match[1]);
+      const startTime = this.normalizeTime(match[2]);
+      const endTime = this.normalizeTime(match[3]);
+      const time = `${startTime} - ${endTime}`;
+      
+      // Extract surrounding context
+      const contextStart = Math.max(0, match.index - 50);
+      const contextEnd = Math.min(text.length, match.index + match[0].length + 100);
+      const context = text.substring(contextStart, contextEnd);
+      
+      const subject = this.extractSubject(context, match[0]) || 'Matière inconnue';
+      const teacher = this.extractTeacher(context) || 'Professeur inconnu';
+      const room = this.extractRoom(context) || 'Salle inconnue';
+      
+      courses.push({ day, time, subject, teacher, room });
+    }
+    
     return courses;
   }
 
@@ -158,7 +183,6 @@ export class PDFParser {
     let normalized = time.replace(/[h\.]/g, ':');
     
     if (!normalized.includes(':')) {
-      // If no separator, assume it's just hours
       normalized += ':00';
     }
     
@@ -172,20 +196,37 @@ export class PDFParser {
     return time;
   }
 
-  private extractSubject(text: string): string {
-    // Remove common prefixes and clean up text
-    let subject = text
+  private extractSubject(text: string, timeString: string): string {
+    // Remove the time string from text
+    const beforeTime = text.split(timeString)[0].trim();
+    const afterTime = text.split(timeString)[1]?.trim() || '';
+    
+    // Try to find subject in the text before time
+    let subject = beforeTime
       .replace(/^(cours|matière|discipline)\s*/gi, '')
-      .replace(/\d+[h\.:]/g, '') // Remove time references
+      .replace(/(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche)/gi, '')
+      .replace(/[0-9]{1,2}[:h.][0-9]{2}/g, '')
       .trim();
     
-    // Take first meaningful phrase
-    const words = subject.split(/\s+/);
-    if (words.length > 0) {
-      return words.slice(0, Math.min(3, words.length)).join(' ');
+    // If subject is too short, try to get it from after the time
+    if (subject.length < 3 && afterTime) {
+      const words = afterTime.split(/\s+/);
+      subject = words.slice(0, Math.min(4, words.length)).join(' ');
     }
     
-    return subject || 'Matière inconnue';
+    // Clean up subject
+    subject = subject
+      .replace(/\b(M\.|Mme|Mr|Mrs|Prof|Professeur)\b.*/gi, '')
+      .replace(/\b(salle|room|local)\b.*/gi, '')
+      .trim();
+    
+    // Take first meaningful phrase (max 5 words)
+    const words = subject.split(/\s+/).filter(w => w.length > 0);
+    if (words.length > 0) {
+      return words.slice(0, Math.min(5, words.length)).join(' ');
+    }
+    
+    return '';
   }
 
   private extractTeacher(text: string): string {
@@ -195,13 +236,13 @@ export class PDFParser {
     }
     
     // Look for common name patterns
-    const namePattern = /\b[A-Z][a-z]+\s+[A-Z][a-z]+\b/g;
+    const namePattern = /\b[A-Z][a-zéèêàâùû]+\s+[A-Z][a-zéèêàâùû]+\b/g;
     const nameMatch = text.match(namePattern);
-    if (nameMatch) {
+    if (nameMatch && nameMatch.length > 0) {
       return nameMatch[0];
     }
     
-    return 'Professeur inconnu';
+    return '';
   }
 
   private extractRoom(text: string): string {
@@ -210,13 +251,13 @@ export class PDFParser {
       return roomMatch[2]?.trim() || roomMatch[0].trim();
     }
     
-    // Look for room-like patterns (numbers, letters + numbers)
-    const roomPattern = /\b([A-Z]?\d{1,3}[A-Z]?|Atelier\s*\d+|Lab\s*\d+)\b/gi;
+    // Look for room-like patterns
+    const roomPattern = /\b([A-Z]?[0-9]{1,3}[A-Z]?|Atelier\s*[0-9]+|Lab\s*[0-9]+|Salle\s*[A-Za-z0-9]+)\b/gi;
     const roomPatternMatch = text.match(roomPattern);
-    if (roomPatternMatch) {
+    if (roomPatternMatch && roomPatternMatch.length > 0) {
       return roomPatternMatch[0];
     }
     
-    return 'Salle inconnue';
+    return '';
   }
 }
