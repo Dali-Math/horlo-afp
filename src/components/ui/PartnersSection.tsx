@@ -28,7 +28,7 @@ export default function PartnersSection() {
         viewport={{ once: true }}
         className="text-center text-4xl md:text-6xl font-bebas tracking-wide text-[#E2B44F] mb-14 drop-shadow-[0_0_25px_rgba(226,180,79,0.4)]"
       >
-        Maisons horlogères genevoises
+        Avec le soutien des grandes maisons horlogères
       </motion.h2>
 
       {/* Logos */}
@@ -47,9 +47,12 @@ export default function PartnersSection() {
               alt={partner.name}
               width={140}
               height={140}
-              priority
-              unoptimized
+              priority={i === 0}
+              unoptimized // utile si CDN pose problème sur les assets statiques
               className="object-contain opacity-90 group-hover:opacity-100 transition duration-500 drop-shadow-[0_0_12px_rgba(226,180,79,0.25)]"
+              onError={(e) => {
+                e.currentTarget.src = "/logos/fallback.png"; // mets un fallback si tu ajoutes ce fichier
+              }}
             />
             <span className="mt-3 text-xs text-gray-400">{partner.name}</span>
           </motion.div>
