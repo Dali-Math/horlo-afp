@@ -1,16 +1,18 @@
+"use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-function PartnersSection() {
-  const partners = [
-    { src: "/images/partners/rolex.png", alt: "Rolex" },
-    { src: "/images/partners/patek.png", alt: "Patek Philippe" },
-    { src: "/images/partners/audemars.png", alt: "Audemars Piguet" },
-    { src: "/images/partners/vacheron.png", alt: "Vacheron Constantin" },
-    { src: "/images/partners/chopard.png", alt: "Chopard" },
-    { src: "/images/partners/piaget.png", alt: "Piaget" },
-    { src: "/images/partners/muller.png", alt: "Franck Muller" },
-  ];
+const partners = [
+  { src: "/images/partners/rolex.png", alt: "Rolex" },
+  { src: "/images/partners/patek.png", alt: "Patek Philippe" },
+  { src: "/images/partners/audemars.png", alt: "Audemars Piguet" },
+  { src: "/images/partners/vacheron.png", alt: "Vacheron Constantin" },
+  { src: "/images/partners/chopard.png", alt: "Chopard" },
+  { src: "/images/partners/piaget.png", alt: "Piaget" },
+  { src: "/images/partners/muller.png", alt: "Franck Muller" },
+];
+
+export default function PartnersSection() {
   return (
     <section className="relative bg-[#0A0A0A] py-20 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#0A0A0A] to-[#141414] animate-[shine_8s_linear_infinite]" />
