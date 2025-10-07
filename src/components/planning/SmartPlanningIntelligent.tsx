@@ -36,6 +36,7 @@ export default function SmartPlanningIntelligent() {
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [hasExistingPlanning, setHasExistingPlanning] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const updateFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -78,6 +79,7 @@ export default function SmartPlanningIntelligent() {
           console.error('arrayBuffer read error:', err);
           throw new Error('Lecture du fichier PDF impossible.');
         });
+
         if (!arrayBuffer || (arrayBuffer as ArrayBuffer).byteLength === 0) {
           console.warn('arrayBuffer is empty');
           toast.error('Le fichier PDF est vide.');
@@ -96,7 +98,7 @@ export default function SmartPlanningIntelligent() {
           return;
         }
       } catch (error) {
-        console.error("Erreur pendant l'analyse du PDF :", error);
+        console.error('Erreur pendant l\'analyse du PDF :', error);
         toast.error('Erreur de lecture du planning. Vérifie ton fichier PDF.');
         return;
       }
@@ -110,14 +112,13 @@ export default function SmartPlanningIntelligent() {
             changes = planningManager.compareAndMerge(planning, extractedCourses);
           } catch (err) {
             console.error('Erreur pendant la mise à jour du planning :', err);
-            toast.error("Erreur lors de la mise à jour du planning.");
+            toast.error('Erreur lors de la mise à jour du planning.');
             return;
           }
-          finalPlanning = changes.newPlanning as PlanningData;
 
+          finalPlanning = changes.newPlanning as PlanningData;
           const { added, modified, removed } = changes.summary || { added: 0, modified: 0, removed: 0 };
           const totalChanges = (added || 0) + (modified || 0) + (removed || 0);
-
           if (totalChanges === 0) {
             toast.success('Aucune modification détectée dans votre planning.');
           } else {
@@ -126,11 +127,19 @@ export default function SmartPlanningIntelligent() {
         } else {
           console.log('createPlanning start');
           finalPlanning = planningManager.createPlanning(extractedCourses) as PlanningData;
-          toast.success(`Planning importé avec succès ! ${extractedCourses.length} cours détectés.`);
+          // Defensive check: ensure totalCourses exists before using it
+          // If missing, show clear message and avoid crash
+          if (!finalPlanning || typeof (finalPlanning as any).metadata?.totalCourses === 'undefined') {
+            toast.error('Le planning importé ne contient pas de données exploitables');
+            setIsLoading(false);
+            setIsUpdating(false);
+            return;
+          }
+          toast.success(`Planning importé avec succès ! ${(finalPlanning as any).metadata.totalCourses} cours détectés.`);
         }
       } catch (error) {
         console.error('Erreur lors de la création/mise à jour du planning :', error);
-        toast.error("Erreur lors de la mise à jour du planning.");
+        toast.error('Erreur lors de la mise à jour du planning.');
         return;
       }
 
@@ -183,13 +192,19 @@ export default function SmartPlanningIntelligent() {
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
+
   const triggerUpdateFileInput = () => {
     updateFileInputRef.current?.click();
   };
 
+  // Defensive render: before any usage of planning.metadata.totalCourses
   if (!hasExistingPlanning && !planning) {
     return (
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl mx-auto">
+      <motion.div
+        className="max-w-4xl mx-auto"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 p-8">
           <div className="text-center mb-8">
             <Calendar className="mx-auto mb-4 text-blue-400" size={64} />
@@ -200,11 +215,22 @@ export default function SmartPlanningIntelligent() {
             </p>
           </div>
           <div className="flex flex-col items-center space-y-6">
-            <input ref={fileInputRef} type="file" accept=".pdf" onChange={handleInitialUpload} className="hidden" />
-
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={triggerFileInput} disabled={isLoading} className="flex items-center space-x-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl font-semibold disabled:opacity-50">
+            <input
+              type="file"
+              accept=".pdf"
+              className="hidden"
+              onChange={handleInitialUpload}
+              ref={fileInputRef}
+            />
+            <motion.button
+              className="flex items-center space-x-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl font-semibold disabled:opacity-50"
+              disabled={isLoading}
+              onClick={triggerFileInput}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
               {isLoading ? <RefreshCw className="animate-spin" size={24} /> : <Upload size={24} />}
-              <span>{isLoading ? 'Analyse en cours...' : '📄 Importer mon planning PDF'}</span>
+              {isLoading ? 'Analyse en cours...' : '📄 Importer mon planning PDF'}
             </motion.button>
             <div className="text-sm text-slate-400">Format accepté : PDF uniquement • Taille max : 10 MB</div>
           </div>
@@ -213,8 +239,14 @@ export default function SmartPlanningIntelligent() {
     );
   }
 
+  // New guard when planning exists but missing totalCourses
+  if (!planning || typeof (planning as any).metadata?.totalCourses === 'undefined') {
+    toast.error('Le planning importé ne contient pas de données exploitables');
+    return <p className="text-gray-400 mt-6">Aucun planning disponible</p>;
+  }
+
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-7xl mx-auto space-y-8">
+    <motion.div className="max-w-7xl mx-auto space-y-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       {/* Planning Management Panel */}
       <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
@@ -233,19 +265,37 @@ export default function SmartPlanningIntelligent() {
               </div>
             )}
           </div>
+
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3">
-            <input ref={fileInputRef} type="file" accept=".pdf" onChange={handleInitialUpload} className="hidden" />
-            <input ref={updateFileInputRef} type="file" accept=".pdf" onChange={handleUpdateUpload} className="hidden" />
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={triggerFileInput} disabled={isLoading} className="flex items-center space-x-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-50">
+            <input type="file" accept=".pdf" className="hidden" onChange={handleInitialUpload} ref={fileInputRef} />
+            <input type="file" accept=".pdf" className="hidden" onChange={handleUpdateUpload} ref={updateFileInputRef} />
+            <motion.button
+              className="flex items-center space-x-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-50"
+              disabled={isLoading}
+              onClick={triggerFileInput}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
               <Upload size={18} />
               Importer
             </motion.button>
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={triggerUpdateFileInput} disabled={isUpdating} className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-50">
+            <motion.button
+              className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-50"
+              disabled={isUpdating}
+              onClick={triggerUpdateFileInput}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
               {isUpdating ? <RefreshCw className="animate-spin" size={18} /> : <RefreshCw size={18} />}
-              <span>{isUpdating ? 'Mise à jour...' : '🔄 Mettre à jour'}</span>
+              {isUpdating ? 'Mise à jour...' : '🔄 Mettre à jour'}
             </motion.button>
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleReset} className="flex items-center space-x-2 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white px-4 py-2 rounded-lg font-medium">
+            <motion.button
+              className="flex items-center space-x-2 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white px-4 py-2 rounded-lg font-medium"
+              onClick={handleReset}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
               <Trash2 size={18} />
               Supprimer
             </motion.button>
@@ -282,7 +332,7 @@ export default function SmartPlanningIntelligent() {
       {/* Calendar Display */}
       {planning && (
         <AnimatePresence>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }}>
             <PlanningCalendar planning={planning} />
           </motion.div>
         </AnimatePresence>
