@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import { motion } from "framer-motion";
 
 export default function PartnersSection() {
   const partners = [
@@ -13,14 +12,14 @@ export default function PartnersSection() {
     { name: "Franck Muller", logo: "/images/partners/muller.png" },
   ];
 
-  // On double le tableau pour que la boucle soit fluide
-  const duplicated = [...partners, ...partners];
+  // On répète plusieurs fois les logos pour boucler visuellement
+  const repeated = [...partners, ...partners, ...partners];
 
   return (
     <section className="relative py-20 bg-[#0A0A0A] overflow-hidden">
-      {/* Halo */}
-      <div className="absolute inset-0">
-        <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#E2B44F]/10 rounded-full blur-3xl" />
+      {/* Halo décoratif */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-[700px] h-[700px] bg-[#E2B44F]/10 rounded-full blur-[120px]" />
       </div>
 
       {/* Titre */}
@@ -28,36 +27,44 @@ export default function PartnersSection() {
         Avec le soutien des grandes maisons horlogères
       </h2>
 
-      {/* Carrousel infini */}
-      <div className="relative flex overflow-hidden whitespace-nowrap">
-        <motion.div
-          className="flex gap-16 px-10"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{
-            duration: 40,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-        >
-          {duplicated.map((partner, i) => (
-            <div key={i} className="flex flex-col items-center min-w-[120px]">
+      {/* Bande défilante infinie */}
+      <div className="relative w-full overflow-hidden">
+        <div className="flex items-center justify-center gap-16 animate-scroll whitespace-nowrap">
+          {repeated.map((partner, i) => (
+            <div key={i} className="flex-shrink-0 flex flex-col items-center">
               <Image
                 src={partner.logo}
                 alt={partner.name}
                 width={120}
                 height={120}
                 unoptimized
-                className="object-contain opacity-80 hover:opacity-100 transition-all duration-500 drop-shadow-[0_0_15px_rgba(226,180,79,0.3)]"
+                className="object-contain opacity-80 hover:opacity-100 transition duration-500 drop-shadow-[0_0_15px_rgba(226,180,79,0.3)]"
               />
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
 
       {/* Légende */}
       <p className="mt-12 text-center text-sm text-slate-400">
         Ressources gratuites et open-source pour la formation en horlogerie.
       </p>
+
+      <style jsx global>{`
+        @keyframes scroll {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-33.333%);
+          }
+        }
+
+        .animate-scroll {
+          animation: scroll 30s linear infinite;
+          display: inline-flex;
+        }
+      `}</style>
     </section>
   );
 }
