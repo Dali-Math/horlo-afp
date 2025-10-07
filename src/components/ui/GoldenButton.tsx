@@ -7,15 +7,9 @@ type GoldenButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   href?: string;
 };
 
-const MotionButton = motion(ButtonBase);
-
-function ButtonBase(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <button {...props} />;
-}
-
 export default function GoldenButton({ label, href, ...props }: GoldenButtonProps) {
   const content = (
-    <MotionButton
+    <motion.button
       type="button"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.97 }}
@@ -30,7 +24,7 @@ export default function GoldenButton({ label, href, ...props }: GoldenButtonProp
         transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
       />
       <span className="relative z-10">{label}</span>
-    </MotionButton>
+    </motion.button>
   );
 
   return href ? (
