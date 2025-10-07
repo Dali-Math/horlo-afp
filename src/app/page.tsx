@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { BookOpen, Wrench, Brain, Clock, FileText, Headphones, Award, Calendar, Users, Play } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 // Swiss cross logo component
 function SwissLogo() {
@@ -60,7 +61,6 @@ function Hero() {
           <div className="mt-6 text-sm text-slate-500">Accès libre, sans inscription — Ressources validées par des institutions</div>
         </div>
 
-        {/* Immersive video/animation card */}
         <div className="relative group rounded-2xl overflow-hidden bg-slate-900 shadow-2xl">
           <div className="aspect-video">
             <video className="w-full h-full object-cover opacity-90" autoPlay muted loop playsInline>
@@ -77,7 +77,6 @@ function Hero() {
   );
 }
 
-// Carrousel rubriques (simple auto-scroll)
 function Carousel() {
   const items = [
     { name: 'Théorie', href: '/theorie' },
@@ -105,7 +104,6 @@ function Carousel() {
   );
 }
 
-// Grille visuelle Next.js "EXPLORE"
 function ExploreGrid() {
   const cards = [
     { name: 'Théorie', href: '/theorie', icon: BookOpen, desc: "Cours structurés, bases aux complications" },
@@ -146,21 +144,49 @@ function ExploreGrid() {
   );
 }
 
-function InstitutionsBand() {
+// ✅ Nouvelle section premium (remplace InstitutionsBand)
+function PartnersSection() {
+  const partners = [
+    { src: "/images/partners/rolex.png", alt: "Rolex" },
+    { src: "/images/partners/patek.png", alt: "Patek Philippe" },
+    { src: "/images/partners/audemars.png", alt: "Audemars Piguet" },
+    { src: "/images/partners/vacheron.png", alt: "Vacheron Constantin" },
+    { src: "/images/partners/chopard.png", alt: "Chopard" },
+    { src: "/images/partners/piaget.png", alt: "Piaget" },
+    { src: "/images/partners/muller.png", alt: "Franck Muller" },
+  ];
+
   return (
-    <section className="py-10 bg-white">
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
-        <div className="text-center text-sm text-slate-500 mb-6">Avec le soutien de</div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 items-center opacity-80">
-          {/* Placeholder logos; replace with real logos in /public */}
-          {['epfl.svg','cifom.svg','cifom-tp.svg','miw.svg','fh.svg'].map((logo) => (
-            <div key={logo} className="relative h-10 grayscale hover:grayscale-0 transition">
-              <Image src={`/${logo}`} alt={logo} fill className="object-contain" />
-            </div>
-          ))}
-        </div>
-        <p className="mt-6 text-center text-xs text-slate-500">Ressources gratuites et open-source pour la formation en horlogerie.</p>
+    <section className="relative bg-[#0A0A0A] py-20 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#0A0A0A] to-[#141414] animate-[shine_8s_linear_infinite]" />
+      <div className="text-center mb-12 relative z-10">
+        <h2 className="text-3xl md:text-4xl font-semibold text-[#E2B44F]" style={{ textShadow: "0 0 15px rgba(226,180,79,0.7)" }}>
+          Avec le soutien des grandes maisons horlogères
+        </h2>
       </div>
+
+      <motion.div
+        className="flex items-center justify-around gap-20 px-8 relative z-10"
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
+      >
+        {[...partners, ...partners].map((p, i) => (
+          <motion.div key={i} className="grayscale hover:grayscale-0 transition-all duration-700" whileHover={{ scale: 1.05 }}>
+            <Image src={p.src} alt={p.alt} width={180} height={100} className="object-contain opacity-85 hover:opacity-100 transition-all" />
+          </motion.div>
+        ))}
+      </motion.div>
+
+      <p className="text-center text-gray-400 mt-10 text-sm relative z-10">
+        Ressources gratuites et open-source pour la formation en horlogerie.
+      </p>
+
+      <style>{`
+        @keyframes shine {
+          0% { background-position: -1000px 0; }
+          100% { background-position: 1000px 0; }
+        }
+      `}</style>
     </section>
   );
 }
@@ -172,7 +198,7 @@ export default function Home() {
       <Hero />
       <Carousel />
       <ExploreGrid />
-      <InstitutionsBand />
+      <PartnersSection /> {/* ✅ section premium */}
     </div>
   );
 }
