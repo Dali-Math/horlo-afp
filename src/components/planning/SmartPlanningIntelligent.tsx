@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, RefreshCw, Clock, Trash2, FileText, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Upload, RefreshCw, Clock, Trash2, FileText, CheckCircle, AlertTriangle, Calendar, Table } from 'lucide-react';
 import toast from 'react-hot-toast';
 import localforage from 'localforage';
 import { PDFParser } from '@/lib/pdf-parser';
@@ -36,9 +36,9 @@ export default function SmartPlanningIntelligent() {
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [hasExistingPlanning, setHasExistingPlanning] = useState(false);
-
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const updateFileInputRef = useRef<HTMLInputElement | null>(null);
+  const [viewMode, setViewMode] = useState<'table' | 'calendar'>('table');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const updateFileInputRef = useRef<HTMLInputElement>(null);
 
   // Initialize planning manager and PDF parser
   const planningManager = new PlanningManager();
@@ -53,289 +53,235 @@ export default function SmartPlanningIntelligent() {
         if (parsed && parsed.courses) setPlanning(parsed);
       }
     } catch (err) {
-      console.error("Erreur lors du chargement du planning :", err);
-      // Minimal safe shape so the app never crashes on first render
-      setPlanning({ totalCourses: 0, courses: [] } as any);
+      console.error("Error loading planning:", err);
     }
   }, []);
 
-  const loadExistingPlanning = useCallback(async () => {
+  // Check if planning exists
+  useEffect(() => {
+    const checkPlanning = async () => {
+      const exists = await planningManager.hasPlanning();
+      setHasExistingPlanning(exists);
+    };
+    checkPlanning();
+  }, [planning]);
+
+  const handleFileSelect = useCallback(async (file: File, isUpdate: boolean = false) => {
+    if (isUpdate) setIsUpdating(true);
+    else setIsLoading(true);
+
     try {
-      const existingPlanning = await localforage.getItem<PlanningData>('smart-planning-data');
-      if (existingPlanning && Array.isArray((existingPlanning as any).courses)) {
-        setPlanning(existingPlanning);
-        setHasExistingPlanning((existingPlanning as any).courses.length > 0);
+      const parsedData = await pdfParser.parsePDF(file);
+      
+      if (isUpdate) {
+        const merged = await planningManager.updatePlanning(parsedData);
+        setPlanning(merged);
+        localStorage.setItem("planning", JSON.stringify(merged));
+        toast.success('✅ Planning mis à jour');
       } else {
-        setPlanning(null);
-        setHasExistingPlanning(false);
+        await planningManager.savePlanning(parsedData);
+        setPlanning(parsedData);
+        localStorage.setItem("planning", JSON.stringify(parsedData));
+        toast.success('✅ Planning importé');
       }
-    } catch (error) {
-      console.error('Error loading existing planning:', error);
-      setPlanning(null);
-      setHasExistingPlanning(false);
+    } catch (error: any) {
+      toast.error(error.message || 'Erreur lors du traitement du PDF');
+    } finally {
+      if (isUpdate) setIsUpdating(false);
+      else setIsLoading(false);
     }
   }, []);
-
-  const handleFileUpload = useCallback(
-    async (file: File, isUpdate = false) => {
-      if (!file || file.type !== 'application/pdf') {
-        toast.error('Veuillez sélectionner un fichier PDF valide.');
-        return;
-      }
-
-      setIsLoading(!isUpdate);
-      setIsUpdating(isUpdate);
-
-      let extractedCourses: CourseData[] = [];
-      try {
-        const arrayBuffer = await file.arrayBuffer();
-        if (!arrayBuffer || (arrayBuffer as ArrayBuffer).byteLength === 0) {
-          toast.error('Le fichier PDF est vide.');
-          return;
-        }
-
-        // Primary parser path (existing behavior)
-        const parsed = await pdfParser.parsePDF(file);
-
-        // Force mapping to CourseData shape expected by the app
-        const extracted = (parsed?.courses || []).map((c: any, i: number) => ({
-          id: `course-${i + 1}`,
-          subject: c.subject || '',
-          teacher: c.teacher || '',
-          room: c.room || '',
-          time: c.time || '',
-          day: c.day || '',
-        })) as CourseData[];
-
-        extractedCourses = extracted;
-
-        // Validate parsing result before proceeding
-        if (!Array.isArray(extractedCourses) || extractedCourses.length === 0) {
-          toast.error('Le planning PDF est vide ou non reconnu.');
-          return;
-        }
-
-        // ensure planning state reflects parsed structure for immediate UI update
-        setPlanning({
-          courses: extractedCourses,
-          lastUpdated: new Date(),
-          metadata: {
-            totalCourses: extractedCourses.length,
-            subjects: Array.from(new Set(extractedCourses.map(c => c.subject).filter(Boolean))),
-            teachers: Array.from(new Set(extractedCourses.map(c => c.teacher).filter(Boolean))),
-            rooms: Array.from(new Set(extractedCourses.map(c => c.room).filter(Boolean))),
-          },
-        } as any);
-      } catch (error) {
-        console.error("Erreur pendant l'analyse du PDF :", error);
-        toast.error('Erreur de lecture du planning. Vérifie ton fichier PDF.');
-        return;
-      }
-
-      let finalPlanning: PlanningData | undefined;
-      try {
-        if (isUpdate && planning) {
-          let changes;
-          try {
-            changes = planningManager.compareAndMerge(planning as any, extractedCourses);
-          } catch (err) {
-            console.error('Erreur pendant la mise à jour du planning :', err);
-            toast.error('Erreur lors de la mise à jour du planning.');
-            return;
-          }
-
-          finalPlanning = changes.newPlanning as PlanningData;
-          const { added, modified, removed } = changes.summary || { added: 0, modified: 0, removed: 0 };
-          const totalChanges = (added || 0) + (modified || 0) + (removed || 0);
-          if (totalChanges === 0) {
-            toast.success('Aucune modification détectée dans votre planning.');
-          } else {
-            toast.success(`Planning mis à jour ! ${added} ajouts, ${modified} modifications, ${removed} suppressions.`);
-          }
-        } else {
-          finalPlanning = planningManager.createPlanning(extractedCourses) as PlanningData;
-          if (!finalPlanning || typeof (finalPlanning as any).metadata?.totalCourses === 'undefined') {
-            toast.error('Le planning importé ne contient pas de données exploitables');
-            setIsLoading(false);
-            setIsUpdating(false);
-            return;
-          }
-          toast.success(`Planning importé avec succès ! ${(finalPlanning as any).metadata.totalCourses} cours détectés.`);
-        }
-      } catch (error) {
-        console.error('Erreur lors de la création/mise à jour du planning :', error);
-        toast.error('Erreur lors de la mise à jour du planning.');
-        return;
-      }
-
-      if (!finalPlanning) {
-        toast.error("Impossible d'afficher le planning.");
-        return;
-      }
-
-      try {
-        await localforage.setItem('smart-planning-data', finalPlanning);
-        setPlanning(finalPlanning);
-        setHasExistingPlanning(true);
-      } catch (error) {
-        console.error('Erreur de sauvegarde du planning :', error);
-        toast.error('Erreur lors de la sauvegarde du planning.');
-        return;
-      } finally {
-        setIsLoading(false);
-        setIsUpdating(false);
-        if (fileInputRef.current) fileInputRef.current.value = '';
-        if (updateFileInputRef.current) updateFileInputRef.current.value = '';
-      }
-    },
-    [planning]
-  );
-
-  const handleInitialUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) handleFileUpload(file, false);
-  };
-
-  const handleUpdateUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) handleFileUpload(file, true);
-  };
 
   const handleReset = useCallback(async () => {
     try {
-      await localforage.removeItem('smart-planning-data');
+      await planningManager.resetPlanning();
       setPlanning(null);
-      setHasExistingPlanning(false);
-      toast.success('Planning supprimé avec succès.');
+      localStorage.removeItem("planning");
+      toast.success('🗑️ Planning réinitialisé');
     } catch (error) {
-      toast.error('Erreur lors de la suppression du planning.');
-      console.error('Reset error:', error);
+      toast.error('Erreur lors de la réinitialisation');
     }
   }, []);
 
-  const triggerFileInput = () => fileInputRef.current?.click();
-  const triggerUpdateFileInput = () => updateFileInputRef.current?.click();
-  const handleImportClick = () => {
-    triggerFileInput();
-  };
-
-  // Universal guard to prevent any crash if planning is null/invalid
-  if (!planning || !Array.isArray((planning as any).courses)) {
-    return (
-      <div className="text-center text-gray-400 py-20">
-        <p>Aucun planning chargé ou données non disponibles.</p>
-        <button onClick={handleImportClick} className="btn-primary mt-6">Importer mon planning PDF</button>
-      </div>
-    );
-  }
-
-  // Guard: planning exists but missing totalCourses metadata entirely
-  if (typeof (planning as any).metadata?.totalCourses === 'undefined') {
-    toast.error('Le planning importé ne contient pas de données exploitables');
-    return (
-      <div className="text-center text-gray-400 py-20">
-        <p>Aucun planning chargé ou données non disponibles.</p>
-        <button onClick={handleImportClick} className="btn-primary mt-6">Importer mon planning PDF</button>
-      </div>
-    );
-  }
-
   return (
-    <motion.div className="max-w-7xl mx-auto space-y-8" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-      {/* Planning Management Panel */}
-      <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 p-6">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
-          <div className="mb-4 lg:mb-0">
-            <h2 className="text-2xl font-bold text-white mb-2 flex items-center">📅 Mon Planning</h2>
-            <div className="text-sm text-slate-300">
-              Dernière mise à jour:{' '}
-              {new Date((planning as any).lastUpdated as any).toLocaleDateString('fr-FR', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
+    <div className="p-4 max-w-7xl mx-auto">
+      <div className="bg-gradient-to-r from-[#E2B44F]/20 to-[#E2B44F]/5 rounded-lg p-6 mb-6 border border-[#E2B44F]/30">
+        <h1 className="text-3xl font-bold text-white mb-2">📅 Planning Intelligent</h1>
+        <p className="text-slate-300">Importez et gérez votre planning hebdomadaire</p>
+      </div>
+
+      {!planning ? (
+        <AnimatePresence mode="wait">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-slate-800/50 rounded-lg p-8 border border-slate-700"
+          >
+            <div className="text-center mb-6">
+              <Upload className="mx-auto mb-4 text-[#E2B44F]" size={48} />
+              <h2 className="text-xl font-semibold text-white mb-2">Aucun planning détecté</h2>
+              <p className="text-slate-400">Uploadez un PDF pour commencer</p>
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf"
+              onChange={(e) => e.target.files?.[0] && handleFileSelect(e.target.files[0])}
+              className="hidden"
+            />
+
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isLoading}
+              className="w-full bg-[#E2B44F] hover:bg-[#E2B44F]/80 text-slate-900 font-semibold py-3 px-6 rounded-lg transition-all disabled:opacity-50"
+            >
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <RefreshCw className="animate-spin" size={20} />
+                  Analyse en cours...
+                </span>
+              ) : (
+                'Importer le planning (PDF)'
+              )}
+            </button>
+          </motion.div>
+        </AnimatePresence>
+      ) : (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex justify-between items-center mb-6"
+          >
+            {/* View Toggle Buttons */}
+            <div className="flex gap-2 bg-slate-800/50 rounded-lg p-1 border border-slate-700">
+              <button
+                onClick={() => setViewMode('table')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                  viewMode === 'table'
+                    ? 'bg-[#E2B44F] text-slate-900 font-semibold'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Table size={18} />
+                Vue Tableau
+              </button>
+              <button
+                onClick={() => setViewMode('calendar')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                  viewMode === 'calendar'
+                    ? 'bg-[#E2B44F] text-slate-900 font-semibold'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Calendar size={18} />
+                Vue Calendrier
+              </button>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-2">
+              <input
+                ref={updateFileInputRef}
+                type="file"
+                accept=".pdf"
+                onChange={(e) => e.target.files?.[0] && handleFileSelect(e.target.files[0], true)}
+                className="hidden"
+              />
+              <button
+                onClick={() => updateFileInputRef.current?.click()}
+                disabled={isUpdating}
+                className="flex items-center gap-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 px-4 py-2 rounded-lg transition-all border border-blue-500/30 disabled:opacity-50"
+              >
+                <RefreshCw className={isUpdating ? 'animate-spin' : ''} size={18} />
+                {isUpdating ? 'Mise à jour...' : 'Mettre à jour'}
+              </button>
+              <button
+                onClick={handleReset}
+                className="flex items-center gap-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-lg transition-all border border-red-500/30"
+              >
+                <Trash2 size={18} />
+                Réinitialiser
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Metadata Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-blue-500/20 rounded-lg p-4 text-center">
+              <FileText className="mx-auto mb-2 text-blue-400" size={24} />
+              <div className="text-2xl font-bold text-white">{(planning as any).metadata.totalCourses}</div>
+              <div className="text-sm text-slate-300">Cours</div>
+            </div>
+            <div className="bg-green-500/20 rounded-lg p-4 text-center">
+              <CheckCircle className="mx-auto mb-2 text-green-400" size={24} />
+              <div className="text-2xl font-bold text-white">{(planning as any).metadata.subjects.length}</div>
+              <div className="text-sm text-slate-300">Matières</div>
+            </div>
+            <div className="bg-purple-500/20 rounded-lg p-4 text-center">
+              <Clock className="mx-auto mb-2 text-purple-400" size={24} />
+              <div className="text-2xl font-bold text-white">{(planning as any).metadata.teachers.length}</div>
+              <div className="text-sm text-slate-300">Professeurs</div>
+            </div>
+            <div className="bg-orange-500/20 rounded-lg p-4 text-center">
+              <AlertTriangle className="mx-auto mb-2 text-orange-400" size={24} />
+              <div className="text-2xl font-bold text-white">{(planning as any).metadata.rooms.length}</div>
+              <div className="text-sm text-slate-300">Salles</div>
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <input ref={fileInputRef} type="file" accept=".pdf" className="hidden" onChange={handleInitialUpload} />
-            <input ref={updateFileInputRef} type="file" accept=".pdf" className="hidden" onChange={handleUpdateUpload} />
-
-            <motion.button className="flex items-center space-x-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-50" disabled={isLoading} onClick={triggerFileInput} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Upload size={18} />
-              Importer
-            </motion.button>
-
-            <motion.button className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-50" disabled={isUpdating} onClick={triggerUpdateFileInput} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              {isUpdating ? <RefreshCw className="animate-spin" size={18} /> : <RefreshCw size={18} />}
-              {isUpdating ? 'Mise à jour...' : '🔄 Mettre à jour'}
-            </motion.button>
-
-            <motion.button className="flex items-center space-x-2 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white px-4 py-2 rounded-lg font-medium" onClick={handleReset} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Trash2 size={18} />
-              Supprimer
-            </motion.button>
-          </div>
-        </div>
-
-        {/* Planning Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-blue-500/20 rounded-lg p-4 text-center">
-            <FileText className="mx-auto mb-2 text-blue-400" size={24} />
-            <div className="text-2xl font-bold text-white">{(planning as any).metadata.totalCourses}</div>
-            <div className="text-sm text-slate-300">Cours</div>
-          </div>
-          <div className="bg-green-500/20 rounded-lg p-4 text-center">
-            <CheckCircle className="mx-auto mb-2 text-green-400" size={24} />
-            <div className="text-2xl font-bold text-white">{(planning as any).metadata.subjects.length}</div>
-            <div className="text-sm text-slate-300">Matières</div>
-          </div>
-          <div className="bg-purple-500/20 rounded-lg p-4 text-center">
-            <Clock className="mx-auto mb-2 text-purple-400" size={24} />
-            <div className="text-2xl font-bold text-white">{(planning as any).metadata.teachers.length}</div>
-            <div className="text-sm text-slate-300">Professeurs</div>
-          </div>
-          <div className="bg-orange-500/20 rounded-lg p-4 text-center">
-            <AlertTriangle className="mx-auto mb-2 text-orange-400" size={24} />
-            <div className="text-2xl font-bold text-white">{(planning as any).metadata.rooms.length}</div>
-            <div className="text-sm text-slate-300">Salles</div>
-          </div>
-        </div>
-
-        {/* Courses Table (strict guard) */}
-        {Array.isArray((planning as any).courses) && (planning as any).courses.length > 0 ? (
-          <table className="w-full border border-gray-700 text-sm text-white mt-6">
-            <thead className="bg-[#E2B44F]/20">
-              <tr>
-                <th className="p-2 text-left">Matière</th>
-                <th className="p-2 text-left">Professeur</th>
-                <th className="p-2 text-left">Salle</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(planning as any).courses.map((c: any, i: number) => (
-                <tr className="border-t border-gray-700 hover:bg-[#E2B44F]/10" key={i}>
-                  <td className="p-2 text-[#E2B44F] font-semibold">{c.subject}</td>
-                  <td className="p-2">{c.teacher}</td>
-                  <td className="p-2">{c.room || '-'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p className="text-gray-300">Aucun cours à afficher.</p>
-        )}
-      </div>
-
-      {/* Calendar Display */}
-      <AnimatePresence>
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }}>
-          <PlanningCalendar planning={planning as any} />
-        </motion.div>
-      </AnimatePresence>
-    </motion.div>
+          {/* Conditional View Rendering */}
+          <AnimatePresence mode="wait">
+            {viewMode === 'table' ? (
+              <motion.div
+                key="table"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                {Array.isArray((planning as any).courses) && (planning as any).courses.length > 0 ? (
+                  <table className="w-full border border-gray-700 text-sm text-white mt-6">
+                    <thead className="bg-[#E2B44F]/20">
+                      <tr>
+                        <th className="p-2 text-left">Jour</th>
+                        <th className="p-2 text-left">Horaire</th>
+                        <th className="p-2 text-left">Matière</th>
+                        <th className="p-2 text-left">Professeur</th>
+                        <th className="p-2 text-left">Salle</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(planning as any).courses.map((c: any, i: number) => (
+                        <tr className="border-t border-gray-700 hover:bg-[#E2B44F]/10" key={i}>
+                          <td className="p-2 text-slate-300">{c.day}</td>
+                          <td className="p-2 text-slate-400">{c.startTime && c.endTime ? `${c.startTime} - ${c.endTime}` : c.time || '-'}</td>
+                          <td className="p-2 text-[#E2B44F] font-semibold">{c.subject}</td>
+                          <td className="p-2">{c.teacher}</td>
+                          <td className="p-2">{c.room || '-'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p className="text-gray-300">Aucun cours à afficher.</p>
+                )}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="calendar"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <PlanningCalendar planning={planning as any} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </>
+      )}
+    </div>
   );
 }
