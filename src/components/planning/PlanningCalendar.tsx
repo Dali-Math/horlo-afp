@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, User } from 'lucide-react';
@@ -19,9 +18,10 @@ interface PlanningData {
   courses: CourseData[];
 }
 
-interface PlanningCalendarProps {
+type PlanningCalendarProps = {
   planning: PlanningData;
-}
+  viewMode: "table" | "calendar";
+};
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 
@@ -46,16 +46,16 @@ const SUBJECT_COLORS = [
 ];
 
 // Change to default export
-const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning }) => {
+export default function PlanningCalendar({ planning, viewMode }: PlanningCalendarProps) {
   const [currentWeek, setCurrentWeek] = useState(0);
   const [selectedCourse, setSelectedCourse] = useState<CourseData | null>(null);
-
+  
   // Process courses data
   const processedCourses = useMemo(() => {
     if (!planning?.courses || !Array.isArray(planning.courses)) {
       return [];
     }
-
+    
     return planning.courses.map((course, index) => {
       // Normalize day names
       const normalizedDay = course.day?.toLowerCase();
@@ -63,11 +63,11 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning }) => {
         day.toLowerCase().includes(normalizedDay) || 
         normalizedDay?.includes(day.toLowerCase())
       );
-
+      
       // Parse time information
       let startTime = course.startTime;
       let endTime = course.endTime;
-
+      
       if (!startTime && course.time) {
         const timeMatch = course.time.match(/(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})/);
         if (timeMatch) {
@@ -75,7 +75,7 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning }) => {
           endTime = timeMatch[2];
         }
       }
-
+      
       return {
         ...course,
         dayIndex: dayIndex >= 0 ? dayIndex : 0,
@@ -85,7 +85,7 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning }) => {
       };
     });
   }, [planning]);
-
+  
   // Get unique subjects for color consistency
   const subjectColors = useMemo(() => {
     const subjects = new Set(processedCourses.map(course => course.subject));
@@ -95,20 +95,20 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning }) => {
     });
     return colorMap;
   }, [processedCourses]);
-
+  
   // Function to get courses for a specific day and time slot
   const getCoursesAtTime = (dayIndex: number, timeSlot: string) => {
     return processedCourses.filter(course => {
       if (course.dayIndex !== dayIndex) return false;
       if (!course.startTime) return false;
-
+      
       const courseStart = course.startTime;
       const courseEnd = course.endTime || course.startTime;
-
+      
       return timeSlot >= courseStart && timeSlot < courseEnd;
     });
   };
-
+  
   // Function to calculate course duration in time slots
   const getCourseDuration = (course: any) => {
     if (!course.startTime || !course.endTime) return 1;
@@ -121,10 +121,10 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning }) => {
     }
     return 1;
   };
-
+  
   // Get courses for current week (for now, showing all courses)
   const weekCourses = processedCourses;
-
+  
   return (
     <div className="planning-calendar">
       {/* Week Navigation */}
@@ -149,7 +149,7 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning }) => {
           <ChevronRight className="w-5 h-5" />
         </button>
       </div>
-
+      
       {/* Calendar Grid */}
       <div className="grid grid-cols-8 gap-1 text-sm">
         {/* Header - Time column */}
@@ -159,11 +159,11 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning }) => {
         
         {/* Header - Day columns */}
         {DAYS.slice(0, 7).map((day, dayIndex) => (
-          <div key={day} className="p-2 text-center font-semibold text-[#E2B44F]">
+          <div className="p-2 text-center font-semibold text-[#E2B44F]" key={day}>
             {day}
           </div>
         ))}
-
+        
         {/* Time slots and courses */}
         {TIME_SLOTS.map((timeSlot, timeIndex) => (
           <React.Fragment key={timeSlot}>
@@ -177,7 +177,7 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning }) => {
               const coursesAtTime = getCoursesAtTime(dayIndex, timeSlot);
               
               return (
-                <div key={`${dayIndex}-${timeSlot}`} className="relative min-h-[40px] border border-slate-700">
+                <div className="relative min-h-[40px] border border-slate-700" key={`${dayIndex}-${timeSlot}`}>
                   {coursesAtTime.map((course, courseIndex) => {
                     // Only render course if this is its start time
                     if (course.startTime !== timeSlot) return null;
@@ -212,7 +212,7 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning }) => {
           </React.Fragment>
         ))}
       </div>
-
+      
       {/* Course Details Modal */}
       {selectedCourse && (
         <motion.div
@@ -232,23 +232,23 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning }) => {
             <div className="space-y-3 text-gray-300">
               <div className="flex items-center gap-3">
                 <User className="w-4 h-4 text-[#E2B44F]" />
-                <span>{selectedCourse.teacher}</span>
+                {selectedCourse.teacher}
               </div>
               
               <div className="flex items-center gap-3">
                 <Clock className="w-4 h-4 text-[#E2B44F]" />
-                <span>{selectedCourse.startTime} - {selectedCourse.endTime}</span>
+                {selectedCourse.startTime} - {selectedCourse.endTime}
               </div>
               
               <div className="flex items-center gap-3">
                 <Calendar className="w-4 h-4 text-[#E2B44F]" />
-                <span>{selectedCourse.day}</span>
+                {selectedCourse.day}
               </div>
               
               {selectedCourse.room && (
                 <div className="flex items-center gap-3">
                   <MapPin className="w-4 h-4 text-[#E2B44F]" />
-                  <span>{selectedCourse.room}</span>
+                  {selectedCourse.room}
                 </div>
               )}
             </div>
@@ -264,6 +264,4 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning }) => {
       )}
     </div>
   );
-};
-
-export default PlanningCalendar;
+}
