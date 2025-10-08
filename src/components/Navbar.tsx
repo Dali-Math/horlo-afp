@@ -13,6 +13,7 @@ export default function Navbar() {
     { href: "/theorie", label: "Théorie" },
     { href: "/pratique", label: "Pratique" },
     { href: "/quiz", label: "Quiz" },
+    { href: "/quiz-longueurs-horlogerie", label: "Quiz Longueurs" },
     { href: "/outils", label: "Outils" },
     { href: "/ressources", label: "Ressources" },
     { href: "/suisse", label: "🇨🇭 Horlogerie Suisse" },
@@ -25,7 +26,7 @@ export default function Navbar() {
   return (
     <nav className="flex flex-wrap items-center justify-between px-6 py-4 bg-[#0A0A0A] text-white border-b border-gray-800">
       {/* Logo and Brand */}
-      <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
+      <Link className="flex items-center gap-3 hover:opacity-90 transition-opacity" href="/">
         <Image
           src="/logos/Logo.jpg"
           alt="HorloLearn Logo"
