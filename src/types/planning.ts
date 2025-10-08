@@ -17,3 +17,13 @@ export interface PlanningData {
   courses: CourseData[];
   metadata?: Record<string, any>;
 }
+
+// View mode type for calendar/table toggle
+export type ViewMode = 'calendar' | 'table';
+
+// Planning state interface for state management
+export interface PlanningState {
+  data: PlanningData | null;
+  isLoading: boolean;
+  error: string | null;
+}
