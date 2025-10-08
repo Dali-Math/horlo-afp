@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Table, Upload, FileText, Download, Trash2 } from 'lucide-react';
 import { PlanningData, PlanningState, ViewMode } from '@/types/planning';
 import PlanningCalendar from './PlanningCalendar';
-import Legend from './Legend';
 import * as pdfjsLib from 'pdfjs-dist';
 // Configure pdf.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
@@ -217,11 +216,6 @@ const SmartPlanningIntelligent: React.FC<SmartPlanningIntelligentProps> = ({
               </div>
             </div>
           </div>
-
-          {/* Legend */}
-          {(planningState.data || planningData) && (
-            <Legend planning={planningState.data || planningData} />
-          )}
 
           {/* View Mode Toggle */}
           <div className="flex justify-center mb-6">
