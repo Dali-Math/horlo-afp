@@ -42,10 +42,12 @@ const TIME_SLOTS = [
   '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
   '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
   '17:00', '17:30', '18:00', '18:30', '19:00', '19:30',
-  '20:00', '20:30', '21:00'
-];
+  '20:00', '20:30', '21:00'];
 
 const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning, viewMode }) => {
+  // Debug log - specific format requested
+  console.log("📦 Planning reçu:", planning);
+  
   const [selectedCourse, setSelectedCourse] = useState<CourseData | null>(null);
   
   // Add debug log at component start
@@ -53,175 +55,167 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning, viewMode 
   
   // Early return if no planning data
   if (!planning || !planning.courses) {
-    console.log('PlanningCalendar: No planning data or courses found');
     return (
-      <div className="text-center p-8">
-        <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-500 text-lg">Aucun planning chargé</p>
-        <p className="text-gray-400 text-sm mt-2">
-          Importez un fichier PDF pour voir votre planning
-        </p>
-      </div>
-    );
-  }
-
-  const processedCourses = useMemo(() => {
-    console.log('Processing courses:', planning.courses);
-    
-    return planning.courses.map((course, index) => {
-      // Normalize day to lowercase for matching
-      const normalizedDay = course.day.toLowerCase();
-      const dayIndex = DAYS.findIndex(day => day.includes(normalizedDay) || normalizedDay.includes(day));
-      
-      // Handle time - support both time and startTime/endTime
-      let startTime = course.startTime || course.time;
-      let endTime = course.endTime;
-      
-      // If time contains a range (e.g., "14:00-15:30"), split it
-      if (startTime && startTime.includes('-')) {
-        const [start, end] = startTime.split('-');
-        startTime = start.trim();
-        endTime = end.trim();
-      }
-      
-      // If no endTime, assume 1 hour duration
-      if (!endTime && startTime) {
-        const [hours, minutes] = startTime.split(':').map(Number);
-        const endHour = hours + 1;
-        endTime = `${endHour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-      }
-      
-      const processedCourse = {
-        ...course,
-        dayIndex,
-        startTime,
-        endTime,
-        teacher: course.teacher || course.professor || 'Non spécifié',
-        id: course.id || `course-${index}`
-      };
-      
-      console.log('Processed course:', processedCourse);
-      return processedCourse;
-    }).filter(course => course.dayIndex !== -1); // Filter out invalid days
-  }, [planning.courses]);
-
-  console.log('Final processed courses:', processedCourses);
-
-  const getCoursesAtTime = (dayIndex: number, timeSlot: string) => {
-    const courses = processedCourses.filter(course => {
-      return course.dayIndex === dayIndex && 
-             course.startTime === timeSlot;
-    });
-    
-    console.log(`Courses for day ${dayIndex}, time ${timeSlot}:`, courses);
-    return courses;
-  };
-
-  if (viewMode === 'table') {
-    return (
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse border border-gray-300">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="border border-gray-300 p-2">Jour</th>
-              <th className="border border-gray-300 p-2">Heure</th>
-              <th className="border border-gray-300 p-2">Matière</th>
-              <th className="border border-gray-300 p-2">Professeur</th>
-              <th className="border border-gray-300 p-2">Salle</th>
-            </tr>
-          </thead>
-          <tbody>
-            {processedCourses.map((course, index) => (
-              <tr key={index} className="hover:bg-gray-50">
-                <td className="border border-gray-300 p-2 capitalize">{course.day}</td>
-                <td className="border border-gray-300 p-2">
-                  {course.startTime}{course.endTime ? ` - ${course.endTime}` : ''}
-                </td>
-                <td className="border border-gray-300 p-2">{course.subject}</td>
-                <td className="border border-gray-300 p-2">{course.teacher}</td>
-                <td className="border border-gray-300 p-2">{course.room || 'Non spécifiée'}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
-
-  return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-      <div className="p-6">
-        <div className="grid grid-cols-8 gap-1 mb-4">
-          {/* Header */}
-          <div className="bg-gray-100 p-3 text-center font-semibold text-gray-700">
-            Horaire
-          </div>
-          {DAYS.slice(0, 7).map((day) => (
-            <div key={day} className="bg-gray-100 p-3 text-center font-semibold text-gray-700 capitalize">
-              {day}
-            </div>
-          ))}
-
-          {/* Time slots and courses */}
-          {TIME_SLOTS.map((timeSlot) => (
-            <React.Fragment key={timeSlot}>
-              {/* Time column */}
-              <div className="bg-gray-50 p-2 text-center text-sm font-medium text-gray-600 border-r">
-                {timeSlot}
-              </div>
-              
-              {/* Day columns */}
-              {DAYS.slice(0, 7).map((day, dayIndex) => {
-                const coursesAtTime = getCoursesAtTime(dayIndex, timeSlot);
-                
-                return (
-                  <div key={`${day}-${timeSlot}`} className="border border-gray-200 min-h-[60px] p-1">
-                    {coursesAtTime.map((course, courseIndex) => (
-                      <motion.div
-                        key={`${course.id}-${courseIndex}`}
-                        className="bg-blue-100 border border-blue-300 rounded p-2 mb-1 cursor-pointer hover:bg-blue-200 transition-colors"
-                        onClick={() => setSelectedCourse(course)}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <div className="text-xs font-semibold text-blue-800 truncate">
-                          {course.subject}
-                        </div>
-                        <div className="text-xs text-blue-600 truncate">
-                          {course.teacher}
-                        </div>
-                        {course.room && (
-                          <div className="text-xs text-blue-500 truncate">
-                            {course.room}
-                          </div>
-                        )}
-                      </motion.div>
-                    ))}
-                  </div>
-                );
-              })}
-            </React.Fragment>
-          ))}
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-3">
+          <Clock className="w-12 h-12 text-gray-400 mx-auto" />
+          <p className="text-gray-600">Aucun cours planifié</p>
         </div>
       </div>
+    );
+  }
 
-      {/* Course Details Modal */}
+  // Normalize course data
+  const normalizedCourses = useMemo(() => {
+    return planning.courses.map(course => ({
+      ...course,
+      day: course.day.toLowerCase(),
+      startTime: course.startTime || course.time?.split('-')[0]?.trim() || '',
+      endTime: course.endTime || course.time?.split('-')[1]?.trim() || '',
+      teacher: course.teacher || course.professor || 'Non spécifié'
+    }));
+  }, [planning.courses]);
+
+  // Helper to get courses for a specific day and time slot
+  const getCourseForSlot = (day: string, timeSlot: string) => {
+    return normalizedCourses.find(
+      course =>
+        course.day === day &&
+        course.startTime === timeSlot
+    );
+  };
+
+  // Calculate course duration in 30-minute slots
+  const getCourseDuration = (startTime: string, endTime: string) => {
+    if (!startTime || !endTime) return 1;
+    const start = TIME_SLOTS.indexOf(startTime);
+    const end = TIME_SLOTS.indexOf(endTime);
+    return end > start ? end - start : 1;
+  };
+
+  return (
+    <div className="space-y-4">
+      {viewMode === 'calendar' ? (
+        // Calendar view
+        <div className="overflow-x-auto">
+          <div className="min-w-max">
+            <div className="grid grid-cols-8 gap-px bg-gray-200 rounded-lg overflow-hidden">
+              {/* Header row */}
+              <div className="bg-gray-50 p-3 font-medium text-gray-700 text-sm">
+                Heure
+              </div>
+              {DAYS.map(day => (
+                <div
+                  key={day}
+                  className="bg-gray-50 p-3 font-medium text-gray-700 text-sm text-center capitalize"
+                >
+                  {day}
+                </div>
+              ))}
+
+              {/* Time slots */}
+              {TIME_SLOTS.map(timeSlot => (
+                <React.Fragment key={timeSlot}>
+                  <div className="bg-white p-3 text-sm text-gray-600">
+                    {timeSlot}
+                  </div>
+                  {DAYS.map(day => {
+                    const course = getCourseForSlot(day, timeSlot);
+                    if (course) {
+                      const duration = getCourseDuration(course.startTime, course.endTime);
+                      return (
+                        <motion.button
+                          key={`${day}-${timeSlot}`}
+                          onClick={() => setSelectedCourse(course)}
+                          className="bg-gradient-to-br from-emerald-50 to-teal-50 border-l-4 border-emerald-500 p-3 text-left hover:shadow-md transition-all"
+                          style={{ gridRow: `span ${duration}` }}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <div className="space-y-1">
+                            <div className="font-semibold text-gray-800 text-sm">
+                              {course.subject}
+                            </div>
+                            <div className="text-xs text-gray-600">
+                              {course.startTime} - {course.endTime}
+                            </div>
+                            {course.teacher && (
+                              <div className="text-xs text-gray-500">
+                                {course.teacher}
+                              </div>
+                            )}
+                            {course.room && (
+                              <div className="text-xs text-gray-500">
+                                {course.room}
+                              </div>
+                            )}
+                          </div>
+                        </motion.button>
+                      );
+                    }
+                    return (
+                      <div
+                        key={`${day}-${timeSlot}`}
+                        className="bg-white p-3"
+                      />
+                    );
+                  })}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : (
+        // Table view
+        <div className="space-y-3">
+          {normalizedCourses.map((course, index) => (
+            <motion.button
+              key={index}
+              onClick={() => setSelectedCourse(course)}
+              className="w-full bg-gradient-to-r from-emerald-50 to-teal-50 border-l-4 border-emerald-500 p-4 text-left rounded-r-lg hover:shadow-md transition-all"
+              whileHover={{ x: 4 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div>
+                  <div className="text-xs text-gray-500 uppercase">Jour</div>
+                  <div className="font-medium text-gray-800 capitalize">{course.day}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500 uppercase">Horaire</div>
+                  <div className="font-medium text-gray-800">
+                    {course.startTime} - {course.endTime}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500 uppercase">Cours</div>
+                  <div className="font-medium text-gray-800">{course.subject}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500 uppercase">Professeur</div>
+                  <div className="font-medium text-gray-800">{course.teacher}</div>
+                </div>
+              </div>
+            </motion.button>
+          ))}
+        </div>
+      )}
+
+      {/* Course details modal */}
       {selectedCourse && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
           onClick={() => setSelectedCourse(null)}
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            className="bg-white rounded-lg p-6 max-w-md w-full mx-4"
+            className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex justify-between items-start mb-4">
               <h3 className="text-lg font-semibold text-gray-800">
                 Détails du cours
               </h3>
@@ -271,7 +265,7 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning, viewMode 
                 </div>
               )}
             </div>
-          </motion.div>
+          </div>
         </motion.div>
       )}
     </div>
