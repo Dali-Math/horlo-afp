@@ -31,7 +31,7 @@ function pickRandom<T>(arr: T[], n: number): T[] {
 
 export default function QuizLongueursHorlogeriePage() {
   const QUESTIONS_PER_RUN = 20;
-  const TIME_PER_QUESTION = 20; // ⏱ 20 s
+  const TIME_PER_QUESTION = 20;
 
   const [seed, setSeed] = useState<number>(() => Date.now());
   const sessionQuestions = useMemo<Question[]>(
@@ -48,7 +48,6 @@ export default function QuizLongueursHorlogeriePage() {
   const q = sessionQuestions[index];
   const done = index >= sessionQuestions.length;
 
-  // Timer par question
   useEffect(() => {
     if (done) return;
     setSecondsLeft(TIME_PER_QUESTION);
@@ -57,7 +56,7 @@ export default function QuizLongueursHorlogeriePage() {
       setSecondsLeft((s) => {
         if (s <= 1) {
           if (timerRef.current) clearInterval(timerRef.current);
-          handleAnswer(null, true); // temps écoulé → faux + auto-next
+          handleAnswer(null, true);
           return TIME_PER_QUESTION;
         }
         return s - 1;
@@ -66,7 +65,6 @@ export default function QuizLongueursHorlogeriePage() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index, seed]);
 
   function handleAnswer(choiceIndex: number | null, timedOut = false) {
@@ -119,7 +117,6 @@ export default function QuizLongueursHorlogeriePage() {
       >
         {!done ? (
           <>
-            {/* Header */}
             <header className="flex items-center justify-between mb-8 border-b pb-4">
               <div className="flex items-center gap-3">
                 <Ruler className="text-[#E2B44F]" size={36} />
@@ -132,7 +129,6 @@ export default function QuizLongueursHorlogeriePage() {
               </div>
             </header>
 
-            {/* Progress */}
             <p className="text-base text-gray-600 mb-4">
               Question {index + 1} / {sessionQuestions.length}
             </p>
@@ -147,12 +143,10 @@ export default function QuizLongueursHorlogeriePage() {
               />
             </div>
 
-            {/* Question */}
             <h2 className="text-3xl font-semibold mb-8 text-center text-[#111]">
               {q.prompt}
             </h2>
 
-            {/* Choices */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {q.choices.map((c, i) => (
                 <button
@@ -173,7 +167,6 @@ export default function QuizLongueursHorlogeriePage() {
               ))}
             </div>
 
-            {/* Live score */}
             <div className="flex items-center justify-between text-base text-gray-600">
               <p>Réponds en 20 secondes, sinon la question est comptée fausse.</p>
               <p>
@@ -182,9 +175,6 @@ export default function QuizLongueursHorlogeriePage() {
             </div>
           </>
         ) : (
-          // =======================
-          //  RESULTATS
-          // =======================
           <div>
             <h2 className="text-4xl font-bold text-center text-[#E2B44F] mb-2">
               Résultats du Quiz
@@ -198,46 +188,42 @@ export default function QuizLongueursHorlogeriePage() {
               </p>
             </div>
 
-            {/* On n’affiche QUE les mauvaises réponses avec la bonne solution */}
-            {answers.some((a) => !a.isCorrect) && (
-              <div className="text-left">
-                <h3 className="text-2xl font-semibold mb-4 text-[#E2B44F]">
-                  Révisions
-                </h3>
-                <ul className="space-y-4">
-                  {answers
-                    .filter((a) => !a.isCorrect)
-                    .map((a, idx) => (
-                      <li
-                        key={idx}
-                        className="rounded-xl border border-[#eee] p-4 bg-[#fafafa]"
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <p className="font-medium text-[#111]">{a.prompt}</p>
-                          <span className="text-sm px-2 py-1 rounded-md bg-red-100 text-red-700">
-                            ❌ Mauvaise réponse
-                          </span>
-                        </div>
+            <div className="text-left">
+              <h3 className="text-2xl font-semibold mb-4 text-[#E2B44F]">
+                Révisions
+              </h3>
+              <ul className="space-y-4">
+                {answers.map((a, idx) => (
+                  <li
+                    key={idx}
+                    className="rounded-xl border border-[#eee] p-4 bg-[#fafafa]"
+                  >
+                    <p className="font-medium text-[#111] mb-2">
+                      {a.prompt}
+                    </p>
 
-                        <p className="text-sm mb-1">
-                          <span className="font-semibold text-red-600">
-                            Ta réponse :
-                          </span>{" "}
-                          {a.timedOut
-                            ? "⏳ Temps écoulé (aucune réponse)"
-                            : a.selectedText ?? "—"}
-                        </p>
-                        <p className="text-sm">
-                          <span className="font-semibold text-green-700">
-                            Bonne réponse :
-                          </span>{" "}
-                          {a.correctText}
-                        </p>
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            )}
+                    <div
+                      className={`p-2 rounded-md mb-1 ${
+                        a.isCorrect
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      Ta réponse :{" "}
+                      {a.timedOut
+                        ? "⏳ Temps écoulé"
+                        : a.selectedText ?? "—"}
+                    </div>
+
+                    {!a.isCorrect && (
+                      <div className="p-2 rounded-md bg-green-50 text-green-700">
+                        Bonne réponse : {a.correctText}
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
             <div className="text-center mt-10">
               <button
