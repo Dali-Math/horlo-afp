@@ -1,5 +1,4 @@
 import * as pdfjsLib from 'pdfjs-dist';
-
 // Configure PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
@@ -26,7 +25,6 @@ export class PDFParser {
     'sa': 'Samedi',
     'di': 'Dimanche'
   };
-
   private timeRangeRegex = /([0-9]{1,2}[:h.][0-9]{2})\s*-\s*([0-9]{1,2}[:h.][0-9]{2})/g;
   private roomRegex = /\b(salle|room|local)\s*([A-Za-z0-9\-]+)\b/gi;
   private teacherRegex = /\b(M\.|Mme|Mr|Mrs|Prof|Professeur)\s*([A-Za-z\s\-éèêàâùû]+)/gi;
@@ -74,7 +72,7 @@ export class PDFParser {
       }
       
       // Look for time ranges
-      const timeMatches = [...line.matchAll(this.timeRangeRegex)];
+      const timeMatches = Array.from(line.matchAll(this.timeRangeRegex));
       if (timeMatches.length > 0 && currentDay) {
         for (const timeMatch of timeMatches) {
           const timeRange = `${timeMatch[1]} - ${timeMatch[2]}`;
