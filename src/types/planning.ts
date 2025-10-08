@@ -18,6 +18,9 @@ export interface PlanningData {
     totalCourses?: number;
     source?: string;
     lastUpdated?: string;
+    subjects?: string[];
+    professors?: string[];
+    rooms?: string[];
   };
 }
 
