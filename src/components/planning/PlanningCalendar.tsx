@@ -9,6 +9,8 @@ import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, User } from 'lucide
 const logPlanning = (planning: any) => {
   try {
     console.log('PlanningCalendar received planning:', planning);
+    console.log('Planning courses:', planning?.courses);
+    console.log('Number of courses:', planning?.courses?.length);
   } catch {}
 };
 
@@ -19,258 +21,261 @@ interface CourseData {
   endTime?: string;
   time?: string;
   subject: string;
-  teacher: string;
+  teacher?: string;
+  professor?: string;
   room?: string;
 }
+
 interface PlanningData {
   courses: CourseData[];
 }
 
 type PlanningCalendarProps = {
-  planning: PlanningData;
+  planning: PlanningData | null;
   viewMode: "table" | "calendar";
 };
 
-const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+const DAYS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+
 const TIME_SLOTS = [
   '08:00', '08:30', '09:00', '09:30', '10:00', '10:30',
   '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
   '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
-  '17:00', '17:30', '18:00', '18:30', '19:00', '19:30'
-];
-const SUBJECT_COLORS = [
-  'from-blue-500 to-blue-600',
-  'from-green-500 to-green-600', 
-  'from-purple-500 to-purple-600',
-  'from-red-500 to-red-600',
-  'from-yellow-500 to-yellow-600',
-  'from-indigo-500 to-indigo-600',
-  'from-pink-500 to-pink-600',
-  'from-teal-500 to-teal-600',
-  'from-orange-500 to-orange-600',
-  'from-cyan-500 to-cyan-600'
+  '17:00', '17:30', '18:00', '18:30', '19:00', '19:30',
+  '20:00', '20:30', '21:00'
 ];
 
-// Change to default export
-export default function PlanningCalendar({ planning, viewMode }: PlanningCalendarProps) {
-  // Log once per render to verify data arrival
-  logPlanning(planning);
-
-  const [currentWeek, setCurrentWeek] = useState(0);
+const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning, viewMode }) => {
   const [selectedCourse, setSelectedCourse] = useState<CourseData | null>(null);
   
-  // Process courses data
+  // Add debug log at component start
+  logPlanning(planning);
+  
+  // Early return if no planning data
+  if (!planning || !planning.courses) {
+    console.log('PlanningCalendar: No planning data or courses found');
+    return (
+      <div className="text-center p-8">
+        <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+        <p className="text-gray-500 text-lg">Aucun planning chargé</p>
+        <p className="text-gray-400 text-sm mt-2">
+          Importez un fichier PDF pour voir votre planning
+        </p>
+      </div>
+    );
+  }
+
   const processedCourses = useMemo(() => {
-    if (!planning?.courses || !Array.isArray(planning.courses)) {
-      return [];
-    }
+    console.log('Processing courses:', planning.courses);
     
     return planning.courses.map((course, index) => {
-      // Normalize day names
-      const normalizedDay = course.day?.toLowerCase();
-      const dayIndex = DAYS.findIndex(day => 
-        day.toLowerCase().includes(normalizedDay) || 
-        normalizedDay?.includes(day.toLowerCase())
-      );
+      // Normalize day to lowercase for matching
+      const normalizedDay = course.day.toLowerCase();
+      const dayIndex = DAYS.findIndex(day => day.includes(normalizedDay) || normalizedDay.includes(day));
       
-      // Parse time information
-      let startTime = course.startTime;
+      // Handle time - support both time and startTime/endTime
+      let startTime = course.startTime || course.time;
       let endTime = course.endTime;
       
-      if (!startTime && course.time) {
-        const timeMatch = course.time.match(/(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})/);
-        if (timeMatch) {
-          startTime = timeMatch[1];
-          endTime = timeMatch[2];
-        }
+      // If time contains a range (e.g., "14:00-15:30"), split it
+      if (startTime && startTime.includes('-')) {
+        const [start, end] = startTime.split('-');
+        startTime = start.trim();
+        endTime = end.trim();
       }
       
-      return {
+      // If no endTime, assume 1 hour duration
+      if (!endTime && startTime) {
+        const [hours, minutes] = startTime.split(':').map(Number);
+        const endHour = hours + 1;
+        endTime = `${endHour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+      }
+      
+      const processedCourse = {
         ...course,
-        dayIndex: dayIndex >= 0 ? dayIndex : 0,
+        dayIndex,
         startTime,
         endTime,
-        colorIndex: index % SUBJECT_COLORS.length
-      } as any;
-    });
-  }, [planning]);
-  
-  // Get unique subjects for color consistency
-  const subjectColors = useMemo(() => {
-    const subjects = new Set(processedCourses.map((course: any) => course.subject));
-    const colorMap: Record<string, string> = {};
-    Array.from(subjects).forEach((subject, index) => {
-      colorMap[subject] = SUBJECT_COLORS[index % SUBJECT_COLORS.length];
-    });
-    return colorMap;
-  }, [processedCourses]);
-  
-  // Function to get courses for a specific day and time slot
+        teacher: course.teacher || course.professor || 'Non spécifié',
+        id: course.id || `course-${index}`
+      };
+      
+      console.log('Processed course:', processedCourse);
+      return processedCourse;
+    }).filter(course => course.dayIndex !== -1); // Filter out invalid days
+  }, [planning.courses]);
+
+  console.log('Final processed courses:', processedCourses);
+
   const getCoursesAtTime = (dayIndex: number, timeSlot: string) => {
-    return processedCourses.filter((course: any) => {
-      if (course.dayIndex !== dayIndex) return false;
-      if (!course.startTime) return false;
-      
-      const courseStart = course.startTime;
-      const courseEnd = course.endTime || course.startTime;
-      
-      return timeSlot >= courseStart && timeSlot < courseEnd;
+    const courses = processedCourses.filter(course => {
+      return course.dayIndex === dayIndex && 
+             course.startTime === timeSlot;
     });
-  };
-  
-  // Function to calculate course duration in time slots
-  const getCourseDuration = (course: any) => {
-    if (!course.startTime || !course.endTime) return 1;
     
-    const startIndex = TIME_SLOTS.indexOf(course.startTime);
-    const endIndex = TIME_SLOTS.indexOf(course.endTime);
-    
-    if (startIndex >= 0 && endIndex > startIndex) {
-      return endIndex - startIndex;
-    }
-    return 1;
+    console.log(`Courses for day ${dayIndex}, time ${timeSlot}:`, courses);
+    return courses;
   };
-  
-  // Get courses for current week (for now, showing all courses)
-  const weekCourses = processedCourses;
-  
-  return (
-    <div className="planning-calendar">
-      {/* Week Navigation */}
-      <div className="flex items-center justify-between mb-6">
-        <button
-          onClick={() => setCurrentWeek(prev => Math.max(0, prev - 1))}
-          className="p-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors"
-          disabled={currentWeek === 0}
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
 
-        <div className="flex items-center gap-2 text-lg font-semibold">
-          <Calendar className="w-5 h-5" />
-          Semaine {currentWeek + 1}
-        </div>
-
-        <button
-          onClick={() => setCurrentWeek(prev => prev + 1)}
-          className="p-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors"
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
+  if (viewMode === 'table') {
+    return (
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="border border-gray-300 p-2">Jour</th>
+              <th className="border border-gray-300 p-2">Heure</th>
+              <th className="border border-gray-300 p-2">Matière</th>
+              <th className="border border-gray-300 p-2">Professeur</th>
+              <th className="border border-gray-300 p-2">Salle</th>
+            </tr>
+          </thead>
+          <tbody>
+            {processedCourses.map((course, index) => (
+              <tr key={index} className="hover:bg-gray-50">
+                <td className="border border-gray-300 p-2 capitalize">{course.day}</td>
+                <td className="border border-gray-300 p-2">
+                  {course.startTime}{course.endTime ? ` - ${course.endTime}` : ''}
+                </td>
+                <td className="border border-gray-300 p-2">{course.subject}</td>
+                <td className="border border-gray-300 p-2">{course.teacher}</td>
+                <td className="border border-gray-300 p-2">{course.room || 'Non spécifiée'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
+    );
+  }
 
-      {/* Calendar Grid */}
-      <div className="grid grid-cols-8 gap-1 text-sm">
-        {/* Header - Time column */}
-        <div className="p-2 text-center font-semibold text-gray-400">
-          <Clock className="w-4 h-4 mx-auto" />
-        </div>
-
-        {/* Header - Day columns */}
-        {DAYS.slice(0, 7).map((day, dayIndex) => (
-          <div className="p-2 text-center font-semibold text-[#E2B44F]" key={day}>
-            {day}
+  return (
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div className="p-6">
+        <div className="grid grid-cols-8 gap-1 mb-4">
+          {/* Header */}
+          <div className="bg-gray-100 p-3 text-center font-semibold text-gray-700">
+            Horaire
           </div>
-        ))}
-
-        {/* Time slots and courses */}
-        {TIME_SLOTS.map((timeSlot) => (
-          <React.Fragment key={timeSlot}>
-            {/* Time label */}
-            <div className="p-2 text-center text-gray-400 text-xs font-mono">
-              {timeSlot}
+          {DAYS.slice(0, 7).map((day) => (
+            <div key={day} className="bg-gray-100 p-3 text-center font-semibold text-gray-700 capitalize">
+              {day}
             </div>
+          ))}
 
-            {/* Day columns */}
-            {DAYS.slice(0, 7).map((_, dayIndex) => {
-              const coursesAtTime = getCoursesAtTime(dayIndex, timeSlot);
+          {/* Time slots and courses */}
+          {TIME_SLOTS.map((timeSlot) => (
+            <React.Fragment key={timeSlot}>
+              {/* Time column */}
+              <div className="bg-gray-50 p-2 text-center text-sm font-medium text-gray-600 border-r">
+                {timeSlot}
+              </div>
               
-              return (
-                <div className="relative min-h-[40px] border border-slate-700" key={`${dayIndex}-${timeSlot}`}>
-                  {coursesAtTime.map((course: any, courseIndex: number) => {
-                    // Only render course if this is its start time
-                    if (course.startTime !== timeSlot) return null;
-                    
-                    const duration = getCourseDuration(course);
-                    const colorClass = subjectColors[course.subject] || 'from-gray-500 to-gray-600';
-                    
-                    return (
+              {/* Day columns */}
+              {DAYS.slice(0, 7).map((day, dayIndex) => {
+                const coursesAtTime = getCoursesAtTime(dayIndex, timeSlot);
+                
+                return (
+                  <div key={`${day}-${timeSlot}`} className="border border-gray-200 min-h-[60px] p-1">
+                    {coursesAtTime.map((course, courseIndex) => (
                       <motion.div
-                        key={`${course.subject}-${courseIndex}`}
-                        className={`absolute inset-0 bg-gradient-to-br ${colorClass} rounded m-0.5 p-1 text-xs text-white cursor-pointer overflow-hidden`}
-                        style={{
-                          height: `${duration * 40 - 4}px`,
-                          zIndex: 10
-                        }}
-                        whileHover={{ scale: 1.02 }}
+                        key={`${course.id}-${courseIndex}`}
+                        className="bg-blue-100 border border-blue-300 rounded p-2 mb-1 cursor-pointer hover:bg-blue-200 transition-colors"
                         onClick={() => setSelectedCourse(course)}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.2 }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                       >
-                        <div className="font-semibold truncate">{course.subject}</div>
-                        <div className="text-xs opacity-90 truncate">{course.teacher}</div>
-                        <div className="text-xs opacity-75 truncate">{course.room}</div>
-                        <div className="text-xs opacity-75">{course.startTime}-{course.endTime}</div>
+                        <div className="text-xs font-semibold text-blue-800 truncate">
+                          {course.subject}
+                        </div>
+                        <div className="text-xs text-blue-600 truncate">
+                          {course.teacher}
+                        </div>
+                        {course.room && (
+                          <div className="text-xs text-blue-500 truncate">
+                            {course.room}
+                          </div>
+                        )}
                       </motion.div>
-                    );
-                  })}
-                </div>
-              );
-            })}
-          </React.Fragment>
-        ))}
+                    ))}
+                  </div>
+                );
+              })}
+            </React.Fragment>
+          ))}
+        </div>
       </div>
 
       {/* Course Details Modal */}
       {selectedCourse && (
         <motion.div
-          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
           onClick={() => setSelectedCourse(null)}
         >
           <motion.div
-            className="bg-slate-800 border border-slate-700 rounded-2xl p-6 m-4 max-w-md w-full"
-            initial={{ scale: 0.8, opacity: 0 }}
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            onClick={e => e.stopPropagation()}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="bg-white rounded-lg p-6 max-w-md w-full mx-4"
+            onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-bold text-[#E2B44F] mb-4">{selectedCourse.subject}</h3>
-
-            <div className="space-y-3 text-gray-300">
-              <div className="flex items-center gap-3">
-                <User className="w-4 h-4 text-[#E2B44F]" />
-                {selectedCourse.teacher}
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-800">
+                Détails du cours
+              </h3>
+              <button
+                onClick={() => setSelectedCourse(null)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="flex items-center">
+                <Calendar className="w-5 h-5 text-gray-500 mr-3" />
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Jour</p>
+                  <p className="text-sm text-gray-600 capitalize">{selectedCourse.day}</p>
+                </div>
               </div>
-
-              <div className="flex items-center gap-3">
-                <Clock className="w-4 h-4 text-[#E2B44F]" />
-                {selectedCourse.startTime} - {selectedCourse.endTime}
+              
+              <div className="flex items-center">
+                <Clock className="w-5 h-5 text-gray-500 mr-3" />
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Horaire</p>
+                  <p className="text-sm text-gray-600">
+                    {selectedCourse.startTime}
+                    {selectedCourse.endTime && ` - ${selectedCourse.endTime}`}
+                  </p>
+                </div>
               </div>
-
-              <div className="flex items-center gap-3">
-                <Calendar className="w-4 h-4 text-[#E2B44F]" />
-                {selectedCourse.day}
+              
+              <div className="flex items-center">
+                <User className="w-5 h-5 text-gray-500 mr-3" />
+                <div>
+                  <p className="text-sm font-medium text-gray-700">Professeur</p>
+                  <p className="text-sm text-gray-600">{selectedCourse.teacher}</p>
+                </div>
               </div>
-
+              
               {selectedCourse.room && (
-                <div className="flex items-center gap-3">
-                  <MapPin className="w-4 h-4 text-[#E2B44F]" />
-                  {selectedCourse.room}
+                <div className="flex items-center">
+                  <MapPin className="w-5 h-5 text-gray-500 mr-3" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">Salle</p>
+                    <p className="text-sm text-gray-600">{selectedCourse.room}</p>
+                  </div>
                 </div>
               )}
             </div>
-
-            <button
-              onClick={() => setSelectedCourse(null)}
-              className="w-full mt-6 bg-[#E2B44F] hover:bg-[#d4a043] text-black font-semibold py-2 rounded-lg transition-colors"
-            >
-              Fermer
-            </button>
           </motion.div>
         </motion.div>
       )}
     </div>
   );
-}
+};
+
+export default PlanningCalendar;
