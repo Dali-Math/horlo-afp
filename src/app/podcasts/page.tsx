@@ -1,3 +1,8 @@
+"use client";
+
+export default function PodcastsPage() {
+  ...
+}
 {/* 🟥 Nouvelle section : tes podcasts HorloLearn */}
 <section className="bg-white rounded-lg shadow-md p-6 mb-10 border border-[#E2B44F]">
   <h2 className="text-2xl font-semibold text-gray-800 mb-6">🎙 Mes podcasts HorloLearn</h2>
