@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Table, Upload, FileText, Download, Trash2 } from 'lucide-react';
 import { PlanningData, PlanningState, ViewMode } from '@/types/planning';
 import PlanningCalendar from './PlanningCalendar';
-import FilterBar from './FilterBar';
 import Legend from './Legend';
 import * as pdfjsLib from 'pdfjs-dist';
 // Configure pdf.js worker
@@ -218,19 +217,6 @@ const SmartPlanningIntelligent: React.FC<SmartPlanningIntelligentProps> = ({
               </div>
             </div>
           </div>
-
-          {/* Filters */}
-          {(planningState.data || planningData) && (
-            <FilterBar
-              planning={planningState.data || planningData}
-              filters={{
-                ...filters,
-                totalCourses: filters.totalCourses ?? 0,
-                metadata: filters.metadata ?? {}
-              }}
-              onFiltersChange={setFilters}
-            />
-          )}
 
           {/* Legend */}
           {(planningState.data || planningData) && (
