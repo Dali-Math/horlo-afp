@@ -1,5 +1,5 @@
 export interface CourseData {
-  id: string;
+  id?: string;
   day: string;
   time: string;
   subject: string;
@@ -11,3 +11,23 @@ export interface ParsedSchedule {
   totalCourses: number;
   courses: CourseData[];
 }
+
+export interface PlanningData {
+  courses: CourseData[];
+  metadata?: {
+    totalCourses?: number;
+    source?: string;
+    lastUpdated?: string;
+    subjects?: string[];
+    professors?: string[];
+    rooms?: string[];
+  };
+}
+
+export interface PlanningState {
+  data: PlanningData | null;
+  isLoading: boolean;
+  error: string | null;
+}
+
+export type ViewMode = 'calendar' | 'table';
