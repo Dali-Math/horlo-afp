@@ -16,6 +16,7 @@ const logPlanning = (planning: any) => {
 
 // Define types locally to avoid import errors
 interface CourseData {
+  id?: string;
   day: string;
   startTime?: string;
   endTime?: string;
@@ -36,7 +37,6 @@ type PlanningCalendarProps = {
 };
 
 const DAYS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
-
 const TIME_SLOTS = [
   '08:00', '08:30', '09:00', '09:30', '10:00', '10:30',
   '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
