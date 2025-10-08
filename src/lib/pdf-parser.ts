@@ -1,5 +1,5 @@
 import * as pdfjsLib from 'pdfjs-dist';
-import { CourseData } from '@/components/planning/SmartPlanningIntelligent';
+import { ParsedCourse } from '@/types/planning';
 
 // Configure PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
@@ -27,6 +27,7 @@ export class PDFParser {
     'sa': 'Samedi',
     'di': 'Dimanche'
   };
+
   private timeRangeRegex = /([0-9]{1,2}[:h.][0-9]{2})\s*-\s*([0-9]{1,2}[:h.][0-9]{2})/g;
   private roomRegex = /\b(salle|room|local)\s*([A-Za-z0-9\-]+)\b/gi;
   private teacherRegex = /\b(M\.|Mme|Mr|Mrs|Prof|Professeur)\s*([A-Za-z\s\-éèêàâùû]+)/gi;
