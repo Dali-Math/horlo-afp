@@ -152,7 +152,7 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning, viewMode 
                   <div key={`${day}-${time}`} className="border-r border-b border-gray-200 p-2 min-h-[60px] relative">
                     {courses.map((course, index) => (
                       <motion.div
-                        key={`${course.id}-${index}`}
+                        key={`${course.id ?? index}`}
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         className="bg-blue-100 border-l-4 border-blue-500 rounded p-2 mb-1 text-xs hover:bg-blue-200 transition-colors cursor-pointer"
