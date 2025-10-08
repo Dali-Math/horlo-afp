@@ -3,15 +3,6 @@ import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, User } from 'lucide-react';
 
-// Debug log to verify planning prop propagation
-const logPlanning = (planning: any) => {
-  try {
-    console.log('PlanningCalendar received planning:', planning);
-    console.log('Planning courses:', planning?.courses);
-    console.log('Number of courses:', planning?.courses?.length);
-  } catch {}
-};
-
 // Define types locally to avoid import errors
 interface CourseData {
   day: string;
@@ -48,21 +39,12 @@ const DAY_MAPPING: Record<string, string> = {
   'jeu': 'Jeudi',
   'ven': 'Vendredi',
   'sam': 'Samedi',
-  'dim': 'Dimanche',
-  'monday': 'Lundi',
-  'tuesday': 'Mardi',
-  'wednesday': 'Mercredi',
-  'thursday': 'Jeudi',
-  'friday': 'Vendredi',
-  'saturday': 'Samedi',
-  'sunday': 'Dimanche'
+  'dim': 'Dimanche'
 };
 
 // Hour normalization mapping
 const normalizeTime = (time: string): string => {
   if (!time) return '';
-  
-  // Convert 08:00 → 8:00, 14:30 → 14:30, etc.
   const cleanTime = time.replace(/^0(\d):/, '$1:');
   return cleanTime;
 };
@@ -70,16 +52,12 @@ const normalizeTime = (time: string): string => {
 // Normalize day name
 const normalizeDay = (day: string): string => {
   if (!day) return '';
-  
   const lowerDay = day.toLowerCase().trim();
   return DAY_MAPPING[lowerDay] || day;
 };
 
 const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning, viewMode }) => {
   const [currentWeek, setCurrentWeek] = useState(0);
-  
-  // Debug logging
-  logPlanning(planning);
   
   // Process and normalize courses
   const processedCourses = useMemo(() => {
@@ -134,16 +112,10 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning, viewMode 
   
   const renderCalendarView = () => (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-      {/* Calendar Header */}
       <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <button
-          onClick={() => navigateWeek('prev')}
-          className="p-2 rounded-full hover:bg-white/20 transition-colors"
-          aria-label="Semaine précédente"
-        >
+        <button onClick={() => navigateWeek('prev')} className="p-2 rounded-full hover:bg-white/20 transition-colors">
           <ChevronLeft className="w-5 h-5" />
         </button>
-        
         <div className="flex items-center space-x-2">
           <Calendar className="w-5 h-5" />
           <h2 className="text-xl font-bold">
@@ -154,60 +126,38 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning, viewMode 
             })}
           </h2>
         </div>
-        
-        <button
-          onClick={() => navigateWeek('next')}
-          className="p-2 rounded-full hover:bg-white/20 transition-colors"
-          aria-label="Semaine suivante"
-        >
+        <button onClick={() => navigateWeek('next')} className="p-2 rounded-full hover:bg-white/20 transition-colors">
           <ChevronRight className="w-5 h-5" />
         </button>
       </div>
-      
-      {/* Calendar Grid */}
       <div className="overflow-x-auto">
         <div className="grid grid-cols-8 min-w-full">
-          {/* Time column header */}
           <div className="bg-gray-50 p-3 border-r border-gray-200 font-semibold text-gray-700">
             Heure
           </div>
-          
-          {/* Day headers */}
           {daysOfWeek.map(day => (
             <div key={day} className="bg-gray-50 p-3 border-r border-gray-200 text-center font-semibold text-gray-700">
               {day}
             </div>
           ))}
-          
-          {/* Time slots and courses */}
           {timeSlots.map(time => (
             <React.Fragment key={time}>
-              {/* Time label */}
               <div className="bg-gray-50 p-3 border-r border-b border-gray-200 text-sm font-medium text-gray-600 flex items-center">
                 <Clock className="w-4 h-4 mr-2" />
                 {time}
               </div>
-              
-              {/* Course cells for each day */}
               {daysOfWeek.map(day => {
                 const courses = coursesByDayTime[day]?.[time] || [];
-                
                 return (
-                  <div
-                    key={`${day}-${time}`}
-                    className="border-r border-b border-gray-200 p-2 min-h-[60px] relative"
-                  >
+                  <div key={`${day}-${time}`} className="border-r border-b border-gray-200 p-2 min-h-[60px] relative">
                     {courses.map((course, index) => (
                       <motion.div
                         key={`${course.id}-${index}`}
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         className="bg-blue-100 border-l-4 border-blue-500 rounded p-2 mb-1 text-xs hover:bg-blue-200 transition-colors cursor-pointer"
-                        title={`${course.subject} - ${course.teacher} - ${course.room}`}
                       >
-                        <div className="font-semibold text-blue-900 truncate">
-                          {course.subject}
-                        </div>
+                        <div className="font-semibold text-blue-900 truncate">{course.subject}</div>
                         <div className="text-blue-700 flex items-center mt-1">
                           <User className="w-3 h-3 mr-1" />
                           <span className="truncate">{course.teacher}</span>
@@ -290,16 +240,6 @@ const PlanningCalendar: React.FC<PlanningCalendarProps> = ({ planning, viewMode 
       </div>
     </div>
   );
-  
-  // Debug info
-  if (process.env.NODE_ENV === 'development') {
-    console.log('PlanningCalendar render:', {
-      planning,
-      viewMode,
-      coursesCount: processedCourses.length,
-      processedCourses: processedCourses.slice(0, 3) // Show first 3 for debug
-    });
-  }
   
   return (
     <div className="p-4">
