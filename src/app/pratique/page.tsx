@@ -15,9 +15,9 @@ const gallery = [
 ];
 
 const tutorials = [
-  { id: 'tuto-debutant', title: 'Initiation: démontage-remontage d’un mouvement', video: 'https://www.youtube.com/embed/VIDEO_ID_1', pdf: '/pdf/tutoriels/initiation-demontage.pdf', duration: '12:35', level: 'Débutant' },
-  { id: 'tuto-intermediaire', title: 'Huilage et lubrification: bonnes pratiques', video: 'https://www.youtube.com/embed/VIDEO_ID_2', pdf: '/pdf/tutoriels/huilage-bonnes-pratiques.pdf', duration: '18:20', level: 'Intermédiaire' },
-  { id: 'tuto-avance', title: 'Chronographe: contrôle et réglage', video: 'https://www.youtube.com/embed/VIDEO_ID_3', pdf: '/pdf/tutoriels/chronographe-reglage.pdf', duration: '22:10', level: 'Avancé' },
+  { id: 'tuto-debutant', title: 'Initiation: démontage-remontage d’un mouvement', video: 'https://www.youtube.com/embed/VIDEO_ID_fNBo91AfDBKYcpKp', pdf: '/pdf/tutoriels/initiation-demontage.pdf', duration: '12:35', level: 'Débutant' },
+  { id: 'tuto-intermediaire', title: 'Huilage et lubrification: bonnes pratiques', video: 'https://www.youtube.com/embed/VIDEO_ID_oo82WFRK7870GBD8', pdf: '/pdf/tutoriels/huilage-bonnes-pratiques.pdf', duration: '18:20', level: 'Intermédiaire' },
+  { id: 'tuto-avance', title: 'Chronographe: contrôle et réglage', video: 'https://www.youtube.com/embed/VIDEO_ID_0X50oiP8JQV2WIU4', pdf: '/pdf/tutoriels/chronographe-reglage.pdf', duration: '22:10', level: 'Avancé' },
 ];
 
 const pdfCards = [
