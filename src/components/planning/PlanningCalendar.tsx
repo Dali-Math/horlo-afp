@@ -3,6 +3,15 @@ import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, User } from 'lucide-react';
 
+// Debug log to verify planning prop propagation
+// This will help diagnose empty calendar after PDF import
+// eslint-disable-next-line no-console
+const logPlanning = (planning: any) => {
+  try {
+    console.log('PlanningCalendar received planning:', planning);
+  } catch {}
+};
+
 // Define types locally to avoid import errors
 interface CourseData {
   day: string;
@@ -13,7 +22,6 @@ interface CourseData {
   teacher: string;
   room?: string;
 }
-
 interface PlanningData {
   courses: CourseData[];
 }
@@ -24,14 +32,12 @@ type PlanningCalendarProps = {
 };
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
-
 const TIME_SLOTS = [
   '08:00', '08:30', '09:00', '09:30', '10:00', '10:30',
   '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
   '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
   '17:00', '17:30', '18:00', '18:30', '19:00', '19:30'
 ];
-
 const SUBJECT_COLORS = [
   'from-blue-500 to-blue-600',
   'from-green-500 to-green-600', 
@@ -47,6 +53,9 @@ const SUBJECT_COLORS = [
 
 // Change to default export
 export default function PlanningCalendar({ planning, viewMode }: PlanningCalendarProps) {
+  // Log once per render to verify data arrival
+  logPlanning(planning);
+
   const [currentWeek, setCurrentWeek] = useState(0);
   const [selectedCourse, setSelectedCourse] = useState<CourseData | null>(null);
   
@@ -82,13 +91,13 @@ export default function PlanningCalendar({ planning, viewMode }: PlanningCalenda
         startTime,
         endTime,
         colorIndex: index % SUBJECT_COLORS.length
-      };
+      } as any;
     });
   }, [planning]);
   
   // Get unique subjects for color consistency
   const subjectColors = useMemo(() => {
-    const subjects = new Set(processedCourses.map(course => course.subject));
+    const subjects = new Set(processedCourses.map((course: any) => course.subject));
     const colorMap: Record<string, string> = {};
     Array.from(subjects).forEach((subject, index) => {
       colorMap[subject] = SUBJECT_COLORS[index % SUBJECT_COLORS.length];
@@ -98,7 +107,7 @@ export default function PlanningCalendar({ planning, viewMode }: PlanningCalenda
   
   // Function to get courses for a specific day and time slot
   const getCoursesAtTime = (dayIndex: number, timeSlot: string) => {
-    return processedCourses.filter(course => {
+    return processedCourses.filter((course: any) => {
       if (course.dayIndex !== dayIndex) return false;
       if (!course.startTime) return false;
       
@@ -136,12 +145,12 @@ export default function PlanningCalendar({ planning, viewMode }: PlanningCalenda
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
-        
+
         <div className="flex items-center gap-2 text-lg font-semibold">
           <Calendar className="w-5 h-5" />
           Semaine {currentWeek + 1}
         </div>
-        
+
         <button
           onClick={() => setCurrentWeek(prev => prev + 1)}
           className="p-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors"
@@ -149,36 +158,36 @@ export default function PlanningCalendar({ planning, viewMode }: PlanningCalenda
           <ChevronRight className="w-5 h-5" />
         </button>
       </div>
-      
+
       {/* Calendar Grid */}
       <div className="grid grid-cols-8 gap-1 text-sm">
         {/* Header - Time column */}
         <div className="p-2 text-center font-semibold text-gray-400">
           <Clock className="w-4 h-4 mx-auto" />
         </div>
-        
+
         {/* Header - Day columns */}
         {DAYS.slice(0, 7).map((day, dayIndex) => (
           <div className="p-2 text-center font-semibold text-[#E2B44F]" key={day}>
             {day}
           </div>
         ))}
-        
+
         {/* Time slots and courses */}
-        {TIME_SLOTS.map((timeSlot, timeIndex) => (
+        {TIME_SLOTS.map((timeSlot) => (
           <React.Fragment key={timeSlot}>
             {/* Time label */}
             <div className="p-2 text-center text-gray-400 text-xs font-mono">
               {timeSlot}
             </div>
-            
+
             {/* Day columns */}
             {DAYS.slice(0, 7).map((_, dayIndex) => {
               const coursesAtTime = getCoursesAtTime(dayIndex, timeSlot);
               
               return (
                 <div className="relative min-h-[40px] border border-slate-700" key={`${dayIndex}-${timeSlot}`}>
-                  {coursesAtTime.map((course, courseIndex) => {
+                  {coursesAtTime.map((course: any, courseIndex: number) => {
                     // Only render course if this is its start time
                     if (course.startTime !== timeSlot) return null;
                     
@@ -212,7 +221,7 @@ export default function PlanningCalendar({ planning, viewMode }: PlanningCalenda
           </React.Fragment>
         ))}
       </div>
-      
+
       {/* Course Details Modal */}
       {selectedCourse && (
         <motion.div
@@ -228,23 +237,23 @@ export default function PlanningCalendar({ planning, viewMode }: PlanningCalenda
             onClick={e => e.stopPropagation()}
           >
             <h3 className="text-xl font-bold text-[#E2B44F] mb-4">{selectedCourse.subject}</h3>
-            
+
             <div className="space-y-3 text-gray-300">
               <div className="flex items-center gap-3">
                 <User className="w-4 h-4 text-[#E2B44F]" />
                 {selectedCourse.teacher}
               </div>
-              
+
               <div className="flex items-center gap-3">
                 <Clock className="w-4 h-4 text-[#E2B44F]" />
                 {selectedCourse.startTime} - {selectedCourse.endTime}
               </div>
-              
+
               <div className="flex items-center gap-3">
                 <Calendar className="w-4 h-4 text-[#E2B44F]" />
                 {selectedCourse.day}
               </div>
-              
+
               {selectedCourse.room && (
                 <div className="flex items-center gap-3">
                   <MapPin className="w-4 h-4 text-[#E2B44F]" />
@@ -252,7 +261,7 @@ export default function PlanningCalendar({ planning, viewMode }: PlanningCalenda
                 </div>
               )}
             </div>
-            
+
             <button
               onClick={() => setSelectedCourse(null)}
               className="w-full mt-6 bg-[#E2B44F] hover:bg-[#d4a043] text-black font-semibold py-2 rounded-lg transition-colors"
