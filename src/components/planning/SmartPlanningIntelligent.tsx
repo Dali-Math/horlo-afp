@@ -1,20 +1,18 @@
 "use client";
-
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, Calendar, Table, AlertCircle } from 'lucide-react';
 import PlanningCalendar from './PlanningCalendar';
-import { PlanningManager } from '../../lib/planning-manager';
+import { parsePDF } from '../../lib/pdf-parser';
+import { ParsedSchedule, CourseData } from '../../types/planning';
 
 const SmartPlanningIntelligent: React.FC = () => {
-  const [planning, setPlanning] = useState<any>(null);
+  const [planning, setPlanning] = useState<ParsedSchedule | null>(null);
   const [hasExistingPlanning, setHasExistingPlanning] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [viewMode, setViewMode] = useState<'table' | 'calendar'>('calendar');
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const planningManager = new PlanningManager();
 
   useEffect(() => {
     checkExistingPlanning();
@@ -35,121 +33,94 @@ const SmartPlanningIntelligent: React.FC = () => {
       // Check if there's existing planning data in localStorage
       const existingData = localStorage.getItem('planning-data');
       if (existingData) {
-        const parsed = JSON.parse(existingData);
-        if (parsed && parsed.courses?.length > 0) {
-          setPlanning(parsed);
-          setHasExistingPlanning(true);
-          return;
-        }
+        const parsedData = JSON.parse(existingData) as ParsedSchedule;
+        setPlanning(parsedData);
+        setHasExistingPlanning(true);
       }
-      
-      // If no existing data found, set as false
-      setHasExistingPlanning(false);
     } catch (error) {
-      console.error('Error checking existing planning:', error);
-      setHasExistingPlanning(false);
+      console.error('Erreur lors du chargement des données existantes:', error);
     }
   };
 
+  // Function to handle file upload and parsing
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      setError('Veuillez sélectionner un fichier PDF valide.');
+      return;
+    }
 
     setIsLoading(true);
     setError('');
 
     try {
-      const parsed = await planningManager.parsePlanningFromFile(file);
-      if (parsed && parsed.courses && parsed.courses.length > 0) {
-        setPlanning(parsed);
+      // Use parsePDF directly
+      const result = await parsePDF(file);
+      
+      if (result) {
+        // Save to localStorage
+        localStorage.setItem('planning-data', JSON.stringify(result));
+        setPlanning(result);
         setHasExistingPlanning(true);
-        
-        // Save to localStorage for persistence
-        await planningManager.savePlanning(parsed);
       } else {
-        setError('Aucun cours détecté dans le fichier PDF.');
+        setError('Impossible de parser le fichier PDF.');
       }
-    } catch (error: any) {
-      console.error('Error parsing planning:', error);
-      setError(error?.message || 'Erreur lors de l\'analyse du fichier PDF.');
+    } catch (error) {
+      console.error('Erreur lors du parsing du PDF:', error);
+      setError('Erreur lors du traitement du fichier.');
     } finally {
       setIsLoading(false);
-      if (event.target) {
-        event.target.value = '';
-      }
     }
+  };
+
+  // Function to clear planning data
+  const clearPlanning = () => {
+    localStorage.removeItem('planning-data');
+    setPlanning(null);
+    setHasExistingPlanning(false);
   };
 
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
 
-  const clearPlanning = async () => {
-    try {
-      await planningManager.clearPlanning();
-      setPlanning(null);
-      setHasExistingPlanning(false);
-      setError('');
-    } catch (error) {
-      console.error('Error clearing planning:', error);
-    }
-  };
-
-  const toggleViewMode = () => {
-    setViewMode(prev => prev === 'calendar' ? 'table' : 'calendar');
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 text-white p-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <motion.h1 
-            className="text-4xl font-bold text-[#E2B44F] mb-2"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            📚 Planning Intelligent
-          </motion.h1>
-          <motion.p 
-            className="text-gray-300 text-lg"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
-            Téléchargez votre emploi du temps en PDF pour une visualisation moderne
-          </motion.p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+      <div className="max-w-7xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-8"
+        >
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+            Planning Intelligent
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Importez votre planning PDF et visualisez-le dans un calendrier interactif moderne
+          </p>
+        </motion.div>
 
-        {/* Upload Section */}
-        {!hasExistingPlanning && (
-          <motion.div 
-            className="bg-slate-800/50 border border-slate-700 rounded-2xl p-8 mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
+        {!hasExistingPlanning ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="bg-white rounded-2xl shadow-xl p-8 mb-8"
           >
             <div className="text-center">
-              <Upload className="w-16 h-16 text-[#E2B44F] mx-auto mb-4" />
-              <h2 className="text-2xl font-semibold mb-4">Importer votre planning</h2>
-              <p className="text-gray-400 mb-6">Téléchargez votre fichier PDF d'emploi du temps</p>
-              
-              <button
-                onClick={triggerFileInput}
-                disabled={isLoading}
-                className="bg-[#E2B44F] hover:bg-[#d4a043] disabled:opacity-50 text-black font-semibold px-8 py-3 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100"
-              >
-                {isLoading ? (
-                  <span className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                    Analyse en cours...
-                  </span>
-                ) : (
-                  'Choisir un fichier PDF'
-                )}
-              </button>
-              
+              <div className="mb-6">
+                <Upload className="w-16 h-16 text-blue-500 mx-auto mb-4" />
+                <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+                  Importer votre planning
+                </h2>
+                <p className="text-gray-600">
+                  Sélectionnez un fichier PDF contenant votre emploi du temps
+                </p>
+              </div>
+
               <input
                 ref={fileInputRef}
                 type="file"
@@ -157,122 +128,86 @@ const SmartPlanningIntelligent: React.FC = () => {
                 onChange={handleFileUpload}
                 className="hidden"
               />
-            </div>
 
-            {error && (
-              <motion.div 
-                className="mt-6 p-4 bg-red-900/50 border border-red-700 rounded-lg flex items-center gap-3"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={triggerFileInput}
+                disabled={isLoading}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <AlertCircle className="w-5 h-5 text-red-400" />
-                <span className="text-red-300">{error}</span>
-              </motion.div>
-            )}
-          </motion.div>
-        )}
+                {isLoading ? 'Traitement en cours...' : 'Choisir un fichier PDF'}
+              </motion.button>
 
-        {/* Planning Display */}
-        {hasExistingPlanning && planning && (
-          <motion.div 
-            className="bg-slate-800/50 border border-slate-700 rounded-2xl p-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            {/* View Mode Toggle */}
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold text-[#E2B44F]">Votre Planning</h2>
-              <div className="flex items-center gap-4">
-                <div className="flex bg-slate-700/50 rounded-lg p-1">
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center justify-center"
+                >
+                  <AlertCircle className="w-5 h-5 mr-2" />
+                  {error}
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
+        ) : (
+          <AnimatePresence mode="wait">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              {/* View Mode Toggle */}
+              <div className="flex justify-center mb-6">
+                <div className="bg-white rounded-lg p-1 shadow-md">
                   <button
                     onClick={() => setViewMode('calendar')}
-                    className={`px-4 py-2 rounded-md flex items-center gap-2 transition-all ${
-                      viewMode === 'calendar' 
-                        ? 'bg-[#E2B44F] text-black font-semibold' 
-                        : 'text-gray-300 hover:text-white'
+                    className={`flex items-center px-4 py-2 rounded-md transition-all duration-200 ${
+                      viewMode === 'calendar'
+                        ? 'bg-blue-600 text-white shadow-md'
+                        : 'text-gray-600 hover:text-gray-800'
                     }`}
                   >
-                    <Calendar className="w-4 h-4" />
+                    <Calendar className="w-4 h-4 mr-2" />
                     Calendrier
                   </button>
                   <button
                     onClick={() => setViewMode('table')}
-                    className={`px-4 py-2 rounded-md flex items-center gap-2 transition-all ${
-                      viewMode === 'table' 
-                        ? 'bg-[#E2B44F] text-black font-semibold' 
-                        : 'text-gray-300 hover:text-white'
+                    className={`flex items-center px-4 py-2 rounded-md transition-all duration-200 ${
+                      viewMode === 'table'
+                        ? 'bg-blue-600 text-white shadow-md'
+                        : 'text-gray-600 hover:text-gray-800'
                     }`}
                   >
-                    <Table className="w-4 h-4" />
+                    <Table className="w-4 h-4 mr-2" />
                     Tableau
                   </button>
                 </div>
-                <button
-                  onClick={clearPlanning}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all"
-                >
-                  Effacer
-                </button>
-                <button
-                  onClick={triggerFileInput}
-                  className="px-4 py-2 bg-[#E2B44F] hover:bg-[#d4a043] text-black font-semibold rounded-lg transition-all"
-                >
-                  Nouveau PDF
-                </button>
               </div>
-            </div>
 
-            {/* Conditional View Rendering */}
-            <AnimatePresence mode="wait">
-              {viewMode === 'table' ? (
-                <motion.div
-                  key="table"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {Array.isArray((planning as any).courses) && (planning as any).courses.length > 0 ? (
-                    <table className="w-full border border-gray-700 text-sm text-white mt-6">
-                      <thead className="bg-[#E2B44F]/20">
-                        <tr>
-                          <th className="p-2 text-left">Jour</th>
-                          <th className="p-2 text-left">Horaire</th>
-                          <th className="p-2 text-left">Matière</th>
-                          <th className="p-2 text-left">Professeur</th>
-                          <th className="p-2 text-left">Salle</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {(planning as any).courses.map((c: any, i: number) => (
-                          <tr className="border-t border-gray-700 hover:bg-[#E2B44F]/10" key={i}>
-                            <td className="p-2 text-slate-300">{c.day}</td>
-                            <td className="p-2 text-slate-400">{c.startTime && c.endTime ? `${c.startTime} - ${c.endTime}` : c.time || '-'}</td>
-                            <td className="p-2 text-[#E2B44F] font-semibold">{c.subject}</td>
-                            <td className="p-2">{c.teacher}</td>
-                            <td className="p-2">{c.room || '-'}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  ) : (
-                    <p className="text-gray-300">Aucun cours à afficher.</p>
-                  )}
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="calendar"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <PlanningCalendar planning={planning as any} />
-                </motion.div>
+              {/* Planning Display */}
+              {planning && (
+                <PlanningCalendar
+                  planning={planning}
+                  viewMode={viewMode}
+                />
               )}
-            </AnimatePresence>
-          </motion.div>
+
+              {/* Clear Planning Button */}
+              <div className="text-center mt-8">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={clearPlanning}
+                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200"
+                >
+                  Supprimer le planning
+                </motion.button>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         )}
       </div>
     </div>
