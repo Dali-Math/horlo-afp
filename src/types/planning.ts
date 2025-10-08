@@ -7,13 +7,12 @@ export interface CourseData {
   room?: string;
   startTime?: string;
   endTime?: string;
+  duration?: string;
 }
-
 export interface ParsedSchedule {
   courses: CourseData[];
   metadata?: Record<string, any>;
 }
-
 export interface PlanningData {
   courses: CourseData[];
   metadata?: Record<string, any>;
