@@ -32,14 +32,22 @@ const SmartPlanningIntelligent: React.FC = () => {
   // Function to check for existing planning
   const checkExistingPlanning = async () => {
     try {
-      const parsed = await planningManager.parsePlanning();
-      setHasExistingPlanning(!!parsed && parsed.courses?.length > 0);
-      
-      if (parsed && parsed.courses?.length > 0) {
-        setPlanning(parsed);
+      // Check if there's existing planning data in localStorage
+      const existingData = localStorage.getItem('planning-data');
+      if (existingData) {
+        const parsed = JSON.parse(existingData);
+        if (parsed && parsed.courses?.length > 0) {
+          setPlanning(parsed);
+          setHasExistingPlanning(true);
+          return;
+        }
       }
+      
+      // If no existing data found, set as false
+      setHasExistingPlanning(false);
     } catch (error) {
       console.error('Error checking existing planning:', error);
+      setHasExistingPlanning(false);
     }
   };
 
