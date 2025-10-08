@@ -6,13 +6,13 @@ export default function PodcastsPage() {
       id: "coulisses",
       title: "Dans les Coulisses du Temps",
       description: "Voyage dans l’atelier, secrets & techniques horlogères.",
-      embedUrl: "https://soundcloud.com/user-555747421/dans_les_rouages_du_temps/s-yk6jMmCWxyx?si=3e3121745a85429b8e29f67931b60682&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
+      embedUrl: "https://soundcloud.com/user-555747421/dans_les_coulisses_du_temps/s-Xw2rx3p2LOw",
     },
     {
       id: "rouages",
       title: "Dans les Rouages du Temps",
       description: "Exploration des mécanismes et roues dans la montre.",
-      embedUrl: "https://soundcloud.com/user-555747421#:~:text=https%3A//soundcloud.com/user%2D555747421/dans_les_coulisses_du_temps/s%2DXw2rx3p2LOw%3Fsi%3D6352afb3a5ab431b83d4517f0dd3c1e1%26utm_source%3Dclipboard%26utm_medium%3Dtext%26utm_campaign%3Dsocial_sharing",
+      embedUrl: "https://soundcloud.com/user-555747421/dans_les_rouages_du_temps/s-yk6jMmCWxyx",
     },
     {
       id: "vocabulaire",
