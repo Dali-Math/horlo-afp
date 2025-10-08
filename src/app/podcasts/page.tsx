@@ -6,7 +6,7 @@ export default function PodcastsPage() {
       id: "coulisses",
       title: "Dans les Coulisses du Temps",
       description: "Voyage dans l’atelier, secrets & techniques horlogères.",
-      embedUrl: "https://soundcloud.com/user-555747421/dans_les_coulisses_du_temps/s-Xw2rx3p2LOw",
+      embedUrl: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%3Atracks%3A2185373015%3Fsecret_token%3Ds-Xw2rx3p2LOw&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true",
     },
     {
       id: "rouages",
