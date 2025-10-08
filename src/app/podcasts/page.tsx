@@ -12,7 +12,7 @@ export default function PodcastsPage() {
       id: "rouages",
       title: "Dans les Rouages du Temps",
       description: "Exploration des mécanismes et roues dans la montre.",
-      embedUrl: "https://soundcloud.com/user-555747421/dans_les_rouages_du_temps/s-yk6jMmCWxyx",
+      embedUrl: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%3Atracks%3A2185374163%3Fsecret_token%3Ds-yk6jMmCWxyx&color=%23ff5500&auto_play=false&hide_related=false&show_user=true&show_reposts=false&show_teaser=true&visual=true",
     },
     {
       id: "vocabulaire",
