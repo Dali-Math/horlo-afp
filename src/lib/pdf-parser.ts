@@ -1,6 +1,4 @@
 import * as pdfjsLib from 'pdfjs-dist';
-import { CourseData } from '@/components/planning/SmartPlanningIntelligent';
-
 // Configure PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
@@ -34,181 +32,101 @@ export class PDFParser {
   async parsePDF(file: File): Promise<ParsedSchedule> {
     try {
       const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+      const pdf = await loadingTask.promise;
       
-      let allText = '';
+      let fullText = '';
       
       // Extract text from all pages
-      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-        const page = await pdf.getPage(pageNum);
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
         const textContent = await page.getTextContent();
-        
         const pageText = textContent.items
           .map((item: any) => item.str)
           .join(' ');
-        allText += pageText + '\n';
-      }
-
-      console.log('Extracted text from PDF:', allText);
-      
-      // Try main parser first
-      const courses = this.extractCourses(allText);
-      
-      // If no courses found, try alternative parser for AFP format
-      if (courses.length === 0) {
-        console.warn('Aucun cours trouvé avec le parser principal, tentative alternative...');
-        return this.alternativeParser(allText);
+        fullText += pageText + '\n';
       }
       
-      return {
-        totalCourses: courses.length,
-        courses,
-      };
+      return this.parseScheduleText(fullText);
     } catch (error) {
       console.error('Error parsing PDF:', error);
       throw error;
     }
   }
 
-  private extractCourses(text: string): any[] {
-    const courses: any[] = [];
+  private parseScheduleText(text: string): ParsedSchedule {
     const lines = text.split('\n').filter(line => line.trim().length > 0);
+    const courses: ParsedSchedule['courses'] = [];
     
     let currentDay = '';
     
     for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
+      const line = lines[i].trim();
       
-      // Check if line contains a day
+      // Check for day names
       const dayMatch = line.match(this.dayRegex);
       if (dayMatch) {
-        const day = dayMatch[0].toLowerCase();
-        // Convert abbreviated day to full name
-        currentDay = this.dayAbbreviations[day] || dayMatch[0];
+        const foundDay = dayMatch[0].toLowerCase();
+        // If it's an abbreviation, expand it
+        currentDay = this.dayAbbreviations[foundDay] || dayMatch[0];
       }
       
-      // Try to extract course information from the line
-      const timeMatch = line.match(this.timeRangeRegex);
-      
-      if (currentDay && (timeMatch || this.looksLikeCourse(line))) {
-        const course = {
-          day: currentDay,
-          time: timeMatch ? `${timeMatch[1]} - ${timeMatch[2]}` : 'N/A',
-          subject: this.extractSubject(line),
-          teacher: this.extractTeacher(line),
-          room: this.extractRoom(line),
-        };
-        
-        // Only add if we found meaningful information
-        if (course.subject || course.teacher || course.room) {
-          courses.push(course);
-        }
-      }
-    }
-    
-    return courses;
-  }
-
-  // Alternative parser for AFP format (horizontal layout with abbreviated days)
-  private alternativeParser(text: string): ParsedSchedule {
-    const courses: any[] = [];
-    const lines = text.split('\n').filter(line => line.trim().length > 0);
-    
-    // Pattern: subject - teacher - room (without explicit time)
-    const altRegex = /([A-Za-zÀ-ÿ\s]{3,})\s*-\s*([A-Za-zÀ-ÿ\s]+)\s*-\s*([A-Z0-9]+)/g;
-    
-    // Pattern: day + date + content
-    const dayDatePattern = /(Lu|Ma|Me|Je|Ve|Sa|Di)\s+(\d+)\s+([^\n]+)/gi;
-    
-    let match;
-    while ((match = dayDatePattern.exec(text)) !== null) {
-      const [, dayAbbr, date, content] = match;
-      const day = this.dayAbbreviations[dayAbbr.toLowerCase()] || dayAbbr;
-      
-      // Try to extract course info from content
-      const subject = this.extractSubject(content);
-      const teacher = this.extractTeacher(content);
-      const room = this.extractRoom(content);
-      
-      if (subject || teacher || room) {
-        courses.push({
-          day,
-          time: 'N/A',
-          subject: subject || 'Non spécifié',
-          teacher: teacher || '',
-          room: room || '',
-        });
-      }
-    }
-    
-    // If still no courses, try simple pattern matching
-    if (courses.length === 0) {
-      let currentDay = '';
-      
-      for (const line of lines) {
-        // Check for day abbreviations
-        const dayMatch = line.match(/(Lu|Ma|Me|Je|Ve|Sa|Di)\s+(\d+)/i);
-        if (dayMatch) {
-          currentDay = this.dayAbbreviations[dayMatch[1].toLowerCase()] || dayMatch[1];
-        }
-        
-        // Look for content that might be a course
-        if (currentDay && line.length > 10 && !line.includes('Formation') && !line.includes('Planning')) {
-          const subject = this.extractSubject(line);
-          const teacher = this.extractTeacher(line);
-          const room = this.extractRoom(line);
+      // Look for time ranges
+      const timeMatches = Array.from(line.matchAll(this.timeRangeRegex));
+      if (timeMatches.length > 0 && currentDay) {
+        for (const timeMatch of timeMatches) {
+          const timeRange = `${timeMatch[1]} - ${timeMatch[2]}`;
           
-          if (subject || teacher || room) {
+          // Extract subject, teacher, and room from surrounding context
+          const context = line + ' ' + (lines[i + 1] || '');
+          const subject = this.extractSubject(context);
+          const teacher = this.extractTeacher(context);
+          const room = this.extractRoom(context);
+          
+          if (subject) {
             courses.push({
               day: currentDay,
-              time: 'N/A',
-              subject: subject || line.trim().substring(0, 50),
-              teacher: teacher || '',
-              room: room || '',
+              time: timeRange,
+              subject,
+              teacher,
+              room
             });
           }
         }
       }
     }
     
-    console.log(`Alternative parser found ${courses.length} courses`);
-    
     return {
       totalCourses: courses.length,
-      courses,
+      courses
     };
   }
 
-  private looksLikeCourse(line: string): boolean {
-    // A line looks like a course if it has teacher or room indicators
-    return this.teacherRegex.test(line) || this.roomRegex.test(line) || /[A-Z][0-9]+/.test(line);
-  }
-
   private extractSubject(text: string): string {
-    // Remove days, times, teachers, and rooms to isolate the subject
+    // Remove day names, times, and other metadata to isolate the subject
     let subject = text
       .replace(this.dayRegex, '')
       .replace(this.timeRangeRegex, '')
       .replace(/[0-9]{1,2}[:h.][0-9]{2}/g, '')
       .trim();
-
+    
     // If subject contains teacher or room info, extract only the part before
     const teacherMatch = subject.match(/(M\.|Mme|Mr|Mrs|Prof|Professeur)/i);
     if (teacherMatch) {
       subject = subject.substring(0, teacherMatch.index).trim();
     }
-
+    
     const roomMatch = subject.match(/(salle|room|local|\b[A-Z][0-9]+\b)/i);
     if (roomMatch) {
       subject = subject.substring(0, roomMatch.index).trim();
     }
-
+    
     // Clean up and take first few words
     const words = subject.split(/\s+/).filter(w => w.length > 0);
     if (words.length > 0) {
       return words.slice(0, Math.min(5, words.length)).join(' ');
     }
-
+    
     return '';
   }
 
@@ -243,4 +161,10 @@ export class PDFParser {
     
     return '';
   }
+}
+
+// Export a standalone function for convenience
+export async function parsePDF(file: File): Promise<ParsedSchedule> {
+  const parser = new PDFParser();
+  return parser.parsePDF(file);
 }
