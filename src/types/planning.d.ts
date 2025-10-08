@@ -1,5 +1,5 @@
 export type CourseData = {
-  id: string;
+  id?: string;
   day?: string;
   time?: string;
   startTime?: string;
@@ -8,7 +8,6 @@ export type CourseData = {
   teacher?: string;
   room?: string;
 };
-
 export type ParsedSchedule = {
   totalCourses: number;
   courses: CourseData[];
