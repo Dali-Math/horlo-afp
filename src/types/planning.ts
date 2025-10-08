@@ -1,13 +1,20 @@
 export interface CourseData {
-  id: string;
+  id?: string;
   day: string;
   time: string;
   subject: string;
-  teacher: string;
-  room: string;
+  teacher?: string;
+  room?: string;
+  startTime?: string;
+  endTime?: string;
 }
 
 export interface ParsedSchedule {
-  totalCourses: number;
   courses: CourseData[];
+  metadata?: Record<string, any>;
+}
+
+export interface PlanningData {
+  courses: CourseData[];
+  metadata?: Record<string, any>;
 }
