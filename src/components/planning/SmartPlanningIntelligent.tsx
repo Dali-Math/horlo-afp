@@ -7,7 +7,6 @@ import PlanningCalendar from './PlanningCalendar';
 import FilterBar from './FilterBar';
 import Legend from './Legend';
 import * as pdfjsLib from 'pdfjs-dist';
-
 // Configure pdf.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
@@ -36,6 +35,7 @@ const SmartPlanningIntelligent: React.FC<SmartPlanningIntelligentProps> = ({
     professors: [],
     rooms: [],
   });
+
   const [isUploading, setIsUploading] = useState(false);
   const [planningData, setPlanningData] = useState<PlanningData | null>(null);
   const [planning, setPlanning] = useState<PlanningData | null>(null);
@@ -223,7 +223,11 @@ const SmartPlanningIntelligent: React.FC<SmartPlanningIntelligentProps> = ({
           {(planningState.data || planningData) && (
             <FilterBar
               planning={planningState.data || planningData}
-              filters={filters}
+              filters={{
+                ...filters,
+                totalCourses: filters.totalCourses ?? 0,
+                metadata: filters.metadata ?? {}
+              }}
               onFiltersChange={setFilters}
             />
           )}
