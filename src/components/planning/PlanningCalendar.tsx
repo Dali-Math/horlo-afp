@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, User } from 'lucide
 
 // Define types locally to avoid import errors
 interface CourseData {
+  id?: string;
   day: string;
   startTime?: string;
   endTime?: string;
