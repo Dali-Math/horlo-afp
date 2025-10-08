@@ -1,4 +1,21 @@
 export default function PodcastsPage() {
+  const mesPodcasts = [
+    {
+      id: "episode1",
+      title: "L’art du démontage horloger",
+      description: "Découvre les gestes essentiels pour démonter un mouvement horloger pas à pas.",
+      audio: "/audio/horlolearn-episode1.mp3",
+      duration: "08:45"
+    },
+    {
+      id: "episode2",
+      title: "Le rôle des huiles et lubrifiants",
+      description: "Pourquoi et comment bien lubrifier un mouvement mécanique.",
+      audio: "/audio/horlolearn-episode2.mp3",
+      duration: "10:20"
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-12">
@@ -6,6 +23,25 @@ export default function PodcastsPage() {
         <p className="text-lg text-gray-700 mb-8">
           Sélection de podcasts horlogers, lecteurs et plateformes pour apprendre et s’inspirer en audio.
         </p>
+
+        {/* 🟥 Nouvelle section : tes podcasts HorloLearn */}
+        <section className="bg-white rounded-lg shadow-md p-6 mb-10 border border-[#E2B44F]">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-6">🎙 Mes podcasts HorloLearn</h2>
+
+          <div className="space-y-8">
+            {mesPodcasts.map((p) => (
+              <div key={p.id} className="border-l-4 border-[#E2B44F] pl-4">
+                <h3 className="text-xl font-semibold text-gray-900">{p.title}</h3>
+                <p className="text-gray-600 mb-3">{p.description}</p>
+                <audio controls className="w-full mb-1">
+                  <source src={p.audio} type="audio/mpeg" />
+                  Ton navigateur ne supporte pas la lecture audio.
+                </audio>
+                <p className="text-sm text-gray-500">⏱ Durée : {p.duration}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* Lecteurs et Plateformes */}
         <section className="bg-white rounded-lg shadow-md p-6 mb-8">
