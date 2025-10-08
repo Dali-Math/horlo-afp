@@ -60,9 +60,12 @@ const SmartPlanningIntelligent: React.FC = () => {
       const result = await parsePDF(file);
       
       if (result) {
+        // Fix TypeScript error by adding id to courses
+        const fixedCourses = result.courses.map((c, i) => ({ id: i.toString(), ...c }));
+        setPlanning({ ...result, courses: fixedCourses });
+        
         // Save to localStorage
-        localStorage.setItem('planning-data', JSON.stringify(result));
-        setPlanning(result);
+        localStorage.setItem('planning-data', JSON.stringify({ ...result, courses: fixedCourses }));
         setHasExistingPlanning(true);
       } else {
         setError('Impossible de parser le fichier PDF.');
@@ -120,7 +123,6 @@ const SmartPlanningIntelligent: React.FC = () => {
                   Sélectionnez un fichier PDF contenant votre emploi du temps
                 </p>
               </div>
-
               <input
                 ref={fileInputRef}
                 type="file"
@@ -128,7 +130,6 @@ const SmartPlanningIntelligent: React.FC = () => {
                 onChange={handleFileUpload}
                 className="hidden"
               />
-
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -138,7 +139,6 @@ const SmartPlanningIntelligent: React.FC = () => {
               >
                 {isLoading ? 'Traitement en cours...' : 'Choisir un fichier PDF'}
               </motion.button>
-
               {error && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -186,7 +186,6 @@ const SmartPlanningIntelligent: React.FC = () => {
                   </button>
                 </div>
               </div>
-
               {/* Planning Display */}
               {planning && (
                 <PlanningCalendar
@@ -194,7 +193,6 @@ const SmartPlanningIntelligent: React.FC = () => {
                   viewMode={viewMode}
                 />
               )}
-
               {/* Clear Planning Button */}
               <div className="text-center mt-8">
                 <motion.button
