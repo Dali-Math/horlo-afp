@@ -18,7 +18,7 @@ const SmartPlanningIntelligent: React.FC = () => {
     checkExistingPlanning();
     const savedViewMode = localStorage.getItem('planning-view-mode');
     if (savedViewMode === 'table' || savedViewMode === 'calendar') {
-      setViewMode(savedViewMode);
+      setViewMode(savedViewMode as 'table' | 'calendar');
     }
   }, []);
 
@@ -30,7 +30,6 @@ const SmartPlanningIntelligent: React.FC = () => {
   // Function to check for existing planning
   const checkExistingPlanning = async () => {
     try {
-      // Check if there's existing planning data in localStorage
       const existingData = localStorage.getItem('planning-data');
       if (existingData) {
         const parsedData = JSON.parse(existingData) as ParsedSchedule;
@@ -46,26 +45,20 @@ const SmartPlanningIntelligent: React.FC = () => {
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
     if (file.type !== 'application/pdf') {
       setError('Veuillez sélectionner un fichier PDF valide.');
       return;
     }
-
     setIsLoading(true);
     setError('');
-
     try {
-      // Use parsePDF directly
       const result = await parsePDF(file);
-      
       if (result) {
-        // Fix TypeScript error by adding id to courses
-        const fixedCourses = result.courses.map((c, i) => ({ id: i.toString(), ...c }));
-        setPlanning({ ...result, courses: fixedCourses });
-        
-        // Save to localStorage
-        localStorage.setItem('planning-data', JSON.stringify({ ...result, courses: fixedCourses }));
+        // Ensure each course has a stable id and normalize structure
+        const fixedCourses = result.courses.map((c, i) => ({ id: c.id ?? i.toString(), ...c }));
+        const normalized: ParsedSchedule = { ...result, courses: fixedCourses };
+        setPlanning(normalized);
+        localStorage.setItem('planning-data', JSON.stringify(normalized));
         setHasExistingPlanning(true);
       } else {
         setError('Impossible de parser le fichier PDF.');
@@ -89,6 +82,9 @@ const SmartPlanningIntelligent: React.FC = () => {
     fileInputRef.current?.click();
   };
 
+  // Explicit planningData propagation (for debugging/guaranteed props)
+  const planningData = planning ?? { week: '', courses: [] } as unknown as ParsedSchedule;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-7xl mx-auto">
@@ -98,9 +94,7 @@ const SmartPlanningIntelligent: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-8"
         >
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Planning Intelligent
-          </h1>
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">Planning Intelligent</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Importez votre planning PDF et visualisez-le dans un calendrier interactif moderne
           </p>
@@ -116,12 +110,8 @@ const SmartPlanningIntelligent: React.FC = () => {
             <div className="text-center">
               <div className="mb-6">
                 <Upload className="w-16 h-16 text-blue-500 mx-auto mb-4" />
-                <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-                  Importer votre planning
-                </h2>
-                <p className="text-gray-600">
-                  Sélectionnez un fichier PDF contenant votre emploi du temps
-                </p>
+                <h2 className="text-2xl font-semibold text-gray-800 mb-2">Importer votre planning</h2>
+                <p className="text-gray-600">Sélectionnez un fichier PDF contenant votre emploi du temps</p>
               </div>
               <input
                 ref={fileInputRef}
@@ -186,13 +176,17 @@ const SmartPlanningIntelligent: React.FC = () => {
                   </button>
                 </div>
               </div>
+
               {/* Planning Display */}
               {planning && (
-                <PlanningCalendar
-                  planning={planning}
-                  viewMode={viewMode}
-                />
+                <PlanningCalendar planning={planning} viewMode={viewMode} />
               )}
+
+              {/* Explicit propagation for testing */}
+              {!planning && (
+                <PlanningCalendar planning={planningData} viewMode={viewMode} />
+              )}
+
               {/* Clear Planning Button */}
               <div className="text-center mt-8">
                 <motion.button
@@ -211,5 +205,4 @@ const SmartPlanningIntelligent: React.FC = () => {
     </div>
   );
 };
-
 export default SmartPlanningIntelligent;
