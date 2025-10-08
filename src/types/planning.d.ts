@@ -20,6 +20,9 @@ export type PlanningData = {
     totalCourses?: number;
     source?: string;
     lastUpdated?: string;
+    subjects?: string[];
+    professors?: string[];
+    rooms?: string[];
   };
 };
 
