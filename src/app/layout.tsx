@@ -1,5 +1,6 @@
 import './globals.css'
 import { Analytics } from '@vercel/analytics/react'
+import Navbar from '@/components/Navbar'
 
 export const metadata = {
   title: 'Horlo-AFP',
@@ -14,6 +15,7 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body>
+        <Navbar />
         {children}
         <Analytics />
       </body>
