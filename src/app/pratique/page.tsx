@@ -18,7 +18,7 @@ const tutorials = [
   {
     id: 'tuto-debutant',
     title: 'Initiation: démontage-remontage d’un mouvement',
-    video: 'https://www.youtube.com/embed/VIDEO_ID_fUpjNPkoGh8C5KQL',
+    video: 'https://www.youtube-nocookie.com/embed/SlB9FukapN4',
     pdf: '/pdf/tutoriels/initiation-demontage.pdf',
     duration: '12:35',
     level: 'Débutant',
@@ -26,7 +26,7 @@ const tutorials = [
   {
     id: 'tuto-intermediaire',
     title: 'Huilage et lubrification: bonnes pratiques',
-    video: 'https://www.youtube.com/embed/VIDEO_ID_8w24ipBE2kE-MwfQ',
+    video: 'https://www.youtube-nocookie.com/embed/ARb8Vo4refs',
     pdf: '/pdf/tutoriels/huilage-bonnes-pratiques.pdf',
     duration: '18:20',
     level: 'Intermédiaire',
@@ -34,7 +34,7 @@ const tutorials = [
   {
     id: 'tuto-avance',
     title: 'Chronographe: contrôle et réglage',
-    video: 'https://www.youtube.com/embed/VIDEO_ID_snPlz4zkkYnBwTKl',
+    video: 'https://www.youtube-nocookie.com/embed/eMQ6TkdEJvA',
     pdf: '/pdf/tutoriels/chronographe-reglage.pdf',
     duration: '22:10',
     level: 'Avancé',
@@ -70,6 +70,7 @@ function SectionTitle({ children, subtitle }: { children: React.ReactNode; subti
 export default function PratiqueHorlogere() {
   return (
     <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_100%_0%,rgba(255,0,0,.08),transparent_60%),radial-gradient(1000px_500px_at_0%_100%,rgba(255,255,255,.06),transparent_60%),linear-gradient(135deg,#0f172a,#0b1220)] text-white">
+
       {/* Banner video (local, autoplay loop, muted, no controls) */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none opacity-20 bg-[url('/swiss/pattern-cross.svg')] bg-[length:40px_40px]"></div>
@@ -165,12 +166,7 @@ export default function PratiqueHorlogere() {
                 </div>
                 <p className="text-sm text-slate-400 mb-4">Durée ~ {tuto.duration}</p>
                 <div className="flex items-center gap-3">
-                  <Link
-                    className="inline-flex items-center gap-2 text-sm font-medium text-red-300 hover:text-white"
-                    href={tuto.pdf}
-                    rel="noopener"
-                    target="_blank"
-                  >
+                  <Link className="inline-flex items-center gap-2 text-sm font-medium text-red-300 hover:text-white" href={tuto.pdf} rel="noopener" target="_blank">
                     <Download className="w-4 h-4" /> Télécharger le PDF
                   </Link>
                 </div>
