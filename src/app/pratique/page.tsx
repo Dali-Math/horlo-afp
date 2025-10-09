@@ -1,12 +1,10 @@
 "use client";
 import React from 'react';
 import Link from 'next/link';
-import { Clock, Wrench, BookOpen, Hammer, Zap, Award, Download, PlayCircle, FileText } from 'lucide-react';
+import { Clock, Wrench, BookOpen, Hammer, Zap, Award, Download, PlayCircle, FileText, Youtube } from 'lucide-react';
 
-// Vidéo bannière locale
 const BANNER_VIDEO_SRC = "/videos/Editor — Clideo.mp4";
 
-// Galerie images
 const gallery = [
   { src: '/pratique/gestes/rodage-1.jpg', alt: 'Rodage - étape 1' },
   { src: '/pratique/gestes/huilage.gif', alt: 'Huilage - animation' },
@@ -15,7 +13,6 @@ const gallery = [
   { src: '/pratique/gestes/precision-balance.gif', alt: 'Réglage du balancier' },
 ];
 
-// Tutoriels vidéo (corrigé)
 const tutorials = [
   {
     id: 'tuto-debutant',
@@ -24,33 +21,34 @@ const tutorials = [
     pdf: '/pdf/tutoriels/initiation-demontage.pdf',
     duration: '12:35',
     level: 'Débutant',
+    youtube: 'https://www.youtube.com/watch?v=SlB9FukapN4',
   },
   {
     id: 'tuto-intermediaire',
     title: 'Huilage et lubrification : bonnes pratiques',
-    video: 'https://www.youtube.com/watch?v=ARb8Vo4refs&t=426s',
+    video: 'https://www.youtube-nocookie.com/embed/ARb8Vo4refs',
     pdf: '/pdf/tutoriels/huilage-bonnes-pratiques.pdf',
     duration: '18:20',
     level: 'Intermédiaire',
+    youtube: 'https://www.youtube.com/watch?v=ARb8Vo4refs',
   },
   {
     id: 'tuto-avance',
     title: 'Chronographe : contrôle et réglage',
-    video: 'https://www.youtube.com/watch?v=eMQ6TkdEJvA',
+    video: 'https://www.youtube-nocookie.com/embed/eMQ6TkdEJvA',
     pdf: '/pdf/tutoriels/chronographe-reglage.pdf',
     duration: '22:10',
     level: 'Avancé',
+    youtube: 'https://www.youtube.com/watch?v=eMQ6TkdEJvA',
   },
 ];
 
-// Ressources PDF
 const pdfCards = [
   { id: 'pdf-rodage', title: 'Guide complet du rodage', cover: '/pdf/previews/rodage-cover.jpg', href: '/pdf/rodage-guide.pdf', pages: 24 },
   { id: 'pdf-outils', title: 'Maniement des outils horlogers', cover: '/pdf/previews/outils-cover.jpg', href: '/pdf/outils-maniement.pdf', pages: 32 },
   { id: 'pdf-reglage', title: 'Réglage & précision', cover: '/pdf/previews/reglage-cover.jpg', href: '/pdf/reglage-precision.pdf', pages: 28 },
 ];
 
-// Catégories principales
 const categories = [
   { id: 'gestes', icon: Hammer, title: 'Gestes de base', description: 'Maîtrisez les techniques fondamentales', color: 'from-amber-500 to-yellow-600', items: ['Rodage', 'Huilage', 'Démontage', 'Remontage'], link: '/ressources/gestes' },
   { id: 'outils', icon: Wrench, title: "Maniement d'outils", description: "Apprenez à utiliser l'outillage horloger", color: 'from-blue-500 to-indigo-600', items: ['Tournevis', 'Brucelles', 'Loupe', 'Établi'], link: '/ressources/outils' },
@@ -74,8 +72,7 @@ function SectionTitle({ children, subtitle }: { children: React.ReactNode; subti
 export default function PratiqueHorlogere() {
   return (
     <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_100%_0%,rgba(255,0,0,.08),transparent_60%),radial-gradient(1000px_500px_at_0%_100%,rgba(255,255,255,.06),transparent_60%),linear-gradient(135deg,#0f172a,#0b1220)] text-white">
-
-      {/* Vidéo bannière */}
+      
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none opacity-20 bg-[url('/swiss/pattern-cross.svg')] bg-[length:40px_40px]"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -98,55 +95,11 @@ export default function PratiqueHorlogere() {
         </div>
       </section>
 
-      {/* Catégories */}
-      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {categories.map((category, index) => {
-            const Icon = category.icon;
-            return (
-              <div key={category.id} className="group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-red-400/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-red-500/20">
-                <div className="w-16 h-16 flex items-center justify-center mb-6 rounded-2xl shadow-lg bg-gradient-to-br from-red-500/20 to-red-600/10">
-                  <Icon className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-red-300 transition-colors">{category.title}</h3>
-                <p className="text-slate-400 mb-6 leading-relaxed">{category.description}</p>
-                <ul className="space-y-2 mb-6">
-                  {category.items.map((item, idx) => (
-                    <li className="flex items-center text-sm text-slate-300" key={idx}>
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-400 mr-3"></span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <Link className="block" href={category.link}>
-                  <button className="w-full py-3 px-4 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-red-500/40">
-                    Explorer
-                  </button>
-                </Link>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Galerie */}
-      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <SectionTitle subtitle="Images pédagogiques HD et animations">Galerie des gestes</SectionTitle>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {gallery.map((item, idx) => (
-            <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/10" key={idx}>
-              <img src={item.src} alt={item.alt} className="object-cover w-full h-full hover:scale-105 transition-transform duration-300" />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Tutoriels vidéo */}
       <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <SectionTitle subtitle="Pas à pas en vidéo avec fiches PDF téléchargeables">Tutoriels vidéo</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {tutorials.map((tuto) => (
-            <div key={tuto.id} className="bg-slate-900/60 border border-white/10 rounded-2xl overflow-hidden hover:border-red-400/40 transition">
+            <div className="bg-slate-900/60 border border-white/10 rounded-2xl overflow-hidden hover:border-red-400/40 transition" key={tuto.id}>
               <div className="aspect-video w-full">
                 <iframe
                   className="w-full h-full"
@@ -164,9 +117,12 @@ export default function PratiqueHorlogere() {
                   <span className="text-xs px-2 py-0.5 rounded bg-white/10 text-slate-200">{tuto.level}</span>
                 </div>
                 <p className="text-sm text-slate-400 mb-4">Durée ~ {tuto.duration}</p>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <Link className="inline-flex items-center gap-2 text-sm font-medium text-red-300 hover:text-white" href={tuto.pdf} rel="noopener" target="_blank">
                     <Download className="w-4 h-4" /> Télécharger le PDF
+                  </Link>
+                  <Link className="inline-flex items-center gap-2 text-sm font-medium text-red-400 hover:text-white" href={tuto.youtube} rel="noopener" target="_blank">
+                    <Youtube className="w-4 h-4" /> Regarder sur YouTube
                   </Link>
                 </div>
               </div>
@@ -174,8 +130,6 @@ export default function PratiqueHorlogere() {
           ))}
         </div>
       </section>
-
-      {/* Section PDF & CTA identiques */}
     </div>
   );
 }
