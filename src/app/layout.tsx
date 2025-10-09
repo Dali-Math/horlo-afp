@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from '@/components/Navbar';
+import { Analytics } from '@vercel/analytics/react';
 
 export default function RootLayout({
   children,
@@ -52,6 +53,7 @@ export default function RootLayout({
             © 2025 HorloLearn. Tous droits réservés.
           </p>
         </footer>
+        <Analytics />
       </body>
     </html>
   );
