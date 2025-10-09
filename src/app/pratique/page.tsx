@@ -72,7 +72,8 @@ function SectionTitle({ children, subtitle }: { children: React.ReactNode; subti
 export default function PratiqueHorlogere() {
   return (
     <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_100%_0%,rgba(255,0,0,.08),transparent_60%),radial-gradient(1000px_500px_at_0%_100%,rgba(255,255,255,.06),transparent_60%),linear-gradient(135deg,#0f172a,#0b1220)] text-white">
-      
+
+      {/* Bannière vidéo */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none opacity-20 bg-[url('/swiss/pattern-cross.svg')] bg-[length:40px_40px]"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -95,6 +96,7 @@ export default function PratiqueHorlogere() {
         </div>
       </section>
 
+      {/* Tutoriels vidéo */}
       <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <SectionTitle subtitle="Pas à pas en vidéo avec fiches PDF téléchargeables">Tutoriels vidéo</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -128,6 +130,59 @@ export default function PratiqueHorlogere() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Galerie */}
+      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <SectionTitle subtitle="Images pédagogiques HD et animations">Galerie des gestes</SectionTitle>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {gallery.map((item, idx) => (
+            <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/10" key={idx}>
+              <img src={item.src} alt={item.alt} className="object-cover w-full h-full hover:scale-105 transition-transform duration-300" />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Ressources PDF */}
+      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <SectionTitle subtitle="Téléchargez les supports illustrés en haute résolution">Ressources PDF</SectionTitle>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {pdfCards.map((pdf) => (
+            <div className="group relative bg-slate-900/60 border border-white/10 rounded-2xl overflow-hidden hover:border-red-400/40 transition" key={pdf.id}>
+              <div className="relative aspect-[3/4] w-full">
+                <img src={pdf.cover} alt={`Couverture - ${pdf.title}`} className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="absolute bottom-3 left-3 text-xs px-2 py-0.5 rounded bg-white/10 text-slate-200 border border-white/10">{pdf.pages} pages</div>
+              </div>
+              <div className="p-4 flex items-center gap-3">
+                <FileText className="w-5 h-5 text-red-300" />
+                <div className="flex-1">
+                  <div className="font-semibold text-white leading-tight">{pdf.title}</div>
+                  <div className="text-xs text-slate-400">PDF illustré</div>
+                </div>
+                <Link className="inline-flex items-center gap-2 text-sm font-medium text-red-300 hover:text-white" href={pdf.href} rel="noopener" target="_blank">
+                  <Download className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="pb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-r from-slate-800/60 to-slate-900/60 backdrop-blur-sm rounded-2xl p-10 border border-slate-700/50">
+            <h2 className="text-3xl font-bold mb-4 text-white">Prêt à perfectionner vos compétences ?</h2>
+            <p className="text-slate-300 mb-8 max-w-2xl">Rejoignez notre communauté et accédez à des centaines de tutoriels exclusifs</p>
+            <Link className="inline-block" href="/communaute">
+              <button className="px-8 py-4 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-red-500/40">
+                Commencer maintenant
+              </button>
+            </Link>
+          </div>
         </div>
       </section>
     </div>
