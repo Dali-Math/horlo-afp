@@ -28,7 +28,7 @@ const tutorials = [
   {
     id: 'tuto-intermediaire',
     title: 'Huilage et lubrification : bonnes pratiques',
-    video: 'https://www.youtube-nocookie.com/embed/SlB9FukapN4',
+    video: 'https://www.youtube.com/watch?v=ARb8Vo4refs&t=426s',
     pdf: '/pdf/tutoriels/huilage-bonnes-pratiques.pdf',
     duration: '18:20',
     level: 'Intermédiaire',
@@ -36,7 +36,7 @@ const tutorials = [
   {
     id: 'tuto-avance',
     title: 'Chronographe : contrôle et réglage',
-    video: 'https://www.youtube-nocookie.com/embed/SlB9FukapN4',
+    video: 'https://www.youtube.com/watch?v=eMQ6TkdEJvA',
     pdf: '/pdf/tutoriels/chronographe-reglage.pdf',
     duration: '22:10',
     level: 'Avancé',
