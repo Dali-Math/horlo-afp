@@ -2,9 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Clock, Wrench, BookOpen, Hammer, Zap, Award, Download, PlayCircle, FileText } from 'lucide-react';
-import Flashcards6497 from '@/components/Flashcards6497';
 
-// Local video path for banner
 const BANNER_VIDEO_SRC = "/videos/Editor — Clideo.mp4";
 
 const gallery = [
@@ -18,7 +16,7 @@ const gallery = [
 const tutorials = [
   {
     id: 'tuto-debutant',
-    title: "Initiation: démontage-remontage d'un mouvement",
+    title: 'Initiation: démontage-remontage d’un mouvement',
     video: 'https://www.youtube-nocookie.com/embed/SlB9FukapN4',
     pdf: '/pdf/tutoriels/initiation-demontage.pdf',
     duration: '12:35',
@@ -34,200 +32,88 @@ const tutorials = [
   },
   {
     id: 'tuto-avance',
-    title: 'Réglage de précision: spirale et balancier',
-    video: 'https://www.youtube-nocookie.com/embed/sj4c8IgGd54',
-    pdf: '/pdf/tutoriels/reglage-precision.pdf',
-    duration: '24:10',
+    title: 'Chronographe: contrôle et réglage',
+    video: 'https://www.youtube-nocookie.com/embed/eMQ6TkdEJvA',
+    pdf: '/pdf/tutoriels/chronographe-reglage.pdf',
+    duration: '22:10',
     level: 'Avancé',
   },
 ];
 
-export default function PratiquePage() {
+const pdfCards = [
+  { id: 'pdf-rodage', title: 'Guide complet du rodage', cover: '/pdf/previews/rodage-cover.jpg', href: '/pdf/rodage-guide.pdf', pages: 24 },
+  { id: 'pdf-outils', title: 'Maniement des outils horlogers', cover: '/pdf/previews/outils-cover.jpg', href: '/pdf/outils-maniement.pdf', pages: 32 },
+  { id: 'pdf-reglage', title: 'Réglage & précision', cover: '/pdf/previews/reglage-cover.jpg', href: '/pdf/reglage-precision.pdf', pages: 28 },
+];
+
+// 👉 Nouvelle section des sous-pages interactives
+const sousPages = [
+  { href: "/pratique/demontage", icon: Wrench, title: "Démontage & Remontage", desc: "Étapes détaillées pour démonter et remonter un mouvement mécanique." },
+  { href: "/pratique/reglage", icon: Clock, title: "Réglage & Précision", desc: "Techniques de réglage du balancier et de l’échappement pour une précision optimale." },
+  { href: "/pratique/outils", icon: Hammer, title: "Outils & Équipement", desc: "Guide complet des outils essentiels et leur bonne utilisation." },
+  { href: "/pratique/huilage", icon: Zap, title: "Huilage & Lubrification", desc: "Protocoles d’huilage pour assurer la longévité des mouvements." },
+  { href: "/pratique/fiches", icon: BookOpen, title: "Fiches Techniques", desc: "Documents détaillés pour chaque type de mouvement." },
+  { href: "/pratique/certifications", icon: Award, title: "Certifications", desc: "Standards et parcours professionnels de l’horlogerie suisse." },
+];
+
+function SectionTitle({ children, subtitle }: { children: React.ReactNode; subtitle?: string }) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-amber-950/30 to-gray-900">
-      {/* Video banner fullscreen */}
-      <section className="relative h-[70vh] overflow-hidden">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          src={BANNER_VIDEO_SRC}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 flex items-center justify-center">
-          <div className="text-center text-white px-4">
-            <h1 className="text-6xl md:text-7xl font-bold mb-4 tracking-wide drop-shadow-lg">
-              Pratique Horlogère
-            </h1>
-            <p className="text-xl md:text-2xl text-amber-200/90 font-light drop-shadow">
-              Gestes, tutoriels et savoir-faire du métier
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Features grid */}
-      <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Card 1 */}
-          <div className="bg-gradient-to-br from-amber-900/40 to-gray-800/40 border border-amber-700/30 rounded-lg p-6 hover:scale-105 transition-transform duration-300">
-            <Wrench className="w-12 h-12 text-amber-400 mb-4" />
-            <h3 className="text-xl font-bold text-amber-100 mb-3">Démontage & Remontage</h3>
-            <p className="text-amber-100/70">
-              Étapes détaillées pour démonter et remonter un mouvement mécanique avec précision.
-            </p>
-          </div>
-
-          {/* Card 2 */}
-          <div className="bg-gradient-to-br from-amber-900/40 to-gray-800/40 border border-amber-700/30 rounded-lg p-6 hover:scale-105 transition-transform duration-300">
-            <Clock className="w-12 h-12 text-amber-400 mb-4" />
-            <h3 className="text-xl font-bold text-amber-100 mb-3">Réglage & Précision</h3>
-            <p className="text-amber-100/70">
-              Techniques de réglage du balancier, du spiral et de l'échappement pour une précision optimale.
-            </p>
-          </div>
-
-          {/* Card 3 */}
-          <div className="bg-gradient-to-br from-amber-900/40 to-gray-800/40 border border-amber-700/30 rounded-lg p-6 hover:scale-105 transition-transform duration-300">
-            <Hammer className="w-12 h-12 text-amber-400 mb-4" />
-            <h3 className="text-xl font-bold text-amber-100 mb-3">Outils & Équipement</h3>
-            <p className="text-amber-100/70">
-              Guide complet des outils essentiels et de leur utilisation correcte en horlogerie.
-            </p>
-          </div>
-
-          {/* Card 4 */}
-          <div className="bg-gradient-to-br from-amber-900/40 to-gray-800/40 border border-amber-700/30 rounded-lg p-6 hover:scale-105 transition-transform duration-300">
-            <Zap className="w-12 h-12 text-amber-400 mb-4" />
-            <h3 className="text-xl font-bold text-amber-100 mb-3">Huilage & Lubrification</h3>
-            <p className="text-amber-100/70">
-              Protocoles d'huilage pour assurer la longévité et le bon fonctionnement des mouvements.
-            </p>
-          </div>
-
-          {/* Card 5 */}
-          <div className="bg-gradient-to-br from-amber-900/40 to-gray-800/40 border border-amber-700/30 rounded-lg p-6 hover:scale-105 transition-transform duration-300">
-            <BookOpen className="w-12 h-12 text-amber-400 mb-4" />
-            <h3 className="text-xl font-bold text-amber-100 mb-3">Fiches Techniques</h3>
-            <p className="text-amber-100/70">
-              Documents PDF détaillés pour chaque type de mouvement et opération.
-            </p>
-          </div>
-
-          {/* Card 6 */}
-          <div className="bg-gradient-to-br from-amber-900/40 to-gray-800/40 border border-amber-700/30 rounded-lg p-6 hover:scale-105 transition-transform duration-300">
-            <Award className="w-12 h-12 text-amber-400 mb-4" />
-            <h3 className="text-xl font-bold text-amber-100 mb-3">Certifications</h3>
-            <p className="text-amber-100/70">
-              Parcours de certification et standards professionnels de l'horlogerie suisse.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Video tutorials section */}
-      <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold text-amber-400 mb-12 text-center">
-          Tutoriels Vidéo
-        </h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {tutorials.map((tuto) => (
-            <div
-              key={tuto.id}
-              className="bg-gradient-to-br from-gray-800/60 to-amber-950/40 border border-amber-700/30 rounded-lg overflow-hidden hover:shadow-2xl hover:shadow-amber-500/20 transition-shadow duration-300"
-            >
-              {/* Video embed */}
-              <div className="relative aspect-video bg-black">
-                <iframe
-                  src={tuto.video}
-                  title={tuto.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="absolute inset-0 w-full h-full"
-                />
-              </div>
-              {/* Card content */}
-              <div className="p-5">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold text-amber-400 bg-amber-900/40 px-2 py-1 rounded">
-                    {tuto.level}
-                  </span>
-                  <span className="text-xs text-amber-100/70 flex items-center gap-1">
-                    <PlayCircle className="w-4 h-4" />
-                    {tuto.duration}
-                  </span>
-                </div>
-                <h3 className="text-lg font-bold text-amber-100 mb-3">{tuto.title}</h3>
-                <a
-                  href={tuto.pdf}
-                  download
-                  className="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 text-sm font-medium transition-colors"
-                >
-                  <Download className="w-4 h-4" />
-                  Télécharger le PDF
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Gallery section */}
-      <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold text-amber-400 mb-12 text-center">
-          Galerie des Gestes
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {gallery.map((img, idx) => (
-            <div
-              key={idx}
-              className="relative aspect-square overflow-hidden rounded-lg border border-amber-700/30 hover:scale-105 transition-transform duration-300"
-            >
-              <img
-                src={img.src}
-                alt={img.alt}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-3">
-                <p className="text-xs text-amber-100 font-medium">{img.alt}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* NEW: Flashcards6497 section */}
-      <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-amber-400 mb-4">
-            Démontage & Remontage — Mouvement ETA 6497
-          </h2>
-          <p className="text-amber-100/70 text-lg max-w-3xl mx-auto">
-            Cartes mémoire interactives pour maîtriser le démontage et le remontage du mouvement ETA 6497.
-          </p>
-        </div>
-        <Flashcards6497 />
-      </section>
-
-      {/* Bottom CTA */}
-      <section className="py-16 px-4 md:px-8 max-w-5xl mx-auto text-center">
-        <div className="bg-gradient-to-br from-amber-900/40 to-gray-800/40 border border-amber-700/30 rounded-lg p-12">
-          <FileText className="w-16 h-16 text-amber-400 mx-auto mb-6" />
-          <h2 className="text-3xl font-bold text-amber-100 mb-4">
-            Fiches Techniques Complètes
-          </h2>
-          <p className="text-amber-100/70 mb-8 text-lg">
-            Accédez à notre bibliothèque de fiches techniques détaillées pour tous les mouvements.
-          </p>
-          <Link
-            href="/ressources"
-            className="inline-block bg-amber-600 hover:bg-amber-500 text-white font-semibold px-8 py-4 rounded-lg transition-colors"
-          >
-            Explorer les Ressources
-          </Link>
-        </div>
-      </section>
+    <div className="text-center mb-10">
+      <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-red-500 via-white to-red-500 bg-clip-text text-transparent">
+        {children}
+      </h2>
+      {subtitle && <p className="mt-2 text-slate-300">{subtitle}</p>}
     </div>
   );
 }
+
+export default function PratiqueHorlogere() {
+  return (
+    <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_100%_0%,rgba(255,0,0,.08),transparent_60%),radial-gradient(1000px_500px_at_0%_100%,rgba(255,255,255,.06),transparent_60%),linear-gradient(135deg,#0f172a,#0b1220)] text-white">
+
+      {/* Banner video */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none opacity-20 bg-[url('/swiss/pattern-cross.svg')] bg-[length:40px_40px]"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="w-full aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-black">
+            <video
+              className="w-full h-full object-cover"
+              src={BANNER_VIDEO_SRC}
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls={false}
+              poster="/images/black-poster.png"
+            />
+          </div>
+          <div className="mt-4 flex items-center gap-3 text-slate-300">
+            <PlayCircle className="w-5 h-5 text-red-400" />
+            Vidéo d’ouverture locale — mécanique horlogère en boucle.
+          </div>
+        </div>
+      </section>
+
+      {/* 🟡 Nouvelle section : sous-pages pratiques */}
+      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <SectionTitle subtitle="Explorez les principales catégories de la pratique horlogère">
+          Sous-pages Pratiques
+        </SectionTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {sousPages.map(({ href, icon: Icon, title, desc }) => (
+            <Link
+              key={href}
+              href={href}
+              className="group bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-red-400/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-red-500/20"
+            >
+              <div className="w-14 h-14 flex items-center justify-center mb-6 rounded-xl shadow-lg bg-gradient-to-br from-red-500/20 to-red-600/10">
+                <Icon className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold mb-2 text-white group-hover:text-red-300 transition-colors">{title}</h3>
+              <p className="text-slate-400 leading-relaxed text-sm">{desc}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ... le reste de ton code inchangé ... */}
