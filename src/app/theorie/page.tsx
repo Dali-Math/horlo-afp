@@ -1,11 +1,13 @@
 import HeroSection from './components/HeroSection'
-import SkeletonClock from "@/components/SkeletonClock";
+import LuxuryClock from "@/components/LuxuryClock";
+
 export default function Theorie() {
   return (
     <section className="relative overflow-visible min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <div className="absolute top-12 right-16 z-50 border border-red-500 hidden md:block">
-        <SkeletonClock />
+      <div className="absolute top-12 right-16 z-50 hidden md:block">
+        <LuxuryClock />
       </div>
+      
       {/* Hero section on top */}
       <HeroSection />
       
@@ -36,45 +38,71 @@ export default function Theorie() {
                 </a>
               </li>
               <li>
-                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="https://archive.org/search?query=horology" target="_blank">
-                  Archives Techniques
+                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/histoire" target="_blank">
+                  Histoire complète
                 </a>
               </li>
             </ul>
           </div>
-          {/* Communication Technique */}
+
+          {/* Mouvements */}
           <div className="bg-white rounded-2xl shadow-lg border border-gold-200 hover:shadow-xl transition-all duration-300 p-8">
             <div className="flex items-center mb-6">
-              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-600 rounded-xl flex items-center justify-center mr-4">
+              <div className="w-12 h-12 bg-gradient-to-r from-gold-400 to-gold-600 rounded-xl flex items-center justify-center mr-4">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-slate-800">Communication Technique</h3>
+              <h3 className="text-xl font-bold text-slate-800">Mouvements</h3>
             </div>
             <ul className="space-y-3">
               <li>
-                <a className="text-blue-600 hover:text-gold-600 transition-colors flex items-center gap-2" href="/pdfs/communication-technique/ETA%206497.pdf" target="_blank">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  ETA-6497.pdf
+                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/mouvements">
+                  Mécaniques horlogers
+                </a>
+              </li>
+              <li>
+                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/complications">
+                  Complications
+                </a>
+              </li>
+              <li>
+                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/galerie-3d">
+                  Galerie 3D interactive
                 </a>
               </li>
             </ul>
           </div>
-          {/* Vidéos */}
+
+          {/* Restauration */}
           <div className="bg-white rounded-2xl shadow-lg border border-gold-200 hover:shadow-xl transition-all duration-300 p-8">
             <div className="flex items-center mb-6">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mr-4">
+              <div className="w-12 h-12 bg-gradient-to-r from-gold-400 to-gold-600 rounded-xl flex items-center justify-center mr-4">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M19 10a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-slate-800">Vidéos</h3>
+              <h3 className="text-xl font-bold text-slate-800">Restauration</h3>
             </div>
+            <ul className="space-y-3">
+              <li>
+                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/restauration">
+                  Techniques de restauration
+                </a>
+              </li>
+              <li>
+                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/outils">
+                  Outils horlogers
+                </a>
+              </li>
+              <li>
+                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/pratique">
+                  Fiches pratiques
+                </a>
+              </li>
+            </ul>
           </div>
-          
         </div>
       </div>
     </section>
