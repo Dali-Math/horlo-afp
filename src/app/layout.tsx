@@ -1,6 +1,7 @@
 import './globals.css'
 import { Analytics } from '@vercel/analytics/react'
 import Navbar from '@/components/Navbar'
+import ScrollToTop from '@/components/ScrollToTop'
 
 export const metadata = {
   title: 'Horlo-AFP',
@@ -18,6 +19,7 @@ export default function RootLayout({
         <Navbar />
         {children}
         <Analytics />
+        <ScrollToTop />
       </body>
     </html>
   )
