@@ -19,8 +19,10 @@ jobs:
       - name: 📦 Install dependencies
         run: |
           npm install jsdom @types/jsdom cheerio node-fetch
-      - name: 🕑 Run updateEvents script
-        run: npx ts-node-esm scripts/updateEvents.ts
+      - name: Run updateEvents script (debug)
+        run: npx ts-node-esm scripts/updateEvents.ts || true
+      - name: Show logs
+        run: cat scripts/updateEvents.log || echo "No log file generated"
       - name: 📁 Commit new events.json
         run: |
           git config --global user.email "events-bot@horlolearn.ch"
