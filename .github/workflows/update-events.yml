@@ -21,7 +21,7 @@ jobs:
           npm install jsdom @types/jsdom cheerio node-fetch
       - name: 🕑 Run updateEvents script
         run: |
-          npx ts-node scripts/updateEvents.ts
+          npx ts-node --esm scripts/updateEvents.ts
       - name: 📁 Commit new events.json
         run: |
           git config --global user.email "events-bot@horlolearn.ch"
