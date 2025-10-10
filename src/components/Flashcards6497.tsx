@@ -86,12 +86,13 @@ export default function Flashcards6497() {
       </h2>
 
       <div
-        onClick={() => setFlipped(!flipped)}
-        className="cursor-pointer bg-[#1a1a1a] border-2 border-[#E2B44F] rounded-2xl shadow-2xl 
-                   p-8 md:p-12 text-center w-full sm:w-[90%] md:w-[80%] lg:w-[70%] 
-                   max-w-4xl min-h-[300px] md:min-h-[340px] flex items-center justify-center 
-                   transition-transform duration-500 hover:scale-[1.02]"
-      >
+  onClick={() => setFlipped(!flipped)}
+  className="cursor-pointer bg-[#1a1a1a] border-2 border-[#E2B44F] rounded-2xl shadow-2xl 
+             p-10 md:p-16 text-center w-full sm:w-[95%] md:w-[85%] lg:w-[70%] xl:w-[65%] 
+             max-w-4xl min-h-[420px] md:min-h-[480px] flex items-center justify-center 
+             transition-transform duration-500 hover:scale-[1.02]"
+>
+
         {flipped ? (
           <p className="text-base sm:text-lg md:text-xl text-gray-200 leading-relaxed">
             {cards[index].answer}
