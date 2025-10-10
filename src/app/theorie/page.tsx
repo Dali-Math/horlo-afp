@@ -1,10 +1,15 @@
 import HeroSection from './components/HeroSection'
+import SkeletonClock from "@/components/SkeletonClock";
 
 export default function Theorie() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <section className="relative min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="absolute top-12 right-16 hidden md:block">
+        <SkeletonClock />
+      </div>
       {/* Hero section on top */}
       <HeroSection />
+      
       
       {/* Premium Resources Grid */}
       <div className="max-w-7xl mx-auto px-4 py-16">
@@ -73,6 +78,6 @@ export default function Theorie() {
           
         </div>
       </div>
-    </div>
+    </section>
   )
 }
