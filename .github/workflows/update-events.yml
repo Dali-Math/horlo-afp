@@ -23,10 +23,12 @@ jobs:
         run: npx ts-node-esm scripts/updateEvents.ts || true
       - name: Show logs
         run: cat scripts/updateEvents.log || echo "No log file generated"
+      - name: Configure Git identity
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
       - name: 📁 Commit new events.json
         run: |
-          git config --global user.email "events-bot@horlolearn.ch"
-          git config --global user.name "horlolearn-events-bot"
           git add public/data/events.json
           git commit -m "Automated update of events.json by bot (GitHub Action)" || echo "No changes to commit"
           git push
