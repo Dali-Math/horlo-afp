@@ -14,8 +14,18 @@ export default function Flashcards6497() {
   }, []);
 
   const total = cards.length;
-  const nextCard = () => { setFlipped(false); setIndex((i) => (i + 1) % total); };
-  const prevCard = () => { setFlipped(false); setIndex((i) => (i - 1 + total) % total); };
+  const nextCard = () => {
+    if (total > 0) {
+      setFlipped(false);
+      setIndex((i) => (i + 1) % total);
+    }
+  };
+  const prevCard = () => {
+    if (total > 0) {
+      setFlipped(false);
+      setIndex((i) => (i - 1 + total) % total);
+    }
+  };
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -28,20 +38,26 @@ export default function Flashcards6497() {
   }, [total]);
 
   if (cards.length === 0) {
-    return <p className="text-[#E2B44F] text-center py-20">Chargement des cartes...</p>;
+    return (
+      <p className="text-[#E2B44F] text-center py-20 text-lg font-medium">
+        Chargement des cartes...
+      </p>
+    );
   }
 
   return (
-    <section className="bg-[#0a0a0a] min-h-[900px] text-gray-200 flex flex-col items-center justify-center py-32 px-4 sm:px-6 lg:px-8">
-      <h2 className="text-3xl md:text-4xl font-bold text-[#E2B44F] mb-10 text-center">
+    <section className="bg-[#0a0a0a] text-gray-200 flex flex-col items-center justify-start min-h-screen py-20 px-4 sm:px-6 lg:px-8">
+      {/* Titre */}
+      <h2 className="text-3xl md:text-4xl font-bold text-[#E2B44F] mb-8 text-center">
         Démontage & Remontage — Mouvement ETA 6497
       </h2>
 
+      {/* Carte */}
       <div
         onClick={() => setFlipped(!flipped)}
         className="cursor-pointer bg-[#1a1a1a] border-2 border-[#E2B44F] rounded-2xl shadow-2xl 
-                   p-10 md:p-16 text-center w-full sm:w-[95%] md:w-[85%] lg:w-[70%] xl:w-[60%] 
-                   max-w-5xl min-h-[520px] md:min-h-[580px] flex items-center justify-center 
+                   p-10 md:p-14 text-center w-full sm:w-[90%] md:w-[75%] lg:w-[60%] 
+                   max-w-3xl min-h-[360px] md:min-h-[420px] flex items-center justify-center 
                    transition-transform duration-500 hover:scale-[1.02]"
       >
         {flipped ? (
@@ -55,9 +71,10 @@ export default function Flashcards6497() {
         )}
       </div>
 
+      {/* Navigation */}
       <div className="flex flex-col sm:flex-row justify-between items-center 
-                      w-full sm:w-[95%] md:w-[85%] lg:w-[70%] xl:w-[60%] max-w-5xl 
-                      mt-10 gap-4 sm:gap-0">
+                      w-full sm:w-[90%] md:w-[75%] lg:w-[60%] max-w-3xl 
+                      mt-10 gap-4 sm:gap-6">
         <button
           onClick={prevCard}
           className="bg-[#E2B44F] text-black font-bold py-3 px-10 rounded-lg hover:bg-[#c89b3d] 
@@ -79,7 +96,8 @@ export default function Flashcards6497() {
         </button>
       </div>
 
-      <p className="text-[#8B7355] mt-6 text-xs sm:text-sm text-center italic">
+      {/* Légende */}
+      <p className="text-[#8B7355] mt-8 text-xs sm:text-sm text-center italic">
         Cliquez sur la carte pour la retourner — compatible mobile, tablette et clavier (Entrée, ←, →)
       </p>
     </section>
