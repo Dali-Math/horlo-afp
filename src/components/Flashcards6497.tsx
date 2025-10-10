@@ -76,12 +76,24 @@ export default function Flashcards6497() {
           className="bg-[#E2B44F]/20 border border-[#E2B44F] text-[#E2B44F] font-semibold py-3 px-6 rounded-lg hover:bg-[#E2B44F]/40 transition"
         >
           Suivant ▶
-        </button>
-      </div>
+        <div className="flex justify-center gap-4 mt-6 flex-wrap">
+  <button
+    onClick={() => setFlipped(!flipped)}
+    className="bg-[#E2B44F] text-black font-bold py-2 px-6 rounded-lg hover:bg-[#c89b3d] transition-colors"
+  >
+    {flipped ? "Retour à la question" : "Retourner"}
+  </button>
 
-      <p className="text-[#8B7355] mt-4 text-xs sm:text-sm text-center italic">
-        Cliquez sur la carte pour la retourner — compatible mobile, tablette et clavier (Entrée, ←, →)
-      </p>
-    </div>
+  <button
+    onClick={() => {
+      setFlipped(false);
+      setIndex((i) => (i + 1) % cards.length);
+    }}
+    className="bg-[#E2B44F]/20 border border-[#E2B44F] text-[#E2B44F] font-semibold py-2 px-6 rounded-lg hover:bg-[#E2B44F]/40 transition-colors"
+  >
+    Suivant ▶
+  </button>
+</div>
+
   );
 }
