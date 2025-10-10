@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-
 const cards = [
   { question: "Quelle est la première étape du démontage du mouvement ETA 6497 ?", answer: "Retirer le balancier complet avec précaution." },
   { question: "Quelle est la fonction du pont de rouage ?", answer: "Il maintient en place les pivots des roues du rouage." },
@@ -53,21 +52,15 @@ const cards = [
   { question: "Pourquoi faut-il toujours travailler sur un tapis horloger ?", answer: "Pour protéger les pièces, éviter les rayures et empêcher les petites pièces de rouler." },
   { question: "Quelle est la règle d'or du remontage d'un mouvement mécanique ?", answer: "Travailler proprement, méthodiquement, et lubrifier chaque point de friction selon les spécifications." }
 ];
-
 export default function Flashcards6497() {
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
-
   const nextCard = () => {
     setFlipped(false);
     setIndex((index + 1) % cards.length);
   };
-
   return (
     <div className="bg-[#0a0a0a] text-gray-200 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#E2B44F] mb-6 md:mb-8 text-center">
-        Démontage & Remontage — Mouvement ETA 6497
-      </h1>
       
       <div
         onClick={() => setFlipped(!flipped)}
