@@ -1,10 +1,9 @@
 import HeroSection from './components/HeroSection'
 import SkeletonClock from "@/components/SkeletonClock";
-
 export default function Theorie() {
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <div className="absolute top-12 right-16 hidden md:block">
+    <section className="relative overflow-visible min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="absolute top-12 right-16 z-50 border border-red-500 hidden md:block">
         <SkeletonClock />
       </div>
       {/* Hero section on top */}
