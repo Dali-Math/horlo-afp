@@ -24,7 +24,6 @@ export default function Flashcards6497() {
     setIndex((i) => (i - 1 + total) % total);
   };
 
-  // Navigation clavier
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Enter") setFlipped((f) => !f);
@@ -49,51 +48,47 @@ export default function Flashcards6497() {
                    max-w-3xl min-h-[300px] flex flex-col items-center justify-center 
                    transition-transform duration-500 hover:scale-[1.02]"
       >
-        <p className={`text-base sm:text-lg md:text-xl leading-relaxed ${flipped ? "text-gray-200" : "text-[#E2B44F] font-semibold"}`}>
+        <p
+          className={`text-base sm:text-lg md:text-xl leading-relaxed ${
+            flipped ? "text-gray-200" : "text-[#E2B44F] font-semibold"
+          }`}
+        >
           {flipped ? cards[index].answer : cards[index].question}
         </p>
-        <button
-          onClick={() => setFlipped(!flipped)}
-          className="mt-6 bg-[#E2B44F] text-black font-bold py-2 px-8 rounded-lg hover:bg-[#c89b3d] transition-colors"
-        >
-          {flipped ? "Retour à la question" : "Retourner"}
-        </button>
+
+        {/* ✅ Ligne de boutons */}
+        <div className="flex justify-center gap-4 mt-6 flex-wrap">
+          <button
+            onClick={prevCard}
+            className="bg-[#E2B44F]/20 border border-[#E2B44F] text-[#E2B44F] font-semibold py-2 px-6 rounded-lg hover:bg-[#E2B44F]/40 transition-colors"
+          >
+            ◀ Précédent
+          </button>
+
+          <button
+            onClick={() => setFlipped(!flipped)}
+            className="bg-[#E2B44F] text-black font-bold py-2 px-6 rounded-lg hover:bg-[#c89b3d] transition-colors"
+          >
+            {flipped ? "Retour à la question" : "Retourner"}
+          </button>
+
+          <button
+            onClick={nextCard}
+            className="bg-[#E2B44F]/20 border border-[#E2B44F] text-[#E2B44F] font-semibold py-2 px-6 rounded-lg hover:bg-[#E2B44F]/40 transition-colors"
+          >
+            Suivant ▶
+          </button>
+        </div>
+
         <p className="text-sm md:text-base text-[#E2B44F] font-medium mt-3">
           Carte {index + 1} sur {total}
         </p>
       </div>
 
-      {/* ✅ Boutons de navigation visibles */}
-      <div className="flex justify-center items-center gap-6 mt-10 flex-wrap">
-        <button
-          onClick={prevCard}
-          className="bg-[#E2B44F]/20 border border-[#E2B44F] text-[#E2B44F] font-semibold py-3 px-6 rounded-lg hover:bg-[#E2B44F]/40 transition"
-        >
-          ◀ Précédent
-        </button>
-        <button
-          onClick={nextCard}
-          className="bg-[#E2B44F]/20 border border-[#E2B44F] text-[#E2B44F] font-semibold py-3 px-6 rounded-lg hover:bg-[#E2B44F]/40 transition"
-        >
-          Suivant ▶
-        <div className="flex justify-center gap-4 mt-6 flex-wrap">
-  <button
-    onClick={() => setFlipped(!flipped)}
-    className="bg-[#E2B44F] text-black font-bold py-2 px-6 rounded-lg hover:bg-[#c89b3d] transition-colors"
-  >
-    {flipped ? "Retour à la question" : "Retourner"}
-  </button>
-
-  <button
-    onClick={() => {
-      setFlipped(false);
-      setIndex((i) => (i + 1) % cards.length);
-    }}
-    className="bg-[#E2B44F]/20 border border-[#E2B44F] text-[#E2B44F] font-semibold py-2 px-6 rounded-lg hover:bg-[#E2B44F]/40 transition-colors"
-  >
-    Suivant ▶
-  </button>
-</div>
-
+      {/* Bas de page */}
+      <p className="text-[#8B7355] mt-4 text-xs sm:text-sm text-center italic">
+        Cliquez sur la carte pour la retourner — compatible mobile, tablette et clavier (Entrée, ←, →)
+      </p>
+    </div>
   );
 }
