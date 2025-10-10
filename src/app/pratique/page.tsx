@@ -46,7 +46,7 @@ const pdfCards = [
   { id: 'pdf-reglage', title: 'Réglage & précision', cover: '/pdf/previews/reglage-cover.jpg', href: '/pdf/reglage-precision.pdf', pages: 28 },
 ];
 
-// 👉 Nouvelle section des sous-pages interactives
+// 🟡 Nouvelle section sous-pages interactives
 const sousPages = [
   { href: "/pratique/demontage", icon: Wrench, title: "Démontage & Remontage", desc: "Étapes détaillées pour démonter et remonter un mouvement mécanique." },
   { href: "/pratique/reglage", icon: Clock, title: "Réglage & Précision", desc: "Techniques de réglage du balancier et de l’échappement pour une précision optimale." },
@@ -69,51 +69,101 @@ function SectionTitle({ children, subtitle }: { children: React.ReactNode; subti
 
 export default function PratiqueHorlogere() {
   return (
-    <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_100%_0%,rgba(255,0,0,.08),transparent_60%),radial-gradient(1000px_500px_at_0%_100%,rgba(255,255,255,.06),transparent_60%),linear-gradient(135deg,#0f172a,#0b1220)] text-white">
+    <>
+      <div className="min-h-screen bg-[radial-gradient(1200px_600px_at_100%_0%,rgba(255,0,0,.08),transparent_60%),radial-gradient(1000px_500px_at_0%_100%,rgba(255,255,255,.06),transparent_60%),linear-gradient(135deg,#0f172a,#0b1220)] text-white">
 
-      {/* Banner video */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none opacity-20 bg-[url('/swiss/pattern-cross.svg')] bg-[length:40px_40px]"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="w-full aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-black">
-            <video
-              className="w-full h-full object-cover"
-              src={BANNER_VIDEO_SRC}
-              autoPlay
-              muted
-              loop
-              playsInline
-              controls={false}
-              poster="/images/black-poster.png"
-            />
+        {/* Banner video */}
+        <section className="relative overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none opacity-20 bg-[url('/swiss/pattern-cross.svg')] bg-[length:40px_40px]"></div>
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div className="w-full aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-black">
+              <video
+                className="w-full h-full object-cover"
+                src={BANNER_VIDEO_SRC}
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls={false}
+                poster="/images/black-poster.png"
+              />
+            </div>
+            <div className="mt-4 flex items-center gap-3 text-slate-300">
+              <PlayCircle className="w-5 h-5 text-red-400" />
+              Vidéo d’ouverture locale — mécanique horlogère en boucle.
+            </div>
           </div>
-          <div className="mt-4 flex items-center gap-3 text-slate-300">
-            <PlayCircle className="w-5 h-5 text-red-400" />
-            Vidéo d’ouverture locale — mécanique horlogère en boucle.
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 🟡 Nouvelle section : sous-pages pratiques */}
-      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <SectionTitle subtitle="Explorez les principales catégories de la pratique horlogère">
-          Sous-pages Pratiques
-        </SectionTitle>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {sousPages.map(({ href, icon: Icon, title, desc }) => (
-            <Link
-              key={href}
-              href={href}
-              className="group bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-red-400/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-red-500/20"
-            >
-              <div className="w-14 h-14 flex items-center justify-center mb-6 rounded-xl shadow-lg bg-gradient-to-br from-red-500/20 to-red-600/10">
-                <Icon className="w-7 h-7 text-white" />
+        {/* 🟡 Sous-pages pratiques */}
+        <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <SectionTitle subtitle="Explorez les principales catégories de la pratique horlogère">
+            Sous-pages Pratiques
+          </SectionTitle>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {sousPages.map(({ href, icon: Icon, title, desc }) => (
+              <Link
+                key={href}
+                href={href}
+                className="group bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-red-400/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-red-500/20"
+              >
+                <div className="w-14 h-14 flex items-center justify-center mb-6 rounded-xl shadow-lg bg-gradient-to-br from-red-500/20 to-red-600/10">
+                  <Icon className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold mb-2 text-white group-hover:text-red-300 transition-colors">{title}</h3>
+                <p className="text-slate-400 leading-relaxed text-sm">{desc}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Galerie des gestes */}
+        <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <SectionTitle subtitle="Images pédagogiques HD et animations">Galerie des gestes</SectionTitle>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {gallery.map((item, idx) => (
+              <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/10" key={idx}>
+                <img src={item.src} alt={item.alt} className="object-cover w-full h-full hover:scale-105 transition-transform duration-300" />
               </div>
-              <h3 className="text-2xl font-bold mb-2 text-white group-hover:text-red-300 transition-colors">{title}</h3>
-              <p className="text-slate-400 leading-relaxed text-sm">{desc}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
 
-      {/* ... le reste de ton code inchangé ... */}
+        {/* Tutoriels vidéo */}
+        <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <SectionTitle subtitle="Pas à pas en vidéo avec fiches PDF téléchargeables">Tutoriels vidéo</SectionTitle>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {tutorials.map((tuto) => (
+              <div className="bg-slate-900/60 border border-white/10 rounded-2xl overflow-hidden hover:border-red-400/40 transition" key={tuto.id}>
+                <div className="aspect-video w-full">
+                  <iframe
+                    className="w-full h-full"
+                    src={tuto.video}
+                    title={tuto.title}
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                </div>
+                <div className="p-5">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-semibold text-white">{tuto.title}</h3>
+                    <span className="text-xs px-2 py-0.5 rounded bg-white/10 text-slate-200">{tuto.level}</span>
+                  </div>
+                  <p className="text-sm text-slate-400 mb-4">Durée ~ {tuto.duration}</p>
+                  <div className="flex items-center gap-3">
+                    <Link className="inline-flex items-center gap-2 text-sm font-medium text-red-300 hover:text-white" href={tuto.pdf} rel="noopener" target="_blank">
+                      <Download className="w-4 h-4" /> Télécharger le PDF
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+      </div>
+    </>
+  );
+}
