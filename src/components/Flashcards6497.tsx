@@ -87,10 +87,11 @@ export default function Flashcards6497() {
       {/* Carte géante */}
       <div
         onClick={() => setFlipped(!flipped)}
-        className="cursor-pointer bg-[#1a1a1a] border-2 border-[#E2B44F] rounded-3xl shadow-2xl 
-                   p-16 md:p-24 xl:p-28 text-center w-full xl:w-[95%]
-                   max-w-7xl min-h-[520px] md:min-h-[700px] lg:min-h-[850px] flex flex-col items-center justify-center 
-                   transition-transform duration-500 hover:scale-[1.03]"
+        className="cursor-pointer bg-[#1a1a1a] border-2 border-[#E2B44F] rounded-3xl shadow-xl 
+           p-6 md:p-10 xl:p-12 text-center w-full sm:w-[90%] md:w-[70%] lg:w-[60%]
+           max-w-3xl min-h-[260px] flex flex-col items-center justify-center 
+           transition-transform duration-500 hover:scale-[1.01]"
+
       >
         <p
           className={`text-2xl md:text-3xl xl:text-4xl leading-relaxed max-w-3xl ${
