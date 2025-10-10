@@ -64,32 +64,41 @@ export default function Flashcards6497() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-gray-200 flex flex-col items-center justify-center p-6">
-      <h1 className="text-3xl md:text-4xl font-bold text-[#E2B44F] mb-4">
+    <div className="bg-[#0a0a0a] text-gray-200 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#E2B44F] mb-6 md:mb-8 text-center">
         Démontage & Remontage — Mouvement ETA 6497
       </h1>
+      
       <div
         onClick={() => setFlipped(!flipped)}
-        className="cursor-pointer bg-[#1a1a1a] border border-[#E2B44F] rounded-2xl shadow-lg p-10 text-center w-full max-w-md h-72 flex items-center justify-center transition-transform duration-500"
+        className="cursor-pointer bg-[#1a1a1a] border-2 border-[#E2B44F] rounded-2xl shadow-2xl p-8 md:p-12 text-center w-full sm:w-[90%] md:w-[85%] lg:w-[75%] xl:w-[70%] max-w-4xl min-h-[280px] md:min-h-[320px] flex items-center justify-center transition-transform duration-500 hover:scale-[1.02]"
       >
         {flipped ? (
-          <p className="text-lg">{cards[index].answer}</p>
+          <p className="text-base sm:text-lg md:text-xl text-gray-200 leading-relaxed">
+            {cards[index].answer}
+          </p>
         ) : (
-          <p className="text-xl font-semibold">{cards[index].question}</p>
+          <p className="text-lg sm:text-xl md:text-2xl font-semibold text-[#E2B44F] leading-relaxed">
+            {cards[index].question}
+          </p>
         )}
       </div>
-      <div className="flex justify-between items-center w-full max-w-md mt-6">
+      
+      <div className="flex flex-col sm:flex-row justify-between items-center w-full sm:w-[90%] md:w-[85%] lg:w-[75%] xl:w-[70%] max-w-4xl mt-6 md:mt-8 gap-4 sm:gap-0">
         <button
           onClick={nextCard}
-          className="bg-[#E2B44F] text-black font-bold py-2 px-6 rounded-lg hover:bg-[#c89b3d] transition-colors"
+          className="bg-[#E2B44F] text-black font-bold py-3 px-8 rounded-lg hover:bg-[#c89b3d] transition-colors shadow-lg text-base md:text-lg"
         >
           Suivant
         </button>
-        <p className="text-sm text-gray-400">
+        <p className="text-sm md:text-base text-[#E2B44F] font-medium">
           Carte {index + 1} sur {cards.length}
         </p>
       </div>
-      <p className="text-gray-500 mt-3 text-sm">Appuyez pour retourner</p>
+      
+      <p className="text-[#8B7355] mt-4 text-xs sm:text-sm text-center">
+        Cliquez sur la carte pour voir la réponse
+      </p>
     </div>
   );
 }
