@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const cards = [
   { question: "Quelle est la première étape du démontage du mouvement ETA 6497 ?", answer: "Retirer le balancier complet avec précaution." },
@@ -80,11 +80,15 @@ export default function Flashcards6497() {
   }, []);
 
   return (
-    <div className="bg-[#0a0a0a] text-gray-200 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <section className="bg-[#0a0a0a] text-gray-200 py-16 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
+      <h2 className="text-3xl md:text-4xl font-bold text-[#E2B44F] mb-8 text-center">
+        Démontage & Remontage — Mouvement ETA 6497
+      </h2>
+
       <div
         onClick={() => setFlipped(!flipped)}
         className="cursor-pointer bg-[#1a1a1a] border-2 border-[#E2B44F] rounded-2xl shadow-2xl 
-                   p-8 md:p-12 text-center w-full sm:w-[90%] md:w-[85%] lg:w-[75%] xl:w-[70%] 
+                   p-8 md:p-12 text-center w-full sm:w-[90%] md:w-[80%] lg:w-[70%] 
                    max-w-4xl min-h-[300px] md:min-h-[340px] flex items-center justify-center 
                    transition-transform duration-500 hover:scale-[1.02]"
       >
@@ -100,8 +104,8 @@ export default function Flashcards6497() {
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between items-center 
-                      w-full sm:w-[90%] md:w-[85%] lg:w-[75%] xl:w-[70%] max-w-4xl 
-                      mt-6 md:mt-8 gap-4 sm:gap-0">
+                      w-full sm:w-[90%] md:w-[80%] lg:w-[70%] max-w-4xl 
+                      mt-8 gap-4 sm:gap-0">
         <button
           onClick={prevCard}
           className="bg-[#E2B44F] text-black font-bold py-3 px-8 rounded-lg hover:bg-[#c89b3d] 
@@ -126,6 +130,6 @@ export default function Flashcards6497() {
       <p className="text-[#8B7355] mt-4 text-xs sm:text-sm text-center italic">
         Cliquez sur la carte pour la retourner — compatible mobile, tablette et clavier (Entrée, ←, →)
       </p>
-    </div>
+    </section>
   );
 }
