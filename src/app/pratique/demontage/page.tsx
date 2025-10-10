@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
+import Flashcards6497 from "@/components/Flashcards6497";
 
 export default function DemontagePage() {
   const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: number | null }>({
@@ -59,12 +60,12 @@ export default function DemontagePage() {
           Retour
         </Link>
 
-        {/* Titre */}
+        {/* Titre principal */}
         <h1 className="text-4xl md:text-5xl font-bold text-[#E2B44F] mb-8 text-center">
-          Démontage & Remontage
+          Démontage & Remontage — Mouvement ETA 6497
         </h1>
 
-        {/* Bloc vidéo */}
+        {/* Vidéo */}
         <section className="mb-12">
           <div className="aspect-video w-full bg-black rounded-lg overflow-hidden shadow-lg">
             <iframe
@@ -88,19 +89,24 @@ export default function DemontagePage() {
           <div className="text-gray-300 leading-relaxed space-y-4">
             <p>
               Le démontage d'un mouvement horloger est une opération délicate qui nécessite
-              méthode et précision. Avant toute intervention, il est <strong className="text-[#E2B44F]">crucial de
-              laisser le mouvement tourner</strong> jusqu'à épuisement complet du ressort moteur,
-              afin d'éviter tout risque de détente brutale pendant le démontage.
+              méthode et précision. Avant toute intervention, il est{" "}
+              <strong className="text-[#E2B44F]">
+                crucial de laisser le mouvement tourner
+              </strong>{" "}
+              jusqu'à épuisement complet du ressort moteur, afin d'éviter tout risque de détente
+              brutale pendant le démontage.
             </p>
             <p>
-              La première étape consiste à <strong className="text-[#E2B44F]">retirer le balancier</strong>, pièce
+              La première étape consiste à{" "}
+              <strong className="text-[#E2B44F]">retirer le balancier</strong>, pièce
               la plus fragile du mouvement. Cette précaution permet d'éviter tout choc accidentel
               lors des manipulations ultérieures. On procède ensuite au retrait des aiguilles
               avec un tire-aiguilles approprié, puis au démontage du cadran.
             </p>
             <p>
               L'échappement, le rouage, et enfin le barillet sont démontés dans cet ordre.
-              Chaque pièce doit être <strong className="text-[#E2B44F]">manipulée avec des brucelles en acier</strong> ou
+              Chaque pièce doit être{" "}
+              <strong className="text-[#E2B44F]">manipulée avec des brucelles en acier</strong> ou
               en laiton pour éviter toute contamination. Un rangement méthodique dans des coupelles
               séparées facilite grandement le remontage. Le mouvement ETA 6497, présenté dans la
               vidéo, est un excellent exemple pédagogique grâce à sa taille généreuse et sa
@@ -109,8 +115,8 @@ export default function DemontagePage() {
           </div>
         </section>
 
-        {/* Bloc mini-quiz */}
-        <section className="bg-[#1a1a1a] p-6 md:p-8 rounded-lg">
+        {/* Mini Quiz */}
+        <section className="bg-[#1a1a1a] p-6 md:p-8 rounded-lg mb-12">
           <h2 className="text-2xl md:text-3xl font-bold text-[#E2B44F] mb-6">
             Mini-Quiz : Testez vos connaissances
           </h2>
@@ -131,7 +137,8 @@ export default function DemontagePage() {
 
                     if (showResult) {
                       if (isCorrect) {
-                        buttonClass += "bg-[#E2B44F] border-[#E2B44F] text-black font-semibold";
+                        buttonClass +=
+                          "bg-[#E2B44F] border-[#E2B44F] text-black font-semibold";
                       } else if (isSelected && !isCorrect) {
                         buttonClass += "bg-red-900/30 border-red-500 text-gray-300";
                       } else {
@@ -157,6 +164,11 @@ export default function DemontagePage() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* Flashcards interactives */}
+        <section className="mt-12">
+          <Flashcards6497 />
         </section>
       </div>
     </div>
