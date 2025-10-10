@@ -69,7 +69,6 @@ export default function Flashcards6497() {
     setIndex((i) => (i - 1 + total) % total);
   };
 
-  // Navigation clavier
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Enter") setFlipped((f) => !f);
@@ -82,8 +81,6 @@ export default function Flashcards6497() {
 
   return (
     <div className="bg-[#0a0a0a] text-gray-200 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-
-      {/* Carte */}
       <div
         onClick={() => setFlipped(!flipped)}
         className="cursor-pointer bg-[#1a1a1a] border-2 border-[#E2B44F] rounded-2xl shadow-2xl 
@@ -102,7 +99,6 @@ export default function Flashcards6497() {
         )}
       </div>
 
-      {/* Boutons navigation */}
       <div className="flex flex-col sm:flex-row justify-between items-center 
                       w-full sm:w-[90%] md:w-[85%] lg:w-[75%] xl:w-[70%] max-w-4xl 
                       mt-6 md:mt-8 gap-4 sm:gap-0">
@@ -127,7 +123,6 @@ export default function Flashcards6497() {
         </button>
       </div>
 
-      {/* Indication */}
       <p className="text-[#8B7355] mt-4 text-xs sm:text-sm text-center italic">
         Cliquez sur la carte pour la retourner — compatible mobile, tablette et clavier (Entrée, ←, →)
       </p>
