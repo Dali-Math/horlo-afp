@@ -17,7 +17,7 @@ const BANNER_VIDEO_SRC = "/videos/Editor — Clideo.mp4";
 const tutorials = [
   {
     id: "tuto-debutant",
-    title: "Initiation: démontage-remontage d’un mouvement",
+    title: "Initiation : démontage-remontage d’un mouvement",
     video: "https://www.youtube-nocookie.com/embed/SlB9FukapN4",
     pdf: "/pdf/tutoriels/initiation-demontage.pdf",
     duration: "12:35",
@@ -25,7 +25,7 @@ const tutorials = [
   },
   {
     id: "tuto-intermediaire",
-    title: "Huilage et lubrification: bonnes pratiques",
+    title: "Huilage et lubrification : bonnes pratiques",
     video: "https://www.youtube-nocookie.com/embed/ARb8Vo4refs",
     pdf: "/pdf/tutoriels/huilage-bonnes-pratiques.pdf",
     duration: "18:20",
@@ -33,7 +33,7 @@ const tutorials = [
   },
   {
     id: "tuto-avance",
-    title: "Chronographe: contrôle et réglage",
+    title: "Chronographe : contrôle et réglage",
     video: "https://www.youtube-nocookie.com/embed/eMQ6TkdEJvA",
     pdf: "/pdf/tutoriels/chronographe-reglage.pdf",
     duration: "22:10",
@@ -85,48 +85,55 @@ export default function PratiqueHorlogere() {
         </div>
       </section>
 
-      {/* 🧱 Catégories principales */}
+      {/* 🧱 Catégories principales avec liens actifs */}
       <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {[
           {
             icon: Wrench,
             title: "Démontage & Remontage",
             desc: "Étapes détaillées pour démonter et remonter un mouvement mécanique.",
+            link: "/pratique/demontage",
           },
           {
             icon: Clock,
             title: "Réglage & Précision",
             desc: "Techniques de réglage du balancier et de l’échappement pour une précision optimale.",
+            link: "/pratique/reglage",
           },
           {
             icon: Hammer,
             title: "Outils & Équipement",
             desc: "Guide complet des outils essentiels et leur bonne utilisation.",
+            link: "/pratique/outils",
           },
           {
             icon: Zap,
             title: "Huilage & Lubrification",
             desc: "Protocoles d’huilage pour assurer la longévité des mouvements.",
+            link: "/pratique/huilage",
           },
           {
             icon: BookOpen,
             title: "Fiches Techniques",
             desc: "Documents détaillés pour chaque type de mouvement.",
+            link: "/pratique/fiches",
           },
           {
             icon: Award,
             title: "Certifications",
             desc: "Standards et parcours professionnels de l’horlogerie suisse.",
+            link: "/pratique/certifications",
           },
         ].map((item, i) => (
-          <div
+          <Link
             key={i}
-            className="group bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-yellow-400/60 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl hover:shadow-yellow-400/20"
+            href={item.link}
+            className="group bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-yellow-400/60 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl hover:shadow-yellow-400/20 block"
           >
             <item.icon className="w-10 h-10 text-yellow-400 mb-5" />
             <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
             <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
-          </div>
+          </Link>
         ))}
       </section>
 
