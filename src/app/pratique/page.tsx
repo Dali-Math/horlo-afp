@@ -31,3 +31,5 @@ const tutorials = [
   },
   {
     id: 'tuto-avance',
+  },
+];
