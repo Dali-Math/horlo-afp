@@ -99,8 +99,9 @@ const Flashcards6497 = () => {
               {cards[index].question}
             </p>
           )}
+          
           {/* Boutons Retourner et Suivant */}
-          <div className="flex items-center gap-4 mt-6">
+          <div className="flex items-center justify-center gap-4 mt-6">
             <button
               onClick={(e) => {
                 e.stopPropagation();
