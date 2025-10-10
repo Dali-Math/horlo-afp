@@ -70,7 +70,8 @@ export default function HuilagePage() {
             <iframe
               width="100%"
               height="100%"
-              src="https://youtu.be/ARb8Vo4refs?si=nRyWBeHLpwyreJgg"
+              src="src="https://www.youtube.com/embed/ARb8Vo4refs?si=nRyWBeHLpwyreJgg"
+"
               title="Techniques de lubrification horlogère"
               frameBorder="0"
               allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
