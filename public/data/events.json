@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "title": "Watches & Wonders Geneva",
+    "date": "31 mars - 5 avril 2025",
+    "location": "Genève, Suisse",
+    "description": "Le plus grand salon international de l'horlogerie. Découvrez les dernières nouveautés des marques prestigieuses, assistez à des conférences et explorez l'univers de la haute horlogerie.",
+    "category": "Salons"
+  },
+  {
+    "id": "2",
+    "title": "Journées des Métiers d'Horlogerie",
+    "date": "15-16 novembre 2025",
+    "location": "La Chaux-de-Fonds, Suisse",
+    "description": "Portes ouvertes des écoles d'horlogerie avec ateliers d'initiation gratuits, démonstrations et visites.",
+    "category": "Ateliers"
+  },
+  {
+    "id": "3",
+    "title": "Salon Belles Montres Paris",
+    "date": "8-10 décembre 2025",
+    "location": "Paris, France",
+    "description": "Salon dédié aux montres vintage et contemporaines. Expositions, conférences techniques, ateliers de restauration.",
+    "category": "Salons"
+  }
+]
