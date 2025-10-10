@@ -1,0 +1,33 @@
+# Workflow automatisé pour la mise à jour quotidienne des événements horlogers
+# Ce script s'exécute tous les jours à 6h du matin (UTC) ou manuellement via workflow_dispatch
+# Il récupère les événements depuis les sources officielles et met à jour le fichier events.json
+
+name: Mise à jour auto des événements horlogers
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-events:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔄 Checkout repository
+        uses: actions/checkout@v3
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: 📦 Install dependencies
+        run: |
+          npm install jsdom
+      - name: 🕑 Run updateEvents script
+        run: |
+          npx ts-node scripts/updateEvents.ts
+      - name: 📁 Commit new events.json
+        run: |
+          git config --global user.email "events-bot@horlolearn.ch"
+          git config --global user.name "horlolearn-events-bot"
+          git add public/data/events.json
+          git commit -m "Automated update of events.json by bot (GitHub Action)" || echo "No changes to commit"
+          git push
