@@ -66,19 +66,22 @@ export default function ReglagePage() {
 
         {/* Bloc vidéo */}
         <section className="mb-12">
-          <div className="aspect-video w-full bg-black rounded-lg overflow-hidden shadow-lg">
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/LE5uleKjSPQ"
-              title="Réglage de précision horlogère"
-              frameBorder="0"
-              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full"
-            ></iframe>
-          </div>
-        </section>
+  <div className="aspect-video w-full bg-black rounded-lg overflow-hidden shadow-lg border border-[#E2B44F]/40">
+    <iframe
+      width="100%"
+      height="100%"
+      src="https://www.youtube.com/embed/HVxT1kQ99kg"
+      title="Tutoriel Horlogerie : Comment régler la marche d’un mouvement"
+      frameBorder="0"
+      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+      className="w-full h-full"
+    ></iframe>
+  </div>
+  <p className="text-center text-gray-400 text-sm mt-2 italic">
+    🎧 Langue audio : français
+  </p>
+</section>
 
         {/* Bloc texte pédagogique */}
         <section className="mb-12 bg-[#1a1a1a] p-6 md:p-8 rounded-lg">
