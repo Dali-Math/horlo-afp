@@ -49,13 +49,10 @@ export default function DemontagePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white py-8 px-4">
+    <section className="bg-[#0a0a0a] min-h-screen py-20 px-4 sm:px-6 lg:px-8 overflow-visible">
       <div className="max-w-4xl mx-auto">
         {/* Bouton retour */}
-        <Link
-          href="/pratique"
-          className="inline-flex items-center gap-2 text-[#E2B44F] hover:text-white transition-colors mb-8"
-        >
+        <Link href="/pratique" className="inline-flex items-center gap-2 text-[#E2B44F] hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-5 h-5" />
           Retour
         </Link>
@@ -67,7 +64,7 @@ export default function DemontagePage() {
 
         {/* Vidéo */}
         <section className="mb-12">
-          <div className="aspect-video w-full bg-black rounded-lg overflow-hidden shadow-lg">
+          <div className="aspect-video w-full bg-black rounded-lg shadow-lg">
             <iframe
               width="100%"
               height="100%"
@@ -89,24 +86,20 @@ export default function DemontagePage() {
           <div className="text-gray-300 leading-relaxed space-y-4">
             <p>
               Le démontage d'un mouvement horloger est une opération délicate qui nécessite
-              méthode et précision. Avant toute intervention, il est{" "}
-              <strong className="text-[#E2B44F]">
-                crucial de laisser le mouvement tourner
-              </strong>{" "}
+              méthode et précision. Avant toute intervention, il est
+              <strong className="text-[#E2B44F]"> crucial de laisser le mouvement tourner</strong>
               jusqu'à épuisement complet du ressort moteur, afin d'éviter tout risque de détente
               brutale pendant le démontage.
             </p>
             <p>
-              La première étape consiste à{" "}
-              <strong className="text-[#E2B44F]">retirer le balancier</strong>, pièce
+              La première étape consiste à <strong className="text-[#E2B44F]">retirer le balancier</strong>, pièce
               la plus fragile du mouvement. Cette précaution permet d'éviter tout choc accidentel
               lors des manipulations ultérieures. On procède ensuite au retrait des aiguilles
               avec un tire-aiguilles approprié, puis au démontage du cadran.
             </p>
             <p>
               L'échappement, le rouage, et enfin le barillet sont démontés dans cet ordre.
-              Chaque pièce doit être{" "}
-              <strong className="text-[#E2B44F]">manipulée avec des brucelles en acier</strong> ou
+              Chaque pièce doit être <strong className="text-[#E2B44F]">manipulée avec des brucelles en acier</strong> ou
               en laiton pour éviter toute contamination. Un rangement méthodique dans des coupelles
               séparées facilite grandement le remontage. Le mouvement ETA 6497, présenté dans la
               vidéo, est un excellent exemple pédagogique grâce à sa taille généreuse et sa
@@ -122,7 +115,7 @@ export default function DemontagePage() {
           </h2>
           <div className="space-y-6">
             {questions.map((q, qIndex) => (
-              <div key={qIndex} className="bg-[#0a0a0a] p-4 md:p-6 rounded-lg">
+              <div className="bg-[#0a0a0a] p-4 md:p-6 rounded-lg" key={qIndex}>
                 <p className="text-white font-semibold mb-4">
                   {qIndex + 1}. {q.question}
                 </p>
@@ -131,14 +124,10 @@ export default function DemontagePage() {
                     const isSelected = quizAnswers[qIndex] === oIndex;
                     const isCorrect = oIndex === q.correct;
                     const showResult = quizAnswers[qIndex] !== null;
-
-                    let buttonClass =
-                      "w-full text-left p-3 rounded-lg transition-all border ";
-
+                    let buttonClass = "w-full text-left p-3 rounded-lg transition-all border ";
                     if (showResult) {
                       if (isCorrect) {
-                        buttonClass +=
-                          "bg-[#E2B44F] border-[#E2B44F] text-black font-semibold";
+                        buttonClass += "bg-[#E2B44F] border-[#E2B44F] text-black font-semibold";
                       } else if (isSelected && !isCorrect) {
                         buttonClass += "bg-red-900/30 border-red-500 text-gray-300";
                       } else {
@@ -148,7 +137,6 @@ export default function DemontagePage() {
                       buttonClass +=
                         "bg-[#0a0a0a] border-gray-700 text-gray-300 hover:border-[#E2B44F] hover:text-white";
                     }
-
                     return (
                       <button
                         key={oIndex}
@@ -171,6 +159,6 @@ export default function DemontagePage() {
           <Flashcards6497 />
         </section>
       </div>
-    </div>
+    </section>
   );
 }
