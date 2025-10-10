@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
 const cards = [
   { question: "Quelle est la première étape du démontage du mouvement ETA 6497 ?", answer: "Retirer le balancier complet avec précaution." },
   { question: "Quelle est la fonction du pont de rouage ?", answer: "Il maintient en place les pivots des roues du rouage." },
@@ -52,19 +53,43 @@ const cards = [
   { question: "Pourquoi faut-il toujours travailler sur un tapis horloger ?", answer: "Pour protéger les pièces, éviter les rayures et empêcher les petites pièces de rouler." },
   { question: "Quelle est la règle d'or du remontage d'un mouvement mécanique ?", answer: "Travailler proprement, méthodiquement, et lubrifier chaque point de friction selon les spécifications." }
 ];
+
 export default function Flashcards6497() {
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const total = cards.length;
+
   const nextCard = () => {
     setFlipped(false);
-    setIndex((index + 1) % cards.length);
+    setIndex((i) => (i + 1) % total);
   };
+
+  const prevCard = () => {
+    setFlipped(false);
+    setIndex((i) => (i - 1 + total) % total);
+  };
+
+  // Navigation clavier
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Enter") setFlipped((f) => !f);
+      if (e.key === "ArrowRight") nextCard();
+      if (e.key === "ArrowLeft") prevCard();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
+
   return (
     <div className="bg-[#0a0a0a] text-gray-200 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      
+
+      {/* Carte */}
       <div
         onClick={() => setFlipped(!flipped)}
-        className="cursor-pointer bg-[#1a1a1a] border-2 border-[#E2B44F] rounded-2xl shadow-2xl p-8 md:p-12 text-center w-full sm:w-[90%] md:w-[85%] lg:w-[75%] xl:w-[70%] max-w-4xl min-h-[280px] md:min-h-[320px] flex items-center justify-center transition-transform duration-500 hover:scale-[1.02]"
+        className="cursor-pointer bg-[#1a1a1a] border-2 border-[#E2B44F] rounded-2xl shadow-2xl 
+                   p-8 md:p-12 text-center w-full sm:w-[90%] md:w-[85%] lg:w-[75%] xl:w-[70%] 
+                   max-w-4xl min-h-[300px] md:min-h-[340px] flex items-center justify-center 
+                   transition-transform duration-500 hover:scale-[1.02]"
       >
         {flipped ? (
           <p className="text-base sm:text-lg md:text-xl text-gray-200 leading-relaxed">
@@ -76,21 +101,35 @@ export default function Flashcards6497() {
           </p>
         )}
       </div>
-      
-      <div className="flex flex-col sm:flex-row justify-between items-center w-full sm:w-[90%] md:w-[85%] lg:w-[75%] xl:w-[70%] max-w-4xl mt-6 md:mt-8 gap-4 sm:gap-0">
+
+      {/* Boutons navigation */}
+      <div className="flex flex-col sm:flex-row justify-between items-center 
+                      w-full sm:w-[90%] md:w-[85%] lg:w-[75%] xl:w-[70%] max-w-4xl 
+                      mt-6 md:mt-8 gap-4 sm:gap-0">
+        <button
+          onClick={prevCard}
+          className="bg-[#E2B44F] text-black font-bold py-3 px-8 rounded-lg hover:bg-[#c89b3d] 
+                     transition-colors shadow-lg text-base md:text-lg"
+        >
+          ← Précédent
+        </button>
+
+        <p className="text-sm md:text-base text-[#E2B44F] font-medium">
+          Carte {index + 1} sur {total}
+        </p>
+
         <button
           onClick={nextCard}
-          className="bg-[#E2B44F] text-black font-bold py-3 px-8 rounded-lg hover:bg-[#c89b3d] transition-colors shadow-lg text-base md:text-lg"
+          className="bg-[#E2B44F] text-black font-bold py-3 px-8 rounded-lg hover:bg-[#c89b3d] 
+                     transition-colors shadow-lg text-base md:text-lg"
         >
-          Suivant
+          Suivant →
         </button>
-        <p className="text-sm md:text-base text-[#E2B44F] font-medium">
-          Carte {index + 1} sur {cards.length}
-        </p>
       </div>
-      
-      <p className="text-[#8B7355] mt-4 text-xs sm:text-sm text-center">
-        Cliquez sur la carte pour voir la réponse
+
+      {/* Indication */}
+      <p className="text-[#8B7355] mt-4 text-xs sm:text-sm text-center italic">
+        Cliquez sur la carte pour la retourner — compatible mobile, tablette et clavier (Entrée, ←, →)
       </p>
     </div>
   );
