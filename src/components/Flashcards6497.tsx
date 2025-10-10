@@ -37,12 +37,12 @@ export default function Flashcards6497() {
       <div
         onClick={() => setFlipped(!flipped)}
         className="cursor-pointer bg-[#1a1a1a] border-2 border-[#E2B44F] rounded-3xl shadow-2xl 
-                   p-12 md:p-16 text-center w-full md:w-[85%] lg:w-[80%] xl:w-[75%]
-                   max-w-5xl min-h-[420px] md:min-h-[500px] lg:min-h-[600px] flex flex-col items-center justify-center 
+                   p-16 md:p-24 xl:p-28 text-center w-full xl:w-[95%]
+                   max-w-7xl min-h-[520px] md:min-h-[700px] lg:min-h-[850px] flex flex-col items-center justify-center 
                    transition-transform duration-500 hover:scale-[1.03]"
       >
         <p
-          className={`text-lg sm:text-xl md:text-2xl leading-relaxed max-w-3xl ${
+          className={`text-2xl md:text-3xl xl:text-4xl leading-relaxed max-w-3xl ${
             flipped ? "text-gray-200" : "text-[#E2B44F] font-semibold"
           }`}
         >
