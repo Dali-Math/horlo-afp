@@ -66,20 +66,20 @@ export default function HuilagePage() {
 
         {/* Bloc vidéo */}
         <section className="mb-12">
-          <div className="aspect-video w-full bg-black rounded-lg overflow-hidden shadow-lg">
-            <iframe
-              width="100%"
-              height="100%"
-              src="src="https://www.youtube.com/embed/ARb8Vo4refs?si=nRyWBeHLpwyreJgg"
-"
-              title="Techniques de lubrification horlogère"
-              frameBorder="0"
-              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full"
-            ></iframe>
-          </div>
-        </section>
+  <div className="aspect-video w-full bg-black rounded-2xl overflow-hidden shadow-2xl border border-[#E2B44F]">
+    <iframe
+      width="100%"
+      height="100%"
+      src="https://www.youtube.com/embed/ARb8Vo4refs?si=nRyWBeHLpwyreJgg"
+      title="Techniques de lubrification horlogère"
+      frameBorder="0"
+      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+      className="w-full h-full"
+    ></iframe>
+  </div>
+</section>
+
 
         {/* Bloc texte pédagogique */}
         <section className="mb-12 bg-[#1a1a1a] p-6 md:p-8 rounded-lg">
