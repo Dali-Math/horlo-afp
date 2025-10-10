@@ -1,82 +1,33 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import HeroSection from './HeroSection';
 import FiltersBar from './FiltersBar';
 import EventCard from './EventCard';
-import type { Event } from './EventCard';
 import CallToActionSection from './CallToActionSection';
-
-// Données mock d'événements
-const mockEvents: Event[] = [
-  {
-    id: '1',
-    title: 'Watches & Wonders Geneva',
-    date: '31 mars - 5 avril 2025',
-    location: 'Genève, Suisse',
-    description:
-      "Le plus grand salon international de l'horlogerie. Découvrez les dernières nouveautés des marques prestigieuses, assistez à des conférences et explorez l'univers de la haute horlogerie.",
-    category: 'Salons',
-  },
-  {
-    id: '2',
-    title: "Journées des Métiers d'Horlogerie",
-    date: '15-16 novembre 2025',
-    location: 'La Chaux-de-Fonds, Suisse',
-    description:
-      "Portes ouvertes des écoles d'horlogerie. Ateliers d'initiation gratuits, démonstrations de métiers, rencontres avec des professionnels et visite des installations de formation.",
-    category: 'Ateliers',
-  },
-  {
-    id: '3',
-    title: 'Salon Belles Montres Paris',
-    date: '8-10 décembre 2025',
-    location: 'Paris, France',
-    description:
-      'Salon dédié aux montres vintage et contemporaines. Expositions, conférences techniques, ateliers de restauration et rencontres avec des collectionneurs passionnés.',
-    category: 'Salons',
-  },
-  {
-    id: '4',
-    title: 'Ateliers MIH - Musée International',
-    date: 'Tous les samedis',
-    location: 'La Chaux-de-Fonds, Suisse',
-    description:
-      "Ateliers pédagogiques mensuels au Musée International d'Horlogerie. Découverte des mécanismes, histoire de l'horlogerie, et initiations pratiques pour tous les âges.",
-    category: 'Ateliers',
-  },
-  {
-    id: '5',
-    title: 'MunichTime Watch Fair',
-    date: '24-26 octobre 2025',
-    location: 'Munich, Allemagne',
-    description:
-      'Foire horlogère internationale avec focus sur les marques indépendantes. Conférences techniques, masterclasses, et opportunités de networking avec des horlogers innovants.',
-    category: 'Salons',
-  },
-];
+import type { Event } from './EventCard';
 
 export default function EvenementsPage() {
+  const [events, setEvents] = useState<Event[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('Tous');
 
-  // Filtrage par catégorie
+  useEffect(() => {
+    fetch('/data/events.json')
+      .then((res) => res.json())
+      .then((data) => setEvents(data))
+      .catch((err) => console.error('Erreur de chargement des événements:', err));
+  }, []);
+
   const filteredEvents =
     selectedCategory === 'Tous'
-      ? mockEvents
-      : mockEvents.filter((event) => event.category === selectedCategory);
+      ? events
+      : events.filter((event) => event.category === selectedCategory);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-900 via-zinc-800 to-zinc-900">
-      {/* Section Hero */}
       <HeroSection />
+      <FiltersBar selectedCategory={selectedCategory} onCategoryChange={setSelectedCategory} />
 
-      {/* Barre de filtres */}
-      <FiltersBar
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-      />
-
-      {/* Grille d'événements */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {filteredEvents.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -87,13 +38,12 @@ export default function EvenementsPage() {
         ) : (
           <div className="text-center py-16">
             <p className="text-xl text-gray-400 font-['Inter']">
-              Aucun événement disponible dans cette catégorie.
+              Chargement des événements...
             </p>
           </div>
         )}
       </section>
 
-      {/* Section Call To Action */}
       <CallToActionSection />
 
       {/* Section Agendas externes */}
