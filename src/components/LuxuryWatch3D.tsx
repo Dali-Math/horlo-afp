@@ -5,7 +5,11 @@ import { useRef } from "react";
 import * as THREE from "three";
 
 function WatchModel() {
-  const { scene } = useGLTF("/models/luxury_watch.glb");
+  const { scene } = useGLTF("/models/luxury_watch.glb", true);
+  
+  // Safety check: return null if scene is not loaded
+  if (!scene) return null;
+  
   const hourRef = useRef<THREE.Object3D>();
   const minuteRef = useRef<THREE.Object3D>();
   const secondRef = useRef<THREE.Object3D>();
@@ -22,7 +26,11 @@ function WatchModel() {
 
   return (
     <>
-      <primitive object={scene} />
+      {/* Fallback mesh instead of primitive */}
+      <mesh>
+        <sphereGeometry args={[1, 32, 32]} />
+        <meshStandardMaterial color="gold" />
+      </mesh>
       <Environment preset="studio" />
     </>
   );
@@ -34,7 +42,8 @@ export default function LuxuryWatch3D() {
       <ambientLight intensity={0.7} />
       <directionalLight position={[3, 3, 5]} intensity={1.5} />
       <WatchModel />
-      <OrbitControls enableZoom={false} enablePan={false} />
+      {/* OrbitControls disabled for testing */}
+      {/* <OrbitControls enableZoom={false} enablePan={false} /> */}
     </Canvas>
   );
 }
