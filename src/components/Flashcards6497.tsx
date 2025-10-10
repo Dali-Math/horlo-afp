@@ -80,7 +80,7 @@ export default function Flashcards6497() {
   }, []);
 
   return (
-    <div className="bg-[#0a0a0a] text-gray-200 flex flex-col items-center justify-start pt-8 pb-16 px-4 sm:px-8 lg:px-12 overflow-visible">
+    <div className="bg-[#0a0a0a] text-gray-200 flex flex-col items-center justify-center pt-8 pb-16 px-4 sm:px-8 lg:px-12 overflow-visible">
       <h2 className="text-3xl md:text-4xl font-bold text-[#E2B44F] mb-12 text-center">
         Démontage & Remontage — Mouvement ETA 6497
       </h2>
