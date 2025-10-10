@@ -10,18 +10,9 @@ import {
   Award,
   Download,
   PlayCircle,
-  FileText,
 } from "lucide-react";
 
 const BANNER_VIDEO_SRC = "/videos/Editor — Clideo.mp4";
-
-const gallery = [
-  { src: "/pratique/gestes/rodage-1.jpg", alt: "Rodage - étape 1" },
-  { src: "/pratique/gestes/huilage.gif", alt: "Huilage - animation" },
-  { src: "/pratique/gestes/demontage-1.jpg", alt: "Démontage - platine" },
-  { src: "/pratique/gestes/remontage-bridge.jpg", alt: "Remontage - pont" },
-  { src: "/pratique/gestes/precision-balance.gif", alt: "Réglage du balancier" },
-];
 
 const tutorials = [
   {
@@ -94,101 +85,32 @@ export default function PratiqueHorlogere() {
         </div>
       </section>
 
-      {/* 🧱 Catégories */}
-      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {[
-          {
-            icon: Wrench,
-            title: "Démontage & Remontage",
-            desc: "Étapes détaillées pour démonter et remonter un mouvement mécanique.",
-          },
-          {
-            icon: Clock,
-            title: "Réglage & Précision",
-            desc: "Techniques de réglage du balancier et de l’échappement pour une précision optimale.",
-          },
-          {
-            icon: Hammer,
-            title: "Outils & Équipement",
-            desc: "Guide complet des outils essentiels et leur bonne utilisation.",
-          },
-          {
-            icon: Zap,
-            title: "Huilage & Lubrification",
-            desc: "Protocoles d’huilage pour assurer la longévité des mouvements.",
-          },
-          {
-            icon: BookOpen,
-            title: "Fiches Techniques",
-            desc: "Documents détaillés pour chaque type de mouvement.",
-          },
-          {
-            icon: Award,
-            title: "Certifications",
-            desc: "Standards et parcours professionnels de l’horlogerie suisse.",
-          },
-        ].map((item, i) => (
-          <div
-            key={i}
-            className="group bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-yellow-400/60 transition-all duration-500 hover:scale-[1.02] hover:shadow-xl hover:shadow-yellow-400/20"
-          >
-            <item.icon className="w-10 h-10 text-yellow-400 mb-5" />
-            <h3 className="text-xl font-bold text-white mb-3">
-              {item.title}
-            </h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
-              {item.desc}
-            </p>
-          </div>
-        ))}
-      </section>
-
-      {/* 🖼 Galerie des gestes */}
-      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <SectionTitle subtitle="Images pédagogiques HD et animations">
-          Galerie des gestes
-        </SectionTitle>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {gallery.map((item, idx) => (
-            <div
-              key={idx}
-              className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/10"
-            >
-              <img
-                src={item.src}
-                alt={item.alt}
-                className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* 🧠 Cartes mémoire ETA 6497 */}
-      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <SectionTitle subtitle="Cartes mémoire interactives pour maîtriser le démontage et le remontage du mouvement ETA 6497.">
           Démontage & Remontage — Mouvement ETA 6497
         </SectionTitle>
 
-        <div className="bg-black/60 rounded-2xl border border-yellow-500/30 p-10 shadow-lg text-center">
-          <h3 className="text-2xl font-bold text-yellow-400 mb-6">
+        <div className="bg-black/70 rounded-3xl border border-yellow-500/30 p-12 shadow-2xl text-center">
+          <h3 className="text-3xl font-bold text-yellow-400 mb-10">
             Démontage & Remontage — Mouvement ETA 6497
           </h3>
 
-          <div className="mx-auto max-w-md bg-gradient-to-b from-neutral-900 to-black rounded-xl border border-yellow-600/30 p-6 mb-6">
+          <div className="mx-auto max-w-2xl bg-gradient-to-b from-neutral-900 to-black rounded-2xl border border-yellow-600/40 p-10 mb-8 shadow-lg hover:shadow-yellow-500/20 transition-all duration-500">
             <p
               id="flashcard-question"
-              className="text-yellow-100 text-lg font-medium leading-relaxed"
+              className="text-yellow-100 text-xl font-medium leading-relaxed"
             >
               Quelle est la première étape du démontage du mouvement ETA 6497 ?
             </p>
             <p
               id="flashcard-answer"
-              className="hidden text-gray-300 text-base leading-relaxed italic mt-2"
+              className="hidden text-gray-300 text-lg leading-relaxed italic mt-4"
             >
               Retirer les aiguilles et le cadran avant de démonter les ponts et
               les rouages.
             </p>
+
             <button
               onClick={() => {
                 const q = document.getElementById("flashcard-question");
@@ -198,14 +120,15 @@ export default function PratiqueHorlogere() {
                   a.classList.toggle("hidden");
                 }
               }}
-              className="mt-6 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 px-6 rounded-lg transition"
+              className="mt-8 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-3 px-8 rounded-xl text-lg transition-all duration-300 hover:scale-105"
             >
               Retourner
             </button>
-            <p className="text-sm text-gray-400 mt-3">Carte 1 sur 50</p>
+
+            <p className="text-sm text-gray-400 mt-4">Carte 1 sur 50</p>
           </div>
 
-          <p className="text-gray-400 text-sm italic">
+          <p className="text-gray-400 text-base italic">
             Cliquez sur la carte pour la retourner — compatible mobile et
             tablette.
           </p>
