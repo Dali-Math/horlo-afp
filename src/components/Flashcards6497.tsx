@@ -76,8 +76,10 @@ const Flashcards6497 = () => {
       <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#E2B44F] mb-10 text-center px-4">
         Flashcards pour la division 6497
       </h2>
+
       {/* Carte */}
       <div
+        onClick={() => setFlipped(!flipped)}
         className="cursor-pointer bg-[#1a1a1a] border-2 border-[#E2B44F] rounded-3xl 
                    shadow-2xl flex items-center justify-center 
                    w-full sm:w-[95%] md:w-[80%] lg:w-[70%] max-w-4xl 
@@ -122,6 +124,7 @@ const Flashcards6497 = () => {
           </div>
         </div>
       </div>
+
       {/* Navigation */}
       <div className="flex flex-col sm:flex-row justify-between items-center 
                       w-full sm:w-[90%] md:w-[75%] lg:w-[60%] max-w-3xl 
@@ -144,6 +147,7 @@ const Flashcards6497 = () => {
           Suivant →
         </button>
       </div>
+
       {/* Légende */}
       <p className="text-[#8B7355] mt-8 text-xs sm:text-sm text-center italic">
         Cliquez sur la carte pour la retourner — compatible mobile, tablette et clavier (Entrée, ←, →)
