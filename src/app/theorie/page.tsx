@@ -1,11 +1,18 @@
 import HeroSection from './components/HeroSection'
 import LuxuryClock from "@/components/LuxuryClock";
+import dynamic from "next/dynamic";
+
+const LuxuryWatch3D = dynamic(() => import("@/components/LuxuryWatch3D"), { ssr: false });
 
 export default function Theorie() {
   return (
     <section className="relative overflow-visible min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="absolute top-12 right-16 z-50 hidden md:block">
         <LuxuryClock />
+      </div>
+
+      <div className="absolute top-16 right-20 w-[250px] h-[250px] hidden md:block">
+        <LuxuryWatch3D />
       </div>
       
       {/* Hero section on top */}
