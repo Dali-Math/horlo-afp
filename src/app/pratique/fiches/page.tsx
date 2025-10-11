@@ -8,7 +8,7 @@ export default function FichesPage() {
       title: "ETA 6497-1",
       description:
         "Communication technique officielle ETA – Détails complets du calibre 6497-1.",
-      file: "/pdfs/communication-technique/ETA%206497.pdf",
+      link: "/pratique/fiches/eta6497", // ✅ lien vers la page Flipbook
       date: "28 novembre 2016",
     },
     // tu pourras en ajouter d’autres ici
@@ -49,12 +49,12 @@ export default function FichesPage() {
               <p className="text-gray-400 mb-4">{fiche.description}</p>
               <p className="text-sm text-gray-500 mb-6">{fiche.date}</p>
 
+              {/* 🔗 Lien vers la page Flipbook */}
               <Link
-                href={fiche.file}
-                target="_blank"
+                href={fiche.link}
                 className="bg-yellow-400 text-black font-semibold px-4 py-2 rounded-md hover:bg-yellow-300 transition"
               >
-                📖 Ouvrir / Télécharger
+                📖 Ouvrir
               </Link>
             </div>
           ))}
