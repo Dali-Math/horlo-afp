@@ -1,29 +1,31 @@
 import HeroSection from './components/HeroSection'
 import LuxuryClock from "@/components/LuxuryClock";
-import dynamic from "next/dynamic";
-
-const LuxuryWatch3D = dynamic(() => import("@/components/LuxuryWatch3D"), { ssr: false });
 
 export default function Theorie() {
   return (
     <section className="relative overflow-visible min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Horloge animée */}
       <div className="absolute top-12 right-16 z-50 hidden md:block">
         <LuxuryClock />
       </div>
 
-      <div className="absolute top-16 right-20 w-[250px] h-[250px] hidden md:block">
-        <LuxuryWatch3D />
+      {/* Montre de luxe statique */}
+      <div className="absolute top-24 right-20 hidden md:block">
+        <img
+          src="/images/luxury_watch.png"
+          alt="Montre de luxe Vacheron Constantin - HorloLearn"
+          className="w-[320px] drop-shadow-[0_0_25px_rgba(226,180,79,0.6)] transition-transform duration-700 hover:scale-105 hover:drop-shadow-[0_0_40px_rgba(226,180,79,0.9)]"
+        />
       </div>
-      
-      {/* Hero section on top */}
+
+      {/* Hero section */}
       <HeroSection />
-      
-      
-      {/* Premium Resources Grid */}
+
+      {/* Grille principale */}
       <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           
-          {/* Cours PDF */}
+          {/* Cours Académiques */}
           <div className="bg-white rounded-2xl shadow-lg border border-gold-200 hover:shadow-xl transition-all duration-300 p-8">
             <div className="flex items-center mb-6">
               <div className="w-12 h-12 bg-gradient-to-r from-gold-400 to-gold-600 rounded-xl flex items-center justify-center mr-4">
@@ -64,21 +66,9 @@ export default function Theorie() {
               <h3 className="text-xl font-bold text-slate-800">Mouvements</h3>
             </div>
             <ul className="space-y-3">
-              <li>
-                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/mouvements">
-                  Mécaniques horlogers
-                </a>
-              </li>
-              <li>
-                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/complications">
-                  Complications
-                </a>
-              </li>
-              <li>
-                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/galerie-3d">
-                  Galerie 3D interactive
-                </a>
-              </li>
+              <li><a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/mouvements">Mécaniques horlogers</a></li>
+              <li><a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/complications">Complications</a></li>
+              <li><a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/galerie-3d">Galerie 3D interactive</a></li>
             </ul>
           </div>
 
@@ -93,21 +83,9 @@ export default function Theorie() {
               <h3 className="text-xl font-bold text-slate-800">Restauration</h3>
             </div>
             <ul className="space-y-3">
-              <li>
-                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/restauration">
-                  Techniques de restauration
-                </a>
-              </li>
-              <li>
-                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/outils">
-                  Outils horlogers
-                </a>
-              </li>
-              <li>
-                <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/pratique">
-                  Fiches pratiques
-                </a>
-              </li>
+              <li><a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/restauration">Techniques de restauration</a></li>
+              <li><a className="text-blue-600 hover:text-gold-600 transition-colors" href="/outils">Outils horlogers</a></li>
+              <li><a className="text-blue-600 hover:text-gold-600 transition-colors" href="/pratique">Fiches pratiques</a></li>
             </ul>
           </div>
         </div>
