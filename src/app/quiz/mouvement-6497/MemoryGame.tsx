@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-
 export default function MemoryGame() {
   const [cards, setCards] = useState<{ id: number; name: string }[]>([]);
   const [flipped, setFlipped] = useState<number[]>([]);
@@ -10,7 +9,6 @@ export default function MemoryGame() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [win, setWin] = useState(false);
-
   useEffect(() => {
     const pieces = [
       "barillet.png",
@@ -33,7 +31,6 @@ export default function MemoryGame() {
       .map((name, index) => ({ id: index, name }));
     setCards(doubled);
   }, []);
-
   useEffect(() => {
     if (isPlaying && timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
@@ -43,8 +40,7 @@ export default function MemoryGame() {
       setIsPlaying(false);
     }
   }, [isPlaying, timeLeft]);
-
-  const handleFlip = (index) => {
+  const handleFlip = (index: number) => {
     if (flipped.length === 2 || flipped.includes(index) || gameOver) return;
     if (!isPlaying) setIsPlaying(true);
     const newFlipped = [...flipped, index];
@@ -59,18 +55,15 @@ export default function MemoryGame() {
       }
     }
   };
-
   useEffect(() => {
     if (matched.length === new Set(cards.map(c => c.name)).size && cards.length > 0) {
       setWin(true);
       setIsPlaying(false);
     }
   }, [matched, cards]);
-
   const handleRestart = () => {
     window.location.reload();
   };
-
   return (
     <div className="flex flex-col items-center justify-center py-10">
       {/* Timer */}
@@ -80,7 +73,6 @@ export default function MemoryGame() {
           {String(timeLeft % 60).padStart(2, "0")}
         </div>
       )}
-
       {/* Grille de cartes */}
       <div className="grid md:grid-cols-4 lg:grid-cols-6 gap-4">
         {cards.map((card, index) => {
@@ -117,7 +109,6 @@ export default function MemoryGame() {
           );
         })}
       </div>
-
       {/* Messages finaux */}
       {gameOver && (
         <div className="mt-8 text-red-500 text-xl font-semibold">
@@ -130,7 +121,6 @@ export default function MemoryGame() {
           </button>
         </div>
       )}
-
       {win && (
         <div className="mt-8 text-green-600 text-xl font-semibold">
           🎉 Bravo ! Tu as retrouvé toutes les pièces du mouvement 6497 !
