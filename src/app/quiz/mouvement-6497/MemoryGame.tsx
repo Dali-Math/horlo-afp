@@ -36,6 +36,7 @@ export default function MemoryGame() {
       "pignon-coulant.png",
       "platine.png",
     ];
+
     const doubled = [...pieces, ...pieces]
       .sort(() => Math.random() - 0.5)
       .map((name, index) => ({
@@ -44,6 +45,7 @@ export default function MemoryGame() {
         flipped: false,
         matched: false,
       }));
+
     setCards(doubled);
   }, []);
 
@@ -69,9 +71,9 @@ export default function MemoryGame() {
   // Handle card flip
   const handleCardClick = (index: number) => {
     if (!canFlip || !isPlaying || gameOver || win) return;
+
     const card = cards[index];
     if (card.flipped || card.matched) return;
-    if (flippedIndices.length >= 2) return;
 
     const newCards = [...cards];
     newCards[index].flipped = true;
@@ -80,27 +82,27 @@ export default function MemoryGame() {
     const newFlipped = [...flippedIndices, index];
     setFlippedIndices(newFlipped);
 
-    // Check match when two cards are flipped
     if (newFlipped.length === 2) {
       setCanFlip(false);
       const [first, second] = newFlipped;
+
       if (cards[first].name === cards[second].name) {
-        // Match!
+        // Match found
         setTimeout(() => {
-          const matched = [...cards];
-          matched[first].matched = true;
-          matched[second].matched = true;
-          setCards(matched);
+          const updatedCards = [...cards];
+          updatedCards[first].matched = true;
+          updatedCards[second].matched = true;
+          setCards(updatedCards);
           setFlippedIndices([]);
           setCanFlip(true);
         }, 600);
       } else {
         // No match
         setTimeout(() => {
-          const unflipped = [...cards];
-          unflipped[first].flipped = false;
-          unflipped[second].flipped = false;
-          setCards(unflipped);
+          const updatedCards = [...cards];
+          updatedCards[first].flipped = false;
+          updatedCards[second].flipped = false;
+          setCards(updatedCards);
           setFlippedIndices([]);
           setCanFlip(true);
         }, 1000);
@@ -110,18 +112,16 @@ export default function MemoryGame() {
 
   const handleStart = () => {
     setIsPlaying(true);
-    setGameOver(false);
-    setWin(false);
   };
 
   const handleRestart = () => {
-    setTimeLeft(120);
-    setIsPlaying(true);
+    setIsPlaying(false);
     setGameOver(false);
     setWin(false);
+    setTimeLeft(120);
     setFlippedIndices([]);
     setCanFlip(true);
-    // Re-shuffle cards
+
     const pieces = [
       "barillet.png",
       "balancier.png",
@@ -138,6 +138,7 @@ export default function MemoryGame() {
       "pignon-coulant.png",
       "platine.png",
     ];
+
     const doubled = [...pieces, ...pieces]
       .sort(() => Math.random() - 0.5)
       .map((name, index) => ({
@@ -146,49 +147,53 @@ export default function MemoryGame() {
         flipped: false,
         matched: false,
       }));
+
     setCards(doubled);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FEFDFB] via-[#FFF8EF] to-[#F5E6D3] p-8 relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-10 left-10 text-6xl opacity-10">⚙️</div>
-      <div className="absolute bottom-20 right-20 text-7xl opacity-10">🕰️</div>
-
-      <div className="max-w-7xl mx-auto relative z-10">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50 to-slate-100 py-12 px-4">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-slate-800 mb-2">🕰️ Memory Game 6497</h1>
-          <p className="text-slate-600 text-lg">Retrouve toutes les paires de pièces du mouvement !</p>
-        </div>
+          <h1 className="text-4xl font-bold text-slate-800 mb-4">
+            🧩 Jeu Mémoire : Mouvement 6497
+          </h1>
+          <p className="text-lg text-slate-600 mb-6">
+            Trouve toutes les paires de pièces horlogères avant la fin du temps
+            !
+          </p>
 
-        {/* Timer and Start */}
-        <div className="flex justify-center items-center gap-6 mb-8">
-          <div className="bg-white px-8 py-4 rounded-2xl shadow-xl border-2 border-[#E2B44F]">
-            <div className="text-2xl font-bold text-slate-800">
-              ⏱️ {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}
+          {/* Timer and Start Button */}
+          <div className="flex flex-col items-center gap-4">
+            <div className="text-2xl font-bold text-slate-700">
+              ⏱️ Temps restant : {Math.floor(timeLeft / 60)}:
+              {(timeLeft % 60).toString().padStart(2, "0")}
             </div>
+
+            {!isPlaying && !gameOver && !win && (
+              <button
+                onClick={handleStart}
+                className="bg-gradient-to-r from-[#E2B44F] to-[#D4A643] text-white px-8 py-4 rounded-lg text-xl font-semibold hover:scale-105 transition-transform shadow-xl"
+              >
+                🎮 Démarrer le jeu
+              </button>
+            )}
           </div>
-          {!isPlaying && !gameOver && !win && (
-            <button
-              onClick={handleStart}
-              className="bg-gradient-to-r from-[#E2B44F] to-[#D4A643] text-white px-8 py-4 rounded-2xl font-bold text-xl hover:scale-110 transition-transform shadow-2xl"
-            >
-              🚀 Commencer
-            </button>
-          )}
         </div>
 
-        {/* Cards Grid */}
-        <div 
-          className="memory-grid" 
+        {/* Memory Grid */}
+        <div
+          className="memory-grid"
           style={{
-            display: 'grid', 
-            gap: '2rem', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', 
-            justifyItems: 'center', 
-            alignItems: 'center', 
-            padding: '2rem'
+            display: 'grid',
+            gap: '1.5rem',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            maxWidth: '1200px',
+            margin: '0 auto',
+            padding: '2rem',
           }}
         >
           {cards.map((card, index) => (
@@ -197,66 +202,78 @@ export default function MemoryGame() {
               onClick={() => handleCardClick(index)}
               className="card"
               style={{
-                width: '240px',
-                aspectRatio: '1/1',
-                borderRadius: '1.2rem',
-                background: '#d4a83f',
-                boxShadow: '0 8px 20px rgba(0,0,0,0.2)',
-                transition: 'transform 0.3s, box-shadow 0.3s',
-                cursor: isPlaying && !gameOver && !win ? 'pointer' : 'default',
-                position: 'relative',
-                transformStyle: 'preserve-3d',
-                transform: card.flipped || card.matched ? 'rotateY(180deg)' : 'rotateY(0deg)',
-              }}
-              onMouseEnter={(e) => {
-                if (isPlaying && !gameOver && !win && !card.flipped && !card.matched) {
-                  e.currentTarget.style.transform = 'scale(1.05)';
-                  e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!card.flipped && !card.matched) {
-                  e.currentTarget.style.transform = 'scale(1)';
-                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.2)';
-                }
+                width: '200px',
+                height: '220px',
+                perspective: '1000px',
+                cursor:
+                  canFlip && isPlaying && !card.matched ? 'pointer' : 'default',
               }}
             >
-              {/* Card Back */}
               <div
-                className="absolute inset-0 bg-gradient-to-br from-[#E2B44F] to-[#D4A643] rounded-xl shadow-2xl flex items-center justify-center"
                 style={{
-                  boxShadow: '0 6px 20px rgba(0,0,0,0.15)',
-                  borderRadius: '1.2rem',
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                  transition: 'transform 0.4s, box-shadow 0.3s'
+                  width: '100%',
+                  height: '100%',
+                  position: 'relative',
+                  transformStyle: 'preserve-3d',
+                  transition: 'transform 0.6s',
+                  transform:
+                    card.flipped || card.matched
+                      ? 'rotateY(180deg)'
+                      : 'rotateY(0deg)',
                 }}
               >
-                <span className="drop-shadow-lg">🕰️</span>
-              </div>
-              {/* Card Front */}
-              <div
-                className="absolute inset-0 bg-gradient-to-br from-white to-[#FEFDFB] border-2 border-[#E2B44F] rounded-xl shadow-xl flex flex-col items-center justify-center p-4"
-                style={{
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                  transform: "rotateY(180deg)",
-                }}
-              >
-                <Image
-                  src={`/images/quiz/6497/${card.name}`}
-                  alt={card.name}
-                  width={120}
-                  height={120}
-                  className="object-contain mb-2"
-                />
-                <span className="text-slate-700 text-sm font-medium text-center leading-tight">
-                  {card.name.replace(".png", "").replace(/-/g, " ")}
-                </span>
+                {/* Card Back */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    backfaceVisibility: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '1rem',
+                    backgroundColor: card.matched ? '#86efac' : '#e2b44f',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                  }}
+                >
+                  <span className="text-6xl">🕰️</span>
+                </div>
+
+                {/* Card Front */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    backfaceVisibility: 'hidden',
+                    transform: 'rotateY(180deg)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '1rem',
+                    backgroundColor: '#ffffff',
+                    padding: '1rem',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                  }}
+                >
+                  <Image
+                    src={`/images/quiz/6497/${card.name}`}
+                    alt={card.name}
+                    width={120}
+                    height={120}
+                    className="object-contain mb-2"
+                  />
+                  <span className="text-slate-700 text-sm font-medium text-center leading-tight">
+                    {card.name.replace(".png", "").replace(/-/g, " ")}
+                  </span>
+                </div>
               </div>
             </div>
           ))}
         </div>
+
         {/* Game Over Message */}
         {gameOver && (
           <div className="mt-8 text-center bg-white px-8 py-6 rounded-2xl shadow-2xl border-4 border-red-400">
@@ -272,6 +289,7 @@ export default function MemoryGame() {
             </button>
           </div>
         )}
+
         {/* Win Message */}
         {win && (
           <div className="mt-8 text-center bg-white px-8 py-6 rounded-2xl shadow-2xl border-4 border-green-400">
@@ -293,9 +311,15 @@ export default function MemoryGame() {
       
       {/* Media Queries via style tag */}
       <style jsx global>{`
+        @media (min-width: 1200px) {
+          .memory-grid {
+            grid-template-columns: repeat(6, 1fr) !important;
+          }
+        }
+        
         @media (max-width: 1024px) {
           .memory-grid {
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+            grid-template-columns: repeat(4, 1fr) !important;
           }
           .card {
             width: 180px !important;
