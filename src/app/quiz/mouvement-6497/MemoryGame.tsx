@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 export default function MemoryGame() {
-  const [cards, setCards] = useState([]);
-  const [flipped, setFlipped] = useState([]);
-  const [matched, setMatched] = useState([]);
+  const [cards, setCards] = useState<{ id: number; name: string }[]>([]);
+  const [flipped, setFlipped] = useState<number[]>([]);
+  const [matched, setMatched] = useState<string[]>([]);
   const [timeLeft, setTimeLeft] = useState(120);
   const [isPlaying, setIsPlaying] = useState(false);
   const [gameOver, setGameOver] = useState(false);
@@ -28,11 +28,9 @@ export default function MemoryGame() {
       "pignon-coulant.png",
       "platine.png",
     ];
-
     const doubled = [...pieces, ...pieces]
       .sort(() => Math.random() - 0.5)
       .map((name, index) => ({ id: index, name }));
-
     setCards(doubled);
   }, []);
 
@@ -49,10 +47,8 @@ export default function MemoryGame() {
   const handleFlip = (index) => {
     if (flipped.length === 2 || flipped.includes(index) || gameOver) return;
     if (!isPlaying) setIsPlaying(true);
-
     const newFlipped = [...flipped, index];
     setFlipped(newFlipped);
-
     if (newFlipped.length === 2) {
       const [first, second] = newFlipped;
       if (cards[first].name === cards[second].name) {
@@ -134,6 +130,7 @@ export default function MemoryGame() {
           </button>
         </div>
       )}
+
       {win && (
         <div className="mt-8 text-green-600 text-xl font-semibold">
           🎉 Bravo ! Tu as retrouvé toutes les pièces du mouvement 6497 !
