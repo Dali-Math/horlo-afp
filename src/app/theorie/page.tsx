@@ -1,14 +1,8 @@
 import HeroSection from './components/HeroSection'
-import LuxuryClock from "@/components/LuxuryClock";
 
 export default function Theorie() {
   return (
     <section className="relative overflow-visible min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Horloge animée */}
-      <div className="absolute top-12 right-16 z-50 hidden md:block">
-        <LuxuryClock />
-      </div>
-
       {/* Montre de luxe statique */}
       <div className="absolute top-24 right-20 hidden md:block">
         <img
@@ -17,10 +11,8 @@ export default function Theorie() {
           className="w-[320px] drop-shadow-[0_0_25px_rgba(226,180,79,0.6)] transition-transform duration-700 hover:scale-105 hover:drop-shadow-[0_0_40px_rgba(226,180,79,0.9)]"
         />
       </div>
-
       {/* Hero section */}
       <HeroSection />
-
       {/* Grille principale */}
       <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -53,7 +45,6 @@ export default function Theorie() {
               </li>
             </ul>
           </div>
-
           {/* Mouvements */}
           <div className="bg-white rounded-2xl shadow-lg border border-gold-200 hover:shadow-xl transition-all duration-300 p-8">
             <div className="flex items-center mb-6">
@@ -71,7 +62,6 @@ export default function Theorie() {
               <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/galerie-3d">Galerie 3D interactive</a>
             </ul>
           </div>
-
           {/* Restauration */}
           <div className="bg-white rounded-2xl shadow-lg border border-gold-200 hover:shadow-xl transition-all duration-300 p-8">
             <div className="flex items-center mb-6">
