@@ -8,10 +8,16 @@ export default function FichesPage() {
       title: "ETA 6497-1",
       description:
         "Communication technique officielle ETA – Détails complets du calibre 6497-1.",
-      link: "/pratique/fiches/eta6497", // ✅ lien vers la page Flipbook
+      link: "/pratique/fiches/eta6497",
       date: "28 novembre 2016",
     },
-    // tu pourras en ajouter d’autres ici
+    {
+      title: "ETA 2824-2",
+      description:
+        "Communication technique officielle ETA – Détails complets du calibre 2824-2, mouvement automatique à remontage unidirectionnel.",
+      link: "/pratique/fiches/eta2824",
+      date: "7 mars 2018",
+    },
   ];
 
   return (
@@ -32,11 +38,10 @@ export default function FichesPage() {
         </div>
 
         <p className="text-gray-300 text-lg leading-relaxed mb-10">
-          Consultez et téléchargez les fiches techniques de chaque mouvement
-          horloger. Idéal pour la révision et la formation.
+          Consultez et visualisez directement les fiches techniques de chaque
+          mouvement horloger. Idéal pour la révision et la formation.
         </p>
 
-        {/* Cartes de fiches */}
         <div className="grid md:grid-cols-2 gap-8">
           {fiches.map((fiche, i) => (
             <div
@@ -49,7 +54,6 @@ export default function FichesPage() {
               <p className="text-gray-400 mb-4">{fiche.description}</p>
               <p className="text-sm text-gray-500 mb-6">{fiche.date}</p>
 
-              {/* 🔗 Lien vers la page Flipbook */}
               <Link
                 href={fiche.link}
                 className="bg-yellow-400 text-black font-semibold px-4 py-2 rounded-md hover:bg-yellow-300 transition"
