@@ -102,27 +102,37 @@ export default function RemontagePage() {
           </div>
         </div>
 
-        {/* Bloc explicatif */}
+        {/* Bloc explicatif identique au design du démontage */}
         <section className="mt-12 bg-[#1a1a1a] p-6 md:p-8 rounded-lg shadow-lg">
           <h2 className="text-2xl md:text-3xl font-bold text-[#E2B44F] mb-4">
-            Maîtriser le Remontage du Mouvement
+            Maîtriser le Remontage d'un Mouvement Mécanique
           </h2>
           <div className="text-gray-300 leading-relaxed space-y-4">
             <p>
-              Le remontage d’un mouvement horloger demande rigueur, observation et une parfaite
-              propreté. Avant d’assembler, toutes les pièces doivent être nettoyées et huilées selon
+              Le remontage d’un mouvement horloger est une opération exigeant une
+              <strong className="text-[#E2B44F]"> méthode rigoureuse et une grande propreté</strong>.
+              Avant d’assembler, toutes les pièces doivent être nettoyées et huilées selon
               les points de lubrification prévus par le constructeur.
             </p>
+
             <p>
-              Commencez par{" "}
-              <strong className="text-[#E2B44F]">installer le barillet et le rouage</strong>. Vérifiez
-              la libre rotation des roues avant de poser les ponts. Chaque vis doit être serrée avec
-              douceur pour éviter toute déformation du pont.
+              Commencez par <strong className="text-[#E2B44F]">installer le barillet et le rouage</strong>,
+              puis vérifiez la libre rotation des roues avant de poser les ponts. Chaque vis
+              doit être serrée avec douceur pour éviter toute déformation du pont et
+              garantir un fonctionnement fluide.
             </p>
+
             <p>
-              Le balancier est replacé en dernier, après contrôle du jeu axial et radial de
-              l’échappement. Enfin, la marche du mouvement est vérifiée à la loupe pour assurer une
-              rotation fluide et constante.
+              <strong className="text-[#E2B44F]">Le balancier est replacé en dernier</strong>, après
+              contrôle du jeu axial et radial de l’échappement. Une fois l’ensemble monté,
+              la marche du mouvement est vérifiée à la loupe pour assurer une
+              <strong className="text-[#E2B44F]"> rotation régulière et constante</strong>.
+            </p>
+
+            <p>
+              Le mouvement ETA 6497 est idéal pour l’apprentissage : il offre une architecture
+              simple, robuste et pédagogique, parfaite pour comprendre les principes du
+              remontage manuel.
             </p>
           </div>
         </section>
