@@ -3,8 +3,6 @@ import Link from "next/link";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import { useState } from "react";
 import FlipBookViewer from "@/components/FlipBookViewer";
-import Flashcards6497 from "@/components/Flashcards6497";
-import FlashcardsRemontage6497 from "@/components/FlashcardsRemontage6497";
 
 export default function RemontagePage() {
   const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: number | null }>({
@@ -15,39 +13,40 @@ export default function RemontagePage() {
 
   const questions = [
     {
-      question: "Quelle est la première étape du remontage d'un mouvement mécanique ?",
+      question: "Quelle est la première étape lors du remontage du mouvement ETA 6497 ?",
       options: [
-        "Remettre le balancier",
-        "Remettre le barillet et le rouage",
-        "Poser le cadran",
-        "Fixer les aiguilles",
+        "Poser le balancier",
+        "Installer le barillet et le rouage",
+        "Remettre les aiguilles",
+        "Huiler les rubis",
       ],
       correct: 1,
     },
     {
-      question: "Pourquoi doit-on huiler certaines zones pendant le remontage ?",
+      question: "Pourquoi faut-il huiler les rubis avant le montage final ?",
       options: [
-        "Pour améliorer la précision du mouvement",
-        "Pour nettoyer les pièces",
-        "Pour éviter le bruit",
-        "Pour faciliter le vissage",
+        "Pour éviter le bruit du mouvement",
+        "Pour réduire les frictions et assurer la longévité du mécanisme",
+        "Pour augmenter la précision des aiguilles",
+        "Pour faciliter le vissage des ponts",
       ],
-      correct: 0,
+      correct: 1,
     },
     {
-      question: "Quel composant doit être remonté en dernier ?",
+      question: "Quelle est la dernière étape avant de refermer le boîtier ?",
       options: [
-        "Le balancier",
-        "Le barillet",
-        "Le pont d'ancre",
-        "La roue moyenne",
+        "Régler le spiral",
+        "Contrôler l’amplitude et la marche du mouvement",
+        "Visser les vis du pont de rouage",
+        "Nettoyer le cadran",
       ],
-      correct: 0,
+      correct: 1,
     },
   ];
 
-  const handleAnswer = (qIndex: number, aIndex: number) =>
-    setQuizAnswers({ ...quizAnswers, [qIndex]: aIndex });
+  const handleAnswer = (questionIndex: number, answerIndex: number) => {
+    setQuizAnswers({ ...quizAnswers, [questionIndex]: answerIndex });
+  };
 
   return (
     <section className="bg-[#0a0a0a] min-h-screen py-20 px-4 sm:px-6 lg:px-8 overflow-visible">
@@ -62,69 +61,64 @@ export default function RemontagePage() {
         </Link>
 
         {/* Titre principal */}
-        <h1 className="text-4xl md:text-5xl font-bold text-[#E2B44F] mb-12 text-center">
+        <h1 className="text-4xl md:text-5xl font-bold text-[#E2B44F] mb-8 text-center">
           Remontage — Mouvement ETA 6497
         </h1>
 
-        {/* Bloc principal deux colonnes */}
-        <div className="grid lg:grid-cols-2 gap-10 mb-16">
-          {/* Colonne gauche : vidéo + texte */}
-          <div>
-            <div className="aspect-video w-full bg-black rounded-lg shadow-lg mb-8">
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://www.youtube.com/embed/DL0z8a3vPRo"
-                title="Remontage mouvement ETA 6497"
-                frameBorder="0"
-                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full rounded-lg"
-              ></iframe>
-            </div>
-
-            <div className="bg-[#1a1a1a] p-6 md:p-8 rounded-lg">
-              <h2 className="text-2xl md:text-3xl font-bold text-[#E2B44F] mb-4">
-                Étapes Clés du Remontage du Mouvement
-              </h2>
-              <div className="text-gray-300 leading-relaxed space-y-4">
-                <p>
-                  Le remontage du mouvement ETA 6497 est une étape cruciale qui demande patience,
-                  observation et précision. Chaque pièce doit être replacée avec soin dans son
-                  logement sans forcer.
-                </p>
-                <p>
-                  Commencez par remettre le{
-                  <strong className="text-[#E2B44F]">barillet et le rouage</strong>, puis le pont
-                  de rouage. Contrôlez à chaque étape la liberté de rotation des roues avant de
-                  visser définitivement.
-                </p>
-                <p>
-                  Enfin, remontez le{
-                  <strong className="text-[#E2B44F]">balancier</strong>, en veillant à son bon
-                  alignement avec l'ancre. Quelques gouttes d'huile adaptées sur les pivots
-                  assureront une meilleure performance et longévité du mouvement.
-                </p>
-              </div>
-            </div>
+        {/* Conteneur principal */}
+        <div className="grid md:grid-cols-2 gap-8 items-start">
+          {/* Vidéo explicative */}
+          <div className="aspect-video w-full bg-black rounded-lg shadow-lg">
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/qik02PzZyUE"
+              title="Remontage mouvement ETA 6497"
+              frameBorder="0"
+              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            ></iframe>
           </div>
 
-          {/* Colonne droite : FlipBook */}
-          <div className="bg-[#111827] p-6 rounded-2xl border border-yellow-500/30 shadow-lg">
-            <div className="flex items-center gap-2 mb-4">
-              <BookOpen className="text-yellow-400 w-6 h-6" />
-              <h2 className="text-xl font-semibold text-yellow-400">
-                Guide de Remontage ETA 6497
-              </h2>
+          {/* FlipBook PDF */}
+          <div className="bg-[#0e0e0e] border border-[#E2B44F]/40 p-4 rounded-xl shadow-md">
+            <h2 className="text-xl font-semibold text-[#E2B44F] mb-4 flex items-center gap-2">
+              <BookOpen className="w-5 h-5" /> Guide de Remontage ETA 6497
+            </h2>
+            <div className="h-[650px] rounded-lg overflow-hidden">
+              <FlipBookViewer file="/pdfs/remontage/ETA6497-Remontage.pdf" />
             </div>
-            <FlipBookViewer file="/pdfs/remontage/ETA-6497-Remontage.pdf" />
           </div>
         </div>
 
+        {/* Bloc explicatif */}
+        <section className="mt-12 bg-[#1a1a1a] p-6 md:p-8 rounded-lg shadow-lg">
+          <h2 className="text-2xl md:text-3xl font-bold text-[#E2B44F] mb-4">
+            Maîtriser le Remontage du Mouvement
+          </h2>
+          <div className="text-gray-300 leading-relaxed space-y-4">
+            <p>
+              Le remontage d’un mouvement horloger demande rigueur, observation et une parfaite
+              propreté. Avant d’assembler, toutes les pièces doivent être nettoyées et huilées selon
+              les points de lubrification prévus par le constructeur.
+            </p>
+            <p>
+              Commencez par <strong className="text-[#E2B44F]">installer le barillet et le rouage</strong>.
+              Vérifiez la libre rotation des roues avant de poser les ponts. Chaque vis doit être serrée
+              avec douceur pour éviter toute déformation du pont.
+            </p>
+            <p>
+              Le balancier est replacé en dernier, après contrôle du jeu axial et radial de l’échappement.
+              Enfin, la marche du mouvement est vérifiée à la loupe pour assurer une rotation fluide et constante.
+            </p>
+          </div>
+        </section>
+
         {/* Mini Quiz */}
-        <section className="bg-[#1a1a1a] p-6 md:p-8 rounded-lg mb-12">
+        <section className="mt-12 bg-[#1a1a1a] p-6 md:p-8 rounded-lg shadow-lg mb-12">
           <h2 className="text-2xl md:text-3xl font-bold text-[#E2B44F] mb-6">
-            Mini-Quiz : Testez vos connaissances
+            Mini-Quiz : Vérifiez vos connaissances
           </h2>
           <div className="space-y-6">
             {questions.map((q, qIndex) => (
@@ -137,24 +131,19 @@ export default function RemontagePage() {
                     const isSelected = quizAnswers[qIndex] === oIndex;
                     const isCorrect = oIndex === q.correct;
                     const showResult = quizAnswers[qIndex] !== null;
-
                     let buttonClass = "w-full text-left p-3 rounded-lg transition-all border ";
                     if (showResult) {
                       if (isCorrect) {
-                        buttonClass +=
-                          "bg-[#E2B44F] border-[#E2B44F] text-black font-semibold";
+                        buttonClass += "bg-[#E2B44F] border-[#E2B44F] text-black font-semibold";
                       } else if (isSelected && !isCorrect) {
-                        buttonClass +=
-                          "bg-red-900/30 border-red-500 text-gray-300";
+                        buttonClass += "bg-red-900/30 border-red-500 text-gray-300";
                       } else {
-                        buttonClass +=
-                          "bg-[#0a0a0a] border-gray-700 text-gray-400";
+                        buttonClass += "bg-[#0a0a0a] border-gray-700 text-gray-400";
                       }
                     } else {
                       buttonClass +=
                         "bg-[#0a0a0a] border-gray-700 text-gray-300 hover:border-[#E2B44F] hover:text-white";
                     }
-
                     return (
                       <button
                         key={oIndex}
@@ -170,11 +159,6 @@ export default function RemontagePage() {
               </div>
             ))}
           </div>
-        </section>
-
-        {/* Flashcards interactives */}
-        <section className="mt-12">
-          <FlashcardsRemontage6497 />
         </section>
       </div>
     </section>
