@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 interface Card {
   id: number;
   image: string;
+  name: string;
   isFlipped: boolean;
   isMatched: boolean;
 }
@@ -11,11 +12,11 @@ interface Card {
 export default function MemoryGame() {
   // Use actual image filenames from /public/images/quiz/6497/
   const images = [
-    '/images/quiz/6497/ancre.png',
-    '/images/quiz/6497/balancier.png',
-    '/images/quiz/6497/barillet.png',
-    '/images/quiz/6497/spiral.png',
-    '/images/quiz/6497/platine.png'
+    { src: '/images/quiz/6497/ancre.png', name: 'Ancre' },
+    { src: '/images/quiz/6497/balancier.png', name: 'Balancier' },
+    { src: '/images/quiz/6497/barillet.png', name: 'Barillet' },
+    { src: '/images/quiz/6497/spiral.png', name: 'Spiral' },
+    { src: '/images/quiz/6497/platine.png', name: 'Platine' }
   ];
 
   const [cards, setCards] = useState<Card[]>([]);
@@ -31,7 +32,8 @@ export default function MemoryGame() {
     const shuffledImages = pairedImages.sort(() => Math.random() - 0.5);
     const gameCards: Card[] = shuffledImages.map((img, index) => ({
       id: index,
-      image: img,
+      image: img.src,
+      name: img.name,
       isFlipped: false,
       isMatched: false
     }));
@@ -99,207 +101,168 @@ export default function MemoryGame() {
     }
   }, [cards]);
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
   return (
     <>
-      <style jsx>{`
-        .memory-container {
-          display: grid;
-          grid-template-columns: 3fr 1fr;
-          align-items: start;
+      <style jsx global>{`
+        .memory-game-container {
+          display: flex;
           justify-content: center;
+          align-items: flex-start;
           gap: 4rem;
-          max-width: 1600px;
-          margin: 3rem auto;
-          padding: 2rem 4rem;
+          padding: 2rem;
+          flex-wrap: wrap;
         }
 
         .memory-grid {
           display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          gap: 1.6rem;
-          justify-items: center;
-          margin-right: 3rem;
-        }
-
-        .memory-sidebar {
-          display: flex;
-          justify-content: flex-start;
-          align-items: flex-start;
-          margin-top: 1rem;
+          grid-template-columns: repeat(5, 120px);
+          grid-gap: 15px;
+          justify-content: center;
+          align-items: center;
         }
 
         .memory-card {
-          width: 100px;
-          height: 100px;
-          perspective: 1000px;
+          background-color: #d4a52d;
+          border-radius: 12px;
           cursor: pointer;
-        }
-
-        .card-inner {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          text-align: center;
-          transition: transform 0.6s;
-          transform-style: preserve-3d;
-          cursor: pointer;
-        }
-
-        .card-flipped .card-inner {
-          transform: rotateY(180deg);
-        }
-
-        .card-front,
-        .card-back {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          backface-visibility: hidden;
-          border-radius: 1rem;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          width: 120px;
+          height: 120px;
+          transition: transform 0.2s ease;
         }
 
-        .card-front {
-          background: linear-gradient(135deg, #d19c28, #e2b44f);
-          color: white;
-          font-size: 1.2rem;
-          font-weight: 600;
+        .memory-card:hover {
+          transform: scale(1.05);
         }
 
-        .card-back {
-          background: #fffef8;
-          transform: rotateY(180deg);
-          border: 2px solid #e2b44f;
-        }
-
-        .card-back img {
-          max-width: 85%;
-          max-height: 85%;
+        .card-image {
+          width: 100%;
+          height: 100%;
           object-fit: contain;
         }
 
-        .card-matched {
-          opacity: 0.6;
-          transform: scale(0.9);
-        }
-
         .memory-panel {
-          background: #fffef8;
-          border: 2px solid #e2b44f;
-          border-radius: 1.5rem;
-          padding: 2rem;
-          width: 260px;
-          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+          width: 220px;
           text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
 
-        .memory-panel h3 {
-          font-size: 1.2rem;
-          color: #333;
-          margin-bottom: 0.5rem;
+        .timer-box {
+          background: #fff8e6;
+          border: 1px solid #e2b44f;
+          border-radius: 12px;
+          padding: 1.2rem;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .memory-panel .time {
-          font-size: 2rem;
-          font-weight: 700;
-          color: #d19c28;
-          margin-bottom: 1rem;
-        }
-
-        .start-btn {
-          background: #d19c28;
-          color: white;
+        .timer-title {
           font-weight: 600;
-          border: none;
-          border-radius: 1rem;
-          padding: 0.8rem 1.5rem;
-          cursor: pointer;
-          transition: all 0.25s ease;
+          color: #222;
         }
 
-        .start-btn:hover {
-          transform: scale(1.05);
-          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+        .timer-value {
+          font-size: 1.5rem;
+          color: #d4a52d;
+          margin: 0.5rem 0;
+        }
+
+        .start-btn,
+        .reset-btn {
+          background-color: #e2b44f;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          padding: 0.6rem 1rem;
+          margin-top: 0.6rem;
+          cursor: pointer;
+          font-weight: 500;
+          transition: background 0.3s ease;
+        }
+
+        .start-btn:hover,
+        .reset-btn:hover {
+          background-color: #d19f41;
         }
 
         .hint {
-          margin-top: 1rem;
-          font-size: 0.9rem;
-          color: #555;
+          font-size: 0.85rem;
+          color: #666;
+          margin-top: 0.6rem;
         }
 
-        /* Responsive */
+        /* Responsive mobile / tablette */
         @media (max-width: 1024px) {
-          .memory-container {
-            grid-template-columns: 1fr;
+          .memory-game-container {
+            flex-direction: column;
+            align-items: center;
             gap: 2rem;
-            text-align: center;
           }
-          .memory-sidebar {
-            justify-content: center;
+
+          .memory-grid {
+            grid-template-columns: repeat(4, 100px);
           }
+
+          .memory-card {
+            width: 100px;
+            height: 100px;
+          }
+
           .memory-panel {
             width: 100%;
-            max-width: 400px;
-          }
-          .memory-grid {
-            grid-template-columns: repeat(4, 1fr);
+            max-width: 300px;
           }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 600px) {
           .memory-grid {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 90px);
+            gap: 12px;
+          }
+
+          .memory-card {
+            width: 90px;
+            height: 90px;
+          }
+
+          .timer-value {
+            font-size: 1.2rem;
           }
         }
       `}</style>
-      
-      <div className="memory-container">
+
+      <div className="memory-game-container">
         <div className="memory-grid">
-          {cards.map((card) => (
+          {cards.map((card, index) => (
             <div
-              key={card.id}
-              className={`memory-card ${
-                card.isFlipped || card.isMatched ? 'card-flipped' : ''
-              } ${card.isMatched ? 'card-matched' : ''}`}
-              onClick={() => handleCardClick(card.id)}
+              key={index}
+              className={`memory-card ${card.isFlipped || card.isMatched ? 'flipped' : ''}`}
+              onClick={() => handleCardClick(index)}
             >
-              <div className="card-inner">
-                <div className="card-front">?</div>
-                <div className="card-back">
-                  <img src={card.image} alt={`Carte ${card.id + 1}`} />
-                </div>
-              </div>
+              <img
+                src={card.isFlipped || card.isMatched ? card.image : '/images/back.png'}
+                alt={card.name}
+                className="card-image"
+              />
             </div>
           ))}
         </div>
-
-        <div className="memory-sidebar">
-          <div className="memory-panel">
-            <h3>Temps écoulé</h3>
-            <div className="time">{formatTime(time)}</div>
-            <button className="start-btn" onClick={startGame}>
-              {gameStarted ? 'Recommencer' : 'Commencer'}
-            </button>
-            {gameWon && (
-              <div className="hint">
-                🎉 Félicitations ! Vous avez terminé en {formatTime(time)} !
-              </div>
+        <div className="memory-panel">
+          <div className="timer-box">
+            <p className="timer-title">⏱️ Temps écoulé :</p>
+            <p className="timer-value">
+              {Math.floor(time / 60).toString().padStart(2, '0')}:{(time % 60).toString().padStart(2, '0')}
+            </p>
+            {!gameStarted ? (
+              <button onClick={startGame} className="start-btn">🎮 Commencer</button>
+            ) : (
+              <button onClick={startGame} className="reset-btn">🔄 Recommencer</button>
             )}
-            {!gameStarted && !gameWon && (
-              <div className="hint">
-                Trouvez toutes les paires d'images identiques
-              </div>
-            )}
+            <p className="hint">💡 Trouvez toutes les paires d'images identiques avant la fin du temps !</p>
           </div>
         </div>
       </div>
