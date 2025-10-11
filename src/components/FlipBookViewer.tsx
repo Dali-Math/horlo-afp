@@ -1,7 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import React, { useRef, useState } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
+import { Document, Page, pdfjs } from "react-pdf/dist/esm/entry.webpack";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -42,13 +42,11 @@ export default function FlipBookViewer({ file }: { file: string }) {
           ))}
         </HTMLFlipBook>
       )}
-
       <Document
         file={file}
         onLoadSuccess={({ numPages }) => setNumPages(numPages)}
         className="hidden"
       />
-
       <div className="flex justify-center gap-6 mt-6">
         <button
           onClick={() => bookRef.current?.pageFlip()?.flipPrev()}
