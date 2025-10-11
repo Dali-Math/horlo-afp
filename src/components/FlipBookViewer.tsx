@@ -9,9 +9,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 // Import dynamique pour éviter le crash SSR
-const HTMLFlipBook = dynamic(() => import("react-pageflip"), {
-  ssr: false,
-});
+const HTMLFlipBook = dynamic(() => import("react-pageflip"), { ssr: false }) as any;
 
 export default function FlipBookViewer({ file }: { file: string }) {
   const [numPages, setNumPages] = useState(0);
