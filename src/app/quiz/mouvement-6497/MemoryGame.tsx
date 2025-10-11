@@ -118,6 +118,7 @@ export default function MemoryGame() {
           margin: 3rem auto;
           padding: 2rem 4rem;
         }
+
         .memory-grid {
           display: grid;
           grid-template-columns: repeat(5, 1fr);
@@ -125,18 +126,21 @@ export default function MemoryGame() {
           justify-items: center;
           margin-right: 3rem;
         }
+
         .memory-sidebar {
           display: flex;
           justify-content: flex-start;
           align-items: flex-start;
           margin-top: 1rem;
         }
+
         .memory-card {
           width: 100px;
           height: 100px;
           perspective: 1000px;
           cursor: pointer;
         }
+
         .card-inner {
           position: relative;
           width: 100%;
@@ -146,9 +150,11 @@ export default function MemoryGame() {
           transform-style: preserve-3d;
           cursor: pointer;
         }
+
         .card-flipped .card-inner {
           transform: rotateY(180deg);
         }
+
         .card-front,
         .card-back {
           position: absolute;
@@ -161,26 +167,31 @@ export default function MemoryGame() {
           justify-content: center;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
+
         .card-front {
           background: linear-gradient(135deg, #d19c28, #e2b44f);
           color: white;
           font-size: 1.2rem;
           font-weight: 600;
         }
+
         .card-back {
           background: #fffef8;
           transform: rotateY(180deg);
           border: 2px solid #e2b44f;
         }
+
         .card-back img {
           max-width: 85%;
           max-height: 85%;
           object-fit: contain;
         }
+
         .card-matched {
           opacity: 0.6;
           transform: scale(0.9);
         }
+
         .memory-panel {
           background: #fffef8;
           border: 2px solid #e2b44f;
@@ -190,17 +201,20 @@ export default function MemoryGame() {
           box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
           text-align: center;
         }
+
         .memory-panel h3 {
           font-size: 1.2rem;
           color: #333;
           margin-bottom: 0.5rem;
         }
+
         .memory-panel .time {
           font-size: 2rem;
           font-weight: 700;
           color: #d19c28;
           margin-bottom: 1rem;
         }
+
         .start-btn {
           background: #d19c28;
           color: white;
@@ -211,15 +225,18 @@ export default function MemoryGame() {
           cursor: pointer;
           transition: all 0.25s ease;
         }
+
         .start-btn:hover {
           transform: scale(1.05);
           box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
         }
+
         .hint {
           margin-top: 1rem;
           font-size: 0.9rem;
           color: #555;
         }
+
         /* Responsive */
         @media (max-width: 1024px) {
           .memory-container {
@@ -238,6 +255,7 @@ export default function MemoryGame() {
             grid-template-columns: repeat(4, 1fr);
           }
         }
+
         @media (max-width: 768px) {
           .memory-grid {
             grid-template-columns: repeat(2, 1fr);
@@ -264,6 +282,7 @@ export default function MemoryGame() {
             </div>
           ))}
         </div>
+
         <div className="memory-sidebar">
           <div className="memory-panel">
             <h3>Temps écoulé</h3>
