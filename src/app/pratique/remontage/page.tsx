@@ -4,6 +4,7 @@ import { ArrowLeft, BookOpen } from "lucide-react";
 import { useState } from "react";
 import FlipBookViewer from "@/components/FlipBookViewer";
 import Flashcards6497 from "@/components/Flashcards6497";
+import FlashcardsRemontage6497 from "@/components/FlashcardsRemontage6497";
 
 export default function RemontagePage() {
   const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: number | null }>({
@@ -136,6 +137,7 @@ export default function RemontagePage() {
                     const isSelected = quizAnswers[qIndex] === oIndex;
                     const isCorrect = oIndex === q.correct;
                     const showResult = quizAnswers[qIndex] !== null;
+
                     let buttonClass = "w-full text-left p-3 rounded-lg transition-all border ";
                     if (showResult) {
                       if (isCorrect) {
@@ -152,6 +154,7 @@ export default function RemontagePage() {
                       buttonClass +=
                         "bg-[#0a0a0a] border-gray-700 text-gray-300 hover:border-[#E2B44F] hover:text-white";
                     }
+
                     return (
                       <button
                         key={oIndex}
@@ -171,7 +174,7 @@ export default function RemontagePage() {
 
         {/* Flashcards interactives */}
         <section className="mt-12">
-          <Flashcards6497 />
+          <FlashcardsRemontage6497 />
         </section>
       </div>
     </section>
