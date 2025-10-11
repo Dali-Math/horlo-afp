@@ -1,305 +1,200 @@
 "use client";
-import { useState, useEffect } from "react";
-import Image from "next/image";
+
+import React, { useState, useEffect } from 'react';
+
+// Image imports
+import img1 from './images/1.png';
+import img2 from './images/2.png';
+import img3 from './images/3.png';
+import img4 from './images/4.png';
+import img5 from './images/5.png';
+import img6 from './images/6.png';
+import img7 from './images/7.png';
+import img8 from './images/8.png';
+import img9 from './images/9.png';
+import img10 from './images/10.png';
+import img11 from './images/11.png';
+import img12 from './images/12.png';
+import img13 from './images/13.png';
+import img14 from './images/14.png';
+import img15 from './images/15.png';
+import img16 from './images/16.png';
+import img17 from './images/17.png';
+import img18 from './images/18.png';
 
 interface Card {
   id: number;
-  name: string;
-  flipped: boolean;
-  matched: boolean;
+  image: any;
+  isFlipped: boolean;
+  isMatched: boolean;
 }
 
 export default function MemoryGame() {
+  const images = [
+    img1, img2, img3, img4, img5, img6, img7, img8, img9,
+    img10, img11, img12, img13, img14, img15, img16, img17, img18
+  ];
+
   const [cards, setCards] = useState<Card[]>([]);
-  const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
-  const [timeLeft, setTimeLeft] = useState(120);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
-  const [win, setWin] = useState(false);
-  const [canFlip, setCanFlip] = useState(true);
+  const [flippedCards, setFlippedCards] = useState<number[]>([]);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [time, setTime] = useState(0);
+  const [gameWon, setGameWon] = useState(false);
 
-  // Initialize cards on mount
-  useEffect(() => {
-    const pieces = [
-      "barillet.png",
-      "balancier.png",
-      "rochet.png",
-      "roue-moyenne.png",
-      "ancre.png",
-      "spiral.png",
-      "roue-echappement.png",
-      "pont-barillet.png",
-      "mobile-de-centre.png",
-      "pont-balancier.png",
-      "axe-balancier.png",
-      "ressort-de-bascule.png",
-      "pignon-coulant.png",
-      "platine.png",
-    ];
+  const initializeCards = () => {
+    const shuffledImages = images.sort(() => Math.random() - 0.5);
+    const gameCards: Card[] = shuffledImages.map((img, index) => ({
+      id: index,
+      image: img,
+      isFlipped: false,
+      isMatched: false
+    }));
+    setCards(gameCards);
+  };
 
-    const doubled = [...pieces, ...pieces]
-      .sort(() => Math.random() - 0.5)
-      .map((name, index) => ({
-        id: index,
-        name,
-        flipped: false,
-        matched: false,
-      }));
+  const startGame = () => {
+    initializeCards();
+    setGameStarted(true);
+    setTime(0);
+    setGameWon(false);
+    setFlippedCards([]);
+  };
 
-    setCards(doubled);
-  }, []);
+  const handleCardClick = (cardId: number) => {
+    if (!gameStarted || gameWon) return;
+    if (flippedCards.includes(cardId)) return;
+    if (cards[cardId].isMatched) return;
+    if (flippedCards.length >= 2) return;
 
-  // Timer logic
-  useEffect(() => {
-    if (isPlaying && timeLeft > 0 && !win) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    } else if (timeLeft === 0 && !win) {
-      setGameOver(true);
-      setIsPlaying(false);
-    }
-  }, [isPlaying, timeLeft, win]);
+    const newFlippedCards = [...flippedCards, cardId];
+    setFlippedCards(newFlippedCards);
 
-  // Check for win condition
-  useEffect(() => {
-    if (cards.length > 0 && cards.every((card) => card.matched)) {
-      setWin(true);
-      setIsPlaying(false);
-    }
-  }, [cards]);
+    setCards(prev => prev.map(card =>
+      card.id === cardId ? { ...card, isFlipped: true } : card
+    ));
 
-  // Handle card flip
-  const handleCardClick = (index: number) => {
-    if (!canFlip || !isPlaying || gameOver || win) return;
-
-    const card = cards[index];
-    if (card.flipped || card.matched) return;
-
-    const newCards = [...cards];
-    newCards[index].flipped = true;
-    setCards(newCards);
-
-    const newFlipped = [...flippedIndices, index];
-    setFlippedIndices(newFlipped);
-
-    if (newFlipped.length === 2) {
-      setCanFlip(false);
-      const [first, second] = newFlipped;
-
-      if (cards[first].name === cards[second].name) {
-        // Match found
+    if (newFlippedCards.length === 2) {
+      const [firstCard, secondCard] = newFlippedCards;
+      if (cards[firstCard].image === cards[secondCard].image) {
         setTimeout(() => {
-          const updatedCards = [...cards];
-          updatedCards[first].matched = true;
-          updatedCards[second].matched = true;
-          setCards(updatedCards);
-          setFlippedIndices([]);
-          setCanFlip(true);
-        }, 600);
-      } else {
-        // No match
-        setTimeout(() => {
-          const updatedCards = [...cards];
-          updatedCards[first].flipped = false;
-          updatedCards[second].flipped = false;
-          setCards(updatedCards);
-          setFlippedIndices([]);
-          setCanFlip(true);
+          setCards(prev => prev.map(card =>
+            card.id === firstCard || card.id === secondCard
+              ? { ...card, isMatched: true }
+              : card
+          ));
+          setFlippedCards([]);
         }, 1000);
+      } else {
+        setTimeout(() => {
+          setCards(prev => prev.map(card =>
+            card.id === firstCard || card.id === secondCard
+              ? { ...card, isFlipped: false }
+              : card
+          ));
+          setFlippedCards([]);
+        }, 1500);
       }
     }
   };
 
-  const handleStart = () => {
-    setIsPlaying(true);
-  };
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (gameStarted && !gameWon) {
+      interval = setInterval(() => {
+        setTime(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [gameStarted, gameWon]);
 
-  const handleRestart = () => {
-    setIsPlaying(false);
-    setGameOver(false);
-    setWin(false);
-    setTimeLeft(120);
-    setFlippedIndices([]);
-    setCanFlip(true);
+  useEffect(() => {
+    if (cards.length > 0 && cards.every(card => card.isMatched)) {
+      setGameWon(true);
+      setGameStarted(false);
+    }
+  }, [cards]);
 
-    const pieces = [
-      "barillet.png",
-      "balancier.png",
-      "rochet.png",
-      "roue-moyenne.png",
-      "ancre.png",
-      "spiral.png",
-      "roue-echappement.png",
-      "pont-barillet.png",
-      "mobile-de-centre.png",
-      "pont-balancier.png",
-      "axe-balancier.png",
-      "ressort-de-bascule.png",
-      "pignon-coulant.png",
-      "platine.png",
-    ];
-
-    const doubled = [...pieces, ...pieces]
-      .sort(() => Math.random() - 0.5)
-      .map((name, index) => ({
-        id: index,
-        name,
-        flipped: false,
-        matched: false,
-      }));
-
-    setCards(doubled);
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50 to-slate-100 py-12 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-slate-800 mb-4">🧩 Jeu Mémoire : Mouvement 6497</h1>
-          <p className="text-lg text-slate-600 mb-6">Trouve toutes les paires de pièces horlogères avant la fin du temps !</p>
-        </div>
-
-        {/* Two-column layout */}
-        <div className="memory-container">
-          {/* Memory Grid - Left */}
-          <div className="memory-grid">
-            {cards.map((card, index) => (
-              <div
-                key={card.id}
-                onClick={() => handleCardClick(index)}
-                className="card"
-                style={{
-                  width: '200px',
-                  aspectRatio: '1 / 1',
-                  perspective: '1000px',
-                  cursor: canFlip && isPlaying && !card.matched ? 'pointer' : 'default',
-                }}
-              >
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    position: 'relative',
-                    transformStyle: 'preserve-3d',
-                    transition: 'transform 0.6s',
-                    transform: card.flipped || card.matched ? 'rotateY(180deg)' : 'rotateY(0deg)',
-                  }}
-                >
-                  {/* Card Back */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      width: '100%',
-                      height: '100%',
-                      backfaceVisibility: 'hidden',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: '1rem',
-                      backgroundColor: card.matched ? '#86efac' : '#e2b44f',
-                      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                    }}
-                  >
-                    <span className="text-6xl">🕰️</span>
-                  </div>
-
-                  {/* Card Front */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      width: '100%',
-                      height: '100%',
-                      backfaceVisibility: 'hidden',
-                      transform: 'rotateY(180deg)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: '1rem',
-                      backgroundColor: '#ffffff',
-                      padding: '1rem',
-                      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                    }}
-                  >
-                    <Image
-                      src={`/images/quiz/6497/${card.name}`}
-                      alt={card.name}
-                      width={120}
-                      height={120}
-                      className="object-contain mb-2"
-                    />
-                    <span className="text-slate-700 text-sm font-medium text-center leading-tight">
-                      {card.name.replace(".png", "").replace(/-/g, " ")}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Sidebar - Right */}
-          <aside className="memory-sidebar">
-            <div className="memory-panel">
-              <h3>⏱ Temps restant :</h3>
-              <p className="time">
-                {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}
-              </p>
-              {!isPlaying && !gameOver && !win && (
-                <button className="start-btn" onClick={handleStart}>
-                  🎮 Démarrer le jeu
-                </button>
-              )}
-              <p className="hint">💡 Trouvez toutes les paires avant la fin du temps !</p>
-            </div>
-          </aside>
-        </div>
-
-        {/* Game Over Message */}
-        {gameOver && (
-          <div className="mt-8 text-center bg-white px-8 py-6 rounded-2xl shadow-2xl border-4 border-red-400">
-            <div className="text-red-600 text-2xl font-bold mb-4">⏰ Temps écoulé ! Game Over</div>
-            <p className="text-slate-600 mb-4">Essaie à nouveau 🕰️</p>
-            <button className="bg-gradient-to-r from-[#E2B44F] to-[#D4A643] text-white px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-transform shadow-lg" onClick={handleRestart}>
-              🔁 Rejouer
-            </button>
-          </div>
-        )}
-
-        {/* Win Message */}
-        {win && (
-          <div className="mt-8 text-center bg-white px-8 py-6 rounded-2xl shadow-2xl border-4 border-green-400">
-            <div className="text-green-600 text-2xl font-bold mb-4">🎉 Bravo ! Toutes les paires sont trouvées !</div>
-            <p className="text-slate-600 mb-4">Tu as retrouvé toutes les pièces du mouvement 6497 !</p>
-            <button className="bg-gradient-to-r from-[#E2B44F] to-[#D4A643] text-white px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-transform shadow-lg" onClick={handleRestart}>
-              🔁 Rejouer
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Styles */}
-      <style jsx global>{`
+    <>
+      <style jsx>{`
         .memory-container {
           display: grid;
-          grid-template-columns: 3fr 1fr; /* 75% - 25% */
+          grid-template-columns: 3fr 1fr;
           align-items: start;
           justify-content: center;
-          gap: 4rem; /* clear space between grid and panel */
+          gap: 4rem;
           max-width: 1600px;
           margin: 3rem auto;
-          padding: 2rem;
+          padding: 2rem 4rem;
         }
         .memory-grid {
           display: grid;
           grid-template-columns: repeat(6, 1fr);
-          gap: 1.5rem;
+          gap: 1.6rem;
           justify-items: center;
+          margin-right: 3rem;
         }
         .memory-sidebar {
           display: flex;
           justify-content: flex-start;
           align-items: flex-start;
+          margin-top: 1rem;
+        }
+        .memory-card {
+          width: 100px;
+          height: 100px;
+          perspective: 1000px;
+          cursor: pointer;
+        }
+        .card-inner {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          transition: transform 0.6s;
+          transform-style: preserve-3d;
+          cursor: pointer;
+        }
+        .card-flipped .card-inner {
+          transform: rotateY(180deg);
+        }
+        .card-front,
+        .card-back {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          backface-visibility: hidden;
+          border-radius: 1rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .card-front {
+          background: linear-gradient(135deg, #d19c28, #e2b44f);
+          color: white;
+          font-size: 1.2rem;
+          font-weight: 600;
+        }
+        .card-back {
+          background: #fffef8;
+          transform: rotateY(180deg);
+          border: 2px solid #e2b44f;
+        }
+        .card-back img {
+          max-width: 85%;
+          max-height: 85%;
+          object-fit: contain;
+        }
+        .card-matched {
+          opacity: 0.6;
+          transform: scale(0.9);
         }
         .memory-panel {
           background: #fffef8;
@@ -364,6 +259,47 @@ export default function MemoryGame() {
           }
         }
       `}</style>
-    </div>
+      
+      <div className="memory-container">
+        <div className="memory-grid">
+          {cards.map((card) => (
+            <div
+              key={card.id}
+              className={`memory-card ${
+                card.isFlipped || card.isMatched ? 'card-flipped' : ''
+              } ${card.isMatched ? 'card-matched' : ''}`}
+              onClick={() => handleCardClick(card.id)}
+            >
+              <div className="card-inner">
+                <div className="card-front">?</div>
+                <div className="card-back">
+                  <img src={card.image.src} alt={`Carte ${card.id + 1}`} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="memory-sidebar">
+          <div className="memory-panel">
+            <h3>Temps écoulé</h3>
+            <div className="time">{formatTime(time)}</div>
+            <button className="start-btn" onClick={startGame}>
+              {gameStarted ? 'Recommencer' : 'Commencer'}
+            </button>
+            {gameWon && (
+              <div className="hint">
+                🎉 Félicitations ! Vous avez terminé en {formatTime(time)} !
+              </div>
+            )}
+            {!gameStarted && !gameWon && (
+              <div className="hint">
+                Trouvez toutes les paires d'images identiques
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
