@@ -66,9 +66,9 @@ export default function Theorie() {
               <h3 className="text-xl font-bold text-slate-800">Mouvements</h3>
             </div>
             <ul className="space-y-3">
-              <li><a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/mouvements">Mécaniques horlogers</a></li>
-              <li><a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/complications">Complications</a></li>
-              <li><a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/galerie-3d">Galerie 3D interactive</a></li>
+              <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/mouvements">Mécaniques horlogers</a>
+              <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/complications">Complications</a>
+              <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/galerie-3d">Galerie 3D interactive</a>
             </ul>
           </div>
 
@@ -83,9 +83,9 @@ export default function Theorie() {
               <h3 className="text-xl font-bold text-slate-800">Restauration</h3>
             </div>
             <ul className="space-y-3">
-              <li><a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/restauration">Techniques de restauration</a></li>
-              <li><a className="text-blue-600 hover:text-gold-600 transition-colors" href="/outils">Outils horlogers</a></li>
-              <li><a className="text-blue-600 hover:text-gold-600 transition-colors" href="/pratique">Fiches pratiques</a></li>
+              <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/theorie/restauration">Techniques de restauration</a>
+              <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/outils">Outils horlogers</a>
+              <a className="text-blue-600 hover:text-gold-600 transition-colors" href="/pratique">Fiches pratiques</a>
             </ul>
           </div>
         </div>
