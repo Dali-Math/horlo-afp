@@ -36,7 +36,6 @@ export default function MemoryGame() {
       "pignon-coulant.png",
       "platine.png",
     ];
-
     const doubled = [...pieces, ...pieces]
       .sort(() => Math.random() - 0.5)
       .map((name, index) => ({
@@ -45,7 +44,6 @@ export default function MemoryGame() {
         flipped: false,
         matched: false,
       }));
-
     setCards(doubled);
   }, []);
 
@@ -71,7 +69,6 @@ export default function MemoryGame() {
   // Handle card flip
   const handleCardClick = (index: number) => {
     if (!canFlip || !isPlaying || gameOver || win) return;
-
     const card = cards[index];
     if (card.flipped || card.matched) return;
 
@@ -85,7 +82,6 @@ export default function MemoryGame() {
     if (newFlipped.length === 2) {
       setCanFlip(false);
       const [first, second] = newFlipped;
-
       if (cards[first].name === cards[second].name) {
         // Match found
         setTimeout(() => {
@@ -121,7 +117,6 @@ export default function MemoryGame() {
     setTimeLeft(120);
     setFlippedIndices([]);
     setCanFlip(true);
-
     const pieces = [
       "barillet.png",
       "balancier.png",
@@ -138,7 +133,6 @@ export default function MemoryGame() {
       "pignon-coulant.png",
       "platine.png",
     ];
-
     const doubled = [...pieces, ...pieces]
       .sort(() => Math.random() - 0.5)
       .map((name, index) => ({
@@ -147,7 +141,6 @@ export default function MemoryGame() {
         flipped: false,
         matched: false,
       }));
-
     setCards(doubled);
   };
 
@@ -156,36 +149,14 @@ export default function MemoryGame() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-slate-800 mb-4">
-            🧩 Jeu Mémoire : Mouvement 6497
-          </h1>
-          <p className="text-lg text-slate-600 mb-6">
-            Trouve toutes les paires de pièces horlogères avant la fin du temps
-            !
-          </p>
+          <h1 className="text-4xl font-bold text-slate-800 mb-4">🧩 Jeu Mémoire : Mouvement 6497</h1>
+          <p className="text-lg text-slate-600 mb-6">Trouve toutes les paires de pièces horlogères avant la fin du temps !</p>
         </div>
 
-        {/* Game Container with Grid and Sidebar */}
-        <div
-          className="game-container"
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'flex-start',
-            gap: '3rem',
-            margin: '2rem auto',
-            maxWidth: '1600px',
-          }}
-        >
-          {/* Memory Grid */}
-          <div
-            className="memory-grid"
-            style={{
-              display: 'grid',
-              gap: '1.5rem',
-              gridTemplateColumns: 'repeat(6, 1fr)',
-            }}
-          >
+        {/* Two-column layout */}
+        <div className="memory-layout">
+          {/* Memory Grid - Left */}
+          <div className="memory-grid">
             {cards.map((card, index) => (
               <div
                 key={card.id}
@@ -195,8 +166,7 @@ export default function MemoryGame() {
                   width: '200px',
                   aspectRatio: '1 / 1',
                   perspective: '1000px',
-                  cursor:
-                    canFlip && isPlaying && !card.matched ? 'pointer' : 'default',
+                  cursor: canFlip && isPlaying && !card.matched ? 'pointer' : 'default',
                 }}
               >
                 <div
@@ -206,10 +176,7 @@ export default function MemoryGame() {
                     position: 'relative',
                     transformStyle: 'preserve-3d',
                     transition: 'transform 0.6s',
-                    transform:
-                      card.flipped || card.matched
-                        ? 'rotateY(180deg)'
-                        : 'rotateY(0deg)',
+                    transform: card.flipped || card.matched ? 'rotateY(180deg)' : 'rotateY(0deg)',
                   }}
                 >
                   {/* Card Back */}
@@ -229,6 +196,7 @@ export default function MemoryGame() {
                   >
                     <span className="text-6xl">🕰️</span>
                   </div>
+
                   {/* Card Front */}
                   <div
                     style={{
@@ -263,56 +231,31 @@ export default function MemoryGame() {
             ))}
           </div>
 
-          {/* Game Sidebar */}
-          <aside
-            className="game-sidebar"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '1rem',
-              padding: '1.5rem',
-              background: 'linear-gradient(180deg, #fff9f0, #f6e6b8)',
-              borderRadius: '1.5rem',
-              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-              width: '220px',
-              height: 'fit-content',
-            }}
-          >
-            {/* Timer */}
-            <div className="text-2xl font-bold text-slate-700 text-center">
-              ⏱️ Temps restant : {Math.floor(timeLeft / 60)}:
-              {(timeLeft % 60).toString().padStart(2, "0")}
+          {/* Sidebar - Right */}
+          <aside className="memory-sidebar">
+            <div className="memory-panel">
+              <h3>⏱ Temps restant :</h3>
+              <p className="time">
+                {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}
+              </p>
+
+              {!isPlaying && !gameOver && !win && (
+                <button className="start-btn" onClick={handleStart}>
+                  🎮 Démarrer le jeu
+                </button>
+              )}
+
+              <p className="hint">💡 Trouvez toutes les paires avant la fin du temps !</p>
             </div>
-
-            {/* Start/Restart Button */}
-            {!isPlaying && !gameOver && !win && (
-              <button
-                onClick={handleStart}
-                className="bg-gradient-to-r from-[#E2B44F] to-[#D4A643] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:scale-105 transition-transform shadow-lg w-full"
-              >
-                🎮 Démarrer le jeu
-              </button>
-            )}
-
-            {/* Hint */}
-            <p className="text-slate-700 text-sm text-center font-medium">
-              💡 Trouvez toutes les paires avant la fin du temps !
-            </p>
           </aside>
         </div>
 
         {/* Game Over Message */}
         {gameOver && (
           <div className="mt-8 text-center bg-white px-8 py-6 rounded-2xl shadow-2xl border-4 border-red-400">
-            <div className="text-red-600 text-2xl font-bold mb-4">
-              ⏰ Temps écoulé ! Game Over
-            </div>
+            <div className="text-red-600 text-2xl font-bold mb-4">⏰ Temps écoulé ! Game Over</div>
             <p className="text-slate-600 mb-4">Essaie à nouveau 🕰️</p>
-            <button
-              onClick={handleRestart}
-              className="bg-gradient-to-r from-[#E2B44F] to-[#D4A643] text-white px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-transform shadow-lg"
-            >
+            <button onClick={handleRestart} className="bg-gradient-to-r from-[#E2B44F] to-[#D4A643] text-white px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-transform shadow-lg">
               🔁 Rejouer
             </button>
           </div>
@@ -321,52 +264,90 @@ export default function MemoryGame() {
         {/* Win Message */}
         {win && (
           <div className="mt-8 text-center bg-white px-8 py-6 rounded-2xl shadow-2xl border-4 border-green-400">
-            <div className="text-green-600 text-2xl font-bold mb-4">
-              🎉 Bravo ! Toutes les paires sont trouvées !
-            </div>
-            <p className="text-slate-600 mb-4">
-              Tu as retrouvé toutes les pièces du mouvement 6497 !
-            </p>
-            <button
-              onClick={handleRestart}
-              className="bg-gradient-to-r from-[#E2B44F] to-[#D4A643] text-white px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-transform shadow-lg"
-            >
+            <div className="text-green-600 text-2xl font-bold mb-4">🎉 Bravo ! Toutes les paires sont trouvées !</div>
+            <p className="text-slate-600 mb-4">Tu as retrouvé toutes les pièces du mouvement 6497 !</p>
+            <button onClick={handleRestart} className="bg-gradient-to-r from-[#E2B44F] to-[#D4A643] text-white px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-transform shadow-lg">
               🔁 Rejouer
             </button>
           </div>
         )}
       </div>
 
-      {/* Media Queries via style tag */}
+      {/* Styles */}
       <style jsx global>{`
+        .memory-layout {
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+          gap: 4rem;
+          max-width: 1600px;
+          margin: 3rem auto;
+          padding: 2rem;
+        }
+        .memory-grid {
+          display: grid;
+          grid-template-columns: repeat(6, 1fr);
+          gap: 1.5rem;
+          justify-items: center;
+        }
+        .memory-sidebar {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 280px;
+        }
+        .memory-panel {
+          background: #fffef8;
+          border: 2px solid #e2b44f;
+          border-radius: 1.5rem;
+          padding: 2rem;
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+          text-align: center;
+        }
+        .memory-panel h3 {
+          color: #333;
+          font-size: 1.2rem;
+          margin-bottom: 0.5rem;
+        }
+        .memory-panel .time {
+          font-size: 2rem;
+          font-weight: bold;
+          color: #d19c28;
+          margin-bottom: 1rem;
+        }
+        .start-btn {
+          background: #d19c28;
+          color: #fff;
+          font-weight: 600;
+          border: none;
+          border-radius: 1rem;
+          padding: 0.8rem 1.5rem;
+          cursor: pointer;
+          transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .start-btn:hover {
+          transform: scale(1.05);
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+        }
+        .hint {
+          margin-top: 1rem;
+          font-size: 0.9rem;
+          color: #555;
+        }
         @media (max-width: 1200px) {
-          .memory-grid {
-            grid-template-columns: repeat(5, 1fr) !important;
-          }
+          .memory-grid { grid-template-columns: repeat(5, 1fr); }
         }
-
         @media (max-width: 1024px) {
-          .game-container {
-            flex-direction: column !important;
-            align-items: center !important;
+          .memory-layout {
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
           }
-
-          .game-sidebar {
-            width: 100% !important;
-            max-width: 600px;
-            flex-direction: row !important;
-            justify-content: space-around !important;
-          }
-
-          .memory-grid {
-            grid-template-columns: repeat(4, 1fr) !important;
-          }
+          .memory-sidebar { width: 100%; }
+          .memory-grid { grid-template-columns: repeat(4, 1fr); }
         }
-
         @media (max-width: 768px) {
-          .memory-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
+          .memory-grid { grid-template-columns: repeat(2, 1fr); }
         }
       `}</style>
     </div>
