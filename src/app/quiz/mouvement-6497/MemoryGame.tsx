@@ -36,7 +36,6 @@ export default function MemoryGame() {
       "pignon-coulant.png",
       "platine.png",
     ];
-
     const doubled = [...pieces, ...pieces]
       .sort(() => Math.random() - 0.5)
       .map((name, index) => ({
@@ -45,7 +44,6 @@ export default function MemoryGame() {
         flipped: false,
         matched: false,
       }));
-
     setCards(doubled);
   }, []);
 
@@ -71,7 +69,6 @@ export default function MemoryGame() {
   // Handle card flip
   const handleCardClick = (index: number) => {
     if (!canFlip || !isPlaying || gameOver || win) return;
-
     const card = cards[index];
     if (card.flipped || card.matched) return;
 
@@ -121,7 +118,6 @@ export default function MemoryGame() {
     setTimeLeft(120);
     setFlippedIndices([]);
     setCanFlip(true);
-
     const pieces = [
       "barillet.png",
       "balancier.png",
@@ -138,7 +134,6 @@ export default function MemoryGame() {
       "pignon-coulant.png",
       "platine.png",
     ];
-
     const doubled = [...pieces, ...pieces]
       .sort(() => Math.random() - 0.5)
       .map((name, index) => ({
@@ -147,7 +142,6 @@ export default function MemoryGame() {
         flipped: false,
         matched: false,
       }));
-
     setCards(doubled);
   };
 
@@ -170,7 +164,6 @@ export default function MemoryGame() {
               ⏱️ Temps restant : {Math.floor(timeLeft / 60)}:
               {(timeLeft % 60).toString().padStart(2, "0")}
             </div>
-
             {!isPlaying && !gameOver && !win && (
               <button
                 onClick={handleStart}
@@ -190,8 +183,8 @@ export default function MemoryGame() {
             gap: '1.5rem',
             justifyContent: 'center',
             alignItems: 'center',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            maxWidth: '1200px',
+            gridTemplateColumns: 'repeat(6, 1fr)',
+            maxWidth: '1400px',
             margin: '0 auto',
             padding: '2rem',
           }}
@@ -203,7 +196,7 @@ export default function MemoryGame() {
               className="card"
               style={{
                 width: '200px',
-                height: '220px',
+                aspectRatio: '1 / 1',
                 perspective: '1000px',
                 cursor:
                   canFlip && isPlaying && !card.matched ? 'pointer' : 'default',
@@ -311,9 +304,9 @@ export default function MemoryGame() {
       
       {/* Media Queries via style tag */}
       <style jsx global>{`
-        @media (min-width: 1200px) {
+        @media (max-width: 1200px) {
           .memory-grid {
-            grid-template-columns: repeat(6, 1fr) !important;
+            grid-template-columns: repeat(5, 1fr) !important;
           }
         }
         
@@ -321,18 +314,11 @@ export default function MemoryGame() {
           .memory-grid {
             grid-template-columns: repeat(4, 1fr) !important;
           }
-          .card {
-            width: 180px !important;
-          }
         }
         
         @media (max-width: 768px) {
           .memory-grid {
             grid-template-columns: repeat(2, 1fr) !important;
-          }
-          .card {
-            width: 100% !important;
-            max-width: 180px !important;
           }
         }
       `}</style>
