@@ -2,15 +2,23 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
+interface Card {
+  id: number;
+  name: string;
+  flipped: boolean;
+  matched: boolean;
+}
+
 export default function MemoryGame() {
-  const [cards, setCards] = useState<{ id: number; name: string }[]>([]);
-  const [flipped, setFlipped] = useState<number[]>([]);
-  const [matched, setMatched] = useState<string[]>([]);
+  const [cards, setCards] = useState<Card[]>([]);
+  const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
   const [timeLeft, setTimeLeft] = useState(120);
   const [isPlaying, setIsPlaying] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [win, setWin] = useState(false);
+  const [canFlip, setCanFlip] = useState(true);
 
+  // Initialize cards on mount
   useEffect(() => {
     const pieces = [
       "barillet.png",
@@ -28,119 +36,181 @@ export default function MemoryGame() {
       "pignon-coulant.png",
       "platine.png",
     ];
+
     const doubled = [...pieces, ...pieces]
       .sort(() => Math.random() - 0.5)
-      .map((name, index) => ({ id: index, name }));
+      .map((name, index) => ({
+        id: index,
+        name,
+        flipped: false,
+        matched: false,
+      }));
+
     setCards(doubled);
   }, []);
 
+  // Timer logic
   useEffect(() => {
-    if (isPlaying && timeLeft > 0) {
+    if (isPlaying && timeLeft > 0 && !win) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
-    } else if (timeLeft === 0) {
+    } else if (timeLeft === 0 && !win) {
       setGameOver(true);
       setIsPlaying(false);
     }
-  }, [isPlaying, timeLeft]);
+  }, [isPlaying, timeLeft, win]);
 
-  const handleFlip = (index: number) => {
-    if (flipped.length === 2 || flipped.includes(index) || gameOver) return;
-    if (!isPlaying) setIsPlaying(true);
-
-    const newFlipped = [...flipped, index];
-    setFlipped(newFlipped);
-
-    if (newFlipped.length === 2) {
-      const [first, second] = newFlipped;
-      if (cards[first].name === cards[second].name) {
-        setMatched([...matched, cards[first].name]);
-        setFlipped([]);
-      } else {
-        setTimeout(() => setFlipped([]), 800);
-      }
-    }
-  };
-
+  // Check for win condition
   useEffect(() => {
-    if (matched.length === new Set(cards.map(c => c.name)).size && cards.length > 0) {
+    if (cards.length > 0 && cards.every((card) => card.matched)) {
       setWin(true);
       setIsPlaying(false);
     }
-  }, [matched, cards]);
+  }, [cards]);
+
+  // Handle card flip
+  const handleFlip = (index: number) => {
+    if (!canFlip || gameOver || win) return;
+    if (cards[index].flipped || cards[index].matched) return;
+    if (flippedIndices.length >= 2) return;
+
+    // Start game on first click
+    if (!isPlaying) setIsPlaying(true);
+
+    // Flip the card
+    const newCards = [...cards];
+    newCards[index].flipped = true;
+    setCards(newCards);
+
+    const newFlippedIndices = [...flippedIndices, index];
+    setFlippedIndices(newFlippedIndices);
+
+    // Check for match when two cards are flipped
+    if (newFlippedIndices.length === 2) {
+      setCanFlip(false);
+      const [firstIndex, secondIndex] = newFlippedIndices;
+
+      if (cards[firstIndex].name === cards[secondIndex].name) {
+        // Match found
+        setTimeout(() => {
+          const updatedCards = [...cards];
+          updatedCards[firstIndex].matched = true;
+          updatedCards[secondIndex].matched = true;
+          setCards(updatedCards);
+          setFlippedIndices([]);
+          setCanFlip(true);
+        }, 600);
+      } else {
+        // No match - flip back
+        setTimeout(() => {
+          const updatedCards = [...cards];
+          updatedCards[firstIndex].flipped = false;
+          updatedCards[secondIndex].flipped = false;
+          setCards(updatedCards);
+          setFlippedIndices([]);
+          setCanFlip(true);
+        }, 1000);
+      }
+    }
+  };
 
   const handleRestart = () => {
     window.location.reload();
   };
 
   return (
-    <div className="flex flex-col items-center justify-center py-10">
+    <div className="flex flex-col items-center justify-center py-10 px-4 min-h-screen bg-gradient-to-br from-[#FAF8F3] to-[#F5F1E8]">
       {/* Timer */}
       {!gameOver && !win && (
-        <div className="text-lg font-semibold text-[#E2B44F] mb-4">
+        <div className="text-2xl font-bold text-[#E2B44F] mb-6 bg-white px-6 py-3 rounded-xl shadow-lg border-2 border-[#E2B44F]">
           ⏱️ Temps restant : {Math.floor(timeLeft / 60)}:
           {String(timeLeft % 60).padStart(2, "0")}
         </div>
       )}
 
-      {/* Grille de cartes */}
-      <div className="grid md:grid-cols-4 lg:grid-cols-6 gap-4">
-        {cards.map((card, index) => {
-          const isFlipped = flipped.includes(index) || matched.includes(card.name);
-          return (
+      {/* Cards Grid */}
+      <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-3 md:gap-4 max-w-6xl">
+        {cards.map((card, index) => (
+          <div
+            key={card.id}
+            onClick={() => handleFlip(index)}
+            className="cursor-pointer w-20 h-20 md:w-28 md:h-28 perspective-1000"
+            style={{ perspective: "1000px" }}
+          >
             <div
-              key={index}
-              onClick={() => handleFlip(index)}
-              className="relative cursor-pointer w-32 h-32 perspective"
+              className="relative w-full h-full transition-transform duration-700 transform-style-3d"
+              style={{
+                transformStyle: "preserve-3d",
+                transform:
+                  card.flipped || card.matched ? "rotateY(180deg)" : "rotateY(0deg)",
+              }}
             >
+              {/* Card Back */}
               <div
-                className={`transition-transform duration-500 transform ${
-                  isFlipped ? "rotate-y-180" : ""
-                }`}
+                className="absolute inset-0 bg-gradient-to-br from-[#E2B44F] via-[#D4A643] to-[#C49838] rounded-xl flex items-center justify-center text-white text-4xl font-bold shadow-xl border-2 border-[#F5E6C3]"
+                style={{
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                }}
               >
-                {/* Dos */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#E2B44F] to-[#cfa843] rounded-xl flex items-center justify-center text-white text-xl font-bold backface-hidden">
-                  🕰️
-                </div>
-                {/* Face */}
-                <div className="absolute inset-0 bg-white border border-[#E2B44F] rounded-xl rotate-y-180 backface-hidden flex flex-col items-center justify-center">
-                  <Image
-                    src={`/images/quiz/6497/${card.name}`}
-                    alt={card.name}
-                    width={60}
-                    height={60}
-                  />
-                  <span className="text-slate-700 text-sm mt-2">
-                    {card.name.replace(".png", "").replace(/-/g, " ")}
-                  </span>
-                </div>
+                <span className="drop-shadow-lg">🕰️</span>
+              </div>
+
+              {/* Card Front */}
+              <div
+                className="absolute inset-0 bg-gradient-to-br from-white to-[#FEFDFB] border-2 border-[#E2B44F] rounded-xl shadow-xl flex flex-col items-center justify-center p-2"
+                style={{
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                  transform: "rotateY(180deg)",
+                }}
+              >
+                <Image
+                  src={`/images/quiz/6497/${card.name}`}
+                  alt={card.name}
+                  width={50}
+                  height={50}
+                  className="object-contain mb-1"
+                />
+                <span className="text-slate-700 text-[0.65rem] md:text-xs font-medium text-center leading-tight">
+                  {card.name.replace(".png", "").replace(/-/g, " ")}
+                </span>
               </div>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
 
-      {/* Messages finaux */}
+      {/* Game Over Message */}
       {gameOver && (
-        <div className="mt-8 text-red-500 text-xl font-semibold">
-          ⏰ Temps écoulé ! Game Over – Essaie à nouveau 🕰️
+        <div className="mt-8 text-center bg-white px-8 py-6 rounded-2xl shadow-2xl border-4 border-red-400">
+          <div className="text-red-600 text-2xl font-bold mb-4">
+            ⏰ Temps écoulé ! Game Over
+          </div>
+          <p className="text-slate-600 mb-4">Essaie à nouveau 🕰️</p>
           <button
             onClick={handleRestart}
-            className="ml-4 bg-[#E2B44F] text-white px-4 py-2 rounded-lg hover:scale-105 transition"
+            className="bg-gradient-to-r from-[#E2B44F] to-[#D4A643] text-white px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-transform shadow-lg"
           >
-            Rejouer
+            🔁 Rejouer
           </button>
         </div>
       )}
 
+      {/* Win Message */}
       {win && (
-        <div className="mt-8 text-green-600 text-xl font-semibold">
-          🎉 Bravo ! Tu as retrouvé toutes les pièces du mouvement 6497 !
+        <div className="mt-8 text-center bg-white px-8 py-6 rounded-2xl shadow-2xl border-4 border-green-400">
+          <div className="text-green-600 text-2xl font-bold mb-4">
+            🎉 Bravo ! Toutes les paires sont trouvées !
+          </div>
+          <p className="text-slate-600 mb-4">
+            Tu as retrouvé toutes les pièces du mouvement 6497 !
+          </p>
           <button
             onClick={handleRestart}
-            className="ml-4 bg-[#E2B44F] text-white px-4 py-2 rounded-lg hover:scale-105 transition"
+            className="bg-gradient-to-r from-[#E2B44F] to-[#D4A643] text-white px-6 py-3 rounded-lg font-semibold hover:scale-105 transition-transform shadow-lg"
           >
-            Rejouer
+            🔁 Rejouer
           </button>
         </div>
       )}
