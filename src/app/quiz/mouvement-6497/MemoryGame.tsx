@@ -36,6 +36,7 @@ export default function MemoryGame() {
       "pignon-coulant.png",
       "platine.png",
     ];
+
     const doubled = [...pieces, ...pieces]
       .sort(() => Math.random() - 0.5)
       .map((name, index) => ({
@@ -44,6 +45,7 @@ export default function MemoryGame() {
         flipped: false,
         matched: false,
       }));
+
     setCards(doubled);
   }, []);
 
@@ -69,6 +71,7 @@ export default function MemoryGame() {
   // Handle card flip
   const handleCardClick = (index: number) => {
     if (!canFlip || !isPlaying || gameOver || win) return;
+
     const card = cards[index];
     if (card.flipped || card.matched) return;
 
@@ -118,6 +121,7 @@ export default function MemoryGame() {
     setTimeLeft(120);
     setFlippedIndices([]);
     setCanFlip(true);
+
     const pieces = [
       "barillet.png",
       "balancier.png",
@@ -134,6 +138,7 @@ export default function MemoryGame() {
       "pignon-coulant.png",
       "platine.png",
     ];
+
     const doubled = [...pieces, ...pieces]
       .sort(() => Math.random() - 0.5)
       .map((name, index) => ({
@@ -142,6 +147,7 @@ export default function MemoryGame() {
         flipped: false,
         matched: false,
       }));
+
     setCards(doubled);
   };
 
@@ -157,114 +163,143 @@ export default function MemoryGame() {
             Trouve toutes les paires de pièces horlogères avant la fin du temps
             !
           </p>
+        </div>
 
-          {/* Timer and Start Button */}
-          <div className="flex flex-col items-center gap-4">
-            <div className="text-2xl font-bold text-slate-700">
+        {/* Game Container with Grid and Sidebar */}
+        <div
+          className="game-container"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            gap: '3rem',
+            margin: '2rem auto',
+            maxWidth: '1600px',
+          }}
+        >
+          {/* Memory Grid */}
+          <div
+            className="memory-grid"
+            style={{
+              display: 'grid',
+              gap: '1.5rem',
+              gridTemplateColumns: 'repeat(6, 1fr)',
+            }}
+          >
+            {cards.map((card, index) => (
+              <div
+                key={card.id}
+                onClick={() => handleCardClick(index)}
+                className="card"
+                style={{
+                  width: '200px',
+                  aspectRatio: '1 / 1',
+                  perspective: '1000px',
+                  cursor:
+                    canFlip && isPlaying && !card.matched ? 'pointer' : 'default',
+                }}
+              >
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    position: 'relative',
+                    transformStyle: 'preserve-3d',
+                    transition: 'transform 0.6s',
+                    transform:
+                      card.flipped || card.matched
+                        ? 'rotateY(180deg)'
+                        : 'rotateY(0deg)',
+                  }}
+                >
+                  {/* Card Back */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      backfaceVisibility: 'hidden',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '1rem',
+                      backgroundColor: card.matched ? '#86efac' : '#e2b44f',
+                      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    }}
+                  >
+                    <span className="text-6xl">🕰️</span>
+                  </div>
+                  {/* Card Front */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      backfaceVisibility: 'hidden',
+                      transform: 'rotateY(180deg)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '1rem',
+                      backgroundColor: '#ffffff',
+                      padding: '1rem',
+                      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                    }}
+                  >
+                    <Image
+                      src={`/images/quiz/6497/${card.name}`}
+                      alt={card.name}
+                      width={120}
+                      height={120}
+                      className="object-contain mb-2"
+                    />
+                    <span className="text-slate-700 text-sm font-medium text-center leading-tight">
+                      {card.name.replace(".png", "").replace(/-/g, " ")}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Game Sidebar */}
+          <aside
+            className="game-sidebar"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '1rem',
+              padding: '1.5rem',
+              background: 'linear-gradient(180deg, #fff9f0, #f6e6b8)',
+              borderRadius: '1.5rem',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+              width: '220px',
+              height: 'fit-content',
+            }}
+          >
+            {/* Timer */}
+            <div className="text-2xl font-bold text-slate-700 text-center">
               ⏱️ Temps restant : {Math.floor(timeLeft / 60)}:
               {(timeLeft % 60).toString().padStart(2, "0")}
             </div>
+
+            {/* Start/Restart Button */}
             {!isPlaying && !gameOver && !win && (
               <button
                 onClick={handleStart}
-                className="bg-gradient-to-r from-[#E2B44F] to-[#D4A643] text-white px-8 py-4 rounded-lg text-xl font-semibold hover:scale-105 transition-transform shadow-xl"
+                className="bg-gradient-to-r from-[#E2B44F] to-[#D4A643] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:scale-105 transition-transform shadow-lg w-full"
               >
                 🎮 Démarrer le jeu
               </button>
             )}
-          </div>
-        </div>
 
-        {/* Memory Grid */}
-        <div
-          className="memory-grid"
-          style={{
-            display: 'grid',
-            gap: '1.5rem',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gridTemplateColumns: 'repeat(6, 1fr)',
-            maxWidth: '1400px',
-            margin: '0 auto',
-            padding: '2rem',
-          }}
-        >
-          {cards.map((card, index) => (
-            <div
-              key={card.id}
-              onClick={() => handleCardClick(index)}
-              className="card"
-              style={{
-                width: '200px',
-                aspectRatio: '1 / 1',
-                perspective: '1000px',
-                cursor:
-                  canFlip && isPlaying && !card.matched ? 'pointer' : 'default',
-              }}
-            >
-              <div
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  position: 'relative',
-                  transformStyle: 'preserve-3d',
-                  transition: 'transform 0.6s',
-                  transform:
-                    card.flipped || card.matched
-                      ? 'rotateY(180deg)'
-                      : 'rotateY(0deg)',
-                }}
-              >
-                {/* Card Back */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: '100%',
-                    backfaceVisibility: 'hidden',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: '1rem',
-                    backgroundColor: card.matched ? '#86efac' : '#e2b44f',
-                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                  }}
-                >
-                  <span className="text-6xl">🕰️</span>
-                </div>
-
-                {/* Card Front */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: '100%',
-                    backfaceVisibility: 'hidden',
-                    transform: 'rotateY(180deg)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: '1rem',
-                    backgroundColor: '#ffffff',
-                    padding: '1rem',
-                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                  }}
-                >
-                  <Image
-                    src={`/images/quiz/6497/${card.name}`}
-                    alt={card.name}
-                    width={120}
-                    height={120}
-                    className="object-contain mb-2"
-                  />
-                  <span className="text-slate-700 text-sm font-medium text-center leading-tight">
-                    {card.name.replace(".png", "").replace(/-/g, " ")}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
+            {/* Hint */}
+            <p className="text-slate-700 text-sm text-center font-medium">
+              💡 Trouvez toutes les paires avant la fin du temps !
+            </p>
+          </aside>
         </div>
 
         {/* Game Over Message */}
@@ -301,7 +336,7 @@ export default function MemoryGame() {
           </div>
         )}
       </div>
-      
+
       {/* Media Queries via style tag */}
       <style jsx global>{`
         @media (max-width: 1200px) {
@@ -309,13 +344,25 @@ export default function MemoryGame() {
             grid-template-columns: repeat(5, 1fr) !important;
           }
         }
-        
+
         @media (max-width: 1024px) {
+          .game-container {
+            flex-direction: column !important;
+            align-items: center !important;
+          }
+
+          .game-sidebar {
+            width: 100% !important;
+            max-width: 600px;
+            flex-direction: row !important;
+            justify-content: space-around !important;
+          }
+
           .memory-grid {
             grid-template-columns: repeat(4, 1fr) !important;
           }
         }
-        
+
         @media (max-width: 768px) {
           .memory-grid {
             grid-template-columns: repeat(2, 1fr) !important;
