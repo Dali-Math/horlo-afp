@@ -2,19 +2,15 @@
 import dynamic from "next/dynamic";
 import React, { useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf/dist/esm/entry.webpack";
-
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
 ).toString();
-
 // Import dynamique pour éviter le crash SSR
 const HTMLFlipBook = dynamic(() => import("react-pageflip"), { ssr: false }) as any;
-
 export default function FlipBookViewer({ file }: { file: string }) {
   const [numPages, setNumPages] = useState(0);
   const bookRef = useRef<any>(null);
-
   return (
     <div className="flex flex-col items-center">
       {numPages > 0 && (
@@ -42,7 +38,7 @@ export default function FlipBookViewer({ file }: { file: string }) {
       )}
       <Document
         file={file}
-        onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+        onLoadSuccess={(info: { numPages: number }) => setNumPages(info.numPages)}
         className="hidden"
       />
       <div className="flex justify-center gap-6 mt-6">
