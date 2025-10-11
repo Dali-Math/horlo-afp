@@ -50,14 +50,21 @@ export default function MemoryGame() {
 
   // Timer countdown
   useEffect(() => {
-    if (isPlaying && timeLeft > 0 && !win) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    } else if (timeLeft === 0 && !win) {
-      setGameOver(true);
-      setIsPlaying(false);
+  if (isPlaying && timeLeft > 0 && !win) {
+
+    // 🔔 Alerte à 1 minute restante
+    if (timeLeft === 60) {
+      alert("⏳ Il ne reste plus qu'une minute !");
     }
-  }, [isPlaying, timeLeft, win]);
+
+    const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+    return () => clearTimeout(timer);
+
+  } else if (timeLeft === 0 && !win) {
+    setGameOver(true);
+    setIsPlaying(false);
+  }
+}, [isPlaying, timeLeft, win]);
 
   // Check for win condition
   useEffect(() => {
