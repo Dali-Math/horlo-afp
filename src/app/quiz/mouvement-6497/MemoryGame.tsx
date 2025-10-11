@@ -28,11 +28,9 @@ export default function MemoryGame() {
       "pignon-coulant.png",
       "platine.png",
     ];
-
     const doubled = [...pieces, ...pieces]
       .sort(() => Math.random() - 0.5)
       .map((name, index) => ({ id: index, name }));
-
     setCards(doubled);
   }, []);
 
@@ -46,9 +44,8 @@ export default function MemoryGame() {
     }
   }, [isPlaying, timeLeft]);
 
-  const handleFlip = (index) => {
+  const handleFlip = (index: number) => {
     if (flipped.length === 2 || flipped.includes(index) || gameOver) return;
-
     if (!isPlaying) setIsPlaying(true);
 
     const newFlipped = [...flipped, index];
@@ -105,7 +102,6 @@ export default function MemoryGame() {
                 <div className="absolute inset-0 bg-gradient-to-br from-[#E2B44F] to-[#cfa843] rounded-xl flex items-center justify-center text-white text-xl font-bold backface-hidden">
                   🕰️
                 </div>
-
                 {/* Face */}
                 <div className="absolute inset-0 bg-white border border-[#E2B44F] rounded-xl rotate-y-180 backface-hidden flex flex-col items-center justify-center">
                   <Image
