@@ -65,14 +65,14 @@ export default function RemontagePage() {
           Remontage — Mouvement ETA 6497
         </h1>
 
-        {/* Conteneur principal */}
+        {/* Bloc principal */}
         <div className="grid md:grid-cols-2 gap-8 items-start">
           {/* Vidéo explicative */}
           <div className="aspect-video w-full bg-black rounded-lg shadow-lg">
             <iframe
               width="100%"
               height="100%"
-              src="https://www.youtube.com/embed/qik02PzZyUE"
+              src="https://www.youtube.com/embed/mlo7muAlynE"
               title="Remontage mouvement ETA 6497"
               frameBorder="0"
               allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -89,6 +89,16 @@ export default function RemontagePage() {
             <div className="h-[650px] rounded-lg overflow-hidden">
               <FlipBookViewer file="/pdfs/remontage/ETA6497-Remontage.pdf" />
             </div>
+
+            {/* Bouton retour vers Démontage */}
+            <div className="text-center mt-6">
+              <Link
+                href="/pratique/demontage"
+                className="inline-block bg-[#E2B44F] text-black font-semibold px-5 py-3 rounded-md hover:bg-yellow-300 transition"
+              >
+                ↩️ Retour au guide de Démontage ETA 6497
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -104,13 +114,15 @@ export default function RemontagePage() {
               les points de lubrification prévus par le constructeur.
             </p>
             <p>
-              Commencez par <strong className="text-[#E2B44F]">installer le barillet et le rouage</strong>.
-              Vérifiez la libre rotation des roues avant de poser les ponts. Chaque vis doit être serrée
-              avec douceur pour éviter toute déformation du pont.
+              Commencez par{" "}
+              <strong className="text-[#E2B44F]">installer le barillet et le rouage</strong>. Vérifiez
+              la libre rotation des roues avant de poser les ponts. Chaque vis doit être serrée avec
+              douceur pour éviter toute déformation du pont.
             </p>
             <p>
-              Le balancier est replacé en dernier, après contrôle du jeu axial et radial de l’échappement.
-              Enfin, la marche du mouvement est vérifiée à la loupe pour assurer une rotation fluide et constante.
+              Le balancier est replacé en dernier, après contrôle du jeu axial et radial de
+              l’échappement. Enfin, la marche du mouvement est vérifiée à la loupe pour assurer une
+              rotation fluide et constante.
             </p>
           </div>
         </section>
@@ -134,11 +146,14 @@ export default function RemontagePage() {
                     let buttonClass = "w-full text-left p-3 rounded-lg transition-all border ";
                     if (showResult) {
                       if (isCorrect) {
-                        buttonClass += "bg-[#E2B44F] border-[#E2B44F] text-black font-semibold";
+                        buttonClass +=
+                          "bg-[#E2B44F] border-[#E2B44F] text-black font-semibold";
                       } else if (isSelected && !isCorrect) {
-                        buttonClass += "bg-red-900/30 border-red-500 text-gray-300";
+                        buttonClass +=
+                          "bg-red-900/30 border-red-500 text-gray-300";
                       } else {
-                        buttonClass += "bg-[#0a0a0a] border-gray-700 text-gray-400";
+                        buttonClass +=
+                          "bg-[#0a0a0a] border-gray-700 text-gray-400";
                       }
                     } else {
                       buttonClass +=
