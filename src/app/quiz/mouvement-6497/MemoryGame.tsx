@@ -25,7 +25,10 @@ export default function MemoryGame() {
   const [gameWon, setGameWon] = useState(false);
 
   const initializeCards = () => {
-    const shuffledImages = images.sort(() => Math.random() - 0.5);
+    // Create pairs by duplicating each image
+    const pairedImages = [...images, ...images];
+    // Shuffle the pairs
+    const shuffledImages = pairedImages.sort(() => Math.random() - 0.5);
     const gameCards: Card[] = shuffledImages.map((img, index) => ({
       id: index,
       image: img,
@@ -117,7 +120,7 @@ export default function MemoryGame() {
         }
         .memory-grid {
           display: grid;
-          grid-template-columns: repeat(6, 1fr);
+          grid-template-columns: repeat(5, 1fr);
           gap: 1.6rem;
           justify-items: center;
           margin-right: 3rem;
