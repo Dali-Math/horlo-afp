@@ -120,6 +120,21 @@ export default function MemoryGame() {
 
   return (
     <div className="flex flex-col items-center justify-center py-10 px-4 min-h-screen bg-gradient-to-br from-[#FAF8F3] to-[#F5F1E8]">
+      <style jsx global>{`
+        @media (max-width: 1024px) {
+          .memory-card {
+            width: 190px !important;
+            height: 190px !important;
+          }
+        }
+        @media (max-width: 768px) {
+          .memory-card {
+            width: 150px !important;
+            height: 150px !important;
+          }
+        }
+      `}</style>
+
       {/* Timer */}
       {!gameOver && !win && (
         <div className="text-2xl font-bold text-[#E2B44F] mb-6 bg-white px-6 py-3 rounded-xl shadow-lg border-2 border-[#E2B44F]">
@@ -129,16 +144,20 @@ export default function MemoryGame() {
       )}
 
       {/* Cards Grid */}
-      <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-3 md:gap-4 max-w-6xl">
+      <div className="grid gap-8 justify-items-center p-8 max-w-7xl" style={{gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))'}}>
         {cards.map((card, index) => (
           <div
             key={card.id}
             onClick={() => handleFlip(index)}
-            className="cursor-pointer w-20 h-20 md:w-28 md:h-28 perspective-1000"
-            style={{ perspective: "1000px" }}
+            className="memory-card cursor-pointer perspective-1000"
+            style={{
+              perspective: "1000px",
+              width: '220px',
+              height: '220px'
+            }}
           >
             <div
-              className="relative w-full h-full transition-transform duration-700 transform-style-3d"
+              className="relative w-full h-full transition-transform duration-700"
               style={{
                 transformStyle: "preserve-3d",
                 transform:
@@ -147,10 +166,14 @@ export default function MemoryGame() {
             >
               {/* Card Back */}
               <div
-                className="absolute inset-0 bg-gradient-to-br from-[#E2B44F] via-[#D4A643] to-[#C49838] rounded-xl flex items-center justify-center text-white text-4xl font-bold shadow-xl border-2 border-[#F5E6C3]"
+                className="absolute inset-0 rounded-xl flex items-center justify-center text-white text-5xl font-bold"
                 style={{
+                  background: '#d4a83f',
+                  boxShadow: '0 6px 20px rgba(0,0,0,0.15)',
+                  borderRadius: '1.2rem',
                   backfaceVisibility: "hidden",
                   WebkitBackfaceVisibility: "hidden",
+                  transition: 'transform 0.4s, box-shadow 0.3s'
                 }}
               >
                 <span className="drop-shadow-lg">🕰️</span>
@@ -158,7 +181,7 @@ export default function MemoryGame() {
 
               {/* Card Front */}
               <div
-                className="absolute inset-0 bg-gradient-to-br from-white to-[#FEFDFB] border-2 border-[#E2B44F] rounded-xl shadow-xl flex flex-col items-center justify-center p-2"
+                className="absolute inset-0 bg-gradient-to-br from-white to-[#FEFDFB] border-2 border-[#E2B44F] rounded-xl shadow-xl flex flex-col items-center justify-center p-4"
                 style={{
                   backfaceVisibility: "hidden",
                   WebkitBackfaceVisibility: "hidden",
@@ -168,11 +191,11 @@ export default function MemoryGame() {
                 <Image
                   src={`/images/quiz/6497/${card.name}`}
                   alt={card.name}
-                  width={50}
-                  height={50}
-                  className="object-contain mb-1"
+                  width={120}
+                  height={120}
+                  className="object-contain mb-2"
                 />
-                <span className="text-slate-700 text-[0.65rem] md:text-xs font-medium text-center leading-tight">
+                <span className="text-slate-700 text-sm font-medium text-center leading-tight">
                   {card.name.replace(".png", "").replace(/-/g, " ")}
                 </span>
               </div>
