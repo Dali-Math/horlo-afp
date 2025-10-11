@@ -9,8 +9,14 @@ interface Card {
 }
 
 export default function MemoryGame() {
-  // Use public folder paths instead of imports
-  const images = Array.from({ length: 18 }, (_, i) => `/images/quiz/6497/${i + 1}.png`);
+  // Use actual image filenames from /public/images/quiz/6497/
+  const images = [
+    '/images/quiz/6497/ancre.png',
+    '/images/quiz/6497/balancier.png',
+    '/images/quiz/6497/barillet.png',
+    '/images/quiz/6497/spiral.png',
+    '/images/quiz/6497/platine.png'
+  ];
 
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
@@ -45,7 +51,6 @@ export default function MemoryGame() {
 
     const newFlippedCards = [...flippedCards, cardId];
     setFlippedCards(newFlippedCards);
-
     setCards(prev => prev.map(card =>
       card.id === cardId ? { ...card, isFlipped: true } : card
     ));
@@ -256,7 +261,6 @@ export default function MemoryGame() {
             </div>
           ))}
         </div>
-
         <div className="memory-sidebar">
           <div className="memory-panel">
             <h3>Temps écoulé</h3>
