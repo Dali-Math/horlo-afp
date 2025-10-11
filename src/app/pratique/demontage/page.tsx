@@ -121,6 +121,16 @@ export default function DemontagePage() {
               </h2>
             </div>
             <FlipBookViewer file="/pdfs/demontage/ETA-6497-Demontage.pdf" />
+
+            {/* 🔧 Lien vers la page Remontage */}
+            <div className="text-center mt-6">
+              <Link
+                href="/pratique/remontage"
+                className="inline-block bg-[#E2B44F] text-black font-semibold px-5 py-3 rounded-md hover:bg-yellow-300 transition"
+              >
+                🔧 Accéder au guide de Remontage ETA 6497
+              </Link>
+            </div>
           </div>
         </div>
 
