@@ -50,6 +50,7 @@ export default function MemoryGame() {
   // 🕹️ Démarrage du jeu
   const startGame = () => {
     initializeCards();
+    console.log("Cartes générées :", cards.length);
     setIsPlaying(true);
     setGameOver(false);
     setTimeLeft(120);
@@ -73,6 +74,7 @@ export default function MemoryGame() {
     const updated = [...cards];
     updated[index].isFlipped = true;
     setCards(updated);
+
     const newFlipped = [...flipped, index];
     setFlipped(newFlipped);
 
