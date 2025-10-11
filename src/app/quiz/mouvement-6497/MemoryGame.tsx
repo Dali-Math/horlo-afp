@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 export default function MemoryGame() {
-  const [cards, setCards] = useState([]);
-  const [flipped, setFlipped] = useState([]);
-  const [matched, setMatched] = useState([]);
+  const [cards, setCards] = useState<{ id: number; name: string }[]>([]);
+  const [flipped, setFlipped] = useState<number[]>([]);
+  const [matched, setMatched] = useState<string[]>([]);
   const [timeLeft, setTimeLeft] = useState(120);
   const [isPlaying, setIsPlaying] = useState(false);
   const [gameOver, setGameOver] = useState(false);
@@ -48,6 +48,7 @@ export default function MemoryGame() {
 
   const handleFlip = (index) => {
     if (flipped.length === 2 || flipped.includes(index) || gameOver) return;
+
     if (!isPlaying) setIsPlaying(true);
 
     const newFlipped = [...flipped, index];
@@ -104,6 +105,7 @@ export default function MemoryGame() {
                 <div className="absolute inset-0 bg-gradient-to-br from-[#E2B44F] to-[#cfa843] rounded-xl flex items-center justify-center text-white text-xl font-bold backface-hidden">
                   🕰️
                 </div>
+
                 {/* Face */}
                 <div className="absolute inset-0 bg-white border border-[#E2B44F] rounded-xl rotate-y-180 backface-hidden flex flex-col items-center justify-center">
                   <Image
@@ -134,6 +136,7 @@ export default function MemoryGame() {
           </button>
         </div>
       )}
+
       {win && (
         <div className="mt-8 text-green-600 text-xl font-semibold">
           🎉 Bravo ! Tu as retrouvé toutes les pièces du mouvement 6497 !
