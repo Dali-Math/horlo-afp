@@ -61,27 +61,65 @@ export default function RemontagePage() {
         </Link>
 
         {/* Titre principal */}
-        <h1 className="text-4xl md:text-5xl font-bold text-[#E2B44F] mb-8 text-center">
+        <h1 className="text-4xl md:text-5xl font-bold text-[#E2B44F] mb-12 text-center">
           Remontage — Mouvement ETA 6497
         </h1>
 
-        {/* Bloc principal */}
-        <div className="grid md:grid-cols-2 gap-8 items-start">
-          {/* Vidéo explicative */}
-          <div className="aspect-video w-full bg-black rounded-lg shadow-lg">
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/mlo7muAlynE"
-              title="Remontage mouvement ETA 6497"
-              frameBorder="0"
-              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full"
-            ></iframe>
+        {/* Bloc principal à 2 colonnes */}
+        <div className="grid lg:grid-cols-2 gap-10 mb-16">
+          {/* Colonne gauche : vidéo + texte explicatif */}
+          <div>
+            {/* Vidéo explicative */}
+            <div className="aspect-video w-full bg-black rounded-lg shadow-lg mb-8">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/mlo7muAlynE"
+                title="Remontage mouvement ETA 6497"
+                frameBorder="0"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full rounded-lg"
+              ></iframe>
+            </div>
+
+            {/* Bloc explicatif (à gauche, même design que Démontage) */}
+            <div className="bg-[#1a1a1a] p-6 md:p-8 rounded-lg shadow-lg">
+              <h2 className="text-2xl md:text-3xl font-bold text-[#E2B44F] mb-4">
+                Maîtriser le Remontage d'un Mouvement Mécanique
+              </h2>
+              <div className="text-gray-300 leading-relaxed space-y-4">
+                <p>
+                  Le remontage d’un mouvement horloger est une opération exigeant une
+                  <strong className="text-[#E2B44F]"> méthode rigoureuse et une grande propreté</strong>.
+                  Avant d’assembler, toutes les pièces doivent être nettoyées et huilées selon
+                  les points de lubrification prévus par le constructeur.
+                </p>
+
+                <p>
+                  Commencez par <strong className="text-[#E2B44F]">installer le barillet et le rouage</strong>,
+                  puis vérifiez la libre rotation des roues avant de poser les ponts. Chaque vis
+                  doit être serrée avec douceur pour éviter toute déformation du pont et
+                  garantir un fonctionnement fluide.
+                </p>
+
+                <p>
+                  <strong className="text-[#E2B44F]">Le balancier est replacé en dernier</strong>, après
+                  contrôle du jeu axial et radial de l’échappement. Une fois l’ensemble monté,
+                  la marche du mouvement est vérifiée à la loupe pour assurer une
+                  <strong className="text-[#E2B44F]"> rotation régulière et constante</strong>.
+                </p>
+
+                <p>
+                  Le mouvement ETA 6497 est idéal pour l’apprentissage : il offre une architecture
+                  simple, robuste et pédagogique, parfaite pour comprendre les principes du
+                  remontage manuel.
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* FlipBook PDF */}
+          {/* Colonne droite : FlipBook PDF */}
           <div className="bg-[#0e0e0e] border border-[#E2B44F]/40 p-4 rounded-xl shadow-md">
             <h2 className="text-xl font-semibold text-[#E2B44F] mb-4 flex items-center gap-2">
               <BookOpen className="w-5 h-5" /> Guide de Remontage ETA 6497
@@ -101,41 +139,6 @@ export default function RemontagePage() {
             </div>
           </div>
         </div>
-
-        {/* Bloc explicatif identique au design du démontage */}
-        <section className="mt-12 bg-[#1a1a1a] p-6 md:p-8 rounded-lg shadow-lg">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#E2B44F] mb-4">
-            Maîtriser le Remontage d'un Mouvement Mécanique
-          </h2>
-          <div className="text-gray-300 leading-relaxed space-y-4">
-            <p>
-              Le remontage d’un mouvement horloger est une opération exigeant une
-              <strong className="text-[#E2B44F]"> méthode rigoureuse et une grande propreté</strong>.
-              Avant d’assembler, toutes les pièces doivent être nettoyées et huilées selon
-              les points de lubrification prévus par le constructeur.
-            </p>
-
-            <p>
-              Commencez par <strong className="text-[#E2B44F]">installer le barillet et le rouage</strong>,
-              puis vérifiez la libre rotation des roues avant de poser les ponts. Chaque vis
-              doit être serrée avec douceur pour éviter toute déformation du pont et
-              garantir un fonctionnement fluide.
-            </p>
-
-            <p>
-              <strong className="text-[#E2B44F]">Le balancier est replacé en dernier</strong>, après
-              contrôle du jeu axial et radial de l’échappement. Une fois l’ensemble monté,
-              la marche du mouvement est vérifiée à la loupe pour assurer une
-              <strong className="text-[#E2B44F]"> rotation régulière et constante</strong>.
-            </p>
-
-            <p>
-              Le mouvement ETA 6497 est idéal pour l’apprentissage : il offre une architecture
-              simple, robuste et pédagogique, parfaite pour comprendre les principes du
-              remontage manuel.
-            </p>
-          </div>
-        </section>
 
         {/* Mini Quiz */}
         <section className="mt-12 bg-[#1a1a1a] p-6 md:p-8 rounded-lg shadow-lg mb-12">
