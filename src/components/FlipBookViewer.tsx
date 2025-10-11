@@ -4,10 +4,10 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { Document, Page, pdfjs } from "react-pdf";
 
-// ✅ configuration du worker PDF
+// 🧩 Configuration du worker PDF (indispensable sur Vercel)
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-// ✅ import du flipbook côté client seulement
+// 🧩 Chargement dynamique du flipbook (client only)
 const HTMLFlipBook = dynamic(() => import("react-pageflip"), { ssr: false });
 
 interface FlipBookViewerProps {
@@ -19,23 +19,32 @@ export default function FlipBookViewer({ file }: FlipBookViewerProps) {
 
   return (
     <div className="flex flex-col items-center">
-      <Document file={file} onLoadSuccess={({ numPages }: { numPages: number }) => setNumPages(numPages)}>
-        <div className="hidden">
-          {Array.from(new Array(numPages), (_, index) => (
-            <Page key={`page_${index + 1}`} pageNumber={index + 1} />
-          ))}
-        </div>
+      {/* On charge d'abord le PDF pour en extraire les pages */}
+      <Document
+        file={file}
+        onLoadSuccess={({ numPages }: { numPages: number }) => setNumPages(numPages)}
+        loading={<p className="text-yellow-400 text-lg mt-10">Chargement du PDF...</p>}
+        error={<p className="text-red-400 mt-10">Erreur de chargement du document.</p>}
+      >
+        {numPages > 0 && (
+          <HTMLFlipBook
+            width={600}
+            height={850}
+            className="shadow-lg rounded-lg overflow-hidden bg-white"
+          >
+            {Array.from({ length: numPages }, (_, i) => (
+              <div key={i} className="page-container bg-white flex justify-center">
+                <Page
+                  pageNumber={i + 1}
+                  width={600}
+                  renderTextLayer={false}
+                  renderAnnotationLayer={false}
+                />
+              </div>
+            ))}
+          </HTMLFlipBook>
+        )}
       </Document>
-
-      {numPages > 0 && (
-        <HTMLFlipBook width={600} height={800} className="shadow-lg rounded-lg overflow-hidden">
-          {Array.from(new Array(numPages), (_, index) => (
-            <div key={index} className="bg-white flex items-center justify-center text-black text-xl font-bold">
-              Page {index + 1}
-            </div>
-          ))}
-        </HTMLFlipBook>
-      )}
     </div>
   );
 }
