@@ -4,11 +4,11 @@ import Image from "next/image";
 import { BookOpen, Wrench, Brain, Clock, FileText, Headphones, Award, Calendar, Users, Play } from "lucide-react";
 import { motion } from "framer-motion";
 
-// ✅ Logo HorloLearn avec drapeau suisse flottant
+// ✅ Logo HorloLearn (drapeau suisse flottant inchangé + texte plus élégant)
 function SwissLogo() {
   return (
     <div className="flex items-center gap-3">
-      {/* Drapeau suisse flottant */}
+      {/* 🇨🇭 Drapeau suisse flottant (inchangé) */}
       <div className="relative w-8 h-8 md:w-10 md:h-10 rounded-sm shadow-md overflow-hidden flag-wave">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-3.5 h-1 bg-white absolute"></div>
@@ -16,24 +16,27 @@ function SwissLogo() {
         </div>
       </div>
 
-      {/* Nom du site */}
-      <span
-        className="font-semibold tracking-wide text-gray-900 text-[17px] md:text-lg"
-        style={{ textShadow: "0 0 5px rgba(226,180,79,0.4)" }}
-      >
-        HorloLearn
-      </span>
+      {/* ✨ Nouveau style du texte HorloLearn */}
+      <div className="flex items-baseline">
+        <span
+          className="text-[1.45rem] md:text-[1.65rem] font-serif italic font-semibold bg-gradient-to-r from-[#C8A951] via-[#FFD97A] to-[#C8A951] bg-clip-text text-transparent"
+          style={{
+            textShadow:
+              "0 0 6px rgba(200,169,81,0.4), 0 0 12px rgba(255,217,122,0.3)",
+          }}
+        >
+          Horlo
+        </span>
+        <span className="ml-1 text-[1.45rem] md:text-[1.65rem] font-sans font-bold tracking-tight text-gray-900">
+          Learn
+        </span>
+      </div>
 
-      {/* Animation du drapeau */}
+      {/* 🌬️ Animation du drapeau (inchangée) */}
       <style jsx>{`
         .flag-wave {
-          background: linear-gradient(
-            90deg,
-            #b91c1c 0%,
-            #dc2626 50%,
-            #b91c1c 100%
-          );
-          animation: wave 2s ease-in-out infinite;
+          background: linear-gradient(90deg, #b91c1c 0%, #dc2626 50%, #b91c1c 100%);
+          animation: wave 2.3s ease-in-out infinite;
           transform-origin: left center;
         }
 
@@ -183,7 +186,7 @@ function Carousel() {
   );
 }
 
-// ✅ Grille "Explore"
+// ✅ Grille Explore
 function ExploreGrid() {
   const cards = [
     { name: "Théorie", href: "/theorie", icon: BookOpen, desc: "Cours structurés, bases aux complications" },
@@ -237,63 +240,6 @@ function ExploreGrid() {
   );
 }
 
-// ✅ Section logos "Partenaires"
-function PartnersSection() {
-  const partners = [
-    { src: "/images/partners/rolex.png", alt: "Rolex" },
-    { src: "/images/partners/patek.png", alt: "Patek Philippe" },
-    { src: "/images/partners/audemars.png", alt: "Audemars Piguet" },
-    { src: "/images/partners/vacheron.png", alt: "Vacheron Constantin" },
-    { src: "/images/partners/chopard.png", alt: "Chopard" },
-    { src: "/images/partners/piaget.png", alt: "Piaget" },
-    { src: "/images/partners/muller.png", alt: "Franck Muller" },
-  ];
-
-  return (
-    <section className="relative bg-[#0A0A0A] py-20 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#0A0A0A] to-[#141414] animate-[shine_8s_linear_infinite]" />
-      <div className="text-center mb-12 relative z-10">
-        <h2
-          className="text-3xl md:text-4xl font-semibold text-[#E2B44F]"
-          style={{ textShadow: "0 0 15px rgba(226,180,79,0.7)" }}
-        >
-          Avec le soutien des grandes maisons horlogères
-        </h2>
-      </div>
-      <motion.div
-        className="flex items-center justify-around gap-20 px-8 relative z-10"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
-      >
-        {[...partners, ...partners].map((p, i) => (
-          <motion.div
-            key={i}
-            className="grayscale hover:grayscale-0 transition-all duration-700"
-            whileHover={{ scale: 3 }}
-          >
-            <Image
-              src={p.src}
-              alt={p.alt}
-              width={180}
-              height={100}
-              className="object-contain opacity-85 hover:opacity-100 transition-all"
-            />
-          </motion.div>
-        ))}
-      </motion.div>
-      <p className="text-center text-gray-400 mt-10 text-sm relative z-10">
-        Ressources gratuites et open-source pour la formation en horlogerie.
-      </p>
-      <style>{`
-        @keyframes shine {
-          0% { background-position: -1000px 0; }
-          100% { background-position: 1000px 0; }
-        }
-      `}</style>
-    </section>
-  );
-}
-
 // ✅ Page principale
 export default function Home() {
   return (
@@ -302,7 +248,6 @@ export default function Home() {
       <Hero />
       <Carousel />
       <ExploreGrid />
-      <PartnersSection />
     </div>
   );
 }
