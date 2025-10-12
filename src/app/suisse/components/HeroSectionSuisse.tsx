@@ -4,9 +4,26 @@ import { motion } from "framer-motion";
 export default function HeroSectionSuisse() {
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-black text-white overflow-hidden">
+      
+      {/* Swiss Flag Banner Video */}
+      <div className="absolute top-12 left-1/2 -translate-x-1/2 z-20 mx-auto w-[700px] h-[180px] border-2 border-[#d10032] rounded-lg overflow-hidden shadow-lg bg-black">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover rounded-lg"
+          width={700}
+          height={180}
+        >
+          <source src="/videos/swiss-flag-banner.mp4" type="video/mp4" />
+          Votre navigateur ne supporte pas la vidéo.
+        </video>
+      </div>
+
       {/* Background gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-[#0a0a0a] to-[#1a1a1a]" />
-      
+
       {/* Animated hero content */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
