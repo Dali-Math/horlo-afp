@@ -1,8 +1,8 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+
+import { useMemo, useState } from "react";
 import Link from "next/link";
 
-// Map slug -> titre + chemin PDF (respecte bien /pdfs/…)
 const DOCS: Record<
   string,
   { title: string; pdf: string; description?: string }
@@ -11,7 +11,7 @@ const DOCS: Record<
     title: "Métiers de l'Horlogerie",
     pdf: "/pdfs/metiers-horlogerie.pdf",
     description:
-      "Guide complet des métiers horlogers suisses : formations, compétences et carrières.",
+      "Guide complet des métiers horlogers suisses : formations, compétences et carrières dans l'industrie.",
   },
   "rapport-fhh": {
     title: "Rapport FHH 2024",
@@ -23,91 +23,74 @@ const DOCS: Record<
 
 type Props = { params: { slug: string } };
 
-export default function PdfLivrePage({ params }: Props) {
+export default function PdfViewerPage({ params }: Props) {
   const doc = DOCS[params.slug];
   const [loaded, setLoaded] = useState(false);
 
-  // Force dark theme on HTML and body
-  useEffect(() => {
-    document.documentElement.style.backgroundColor = "#0A0A0A";
-    document.body.style.backgroundColor = "#0A0A0A";
-  }, []);
-
   if (!doc) {
     return (
-      <div className="min-h-screen bg-[#0A0A0A] text-gray-200 flex items-center justify-center">
+      <main className="min-h-screen bg-[#0A0A0A] text-gray-200 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-lg">Document introuvable.</p>
+          <p className="text-lg mb-4">❌ Document introuvable.</p>
           <Link
             href="/suisse"
-            className="mt-4 inline-block text-[#E2B44F] hover:text-[#FFD36D] transition"
+            className="text-[#E2B44F] hover:text-[#FFD36D] transition underline"
           >
             ← Retour aux documents
           </Link>
         </div>
-      </div>
+      </main>
     );
   }
 
-  // URL PDF.js avec thème sombre + fit page
   const viewerSrc = useMemo(() => {
-    // NB : # et ? appartiennent à viewer.html (anchor pour PDF.js)
     const file = encodeURIComponent(doc.pdf);
+    // PDF.js en mode sombre
     return `/pdfjs/web/viewer.html?file=${file}#theme=dark&zoom=page-fit&spread=auto`;
   }, [doc.pdf]);
 
   return (
-    <main className="min-h-screen bg-[#0A0A0A] text-gray-100">
-      <div className="mx-auto max-w-6xl px-4 pt-6 pb-16">
-        {/* Header */}
-        <div className="mb-5 flex items-center justify-between">
-          <Link
-            href="/suisse"
-            className="text-[#E2B44F] hover:text-[#FFD36D] transition"
-          >
-            ← Retour aux documents
-          </Link>
-        </div>
+    <main className="min-h-screen bg-[#0A0A0A] text-gray-200">
+      <div className="max-w-6xl mx-auto px-4 pt-8 pb-20">
+        {/* Bouton retour */}
+        <Link
+          href="/suisse"
+          className="text-[#E2B44F] hover:text-[#FFD36D] transition text-sm"
+        >
+          ← Retour aux documents
+        </Link>
 
-        {/* Titre bloc */}
-        <section className="rounded-xl border border-[#E2B44F]/20 bg-[#0D0D0D] px-5 py-5 shadow-[0_0_30px_rgba(226,180,79,0.05)]">
-          <h1 className="text-2xl md:text-3xl font-[700] tracking-tight">
+        {/* En-tête du document */}
+        <div className="mt-4 p-6 rounded-xl border border-[#E2B44F]/20 bg-[#0D0D0D] shadow-[0_0_20px_rgba(226,180,79,0.05)]">
+          <h1 className="text-3xl font-bold mb-2">
             <span className="text-[#E2B44F]">📘</span>{" "}
             <span className="text-white">{doc.title}</span>
           </h1>
-          {doc.description ? (
-            <p className="mt-2 text-sm md:text-base text-gray-400">
-              {doc.description}
-            </p>
-          ) : null}
-        </section>
+          {doc.description && (
+            <p className="text-gray-400 text-base">{doc.description}</p>
+          )}
+        </div>
 
-        {/* Viewer container */}
-        <section className="mt-6 rounded-xl border border-[#E2B44F]/20 bg-[#0D0D0D] p-2">
-          {/* Loader */}
+        {/* Viewer */}
+        <div className="mt-8 rounded-xl border border-[#E2B44F]/20 bg-[#0D0D0D] p-2">
           {!loaded && (
-            <div className="flex h-[65vh] items-center justify-center bg-[#0A0A0A]">
-              <div className="flex flex-col items-center">
-                <div className="h-10 w-10 animate-spin rounded-full border-2 border-[#E2B44F] border-t-transparent"></div>
-                <p className="mt-3 text-sm text-gray-400">
-                  Chargement du livre en cours…
-                </p>
-              </div>
+            <div className="flex flex-col items-center justify-center h-[70vh]">
+              <div className="h-10 w-10 border-2 border-[#E2B44F] border-t-transparent rounded-full animate-spin"></div>
+              <p className="mt-4 text-gray-400 text-sm">
+                Chargement du livre en cours…
+              </p>
             </div>
           )}
 
-          {/* IFRAME PDF.js */}
           <iframe
-            title={doc.title}
             src={viewerSrc}
-            className={`w-full ${
-              loaded ? "h-[85vh]" : "h-0"
-            } rounded-lg bg-[#0A0A0A]`}
+            title={doc.title}
+            className={`w-full ${loaded ? "h-[85vh]" : "h-0"} rounded-lg transition-all`}
             onLoad={() => setLoaded(true)}
-            loading="eager"
             allowFullScreen
+            loading="eager"
           />
-        </section>
+        </div>
       </div>
     </main>
   );
