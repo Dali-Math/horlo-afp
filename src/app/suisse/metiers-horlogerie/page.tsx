@@ -1,23 +1,35 @@
 "use client";
+import { useEffect, useState } from "react";
 import Script from "next/script";
-import { useEffect } from "react";
 import Link from "next/link";
 
 export default function MetiersHorlogerie() {
+  const [ready, setReady] = useState(false);
+
   useEffect(() => {
-    //@ts-ignore
-    window.$("#flipbook").FlipBook({
-      pdf: "/pdfs/metiers-horlogerie.pdf",
-      template: {
-        sounds: { startFlip: "https://3dflipbook.net/sounds/turn.mp3" },
-      },
-      controlsProps: { downloadURL: "/pdfs/metiers-horlogerie.pdf" },
-    });
-  }, []);
+    if (ready && typeof window !== "undefined") {
+      const interval = setInterval(() => {
+        if (window.$ && window.$("#flipbook").FlipBook) {
+          //@ts-ignore
+          window.$("#flipbook").FlipBook({
+            pdf: "/pdfs/metiers-horlogerie.pdf",
+            template: {
+              sounds: { startFlip: "https://3dflipbook.net/sounds/turn.mp3" },
+            },
+            controlsProps: { downloadURL: "/pdfs/metiers-horlogerie.pdf" },
+          });
+          clearInterval(interval);
+        }
+      }, 300);
+    }
+  }, [ready]);
 
   return (
     <>
-      <Script src="https://cdn.jsdelivr.net/npm/3dflipbook/dist/js/3dflipbook.min.js" />
+      <Script
+        src="https://cdn.jsdelivr.net/npm/3dflipbook/dist/js/3dflipbook.min.js"
+        onLoad={() => setReady(true)}
+      />
       <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/3dflipbook/dist/css/3dflipbook.min.css"
@@ -35,10 +47,17 @@ export default function MetiersHorlogerie() {
             Métiers de l'Horlogerie
           </h1>
         </div>
+
         <div
           id="flipbook"
           className="w-[90%] h-[85vh] rounded-lg overflow-hidden shadow-2xl"
-        ></div>
+        >
+          {!ready && (
+            <p className="text-gray-400 text-center mt-10 animate-pulse">
+              Chargement du livre en cours...
+            </p>
+          )}
+        </div>
       </div>
     </>
   );
