@@ -1,56 +1,42 @@
-import React from 'react';
-import JsonLd from '@/components/JsonLd';
-import { siteConfig } from '@/lib/seo';
+"use client";
+import { SITE } from "@/lib/seo";
+import JsonLd from "./JsonLd";
 
 interface ArticleSchemaProps {
-  headline: string;
+  title: string;
   description: string;
-  datePublished: string;
-  dateModified?: string;
-  author?: {
-    name: string;
-    url?: string;
-  };
+  slug: string;
   image?: string;
-  keywords?: string[];
+  authors?: { name: string }[];
+  datePublished?: string;
+  dateModified?: string;
 }
 
-export function ArticleSchema({
-  headline,
+export default function ArticleSchema({
+  title,
   description,
-  datePublished,
-  dateModified,
-  author = { name: siteConfig.author.name },
-  image,
-  keywords = [],
+  slug,
+  image = SITE.logo,
+  authors = [{ name: "HorloLearn" }],
+  datePublished = new Date().toISOString(),
+  dateModified = new Date().toISOString(),
 }: ArticleSchemaProps) {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline,
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
     description,
-    image: image || siteConfig.openGraph.images[0].url,
-    datePublished,
-    dateModified: dateModified || datePublished,
-    author: {
-      '@type': 'Person',
-      name: author.name,
-      url: author.url || siteConfig.siteUrl,
-    },
+    image: `${SITE.domain}${image}`,
+    author: authors,
     publisher: {
-      '@type': 'Organization',
-      name: siteConfig.siteName,
-      logo: {
-        '@type': 'ImageObject',
-        url: siteConfig.openGraph.images[0].url,
-      },
+      "@type": "Organization",
+      name: SITE.organization.legalName,
+      logo: { "@type": "ImageObject", url: `${SITE.domain}${SITE.logo}` },
     },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': siteConfig.siteUrl,
-    },
-    keywords: keywords.join(', '),
+    mainEntityOfPage: `${SITE.domain}/${slug}`,
+    datePublished,
+    dateModified,
   };
 
-  return <JsonLd data={schema} />;
+  return <JsonLd data={data} />;
 }
