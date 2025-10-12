@@ -1,12 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  output: 'standalone',
-  trailingSlash: false,
-  experimental: {
-    appDir: true
+  i18n: {
+    locales: ["fr", "en"],
+    defaultLocale: "fr",
   },
-  // Remove 'export' to allow dynamic features like Firebase Auth
-  // Netlify supports Next.js runtime features
-}
-module.exports = nextConfig
+  trailingSlash: false,
+  reactStrictMode: true,
+  output: "standalone",
+
+  async redirects() {
+    return [
+      { source: "/", destination: "/fr", permanent: false },
+    ];
+  },
+};
+
+module.exports = nextConfig;
