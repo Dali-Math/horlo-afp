@@ -1,19 +1,12 @@
-import "../globals.css";
-import { ReactNode } from "react";
-import { NextIntlClientProvider } from "next-intl";
+import { NextIntlClientProvider } from 'next-intl';
 import path from 'path';
 import { promises as fs } from 'fs';
-
-export const metadata = {
-  title: "HorloLearn",
-  description: "Swiss watchmaking learning platform",
-};
 
 export default async function LocaleLayout({
   children,
   params,
 }: {
-  children: ReactNode;
+  children: React.ReactNode;
   params: { locale: string };
 }) {
   const filePath = path.join(process.cwd(), 'src/messages', `${params.locale}.json`);
