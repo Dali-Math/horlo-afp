@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { FaqSchema } from '@/components/FaqSchema';
-import { BreadcrumbsSchema } from '@/components/BreadcrumbsSchema';
+import FaqSchema from '@/components/FaqSchema';
+import BreadcrumbsSchema from '@/components/BreadcrumbsSchema';
 import { siteConfig } from '@/lib/seo';
 
 export const metadata: Metadata = {
@@ -53,7 +53,6 @@ export default function FaqPage() {
           Retrouvez ici les réponses aux questions les plus posées sur
           l'horlogerie, les mouvements mécaniques et la restauration de montres.
         </p>
-
         <div className="space-y-8">
           {faqItems.map((item, index) => (
             <div key={index} className="bg-white rounded-lg shadow-md p-6">
@@ -63,20 +62,6 @@ export default function FaqPage() {
               <p className="text-gray-700 leading-relaxed">{item.answer}</p>
             </div>
           ))}
-        </div>
-
-        <div className="mt-12 p-6 bg-blue-50 rounded-lg">
-          <h3 className="text-2xl font-semibold mb-4">Une autre question ?</h3>
-          <p className="text-gray-700 mb-4">
-            Si vous ne trouvez pas de réponse à votre question, n'hésitez pas à
-            nous contacter ou à consulter nos ressources pédagogiques complètes.
-          </p>
-          <a
-            href="/contact"
-            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
-          >
-            Nous contacter
-          </a>
         </div>
       </div>
     </>
