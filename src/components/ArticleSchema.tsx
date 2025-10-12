@@ -1,5 +1,5 @@
 import React from 'react';
-import { JsonLd } from './JsonLd';
+import JsonLd from '@/components/JsonLd';
 import { siteConfig } from '@/lib/seo';
 
 interface ArticleSchemaProps {
