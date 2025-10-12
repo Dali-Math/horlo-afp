@@ -4,36 +4,57 @@ import Image from "next/image";
 import { BookOpen, Wrench, Brain, Clock, FileText, Headphones, Award, Calendar, Users, Play } from "lucide-react";
 import { motion } from "framer-motion";
 
-// ✅ Logo HorloLearn (drapeau suisse animé)
+// ✅ Logo HorloLearn avec drapeau suisse flottant
 function SwissLogo() {
   return (
     <div className="flex items-center gap-3">
-      {/* Drapeau suisse animé */}
-      <motion.div
-        className="relative w-8 h-8 md:w-10 md:h-10 bg-red-600 rounded-sm shadow-md overflow-hidden"
-        animate={{
-          rotateZ: [0, 0.5, -0.5, 0.3, -0.2, 0], // léger mouvement
-          y: [0, -0.5, 0.5, -1, 0], // petit flottement
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      >
+      {/* Drapeau suisse flottant */}
+      <div className="relative w-8 h-8 md:w-10 md:h-10 rounded-sm shadow-md overflow-hidden flag-wave">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-3.5 h-1 bg-white absolute"></div>
           <div className="w-1 h-3.5 bg-white absolute"></div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Nom HorloLearn */}
+      {/* Nom du site */}
       <span
         className="font-semibold tracking-wide text-gray-900 text-[17px] md:text-lg"
-        style={{ textShadow: "0 0 5px rgba(226,180,79,0.4)" }} // léger reflet doré
+        style={{ textShadow: "0 0 5px rgba(226,180,79,0.4)" }}
       >
         HorloLearn
       </span>
+
+      {/* Animation du drapeau */}
+      <style jsx>{`
+        .flag-wave {
+          background: linear-gradient(
+            90deg,
+            #b91c1c 0%,
+            #dc2626 50%,
+            #b91c1c 100%
+          );
+          animation: wave 2s ease-in-out infinite;
+          transform-origin: left center;
+        }
+
+        @keyframes wave {
+          0% {
+            transform: perspective(250px) rotateY(0deg);
+          }
+          25% {
+            transform: perspective(250px) rotateY(6deg);
+          }
+          50% {
+            transform: perspective(250px) rotateY(0deg);
+          }
+          75% {
+            transform: perspective(250px) rotateY(-6deg);
+          }
+          100% {
+            transform: perspective(250px) rotateY(0deg);
+          }
+        }
+      `}</style>
     </div>
   );
 }
