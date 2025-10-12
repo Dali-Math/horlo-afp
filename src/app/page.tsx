@@ -15,7 +15,7 @@ function SwissLogo() {
           <div className="h-2 md:h-2.5 w-6 md:w-7 bg-white absolute -translate-x-1/2 left-1/2 -translate-y-1/2 top-1/2"></div>
         </div>
       </div>
-      <span className="font-semibold tracking-wide text-gray-900">Horlo AFP</span>
+      <span className="font-semibold tracking-wide text-gray-900">HorloLearn</span>
     </div>
   );
 }
