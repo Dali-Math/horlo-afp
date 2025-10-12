@@ -1,3 +1,4 @@
+// Force rebuild for locale routes
 import React from "react";
 
 export default function LocaleHome({
