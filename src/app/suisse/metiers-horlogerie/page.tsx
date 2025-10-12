@@ -1,4 +1,5 @@
 "use client";
+// PDF cache fix: ensure correct paths are used
 import { useEffect, useState } from "react";
 import Script from "next/script";
 import Link from "next/link";
@@ -31,44 +32,75 @@ export default function MetiersHorlogerie() {
         src="https://code.jquery.com/jquery-3.6.0.min.js"
         strategy="beforeInteractive"
       />
-
       {/* Charger le Flipbook après jQuery */}
       <Script
-        src="https://cdn.jsdelivr.net/npm/3dflipbook/dist/js/3dflipbook.min.js"
-        onLoad={() => setReady(true)}
+        src="https://3dflipbook.net/js/dist/3dflipbook.min.js"
         strategy="afterInteractive"
+        onLoad={() => setReady(true)}
       />
-
-      {/* CSS du Flipbook */}
+      {/* CSS */}
       <link
         rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/3dflipbook/dist/css/3dflipbook.min.css"
+        href="https://3dflipbook.net/css/dist/3dflipbook.min.css"
       />
 
-      <div className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center p-4">
-        <div className="w-full flex justify-between items-center mb-4">
-          <Link
-            href="/suisse"
-            className="text-[#E2B44F] font-semibold hover:text-[#FFD700] transition"
-          >
-            ← Retour aux documents
-          </Link>
-          <h1 className="text-2xl font-bold text-[#E2B44F]">
-            Métiers de l'Horlogerie
-          </h1>
+      <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+        {/* Barre de navigation */}
+        <div className="w-full bg-white/80 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-40">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
+              <Link
+                href="/suisse"
+                className="flex items-center gap-2 text-slate-700 hover:text-blue-600 transition-colors"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                  />
+                </svg>
+                <span className="font-medium">Retour aux documents</span>
+              </Link>
+            </div>
+          </div>
         </div>
 
-        <div
-          id="flipbook"
-          className="w-[90%] h-[85vh] rounded-lg overflow-hidden shadow-2xl flex items-center justify-center"
-        >
-          {!ready && (
-            <p className="text-gray-400 text-center animate-pulse">
-              Chargement du livre en cours...
-            </p>
-          )}
+        {/* Contenu principal */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+            {/* En-tête */}
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white">
+              <h1 className="text-3xl md:text-4xl font-bold mb-3">
+                📘 Métiers de l'Horlogerie
+              </h1>
+              <p className="text-blue-100 text-lg">
+                Guide complet des métiers horlogers suisses : formations,
+                compétences et carrières dans l'industrie.
+              </p>
+            </div>
+
+            {/* Flipbook */}
+            <div className="p-8">
+              <div
+                id="flipbook"
+                className="w-full min-h-[600px] flex items-center justify-center bg-slate-50 rounded-xl"
+              >
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                  <p className="text-slate-600">Chargement du livre en cours…</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }
