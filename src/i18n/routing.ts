@@ -16,8 +16,14 @@ export const pathnames = {
   "/quiz": {
     fr: "/quiz",
     en: "/quiz",
-  },
+  }
 } satisfies Pathnames<typeof locales>;
+
+export const routing = {
+  locales,
+  defaultLocale,
+  pathnames,
+};
 
 export const { Link, redirect, usePathname, useRouter } =
   createLocalizedPathnamesNavigation({ locales, pathnames, defaultLocale });
