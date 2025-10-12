@@ -4,55 +4,36 @@ import Image from "next/image";
 import { BookOpen, Wrench, Brain, Clock, FileText, Headphones, Award, Calendar, Users, Play } from "lucide-react";
 import { motion } from "framer-motion";
 
-// ✅ Logo HorloLearn avec drapeau suisse flottant
+// ✅ Logo HorloLearn (drapeau suisse flottant + texte doré élégant)
 function SwissLogo() {
   return (
-    <div className="flex items-center gap-3">
-      {/* Drapeau suisse flottant */}
-      <div className="relative w-8 h-8 md:w-10 md:h-10 rounded-sm shadow-md overflow-hidden flag-wave">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-3.5 h-1 bg-white absolute"></div>
-          <div className="w-1 h-3.5 bg-white absolute"></div>
+    <div className="flex items-center gap-3 select-none">
+      {/* 🇨🇭 Drapeau suisse animé */}
+      <div className="relative w-8 h-8 md:w-10 md:h-10 animate-[flagWave_3.5s_ease-in-out_infinite]">
+        <div className="absolute inset-0 bg-red-600 rounded shadow-md"></div>
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="w-2 md:w-2.5 h-6 md:h-7 bg-white absolute -translate-x-1/2 left-1/2 -translate-y-1/2 top-1/2"></div>
+          <div className="h-2 md:h-2.5 w-6 md:w-7 bg-white absolute -translate-x-1/2 left-1/2 -translate-y-1/2 top-1/2"></div>
         </div>
       </div>
 
-      {/* Nom du site */}
-      <span
-        className="font-semibold tracking-wide text-gray-900 text-[17px] md:text-lg"
-        style={{ textShadow: "0 0 5px rgba(226,180,79,0.4)" }}
-      >
-        HorloLearn
-      </span>
+      {/* ✨ Texte du logo */}
+      <div className="flex items-baseline">
+        <span className="text-[1.4rem] md:text-[1.6rem] font-serif italic font-semibold bg-gradient-to-r from-[#E2B44F] via-[#f7e3a2] to-[#E2B44F] bg-clip-text text-transparent drop-shadow-[0_0_6px_rgba(226,180,79,0.4)]">
+          Horlo
+        </span>
+        <span className="ml-1 text-[1.4rem] md:text-[1.6rem] font-sans font-bold text-gray-900 tracking-tight">
+          Learn
+        </span>
+      </div>
 
-      {/* Animation du drapeau */}
-      <style jsx>{`
-        .flag-wave {
-          background: linear-gradient(
-            90deg,
-            #b91c1c 0%,
-            #dc2626 50%,
-            #b91c1c 100%
-          );
-          animation: wave 2s ease-in-out infinite;
-          transform-origin: left center;
-        }
-
-        @keyframes wave {
-          0% {
-            transform: perspective(250px) rotateY(0deg);
-          }
-          25% {
-            transform: perspective(250px) rotateY(6deg);
-          }
-          50% {
-            transform: perspective(250px) rotateY(0deg);
-          }
-          75% {
-            transform: perspective(250px) rotateY(-6deg);
-          }
-          100% {
-            transform: perspective(250px) rotateY(0deg);
-          }
+      {/* 🌬️ Animation du drapeau */}
+      <style>{`
+        @keyframes flagWave {
+          0%, 100% { transform: rotate(0deg) scale(1); }
+          25% { transform: rotate(-1.2deg) scale(1.02); }
+          50% { transform: rotate(1.2deg) scale(1.03); }
+          75% { transform: rotate(-1deg) scale(1.02); }
         }
       `}</style>
     </div>
