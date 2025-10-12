@@ -1,45 +1,58 @@
 "use client";
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { BookOpen, Wrench, Brain, Clock, FileText, Headphones, Award, Calendar, Users, Play } from "lucide-react";
 import { motion } from "framer-motion";
 
-// ✅ Logo HorloLearn — drapeau suisse flottant + texte doré lisible
+// ✅ Logo HorloLearn avec drapeau suisse flottant
 function SwissLogo() {
   return (
-    <div className="flex items-center gap-3 select-none">
-      {/* 🇨🇭 Drapeau suisse animé */}
-      <div className="relative w-9 h-9 md:w-11 md:h-11">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#b91c1c] via-[#dc2626] to-[#b91c1c] rounded shadow-md overflow-hidden animate-[flagFloat_3s_ease-in-out_infinite]">
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <div className="w-2.5 md:w-3 h-6 md:h-7 bg-white absolute -translate-x-1/2 left-1/2 -translate-y-1/2 top-1/2"></div>
-            <div className="h-2.5 md:h-3 w-6 md:w-7 bg-white absolute -translate-x-1/2 left-1/2 -translate-y-1/2 top-1/2"></div>
-          </div>
+    <div className="flex items-center gap-3">
+      {/* Drapeau suisse flottant */}
+      <div className="relative w-8 h-8 md:w-10 md:h-10 rounded-sm shadow-md overflow-hidden flag-wave">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-3.5 h-1 bg-white absolute"></div>
+          <div className="w-1 h-3.5 bg-white absolute"></div>
         </div>
       </div>
 
-      {/* ✨ Nom HorloLearn */}
-      <div className="flex items-baseline">
-        <span
-          className="text-[1.45rem] md:text-[1.65rem] font-serif italic font-semibold bg-gradient-to-r from-[#d4af37] via-[#f7e48c] to-[#b8860b] bg-clip-text text-transparent"
-          style={{ textShadow: "0 0 10px rgba(218,165,32,0.45)" }}
-        >
-          Horlo
-        </span>
-        <span className="ml-1 text-[1.45rem] md:text-[1.65rem] font-sans font-bold text-gray-900 tracking-tight">
-          Learn
-        </span>
-      </div>
+      {/* Nom du site */}
+      <span
+        className="font-semibold tracking-wide text-gray-900 text-[17px] md:text-lg"
+        style={{ textShadow: "0 0 5px rgba(226,180,79,0.4)" }}
+      >
+        HorloLearn
+      </span>
 
-      {/* 🌬️ Animation effet de vent */}
-      <style>{`
-        @keyframes flagFloat {
-          0% { transform: rotateY(0deg) translateY(0px); }
-          25% { transform: rotateY(6deg) translateY(-1px); }
-          50% { transform: rotateY(0deg) translateY(1px); }
-          75% { transform: rotateY(-6deg) translateY(-1px); }
-          100% { transform: rotateY(0deg) translateY(0px); }
+      {/* Animation du drapeau */}
+      <style jsx>{`
+        .flag-wave {
+          background: linear-gradient(
+            90deg,
+            #b91c1c 0%,
+            #dc2626 50%,
+            #b91c1c 100%
+          );
+          animation: wave 2s ease-in-out infinite;
+          transform-origin: left center;
+        }
+
+        @keyframes wave {
+          0% {
+            transform: perspective(250px) rotateY(0deg);
+          }
+          25% {
+            transform: perspective(250px) rotateY(6deg);
+          }
+          50% {
+            transform: perspective(250px) rotateY(0deg);
+          }
+          75% {
+            transform: perspective(250px) rotateY(-6deg);
+          }
+          100% {
+            transform: perspective(250px) rotateY(0deg);
+          }
         }
       `}</style>
     </div>
@@ -170,7 +183,7 @@ function Carousel() {
   );
 }
 
-// ✅ Grille Explore
+// ✅ Grille "Explore"
 function ExploreGrid() {
   const cards = [
     { name: "Théorie", href: "/theorie", icon: BookOpen, desc: "Cours structurés, bases aux complications" },
@@ -224,6 +237,63 @@ function ExploreGrid() {
   );
 }
 
+// ✅ Section logos "Partenaires"
+function PartnersSection() {
+  const partners = [
+    { src: "/images/partners/rolex.png", alt: "Rolex" },
+    { src: "/images/partners/patek.png", alt: "Patek Philippe" },
+    { src: "/images/partners/audemars.png", alt: "Audemars Piguet" },
+    { src: "/images/partners/vacheron.png", alt: "Vacheron Constantin" },
+    { src: "/images/partners/chopard.png", alt: "Chopard" },
+    { src: "/images/partners/piaget.png", alt: "Piaget" },
+    { src: "/images/partners/muller.png", alt: "Franck Muller" },
+  ];
+
+  return (
+    <section className="relative bg-[#0A0A0A] py-20 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#0A0A0A] to-[#141414] animate-[shine_8s_linear_infinite]" />
+      <div className="text-center mb-12 relative z-10">
+        <h2
+          className="text-3xl md:text-4xl font-semibold text-[#E2B44F]"
+          style={{ textShadow: "0 0 15px rgba(226,180,79,0.7)" }}
+        >
+          Avec le soutien des grandes maisons horlogères
+        </h2>
+      </div>
+      <motion.div
+        className="flex items-center justify-around gap-20 px-8 relative z-10"
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
+      >
+        {[...partners, ...partners].map((p, i) => (
+          <motion.div
+            key={i}
+            className="grayscale hover:grayscale-0 transition-all duration-700"
+            whileHover={{ scale: 3 }}
+          >
+            <Image
+              src={p.src}
+              alt={p.alt}
+              width={180}
+              height={100}
+              className="object-contain opacity-85 hover:opacity-100 transition-all"
+            />
+          </motion.div>
+        ))}
+      </motion.div>
+      <p className="text-center text-gray-400 mt-10 text-sm relative z-10">
+        Ressources gratuites et open-source pour la formation en horlogerie.
+      </p>
+      <style>{`
+        @keyframes shine {
+          0% { background-position: -1000px 0; }
+          100% { background-position: 1000px 0; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
 // ✅ Page principale
 export default function Home() {
   return (
@@ -232,6 +302,7 @@ export default function Home() {
       <Hero />
       <Carousel />
       <ExploreGrid />
+      <PartnersSection />
     </div>
   );
 }
