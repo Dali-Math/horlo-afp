@@ -1,5 +1,5 @@
 import React from 'react';
-import { JsonLd } from './JsonLd';
+import JsonLd from '@/components/JsonLd';
 import { siteConfig } from '@/lib/seo';
 
 interface HowToStep {
@@ -38,25 +38,26 @@ export function HowToSchema({
     '@type': 'HowTo',
     name,
     description,
-    image: image || siteConfig.openGraph.images[0].url,
+    image,
     totalTime,
     estimatedCost,
-    supply: supply.map((item) => ({
-      '@type': 'HowToSupply',
-      name: item,
-    })),
-    tool: tool.map((item) => ({
-      '@type': 'HowToTool',
-      name: item,
-    })),
-    step: step.map((s, index) => ({
+    supply,
+    tool,
+    step: step.map((s) => ({
       '@type': 'HowToStep',
-      position: index + 1,
       name: s.name,
       text: s.text,
       image: s.image,
       url: s.url,
     })),
+    publisher: {
+      '@type': 'Organization',
+      name: siteConfig.siteName,
+      logo: {
+        '@type': 'ImageObject',
+        url: siteConfig.openGraph.images[0].url,
+      },
+    },
   };
 
   return <JsonLd data={schema} />;
