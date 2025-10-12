@@ -1,16 +1,4 @@
 {
   "title": "Welcome to HorloLearn",
-  "description": "Swiss watchmaking learning platform",
-  "nav": {
-    "home": "Home",
-    "practice": "Practice",
-    "theory": "Theory",
-    "resources": "Resources",
-    "podcasts": "Podcasts",
-    "community": "Community"
-  },
-  "footer": {
-    "copyright": "All rights reserved",
-    "madeBy": "Made by HorloLearn Geneva"
-  }
+  "description": "Swiss watchmaking learning platform"
 }
