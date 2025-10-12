@@ -46,7 +46,7 @@ export default function PdfViewerPage({ params }: Props) {
   const viewerSrc = useMemo(() => {
     const file = encodeURIComponent(doc.pdf);
     // PDF.js en mode sombre
-    return `/pdfjs/web/viewer.html?file=${file}#theme=dark&zoom=page-fit&spread=auto`;
+    return `/pdfjs/web/viewer.html?file=/pdfs/${params.slug}.pdf#theme=dark&zoom=page-fit&spread=auto`;
   }, [doc.pdf]);
 
   return (
