@@ -4,7 +4,7 @@ import Image from "next/image";
 import { BookOpen, Wrench, Brain, Clock, FileText, Headphones, Award, Calendar, Users, Play } from "lucide-react";
 import { motion } from "framer-motion";
 
-// ✅ Logo Horlo-AFP
+// ✅ Logo HorloLearn
 function SwissLogo() {
   return (
     <div className="flex items-center gap-3">
