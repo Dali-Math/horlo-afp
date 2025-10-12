@@ -1,0 +1,19 @@
+{
+  "welcome": "Bienvenue sur HorloLearn",
+  "start": "Commencer l'apprentissage",
+  "practice": "Pratique horlogère",
+  "theory": "Théorie horlogère",
+  "quiz": "Quiz interactifs",
+  "resources": "Ressources",
+  "tools": "Outils",
+  "language": "Langue",
+  "remontage": "Remontage du mouvement",
+  "demontage": "Démontage du mouvement",
+  "watchmaking": "Apprenez l'horlogerie suisse pas à pas",
+  "description": "HorloLearn vous guide dans l'apprentissage pratique et théorique de l'horlogerie suisse.",
+  "back": "Retour",
+  "video_not_available": "Vidéo non disponible",
+  "quiz_start": "Démarrer le quiz",
+  "quiz_end": "Félicitations ! Vous avez terminé le quiz.",
+  "footer": "Un projet éducatif dédié aux passionnés d'horlogerie."
+}
