@@ -1,51 +1,39 @@
-import React from 'react';
-import JsonLd from '@/components/JsonLd';
-import { siteConfig } from '@/lib/seo';
+"use client";
+import { SITE } from "@/lib/seo";
+import JsonLd from "./JsonLd";
 
 interface VideoSchemaProps {
   name: string;
   description: string;
+  videoUrl: string;
   thumbnailUrl: string;
-  uploadDate: string;
-  contentUrl: string;
-  embedUrl?: string;
-  duration?: string;
-  width?: number;
-  height?: number;
+  uploadDate?: string;
 }
 
-export function VideoSchema({
+export default function VideoSchema({
   name,
   description,
+  videoUrl,
   thumbnailUrl,
-  uploadDate,
-  contentUrl,
-  embedUrl,
-  duration,
-  width = 1920,
-  height = 1080,
+  uploadDate = new Date().toISOString(),
 }: VideoSchemaProps) {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'VideoObject',
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
     name,
     description,
-    thumbnailUrl,
+    thumbnailUrl: [`${SITE.domain}${thumbnailUrl}`],
+    contentUrl: `${SITE.domain}${videoUrl}`,
     uploadDate,
-    contentUrl,
-    embedUrl,
-    duration,
-    width,
-    height,
     publisher: {
-      '@type': 'Organization',
-      name: siteConfig.siteName,
+      "@type": "Organization",
+      name: SITE.organization.legalName,
       logo: {
-        '@type': 'ImageObject',
-        url: siteConfig.openGraph.images[0].url,
+        "@type": "ImageObject",
+        url: `${SITE.domain}${SITE.logo}`,
       },
     },
   };
 
-  return <JsonLd data={schema} />;
+  return <JsonLd data={data} />;
 }
