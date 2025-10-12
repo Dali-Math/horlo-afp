@@ -1,6 +1,5 @@
 "use client";
-
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
 // Map slug -> titre + chemin PDF (respecte bien /pdfs/…)
@@ -28,6 +27,12 @@ export default function PdfLivrePage({ params }: Props) {
   const doc = DOCS[params.slug];
   const [loaded, setLoaded] = useState(false);
 
+  // Force dark theme on HTML and body
+  useEffect(() => {
+    document.documentElement.style.backgroundColor = "#0A0A0A";
+    document.body.style.backgroundColor = "#0A0A0A";
+  }, []);
+
   if (!doc) {
     return (
       <div className="min-h-screen bg-[#0A0A0A] text-gray-200 flex items-center justify-center">
@@ -35,7 +40,7 @@ export default function PdfLivrePage({ params }: Props) {
           <p className="text-lg">Document introuvable.</p>
           <Link
             href="/suisse"
-            className="mt-4 inline-block text-[#E2B44F] hover:underline"
+            className="mt-4 inline-block text-[#E2B44F] hover:text-[#FFD36D] transition"
           >
             ← Retour aux documents
           </Link>
@@ -58,7 +63,7 @@ export default function PdfLivrePage({ params }: Props) {
         <div className="mb-5 flex items-center justify-between">
           <Link
             href="/suisse"
-            className="text-[#E2B44F] hover:text-[#ffd36d] transition"
+            className="text-[#E2B44F] hover:text-[#FFD36D] transition"
           >
             ← Retour aux documents
           </Link>
@@ -81,9 +86,9 @@ export default function PdfLivrePage({ params }: Props) {
         <section className="mt-6 rounded-xl border border-[#E2B44F]/20 bg-[#0D0D0D] p-2">
           {/* Loader */}
           {!loaded && (
-            <div className="flex h-[65vh] items-center justify-center">
+            <div className="flex h-[65vh] items-center justify-center bg-[#0A0A0A]">
               <div className="flex flex-col items-center">
-                <div className="h-10 w-10 animate-spin rounded-full border-2 border-[#E2B44F] border-t-transparent" />
+                <div className="h-10 w-10 animate-spin rounded-full border-2 border-[#E2B44F] border-t-transparent"></div>
                 <p className="mt-3 text-sm text-gray-400">
                   Chargement du livre en cours…
                 </p>
