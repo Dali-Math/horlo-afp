@@ -27,6 +27,7 @@ export const metadata: Metadata = {
       "Formation horlogère suisse complète : gestes, démontage, remontage, ETA 6497, AFP.",
     "ai:topic": "Horlogerie suisse, mouvement mécanique, formation AFP, ETA 6497",
     "ai:author": "HorloLearn by Mohamed Ali Mathlouthi",
+    "color-scheme": "dark light",
   },
 };
 
