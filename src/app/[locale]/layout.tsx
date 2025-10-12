@@ -12,7 +12,7 @@ export default async function LocaleLayout({
   params: { locale: string };
 }) {
   const { locale } = params;
-  const messagesPath = path.join(process.cwd(), 'src/messages', `${locale}.json`);
+  const messagesPath = path.join(process.cwd(), 'public/locales', `${locale}.json`);
 
   try {
     const fileContents = await fs.readFile(messagesPath, 'utf8');
