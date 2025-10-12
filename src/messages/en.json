@@ -1,0 +1,19 @@
+{
+  "welcome": "Welcome to HorloLearn",
+  "start": "Start learning",
+  "practice": "Watchmaking Practice",
+  "theory": "Watchmaking Theory",
+  "quiz": "Interactive Quizzes",
+  "resources": "Resources",
+  "tools": "Tools",
+  "language": "Language",
+  "remontage": "Movement Assembly",
+  "demontage": "Movement Disassembly",
+  "watchmaking": "Learn Swiss watchmaking step by step",
+  "description": "HorloLearn guides you through practical and theoretical Swiss watchmaking training.",
+  "back": "Back",
+  "video_not_available": "Video not available",
+  "quiz_start": "Start the quiz",
+  "quiz_end": "Congratulations! You've completed the quiz.",
+  "footer": "An educational project for watchmaking enthusiasts."
+}
