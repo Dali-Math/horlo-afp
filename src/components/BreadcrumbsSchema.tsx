@@ -1,26 +1,21 @@
-import React from 'react';
-import JsonLd from '@/components/JsonLd';
+"use client";
+import JsonLd from "./JsonLd";
+import { SITE } from "@/lib/seo";
 
-interface BreadcrumbItem {
-  name: string;
-  url: string;
-}
-
-interface BreadcrumbsSchemaProps {
-  items: BreadcrumbItem[];
-}
-
-export function BreadcrumbsSchema({ items }: BreadcrumbsSchemaProps) {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: items.map((item, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: item.name,
-      item: item.url,
+export default function BreadcrumbsSchema({
+  items,
+}: {
+  items: { name: string; slug: string }[];
+}) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((it, idx) => ({
+      "@type": "ListItem",
+      position: idx + 1,
+      name: it.name,
+      item: `${SITE.domain}/${it.slug}`,
     })),
   };
-
-  return <JsonLd data={schema} />;
+  return <JsonLd data={data} />;
 }
