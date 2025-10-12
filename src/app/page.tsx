@@ -4,18 +4,36 @@ import Image from "next/image";
 import { BookOpen, Wrench, Brain, Clock, FileText, Headphones, Award, Calendar, Users, Play } from "lucide-react";
 import { motion } from "framer-motion";
 
-// ✅ Logo HorloLearn
+// ✅ Logo HorloLearn (drapeau suisse animé)
 function SwissLogo() {
   return (
     <div className="flex items-center gap-3">
-      <div className="relative w-8 h-8 md:w-10 md:h-10">
-        <div className="absolute inset-0 bg-red-600 rounded"></div>
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="w-2 md:w-2.5 h-6 md:h-7 bg-white absolute -translate-x-1/2 left-1/2 -translate-y-1/2 top-1/2"></div>
-          <div className="h-2 md:h-2.5 w-6 md:w-7 bg-white absolute -translate-x-1/2 left-1/2 -translate-y-1/2 top-1/2"></div>
+      {/* Drapeau suisse animé */}
+      <motion.div
+        className="relative w-8 h-8 md:w-10 md:h-10 bg-red-600 rounded-sm shadow-md overflow-hidden"
+        animate={{
+          rotateZ: [0, 0.5, -0.5, 0.3, -0.2, 0], // léger mouvement
+          y: [0, -0.5, 0.5, -1, 0], // petit flottement
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      >
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-3.5 h-1 bg-white absolute"></div>
+          <div className="w-1 h-3.5 bg-white absolute"></div>
         </div>
-      </div>
-      <span className="font-semibold tracking-wide text-gray-900">HorloLearn</span>
+      </motion.div>
+
+      {/* Nom HorloLearn */}
+      <span
+        className="font-semibold tracking-wide text-gray-900 text-[17px] md:text-lg"
+        style={{ textShadow: "0 0 5px rgba(226,180,79,0.4)" }} // léger reflet doré
+      >
+        HorloLearn
+      </span>
     </div>
   );
 }
@@ -33,7 +51,12 @@ function Header() {
           <Link href="/ressources" className="hover:text-red-700">Ressources</Link>
           <Link href="/communaute" className="hover:text-red-700">Communauté</Link>
         </nav>
-        <Link href="/quiz" className="px-3 py-2 rounded-md bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition">Quiz</Link>
+        <Link
+          href="/quiz"
+          className="px-3 py-2 rounded-md bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition"
+        >
+          Quiz
+        </Link>
       </div>
     </header>
   );
@@ -61,8 +84,18 @@ function Hero() {
             Un parcours pédagogique gratuit, structuré et pratique pour débuter ou se perfectionner.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/theorie" className="px-5 py-3 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition">Commencer</Link>
-            <Link href="/communaute" className="px-5 py-3 rounded-lg bg-white border border-slate-300 text-slate-800 font-semibold hover:bg-slate-50 transition">Rejoindre la communauté</Link>
+            <Link
+              href="/theorie"
+              className="px-5 py-3 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+            >
+              Commencer
+            </Link>
+            <Link
+              href="/communaute"
+              className="px-5 py-3 rounded-lg bg-white border border-slate-300 text-slate-800 font-semibold hover:bg-slate-50 transition"
+            >
+              Rejoindre la communauté
+            </Link>
           </div>
           <div className="mt-6 text-sm text-slate-500">
             Accès libre, sans inscription — Ressources validées par des institutions
@@ -71,7 +104,13 @@ function Hero() {
 
         <div className="relative group rounded-2xl overflow-hidden bg-slate-900 shadow-2xl">
           <div className="aspect-video">
-            <video className="w-full h-full object-cover opacity-90" autoPlay muted loop playsInline>
+            <video
+              className="w-full h-full object-cover opacity-90"
+              autoPlay
+              muted
+              loop
+              playsInline
+            >
               <source src="/hero-watch.mp4" type="video/mp4" />
             </video>
           </div>
@@ -193,7 +232,10 @@ function PartnersSection() {
     <section className="relative bg-[#0A0A0A] py-20 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#0A0A0A] to-[#141414] animate-[shine_8s_linear_infinite]" />
       <div className="text-center mb-12 relative z-10">
-        <h2 className="text-3xl md:text-4xl font-semibold text-[#E2B44F]" style={{ textShadow: "0 0 15px rgba(226,180,79,0.7)" }}>
+        <h2
+          className="text-3xl md:text-4xl font-semibold text-[#E2B44F]"
+          style={{ textShadow: "0 0 15px rgba(226,180,79,0.7)" }}
+        >
           Avec le soutien des grandes maisons horlogères
         </h2>
       </div>
@@ -203,8 +245,18 @@ function PartnersSection() {
         transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
       >
         {[...partners, ...partners].map((p, i) => (
-          <motion.div key={i} className="grayscale hover:grayscale-0 transition-all duration-700" whileHover={{ scale: 3 }}>
-            <Image src={p.src} alt={p.alt} width={180} height={100} className="object-contain opacity-85 hover:opacity-100 transition-all" />
+          <motion.div
+            key={i}
+            className="grayscale hover:grayscale-0 transition-all duration-700"
+            whileHover={{ scale: 3 }}
+          >
+            <Image
+              src={p.src}
+              alt={p.alt}
+              width={180}
+              height={100}
+              className="object-contain opacity-85 hover:opacity-100 transition-all"
+            />
           </motion.div>
         ))}
       </motion.div>
