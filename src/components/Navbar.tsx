@@ -26,8 +26,8 @@ export default function Navbar() {
 
   return (
     <header className="bg-[#0A0A0A] text-white border-b border-gray-800 shadow-sm">
-      <nav className="flex flex-wrap items-center justify-between px-8 md:px-10 py-4 max-w-[1400px] mx-auto">
-
+      <nav
+        className="flex flex-wrap items-center justify-between px-8 md:px-10 py-4 max-w-[1400px] mx-auto"
         aria-label="Navigation principale"
       >
         {/* Logo animé */}
