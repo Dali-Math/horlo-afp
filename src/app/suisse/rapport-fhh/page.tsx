@@ -7,9 +7,9 @@ export default function RapportFHH() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (ready && typeof window !== "undefined") {
+    if (ready && typeof window !== "undefined" && window.$) {
       const interval = setInterval(() => {
-        if (window.$ && window.$("#flipbook").FlipBook) {
+        if (window.$("#flipbook").FlipBook) {
           //@ts-ignore
           window.$("#flipbook").FlipBook({
             pdf: "/pdfs/rapport-fhh.pdf",
@@ -26,10 +26,20 @@ export default function RapportFHH() {
 
   return (
     <>
+      {/* Charger jQuery d'abord */}
+      <Script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        strategy="beforeInteractive"
+      />
+
+      {/* Charger le Flipbook après jQuery */}
       <Script
         src="https://cdn.jsdelivr.net/npm/3dflipbook/dist/js/3dflipbook.min.js"
         onLoad={() => setReady(true)}
+        strategy="afterInteractive"
       />
+
+      {/* CSS du Flipbook */}
       <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/3dflipbook/dist/css/3dflipbook.min.css"
@@ -50,10 +60,10 @@ export default function RapportFHH() {
 
         <div
           id="flipbook"
-          className="w-[90%] h-[85vh] rounded-lg overflow-hidden shadow-2xl"
+          className="w-[90%] h-[85vh] rounded-lg overflow-hidden shadow-2xl flex items-center justify-center"
         >
           {!ready && (
-            <p className="text-gray-400 text-center mt-10 animate-pulse">
+            <p className="text-gray-400 text-center animate-pulse">
               Chargement du livre en cours...
             </p>
           )}
