@@ -1,59 +1,57 @@
-"use client";
+import { Metadata } from "next";
+import PodcastSchema from "@/components/PodcastSchema";
+import BreadcrumbsSchema from "@/components/BreadcrumbsSchema";
+import { SITE } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: `Podcasts HorloLearn – Formation et culture horlogère`,
+  description:
+    "Podcasts HorloLearn : discussions, explications et récits sur l'horlogerie suisse, les calibres ETA et la formation AFP.",
+};
 
 export default function PodcastsPage() {
-  const mesPodcasts = [
-    {
-      id: "coulisses",
-      title: "Dans les Coulisses du Temps",
-      description: "Voyage dans l’atelier, secrets & techniques horlogères.",
-      embedUrl: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%3Atracks%3A2185373015%3Fsecret_token%3Ds-Xw2rx3p2LOw&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true",
+  const episode = {
+    name: "Les bases du mouvement ETA 6497",
+    description:
+      "Un épisode audio de 20 minutes qui explore la structure du calibre ETA 6497, ses composants et son importance dans la formation horlogère suisse.",
+    audioUrl: "/audios/episode1.mp3",
+    imageUrl: "/images/podcast-cover.jpg",
+    uploadDate: "2025-10-12",
+    duration: "PT20M",
+    episodeNumber: 1,
+    partOfSeries: {
+      name: "HorloLearn Podcast",
+      url: "https://www.horlolearn.ch/podcasts",
     },
-    {
-      id: "rouages",
-      title: "Dans les Rouages du Temps",
-      description: "Exploration des mécanismes et roues dans la montre.",
-      embedUrl: "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%3Atracks%3A2185374163%3Fsecret_token%3Ds-yk6jMmCWxyx&color=%23ff5500&auto_play=false&hide_related=false&show_user=true&show_reposts=false&show_teaser=true&visual=true",
-    },
-    {
-      id: "vocabulaire",
-      title: "Vocabulaire Horloger",
-      description: "Termes techniques expliqués simplement.",
-      embedUrl: "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/user-555747421/vocabulaire_horloger",
-    },
-  ];
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">🎧 Podcasts</h1>
-        <p className="text-lg text-gray-700 mb-8">
-          Sélection de podcasts horlogers, écoute intégrée sans téléchargement.
-        </p>
+    <section className="max-w-3xl mx-auto p-6">
+      <BreadcrumbsSchema
+        items={[
+          { name: "Accueil", slug: "" },
+          { name: "Podcasts", slug: "podcasts" },
+        ]}
+      />
 
-        {/* 🎙 Section : tes podcasts HorloLearn */}
-        <section className="bg-white rounded-lg shadow-md p-6 mb-10 border border-[#E2B44F]">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-            🎙 Mes podcasts HorloLearn
-          </h2>
+      <h1 className="text-3xl font-bold text-[#E2B44F] mb-4">
+        Podcasts HorloLearn 🎧
+      </h1>
+      <p className="text-gray-300 mb-6">
+        Écoutez nos épisodes exclusifs sur la culture horlogère suisse, les
+        techniques de démontage, et les secrets des calibres emblématiques.
+      </p>
 
-          <div className="space-y-8">
-            {mesPodcasts.map((p) => (
-              <div key={p.id} className="border-l-4 border-[#E2B44F] pl-4">
-                <h3 className="text-xl font-semibold text-gray-900">{p.title}</h3>
-                <p className="text-gray-600 mb-4">{p.description}</p>
-                <iframe
-                  width="100%"
-                  height="166"
-                  scrolling="no"
-                  frameBorder="no"
-                  allow="autoplay"
-                  src={p.embedUrl}
-                ></iframe>
-              </div>
-            ))}
-          </div>
-        </section>
+      <div className="bg-[#111] p-4 rounded-2xl shadow-md">
+        <h2 className="text-xl font-semibold text-[#E2B44F]">
+          {episode.name}
+        </h2>
+        <p className="text-gray-400 mb-3">{episode.description}</p>
+        <audio controls src={episode.audioUrl} className="w-full rounded-lg" />
       </div>
-    </div>
+
+      {/* Injection du JSON-LD IA */}
+      <PodcastSchema {...episode} />
+    </section>
   );
 }
