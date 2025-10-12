@@ -1,6 +1,8 @@
 import { NextIntlClientProvider } from 'next-intl';
+import { notFound } from 'next/navigation';
 import path from 'path';
-import { promises as fs } from 'fs';
+import fs from 'fs/promises';
+import React from 'react';
 
 export default async function LocaleLayout({
   children,
@@ -9,17 +11,24 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  const filePath = path.join(process.cwd(), 'src/messages', `${params.locale}.json`);
-  const fileContents = await fs.readFile(filePath, 'utf8');
-  const messages = JSON.parse(fileContents);
+  const { locale } = params;
+  const messagesPath = path.join(process.cwd(), 'src/messages', `${locale}.json`);
 
-  return (
-    <html lang={params.locale}>
-      <body>
-        <NextIntlClientProvider locale={params.locale} messages={messages}>
-          {children}
-        </NextIntlClientProvider>
-      </body>
-    </html>
-  );
+  try {
+    const fileContents = await fs.readFile(messagesPath, 'utf8');
+    const messages = JSON.parse(fileContents);
+
+    return (
+      <html lang={locale}>
+        <body>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            {children}
+          </NextIntlClientProvider>
+        </body>
+      </html>
+    );
+  } catch (error) {
+    console.error('❌ Locale JSON not found or invalid:', error);
+    notFound();
+  }
 }
