@@ -8,11 +8,8 @@ const nextConfig = {
   reactStrictMode: true,
   output: "standalone",
 
-  async redirects() {
-    return [
-      { source: "/", destination: "/fr", permanent: false },
-    ];
-  },
+  // Supprimer complètement la section "redirects"
+  // Elle n'est plus nécessaire puisque defaultLocale est déjà "fr".
 };
 
 module.exports = nextConfig;
