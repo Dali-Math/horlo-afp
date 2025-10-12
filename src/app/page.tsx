@@ -4,11 +4,11 @@ import Image from "next/image";
 import { BookOpen, Wrench, Brain, Clock, FileText, Headphones, Award, Calendar, Users, Play } from "lucide-react";
 import { motion } from "framer-motion";
 
-// ✅ Logo HorloLearn (drapeau suisse flottant inchangé + texte plus élégant)
+// ✅ Logo HorloLearn (drapeau suisse + texte raffiné)
 function SwissLogo() {
   return (
     <div className="flex items-center gap-3">
-      {/* 🇨🇭 Drapeau suisse flottant (inchangé) */}
+      {/* 🇨🇭 Drapeau suisse flottant */}
       <div className="relative w-8 h-8 md:w-10 md:h-10 rounded-sm shadow-md overflow-hidden flag-wave">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-3.5 h-1 bg-white absolute"></div>
@@ -16,46 +16,42 @@ function SwissLogo() {
         </div>
       </div>
 
-      {/* ✨ Nouveau style du texte HorloLearn */}
+      {/* ✨ HorloLearn modernisé */}
       <div className="flex items-baseline">
         <span
-          className="text-[1.45rem] md:text-[1.65rem] font-serif italic font-semibold bg-gradient-to-r from-[#C8A951] via-[#FFD97A] to-[#C8A951] bg-clip-text text-transparent"
+          className="text-[1.55rem] md:text-[1.75rem] font-serif italic font-semibold bg-gradient-to-br from-[#C6A04D] via-[#E5C469] to-[#A87927] bg-clip-text text-transparent"
           style={{
             textShadow:
-              "0 0 6px rgba(200,169,81,0.4), 0 0 12px rgba(255,217,122,0.3)",
+              "0 0 4px rgba(230,200,110,0.3), 0 0 10px rgba(255,230,160,0.25)",
+            letterSpacing: "0.5px",
           }}
         >
           Horlo
         </span>
-        <span className="ml-1 text-[1.45rem] md:text-[1.65rem] font-sans font-bold tracking-tight text-gray-900">
+        <span
+          className="ml-1 text-[1.55rem] md:text-[1.75rem] font-sans font-semibold bg-gradient-to-r from-[#3A3A3A] to-[#1E1E1E] bg-clip-text text-transparent"
+          style={{
+            textShadow:
+              "0 1px 2px rgba(0,0,0,0.25), 0 0 6px rgba(120,120,120,0.15)",
+            letterSpacing: "0.5px",
+          }}
+        >
           Learn
         </span>
       </div>
 
-      {/* 🌬️ Animation du drapeau (inchangée) */}
       <style jsx>{`
         .flag-wave {
           background: linear-gradient(90deg, #b91c1c 0%, #dc2626 50%, #b91c1c 100%);
           animation: wave 2.3s ease-in-out infinite;
           transform-origin: left center;
         }
-
         @keyframes wave {
-          0% {
-            transform: perspective(250px) rotateY(0deg);
-          }
-          25% {
-            transform: perspective(250px) rotateY(6deg);
-          }
-          50% {
-            transform: perspective(250px) rotateY(0deg);
-          }
-          75% {
-            transform: perspective(250px) rotateY(-6deg);
-          }
-          100% {
-            transform: perspective(250px) rotateY(0deg);
-          }
+          0% { transform: perspective(250px) rotateY(0deg); }
+          25% { transform: perspective(250px) rotateY(6deg); }
+          50% { transform: perspective(250px) rotateY(0deg); }
+          75% { transform: perspective(250px) rotateY(-6deg); }
+          100% { transform: perspective(250px) rotateY(0deg); }
         }
       `}</style>
     </div>
@@ -75,10 +71,7 @@ function Header() {
           <Link href="/ressources" className="hover:text-red-700">Ressources</Link>
           <Link href="/communaute" className="hover:text-red-700">Communauté</Link>
         </nav>
-        <Link
-          href="/quiz"
-          className="px-3 py-2 rounded-md bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition"
-        >
+        <Link href="/quiz" className="px-3 py-2 rounded-md bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition">
           Quiz
         </Link>
       </div>
@@ -108,16 +101,10 @@ function Hero() {
             Un parcours pédagogique gratuit, structuré et pratique pour débuter ou se perfectionner.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/theorie"
-              className="px-5 py-3 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition"
-            >
+            <Link href="/theorie" className="px-5 py-3 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition">
               Commencer
             </Link>
-            <Link
-              href="/communaute"
-              className="px-5 py-3 rounded-lg bg-white border border-slate-300 text-slate-800 font-semibold hover:bg-slate-50 transition"
-            >
+            <Link href="/communaute" className="px-5 py-3 rounded-lg bg-white border border-slate-300 text-slate-800 font-semibold hover:bg-slate-50 transition">
               Rejoindre la communauté
             </Link>
           </div>
@@ -128,13 +115,7 @@ function Hero() {
 
         <div className="relative group rounded-2xl overflow-hidden bg-slate-900 shadow-2xl">
           <div className="aspect-video">
-            <video
-              className="w-full h-full object-cover opacity-90"
-              autoPlay
-              muted
-              loop
-              playsInline
-            >
+            <video className="w-full h-full object-cover opacity-90" autoPlay muted loop playsInline>
               <source src="/hero-watch.mp4" type="video/mp4" />
             </video>
           </div>
@@ -164,18 +145,9 @@ function Carousel() {
   return (
     <section className="py-8 md:py-10 bg-white/70 border-y border-slate-200">
       <div className="overflow-hidden">
-        <div
-          className="flex gap-6 animate-[scroll_25s_linear_infinite]"
-          style={{
-            maskImage: "linear-gradient(90deg, transparent, black 10%, black 90%, transparent)",
-          }}
-        >
+        <div className="flex gap-6 animate-[scroll_25s_linear_infinite]" style={{ maskImage: "linear-gradient(90deg, transparent, black 10%, black 90%, transparent)" }}>
           {items.concat(items).map((it, i) => (
-            <Link
-              key={i}
-              href={it.href}
-              className="shrink-0 px-5 py-2 rounded-full border border-slate-300 bg-white text-slate-700 hover:border-red-600 hover:text-red-700 transition"
-            >
+            <Link key={i} href={it.href} className="shrink-0 px-5 py-2 rounded-full border border-slate-300 bg-white text-slate-700 hover:border-red-600 hover:text-red-700 transition">
               {it.name}
             </Link>
           ))}
@@ -208,23 +180,13 @@ function ExploreGrid() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {cards.map((c, idx) => (
-          <Link
-            key={c.href}
-            href={c.href}
-            className="group relative rounded-2xl bg-white border border-slate-200 shadow hover:shadow-xl hover:border-red-600 transition overflow-hidden"
-            style={{ animation: `fadeInUp .6s ease ${idx * 0.06}s both` }}
-          >
+          <Link key={c.href} href={c.href} className="group relative rounded-2xl bg-white border border-slate-200 shadow hover:shadow-xl hover:border-red-600 transition overflow-hidden" style={{ animation: `fadeInUp .6s ease ${idx * 0.06}s both` }}>
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 rounded-xl bg-gradient-to-br from-red-600 to-red-700 text-white shadow">
                   {c.icon ? <c.icon className="w-6 h-6" /> : null}
                 </div>
-                <svg
-                  className="w-6 h-6 text-red-600 opacity-0 group-hover:opacity-100 transition"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-6 h-6 text-red-600 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path d="M9 5l7 7-7 7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
@@ -240,6 +202,46 @@ function ExploreGrid() {
   );
 }
 
+// ✅ Section Partenaires (restaurée)
+function PartnersSection() {
+  const partners = [
+    { src: "/images/partners/rolex.png", alt: "Rolex" },
+    { src: "/images/partners/patek.png", alt: "Patek Philippe" },
+    { src: "/images/partners/audemars.png", alt: "Audemars Piguet" },
+    { src: "/images/partners/vacheron.png", alt: "Vacheron Constantin" },
+    { src: "/images/partners/chopard.png", alt: "Chopard" },
+    { src: "/images/partners/piaget.png", alt: "Piaget" },
+    { src: "/images/partners/muller.png", alt: "Franck Muller" },
+  ];
+
+  return (
+    <section className="relative bg-[#0A0A0A] py-20 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#0A0A0A] to-[#141414] animate-[shine_8s_linear_infinite]" />
+      <div className="text-center mb-12 relative z-10">
+        <h2 className="text-3xl md:text-4xl font-semibold text-[#E2B44F]" style={{ textShadow: "0 0 15px rgba(226,180,79,0.7)" }}>
+          Avec le soutien des grandes maisons horlogères
+        </h2>
+      </div>
+      <motion.div className="flex items-center justify-around gap-20 px-8 relative z-10" animate={{ x: ["0%", "-50%"] }} transition={{ repeat: Infinity, duration: 40, ease: "linear" }}>
+        {[...partners, ...partners].map((p, i) => (
+          <motion.div key={i} className="grayscale hover:grayscale-0 transition-all duration-700" whileHover={{ scale: 3 }}>
+            <Image src={p.src} alt={p.alt} width={180} height={100} className="object-contain opacity-85 hover:opacity-100 transition-all" />
+          </motion.div>
+        ))}
+      </motion.div>
+      <p className="text-center text-gray-400 mt-10 text-sm relative z-10">
+        Ressources gratuites et open-source pour la formation en horlogerie.
+      </p>
+      <style>{`
+        @keyframes shine {
+          0% { background-position: -1000px 0; }
+          100% { background-position: 1000px 0; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
 // ✅ Page principale
 export default function Home() {
   return (
@@ -248,6 +250,7 @@ export default function Home() {
       <Hero />
       <Carousel />
       <ExploreGrid />
+      <PartnersSection />
     </div>
   );
 }
