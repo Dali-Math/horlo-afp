@@ -1,6 +1,6 @@
-const fs = require("fs-extra");
-const path = require("path");
-const { fromPath } = require("pdf2pic");
+import fs from "fs-extra";
+import path from "path";
+import { fromPath } from "pdf2pic";
 
 const inputDir = path.resolve("./public/pdfs");
 const outputBase = path.resolve("./public/flipbook");
@@ -9,6 +9,11 @@ async function convertAllPdfs() {
   await fs.ensureDir(outputBase);
   const files = await fs.readdir(inputDir);
   const pdfs = files.filter((f) => f.endsWith(".pdf"));
+
+  if (pdfs.length === 0) {
+    console.log("⚠️  Aucun fichier PDF trouvé dans /public/pdfs/");
+    return;
+  }
 
   for (const file of pdfs) {
     const name = path.basename(file, ".pdf");
@@ -35,8 +40,10 @@ async function convertAllPdfs() {
 
     console.log(`✅ Terminé : ${name}`);
   }
+
+  console.log("🎉 Toutes les conversions sont terminées !");
 }
 
-convertAllPdfs()
-  .then(() => console.log("🎉 Toutes les conversions sont terminées !"))
-  .catch((err) => console.error("❌ Erreur :", err));
+convertAllPdfs().catch((err) => {
+  console.error("❌ Erreur :", err);
+});
