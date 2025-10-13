@@ -2,9 +2,8 @@
 
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
-import { useState } from "react";
 
 const HTMLFlipBook = dynamic(() => import("react-pageflip"), { ssr: false });
 
@@ -29,7 +28,7 @@ const DOCS: Record<
 export default function LivreFlipbook() {
   const { slug } = useParams();
   const doc = useMemo(() => DOCS[slug as string], [slug]);
-  const flipBookRef = useRef<any>(null);
+  const flipRef = useRef<any>(null);
   const [zoom, setZoom] = useState(1);
 
   if (!doc) {
@@ -40,8 +39,17 @@ export default function LivreFlipbook() {
     );
   }
 
-  const nextPage = () => flipBookRef.current?.pageFlip().flipNext();
-  const prevPage = () => flipBookRef.current?.pageFlip().flipPrev();
+  const handleNext = () => {
+    if (flipRef.current) {
+      flipRef.current.pageFlip().flipNext();
+    }
+  };
+
+  const handlePrev = () => {
+    if (flipRef.current) {
+      flipRef.current.pageFlip().flipPrev();
+    }
+  };
 
   const zoomIn = () => setZoom((z) => Math.min(z + 0.2, 2));
   const zoomOut = () => setZoom((z) => Math.max(z - 0.2, 1));
@@ -60,12 +68,12 @@ export default function LivreFlipbook() {
         style={{ transform: `scale(${zoom})`, transition: "transform 0.3s" }}
       >
         <HTMLFlipBook
-          ref={flipBookRef}
           width={400}
           height={550}
           showCover={true}
           className="shadow-lg rounded-xl"
           mobileScrollSupport={true}
+          ref={flipRef}
         >
           <div className="flex items-center justify-center bg-[#111] text-gray-200 p-10">
             <h2 className="text-2xl font-semibold">{doc.title}</h2>
@@ -84,14 +92,14 @@ export default function LivreFlipbook() {
 
         {/* Boutons navigation */}
         <button
-          onClick={prevPage}
+          onClick={handlePrev}
           className="absolute left-2 md:left-10 top-1/2 -translate-y-1/2 bg-[#E2B44F]/20 hover:bg-[#E2B44F]/40 text-white p-3 rounded-full"
         >
           <ChevronLeft size={24} />
         </button>
 
         <button
-          onClick={nextPage}
+          onClick={handleNext}
           className="absolute right-2 md:right-10 top-1/2 -translate-y-1/2 bg-[#E2B44F]/20 hover:bg-[#E2B44F]/40 text-white p-3 rounded-full"
         >
           <ChevronRight size={24} />
