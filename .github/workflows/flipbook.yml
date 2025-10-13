@@ -1,32 +1,55 @@
-name: Convert PDFs to Flipbook Images
+name: Smart Flipbook PDF Converter
 
 on:
   push:
     branches:
       - main
+    paths:
+      - 'public/pdfs/**.pdf'   # Ne s’exécute que si des PDFs changent
+      - '.github/workflows/flipbook.yml'
+      - 'scripts/convert-pdf-to-images.js'
+      - 'package.json'
 
 jobs:
   convert-pdfs:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: 🧩 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Install dependencies
-        run: npm install
+      - name: 📦 Install dependencies
+        run: npm ci
 
-      - name: Run Flipbook conversion
-        run: npm run flipbook
+      - name: 🕵️‍♂️ Detect changed PDFs
+        id: changed-pdfs
+        run: |
+          echo "CHANGED_PDFS=$(git diff --name-only HEAD^ HEAD | grep 'public/pdfs/' | grep '.pdf' || true)" >> $GITHUB_ENV
 
-      - name: Commit generated flipbook images
+      - name: 🚫 Skip if no PDFs changed
+        if: env.CHANGED_PDFS == ''
+        run: echo "No new or updated PDFs found — skipping conversion."
+
+      - name: 🔄 Convert only changed PDFs
+        if: env.CHANGED_PDFS != ''
+        run: |
+          echo "Changed PDFs:"
+          echo "$CHANGED_PDFS"
+          for file in $CHANGED_PDFS; do
+            echo "Converting $file ..."
+            node scripts/convert-pdf-to-images.js
+          done
+
+      - name: 💾 Commit updated Flipbook images
+        if: env.CHANGED_PDFS != ''
         run: |
           git config user.name "GitHub Action"
           git config user.email "actions@github.com"
           git add public/flipbook || true
-          git commit -m "Auto-update flipbook images" || echo "No changes to commit"
+          git commit -m "Auto-update Flipbook for changed PDFs" || echo "No changes to commit"
           git push
