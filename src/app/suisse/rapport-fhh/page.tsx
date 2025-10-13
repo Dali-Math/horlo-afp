@@ -1,74 +1,56 @@
 "use client";
-import { useEffect, useState } from "react";
-import Script from "next/script";
+
 import Link from "next/link";
+import { ArrowLeft, BookOpen, FileText } from "lucide-react";
+import FlipBookViewer from "@/components/FlipBookViewer";
 
-export default function RapportFHH() {
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    if (ready && typeof window !== "undefined" && window.$) {
-      const interval = setInterval(() => {
-        if (window.$("#flipbook").FlipBook) {
-          //@ts-ignore
-          window.$("#flipbook").FlipBook({
-            pdf: "/pdfs/rapport-fhh.pdf",
-            template: {
-              sounds: { startFlip: "https://3dflipbook.net/sounds/turn.mp3" },
-            },
-            controlsProps: { downloadURL: "/pdfs/rapport-fhh.pdf" },
-          });
-          clearInterval(interval);
-        }
-      }, 300);
-    }
-  }, [ready]);
-
+export default function RapportFHH2024() {
   return (
-    <>
-      {/* Charger jQuery d'abord */}
-      <Script
-        src="https://code.jquery.com/jquery-3.6.0.min.js"
-        strategy="beforeInteractive"
-      />
-
-      {/* Charger le Flipbook après jQuery */}
-      <Script
-        src="https://cdn.jsdelivr.net/npm/3dflipbook/dist/js/3dflipbook.min.js"
-        onLoad={() => setReady(true)}
-        strategy="afterInteractive"
-      />
-
-      {/* CSS du Flipbook */}
-      <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/3dflipbook/dist/css/3dflipbook.min.css"
-      />
-
-      <div className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center p-4">
-        <div className="w-full flex justify-between items-center mb-4">
+    <div className="min-h-screen bg-[#0b1220] text-white py-16 px-6">
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
+        {/* Partie gauche : texte explicatif */}
+        <div>
           <Link
-            href="/suisse"
-            className="text-[#E2B44F] font-semibold hover:text-[#FFD700] transition"
+            href="/suisse/livre"
+            className="inline-flex items-center gap-2 text-yellow-400 hover:text-white transition mb-8"
           >
-            ← Retour aux documents
+            <ArrowLeft className="w-5 h-5" /> Retour
           </Link>
-          <h1 className="text-2xl font-bold text-[#E2B44F]">
-            Rapport FHH 2024
-          </h1>
+
+          <div className="flex items-center gap-3 mb-6">
+            <FileText className="text-yellow-400 w-7 h-7" />
+            <h1 className="text-3xl font-bold text-yellow-400">
+              Rapport FHH 2024
+            </h1>
+          </div>
+
+          <p className="text-gray-300 leading-relaxed mb-4">
+            Le <span className="text-yellow-400">Rapport FHH 2024</span> présente les
+            chiffres clés, les tendances et les perspectives de l’industrie
+            horlogère suisse. Il s’agit d’une ressource précieuse pour comprendre
+            l’évolution du secteur et ses dynamiques économiques.
+          </p>
+
+          <p className="text-gray-300 leading-relaxed">
+            Publié par la Fondation de la Haute Horlogerie, ce rapport met en
+            lumière les innovations, les marchés émergents et les défis auxquels
+            les maisons suisses font face dans un contexte mondial en mutation.
+          </p>
         </div>
 
-        <div
-          id="flipbook"
-          className="w-[90%] h-[85vh] rounded-lg overflow-hidden shadow-2xl flex items-center justify-center"
-        >
-          {!ready && (
-            <p className="text-gray-400 text-center animate-pulse">
-              Chargement du livre en cours...
-            </p>
-          )}
+        {/* Partie droite : flipbook PDF */}
+        <div className="bg-[#111827] p-6 rounded-2xl border border-yellow-500/30 shadow-lg">
+          <div className="flex items-center gap-2 mb-4">
+            <BookOpen className="text-yellow-400 w-6 h-6" />
+            <h2 className="text-xl font-semibold text-yellow-400">
+              Rapport Annuel de la Fondation de la Haute Horlogerie
+            </h2>
+          </div>
+
+          {/* FlipBook PDF */}
+          <FlipBookViewer file="/pdfs/rapport-fhh.pdf" />
         </div>
       </div>
-    </>
+    </div>
   );
 }
