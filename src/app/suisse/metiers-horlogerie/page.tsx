@@ -7,7 +7,7 @@ export default function MetiersHorlogerie() {
   return (
     <div className="min-h-screen bg-[#0b1220] text-white py-16 px-6">
       <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
-        {/* Partie gauche : description */}
+        {/* Partie gauche : texte descriptif */}
         <div>
           <Link
             href="/suisse"
@@ -24,14 +24,14 @@ export default function MetiersHorlogerie() {
           </div>
 
           <p className="text-gray-300 leading-relaxed">
-            Ce guide complet présente les différents métiers de l’horlogerie
-            suisse, les compétences requises et les parcours de formation.
-            Réalisé pour les futurs professionnels et les passionnés,
-            il met en valeur l’excellence artisanale et technique suisse.
+            Le guide des métiers de l’horlogerie suisse présente les différentes
+            professions, les parcours de formation et les compétences clés.
+            C’est une ressource essentielle pour comprendre l’univers de
+            l’artisanat horloger et les opportunités qu’il offre.
           </p>
         </div>
 
-        {/* Partie droite : flipbook PDF */}
+        {/* Partie droite : flipbook */}
         <div className="bg-[#111827] p-6 rounded-2xl border border-yellow-500/30 shadow-lg">
           <div className="flex items-center gap-2 mb-4">
             <BookOpen className="text-yellow-400 w-6 h-6" />
