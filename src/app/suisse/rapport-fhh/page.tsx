@@ -1,13 +1,16 @@
 "use client";
 import Link from "next/link";
 import { ArrowLeft, BookOpen, FileText } from "lucide-react";
-import FlipBookViewer from "@/components/FlipBookViewer";
+import dynamic from "next/dynamic";
+
+// On charge FlipBookViewer sans SSR pour éviter les erreurs Next.js
+const FlipBookViewer = dynamic(() => import("@/components/FlipBookViewer"), { ssr: false });
 
 export default function RapportFHH() {
   return (
     <div className="min-h-screen bg-[#0b1220] text-white py-16 px-6">
       <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
-        {/* Partie gauche : texte descriptif */}
+        {/* Partie gauche : description */}
         <div>
           <Link
             href="/suisse"
@@ -45,6 +48,8 @@ export default function RapportFHH() {
               Rapport Annuel de la Fondation de la Haute Horlogerie
             </h2>
           </div>
+
+          {/* Le bon chemin du PDF */}
           <FlipBookViewer file="/pdfs/rapport-fhh.pdf" />
         </div>
       </div>
