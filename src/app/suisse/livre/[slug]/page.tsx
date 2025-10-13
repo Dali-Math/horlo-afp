@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
-import "react-pageflip/dist/react-pageflip.css";
+
 
 const HTMLFlipBook = dynamic(() => import("react-pageflip"), { ssr: false });
 
