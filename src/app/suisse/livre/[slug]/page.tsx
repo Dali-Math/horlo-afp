@@ -1,103 +1,56 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { useParams } from "next/navigation";
-import { useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, BookOpen, FileText } from "lucide-react";
+import FlipBookViewer from "@/components/FlipBookViewer";
 
-const HTMLFlipBook = dynamic(() => import("react-pageflip"), { ssr: false });
-
-const DOCS: Record<
-  string,
-  { title: string; pages: string[]; description?: string }
-> = {
-  "metiers-horlogerie": {
-    title: "Métiers de l'Horlogerie",
-    description:
-      "Guide complet des métiers horlogers suisses : formations, compétences et carrières dans l'industrie.",
-    pages: [
-      "/flipbook/metiers-horlogerie/1.jpg",
-      "/flipbook/metiers-horlogerie/2.jpg",
-      "/flipbook/metiers-horlogerie/3.jpg",
-      "/flipbook/metiers-horlogerie/4.jpg",
-    ],
-  },
-  "rapport-fhh": {
-    title: "Rapport FHH 2024",
-    description:
-      "Rapport annuel : chiffres clés et tendances de l'industrie horlogère suisse.",
-    pages: [
-      "/flipbook/rapport-fhh/1.jpg",
-      "/flipbook/rapport-fhh/2.jpg",
-      "/flipbook/rapport-fhh/3.jpg",
-      "/flipbook/rapport-fhh/4.jpg",
-    ],
-  },
-};
-
-export default function LivreFlipbook() {
-  const { slug } = useParams();
-  const doc = useMemo(() => DOCS[slug as string], [slug]);
-  const [zoom, setZoom] = useState(1);
-
-  if (!doc) {
-    return (
-      <div className="flex items-center justify-center min-h-screen text-gray-300">
-        <p>Document introuvable 📄</p>
-      </div>
-    );
-  }
-
-  const zoomIn = () => setZoom((z) => Math.min(z + 0.2, 2));
-  const zoomOut = () => setZoom((z) => Math.max(z - 0.2, 1));
-
+export default function RapportFHH2024() {
   return (
-    <section className="min-h-screen bg-black text-white py-12 px-6 flex flex-col items-center">
-      <h1 className="text-3xl md:text-4xl font-bold text-[#E2B44F] mb-6 text-center">
-        {doc.title}
-      </h1>
-      <p className="text-gray-400 mb-10 text-center max-w-2xl">
-        {doc.description}
-      </p>
-
-      <div
-        className="relative flex justify-center items-center w-full"
-        style={{ transform: `scale(${zoom})`, transition: "transform 0.3s" }}
-      >
-        <HTMLFlipBook
-          width={500}
-          height={700}
-          showCover={true}
-          className="shadow-lg rounded-xl"
-          mobileScrollSupport={true}
-        >
-          {doc.pages.map((page, i) => (
-            <div key={i} className="bg-[#111] flex items-center justify-center">
-              <img
-                src={page}
-                alt={`Page ${i + 1}`}
-                className="w-full h-full object-contain"
-              />
-            </div>
-          ))}
-        </HTMLFlipBook>
-
-        {/* Contrôles zoom */}
-        <div className="absolute bottom-4 right-4 flex gap-3">
-          <button
-            onClick={zoomOut}
-            className="bg-[#E2B44F]/20 hover:bg-[#E2B44F]/40 p-2 rounded-full"
+    <div className="min-h-screen bg-[#0b1220] text-white py-16 px-6">
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
+        {/* Partie gauche : texte explicatif */}
+        <div>
+          <Link
+            href="/suisse/livre"
+            className="inline-flex items-center gap-2 text-yellow-400 hover:text-white transition mb-8"
           >
-            <ZoomOut size={18} />
-          </button>
-          <button
-            onClick={zoomIn}
-            className="bg-[#E2B44F]/20 hover:bg-[#E2B44F]/40 p-2 rounded-full"
-          >
-            <ZoomIn size={18} />
-          </button>
+            <ArrowLeft className="w-5 h-5" /> Retour
+          </Link>
+
+          <div className="flex items-center gap-3 mb-6">
+            <FileText className="text-yellow-400 w-7 h-7" />
+            <h1 className="text-3xl font-bold text-yellow-400">
+              Rapport FHH 2024
+            </h1>
+          </div>
+
+          <p className="text-gray-300 leading-relaxed mb-4">
+            Le <span className="text-yellow-400">Rapport FHH 2024</span> présente les
+            chiffres clés, les tendances et les perspectives de l’industrie
+            horlogère suisse. Il s’agit d’une ressource précieuse pour comprendre
+            l’évolution du secteur et ses dynamiques économiques.
+          </p>
+
+          <p className="text-gray-300 leading-relaxed">
+            Publié par la Fondation de la Haute Horlogerie, ce rapport met en
+            lumière les innovations, les marchés émergents et les défis auxquels
+            les maisons suisses font face dans un contexte mondial en mutation.
+          </p>
+        </div>
+
+        {/* Partie droite : flipbook PDF */}
+        <div className="bg-[#111827] p-6 rounded-2xl border border-yellow-500/30 shadow-lg">
+          <div className="flex items-center gap-2 mb-4">
+            <BookOpen className="text-yellow-400 w-6 h-6" />
+            <h2 className="text-xl font-semibold text-yellow-400">
+              Rapport Annuel de la Fondation de la Haute Horlogerie
+            </h2>
+          </div>
+
+          {/* FlipBook PDF */}
+          <FlipBookViewer file="/pdfs/rapport-fhh.pdf" />
         </div>
       </div>
-    </section>
+    </div>
   );
 }
