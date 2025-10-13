@@ -11,7 +11,7 @@ async function convertAllPdfs() {
   const pdfs = files.filter((f) => f.endsWith(".pdf"));
 
   if (pdfs.length === 0) {
-    console.log("⚠️  Aucun fichier PDF trouvé dans /public/pdfs/");
+    console.log("⚠️ Aucun fichier PDF trouvé dans /public/pdfs/");
     return;
   }
 
@@ -21,8 +21,7 @@ async function convertAllPdfs() {
     const outputDir = path.join(outputBase, name);
     await fs.ensureDir(outputDir);
 
-    console.log(`🔄 Conversion de ${file}...`);
-
+    console.log(`🧩 Conversion du fichier : ${file}`);
     const converter = fromPath(inputPath, {
       density: 150,
       savePath: outputDir,
@@ -31,14 +30,18 @@ async function convertAllPdfs() {
       height: 1600,
     });
 
+    // Conversion page par page avec affichage progressif
     const totalPages = await converter(1, true);
-    const pages = totalPages.length;
+    const total = totalPages.totalPages;
+    console.log(`📄 Total de pages détectées : ${total}`);
 
-    for (let i = 1; i <= pages; i++) {
+    for (let i = 1; i <= total; i++) {
       await converter(i);
+      const progress = Math.round((i / total) * 100);
+      console.log(`✅ Page ${i}/${total} (${progress}%)`);
     }
 
-    console.log(`✅ Terminé : ${name}`);
+    console.log(`🏁 Terminé : ${name}`);
   }
 
   console.log("🎉 Toutes les conversions sont terminées !");
@@ -46,4 +49,5 @@ async function convertAllPdfs() {
 
 convertAllPdfs().catch((err) => {
   console.error("❌ Erreur :", err);
+  process.exit(1);
 });
