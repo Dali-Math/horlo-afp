@@ -1,0 +1,32 @@
+name: Convert PDFs to Flipbook Images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  convert-pdfs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Flipbook conversion
+        run: npm run flipbook
+
+      - name: Commit generated flipbook images
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "actions@github.com"
+          git add public/flipbook || true
+          git commit -m "Auto-update flipbook images" || echo "No changes to commit"
+          git push
