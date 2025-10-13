@@ -43,11 +43,12 @@ export default function PdfViewerPage({ params }: Props) {
     );
   }
 
+  // 🔄 NOUVELLE VERSION : on pointe vers le FlipBook
   const viewerSrc = useMemo(() => {
     const file = encodeURIComponent(doc.pdf);
-    // PDF.js en mode sombre
-    return `/pdfjs/web/viewer.html?file=/pdfs/${params.slug}.pdf#theme=dark&zoom=page-fit&spread=auto`;
-  }, [doc.pdf]);
+    const title = encodeURIComponent(doc.title);
+    return `/pdfjs/flipbook/index.html?file=${file}&title=${title}`;
+  }, [doc.pdf, doc.title]);
 
   return (
     <main className="min-h-screen bg-[#0A0A0A] text-gray-200">
@@ -71,7 +72,7 @@ export default function PdfViewerPage({ params }: Props) {
           )}
         </div>
 
-        {/* Viewer */}
+        {/* FlipBook Viewer */}
         <div className="mt-8 rounded-xl border border-[#E2B44F]/20 bg-[#0D0D0D] p-2">
           {!loaded && (
             <div className="flex flex-col items-center justify-center h-[70vh]">
@@ -85,7 +86,9 @@ export default function PdfViewerPage({ params }: Props) {
           <iframe
             src={viewerSrc}
             title={doc.title}
-            className={`w-full ${loaded ? "h-[85vh]" : "h-0"} rounded-lg transition-all`}
+            className={`w-full ${
+              loaded ? "h-[85vh]" : "h-0"
+            } rounded-lg transition-all`}
             onLoad={() => setLoaded(true)}
             allowFullScreen
             loading="eager"
