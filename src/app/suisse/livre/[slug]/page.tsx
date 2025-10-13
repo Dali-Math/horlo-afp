@@ -5,7 +5,9 @@ import { useParams } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
 
-const HTMLFlipBook = dynamic(() => import("react-pageflip"), { ssr: false });
+// On déclare le type manuellement pour contourner la restriction de TypeScript
+// car react-pageflip ne publie pas encore un type ref compatible.
+const HTMLFlipBook: any = dynamic(() => import("react-pageflip"), { ssr: false });
 
 const DOCS: Record<
   string,
@@ -39,17 +41,8 @@ export default function LivreFlipbook() {
     );
   }
 
-  const handleNext = () => {
-    if (flipRef.current) {
-      flipRef.current.pageFlip().flipNext();
-    }
-  };
-
-  const handlePrev = () => {
-    if (flipRef.current) {
-      flipRef.current.pageFlip().flipPrev();
-    }
-  };
+  const handleNext = () => flipRef.current?.pageFlip()?.flipNext();
+  const handlePrev = () => flipRef.current?.pageFlip()?.flipPrev();
 
   const zoomIn = () => setZoom((z) => Math.min(z + 0.2, 2));
   const zoomOut = () => setZoom((z) => Math.max(z - 0.2, 1));
@@ -68,12 +61,12 @@ export default function LivreFlipbook() {
         style={{ transform: `scale(${zoom})`, transition: "transform 0.3s" }}
       >
         <HTMLFlipBook
+          ref={flipRef}
           width={400}
           height={550}
           showCover={true}
           className="shadow-lg rounded-xl"
           mobileScrollSupport={true}
-          ref={flipRef}
         >
           <div className="flex items-center justify-center bg-[#111] text-gray-200 p-10">
             <h2 className="text-2xl font-semibold">{doc.title}</h2>
