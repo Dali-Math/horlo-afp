@@ -11,7 +11,8 @@ export default function FlipbookViewer({ doc }: DocProps) {
   const viewerSrc = useMemo(() => {
     const file = encodeURIComponent(doc.pdf);
     const title = encodeURIComponent(doc.title);
-    return `/pdfjs/flipbook/index.html?file=${file}&title=${title}`;
+    // Correction ici : on pointe sur le nouveau nom flipbook-viewer.html
+    return `/pdfjs/flipbook/flipbook-viewer.html?file=${file}&title=${title}`;
   }, [doc.pdf, doc.title]);
 
   return (
