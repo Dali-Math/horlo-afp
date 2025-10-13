@@ -1,74 +1,47 @@
 "use client";
-import { useEffect, useState } from "react";
-import Script from "next/script";
+
 import Link from "next/link";
+import { BookOpen, ArrowLeft } from "lucide-react";
+import FlipBookViewer from "@/components/FlipBookViewer";
 
 export default function MetiersHorlogerie() {
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    if (ready && typeof window !== "undefined" && window.$) {
-      const interval = setInterval(() => {
-        if (window.$("#flipbook").FlipBook) {
-          //@ts-ignore
-          window.$("#flipbook").FlipBook({
-            pdf: "/pdfs/metiers-horlogerie.pdf",
-            template: {
-              sounds: { startFlip: "https://3dflipbook.net/sounds/turn.mp3" },
-            },
-            controlsProps: { downloadURL: "/pdfs/metiers-horlogerie.pdf" },
-          });
-          clearInterval(interval);
-        }
-      }, 300);
-    }
-  }, [ready]);
-
   return (
-    <>
-      {/* Charger jQuery d'abord */}
-      <Script
-        src="https://code.jquery.com/jquery-3.6.0.min.js"
-        strategy="beforeInteractive"
-      />
-
-      {/* Charger le Flipbook après jQuery */}
-      <Script
-        src="https://cdn.jsdelivr.net/npm/3dflipbook/dist/js/3dflipbook.min.js"
-        onLoad={() => setReady(true)}
-        strategy="afterInteractive"
-      />
-
-      {/* CSS du Flipbook */}
-      <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/3dflipbook/dist/css/3dflipbook.min.css"
-      />
-
-      <div className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center p-4">
-        <div className="w-full flex justify-between items-center mb-4">
+    <section className="min-h-screen bg-[#0b1220] text-white py-16 px-8">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-start">
+        {/* Colonne gauche */}
+        <div>
           <Link
             href="/suisse"
-            className="text-[#E2B44F] font-semibold hover:text-[#FFD700] transition"
+            className="inline-flex items-center gap-2 text-yellow-400 hover:text-white transition mb-8"
           >
-            ← Retour aux documents
+            <ArrowLeft className="w-5 h-5" />
+            Retour
           </Link>
-          <h1 className="text-2xl font-bold text-[#E2B44F]">
-            Métiers de l'Horlogerie
-          </h1>
+
+          <div className="flex items-center gap-3 mb-6">
+            <BookOpen className="text-yellow-400 w-7 h-7" />
+            <h1 className="text-3xl font-bold text-yellow-400">
+              Métiers de l'Horlogerie
+            </h1>
+          </div>
+
+          <p className="text-gray-300 leading-relaxed mb-6">
+            Le guide des Métiers de l’Horlogerie explore les différentes
+            professions de l’industrie suisse : horlogers, polisseurs,
+            micro-mécaniciens et concepteurs. Il offre une vision complète des
+            formations disponibles et des opportunités offertes par ce secteur
+            d’excellence.
+          </p>
         </div>
 
-        <div
-          id="flipbook"
-          className="w-[90%] h-[85vh] rounded-lg overflow-hidden shadow-2xl flex items-center justify-center"
-        >
-          {!ready && (
-            <p className="text-gray-400 text-center animate-pulse">
-              Chargement du livre en cours...
-            </p>
-          )}
+        {/* Colonne droite */}
+        <div className="bg-[#111827] p-6 rounded-2xl border border-yellow-500/30 shadow-lg">
+          <h2 className="text-xl font-semibold text-yellow-400 mb-4">
+            Guide complet des métiers horlogers suisses
+          </h2>
+          <FlipBookViewer file="/pdfs/metiers-horlogerie.pdf" />
         </div>
       </div>
-    </>
+    </section>
   );
 }
