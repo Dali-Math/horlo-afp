@@ -1,7 +1,11 @@
-// Fonction nécessaire pour export dynamique des chemins
-export async function generateStaticParams() {
-  return Object.keys(DOCS).map((slug) => ({ slug }));
-}
+"use client";
+
+import dynamic from "next/dynamic";
+import { useParams } from "next/navigation";
+import { useMemo } from "react";
+import "react-pageflip/dist/react-pageflip.css";
+
+const HTMLFlipBook = dynamic(() => import("react-pageflip"), { ssr: false });
 
 const DOCS: Record<
   string,
@@ -21,52 +25,50 @@ const DOCS: Record<
   },
 };
 
-import Link from "next/link";
-import FlipbookViewer from "./FlipbookViewer";
-
-type Props = { params: { slug: string } };
-
-export default function PdfViewerPage({ params }: Props) {
-  const doc = DOCS[params.slug];
+export default function LivreFlipbook() {
+  const { slug } = useParams();
+  const doc = useMemo(() => DOCS[slug as string], [slug]);
 
   if (!doc) {
     return (
-      <main className="min-h-screen bg-[#0A0A0A] text-gray-200 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg mb-4">❌ Document introuvable.</p>
-          <Link
-            href="/suisse"
-            className="text-[#E2B44F] hover:text-[#FFD36D] transition underline"
-          >
-            ← Retour aux documents
-          </Link>
-        </div>
-      </main>
+      <div className="flex items-center justify-center min-h-screen text-gray-300">
+        <p>Document introuvable 📄</p>
+      </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#0A0A0A] text-gray-200">
-      <div className="max-w-6xl mx-auto px-4 pt-8 pb-20">
-        <Link
-          href="/suisse"
-          className="text-[#E2B44F] hover:text-[#FFD36D] transition text-sm"
+    <section className="min-h-screen bg-black text-white py-12 px-6 flex flex-col items-center">
+      <h1 className="text-3xl md:text-4xl font-bold text-[#E2B44F] mb-6 text-center">
+        {doc.title}
+      </h1>
+
+      <p className="text-gray-400 mb-10 text-center max-w-2xl">
+        {doc.description}
+      </p>
+
+      <div className="w-full flex justify-center">
+        <HTMLFlipBook
+          width={400}
+          height={550}
+          showCover={true}
+          className="shadow-lg rounded-xl"
         >
-          ← Retour aux documents
-        </Link>
-        <div className="mt-4 p-6 rounded-xl border border-[#E2B44F]/20 bg-[#0D0D0D] shadow-[0_0_20px_rgba(226,180,79,0.05)]">
-          <h1 className="text-3xl font-bold mb-2">
-            <span className="text-[#E2B44F]">📘</span>{" "}
-            <span className="text-white">{doc.title}</span>
-          </h1>
-          {doc.description && (
-            <p className="text-gray-400 text-base">{doc.description}</p>
-          )}
-        </div>
-        <div className="mt-8 rounded-xl border border-[#E2B44F]/20 bg-[#0D0D0D] p-2">
-          <FlipbookViewer doc={doc} />
-        </div>
+          <div className="flex items-center justify-center bg-[#111] text-gray-200 p-10">
+            <h2 className="text-2xl font-semibold">{doc.title}</h2>
+          </div>
+
+          <iframe
+            src={doc.pdf}
+            className="w-full h-full bg-white"
+            title={doc.title}
+          ></iframe>
+
+          <div className="flex items-center justify-center bg-[#111] text-gray-400 p-10">
+            <p>Fin du document</p>
+          </div>
+        </HTMLFlipBook>
       </div>
-    </main>
+    </section>
   );
 }
