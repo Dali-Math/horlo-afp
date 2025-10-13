@@ -21,12 +21,16 @@ export default function Navbar() {
     { href: "/culture", label: "Culture" },
     { href: "/evenements", label: "Événements" },
     { href: "/communaute", label: "Communauté" },
+    // 🔸 Pas de lien Contact ici : il sera uniquement dans le footer
   ];
 
   return (
     <nav className="flex flex-wrap items-center justify-between px-10 md:px-16 py-4 bg-[#0A0A0A] text-white border-b border-gray-800">
-      {/* Logo reculé */}
-      <Link className="flex items-center gap-3 hover:opacity-90 transition-opacity" href="/">
+      {/* Logo principal */}
+      <Link
+        className="flex items-center gap-3 hover:opacity-90 transition-opacity"
+        href="/"
+      >
         <div className="pl-2 md:pl-4 flex items-center gap-3">
           <Image
             src="/logos/Logo.jpg"
@@ -37,13 +41,17 @@ export default function Navbar() {
             priority
           />
           <div className="flex flex-col">
-            <span className="text-xl font-bold text-white">Horlo<span className="text-[#E2B44F]">Learn</span></span>
-            <span className="text-xs text-[#E2B44F]">Culture & savoir-faire horloger</span>
+            <span className="text-xl font-bold text-white">
+              Horlo<span className="text-[#E2B44F]">Learn</span>
+            </span>
+            <span className="text-xs text-[#E2B44F]">
+              Culture & savoir-faire horloger
+            </span>
           </div>
         </div>
       </Link>
 
-      {/* Desktop Navigation */}
+      {/* Navigation Desktop */}
       <div className="hidden lg:flex gap-6 xl:gap-8 text-sm font-medium">
         {navLinks.map(({ href, label }) => (
           <Link
@@ -60,16 +68,20 @@ export default function Navbar() {
         ))}
       </div>
 
-      {/* Mobile Menu Button */}
+      {/* Bouton menu mobile */}
       <button
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         className="lg:hidden p-2 text-white hover:text-[#E2B44F] transition-colors"
         aria-label="Toggle menu"
       >
-        {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        {mobileMenuOpen ? (
+          <X className="w-6 h-6" />
+        ) : (
+          <Menu className="w-6 h-6" />
+        )}
       </button>
 
-      {/* Mobile Navigation */}
+      {/* Menu mobile */}
       {mobileMenuOpen && (
         <div className="lg:hidden w-full mt-4 pb-4 border-t border-gray-800 pt-4">
           <div className="flex flex-col space-y-3">
