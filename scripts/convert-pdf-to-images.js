@@ -1,6 +1,6 @@
-import fs from "fs-extra";
-import path from "path";
-import { Poppler } from "pdf-poppler";
+const fs = require("fs-extra");
+const path = require("path");
+const { Poppler } = require("pdf-poppler");
 
 const inputDir = path.resolve("./public/pdfs");
 const outputBase = path.resolve("./public/flipbook");
@@ -32,4 +32,4 @@ async function convertAllPdfs() {
 
 convertAllPdfs()
   .then(() => console.log("🎉 Toutes les conversions sont terminées !"))
-  .catch((err) => console.error("Erreur :", err));
+  .catch((err) => console.error("❌ Erreur :", err));
