@@ -36,6 +36,7 @@ export default function DocumentsGuidesSuisse() {
           Ressources officielles et guides pratiques pour découvrir
           l'excellence horlogère suisse
         </p>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {documents.map((doc, index) => (
             <motion.div
@@ -52,19 +53,13 @@ export default function DocumentsGuidesSuisse() {
               <p className="text-gray-400 mb-6 leading-relaxed">
                 {doc.description}
               </p>
+
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
-                  href={`/suisse/livre/${doc.slug}`}
+                  href={`/suisse/${doc.slug}`}
                   className="flex-1 px-4 py-3 bg-[#E2B44F] text-black font-semibold rounded hover:bg-[#FFD700] transition-colors text-center"
                 >
-                  📄 Consulter le document
-                </Link>
-                <Link
-                  href={`/pdfs/${doc.slug}.pdf`}
-                  download
-                  className="flex-1 px-4 py-3 bg-transparent border border-[#E2B44F] text-[#E2B44F] font-semibold rounded hover:bg-[#E2B44F] hover:text-black transition-colors text-center"
-                >
-                  ⬇️ Télécharger le PDF
+                  📖 Consulter le document
                 </Link>
               </div>
             </motion.div>
