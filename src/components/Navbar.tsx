@@ -2,15 +2,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [hoverTheory, setHoverTheory] = useState(false);
 
   const navLinks = [
-    { href: "/theorie", label: "Théorie" },
     { href: "/pratique", label: "Pratique" },
     { href: "/quiz", label: "Quiz" },
     { href: "/quiz-longueurs-horlogerie", label: "Quiz Longueurs" },
@@ -21,11 +21,10 @@ export default function Navbar() {
     { href: "/culture", label: "Culture" },
     { href: "/evenements", label: "Événements" },
     { href: "/communaute", label: "Communauté" },
-    // 🔸 Pas de lien Contact ici : il sera uniquement dans le footer
   ];
 
   return (
-    <nav className="flex flex-wrap items-center justify-between px-10 md:px-16 py-4 bg-[#0A0A0A] text-white border-b border-gray-800">
+    <nav className="flex flex-wrap items-center justify-between px-10 md:px-16 py-4 bg-[#0A0A0A] text-white border-b border-gray-800 relative z-50">
       {/* Logo principal */}
       <Link
         className="flex items-center gap-3 hover:opacity-90 transition-opacity"
@@ -52,7 +51,42 @@ export default function Navbar() {
       </Link>
 
       {/* Navigation Desktop */}
-      <div className="hidden lg:flex gap-6 xl:gap-8 text-sm font-medium">
+      <div className="hidden lg:flex gap-6 xl:gap-8 text-sm font-medium items-center">
+        {/* Bloc Théorie avec flèche et menu déroulant */}
+        <div
+          className="relative"
+          onMouseEnter={() => setHoverTheory(true)}
+          onMouseLeave={() => setHoverTheory(false)}
+        >
+          <button
+            className={`flex items-center gap-1 transition-colors duration-200 ${
+              pathname.startsWith("/theorie")
+                ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
+                : "hover:text-[#E2B44F]"
+            }`}
+          >
+            Théorie
+            <ChevronDown
+              size={16}
+              className={`text-[#E2B44F] transition-transform duration-300 ${
+                hoverTheory ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          {hoverTheory && (
+            <div className="absolute left-0 mt-2 bg-[#111] border border-[#E2B44F]/30 rounded-lg shadow-lg w-56 py-2">
+              <Link
+                href="/theorie/lecture-de-plan"
+                className="block px-4 py-2 text-sm text-white hover:text-[#E2B44F] hover:bg-[#E2B44F]/10 transition"
+              >
+                Lecture de plan
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/* Autres liens */}
         {navLinks.map(({ href, label }) => (
           <Link
             key={href}
@@ -85,6 +119,13 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div className="lg:hidden w-full mt-4 pb-4 border-t border-gray-800 pt-4">
           <div className="flex flex-col space-y-3">
+            <Link
+              href="/theorie/lecture-de-plan"
+              className="text-gray-300 hover:text-[#E2B44F] hover:bg-gray-900 px-2 py-2 rounded"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Théorie – Lecture de plan
+            </Link>
             {navLinks.map(({ href, label }) => (
               <Link
                 key={href}
