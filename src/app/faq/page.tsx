@@ -29,10 +29,10 @@ export default function FAQPage() {
       <BreadcrumbsSchema
         items={[
           { name: "Accueil", slug: "" },
-          { name: "FAQ", slug: "faq" },
         ]}
+        currentTitle="FAQ"
+        currentPath="/faq"
       />
-
       <h1 className="text-3xl font-bold text-[#E2B44F] mb-4">FAQ HorloLearn</h1>
       <ul className="space-y-4">
         {items.map((it) => (
@@ -42,7 +42,6 @@ export default function FAQPage() {
           </li>
         ))}
       </ul>
-
       <FaqSchema items={items} />
     </section>
   );
