@@ -1,6 +1,7 @@
 "use client";
-import JsonLd from "./JsonLd";
 import { SITE } from "@/lib/seo";
+import { toAbsolute } from "@/lib/url";
+import JsonLd from "./JsonLd";
 
 interface PodcastSchemaProps {
   name: string;             // Titre de l'épisode ou de la série
@@ -26,19 +27,13 @@ export default function PodcastSchema({
   episodeNumber,
   partOfSeries,
 }: PodcastSchemaProps) {
-  // Helper pour construire une URL absolue propre (évite les doubles "//")
-  const toAbsolute = (path?: string) =>
-    !path ? undefined : path.startsWith("http")
-      ? path
-      : new URL(path.startsWith("/") ? path : `/${path}`, SITE.url).toString();
-
   const data = {
     "@context": "https://schema.org",
     "@type": "PodcastEpisode",
     name,
     description,
     url: toAbsolute(audioUrl),
-    image: toAbsolute(imageUrl),
+    image: toAbsolute(imageUrl || SITE.image),
     datePublished: uploadDate,
     duration,
     episodeNumber,
@@ -51,10 +46,6 @@ export default function PodcastSchema({
       "@type": "Organization",
       name: "HorloLearn",
       logo: toAbsolute(SITE.image),
-    },
-    author: {
-      "@type": "Person",
-      name: "HorloLearn",
     },
   };
 
