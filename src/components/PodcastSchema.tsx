@@ -26,13 +26,19 @@ export default function PodcastSchema({
   episodeNumber,
   partOfSeries,
 }: PodcastSchemaProps) {
+  // Helper pour construire une URL absolue propre (évite les doubles "//")
+  const toAbsolute = (path?: string) =>
+    !path ? undefined : path.startsWith("http")
+      ? path
+      : new URL(path.startsWith("/") ? path : `/${path}`, SITE.url).toString();
+
   const data = {
     "@context": "https://schema.org",
     "@type": "PodcastEpisode",
     name,
     description,
-    url: `${SITE.domain}${audioUrl}`,
-    image: `${SITE.domain}${imageUrl}`,
+    url: toAbsolute(audioUrl),
+    image: toAbsolute(imageUrl),
     datePublished: uploadDate,
     duration,
     episodeNumber,
@@ -43,11 +49,8 @@ export default function PodcastSchema({
     },
     publisher: {
       "@type": "Organization",
-      name: SITE.organization.legalName,
-      logo: {
-        "@type": "ImageObject",
-        url: `${SITE.domain}${SITE.logo}`,
-      },
+      name: "HorloLearn",
+      logo: toAbsolute(SITE.image),
     },
     author: {
       "@type": "Person",
