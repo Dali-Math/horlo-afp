@@ -1,4 +1,3 @@
-// components/PlanInteractif.jsx
 import { useState } from "react";
 
 export default function PlanInteractif() {
@@ -16,7 +15,6 @@ export default function PlanInteractif() {
         />
         <text x="95" y="100" fontSize="16" fill="#374151">Ø 1.20</text>
       </svg>
-
       {selected === "cote" && (
         <div className="absolute left-[120px] top-[40px] bg-white shadow-lg border p-4 rounded z-10 w-72 text-black">
           <button
@@ -28,8 +26,8 @@ export default function PlanInteractif() {
           <div>
             Cette cote indique le diamètre du trou destiné à recevoir un axe de roue.<br/>
             La tolérance associée (<b>± 0.02 mm</b>) garantit un jeu fonctionnel :<br/>
-            - trop serré : l’axe ne monte pas<br/>
-            - trop lâche : la roue prend du jeu<br/>
+            - trop serré : l’axe ne monte pas<br/>
+            - trop lâche : la roue prend du jeu<br/>
             Importance pour la précision et la qualité d’assemblage.
           </div>
         </div>
