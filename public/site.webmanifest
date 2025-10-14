@@ -1,0 +1,82 @@
+{
+  "name": "HorloLearn - Formation AFP Horlogerie Suisse",
+  "short_name": "HorloLearn",
+  "description": "Plateforme éducative dédiée à la formation AFP en horlogerie suisse : théorie, pratique, fiches, vidéos et quiz interactifs.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#0a0a0a",
+  "background_color": "#0a0a0a",
+  "orientation": "portrait-primary",
+  "categories": ["education", "learning", "watchmaking", "swiss"],
+  "lang": "fr-CH",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/og-image.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.svg",
+      "type": "image/svg+xml",
+      "sizes": "1200x630",
+      "form_factor": "wide"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Théorie",
+      "short_name": "Théorie",
+      "description": "Accéder aux cours théoriques",
+      "url": "/theorie",
+      "icons": [
+        {
+          "src": "/og-image.svg",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Pratique",
+      "short_name": "Pratique",
+      "description": "Accéder aux vidéos pratiques",
+      "url": "/pratique",
+      "icons": [
+        {
+          "src": "/og-image.svg",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Quiz",
+      "short_name": "Quiz",
+      "description": "Tester ses connaissances",
+      "url": "/quiz",
+      "icons": [
+        {
+          "src": "/og-image.svg",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
