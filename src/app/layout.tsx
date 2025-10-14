@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     type: "website",
   },
   twitter: {
-    card: SITE.twitter.card,
+    card: "summary_large_image",
     site: SITE.twitter.site,
     creator: SITE.twitter.creator,
     title: SITE.title,
@@ -88,15 +88,15 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="fr">
+    <html lang={SITE.locale.split('-')[0]} className="dark">
       <head>
         <link
           rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
           as="style"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
         />
         <script
