@@ -9,6 +9,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoverTheory, setHoverTheory] = useState(false);
+  let closeTimeout: NodeJS.Timeout;
 
   const navLinks = [
     { href: "/pratique", label: "Pratique" },
@@ -55,8 +56,13 @@ export default function Navbar() {
         {/* Bloc Théorie avec flèche et menu déroulant */}
         <div
           className="relative"
-          onMouseEnter={() => setHoverTheory(true)}
-          onMouseLeave={() => setHoverTheory(false)}
+          onMouseEnter={() => {
+            clearTimeout(closeTimeout);
+            setHoverTheory(true);
+          }}
+          onMouseLeave={() => {
+            closeTimeout = setTimeout(() => setHoverTheory(false), 150);
+          }}
         >
           <button
             className={`flex items-center gap-1 transition-colors duration-200 ${
@@ -74,8 +80,15 @@ export default function Navbar() {
             />
           </button>
 
+          {/* Menu déroulant stable au survol */}
           {hoverTheory && (
-            <div className="absolute left-0 mt-2 bg-[#111] border border-[#E2B44F]/30 rounded-lg shadow-lg w-56 py-2">
+            <div
+              className="absolute left-0 mt-3 bg-[#111] border border-[#E2B44F]/30 rounded-lg shadow-lg w-56 py-2"
+              onMouseEnter={() => clearTimeout(closeTimeout)}
+              onMouseLeave={() => {
+                closeTimeout = setTimeout(() => setHoverTheory(false), 150);
+              }}
+            >
               <Link
                 href="/theorie/lecture-de-plan"
                 className="block px-4 py-2 text-sm text-white hover:text-[#E2B44F] hover:bg-[#E2B44F]/10 transition"
