@@ -8,6 +8,7 @@ import { useState } from "react";
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [theorieOpen, setTheorieOpen] = useState(false);
 
   const navLinks = [
     { href: "/pratique", label: "Pratique" },
@@ -22,29 +23,37 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="flex flex-wrap items-center justify-between px-8 md:px-16 py-4 bg-[#0A0A0A] text-white border-b border-gray-800 relative">
+    <nav className="flex flex-wrap items-center justify-between px-6 md:px-12 py-4 bg-[#0A0A0A] text-white border-b border-gray-800 relative z-50">
       {/* Logo */}
       <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
         <Image
           src="/logos/Logo.jpg"
           alt="HorloLearn Logo"
-          width={50}
-          height={50}
+          width={48}
+          height={48}
           className="rounded-full"
           priority
         />
         <div className="flex flex-col">
-          <span className="text-xl font-bold text-white">
+          <span className="text-lg md:text-xl font-bold text-white">
             Horlo<span className="text-[#E2B44F]">Learn</span>
           </span>
-          <span className="text-xs text-[#E2B44F]">Culture & savoir-faire horloger</span>
+          <span className="text-xs text-[#E2B44F] leading-tight">
+            Culture & savoir-faire horloger
+          </span>
         </div>
       </Link>
 
       {/* Liens desktop */}
       <div className="hidden lg:flex items-center gap-6 text-sm font-medium relative">
-        {/* Bloc Théorie (fixé avec hover group) */}
-        <div className="relative group">
+        {/* Bloc Théorie avec sous-menu stable */}
+        <div
+          className="relative"
+          onMouseEnter={() => setTheorieOpen(true)}
+          onMouseLeave={() => {
+            setTimeout(() => setTheorieOpen(false), 150);
+          }}
+        >
           <Link
             href="/theorie"
             className={`flex items-center gap-1 transition-colors ${
@@ -53,22 +62,30 @@ export default function Navbar() {
                 : "hover:text-[#E2B44F]"
             }`}
           >
-            Théorie <ChevronDown className="w-4 h-4 mt-0.5" />
+            Théorie{" "}
+            <ChevronDown
+              className={`w-4 h-4 mt-0.5 transition-transform duration-200 ${
+                theorieOpen ? "rotate-180 text-[#E2B44F]" : ""
+              }`}
+            />
           </Link>
 
           {/* Sous-menu stable */}
-          <div
-            className="absolute top-full left-0 mt-2 w-56 bg-[#111] border border-[#E2B44F33] rounded-lg shadow-lg 
-            opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 
-            transition-all duration-200 ease-out pointer-events-none group-hover:pointer-events-auto z-50"
-          >
-            <Link
-              href="/theorie/lecture-de-plan"
-              className="block px-4 py-3 text-sm hover:bg-[#E2B44F22] hover:text-[#E2B44F] transition-colors"
+          {theorieOpen && (
+            <div
+              onMouseEnter={() => setTheorieOpen(true)}
+              onMouseLeave={() => setTheorieOpen(false)}
+              className="absolute top-full left-0 mt-2 w-56 bg-[#111] border border-[#E2B44F33] rounded-lg shadow-lg
+              transition-all duration-200 ease-out opacity-100 translate-y-0 z-50"
             >
-              Lecture de Plan
-            </Link>
-          </div>
+              <Link
+                href="/theorie/lecture-de-plan"
+                className="block px-4 py-3 text-sm hover:bg-[#E2B44F22] hover:text-[#E2B44F] transition-colors"
+              >
+                Lecture de Plan
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Autres liens */}
@@ -96,30 +113,32 @@ export default function Navbar() {
         {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
-      {/* Menu mobile */}
+      {/* Menu mobile/tablette */}
       {mobileMenuOpen && (
-        <div className="lg:hidden w-full mt-4 pb-4 border-t border-gray-800 pt-4">
+        <div className="lg:hidden w-full mt-4 pb-4 border-t border-gray-800 pt-4 bg-[#0A0A0A] rounded-lg">
           <div className="flex flex-col space-y-3">
-            <Link
-              href="/theorie"
-              className={`py-2 px-2 rounded ${
-                pathname.startsWith("/theorie")
-                  ? "text-[#E2B44F] font-semibold bg-gray-900 border-l-4 border-[#E2B44F]"
-                  : "text-gray-300 hover:text-[#E2B44F] hover:bg-gray-900"
-              }`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Théorie
-            </Link>
+            {/* Bloc Théorie dans mobile */}
+            <details className="group">
+              <summary
+                className={`flex justify-between items-center py-2 px-2 rounded cursor-pointer ${
+                  pathname.startsWith("/theorie")
+                    ? "text-[#E2B44F] font-semibold bg-gray-900 border-l-4 border-[#E2B44F]"
+                    : "text-gray-300 hover:text-[#E2B44F] hover:bg-gray-900"
+                }`}
+              >
+                Théorie
+                <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180 text-[#E2B44F]" />
+              </summary>
+              <Link
+                href="/theorie/lecture-de-plan"
+                className="pl-6 py-2 text-gray-400 hover:text-[#E2B44F] transition-colors block"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                ↳ Lecture de Plan
+              </Link>
+            </details>
 
-            <Link
-              href="/theorie/lecture-de-plan"
-              className="pl-6 text-gray-400 hover:text-[#E2B44F] transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              ↳ Lecture de Plan
-            </Link>
-
+            {/* Autres liens */}
             {navLinks.map(({ href, label }) => (
               <Link
                 key={href}
