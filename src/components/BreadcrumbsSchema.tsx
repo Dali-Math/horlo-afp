@@ -1,6 +1,6 @@
 "use client";
-import { toAbsolute } from "@/lib/url";
 import JsonLd from "./JsonLd";
+import { SITE } from "@/lib/seo";
 
 export default function BreadcrumbsSchema({
   items,
@@ -14,9 +14,8 @@ export default function BreadcrumbsSchema({
       "@type": "ListItem",
       position: idx + 1,
       name: it.name,
-      item: toAbsolute(it.slug),
+      item: `${SITE.domain}/${it.slug}`,
     })),
   };
-
   return <JsonLd data={data} />;
 }
