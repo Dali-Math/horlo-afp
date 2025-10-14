@@ -1,5 +1,5 @@
 "use client";
-import HeroSection from "@/components/HeroSection";
+import HeroSection from "./components/HeroSection";
 
 export default function Theorie() {
   return (
