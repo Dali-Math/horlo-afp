@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -16,7 +17,7 @@ export default function FlipBookViewer({ file }: FlipBookViewerProps) {
   const [width, setWidth] = useState<number>(600);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // 📱 Ajuste automatiquement la largeur selon la taille d'écran
+  // 📱 Ajuste automatiquement la largeur selon la taille d’écran
   useEffect(() => {
     const handleResize = () => {
       if (containerRef.current) {
@@ -25,7 +26,6 @@ export default function FlipBookViewer({ file }: FlipBookViewerProps) {
         setWidth(newWidth);
       }
     };
-
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -52,7 +52,6 @@ export default function FlipBookViewer({ file }: FlipBookViewerProps) {
                   width={width}
                   renderTextLayer={false}
                   renderAnnotationLayer={false}
-                  loading="lazy"
                 />
               </div>
             ))}
