@@ -2,6 +2,9 @@
 import JsonLd from "./JsonLd";
 import { SITE } from "@/lib/seo";
 
+const toAbsolute = (slug: string) =>
+  new URL(slug.startsWith("/") ? slug : `/${slug}`, SITE.url).toString();
+
 export default function BreadcrumbsSchema({
   items,
 }: {
@@ -14,7 +17,7 @@ export default function BreadcrumbsSchema({
       "@type": "ListItem",
       position: idx + 1,
       name: it.name,
-      item: `${SITE.domain}/${it.slug}`,
+      item: toAbsolute(it.slug),
     })),
   };
   return <JsonLd data={data} />;
