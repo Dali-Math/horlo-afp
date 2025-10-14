@@ -1,5 +1,6 @@
 "use client";
 import { SITE } from "@/lib/seo";
+import { toAbsolute } from "@/lib/url";
 import JsonLd from "./JsonLd";
 
 interface ArticleSchemaProps {
@@ -21,22 +22,21 @@ export default function ArticleSchema({
   datePublished = new Date().toISOString(),
   dateModified = new Date().toISOString(),
 }: ArticleSchemaProps) {
-  const toAbsolute = (path: string) =>
-    path?.startsWith("http") ? path : new URL(path, SITE.url).toString();
+  const imageAbs = toAbsolute(image || SITE.image);
 
   const data = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: title,
     description,
-    image: toAbsolute(image),
+    image: imageAbs,
     author: authors,
     publisher: {
       "@type": "Organization",
-      name: SITE.organization.legalName,
-      logo: { "@type": "ImageObject", url: toAbsolute(SITE.image) },
+      name: "HorloLearn",
+      logo: toAbsolute(SITE.image),
     },
-    mainEntityOfPage: `${SITE.url}/${slug}`,
+    mainEntityOfPage: toAbsolute(slug),
     datePublished,
     dateModified,
   };
