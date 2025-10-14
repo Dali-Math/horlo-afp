@@ -17,7 +17,7 @@ export default function CotesTolerances() {
         </ul>
       </div>
       <div>
-        <FlipBookViewer pdfUrl="/pdfs/lecture-de-plan/cotes-tolerances.pdf" />
+        <FlipBookViewer file="/pdfs/lecture-de-plan/cotes-tolerances.pdf" />
       </div>
     </section>
   );
