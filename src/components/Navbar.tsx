@@ -8,7 +8,6 @@ import { useState } from "react";
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [theorieOpen, setTheorieOpen] = useState(false);
 
   const navLinks = [
     { href: "/pratique", label: "Pratique" },
@@ -44,12 +43,8 @@ export default function Navbar() {
 
       {/* Liens desktop */}
       <div className="hidden lg:flex items-center gap-6 text-sm font-medium relative">
-        {/* Lien avec sous-menu */}
-        <div
-          className="relative"
-          onMouseEnter={() => setTheorieOpen(true)}
-          onMouseLeave={() => setTheorieOpen(false)}
-        >
+        {/* Bloc Théorie (fixé avec hover group) */}
+        <div className="relative group">
           <Link
             href="/theorie"
             className={`flex items-center gap-1 transition-colors ${
@@ -61,17 +56,19 @@ export default function Navbar() {
             Théorie <ChevronDown className="w-4 h-4 mt-0.5" />
           </Link>
 
-          {/* Sous-menu */}
-          {theorieOpen && (
-            <div className="absolute top-full left-0 mt-2 w-48 bg-[#111] border border-[#E2B44F33] rounded-lg shadow-lg z-50">
-              <Link
-                href="/theorie/lecture-de-plan"
-                className="block px-4 py-3 text-sm hover:bg-[#E2B44F22] hover:text-[#E2B44F]"
-              >
-                Lecture de Plan
-              </Link>
-            </div>
-          )}
+          {/* Sous-menu stable */}
+          <div
+            className="absolute top-full left-0 mt-2 w-56 bg-[#111] border border-[#E2B44F33] rounded-lg shadow-lg 
+            opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 
+            transition-all duration-200 ease-out pointer-events-none group-hover:pointer-events-auto z-50"
+          >
+            <Link
+              href="/theorie/lecture-de-plan"
+              className="block px-4 py-3 text-sm hover:bg-[#E2B44F22] hover:text-[#E2B44F] transition-colors"
+            >
+              Lecture de Plan
+            </Link>
+          </div>
         </div>
 
         {/* Autres liens */}
