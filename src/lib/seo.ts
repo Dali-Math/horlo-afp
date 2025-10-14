@@ -1,11 +1,18 @@
 export const SITE = {
   name: "HorloLearn",
-  url: "https://www.horlolearn.ch",
-  title: "HorloLearn | Formation AFP en Horlogerie Suisse",
-  description:
-    "Plateforme éducative dédiée à la formation AFP en horlogerie suisse : théorie, pratique, fiches, vidéos et quiz interactifs.",
-  image: "/og-image.svg",
-  twitter: { site: "@HorloLearn", creator: "@HorloLearn" },
-  organization: { legalName: "HorloLearn" },
+  domain: "https://www.horlolearn.ch",
+  locale: "fr_CH",
+  twitter: "@HorloLearn",
+  logo: "/og-image.jpg",
+  contactEmail: "mathlouthi_mohamed82@yahoo.com",
+  organization: {
+    legalName: "HorloLearn",
+    url: "https://www.horlolearn.ch",
+    logo: "https://www.horlolearn.ch/og-image.jpg",
+    sameAs: [
+      "https://github.com/Dali-Math",
+      "https://www.youtube.com/@HorloLearn",
+      "https://www.linkedin.com/in/...",
+    ],
+  },
 };
-// ⛔️ pas de SITE.domain / pas de SITE.logo
