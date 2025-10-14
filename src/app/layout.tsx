@@ -1,5 +1,4 @@
-import 
- "./globals.css";
+import "./globals.css";
 import type { Metadata } from "next";
 import { SITE } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
@@ -7,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@vercel/analytics/react";
+
 export const metadata: Metadata = {
   title: SITE.title,
   description: SITE.description,
@@ -34,3 +34,26 @@ export const metadata: Metadata = {
     site: SITE.twitter.site,
     creator: SITE.twitter.creator,
     title: SITE.title,
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="fr">
+      <head>
+        <JsonLd />
+      </head>
+      <body className="min-h-screen bg-gray-50">
+        <Navbar />
+        <main className="container mx-auto px-4 py-8">{children}</main>
+        <Footer />
+        <ScrollToTop />
+        <Analytics />
+      </body>
+    </html>
+  );
+}
