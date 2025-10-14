@@ -17,7 +17,7 @@ export default function TypesLignes() {
         </ul>
       </div>
       <div>
-        <FlipBookViewer pdfUrl="/pdfs/lecture-de-plan/types-lignes.pdf" />
+        <FlipBookViewer file="/pdfs/lecture-de-plan/types-lignes.pdf" />
       </div>
     </section>
   );
