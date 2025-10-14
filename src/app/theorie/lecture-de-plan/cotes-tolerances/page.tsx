@@ -1,23 +1,34 @@
 "use client";
-import FlipBookViewer from "@/components/FlipBookViewer";
+import Link from "next/link";
 
 export default function CotesTolerances() {
   return (
-    <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 px-6 lg:px-16 py-16 text-white bg-[#0B0B0B]">
-      <div>
-        <h1 className="text-4xl font-bold text-gold-400 mb-6">Cotes et Tolérances</h1>
-        <p className="text-lg text-gray-300 mb-4">
-          Les cotes et tolérances assurent la précision d’assemblage des composants horlogers.
-          Références : <strong>ISO 129-1</strong> et <strong>ISO 1101</strong>.
+    <section className="min-h-screen bg-[#0b1220] text-white py-16 px-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="mb-8">
+          <Link href="/theorie/lecture-de-plan" className="text-[#E2B44F] hover:underline flex items-center gap-2">
+            ← Retour
+          </Link>
+        </div>
+
+        <h1 className="text-3xl font-bold text-[#E2B44F] underline mb-6 text-center">
+          Cotes et Tolérances (ISO 129-1 & ISO 1101)
+</h1>
+
+        <p className="text-gray-300 mb-6">
+          Ces normes précisent les règles de cotation et les tolérances dimensionnelles pour garantir 
+          la compatibilité et la précision des composants horlogers.
         </p>
-        <ul className="list-disc list-inside text-gray-400 space-y-2">
-          <li>Lecture des cotes nominales, limites et ajustements.</li>
-          <li>Tolérances dimensionnelles et géométriques (planéité, coaxialité).</li>
-          <li>Importance dans l’ajustement des mobiles et des ponts.</li>
+
+        <ul className="list-disc pl-6 text-gray-400 space-y-2">
+          <li><strong>ISO 129-1</strong> : indication des dimensions.</li>
+          <li><strong>ISO 1101</strong> : tolérances géométriques.</li>
+          <li>Respect des limites d’usinage et d’ajustement entre pièces.</li>
         </ul>
-      </div>
-      <div>
-        <FlipBookViewer file="/pdfs/lecture-de-plan/cotes-tolerances.pdf" />
+
+        <p className="text-sm text-gray-500 mt-10 border-t border-gray-700 pt-6">
+          © HorloLearn 2025 — Résumé pédagogique basé sur les normes ISO 129-1:2018 & ISO 1101:2017.
+        </p>
       </div>
     </section>
   );
