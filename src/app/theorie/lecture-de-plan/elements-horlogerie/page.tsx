@@ -17,7 +17,7 @@ export default function ElementsHorlogerie() {
         </ul>
       </div>
       <div>
-        <FlipBookViewer pdfUrl="/pdfs/lecture-de-plan/elements-horlogerie.pdf" />
+        <FlipBookViewer file="/pdfs/lecture-de-plan/elements-horlogerie.pdf" />
       </div>
     </section>
   );
