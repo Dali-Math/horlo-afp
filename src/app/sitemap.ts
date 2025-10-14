@@ -1,6 +1,8 @@
 import { MetadataRoute } from "next";
 import { SITE } from "@/lib/seo";
 
+export const revalidate = 3600;
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   return [
