@@ -47,7 +47,7 @@ export default function QuizEta6497() {
           </li>
         ))}
       </ul>
-      <QuizSchema name="Quiz ETA 6497" questions={questions} />
+      <QuizSchema questions={questions} />
     </section>
   );
 }
