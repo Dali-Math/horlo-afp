@@ -1,32 +1,50 @@
 "use client";
 import Link from "next/link";
-import { ClipboardList, Ruler, Shapes, FileText } from "lucide-react";
+import { Layers, Ruler, Square, FileText, Wrench, Shapes } from "lucide-react";
 
 export default function LectureDePlanPage() {
   const modules = [
     {
-      href: "/theorie/lecture-de-plan/competences",
-      title: "Compétences à développer",
-      description: "Bases à maîtriser pour comprendre les représentations horlogères.",
-      icon: <ClipboardList className="w-6 h-6 text-[#E2B44F]" />,
+      href: "/theorie/lecture-de-plan/vues-techniques",
+      title: "Vues Techniques",
+      description:
+        "Comprendre les projections et coupes selon la norme ISO 128-3. Base de toute lecture de plan horloger.",
+      icon: <Layers className="w-6 h-6 text-[#E2B44F]" />,
     },
     {
-      href: "/theorie/lecture-de-plan/symboles-iso",
-      title: "Symboles ISO",
-      description: "Apprenez à reconnaître les symboles normalisés utilisés en horlogerie.",
-      icon: <Shapes className="w-6 h-6 text-[#E2B44F]" />,
+      href: "/theorie/lecture-de-plan/types-lignes",
+      title: "Types de Lignes",
+      description:
+        "Identifier les lignes de contour, d’axe, de coupe ou de cote (ISO 128-2).",
+      icon: <Square className="w-6 h-6 text-[#E2B44F]" />,
     },
     {
-      href: "/theorie/lecture-de-plan/tolerances",
+      href: "/theorie/lecture-de-plan/cotes-tolerances",
       title: "Cotes et Tolérances",
-      description: "Lecture et interprétation des tolérances selon les normes techniques.",
+      description:
+        "Lecture et interprétation des cotes selon ISO 129-1 et des tolérances géométriques ISO 1101.",
       icon: <Ruler className="w-6 h-6 text-[#E2B44F]" />,
     },
     {
-      href: "/theorie/lecture-de-plan/cartouche",
+      href: "/theorie/lecture-de-plan/symboles-normalises",
+      title: "Symboles Normalisés",
+      description:
+        "Découverte des symboles ISO (états de surface, chanfreins, filetage, etc.) – ISO 1302 et ISO 13715.",
+      icon: <Shapes className="w-6 h-6 text-[#E2B44F]" />,
+    },
+    {
+      href: "/theorie/lecture-de-plan/cartouche-horloger",
       title: "Cartouche Horloger",
-      description: "Analyse d’un dessin technique complet d’un mouvement horloger.",
+      description:
+        "Analyse du cartouche technique (titre, échelle, matière, auteur, révision) – ISO 7200 / NIHS.",
       icon: <FileText className="w-6 h-6 text-[#E2B44F]" />,
+    },
+    {
+      href: "/theorie/lecture-de-plan/elements-horlogerie",
+      title: "Éléments d’Horlogerie",
+      description:
+        "Lecture et identification des composants horlogers sur un plan (ponts, axes, roues, vis, etc.).",
+      icon: <Wrench className="w-6 h-6 text-[#E2B44F]" />,
     },
   ];
 
@@ -37,11 +55,11 @@ export default function LectureDePlanPage() {
           Lecture de Plan Horloger
         </h1>
         <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-          Explorez les fondements de la lecture de plans techniques, indispensables à toute formation horlogère suisse.
+          Découvrez les principes fondamentaux de la lecture de plan horloger selon les normes ISO et NIHS.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {modules.map((item) => (
           <Link
             key={item.href}
