@@ -21,19 +21,22 @@ export default function ArticleSchema({
   datePublished = new Date().toISOString(),
   dateModified = new Date().toISOString(),
 }: ArticleSchemaProps) {
+  const toAbsolute = (path: string) =>
+    path?.startsWith("http") ? path : new URL(path, SITE.url).toString();
+
   const data = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: title,
     description,
-    image: `${SITE.domain}${image}`,
+    image: toAbsolute(image),
     author: authors,
     publisher: {
       "@type": "Organization",
       name: SITE.organization.legalName,
-      logo: { "@type": "ImageObject", url: `${SITE.domain}${SITE.image}` },
+      logo: { "@type": "ImageObject", url: toAbsolute(SITE.image) },
     },
-    mainEntityOfPage: `${SITE.domain}/${slug}`,
+    mainEntityOfPage: `${SITE.url}/${slug}`,
     datePublished,
     dateModified,
   };
