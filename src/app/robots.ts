@@ -1,7 +1,6 @@
-import { MetadataRoute } from "next";
 import { SITE } from "@/lib/seo";
 
-export default function robots(): MetadataRoute.Robots {
+export default function robots() {
   return {
     rules: [
       { userAgent: "*", allow: "/" },
