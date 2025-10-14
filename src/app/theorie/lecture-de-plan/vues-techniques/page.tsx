@@ -18,7 +18,7 @@ export default function VuesTechniques() {
         </ul>
       </div>
       <div>
-        <FlipBookViewer pdfUrl="/pdfs/lecture-de-plan/vues-techniques.pdf" />
+        <FlipBookViewer file="/pdfs/lecture-de-plan/vues-techniques.pdf" />
       </div>
     </section>
   );
