@@ -1,23 +1,34 @@
 "use client";
-import FlipBookViewer from "@/components/FlipBookViewer";
+import Link from "next/link";
 
 export default function ElementsHorlogerie() {
   return (
-    <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 px-6 lg:px-16 py-16 text-white bg-[#0B0B0B]">
-      <div>
-        <h1 className="text-4xl font-bold text-gold-400 mb-6">Éléments d’Horlogerie</h1>
-        <p className="text-lg text-gray-300 mb-4">
-          L’étude des éléments horlogers vise à identifier les composants d’un mouvement et leur
-          représentation sur un plan.
+    <section className="min-h-screen bg-[#0b1220] text-white py-16 px-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="mb-8">
+          <Link href="/theorie/lecture-de-plan" className="text-[#E2B44F] hover:underline flex items-center gap-2">
+            ← Retour
+          </Link>
+        </div>
+
+        <h1 className="text-3xl font-bold text-[#E2B44F] underline mb-6 text-center">
+          Éléments d’Horlogerie (Normes NIHS)
+</h1>
+
+        <p className="text-gray-300 mb-6">
+          Les éléments d’horlogerie regroupent les composants standardisés (roues, vis, axes, ressorts, etc.) 
+          utilisés dans la construction des mouvements mécaniques suisses.
         </p>
-        <ul className="list-disc list-inside text-gray-400 space-y-2">
-          <li>Lecture des ponts, rouages, vis, axes et ressorts.</li>
-          <li>Symbolisation des liaisons et des ajustements.</li>
-          <li>Identification fonctionnelle des composants.</li>
+
+        <ul className="list-disc pl-6 text-gray-400 space-y-2">
+          <li>Respect des dimensions et tolérances NIHS.</li>
+          <li>Interopérabilité entre les fabricants.</li>
+          <li>Références communes pour les écoles et ateliers horlogers.</li>
         </ul>
-      </div>
-      <div>
-        <FlipBookViewer file="/pdfs/lecture-de-plan/elements-horlogerie.pdf" />
+
+        <p className="text-sm text-gray-500 mt-10 border-t border-gray-700 pt-6">
+          © HorloLearn 2025 — Résumé pédagogique basé sur les normes NIHS applicables aux composants horlogers.
+        </p>
       </div>
     </section>
   );
