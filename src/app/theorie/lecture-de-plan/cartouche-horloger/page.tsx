@@ -1,24 +1,34 @@
 "use client";
-import FlipBookViewer from "@/components/FlipBookViewer";
+import Link from "next/link";
 
 export default function CartoucheHorloger() {
   return (
-    <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 px-6 lg:px-16 py-16 text-white bg-[#0B0B0B]">
-      <div>
-        <h1 className="text-4xl font-bold text-gold-400 mb-6">Cartouche Horloger</h1>
-        <p className="text-lg text-gray-300 mb-4">
-          Le cartouche technique (norme <strong>ISO 7200</strong> et <strong>NIHS</strong>)
-          regroupe les informations essentielles du plan : identification, échelle, matière et auteur.
-        </p>
-        <ul className="list-disc list-inside text-gray-400 space-y-2">
-          <li>Nom de la pièce et du dessinateur.</li>
-          <li>Indice de révision et tolérances globales.</li>
-          <li>Norme utilisée et unités employées.</li>
-        </ul>
-      </div>
+    <section className="min-h-screen bg-[#0b1220] text-white py-16 px-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="mb-8">
+          <Link href="/theorie/lecture-de-plan" className="text-[#E2B44F] hover:underline flex items-center gap-2">
+            ← Retour
+          </Link>
+        </div>
 
-      <div>
-        <FlipBookViewer file="/pdfs/lecture-de-plan/cartouche-horloger.pdf" />
+        <h1 className="text-3xl font-bold text-[#E2B44F] underline mb-6 text-center">
+          Cartouche Horloger (NIHS 7200 / 7201)
+</h1>
+
+        <p className="text-gray-300 mb-6">
+          Le cartouche horloger regroupe les informations techniques essentielles : titre, échelle, matière, 
+          auteur, date et révision, selon les normes <strong>NIHS 7200</strong> et <strong>NIHS 7201</strong>.
+        </p>
+
+        <ul className="list-disc pl-6 text-gray-400 space-y-2">
+          <li>Identification du dessin et du mouvement.</li>
+          <li>Standardisation pour l’industrie horlogère suisse.</li>
+          <li>Conformité à la présentation NIHS.</li>
+        </ul>
+
+        <p className="text-sm text-gray-500 mt-10 border-t border-gray-700 pt-6">
+          © HorloLearn 2025 — Résumé pédagogique basé sur les normes NIHS 7200 & 7201.
+        </p>
       </div>
     </section>
   );
