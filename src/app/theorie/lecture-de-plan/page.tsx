@@ -1,81 +1,139 @@
 "use client";
-import Link from "next/link";
-import { Layers, Ruler, Square, FileText, Wrench, Shapes } from "lucide-react";
+import { BookOpen } from "lucide-react";
 
-export default function LectureDePlanPage() {
-  const modules = [
-    {
-      href: "/theorie/lecture-de-plan/vues-techniques",
-      title: "Vues Techniques",
-      description:
-        "Comprendre les projections et coupes selon la norme ISO 128-3. Base de toute lecture de plan horloger.",
-      icon: <Layers className="w-6 h-6 text-[#E2B44F]" />,
-    },
-    {
-      href: "/theorie/lecture-de-plan/types-lignes",
-      title: "Types de Lignes",
-      description:
-        "Identifier les lignes de contour, d’axe, de coupe ou de cote (ISO 128-2).",
-      icon: <Square className="w-6 h-6 text-[#E2B44F]" />,
-    },
-    {
-      href: "/theorie/lecture-de-plan/cotes-tolerances",
-      title: "Cotes et Tolérances",
-      description:
-        "Lecture et interprétation des cotes selon ISO 129-1 et des tolérances géométriques ISO 1101.",
-      icon: <Ruler className="w-6 h-6 text-[#E2B44F]" />,
-    },
-    {
-      href: "/theorie/lecture-de-plan/symboles-normalises",
-      title: "Symboles Normalisés",
-      description:
-        "Découverte des symboles ISO (états de surface, chanfreins, filetage, etc.) – ISO 1302 et ISO 13715.",
-      icon: <Shapes className="w-6 h-6 text-[#E2B44F]" />,
-    },
-    {
-      href: "/theorie/lecture-de-plan/cartouche-horloger",
-      title: "Cartouche Horloger",
-      description:
-        "Analyse du cartouche technique (titre, échelle, matière, auteur, révision) – ISO 7200 / NIHS.",
-      icon: <FileText className="w-6 h-6 text-[#E2B44F]" />,
-    },
-    {
-      href: "/theorie/lecture-de-plan/elements-horlogerie",
-      title: "Éléments d’Horlogerie",
-      description:
-        "Lecture et identification des composants horlogers sur un plan (ponts, axes, roues, vis, etc.).",
-      icon: <Wrench className="w-6 h-6 text-[#E2B44F]" />,
-    },
-  ];
-
+export default function LectureDePlan() {
   return (
-    <main className="min-h-screen bg-[#0B0B0B] text-white py-16 px-6 md:px-16">
-      <div className="max-w-6xl mx-auto text-center mb-16">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#E2B44F]">
-          Lecture de Plan Horloger
-        </h1>
-        <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-          Découvrez les principes fondamentaux de la lecture de plan horloger selon les normes ISO et NIHS.
+    <section className="min-h-screen bg-[#0b1220] text-white py-20 px-6">
+      <div className="max-w-5xl mx-auto">
+        
+        {/* Titre principal */}
+        <div className="flex items-center gap-3 mb-8">
+          <BookOpen className="text-[#E2B44F] w-8 h-8" />
+          <h1 className="text-4xl font-bold text-[#E2B44F]">Lecture de Plan</h1>
+        </div>
+
+        {/* Introduction */}
+        <p className="text-gray-300 mb-10 max-w-3xl">
+          Cette section regroupe les principales normes et références officielles liées à la
+          lecture de plan en horlogerie. Les documents ci-dessous renvoient directement vers
+          les sources ISO et NIHS, garantissant l’accès aux informations authentiques et à jour.
+        </p>
+
+        {/* Liste de liens */}
+        <div className="space-y-6">
+          {/* Vues techniques */}
+          <div className="p-6 bg-[#111827] rounded-xl border border-[#E2B44F]/30 hover:border-[#E2B44F] transition-all">
+            <h2 className="text-xl font-semibold text-[#E2B44F] mb-2">📐 Vues Techniques (Projection orthogonale)</h2>
+            <p className="text-gray-400 mb-3">
+              Représentation des objets mécaniques selon la norme ISO 128-3.
+              Ces principes permettent de comprendre les différentes vues d’une pièce horlogère.
+            </p>
+            <a
+              href="https://www.iso.org/standard/74376.html"
+              target="_blank"
+              className="text-[#E2B44F] hover:underline"
+            >
+              → Consulter la norme ISO 128-3 sur le site officiel
+            </a>
+          </div>
+
+          {/* Types de lignes */}
+          <div className="p-6 bg-[#111827] rounded-xl border border-[#E2B44F]/30 hover:border-[#E2B44F] transition-all">
+            <h2 className="text-xl font-semibold text-[#E2B44F] mb-2">✏️ Types de Lignes (ISO 128-2)</h2>
+            <p className="text-gray-400 mb-3">
+              Cette norme définit les différents types de lignes utilisés dans les dessins techniques
+              (contours, axes, lignes de coupe, etc.).
+            </p>
+            <a
+              href="https://www.iso.org/standard/74375.html"
+              target="_blank"
+              className="text-[#E2B44F] hover:underline"
+            >
+              → Consulter la norme ISO 128-2 sur le site officiel
+            </a>
+          </div>
+
+          {/* Cotes et tolérances */}
+          <div className="p-6 bg-[#111827] rounded-xl border border-[#E2B44F]/30 hover:border-[#E2B44F] transition-all">
+            <h2 className="text-xl font-semibold text-[#E2B44F] mb-2">📏 Cotes et Tolérances (ISO 129-1 & ISO 1101)</h2>
+            <p className="text-gray-400 mb-3">
+              Ces normes précisent les règles de cotation et les tolérances dimensionnelles
+              pour garantir la compatibilité et la précision des assemblages horlogers.
+            </p>
+            <ul className="list-disc pl-6 text-gray-400 space-y-1">
+              <li>
+                <a href="https://www.iso.org/standard/70174.html" target="_blank" className="text-[#E2B44F] hover:underline">
+                  ISO 129-1 : Indication des dimensions
+                </a>
+              </li>
+              <li>
+                <a href="https://www.iso.org/standard/55765.html" target="_blank" className="text-[#E2B44F] hover:underline">
+                  ISO 1101 : Tolérances géométriques
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Symboles normalisés */}
+          <div className="p-6 bg-[#111827] rounded-xl border border-[#E2B44F]/30 hover:border-[#E2B44F] transition-all">
+            <h2 className="text-xl font-semibold text-[#E2B44F] mb-2">🔣 Symboles Normalisés (ISO 1302 & ISO 13715)</h2>
+            <p className="text-gray-400 mb-3">
+              Les symboles de finition, d’état de surface et de chanfrein assurent
+              la qualité et la fonctionnalité des pièces mécaniques.
+            </p>
+            <ul className="list-disc pl-6 text-gray-400 space-y-1">
+              <li>
+                <a href="https://www.iso.org/standard/10778.html" target="_blank" className="text-[#E2B44F] hover:underline">
+                  ISO 1302 : Rugosité de surface
+                </a>
+              </li>
+              <li>
+                <a href="https://www.iso.org/standard/23135.html" target="_blank" className="text-[#E2B44F] hover:underline">
+                  ISO 13715 : Arêtes et chanfreins
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Cartouche horloger */}
+          <div className="p-6 bg-[#111827] rounded-xl border border-[#E2B44F]/30 hover:border-[#E2B44F] transition-all">
+            <h2 className="text-xl font-semibold text-[#E2B44F] mb-2">📄 Cartouche Horloger (NIHS 7200 / 7201)</h2>
+            <p className="text-gray-400 mb-3">
+              Le cartouche regroupe les informations essentielles d’un dessin horloger :
+              titre, échelle, matière, nom du dessinateur et révision.
+            </p>
+            <a
+              href="https://nihs.ch/normes/nihs-7200"
+              target="_blank"
+              className="text-[#E2B44F] hover:underline"
+            >
+              → Consulter la norme NIHS 7200 sur le site officiel
+            </a>
+          </div>
+
+          {/* Éléments spécifiques à l’horlogerie */}
+          <div className="p-6 bg-[#111827] rounded-xl border border-[#E2B44F]/30 hover:border-[#E2B44F] transition-all">
+            <h2 className="text-xl font-semibold text-[#E2B44F] mb-2">⚙️ Éléments Spécifiques à l’Horlogerie</h2>
+            <p className="text-gray-400 mb-3">
+              Les composants horlogers (roues, ponts, vis, axes) obéissent à des normes et tolérances spécifiques.
+              Leur représentation suit les standards NIHS.
+            </p>
+            <a
+              href="https://nihs.ch/normes"
+              target="_blank"
+              className="text-[#E2B44F] hover:underline"
+            >
+              → Voir l’ensemble des normes NIHS horlogères
+            </a>
+          </div>
+        </div>
+
+        {/* Mention légale */}
+        <p className="text-gray-500 text-sm mt-12 border-t border-gray-700 pt-6">
+          © HorloLearn 2025 – Liens officiels vers les normes ISO & NIHS.
+          Ces références sont fournies à titre pédagogique pour faciliter la formation et la culture horlogère.
         </p>
       </div>
-
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {modules.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="bg-[#111] border border-[#E2B44F]/20 rounded-2xl p-6 hover:border-[#E2B44F]/60 hover:shadow-[0_0_15px_rgba(226,180,79,0.3)] transition-all duration-300 group"
-          >
-            <div className="flex flex-col items-center text-center gap-4">
-              <div className="p-3 bg-[#E2B44F]/10 rounded-full group-hover:bg-[#E2B44F]/20 transition">
-                {item.icon}
-              </div>
-              <h2 className="text-xl font-semibold text-[#E2B44F]">{item.title}</h2>
-              <p className="text-gray-400 text-sm leading-relaxed">{item.description}</p>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </main>
+    </section>
   );
 }
