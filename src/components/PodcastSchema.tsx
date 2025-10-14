@@ -1,6 +1,7 @@
 "use client";
-import JsonLd from "./JsonLd";
 import { SITE } from "@/lib/seo";
+import { toAbsolute } from "@/lib/url";
+import JsonLd from "./JsonLd";
 
 interface PodcastSchemaProps {
   name: string;             // Titre de l'épisode ou de la série
@@ -31,8 +32,8 @@ export default function PodcastSchema({
     "@type": "PodcastEpisode",
     name,
     description,
-    url: `${SITE.domain}${audioUrl}`,
-    image: `${SITE.domain}${imageUrl}`,
+    url: toAbsolute(audioUrl),
+    image: toAbsolute(imageUrl || SITE.image),
     datePublished: uploadDate,
     duration,
     episodeNumber,
@@ -43,15 +44,8 @@ export default function PodcastSchema({
     },
     publisher: {
       "@type": "Organization",
-      name: SITE.organization.legalName,
-      logo: {
-        "@type": "ImageObject",
-        url: `${SITE.domain}${SITE.logo}`,
-      },
-    },
-    author: {
-      "@type": "Person",
       name: "HorloLearn",
+      logo: toAbsolute(SITE.image),
     },
   };
 
