@@ -16,7 +16,7 @@ export default function ArticleSchema({
   title,
   description,
   slug,
-  image = SITE.logo,
+  image = SITE.image,
   authors = [{ name: "HorloLearn" }],
   datePublished = new Date().toISOString(),
   dateModified = new Date().toISOString(),
@@ -31,7 +31,7 @@ export default function ArticleSchema({
     publisher: {
       "@type": "Organization",
       name: SITE.organization.legalName,
-      logo: { "@type": "ImageObject", url: `${SITE.domain}${SITE.logo}` },
+      logo: { "@type": "ImageObject", url: `${SITE.domain}${SITE.image}` },
     },
     mainEntityOfPage: `${SITE.domain}/${slug}`,
     datePublished,
