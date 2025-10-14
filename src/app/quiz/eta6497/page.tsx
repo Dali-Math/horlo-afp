@@ -29,28 +29,25 @@ export default function QuizEta6497() {
     <section className="max-w-3xl mx-auto p-6">
       <BreadcrumbsSchema
         items={[
+          { name: "Accueil", slug: "" },
           { name: "Quiz", slug: "quiz" },
-          { name: "ETA 6497", slug: "quiz/eta6497" },
         ]}
+        currentTitle="Quiz ETA 6497"
+        currentPath="/quiz/eta6497"
       />
-
-      <h1 className="text-3xl font-bold text-[#E2B44F] mb-4">
-        Quiz – Mouvement ETA 6497
-      </h1>
+      <h1 className="text-3xl font-bold text-[#E2B44F] mb-4">Quiz ETA 6497</h1>
       <p className="text-gray-300 mb-6">
-        Répondez aux questions pour valider vos connaissances sur le mouvement ETA 6497.
+        Testez vos connaissances sur le mouvement de référence de la formation AFP.
       </p>
-
-      <ul className="space-y-4 text-gray-300">
-        {questions.map((q, index) => (
-          <li key={index}>
-            <strong>Q{index + 1}.</strong> {q.question}
+      <ul className="space-y-4">
+        {questions.map((q) => (
+          <li key={q.question}>
+            <h2 className="text-xl font-semibold">{q.question}</h2>
+            <p className="text-gray-300">{q.answer}</p>
           </li>
         ))}
       </ul>
-
-      {/* Injection IA : quiz complet indexable */}
-      <QuizSchema quizName="Quiz ETA 6497" questions={questions} />
+      <QuizSchema questions={questions} />
     </section>
   );
 }
