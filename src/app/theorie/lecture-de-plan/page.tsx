@@ -1,47 +1,38 @@
 "use client";
 import Link from "next/link";
-import { BookOpen, ArrowRight } from "lucide-react";
+import { ArrowLeft, Target } from "lucide-react";
+import FlipBookViewer from "@/components/FlipBookViewer";
 
-export default function LectureDePlan() {
-  const topics = [
-    { title: "Compétences à développer chez l’élève", href: "/theorie/lecture-de-plan/competences-eleve" },
-    { title: "Les éléments spécifiques à l’horlogerie", href: "/theorie/lecture-de-plan/elements-horlogerie" },
-    { title: "Le cartouche horloger", href: "/theorie/lecture-de-plan/cartouche-horloger" },
-    { title: "Les symboles normalisés (ISO / horlogerie)", href: "/theorie/lecture-de-plan/symboles-normalises" },
-    { title: "Les cotes et tolérances", href: "/theorie/lecture-de-plan/cotes-tolerances" },
-    { title: "Les vues techniques (projection orthogonale)", href: "/theorie/lecture-de-plan/vues-techniques" },
-    { title: "Les types de lignes (à connaître absolument)", href: "/theorie/lecture-de-plan/types-lignes" },
-    { title: "Les éléments fondamentaux d’un plan horloger", href: "/theorie/lecture-de-plan/elements-fondamentaux" },
-  ];
-
+export default function CompetencesEleve() {
   return (
     <section className="min-h-screen bg-[#0b1220] text-white py-20 px-6">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex items-center gap-3 mb-8">
-          <BookOpen className="text-[#E2B44F] w-8 h-8" />
-          <h1 className="text-4xl font-bold text-[#E2B44F]">Lecture de Plan</h1>
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
+        <div>
+          <Link href="/theorie/lecture-de-plan" className="inline-flex items-center gap-2 text-[#E2B44F] hover:text-white mb-8">
+            <ArrowLeft className="w-5 h-5" /> Retour
+          </Link>
+
+          <div className="flex items-center gap-3 mb-6">
+            <Target className="text-[#E2B44F] w-7 h-7" />
+            <h1 className="text-3xl font-bold text-[#E2B44F]">Compétences à développer chez l’élève</h1>
+          </div>
+
+          <p className="text-gray-300 leading-relaxed">
+            Ce module aide l’élève à comprendre les représentations techniques, 
+            à lire les tolérances et à reconnaître les symboles ISO utilisés en horlogerie.
+          </p>
+
+          <ul className="list-disc pl-6 mt-4 space-y-2 text-gray-400">
+            <li>Identifier les vues et les projections d’un dessin horloger.</li>
+            <li>Lire les cotes et tolérances.</li>
+            <li>Reconnaître les symboles normalisés ISO.</li>
+            <li>Analyser un cartouche horloger complet.</li>
+          </ul>
         </div>
 
-        <p className="text-gray-300 mb-12 max-w-3xl">
-          Apprendre à lire un plan horloger, c’est comprendre le langage universel de la mécanique de précision.
-          Ce module regroupe toutes les notions nécessaires pour interpréter, réaliser et vérifier un dessin horloger complet.
-        </p>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          {topics.map((topic) => (
-            <Link
-              key={topic.href}
-              href={topic.href}
-              className="p-6 rounded-xl border border-[#E2B44F]/30 hover:border-[#E2B44F] hover:shadow-lg hover:shadow-[#E2B44F]/10 transition-all bg-[#111827]"
-            >
-              <h2 className="text-xl font-semibold text-[#E2B44F] flex items-center justify-between">
-                {topic.title} <ArrowRight className="w-5 h-5" />
-              </h2>
-              <p className="text-gray-400 mt-2 text-sm">
-                Découvre les bases essentielles de {topic.title.toLowerCase()}.
-              </p>
-            </Link>
-          ))}
+        <div className="bg-[#111827] p-6 rounded-2xl border border-[#E2B44F]/30 shadow-lg">
+          <h2 className="text-xl font-semibold text-[#E2B44F] mb-4">Fiche PDF : Compétences</h2>
+          <FlipBookViewer file="/pdfs/lecture-de-plan/competences-eleve.pdf" />
         </div>
       </div>
     </section>
