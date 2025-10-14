@@ -25,8 +25,6 @@ export const SITE = {
   organization: {
     name: "HorloLearn",
     legalName: "HorloLearn",
-    url: "https://www.horlolearn.ch",
-    logo: "https://www.horlolearn.ch/og-image.svg",
     contactEmail: "mathlouthi_mohamed82@yahoo.com",
     sameAs: [
       "https://www.linkedin.com/company/horlolearn/",
