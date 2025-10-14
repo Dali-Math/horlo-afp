@@ -16,8 +16,9 @@ export default function CartoucheHorloger() {
           <li>Norme utilisée et unités employées.</li>
         </ul>
       </div>
+
       <div>
-        <FlipBookViewer pdfUrl="/pdfs/lecture-de-plan/cartouche-horloger.pdf" />
+        <FlipBookViewer file="/pdfs/lecture-de-plan/cartouche-horloger.pdf" />
       </div>
     </section>
   );
