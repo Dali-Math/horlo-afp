@@ -3,12 +3,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [theorieOpen, setTheorieOpen] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const navLinks = [
     { href: "/pratique", label: "Pratique" },
@@ -21,6 +22,15 @@ export default function Navbar() {
     { href: "/evenements", label: "Événements" },
     { href: "/communaute", label: "Communauté" },
   ];
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setTheorieOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => setTheorieOpen(false), 250);
+  };
 
   return (
     <nav className="flex flex-wrap items-center justify-between px-6 md:px-12 py-4 bg-[#0A0A0A] text-white border-b border-gray-800 relative z-50">
@@ -46,13 +56,11 @@ export default function Navbar() {
 
       {/* Liens desktop */}
       <div className="hidden lg:flex items-center gap-6 text-sm font-medium relative">
-        {/* Bloc Théorie avec sous-menu stable */}
+        {/* Bloc Théorie avec sous-menu fluide */}
         <div
           className="relative"
-          onMouseEnter={() => setTheorieOpen(true)}
-          onMouseLeave={() => {
-            setTimeout(() => setTheorieOpen(false), 150);
-          }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           <Link
             href="/theorie"
@@ -73,10 +81,10 @@ export default function Navbar() {
           {/* Sous-menu stable */}
           {theorieOpen && (
             <div
-              onMouseEnter={() => setTheorieOpen(true)}
-              onMouseLeave={() => setTheorieOpen(false)}
               className="absolute top-full left-0 mt-2 w-56 bg-[#111] border border-[#E2B44F33] rounded-lg shadow-lg
               transition-all duration-200 ease-out opacity-100 translate-y-0 z-50"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
             >
               <Link
                 href="/theorie/lecture-de-plan"
