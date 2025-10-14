@@ -1,0 +1,27 @@
+{
+  "project": "HorloLearn AFP",
+  "version": "stable-14.10.25",
+  "created": "2025-10-14T00:00:00Z",
+  "description": "Sauvegarde complète du site HorloLearn dans sa version stable (post-rollback SEO, build validé Vercel, thème noir-or).",
+  "files_snapshot": {
+    "src/lib": [
+      "firebase.ts",
+      "pdf-parser.ts",
+      "planning-manager.ts",
+      "seo.ts",
+      "usePlanningFilters.ts"
+    ],
+    "src/components": "version stable restaurée (sans url.ts ni toAbsolute)",
+    "public/pdfs": "tous les fichiers confirmés le 14.10.25",
+    "vercel.json": "configuration stable"
+  },
+  "restore_instructions": {
+    "1": "Exécuter la commande suivante :",
+    "2": "node restore.js backup-stable-14-10-25.json",
+    "3": "Cela restaurera tous les fichiers listés et supprimera les fichiers temporaires ajoutés depuis la dernière modification."
+  },
+  "author": "Dali-Math",
+  "repository": "https://github.com/Dali-Math/horlo-afp",
+  "vercel_status": "✅ Production stable et validée",
+  "note": "Cette sauvegarde correspond à l’état exact du build stable après correction des erreurs SEO et suppression de SITE.url."
+}
