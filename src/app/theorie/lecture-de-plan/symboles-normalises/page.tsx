@@ -18,7 +18,7 @@ export default function SymbolesNormalises() {
         </ul>
       </div>
       <div>
-        <FlipBookViewer pdfUrl="/pdfs/lecture-de-plan/symboles-normalises.pdf" />
+        <FlipBookViewer file="/pdfs/lecture-de-plan/symboles-normalises.pdf" />
       </div>
     </section>
   );
