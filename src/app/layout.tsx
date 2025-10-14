@@ -3,58 +3,88 @@ import type { Metadata } from "next";
 import { SITE } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer"; // ✅ Ajout du Footer
+import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
-  title: "HorloLearn – Formation Horlogère Suisse (AFP)",
-  description:
-    "Apprenez les gestes, mouvements et techniques horlogères suisses. Guides ETA 6497, vidéos, quiz et fiches de formation AFP.",
-  keywords: ["horlogerie suisse", "ETA 6497", "formation AFP", "montre mécanique", "HorloLearn"],
-  metadataBase: new URL(SITE.domain),
+  title: SITE.title,
+  description: SITE.description,
+  keywords: SITE.keywords,
+  authors: [{ name: SITE.author }],
+  metadataBase: new URL(SITE.url),
   openGraph: {
-    title: "HorloLearn – Formation Horlogère Suisse",
-    description: "Découvrez les mouvements suisses et la formation horlogère AFP.",
-    url: SITE.domain,
+    title: SITE.title,
+    description: SITE.description,
+    url: SITE.url,
     siteName: SITE.name,
     images: [
       {
-        url: SITE.logo,
+        url: SITE.image,
         width: 1200,
         height: 630,
-        alt: "HorloLearn – Formation Horlogère Suisse",
+        alt: SITE.title,
       },
     ],
     locale: SITE.locale,
     type: "website",
   },
-  alternates: { canonical: SITE.domain },
+  twitter: {
+    card: SITE.twitter.card,
+    site: SITE.twitter.site,
+    creator: SITE.twitter.creator,
+    title: SITE.title,
+    description: SITE.description,
+    images: [SITE.image],
+  },
+  alternates: {
+    canonical: SITE.url,
+  },
   other: {
-    "ai:summary":
-      "Formation horlogère suisse complète : gestes, démontage, remontage, ETA 6497, AFP.",
-    "ai:topic": "Horlogerie suisse, mouvement mécanique, formation AFP, ETA 6497",
-    "ai:author": "HorloLearn by Mohamed Ali Mathlouthi",
+    "ai:summary": SITE.description,
+    "ai:topic": SITE.keywords.join(", "),
+    "ai:author": SITE.author,
     "color-scheme": "dark light",
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const org = {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: SITE.organization.legalName,
+    name: SITE.organization.name,
+    legalName: SITE.organization.legalName,
     url: SITE.organization.url,
     logo: SITE.organization.logo,
     contactPoint: [
       {
         "@type": "ContactPoint",
-        email: SITE.contactEmail,
+        email: SITE.organization.contactEmail,
         contactType: "customer support",
         availableLanguage: ["fr-CH", "fr", "en"],
       },
     ],
     sameAs: SITE.organization.sameAs,
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE.name,
+    url: SITE.url,
+    description: SITE.description,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${SITE.url}/search?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
   };
 
   return (
@@ -65,14 +95,30 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700&display=swap"
           as="style"
         />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700&display=swap"
+          rel="stylesheet"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
+        />
       </head>
       <body className="bg-[#0a0a0a] text-gray-200">
         <Navbar />
         {children}
-        <Footer /> {/* ✅ Footer affiché sur toutes les pages */}
+        <Footer />
         <ScrollToTop />
         <Analytics />
-        <JsonLd data={org} />
+        <JsonLd data={organizationSchema} />
       </body>
     </html>
   );
