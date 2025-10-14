@@ -59,6 +59,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="fr">
+      <head>
+        <link
+          rel="preload"
+          href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700&display=swap"
+          as="style"
+        />
+      </head>
       <body className="bg-[#0a0a0a] text-gray-200">
         <Navbar />
         {children}
