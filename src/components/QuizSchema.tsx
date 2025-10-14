@@ -1,7 +1,6 @@
 "use client";
-import { SITE } from "@/lib/seo";
-import { toAbsolute } from "@/lib/url";
 import JsonLd from "./JsonLd";
+import { SITE } from "@/lib/seo";
 
 interface QuizSchemaProps {
   questions: {
@@ -22,20 +21,20 @@ export default function QuizSchema({
     "@type": "Quiz",
     name: quizName,
     description,
-    url: SITE.url,
-    publisher: {
+    creator: {
       "@type": "Organization",
       name: SITE.organization.legalName,
-      url: SITE.url,
-      logo: toAbsolute(SITE.image),
+      url: SITE.domain,
+      logo: `${SITE.domain}${SITE.logo}`,
     },
     hasPart: questions.map((q, i) => ({
       "@type": "Question",
       position: i + 1,
       name: q.question,
-      acceptedAnswer: q.answer
-        ? { "@type": "Answer", text: q.answer }
-        : undefined,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: q.answer,
+      },
     })),
   };
 
