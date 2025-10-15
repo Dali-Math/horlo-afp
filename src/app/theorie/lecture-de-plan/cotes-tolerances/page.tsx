@@ -2,12 +2,10 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import FicheErreursBonnesPratiques from "@/components/FicheErreursBonnesPratiques"; // Import corrigé
+import FicheErreursBonnesPratiques from "../../components/FicheErreursBonnesPratiques";
 
-// Lazy load du composant interactif
 const PlanInteractif = dynamic(() => import("@/components/PlanInteractif"), { ssr: false });
 
-// 15 questions quiz : une seule définition, pas de doublon
 function QuizTolerance() {
   const questions = [
     {
