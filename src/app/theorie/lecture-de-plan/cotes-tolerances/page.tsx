@@ -1,8 +1,8 @@
 "use client";
-import { motion } from "framer-motion";
+
 import { useState } from "react";
 
-// Icônes minimalistes internes
+// Icônes simples
 const XCircleIcon = ({ className = "" }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className={className}>
     <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.72 6.97a.75.75 0 10-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 101.06 1.06L12 13.06l1.72 1.72a.75.75 0 101.06-1.06L13.06 12l1.72-1.72a.75.75 0 10-1.06-1.06L12 10.94l-1.72-1.72z" clipRule="evenodd" />
@@ -35,120 +35,119 @@ export default function CotesEtTolerancesPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-neutral-950 to-black text-gray-100 overflow-hidden">
-      <section className="relative flex flex-col items-center text-center py-24 px-6">
-        <motion.h1
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-5xl font-bold text-yellow-400 mb-4 tracking-wide"
-        >
-          Cotes et Tolérances
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="max-w-2xl text-gray-400 leading-relaxed"
-        >
-          Ces normes précisent les règles de cotation et les tolérances
-          <span className="text-gray-200 font-semibold"> indispensables </span>
-          à la qualité en horlogerie. Maîtrise-les pour comprendre l’assemblage,
-          l’usinage et le contrôle dimensionnel des montres.
-        </motion.p>
+    <main className="min-h-screen bg-neutral-950 text-gray-100 font-sans">
+      <section className="max-w-5xl mx-auto px-6 py-20">
+        {/* Header */}
+        <header className="mb-16">
+          <a href="#" className="text-sm text-gray-500 hover:text-yellow-400 transition">
+            ← Retour
+          </a>
+          <h1 className="text-4xl font-semibold text-yellow-400 mt-4 mb-3 leading-tight">
+            Cotes et Tolérances <span className="text-gray-400">(ISO 129-1 & ISO 1101)</span>
+          </h1>
+          <p className="text-gray-300 text-lg leading-relaxed max-w-3xl">
+            Ces normes précisent les règles de cotation et les tolérances indispensables à la qualité
+            en horlogerie. Maîtrise-les pour comprendre l’assemblage, l’usinage et le contrôle
+            dimensionnel des montres.
+          </p>
+        </header>
+
+        {/* Schéma */}
+        <section className="mb-24">
+          <h2 className="text-xl font-semibold text-yellow-400 mb-6 border-l-4 border-yellow-400 pl-3">
+            Schéma de principe
+          </h2>
+          <figure className="bg-neutral-900 rounded-lg border border-neutral-800 p-6">
+            <img
+              src="/images/cotes-tolerances/tuto.png"
+              alt="Schéma des cotes et tolérances horlogères"
+              className="rounded-md w-full max-w-md mx-auto"
+            />
+            <figcaption className="text-sm text-gray-500 text-center mt-3 italic">
+              Cotes, tolérances et jeux fonctionnels en horlogerie.
+            </figcaption>
+          </figure>
+        </section>
+
+        {/* Fiche Erreurs & Bonnes pratiques */}
+        <section className="mb-24">
+          <h2 className="text-xl font-semibold text-yellow-400 mb-10 border-l-4 border-yellow-400 pl-3">
+            Mémo technique : erreurs et bonnes pratiques
+          </h2>
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Erreurs */}
+            <div>
+              <h3 className="flex items-center gap-2 text-red-400 text-lg font-medium mb-5">
+                <XCircleIcon className="w-5 h-5" /> Erreurs fréquentes
+              </h3>
+              <ul className="space-y-3">
+                {erreurs.map((e, i) => (
+                  <li key={i} className="flex gap-3 items-start">
+                    <XCircleIcon className="w-4 h-4 mt-1 text-red-400" />
+                    <span className="text-gray-300 leading-relaxed">{e}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* Bonnes pratiques */}
+            <div>
+              <h3 className="flex items-center gap-2 text-green-400 text-lg font-medium mb-5">
+                <CheckCircleIcon className="w-5 h-5" /> Bonnes pratiques
+              </h3>
+              <ul className="space-y-3">
+                {bonnesPratiques.map((b, i) => (
+                  <li key={i} className="flex gap-3 items-start">
+                    <CheckCircleIcon className="w-4 h-4 mt-1 text-green-400" />
+                    <span className="text-gray-300 leading-relaxed">{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Quiz */}
+        <section className="mb-24">
+          <h2 className="text-xl font-semibold text-yellow-400 mb-6 border-l-4 border-yellow-400 pl-3">
+            Quiz : teste tes connaissances
+          </h2>
+          <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-6 max-w-2xl mx-auto">
+            <p className="text-gray-300 mb-4 font-medium">
+              Qu'appelle-t-on “cote nominale” ?
+            </p>
+            <div className="space-y-2">
+              <button className="w-full text-left py-2 px-4 rounded-md border border-neutral-800 bg-neutral-950 hover:border-yellow-400 hover:bg-neutral-800 transition">
+                La dimension idéale sans tolérance
+              </button>
+              <button className="w-full text-left py-2 px-4 rounded-md border border-neutral-800 bg-neutral-950 hover:border-yellow-400 hover:bg-neutral-800 transition">
+                La tolérance maximale autorisée
+              </button>
+              <button className="w-full text-left py-2 px-4 rounded-md border border-neutral-800 bg-neutral-950 hover:border-yellow-400 hover:bg-neutral-800 transition">
+                L’écart entre deux dimensions
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Vidéo */}
+        <section className="mb-16">
+          <h2 className="text-xl font-semibold text-yellow-400 mb-6 border-l-4 border-yellow-400 pl-3">
+            Vidéo pédagogique
+          </h2>
+          <div className="aspect-video max-w-3xl mx-auto rounded-lg overflow-hidden border border-neutral-800 bg-black">
+            <iframe
+              className="w-full h-full"
+              src="https://www.youtube.com/embed/0ddnQpKz_gU"
+              title="Tolérances et ajustement"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </section>
+
+        <footer className="border-t border-neutral-800 pt-8 text-sm text-gray-500 text-center">
+          © HorloLearn 2025 — Références ISO 129-1 et ISO 1101.
+        </footer>
       </section>
-
-      {/* Schéma */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="max-w-4xl mx-auto my-12 bg-neutral-900/70 border border-yellow-600/40 rounded-2xl shadow-xl p-6"
-      >
-        <h2 className="text-xl text-yellow-400 font-semibold mb-4 text-center">
-          Schéma Interactif
-        </h2>
-        <div className="rounded-xl overflow-hidden border border-yellow-700/40 bg-neutral-950/60 shadow-inner">
-          <img
-            src="/images/cotes-tolerances/tuto.png"
-            alt="Schéma des cotes et tolérances"
-            className="w-full rounded-lg"
-          />
-        </div>
-        <p className="text-center text-gray-500 italic mt-2">
-          Cliquez sur le schéma pour afficher les explications détaillées.
-        </p>
-      </motion.section>
-
-      {/* Fiche Erreurs / Bonnes Pratiques */}
-      <motion.section
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7 }}
-        className="max-w-5xl mx-auto my-16 p-8 rounded-2xl bg-neutral-900/80 border border-yellow-700/30 shadow-lg"
-      >
-        <h2 className="text-center text-2xl text-yellow-400 font-semibold mb-10 uppercase tracking-wide">
-          Mémo Technique : Erreurs & Bonnes Pratiques
-        </h2>
-        <div className="grid md:grid-cols-2 gap-12">
-          {/* Erreurs */}
-          <div>
-            <h3 className="flex items-center gap-2 text-red-400 text-lg font-semibold mb-4">
-              <XCircleIcon className="w-6 h-6" /> Erreurs fréquentes
-            </h3>
-            <ul className="space-y-3 text-gray-300">
-              {erreurs.map((err, i) => (
-                <li
-                  key={i}
-                  className="flex items-start gap-2 bg-neutral-800/60 rounded-lg p-3 hover:bg-neutral-700/60 transition"
-                >
-                  <XCircleIcon className="w-5 h-5 mt-1 text-red-400" />
-                  <span>{err}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Bonnes pratiques */}
-          <div>
-            <h3 className="flex items-center gap-2 text-green-400 text-lg font-semibold mb-4">
-              <CheckCircleIcon className="w-6 h-6" /> Bonnes pratiques
-            </h3>
-            <ul className="space-y-3 text-gray-300">
-              {bonnesPratiques.map((b, i) => (
-                <li
-                  key={i}
-                  className="flex items-start gap-2 bg-neutral-800/60 rounded-lg p-3 hover:bg-neutral-700/60 transition"
-                >
-                  <CheckCircleIcon className="w-5 h-5 mt-1 text-green-400" />
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Bloc Quiz stylisé */}
-      <motion.section
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1 }}
-        className="max-w-4xl mx-auto my-20 bg-gradient-to-br from-neutral-950 to-neutral-900 border border-yellow-700/30 rounded-2xl shadow-2xl p-8 text-center"
-      >
-        <h2 className="text-2xl font-semibold text-yellow-400 mb-6">
-          🧠 Quiz : Teste tes connaissances
-        </h2>
-        {/* --- ICI tu gardes ton composant de quiz existant --- */}
-        <div className="text-gray-300">
-          <p>👉 Insère ici ton quiz interactif déjà fonctionnel.</p>
-        </div>
-      </motion.section>
-
-      {/* Footer */}
-      <footer className="text-center py-12 text-sm text-gray-500 border-t border-neutral-800 mt-20">
-        © HorloLearn 2025 — Basé sur les normes ISO 129-1 & ISO 1101.
-      </footer>
     </main>
   );
 }
