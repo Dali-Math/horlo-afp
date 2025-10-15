@@ -1,11 +1,10 @@
 "use client";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 
-// ✅ Fiche Erreurs & Bonnes pratiques (HorloLearn)
 export default function FicheErreursBonnesPratiques() {
   const erreurs = [
     "Oublier d’indiquer la tolérance",
-    "Tolérance trop serrée (blocage ou usinage coûteux)",
+    "Tolérance trop serrée (blocage/usinage coûteux)",
     "Tolérance trop large (jeu excessif, perte de précision)",
     "Mauvaise lecture de cote maxi/mini",
     "Confondre diamètre et dimension linéaire",
@@ -18,21 +17,19 @@ export default function FicheErreursBonnesPratiques() {
     "Utiliser la cotation ISO appropriée (symboles, orientations)",
     "Relire sa cotation avec le plan d’ensemble ou coupe",
     "Consulter les opérateurs d’usinage pour valider la faisabilité",
-    "Faire relire et valider son plan avant la fabrication",
+    "Faire relire/valider son plan avant la fabrication",
     "Conserver la cohérence d’échelle et d’unités",
     "Se référer aux normes ISO 129-1 et ISO 1101 à chaque plan",
   ];
 
   return (
-    <div className="bg-[#0b1220] rounded-xl shadow-lg px-6 py-8 my-12 max-w-3xl mx-auto border border-[#E2B44F80]">
-      <h2 className="text-2xl font-bold text-[#E2B44F] mb-6 text-center underline">
-        Erreurs fréquentes & Bonnes pratiques
+    <div className="bg-gray-900 rounded-xl shadow-lg px-6 py-8 my-12 max-w-3xl mx-auto border border-[#E2B44F]">
+      <h2 className="text-2xl font-bold text-[#E2B44F] mb-5 text-center underline">
+        Fiche — Erreurs fréquentes & Bonnes pratiques
       </h2>
-
-      <div className="flex flex-col md:flex-row gap-8 justify-between">
-        {/* Colonne Erreurs */}
+      <div className="flex flex-col md:flex-row gap-6 justify-between">
         <div className="md:w-1/2">
-          <h3 className="font-semibold text-red-400 text-lg flex items-center gap-2 mb-3">
+          <h3 className="font-semibold text-red-400 text-lg flex items-center gap-1 mb-3">
             <XCircleIcon className="h-6 w-6 text-red-400" />
             Erreurs fréquentes
           </h3>
@@ -45,10 +42,8 @@ export default function FicheErreursBonnesPratiques() {
             ))}
           </ul>
         </div>
-
-        {/* Colonne Bonnes pratiques */}
         <div className="md:w-1/2">
-          <h3 className="font-semibold text-green-400 text-lg flex items-center gap-2 mb-3">
+          <h3 className="font-semibold text-green-400 text-lg flex items-center gap-1 mb-3">
             <CheckCircleIcon className="h-6 w-6 text-green-400" />
             Bonnes pratiques
           </h3>
