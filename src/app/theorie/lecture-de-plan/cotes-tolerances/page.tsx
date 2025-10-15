@@ -1,4 +1,4 @@
-import React from 'react';
+import FichePratiques from '../components/FichePratiques';
 
 // --- Icônes SVG (auto-contenues, pas de dépendances) ---
 const XCircleIcon = ({ className = '' }: { className?: string }) => (
