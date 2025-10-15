@@ -6,7 +6,7 @@ import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 
 const PlanInteractif = dynamic(() => import("@/components/PlanInteractif"), { ssr: false });
 
-// ✅ Fiche intégrée directement ici
+// ✅ FICHE INTÉGRÉE DIRECTEMENT
 function FicheErreursBonnesPratiques() {
   const erreurs = [
     "Oublier d’indiquer la tolérance",
@@ -31,7 +31,7 @@ function FicheErreursBonnesPratiques() {
   return (
     <div className="bg-gray-900 rounded-xl shadow-lg px-6 py-8 my-12 max-w-3xl mx-auto border border-[#E2B44F]">
       <h2 className="text-2xl font-bold text-[#E2B44F] mb-5 text-center underline">
-        Fiches d’erreurs et bonnes pratiques
+        Fiche — Erreurs fréquentes & Bonnes pratiques
       </h2>
       <div className="flex flex-col md:flex-row gap-6 justify-between">
         <div className="md:w-1/2">
@@ -67,7 +67,7 @@ function FicheErreursBonnesPratiques() {
   );
 }
 
-// ✅ Quiz conservé complet
+// ✅ QUIZ COMPLET
 function QuizTolerance() {
   const questions = [
     { q: "Qu'appelle-t-on 'cote nominale' ?", options: ["La dimension idéale sans tolérance", "La tolérance maximale autorisée", "L'écart entre deux dimensions"], answer: 0 },
@@ -131,7 +131,7 @@ function QuizTolerance() {
   );
 }
 
-// ✅ Page principale
+// ✅ PAGE PRINCIPALE
 export default function CotesTolerances() {
   return (
     <section className="min-h-screen bg-[#0b1220] text-white py-16 px-4 sm:px-6">
@@ -147,7 +147,7 @@ export default function CotesTolerances() {
         </h1>
 
         <p className="text-gray-300 mb-6 leading-relaxed">
-          Ces normes précisent les règles de cotation et les tolérances <b>indispensables</b> à la qualité en horlogerie. 
+          Ces normes précisent les règles de cotation et les tolérances <b>indispensables</b> à la qualité en horlogerie.
           Maîtrise-les pour comprendre l'assemblage, l'usinage et le contrôle dimensionnel des montres.
         </p>
 
@@ -175,7 +175,7 @@ export default function CotesTolerances() {
           </div>
         </div>
 
-        {/* Fiche intégrée directement ici */}
+        {/* ✅ Fiche intégrée ici */}
         <FicheErreursBonnesPratiques />
 
         <ul className="list-disc pl-6 text-gray-400 space-y-2 mb-8">
