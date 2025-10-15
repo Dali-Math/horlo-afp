@@ -1,8 +1,9 @@
+import React from "react";
 "use client";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import FicheErreursBonnesPratiques from "../components/FicheErreursBonnesPratiques";
+import FicheErreursBonnesPratiques from "./components/FicheErreursBonnesPratiques";
 
 const PlanInteractif = dynamic(() => import("@/components/PlanInteractif"), { ssr: false });
 
@@ -116,16 +117,6 @@ export default function CotesTolerances() {
             ></iframe>
           </div>
         </div>
-       export default function CotesTolerances() {
-  return (
-    <section>
-      {/* ... */}
-      <div>video ici...</div>
-      <FicheErreursBonnesPratiques />
-      {/* ... */}
-    </section>
-  );
-}
 
         {/* Fiche pédagogique erreurs/bonnes pratiques */}
         <FicheErreursBonnesPratiques />
@@ -144,4 +135,3 @@ export default function CotesTolerances() {
     </section>
   );
 }
-
