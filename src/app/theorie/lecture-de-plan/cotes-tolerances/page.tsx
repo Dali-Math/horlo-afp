@@ -1,13 +1,6 @@
 import React from 'react';
 
 // --- Icônes SVG (auto-contenues, pas de dépendances) ---
-const ArrowLeftIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="19" y1="12" x2="5" y2="12"></line>
-    <polyline points="12 19 5 12 12 5"></polyline>
-  </svg>
-);
-
 const XCircleIcon = ({ className = '' }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
     <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.72 6.97a.75.75 0 10-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 101.06 1.06L12 13.06l1.72 1.72a.75.75 0 101.06-1.06L13.06 12l1.72-1.72a.75.75 0 10-1.06-1.06L12 10.94l-1.72-1.72z" clipRule="evenodd" />
@@ -22,356 +15,231 @@ const CheckCircleIcon = ({ className = '' }: { className?: string }) => (
 
 
 // --- Composant principal de la page ---
-const TolerancesPage: React.FC = () => {
-  // Les données sont définies ici pour plus de clarté
+const CotesEtTolerancesPage = () => {
+
+  // Les données pour la fiche sont définies ici pour plus de clarté
   const erreurs = [
-    "Oublier d’indiquer la tolérance",
-    "Tolérance trop serrée (blocage/usinage coûteux)",
-    "Tolérance trop large (jeu excessif, perte de précision)",
-    "Mauvaise lecture de cote maxi/mini",
-    "Confondre diamètre et dimension linéaire",
-    "Négliger les tolérances géométriques (ISO 1101)",
-    "Mélanger unités (mm, µm)",
+    "Oublier d’indiquer une tolérance sur une cote fonctionnelle.",
+    "Définir une tolérance trop serrée (augmente le coût et les rejets).",
+    "Choisir une tolérance trop large (crée un jeu excessif).",
+    "Confondre la cote maximale et la cote minimale.",
+    "Négliger les tolérances géométriques (parallélisme, etc.).",
+    "Mélanger les unités de mesure (mm et µm) sans le préciser.",
   ];
 
-  const bonnes = [
-    "Préciser une tolérance adaptée à la fonction réelle",
-    "Utiliser la cotation ISO appropriée (symboles, orientations)",
-    "Relire sa cotation avec le plan d’ensemble ou coupe",
-    "Consulter les opérateurs d’usinage pour valider la faisabilité",
-    "Faire relire/valider son plan avant la fabrication",
-    "Conserver la cohérence d’échelle et d’unités",
-    "Se référer aux normes ISO 129-1 et ISO 1101 à chaque plan",
+  const bonnesPratiques = [
+    "Analyser la fonction de la pièce pour définir une tolérance juste.",
+    "Utiliser les symboles et la syntaxe de la norme ISO appropriée.",
+    "Toujours relire la cotation en pensant à l'assemblage final.",
+    "Valider la faisabilité des tolérances avec l'atelier d'usinage.",
+    "Faire contrôler ses plans par un pair avant de lancer la production.",
+    "Rester cohérent dans les unités et la précision sur tout le plan.",
   ];
-
+  
   return (
     <>
+      {/* Les styles sont encapsulés dans le composant pour être autonomes */}
       <style>{`
-        /* --- Import de Polices --- */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Slab:wght@700&display=swap');
-
-        /* --- Variables de Design --- */
         :root {
-          --color-primary: #005a9c; /* Bleu technique */
-          --color-dark: #2c3e50; /* Gris foncé pour le texte */
-          --color-light-gray: #f8f9fa; /* Fond de la page */
-          --color-border: #e9ecef;
-          --color-white: #ffffff;
-          --color-error: #c0392b; /* Rouge sobre */
-          --color-success: #27ae60; /* Vert sobre */
-          --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-          --shadow-md: 0 4px 8px rgba(0,0,0,0.07);
-          --border-radius: 8px;
+            --bg-dark: #0d1117;
+            --text-light: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent-gold: #E2B44F;
+            --border-color: #30363d;
+            --card-bg: #161b22;
         }
-
-        /* --- Styles Globaux --- */
         body {
-          background-color: var(--color-light-gray);
-          font-family: 'Inter', sans-serif;
-          color: var(--color-dark);
-          line-height: 1.7;
-          margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
-        
-        /* --- Conteneur Principal --- */
-        .tech-page-container {
-          max-width: 900px;
-          margin: 2rem auto;
-          padding: 0 1rem;
+        .page-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 1rem 2rem;
         }
-
-        /* --- En-tête --- */
-        .tech-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 2rem;
-          flex-wrap: wrap;
-          gap: 1rem;
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            display: inline-block;
         }
-
-        .back-button {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 0.5rem 1rem;
-          background-color: var(--color-white);
-          border: 1px solid var(--color-border);
-          border-radius: var(--border-radius);
-          font-weight: 600;
-          color: var(--color-primary);
-          text-decoration: none;
-          transition: all 0.2s ease;
+        .back-link:hover {
+            color: var(--accent-gold);
         }
-
-        .back-button:hover {
-          background-color: var(--color-primary);
-          color: var(--color-white);
-          box-shadow: var(--shadow-sm);
+        .intro-header h1 {
+            color: var(--accent-gold);
+            font-size: 2.5rem;
+            font-weight: 700;
         }
-        
-        .page-title {
-          font-family: 'Roboto Slab', serif;
-          font-size: 2.5rem;
-          color: var(--color-dark);
-          margin: 0;
-          text-align: right;
+        .intro-header p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 800px;
+            margin-bottom: 3rem;
+            line-height: 1.6;
         }
-
-        /* --- Carte de Contenu --- */
-        .content-card {
-          background-color: var(--color-white);
-          border-radius: var(--border-radius);
-          padding: 2rem;
-          margin-bottom: 2rem;
-          box-shadow: var(--shadow-md);
-          border: 1px solid var(--color-border);
-        }
-
-        .content-card h2 {
-          font-family: 'Roboto Slab', serif;
-          font-size: 1.8rem;
-          color: var(--color-primary);
-          margin-top: 0;
-          margin-bottom: 1.5rem;
-          padding-bottom: 0.5rem;
-          border-bottom: 2px solid var(--color-primary);
-        }
-        
-        .content-card h3 {
-          font-family: 'Roboto Slab', serif;
-          font-size: 1.4rem;
-          color: var(--color-dark);
-          margin-top: 2rem;
-          margin-bottom: 1rem;
-        }
-
-        .content-card p, .content-card li {
-          font-size: 1rem;
-          color: #34495e;
-        }
-
-        .content-card ul:not(.practices-list) {
-          padding-left: 20px;
-          list-style: none;
-        }
-
-        .content-card ul:not(.practices-list) li {
-          position: relative;
-          padding-left: 1.5rem;
-          margin-bottom: 0.5rem;
-        }
-        
-        .content-card ul:not(.practices-list) li::before {
-          content: '•';
-          position: absolute;
-          left: 0;
-          color: var(--color-primary);
-          font-weight: bold;
-          font-size: 1.2rem;
-        }
-        
-        .content-card strong {
-          color: var(--color-dark);
-        }
-
-        /* --- Image et Figure --- */
-        .image-wrapper {
-          margin: 2rem 0;
-          text-align: center;
-        }
-        
-        .image-wrapper img {
-          max-width: 100%;
-          height: auto;
-          border-radius: var(--border-radius);
-          border: 1px solid var(--color-border);
-          background-color: #fdfdfd;
-        }
-        
-        .image-wrapper figcaption {
-          margin-top: 0.75rem;
-          font-style: italic;
-          color: #7f8c8d;
-          font-size: 0.9rem;
-        }
-
-        /* --- Tableau Stylisé --- */
-        .styled-table {
-          width: 100%;
-          border-collapse: collapse;
-          margin: 2rem 0;
-          font-size: 0.95rem;
-        }
-
-        .styled-table th, .styled-table td {
-          padding: 0.8rem 1rem;
-          border: 1px solid var(--color-border);
-          text-align: left;
-        }
-
-        .styled-table thead {
-          background-color: var(--color-dark);
-          color: var(--color-white);
-        }
-        
-        .styled-table thead th {
+        .intro-header p strong {
+            color: var(--text-light);
             font-weight: 600;
         }
-
-        .styled-table tbody tr:nth-child(even) {
-          background-color: var(--color-light-gray);
-        }
-
-        .styled-table tbody tr:hover {
-          background-color: #e0eaf2;
-        }
         
-        /* --- Styles: Fiche Erreurs & Bonnes Pratiques --- */
-        .practices-grid {
+        /* Schéma Interactif */
+        .schema-container {
+            margin-bottom: 4rem;
+        }
+        .schema-container h2 {
+            color: var(--accent-gold);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .schema-image-wrapper {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+        }
+        .schema-image-wrapper img {
+            max-width: 100%;
+            background-color: white; /* Pour que le schéma blanc soit visible */
+            border-radius: 5px;
+        }
+        .schema-image-wrapper figcaption {
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Fiche Erreurs & Bonnes Pratiques (Stylisée pour ce thème) */
+        .fiche-container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--accent-gold);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin: 4rem 0; /* Espace avant et après */
+        }
+        .fiche-title {
+            color: var(--accent-gold);
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 2.5rem 0;
+            text-transform: uppercase;
+        }
+        .fiche-grid {
             display: flex;
-            gap: 2rem;
+            gap: 3rem;
+            justify-content: center;
             flex-wrap: wrap;
         }
-        .practices-column {
+        .fiche-column {
             flex: 1;
             min-width: 300px;
         }
-        .practices-title {
+        .fiche-subtitle {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-family: 'Roboto Slab', serif;
-            font-size: 1.4rem;
-            margin: 0 0 1rem 0;
-            padding: 0;
-            border: none;
-        }
-        .practices-title.error { color: var(--color-error); }
-        .practices-title.success { color: var(--color-success); }
-        
-        .practices-icon {
-            width: 1.5rem;
-            height: 1.5rem;
-        }
-        
-        .practices-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
             gap: 0.75rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 0 1.5rem 0;
         }
-
-        .practices-list li {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.5rem;
-            font-size: 0.95rem;
-        }
+        .fiche-subtitle.error { color: #e57373; }
+        .fiche-subtitle.success { color: #81c784; }
+        .fiche-icon { width: 1.5rem; height: 1.5rem; flex-shrink: 0; }
+        .fiche-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem; }
+        .fiche-list li { display: flex; align-items: flex-start; gap: 0.75rem; color: var(--text-light); line-height: 1.6; }
+        .fiche-list-icon { width: 1.25rem; height: 1.25rem; flex-shrink: 0; margin-top: 4px; }
         
-        .practices-list-icon {
-            flex-shrink: 0;
-            width: 1.2rem;
-            height: 1.2rem;
-            margin-top: 0.15rem;
+        /* Quiz */
+        .quiz-container {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
         }
-        .practices-list-icon.error { color: var(--color-error); }
-        .practices-list-icon.success { color: var(--color-success); }
-
-
-        /* --- Responsive --- */
-        @media (max-width: 768px) {
-          .tech-header {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-          .page-title {
-            font-size: 2rem;
+        .quiz-title {
+            color: var(--accent-gold);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        .quiz-question {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+        .quiz-options button {
+            display: block;
+            width: 100%;
             text-align: left;
-          }
-          .content-card {
-            padding: 1.5rem;
-          }
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: #21262d;
+            color: var(--text-light);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .quiz-options button:hover {
+            border-color: var(--accent-gold);
+            background-color: #30363d;
         }
       `}</style>
 
-      <div className="tech-page-container">
-        <header className="tech-header">
-          <a href="/theorie/lecture-de-plan" className="back-button">
-            <ArrowLeftIcon />
-            Retour à la théorie
-          </a>
-          <h1 className="page-title">Cotes et Tolérances</h1>
+      <div className="page-container">
+        <a href="#" className="back-link">← Retour</a>
+        
+        <header className="intro-header">
+          <h1>Cotes et Tolérances (ISO 129-1 & ISO 1101)</h1>
+          <p>
+            Ces normes précisent les règles de cotation et les tolérances <strong>indispensables</strong> à la qualité en horlogerie. Maîtrise-les pour comprendre l'assemblage, l'usinage et le contrôle dimensionnel des montres.
+          </p>
         </header>
 
         <main>
-          {/* ... autres sections ... */}
-          <section className="content-card">
-            <h2>Définitions</h2>
-            <ul>
-              <li><strong>Cote :</strong> Valeur numérique exprimée dans une unité de mesure et indiquée sur un dessin technique.</li>
-              <li><strong>Cotation :</strong> Ensemble des spécifications (lignes, symboles, notes) qui définissent les dimensions et la géométrie d'une pièce.</li>
-              <li><strong>Tolérance :</strong> Écart admissible entre la dimension spécifiée (nominale) et la dimension réelle de la pièce finie. Elle garantit l'interchangeabilité et la fonctionnalité.</li>
-            </ul>
-          </section>
-
-          <section className="content-card">
-            <h2>Éléments de cotation</h2>
-            <p>Une cotation complète inclut plusieurs éléments graphiques essentiels :</p>
-            <ul>
-              <li><strong>Ligne de cote :</strong> Ligne fine et continue, parallèle à la dimension cotée, se terminant par des flèches.</li>
-              <li><strong>Ligne d'attache (ou de rappel) :</strong> Ligne fine prolongeant les arêtes de l'objet pour délimiter la ligne de cote.</li>
-              <li><strong>Valeur de la cote :</strong> Le nombre indiquant la dimension.</li>
-              <li><strong>Flèches :</strong> Indiquent les extrémités de la ligne de cote.</li>
-            </ul>
-            <figure className="image-wrapper">
-              <img src="https://horlo-afp-git-test-lecture-de-plan-dali-maths-projects.vercel.app/images/cotes-tolerances/cotes.png" alt="Schéma des éléments de cotation" />
-              <figcaption>Illustration des différents composants d'une cote.</figcaption>
-            </figure>
-          </section>
-
-          <section className="content-card">
-            <h2>Tolérances dimensionnelles</h2>
-            {/* ... contenu ... */}
-          </section>
-
-          <section className="content-card">
-            <h2>Tolérances géométriques</h2>
-            {/* ... contenu ... */}
+          <section className="schema-container">
+            <h2>Schéma interactif</h2>
+            <div className="schema-image-wrapper">
+              <img src="https://horlo-afp-git-test-lecture-de-plan-dali-maths-projects.vercel.app/images/cotes-tolerances/tuto.png" alt="Schéma de cotes et tolérances horlogères" />
+              <figcaption>Cliquez sur l'image pour afficher l'explication pédagogique.</figcaption>
+            </div>
           </section>
 
           {/* ==================================================================== */}
-          {/* --- DÉBUT DE LA FICHE ERREURS & BONNES PRATIQUES (INTÉGRÉE ICI) --- */}
+          {/* --- FICHE ERREURS & BONNES PRATIQUES INTÉGRÉE ICI --- */}
           {/* ==================================================================== */}
-          <section className="content-card">
-            <h2>Erreurs Fréquentes & Bonnes Pratiques</h2>
-            <div className="practices-grid">
-              <div className="practices-column">
-                <h3 className="practices-title error">
-                  <XCircleIcon className="practices-icon" />
-                  À éviter
+          <section className="fiche-container">
+            <h2 className="fiche-title">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
+            <div className="fiche-grid">
+              <div className="fiche-column">
+                <h3 className="fiche-subtitle error">
+                  <XCircleIcon className="fiche-icon" />
+                  Erreurs Fréquentes
                 </h3>
-                <ul className="practices-list">
-                  {erreurs.map((e, i) => (
-                    <li key={`error-${i}`}>
-                      <XCircleIcon className="practices-list-icon error" />
-                      <span>{e}</span>
+                <ul className="fiche-list">
+                  {erreurs.map((erreur, index) => (
+                    <li key={`erreur-${index}`}>
+                      <XCircleIcon className="fiche-list-icon" />
+                      <span>{erreur}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-              <div className="practices-column">
-                <h3 className="practices-title success">
-                  <CheckCircleIcon className="practices-icon" />
-                  À suivre
+              <div className="fiche-column">
+                <h3 className="fiche-subtitle success">
+                  <CheckCircleIcon className="fiche-icon" />
+                  Bonnes Pratiques
                 </h3>
-                <ul className="practices-list">
-                  {bonnes.map((b, i) => (
-                    <li key={`good-${i}`}>
-                      <CheckCircleIcon className="practices-list-icon success" />
-                      <span>{b}</span>
+                <ul className="fiche-list">
+                  {bonnesPratiques.map((pratique, index) => (
+                    <li key={`pratique-${index}`}>
+                      <CheckCircleIcon className="fiche-list-icon" />
+                      <span>{pratique}</span>
                     </li>
                   ))}
                 </ul>
@@ -379,12 +247,22 @@ const TolerancesPage: React.FC = () => {
             </div>
           </section>
           {/* ================================================================== */}
-          {/* --- FIN DE LA FICHE ERREURS & BONNES PRATIQUES --- */}
+          {/* --- FIN DE LA FICHE --- */}
           {/* ================================================================== */}
+
+          <section className="quiz-container">
+            <h2 className="quiz-title">Quiz : Teste tes connaissances</h2>
+            <p className="quiz-question">Qu'appelle-t-on 'cote nominale' ?</p>
+            <div className="quiz-options">
+              <button>La dimension idéale sans tolérance</button>
+              <button>La tolérance maximale autorisée</button>
+              <button>L'écart entre deux dimensions</button>
+            </div>
+          </section>
         </main>
       </div>
     </>
   );
 };
 
-export default TolerancesPage;
+export default CotesEtTolerancesPage;
