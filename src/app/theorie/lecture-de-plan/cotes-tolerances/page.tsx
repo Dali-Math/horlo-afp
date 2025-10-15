@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import FicheErreursBonnesPratiques from "./components/FicheErreursBonnesPratiques";
+import FicheErreursBonnesPratiques from "../components/FicheErreursBonnesPratiques";
 
 const PlanInteractif = dynamic(() => import("@/components/PlanInteractif"), { ssr: false });
 
