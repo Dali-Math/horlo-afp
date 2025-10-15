@@ -35,26 +35,24 @@ export default function CotesEtTolerancesPage() {
           </p>
         </header>
 
-        {/* --- Schéma Interactif --- */}
+        {/* --- Schéma Interactif (optimisé avec next/image) --- */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Schéma Interactif</h2>
-
           <div className="flex justify-center mb-4">
             <Image
-              src="/images/theorie/schema-tolerances-horlogeres.png"
+              src="/schema-cotes-tolerances.png"
               alt="Schéma des tolérances horlogères"
-              width={700}
-              height={400}
-              className="rounded-lg shadow-md border border-gray-200 hover:scale-[1.02] transition-transform duration-300"
+              width={500}
+              height={300}
+              className="rounded-lg shadow"
             />
           </div>
-
           <p className="text-gray-500 text-sm">
             Cliquez sur l’image pour afficher l’explication pédagogique.
           </p>
         </section>
 
-        {/* --- Bonnes pratiques & erreurs --- */}
+        {/* --- Erreurs & Bonnes pratiques --- */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
           <h2 className="text-2xl font-semibold text-blue-800 mb-10 text-center">
             Mémo Technique : Erreurs & Bonnes Pratiques
@@ -88,6 +86,46 @@ export default function CotesEtTolerancesPage() {
             </div>
           </div>
         </section>
+
+        {/* --- Quiz --- */}
+        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
+          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Quiz : Teste tes connaissances</h2>
+          <p className="text-gray-700 font-medium mb-4">
+            Qu'appelle-t-on “<strong>cote nominale</strong>” ?
+          </p>
+          <div className="grid gap-4">
+            {[
+              "La dimension idéale sans tolérance",
+              "La tolérance maximale autorisée",
+              "L’écart entre deux dimensions",
+            ].map((option, i) => (
+              <button
+                key={i}
+                className="text-left py-3 px-4 border border-gray-200 rounded-lg hover:bg-blue-50 transition-all"
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* --- Vidéo pédagogique --- */}
+        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
+          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Vidéo : Tolérance & Ajustement</h2>
+          <div className="aspect-video overflow-hidden rounded-md border border-gray-200">
+            <iframe
+              className="w-full h-full"
+              src="https://www.youtube.com/embed/0ddnQpKz_gU"
+              title="Tolérances et ajustement"
+              allowFullScreen
+            />
+          </div>
+        </section>
+
+        {/* --- Footer --- */}
+        <footer className="text-center text-sm text-gray-500 mt-6">
+          © HorloLearn 2025 — Normes ISO 129-1 & ISO 1101.
+        </footer>
       </div>
     </main>
   );
