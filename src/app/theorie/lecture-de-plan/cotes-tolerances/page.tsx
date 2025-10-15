@@ -1,5 +1,4 @@
-"use client"; // ← Obligatoire pour utiliser useState dans une page Next.js 14+
-
+"use client";
 import { useState } from "react";
 import { CheckCircle, XCircle, X } from "lucide-react"; // icons lucide-react à installer
 
@@ -27,7 +26,6 @@ export default function CotesEtTolerancesPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-6 py-16 font-sans text-gray-800">
       <div className="max-w-5xl mx-auto space-y-16">
-
         {/* --- Header --- */}
         <header className="text-center space-y-4">
           <h1 className="text-4xl font-bold text-blue-900">
@@ -54,14 +52,14 @@ export default function CotesEtTolerancesPage() {
             </p>
           </div>
 
-          {/* Modal pédagogique */}
+          {/* Modal pédagogique uniquement avec explication */}
           {isModalOpen && (
             <div
               className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
               onClick={() => setIsModalOpen(false)}
             >
               <div
-                className="bg-white p-6 rounded-lg shadow-lg max-w-3xl w-full relative"
+                className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full relative"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
@@ -71,14 +69,25 @@ export default function CotesEtTolerancesPage() {
                   <X className="w-6 h-6" />
                 </button>
                 <h3 className="text-xl font-semibold text-blue-800 mb-4">Explication pédagogique</h3>
+                {/* Optionnel : illustration mini-image */}
                 <img
                   src="/images/schema-cotes-tolerances.png"
-                  alt="Zoom schéma pédagogique"
-                  className="w-full rounded"
+                  alt="Mini schéma pédagogique"
+                  className="w-28 mx-auto rounded mb-5"
+                  style={{ display: "block" }}
                 />
-                <p className="mt-4 text-gray-600 text-sm">
-                  Ce schéma illustre les cotes nominales, les tolérances dimensionnelles, ainsi que les jeux fonctionnels attendus en horlogerie. Il est crucial de comprendre comment la précision influe sur l’assemblage et la fiabilité des composants.
-                </p>
+                <div className="mt-2 text-gray-700 text-left leading-relaxed text-base">
+                  <b>Les cotes et tolérances</b> sont fondamentales pour garantir la qualité en horlogerie.<br /><br />
+                  <ul className="list-disc pl-6">
+                    <li>La <b>cote nominale</b> est la valeur idéale d’une dimension.</li>
+                    <li>La <b>tolérance</b> détermine l’intervalle admissible autour de cette cote (exemple typique : ±0.02 mm pour l’ajustement précis d’un axe).</li>
+                    <li>Un bon choix de tolérance permet de trouver le juste compromis : ni trop serré (difficulté d’assemblage / coût) ni trop lâche (jeu excessif, imprécision).</li>
+                    <li>Il faut aussi prendre en compte les <b>tolérances géométriques</b> pour garantir la forme et la position (parallélisme, planéité).</li>
+                  </ul>
+                  <br />
+                  La <b>norme ISO</b> assure une lecture universelle sur les plans, facilitant la communication entre conception, atelier et contrôle qualité.<br />
+                  <b>En horlogerie</b>, c’est la clé pour obtenir des montres précises et fiables, avec des composants interchangeables et bien ajustés.
+                </div>
               </div>
             </div>
           )}
