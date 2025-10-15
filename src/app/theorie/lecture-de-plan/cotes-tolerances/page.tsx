@@ -1,193 +1,311 @@
-"use client";
-import Link from "next/link";
-import dynamic from "next/dynamic";
-import { useState } from "react";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import React from 'react';
 
-const PlanInteractif = dynamic(() => import("@/components/PlanInteractif"), { ssr: false });
+// Pour utiliser des icônes sans installer de bibliothèque, nous créons un composant SVG simple.
+const ArrowLeftIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="19" y1="12" x2="5" y2="12"></line>
+    <polyline points="12 19 5 12 12 5"></polyline>
+  </svg>
+);
 
-// ✅ FICHE DIRECTEMENT DANS LA PAGE
-function FicheErreursBonnesPratiques() {
-  const erreurs = [
-    "Oublier d’indiquer la tolérance",
-    "Tolérance trop serrée (blocage/usinage coûteux)",
-    "Tolérance trop large (jeu excessif, perte de précision)",
-    "Mauvaise lecture de cote maxi/mini",
-    "Confondre diamètre et dimension linéaire",
-    "Négliger les tolérances géométriques (ISO 1101)",
-    "Mélanger unités (mm, µm)",
-  ];
 
-  const bonnes = [
-    "Préciser une tolérance adaptée à la fonction réelle",
-    "Utiliser la cotation ISO appropriée (symboles, orientations)",
-    "Relire sa cotation avec le plan d’ensemble ou coupe",
-    "Consulter les opérateurs d’usinage pour valider la faisabilité",
-    "Faire relire/valider son plan avant la fabrication",
-    "Conserver la cohérence d’échelle et d’unités",
-    "Se référer aux normes ISO 129-1 et ISO 1101 à chaque plan",
-  ];
-
+const TolerancesPage: React.FC = () => {
   return (
-    <div className="bg-gray-900 rounded-xl shadow-lg px-6 py-8 my-12 max-w-3xl mx-auto border border-[#E2B44F]">
-      <h2 className="text-2xl font-bold text-[#E2B44F] mb-5 text-center underline">
-        Fiche — Erreurs fréquentes & Bonnes pratiques
-      </h2>
-      <div className="flex flex-col md:flex-row gap-6 justify-between">
-        <div className="md:w-1/2">
-          <h3 className="font-semibold text-red-400 text-lg flex items-center gap-1 mb-3">
-            <XCircleIcon className="h-6 w-6 text-red-400" />
-            Erreurs fréquentes
-          </h3>
-          <ul className="space-y-2">
-            {erreurs.map((e, i) => (
-              <li key={i} className="flex items-center gap-2 text-sm text-red-200">
-                <XCircleIcon className="h-4 w-4 text-red-400" />
-                {e}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="md:w-1/2">
-          <h3 className="font-semibold text-green-400 text-lg flex items-center gap-1 mb-3">
-            <CheckCircleIcon className="h-6 w-6 text-green-400" />
-            Bonnes pratiques
-          </h3>
-          <ul className="space-y-2">
-            {bonnes.map((b, i) => (
-              <li key={i} className="flex items-center gap-2 text-sm text-green-200">
-                <CheckCircleIcon className="h-4 w-4 text-green-400" />
-                {b}
-              </li>
-            ))}
-          </ul>
-        </div>
+    <>
+      <style>{`
+        /* --- Import de Polices --- */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Slab:wght@700&display=swap');
+
+        /* --- Variables de Design --- */
+        :root {
+          --color-primary: #005a9c; /* Bleu technique */
+          --color-dark: #2c3e50; /* Gris foncé pour le texte */
+          --color-light-gray: #f8f9fa; /* Fond de la page */
+          --color-border: #e9ecef;
+          --color-white: #ffffff;
+          --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+          --shadow-md: 0 4px 8px rgba(0,0,0,0.07);
+          --border-radius: 8px;
+        }
+
+        /* --- Styles Globaux --- */
+        body {
+          background-color: var(--color-light-gray);
+          font-family: 'Inter', sans-serif;
+          color: var(--color-dark);
+          line-height: 1.7;
+          margin: 0;
+        }
+        
+        /* --- Conteneur Principal --- */
+        .tech-page-container {
+          max-width: 900px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+        }
+
+        /* --- En-tête --- */
+        .tech-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 2rem;
+          flex-wrap: wrap;
+          gap: 1rem;
+        }
+
+        .back-button {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 1rem;
+          background-color: var(--color-white);
+          border: 1px solid var(--color-border);
+          border-radius: var(--border-radius);
+          font-weight: 600;
+          color: var(--color-primary);
+          text-decoration: none;
+          transition: all 0.2s ease;
+        }
+
+        .back-button:hover {
+          background-color: var(--color-primary);
+          color: var(--color-white);
+          box-shadow: var(--shadow-sm);
+        }
+        
+        .page-title {
+          font-family: 'Roboto Slab', serif;
+          font-size: 2.5rem;
+          color: var(--color-dark);
+          margin: 0;
+          text-align: right;
+        }
+
+        /* --- Carte de Contenu --- */
+        .content-card {
+          background-color: var(--color-white);
+          border-radius: var(--border-radius);
+          padding: 2rem;
+          margin-bottom: 2rem;
+          box-shadow: var(--shadow-md);
+          border: 1px solid var(--color-border);
+        }
+
+        .content-card h2 {
+          font-family: 'Roboto Slab', serif;
+          font-size: 1.8rem;
+          color: var(--color-primary);
+          margin-top: 0;
+          margin-bottom: 1.5rem;
+          padding-bottom: 0.5rem;
+          border-bottom: 2px solid var(--color-primary);
+        }
+        
+        .content-card h3 {
+          font-family: 'Roboto Slab', serif;
+          font-size: 1.4rem;
+          color: var(--color-dark);
+          margin-top: 2rem;
+          margin-bottom: 1rem;
+        }
+
+        .content-card p, .content-card li {
+          font-size: 1rem;
+          color: #34495e;
+        }
+
+        .content-card ul {
+          padding-left: 20px;
+          list-style: none;
+        }
+
+        .content-card ul li {
+          position: relative;
+          padding-left: 1.5rem;
+          margin-bottom: 0.5rem;
+        }
+        
+        .content-card ul li::before {
+          content: '•';
+          position: absolute;
+          left: 0;
+          color: var(--color-primary);
+          font-weight: bold;
+          font-size: 1.2rem;
+        }
+        
+        .content-card strong {
+          color: var(--color-dark);
+        }
+
+        /* --- Image et Figure --- */
+        .image-wrapper {
+          margin: 2rem 0;
+          text-align: center;
+        }
+        
+        .image-wrapper img {
+          max-width: 100%;
+          height: auto;
+          border-radius: var(--border-radius);
+          border: 1px solid var(--color-border);
+          background-color: #fdfdfd;
+        }
+        
+        .image-wrapper figcaption {
+          margin-top: 0.75rem;
+          font-style: italic;
+          color: #7f8c8d;
+          font-size: 0.9rem;
+        }
+
+        /* --- Tableau Stylisé --- */
+        .styled-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 2rem 0;
+          font-size: 0.95rem;
+        }
+
+        .styled-table th, .styled-table td {
+          padding: 0.8rem 1rem;
+          border: 1px solid var(--color-border);
+          text-align: left;
+        }
+
+        .styled-table thead {
+          background-color: var(--color-dark);
+          color: var(--color-white);
+        }
+        
+        .styled-table thead th {
+            font-weight: 600;
+        }
+
+        .styled-table tbody tr:nth-child(even) {
+          background-color: var(--color-light-gray);
+        }
+
+        .styled-table tbody tr:hover {
+          background-color: #e0eaf2; /* Bleu très clair au survol */
+        }
+        
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+          .tech-header {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+          .page-title {
+            font-size: 2rem;
+            text-align: left;
+          }
+          .content-card {
+            padding: 1.5rem;
+          }
+        }
+      `}</style>
+
+      <div className="tech-page-container">
+        <header className="tech-header">
+          <a href="/theorie/lecture-de-plan" className="back-button">
+            <ArrowLeftIcon />
+            Retour à la théorie
+          </a>
+          <h1 className="page-title">Cotes et Tolérances</h1>
+        </header>
+
+        <main>
+          <section className="content-card">
+            <h2>Définitions</h2>
+            <ul>
+              <li><strong>Cote :</strong> Valeur numérique exprimée dans une unité de mesure et indiquée sur un dessin technique.</li>
+              <li><strong>Cotation :</strong> Ensemble des spécifications (lignes, symboles, notes) qui définissent les dimensions et la géométrie d'une pièce.</li>
+              <li><strong>Tolérance :</strong> Écart admissible entre la dimension spécifiée (nominale) et la dimension réelle de la pièce finie. Elle garantit l'interchangeabilité et la fonctionnalité.</li>
+            </ul>
+          </section>
+
+          <section className="content-card">
+            <h2>Éléments de cotation</h2>
+            <p>Une cotation complète inclut plusieurs éléments graphiques essentiels :</p>
+            <ul>
+              <li><strong>Ligne de cote :</strong> Ligne fine et continue, parallèle à la dimension cotée, se terminant par des flèches.</li>
+              <li><strong>Ligne d'attache (ou de rappel) :</strong> Ligne fine prolongeant les arêtes de l'objet pour délimiter la ligne de cote.</li>
+              <li><strong>Valeur de la cote :</strong> Le nombre indiquant la dimension.</li>
+              <li><strong>Flèches :</strong> Indiquent les extrémités de la ligne de cote.</li>
+            </ul>
+            <figure className="image-wrapper">
+              <img src="https://horlo-afp-git-test-lecture-de-plan-dali-maths-projects.vercel.app/images/cotes-tolerances/cotes.png" alt="Schéma des éléments de cotation" />
+              <figcaption>Illustration des différents composants d'une cote.</figcaption>
+            </figure>
+          </section>
+
+          <section className="content-card">
+            <h2>Tolérances dimensionnelles</h2>
+            <p>Elles définissent les limites de variation acceptables pour une dimension spécifique (longueur, diamètre, etc.).</p>
+            <h3>Terminologie</h3>
+            <ul>
+              <li><strong>Cote nominale :</strong> La dimension théorique parfaite (ex: 10 mm).</li>
+              <li><strong>Écart supérieur (ES) :</strong> Limite maximale de variation (ex: +0.02).</li>
+              <li><strong>Écart inférieur (EI) :</strong> Limite minimale de variation (ex: -0.01).</li>
+              <li><strong>Cote maximale :</strong> Cote nominale + ES (ex: 10.02 mm).</li>
+              <li><strong>Cote minimale :</strong> Cote nominale + EI (ex: 9.99 mm).</li>
+              <li><strong>Intervalle de Tolérance (IT) :</strong> Différence entre la cote maximale et minimale (ex: 0.03 mm).</li>
+            </ul>
+            <figure className="image-wrapper">
+              <img src="https://horlo-afp-git-test-lecture-de-plan-dali-maths-projects.vercel.app/images/cotes-tolerances/tolerances_dimensionnelles.png" alt="Visualisation des tolérances dimensionnelles" />
+              <figcaption>Représentation graphique de l'intervalle de tolérance.</figcaption>
+            </figure>
+          </section>
+
+          <section className="content-card">
+            <h2>Tolérances géométriques</h2>
+            <p>
+              Elles contrôlent les erreurs de forme, de profil, d'orientation, de position et de battement d'un élément, indépendamment de ses dimensions. Elles sont cruciales pour assurer le bon fonctionnement des assemblages.
+            </p>
+            <figure className="image-wrapper">
+              <img src="https://horlo-afp-git-test-lecture-de-plan-dali-maths-projects.vercel.app/images/cotes-tolerances/tolerances_geometriques.png" alt="Tableau des symboles de tolérances géométriques" />
+              <figcaption>Symboles normalisés pour les tolérances géométriques.</figcaption>
+            </figure>
+            
+            <h3>Exemples courants</h3>
+            <table className="styled-table">
+              <thead>
+                <tr>
+                  <th>Type de Tolérance</th>
+                  <th>Symbole</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Forme</strong></td>
+                  <td>Rectitude, Planéité, Circularité</td>
+                  <td>Contrôle la géométrie d'un seul élément, sans référence à un autre.</td>
+                </tr>
+                <tr>
+                  <td><strong>Orientation</strong></td>
+                  <td>Parallélisme, Perpendicularité, Inclinaison</td>
+                  <td>Définit l'angle d'un élément par rapport à une référence.</td>
+                </tr>
+                <tr>
+                  <td><strong>Position</strong></td>
+                  <td>Localisation, Concentricité, Symétrie</td>
+                  <td>Spécifie l'emplacement exact d'un élément par rapport à un autre ou à un système de référence.</td>
+                </tr>
+                <tr>
+                  <td><strong>Battement</strong></td>
+                  <td>Battement simple, Battement total</td>
+                  <td>Contrôle la variation d'une surface lors de la rotation de la pièce autour d'un axe de référence.</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </main>
       </div>
-    </div>
+    </>
   );
-}
+};
 
-// ✅ QUIZ INTÉGRÉ
-function QuizTolerance() {
-  const questions = [
-    { q: "Qu'appelle-t-on 'cote nominale' ?", options: ["La dimension idéale sans tolérance", "La tolérance maximale autorisée", "L'écart entre deux dimensions"], answer: 0 },
-    { q: "Une tolérance trop faible peut provoquer :", options: ["Un assemblage qui coince", "Du jeu excessif", "Les deux"], answer: 2 },
-    { q: "Quelle unité est la plus utilisée en horlogerie pour les dimensions ?", options: ["Le centimètre", "Le millimètre", "Le micron"], answer: 1 },
-    { q: "Une tolérance bilatérale se définit par :", options: ["Un écart supérieur et inférieur", "Uniquement un écart inférieur", "Uniquement un écart supérieur"], answer: 0 },
-    { q: "Si une cote de 100 mm a une tolérance de +2 / -1, la cote minimale est :", options: ["98 mm", "99 mm", "102 mm"], answer: 1 },
-    { q: "Pour que deux pièces s'assemblent sans jeu excessif, il faut une tolérance :", options: ["Très large", "Adaptée à la fonction", "Nulle"], answer: 1 },
-    { q: "Les tolérances sont-elles toujours indiquées par une plage de valeurs ?", options: ["Oui", "Non, parfois seulement une limite", "Jamais"], answer: 1 },
-    { q: "ISO 129-1 concerne :", options: ["Les tolérances géométriques", "La cotation dimensionnelle", "La dureté des matériaux"], answer: 1 },
-    { q: "Une tolérance trop large peut induire :", options: ["Du jeu excessif", "Un assemblage parfait", "Un défaut d'usinage"], answer: 0 },
-    { q: "ISO 1101 concerne :", options: ["L'usinage des boîtiers", "Les tolérances géométriques", "Le polissage"], answer: 1 },
-    { q: "En horlogerie, un ajustement trop serré cause principalement :", options: ["Du jeu fonctionnel", "Un blocage ou usure prématurée", "Une précision accrue"], answer: 1 },
-    { q: "Comment calcule-t-on l'intervalle de tolérance ?", options: ["Cote maxi - cote mini", "Cote nominale / 2", "Cote nominale x tolérance"], answer: 0 },
-    { q: "Une cote sans tolérance est appelée :", options: ["Cote brute", "Cote fictive", "Cote nominale"], answer: 2 },
-    { q: "Le symbole Ø devant une cote indique :", options: ["Une dimension linéaire", "Un diamètre", "Une épaisseur"], answer: 1 },
-    { q: "Pourquoi utilise-t-on des tolérances en horlogerie ?", options: ["Pour simplifier les plans", "Pour garantir la fonctionnalité et l'assemblage", "Pour décorer les montres"], answer: 1 },
-  ];
-
-  const [idx, setIdx] = useState(0);
-  const [selected, setSelected] = useState<number | null>(null);
-  const [score, setScore] = useState(0);
-
-  const handleSelect = (i: number) => {
-    setSelected(i);
-    if (i === questions[idx].answer) setScore((s) => s + 1);
-    setTimeout(() => {
-      setSelected(null);
-      setIdx((prev) => prev + 1);
-    }, 800);
-  };
-
-  return (
-    <div className="bg-gray-800 p-4 sm:p-6 rounded-lg">
-      {idx < questions.length ? (
-        <>
-          <div className="font-bold mb-3">{questions[idx].q}</div>
-          {questions[idx].options.map((opt, i) => (
-            <button
-              key={i}
-              className={`block w-full mb-2 p-3 rounded border text-center my-1 transition-colors
-                ${selected !== null
-                  ? i === questions[idx].answer
-                    ? "border-green-500 bg-green-100 text-black"
-                    : "border-red-500 bg-red-100 text-black"
-                  : "border-gray-600 hover:bg-gray-700"}`}
-              disabled={selected !== null}
-              onClick={() => handleSelect(i)}
-            >
-              {opt}
-            </button>
-          ))}
-        </>
-      ) : (
-        <div>
-          <div className="font-bold text-lg mb-3">Score : {score} / {questions.length}</div>
-          <div>Bravo ! Tu as terminé le quiz.</div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ✅ PAGE PRINCIPALE
-export default function CotesTolerances() {
-  return (
-    <section className="min-h-screen bg-[#0b1220] text-white py-16 px-4 sm:px-6">
-      <div className="max-w-5xl mx-auto">
-        <div className="mb-8">
-          <Link href="/theorie/lecture-de-plan" className="text-[#E2B44F] hover:text-white transition-colors flex items-center gap-2">
-            ← Retour
-          </Link>
-        </div>
-
-        <h1 className="text-3xl font-bold text-[#E2B44F] underline mb-6 text-center">
-          Cotes et Tolérances (ISO 129-1 & ISO 1101)
-        </h1>
-
-        <p className="text-gray-300 mb-6 leading-relaxed">
-          Ces normes précisent les règles de cotation et les tolérances <b>indispensables</b> à la qualité en horlogerie.
-          Maîtrise-les pour comprendre l'assemblage, l'usinage et le contrôle dimensionnel des montres.
-        </p>
-
-        <div className="mb-10">
-          <h2 className="text-xl font-semibold text-[#E2B44F] mb-2">Schéma interactif</h2>
-          <PlanInteractif />
-        </div>
-
-        <div className="mb-10">
-          <h2 className="text-xl font-semibold text-[#E2B44F] mb-2">Quiz : Teste tes connaissances</h2>
-          <QuizTolerance />
-        </div>
-
-        <div className="mb-10">
-          <h2 className="text-xl font-semibold text-[#E2B44F] mb-2">Vidéo : Tolérance & Ajustement</h2>
-          <div className="w-full aspect-video max-w-2xl mx-auto">
-            <iframe
-              src="https://www.youtube.com/embed/_9zJ3vClwZw"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full rounded"
-              title="Vidéo: Tolérances et Ajustements"
-            ></iframe>
-          </div>
-        </div>
-
-        {/* ✅ Fiche intégrée */}
-        <FicheErreursBonnesPratiques />
-
-        <ul className="list-disc pl-6 text-gray-400 space-y-2 mb-8">
-          <li><strong>ISO 129-1</strong> : indication des dimensions sur plans techniques.</li>
-          <li><strong>ISO 1101</strong> : tolérances géométriques des pièces.</li>
-          <li>Respect des limites d'usinage et d'ajustement pour la fiabilité.</li>
-        </ul>
-
-        <p className="text-sm text-gray-500 mt-10 border-t border-gray-700 pt-6 text-center">
-          © HorloLearn 2025 — Résumé pédagogique basé sur les normes ISO 129-1:2018 & ISO 1101:2017.
-        </p>
-      </div>
-    </section>
-  );
-}
+export default TolerancesPage;
