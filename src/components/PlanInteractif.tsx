@@ -8,7 +8,7 @@ export default function PlanInteractif() {
     <div className="relative w-full max-w-2xl mx-auto p-6 bg-[#0b1220] rounded-xl border border-[#E2B44F40] text-center shadow-lg">
       {/* Image du schéma */}
       <img
-        src="/images/image.jpg"
+        src="/images/schema-cotes-tolerances.png"
         alt="Schéma de cotation et tolérance horlogère"
         className="mx-auto w-full max-w-xl h-auto rounded-lg shadow-md border border-[#E2B44F] cursor-pointer transition-transform duration-300 hover:scale-[1.02]"
         onClick={() => setSelected(true)}
