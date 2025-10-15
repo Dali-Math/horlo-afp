@@ -1,10 +1,8 @@
 "use client";
 import { useState } from "react";
-import { CheckCircle, XCircle, Play, ChevronLeft, ChevronRight } from "lucide-react";
+import { CheckCircle, XCircle, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function CotesEtTolerancesPage() {
-  const [progress, setProgress] = useState(40); // % progression fictive
-
   const erreurs = [
     "Oublier d’indiquer une tolérance sur une cote fonctionnelle.",
     "Définir une tolérance trop serrée (augmente le coût et les rejets).",
@@ -23,18 +21,20 @@ export default function CotesEtTolerancesPage() {
     "Rester cohérent dans les unités et la précision sur tout le plan.",
   ];
 
+  const [progress, setProgress] = useState(40); // pourcentage fictif
+
   return (
     <div className="flex min-h-screen bg-neutral-100 text-neutral-800 font-[Inter]">
-      {/* === SIDEBAR === */}
-      <aside className="w-64 bg-white border-r border-neutral-200 flex flex-col">
-        <div className="px-6 py-6 border-b border-neutral-200">
+      {/* Sidebar */}
+      <aside className="w-64 bg-white border-r border-neutral-200 flex flex-col fixed left-0 top-0 bottom-0">
+        <div className="px-6 py-5 border-b border-neutral-200">
           <h2 className="font-semibold text-lg text-yellow-700">HorloLearn AFP</h2>
           <p className="text-sm text-neutral-500">Module : Lecture de plan</p>
         </div>
         <nav className="flex-1 px-4 py-4 space-y-2 text-sm">
           {[
-            "Introduction aux normes",
-            "Symboles de cotation",
+            "Introduction",
+            "Symboles ISO",
             "Cotes et tolérances",
             "Ajustements ISO",
             "Tolérances géométriques",
@@ -58,17 +58,15 @@ export default function CotesEtTolerancesPage() {
         </div>
       </aside>
 
-      {/* === MAIN CONTENT === */}
-      <main className="flex-1 flex flex-col">
-        {/* Barre supérieure */}
-        <header className="bg-white border-b border-neutral-200 p-4 flex items-center justify-between">
+      {/* Main */}
+      <main className="ml-64 flex-1 flex flex-col">
+        {/* Top Bar */}
+        <header className="bg-white border-b border-neutral-200 p-4 flex items-center justify-between sticky top-0 z-10">
           <div>
             <h1 className="text-xl font-semibold text-yellow-700">
               Cotes et Tolérances (ISO 129-1 & ISO 1101)
             </h1>
-            <p className="text-sm text-neutral-500">
-              Chapitre 3 sur 7 — Lecture de plan horlogère
-            </p>
+            <p className="text-sm text-neutral-500">Chapitre 3 sur 7 — Lecture de plan horlogère</p>
           </div>
           <div className="w-56 h-2 bg-neutral-200 rounded-full overflow-hidden">
             <div
@@ -78,13 +76,11 @@ export default function CotesEtTolerancesPage() {
           </div>
         </header>
 
-        {/* Contenu principal */}
+        {/* Content */}
         <section className="flex-1 overflow-y-auto p-10 space-y-10">
           {/* Schéma */}
           <div className="bg-white rounded-xl border border-neutral-200 p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-yellow-700 mb-3">
-              Schéma interactif
-            </h2>
+            <h2 className="text-lg font-semibold text-yellow-700 mb-3">Schéma interactif</h2>
             <div className="flex justify-center">
               <img
                 src="/images/cotes-tolerances/tuto.png"
@@ -103,7 +99,6 @@ export default function CotesEtTolerancesPage() {
               Mémo technique : erreurs & bonnes pratiques
             </h2>
             <div className="grid md:grid-cols-2 gap-10">
-              {/* Erreurs */}
               <div>
                 <h3 className="flex items-center gap-2 text-red-500 text-base font-medium mb-4">
                   <XCircle size={20} /> Erreurs fréquentes
@@ -118,7 +113,6 @@ export default function CotesEtTolerancesPage() {
                 </ul>
               </div>
 
-              {/* Bonnes pratiques */}
               <div>
                 <h3 className="flex items-center gap-2 text-green-600 text-base font-medium mb-4">
                   <CheckCircle size={20} /> Bonnes pratiques
@@ -140,21 +134,19 @@ export default function CotesEtTolerancesPage() {
             <h2 className="text-lg font-semibold text-yellow-700 mb-4">
               Quiz : teste tes connaissances
             </h2>
-            <div className="space-y-3">
-              <p className="font-medium text-neutral-700">
-                Qu'appelle-t-on “cote nominale” ?
-              </p>
-              <div className="grid gap-2">
-                <button className="text-left py-2 px-3 rounded-md border border-neutral-200 hover:bg-yellow-50 transition">
-                  La dimension idéale sans tolérance
-                </button>
-                <button className="text-left py-2 px-3 rounded-md border border-neutral-200 hover:bg-yellow-50 transition">
-                  La tolérance maximale autorisée
-                </button>
-                <button className="text-left py-2 px-3 rounded-md border border-neutral-200 hover:bg-yellow-50 transition">
-                  L’écart entre deux dimensions
-                </button>
-              </div>
+            <p className="font-medium text-neutral-700 mb-3">
+              Qu'appelle-t-on “cote nominale” ?
+            </p>
+            <div className="space-y-2">
+              <button className="w-full text-left py-2 px-3 rounded-md border border-neutral-200 hover:bg-yellow-50 transition">
+                La dimension idéale sans tolérance
+              </button>
+              <button className="w-full text-left py-2 px-3 rounded-md border border-neutral-200 hover:bg-yellow-50 transition">
+                La tolérance maximale autorisée
+              </button>
+              <button className="w-full text-left py-2 px-3 rounded-md border border-neutral-200 hover:bg-yellow-50 transition">
+                L’écart entre deux dimensions
+              </button>
             </div>
           </div>
 
@@ -174,7 +166,7 @@ export default function CotesEtTolerancesPage() {
           </div>
         </section>
 
-        {/* Navigation bas de page */}
+        {/* Navigation */}
         <footer className="bg-white border-t border-neutral-200 p-4 flex items-center justify-between">
           <button className="flex items-center gap-2 text-neutral-600 hover:text-yellow-600 transition">
             <ChevronLeft size={18} /> Chapitre précédent
