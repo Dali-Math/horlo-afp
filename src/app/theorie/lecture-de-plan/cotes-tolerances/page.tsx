@@ -116,6 +116,16 @@ export default function CotesTolerances() {
             ></iframe>
           </div>
         </div>
+       export default function CotesTolerances() {
+  return (
+    <section>
+      {/* ... */}
+      <div>video ici...</div>
+      <FicheErreursBonnesPratiques />
+      {/* ... */}
+    </section>
+  );
+}
 
         {/* Fiche pédagogique erreurs/bonnes pratiques */}
         <FicheErreursBonnesPratiques />
