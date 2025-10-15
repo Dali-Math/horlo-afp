@@ -6,7 +6,7 @@ import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 
 const PlanInteractif = dynamic(() => import("@/components/PlanInteractif"), { ssr: false });
 
-// ✅ FICHE INTÉGRÉE DIRECTEMENT
+// ✅ FICHE DIRECTEMENT DANS LA PAGE
 function FicheErreursBonnesPratiques() {
   const erreurs = [
     "Oublier d’indiquer la tolérance",
@@ -67,7 +67,7 @@ function FicheErreursBonnesPratiques() {
   );
 }
 
-// ✅ QUIZ COMPLET
+// ✅ QUIZ INTÉGRÉ
 function QuizTolerance() {
   const questions = [
     { q: "Qu'appelle-t-on 'cote nominale' ?", options: ["La dimension idéale sans tolérance", "La tolérance maximale autorisée", "L'écart entre deux dimensions"], answer: 0 },
@@ -175,7 +175,7 @@ export default function CotesTolerances() {
           </div>
         </div>
 
-        {/* ✅ Fiche intégrée ici */}
+        {/* ✅ Fiche intégrée */}
         <FicheErreursBonnesPratiques />
 
         <ul className="list-disc pl-6 text-gray-400 space-y-2 mb-8">
