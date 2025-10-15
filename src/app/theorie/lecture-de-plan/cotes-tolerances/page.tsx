@@ -6,6 +6,7 @@ import { useState } from "react";
 // Lazy load du composant interactif
 const PlanInteractif = dynamic(() => import("@/components/PlanInteractif"), { ssr: false });
 
+// QUESTIONS POUR LE QUIZ — 15 QUESTIONS
 function QuizTolerance() {
   const questions = [
     {
@@ -21,6 +22,71 @@ function QuizTolerance() {
       q: "Une tolérance trop faible peut provoquer :",
       options: ["Un assemblage qui coince", "Du jeu excessif", "Les deux"],
       answer: 2,
+    },
+    {
+      q: "Quelle unité est la plus utilisée en horlogerie pour les dimensions ?",
+      options: ["Le centimètre", "Le millimètre", "Le micron"],
+      answer: 1,
+    },
+    {
+      q: "Une tolérance bilatérale se définit par :",
+      options: ["Un écart supérieur et inférieur", "Uniquement un écart inférieur", "Uniquement un écart supérieur"],
+      answer: 0,
+    },
+    {
+      q: "Si une cote de 100 mm a une tolérance de +2 / -1, la cote minimale est :",
+      options: ["98 mm", "99 mm", "102 mm"],
+      answer: 1,
+    },
+    {
+      q: "Pour que deux pièces s’assemblent sans jeu excessif, il faut une tolérance :",
+      options: ["Très large", "Adaptée à la fonction", "Nulle"],
+      answer: 1,
+    },
+    {
+      q: "Les tolérances sont-elles toujours indiquées par une plage de valeurs ?",
+      options: ["Oui", "Non, parfois seulement une limite", "Jamais"],
+      answer: 1,
+    },
+    {
+      q: "ISO 129-1 concerne :",
+      options: ["Les tolérances géométriques", "La cotation dimensionnelle", "La dureté des matériaux"],
+      answer: 1,
+    },
+    {
+      q: "Une tolérance trop large peut induire :",
+      options: ["Du jeu excessif", "Un assemblage parfait", "Un défaut d’usinage"],
+      answer: 0,
+    },
+    {
+      q: "ISO 1101 concerne :",
+      options: ["L’usinage des boîtiers", "Les tolérances géométriques", "Le polissage"],
+      answer: 1,
+    },
+    {
+      q: "En horlogerie, un ajustement trop serré cause principalement :",
+      options: ["Du jeu fonctionnel", "Un blocage ou usure prématurée", "Une précision accrue"],
+      answer: 1,
+    },
+    {
+      q: "Comment calcule-t-on l’intervalle de tolérance ?",
+      options: ["Cote maxi - cote mini", "Cote nominale / 2", "Cote nominale x tolérance"],
+      answer: 0,
+    },
+    {
+      q: "Une cote sans tolérance est appelée :",
+      options: ["Cote brute", "Cote fictive", "Cote nominale"],
+      answer: 2,
+    },
+    {
+      q: "Le symbole Ø devant une cote indique :",
+      options: ["Une dimension linéaire", "Un diamètre", "Une épaisseur"],
+      answer: 1,
+    },
+    {
+      q: "Pourquoi utilise-t-on des tolérances en horlogerie ?",
+      options: ["Pour simplifier les plans", "Pour garantir la fonctionnalité et l’assemblage", "Pour décorer les montres"],
+      answer: 1,
     },
   ];
   const [idx, setIdx] = useState(0);
@@ -119,7 +185,7 @@ export default function CotesTolerances() {
           </h2>
           <div className="w-full aspect-video max-w-2xl mx-auto">
             <iframe
-              src="https://www.youtube.com/watch?v=_9zJ3vClwZw"
+              src="https://www.youtube.com/embed/_9zJ3vClwZw"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -127,17 +193,6 @@ export default function CotesTolerances() {
               title="Vidéo: Tolérances et Ajustements"
             ></iframe>
           </div>
-        </div>
-
-        {/* Fiche PDF */}
-        <div className="mb-8 text-center">
-          <a
-            href="/fiches/tolerances.pdf"
-            download
-            className="inline-block px-4 py-2 bg-[#E2B44F] text-black rounded hover:underline transition-colors"
-          >
-            Télécharger la fiche de synthèse (PDF)
-          </a>
         </div>
 
         {/* Liste pédagogique */}
