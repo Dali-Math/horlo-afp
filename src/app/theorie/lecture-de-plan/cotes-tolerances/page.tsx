@@ -23,6 +23,7 @@ export default function CotesEtTolerancesPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-6 py-16 font-sans text-gray-800">
       <div className="max-w-5xl mx-auto space-y-16">
+
         {/* --- Header --- */}
         <header className="text-center space-y-4">
           <h1 className="text-4xl font-bold text-blue-900">
@@ -37,6 +38,7 @@ export default function CotesEtTolerancesPage() {
         {/* --- Schéma Interactif --- */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Schéma Interactif</h2>
+
           <div className="flex justify-center mb-4">
             <img
               src="/images/cotes-tolerances/tuto.png"
@@ -44,7 +46,19 @@ export default function CotesEtTolerancesPage() {
               className="rounded-lg shadow max-w-md w-full"
             />
           </div>
-          <p className="text-gray-500 text-sm">Cliquez sur l’image pour afficher l’explication pédagogique.</p>
+
+          <p className="text-gray-500 text-sm mb-6">
+            Cliquez sur l’image pour afficher l’explication pédagogique.
+          </p>
+
+          {/* ✅ Nouvelle image ajoutée ici */}
+          <div className="flex justify-center">
+            <img
+              src="/schema-cotes-tolerances.png"
+              alt="Schéma cotes et tolérances horlogères"
+              className="rounded-lg shadow max-w-3xl w-full"
+            />
+          </div>
         </section>
 
         {/* --- Bonnes pratiques & erreurs --- */}
