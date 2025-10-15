@@ -1,6 +1,6 @@
 import React from 'react';
 
-// Pour utiliser des icônes sans installer de bibliothèque, nous créons un composant SVG simple.
+// --- Icônes SVG ---
 const ArrowLeftIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -8,7 +8,80 @@ const ArrowLeftIcon = () => (
   </svg>
 );
 
+const XCircleIcon = ({ className = '' }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.72 6.97a.75.75 0 10-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 101.06 1.06L12 13.06l1.72 1.72a.75.75 0 101.06-1.06L13.06 12l1.72-1.72a.75.75 0 10-1.06-1.06L12 10.94l-1.72-1.72z" clipRule="evenodd" />
+  </svg>
+);
 
+const CheckCircleIcon = ({ className = '' }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
+  </svg>
+);
+
+
+// --- Composant pour la fiche de bonnes pratiques ---
+function FicheErreursBonnesPratiques() {
+  const erreurs = [
+    "Oublier d’indiquer la tolérance",
+    "Tolérance trop serrée (blocage/usinage coûteux)",
+    "Tolérance trop large (jeu excessif, perte de précision)",
+    "Mauvaise lecture de cote maxi/mini",
+    "Confondre diamètre et dimension linéaire",
+    "Négliger les tolérances géométriques (ISO 1101)",
+    "Mélanger unités (mm, µm)",
+  ];
+
+  const bonnes = [
+    "Préciser une tolérance adaptée à la fonction réelle",
+    "Utiliser la cotation ISO appropriée (symboles, orientations)",
+    "Relire sa cotation avec le plan d’ensemble ou coupe",
+    "Consulter les opérateurs d’usinage pour valider la faisabilité",
+    "Faire relire/valider son plan avant la fabrication",
+    "Conserver la cohérence d’échelle et d’unités",
+    "Se référer aux normes ISO 129-1 et ISO 1101 à chaque plan",
+  ];
+
+  return (
+    <section className="content-card">
+        <h2>Erreurs Fréquentes & Bonnes Pratiques</h2>
+        <div className="practices-grid">
+            <div className="practices-column">
+                <h3 className="practices-title error">
+                    <XCircleIcon className="practices-icon" />
+                    À éviter
+                </h3>
+                <ul className="practices-list">
+                    {erreurs.map((e, i) => (
+                    <li key={i}>
+                        <XCircleIcon className="practices-list-icon error" />
+                        <span>{e}</span>
+                    </li>
+                    ))}
+                </ul>
+            </div>
+            <div className="practices-column">
+                <h3 className="practices-title success">
+                    <CheckCircleIcon className="practices-icon" />
+                    À suivre
+                </h3>
+                <ul className="practices-list">
+                    {bonnes.map((b, i) => (
+                    <li key={i}>
+                        <CheckCircleIcon className="practices-list-icon success" />
+                        <span>{b}</span>
+                    </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    </section>
+  );
+}
+
+
+// --- Composant principal de la page ---
 const TolerancesPage: React.FC = () => {
   return (
     <>
@@ -23,6 +96,8 @@ const TolerancesPage: React.FC = () => {
           --color-light-gray: #f8f9fa; /* Fond de la page */
           --color-border: #e9ecef;
           --color-white: #ffffff;
+          --color-error: #c0392b; /* Rouge sobre */
+          --color-success: #27ae60; /* Vert sobre */
           --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
           --shadow-md: 0 4px 8px rgba(0,0,0,0.07);
           --border-radius: 8px;
@@ -115,18 +190,18 @@ const TolerancesPage: React.FC = () => {
           color: #34495e;
         }
 
-        .content-card ul {
+        .content-card ul:not(.practices-list) {
           padding-left: 20px;
           list-style: none;
         }
 
-        .content-card ul li {
+        .content-card ul:not(.practices-list) li {
           position: relative;
           padding-left: 1.5rem;
           margin-bottom: 0.5rem;
         }
         
-        .content-card ul li::before {
+        .content-card ul:not(.practices-list) li::before {
           content: '•';
           position: absolute;
           left: 0;
@@ -188,9 +263,61 @@ const TolerancesPage: React.FC = () => {
         }
 
         .styled-table tbody tr:hover {
-          background-color: #e0eaf2; /* Bleu très clair au survol */
+          background-color: #e0eaf2;
         }
         
+        /* --- NOUVEAUX STYLES: Fiche Erreurs & Bonnes Pratiques --- */
+        .practices-grid {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .practices-column {
+            flex: 1;
+            min-width: 300px;
+        }
+        .practices-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Roboto Slab', serif;
+            font-size: 1.4rem;
+            margin: 0 0 1rem 0;
+        }
+        .practices-title.error { color: var(--color-error); }
+        .practices-title.success { color: var(--color-success); }
+        
+        .practices-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+        
+        .practices-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .practices-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .practices-list-icon {
+            flex-shrink: 0;
+            width: 1.2rem;
+            height: 1.2rem;
+            margin-top: 0.15rem;
+        }
+        .practices-list-icon.error { color: var(--color-error); }
+        .practices-list-icon.success { color: var(--color-success); }
+
+
         /* --- Responsive --- */
         @media (max-width: 768px) {
           .tech-header {
@@ -302,6 +429,10 @@ const TolerancesPage: React.FC = () => {
               </tbody>
             </table>
           </section>
+
+          {/* --- FICHE INTÉGRÉE ICI --- */}
+          <FicheErreursBonnesPratiques />
+
         </main>
       </div>
     </>
