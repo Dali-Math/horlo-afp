@@ -2,6 +2,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useState } from "react";
+import FicheErreursBonnesPratiques from "../components/FicheErreursBonnesPratiques";
 
 // Lazy load du composant interactif
 const PlanInteractif = dynamic(() => import("@/components/PlanInteractif"), { ssr: false });
@@ -30,7 +31,11 @@ function QuizTolerance() {
     },
     {
       q: "Une tolérance bilatérale se définit par :",
-      options: ["Un écart supérieur et inférieur", "Uniquement un écart inférieur", "Uniquement un écart supérieur"],
+      options: [
+        "Un écart supérieur et inférieur",
+        "Uniquement un écart inférieur",
+        "Uniquement un écart supérieur",
+      ],
       answer: 0,
     },
     {
@@ -50,7 +55,11 @@ function QuizTolerance() {
     },
     {
       q: "ISO 129-1 concerne :",
-      options: ["Les tolérances géométriques", "La cotation dimensionnelle", "La dureté des matériaux"],
+      options: [
+        "Les tolérances géométriques",
+        "La cotation dimensionnelle",
+        "La dureté des matériaux",
+      ],
       answer: 1,
     },
     {
@@ -85,7 +94,11 @@ function QuizTolerance() {
     },
     {
       q: "Pourquoi utilise-t-on des tolérances en horlogerie ?",
-      options: ["Pour simplifier les plans", "Pour garantir la fonctionnalité et l’assemblage", "Pour décorer les montres"],
+      options: [
+        "Pour simplifier les plans",
+        "Pour garantir la fonctionnalité et l’assemblage",
+        "Pour décorer les montres",
+      ],
       answer: 1,
     },
   ];
@@ -195,6 +208,9 @@ export default function CotesTolerances() {
           </div>
         </div>
 
+        {/* Fiche pédagogique erreurs/bonnes pratiques */}
+        <FicheErreursBonnesPratiques />
+
         {/* Liste pédagogique */}
         <ul className="list-disc pl-6 text-gray-400 space-y-2 mb-8">
           <li>
@@ -203,9 +219,7 @@ export default function CotesTolerances() {
           <li>
             <strong>ISO 1101</strong> : tolérances géométriques des pièces.
           </li>
-          <li>
-            Respect des limites d’usinage et d’ajustement pour la fiabilité.
-          </li>
+          <li>Respect des limites d’usinage et d’ajustement pour la fiabilité.</li>
         </ul>
 
         <p className="text-sm text-gray-500 mt-10 border-t border-gray-700 pt-6 text-center">
