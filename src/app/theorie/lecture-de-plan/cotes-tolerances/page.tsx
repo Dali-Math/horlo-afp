@@ -36,30 +36,30 @@ export default function CotesEtTolerancesPage() {
         </header>
 
         {/* --- Schéma Interactif --- */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Schéma Interactif</h2>
+<section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
+  <h2 className="text-2xl font-semibold text-blue-800 mb-6">Schéma Interactif</h2>
 
-          <div className="flex justify-center mb-4">
-            <img
-              src="/images/cotes-tolerances/tuto.png"
-              alt="Schéma des tolérances horlogères"
-              className="rounded-lg shadow max-w-md w-full"
-            />
-          </div>
+  <div className="flex justify-center mb-4">
+    <img
+      src="/images/cotes-tolerances/tuto.png"
+      alt="Schéma des tolérances horlogères"
+      className="rounded-lg shadow max-w-md w-full"
+    />
+  </div>
 
-          <p className="text-gray-500 text-sm mb-6">
-            Cliquez sur l’image pour afficher l’explication pédagogique.
-          </p>
+  <p className="text-gray-500 text-sm mb-6">
+    Cliquez sur l’image pour afficher l’explication pédagogique.
+  </p>
 
-          {/* ✅ Nouvelle image ajoutée ici */}
-          <div className="flex justify-center">
-            <img
-              src="/schema-cotes-tolerances.png"
-              alt="Schéma cotes et tolérances horlogères"
-              className="rounded-lg shadow max-w-3xl w-full"
-            />
-          </div>
-        </section>
+  {/* ✅ Ton image ajoutée ici, chemin corrigé */}
+  <div className="flex justify-center">
+    <img
+      src="/images/schema-cotes-tolerances.png"
+      alt="Schéma cotes et tolérances horlogères"
+      className="rounded-lg shadow max-w-3xl w-full"
+    />
+  </div>
+</section>
 
         {/* --- Bonnes pratiques & erreurs --- */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
