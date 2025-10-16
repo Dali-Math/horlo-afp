@@ -1,7 +1,41 @@
 "use client";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function CartoucheHorlogerPage() {
+  const [answers, setAnswers] = useState({});
+  const [score, setScore] = useState<number | null>(null);
+
+  const quiz = [
+    { q: "À quoi sert le cartouche horloger ?", a: "Identifier, tracer et certifier le plan technique" },
+    { q: "Que signifie 'Échelle 1:1' ?", a: "Le dessin est à taille réelle" },
+    { q: "Quel élément indique la matière utilisée ?", a: "La zone 'Matière'" },
+    { q: "Que représente Ra 0,8 ?", a: "L’état de surface moyen (rugosité)" },
+    { q: "À quoi sert la case 'Contrôlé' ?", a: "À indiquer le vérificateur du plan" },
+    { q: "Quelle unité est obligatoire en horlogerie suisse ?", a: "Le millimètre (mm)" },
+    { q: "Que contient la zone 'Modification' ?", a: "L’historique des révisions du plan" },
+    { q: "Quelle est la fonction du symbole de projection ?", a: "Indiquer la méthode de vue (1er ou 3e angle)" },
+    { q: "Que signifie ±0,02 mm ?", a: "Tolérance générale de fabrication" },
+    { q: "Qui signe la case 'Dessiné' ?", a: "Le dessinateur technique responsable" },
+    { q: "Que trouve-t-on dans la zone 'Dimensions en mm' ?", a: "Les unités utilisées pour les cotes" },
+    { q: "À quoi sert le numéro de plan ?", a: "Identifier et classer le dessin" },
+    { q: "Qu’indique la zone 'Titre du dessin' ?", a: "Le nom de la pièce (ex: Pont, Roue...)" },
+    { q: "Quel document normalise le cartouche ?", a: "La norme ISO 5457" },
+    { q: "Pourquoi le cartouche doit-il être clair et uniforme ?", a: "Pour garantir la lisibilité et la traçabilité" },
+  ];
+
+  const handleAnswer = (i: number, ans: string) => {
+    setAnswers({ ...answers, [i]: ans });
+  };
+
+  const handleSubmit = () => {
+    let sc = 0;
+    quiz.forEach((q, i) => {
+      if (answers[i] && answers[i] === q.a) sc++;
+    });
+    setScore(sc);
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-6 py-16 font-sans text-gray-800">
       <div className="max-w-5xl mx-auto space-y-16">
@@ -12,13 +46,7 @@ export default function CartoucheHorlogerPage() {
             href="/theorie/lecture-de-plan"
             className="text-blue-700 hover:underline flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
             Retour
@@ -65,31 +93,67 @@ export default function CartoucheHorlogerPage() {
           </ul>
         </section>
 
-        {/* Bonnes pratiques */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Bonnes Pratiques</h2>
-          <ul className="list-disc pl-6 space-y-3 text-gray-700">
-            <li>Rédiger toutes les indications <b>en lettres majuscules</b> pour éviter toute ambiguïté.</li>
-            <li>Utiliser les <b>unités métriques</b> exclusivement (mm, µm).</li>
-            <li>Veiller à ce que le cartouche soit toujours <b>lisible en position horizontale</b> sur le plan.</li>
-            <li>Éviter toute surcharge : ne pas inclure d’informations non techniques.</li>
-            <li>Uniformiser la présentation du cartouche dans tous les plans d’un même projet.</li>
-          </ul>
+        {/* Quiz interactif */}
+        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
+          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Quiz : Teste tes connaissances</h2>
+          <div className="space-y-6 text-left">
+            {quiz.map((q, i) => (
+              <div key={i} className="border-b border-gray-200 pb-4">
+                <p className="font-semibold mb-2">{i + 1}. {q.q}</p>
+                <div className="space-y-1">
+                  {["Identifier, tracer et certifier le plan technique", "Le dessin est à taille réelle", "La zone 'Matière'", "L’état de surface moyen (rugosité)", "À indiquer le vérificateur du plan", "Le millimètre (mm)", "L’historique des révisions du plan", "Indiquer la méthode de vue (1er ou 3e angle)", "Tolérance générale de fabrication", "Le dessinateur technique responsable", "Les unités utilisées pour les cotes", "Identifier et classer le dessin", "Le nom de la pièce (ex: Pont, Roue...)", "La norme ISO 5457", "Pour garantir la lisibilité et la traçabilité"].map((a) => (
+                    <label key={a} className="block">
+                      <input
+                        type="radio"
+                        name={`q${i}`}
+                        value={a}
+                        checked={answers[i] === a}
+                        onChange={() => handleAnswer(i, a)}
+                        className="mr-2 accent-blue-600"
+                      />
+                      {a}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <button
+            onClick={handleSubmit}
+            className="mt-6 bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-800 transition"
+          >
+            Valider mes réponses
+          </button>
+
+          {score !== null && (
+            <p className="mt-6 text-lg font-semibold text-blue-900">
+              Score : {score} / {quiz.length}
+            </p>
+          )}
         </section>
 
-        {/* Exemple concret */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Exemple d’Application</h2>
-          <p className="text-gray-700 leading-relaxed mb-4">
-            Dans la fabrication d’une <b>roue de moyenne</b>, le cartouche permettra d’identifier rapidement :
-          </p>
-          <ul className="list-disc pl-6 space-y-2 text-gray-700">
-            <li>Le plan : <b>Roue moyenne réf. RM-210</b></li>
-            <li>L’échelle utilisée : <b>10:1</b></li>
-            <li>Le matériau : <b>Laiton CuZn37</b></li>
-            <li>La tolérance générale : <b>±0.02 mm</b></li>
-            <li>Le dessinateur : <b>M. A. Dubois</b> – <i>Validé le 02.10.2025</i></li>
-          </ul>
+        {/* Vidéo pédagogique */}
+        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
+          <h2 className="text-2xl font-semibold text-blue-800 mb-6">
+            Vidéo : Cartouche & Lecture de plan
+          </h2>
+          <div className="aspect-video overflow-hidden rounded-md border border-gray-200">
+            <iframe
+              className="w-full h-full"
+              src="https://www.youtube-nocookie.com/embed/tatCrJPJGl4?rel=0&modestbranding=1"
+              title="Cartouche & Lecture de plan"
+              allowFullScreen
+            />
+          </div>
+          <a
+            href="https://www.youtube.com/watch?v=tatCrJPJGl4"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-6 bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-800 transition"
+          >
+            🔗 Ouvrir sur YouTube
+          </a>
         </section>
 
         {/* Astuce horlogère */}
