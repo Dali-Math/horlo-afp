@@ -42,151 +42,117 @@ export default function CotesEtTolerancesPage() {
       options: [
         "La dimension idéale sans tolérance",
         "La tolérance maximale autorisée",
-        "L'écart entre deux dimensions"
+        "L'écart entre deux dimensions",
       ],
       correct: 0,
-      explanation: "La cote nominale est la dimension idéale théorique d'une pièce, sans considération de tolérance."
+      explanation:
+        "La cote nominale est la dimension idéale théorique d'une pièce, sans considération de tolérance.",
     },
     {
       question: "En système ISO, quelle lettre utilise-t-on pour les alésages ?",
-      options: [
-        "Des lettres minuscules",
-        "Des lettres majuscules",
-        "Des chiffres uniquement"
-      ],
+      options: ["Des lettres minuscules", "Des lettres majuscules", "Des chiffres uniquement"],
       correct: 1,
-      explanation: "Les alésages (contenants) utilisent des lettres majuscules, tandis que les arbres (contenus) utilisent des minuscules."
+      explanation:
+        "Les alésages (contenants) utilisent des lettres majuscules, tandis que les arbres (contenus) utilisent des minuscules.",
     },
     {
       question: "Qu'est-ce qu'un arbre dans le système ISO ?",
       options: [
         "Tout ce qui est contenant",
         "Tout ce qui est contenu",
-        "Un élément cylindrique uniquement"
+        "Un élément cylindrique uniquement",
       ],
       correct: 1,
-      explanation: "Dans le système ISO, un arbre désigne tout élément contenu, peu importe sa forme."
+      explanation:
+        "Dans le système ISO, un arbre désigne tout élément contenu, peu importe sa forme.",
     },
     {
       question: "Qu'est-ce qu'un alésage ?",
-      options: [
-        "Un élément cylindrique creux",
-        "Tout ce qui est contenant",
-        "Une pièce rotative"
-      ],
+      options: ["Un élément cylindrique creux", "Tout ce qui est contenant", "Une pièce rotative"],
       correct: 1,
-      explanation: "L'alésage désigne tout élément contenant dans un assemblage."
+      explanation: "L'alésage désigne tout élément contenant dans un assemblage.",
     },
     {
       question: "Comment calcule-t-on l'intervalle de tolérance (IT) ?",
-      options: [
-        "ES - EI (écart supérieur moins écart inférieur)",
-        "Cote max + Cote min",
-        "Cote nominale × 2"
-      ],
+      options: ["ES - EI (écart supérieur moins écart inférieur)", "Cote max + Cote min", "Cote nominale × 2"],
       correct: 0,
-      explanation: "L'intervalle de tolérance est la différence entre l'écart supérieur et l'écart inférieur."
+      explanation: "L'intervalle de tolérance est la différence entre l'écart supérieur et l'écart inférieur.",
     },
     {
       question: "Pour un arbre, quelles lettres utilise-t-on ?",
-      options: [
-        "Des lettres majuscules",
-        "Des lettres minuscules",
-        "Des symboles spéciaux"
-      ],
+      options: ["Des lettres majuscules", "Des lettres minuscules", "Des symboles spéciaux"],
       correct: 1,
-      explanation: "Les arbres (éléments contenus) sont désignés par des lettres minuscules."
+      explanation: "Les arbres (éléments contenus) sont désignés par des lettres minuscules.",
     },
     {
       question: "Dans la cotation Ø60 H8/f7, que représente H8 ?",
-      options: [
-        "La tolérance de l'arbre",
-        "La tolérance de l'alésage",
-        "La cote nominale"
-      ],
+      options: ["La tolérance de l'arbre", "La tolérance de l'alésage", "La cote nominale"],
       correct: 1,
-      explanation: "H8 (majuscule) désigne la tolérance de l'alésage, f7 (minuscule) celle de l'arbre."
+      explanation: "H8 (majuscule) désigne la tolérance de l'alésage, f7 (minuscule) celle de l'arbre.",
     },
     {
       question: "Que signifie ES pour un alésage ?",
-      options: [
-        "Écart Supérieur",
-        "Écart Standard",
-        "Élément Spécial"
-      ],
+      options: ["Écart Supérieur", "Écart Standard", "Élément Spécial"],
       correct: 0,
-      explanation: "ES signifie Écart Supérieur, utilisé en majuscule pour les alésages."
+      explanation: "ES signifie Écart Supérieur, utilisé en majuscule pour les alésages.",
     },
     {
       question: "Que signifie ei pour un arbre ?",
-      options: [
-        "écart initial",
-        "écart inférieur",
-        "élément intérieur"
-      ],
+      options: ["écart initial", "écart inférieur", "élément intérieur"],
       correct: 1,
-      explanation: "ei (minuscule) représente l'écart inférieur pour un arbre."
+      explanation: "ei (minuscule) représente l'écart inférieur pour un arbre.",
     },
     {
       question: "Quelle est la cote maximale ?",
       options: [
         "La plus petite dimension acceptable",
         "La plus grande dimension acceptable",
-        "La dimension moyenne"
+        "La dimension moyenne",
       ],
       correct: 1,
-      explanation: "La cote maximale correspond à la plus grande dimension acceptable pour la pièce."
+      explanation:
+        "La cote maximale correspond à la plus grande dimension acceptable pour la pièce.",
     },
     {
       question: "Pour Ø60 F7, avec tolérances -0.030/-0.060, quelle est la cote minimale ?",
-      options: [
-        "59.940 mm",
-        "59.970 mm",
-        "60.030 mm"
-      ],
+      options: ["59.940 mm", "59.970 mm", "60.030 mm"],
       correct: 0,
-      explanation: "Cote minimale = 60 - 0.060 = 59.940 mm"
+      explanation: "Cote minimale = 60 - 0.060 = 59.940 mm",
     },
     {
       question: "Pour Ø60 E8 avec tolérances +0.060/+0.106, quelle est la cote maximale ?",
-      options: [
-        "60.060 mm",
-        "60.106 mm",
-        "60.166 mm"
-      ],
+      options: ["60.060 mm", "60.106 mm", "60.166 mm"],
       correct: 1,
-      explanation: "Cote maximale = 60 + 0.106 = 60.106 mm"
+      explanation: "Cote maximale = 60 + 0.106 = 60.106 mm",
     },
     {
       question: "Pourquoi utilise-t-on des tolérances prédéfinies en système ISO ?",
       options: [
         "Pour réduire les coûts uniquement",
         "Pour standardiser et faciliter l'interchangeabilité",
-        "Pour compliquer la fabrication"
+        "Pour compliquer la fabrication",
       ],
       correct: 1,
-      explanation: "Les tolérances ISO standardisées permettent l'interchangeabilité des pièces et une communication universelle."
+      explanation:
+        "Les tolérances ISO standardisées permettent l'interchangeabilité des pièces et une communication universelle.",
     },
     {
       question: "Dans un assemblage, si l'arbre mesure 59.97 mm et l'alésage 60.08 mm, quel est le jeu ?",
-      options: [
-        "0.11 mm",
-        "0.05 mm",
-        "120.05 mm"
-      ],
+      options: ["0.11 mm", "0.05 mm", "120.05 mm"],
       correct: 0,
-      explanation: "Jeu = Alésage - Arbre = 60.08 - 59.97 = 0.11 mm"
+      explanation: "Jeu = Alésage - Arbre = 60.08 - 59.97 = 0.11 mm",
     },
     {
       question: "Quel organisme définit le système de tolérancement ISO ?",
       options: [
         "L'Organisation Internationale de Normalisation",
         "L'Institut Suisse d'Horlogerie",
-        "L'Agence Européenne de Mécanique"
+        "L'Agence Européenne de Mécanique",
       ],
       correct: 0,
-      explanation: "ISO signifie International Organization for Standardization (Organisation Internationale de Normalisation)."
-    }
+      explanation:
+        "ISO signifie International Organization for Standardization (Organisation Internationale de Normalisation).",
+    },
   ];
 
   const handleAnswer = (optionIndex: number) => {
@@ -219,11 +185,11 @@ export default function CotesEtTolerancesPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-6 py-16 font-sans text-gray-800">
       <div className="max-w-5xl mx-auto space-y-16">
-        {/* Bouton Retour avec Link, rien supprimé */}
+
         <div className="mb-6">
           <Link
             href="/theorie/lecture-de-plan"
-            className="text-[#2B44F] hover:underline flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition"
+            className="text-blue-700 hover:underline flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -231,16 +197,17 @@ export default function CotesEtTolerancesPage() {
             Retour
           </Link>
         </div>
-        {/* Header */}
+
         <header className="text-center space-y-4">
           <h1 className="text-4xl font-bold text-blue-900">
             Cotes et Tolérances <span className="text-blue-600">(ISO 129-1 & 1101)</span>
           </h1>
           <p className="text-gray-600 max-w-xl mx-auto text-lg leading-relaxed">
-            Maîtrise les règles de cotation et les tolérances indispensables à la qualité en horlogerie : assemblage, usinage et contrôle dimensionnel.
+            Maîtrise les règles de cotation et les tolérances indispensables à la qualité en horlogerie :
+            assemblage, usinage et contrôle dimensionnel.
           </p>
         </header>
-        {/* Schéma Interactif et Modal */}
+
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Schéma Interactif</h2>
           <div className="mb-4 cursor-pointer" onClick={() => setIsModalOpen(true)}>
@@ -250,10 +217,9 @@ export default function CotesEtTolerancesPage() {
               className="mx-auto rounded-lg shadow max-w-md w-full hover:scale-105 transition-transform"
               style={{ minHeight: "200px" }}
             />
-            <p className="text-gray-500 text-sm mt-2">
-              Cliquez sur l'image pour afficher l'explication pédagogique.
-            </p>
+            <p className="text-gray-500 text-sm mt-2">Cliquez sur l'image pour afficher l'explication pédagogique.</p>
           </div>
+
           {isModalOpen && (
             <div
               className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -277,22 +243,36 @@ export default function CotesEtTolerancesPage() {
                   style={{ display: "block" }}
                 />
                 <div className="mt-2 text-gray-700 text-left leading-relaxed text-base">
-                  <b>Les cotes et tolérances</b> sont fondamentales pour garantir la qualité en horlogerie.<br /><br />
+                  <b>Les cotes et tolérances</b> sont fondamentales pour garantir la qualité en horlogerie.
+                  <br />
+                  <br />
                   <ul className="list-disc pl-6">
                     <li>La <b>cote nominale</b> est la valeur idéale d'une dimension.</li>
-                    <li>La <b>tolérance</b> détermine l'intervalle admissible autour de cette cote (exemple typique : ±0.02 mm pour l'ajustement précis d'un axe).</li>
-                    <li>Un bon choix de tolérance permet de trouver le juste compromis : ni trop serré (difficulté d'assemblage / coût) ni trop lâche (jeu excessif, imprécision).</li>
-                    <li>Il faut aussi prendre en compte les <b>tolérances géométriques</b> pour garantir la forme et la position (parallélisme, planéité).</li>
+                    <li>
+                      La <b>tolérance</b> détermine l'intervalle admissible autour de cette cote (exemple typique :
+                      ±0.02 mm pour l'ajustement précis d'un axe).
+                    </li>
+                    <li>
+                      Un bon choix de tolérance permet de trouver le juste compromis : ni trop serré (difficulté
+                      d'assemblage / coût) ni trop lâche (jeu excessif, imprécision).
+                    </li>
+                    <li>
+                      Il faut aussi prendre en compte les <b>tolérances géométriques</b> pour garantir la forme et la
+                      position (parallélisme, planéité).
+                    </li>
                   </ul>
                   <br />
-                  La <b>norme ISO</b> assure une lecture universelle sur les plans, facilitant la communication entre conception, atelier et contrôle qualité.<br />
-                  <b>En horlogerie</b>, c'est la clé pour obtenir des montres précises et fiables, avec des composants interchangeables et bien ajustés.
+                  La <b>norme ISO</b> assure une lecture universelle sur les plans, facilitant la communication entre
+                  conception, atelier et contrôle qualité.
+                  <br />
+                  <b>En horlogerie</b>, c'est la clé pour obtenir des montres précises et fiables, avec des composants
+                  interchangeables et bien ajustés.
                 </div>
               </div>
             </div>
           )}
         </section>
-        {/* Bonnes pratiques & erreurs */}
+
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
           <h2 className="text-2xl font-semibold text-blue-800 mb-10 text-center">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
           <div className="grid md:grid-cols-2 gap-12">
@@ -324,6 +304,7 @@ export default function CotesEtTolerancesPage() {
             </div>
           </div>
         </section>
+
         {/* Quiz */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Quiz : Teste tes connaissances</h2>
@@ -380,10 +361,13 @@ export default function CotesEtTolerancesPage() {
                 Ton score : <span className="font-bold text-blue-700">{score}</span> sur {quizQuestions.length}
               </p>
               <p className="text-gray-600">
-                {score >= 12 ? "🎉 Excellent ! Tu maîtrises le sujet !" :
-                 score >= 9 ? "👍 Très bien ! Continue comme ça !" :
-                 score >= 6 ? "👌 Pas mal ! Révise encore un peu." :
-                 "📚 Continue à apprendre, tu vas y arriver !"}
+                {score >= 12
+                  ? "🎉 Excellent ! Tu maîtrises le sujet !"
+                  : score >= 9
+                  ? "👍 Très bien ! Continue comme ça !"
+                  : score >= 6
+                  ? "👌 Pas mal ! Révise encore un peu."
+                  : "📚 Continue à apprendre, tu vas y arriver !"}
               </p>
               <button
                 onClick={restartQuiz}
@@ -394,6 +378,7 @@ export default function CotesEtTolerancesPage() {
             </div>
           )}
         </section>
+
         {/* Vidéo pédagogique */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Vidéo : Cotation et Tolérances ISO</h2>
@@ -406,6 +391,7 @@ export default function CotesEtTolerancesPage() {
             />
           </div>
         </section>
+
         {/* Historique des normes */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Contexte & Origines des Normes</h2>
@@ -416,6 +402,7 @@ export default function CotesEtTolerancesPage() {
             l'interchangeabilité des pièces, la fiabilité des assemblages et la précision des mouvements.
           </p>
         </section>
+
         {/* Tableau des tolérances */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Exemples de Tolérances en Horlogerie</h2>
@@ -452,13 +439,15 @@ export default function CotesEtTolerancesPage() {
             </table>
           </div>
         </section>
-        {/* Citation motivationnelle */}
+
+        {/* Citation */}
         <section className="bg-blue-50 border border-blue-100 shadow-sm rounded-2xl p-8 text-center">
           <blockquote className="text-xl italic text-blue-900">
             "La précision n'est pas une option, c'est une exigence en horlogerie."
           </blockquote>
           <p className="mt-4 text-blue-700 font-medium">— Principe fondamental de la cotation ISO</p>
         </section>
+
         {/* FAQ */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Questions fréquentes (FAQ)</h2>
@@ -481,7 +470,8 @@ export default function CotesEtTolerancesPage() {
             </details>
           </div>
         </section>
-        {/* Appel à l'action */}
+
+        {/* Lien ISO */}
         <section className="text-center py-10">
           <p className="text-gray-600 text-lg mb-4">📘 Tu veux aller plus loin ?</p>
           <a
@@ -493,7 +483,7 @@ export default function CotesEtTolerancesPage() {
             Consulter la norme ISO 129-1 complète
           </a>
         </section>
-        {/* Footer */}
+
         <footer className="text-center text-sm text-gray-500 mt-6">
           © HorloLearn 2025 — Normes ISO 129-1 & ISO 1101.
         </footer>
