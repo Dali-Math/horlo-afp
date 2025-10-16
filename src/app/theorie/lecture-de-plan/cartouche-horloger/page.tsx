@@ -2,171 +2,219 @@
 import Link from "next/link";
 import { useState } from "react";
 
-type Question = {
-  q: string;
-  a: string;
-  choices: string[];
-};
+// Composant QuizCartouche (inclus directement, même système séquentiel que QuizTolerances)
+function QuizCartouche() {
+  const questions = [
+    {
+      question: "À quoi sert le cartouche horloger ?",
+      options: [
+        "Mettre en page un logo d'entreprise",
+        "Dessiner le mouvement",
+        "Identifier, tracer et certifier le plan technique",
+        "Calculer les coûts de production"
+      ],
+      correct: 2,  // Index de la bonne réponse (basé sur ton 'a')
+    },
+    {
+      question: "Que signifie 'Échelle 1:1' ?",
+      options: [
+        "Le plan est réduit de moitié",
+        "Le dessin est en deux dimensions",
+        "Le dessin est à taille réelle",
+        "L'échelle est multipliée par 10"
+      ],
+      correct: 2,
+    },
+    {
+      question: "Quel élément indique la matière utilisée ?",
+      options: [
+        "La case 'Contrôlé'",
+        "Le cartouche signature",
+        "La zone 'Matière'",
+        "La zone 'Modification'"
+      ],
+      correct: 2,
+    },
+    {
+      question: "Que représente Ra 0,8 ?",
+      options: [
+        "Le diamètre de la pièce",
+        "La dureté du matériau",
+        "L’état de surface moyen (rugosité)",
+        "La tolérance maximale"
+      ],
+      correct: 2,
+    },
+    {
+      question: "À quoi sert la case 'Contrôlé' ?",
+      options: [
+        "À noter l'échelle du dessin",
+        "À donner la masse du composant",
+        "À indiquer le vérificateur du plan",
+        "À signer le designer"
+      ],
+      correct: 2,
+    },
+    {
+      question: "Quelle unité est obligatoire en horlogerie suisse ?",
+      options: [
+        "Le pouce (inch)",
+        "Le centimètre (cm)",
+        "Le millimètre (mm)",
+        "Le micromètre (µm) uniquement"
+      ],
+      correct: 2,
+    },
+    {
+      question: "Que contient la zone 'Modification' ?",
+      options: [
+        "La valeur du jeu fonctionnel",
+        "Les initiales du designer",
+        "L’historique des révisions du plan",
+        "Le numéro de série de la pièce"
+      ],
+      correct: 2,
+    },
+    {
+      question: "Quelle est la fonction du symbole de projection ?",
+      options: [
+        "Donner la matière principale",
+        "Vérifier l'état de surface",
+        "Indiquer la méthode de vue (1er ou 3e angle)",
+        "Afficher l'échelle du plan"
+      ],
+      correct: 2,
+    },
+    {
+      question: "Que signifie ±0,02 mm ?",
+      options: [
+        "La largeur totale du plan",
+        "L'épaisseur de la feuille",
+        "Tolérance générale de fabrication",
+        "Le rayon de courbure"
+      ],
+      correct: 2,
+    },
+    {
+      question: "Qui signe la case 'Dessiné' ?",
+      options: [
+        "Le contrôleur qualité",
+        "Le responsable production",
+        "Le dessinateur technique responsable",
+        "Le chef d'atelier"
+      ],
+      correct: 2,
+    },
+    {
+      question: "Que trouve-t-on dans la zone 'Dimensions en mm' ?",
+      options: [
+        "Le diamètre minimal du rubis",
+        "L'année de fabrication",
+        "Les unités utilisées pour les cotes",
+        "La masse totale de la pièce"
+      ],
+      correct: 2,
+    },
+    {
+      question: "À quoi sert le numéro de plan ?",
+      options: [
+        "Afficher la marque de l'atelier",
+        "Déterminer la surface polie",
+        "Identifier et classer le dessin",
+        "Calculer les tolérances"
+      ],
+      correct: 2,
+    },
+    {
+      question: "Qu’indique la zone 'Titre du dessin' ?",
+      options: [
+        "La tolérance maximale",
+        "La référence de l'acier",
+        "Le nom de la pièce (ex: Pont, Roue...)",
+        "L'échelle de projection"
+      ],
+      correct: 2,
+    },
+    {
+      question: "Quel document normalise le cartouche ?",
+      options: [
+        "La norme ISO 14001",
+        "La norme ISO 9001",
+        "La norme ISO 5457",
+        "La norme ISO 2768"
+      ],
+      correct: 2,
+    },
+    {
+      question: "Pourquoi le cartouche doit-il être clair et uniforme ?",
+      options: [
+        "Pour impressionner le client",
+        "Pour faciliter le scan",
+        "Pour garantir la lisibilité et la traçabilité",
+        "Pour réduire les coûts d'impression"
+      ],
+      correct: 2,
+    },
+  ];
 
-const quiz: Question[] = [
-  {
-    q: "À quoi sert le cartouche horloger ?",
-    a: "Identifier, tracer et certifier le plan technique",
-    choices: [
-      "Identifier, tracer et certifier le plan technique",
-      "Mettre en page un logo d'entreprise",
-      "Dessiner le mouvement"
-    ]
-  },
-  {
-    q: "Que signifie 'Échelle 1:1' ?",
-    a: "Le dessin est à taille réelle",
-    choices: [
-      "Le dessin est à taille réelle",
-      "Le plan est réduit de moitié",
-      "Le dessin est en deux dimensions"
-    ]
-  },
-  {
-    q: "Quel élément indique la matière utilisée ?",
-    a: "La zone 'Matière'",
-    choices: [
-      "La zone 'Matière'",
-      "La case 'Contrôlé'",
-      "Le cartouche signature"
-    ]
-  },
-  {
-    q: "Que représente Ra 0,8 ?",
-    a: "L’état de surface moyen (rugosité)",
-    choices: [
-      "L’état de surface moyen (rugosité)",
-      "Le diamètre de la pièce",
-      "La dureté du matériau"
-    ]
-  },
-  {
-    q: "À quoi sert la case 'Contrôlé' ?",
-    a: "À indiquer le vérificateur du plan",
-    choices: [
-      "À indiquer le vérificateur du plan",
-      "À noter l'échelle du dessin",
-      "À donner la masse du composant"
-    ]
-  },
-  {
-    q: "Quelle unité est obligatoire en horlogerie suisse ?",
-    a: "Le millimètre (mm)",
-    choices: [
-      "Le millimètre (mm)",
-      "Le pouce (inch)",
-      "Le centimètre (cm)"
-    ]
-  },
-  {
-    q: "Que contient la zone 'Modification' ?",
-    a: "L’historique des révisions du plan",
-    choices: [
-      "L’historique des révisions du plan",
-      "La valeur du jeu fonctionnel",
-      "Les initiales du designer"
-    ]
-  },
-  {
-    q: "Quelle est la fonction du symbole de projection ?",
-    a: "Indiquer la méthode de vue (1er ou 3e angle)",
-    choices: [
-      "Indiquer la méthode de vue (1er ou 3e angle)",
-      "Donner la matière principale",
-      "Vérifier l'état de surface"
-    ]
-  },
-  {
-    q: "Que signifie ±0,02 mm ?",
-    a: "Tolérance générale de fabrication",
-    choices: [
-      "Tolérance générale de fabrication",
-      "La largeur totale du plan",
-      "L'épaisseur de la feuille"
-    ]
-  },
-  {
-    q: "Qui signe la case 'Dessiné' ?",
-    a: "Le dessinateur technique responsable",
-    choices: [
-      "Le dessinateur technique responsable",
-      "Le contrôleur qualité",
-      "Le responsable production"
-    ]
-  },
-  {
-    q: "Que trouve-t-on dans la zone 'Dimensions en mm' ?",
-    a: "Les unités utilisées pour les cotes",
-    choices: [
-      "Les unités utilisées pour les cotes",
-      "Le diamètre minimal du rubis",
-      "L'année de fabrication"
-    ]
-  },
-  {
-    q: "À quoi sert le numéro de plan ?",
-    a: "Identifier et classer le dessin",
-    choices: [
-      "Identifier et classer le dessin",
-      "Afficher la marque de l'atelier",
-      "Déterminer la surface polie"
-    ]
-  },
-  {
-    q: "Qu’indique la zone 'Titre du dessin' ?",
-    a: "Le nom de la pièce (ex: Pont, Roue...)",
-    choices: [
-      "Le nom de la pièce (ex: Pont, Roue...)",
-      "La tolérance maximale",
-      "La référence de l'acier"
-    ]
-  },
-  {
-    q: "Quel document normalise le cartouche ?",
-    a: "La norme ISO 5457",
-    choices: [
-      "La norme ISO 5457",
-      "La norme ISO 14001",
-      "La norme ISO 9001"
-    ]
-  },
-  {
-    q: "Pourquoi le cartouche doit-il être clair et uniforme ?",
-    a: "Pour garantir la lisibilité et la traçabilité",
-    choices: [
-      "Pour garantir la lisibilité et la traçabilité",
-      "Pour impressionner le client",
-      "Pour faciliter le scan"
-    ]
-  }
-];
+  const [current, setCurrent] = useState(0);
+  const [score, setScore] = useState(0);
+  const [showScore, setShowScore] = useState(false);
+
+  const handleAnswer = (index: number) => {
+    if (index === questions[current].correct) setScore(score + 1);
+    const next = current + 1;
+    if (next < questions.length) setCurrent(next);
+    else setShowScore(true);
+  };
+
+  return (
+    <section className="bg-[#111827] text-gray-200 rounded-2xl shadow-lg p-8 mt-10 text-center">
+      <h2 className="text-xl font-semibold text-[#E2B44F] mb-4">Mini Quiz : Cartouche Horloger</h2>
+
+      {showScore ? (
+        <div className="text-lg text-gray-300">
+          <p>Résultat : <span className="text-[#E2B44F] font-bold">{score}</span> / {questions.length}</p>
+          <p className="mt-2 text-sm">
+            {score === questions.length 
+              ? "Excellent ! Tu es un expert du cartouche horloger." 
+              : score > questions.length / 2 
+              ? "Bien joué ! Revois les détails pour un score parfait." 
+              : "Continue à t'entraîner sur les normes ISO et les plans techniques."
+            }
+          </p>
+          <button 
+            onClick={() => { setShowScore(false); setCurrent(0); setScore(0); }} 
+            className="mt-4 bg-[#E2B44F] hover:bg-[#d4ac3d] text-gray-800 px-6 py-2 rounded-lg font-semibold transition"
+          >
+            Refaire le Quiz
+          </button>
+        </div>
+      ) : (
+        <div>
+          <p className="mb-4 text-gray-300">{questions[current].question}</p>
+          <div className="grid md:grid-cols-2 gap-3">
+            {questions[current].options.map((option, i) => (
+              <button
+                key={i}
+                onClick={() => handleAnswer(i)}
+                className="bg-[#1c2333] hover:bg-[#2c3344] text-gray-200 px-4 py-2 rounded-lg transition disabled:opacity-50"
+                disabled={showScore}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-gray-400">
+            Question {current + 1} sur {questions.length}
+          </p>
+        </div>
+      )}
+    </section>
+  );
+}
 
 export default function CartoucheHorlogerPage() {
-  const [answers, setAnswers] = useState<Record<number, string>>({});
-  const [score, setScore] = useState<number | null>(null);
-
-  const handleAnswer = (i: number, ans: string) => {
-    setAnswers({ ...answers, [i]: ans });
-  };
-
-  const handleSubmit = () => {
-    let sc = 0;
-    quiz.forEach((q, i) => {
-      if (answers[i] && answers[i] === q.a) sc++;
-    });
-    setScore(sc);
-  };
-
-  const handleRestart = () => {
-    setAnswers({});
-    setScore(null);
-  };
-
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-6 py-16 font-sans text-gray-800">
       <div className="max-w-5xl mx-auto space-y-16">
@@ -224,61 +272,10 @@ export default function CartoucheHorlogerPage() {
           </ul>
         </section>
 
-        {/* Quiz interactif corrigé */}
+        {/* Quiz interactif (remplace l'ancien) */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Quiz : Teste tes connaissances</h2>
-          <div className="space-y-6 text-left">
-            {quiz.map((q, i) => (
-              <div key={i} className="border-b border-gray-200 pb-4">
-                <p className="font-semibold mb-2">{i + 1}. {q.q}</p>
-                <div className="space-y-1">
-                  {q.choices.map((a) => (
-                    <label key={a} className="block">
-                      <input
-                        type="radio"
-                        name={`q${i}`}
-                        value={a}
-                        checked={answers[i] === a}
-                        onChange={() => handleAnswer(i, a)}
-                        className="mr-2 accent-blue-600"
-                        disabled={score !== null}
-                      />
-                      {a}
-                    </label>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {score === null ? (
-            <button
-              onClick={handleSubmit}
-              className="mt-6 bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-800 transition"
-              disabled={Object.keys(answers).length !== quiz.length}
-            >
-              Valider mes réponses
-            </button>
-          ) : (
-            <>
-              <p className="mt-6 text-lg font-semibold text-blue-900">
-                Score : {score} / {quiz.length}
-              </p>
-              <p className="mt-2 text-base text-gray-800">
-                {score === quiz.length
-                  ? "Bravo ! Toutes les réponses sont correctes."
-                  : score >= Math.floor(quiz.length * 0.7)
-                  ? "Bien joué ! Quelques petites erreurs à corriger."
-                  : "Révise le cartouche et réessaie pour un score parfait."}
-              </p>
-              <button
-                onClick={handleRestart}
-                className="mt-4 bg-gray-200 text-blue-800 font-semibold py-2 px-6 rounded-lg hover:bg-gray-300 transition"
-              >
-                Recommencer le quiz
-              </button>
-            </>
-          )}
+          <QuizCartouche />
         </section>
 
         {/* Vidéo pédagogique */}
