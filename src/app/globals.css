@@ -140,43 +140,43 @@ body {
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
 }
 
-/* Marquee footer corrigée : Linéaire infini droite → gauche, pause hover */
+/* Marquee footer : Titre + icônes défilent ensemble (linéaire droite → gauche) */
 @keyframes marquee-footer {
   0% {
-    transform: translateX(0); /* Commence aligné */
+    transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%); /* Défile à gauche (avec duplication) */
+    transform: translateX(-50%); /* Seamless avec duplication */
   }
 }
 
 .animate-marquee-footer {
   animation: marquee-footer linear infinite;
-  width: 200%; /* Double largeur pour duplication seamless */
+  width: 200%; /* Double pour loop sans saut */
   display: flex;
   align-items: center;
+  gap: 1.5rem; /* Gap uniforme pour titre/icônes */
 }
 
-/* Pause au hover (arrêt du contenu comme demandé) */
+/* Pause au hover (tout s'arrête : titre + icônes) */
 .marquee-container:hover .animate-marquee-footer {
   animation-play-state: paused;
 }
 
-/* Responsive : Plus lent sur mobile, gap/icônes réduits */
+/* Responsive : Plus lent avec texte long, tailles réduites mobile */
 @media (max-width: 768px) {
   .animate-marquee-footer {
-    animation-duration: 40s; /* Plus lent pour lisibilité */
+    animation-duration: 45s; /* Plus lent pour lisibilité (texte + icônes) */
     gap: 1rem; /* Gap réduit */
   }
   
-  /* Icônes plus petites */
+  /* Icônes + titre plus petits */
   .animate-marquee-footer img {
     width: 60px !important;
     height: 40px !important;
   }
   
-  /* Titre plus petit */
-  .marquee-container .text-base {
-    font-size: 0.875rem;
+  .animate-marquee-footer span {
+    font-size: 0.875rem !important; /* Titre plus petit mobile */
   }
 }
