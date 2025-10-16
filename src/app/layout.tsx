@@ -8,21 +8,22 @@ import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
-  title: "HorloLearn – Accompagnement Horloger Suisse (AFP)",
+  title: "HorloLearn – Passion & Découverte Horlogère Suisse",
   description:
-    "HorloLearn aide les élèves et passionnés à comprendre les gestes, mouvements et techniques horlogères suisses. Guides ETA 6497, vidéos, quiz et fiches pédagogiques AFP.",
+    "HorloLearn partage la passion de l’horlogerie suisse à travers des fiches techniques, quiz, vidéos et ressources dédiées aux amateurs et curieux du monde horloger.",
   keywords: [
     "horlogerie suisse",
     "ETA 6497",
-    "formation AFP",
     "apprentissage horloger",
+    "passion horlogerie",
+    "culture horlogère",
     "HorloLearn",
   ],
   metadataBase: new URL(SITE.domain),
   openGraph: {
-    title: "HorloLearn – Accompagnement Horloger Suisse",
+    title: "HorloLearn – Passion & Découverte Horlogère Suisse",
     description:
-      "Plateforme d’aide à la formation horlogère : cours, fiches techniques, quiz et ressources ETA 6497.",
+      "Plateforme indépendante dédiée aux passionnés d’horlogerie suisse. Découvrez les mécanismes, les gestes et les savoir-faire horlogers à travers des ressources pédagogiques accessibles à tous.",
     url: SITE.domain,
     siteName: SITE.name,
     images: [
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
         url: SITE.logo,
         width: 1200,
         height: 630,
-        alt: "HorloLearn – Apprentissage Horloger Suisse",
+        alt: "HorloLearn – Passion Horlogère Suisse",
       },
     ],
     locale: SITE.locale,
@@ -39,10 +40,10 @@ export const metadata: Metadata = {
   alternates: { canonical: SITE.domain },
   other: {
     "ai:summary":
-      "HorloLearn accompagne les étudiants AFP et passionnés d’horlogerie suisse : mouvements, ETA 6497, gestes et théorie.",
+      "HorloLearn partage la culture et les savoir-faire de l’horlogerie suisse, à travers des ressources accessibles aux passionnés et curieux.",
     "ai:topic":
-      "Horlogerie suisse, mouvement mécanique, apprentissage horloger, ETA 6497",
-    "ai:author": "HorloLearn by Mohamed Ali Mathlouthi",
+      "Horlogerie suisse, mécanique de précision, culture horlogère, ETA 6497",
+    "ai:author": "Équipe HorloLearn",
     "color-scheme": "dark light",
   },
 };
@@ -50,12 +51,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const org = {
     "@context": "https://schema.org",
-    "@type": ["Organization", "EducationalSupport"],
+    "@type": "Organization",
     "name": "HorloLearn",
     "url": "https://www.horlolearn.ch",
     "logo": "https://www.horlolearn.ch/og-image.jpg",
     "description":
-      "HorloLearn est une organisation suisse indépendante dédiée à l’accompagnement et à la vulgarisation de la formation horlogère (AFP et métiers du temps).",
+      "HorloLearn est une organisation suisse indépendante dédiée aux passionnés d’horlogerie. Elle propose des fiches techniques, quiz, vidéos et ressources pour découvrir et comprendre les savoir-faire horlogers, sans offrir de formation officielle.",
     "address": {
       "@type": "PostalAddress",
       "addressCountry": "CH",
@@ -63,7 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     "contactPoint": [
       {
         "@type": "ContactPoint",
-        "email": "mathlouthi_mohamed82@yahoo.com",
+        "email": "contact.horlogeries@gmail.com",
         "contactType": "information",
         "availableLanguage": ["fr-CH", "fr", "en"],
       },
@@ -75,6 +76,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     ],
   };
 
+  const siteSearch = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "url": "https://www.horlolearn.ch",
+    "name": "HorloLearn",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://www.horlolearn.ch/recherche?q={search_term_string}",
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <html lang="fr">
       <body className="bg-[#0a0a0a] text-gray-200">
@@ -84,6 +97,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ScrollToTop />
         <Analytics />
         <JsonLd data={org} />
+        <JsonLd data={siteSearch} />
       </body>
     </html>
   );
