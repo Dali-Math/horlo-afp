@@ -2,10 +2,35 @@
 import Link from "next/link";
 import { useState } from "react";
 
+interface Question {
+  question: string;
+  options: string[];
+  correct: number;
+  correction: string;
+}
+
+interface Line {
+  id: number;
+  type: string;
+  epaisseur: string;
+  exemple: string;
+  path: string;
+  stroke: string;
+  strokeWidth: number;
+  strokeDasharray: string;
+}
+
+interface TooltipState {
+  show: boolean;
+  type: string;
+  epaisseur: string;
+  exemple: string;
+}
+
 function QuizTypesLignes() {
-  const questions = [
+  const questions: Question[] = [
     {
-      question: "Quelle ligne représente les contours visibles et de coupe ?",
+      question: "Quelle ligne represente les contours visibles et de coupe ?",
       options: [
         "Ligne en tiretes",
         "Ligne continue fine",
@@ -138,19 +163,19 @@ function QuizTypesLignes() {
     },
   ];
 
-  const [current, setCurrent] = useState(0);
-  const [score, setScore] = useState(0);
-  const [showScore, setShowScore] = useState(false);
-  const [selected, setSelected] = useState(null);
-  const [showCorrection, setShowCorrection] = useState(false);
+  const [current, setCurrent] = useState<number>(0);
+  const [score, setScore] = useState<number>(0);
+  const [showScore, setShowScore] = useState<boolean>(false);
+  const [selected, setSelected] = useState<number | null>(null);
+  const [showCorrection, setShowCorrection] = useState<boolean>(false);
 
-  const handleAnswer = (i) => {
+  const handleAnswer = (i: number): void => {
     setSelected(i);
     setShowCorrection(true);
-    if (i === questions[current].correct) setScore(s => s + 1);
+    if (i === questions[current].correct) setScore((s) => s + 1);
   };
 
-  const handleNext = () => {
+  const handleNext = (): void => {
     setSelected(null);
     setShowCorrection(false);
     if (current + 1 < questions.length) {
@@ -160,7 +185,7 @@ function QuizTypesLignes() {
     }
   };
 
-  const handleRestart = () => {
+  const handleRestart = (): void => {
     setCurrent(0);
     setScore(0);
     setSelected(null);
@@ -195,7 +220,7 @@ function QuizTypesLignes() {
           <div className="grid md:grid-cols-2 gap-3">
             {questions[current].options.map((option, i) => (
               <button
-                key={i}
+                key={i.toString()}
                 onClick={() => !showCorrection && handleAnswer(i)}
                 className={`px-4 py-3 rounded-lg transition-all duration-200 flex items-center justify-between
                   ${!showCorrection 
@@ -207,12 +232,13 @@ function QuizTypesLignes() {
                         : "bg-[#1c2333] text-gray-400"
                   }`}
                 disabled={showCorrection}
+                type="button"
               >
                 <span>{option}</span>
                 {showCorrection && i === selected && (
-                  i === questions[current].correct ? <span className="text-green-400">✅</span> : <span className="text-red-400">❌</span>
+                  i === questions[current].correct ? <span className="text-green-400">{"✅"}</span> : <span className="text-red-400">{"❌"}</span>
                 )}
-                {showCorrection && i === questions[current].correct && <span className="text-green-400">✅</span>}
+                {showCorrection && i === questions[current].correct && <span className="text-green-400">{"✅"}</span>}
               </button>
             ))}
           </div>
@@ -228,6 +254,7 @@ function QuizTypesLignes() {
             <button
               onClick={handleNext}
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition"
+              type="button"
             >
               {current + 1 < questions.length ? "Question suivante" : "Voir le score final"}
             </button>
@@ -244,9 +271,9 @@ function QuizTypesLignes() {
 }
 
 function InteractiveSVG() {
-  const [tooltip, setTooltip] = useState({ show: false, type: '', epaisseur: '', exemple: '' });
+  const [tooltip, setTooltip] = useState<TooltipState>({ show: false, type: '', epaisseur: '', exemple: '' });
 
-  const lines = [
+  const lines: Line[] = [
     {
       id: 1,
       type: 'Ligne continue epaisse',
@@ -309,7 +336,7 @@ function InteractiveSVG() {
     },
   ];
 
-  const handleMouseEnter = (line) => {
+  const handleMouseEnter = (line: Line): void => {
     setTooltip({
       show: true,
       type: line.type,
@@ -318,7 +345,7 @@ function InteractiveSVG() {
     });
   };
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = (): void => {
     setTooltip({ show: false, type: '', epaisseur: '', exemple: '' });
   };
 
@@ -328,7 +355,7 @@ function InteractiveSVG() {
         <text x="10" y="35" fontSize="12" fill="black">Exemples interactifs (hover/clic)</text>
         {lines.map((line) => (
           <path
-            key={line.id}
+            key={line.id.toString()}
             d={line.path}
             stroke={line.stroke}
             strokeWidth={line.strokeWidth}
@@ -462,7 +489,7 @@ export default function TypesLignesIso1282Page() {
               </thead>
               <tbody>
                 {typesLignes.map((ligne, i) => (
-                  <tr key={i} className={i % 2 === 0 ? "bg-gray-50" : ""}>
+                  <tr key={i.toString()} className={i % 2 === 0 ? "bg-gray-50" : ""}>
                     <td className="border px-4 py-3 font-semibold text-blue-900">{ligne.type}</td>
                     <td className="border px-4 py-3 font-mono">{ligne.epaisseur}</td>
                     <td className="border px-4 py-3 text-gray-700">{ligne.usage}</td>
