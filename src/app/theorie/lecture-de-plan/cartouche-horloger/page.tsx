@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 export default function CartoucheHorlogerPage() {
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState<Record<number, string>>({});
   const [score, setScore] = useState<number | null>(null);
 
   const quiz = [
