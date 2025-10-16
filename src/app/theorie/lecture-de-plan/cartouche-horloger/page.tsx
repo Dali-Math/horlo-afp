@@ -40,7 +40,7 @@ export default function CartoucheHorlogerPage() {
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Schéma d’un Cartouche Horloger</h2>
           <img
-            src="/images/schema-cartouche-horloger.png"
+            src="/images/cartouche-horloger.jpg"
             alt="Schéma du cartouche horloger"
             className="mx-auto rounded-lg shadow max-w-2xl w-full hover:scale-105 transition-transform"
           />
