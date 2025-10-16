@@ -340,27 +340,23 @@ export default function CartoucheHorlogerPage() {
         </section>
 
         {/* Vidéo pédagogique */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">
-            Vidéo : Cartouche & Lecture de plan
-          </h2>
-          <div className="aspect-video overflow-hidden rounded-md border border-gray-200">
-            <iframe
-              className="w-full h-full"
-              src="https://www.youtube.com/watch?v=tatCrJPJGl4"
-              title="Cartouche & Lecture de plan"
-              allowFullScreen
-            />
-          </div>
-          <a
-            href="https://www.youtube.com/watch?v=tatCrJPJGl4"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block mt-6 bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-800 transition"
-          >
-            🔗 Ouvrir sur YouTube
-          </a>
-        </section>
+<section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
+  <h2 className="text-2xl font-semibold text-blue-800 mb-6">
+    Vidéo : Cartouche & Lecture de plan
+  </h2>
+
+  <div className="aspect-w-16 aspect-h-9 overflow-hidden rounded-md border border-gray-200">
+    <iframe
+      className="w-full h-full"
+      src="https://www.youtube-nocookie.com/embed/tatCrJPJGl4"
+      title="Cartouche & Lecture de plan"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      referrerPolicy="strict-origin-when-cross-origin"
+      allowFullScreen
+    ></iframe>
+  </div>
+</section>
 
         {/* Astuce horlogère */}
         <section className="bg-blue-50 border border-blue-100 shadow-sm rounded-2xl p-8 text-center">
