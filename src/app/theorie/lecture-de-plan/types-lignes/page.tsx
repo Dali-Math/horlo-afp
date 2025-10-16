@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
-import { useState, useRef } from "react";
-import Image from "next/image"; // Pour images optimisées
+import { useRouter } from "next/navigation"; // Pour router.back()
+import { useState } from "react";
+import Image from "next/image";
 
 interface Question {
   question: string;
@@ -10,159 +11,159 @@ interface Question {
   correction: string;
 }
 
-interface Line {
+interface Cote {
   id: number;
   type: string;
-  epaisseur: string;
+  tolerance: string;
   exemple: string;
   path: string;
   stroke: string;
   strokeWidth: number;
-  strokeDasharray: string;
+  label: string;
 }
 
 interface TooltipState {
   show: boolean;
   type: string;
-  epaisseur: string;
+  tolerance: string;
   exemple: string;
   x: number;
   y: number;
 }
 
-function QuizTypesLignes() {
+function QuizCotesTolerances() {
   const questions: Question[] = [
     {
-      question: "Quelle ligne représente les contours visibles et de coupe ?",
+      question: "Quelle tolérance pour un pivot de roue en horlogerie (diamètre précis) ?",
       options: [
-        "Ligne en tiretés",
-        "Ligne continue fine",
-        "Ligne continue épaisse",
-        "Ligne en chaîne"
+        "±0,01 mm",
+        "±0,05 mm",
+        "±0,02 mm",
+        "±0,1 mm"
       ],
       correct: 2,
-      correction: "La ligne continue épaisse (0,5-1 mm) définit les bords extérieurs (ex: contours d'un pont de balancier). Essentiel pour l'usinage précis en horlogerie.",
+      correction: "±0,02 mm typique pour pivots (ISO 129-1) : Assure rotation fluide sans jeu excessif dans mouvements ETA.",
     },
     {
-      question: "Quelle ligne est utilisée pour les dimensions et côtes ?",
+      question: "ISO 1101 concerne les... ?",
       options: [
-        "Ligne en tiretés fins",
-        "Ligne continue épaisse",
-        "Ligne continue fine",
-        "Ligne libre"
+        "Lignes techniques",
+        "Tolérances géométriques",
+        "Côtes linéaires",
+        "Cartouches"
+      ],
+      correct: 1,
+      correction: "ISO 1101 : Tolérances de forme/orientation (ex: parallélisme platine). Crucial pour assemblages horlogers.",
+    },
+    {
+      question: "Le 'jeu fonctionnel' en horlogerie est de... ?",
+      options: [
+        "0,05-0,1 mm",
+        "0,01-0,03 mm",
+        "0,2 mm",
+        "Variable sans norme"
+      ],
+      correct: 1,
+      correction: "0,01-0,03 mm pour jeux (ex: entre pivot et platine). Évite blocage/usure prématurée.",
+    },
+    {
+      question: "Quelle côte pour un trou de vis M1,5 en horlogerie ?",
+      options: [
+        "Ø1,5 ±0,05",
+        "Ø1,55 ±0,01",
+        "Ø1,5 +0,02/-0",
+        "Ø1,6 nominal"
       ],
       correct: 2,
-      correction: "La ligne continue fine (0,2-0,5 mm) trace les prolongations, flèches et hachures pour côtes en mm/µm (ex: diamètre d'un pivot). Évite les ambiguïtés sur les plans.",
+      correction: "Ø1,55 ±0,01 (ISO 129-1) : Précision pour filetage sans forçage sur micro-vis.",
     },
     {
-      question: "Quelle ligne pour un axe caché (non visible) ?",
+      question: "Les tolérances géométriques (ISO 1101) incluent... ?",
       options: [
-        "Ligne continue épaisse",
-        "Ligne en tiretés (pointillés)",
-        "Ligne en chaîne",
-        "Ligne continue fine"
+        "Seule la dimension",
+        "Perp., parall., rondeur",
+        "Axes de rotation",
+        "Hachures"
       ],
       correct: 1,
-      correction: "La ligne en tiretés (0,3-0,5 mm) montre les arêtes cachées (ex: trou interne sous une platine). Crucial pour le démontage sans surprise en atelier horloger.",
+      correction: "Perpendic./parallélisme/rondeur (ex: balancier rond <0,01 mm). Évite vibrations en haute horlogerie.",
     },
     {
-      question: "Quelle ligne indique les axes de rotation et symétries ?",
+      question: "Pour un jeu fonctionnel sur pivot, la tolérance est... ?",
       options: [
-        "Ligne en tiretés fins",
-        "Ligne en chaîne (tiretés espacés)",
-        "Ligne continue épaisse",
-        "Ligne libre"
+        "Nulle (ajustement serré)",
+        "Légèrement lâche (+0,01)",
+        "Très lâche",
+        "ISO 9001 seulement"
       ],
       correct: 1,
-      correction: "La ligne en chaîne (0,2-0,4 mm) marque les centres et trajectoires (ex: axe d'une roue d'échappement). Aide à l'alignement lors du remontage.",
+      correction: "+0,01 mm lâche : Permet lubrification sans frottement (ex: échappement).",
     },
     {
-      question: "Quelle ligne pour les annotations et repères ?",
+      question: "ISO 129-1 définit les... ?",
       options: [
-        "Ligne continue fine",
-        "Ligne en tiretés",
-        "Ligne en tiretés fins",
-        "Ligne en chaîne"
-      ],
-      correct: 2,
-      correction: "La ligne en tiretés fins (0,1-0,3 mm) sert aux indications (ex: repères pour vis ou assemblages). Subtile pour ne pas surcharger le plan horloger.",
-    },
-    {
-      question: "Quelle ligne est variable et utilisée pour les esquisses ?",
-      options: [
-        "Ligne continue épaisse",
-        "Ligne libre ou de croquis",
-        "Ligne en tiretés",
-        "Ligne en chaîne"
+        "Lignes ISO 128",
+        "Principes de cotation",
+        "Couleurs plans",
+        "Fonts techniques"
       ],
       correct: 1,
-      correction: "La ligne libre (fine/variable) permet les notes manuelles (ex: croquis rapide d'un ajustement prototype). Utile en phase de conception avant CAO.",
+      correction: "Principes de cotation/dimensionnement (ex: flèches, prolongations). Base pour plans suisses.",
     },
     {
-      question: "Quelle épaisseur typique pour une ligne de contour en horlogerie ?",
+      question: "En horlogerie, tolérance typique pour platine (épaisseur) ?",
       options: [
-        "0,1 mm",
-        "0,2-0,5 mm",
-        "0,5-1 mm",
+        "±0,005 mm",
+        "±0,05 mm",
+        "±0,1 mm",
         "Variable"
       ],
-      correct: 2,
-      correction: "0,5-1 mm pour les contours épais : assure visibilité sur micro-pièces (ex: outline d'une roue dentée à 1:1). Norme ISO 128-2 pour uniformité suisse.",
+      correct: 1,
+      correction: "±0,05 mm pour platines : Assure planéité pour composants alignés (ETA 6497).",
     },
     {
-      question: "Les lignes en tiretés servent à... ?",
+      question: "Le symbole Ø indique... ?",
       options: [
-        "Montrer les côtes",
-        "Représenter les parties cachées",
-        "Tracer les axes",
-        "Annoter librement"
+        "Diamètre",
+        "Profondeur",
+        "Longueur",
+        "Angle"
+      ],
+      correct: 0,
+      correction: "Diamètre (ex: Ø10 ±0,02) : Standard pour trous/pivots circulaires.",
+    },
+    {
+      question: "Pourquoi des tolérances en horlogerie ?",
+      options: [
+        "Décoratif",
+        "Interchangeabilité pièces",
+        "Simplicité",
+        "Coût bas"
       ],
       correct: 1,
-      correction: "Elles indiquent les arêtes non visibles (ex: engrenages internes d'un barillet). Permet de 'voir à travers' sans démonter le mouvement.",
+      correction: "Interchangeabilité (ex: pièces ETA standardisées mondialement). Évite custom pour chaque montre.",
     },
     {
-      question: "Dans ISO 128-2, quelle ligne pour les hachures de section ?",
+      question: "Jeu fonctionnel vs ajustement : quel pour roulements ?",
       options: [
-        "Ligne en chaîne",
-        "Ligne continue fine",
-        "Ligne continue épaisse",
-        "Ligne en tiretés fins"
+        "Ajustement serré",
+        "Jeu lâche 0,02 mm",
+        "Sans tolérance",
+        "ISO 5457"
       ],
       correct: 1,
-      correction: "Ligne continue fine pour hachures et sections (ex: coupe d'un pivot). Distingue les matériaux dans les vues éclatées horlogères.",
+      correction: "Jeu lâche (0,02 mm) pour roulements : Réduit usure, tolère expansions thermiques.",
     },
     {
-      question: "Pourquoi utiliser des lignes fines pour les côtes en horlogerie ?",
+      question: "ISO 1101 s'applique aux tolérances... ?",
       options: [
-        "Pour plus de visibilité",
-        "Pour éviter la surcharge du plan",
-        "Pour indiquer les axes cachés",
-        "Pour les esquisses"
+        "Linéaires seulement",
+        "De forme et position",
+        "Axes symétrie",
+        "Hachures"
       ],
       correct: 1,
-      correction: "Elles (0,2-0,5 mm) gardent le plan clair sur des pièces minuscules (ex: tolérances ±0,02 mm). Sur un plan surchargé, c'est illisible en production.",
-    },
-    {
-      question: "Quelle ligne pour les trajectoires de mouvement (ex: balancier) ?",
-      options: [
-        "Ligne continue épaisse",
-        "Ligne en tiretés",
-        "Ligne en chaîne",
-        "Ligne libre"
-      ],
-      correct: 2,
-      correction: "Ligne en chaîne pour dynamiques (ex: oscillation du balancier). Aide à visualiser les jeux fonctionnels sans simulation 3D.",
-    },
-    {
-      question: "En horlogerie suisse, ISO 128-2 est combinée avec quelle norme pour les cartouches ?",
-      options: [
-        "ISO 9001",
-        "ISO 1101",
-        "ISO 5457",
-        "ISO 4287"
-      ],
-      correct: 2,
-      correction: "ISO 5457 pour cartouches : lignes + infos admin (ex: échelle 1:1). Ensemble, elles standardisent les plans ETA pour traçabilité internationale.",
+      correction: "Forme/position (ex: concentricité pivots <0,005 mm). Pour précision micrométrique.",
     },
   ];
 
@@ -198,17 +199,17 @@ function QuizTypesLignes() {
 
   return (
     <section className="bg-[#1c1e26] text-gray-300 rounded-2xl shadow-lg p-8 mt-10 text-center border border-[#E2B44F]/20">
-      <h2 className="text-xl font-semibold text-[#E2B44F] mb-4">Quiz : Teste tes connaissances sur les lignes ISO 128-2</h2>
+      <h2 className="text-xl font-semibold text-[#E2B44F] mb-4">Quiz : Teste tes connaissances sur les côtes et tolérances ISO</h2>
       {showScore ? (
         <div className="space-y-4">
           <p className="text-lg text-gray-300">
             Résultat final : <span className="text-[#E2B44F] font-bold">{score}</span> / {questions.length}
           </p>
           <p className="text-sm text-gray-400">
-            {score === questions.length ? "Parfait ! Tu maîtrises les lignes techniques." :
-             score >= 10 ? "Excellent ! Quelques nuances à peaufiner." :
-             score >= 7 ? "Bon niveau, revois les usages cachés." :
-             "Pratique avec des plans pour progresser."}
+            {score === questions.length ? "Parfait ! Tu maîtrises les tolérances horlogères." :
+             score >= 10 ? "Excellent ! Précision suisse au top." :
+             score >= 7 ? "Bon, revois les jeux fonctionnels." :
+             "Pratique avec des plans pour affiner."}
           </p>
           <button
             onClick={handleRestart}
@@ -274,168 +275,153 @@ function QuizTypesLignes() {
 }
 
 function InteractiveSVG() {
-  const [tooltip, setTooltip] = useState<TooltipState>({ show: false, type: '', epaisseur: '', exemple: '', x: 0, y: 0 });
+  const [tooltip, setTooltip] = useState<TooltipState>({ show: false, type: '', tolerance: '', exemple: '', x: 0, y: 0 });
 
-  const lines: Line[] = [
+  const cotes: Cote[] = [
     {
       id: 1,
-      type: 'Ligne continue épaisse',
-      epaisseur: '0,5-1 mm',
-      exemple: 'Contours de pont',
-      path: 'M10 50 L200 50',
+      type: 'Côte linéaire Ø10',
+      tolerance: '±0,02 mm',
+      exemple: 'Diamètre pivot',
+      path: 'M100 100 m -50, 0 a 50,50 0 1,1 100,0 a 50,50 0 1,1 -100,0', // Cercle Ø10
       stroke: '#E2B44F',
-      strokeWidth: 3,
-      strokeDasharray: 'none'
+      strokeWidth: 1,
+      label: 'Ø10'
     },
     {
       id: 2,
-      type: 'Ligne continue fine',
-      epaisseur: '0,2-0,5 mm',
-      exemple: 'Côte pivot',
-      path: 'M10 80 L200 80',
+      type: 'Tolérance jeu fonctionnel',
+      tolerance: '0,01-0,03 mm',
+      exemple: 'Entre pivot/platine',
+      path: 'M150 100 L250 100', // Ligne côte
       stroke: '#E2B44F',
-      strokeWidth: 1,
-      strokeDasharray: 'none'
+      strokeWidth: 0.5,
+      label: 'Jeu 0,02'
     },
     {
       id: 3,
-      type: 'Ligne en tiretés',
-      epaisseur: '0,3-0,5 mm',
-      exemple: 'Arête cachée',
-      path: 'M10 110 L200 110',
+      type: 'Ajustement technique',
+      tolerance: '+0,02/-0',
+      exemple: 'Trou vis M1,5',
+      path: 'M50 150 L150 150', // Ligne prolongée
       stroke: '#E2B44F',
-      strokeWidth: 2,
-      strokeDasharray: '5,5'
+      strokeWidth: 1,
+      label: 'Ø1,55'
     },
     {
       id: 4,
-      type: 'Ligne en chaîne',
-      epaisseur: '0,2-0,4 mm',
-      exemple: 'Axe rotation',
-      path: 'M10 140 L200 140',
+      type: 'Tolérance géométrique (rondeur)',
+      tolerance: '<0,01 mm',
+      exemple: 'Balancier',
+      path: 'M200 150 m -20, 0 a 20,20 0 1,1 40,0 a 20,20 0 1,1 -40,0',
       stroke: '#E2B44F',
-      strokeWidth: 1.5,
-      strokeDasharray: '10,5'
-    },
-    {
-      id: 5,
-      type: 'Ligne en tiretés fins',
-      epaisseur: '0,1-0,3 mm',
-      exemple: 'Repère vis',
-      path: 'M10 170 L200 170',
-      stroke: '#E2B44F',
-      strokeWidth: 1,
-      strokeDasharray: '3,3'
-    },
-    {
-      id: 6,
-      type: 'Ligne libre',
-      epaisseur: 'Variable',
-      exemple: 'Esquisse note',
-      path: 'M10 200 Q100 180 200 200',
-      stroke: '#E2B44F',
-      strokeWidth: 2,
-      strokeDasharray: 'none'
+      strokeWidth: 0.5,
+      label: 'Rondeur'
     },
   ];
 
-  const handleMouseEnter = (line: Line, event: React.MouseEvent<SVGPathElement>): void => {
+  const handleMouseEnter = (cote: Cote, event: React.MouseEvent<SVGPathElement>): void => {
     const svgRect = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - svgRect.left;
     const y = event.clientY - svgRect.top;
     setTooltip({
       show: true,
-      type: line.type,
-      epaisseur: line.epaisseur,
-      exemple: line.exemple,
+      type: cote.type,
+      tolerance: cote.tolerance,
+      exemple: cote.exemple,
       x,
       y
     });
   };
 
   const handleMouseLeave = (): void => {
-    setTooltip({ show: false, type: '', epaisseur: '', exemple: '', x: 0, y: 0 });
+    setTooltip({ show: false, type: '', tolerance: '', exemple: '', x: 0, y: 0 });
   };
 
   return (
     <div className="relative">
-      <svg width="300" height="250" viewBox="0 0 300 250" className="border border-[#E2B44F]/30 rounded-lg mx-auto block shadow-sm bg-[#1c1e26]">
-        <text x="10" y="35" fontSize="12" fill="#E2B44F">Exemples interactifs (hover/clic)</text>
-        {lines.map((line) => (
-          <path
-            key={line.id.toString()}
-            d={line.path}
-            stroke={line.stroke}
-            strokeWidth={line.strokeWidth}
-            strokeDasharray={line.strokeDasharray}
-            fill="none"
-            onMouseEnter={(e) => handleMouseEnter(line, e)}
-            onMouseLeave={handleMouseLeave}
-            onTouchStart={(e) => handleMouseEnter(line, e as any)} // Mobile touch
-            className="cursor-pointer hover:opacity-70 transition"
-          />
+      <svg width="300" height="200" viewBox="0 0 300 200" className="border border-[#E2B44F]/30 rounded-lg mx-auto block shadow-sm bg-[#1c1e26]">
+        <text x="10" y="20" fontSize="12" fill="#E2B44F">Schéma interactif côtes/tolérances (hover/clic)</text>
+        {cotes.map((cote) => (
+          <>
+            <path
+              key={cote.id.toString()}
+              d={cote.path}
+              stroke={cote.stroke}
+              strokeWidth={cote.strokeWidth}
+              fill="none"
+              onMouseEnter={(e) => handleMouseEnter(cote, e)}
+              onMouseLeave={handleMouseLeave}
+              onTouchStart={(e) => handleMouseEnter(cote, e as any)}
+              className="cursor-pointer hover:opacity-70 transition"
+            />
+            <text x="cote.path.includes('100') ? 110 : 160" y="cote.id === 1 ? 105 : 155" fontSize="10" fill="#E2B44F" textAnchor="middle">{cote.label}</text>
+          </>
         ))}
       </svg>
       {tooltip.show && (
         <div 
           className="absolute bg-[#2c3344] border border-[#E2B44F]/50 shadow-lg rounded p-2 text-sm z-10 max-w-xs text-gray-300"
-          style={{ left: `${tooltip.x}px`, top: `${tooltip.y - 60}px` }} // Position dynamique
+          style={{ left: `${tooltip.x}px`, top: `${tooltip.y - 60}px` }}
         >
           <strong>{tooltip.type}</strong>
           <br />
-          Épaisseur: {tooltip.epaisseur}
+          Tolérance: {tooltip.tolerance}
           <br />
           Ex: {tooltip.exemple}
         </div>
       )}
-      <p className="text-center text-xs text-gray-500 mt-2">Passe la souris ou touche sur les lignes pour voir les détails (ISO 128-2).</p>
+      <p className="text-center text-xs text-gray-500 mt-2">Passe la souris ou touche sur les éléments pour voir les détails (ISO 129-1/1101).</p>
     </div>
   );
 }
 
-const typesLignes = [
+const cotesTolerances = [
   {
-    type: "Ligne continue épaisse",
-    epaisseur: "0,5 à 1 mm",
-    usage: "Contours visibles et contours de coupe. En horlogerie : représente les bords extérieurs des pièces (ex: ponts, platines).",
-    exemple: "Utilisée pour les outlines principales d'un mouvement ETA.",
+    type: "Côtes linéaires (ISO 129-1)",
+    tolerance: "±0,01 à ±0,05 mm",
+    usage: "Dimensions de base (longueur, Ø). En horlogerie : pivots, trous (ex: Ø10 ±0,02 pour précision).",
+    exemple: "Côte d'un pivot ETA : Assure ajustement sans jeu excessif.",
   },
   {
-    type: "Ligne continue fine",
-    epaisseur: "0,2 à 0,5 mm",
-    usage: "Dimensions, hachures, lignes de prolongation et flèches. En horlogerie : côtes précises pour tolérances (ex: diamètres de pivots).",
-    exemple: "Indique les mesures en mm/µm sur un plan de roue dentée.",
+    type: "Tolérances de jeu fonctionnel",
+    tolerance: "0,01-0,03 mm lâche",
+    usage: "Espace pour mouvement (lubrification). En horlogerie : Entre pivot et platine pour rotation fluide.",
+    exemple: "Jeu 0,02 mm dans échappement : Évite blocage/usure.",
   },
   {
-    type: "Ligne en tiretés (pointillés)",
-    epaisseur: "0,3 à 0,5 mm",
-    usage: "Arêtes cachées. En horlogerie : montre les parties internes non visibles (ex: trous sous une platine).",
-    exemple: "Représente un axe interne d'un balancier sans démonter la pièce.",
+    type: "Ajustements techniques",
+    tolerance: "+0,02/-0 mm",
+    usage: "Assemblages serrés (transition/intermédiaire). En horlogerie : Vis/filetages pour fixation stable.",
+    exemple: "Trou M1,5 Ø1,55 : Filetage précis sans forçage.",
   },
   {
-    type: "Ligne en chaîne (tiretés espacés)",
-    epaisseur: "0,2 à 0,4 mm",
-    usage: "Lignes de centre, trajectoires de mouvement et symétries. En horlogerie : axes de rotation (ex: pivots de roues).",
-    exemple: "Trace le centre d'une roue d'échappement pour alignement.",
+    type: "Tolérances géométriques (ISO 1101)",
+    tolerance: "<0,01 mm (rondeur/perp.)",
+    usage: "Forme/orientation (parallélisme, concentricité). En horlogerie : Balanciers/platines pour alignement.",
+    exemple: "Rondeur balancier <0,005 mm : Réduit vibrations haute fréquence.",
   },
   {
-    type: "Ligne en tiretés fins (pointillés fins)",
-    epaisseur: "0,1 à 0,3 mm",
-    usage: "Lignes d'indication et de référence. En horlogerie : repères pour assemblages (ex: positions de vis).",
-    exemple: "Indique l'orientation d'un composant lors du remontage.",
+    type: "Côtes angulaires",
+    tolerance: "±0,5° à ±1°",
+    usage: "Angles (ex: cône pivots). En horlogerie : Alignement roues dentées.",
+    exemple: "Angle 45° pour cône : ±0,5° pour usinage CNC.",
   },
   {
-    type: "Ligne libre ou de croquis",
-    epaisseur: "Variable (fine)",
-    usage: "Annotations et esquisses préliminaires. En horlogerie : notes manuelles sur un prototype de plan.",
-    exemple: "Croquis rapide d'un ajustement pour atelier.",
+    type: "Tolérances de position",
+    tolerance: "0,005-0,02 mm",
+    usage: "Emplacements relatifs (ex: trous symétriques). En horlogerie : Positions vis pour remontage.",
+    exemple: "Concentricité trous platine : ±0,01 mm pour stabilité.",
   },
 ];
 
-export default function TypesLignesIso1282Page() {
+export default function CotesTolerancesPage() {
+  const router = useRouter();
+  const handleBack = () => router.back(); // Retour à page précédente
+
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>): void => {
-    e.currentTarget.style.display = 'none'; // Cache image 404
-    e.currentTarget.nextElementSibling?.classList.remove('hidden'); // Montre fallback
+    e.currentTarget.style.display = 'none';
+    e.currentTarget.nextElementSibling?.classList.remove('hidden');
   };
 
   return (
@@ -443,142 +429,149 @@ export default function TypesLignesIso1282Page() {
       <div className="max-w-5xl mx-auto space-y-16">
         {/* Bouton Retour */}
         <div className="mb-6">
-          <Link
-            href="/theorie"
+          <button
+            onClick={handleBack}
             className="text-[#E2B44F] hover:text-[#d4ac3d] flex items-center gap-2 px-4 py-2 bg-[#2c3344] text-gray-300 rounded-lg font-semibold hover:bg-[#3c4454] transition border border-[#E2B44F]/20"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
-            Retour à la Théorie
-          </Link>
+            Retour à la page précédente
+          </button>
         </div>
 
         {/* Titre principal */}
         <header className="text-center space-y-4">
-          <div className="relative">
-            <Image
-              src="/images/typ-logo.png"
-              alt="Logo TyP"
-              width={80}
-              height={80}
-              className="mx-auto shadow-lg rounded-full border border-[#E2B44F]/30"
-              onError={handleImageError}
-            />
-            <p className="hidden text-sm text-gray-500 mt-2">Logo TyP (image non trouvée)</p>
-          </div>
+          <Image
+            src="/images/cotes-logo.png" // Ajoute ton logo si besoin
+            alt="Logo Côtes"
+            width={80}
+            height={80}
+            className="mx-auto shadow-lg rounded-full border border-[#E2B44F]/30"
+            onError={handleImageError}
+          />
+          <p className="hidden text-sm text-gray-500 mt-2">Logo Côtes (image non trouvée)</p>
           <h1 className="text-4xl font-bold text-[#E2B44F]">
-            Types de Lignes <span className="text-gray-400">(ISO 128-2)</span>
+            Côtes et Tolérances <span className="text-gray-400">(ISO 129-1 & 1101)</span>
           </h1>
           <p className="text-gray-400 max-w-xl mx-auto text-lg leading-relaxed">
-            La norme ISO 128-2 définit les types de lignes standard pour les dessins techniques. En horlogerie suisse, elles assurent une représentation claire et précise des plans (contours, axes, côtes) pour éviter les ambiguïtés en production.
+            Les normes ISO 129-1 (cotation) et 1101 (tolérances géométriques) définissent les dimensions précises et tolérances pour les dessins techniques. En horlogerie, elles garantissent l'interchangeabilité des micro-pièces (ex: pivots ±0,02 mm) pour assemblages parfaits.
           </p>
         </header>
 
-        {/* Section image illustrative */}
+        {/* Section schéma illustrative */}
         <section className="bg-[#2c3344] border border-[#E2B44F]/20 shadow-sm rounded-2xl p-10 text-center">
-          <h2 className="text-2xl font-semibold text-[#E2B44F] mb-6">Schéma des Types de Lignes (ISO 128-2)</h2>
+          <h2 className="text-2xl font-semibold text-[#E2B44F] mb-6">Schéma des Côtes et Tolérances Horlogères</h2>
           <div className="relative">
             <Image
-              src="/images/types-lignes-iso128-2.jpg"
-              alt="Schéma des types de lignes ISO 128-2"
+              src="/images/cotes-tolerances-schema.jpg"
+              alt="Schéma côtes tolérances ISO"
               width={800}
               height={600}
               className="mx-auto rounded-lg shadow max-w-full hover:scale-105 transition-transform"
               onError={handleImageError}
             />
-            <p className="hidden text-sm text-gray-500 mt-2">Schéma ISO 128-2 (image non trouvée – ajoute en /public/images/)</p>
+            <p className="hidden text-sm text-gray-500 mt-2">Schéma (Ø10 ±0,02, jeu 0,02 mm – ajoute image en /public/images/)</p>
           </div>
           <p className="text-gray-500 text-sm mt-4">
-            Exemple d'application des lignes sur un plan technique horloger (épaisseurs et usages conformes à ISO 128-2).
+            Exemple : Ø10 mm ±0,02 (tolérance), jeu fonctionnel 0,02 mm, ajustement technique pour pivot.
           </p>
         </section>
 
         {/* SVG interactif */}
         <section className="bg-[#2c3344] border border-[#E2B44F]/20 shadow-sm rounded-2xl p-10 text-center">
-          <h2 className="text-2xl font-semibold text-[#E2B44F] mb-6">SVG Interactif : Exemples de Lignes</h2>
+          <h2 className="text-2xl font-semibold text-[#E2B44F] mb-6">SVG Interactif : Exemples de Côtes</h2>
           <InteractiveSVG />
-          <p className="text-gray-500 text-sm mt-4">Clique ou survole les lignes pour voir les détails. Idéal pour visualiser les applications en horlogerie.</p>
+          <p className="text-gray-500 text-sm mt-4">Clique ou survole pour détails (ex: tolérances sur pivots/balanciers).</p>
         </section>
 
-        {/* Tableau des types de lignes */}
+        {/* Tableau des côtes/tolérances */}
         <section className="bg-[#2c3344] border border-[#E2B44F]/20 shadow-sm rounded-2xl p-10">
-          <h2 className="text-2xl font-semibold text-[#E2B44F] mb-6">Détails des Types de Lignes</h2>
-          <p className="text-gray-400 mb-4">Chaque type a une épaisseur et un usage spécifique, adapté aux micro-pièces horlogères. Respecter ISO 128-2 évite les erreurs d'interprétation lors du démontage/remontage ou de l'usinage.</p>
+          <h2 className="text-2xl font-semibold text-[#E2B44F] mb-6">Détails des Côtes et Tolérances</h2>
+          <p className="text-gray-400 mb-4">En horlogerie suisse, ces normes assurent précision micrométrique (ex: ±0,005 mm pour platines). ISO 129-1 pour cotation, 1101 pour géométrie.</p>
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm text-left border-collapse border border-[#E2B44F]/20">
               <thead className="bg-[#E2B44F]/10">
                 <tr>
-                  <th className="border px-4 py-3 font-semibold text-[#E2B44F]">Type de Ligne</th>
-                  <th className="border px-4 py-3 font-semibold text-[#E2B44F]">Épaisseur (mm)</th>
+                  <th className="border px-4 py-3 font-semibold text-[#E2B44F]">Type</th>
+                  <th className="border px-4 py-3 font-semibold text-[#E2B44F]">Tolérance Typique</th>
                   <th className="border px-4 py-3 font-semibold text-[#E2B44F]">Usage Technique</th>
-                  <th className="border px-4 py-3 font-semibold text-[#E2B44F]">Exemple en Horlogerie</th>
+                  <th className="border px-4 py-3 font-semibold text-[#E2B44F]">Exemple Horloger</th>
                 </tr>
               </thead>
               <tbody>
-                {typesLignes.map((ligne, i) => (
+                {cotesTolerances.map((cote, i) => (
                   <tr key={i.toString()} className={i % 2 === 0 ? "bg-[#1c1e26]" : "bg-[#2c3344]"}>
-                    <td className="border px-4 py-3 font-semibold text-gray-300">{ligne.type}</td>
-                    <td className="border px-4 py-3 font-mono text-gray-400">{ligne.epaisseur}</td>
-                    <td className="border px-4 py-3 text-gray-300">{ligne.usage}</td>
-                    <td className="border px-4 py-3 italic text-gray-400">{ligne.exemple}</td>
+                    <td className="border px-4 py-3 font-semibold text-gray-300">{cote.type}</td>
+                    <td className="border px-4 py-3 font-mono text-gray-400">{cote.tolerance}</td>
+                    <td className="border px-4 py-3 text-gray-300">{cote.usage}</td>
+                    <td className="border px-4 py-3 italic text-gray-400">{cote.exemple}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
           <p className="text-gray-500 text-sm mt-4">
-            En Suisse, ces lignes sont combinées avec ISO 5457 (cartouches) pour des plans complets. L'épaisseur varie selon l'échelle (ex: 1:1 pour micro-pièces).
+            Tolérances adaptées à l'échelle 1:1 pour micro-pièces. Combinées à ISO 128-2 (lignes) pour plans complets.
           </p>
         </section>
 
         {/* Quiz interactif */}
         <section className="bg-[#2c3344] border border-[#E2B44F]/20 shadow-sm rounded-2xl p-10">
-          <QuizTypesLignes />
+          <QuizCotesTolerances />
         </section>
 
         {/* Vidéo pédagogique */}
         <section className="bg-[#2c3344] border border-[#E2B44F]/20 shadow-sm rounded-2xl p-10 text-center">
           <h2 className="text-2xl font-semibold text-[#E2B44F] mb-6">
-            Vidéo : Lignes Techniques en Dessin Industriel
+            Vidéo : Tolérances en Dessin Technique
           </h2>
           <div className="relative w-full max-w-3xl mx-auto overflow-hidden rounded-xl border border-[#E2B44F]/20 shadow-sm hover:scale-[1.02] transition-transform duration-300">
             <iframe
               className="w-full h-[480px] md:h-[540px] lg:h-[600px]"
-              src="https://www.youtube-nocookie.com/embed/93zHWlfYrwc"
-              title="Lignes Techniques en Dessin Industriel"
+              src="https://www.youtube-nocookie.com/embed/VIDEO_ID_TOLERANCES" // Remplace par ID YouTube pertinent (ex: sur ISO 1101)
+              title="Tolérances Géométriques ISO 1101"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               referrerPolicy="strict-origin-when-cross-origin"
               allowFullScreen
             ></iframe>
           </div>
-          <p className="text-gray-500 text-sm mt-4">Vidéo explicative sur les types de lignes (ISO 128-2) appliquées au dessin technique.</p>
+          <p className="text-gray-500 text-sm mt-4">Vidéo sur côtes/tolérances appliquées (recherche "ISO 1101 dessin technique" pour ID).</p>
         </section>
 
         {/* Astuce horlogère */}
         <section className="bg-[#E2B44F]/10 border border-[#E2B44F]/20 shadow-sm rounded-2xl p-8 text-center">
           <blockquote className="text-xl italic text-[#E2B44F]">
-            "Une ligne mal choisie peut transformer un plan clair en puzzle horloger."
+            "Une tolérance mal appliquée peut déséquilibrer un mouvement entier."
           </blockquote>
-          <p className="mt-4 text-[#E2B44F] font-medium">— Astuce pour les apprentis en dessin technique</p>
+          <p className="mt-4 text-[#E2B44F] font-medium">— Astuce pour apprentis en cotation technique</p>
         </section>
 
         {/* Lien ISO */}
         <section className="text-center py-10">
           <p className="text-gray-400 text-lg mb-4">📘 Pour aller plus loin :</p>
           <a
-            href="https://www.iso.org/standard/75666.html"
+            href="https://www.iso.org/standard/45667.html" // ISO 129-1
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-[#E2B44F] text-gray-900 font-semibold py-3 px-6 rounded-lg hover:bg-[#d4ac3d] transition border border-[#E2B44F]"
           >
-            Consulter la norme ISO 128-2 (Dessins techniques - Lignes)
+            ISO 129-1 : Principes de cotation
+          </a>
+          <br className="mt-2" />
+          <a
+            href="https://www.iso.org/standard/21235.html" // ISO 1101
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-[#E2B44F] text-gray-900 font-semibold py-3 px-6 rounded-lg hover:bg-[#d4ac3d] transition border border-[#E2B44F] mt-2"
+          >
+            ISO 1101 : Tolérances géométriques
           </a>
         </section>
 
         <footer className="text-center text-sm text-gray-500 mt-6 border-t border-[#E2B44F]/20 pt-4">
-          © HorloLearn 2025 — Norme ISO 128-2 / Pratiques de dessin horloger suisse.
+          © HorloLearn 2025 — ISO 129-1/1101 / Pratiques de cotation horlogère suisse.
         </footer>
       </div>
     </main>
