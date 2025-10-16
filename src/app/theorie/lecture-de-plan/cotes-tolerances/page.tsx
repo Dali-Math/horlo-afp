@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // Ajout pour bouton Retour
+import { useRouter } from "next/navigation";
 import { CheckCircle, XCircle, X } from "lucide-react";
 
 export default function CotesEtTolerancesPage() {
@@ -184,7 +184,7 @@ export default function CotesEtTolerancesPage() {
   ];
 
   const handleAnswer = (optionIndex: number) => {
-    if (selectedAnswer !== null) return;
+    if (selectedAnswer !== null) return; // Empêche de répondre plusieurs fois
     setSelectedAnswer(optionIndex.toString());
     setShowExplanation(true);
     if (optionIndex === quizQuestions[currentQuestion].correct) {
@@ -213,10 +213,10 @@ export default function CotesEtTolerancesPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-6 py-16 font-sans text-gray-800">
       <div className="max-w-5xl mx-auto space-y-16">
-        {/* --- Bouton Retour --- */}
+        {/* --- Bouton Retour vers lecture-de-plan --- */}
         <div className="mb-6">
           <button
-            onClick={() => router.back()}
+            onClick={() => router.push('/theorie/lecture-de-plan')}
             className="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
