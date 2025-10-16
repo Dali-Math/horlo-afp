@@ -42,7 +42,7 @@ function QuizCartouche() {
       options: [
         "Le diamètre de la pièce",
         "La dureté du matériau",
-        "L’état de surface moyen (rugosité)",
+        "L'état de surface moyen (rugosité)",
         "La tolérance générale"
       ],
       correct: 2,
@@ -290,6 +290,17 @@ const TABLE_REPERE = [
   { n: 11, libelle: "Tolérances en µm", fonction: "Tolérances exprimées en microns : utile pour cotes critiques (axes, rubis) en micro-mécanique horlogère." },
 ];
 
+const COMPOSITION_GENERALE = [
+  { element: "Titre du dessin", description: "Désignation claire de la pièce (ex: Pont de balancier, Roue moyenne). Permet une identification immédiate." },
+  { element: "Numéro de plan", description: "Référence unique pour le suivi, la version et l'archivage (ex: 12345-A). Essentiel pour la traçabilité." },
+  { element: "Échelle", description: "Rapport taille réelle/dessin (ex: 5:1, 1:1, 2:1). Guide l'usinage sans erreur de proportion." },
+  { element: "Nom du dessinateur", description: "Identifie la personne responsable du plan CAO. Avec date de création/révision." },
+  { element: "Matériau", description: "Indication de la matière (ex: Laiton, Acier trempé, Rubis synthétique). Oriente les traitements et contrôles." },
+  { element: "Traitement thermique / de surface", description: "Opérations spécifiques (ex: trempe, polissage, rhodiage). Assure la durabilité des composants horlogers." },
+  { element: "Tolérances générales", description: "Valeurs par défaut (ex: ±0.02 mm). Appliquées si non précisées localement sur le dessin." },
+  { element: "Validation", description: "Signatures du responsable technique ou chef d'atelier. Certifie la conformité finale aux normes ISO." },
+];
+
 export default function CartoucheHorlogerPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-6 py-16 font-sans text-gray-800">
@@ -319,7 +330,7 @@ export default function CartoucheHorlogerPage() {
           </p>
         </header>
 
-        {/* Section schéma avec tableau et CSV */}
+        {/* Section schéma avec tableau numéroté et CSV */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Schéma d'un Cartouche Horloger</h2>
           <img
@@ -331,7 +342,7 @@ export default function CartoucheHorlogerPage() {
             Exemple type d'un cartouche utilisé en horlogerie suisse.
           </p>
 
-          {/* Tableau pédagogique */}
+          {/* Tableau pédagogique numéroté */}
           <div className="mt-12">
             <h3 className="text-lg font-bold mb-3 text-blue-800">Tableau de correspondance – N° du schéma</h3>
             <div className="overflow-x-auto">
@@ -364,20 +375,29 @@ export default function CartoucheHorlogerPage() {
           </div>
         </section>
 
-        {/* Détails du cartouche */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 leading-relaxed">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Composition du Cartouche</h2>
-          <ul className="list-disc pl-6 space-y-3 text-gray-700">
-            <li><b>Titre du dessin</b> : désignation claire de la pièce (ex : Pont de balancier, Roue moyenne).</li>
-            <li><b>Numéro de plan</b> : référence unique pour le suivi et la version du plan.</li>
-            <li><b>Échelle</b> : rapport entre la taille réelle et la taille du dessin (ex : 5:1, 1:1, 2:1).</li>
-            <li><b>Nom du dessinateur</b> : personne ayant réalisé le plan.</li>
-            <li><b>Date</b> : date de création ou de révision du plan.</li>
-            <li><b>Matériau</b> : indication de la matière utilisée (ex : Laiton, Acier trempé, Rubis synthétique).</li>
-            <li><b>Traitement thermique / de surface</b> : spécifie les opérations (ex : trempe, polissage, rhodiage).</li>
-            <li><b>Tolérances générales</b> : valeurs par défaut si non précisées sur le dessin (ex : ±0.02 mm).</li>
-            <li><b>Validation</b> : signature du responsable technique ou du chef d'atelier.</li>
-          </ul>
+        {/* Nouvelle section : Composition générale en tableau (remplace l'ancienne liste) */}
+        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
+          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Composition Générale du Cartouche</h2>
+          <p className="text-gray-600 mb-4">Voici les éléments clés du cartouche selon la norme ISO 5457, adaptés à l'horlogerie suisse. Chaque composant assure précision, traçabilité et qualité.</p>
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-sm text-left border border-collapse border-blue-200">
+              <thead className="bg-blue-50">
+                <tr>
+                  <th className="border px-4 py-2">Élément</th>
+                  <th className="border px-4 py-2">Description / Rôle pédagogique</th>
+                </tr>
+              </thead>
+              <tbody>
+                {COMPOSITION_GENERALE.map((item, i) => (
+                  <tr key={i}>
+                    <td className="border px-4 py-3 font-semibold">{item.element}</td>
+                    <td className="border px-4 py-3 text-gray-700">{item.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-gray-500 text-sm mt-4">Ce tableau complète les repères numérotés du schéma ci-dessus. En horlogerie, tout doit être précis pour éviter des erreurs coûteuses en production.</p>
         </section>
 
         {/* Quiz interactif */}
@@ -406,7 +426,7 @@ export default function CartoucheHorlogerPage() {
         {/* Astuce horlogère */}
         <section className="bg-blue-50 border border-blue-100 shadow-sm rounded-2xl p-8 text-center">
           <blockquote className="text-xl italic text-blue-900">
-            “Un bon cartouche, c’est la carte d’identité du plan horloger.”
+            "Un bon cartouche, c'est la carte d'identité du plan horloger."
           </blockquote>
           <p className="mt-4 text-blue-700 font-medium">— Règle de base en dessin horloger</p>
         </section>
