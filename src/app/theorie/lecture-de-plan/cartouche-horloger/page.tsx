@@ -347,7 +347,7 @@ export default function CartoucheHorlogerPage() {
           <div className="aspect-video overflow-hidden rounded-md border border-gray-200">
             <iframe
               className="w-full h-full"
-              src="https://www.youtube-nocookie.com/embed/tatCrJPJGl4?rel=0&modestbranding=1"
+              src="https://www.youtube.com/watch?v=tatCrJPJGl4"
               title="Cartouche & Lecture de plan"
               allowFullScreen
             />
