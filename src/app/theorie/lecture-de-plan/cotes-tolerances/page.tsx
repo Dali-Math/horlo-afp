@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircle, XCircle, X } from "lucide-react";
 
 type QuizQuestion = {
@@ -12,6 +12,8 @@ type QuizQuestion = {
 };
 
 export default function CotesEtTolerancesPage() {
+  // ---- UI State ----
+  const [mounted, setMounted] = useState(false); // ✅ fix anti-crash SSR/hydration
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -19,14 +21,24 @@ export default function CotesEtTolerancesPage() {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
 
-  // Mémo
+  useEffect(() => {
+    setMounted(true);
+    return () => {
+      // sécurité: empêche toute mise à jour d'état après démontage
+      setMounted(false);
+    };
+  }, []);
+
+  if (!mounted) return null; // ✅ empêche l'hydratation bancale → plus d’exception client-side
+
+  // ---- Data ----
   const erreurs = [
     "Oublier d'indiquer une tolérance sur une cote fonctionnelle.",
     "Définir une tolérance trop serrée (augmente le coût et les rejets).",
     "Choisir une tolérance trop large (crée un jeu excessif).",
     "Confondre la cote maximale et la cote minimale.",
     "Négliger les tolérances géométriques (parallélisme, etc.).",
-    "Mélanger les unités de mesure (mm et µm) sans le préciser."
+    "Mélanger les unités de mesure (mm et µm) sans le préciser.",
   ];
 
   const bonnes = [
@@ -35,126 +47,106 @@ export default function CotesEtTolerancesPage() {
     "Toujours relire la cotation en pensant à l'assemblage final.",
     "Valider la faisabilité des tolérances avec l'atelier d'usinage.",
     "Faire contrôler ses plans par un pair avant la production.",
-    "Rester cohérent dans les unités et la précision sur tout le plan."
+    "Rester cohérent dans les unités et la précision sur tout le plan.",
   ];
 
-  // Quiz
   const quizQuestions: QuizQuestion[] = [
     {
       question: 'Qu\'appelle-t-on "cote nominale" ?',
-      options: [
-        "La dimension idéale sans tolérance",
-        "La tolérance maximale autorisée",
-        "L'écart entre deux dimensions"
-      ],
+      options: ["La dimension idéale sans tolérance", "La tolérance maximale autorisée", "L'écart entre deux dimensions"],
       correct: 0,
-      explanation:
-        "La cote nominale est la dimension idéale théorique d'une pièce, sans considération de tolérance."
+      explanation: "La cote nominale est la dimension idéale théorique d'une pièce, sans considération de tolérance.",
     },
     {
       question: "En système ISO, quelle lettre utilise-t-on pour les alésages ?",
       options: ["Des lettres minuscules", "Des lettres majuscules", "Des chiffres uniquement"],
       correct: 1,
-      explanation:
-        "Les alésages (contenants) utilisent des lettres majuscules, tandis que les arbres (contenus) utilisent des minuscules."
+      explanation: "Les alésages (contenants) utilisent des lettres majuscules, tandis que les arbres (contenus) utilisent des minuscules.",
     },
     {
       question: "Qu'est-ce qu'un arbre dans le système ISO ?",
       options: ["Tout ce qui est contenant", "Tout ce qui est contenu", "Un élément cylindrique uniquement"],
       correct: 1,
-      explanation:
-        "Dans le système ISO, un arbre désigne tout élément contenu, quelle que soit sa forme."
+      explanation: "Dans le système ISO, un arbre désigne tout élément contenu, peu importe sa forme.",
     },
     {
       question: "Qu'est-ce qu'un alésage ?",
       options: ["Un élément cylindrique creux", "Tout ce qui est contenant", "Une pièce rotative"],
       correct: 1,
-      explanation: "L'alésage désigne tout élément contenant dans un assemblage."
+      explanation: "L'alésage désigne tout élément contenant dans un assemblage.",
     },
     {
       question: "Comment calcule-t-on l'intervalle de tolérance (IT) ?",
       options: ["ES - EI (écart supérieur moins écart inférieur)", "Cote max + Cote min", "Cote nominale × 2"],
       correct: 0,
-      explanation:
-        "L'intervalle de tolérance est la différence entre l'écart supérieur et l'écart inférieur."
+      explanation: "L'intervalle de tolérance est la différence entre l'écart supérieur et l'écart inférieur.",
     },
     {
       question: "Pour un arbre, quelles lettres utilise-t-on ?",
       options: ["Des lettres majuscules", "Des lettres minuscules", "Des symboles spéciaux"],
       correct: 1,
-      explanation: "Les arbres (éléments contenus) sont désignés par des lettres minuscules."
+      explanation: "Les arbres (éléments contenus) sont désignés par des lettres minuscules.",
     },
     {
       question: "Dans la cotation Ø60 H8/f7, que représente H8 ?",
       options: ["La tolérance de l'arbre", "La tolérance de l'alésage", "La cote nominale"],
       correct: 1,
-      explanation:
-        "H8 (majuscule) désigne la tolérance de l'alésage, f7 (minuscule) celle de l'arbre."
+      explanation: "H8 (majuscule) désigne la tolérance de l'alésage, f7 (minuscule) celle de l'arbre.",
     },
     {
       question: "Que signifie ES pour un alésage ?",
       options: ["Écart Supérieur", "Écart Standard", "Élément Spécial"],
       correct: 0,
-      explanation: "ES = Écart Supérieur (majuscule pour les alésages)."
+      explanation: "ES (majuscule) = Écart Supérieur pour un alésage.",
     },
     {
       question: "Que signifie ei pour un arbre ?",
       options: ["écart initial", "écart inférieur", "élément intérieur"],
       correct: 1,
-      explanation: "ei (minuscule) représente l'écart inférieur pour un arbre."
+      explanation: "ei (minuscule) = écart inférieur pour un arbre.",
     },
     {
       question: "Quelle est la cote maximale ?",
       options: ["La plus petite dimension acceptable", "La plus grande dimension acceptable", "La dimension moyenne"],
       correct: 1,
-      explanation: "La cote maximale est la plus grande dimension acceptable pour la pièce."
+      explanation: "La cote maximale correspond à la plus grande dimension acceptable pour la pièce.",
     },
     {
       question: "Pour Ø60 F7, avec tolérances -0.030/-0.060, quelle est la cote minimale ?",
       options: ["59.940 mm", "59.970 mm", "60.030 mm"],
       correct: 0,
-      explanation: "Cote minimale = 60 - 0.060 = 59.940 mm."
+      explanation: "Cote minimale = 60 - 0.060 = 59.940 mm",
     },
     {
       question: "Pour Ø60 E8 avec tolérances +0.060/+0.106, quelle est la cote maximale ?",
       options: ["60.060 mm", "60.106 mm", "60.166 mm"],
       correct: 1,
-      explanation: "Cote maximale = 60 + 0.106 = 60.106 mm."
+      explanation: "Cote maximale = 60 + 0.106 = 60.106 mm",
     },
     {
       question: "Pourquoi utilise-t-on des tolérances prédéfinies en système ISO ?",
-      options: [
-        "Pour réduire les coûts uniquement",
-        "Pour standardiser et faciliter l'interchangeabilité",
-        "Pour compliquer la fabrication"
-      ],
+      options: ["Pour réduire les coûts uniquement", "Pour standardiser et faciliter l'interchangeabilité", "Pour compliquer la fabrication"],
       correct: 1,
-      explanation:
-        "Les tolérances normalisées ISO favorisent l'interchangeabilité et une communication universelle."
+      explanation: "Les tolérances ISO standardisées permettent l'interchangeabilité des pièces et une communication universelle.",
     },
     {
       question: "Dans un assemblage, si l'arbre mesure 59.97 mm et l'alésage 60.08 mm, quel est le jeu ?",
       options: ["0.11 mm", "0.05 mm", "120.05 mm"],
       correct: 0,
-      explanation: "Jeu = 60.08 - 59.97 = 0.11 mm."
+      explanation: "Jeu = 60.08 - 59.97 = 0.11 mm",
     },
     {
       question: "Quel organisme définit le système de tolérancement ISO ?",
-      options: [
-        "L'Organisation Internationale de Normalisation",
-        "L'Institut Suisse d'Horlogerie",
-        "L'Agence Européenne de Mécanique"
-      ],
+      options: ["L'Organisation Internationale de Normalisation", "L'Institut Suisse d'Horlogerie", "L'Agence Européenne de Mécanique"],
       correct: 0,
-      explanation:
-        "ISO = International Organization for Standardization (Organisation Internationale de Normalisation)."
-    }
+      explanation: "ISO = International Organization for Standardization (Organisation Internationale de Normalisation).",
+    },
   ];
 
-  // Handlers
+  // ---- Quiz handlers ----
   const handleAnswer = (optionIndex: number) => {
     if (selectedAnswer !== null) return;
-    setSelectedAnswer(String(optionIndex));
+    setSelectedAnswer(optionIndex.toString());
     setShowExplanation(true);
     if (optionIndex === quizQuestions[currentQuestion].correct) {
       setScore((s) => s + 1);
@@ -179,10 +171,11 @@ export default function CotesEtTolerancesPage() {
     setShowExplanation(false);
   };
 
+  // ---- UI ----
   return (
     <main className="min-h-screen bg-[#0a0e1a] text-gray-200 px-6 py-16 font-sans">
       <div className="max-w-5xl mx-auto space-y-16">
-        {/* Bouton Retour (navigation explicite, pas d'historique) */}
+        {/* Retour : navigation explicite → pas de crash */}
         <div className="mb-6">
           <Link
             href="/theorie/lecture-de-plan"
@@ -206,7 +199,7 @@ export default function CotesEtTolerancesPage() {
           </p>
         </header>
 
-        {/* Schéma + modal */}
+        {/* Schéma + modal (rendu conditionnel avec mounted) */}
         <section className="bg-[#111624] border border-[#1f2637] rounded-2xl p-10 text-center shadow-lg">
           <h2 className="text-2xl font-semibold text-[#E2B44F] mb-6">Schéma Interactif</h2>
           <div className="mb-4 cursor-pointer" onClick={() => setIsModalOpen(true)}>
@@ -215,12 +208,10 @@ export default function CotesEtTolerancesPage() {
               alt="Schéma des tolérances horlogères"
               className="mx-auto rounded-lg shadow-lg max-w-md w-full hover:scale-105 transition-transform"
             />
-            <p className="text-gray-500 text-sm mt-2">
-              Cliquez sur l’image pour afficher l’explication pédagogique.
-            </p>
+            <p className="text-gray-500 text-sm mt-2">Cliquez sur l’image pour afficher l’explication pédagogique.</p>
           </div>
 
-          {isModalOpen && (
+          {isModalOpen && mounted && (
             <div
               className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
               onClick={() => setIsModalOpen(false)}
@@ -236,31 +227,21 @@ export default function CotesEtTolerancesPage() {
                   <X className="w-6 h-6" />
                 </button>
 
-                <h3 className="text-xl font-semibold text-[#E2B44F] mb-4">
-                  Explication pédagogique
-                </h3>
-
+                <h3 className="text-xl font-semibold text-[#E2B44F] mb-4">Explication pédagogique</h3>
                 <img
                   src="/images/schema-cotes-tolerances.png"
                   alt="Mini schéma pédagogique"
                   className="w-32 mx-auto rounded mb-5"
                 />
-
-                <div className="text-sm leading-relaxed text-gray-300 space-y-3">
+                <div className="text-sm leading-relaxed text-gray-300 space-y-2">
                   <p>
-                    Les <b>cotes et tolérances</b> garantissent l’ajustement et la fonction correcte des composants.
-                    Une tolérance bien choisie équilibre précision, coût et montage.
+                    Les <b>cotes et tolérances</b> assurent l’ajustement et la fonction correcte des composants.
+                    Une tolérance bien choisie équilibre précision, coût et facilité d’assemblage.
                   </p>
                   <ul className="list-disc pl-6 space-y-1">
-                    <li>
-                      <b>Cote nominale</b> : valeur idéale.
-                    </li>
-                    <li>
-                      <b>Tolérance</b> : intervalle admissible autour de la cote (p. ex. ±0.02 mm).
-                    </li>
-                    <li>
-                      <b>Tolérances géométriques</b> : forme/position (planéité, parallélisme, etc.).
-                    </li>
+                    <li><b>Cote nominale</b> : valeur idéale théorique.</li>
+                    <li><b>Tolérance</b> : intervalle admissible autour de la cote (p.ex. ±0.02 mm).</li>
+                    <li><b>Tolérances géométriques</b> : exigences de forme/position (planéité, parallélisme…).</li>
                   </ul>
                 </div>
               </div>
@@ -306,20 +287,17 @@ export default function CotesEtTolerancesPage() {
         {/* Quiz */}
         <section className="bg-[#111624] border border-[#1f2637] rounded-2xl p-10 shadow-lg">
           <h2 className="text-2xl font-semibold text-[#E2B44F] mb-6">Quiz : Teste tes connaissances</h2>
-
           {!quizCompleted ? (
             <>
               <div className="mb-4 text-sm text-gray-400">
                 Question {currentQuestion + 1} sur {quizQuestions.length}
               </div>
-
               <p className="text-gray-200 font-medium mb-4 text-lg">
                 {quizQuestions[currentQuestion].question}
               </p>
-
               <div className="grid gap-4 mb-6">
                 {quizQuestions[currentQuestion].options.map((option, i) => {
-                  const isSelected = selectedAnswer === String(i);
+                  const isSelected = selectedAnswer === i.toString();
                   const isCorrect = i === quizQuestions[currentQuestion].correct;
                   return (
                     <button
@@ -344,7 +322,6 @@ export default function CotesEtTolerancesPage() {
                   );
                 })}
               </div>
-
               {showExplanation && (
                 <div className="mb-6 p-4 rounded-lg border border-[#2a3348] bg-[#151b2a]">
                   <p className="text-sm text-gray-300">
@@ -352,15 +329,12 @@ export default function CotesEtTolerancesPage() {
                   </p>
                 </div>
               )}
-
               {selectedAnswer !== null && (
                 <button
                   onClick={handleNext}
                   className="bg-[#E2B44F] text-black font-semibold py-3 px-6 rounded-lg hover:brightness-110 transition"
                 >
-                  {currentQuestion + 1 < quizQuestions.length
-                    ? "Question suivante"
-                    : "Voir les résultats"}
+                  {currentQuestion + 1 < quizQuestions.length ? "Question suivante" : "Voir les résultats"}
                 </button>
               )}
             </>
@@ -368,8 +342,7 @@ export default function CotesEtTolerancesPage() {
             <div className="text-center space-y-6">
               <h3 className="text-2xl font-bold text-[#E2B44F]">Quiz terminé !</h3>
               <p className="text-xl text-gray-200">
-                Ton score :{" "}
-                <span className="font-bold text-[#E2B44F]">{score}</span> sur {quizQuestions.length}
+                Ton score : <span className="font-bold text-[#E2B44F]">{score}</span> sur {quizQuestions.length}
               </p>
               <p className="text-gray-300">
                 {score >= 12
@@ -457,8 +430,8 @@ export default function CotesEtTolerancesPage() {
                 Quelle est la différence entre tolérance dimensionnelle et géométrique ?
               </summary>
               <p className="mt-2">
-                La tolérance dimensionnelle concerne les tailles (longueur, diamètre) tandis que la géométrique
-                garantit la forme/position (planéité, perpendicularité, parallélisme, etc.).
+                La tolérance dimensionnelle concerne les tailles (longueur, diamètre) tandis que la géométrique garantit
+                la forme et la position (planéité, perpendicularité, parallélisme, etc.).
               </p>
             </details>
             <details className="bg-[#0f1422] rounded-lg p-4 border border-[#2a3348]">
@@ -466,7 +439,7 @@ export default function CotesEtTolerancesPage() {
                 Puis-je utiliser plusieurs unités sur un même plan ?
               </summary>
               <p className="mt-2">
-                Oui, mais indique clairement le changement (ex. mm → µm) pour éviter toute ambiguïté en production.
+                Oui, mais indique clairement le changement d'unité (mm ↔ µm) pour éviter toute ambiguïté en production.
               </p>
             </details>
           </div>
