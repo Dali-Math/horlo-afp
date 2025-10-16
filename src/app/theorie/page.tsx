@@ -1,12 +1,5 @@
 "use client";
-import { generateSeoMeta } from "@/lib/seo";
 import HeroSection from "./components/HeroSection";
-
-export const metadata = generateSeoMeta(
-  "/theorie",
-  "Théorie Horlogère",
-  "Cours et ressources complètes sur la théorie horlogère suisse : lecture de plans, composants, matériaux et principes du mouvement mécanique."
-);
 
 export default function Theorie() {
   console.log("✅ Page Théorie rendue avec succès");
@@ -18,29 +11,9 @@ export default function Theorie() {
         <div className="bg-white rounded-2xl shadow-lg border border-blue-200 p-8">
           <h3 className="text-2xl font-bold text-blue-700 mb-4">Cours Académiques</h3>
           <ul className="space-y-3 text-gray-600">
-            <li>
-              <a
-                className="hover:text-blue-500"
-                href="https://www.hautehorlogerie.org/fr/encyclopedie/"
-                target="_blank"
-              >
-                Encyclopédie FHH
-              </a>
-            </li>
-            <li>
-              <a
-                className="hover:text-blue-500"
-                href="https://www.federation-horlogerie.ch/fr/formation"
-                target="_blank"
-              >
-                Manuels FH
-              </a>
-            </li>
-            <li>
-              <a className="hover:text-blue-500" href="/theorie/lecture-de-plan">
-                Lecture de plan
-              </a>
-            </li>
+            <li><a className="hover:text-blue-500" href="https://www.hautehorlogerie.org/fr/encyclopedie/" target="_blank">Encyclopédie FHH</a></li>
+            <li><a className="hover:text-blue-500" href="https://www.federation-horlogerie.ch/fr/formation" target="_blank">Manuels FH</a></li>
+            <li><a className="hover:text-blue-500" href="/theorie/lecture-de-plan">Lecture de plan</a></li>
           </ul>
         </div>
       </section>
