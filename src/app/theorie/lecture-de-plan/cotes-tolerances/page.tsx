@@ -3,6 +3,14 @@ import Link from "next/link";
 import { useState } from "react";
 import { CheckCircle, XCircle, X } from "lucide-react";
 
+// Définition du type pour chaque question du quiz
+type QuizQuestion = {
+  question: string;
+  options: string[];
+  correct: number;
+  explanation: string;
+};
+
 export default function CotesEtTolerancesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -29,8 +37,158 @@ export default function CotesEtTolerancesPage() {
     "Rester cohérent dans les unités et la précision sur tout le plan.",
   ];
 
-  const quizQuestions = [
-    // ... tes 15 questions identiques ...
+  // Ce typage répond à l’erreur de TS
+  const quizQuestions: QuizQuestion[] = [
+    {
+      question: 'Qu\'appelle-t-on "cote nominale" ?',
+      options: [
+        "La dimension idéale sans tolérance",
+        "La tolérance maximale autorisée",
+        "L'écart entre deux dimensions"
+      ],
+      correct: 0,
+      explanation: "La cote nominale est la dimension idéale théorique d'une pièce, sans considération de tolérance."
+    },
+    {
+      question: "En système ISO, quelle lettre utilise-t-on pour les alésages ?",
+      options: [
+        "Des lettres minuscules",
+        "Des lettres majuscules",
+        "Des chiffres uniquement"
+      ],
+      correct: 1,
+      explanation: "Les alésages (contenants) utilisent des lettres majuscules, tandis que les arbres (contenus) utilisent des minuscules."
+    },
+    {
+      question: "Qu'est-ce qu'un arbre dans le système ISO ?",
+      options: [
+        "Tout ce qui est contenant",
+        "Tout ce qui est contenu",
+        "Un élément cylindrique uniquement"
+      ],
+      correct: 1,
+      explanation: "Dans le système ISO, un arbre désigne tout élément contenu, peu importe sa forme."
+    },
+    {
+      question: "Qu'est-ce qu'un alésage ?",
+      options: [
+        "Un élément cylindrique creux",
+        "Tout ce qui est contenant",
+        "Une pièce rotative"
+      ],
+      correct: 1,
+      explanation: "L'alésage désigne tout élément contenant dans un assemblage."
+    },
+    {
+      question: "Comment calcule-t-on l'intervalle de tolérance (IT) ?",
+      options: [
+        "ES - EI (écart supérieur moins écart inférieur)",
+        "Cote max + Cote min",
+        "Cote nominale × 2"
+      ],
+      correct: 0,
+      explanation: "L'intervalle de tolérance est la différence entre l'écart supérieur et l'écart inférieur."
+    },
+    {
+      question: "Pour un arbre, quelles lettres utilise-t-on ?",
+      options: [
+        "Des lettres majuscules",
+        "Des lettres minuscules",
+        "Des symboles spéciaux"
+      ],
+      correct: 1,
+      explanation: "Les arbres (éléments contenus) sont désignés par des lettres minuscules."
+    },
+    {
+      question: "Dans la cotation Ø60 H8/f7, que représente H8 ?",
+      options: [
+        "La tolérance de l'arbre",
+        "La tolérance de l'alésage",
+        "La cote nominale"
+      ],
+      correct: 1,
+      explanation: "H8 (majuscule) désigne la tolérance de l'alésage, f7 (minuscule) celle de l'arbre."
+    },
+    {
+      question: "Que signifie ES pour un alésage ?",
+      options: [
+        "Écart Supérieur",
+        "Écart Standard",
+        "Élément Spécial"
+      ],
+      correct: 0,
+      explanation: "ES signifie Écart Supérieur, utilisé en majuscule pour les alésages."
+    },
+    {
+      question: "Que signifie ei pour un arbre ?",
+      options: [
+        "écart initial",
+        "écart inférieur",
+        "élément intérieur"
+      ],
+      correct: 1,
+      explanation: "ei (minuscule) représente l'écart inférieur pour un arbre."
+    },
+    {
+      question: "Quelle est la cote maximale ?",
+      options: [
+        "La plus petite dimension acceptable",
+        "La plus grande dimension acceptable",
+        "La dimension moyenne"
+      ],
+      correct: 1,
+      explanation: "La cote maximale correspond à la plus grande dimension acceptable pour la pièce."
+    },
+    {
+      question: "Pour Ø60 F7, avec tolérances -0.030/-0.060, quelle est la cote minimale ?",
+      options: [
+        "59.940 mm",
+        "59.970 mm",
+        "60.030 mm"
+      ],
+      correct: 0,
+      explanation: "Cote minimale = 60 - 0.060 = 59.940 mm"
+    },
+    {
+      question: "Pour Ø60 E8 avec tolérances +0.060/+0.106, quelle est la cote maximale ?",
+      options: [
+        "60.060 mm",
+        "60.106 mm",
+        "60.166 mm"
+      ],
+      correct: 1,
+      explanation: "Cote maximale = 60 + 0.106 = 60.106 mm"
+    },
+    {
+      question: "Pourquoi utilise-t-on des tolérances prédéfinies en système ISO ?",
+      options: [
+        "Pour réduire les coûts uniquement",
+        "Pour standardiser et faciliter l'interchangeabilité",
+        "Pour compliquer la fabrication"
+      ],
+      correct: 1,
+      explanation: "Les tolérances ISO standardisées permettent l'interchangeabilité des pièces et une communication universelle."
+    },
+    {
+      question: "Dans un assemblage, si l'arbre mesure 59.97 mm et l'alésage 60.08 mm, quel est le jeu ?",
+      options: [
+        "0.11 mm",
+        "0.05 mm",
+        "120.05 mm"
+      ],
+      correct: 0,
+      explanation: "Jeu = Alésage - Arbre = 60.08 - 59.97 = 0.11 mm"
+    },
+    {
+      question: "Quel organisme définit le système de tolérancement ISO ?",
+      options: [
+        "L'Organisation Internationale de Normalisation",
+        "L'Institut Suisse d'Horlogerie",
+        "L'Agence Européenne de Mécanique"
+      ],
+      correct: 0,
+      explanation: "ISO signifie International Organization for Standardization (Organisation Internationale de Normalisation)."
+    }
   ];
 
   const handleAnswer = (optionIndex: number) => {
@@ -75,17 +233,9 @@ export default function CotesEtTolerancesPage() {
             Retour
           </Link>
         </div>
-
+        
         {/* --- Header --- */}
-        <header className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-blue-900">
-            Cotes et Tolérances <span className="text-blue-600">(ISO 129-1 & 1101)</span>
-          </h1>
-          <p className="text-gray-600 max-w-xl mx-auto text-lg leading-relaxed">
-            Maîtrise les règles de cotation et les tolérances indispensables à la qualité en horlogerie : assemblage, usinage et contrôle dimensionnel.
-          </p>
-        </header>
-        {/* ... le reste de ta page inchangé ... */}
+        {/* ... (Le reste de ta page est inchangé) ... */}
       </div>
     </main>
   );
