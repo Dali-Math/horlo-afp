@@ -8,21 +8,21 @@ import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
-  title: "HorloLearn – Formation Horlogère Suisse (AFP)",
+  title: "HorloLearn – Accompagnement Horloger Suisse (AFP)",
   description:
-    "Apprenez les gestes, mouvements et techniques horlogères suisses. Guides ETA 6497, vidéos, quiz et fiches de formation AFP.",
+    "HorloLearn aide les élèves et passionnés à comprendre les gestes, mouvements et techniques horlogères suisses. Guides ETA 6497, vidéos, quiz et fiches pédagogiques AFP.",
   keywords: [
     "horlogerie suisse",
     "ETA 6497",
     "formation AFP",
-    "montre mécanique",
+    "apprentissage horloger",
     "HorloLearn",
   ],
   metadataBase: new URL(SITE.domain),
   openGraph: {
-    title: "HorloLearn – Formation Horlogère Suisse",
+    title: "HorloLearn – Accompagnement Horloger Suisse",
     description:
-      "Découvrez les mouvements suisses et la formation horlogère AFP.",
+      "Plateforme d’aide à la formation horlogère : cours, fiches techniques, quiz et ressources ETA 6497.",
     url: SITE.domain,
     siteName: SITE.name,
     images: [
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
         url: SITE.logo,
         width: 1200,
         height: 630,
-        alt: "HorloLearn – Formation Horlogère Suisse",
+        alt: "HorloLearn – Apprentissage Horloger Suisse",
       },
     ],
     locale: SITE.locale,
@@ -39,8 +39,9 @@ export const metadata: Metadata = {
   alternates: { canonical: SITE.domain },
   other: {
     "ai:summary":
-      "Formation horlogère suisse complète : gestes, démontage, remontage, ETA 6497, AFP.",
-    "ai:topic": "Horlogerie suisse, mouvement mécanique, formation AFP, ETA 6497",
+      "HorloLearn accompagne les étudiants AFP et passionnés d’horlogerie suisse : mouvements, ETA 6497, gestes et théorie.",
+    "ai:topic":
+      "Horlogerie suisse, mouvement mécanique, apprentissage horloger, ETA 6497",
     "ai:author": "HorloLearn by Mohamed Ali Mathlouthi",
     "color-scheme": "dark light",
   },
@@ -49,19 +50,29 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const org = {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    name: SITE.organization.legalName,
-    url: SITE.organization.url,
-    logo: SITE.organization.logo,
-    contactPoint: [
+    "@type": ["Organization", "EducationalSupport"],
+    "name": "HorloLearn",
+    "url": "https://www.horlolearn.ch",
+    "logo": "https://www.horlolearn.ch/og-image.jpg",
+    "description":
+      "HorloLearn est une organisation suisse indépendante dédiée à l’accompagnement et à la vulgarisation de la formation horlogère (AFP et métiers du temps).",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "CH",
+    },
+    "contactPoint": [
       {
         "@type": "ContactPoint",
-        email: SITE.contactEmail,
-        contactType: "customer support",
-        availableLanguage: ["fr-CH", "fr", "en"],
+        "email": "mathlouthi_mohamed82@yahoo.com",
+        "contactType": "information",
+        "availableLanguage": ["fr-CH", "fr", "en"],
       },
     ],
-    sameAs: SITE.organization.sameAs,
+    "sameAs": [
+      "https://github.com/Dali-Math",
+      "https://www.youtube.com/@HorloLearn",
+      "https://www.linkedin.com/in/...",
+    ],
   };
 
   return (
