@@ -34,5 +34,22 @@ export function generateSeoMeta(pathname: string, title: string, description: st
     },
   };
 }
+export const educationalOrganizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  "name": "HorloLearn",
+  "url": "https://www.horlolearn.ch",
+  "logo": "https://www.horlolearn.ch/og-image.jpg",
+  "description": "Plateforme suisse d’apprentissage horloger moderne et immersif.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "CH"
+  },
+  "sameAs": [
+    "https://github.com/Dali-Math",
+    "https://www.youtube.com/@HorloLearn",
+    "https://www.linkedin.com/in/..."
+  ]
+};
 
 export { SITE } from "./site";
