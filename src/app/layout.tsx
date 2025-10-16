@@ -1,21 +1,28 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { SITE } from "@/lib/seo";
-import JsonLd from "@/components/JsonLd";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer"; // ✅ Ajout du Footer
+import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@vercel/analytics/react";
+import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
   title: "HorloLearn – Formation Horlogère Suisse (AFP)",
   description:
     "Apprenez les gestes, mouvements et techniques horlogères suisses. Guides ETA 6497, vidéos, quiz et fiches de formation AFP.",
-  keywords: ["horlogerie suisse", "ETA 6497", "formation AFP", "montre mécanique", "HorloLearn"],
+  keywords: [
+    "horlogerie suisse",
+    "ETA 6497",
+    "formation AFP",
+    "montre mécanique",
+    "HorloLearn",
+  ],
   metadataBase: new URL(SITE.domain),
   openGraph: {
     title: "HorloLearn – Formation Horlogère Suisse",
-    description: "Découvrez les mouvements suisses et la formation horlogère AFP.",
+    description:
+      "Découvrez les mouvements suisses et la formation horlogère AFP.",
     url: SITE.domain,
     siteName: SITE.name,
     images: [
@@ -62,7 +69,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-[#0a0a0a] text-gray-200">
         <Navbar />
         {children}
-        <Footer /> {/* ✅ Footer affiché sur toutes les pages */}
+        <Footer />
         <ScrollToTop />
         <Analytics />
         <JsonLd data={org} />

@@ -46,7 +46,6 @@ export default function LectureDePlan() {
   return (
     <section className="min-h-screen bg-[#0b1220] text-white py-16 px-4 sm:px-6 md:px-10">
       <div className="max-w-6xl mx-auto">
-
         {/* --- Titre principal --- */}
         <motion.h1
           className="text-3xl sm:text-4xl font-bold text-[#E2B44F] mb-4 text-center"
@@ -58,13 +57,13 @@ export default function LectureDePlan() {
         </motion.h1>
 
         <motion.p
-          className="text-center text-gray-400 mb-12 max-w-2xl mx-auto"
+          className="text-center text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
           Découvrez les principes fondamentaux de la lecture de plans techniques selon les normes ISO et NIHS. 
-          Chaque fiche est interactive et adaptée à la formation horlogère.
+          Chaque fiche est interactive et adaptée à la formation horlogère suisse.
         </motion.p>
 
         {/* --- Grille animée --- */}
@@ -74,27 +73,25 @@ export default function LectureDePlan() {
           animate="visible"
           variants={{
             hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: 0.15,
-              },
-            },
+            visible: { transition: { staggerChildren: 0.15 } },
           }}
         >
-          {sections.map((item, index) => (
+          {sections.map((item) => (
             <motion.div
               key={item.title}
               variants={{
                 hidden: { opacity: 0, y: 25 },
                 visible: { opacity: 1, y: 0 },
               }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 200, damping: 12 }}
             >
               <Link
                 href={item.href}
-                className="group relative block bg-[#111827] border border-[#E2B44F33] rounded-2xl p-6 
-                hover:border-[#E2B44F] transition-all duration-300 overflow-hidden"
+                className="group relative block bg-[#111827] border border-[#E2B44F33] 
+                rounded-2xl p-6 hover:border-[#FFD96A] hover:bg-[#1a1f2e] 
+                transition-all duration-300 overflow-hidden shadow-sm hover:shadow-md"
               >
-                {/* effet doré au survol */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[#E2B44F33] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
 
                 <div className="relative flex flex-col gap-3">
@@ -102,7 +99,7 @@ export default function LectureDePlan() {
                   <h2 className="text-lg sm:text-xl font-semibold text-[#E2B44F] group-hover:text-[#FFD96A]">
                     {item.title}
                   </h2>
-                  <p className="text-gray-400 text-sm leading-relaxed">
+                  <p className="text-gray-300 text-[15px] leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
@@ -118,8 +115,8 @@ export default function LectureDePlan() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
         >
-          © HorloLearn 2025 — Liens vers les normes ISO & NIHS. 
-          Ces fiches sont des résumés pédagogiques destinés à la formation et la culture horlogère suisse.
+          © HorloLearn 2025 — Liens vers les normes ISO & NIHS.<br />
+          Ces fiches sont des résumés pédagogiques destinés à la formation et à la culture horlogère suisse.
         </motion.p>
       </div>
     </section>
