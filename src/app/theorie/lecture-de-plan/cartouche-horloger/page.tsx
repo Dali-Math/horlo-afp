@@ -2,27 +2,153 @@
 import Link from "next/link";
 import { useState } from "react";
 
+type Question = {
+  q: string;
+  a: string;
+  choices: string[];
+};
+
+const quiz: Question[] = [
+  {
+    q: "À quoi sert le cartouche horloger ?",
+    a: "Identifier, tracer et certifier le plan technique",
+    choices: [
+      "Identifier, tracer et certifier le plan technique",
+      "Mettre en page un logo d'entreprise",
+      "Dessiner le mouvement"
+    ]
+  },
+  {
+    q: "Que signifie 'Échelle 1:1' ?",
+    a: "Le dessin est à taille réelle",
+    choices: [
+      "Le dessin est à taille réelle",
+      "Le plan est réduit de moitié",
+      "Le dessin est en deux dimensions"
+    ]
+  },
+  {
+    q: "Quel élément indique la matière utilisée ?",
+    a: "La zone 'Matière'",
+    choices: [
+      "La zone 'Matière'",
+      "La case 'Contrôlé'",
+      "Le cartouche signature"
+    ]
+  },
+  {
+    q: "Que représente Ra 0,8 ?",
+    a: "L’état de surface moyen (rugosité)",
+    choices: [
+      "L’état de surface moyen (rugosité)",
+      "Le diamètre de la pièce",
+      "La dureté du matériau"
+    ]
+  },
+  {
+    q: "À quoi sert la case 'Contrôlé' ?",
+    a: "À indiquer le vérificateur du plan",
+    choices: [
+      "À indiquer le vérificateur du plan",
+      "À noter l'échelle du dessin",
+      "À donner la masse du composant"
+    ]
+  },
+  {
+    q: "Quelle unité est obligatoire en horlogerie suisse ?",
+    a: "Le millimètre (mm)",
+    choices: [
+      "Le millimètre (mm)",
+      "Le pouce (inch)",
+      "Le centimètre (cm)"
+    ]
+  },
+  {
+    q: "Que contient la zone 'Modification' ?",
+    a: "L’historique des révisions du plan",
+    choices: [
+      "L’historique des révisions du plan",
+      "La valeur du jeu fonctionnel",
+      "Les initiales du designer"
+    ]
+  },
+  {
+    q: "Quelle est la fonction du symbole de projection ?",
+    a: "Indiquer la méthode de vue (1er ou 3e angle)",
+    choices: [
+      "Indiquer la méthode de vue (1er ou 3e angle)",
+      "Donner la matière principale",
+      "Vérifier l'état de surface"
+    ]
+  },
+  {
+    q: "Que signifie ±0,02 mm ?",
+    a: "Tolérance générale de fabrication",
+    choices: [
+      "Tolérance générale de fabrication",
+      "La largeur totale du plan",
+      "L'épaisseur de la feuille"
+    ]
+  },
+  {
+    q: "Qui signe la case 'Dessiné' ?",
+    a: "Le dessinateur technique responsable",
+    choices: [
+      "Le dessinateur technique responsable",
+      "Le contrôleur qualité",
+      "Le responsable production"
+    ]
+  },
+  {
+    q: "Que trouve-t-on dans la zone 'Dimensions en mm' ?",
+    a: "Les unités utilisées pour les cotes",
+    choices: [
+      "Les unités utilisées pour les cotes",
+      "Le diamètre minimal du rubis",
+      "L'année de fabrication"
+    ]
+  },
+  {
+    q: "À quoi sert le numéro de plan ?",
+    a: "Identifier et classer le dessin",
+    choices: [
+      "Identifier et classer le dessin",
+      "Afficher la marque de l'atelier",
+      "Déterminer la surface polie"
+    ]
+  },
+  {
+    q: "Qu’indique la zone 'Titre du dessin' ?",
+    a: "Le nom de la pièce (ex: Pont, Roue...)",
+    choices: [
+      "Le nom de la pièce (ex: Pont, Roue...)",
+      "La tolérance maximale",
+      "La référence de l'acier"
+    ]
+  },
+  {
+    q: "Quel document normalise le cartouche ?",
+    a: "La norme ISO 5457",
+    choices: [
+      "La norme ISO 5457",
+      "La norme ISO 14001",
+      "La norme ISO 9001"
+    ]
+  },
+  {
+    q: "Pourquoi le cartouche doit-il être clair et uniforme ?",
+    a: "Pour garantir la lisibilité et la traçabilité",
+    choices: [
+      "Pour garantir la lisibilité et la traçabilité",
+      "Pour impressionner le client",
+      "Pour faciliter le scan"
+    ]
+  }
+];
+
 export default function CartoucheHorlogerPage() {
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [score, setScore] = useState<number | null>(null);
-
-  const quiz = [
-    { q: "À quoi sert le cartouche horloger ?", a: "Identifier, tracer et certifier le plan technique" },
-    { q: "Que signifie 'Échelle 1:1' ?", a: "Le dessin est à taille réelle" },
-    { q: "Quel élément indique la matière utilisée ?", a: "La zone 'Matière'" },
-    { q: "Que représente Ra 0,8 ?", a: "L’état de surface moyen (rugosité)" },
-    { q: "À quoi sert la case 'Contrôlé' ?", a: "À indiquer le vérificateur du plan" },
-    { q: "Quelle unité est obligatoire en horlogerie suisse ?", a: "Le millimètre (mm)" },
-    { q: "Que contient la zone 'Modification' ?", a: "L’historique des révisions du plan" },
-    { q: "Quelle est la fonction du symbole de projection ?", a: "Indiquer la méthode de vue (1er ou 3e angle)" },
-    { q: "Que signifie ±0,02 mm ?", a: "Tolérance générale de fabrication" },
-    { q: "Qui signe la case 'Dessiné' ?", a: "Le dessinateur technique responsable" },
-    { q: "Que trouve-t-on dans la zone 'Dimensions en mm' ?", a: "Les unités utilisées pour les cotes" },
-    { q: "À quoi sert le numéro de plan ?", a: "Identifier et classer le dessin" },
-    { q: "Qu’indique la zone 'Titre du dessin' ?", a: "Le nom de la pièce (ex: Pont, Roue...)" },
-    { q: "Quel document normalise le cartouche ?", a: "La norme ISO 5457" },
-    { q: "Pourquoi le cartouche doit-il être clair et uniforme ?", a: "Pour garantir la lisibilité et la traçabilité" },
-  ];
 
   const handleAnswer = (i: number, ans: string) => {
     setAnswers({ ...answers, [i]: ans });
@@ -34,6 +160,11 @@ export default function CartoucheHorlogerPage() {
       if (answers[i] && answers[i] === q.a) sc++;
     });
     setScore(sc);
+  };
+
+  const handleRestart = () => {
+    setAnswers({});
+    setScore(null);
   };
 
   return (
@@ -93,7 +224,7 @@ export default function CartoucheHorlogerPage() {
           </ul>
         </section>
 
-        {/* Quiz interactif */}
+        {/* Quiz interactif corrigé */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Quiz : Teste tes connaissances</h2>
           <div className="space-y-6 text-left">
@@ -101,7 +232,7 @@ export default function CartoucheHorlogerPage() {
               <div key={i} className="border-b border-gray-200 pb-4">
                 <p className="font-semibold mb-2">{i + 1}. {q.q}</p>
                 <div className="space-y-1">
-                  {["Identifier, tracer et certifier le plan technique", "Le dessin est à taille réelle", "La zone 'Matière'", "L’état de surface moyen (rugosité)", "À indiquer le vérificateur du plan", "Le millimètre (mm)", "L’historique des révisions du plan", "Indiquer la méthode de vue (1er ou 3e angle)", "Tolérance générale de fabrication", "Le dessinateur technique responsable", "Les unités utilisées pour les cotes", "Identifier et classer le dessin", "Le nom de la pièce (ex: Pont, Roue...)", "La norme ISO 5457", "Pour garantir la lisibilité et la traçabilité"].map((a) => (
+                  {q.choices.map((a) => (
                     <label key={a} className="block">
                       <input
                         type="radio"
@@ -110,6 +241,7 @@ export default function CartoucheHorlogerPage() {
                         checked={answers[i] === a}
                         onChange={() => handleAnswer(i, a)}
                         className="mr-2 accent-blue-600"
+                        disabled={score !== null}
                       />
                       {a}
                     </label>
@@ -119,17 +251,33 @@ export default function CartoucheHorlogerPage() {
             ))}
           </div>
 
-          <button
-            onClick={handleSubmit}
-            className="mt-6 bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-800 transition"
-          >
-            Valider mes réponses
-          </button>
-
-          {score !== null && (
-            <p className="mt-6 text-lg font-semibold text-blue-900">
-              Score : {score} / {quiz.length}
-            </p>
+          {score === null ? (
+            <button
+              onClick={handleSubmit}
+              className="mt-6 bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-800 transition"
+              disabled={Object.keys(answers).length !== quiz.length}
+            >
+              Valider mes réponses
+            </button>
+          ) : (
+            <>
+              <p className="mt-6 text-lg font-semibold text-blue-900">
+                Score : {score} / {quiz.length}
+              </p>
+              <p className="mt-2 text-base text-gray-800">
+                {score === quiz.length
+                  ? "Bravo ! Toutes les réponses sont correctes."
+                  : score >= Math.floor(quiz.length * 0.7)
+                  ? "Bien joué ! Quelques petites erreurs à corriger."
+                  : "Révise le cartouche et réessaie pour un score parfait."}
+              </p>
+              <button
+                onClick={handleRestart}
+                className="mt-4 bg-gray-200 text-blue-800 font-semibold py-2 px-6 rounded-lg hover:bg-gray-300 transition"
+              >
+                Recommencer le quiz
+              </button>
+            </>
           )}
         </section>
 
