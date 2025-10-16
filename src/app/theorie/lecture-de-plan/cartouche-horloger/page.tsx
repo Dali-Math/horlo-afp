@@ -1,145 +1,206 @@
 "use client";
-import { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
 
-export default function CartoucheHorlogerPage() {
-  const [answers, setAnswers] = useState<Record<number, string>>({});
-  const [score, setScore] = useState<number | null>(null);
-
-  const handleAnswer = (index: number, answer: string) => {
-    setAnswers((prev) => ({ ...prev, [index]: answer }));
-  };
-
-  const handleSubmit = () => {
-    let sc = 0;
-    quiz.forEach((q, i) => {
-      if (answers[i] && answers[i] === q.a) sc++;
-    });
-    setScore(sc);
-  };
-
-  const quiz = [
+// Composant QuizCartouche (séquentiel comme cotes-tolerances, avec indicateur "Question X sur Y")
+function QuizCartouche() {
+  const questions = [
     {
-      q: "À quoi sert le cartouche horloger ?",
+      question: "À quoi sert le cartouche horloger ?",
       options: [
+        "Mettre en page un logo d'entreprise",
+        "Dessiner le mouvement",
         "Identifier, tracer et certifier le plan technique",
-        "Indiquer la matière utilisée",
-        "Donner la date du contrôle",
+        "Calculer les coûts de production"
       ],
-      a: "Identifier, tracer et certifier le plan technique",
+      correct: 2,
     },
     {
-      q: "Que signifie 'Échelle 1:1' ?",
+      question: "Que signifie 'Échelle 1:1' ?",
       options: [
+        "Le plan est réduit de moitié",
+        "Le dessin est en deux dimensions",
         "Le dessin est à taille réelle",
-        "Le dessin est agrandi 10 fois",
-        "Le dessin est réduit 10 fois",
+        "L'échelle est multipliée par 2"
       ],
-      a: "Le dessin est à taille réelle",
+      correct: 2,
     },
     {
-      q: "Quelle case indique la matière de la pièce ?",
-      options: ["Dessiné", "Matière", "Contrôlé"],
-      a: "Matière",
-    },
-    {
-      q: "Que représente Ra 0,8 ?",
+      question: "Quel élément indique la matière utilisée ?",
       options: [
-        "Rugosité moyenne de surface",
-        "Dureté du métal",
-        "Indice de tolérance",
+        "La case 'Contrôlé'",
+        "Le cartouche signature",
+        "La zone 'Matière'",
+        "La zone 'Modification'"
       ],
-      a: "Rugosité moyenne de surface",
+      correct: 2,
     },
     {
-      q: "À quoi sert la case 'Contrôlé' ?",
+      question: "Que représente Ra 0,8 ?",
       options: [
-        "Indiquer le vérificateur du plan",
-        "Donner la matière utilisée",
-        "Afficher la date de fabrication",
+        "Le diamètre de la pièce",
+        "La dureté du matériau",
+        "L’état de surface moyen (rugosité)",
+        "La tolérance générale"
       ],
-      a: "Indiquer le vérificateur du plan",
+      correct: 2,
     },
     {
-      q: "Quelle unité est obligatoire en horlogerie suisse ?",
-      options: ["Le millimètre (mm)", "Le centimètre (cm)", "Le pouce (inch)"],
-      a: "Le millimètre (mm)",
-    },
-    {
-      q: "Que contient la zone 'Modification' ?",
+      question: "À quoi sert la case 'Contrôlé' ?",
       options: [
-        "Les révisions et indices du plan",
-        "Les cotes principales",
-        "Les numéros de série",
+        "À noter l'échelle du dessin",
+        "À donner la masse du composant",
+        "À indiquer le vérificateur du plan",
+        "À signer le dessinateur"
       ],
-      a: "Les révisions et indices du plan",
+      correct: 2,
     },
     {
-      q: "Quel symbole définit la méthode de projection ?",
+      question: "Quelle unité est obligatoire en horlogerie suisse ?",
       options: [
-        "Le symbole ISO de vue (1er ou 3e angle)",
-        "Le symbole de rugosité",
-        "Le symbole du diamètre",
+        "Le pouce (inch)",
+        "Le centimètre (cm)",
+        "Le millimètre (mm)",
+        "Le micromètre (µm)"
       ],
-      a: "Le symbole ISO de vue (1er ou 3e angle)",
+      correct: 2,
     },
     {
-      q: "Que signifie ±0,02 mm ?",
+      question: "Que contient la zone 'Modification' ?",
       options: [
+        "La valeur du jeu fonctionnel",
+        "Les initiales du designer",
+        "L’historique des révisions du plan",
+        "Le numéro de série"
+      ],
+      correct: 2,
+    },
+    {
+      question: "Quelle est la fonction du symbole de projection ?",
+      options: [
+        "Donner la matière principale",
+        "Vérifier l'état de surface",
+        "Indiquer la méthode de vue (1er ou 3e angle)",
+        "Afficher l'échelle"
+      ],
+      correct: 2,
+    },
+    {
+      question: "Que signifie ±0,02 mm ?",
+      options: [
+        "La largeur totale du plan",
+        "L'épaisseur de la feuille",
         "Tolérance générale de fabrication",
-        "Erreur de dessin",
-        "Jeu fonctionnel",
+        "Le rayon maximal"
       ],
-      a: "Tolérance générale de fabrication",
+      correct: 2,
     },
     {
-      q: "Qui signe la case 'Dessiné' ?",
-      options: ["Le dessinateur technique", "Le contrôleur", "Le chef d’atelier"],
-      a: "Le dessinateur technique",
-    },
-    {
-      q: "Que trouve-t-on dans la zone 'Dimensions en mm' ?",
+      question: "Qui signe la case 'Dessiné' ?",
       options: [
-        "L’unité de mesure utilisée",
-        "La masse de la pièce",
-        "Le nombre de composants",
+        "Le contrôleur qualité",
+        "Le responsable production",
+        "Le dessinateur technique responsable",
+        "Le chef d'équipe"
       ],
-      a: "L’unité de mesure utilisée",
+      correct: 2,
     },
     {
-      q: "À quoi sert le numéro de plan ?",
+      question: "Que trouve-t-on dans la zone 'Dimensions en mm' ?",
       options: [
-        "Identifier le dessin et sa version",
-        "Indiquer la matière",
-        "Déterminer la tolérance",
+        "Le diamètre minimal du rubis",
+        "L'année de fabrication",
+        "Les unités utilisées pour les cotes",
+        "La masse de la pièce"
       ],
-      a: "Identifier le dessin et sa version",
+      correct: 2,
     },
     {
-      q: "Qu’indique le 'Titre du dessin' ?",
+      question: "À quoi sert le numéro de plan ?",
       options: [
-        "Le nom de la pièce (ex : pont, roue...)",
-        "La date de fabrication",
-        "La norme ISO utilisée",
+        "Afficher la marque de l'atelier",
+        "Déterminer la surface polie",
+        "Identifier et classer le dessin",
+        "Calculer les tolérances"
       ],
-      a: "Le nom de la pièce (ex : pont, roue...)",
+      correct: 2,
     },
     {
-      q: "Quel document définit la norme du cartouche ?",
-      options: ["ISO 5457", "ISO 2768", "ISO 10110"],
-      a: "ISO 5457",
-    },
-    {
-      q: "Pourquoi le cartouche doit-il être uniforme ?",
+      question: "Qu’indique la zone 'Titre du dessin' ?",
       options: [
-        "Pour garantir lisibilité et traçabilité",
-        "Pour décorer le plan",
-        "Pour limiter la taille du fichier",
+        "La tolérance maximale",
+        "La référence de l'acier",
+        "Le nom de la pièce (ex: Pont, Roue...)",
+        "L'échelle de vue"
       ],
-      a: "Pour garantir lisibilité et traçabilité",
+      correct: 2,
+    },
+    {
+      question: "Quel document normalise le cartouche ?",
+      options: [
+        "La norme ISO 14001",
+        "La norme ISO 9001",
+        "La norme ISO 5457",
+        "La norme ISO 1101"
+      ],
+      correct: 2,
+    },
+    {
+      question: "Pourquoi le cartouche doit-il être clair et uniforme ?",
+      options: [
+        "Pour impressionner le client",
+        "Pour faciliter le scan",
+        "Pour garantir la lisibilité et la traçabilité",
+        "Pour accélérer l'impression"
+      ],
+      correct: 2,
     },
   ];
 
+  const [current, setCurrent] = useState(0);
+  const [score, setScore] = useState(0);
+  const [showScore, setShowScore] = useState(false);
+
+  const handleAnswer = (index: number) => {
+    if (index === questions[current].correct) setScore(score + 1);
+    const next = current + 1;
+    if (next < questions.length) setCurrent(next);
+    else setShowScore(true);
+  };
+
+  return (
+    <section className="bg-[#111827] text-gray-200 rounded-2xl shadow-lg p-8 mt-10 text-center">
+      <h2 className="text-xl font-semibold text-[#E2B44F] mb-4">Quiz : Teste tes connaissances</h2>
+
+      {showScore ? (
+        <p className="text-lg text-gray-300">
+          Résultat : <span className="text-[#E2B44F]">{score}</span> /{" "}
+          {questions.length}
+        </p>
+      ) : (
+        <div>
+          <p className="mb-4 text-gray-300">{questions[current].question}</p>
+          <div className="grid md:grid-cols-2 gap-3">
+            {questions[current].options.map((option, i) => (
+              <button
+                key={i}
+                onClick={() => handleAnswer(i)}
+                className="bg-[#1c2333] hover:bg-[#2c3344] text-gray-200 px-4 py-2 rounded-lg transition"
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-gray-400">
+            Question {current + 1} sur {questions.length}
+          </p>
+        </div>
+      )}
+    </section>
+  );
+}
+
+export default function CartoucheHorlogerPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-6 py-16 font-sans text-gray-800">
       <div className="max-w-5xl mx-auto space-y-16">
@@ -150,13 +211,7 @@ export default function CartoucheHorlogerPage() {
             href="/theorie/lecture-de-plan"
             className="text-blue-700 hover:underline flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
             Retour
@@ -174,7 +229,7 @@ export default function CartoucheHorlogerPage() {
           </p>
         </header>
 
-        {/* Schéma */}
+        {/* Section schéma */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Schéma d’un Cartouche Horloger</h2>
           <img
@@ -187,7 +242,7 @@ export default function CartoucheHorlogerPage() {
           </p>
         </section>
 
-        {/* Composition */}
+        {/* Détails du cartouche */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 leading-relaxed">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Composition du Cartouche</h2>
           <ul className="list-disc pl-6 space-y-3 text-gray-700">
@@ -203,59 +258,36 @@ export default function CartoucheHorlogerPage() {
           </ul>
         </section>
 
-        {/* Vidéo */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Vidéo : Cartouche & Lecture de plan</h2>
-          <div className="aspect-w-16 aspect-h-9">
-            <iframe
-              className="w-full h-96 rounded-lg shadow"
-              src="https://www.youtube.com/embed/tatCrJPJGl4"
-              title="Cartouche et tolérances - Système ISO"
-              allowFullScreen
-            ></iframe>
-          </div>
-        </section>
-
-        {/* Quiz */}
+        {/* Quiz interactif (comme dans cotes-tolerances) */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Quiz : Teste tes connaissances</h2>
-
-          <div className="space-y-8 text-left">
-            {quiz.map((item, i) => (
-              <div key={i} className="border-b border-gray-200 pb-4">
-                <p className="font-semibold mb-2">{i + 1}. {item.q}</p>
-                {item.options.map((opt) => (
-                  <label key={opt} className="block">
-                    <input
-                      type="radio"
-                      name={`q${i}`}
-                      value={opt}
-                      checked={answers[i] === opt}
-                      onChange={() => handleAnswer(i, opt)}
-                      className="mr-2 accent-blue-600"
-                    />
-                    {opt}
-                  </label>
-                ))}
-              </div>
-            ))}
-          </div>
-
-          <button
-            onClick={handleSubmit}
-            className="mt-6 bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-800 transition"
-          >
-            Valider mes réponses
-          </button>
-
-          {score !== null && (
-            <p className="mt-6 text-lg font-semibold text-blue-900">
-              Score : {score} / 15
-            </p>
-          )}
+          <QuizCartouche />
         </section>
 
-        {/* Astuce */}
+        {/* Vidéo pédagogique */}
+        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
+          <h2 className="text-2xl font-semibold text-blue-800 mb-6">
+            Vidéo : Cartouche & Lecture de plan
+          </h2>
+          <div className="aspect-video overflow-hidden rounded-md border border-gray-200">
+            <iframe
+              className="w-full h-full"
+              src="https://www.youtube-nocookie.com/embed/tatCrJPJGl4?rel=0&modestbranding=1"
+              title="Cartouche & Lecture de plan"
+              allowFullScreen
+            />
+          </div>
+          <a
+            href="https://www.youtube.com/watch?v=tatCrJPJGl4"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-6 bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-800 transition"
+          >
+            🔗 Ouvrir sur YouTube
+          </a>
+        </section>
+
+        {/* Astuce horlogère */}
         <section className="bg-blue-50 border border-blue-100 shadow-sm rounded-2xl p-8 text-center">
           <blockquote className="text-xl italic text-blue-900">
             “Un bon cartouche, c’est la carte d’identité du plan horloger.”
