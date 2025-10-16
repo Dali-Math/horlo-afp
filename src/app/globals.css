@@ -139,3 +139,39 @@ body {
 .gold-glow {
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
 }
+@keyframes marquee-footer {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-footer {
+  animation: marquee-footer linear infinite;
+  width: 200%; /* Double pour duplication */
+}
+
+/* Pause au hover (optionnel, comme certains sites) */
+.animate-marquee-footer:hover {
+  animation-play-state: paused;
+}
+
+/* Responsive : Plus lent sur mobile, gap réduit */
+@media (max-width: 768px) {
+  .animate-marquee-footer {
+    animation-duration: 40s; /* Double vitesse pour lisibilité */
+  }
+  
+  /* Gap plus petit sur mobile */
+  .animate-marquee-footer .gap-8 {
+    gap: 4;
+  }
+  
+  /* Icônes plus petites */
+  .animate-marquee-footer img {
+    width: 60px !important;
+    height: 40px !important;
+  }
+}
