@@ -1,11 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
-import { X } from "lucide-react";
 
 export default function CartoucheHorlogerPage() {
-  const [openImg, setOpenImg] = useState(false);
-
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-6 py-16 font-sans text-gray-800">
       <div className="max-w-5xl mx-auto space-y-16">
@@ -36,82 +32,67 @@ export default function CartoucheHorlogerPage() {
           </h1>
           <p className="text-gray-600 max-w-xl mx-auto text-lg leading-relaxed">
             Le <strong>cartouche horloger</strong> est un élément essentiel d’un plan technique.
-            Il regroupe les informations d’identification, de fabrication et de contrôle
-            qui garantissent la traçabilité et la qualité du dessin.
+            Il regroupe les informations d’identification, de fabrication et de contrôle qui garantissent la traçabilité et la qualité du dessin.
           </p>
         </header>
 
-        {/* Schéma avec zoom */}
+        {/* Section schéma */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Schéma d’un Cartouche Horloger</h2>
-
-          <button
-            onClick={() => setOpenImg(true)}
-            className="block mx-auto rounded-lg shadow hover:shadow-md transition"
-            title="Cliquer pour agrandir"
-          >
-            <img
-              src="/images/schema-cartouche-horloger.png"
-              alt="Schéma du cartouche horloger"
-              className="mx-auto rounded-lg max-w-2xl w-full border border-gray-200"
-            />
-          </button>
-
+          <img
+            src="/images/schema-cartouche-horloger.png"
+            alt="Schéma du cartouche horloger"
+            className="mx-auto rounded-lg shadow max-w-2xl w-full hover:scale-105 transition-transform"
+          />
           <p className="text-gray-500 text-sm mt-4">
             Exemple type d’un cartouche utilisé en horlogerie suisse.
           </p>
-
-          {openImg && (
-            <div
-              className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
-              onClick={() => setOpenImg(false)}
-            >
-              <div
-                className="bg-white p-3 rounded-lg shadow-xl relative"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <button
-                  onClick={() => setOpenImg(false)}
-                  className="absolute -top-3 -right-3 bg-white border rounded-full p-1 shadow hover:bg-slate-50"
-                  aria-label="Fermer"
-                >
-                  <X className="w-5 h-5 text-gray-600" />
-                </button>
-                <img
-                  src="/images/cartouche-horloger.png"
-                  alt="Schéma du cartouche horloger agrandi"
-                  className="rounded-md"
-                  style={{ transform: "scale(1.5)", transformOrigin: "top left" }}
-                />
-              </div>
-            </div>
-          )}
         </section>
 
-        {/* Vidéo pédagogique */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">
-            Vidéo : Cartouche & Lecture de plan
-          </h2>
-          <div className="aspect-video overflow-hidden rounded-md border border-gray-200">
-            <iframe
-              className="w-full h-full"
-              src="https://www.youtube.com/watch?v=tatCrJPJGl4"
-              title="Cartouche & Lecture de plan"
-              allowFullScreen
-            />
-          </div>
-          <a
-            href="https://www.youtube.com/watch?v=tatCrJPJGl4"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block mt-6 bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-800 transition"
-          >
-            🔗 Ouvrir sur YouTube
-          </a>
+        {/* Détails du cartouche */}
+        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 leading-relaxed">
+          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Composition du Cartouche</h2>
+          <ul className="list-disc pl-6 space-y-3 text-gray-700">
+            <li><b>Titre du dessin</b> : désignation claire de la pièce (ex : Pont de balancier, Roue moyenne).</li>
+            <li><b>Numéro de plan</b> : référence unique pour le suivi et la version du plan.</li>
+            <li><b>Échelle</b> : rapport entre la taille réelle et la taille du dessin (ex : 5:1, 1:1, 2:1).</li>
+            <li><b>Nom du dessinateur</b> : personne ayant réalisé le plan.</li>
+            <li><b>Date</b> : date de création ou de révision du plan.</li>
+            <li><b>Matériau</b> : indication de la matière utilisée (ex : Laiton, Acier trempé, Rubis synthétique).</li>
+            <li><b>Traitement thermique / de surface</b> : spécifie les opérations (ex : trempe, polissage, rhodiage).</li>
+            <li><b>Tolérances générales</b> : valeurs par défaut si non précisées sur le dessin (ex : ±0.02 mm).</li>
+            <li><b>Validation</b> : signature du responsable technique ou du chef d’atelier.</li>
+          </ul>
         </section>
 
-        {/* Citation horlogère */}
+        {/* Bonnes pratiques */}
+        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
+          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Bonnes Pratiques</h2>
+          <ul className="list-disc pl-6 space-y-3 text-gray-700">
+            <li>Rédiger toutes les indications <b>en lettres majuscules</b> pour éviter toute ambiguïté.</li>
+            <li>Utiliser les <b>unités métriques</b> exclusivement (mm, µm).</li>
+            <li>Veiller à ce que le cartouche soit toujours <b>lisible en position horizontale</b> sur le plan.</li>
+            <li>Éviter toute surcharge : ne pas inclure d’informations non techniques.</li>
+            <li>Uniformiser la présentation du cartouche dans tous les plans d’un même projet.</li>
+          </ul>
+        </section>
+
+        {/* Exemple concret */}
+        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
+          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Exemple d’Application</h2>
+          <p className="text-gray-700 leading-relaxed mb-4">
+            Dans la fabrication d’une <b>roue de moyenne</b>, le cartouche permettra d’identifier rapidement :
+          </p>
+          <ul className="list-disc pl-6 space-y-2 text-gray-700">
+            <li>Le plan : <b>Roue moyenne réf. RM-210</b></li>
+            <li>L’échelle utilisée : <b>10:1</b></li>
+            <li>Le matériau : <b>Laiton CuZn37</b></li>
+            <li>La tolérance générale : <b>±0.02 mm</b></li>
+            <li>Le dessinateur : <b>M. A. Dubois</b> – <i>Validé le 02.10.2025</i></li>
+          </ul>
+        </section>
+
+        {/* Astuce horlogère */}
         <section className="bg-blue-50 border border-blue-100 shadow-sm rounded-2xl p-8 text-center">
           <blockquote className="text-xl italic text-blue-900">
             “Un bon cartouche, c’est la carte d’identité du plan horloger.”
