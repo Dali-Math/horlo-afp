@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // Ajout pour bouton Retour
 import { CheckCircle, XCircle, X } from "lucide-react";
 
 export default function CotesEtTolerancesPage() {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -182,11 +184,9 @@ export default function CotesEtTolerancesPage() {
   ];
 
   const handleAnswer = (optionIndex: number) => {
-    if (selectedAnswer !== null) return; // Empêche de répondre plusieurs fois
-    
+    if (selectedAnswer !== null) return;
     setSelectedAnswer(optionIndex.toString());
     setShowExplanation(true);
-    
     if (optionIndex === quizQuestions[currentQuestion].correct) {
       setScore(score + 1);
     }
@@ -213,6 +213,18 @@ export default function CotesEtTolerancesPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-6 py-16 font-sans text-gray-800">
       <div className="max-w-5xl mx-auto space-y-16">
+        {/* --- Bouton Retour --- */}
+        <div className="mb-6">
+          <button
+            onClick={() => router.back()}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            Retour
+          </button>
+        </div>
         {/* --- Header --- */}
         <header className="text-center space-y-4">
           <h1 className="text-4xl font-bold text-blue-900">
@@ -315,17 +327,14 @@ export default function CotesEtTolerancesPage() {
         {/* --- Quiz --- */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
           <h2 className="text-2xl font-semibold text-blue-800 mb-6">Quiz : Teste tes connaissances</h2>
-          
           {!quizCompleted ? (
             <>
               <div className="mb-4 text-sm text-gray-600">
                 Question {currentQuestion + 1} sur {quizQuestions.length}
               </div>
-              
               <p className="text-gray-700 font-medium mb-4 text-lg">
                 {quizQuestions[currentQuestion].question}
               </p>
-              
               <div className="grid gap-4 mb-6">
                 {quizQuestions[currentQuestion].options.map((option, i) => (
                   <button
@@ -348,7 +357,6 @@ export default function CotesEtTolerancesPage() {
                   </button>
                 ))}
               </div>
-
               {showExplanation && (
                 <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <p className="text-sm text-gray-700">
@@ -356,7 +364,6 @@ export default function CotesEtTolerancesPage() {
                   </p>
                 </div>
               )}
-
               {selectedAnswer !== null && (
                 <button
                   onClick={handleNext}
