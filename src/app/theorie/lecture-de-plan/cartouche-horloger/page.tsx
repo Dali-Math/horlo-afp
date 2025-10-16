@@ -320,18 +320,19 @@ export default function CartoucheHorlogerPage() {
 
         {/* Détails du cartouche */}
         <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 leading-relaxed">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Composition du Cartouche</h2>
-          <ul className="list-disc pl-6 space-y-3 text-gray-700">
-            <li><b>Titre du dessin</b> : désignation claire de la pièce (ex : Pont de balancier, Roue moyenne).</li>
-            <li><b>Numéro de plan</b> : référence unique pour le suivi et la version du plan.</li>
-            <li><b>Échelle</b> : rapport entre la taille réelle et la taille du dessin (ex : 5:1, 1:1, 2:1).</li>
-            <li><b>Nom du dessinateur</b> : personne ayant réalisé le plan.</li>
-            <li><b>Date</b> : date de création ou de révision du plan.</li>
-            <li><b>Matériau</b> : indication de la matière utilisée (ex : Laiton, Acier trempé, Rubis synthétique).</li>
-            <li><b>Traitement thermique / de surface</b> : spécifie les opérations (ex : trempe, polissage, rhodiage).</li>
-            <li><b>Tolérances générales</b> : valeurs par défaut si non précisées sur le dessin (ex : ±0.02 mm).</li>
-            <li><b>Validation</b> : signature du responsable technique ou du chef d’atelier.</li>
-          </ul>
+          <h2 className="text-2xl font-bold text-blue-700 mt-12 mb-6">
+  Composition du Cartouche
+</h2>
+<ul className="space-y-2 text-gray-700">
+  <li><strong>Dimensions et Tolérances :</strong> valeurs standards en mm ou µm, et tolérances générales (ex. ±0.02 mm).</li>
+  <li><strong>Matière :</strong> type de matériau utilisé (ex. Acier, Laiton, Rubis synthétique).</li>
+  <li><strong>Dessiné par :</strong> nom ou initiales de la personne ayant réalisé le dessin.</li>
+  <li><strong>Contrôlé par :</strong> nom ou signature de la personne ayant vérifié le plan.</li>
+  <li><strong>Échelle :</strong> rapport entre la taille réelle et la taille dessinée (ex. 1:1, 2:1, 5:1).</li>
+  <li><strong>Symbole de projection :</strong> indique la méthode de vue utilisée (premier ou troisième dièdre).</li>
+  <li><strong>Modification :</strong> section réservée à l’historique des corrections ou révisions du plan.</li>
+  <li><strong>État de surface général :</strong> rugosité moyenne prescrite (ex. Ra 0.8).</li>
+</ul>
         </section>
 
         {/* Quiz interactif */}
