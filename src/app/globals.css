@@ -139,39 +139,44 @@ body {
 .gold-glow {
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
 }
+
+/* Marquee footer corrigée : Linéaire infini droite → gauche, pause hover */
 @keyframes marquee-footer {
   0% {
-    transform: translateX(0);
+    transform: translateX(0); /* Commence aligné */
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(-50%); /* Défile à gauche (avec duplication) */
   }
 }
 
 .animate-marquee-footer {
   animation: marquee-footer linear infinite;
-  width: 200%; /* Double pour duplication */
+  width: 200%; /* Double largeur pour duplication seamless */
+  display: flex;
+  align-items: center;
 }
 
-/* Pause au hover (optionnel, comme certains sites) */
-.animate-marquee-footer:hover {
+/* Pause au hover (arrêt du contenu comme demandé) */
+.marquee-container:hover .animate-marquee-footer {
   animation-play-state: paused;
 }
 
-/* Responsive : Plus lent sur mobile, gap réduit */
+/* Responsive : Plus lent sur mobile, gap/icônes réduits */
 @media (max-width: 768px) {
   .animate-marquee-footer {
-    animation-duration: 40s; /* Double vitesse pour lisibilité */
-  }
-  
-  /* Gap plus petit sur mobile */
-  .animate-marquee-footer .gap-8 {
-    gap: 4;
+    animation-duration: 40s; /* Plus lent pour lisibilité */
+    gap: 1rem; /* Gap réduit */
   }
   
   /* Icônes plus petites */
   .animate-marquee-footer img {
     width: 60px !important;
     height: 40px !important;
+  }
+  
+  /* Titre plus petit */
+  .marquee-container .text-base {
+    font-size: 0.875rem;
   }
 }
