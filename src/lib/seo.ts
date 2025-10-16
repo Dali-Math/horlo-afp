@@ -34,3 +34,5 @@ export function generateSeoMeta(pathname: string, title: string, description: st
     },
   };
 }
+
+export { SITE } from "./site";
