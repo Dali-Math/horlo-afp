@@ -345,9 +345,9 @@ export default function CartoucheHorlogerPage() {
     Vidéo : Cartouche & Lecture de plan
   </h2>
 
-  <div className="aspect-w-16 aspect-h-9 overflow-hidden rounded-md border border-gray-200">
+  <div className="relative w-full max-w-3xl mx-auto overflow-hidden rounded-xl border border-gray-200 shadow-sm hover:scale-[1.02] transition-transform duration-300">
     <iframe
-      className="w-full h-full"
+      className="w-full h-[480px] md:h-[540px] lg:h-[600px]"
       src="https://www.youtube-nocookie.com/embed/X8NnCkDOrMY"
       title="Cartouche & Lecture de plan"
       frameBorder="0"
