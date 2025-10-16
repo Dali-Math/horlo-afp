@@ -4,7 +4,7 @@ export const SITE = {
   locale: "fr_CH",
   twitter: "@HorloLearn",
   logo: "/og-image.jpg",
-  contactEmail: "mathlouthi_mohamed82@yahoo.com",
+  contactEmail: "contact.horlogeries@gmail.com",
   organization: {
     legalName: "HorloLearn",
     url: "https://www.horlolearn.ch",
