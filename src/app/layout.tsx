@@ -10,7 +10,7 @@ import JsonLd from "@/components/JsonLd";
 export const metadata: Metadata = {
   title: "HorloLearn – Passion & Découverte Horlogère Suisse",
   description:
-    "HorloLearn partage la passion de l’horlogerie suisse à travers des fiches techniques, quiz, vidéos et ressources dédiées aux amateurs et curieux du monde horloger.",
+    "HorloLearn partage la passion de l’horlogerie suisse à travers des fiches techniques, quiz, vidéos et ressources destinées aux amateurs et curieux du monde horloger.",
   keywords: [
     "horlogerie suisse",
     "ETA 6497",
