@@ -8,14 +8,14 @@ const comparaison = {
     frequence: "28,800 A/h",
     reserve: "38h",
     rubis: "25",
-    image: "https://images.unsplash.com/photo-1622434641406-a158123450f9?w=400&h=300&fit=crop"
+    image: "/images/eta-2824.jpg"  // ← Chemin correct depuis public/
   },
   droite: {
     nom: "Sellita SW200",
     frequence: "28,800 A/h",
     reserve: "38h",
     rubis: "26",
-    image: "https://images.unsplash.com/photo-1622434641406-a158123450f9?w=400&h=300&fit=crop"
+    image: "/images/sellita-sw200.jpg"  // ← Chemin correct depuis public/
   }
 };
 
@@ -33,7 +33,7 @@ export default function ComparaisonMouvements() {
           <img 
             src={comparaison.gauche.image} 
             alt={comparaison.gauche.nom} 
-            className="w-full h-48 object-cover rounded-xl mb-4"
+            className="w-full h-48 object-cover rounded-xl mb-4 shadow-lg"
           />
           <h3 className="text-xl font-bold text-slate-900 mb-4">{comparaison.gauche.nom}</h3>
           <div className="space-y-2 text-left">
@@ -57,7 +57,7 @@ export default function ComparaisonMouvements() {
           <img 
             src={comparaison.droite.image} 
             alt={comparaison.droite.nom} 
-            className="w-full h-48 object-cover rounded-xl mb-4"
+            className="w-full h-48 object-cover rounded-xl mb-4 shadow-lg"
           />
           <h3 className="text-xl font-bold text-slate-900 mb-4">{comparaison.droite.nom}</h3>
           <div className="space-y-2 text-left">
