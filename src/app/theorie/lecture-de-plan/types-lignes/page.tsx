@@ -1,558 +1,813 @@
-"use client";
-import Link from "next/link";
-import { useState } from "react";
+'use client';
 
-interface Question {
+import React, { useState } from 'react';
+import { ChevronLeft, CheckCircle, XCircle, Book } from 'lucide-react';
+import Link from 'next/link';
+
+interface LineTypeExplanation {
+  id: string;
+  name: string;
+  designation: string;
+  width: string;
+  usage: string;
+  example: string;
+  priority: number;
+}
+
+const lineTypesData: LineTypeExplanation[] = [
+  {
+    id: 'continu-fort',
+    name: 'Continu fort',
+    designation: 'Trait plein épais',
+    width: '0.5 - 0.7 mm',
+    usage: 'Contours et arêtes visibles sur une vue donnée',
+    example: 'Contour extérieur d\'une platine, bords visibles d\'un pont',
+    priority: 1
+  },
+  {
+    id: 'continu-fin',
+    name: 'Continu fin',
+    designation: 'Trait plein mince',
+    width: '0.25 - 0.35 mm',
+    usage: 'Lignes de cote, lignes d\'attache, hachures, arêtes fictives',
+    example: 'Cotation d\'un diamètre, hachures de coupe, lignes de repère',
+    priority: 3
+  },
+  {
+    id: 'interrompu-fort',
+    name: 'Interrompu fort',
+    designation: 'Trait discontinu épais',
+    width: '0.5 - 0.7 mm',
+    usage: 'Contours et arêtes cachées (non visibles sur la vue)',
+    example: 'Alésage caché dans une platine, trou borgne non visible',
+    priority: 2
+  },
+  {
+    id: 'interrompu-fin',
+    name: 'Interrompu fin',
+    designation: 'Trait discontinu mince',
+    width: '0.25 - 0.35 mm',
+    usage: 'Contours cachés secondaires, constructions géométriques cachées',
+    example: 'Arêtes cachées non prioritaires, détails internes secondaires',
+    priority: 4
+  },
+  {
+    id: 'mixte-fin',
+    name: 'Mixte fin',
+    designation: 'Trait mixte mince (tiret-point)',
+    width: '0.25 - 0.35 mm',
+    usage: 'Axes de symétrie, axes de révolution, traces de plans de symétrie',
+    example: 'Axe d\'un balancier, plan de symétrie d\'une platine',
+    priority: 5
+  },
+  {
+    id: 'mixte-fort',
+    name: 'Mixte fort',
+    designation: 'Trait mixte épais (tiret-point)',
+    width: '0.5 - 0.7 mm',
+    usage: 'Surfaces faisant l\'objet de spécifications particulières (traitement de surface)',
+    example: 'Zone à polir, surface à rectifier, indication de traitement thermique',
+    priority: 6
+  },
+  {
+    id: 'mixte-deux-tirets',
+    name: 'Mixte fin à deux tirets',
+    designation: 'Trait mixte à double tiret',
+    width: '0.25 - 0.35 mm',
+    usage: 'Contours de pièces voisines, positions intermédiaires de pièces mobiles',
+    example: 'Position alternative d\'un levier, pièce adjacente en transparence',
+    priority: 7
+  },
+  {
+    id: 'main-levee',
+    name: 'Continu fin à main levée',
+    designation: 'Trait ondulé ou zigzag',
+    width: '0.25 - 0.35 mm',
+    usage: 'Limites de vues partielles, coupes interrompues, sections brisées',
+    example: 'Limite de vue partielle sur un mouvement, coupe locale',
+    priority: 8
+  }
+];
+
+interface QuizQuestion {
+  id: number;
   question: string;
   options: string[];
-  correct: number;
-  correction: string;
+  correctAnswer: number;
+  explanation: string;
 }
 
-interface Line {
-  id: number;
-  type: string;
-  epaisseur: string;
-  exemple: string;
-  path: string;
-  stroke: string;
-  strokeWidth: number;
-  strokeDasharray: string;
-}
+const quizData: QuizQuestion[] = [
+  {
+    id: 1,
+    question: "Quelle norme ISO définit les types de lignes en dessin technique ?",
+    options: ["ISO 128-1", "ISO 128-2", "ISO 128-3", "ISO 1302"],
+    correctAnswer: 1,
+    explanation: "La norme ISO 128-2 établit les types de traits utilisés dans les dessins techniques, leurs désignations et configurations."
+  },
+  {
+    id: 2,
+    question: "Quel type de trait utilise-t-on pour les contours visibles ?",
+    options: ["Continu fin", "Interrompu fort", "Continu fort", "Mixte fin"],
+    correctAnswer: 2,
+    explanation: "Le trait continu fort (épais) est utilisé pour représenter les contours et arêtes visibles sur une vue donnée."
+  },
+  {
+    id: 3,
+    question: "Quel est le rapport minimal entre la largeur d'un trait fort et d'un trait fin ?",
+    options: ["1:1", "2:1", "3:1", "4:1"],
+    correctAnswer: 1,
+    explanation: "Selon ISO 128-2, le rapport entre la largeur d'un trait fort et d'un trait fin ne doit pas être inférieur à 2:1."
+  },
+  {
+    id: 4,
+    question: "Quel trait représente les arêtes cachées ?",
+    options: ["Continu fort", "Interrompu fort", "Mixte fin", "Continu fin"],
+    correctAnswer: 1,
+    explanation: "Le trait interrompu fort (discontinu épais) représente les contours et arêtes cachées, non visibles sur la vue."
+  },
+  {
+    id: 5,
+    question: "Quel trait utilise-t-on pour les axes de symétrie ?",
+    options: ["Continu fin", "Interrompu fin", "Mixte fin", "Mixte fort"],
+    correctAnswer: 2,
+    explanation: "Le trait mixte fin (tiret-point mince) est utilisé pour les axes de symétrie, axes de révolution et plans de coupe."
+  },
+  {
+    id: 6,
+    question: "En cas de superposition, quel trait a la priorité absolue ?",
+    options: ["Trait mixte fin", "Trait interrompu fort", "Trait continu fort", "Trait continu fin"],
+    correctAnswer: 2,
+    explanation: "Le trait continu fort a la priorité absolue lors de superpositions : 1. Continu fort, 2. Interrompu fort, 3. Mixte fin."
+  },
+  {
+    id: 7,
+    question: "Quel trait indique une surface nécessitant un traitement particulier ?",
+    options: ["Continu fort", "Mixte fort", "Interrompu fort", "Continu fin"],
+    correctAnswer: 1,
+    explanation: "Le trait mixte fort indique les surfaces faisant l'objet de spécifications particulières (traitement de surface, polissage, etc.)."
+  },
+  {
+    id: 8,
+    question: "Quelle largeur typique pour un trait fort à l'encre ?",
+    options: ["0.18 mm", "0.35 mm", "0.5 - 0.7 mm", "1.4 mm"],
+    correctAnswer: 2,
+    explanation: "La largeur typique d'un trait fort à l'encre est de 0.5 à 0.7 mm selon la taille et le type de dessin."
+  },
+  {
+    id: 9,
+    question: "Quel trait représente les pièces voisines ou positions alternatives ?",
+    options: ["Mixte fin", "Mixte fin à deux tirets", "Interrompu fin", "Continu fin"],
+    correctAnswer: 1,
+    explanation: "Le trait mixte fin à deux tirets représente les contours de pièces voisines ou les positions intermédiaires de pièces mobiles."
+  },
+  {
+    id: 10,
+    question: "Quel trait utilise-t-on pour les lignes de cote ?",
+    options: ["Continu fort", "Continu fin", "Interrompu fin", "Mixte fin"],
+    correctAnswer: 1,
+    explanation: "Le trait continu fin est utilisé pour les lignes de cote, lignes d'attache, hachures et lignes de repère."
+  },
+  {
+    id: 11,
+    question: "Combien de largeurs de trait existe-t-il selon ISO 128-2 ?",
+    options: ["Une seule", "Deux (fort et fin)", "Trois", "Quatre"],
+    correctAnswer: 1,
+    explanation: "Il existe deux largeurs de trait : fort (épais) et fin (mince), avec un rapport minimal de 2:1."
+  },
+  {
+    id: 12,
+    question: "Quel trait limite une vue partielle ou une coupe interrompue ?",
+    options: ["Continu fort", "Interrompu fin", "Continu fin à main levée ou zigzag", "Mixte fin"],
+    correctAnswer: 2,
+    explanation: "Le trait continu fin à main levée (ondulé) ou en zigzag indique les limites de vues partielles ou de coupes interrompues."
+  },
+  {
+    id: 13,
+    question: "Les traits forts peuvent-ils se croiser entre eux ?",
+    options: ["Oui, toujours", "Non, jamais", "Seulement à 90°", "Seulement sur les axes"],
+    correctAnswer: 1,
+    explanation: "Règle importante : les traits forts ne se croisent JAMAIS entre eux. En cas de superposition, on applique l'ordre de priorité."
+  },
+  {
+    id: 14,
+    question: "Quelle est la longueur typique d'un tiret court selon ISO 128-2 ?",
+    options: ["1.5d", "3d", "6d", "12d"],
+    correctAnswer: 1,
+    explanation: "Selon ISO 128-2, un tiret court mesure environ 3d (où d = largeur du trait), un tiret long mesure 12d."
+  },
+  {
+    id: 15,
+    question: "Peut-on omettre les traits cachés sur un plan horloger ?",
+    options: ["Non, jamais", "Oui, s'ils ne sont pas nécessaires à la définition", "Seulement en vue de face", "Seulement pour les petites pièces"],
+    correctAnswer: 1,
+    explanation: "Oui, lorsque les parties cachées ne sont pas nécessaires à la définition, elles peuvent être omises pour alléger et faciliter la lecture du plan."
+  }
+];
 
-interface TooltipState {
-  show: boolean;
-  type: string;
-  epaisseur: string;
-  exemple: string;
-}
+export default function TypesLignesPage() {
+  const [selectedLine, setSelectedLine] = useState<string | null>(null);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [score, setScore] = useState(0);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
-function QuizTypesLignes() {
-  const questions: Question[] = [
-    {
-      question: "Quelle ligne represente les contours visibles et de coupe ?",
-      options: [
-        "Ligne en tiretes",
-        "Ligne continue fine",
-        "Ligne continue epaisse",
-        "Ligne en chaine"
-      ],
-      correct: 2,
-      correction: "La ligne continue epaisse (0,5-1 mm) definit les bords exterieurs (ex: contours d'un pont de balancier). Essentiel pour l'usinage precis en horlogerie.",
-    },
-    {
-      question: "Quelle ligne est utilisee pour les dimensions et cotes ?",
-      options: [
-        "Ligne en tiretes fins",
-        "Ligne continue epaisse",
-        "Ligne continue fine",
-        "Ligne libre"
-      ],
-      correct: 2,
-      correction: "La ligne continue fine (0,2-0,5 mm) trace les prolongations, fleches et hachures pour cotes en mm/um (ex: diametre d'un pivot). Evite les ambiguïtes sur les plans.",
-    },
-    {
-      question: "Quelle ligne pour un axe cache (non visible) ?",
-      options: [
-        "Ligne continue epaisse",
-        "Ligne en tiretes (pointillés)",
-        "Ligne en chaine",
-        "Ligne continue fine"
-      ],
-      correct: 1,
-      correction: "La ligne en tiretes (0,3-0,5 mm) montre les aretes cachees (ex: trou interne sous une platine). Crucial pour le demontage sans surprise en atelier horloger.",
-    },
-    {
-      question: "Quelle ligne indique les axes de rotation et symmetries ?",
-      options: [
-        "Ligne en tiretes fins",
-        "Ligne en chaine (tirets espaces)",
-        "Ligne continue epaisse",
-        "Ligne libre"
-      ],
-      correct: 1,
-      correction: "La ligne en chaine (0,2-0,4 mm) marque les centres et trajectoires (ex: axe d'une roue d'echappement). Aide a l'alignement lors du remontage.",
-    },
-    {
-      question: "Quelle ligne pour les annotations et repères ?",
-      options: [
-        "Ligne continue fine",
-        "Ligne en tiretes",
-        "Ligne en tiretes fins",
-        "Ligne en chaine"
-      ],
-      correct: 2,
-      correction: "La ligne en tiretes fins (0,1-0,3 mm) sert aux indications (ex: repères pour vis ou assemblages). Subtile pour ne pas surcharger le plan horloger.",
-    },
-    {
-      question: "Quelle ligne est variable et utilisee pour les esquisses ?",
-      options: [
-        "Ligne continue epaisse",
-        "Ligne libre ou de croquis",
-        "Ligne en tiretes",
-        "Ligne en chaine"
-      ],
-      correct: 1,
-      correction: "La ligne libre (fine/variable) permet les notes manuelles (ex: croquis rapide d'un ajustement prototype). Utile en phase de conception avant CAO.",
-    },
-    {
-      question: "Quelle epaisseur typique pour une ligne de contour en horlogerie ?",
-      options: [
-        "0,1 mm",
-        "0,2-0,5 mm",
-        "0,5-1 mm",
-        "Variable"
-      ],
-      correct: 2,
-      correction: "0,5-1 mm pour les contours epais : assure visibilite sur micro-pieces (ex: outline d'une roue dentee a 1:1). Norme ISO 128-2 pour uniformite suisse.",
-    },
-    {
-      question: "Les lignes en tiretes servent a... ?",
-      options: [
-        "Montrer les cotes",
-        "Representer les parties cachees",
-        "Tracer les axes",
-        "Annoter librement"
-      ],
-      correct: 1,
-      correction: "Elles indiquent les aretes non visibles (ex: engrenages internes d'un barillet). Permet de 'voir a travers' sans demonter le mouvement.",
-    },
-    {
-      question: "Dans ISO 128-2, quelle ligne pour les hachures de section ?",
-      options: [
-        "Ligne en chaine",
-        "Ligne continue fine",
-        "Ligne continue epaisse",
-        "Ligne en tiretes fins"
-      ],
-      correct: 1,
-      correction: "Ligne continue fine pour hachures et sections (ex: coupe d'un pivot). Distingue les materiaux dans les vues eclatees horlogeres.",
-    },
-    {
-      question: "Pourquoi utiliser des lignes fines pour les cotes en horlogerie ?",
-      options: [
-        "Pour plus de visibilite",
-        "Pour eviter la surcharge du plan",
-        "Pour indiquer les axes caches",
-        "Pour les esquisses"
-      ],
-      correct: 1,
-      correction: "Elles (0,2-0,5 mm) gardent le plan clair sur des pieces minuscules (ex: tolerances ±0,02 mm). Sur un plan surcharge, c'est illisible en production.",
-    },
-    {
-      question: "Quelle ligne pour les trajectoires de mouvement (ex: balancier) ?",
-      options: [
-        "Ligne continue epaisse",
-        "Ligne en tiretes",
-        "Ligne en chaine",
-        "Ligne libre"
-      ],
-      correct: 2,
-      correction: "Ligne en chaine pour dynamiques (ex: oscillation du balancier). Aide a visualiser les jeux fonctionnels sans simulation 3D.",
-    },
-    {
-      question: "En horlogerie suisse, ISO 128-2 est combinee avec quelle norme pour les cartouches ?",
-      options: [
-        "ISO 9001",
-        "ISO 1101",
-        "ISO 5457",
-        "ISO 4287"
-      ],
-      correct: 2,
-      correction: "ISO 5457 pour cartouches : lignes + infos admin (ex: echelle 1:1). Ensemble, elles standardisent les plans ETA pour traceabilite internationale.",
-    },
-  ];
-
-  const [current, setCurrent] = useState<number>(0);
-  const [score, setScore] = useState<number>(0);
-  const [showScore, setShowScore] = useState<boolean>(false);
-  const [selected, setSelected] = useState<number | null>(null);
-  const [showCorrection, setShowCorrection] = useState<boolean>(false);
-
-  const handleAnswer = (i: number): void => {
-    setSelected(i);
-    setShowCorrection(true);
-    if (i === questions[current].correct) setScore((s) => s + 1);
+  const handleLineClick = (lineId: string) => {
+    setSelectedLine(lineId);
   };
 
-  const handleNext = (): void => {
-    setSelected(null);
-    setShowCorrection(false);
-    if (current + 1 < questions.length) {
-      setCurrent(current + 1);
-    } else {
-      setShowScore(true);
+  const handleAnswerSelect = (answerIndex: number) => {
+    if (selectedAnswer === null) {
+      setSelectedAnswer(answerIndex);
+      setShowExplanation(true);
+      if (answerIndex === quizData[currentQuestion].correctAnswer) {
+        setScore(score + 1);
+      }
     }
   };
 
-  const handleRestart = (): void => {
-    setCurrent(0);
+  const handleNextQuestion = () => {
+    if (currentQuestion < quizData.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+      setSelectedAnswer(null);
+      setShowExplanation(false);
+    } else {
+      setQuizCompleted(true);
+    }
+  };
+
+  const resetQuiz = () => {
+    setCurrentQuestion(0);
+    setSelectedAnswer(null);
+    setShowExplanation(false);
     setScore(0);
-    setSelected(null);
-    setShowCorrection(false);
-    setShowScore(false);
+    setQuizCompleted(false);
   };
 
-  return (
-    <section className="bg-[#111827] text-gray-200 rounded-2xl shadow-lg p-8 mt-10 text-center">
-      <h2 className="text-xl font-semibold text-[#E2B44F] mb-4">Quiz : Teste tes connaissances sur les lignes ISO 128-2</h2>
-      {showScore ? (
-        <div className="space-y-4">
-          <p className="text-lg text-gray-300">
-            Resultat final : <span className="text-[#E2B44F] font-bold">{score}</span> / {questions.length}
-          </p>
-          <p className="text-sm text-gray-400">
-            {score === questions.length ? "Parfait ! Tu maitrises les lignes techniques." :
-             score >= 10 ? "Excellent ! Quelques nuances a peaufiner." :
-             score >= 7 ? "Bon niveau, re vises les usages caches." :
-             "Pratique avec des plans pour progresser."}
-          </p>
-          <button
-            onClick={handleRestart}
-            className="bg-[#E2B44F] hover:bg-[#d4ac3d] text-gray-900 px-6 py-2 rounded-lg font-semibold transition"
-          >
-            Recommencer le quiz
-          </button>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          <p className="mb-4 text-gray-300 font-medium">{questions[current].question}</p>
-          <div className="grid md:grid-cols-2 gap-3">
-            {questions[current].options.map((option, i) => (
-              <button
-                key={i.toString()}
-                onClick={() => !showCorrection && handleAnswer(i)}
-                className={`px-4 py-3 rounded-lg transition-all duration-200 flex items-center justify-between
-                  ${!showCorrection 
-                    ? "bg-[#1c2333] hover:bg-[#2c3344] text-gray-200 border border-[#2c3344]" 
-                    : i === questions[current].correct 
-                      ? "border-2 border-green-500 bg-green-900/50 text-green-300" 
-                      : i === selected && i !== questions[current].correct 
-                        ? "border-2 border-red-500 bg-red-900/50 text-red-300 line-through" 
-                        : "bg-[#1c2333] text-gray-400"
-                  }`}
-                disabled={showCorrection}
-                type="button"
-              >
-                <span>{option}</span>
-                {showCorrection && i === selected && (
-                  i === questions[current].correct ? <span className="text-green-400">{"✅"}</span> : <span className="text-red-400">{"❌"}</span>
-                )}
-                {showCorrection && i === questions[current].correct && <span className="text-green-400">{"✅"}</span>}
-              </button>
-            ))}
-          </div>
-          {showCorrection && (
-            <div className="text-left bg-[#1e293b] rounded-lg p-4 border border-[#E2B44F]/30">
-              <h4 className="font-bold text-[#E2B44F] mb-2">
-                {selected === questions[current].correct ? "✅ Bonne réponse !" : "❌ Mauvaise réponse."}
-              </h4>
-              <p className="text-gray-200 text-sm">{questions[current].correction}</p>
-            </div>
-          )}
-          {showCorrection && (
-            <button
-              onClick={handleNext}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition"
-              type="button"
-            >
-              {current + 1 < questions.length ? "Question suivante" : "Voir le score final"}
-            </button>
-          )}
-          {!showCorrection && (
-            <p className="text-xs text-gray-400">
-              Question {current + 1} sur {questions.length} • Choisis une réponse
-            </p>
-          )}
-        </div>
-      )}
-    </section>
-  );
-}
-
-function InteractiveSVG() {
-  const [tooltip, setTooltip] = useState<TooltipState>({ show: false, type: '', epaisseur: '', exemple: '' });
-
-  const lines: Line[] = [
-    {
-      id: 1,
-      type: 'Ligne continue epaisse',
-      epaisseur: '0,5-1 mm',
-      exemple: 'Contours de pont',
-      path: 'M10 50 L200 50',
-      stroke: 'black',
-      strokeWidth: 3,
-      strokeDasharray: 'none'
-    },
-    {
-      id: 2,
-      type: 'Ligne continue fine',
-      epaisseur: '0,2-0,5 mm',
-      exemple: 'Cote pivot',
-      path: 'M10 80 L200 80',
-      stroke: 'black',
-      strokeWidth: 1,
-      strokeDasharray: 'none'
-    },
-    {
-      id: 3,
-      type: 'Ligne en tiretes',
-      epaisseur: '0,3-0,5 mm',
-      exemple: 'Arete cachee',
-      path: 'M10 110 L200 110',
-      stroke: 'black',
-      strokeWidth: 2,
-      strokeDasharray: '5,5'
-    },
-    {
-      id: 4,
-      type: 'Ligne en chaine',
-      epaisseur: '0,2-0,4 mm',
-      exemple: 'Axe rotation',
-      path: 'M10 140 L200 140',
-      stroke: 'black',
-      strokeWidth: 1.5,
-      strokeDasharray: '10,5'
-    },
-    {
-      id: 5,
-      type: 'Ligne en tiretes fins',
-      epaisseur: '0,1-0,3 mm',
-      exemple: 'Repere vis',
-      path: 'M10 170 L200 170',
-      stroke: 'black',
-      strokeWidth: 1,
-      strokeDasharray: '3,3'
-    },
-    {
-      id: 6,
-      type: 'Ligne libre',
-      epaisseur: 'Variable',
-      exemple: 'Esquisse note',
-      path: 'M10 200 Q100 180 200 200',
-      stroke: 'gray',
-      strokeWidth: 2,
-      strokeDasharray: 'none'
-    },
-  ];
-
-  const handleMouseEnter = (line: Line): void => {
-    setTooltip({
-      show: true,
-      type: line.type,
-      epaisseur: line.epaisseur,
-      exemple: line.exemple
-    });
-  };
-
-  const handleMouseLeave = (): void => {
-    setTooltip({ show: false, type: '', epaisseur: '', exemple: '' });
-  };
+  const selectedLineData = lineTypesData.find(l => l.id === selectedLine);
 
   return (
-    <div className="relative">
-      <svg width="300" height="250" viewBox="0 0 300 250" className="border border-gray-300 rounded-lg mx-auto block shadow-sm">
-        <text x="10" y="35" fontSize="12" fill="black">Exemples interactifs (hover/clic)</text>
-        {lines.map((line) => (
-          <path
-            key={line.id.toString()}
-            d={line.path}
-            stroke={line.stroke}
-            strokeWidth={line.strokeWidth}
-            strokeDasharray={line.strokeDasharray}
-            fill="none"
-            onMouseEnter={() => handleMouseEnter(line)}
-            onMouseLeave={handleMouseLeave}
-            onClick={() => handleMouseEnter(line)}
-            className="cursor-pointer hover:opacity-70 transition"
-          />
-        ))}
-      </svg>
-      {tooltip.show && (
-        <div className="absolute top-0 left-full ml-2 bg-white border border-blue-200 shadow-lg rounded p-2 text-sm z-10 max-w-xs">
-          <strong>{tooltip.type}</strong>
-          <br />
-          Epaisseur: {tooltip.epaisseur}
-          <br />
-          Ex: {tooltip.exemple}
-        </div>
-      )}
-      <p className="text-center text-xs text-gray-500 mt-2">Passe la souris sur les lignes pour voir les details (ISO 128-2).</p>
-    </div>
-  );
-}
-
-const typesLignes = [
-  {
-    type: "Ligne continue epaisse",
-    epaisseur: "0,5 a 1 mm",
-    usage: "Contours visibles et contours de coupe. En horlogerie : represente les bords exterieurs des pieces (ex: ponts, platines).",
-    exemple: "Utilisee pour les outlines principales d'un mouvement ETA.",
-  },
-  {
-    type: "Ligne continue fine",
-    epaisseur: "0,2 a 0,5 mm",
-    usage: "Dimensions, hachures, lignes de prolongation et fleches. En horlogerie : cotes precises pour tolerances (ex: diametres de pivots).",
-    exemple: "Indique les mesures en mm/um sur un plan de roue dentee.",
-  },
-  {
-    type: "Ligne en tiretes (pointillés)",
-    epaisseur: "0,3 a 0,5 mm",
-    usage: "Aretes cachees. En horlogerie : montre les parties internes non visibles (ex: trous sous une platine).",
-    exemple: "Represente un axe interne d'un balancier sans demonter la piece.",
-  },
-  {
-    type: "Ligne en chaine (tirets espaces)",
-    epaisseur: "0,2 a 0,4 mm",
-    usage: "Lignes de centre, trajectoires de mouvement et symmetries. En horlogerie : axes de rotation (ex: pivots de roues).",
-    exemple: "Trace le centre d'une roue d'echappement pour alignement.",
-  },
-  {
-    type: "Ligne en tiretes fins (pointillés fins)",
-    epaisseur: "0,1 a 0,3 mm",
-    usage: "Lignes d'indication et de reference. En horlogerie : repères pour assemblages (ex: positions de vis).",
-    exemple: "Indique l'orientation d'un composant lors du remontage.",
-  },
-  {
-    type: "Ligne libre ou de croquis",
-    epaisseur: "Variable (fine)",
-    usage: "Annotations et esquisses preliminaires. En horlogerie : notes manuelles sur un prototype de plan.",
-    exemple: "Croquis rapide d'un ajustement pour atelier.",
-  },
-];
-
-export default function TypesLignesIso1282Page() {
-  return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-6 py-16 font-sans text-gray-800">
-      <div className="max-w-5xl mx-auto space-y-16">
-        {/* Bouton Retour */}
-        <div className="mb-6">
-          <Link
-            href="/theorie/lecture-de-plan"
-            className="text-blue-700 hover:underline flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <Link href="/theorie/lecture-de-plan" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+            <ChevronLeft className="w-5 h-5 mr-1" />
             Retour
           </Link>
         </div>
+      </header>
 
-        {/* Titre principal */}
-        <header className="text-center space-y-4">
-          <img
-            src="/images/typ-logo.png"
-            alt="Logo TyP"
-            className="mx-auto h-16 w-auto shadow-lg rounded-full"
-          />
-          <h1 className="text-4xl font-bold text-blue-900">
-            Types de Lignes <span className="text-blue-600">(ISO 128-2)</span>
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Title Section */}
+        <div className="text-center mb-12">
+          <div className="inline-block px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-4">
+            Les normes
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+            Types de Lignes (ISO 128-2)
           </h1>
-          <p className="text-gray-600 max-w-xl mx-auto text-lg leading-relaxed">
-            La norme ISO 128-2 definit les types de lignes standard pour les dessins techniques. En horlogerie suisse, elles assurent une representation claire et precise des plans (contours, axes, cotes) pour eviter les ambiguïtés en production.
-          </p>
-        </header>
+        </div>
 
-        {/* Section image illustrative */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Schema des Types de Lignes (ISO 128-2)</h2>
-          <img
-            src="/images/types-lignes-iso128-2.jpg"
-            alt="Schema des types de lignes ISO 128-2"
-            className="mx-auto rounded-lg shadow max-w-2xl w-full hover:scale-105 transition-transform"
-          />
-          <p className="text-gray-500 text-sm mt-4">
-            Exemple d'application des lignes sur un plan technique horloger (epaisseurs et usages conformes a ISO 128-2).
-          </p>
+        {/* Interactive Schema Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Schéma Interactif</h2>
+          <p className="text-slate-600 mb-8">Cliquez sur chaque type de ligne pour afficher son explication et utilisation.</p>
+          
+          <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
+            <svg viewBox="0 0 800 700" className="w-full h-auto">
+              <text x="400" y="30" textAnchor="middle" fontSize="20" fontWeight="bold" fill="#1e40af">Types de Lignes ISO 128-2</text>
+              
+              {/* Continu fort */}
+              <g onClick={() => handleLineClick('continu-fort')} className="cursor-pointer hover:opacity-80 transition-opacity">
+                <rect x="50" y="60" width="700" height="60" fill="#3b82f6" fillOpacity="0.05" stroke="#3b82f6" strokeWidth="1" rx="4"/>
+                <line x1="200" y1="90" x2="600" y2="90" stroke="#1e40af" strokeWidth="4"/>
+                <text x="100" y="95" fontSize="14" fontWeight="bold" fill="#1e293b">Continu fort</text>
+              </g>
+
+              {/* Continu fin */}
+              <g onClick={() => handleLineClick('continu-fin')} className="cursor-pointer hover:opacity-80 transition-opacity">
+                <rect x="50" y="130" width="700" height="60" fill="#10b981" fillOpacity="0.05" stroke="#10b981" strokeWidth="1" rx="4"/>
+                <line x1="200" y1="160" x2="600" y2="160" stroke="#047857" strokeWidth="1.5"/>
+                <text x="100" y="165" fontSize="14" fontWeight="bold" fill="#1e293b">Continu fin</text>
+              </g>
+
+              {/* Interrompu fort */}
+              <g onClick={() => handleLineClick('interrompu-fort')} className="cursor-pointer hover:opacity-80 transition-opacity">
+                <rect x="50" y="200" width="700" height="60" fill="#f59e0b" fillOpacity="0.05" stroke="#f59e0b" strokeWidth="1" rx="4"/>
+                <line x1="200" y1="230" x2="600" y2="230" stroke="#d97706" strokeWidth="4" strokeDasharray="20,8"/>
+                <text x="100" y="235" fontSize="14" fontWeight="bold" fill="#1e293b">Interrompu fort</text>
+              </g>
+
+              {/* Interrompu fin */}
+              <g onClick={() => handleLineClick('interrompu-fin')} className="cursor-pointer hover:opacity-80 transition-opacity">
+                <rect x="50" y="270" width="700" height="60" fill="#8b5cf6" fillOpacity="0.05" stroke="#8b5cf6" strokeWidth="1" rx="4"/>
+                <line x1="200" y1="300" x2="600" y2="300" stroke="#6d28d9" strokeWidth="1.5" strokeDasharray="15,6"/>
+                <text x="100" y="305" fontSize="14" fontWeight="bold" fill="#1e293b">Interrompu fin</text>
+              </g>
+
+              {/* Mixte fin */}
+              <g onClick={() => handleLineClick('mixte-fin')} className="cursor-pointer hover:opacity-80 transition-opacity">
+                <rect x="50" y="340" width="700" height="60" fill="#ec4899" fillOpacity="0.05" stroke="#ec4899" strokeWidth="1" rx="4"/>
+                <line x1="200" y1="370" x2="600" y2="370" stroke="#be185d" strokeWidth="1.5" strokeDasharray="30,5,5,5"/>
+                <text x="100" y="375" fontSize="14" fontWeight="bold" fill="#1e293b">Mixte fin</text>
+              </g>
+
+              {/* Mixte fort */}
+              <g onClick={() => handleLineClick('mixte-fort')} className="cursor-pointer hover:opacity-80 transition-opacity">
+                <rect x="50" y="410" width="700" height="60" fill="#06b6d4" fillOpacity="0.05" stroke="#06b6d4" strokeWidth="1" rx="4"/>
+                <line x1="200" y1="440" x2="600" y2="440" stroke="#0891b2" strokeWidth="4" strokeDasharray="30,5,5,5"/>
+                <text x="100" y="445" fontSize="14" fontWeight="bold" fill="#1e293b">Mixte fort</text>
+              </g>
+
+              {/* Mixte fin à deux tirets */}
+              <g onClick={() => handleLineClick('mixte-deux-tirets')} className="cursor-pointer hover:opacity-80 transition-opacity">
+                <rect x="50" y="480" width="700" height="60" fill="#ef4444" fillOpacity="0.05" stroke="#ef4444" strokeWidth="1" rx="4"/>
+                <line x1="200" y1="510" x2="600" y2="510" stroke="#dc2626" strokeWidth="1.5" strokeDasharray="30,5,8,5,8,5"/>
+                <text x="100" y="515" fontSize="14" fontWeight="bold" fill="#1e293b">Mixte 2 tirets</text>
+              </g>
+
+              {/* Main levée */}
+              <g onClick={() => handleLineClick('main-levee')} className="cursor-pointer hover:opacity-80 transition-opacity">
+                <rect x="50" y="550" width="700" height="60" fill="#a855f7" fillOpacity="0.05" stroke="#a855f7" strokeWidth="1" rx="4"/>
+                <path d="M 200 580 Q 250 575 300 580 T 400 580 T 500 580 T 600 580" stroke="#7c3aed" strokeWidth="1.5" fill="none"/>
+                <text x="100" y="585" fontSize="14" fontWeight="bold" fill="#1e293b">Main levée</text>
+              </g>
+
+              {/* Légende */}
+              <text x="400" y="650" textAnchor="middle" fontSize="12" fill="#64748b">Cliquez sur une ligne pour voir les détails</text>
+            </svg>
+          </div>
+
+          {/* Explanation Panel */}
+          {selectedLineData && (
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border-l-4 border-blue-600">
+              <h3 className="text-2xl font-bold text-slate-900 mb-2">{selectedLineData.name}</h3>
+              <p className="text-sm text-blue-800 font-semibold mb-3">Priorité de tracé : {selectedLineData.priority}</p>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm font-bold text-slate-700 mb-1">Désignation :</p>
+                  <p className="text-slate-700 mb-3">{selectedLineData.designation}</p>
+                  <p className="text-sm font-bold text-slate-700 mb-1">Largeur typique :</p>
+                  <p className="text-slate-700">{selectedLineData.width}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-slate-700 mb-1">Usage :</p>
+                  <p className="text-slate-700 mb-3">{selectedLineData.usage}</p>
+                  <p className="text-sm font-bold text-slate-700 mb-1">Exemple horlogerie :</p>
+                  <p className="text-slate-700">{selectedLineData.example}</p>
+                </div>
+              </div>
+            </div>
+          )}
         </section>
 
-        {/* SVG interactif */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">SVG Interactif : Exemples de Lignes</h2>
-          <InteractiveSVG />
-          <p className="text-gray-500 text-sm mt-4">Clique ou survole les lignes pour voir les details. Ideal pour visualiser les applications en horlogerie.</p>
+        {/* Mémo Technique */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Erreurs */}
+            <div className="bg-red-50 rounded-xl p-6 border border-red-200">
+              <h3 className="text-xl font-bold text-red-900 mb-4 flex items-center">
+                <XCircle className="w-6 h-6 mr-2" />
+                Erreurs fréquentes
+              </h3>
+              <ul className="space-y-3 text-slate-700">
+                <li className="flex items-start">
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Utiliser un trait continu fin pour les contours visibles.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Confondre trait interrompu (caché) et trait mixte (axe).</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Ne pas respecter le rapport 2:1 entre traits fort et fin.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Laisser se croiser deux traits forts.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Dessiner tous les traits cachés, même non nécessaires.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Oublier l'ordre de priorité lors de superpositions.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Bonnes pratiques */}
+            <div className="bg-green-50 rounded-xl p-6 border border-green-200">
+              <h3 className="text-xl font-bold text-green-900 mb-4 flex items-center">
+                <CheckCircle className="w-6 h-6 mr-2" />
+                Bonnes pratiques
+              </h3>
+              <ul className="space-y-3 text-slate-700">
+                <li className="flex items-start">
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Toujours utiliser trait continu fort pour contours visibles.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Respecter l'ordre de priorité : 1. Fort, 2. Interrompu, 3. Mixte.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Maintenir un rapport constant 2:1 (fort/fin) sur tout le plan.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Omettre les traits cachés non essentiels pour clarifier le dessin.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Utiliser traits mixtes fins pour tous les axes de symétrie.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Vérifier la cohérence des types de traits sur toutes les vues.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </section>
 
-        {/* Tableau des types de lignes */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Details des Types de Lignes</h2>
-          <p className="text-gray-600 mb-4">Chaque type a une epaisseur et un usage specifique, adapte aux micro-pieces horlogeres. Respecter ISO 128-2 evite les erreurs d'interpretation lors du demontage/remontage ou de l'usinage.</p>
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm text-left border border-collapse border-blue-200">
-              <thead className="bg-blue-50">
-                <tr>
-                  <th className="border px-4 py-2 font-semibold">Type de Ligne</th>
-                  <th className="border px-4 py-2 font-semibold">Epaisseur (mm)</th>
-                  <th className="border px-4 py-2 font-semibold">Usage Technique</th>
-                  <th className="border px-4 py-2 font-semibold">Exemple en Horlogerie</th>
-                </tr>
-              </thead>
-              <tbody>
-                {typesLignes.map((ligne, i) => (
-                  <tr key={i.toString()} className={i % 2 === 0 ? "bg-gray-50" : ""}>
-                    <td className="border px-4 py-3 font-semibold text-blue-900">{ligne.type}</td>
-                    <td className="border px-4 py-3 font-mono">{ligne.epaisseur}</td>
-                    <td className="border px-4 py-3 text-gray-700">{ligne.usage}</td>
-                    <td className="border px-4 py-3 italic">{ligne.exemple}</td>
+        {/* Quiz Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Quiz : Teste tes connaissances</h2>
+          
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            {!quizCompleted ? (
+              <>
+                <div className="mb-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-sm font-medium text-slate-600">
+                      Question {currentQuestion + 1} sur {quizData.length}
+                    </span>
+                    <span className="text-sm font-medium text-blue-600">
+                      Score: {score}/{quizData.length}
+                    </span>
+                  </div>
+                  <div className="w-full bg-slate-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${((currentQuestion + 1) / quizData.length) * 100}%` }}
+                    ></div>
+                  </div>
+                </div>
+
+                <h3 className="text-xl font-bold text-slate-900 mb-6">
+                  {quizData[currentQuestion].question}
+                </h3>
+
+                <div className="space-y-3 mb-6">
+                  {quizData[currentQuestion].options.map((option, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleAnswerSelect(index)}
+                      disabled={selectedAnswer !== null}
+                      className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                        selectedAnswer === null
+                          ? 'border-slate-200 hover:border-blue-400 hover:bg-blue-50'
+                          : index === quizData[currentQuestion].correctAnswer
+                          ? 'border-green-500 bg-green-50'
+                          : selectedAnswer === index
+                          ? 'border-red-500 bg-red-50'
+                          : 'border-slate-200 opacity-50'
+                      }`}
+                    >
+                      <div className="flex items-center">
+                        <span className="font-semibold mr-3 text-slate-700">
+                          {String.fromCharCode(65 + index)}.
+                        </span>
+                        <span className="text-slate-800">{option}</span>
+                        {selectedAnswer !== null && index === quizData[currentQuestion].correctAnswer && (
+                          <CheckCircle className="w-5 h-5 ml-auto text-green-600" />
+                        )}
+                        {selectedAnswer === index && index !== quizData[currentQuestion].correctAnswer && (
+                          <XCircle className="w-5 h-5 ml-auto text-red-600" />
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                {showExplanation && (
+                  <div className="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6 rounded">
+                    <p className="text-slate-700">
+                      <strong>Explication :</strong> {quizData[currentQuestion].explanation}
+                    </p>
+                  </div>
+                )}
+
+                {selectedAnswer !== null && (
+                  <button
+                    onClick={handleNextQuestion}
+                    className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                  >
+                    {currentQuestion < quizData.length - 1 ? 'Question suivante' : 'Voir les résultats'}
+                  </button>
+                )}
+              </>
+            ) : (
+              <div className="text-center">
+                <h3 className="text-3xl font-bold text-slate-900 mb-4">Quiz terminé !</h3>
+                <p className="text-xl text-slate-700 mb-6">
+                  Votre score : <span className="font-bold text-blue-600">{score}/{quizData.length}</span>
+                  {' '}({Math.round((score / quizData.length) * 100)}%)
+                </p>
+                <div className="mb-6">
+                  {score === quizData.length && (
+                    <p className="text-green-600 font-semibold text-lg">🎉 Parfait ! Tu maîtrises les types de lignes !</p>
+                  )}
+                  {score >= quizData.length * 0.8 && score < quizData.length && (
+                    <p className="text-blue-600 font-semibold text-lg">👏 Excellent travail ! Quelques révisions et ce sera parfait !</p>
+                  )}
+                  {score >= quizData.length * 0.6 && score < quizData.length * 0.8 && (
+                    <p className="text-yellow-600 font-semibold text-lg">💪 Bon résultat ! Continue de t'entraîner !</p>
+                  )}
+                  {score < quizData.length * 0.6 && (
+                    <p className="text-orange-600 font-semibold text-lg">📚 Révise les notions et réessaie !</p>
+                  )}
+                </div>
+                <button
+                  onClick={resetQuiz}
+                  className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                >
+                  Recommencer le quiz
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Video Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Vidéo : Types de Traits en Dessin Technique</h2>
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="aspect-video">
+              <iframe 
+                width="100%" 
+                height="100%" 
+                src="https://www.youtube.com/embed/LhrEIU0KLrU" 
+                title="Dessin Technique : Les principaux types de traits utilisés" 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowFullScreen
+                className="rounded-lg"
+              ></iframe>
+            </div>
+          </div>
+        </section>
+
+        {/* Context Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Contexte & Origines de la Norme</h2>
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <div className="flex items-start mb-6">
+              <div className="bg-blue-100 p-3 rounded-lg mr-4">
+                <Book className="w-6 h-6 text-blue-600" />
+              </div>
+              <div className="flex-1">
+                <p className="text-slate-700 leading-relaxed mb-4">
+                  La norme <strong className="text-blue-600">ISO 128-2:2020</strong> établit les types de traits utilisés dans les dessins techniques (schémas, plans, cartes), leurs désignations et leurs configurations, ainsi que les règles générales pour le tracé de traits. Elle remplace l'ancienne norme ISO 128 de 1982.
+                </p>
+                <p className="text-slate-700 leading-relaxed mb-4">
+                  Cette norme définit <strong>deux largeurs de trait</strong> principales : <strong>fort (épais)</strong> et <strong>fin (mince)</strong>, avec un rapport minimal de <strong>2:1</strong>. Les largeurs recommandées sont : 0.18, 0.25, 0.35, 0.5, 0.7, 1, 1.4 et 2 mm.
+                </p>
+                <p className="text-slate-700 leading-relaxed">
+                  En horlogerie, le respect strict de ces conventions est essentiel pour garantir la lisibilité des plans techniques de mouvements, où la précision dimensionnelle et la clarté des spécifications sont cruciales pour l'usinage de composants miniatures.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Table: Types de traits */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Types de Traits : Récapitulatif Complet</h2>
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-100">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Type de trait</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Désignation</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Largeur</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Applications principales</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Continu fort</td>
+                    <td className="px-6 py-4 text-slate-700">Trait plein épais</td>
+                    <td className="px-6 py-4 text-slate-700">0.5 - 0.7 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Contours visibles, arêtes vues</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Continu fin</td>
+                    <td className="px-6 py-4 text-slate-700">Trait plein mince</td>
+                    <td className="px-6 py-4 text-slate-700">0.25 - 0.35 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Lignes de cote, hachures, lignes d'attache</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Interrompu fort</td>
+                    <td className="px-6 py-4 text-slate-700">Trait discontinu épais</td>
+                    <td className="px-6 py-4 text-slate-700">0.5 - 0.7 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Contours cachés, arêtes non visibles</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Interrompu fin</td>
+                    <td className="px-6 py-4 text-slate-700">Trait discontinu mince</td>
+                    <td className="px-6 py-4 text-slate-700">0.25 - 0.35 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Contours cachés secondaires</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Mixte fin</td>
+                    <td className="px-6 py-4 text-slate-700">Tiret-point mince</td>
+                    <td className="px-6 py-4 text-slate-700">0.25 - 0.35 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Axes de symétrie, plans de coupe</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Mixte fort</td>
+                    <td className="px-6 py-4 text-slate-700">Tiret-point épais</td>
+                    <td className="px-6 py-4 text-slate-700">0.5 - 0.7 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Surfaces avec spécifications particulières</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Mixte fin 2 tirets</td>
+                    <td className="px-6 py-4 text-slate-700">Double tiret-point</td>
+                    <td className="px-6 py-4 text-slate-700">0.25 - 0.35 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Pièces voisines, positions alternatives</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Continu fin main levée</td>
+                    <td className="px-6 py-4 text-slate-700">Trait ondulé/zigzag</td>
+                    <td className="px-6 py-4 text-slate-700">0.25 - 0.35 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Limites de vues partielles, coupes interrompues</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <p className="text-gray-500 text-sm mt-4">
-            En Suisse, ces lignes sont combinees avec ISO 5457 (cartouches) pour des plans complets. L'epaisseur varie selon l'echelle (ex: 1:1 pour micro-pieces).
-          </p>
         </section>
 
-        {/* Quiz interactif */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
-          <QuizTypesLignes />
-        </section>
-
-        {/* Video pedagogique */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">
-            Video : Lignes Techniques en Dessin Industriel
-          </h2>
-          <div className="relative w-full max-w-3xl mx-auto overflow-hidden rounded-xl border border-gray-200 shadow-sm hover:scale-[1.02] transition-transform duration-300">
-            <iframe
-              className="w-full h-[480px] md:h-[540px] lg:h-[600px]"
-              src="https://www.youtube-nocookie.com/embed/93zHWlfYrwc"
-              title="Lignes Techniques en Dessin Industriel"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            ></iframe>
+        {/* Table: Ordre de priorité */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Ordre de Priorité des Traits</h2>
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-100">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Priorité</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Type de trait</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Règle en cas de superposition</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-blue-600 text-lg">1</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900">Continu fort</td>
+                    <td className="px-6 py-4 text-slate-700">Priorité absolue, masque tous les autres traits</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-blue-600 text-lg">2</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900">Interrompu fort</td>
+                    <td className="px-6 py-4 text-slate-700">Priorité sur les traits mixtes et fins</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-blue-600 text-lg">3</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900">Continu fin</td>
+                    <td className="px-6 py-4 text-slate-700">Priorité sur les traits mixtes</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-blue-600 text-lg">4</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900">Interrompu fin</td>
+                    <td className="px-6 py-4 text-slate-700">Priorité secondaire</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-blue-600 text-lg">5</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900">Mixte fin</td>
+                    <td className="px-6 py-4 text-slate-700">Priorité faible, souvent masqué</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <p className="text-gray-500 text-sm mt-4">Video explicative sur les types de lignes (ISO 128-2) appliquees au dessin technique.</p>
+          <div className="mt-4 bg-amber-50 border-l-4 border-amber-600 p-4 rounded">
+            <p className="text-slate-700">
+              <strong>Règle importante :</strong> Les traits forts ne se croisent jamais entre eux ! En cas de superposition, toujours appliquer l'ordre de priorité ci-dessus.
+            </p>
+          </div>
         </section>
 
-        {/* Astuce horlogere */}
-        <section className="bg-blue-50 border border-blue-100 shadow-sm rounded-2xl p-8 text-center">
-          <blockquote className="text-xl italic text-blue-900">
-            "Une ligne mal choisie peut transformer un plan clair en puzzle horloger."
-          </blockquote>
-          <p className="mt-4 text-blue-700 font-medium">— Astuce pour les apprentis en dessin technique</p>
+        {/* Quote */}
+        <section className="mb-16">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white text-center">
+            <blockquote className="text-2xl font-serif italic mb-4">
+              "La maîtrise des types de lignes est la base de tout dessin technique précis."
+            </blockquote>
+            <p className="text-blue-100">— Principe fondamental ISO 128-2</p>
+          </div>
         </section>
 
-        {/* Lien ISO */}
-        <section className="text-center py-10">
-          <p className="text-gray-600 text-lg mb-4">📘 Pour aller plus loin :</p>
-          <a
-            href="https://www.iso.org/standard/75666.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-800 transition"
-          >
-            Consulter la norme ISO 128-2 (Dessins techniques - Lignes)
-          </a>
+        {/* FAQ */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Questions fréquentes (FAQ)</h2>
+          
+          <div className="space-y-4">
+            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+                Quelle est la différence entre un trait continu fort et un trait continu fin ?
+                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                <p className="text-slate-700">
+                  Le <strong>trait continu fort</strong> (épais, 0.5-0.7 mm) représente les contours et arêtes visibles. Le <strong>trait continu fin</strong> (mince, 0.25-0.35 mm) est utilisé pour les lignes de cote, hachures et lignes d'attache. Le rapport entre les deux doit être d'au moins 2:1.
+                </p>
+              </div>
+            </details>
+
+            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+                Pourquoi les traits forts ne peuvent-ils jamais se croiser ?
+                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                <p className="text-slate-700">
+                  C'est une règle fondamentale de clarté : si deux traits forts (contours visibles) se croisent, cela signifie que deux arêtes vues se superposent exactement, ce qui est physiquement impossible ou crée une ambiguïté. Dans ce cas, on doit choisir la vue qui évite cette superposition ou appliquer l'ordre de priorité.
+                </p>
+              </div>
+            </details>
+
+            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+                Quand doit-on omettre les traits cachés ?
+                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                <p className="text-slate-700">
+                  Les traits cachés (interrompus) peuvent être omis lorsqu'ils ne sont <strong>pas nécessaires à la définition de la pièce</strong>. Ceci permet d'alléger le dessin et de faciliter la lecture. En horlogerie, on privilégie les coupes pour montrer les détails internes plutôt que de multiplier les traits cachés.
+                </p>
+              </div>
+            </details>
+
+            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+                Comment distinguer un axe (mixte fin) d'une arête cachée (interrompu) ?
+                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                <p className="text-slate-700">
+                  Le <strong>trait mixte fin</strong> (tiret-point) représente un élément <strong>théorique</strong> (axe de symétrie, plan de coupe) qui n'existe pas physiquement sur la pièce. Le <strong>trait interrompu</strong> représente une arête ou un contour <strong>réel mais caché</strong> derrière une surface opaque. La configuration est différente : tiret-point vs tirets réguliers.
+                </p>
+              </div>
+            </details>
+
+            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+                Quelles largeurs de trait choisir pour un plan A4 ?
+                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                <p className="text-slate-700">
+                  Pour un plan format A4, les largeurs recommandées sont : <strong>trait fort = 0.5 mm</strong> et <strong>trait fin = 0.25 mm</strong> (rapport 2:1). Pour des formats plus grands (A3, A2), on peut utiliser trait fort = 0.7 mm et trait fin = 0.35 mm. L'important est de maintenir le rapport 2:1 et d'être constant sur tout le plan.
+                </p>
+              </div>
+            </details>
+          </div>
         </section>
 
-        <footer className="text-center text-sm text-gray-500 mt-6 border-t border-gray-200 pt-4">
-          © HorloLearn 2025 — Norme ISO 128-2 / Pratiques de dessin horloger suisse.
-        </footer>
-      </div>
-    </main>
+        {/* CTA */}
+        <section className="text-center">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white inline-block">
+            <p className="text-lg mb-4">📘 Tu veux aller plus loin ?</p>
+            <a 
+              href="https://www.iso.org/standard/69129.html" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+            >
+              Consulter la norme ISO 128-2 complète
+            </a>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-slate-900 text-white py-8 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-slate-400">© 2025 HorloLearn - Passion & Découverte Horlogère Suisse</p>
+        </div>
+      </footer>
+    </div>
   );
 }
