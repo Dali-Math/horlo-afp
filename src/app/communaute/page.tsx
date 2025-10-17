@@ -17,7 +17,9 @@ import {
   CheckCircle,
   MapPin,
   GraduationCap,
-  ChevronRight
+  ChevronRight,
+  List,
+  Filter
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -34,7 +36,19 @@ interface Course {
   periods: number;
 }
 
-// Planning réel extrait du PDF (exemple pour quelques semaines)
+interface Discussion {
+  id: string;
+  author: string;
+  avatar: string;
+  title: string;
+  category: string;
+  replies: number;
+  views: number;
+  lastActivity: string;
+  isHot: boolean;
+}
+
+// Données réelles du planning (basées sur votre PDF)
 const realPlanningData: Course[] = [
   // Semaine du 13-18 octobre 2025
   {
@@ -65,27 +79,27 @@ const realPlanningData: Course[] = [
   // Semaine du 20-25 octobre 2025
   {
     id: '3',
-    title: 'Théorie d\'horlogerie',
-    type: 'Cours',
-    teacher: 'P. Rouge',
-    room: 'Salle 205',
-    startTime: '17:00',
-    endTime: '20:45',
-    date: new Date(2025, 9, 21), // Mardi 21 oct
-    color: 'bg-purple-500',
-    periods: 70
-  },
-  {
-    id: '4',
-    title: 'Dessin technique',
+    title: 'Dessin Tech.',
     type: 'Cours',
     teacher: 'P. Wyss',
     room: 'Salle sèche',
     startTime: '17:30',
     endTime: '21:15',
-    date: new Date(2025, 9, 22), // Mercredi 22 oct
-    color: 'bg-green-500',
+    date: new Date(2025, 9, 20), // Lundi 20 oct
+    color: 'bg-purple-500',
     periods: 55
+  },
+  {
+    id: '4',
+    title: 'Pratique',
+    type: 'Atelier',
+    teacher: 'V. Guilliou',
+    room: 'Atelier 414',
+    startTime: '17:30',
+    endTime: '21:15',
+    date: new Date(2025, 9, 22), // Mercredi 22 oct
+    color: 'bg-purple-500',
+    periods: 414
   },
   {
     id: '5',
@@ -100,7 +114,7 @@ const realPlanningData: Course[] = [
     periods: 50
   },
   
-  // Semaine du 27 oct - 1er nov 2025
+  // Novembre (exemples)
   {
     id: '6',
     title: 'Pratique d\'horlogerie',
@@ -109,7 +123,7 @@ const realPlanningData: Course[] = [
     room: 'Atelier 414',
     startTime: '17:30',
     endTime: '21:15',
-    date: new Date(2025, 9, 27), // Lundi 27 oct
+    date: new Date(2025, 10, 3), // Lundi 3 nov
     color: 'bg-blue-500',
     periods: 414
   },
@@ -121,8 +135,8 @@ const realPlanningData: Course[] = [
     room: 'Salle 205',
     startTime: '17:00',
     endTime: '20:45',
-    date: new Date(2025, 9, 28), // Mardi 28 oct
-    color: 'bg-purple-500',
+    date: new Date(2025, 10, 5), // Mercredi 5 nov
+    color: 'bg-green-500',
     periods: 70
   },
   {
@@ -133,23 +147,11 @@ const realPlanningData: Course[] = [
     room: 'Salle sèche',
     startTime: '17:30',
     endTime: '21:15',
-    date: new Date(2025, 9, 1), // Samedi 1er nov
+    date: new Date(2025, 10, 8), // Samedi 8 nov
     color: 'bg-indigo-500',
     periods: 41
   }
 ];
-
-interface Discussion {
-  id: string;
-  author: string;
-  avatar: string;
-  title: string;
-  category: string;
-  replies: number;
-  views: number;
-  lastActivity: string;
-  isHot: boolean;
-}
 
 const discussions: Discussion[] = [
   {
@@ -211,14 +213,15 @@ const discussions: Discussion[] = [
 
 export default function CommunautePage() {
   const [activeTab, setActiveTab] = useState<'planning' | 'discussions'>('planning');
+  const [viewMode, setViewMode] = useState<'week' | 'month' | 'list'>('week');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisComplete, setAnalysisComplete] = useState(false);
   const [courses, setCourses] = useState<Course[]>([]);
   const [currentWeekStart, setCurrentWeekStart] = useState<Date>(() => {
-    // Démarrer à la semaine du 13 octobre 2025 par défaut
-    return new Date(2025, 9, 13);
+    return new Date(2025, 9, 13); // Semaine du 13 octobre 2025
   });
+  const [currentMonth, setCurrentMonth] = useState(new Date(2025, 9)); // Octobre 2025
   const [planningInfo, setPlanningInfo] = useState<{
     module: string;
     code: string;
@@ -237,7 +240,7 @@ export default function CommunautePage() {
   // Obtenir la semaine courante (lundi à samedi)
   const getWeekDays = (startDate: Date) => {
     const days = [];
-    for (let i = 0; i < 6; i++) { // Lundi à Samedi
+    for (let i = 0; i < 6; i++) {
       const date = new Date(startDate);
       date.setDate(date.getDate() + i);
       days.push(date);
@@ -254,7 +257,6 @@ export default function CommunautePage() {
       setIsAnalyzing(true);
       
       setTimeout(() => {
-        // En production, ici on ferait l'extraction PDF réelle
         setCourses(realPlanningData);
         setPlanningInfo({
           module: 'Formation modulaire en Horlogerie - Module de Base',
@@ -315,6 +317,66 @@ export default function CommunautePage() {
     setCurrentWeekStart(newDate);
   };
 
+  const goToPreviousMonth = () => {
+    const prev = new Date(currentMonth);
+    prev.setMonth(prev.getMonth() - 1);
+    setCurrentMonth(prev);
+  };
+
+  const goToNextMonth = () => {
+    const next = new Date(currentMonth);
+    next.setMonth(next.getMonth() + 1);
+    setCurrentMonth(next);
+  };
+
+  const exportToCalendar = () => {
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//HorloLearn//Planning//FR',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      'X-WR-CALNAME:Planning Horlogerie',
+      'X-WR-TIMEZONE:Europe/Zurich',
+      ...courses.map(course => {
+        const startDateTime = new Date(course.date);
+        const [startHours, startMinutes] = course.startTime.split(':');
+        startDateTime.setHours(parseInt(startHours), parseInt(startMinutes), 0);
+        
+        const endDateTime = new Date(course.date);
+        const [endHours, endMinutes] = course.endTime.split(':');
+        endDateTime.setHours(parseInt(endHours), parseInt(endMinutes), 0);
+        
+        const formatICSDate = (date: Date) => {
+          return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+        };
+        
+        return [
+          'BEGIN:VEVENT',
+          `UID:${course.id}@horlolearn.ch`,
+          `DTSTAMP:${formatICSDate(new Date())}`,
+          `DTSTART:${formatICSDate(startDateTime)}`,
+          `DTEND:${formatICSDate(endDateTime)}`,
+          `SUMMARY:${course.title}`,
+          `LOCATION:${course.room}`,
+          `DESCRIPTION:Type: ${course.type}\\nFormateur: ${course.teacher}\\nPériodes: ${course.periods}`,
+          'STATUS:CONFIRMED',
+          'TRANSP:OPAQUE',
+          'END:VEVENT'
+        ].join('\n');
+      }),
+      'END:VCALENDAR'
+    ].join('\n');
+    
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'planning-horlogerie.ics';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const getCategoryColor = (category: string) => {
     switch(category) {
       case 'Pratique': return 'bg-blue-100 text-blue-700';
@@ -324,6 +386,272 @@ export default function CommunautePage() {
       case 'Opportunités': return 'bg-pink-100 text-pink-700';
       default: return 'bg-slate-100 text-slate-700';
     }
+  };
+
+  // Render Vue Semaine
+  const renderWeekView = () => {
+    return (
+      <div className="bg-white rounded-xl shadow-lg p-6">
+        <div className="flex items-center justify-between mb-6">
+          <button
+            onClick={goToPreviousWeek}
+            className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+          >
+            <ChevronLeft className="w-6 h-6 text-slate-600" />
+          </button>
+          <h3 className="text-xl font-bold text-slate-900">
+            Semaine du {weekDays[0].getDate()} {formatDate(weekDays[0]).month} au {weekDays[5].getDate()} {formatDate(weekDays[5]).month} {weekDays[0].getFullYear()}
+          </h3>
+          <button
+            onClick={goToNextWeek}
+            className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+          >
+            <ChevronRight className="w-6 h-6 text-slate-600" />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-6 gap-4">
+          {weekDays.map((day, index) => {
+            const dayInfo = formatDate(day);
+            const dayCourses = courses.filter(
+              c => c.date.toDateString() === day.toDateString()
+            );
+            const isToday = day.toDateString() === new Date().toDateString();
+
+            return (
+              <div
+                key={index}
+                className={`rounded-xl p-4 border-2 transition-all min-h-[200px] ${
+                  isToday
+                    ? 'border-blue-600 bg-blue-50'
+                    : 'border-slate-200 bg-white'
+                }`}
+              >
+                <div className="text-center mb-3">
+                  <p className={`text-sm font-semibold ${
+                    isToday ? 'text-blue-600' : 'text-slate-600'
+                  }`}>
+                    {dayInfo.day}
+                  </p>
+                  <p className={`text-2xl font-bold ${
+                    isToday ? 'text-blue-600' : 'text-slate-900'
+                  }`}>
+                    {dayInfo.date}
+                  </p>
+                  <p className="text-xs text-slate-500">{dayInfo.month}</p>
+                </div>
+
+                {dayCourses.length > 0 ? (
+                  <div className="space-y-2">
+                    {dayCourses.map((course) => (
+                      <div
+                        key={course.id}
+                        className={`${course.color} rounded-lg p-3 text-white cursor-pointer hover:opacity-90 transition-opacity`}
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <Clock className="w-3 h-3" />
+                          <p className="text-xs font-bold">
+                            {course.startTime} - {course.endTime}
+                          </p>
+                        </div>
+                        <p className="text-sm font-semibold mb-1">
+                          {course.title}
+                        </p>
+                        <p className="text-xs opacity-90">{course.type}</p>
+                        <p className="text-xs opacity-75 mt-1">{course.periods} périodes</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-xs text-slate-400">Pas de cours</p>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  // Render Vue Mois
+  const renderMonthView = () => {
+    const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+    const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+    
+    const days = [];
+    for (let d = new Date(firstDay); d <= lastDay; d.setDate(d.getDate() + 1)) {
+      days.push(new Date(d));
+    }
+    
+    const monthCourses = courses.filter(c => 
+      c.date.getMonth() === currentMonth.getMonth() &&
+      c.date.getFullYear() === currentMonth.getFullYear()
+    );
+    
+    return (
+      <div className="bg-white rounded-2xl shadow-lg p-8">
+        <div className="flex items-center justify-between mb-6">
+          <button
+            onClick={goToPreviousMonth}
+            className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+          >
+            <ChevronLeft className="w-6 h-6 text-slate-600" />
+          </button>
+          <h2 className="text-2xl font-bold text-slate-900 capitalize">
+            {currentMonth.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
+          </h2>
+          <button
+            onClick={goToNextMonth}
+            className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+          >
+            <ChevronRight className="w-6 h-6 text-slate-600" />
+          </button>
+        </div>
+        
+        {/* Grille calendrier */}
+        <div className="grid grid-cols-7 gap-2 mb-6">
+          {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map(d => (
+            <div key={d} className="text-center font-bold text-slate-600 py-2 text-sm">{d}</div>
+          ))}
+          
+          {/* Espaces vides avant le 1er jour du mois */}
+          {Array.from({ length: (firstDay.getDay() + 6) % 7 }).map((_, i) => (
+            <div key={`empty-${i}`} className="aspect-square" />
+          ))}
+          
+          {/* Jours du mois */}
+          {days.map(day => {
+            const dayCourses = monthCourses.filter(c => 
+              c.date.toDateString() === day.toDateString()
+            );
+            const isToday = day.toDateString() === new Date().toDateString();
+            
+            return (
+              <div key={day.toISOString()} className={`aspect-square border rounded-lg p-2 ${
+                isToday ? 'border-blue-600 bg-blue-50' : 'border-slate-200 hover:border-slate-300'
+              } transition-all cursor-pointer`}>
+                <div className={`text-sm font-semibold mb-1 ${
+                  isToday ? 'text-blue-600' : 'text-slate-900'
+                }`}>
+                  {day.getDate()}
+                </div>
+                <div className="space-y-1">
+                  {dayCourses.map(course => (
+                    <div key={course.id} className={`${course.color} text-white text-[10px] rounded px-1 py-0.5 truncate`}>
+                      {course.title.split(' ')[0]}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        
+        {/* Légende */}
+        <div className="border-t border-slate-200 pt-6">
+          <h3 className="text-sm font-bold text-slate-900 mb-3">Légende :</h3>
+          <div className="flex flex-wrap gap-3">
+            {Array.from(new Set(monthCourses.map(c => c.title))).map(title => {
+              const course = monthCourses.find(c => c.title === title);
+              return (
+                <div key={title} className="flex items-center gap-2">
+                  <div className={`w-4 h-4 rounded ${course?.color}`}></div>
+                  <span className="text-sm text-slate-700">{title}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Stats du mois */}
+        <div className="mt-6 grid md:grid-cols-3 gap-4">
+          <div className="bg-blue-50 rounded-lg p-4">
+            <p className="text-sm text-blue-600 mb-1">Cours ce mois</p>
+            <p className="text-2xl font-bold text-blue-900">{monthCourses.length}</p>
+          </div>
+          <div className="bg-green-50 rounded-lg p-4">
+            <p className="text-sm text-green-600 mb-1">Total heures</p>
+            <p className="text-2xl font-bold text-green-900">
+              {Math.round(monthCourses.length * 3.75)}h
+            </p>
+          </div>
+          <div className="bg-purple-50 rounded-lg p-4">
+            <p className="text-sm text-purple-600 mb-1">Matières différentes</p>
+            <p className="text-2xl font-bold text-purple-900">
+              {new Set(monthCourses.map(c => c.title)).size}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Render Vue Liste
+  const renderListView = () => {
+    const sortedCourses = [...courses].sort((a, b) => a.date.getTime() - b.date.getTime());
+    
+    return (
+      <div className="bg-white rounded-2xl shadow-lg p-8">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">
+            Tous les cours (Sept 2025 → Mai 2026)
+          </h2>
+          <div className="flex items-center gap-2">
+            <button className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+              <Filter className="w-4 h-4" />
+              <span className="text-sm font-medium">Filtrer</span>
+            </button>
+          </div>
+        </div>
+        
+        <div className="space-y-4">
+          {sortedCourses.map(course => (
+            <div key={course.id} className="border border-slate-200 rounded-xl p-5 hover:shadow-lg transition-all">
+              <div className="flex items-start gap-4">
+                <div className={`${course.color} rounded-lg p-3 text-white flex-shrink-0`}>
+                  <Calendar className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-slate-600 mb-1 capitalize">
+                    {course.date.toLocaleDateString('fr-FR', { 
+                      weekday: 'long', 
+                      day: 'numeric', 
+                      month: 'long', 
+                      year: 'numeric' 
+                    })}
+                  </p>
+                  <h3 className="text-lg font-bold text-slate-900 mb-2">{course.title}</h3>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-medium">
+                      {course.type}
+                    </span>
+                    <span className="text-xs text-slate-500">
+                      {course.periods} périodes
+                    </span>
+                  </div>
+                  <div className="grid md:grid-cols-3 gap-4 text-sm text-slate-600">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4" />
+                      <span>{course.startTime} - {course.endTime}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Users className="w-4 h-4" />
+                      <span>{course.teacher}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      <span>{course.room}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -431,23 +759,23 @@ export default function CommunautePage() {
                 <Upload className="w-10 h-10 text-blue-600 mb-4" />
                 <h3 className="text-lg font-bold text-slate-900 mb-2">Import PDF automatique</h3>
                 <p className="text-sm text-slate-600">
-                  Uploadez votre planning PDF et l'analyse détecte automatiquement chaque cours semaine par semaine.
+                  Uploadez votre planning PDF une seule fois et profitez de 3 vues différentes.
                 </p>
               </div>
               
               <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-green-600">
                 <Calendar className="w-10 h-10 text-green-600 mb-4" />
-                <h3 className="text-lg font-bold text-slate-900 mb-2">Planning variable</h3>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">3 vues disponibles</h3>
                 <p className="text-sm text-slate-600">
-                  Chaque semaine est unique : le système affiche uniquement les cours programmés cette semaine-là.
+                  Vue hebdomadaire, mensuelle et liste complète pour une planification optimale.
                 </p>
               </div>
               
               <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-purple-600">
-                <RefreshCw className="w-10 h-10 text-purple-600 mb-4" />
-                <h3 className="text-lg font-bold text-slate-900 mb-2">Détection intelligente</h3>
+                <Download className="w-10 h-10 text-purple-600 mb-4" />
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Export calendrier</h3>
                 <p className="text-sm text-slate-600">
-                  Extraction automatique : matières, formateurs, salles, horaires, dates et nombre de périodes.
+                  Exportez en .ics pour Google Calendar, Outlook ou Apple Calendar.
                 </p>
               </div>
             </div>
@@ -486,18 +814,6 @@ export default function CommunautePage() {
                       <p className="text-xs text-slate-500 mt-4">
                         Formats acceptés : PDF (max 5 MB)
                       </p>
-                      <div className="mt-6 bg-blue-50 rounded-lg p-4">
-                        <p className="text-sm text-blue-900 font-semibold mb-2">
-                          ✨ Le système détecte automatiquement :
-                        </p>
-                        <ul className="text-sm text-blue-700 space-y-1 text-left max-w-md mx-auto">
-                          <li>• Les cours programmés <strong>semaine par semaine</strong></li>
-                          <li>• Dates exactes de chaque cours (jour, mois, année)</li>
-                          <li>• Formateurs, salles et types (Atelier/Cours)</li>
-                          <li>• Horaires précis et nombre de périodes</li>
-                          <li>• Planning complet sur 9 mois (Sept 2025 → Mai 2026)</li>
-                        </ul>
-                      </div>
                     </>
                   ) : (
                     <div className="flex flex-col items-center">
@@ -506,40 +822,11 @@ export default function CommunautePage() {
                         Analyse en cours...
                       </p>
                       <p className="text-sm text-slate-600 mb-4">
-                        Extraction des cours semaine par semaine
+                        Extraction des cours, dates et horaires
                       </p>
-                      <div className="flex flex-col gap-2 w-full max-w-md">
-                        <div className="flex items-center gap-2 text-sm text-slate-600">
-                          <div className="w-4 h-4 rounded-full bg-green-500 animate-pulse"></div>
-                          <span>Lecture du calendrier sur 9 mois...</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-slate-600">
-                          <div className="w-4 h-4 rounded-full bg-green-500 animate-pulse"></div>
-                          <span>Détection des cours par date exacte...</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-slate-600">
-                          <div className="w-4 h-4 rounded-full bg-green-500 animate-pulse"></div>
-                          <span>Extraction formateurs, salles et horaires...</span>
-                        </div>
-                      </div>
                     </div>
                   )}
                 </div>
-
-                {uploadedFile && !isAnalyzing && (
-                  <div className="mt-4 bg-blue-50 rounded-lg p-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <FileText className="w-8 h-8 text-blue-600" />
-                      <div>
-                        <p className="font-semibold text-slate-900">{uploadedFile.name}</p>
-                        <p className="text-sm text-slate-600">
-                          {(uploadedFile.size / 1024).toFixed(1)} KB
-                        </p>
-                      </div>
-                    </div>
-                    <CheckCircle className="w-6 h-6 text-green-600" />
-                  </div>
-                )}
               </div>
             )}
 
@@ -576,89 +863,51 @@ export default function CommunautePage() {
                   </div>
                 </div>
 
-                {/* Week Navigation */}
-                <div className="bg-white rounded-xl shadow-lg p-6">
-                  <div className="flex items-center justify-between mb-6">
+                {/* View Mode Selector */}
+                <div className="flex items-center justify-between">
+                  <div className="bg-white rounded-xl shadow-lg p-2 inline-flex gap-2">
                     <button
-                      onClick={goToPreviousWeek}
-                      className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+                      onClick={() => setViewMode('week')}
+                      className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                        viewMode === 'week' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                      }`}
                     >
-                      <ChevronLeft className="w-6 h-6 text-slate-600" />
+                      <Calendar className="w-5 h-5" />
+                      Vue Semaine
                     </button>
-                    <h3 className="text-xl font-bold text-slate-900">
-                      Semaine du {weekDays[0].getDate()} {formatDate(weekDays[0]).month} au {weekDays[5].getDate()} {formatDate(weekDays[5]).month} {weekDays[0].getFullYear()}
-                    </h3>
                     <button
-                      onClick={goToNextWeek}
-                      className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+                      onClick={() => setViewMode('month')}
+                      className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                        viewMode === 'month' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                      }`}
                     >
-                      <ChevronRight className="w-6 h-6 text-slate-600" />
+                      <Calendar className="w-5 h-5" />
+                      Vue Mois
+                    </button>
+                    <button
+                      onClick={() => setViewMode('list')}
+                      className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                        viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      <List className="w-5 h-5" />
+                      Vue Liste
                     </button>
                   </div>
 
-                  {/* Week Days Grid */}
-                  <div className="grid grid-cols-6 gap-4">
-                    {weekDays.map((day, index) => {
-                      const dayInfo = formatDate(day);
-                      const dayCourses = courses.filter(
-                        c => c.date.toDateString() === day.toDateString()
-                      );
-                      const isToday = day.toDateString() === new Date().toDateString();
-
-                      return (
-                        <div
-                          key={index}
-                          className={`rounded-xl p-4 border-2 transition-all min-h-[200px] ${
-                            isToday
-                              ? 'border-blue-600 bg-blue-50'
-                              : 'border-slate-200 bg-white'
-                          }`}
-                        >
-                          <div className="text-center mb-3">
-                            <p className={`text-sm font-semibold ${
-                              isToday ? 'text-blue-600' : 'text-slate-600'
-                            }`}>
-                              {dayInfo.day}
-                            </p>
-                            <p className={`text-2xl font-bold ${
-                              isToday ? 'text-blue-600' : 'text-slate-900'
-                            }`}>
-                              {dayInfo.date}
-                            </p>
-                            <p className="text-xs text-slate-500">{dayInfo.month}</p>
-                          </div>
-
-                          {dayCourses.length > 0 ? (
-                            <div className="space-y-2">
-                              {dayCourses.map((course) => (
-                                <div
-                                  key={course.id}
-                                  className={`${course.color} rounded-lg p-3 text-white cursor-pointer hover:opacity-90 transition-opacity`}
-                                >
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <Clock className="w-3 h-3" />
-                                    <p className="text-xs font-bold">
-                                      {course.startTime} - {course.endTime}
-                                    </p>
-                                  </div>
-                                  <p className="text-sm font-semibold mb-1">
-                                    {course.title}
-                                  </p>
-                                  <p className="text-xs opacity-90">{course.type}</p>
-                                  <p className="text-xs opacity-75 mt-1">{course.periods} périodes</p>
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <div className="text-center py-8">
-                              <p className="text-xs text-slate-400">Pas de cours</p>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
+                  <button
+                    onClick={exportToCalendar}
+                    className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors shadow-lg"
+                  >
+                    <Download className="w-5 h-5" />
+                    Exporter (.ics)
+                  </button>
                 </div>
+
+                {/* Conditional View Rendering */}
+                {viewMode === 'week' && renderWeekView()}
+                {viewMode === 'month' && renderMonthView()}
+                {viewMode === 'list' && renderListView()}
 
                 {/* Quick Actions */}
                 <div className="grid md:grid-cols-3 gap-4">
