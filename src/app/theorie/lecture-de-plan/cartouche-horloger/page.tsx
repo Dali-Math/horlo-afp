@@ -12,9 +12,26 @@ interface CartoucheField {
   description: string;
   example: string;
   characters: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 
 const cartoucheFieldsData: CartoucheField[] = [
+  {
+    id: 'entreprise',
+    name: 'Nom de l\'entreprise',
+    category: 'Identification',
+    obligation: 'Obligatoire',
+    description: 'Raison sociale de l\'entreprise ou logo.',
+    example: 'Manufacture Horlogère SA',
+    characters: '30 caractères',
+    x: 10,
+    y: 10,
+    width: 100,
+    height: 40
+  },
   {
     id: 'titre',
     name: 'Titre',
@@ -22,7 +39,11 @@ const cartoucheFieldsData: CartoucheField[] = [
     obligation: 'Obligatoire',
     description: 'Désignation de la pièce ou de l\'ensemble. Doit être clair et normalisé.',
     example: 'Platine calibre 2824 / Pont de balancier',
-    characters: '25-30 caractères'
+    characters: '25-30 caractères',
+    x: 120,
+    y: 10,
+    width: 180,
+    height: 25
   },
   {
     id: 'numero-piece',
@@ -31,7 +52,11 @@ const cartoucheFieldsData: CartoucheField[] = [
     obligation: 'Obligatoire',
     description: 'Référence unique de la pièce dans le système de gestion.',
     example: 'P-2824-001-A / MB-453-12',
-    characters: '15-20 caractères'
+    characters: '15-20 caractères',
+    x: 310,
+    y: 10,
+    width: 90,
+    height: 25
   },
   {
     id: 'materiau',
@@ -40,43 +65,11 @@ const cartoucheFieldsData: CartoucheField[] = [
     obligation: 'Obligatoire',
     description: 'Matière première utilisée selon nomenclature normalisée.',
     example: 'Maillechort / Laiton CuZn40 / Acier inox 316L',
-    characters: '20 caractères'
-  },
-  {
-    id: 'echelle',
-    name: 'Échelle',
-    category: 'Représentation',
-    obligation: 'Obligatoire',
-    description: 'Rapport entre les dimensions du dessin et les dimensions réelles.',
-    example: '1:1 / 2:1 / 5:1 / 10:1',
-    characters: '10 caractères'
-  },
-  {
-    id: 'projection',
-    name: 'Méthode de projection',
-    category: 'Représentation',
-    obligation: 'Obligatoire',
-    description: 'Symbole indiquant la méthode européenne (E) ou américaine (A).',
-    example: 'Symbole E (1er dièdre) en Suisse',
-    characters: 'Symbole'
-  },
-  {
-    id: 'format',
-    name: 'Format',
-    category: 'Document',
-    obligation: 'Obligatoire',
-    description: 'Format du plan selon ISO 5457 (A0, A1, A2, A3, A4).',
-    example: 'A4 / A3',
-    characters: '4 caractères'
-  },
-  {
-    id: 'tolerance-generale',
-    name: 'Tolérance générale',
-    category: 'Technique',
-    obligation: 'Conditionnel',
-    description: 'Tolérances applicables aux cotes non tolérancées individuellement.',
-    example: 'ISO 2768-m / ±0.1 mm',
-    characters: '20 caractères'
+    characters: '20 caractères',
+    x: 120,
+    y: 40,
+    width: 90,
+    height: 20
   },
   {
     id: 'traitement',
@@ -85,43 +78,11 @@ const cartoucheFieldsData: CartoucheField[] = [
     obligation: 'Conditionnel',
     description: 'Traitements thermiques, revêtements, finitions spéciales.',
     example: 'Rhodiage / Anglage / Perlage / PVD',
-    characters: '30 caractères'
-  },
-  {
-    id: 'dessinateur',
-    name: 'Dessinateur',
-    category: 'Administratif',
-    obligation: 'Obligatoire',
-    description: 'Nom ou initiales de la personne ayant réalisé le dessin.',
-    example: 'J. Dupont / JD',
-    characters: '20 caractères'
-  },
-  {
-    id: 'verificateur',
-    name: 'Vérificateur',
-    category: 'Administratif',
-    obligation: 'Obligatoire',
-    description: 'Nom ou initiales de la personne ayant vérifié le dessin.',
-    example: 'M. Martin / MM',
-    characters: '20 caractères'
-  },
-  {
-    id: 'date',
-    name: 'Date',
-    category: 'Administratif',
-    obligation: 'Obligatoire',
-    description: 'Date de création ou de dernière modification.',
-    example: '17.10.2025 / 2025-10-17',
-    characters: '10 caractères'
-  },
-  {
-    id: 'indice',
-    name: 'Indice de révision',
-    category: 'Gestion',
-    obligation: 'Obligatoire',
-    description: 'Lettre ou numéro indiquant la version du document.',
-    example: 'A / B / C / Rev.1',
-    characters: '4 caractères'
+    characters: '30 caractères',
+    x: 215,
+    y: 40,
+    width: 85,
+    height: 20
   },
   {
     id: 'masse',
@@ -130,16 +91,115 @@ const cartoucheFieldsData: CartoucheField[] = [
     obligation: 'Conditionnel',
     description: 'Poids théorique de la pièce (important en horlogerie).',
     example: '0.45 g / 2.3 g',
-    characters: '10 caractères'
+    characters: '10 caractères',
+    x: 310,
+    y: 40,
+    width: 45,
+    height: 20
   },
   {
-    id: 'entreprise',
-    name: 'Nom de l\'entreprise',
-    category: 'Identification',
+    id: 'echelle',
+    name: 'Échelle',
+    category: 'Représentation',
     obligation: 'Obligatoire',
-    description: 'Raison sociale de l\'entreprise ou logo.',
-    example: 'Manufacture Horlogère SA',
-    characters: '30 caractères'
+    description: 'Rapport entre les dimensions du dessin et les dimensions réelles.',
+    example: '1:1 / 2:1 / 5:1 / 10:1',
+    characters: '10 caractères',
+    x: 360,
+    y: 40,
+    width: 40,
+    height: 20
+  },
+  {
+    id: 'tolerance-generale',
+    name: 'Tolérance générale',
+    category: 'Technique',
+    obligation: 'Conditionnel',
+    description: 'Tolérances applicables aux cotes non tolérancées individuellement.',
+    example: 'ISO 2768-m / ±0.1 mm',
+    characters: '20 caractères',
+    x: 120,
+    y: 65,
+    width: 90,
+    height: 20
+  },
+  {
+    id: 'projection',
+    name: 'Méthode de projection',
+    category: 'Représentation',
+    obligation: 'Obligatoire',
+    description: 'Symbole indiquant la méthode européenne (E) ou américaine (A).',
+    example: 'Symbole E (1er dièdre) en Suisse',
+    characters: 'Symbole',
+    x: 215,
+    y: 65,
+    width: 40,
+    height: 20
+  },
+  {
+    id: 'format',
+    name: 'Format',
+    category: 'Document',
+    obligation: 'Obligatoire',
+    description: 'Format du plan selon ISO 5457 (A0, A1, A2, A3, A4).',
+    example: 'A4 / A3',
+    characters: '4 caractères',
+    x: 260,
+    y: 65,
+    width: 40,
+    height: 20
+  },
+  {
+    id: 'indice',
+    name: 'Indice de révision',
+    category: 'Gestion',
+    obligation: 'Obligatoire',
+    description: 'Lettre ou numéro indiquant la version du document.',
+    example: 'A / B / C / Rev.1',
+    characters: '4 caractères',
+    x: 310,
+    y: 65,
+    width: 45,
+    height: 20
+  },
+  {
+    id: 'dessinateur',
+    name: 'Dessinateur',
+    category: 'Administratif',
+    obligation: 'Obligatoire',
+    description: 'Nom ou initiales de la personne ayant réalisé le dessin.',
+    example: 'J. Dupont / JD',
+    characters: '20 caractères',
+    x: 10,
+    y: 55,
+    width: 100,
+    height: 15
+  },
+  {
+    id: 'verificateur',
+    name: 'Vérificateur',
+    category: 'Administratif',
+    obligation: 'Obligatoire',
+    description: 'Nom ou initiales de la personne ayant vérifié le dessin.',
+    example: 'M. Martin / MM',
+    characters: '20 caractères',
+    x: 10,
+    y: 75,
+    width: 100,
+    height: 15
+  },
+  {
+    id: 'date',
+    name: 'Date',
+    category: 'Administratif',
+    obligation: 'Obligatoire',
+    description: 'Date de création ou de dernière modification.',
+    example: '17.10.2025 / 2025-10-17',
+    characters: '10 caractères',
+    x: 360,
+    y: 65,
+    width: 40,
+    height: 20
   }
 ];
 
@@ -345,37 +405,86 @@ export default function CartoucheHorlogerPage() {
           </p>
         </div>
 
-        {/* Interactive Schema Section */}
+        {/* Interactive Cartouche Schema Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Champs de Données du Cartouche</h2>
-          <p className="text-slate-600 mb-8">Cliquez sur un champ pour voir ses caractéristiques détaillées.</p>
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Schéma Interactif du Cartouche</h2>
+          <p className="text-slate-600 mb-8">Cliquez sur un champ dans le schéma ou dans la liste ci-dessous pour voir ses détails.</p>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {cartoucheFieldsData.map((field) => (
-              <div
-                key={field.id}
-                onClick={() => handleFieldClick(field.id)}
-                className={`bg-white rounded-xl p-5 border-2 cursor-pointer transition-all hover:shadow-lg ${
-                  selectedField === field.id ? 'border-blue-600 shadow-lg' : 'border-slate-200'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getCategoryColor(field.category)}`}>
-                    {field.category}
-                  </span>
-                  <span className={`text-xs font-semibold ${getObligationColor(field.obligation)}`}>
+          {/* SVG Cartouche */}
+          <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
+            <div className="mb-4 text-center">
+              <span className="text-sm font-medium text-slate-600">Position : Coin inférieur droit du plan (ISO 5457)</span>
+            </div>
+            <svg viewBox="0 0 410 100" className="w-full h-auto border-2 border-slate-300 rounded-lg">
+              {/* Titre général */}
+              <text x="205" y="-5" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1e40af">
+                Cartouche d'inscription ISO 7200
+              </text>
+              
+              {/* Cadre extérieur */}
+              <rect x="0" y="0" width="410" height="100" fill="none" stroke="#1e293b" strokeWidth="2"/>
+              
+              {/* Champs interactifs */}
+              {cartoucheFieldsData.map((field) => (
+                <g key={field.id} onClick={() => handleFieldClick(field.id)} className="cursor-pointer">
+                  <rect
+                    x={field.x}
+                    y={field.y}
+                    width={field.width}
+                    height={field.height}
+                    fill={selectedField === field.id ? '#fde68a' : '#ffffff'}
+                    stroke={selectedField === field.id ? '#f59e0b' : '#64748b'}
+                    strokeWidth={selectedField === field.id ? 3 : 1}
+                    className="transition-all duration-200"
+                  />
+                  <text
+                    x={field.x + field.width / 2}
+                    y={field.y + field.height / 2 + 4}
+                    textAnchor="middle"
+                    fontSize={field.width < 50 ? '7' : '9'}
+                    fill={selectedField === field.id ? '#92400e' : '#334155'}
+                    fontWeight={selectedField === field.id ? 'bold' : 'normal'}
+                    className="pointer-events-none"
+                  >
+                    {field.name.length > 15 ? field.name.substring(0, 13) + '...' : field.name}
+                  </text>
+                  
+                  {/* Indicateur O/C */}
+                  <circle
+                    cx={field.x + field.width - 8}
+                    cy={field.y + 8}
+                    r="6"
+                    fill={field.obligation === 'Obligatoire' ? '#ef4444' : '#3b82f6'}
+                    className="pointer-events-none"
+                  />
+                  <text
+                    x={field.x + field.width - 8}
+                    y={field.y + 11}
+                    textAnchor="middle"
+                    fontSize="8"
+                    fill="white"
+                    fontWeight="bold"
+                    className="pointer-events-none"
+                  >
                     {field.obligation === 'Obligatoire' ? 'O' : 'C'}
-                  </span>
-                </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">{field.name}</h3>
-                <p className="text-sm text-slate-600 line-clamp-2">{field.description}</p>
-              </div>
-            ))}
+                  </text>
+                </g>
+              ))}
+              
+              {/* Légende */}
+              <g>
+                <circle cx="15" cy="95" r="4" fill="#ef4444"/>
+                <text x="22" y="98" fontSize="7" fill="#64748b">Obligatoire (O)</text>
+                
+                <circle cx="80" cy="95" r="4" fill="#3b82f6"/>
+                <text x="87" y="98" fontSize="7" fill="#64748b">Conditionnel (C)</text>
+              </g>
+            </svg>
           </div>
 
           {/* Explanation Panel */}
           {selectedFieldData && (
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border-l-4 border-blue-600">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border-l-4 border-blue-600 animate-fadeIn">
               <div className="flex items-center mb-4">
                 <FileText className="w-6 h-6 text-blue-600 mr-3" />
                 <div>
@@ -402,10 +511,41 @@ export default function CartoucheHorlogerPage() {
                   <p className="text-slate-700 bg-white px-4 py-3 rounded-lg border border-blue-200 font-mono text-sm">
                     {selectedFieldData.example}
                   </p>
+                  <p className="text-sm font-bold text-slate-700 mb-1 mt-3">Position dans le cartouche :</p>
+                  <p className="text-slate-700 text-xs">
+                    x: {selectedFieldData.x}mm, y: {selectedFieldData.y}mm (largeur: {selectedFieldData.width}mm × hauteur: {selectedFieldData.height}mm)
+                  </p>
                 </div>
               </div>
             </div>
           )}
+        </section>
+
+        {/* List of Fields */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Liste des Champs de Données</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {cartoucheFieldsData.map((field) => (
+              <div
+                key={field.id}
+                onClick={() => handleFieldClick(field.id)}
+                className={`bg-white rounded-xl p-5 border-2 cursor-pointer transition-all hover:shadow-lg ${
+                  selectedField === field.id ? 'border-blue-600 shadow-lg ring-2 ring-blue-200' : 'border-slate-200'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getCategoryColor(field.category)}`}>
+                    {field.category}
+                  </span>
+                  <span className={`text-xs font-semibold ${getObligationColor(field.obligation)}`}>
+                    {field.obligation === 'Obligatoire' ? 'O' : 'C'}
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">{field.name}</h3>
+                <p className="text-sm text-slate-600 line-clamp-2">{field.description}</p>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Mémo Technique */}
