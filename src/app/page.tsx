@@ -1,349 +1,306 @@
-"use client";
-import Link from "next/link";
-import Image from "next/image";
-import {
-  BookOpen,
-  Wrench,
-  Brain,
-  Clock,
-  FileText,
-  Headphones,
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import { 
+  BookOpen, 
+  Wrench, 
+  GraduationCap, 
+  Users, 
   Award,
-  Calendar,
-  Users,
+  TrendingUp,
+  Star,
+  ArrowRight,
   Play,
-} from "lucide-react";
-import { motion } from "framer-motion";
+  CheckCircle,
+  Lightbulb,
+  MessageSquare
+} from 'lucide-react';
+import AstuceDuJour from '@/components/AstuceDuJour';
+import ActualitesHorlogeres from '@/components/ActualitesHorlogeres';
+import MouvementDuMois from '@/components/MouvementDuMois';
+import GalerieVideos from '@/components/GalerieVideos';
+import ComparaisonMouvements from '@/components/ComparaisonMouvements';
 
-/* 🇨🇭 Logo HorloLearn */
-function SwissLogo() {
+export default function HomePage() {
   return (
-    <div className="flex items-center gap-3">
-      <div className="relative w-8 h-8 md:w-10 md:h-10 rounded-sm shadow-md overflow-hidden flag-wave">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-3.5 h-1 bg-white absolute"></div>
-          <div className="w-1 h-3.5 bg-white absolute"></div>
-        </div>
-      </div>
-      <div className="flex items-baseline">
-        <span
-          className="text-[1.55rem] md:text-[1.75rem] font-serif italic font-semibold bg-gradient-to-br from-[#C6A04D] via-[#E5C469] to-[#A87927] bg-clip-text text-transparent"
-          style={{
-            textShadow:
-              "0 0 4px rgba(230,200,110,0.3), 0 0 10px rgba(255,230,160,0.25)",
-            letterSpacing: "0.5px",
-          }}
-        >
-          Horlo
-        </span>
-        <span
-          className="ml-1 text-[1.55rem] md:text-[1.75rem] font-sans font-semibold bg-gradient-to-r from-[#3A3A3A] to-[#1E1E1E] bg-clip-text text-transparent"
-          style={{
-            textShadow:
-              "0 1px 2px rgba(0,0,0,0.25), 0 0 6px rgba(120,120,120,0.15)",
-            letterSpacing: "0.5px",
-          }}
-        >
-          Learn
-        </span>
-      </div>
-      <style jsx>{`
-        .flag-wave {
-          background: linear-gradient(90deg, #b91c1c 0%, #dc2626 50%, #b91c1c 100%);
-          animation: wave 2.3s ease-in-out infinite;
-          transform-origin: left center;
-        }
-        @keyframes wave {
-          0% {
-            transform: perspective(250px) rotateY(0deg);
-          }
-          25% {
-            transform: perspective(250px) rotateY(6deg);
-          }
-          50% {
-            transform: perspective(250px) rotateY(0deg);
-          }
-          75% {
-            transform: perspective(250px) rotateY(-6deg);
-          }
-          100% {
-            transform: perspective(250px) rotateY(0deg);
-          }
-        }
-      `}</style>
-    </div>
-  );
-}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* HEADER / NAVIGATION */}
+      <header className="bg-white/90 backdrop-blur-sm shadow-md sticky top-0 z-50 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-2 rounded-xl group-hover:scale-110 transition-transform">
+                <Award className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  HorloLearn
+                </h1>
+                <p className="text-xs text-slate-600">Passion & Découverte Horlogère</p>
+              </div>
+            </Link>
 
-/* ✅ Barre de navigation */
-function Header() {
-  return (
-    <header className="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
-        <SwissLogo />
-        <nav className="hidden md:flex items-center gap-6 text-sm text-gray-700">
-          <Link href="/theorie" className="hover:text-red-700">
-            Théorie
-          </Link>
-          <Link href="/pratique" className="hover:text-red-700">
-            Pratique
-          </Link>
-          <Link href="/outils" className="hover:text-red-700">
-            Outils
-          </Link>
-          <Link href="/ressources" className="hover:text-red-700">
-            Ressources
-          </Link>
-          <Link href="/communaute" className="hover:text-red-700">
-            Communauté
-          </Link>
-        </nav>
-        <Link
-          href="/quiz"
-          className="px-3 py-2 rounded-md bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition"
-        >
-          Quiz
-        </Link>
-      </div>
-    </header>
-  );
-}
+            {/* Navigation */}
+            <nav className="hidden md:flex items-center gap-8">
+              <Link href="/theorie" className="text-slate-700 hover:text-blue-600 font-medium transition-colors flex items-center gap-2">
+                <BookOpen className="w-4 h-4" />
+                Théorie
+              </Link>
+              <Link href="/pratique" className="text-slate-700 hover:text-blue-600 font-medium transition-colors flex items-center gap-2">
+                <Wrench className="w-4 h-4" />
+                Pratique
+              </Link>
+              <Link href="/quiz" className="text-slate-700 hover:text-blue-600 font-medium transition-colors flex items-center gap-2">
+                <GraduationCap className="w-4 h-4" />
+                Quiz
+              </Link>
+              <Link href="/outils" className="text-slate-700 hover:text-blue-600 font-medium transition-colors flex items-center gap-2">
+                <Star className="w-4 h-4" />
+                Outils
+              </Link>
+              <Link href="/communaute" className="text-slate-700 hover:text-blue-600 font-medium transition-colors flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                Communauté
+              </Link>
+            </nav>
 
-/* ✅ Section héros (corrigée sans la vidéo 404) */
-function Hero() {
-  return (
-    <section className="relative overflow-hidden">
-      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-sky-100 via-slate-100 to-slate-200" />
-      <div
-        className="absolute inset-0 -z-10 opacity-60"
-        style={{
-          backgroundImage:
-            "radial-gradient(600px 200px at 10% 20%, rgba(2,132,199,0.15), transparent 60%), radial-gradient(600px 200px at 90% 10%, rgba(30,64,175,0.15), transparent 60%), radial-gradient(800px 300px at 50% 90%, rgba(148,163,184,0.18), transparent 60%)",
-        }}
-      />
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center">
-        <div>
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
-            <span className="text-red-700">Horlogerie suisse</span>
-            <span className="block text-slate-800 mt-2">
-              Apprentissage moderne et immersif
-            </span>
-          </h1>
-          <p className="mt-5 text-lg md:text-xl text-slate-600">
-            Un parcours pédagogique gratuit, structuré et pratique pour débuter
-            ou se perfectionner.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/theorie"
-              className="px-5 py-3 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+            {/* CTA Button */}
+            <Link 
+              href="/quiz" 
+              className="hidden md:flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition-all"
             >
+              <Play className="w-4 h-4" />
               Commencer
             </Link>
-            <Link
-              href="/communaute"
-              className="px-5 py-3 rounded-lg bg-white border border-slate-300 text-slate-800 font-semibold hover:bg-slate-50 transition"
-            >
-              Rejoindre la communauté
-            </Link>
-          </div>
-          <div className="mt-6 text-sm text-slate-500">
-            Accès libre, sans inscription — Ressources validées par des
-            institutions
           </div>
         </div>
+      </header>
 
-        {/* ✅ Bloc image à la place de la vidéo */}
-        <div className="relative group rounded-2xl overflow-hidden bg-slate-900 shadow-2xl">
-          <div className="aspect-video bg-slate-900 relative overflow-hidden">
-            <Image
-              src="/images/hero-placeholder.jpg"
-              alt="Formation horlogère suisse"
-              width={1200}
-              height={675}
-              className="w-full h-full object-cover opacity-90"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/20 to-transparent" />
-            <button className="absolute left-4 bottom-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/90 text-slate-900 font-semibold hover:bg-white transition">
-              <Play className="w-4 h-4" /> Aperçu immersif
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ✅ Carrousel de rubriques */
-function Carousel() {
-  const items = [
-    { name: "Théorie", href: "/theorie" },
-    { name: "Pratique", href: "/pratique" },
-    { name: "Quiz", href: "/quiz" },
-    { name: "Outils", href: "/outils" },
-    { name: "Ressources", href: "/ressources" },
-    { name: "Culture", href: "/culture" },
-    { name: "Événements", href: "/evenements" },
-    { name: "Communauté", href: "/communaute" },
-  ];
-
-  return (
-    <section className="py-8 md:py-10 bg-white/70 border-y border-slate-200">
-      <div className="overflow-hidden">
-        <div
-          className="flex gap-6 animate-[scroll_25s_linear_infinite]"
-          style={{
-            maskImage:
-              "linear-gradient(90deg, transparent, black 10%, black 90%, transparent)",
-          }}
-        >
-          {items.concat(items).map((it, i) => (
-            <Link
-              key={i}
-              href={it.href}
-              className="shrink-0 px-5 py-2 rounded-full border border-slate-300 bg-white text-slate-700 hover:border-red-600 hover:text-red-700 transition"
-            >
-              {it.name}
-            </Link>
-          ))}
-        </div>
-      </div>
-      <style>{`@keyframes scroll { from {transform: translateX(0);} to {transform: translateX(-50%);} }`}</style>
-    </section>
-  );
-}
-
-/* ✅ Grille Explore */
-function ExploreGrid() {
-  const cards = [
-    { name: "Théorie", href: "/theorie", icon: BookOpen, desc: "Cours structurés, bases aux complications" },
-    { name: "Pratique", href: "/pratique", icon: Wrench, desc: "Gestes métiers, réglages et outillage" },
-    { name: "Quiz", href: "/quiz", icon: Brain, desc: "Évaluez vos acquis en continu" },
-    { name: "Outils", href: "/outils", icon: Clock, desc: "Calculs, tolérances et conversions" },
-    { name: "Ressources", href: "/ressources", icon: FileText, desc: "Normes, fiches et documents" },
-    { name: "Podcasts", href: "/podcasts", icon: Headphones, desc: "Écouter des experts du métier" },
-    { name: "Culture", href: "/culture", icon: Award, desc: "Histoire et musées suisses" },
-    { name: "Événements", href: "/evenements", icon: Calendar, desc: "Ateliers, salons et rencontres" },
-    { name: "Communauté", href: "/communaute", icon: Users, desc: "Échanger, s'entraider, progresser" },
-  ];
-
-  return (
-    <section className="max-w-7xl mx-auto px-4 md:px-6 py-14 md:py-20">
-      <div className="text-center mb-10">
-        <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900">
-          Explore
-        </h2>
-        <p className="mt-3 text-slate-600">
-          Choisissez une rubrique pour commencer
-        </p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {cards.map((c, idx) => (
-          <Link
-            key={c.href}
-            href={c.href}
-            className="group relative rounded-2xl bg-white border border-slate-200 shadow hover:shadow-xl hover:border-red-600 transition overflow-hidden"
-            style={{ animation: `fadeInUp .6s ease ${idx * 0.06}s both` }}
-          >
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-red-600 to-red-700 text-white shadow">
-                  {c.icon ? <c.icon className="w-6 h-6" /> : null}
-                </div>
-                <svg
-                  className="w-6 h-6 text-red-600 opacity-0 group-hover:opacity-100 transition"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M9 5l7 7-7 7"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 group-hover:text-red-700">
-                {c.name}
-              </h3>
-              <p className="mt-1 text-slate-600">{c.desc}</p>
+      {/* HERO SECTION */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 text-white py-20">
+        {/* Overlay animé */}
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="inline-block px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm font-semibold mb-6 border border-white/20">
+              🇨🇭 Plateforme #1 en horlogerie suisse
             </div>
-            <div className="h-1 bg-gradient-to-r from-transparent via-red-600 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-          </Link>
-        ))}
-      </div>
-      <style>{`@keyframes fadeInUp { from {opacity: 0; transform: translateY(12px);} to {opacity: 1; transform: translateY(0);} }`}</style>
-    </section>
-  );
-}
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+              Maîtrisez l'art de l'
+              <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+                horlogerie suisse
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl text-blue-100 mb-8 leading-relaxed">
+              Cours interactifs, simulateurs 3D, quiz certifiants et communauté d'experts pour apprendre et exceller en horlogerie.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link 
+                href="/pratique" 
+                className="flex items-center gap-2 bg-white text-blue-900 px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all"
+              >
+                <Play className="w-5 h-5" />
+                Commencer gratuitement
+              </Link>
+              <Link 
+                href="/outils" 
+                className="flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all border border-white/30"
+              >
+                <Wrench className="w-5 h-5" />
+                Explorer les outils
+              </Link>
+            </div>
+          </div>
+        </div>
 
-/* ✅ Section Partenaires */
-function PartnersSection() {
-  const partners = [
-    { src: "/images/partners/rolex.png", alt: "Rolex" },
-    { src: "/images/partners/patek.png", alt: "Patek Philippe" },
-    { src: "/images/partners/audemars.png", alt: "Audemars Piguet" },
-    { src: "/images/partners/vacheron.png", alt: "Vacheron Constantin" },
-    { src: "/images/partners/chopard.png", alt: "Chopard" },
-    { src: "/images/partners/piaget.png", alt: "Piaget" },
-    { src: "/images/partners/muller.png", alt: "Franck Muller" },
-  ];
+        {/* Stats Bar */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { label: "Élèves actifs", value: "1,247", icon: Users },
+              { label: "Cours vidéo", value: "156+", icon: Play },
+              { label: "Quiz disponibles", value: "45", icon: CheckCircle },
+              { label: "Taux de réussite", value: "94%", icon: TrendingUp }
+            ].map((stat, idx) => (
+              <div key={idx} className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                <stat.icon className="w-8 h-8 text-yellow-400 mb-3" />
+                <p className="text-3xl font-bold mb-1">{stat.value}</p>
+                <p className="text-blue-200 text-sm">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-  return (
-    <section className="relative bg-[#0A0A0A] py-20 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-[#0A0A0A] to-[#141414] animate-[shine_8s_linear_infinite]" />
-      <div className="text-center mb-12 relative z-10">
-        <h2
-          className="text-3xl md:text-4xl font-semibold text-[#E2B44F]"
-          style={{ textShadow: "0 0 15px rgba(226,180,79,0.7)" }}
-        >
-          Avec le soutien des grandes maisons horlogères
-        </h2>
-      </div>
-      <motion.div
-        className="flex items-center justify-around gap-20 px-8 relative z-10"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
-      >
-        {[...partners, ...partners].map((p, i) => (
-          <motion.div
-            key={i}
-            className="grayscale hover:grayscale-0 transition-all duration-700"
-            whileHover={{ scale: 3 }}
-          >
-            <Image
-              src={p.src}
-              alt={p.alt}
-              width={180}
-              height={100}
-              className="object-contain opacity-85 hover:opacity-100 transition-all"
-            />
-          </motion.div>
-        ))}
-      </motion.div>
-      <p className="text-center text-gray-400 mt-10 text-sm relative z-10">
-        Ressources gratuites et open-source pour la formation en horlogerie.
-      </p>
-      <style>{`
-        @keyframes shine {
-          0% { background-position: -1000px 0; }
-          100% { background-position: 1000px 0; }
-        }
-      `}</style>
-    </section>
-  );
-}
+      {/* MAIN CONTENT */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        
+        {/* Astuce du Jour */}
+        <AstuceDuJour />
 
-/* ✅ Page principale */
-export default function Home() {
-  return (
-    <div className="min-h-screen">
-      <Header />
-      <Hero />
-      <Carousel />
-      <ExploreGrid />
-      <PartnersSection />
+        {/* Parcours d'Apprentissage */}
+        <section className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-slate-900 mb-4">Parcours d'Apprentissage</h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              Un cursus complet de la théorie à la pratique pour devenir horloger
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                title: "Théorie",
+                icon: BookOpen,
+                color: "from-blue-600 to-cyan-600",
+                description: "Principes fondamentaux, histoire et terminologie horlogère",
+                link: "/theorie",
+                features: ["Cours structurés", "Schémas animés", "Glossaire illustré"]
+              },
+              {
+                title: "Pratique",
+                icon: Wrench,
+                color: "from-purple-600 to-pink-600",
+                description: "Démontage, remontage et réglage de mouvements réels",
+                link: "/pratique",
+                features: ["Tutoriels vidéo", "Plans techniques", "Exercices guidés"]
+              },
+              {
+                title: "Certification",
+                icon: Award,
+                color: "from-orange-600 to-red-600",
+                description: "Validez vos compétences avec nos quiz certifiants",
+                link: "/quiz",
+                features: ["45 quiz", "Badge de réussite", "Suivi progrès"]
+              }
+            ].map((parcours, idx) => (
+              <Link 
+                key={idx}
+                href={parcours.link}
+                className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all border border-slate-200 hover:scale-105"
+              >
+                <div className={`inline-block p-4 rounded-xl bg-gradient-to-br ${parcours.color} mb-6 group-hover:scale-110 transition-transform`}>
+                  <parcours.icon className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 mb-3">{parcours.title}</h3>
+                <p className="text-slate-600 mb-6">{parcours.description}</p>
+                <ul className="space-y-2 mb-6">
+                  {parcours.features.map((feature, i) => (
+                    <li key={i} className="flex items-center gap-2 text-sm text-slate-700">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <div className="flex items-center gap-2 text-blue-600 font-semibold group-hover:gap-4 transition-all">
+                  Découvrir <ArrowRight className="w-5 h-5" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Mouvement du Mois */}
+        <MouvementDuMois />
+
+        {/* Actualités Horlogères */}
+        <ActualitesHorlogeres />
+
+        {/* Galerie Vidéos */}
+        <GalerieVideos />
+
+        {/* Comparaison */}
+        <ComparaisonMouvements />
+
+        {/* CTA Final */}
+        <section className="mt-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-12 text-white text-center shadow-2xl">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-4xl font-bold mb-4">Rejoignez la communauté HorloLearn</h2>
+            <p className="text-xl text-blue-100 mb-8">
+              Plus de 1,200 passionnés et professionnels vous attendent pour échanger, apprendre et progresser ensemble
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link 
+                href="/communaute" 
+                className="flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:shadow-xl transition-all"
+              >
+                <Users className="w-5 h-5" />
+                Rejoindre maintenant
+              </Link>
+              <Link 
+                href="/outils" 
+                className="flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all border border-white/30"
+              >
+                <Lightbulb className="w-5 h-5" />
+                Essayer les outils
+              </Link>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      {/* FOOTER */}
+      <footer className="bg-slate-900 text-white py-12 mt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            {/* Logo + Description */}
+            <div className="col-span-2">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-2 rounded-xl">
+                  <Award className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-2xl font-bold">HorloLearn</span>
+              </div>
+              <p className="text-slate-400 mb-4">
+                La première plateforme interactive francophone dédiée à l'apprentissage de l'horlogerie suisse.
+              </p>
+              <div className="flex gap-4">
+                {['Facebook', 'Instagram', 'YouTube'].map(social => (
+                  <a key={social} href="#" className="bg-slate-800 hover:bg-slate-700 p-2 rounded-lg transition-colors">
+                    <span className="text-sm">{social[0]}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Liens */}
+            <div>
+              <h3 className="font-bold text-lg mb-4">Apprendre</h3>
+              <ul className="space-y-2 text-slate-400">
+                <li><Link href="/theorie" className="hover:text-white transition-colors">Théorie</Link></li>
+                <li><Link href="/pratique" className="hover:text-white transition-colors">Pratique</Link></li>
+                <li><Link href="/quiz" className="hover:text-white transition-colors">Quiz</Link></li>
+                <li><Link href="/ressources" className="hover:text-white transition-colors">Ressources</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-lg mb-4">Communauté</h3>
+              <ul className="space-y-2 text-slate-400">
+                <li><Link href="/communaute" className="hover:text-white transition-colors">Forum</Link></li>
+                <li><Link href="/outils" className="hover:text-white transition-colors">Outils</Link></li>
+                <li><Link href="/culture" className="hover:text-white transition-colors">Culture</Link></li>
+                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-slate-400 text-sm">
+              © 2025 HorloLearn – Passion & Découverte Horlogère Suisse
+            </p>
+            <div className="flex gap-6 text-sm text-slate-400">
+              <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link>
+              <Link href="/politique-confidentialite" className="hover:text-white transition-colors">Confidentialité</Link>
+              <Link href="/cgu" className="hover:text-white transition-colors">CGU</Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
