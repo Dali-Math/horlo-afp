@@ -428,7 +428,7 @@ export default function TypesLignesIso1282Page() {
         {/* Bouton Retour */}
         <div className="mb-6">
           <Link
-            href="/theorie/cartouche-horloger"
+            href="/theorie/lecture-de-plan"
             className="text-blue-700 hover:underline flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
