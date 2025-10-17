@@ -86,7 +86,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
             <div className="inline-block px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm font-semibold mb-6 border border-white/20">
-              🇨🇭 Plateforme #1 en horlogerie suisse
+              🇨🇭 Plateforme francophone d'excellence en horlogerie
             </div>
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
               Maîtrisez l'art de l'
@@ -116,21 +116,84 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Stats Bar */}
+        {/* Stats horlogères premium - VERSION EXCEPTIONNELLE */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 relative z-10">
+          {/* Bandeau de prestige */}
+          <div className="text-center mb-8">
+            <div className="inline-block px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/30">
+              <p className="text-white font-semibold flex items-center gap-3">
+                <span className="text-2xl">🇨🇭</span>
+                Qualité & Précision Suisse
+                <span className="text-2xl">⚙️</span>
+              </p>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { label: "Élèves actifs", value: "1,247", icon: Users },
-              { label: "Cours vidéo", value: "156+", icon: Play },
-              { label: "Quiz disponibles", value: "45", icon: CheckCircle },
-              { label: "Taux de réussite", value: "94%", icon: TrendingUp }
+              { 
+                emoji: "⚙️",
+                value: "28,800", 
+                unit: "A/h",
+                label: "Fréquence de précision",
+                detail: "Standard ETA 2824-2"
+              },
+              { 
+                emoji: "🔩",
+                value: "25", 
+                unit: "rubis",
+                label: "Composants nobles",
+                detail: "Roulements anti-friction"
+              },
+              { 
+                emoji: "⏱️",
+                value: "38h", 
+                unit: "",
+                label: "Réserve de marche",
+                detail: "Autonomie moyenne"
+              },
+              { 
+                emoji: "🏆",
+                value: "100%", 
+                unit: "",
+                label: "Savoir-faire suisse",
+                detail: "Tradition & Innovation"
+              }
             ].map((stat, idx) => (
-              <div key={idx} className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                <stat.icon className="w-8 h-8 text-yellow-400 mb-3" />
-                <p className="text-3xl font-bold mb-1">{stat.value}</p>
-                <p className="text-blue-200 text-sm">{stat.label}</p>
+              <div 
+                key={idx}
+                className="relative group"
+              >
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all">
+                  {/* Emoji / Icône */}
+                  <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">
+                    {stat.emoji}
+                  </div>
+                  
+                  {/* Valeur principale */}
+                  <div className="mb-2">
+                    <span className="text-4xl font-bold text-white">{stat.value}</span>
+                    {stat.unit && (
+                      <span className="text-xl text-blue-300 ml-1">{stat.unit}</span>
+                    )}
+                  </div>
+                  
+                  {/* Label */}
+                  <p className="text-white font-semibold text-sm mb-1">{stat.label}</p>
+                  <p className="text-blue-300 text-xs">{stat.detail}</p>
+                </div>
               </div>
             ))}
+          </div>
+
+          {/* Phrase d'accroche */}
+          <div className="mt-12 text-center">
+            <p className="text-2xl font-light text-white mb-2">
+              L'excellence horlogère à portée de main
+            </p>
+            <p className="text-blue-200 text-sm">
+              Chaque détail compte. Chaque seconde est précieuse.
+            </p>
           </div>
         </div>
       </section>
@@ -174,7 +237,7 @@ export default function HomePage() {
                 color: "from-orange-600 to-red-600",
                 description: "Validez vos compétences avec nos quiz certifiants",
                 link: "/quiz",
-                features: ["45 quiz", "Badge de réussite", "Suivi progrès"]
+                features: ["Quiz interactifs", "Badge de réussite", "Suivi progrès"]
               }
             ].map((parcours, idx) => (
               <Link 
@@ -220,7 +283,7 @@ export default function HomePage() {
           <div className="max-w-3xl mx-auto">
             <h2 className="text-4xl font-bold mb-4">Rejoignez la communauté HorloLearn</h2>
             <p className="text-xl text-blue-100 mb-8">
-              Plus de 1,200 passionnés et professionnels vous attendent pour échanger, apprendre et progresser ensemble
+              Passionnés et professionnels vous attendent pour échanger, apprendre et progresser ensemble
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link 
@@ -258,13 +321,6 @@ export default function HomePage() {
               <p className="text-slate-400 mb-4">
                 La première plateforme interactive francophone dédiée à l'apprentissage de l'horlogerie suisse.
               </p>
-              <div className="flex gap-4">
-                {['Facebook', 'Instagram', 'YouTube'].map(social => (
-                  <a key={social} href="#" className="bg-slate-800 hover:bg-slate-700 p-2 rounded-lg transition-colors">
-                    <span className="text-sm">{social[0]}</span>
-                  </a>
-                ))}
-              </div>
             </div>
 
             {/* Liens */}
@@ -296,7 +352,6 @@ export default function HomePage() {
             <div className="flex gap-6 text-sm text-slate-400">
               <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link>
               <Link href="/politique-confidentialite" className="hover:text-white transition-colors">Confidentialité</Link>
-              <Link href="/cgu" className="hover:text-white transition-colors">CGU</Link>
             </div>
           </div>
         </div>
