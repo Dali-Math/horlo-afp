@@ -16,7 +16,8 @@ import {
   RefreshCw,
   CheckCircle,
   AlertCircle,
-  MapPin
+  MapPin,
+  GraduationCap
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -30,6 +31,7 @@ interface Course {
   endTime: string;
   day: string;
   color: string;
+  periods: number;
 }
 
 interface Discussion {
@@ -44,63 +46,110 @@ interface Discussion {
   isHot: boolean;
 }
 
-const sampleCourses: Course[] = [
-  {
-    id: '1',
-    title: 'Théorie Horlogère',
-    type: 'Cours',
-    teacher: 'M. Dubois',
-    room: 'Salle 201',
-    startTime: '08:00',
-    endTime: '10:00',
-    day: 'Lundi',
-    color: 'bg-blue-500'
-  },
-  {
-    id: '2',
-    title: 'Pratique Démontage',
-    type: 'Atelier',
-    teacher: 'Mme Martin',
-    room: 'Atelier A',
-    startTime: '10:15',
-    endTime: '12:15',
-    day: 'Lundi',
-    color: 'bg-green-500'
-  },
-  {
-    id: '3',
-    title: 'Lecture de Plan',
-    type: 'Cours',
-    teacher: 'M. Favre',
-    room: 'Salle 105',
-    startTime: '13:30',
-    endTime: '15:30',
-    day: 'Lundi',
-    color: 'bg-purple-500'
-  },
-  {
-    id: '4',
-    title: 'Remontage ETA 2824',
-    type: 'Atelier',
-    teacher: 'M. Perret',
-    room: 'Atelier B',
-    startTime: '08:00',
-    endTime: '11:00',
-    day: 'Mardi',
-    color: 'bg-orange-500'
-  },
-  {
-    id: '5',
-    title: 'Complications',
-    type: 'Cours',
-    teacher: 'Mme Rousseau',
-    room: 'Salle 201',
-    startTime: '13:30',
-    endTime: '16:30',
-    day: 'Mardi',
-    color: 'bg-red-500'
-  }
-];
+// Simule l'extraction de données d'un PDF de planning horlogerie
+const extractPlanningFromPDF = (fileName: string): Course[] => {
+  // Dans une vraie implémentation, on utiliserait pdf.js ou une API backend
+  // Ici, on simule la détection automatique basée sur votre modèle
+  
+  return [
+    {
+      id: '1',
+      title: 'Pratique d\'horlogerie',
+      type: 'Atelier',
+      teacher: 'V. Guilliou',
+      room: 'Atelier 414',
+      startTime: '17h30',
+      endTime: '21h15',
+      day: 'Lundi',
+      color: 'bg-blue-500',
+      periods: 414
+    },
+    {
+      id: '2',
+      title: 'Théorie d\'horlogerie',
+      type: 'Cours',
+      teacher: 'P. Rouge',
+      room: 'Salle 205',
+      startTime: '17h00',
+      endTime: '20h45',
+      day: 'Mardi',
+      color: 'bg-purple-500',
+      periods: 70
+    },
+    {
+      id: '3',
+      title: 'Dessin technique',
+      type: 'Cours',
+      teacher: 'P. Wyss',
+      room: 'Salle sèche',
+      startTime: '17h30',
+      endTime: '21h15',
+      day: 'Mercredi',
+      color: 'bg-green-500',
+      periods: 55
+    },
+    {
+      id: '4',
+      title: 'Mathématiques',
+      type: 'Cours',
+      teacher: 'M. Achram',
+      room: 'Salle 205',
+      startTime: '17h15',
+      endTime: '20h15',
+      day: 'Jeudi',
+      color: 'bg-orange-500',
+      periods: 35
+    },
+    {
+      id: '5',
+      title: 'Micromécanique A',
+      type: 'Atelier',
+      teacher: 'H. Alves Garcia',
+      room: 'Salle sèche',
+      startTime: '17h30',
+      endTime: '21h15',
+      day: 'Vendredi',
+      color: 'bg-red-500',
+      periods: 50
+    },
+    {
+      id: '6',
+      title: 'Micromécanique B',
+      type: 'Atelier',
+      teacher: 'H. Alves Garcia',
+      room: 'Salle sèche',
+      startTime: '17h30',
+      endTime: '21h15',
+      day: 'Samedi',
+      color: 'bg-indigo-500',
+      periods: 41
+    },
+    {
+      id: '7',
+      title: 'Technologie Micromécanique',
+      type: 'Cours',
+      teacher: 'A. Tairi',
+      room: 'Salle sèche',
+      startTime: '17h30',
+      endTime: '21h15',
+      day: 'Mercredi',
+      color: 'bg-teal-500',
+      periods: 20
+    },
+    {
+      id: '8',
+      title: 'Matériaux',
+      type: 'Cours',
+      teacher: 'Formateur assigné',
+      room: 'Salle 205',
+      startTime: '17h30',
+      endTime: '21h15',
+      day: 'Jeudi',
+      color: 'bg-pink-500',
+      periods: 16
+    }
+  ];
+};
 
 const discussions: Discussion[] = [
   {
@@ -167,8 +216,13 @@ export default function CommunautePage() {
   const [analysisComplete, setAnalysisComplete] = useState(false);
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedDay, setSelectedDay] = useState<string>('Lundi');
+  const [planningInfo, setPlanningInfo] = useState<{
+    module: string;
+    code: string;
+    totalPeriods: number;
+  } | null>(null);
 
-  const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
+  const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
 
   const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -176,11 +230,17 @@ export default function CommunautePage() {
       setUploadedFile(file);
       setIsAnalyzing(true);
       
-      // Simulation d'analyse
+      // Simulation d'analyse PDF réaliste
       setTimeout(() => {
+        const extractedCourses = extractPlanningFromPDF(file.name);
+        setCourses(extractedCourses);
+        setPlanningInfo({
+          module: 'Formation modulaire en Horlogerie - Module de Base',
+          code: 'HORL1_S925',
+          totalPeriods: extractedCourses.reduce((sum, c) => sum + c.periods, 0)
+        });
         setIsAnalyzing(false);
         setAnalysisComplete(true);
-        setCourses(sampleCourses);
       }, 2500);
     }
   }, []);
@@ -197,9 +257,15 @@ export default function CommunautePage() {
       setIsAnalyzing(true);
       
       setTimeout(() => {
+        const extractedCourses = extractPlanningFromPDF(file.name);
+        setCourses(extractedCourses);
+        setPlanningInfo({
+          module: 'Formation modulaire en Horlogerie - Module de Base',
+          code: 'HORL1_S925',
+          totalPeriods: extractedCourses.reduce((sum, c) => sum + c.periods, 0)
+        });
         setIsAnalyzing(false);
         setAnalysisComplete(true);
-        setCourses(sampleCourses);
       }, 2500);
     }
   }, []);
@@ -328,9 +394,9 @@ export default function CommunautePage() {
               
               <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-green-600">
                 <RefreshCw className="w-10 h-10 text-green-600 mb-4" />
-                <h3 className="text-lg font-bold text-slate-900 mb-2">Mise à jour automatique</h3>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Détection intelligente</h3>
                 <p className="text-sm text-slate-600">
-                  Synchronisation en temps réel avec votre établissement pour ne jamais rater un changement.
+                  Extraction automatique des cours, formateurs, salles, horaires et nombre de périodes.
                 </p>
               </div>
               
@@ -377,6 +443,19 @@ export default function CommunautePage() {
                       <p className="text-xs text-slate-500 mt-4">
                         Formats acceptés : PDF (max 5 MB)
                       </p>
+                      <div className="mt-6 bg-blue-50 rounded-lg p-4">
+                        <p className="text-sm text-blue-900 font-semibold mb-2">
+                          ✨ Détection automatique de :
+                        </p>
+                        <ul className="text-sm text-blue-700 space-y-1">
+                          <li>• Matières enseignées et types de cours (Atelier/Cours)</li>
+                          <li>• Formateurs assignés à chaque matière</li>
+                          <li>• Salles et ateliers (numéros et types)</li>
+                          <li>• Horaires précis (début et fin)</li>
+                          <li>• Nombre de périodes par matière</li>
+                          <li>• Jours de la semaine et calendrier</li>
+                        </ul>
+                      </div>
                     </>
                   ) : (
                     <div className="flex flex-col items-center">
@@ -384,9 +463,23 @@ export default function CommunautePage() {
                       <p className="text-lg font-semibold text-slate-900 mb-2">
                         Analyse en cours...
                       </p>
-                      <p className="text-sm text-slate-600">
-                        Extraction des cours, horaires et salles
+                      <p className="text-sm text-slate-600 mb-4">
+                        Extraction des cours, horaires, salles et formateurs
                       </p>
+                      <div className="flex flex-col gap-2 w-full max-w-md">
+                        <div className="flex items-center gap-2 text-sm text-slate-600">
+                          <div className="w-4 h-4 rounded-full bg-green-500 animate-pulse"></div>
+                          <span>Détection des matières enseignées...</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-slate-600">
+                          <div className="w-4 h-4 rounded-full bg-green-500 animate-pulse"></div>
+                          <span>Extraction des formateurs et salles...</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-slate-600">
+                          <div className="w-4 h-4 rounded-full bg-green-500 animate-pulse"></div>
+                          <span>Analyse des horaires et périodes...</span>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -409,16 +502,37 @@ export default function CommunautePage() {
             )}
 
             {/* Planning Display */}
-            {analysisComplete && (
+            {analysisComplete && planningInfo && (
               <div className="space-y-6">
-                {/* Success Alert */}
-                <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3">
-                  <CheckCircle className="w-6 h-6 text-green-600" />
-                  <div>
-                    <p className="font-semibold text-green-900">Planning importé avec succès !</p>
-                    <p className="text-sm text-green-700">
-                      {courses.length} cours détectés • Mise à jour automatique activée
-                    </p>
+                {/* Success Alert with Planning Info */}
+                <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl p-6">
+                  <div className="flex items-start gap-4">
+                    <CheckCircle className="w-8 h-8 text-green-600 flex-shrink-0" />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <GraduationCap className="w-5 h-5 text-blue-600" />
+                        <p className="font-bold text-green-900">{planningInfo.module}</p>
+                      </div>
+                      <p className="text-sm text-green-800 mb-3">
+                        Code module : <span className="font-semibold">{planningInfo.code}</span>
+                      </p>
+                      <div className="grid md:grid-cols-3 gap-4 text-sm">
+                        <div className="bg-white rounded-lg p-3">
+                          <p className="text-slate-600 mb-1">Cours détectés</p>
+                          <p className="text-2xl font-bold text-blue-600">{courses.length}</p>
+                        </div>
+                        <div className="bg-white rounded-lg p-3">
+                          <p className="text-slate-600 mb-1">Total périodes</p>
+                          <p className="text-2xl font-bold text-green-600">{planningInfo.totalPeriods}</p>
+                        </div>
+                        <div className="bg-white rounded-lg p-3">
+                          <p className="text-slate-600 mb-1">Formateurs</p>
+                          <p className="text-2xl font-bold text-purple-600">
+                            {new Set(courses.map(c => c.teacher)).size}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -469,20 +583,27 @@ export default function CommunautePage() {
                               <div className="flex items-start justify-between mb-2">
                                 <div>
                                   <h3 className="text-lg font-bold text-slate-900">{course.title}</h3>
-                                  <p className="text-sm text-slate-600">{course.type}</p>
+                                  <div className="flex items-center gap-3 mt-1">
+                                    <span className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-medium">
+                                      {course.type}
+                                    </span>
+                                    <span className="text-xs text-slate-500">
+                                      {course.periods} périodes
+                                    </span>
+                                  </div>
                                 </div>
-                                <span className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm font-medium">
+                                <span className="px-4 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-bold border border-blue-200">
                                   {course.startTime} - {course.endTime}
                                 </span>
                               </div>
                               <div className="grid md:grid-cols-2 gap-4 mt-4">
                                 <div className="flex items-center gap-2 text-slate-600">
                                   <Users className="w-4 h-4" />
-                                  <span className="text-sm">{course.teacher}</span>
+                                  <span className="text-sm font-medium">{course.teacher}</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-slate-600">
                                   <MapPin className="w-4 h-4" />
-                                  <span className="text-sm">{course.room}</span>
+                                  <span className="text-sm font-medium">{course.room}</span>
                                 </div>
                               </div>
                             </div>
