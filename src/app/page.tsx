@@ -13,16 +13,15 @@ import {
   ArrowRight,
   Play,
   CheckCircle,
-  Lightbulb,
   Bell,
   Rss,
   Sparkles,
   Calendar,
   Clock,
-  ExternalLink
+  ExternalLink,
+  Heart
 } from 'lucide-react';
 import AstuceDuJour from '@/components/AstuceDuJour';
-import ActualitesHorlogeres from '@/components/ActualitesHorlogeres';
 import MouvementDuMois from '@/components/MouvementDuMois';
 import GalerieVideos from '@/components/GalerieVideos';
 import ComparaisonMouvements from '@/components/ComparaisonMouvements';
@@ -63,9 +62,9 @@ function AnimatedStats() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
       {[
-        { label: "Ressources gratuites", value: ressources, icon: "📚", color: "from-blue-600 to-cyan-600" },
+        { label: "Ressources partagées", value: ressources, icon: "📚", color: "from-blue-600 to-cyan-600" },
         { label: "Outils disponibles", value: outils, icon: "🔧", color: "from-purple-600 to-pink-600" },
-        { label: "Visiteurs ce mois", value: visiteurs, icon: "👥", color: "from-orange-600 to-red-600" },
+        { label: "Passionnés ce mois", value: visiteurs, icon: "👥", color: "from-orange-600 to-red-600" },
         { label: "Heures de contenu", value: heures, icon: "⏱️", color: "from-green-600 to-emerald-600" }
       ].map((stat, idx) => (
         <div 
@@ -103,7 +102,7 @@ function RessourceDeLaSemaine() {
         </div>
       </div>
       <p className="text-slate-700 mb-6">
-        Document PDF haute résolution : démontage complet, éclaté annoté, couples de serrage et procédures de réglage.
+        Document PDF haute résolution : démontage complet, éclaté annoté, couples de serrage et procédures de réglage. Partagé par la communauté.
       </p>
       <div className="flex gap-4">
         <Link
@@ -184,7 +183,6 @@ function NewsletterSignup() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Intégrer avec un service d'emailing (Mailchimp, SendGrid...)
     console.log('Email souscrit:', email);
     setSubscribed(true);
     setTimeout(() => setSubscribed(false), 3000);
@@ -198,7 +196,7 @@ function NewsletterSignup() {
         </div>
         <h2 className="text-3xl font-bold mb-4">Restez informé</h2>
         <p className="text-xl text-blue-100 mb-8">
-          Recevez chaque semaine : nouvelles ressources, astuces d'atelier et actualités horlogères
+          Recevez chaque semaine : nouvelles ressources partagées, astuces d'atelier et actualités horlogères
         </p>
         {!subscribed ? (
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
@@ -297,115 +295,92 @@ export default function HomePage() {
             </nav>
 
             <Link 
-              href="/quiz" 
+              href="/theorie" 
               className="hidden md:flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition-all"
             >
               <Play className="w-4 h-4" />
-              Commencer
+              Explorer
             </Link>
           </div>
         </div>
       </header>
 
       {/* HERO SECTION */}
-<section className="relative overflow-hidden bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 text-white py-20">
-  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20"></div>
-  
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-    <div className="text-center max-w-4xl mx-auto">
-      {/* Badges */}
-      <div className="flex items-center justify-center gap-3 mb-6 flex-wrap">
-        <div className="inline-block px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm font-semibold border border-white/20">
-          🇨🇭 Passion Horlogère Suisse
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 text-white py-20">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-4xl mx-auto">
+            {/* Badges */}
+            <div className="flex items-center justify-center gap-3 mb-6 flex-wrap">
+              <div className="inline-block px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm font-semibold border border-white/20">
+                🇨🇭 Passion Horlogère Suisse
+              </div>
+              <div className="inline-block px-4 py-2 bg-green-500/20 backdrop-blur-sm rounded-full text-sm font-semibold border border-green-400/30">
+                ✨ 100% Gratuit & Open-Source
+              </div>
+              <div className="inline-block px-4 py-2 bg-orange-500/20 backdrop-blur-sm rounded-full text-sm font-semibold border border-orange-400/30">
+                👥 Communauté d'Entraide
+              </div>
+            </div>
+
+            {/* Titre principal */}
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+              Explorez l'univers de l'
+              <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+                horlogerie suisse
+              </span>
+            </h1>
+
+            {/* Sous-titre */}
+            <p className="text-xl md:text-2xl text-blue-100 mb-8 leading-relaxed">
+              Une bibliothèque collaborative de ressources, tutoriels et outils pour passionnés d'horlogerie. 
+              <strong className="text-white"> Par la communauté, pour la communauté.</strong>
+            </p>
+
+            {/* CTA */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link 
+                href="/theorie" 
+                className="flex items-center gap-2 bg-white text-blue-900 px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all"
+              >
+                <BookOpen className="w-5 h-5" />
+                Explorer les ressources
+              </Link>
+              <Link 
+                href="/communaute" 
+                className="flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all border border-white/30"
+              >
+                <Users className="w-5 h-5" />
+                Rejoindre la communauté
+              </Link>
+            </div>
+
+            {/* Petit texte en bas */}
+            <p className="mt-8 text-sm text-blue-200">
+              Aucune inscription requise • Aucun diplôme délivré • Simplement la passion du geste horloger
+            </p>
+          </div>
         </div>
-        <div className="inline-block px-4 py-2 bg-green-500/20 backdrop-blur-sm rounded-full text-sm font-semibold border border-green-400/30">
-          ✨ 100% Gratuit & Open-Source
-        </div>
-        <div className="inline-block px-4 py-2 bg-orange-500/20 backdrop-blur-sm rounded-full text-sm font-semibold border border-orange-400/30">
-          👥 Communauté d'Entraide
-        </div>
-      </div>
-
-      {/* Titre principal */}
-      <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-        Explorez l'univers de l'
-        <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-          horlogerie suisse
-        </span>
-      </h1>
-
-      {/* Sous-titre */}
-      <p className="text-xl md:text-2xl text-blue-100 mb-8 leading-relaxed">
-        Une bibliothèque collaborative de ressources, tutoriels et outils pour passionnés d'horlogerie. 
-        <strong className="text-white"> Par la communauté, pour la communauté.</strong>
-      </p>
-
-      {/* CTA */}
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-        <Link 
-          href="/theorie" 
-          className="flex items-center gap-2 bg-white text-blue-900 px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all"
-        >
-          <BookOpen className="w-5 h-5" />
-          Explorer les ressources
-        </Link>
-        <Link 
-          href="/communaute" 
-          className="flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all border border-white/30"
-        >
-          <Users className="w-5 h-5" />
-          Rejoindre la communauté
-        </Link>
-      </div>
-
-      {/* Petit texte en bas */}
-      <p className="mt-8 text-sm text-blue-200">
-        Aucune inscription requise • Aucun diplôme délivré • Simplement la passion du geste horloger
-      </p>
-    </div>
-  </div>
-
-  {/* Stats Animées */}
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 relative z-10">
-    <div className="text-center mb-8">
-      <div className="inline-block px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/30">
-        <p className="text-white font-semibold flex items-center gap-3">
-          <span className="text-2xl">📚</span>
-          Ressources Partagées par la Communauté
-          <span className="text-2xl">🤝</span>
-        </p>
-      </div>
-    </div>
-    <AnimatedStats />
-    <div className="mt-12 text-center">
-      <p className="text-2xl font-light text-white mb-2">
-        L'horlogerie accessible à tous
-      </p>
-      <p className="text-blue-200 text-sm">
-        Pas de certification, juste la passion du savoir-faire horloger
-      </p>
-    </div>
-  </div>
-</section>
 
         {/* Stats Animées */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 relative z-10">
           <div className="text-center mb-8">
             <div className="inline-block px-6 py-3 bg-white/10 backdrop-blur-md rounded-full border border-white/30">
               <p className="text-white font-semibold flex items-center gap-3">
-                <span className="text-2xl">🇨🇭</span>
-                Qualité & Précision Suisse
-                <span className="text-2xl">⚙️</span>
+                <span className="text-2xl">📚</span>
+                Ressources Partagées par la Communauté
+                <span className="text-2xl">🤝</span>
               </p>
             </div>
           </div>
           <AnimatedStats />
           <div className="mt-12 text-center">
             <p className="text-2xl font-light text-white mb-2">
-              L'excellence horlogère à portée de main
+              L'horlogerie accessible à tous
             </p>
             <p className="text-blue-200 text-sm">
-              Chaque détail compte. Chaque seconde est précieuse.
+              Pas de certification, juste la passion du savoir-faire horloger
             </p>
           </div>
         </div>
@@ -426,9 +401,9 @@ export default function HomePage() {
         {/* Parcours d'Apprentissage */}
         <section className="mb-16">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">Parcours d'Apprentissage</h2>
+            <h2 className="text-4xl font-bold text-slate-900 mb-4">Explorer par Thématique</h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Un cursus complet de la théorie à la pratique pour devenir horloger
+              Des ressources organisées pour progresser à votre rythme
             </p>
           </div>
 
@@ -440,23 +415,23 @@ export default function HomePage() {
                 color: "from-blue-600 to-cyan-600",
                 description: "Principes fondamentaux, histoire et terminologie horlogère",
                 link: "/theorie",
-                features: ["Cours structurés", "Schémas animés", "Glossaire illustré"]
+                features: ["Cours détaillés", "Schémas annotés", "Glossaire illustré"]
               },
               {
                 title: "Pratique",
                 icon: Wrench,
                 color: "from-purple-600 to-pink-600",
-                description: "Démontage, remontage et réglage de mouvements réels",
+                description: "Démontage, remontage et réglage de mouvements",
                 link: "/pratique",
-                features: ["Tutoriels vidéo", "Plans techniques", "Exercices guidés"]
+                features: ["Tutoriels vidéo", "Plans techniques", "Guides pas-à-pas"]
               },
               {
-                title: "Certification",
+                title: "Évaluation",
                 icon: Award,
                 color: "from-orange-600 to-red-600",
-                description: "Validez vos compétences avec nos quiz certifiants",
+                description: "Testez vos connaissances avec nos quiz",
                 link: "/quiz",
-                features: ["Quiz interactifs", "Badge de réussite", "Suivi progrès"]
+                features: ["Quiz interactifs", "Correction détaillée", "Suivi progrès"]
               }
             ].map((parcours, idx) => (
               <Link 
@@ -491,9 +466,6 @@ export default function HomePage() {
         {/* Newsletter */}
         <NewsletterSignup />
 
-        {/* Actualités Horlogères */}
-        <ActualitesHorlogeres />
-
         {/* Galerie Vidéos */}
         <GalerieVideos />
 
@@ -514,12 +486,16 @@ export default function HomePage() {
                 <span className="text-2xl font-bold">HorloLearn</span>
               </div>
               <p className="text-slate-400 mb-4">
-                La première plateforme interactive francophone dédiée à l'apprentissage de l'horlogerie suisse.
+                La première plateforme collaborative francophone dédiée au partage de connaissances horlogères.
               </p>
+              <div className="flex items-center gap-2 text-sm text-slate-500">
+                <Heart className="w-4 h-4 text-red-500" />
+                <span>Fait avec passion par la communauté</span>
+              </div>
             </div>
 
             <div>
-              <h3 className="font-bold text-lg mb-4">Apprendre</h3>
+              <h3 className="font-bold text-lg mb-4">Explorer</h3>
               <ul className="space-y-2 text-slate-400">
                 <li><Link href="/theorie" className="hover:text-white transition-colors">Théorie</Link></li>
                 <li><Link href="/pratique" className="hover:text-white transition-colors">Pratique</Link></li>
@@ -539,14 +515,20 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-slate-400 text-sm">
-              © 2025 HorloLearn – Passion & Découverte Horlogère Suisse
-            </p>
-            <div className="flex gap-6 text-sm text-slate-400">
-              <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link>
-              <Link href="/politique-confidentialite" className="hover:text-white transition-colors">Confidentialité</Link>
+          <div className="border-t border-slate-800 pt-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
+              <p className="text-slate-400 text-sm">
+                © 2025 HorloLearn – Passion & Découverte Horlogère Suisse
+              </p>
+              <div className="flex gap-6 text-sm text-slate-400">
+                <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link>
+                <Link href="/politique-confidentialite" className="hover:text-white transition-colors">Confidentialité</Link>
+              </div>
             </div>
+            <p className="text-xs text-slate-500 text-center">
+              💡 HorloLearn n'est ni une école ni un centre de formation officiel. Aucun diplôme ou certification reconnue n'est délivré. 
+              Il s'agit d'une plateforme collaborative de partage de connaissances horlogères.
+            </p>
           </div>
         </div>
       </footer>
