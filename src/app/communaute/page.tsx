@@ -17,7 +17,8 @@ import {
   BookOpen,
   AlertCircle,
   FileText,
-  Maximize2
+  Maximize2,
+  Loader2
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -98,12 +99,14 @@ export default function CommunautePage() {
   const [authError, setAuthError] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [planningUrl, setPlanningUrl] = useState('/planning-horlogerie.pdf');
+  const [planningUrl, setPlanningUrl] = useState(`/planning-horlogerie.pdf?t=${Date.now()}`);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
 
   // Codes d'accès (à stocker en variable d'environnement en production)
   const STUDENT_CODE = 'HORL2025';
-  const ADMIN_CODE = 'DALI06052022';
+  const ADMIN_CODE = 'ADMIN2025';
 
   const handleAccessSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,7 +115,6 @@ export default function CommunautePage() {
       setIsAuthenticated(true);
       setIsAdmin(true);
       setAuthError('');
-      // Sauvegarder dans localStorage
       localStorage.setItem('horlo_access', 'admin');
     } else if (accessCode === STUDENT_CODE) {
       setIsAuthenticated(true);
@@ -125,19 +127,41 @@ export default function CommunautePage() {
     }
   };
 
-  const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type === 'application/pdf') {
       setUploadedFile(file);
+      setIsUploading(true);
+      setUploadSuccess(false);
       
-      // Créer une URL temporaire pour prévisualiser
-      const fileUrl = URL.createObjectURL(file);
-      setPlanningUrl(fileUrl);
-      
-      // En production, vous uploaderiez vers votre serveur :
-      // const formData = new FormData();
-      // formData.append('planning', file);
-      // await fetch('/api/upload-planning', { method: 'POST', body: formData });
+      try {
+        // Upload vers le serveur
+        const formData = new FormData();
+        formData.append('planning', file);
+        
+        const response = await fetch('/api/upload-planning', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          // Forcer le rechargement du PDF avec un timestamp pour éviter le cache
+          setPlanningUrl(`/planning-horlogerie.pdf?t=${Date.now()}`);
+          setUploadSuccess(true);
+          
+          // Message de succès temporaire
+          setTimeout(() => setUploadSuccess(false), 5000);
+        } else {
+          alert('Erreur lors de l\'upload : ' + data.error);
+        }
+      } catch (error) {
+        console.error('Erreur upload:', error);
+        alert('Erreur lors de l\'upload du fichier');
+      } finally {
+        setIsUploading(false);
+      }
     }
   }, []);
 
@@ -369,14 +393,26 @@ export default function CommunautePage() {
                       </div>
                       <div className="flex items-center gap-2">
                         {isAdmin && (
-                          <label className="flex items-center gap-2 px-4 py-2 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors cursor-pointer">
-                            <Upload className="w-5 h-5" />
-                            Mettre à jour
+                          <label className={`flex items-center gap-2 px-4 py-2 bg-white text-blue-600 rounded-lg font-semibold transition-colors cursor-pointer ${
+                            isUploading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-50'
+                          }`}>
+                            {isUploading ? (
+                              <>
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                                Upload...
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="w-5 h-5" />
+                                Mettre à jour
+                              </>
+                            )}
                             <input
                               type="file"
                               accept=".pdf"
                               onChange={handleFileUpload}
                               className="hidden"
+                              disabled={isUploading}
                             />
                           </label>
                         )}
@@ -414,7 +450,7 @@ export default function CommunautePage() {
                     />
                   </div>
 
-                  {uploadedFile && isAdmin && (
+                  {uploadSuccess && (
                     <div className="px-6 py-4 bg-green-50 border-t border-green-200">
                       <div className="flex items-center gap-3">
                         <CheckCircle className="w-5 h-5 text-green-600" />
@@ -423,7 +459,7 @@ export default function CommunautePage() {
                             Planning mis à jour avec succès
                           </p>
                           <p className="text-xs text-green-700">
-                            {uploadedFile.name} • Tous les élèves verront la nouvelle version
+                            Tous les élèves verront la nouvelle version immédiatement
                           </p>
                         </div>
                       </div>
@@ -458,7 +494,10 @@ export default function CommunautePage() {
                   <div className="bg-white rounded-xl p-6 shadow-lg">
                     <h3 className="text-lg font-bold text-slate-900 mb-4">⚙️ Options</h3>
                     <div className="space-y-3">
-                      <button className="w-full flex items-center gap-3 px-4 py-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
+                      <button 
+                        onClick={() => window.print()}
+                        className="w-full flex items-center gap-3 px-4 py-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+                      >
                         <FileText className="w-5 h-5 text-blue-600" />
                         <span className="text-sm font-medium text-slate-900">Imprimer le planning</span>
                       </button>
