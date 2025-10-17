@@ -1,15 +1,11 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { 
   ChevronLeft, 
-  Upload, 
   Calendar, 
   Lock,
-  Eye,
   Download,
-  RefreshCw,
-  CheckCircle,
   Users,
   MessageSquare,
   Share2,
@@ -18,7 +14,7 @@ import {
   AlertCircle,
   FileText,
   Maximize2,
-  Loader2
+  Eye
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -97,73 +93,25 @@ export default function CommunautePage() {
   const [accessCode, setAccessCode] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authError, setAuthError] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [planningUrl, setPlanningUrl] = useState(`/planning-horlogerie.pdf?t=${Date.now()}`);
+  const [planningUrl] = useState('/planning-horlogerie.pdf');
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadSuccess, setUploadSuccess] = useState(false);
 
-  // Codes d'accès (à stocker en variable d'environnement en production)
+  // Code d'accès unique pour tous les élèves
   const STUDENT_CODE = 'HORL2025';
-  const ADMIN_CODE = 'ADMIN2025';
 
   const handleAccessSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (accessCode === ADMIN_CODE) {
+    if (accessCode === STUDENT_CODE) {
       setIsAuthenticated(true);
-      setIsAdmin(true);
       setAuthError('');
-      localStorage.setItem('horlo_access', 'admin');
-    } else if (accessCode === STUDENT_CODE) {
-      setIsAuthenticated(true);
-      setIsAdmin(false);
-      setAuthError('');
-      localStorage.setItem('horlo_access', 'student');
+      // Sauvegarder dans sessionStorage (pas localStorage pour éviter la persistance)
+      sessionStorage.setItem('horlo_access', 'true');
     } else {
       setAuthError('Code d\'accès invalide');
       setAccessCode('');
     }
   };
-
-  const handleFileUpload = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file && file.type === 'application/pdf') {
-      setUploadedFile(file);
-      setIsUploading(true);
-      setUploadSuccess(false);
-      
-      try {
-        // Upload vers le serveur
-        const formData = new FormData();
-        formData.append('planning', file);
-        
-        const response = await fetch('/api/upload-planning', {
-          method: 'POST',
-          body: formData
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-          // Forcer le rechargement du PDF avec un timestamp pour éviter le cache
-          setPlanningUrl(`/planning-horlogerie.pdf?t=${Date.now()}`);
-          setUploadSuccess(true);
-          
-          // Message de succès temporaire
-          setTimeout(() => setUploadSuccess(false), 5000);
-        } else {
-          alert('Erreur lors de l\'upload : ' + data.error);
-        }
-      } catch (error) {
-        console.error('Erreur upload:', error);
-        alert('Erreur lors de l\'upload du fichier');
-      } finally {
-        setIsUploading(false);
-      }
-    }
-  }, []);
 
   const downloadPlanning = () => {
     const link = document.createElement('a');
@@ -183,15 +131,11 @@ export default function CommunautePage() {
     }
   };
 
-  // Vérifier l'authentification au chargement
+  // Vérifier l'authentification au chargement (sessionStorage seulement)
   React.useEffect(() => {
-    const savedAccess = localStorage.getItem('horlo_access');
-    if (savedAccess === 'admin') {
+    const savedAccess = sessionStorage.getItem('horlo_access');
+    if (savedAccess === 'true') {
       setIsAuthenticated(true);
-      setIsAdmin(true);
-    } else if (savedAccess === 'student') {
-      setIsAuthenticated(true);
-      setIsAdmin(false);
     }
   }, []);
 
@@ -313,10 +257,10 @@ export default function CommunautePage() {
               </div>
               
               <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-purple-600">
-                <RefreshCw className="w-10 h-10 text-purple-600 mb-4" />
-                <h3 className="text-lg font-bold text-slate-900 mb-2">Toujours à jour</h3>
+                <Download className="w-10 h-10 text-purple-600 mb-4" />
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Téléchargement</h3>
                 <p className="text-sm text-slate-600">
-                  Les modifications sont visibles immédiatement pour tous les élèves.
+                  Téléchargez le PDF pour le consulter hors ligne ou l'imprimer.
                 </p>
               </div>
             </div>
@@ -346,8 +290,9 @@ export default function CommunautePage() {
                       value={accessCode}
                       onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
                       placeholder="Entrez votre code"
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent text-slate-900"
                       required
+                      autoFocus
                     />
                   </div>
 
@@ -381,7 +326,7 @@ export default function CommunautePage() {
                 <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
                   {/* Header avec actions */}
                   <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between flex-wrap gap-4">
                       <div className="flex items-center gap-3 text-white">
                         <Calendar className="w-6 h-6" />
                         <div>
@@ -392,30 +337,6 @@ export default function CommunautePage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        {isAdmin && (
-                          <label className={`flex items-center gap-2 px-4 py-2 bg-white text-blue-600 rounded-lg font-semibold transition-colors cursor-pointer ${
-                            isUploading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-50'
-                          }`}>
-                            {isUploading ? (
-                              <>
-                                <Loader2 className="w-5 h-5 animate-spin" />
-                                Upload...
-                              </>
-                            ) : (
-                              <>
-                                <Upload className="w-5 h-5" />
-                                Mettre à jour
-                              </>
-                            )}
-                            <input
-                              type="file"
-                              accept=".pdf"
-                              onChange={handleFileUpload}
-                              className="hidden"
-                              disabled={isUploading}
-                            />
-                          </label>
-                        )}
                         <button
                           onClick={downloadPlanning}
                           className="flex items-center gap-2 px-4 py-2 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
@@ -438,7 +359,7 @@ export default function CommunautePage() {
                     {isFullscreen && (
                       <button
                         onClick={() => setIsFullscreen(false)}
-                        className="absolute top-4 right-4 z-10 p-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700"
+                        className="absolute top-4 right-4 z-10 p-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors"
                       >
                         ✕ Fermer
                       </button>
@@ -449,22 +370,6 @@ export default function CommunautePage() {
                       title="Planning Scolaire"
                     />
                   </div>
-
-                  {uploadSuccess && (
-                    <div className="px-6 py-4 bg-green-50 border-t border-green-200">
-                      <div className="flex items-center gap-3">
-                        <CheckCircle className="w-5 h-5 text-green-600" />
-                        <div>
-                          <p className="text-sm font-semibold text-green-900">
-                            Planning mis à jour avec succès
-                          </p>
-                          <p className="text-xs text-green-700">
-                            Tous les élèves verront la nouvelle version immédiatement
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
 
                 {/* Informations complémentaires */}
@@ -482,7 +387,7 @@ export default function CommunautePage() {
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-blue-600">•</span>
-                        <span><strong>Jours de cours :</strong> Lundi, Mardi, Mercredi, Jeudi, Vendredi (et certains samedis)</span>
+                        <span><strong>Jours de cours :</strong> Variables selon les semaines</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-blue-600">•</span>
@@ -501,15 +406,20 @@ export default function CommunautePage() {
                         <FileText className="w-5 h-5 text-blue-600" />
                         <span className="text-sm font-medium text-slate-900">Imprimer le planning</span>
                       </button>
-                      <button className="w-full flex items-center gap-3 px-4 py-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
+                      <button 
+                        onClick={() => {
+                          navigator.clipboard.writeText(window.location.href);
+                          alert('Lien copié ! Partagez-le avec vos collègues.');
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+                      >
                         <Share2 className="w-5 h-5 text-green-600" />
-                        <span className="text-sm font-medium text-slate-900">Partager avec un collègue</span>
+                        <span className="text-sm font-medium text-slate-900">Partager le lien</span>
                       </button>
                       <button
                         onClick={() => {
                           setIsAuthenticated(false);
-                          setIsAdmin(false);
-                          localStorage.removeItem('horlo_access');
+                          sessionStorage.removeItem('horlo_access');
                         }}
                         className="w-full flex items-center gap-3 px-4 py-3 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
                       >
