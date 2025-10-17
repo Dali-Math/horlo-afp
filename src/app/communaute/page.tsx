@@ -103,7 +103,7 @@ export default function CommunautePage() {
 
   // Codes d'accès (à stocker en variable d'environnement en production)
   const STUDENT_CODE = 'HORL2025';
-  const ADMIN_CODE = 'Dali06052022';
+  const ADMIN_CODE = 'DALI06052022';
 
   const handleAccessSubmit = (e: React.FormEvent) => {
     e.preventDefault();
