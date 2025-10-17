@@ -5,36 +5,21 @@ import {
   ChevronLeft, 
   Upload, 
   Calendar, 
-  Clock, 
-  BookOpen, 
-  Users, 
-  MessageSquare, 
-  Share2, 
-  TrendingUp,
-  FileText,
+  Lock,
+  Eye,
   Download,
   RefreshCw,
   CheckCircle,
-  MapPin,
-  GraduationCap,
-  ChevronRight,
-  List,
-  Filter
+  Users,
+  MessageSquare,
+  Share2,
+  TrendingUp,
+  BookOpen,
+  AlertCircle,
+  FileText,
+  Maximize2
 } from 'lucide-react';
 import Link from 'next/link';
-
-interface Course {
-  id: string;
-  title: string;
-  type: string;
-  teacher: string;
-  room: string;
-  startTime: string;
-  endTime: string;
-  date: Date;
-  color: string;
-  periods: number;
-}
 
 interface Discussion {
   id: string;
@@ -47,111 +32,6 @@ interface Discussion {
   lastActivity: string;
   isHot: boolean;
 }
-
-// Données réelles du planning (basées sur votre PDF)
-const realPlanningData: Course[] = [
-  // Semaine du 13-18 octobre 2025
-  {
-    id: '1',
-    title: 'Pratique d\'horlogerie',
-    type: 'Atelier',
-    teacher: 'V. Guilliou',
-    room: 'Atelier 414',
-    startTime: '17:30',
-    endTime: '21:15',
-    date: new Date(2025, 9, 13), // Lundi 13 oct
-    color: 'bg-blue-500',
-    periods: 414
-  },
-  {
-    id: '2',
-    title: 'Mathématiques',
-    type: 'Cours',
-    teacher: 'M. Achram',
-    room: 'Salle 205',
-    startTime: '17:15',
-    endTime: '20:15',
-    date: new Date(2025, 9, 16), // Jeudi 16 oct
-    color: 'bg-orange-500',
-    periods: 35
-  },
-  
-  // Semaine du 20-25 octobre 2025
-  {
-    id: '3',
-    title: 'Dessin Tech.',
-    type: 'Cours',
-    teacher: 'P. Wyss',
-    room: 'Salle sèche',
-    startTime: '17:30',
-    endTime: '21:15',
-    date: new Date(2025, 9, 20), // Lundi 20 oct
-    color: 'bg-purple-500',
-    periods: 55
-  },
-  {
-    id: '4',
-    title: 'Pratique',
-    type: 'Atelier',
-    teacher: 'V. Guilliou',
-    room: 'Atelier 414',
-    startTime: '17:30',
-    endTime: '21:15',
-    date: new Date(2025, 9, 22), // Mercredi 22 oct
-    color: 'bg-purple-500',
-    periods: 414
-  },
-  {
-    id: '5',
-    title: 'Micromécanique A',
-    type: 'Atelier',
-    teacher: 'H. Alves Garcia',
-    room: 'Salle sèche',
-    startTime: '17:30',
-    endTime: '21:15',
-    date: new Date(2025, 9, 24), // Vendredi 24 oct
-    color: 'bg-red-500',
-    periods: 50
-  },
-  
-  // Novembre (exemples)
-  {
-    id: '6',
-    title: 'Pratique d\'horlogerie',
-    type: 'Atelier',
-    teacher: 'V. Guilliou',
-    room: 'Atelier 414',
-    startTime: '17:30',
-    endTime: '21:15',
-    date: new Date(2025, 10, 3), // Lundi 3 nov
-    color: 'bg-blue-500',
-    periods: 414
-  },
-  {
-    id: '7',
-    title: 'Théorie d\'horlogerie',
-    type: 'Cours',
-    teacher: 'P. Rouge',
-    room: 'Salle 205',
-    startTime: '17:00',
-    endTime: '20:45',
-    date: new Date(2025, 10, 5), // Mercredi 5 nov
-    color: 'bg-green-500',
-    periods: 70
-  },
-  {
-    id: '8',
-    title: 'Micromécanique B',
-    type: 'Atelier',
-    teacher: 'H. Alves Garcia',
-    room: 'Salle sèche',
-    startTime: '17:30',
-    endTime: '21:15',
-    date: new Date(2025, 10, 8), // Samedi 8 nov
-    color: 'bg-indigo-500',
-    periods: 41
-  }
-];
 
 const discussions: Discussion[] = [
   {
@@ -213,168 +93,59 @@ const discussions: Discussion[] = [
 
 export default function CommunautePage() {
   const [activeTab, setActiveTab] = useState<'planning' | 'discussions'>('planning');
-  const [viewMode, setViewMode] = useState<'week' | 'month' | 'list'>('week');
+  const [accessCode, setAccessCode] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authError, setAuthError] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisComplete, setAnalysisComplete] = useState(false);
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [currentWeekStart, setCurrentWeekStart] = useState<Date>(() => {
-    return new Date(2025, 9, 13); // Semaine du 13 octobre 2025
-  });
-  const [currentMonth, setCurrentMonth] = useState(new Date(2025, 9)); // Octobre 2025
-  const [planningInfo, setPlanningInfo] = useState<{
-    module: string;
-    code: string;
-    totalPeriods: number;
-    totalCourses: number;
-  } | null>(null);
+  const [planningUrl, setPlanningUrl] = useState('/planning-horlogerie.pdf');
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // Obtenir le lundi de la semaine donnée
-  function getMonday(date: Date): Date {
-    const d = new Date(date);
-    const day = d.getDay();
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-    return new Date(d.setDate(diff));
-  }
+  // Codes d'accès (à stocker en variable d'environnement en production)
+  const STUDENT_CODE = 'HORL2025';
+  const ADMIN_CODE = 'Dali06052022';
 
-  // Obtenir la semaine courante (lundi à samedi)
-  const getWeekDays = (startDate: Date) => {
-    const days = [];
-    for (let i = 0; i < 6; i++) {
-      const date = new Date(startDate);
-      date.setDate(date.getDate() + i);
-      days.push(date);
+  const handleAccessSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (accessCode === ADMIN_CODE) {
+      setIsAuthenticated(true);
+      setIsAdmin(true);
+      setAuthError('');
+      // Sauvegarder dans localStorage
+      localStorage.setItem('horlo_access', 'admin');
+    } else if (accessCode === STUDENT_CODE) {
+      setIsAuthenticated(true);
+      setIsAdmin(false);
+      setAuthError('');
+      localStorage.setItem('horlo_access', 'student');
+    } else {
+      setAuthError('Code d\'accès invalide');
+      setAccessCode('');
     }
-    return days;
   };
-
-  const weekDays = getWeekDays(currentWeekStart);
 
   const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type === 'application/pdf') {
       setUploadedFile(file);
-      setIsAnalyzing(true);
       
-      setTimeout(() => {
-        setCourses(realPlanningData);
-        setPlanningInfo({
-          module: 'Formation modulaire en Horlogerie - Module de Base',
-          code: 'HORL1_S925',
-          totalPeriods: 701,
-          totalCourses: 215
-        });
-        setIsAnalyzing(false);
-        setAnalysisComplete(true);
-      }, 2500);
+      // Créer une URL temporaire pour prévisualiser
+      const fileUrl = URL.createObjectURL(file);
+      setPlanningUrl(fileUrl);
+      
+      // En production, vous uploaderiez vers votre serveur :
+      // const formData = new FormData();
+      // formData.append('planning', file);
+      // await fetch('/api/upload-planning', { method: 'POST', body: formData });
     }
   }, []);
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file && file.type === 'application/pdf') {
-      setUploadedFile(file);
-      setIsAnalyzing(true);
-      
-      setTimeout(() => {
-        setCourses(realPlanningData);
-        setPlanningInfo({
-          module: 'Formation modulaire en Horlogerie - Module de Base',
-          code: 'HORL1_S925',
-          totalPeriods: 701,
-          totalCourses: 215
-        });
-        setIsAnalyzing(false);
-        setAnalysisComplete(true);
-      }, 2500);
-    }
-  }, []);
-
-  const formatDate = (date: Date) => {
-    const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-    const months = ['jan', 'fév', 'mar', 'avr', 'mai', 'juin', 'juil', 'août', 'sept', 'oct', 'nov', 'déc'];
-    return {
-      day: days[date.getDay()],
-      date: date.getDate(),
-      month: months[date.getMonth()]
-    };
-  };
-
-  const goToPreviousWeek = () => {
-    const newDate = new Date(currentWeekStart);
-    newDate.setDate(newDate.getDate() - 7);
-    setCurrentWeekStart(newDate);
-  };
-
-  const goToNextWeek = () => {
-    const newDate = new Date(currentWeekStart);
-    newDate.setDate(newDate.getDate() + 7);
-    setCurrentWeekStart(newDate);
-  };
-
-  const goToPreviousMonth = () => {
-    const prev = new Date(currentMonth);
-    prev.setMonth(prev.getMonth() - 1);
-    setCurrentMonth(prev);
-  };
-
-  const goToNextMonth = () => {
-    const next = new Date(currentMonth);
-    next.setMonth(next.getMonth() + 1);
-    setCurrentMonth(next);
-  };
-
-  const exportToCalendar = () => {
-    const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//HorloLearn//Planning//FR',
-      'CALSCALE:GREGORIAN',
-      'METHOD:PUBLISH',
-      'X-WR-CALNAME:Planning Horlogerie',
-      'X-WR-TIMEZONE:Europe/Zurich',
-      ...courses.map(course => {
-        const startDateTime = new Date(course.date);
-        const [startHours, startMinutes] = course.startTime.split(':');
-        startDateTime.setHours(parseInt(startHours), parseInt(startMinutes), 0);
-        
-        const endDateTime = new Date(course.date);
-        const [endHours, endMinutes] = course.endTime.split(':');
-        endDateTime.setHours(parseInt(endHours), parseInt(endMinutes), 0);
-        
-        const formatICSDate = (date: Date) => {
-          return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-        };
-        
-        return [
-          'BEGIN:VEVENT',
-          `UID:${course.id}@horlolearn.ch`,
-          `DTSTAMP:${formatICSDate(new Date())}`,
-          `DTSTART:${formatICSDate(startDateTime)}`,
-          `DTEND:${formatICSDate(endDateTime)}`,
-          `SUMMARY:${course.title}`,
-          `LOCATION:${course.room}`,
-          `DESCRIPTION:Type: ${course.type}\\nFormateur: ${course.teacher}\\nPériodes: ${course.periods}`,
-          'STATUS:CONFIRMED',
-          'TRANSP:OPAQUE',
-          'END:VEVENT'
-        ].join('\n');
-      }),
-      'END:VCALENDAR'
-    ].join('\n');
-    
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'planning-horlogerie.ics';
-    a.click();
-    URL.revokeObjectURL(url);
+  const downloadPlanning = () => {
+    const link = document.createElement('a');
+    link.href = planningUrl;
+    link.download = 'Planning-Horlogerie-2025-2026.pdf';
+    link.click();
   };
 
   const getCategoryColor = (category: string) => {
@@ -388,271 +159,17 @@ export default function CommunautePage() {
     }
   };
 
-  // Render Vue Semaine
-  const renderWeekView = () => {
-    return (
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <div className="flex items-center justify-between mb-6">
-          <button
-            onClick={goToPreviousWeek}
-            className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
-          >
-            <ChevronLeft className="w-6 h-6 text-slate-600" />
-          </button>
-          <h3 className="text-xl font-bold text-slate-900">
-            Semaine du {weekDays[0].getDate()} {formatDate(weekDays[0]).month} au {weekDays[5].getDate()} {formatDate(weekDays[5]).month} {weekDays[0].getFullYear()}
-          </h3>
-          <button
-            onClick={goToNextWeek}
-            className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
-          >
-            <ChevronRight className="w-6 h-6 text-slate-600" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-6 gap-4">
-          {weekDays.map((day, index) => {
-            const dayInfo = formatDate(day);
-            const dayCourses = courses.filter(
-              c => c.date.toDateString() === day.toDateString()
-            );
-            const isToday = day.toDateString() === new Date().toDateString();
-
-            return (
-              <div
-                key={index}
-                className={`rounded-xl p-4 border-2 transition-all min-h-[200px] ${
-                  isToday
-                    ? 'border-blue-600 bg-blue-50'
-                    : 'border-slate-200 bg-white'
-                }`}
-              >
-                <div className="text-center mb-3">
-                  <p className={`text-sm font-semibold ${
-                    isToday ? 'text-blue-600' : 'text-slate-600'
-                  }`}>
-                    {dayInfo.day}
-                  </p>
-                  <p className={`text-2xl font-bold ${
-                    isToday ? 'text-blue-600' : 'text-slate-900'
-                  }`}>
-                    {dayInfo.date}
-                  </p>
-                  <p className="text-xs text-slate-500">{dayInfo.month}</p>
-                </div>
-
-                {dayCourses.length > 0 ? (
-                  <div className="space-y-2">
-                    {dayCourses.map((course) => (
-                      <div
-                        key={course.id}
-                        className={`${course.color} rounded-lg p-3 text-white cursor-pointer hover:opacity-90 transition-opacity`}
-                      >
-                        <div className="flex items-center gap-2 mb-1">
-                          <Clock className="w-3 h-3" />
-                          <p className="text-xs font-bold">
-                            {course.startTime} - {course.endTime}
-                          </p>
-                        </div>
-                        <p className="text-sm font-semibold mb-1">
-                          {course.title}
-                        </p>
-                        <p className="text-xs opacity-90">{course.type}</p>
-                        <p className="text-xs opacity-75 mt-1">{course.periods} périodes</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <p className="text-xs text-slate-400">Pas de cours</p>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
-  // Render Vue Mois
-  const renderMonthView = () => {
-    const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-    const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
-    
-    const days = [];
-    for (let d = new Date(firstDay); d <= lastDay; d.setDate(d.getDate() + 1)) {
-      days.push(new Date(d));
+  // Vérifier l'authentification au chargement
+  React.useEffect(() => {
+    const savedAccess = localStorage.getItem('horlo_access');
+    if (savedAccess === 'admin') {
+      setIsAuthenticated(true);
+      setIsAdmin(true);
+    } else if (savedAccess === 'student') {
+      setIsAuthenticated(true);
+      setIsAdmin(false);
     }
-    
-    const monthCourses = courses.filter(c => 
-      c.date.getMonth() === currentMonth.getMonth() &&
-      c.date.getFullYear() === currentMonth.getFullYear()
-    );
-    
-    return (
-      <div className="bg-white rounded-2xl shadow-lg p-8">
-        <div className="flex items-center justify-between mb-6">
-          <button
-            onClick={goToPreviousMonth}
-            className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
-          >
-            <ChevronLeft className="w-6 h-6 text-slate-600" />
-          </button>
-          <h2 className="text-2xl font-bold text-slate-900 capitalize">
-            {currentMonth.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
-          </h2>
-          <button
-            onClick={goToNextMonth}
-            className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
-          >
-            <ChevronRight className="w-6 h-6 text-slate-600" />
-          </button>
-        </div>
-        
-        {/* Grille calendrier */}
-        <div className="grid grid-cols-7 gap-2 mb-6">
-          {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map(d => (
-            <div key={d} className="text-center font-bold text-slate-600 py-2 text-sm">{d}</div>
-          ))}
-          
-          {/* Espaces vides avant le 1er jour du mois */}
-          {Array.from({ length: (firstDay.getDay() + 6) % 7 }).map((_, i) => (
-            <div key={`empty-${i}`} className="aspect-square" />
-          ))}
-          
-          {/* Jours du mois */}
-          {days.map(day => {
-            const dayCourses = monthCourses.filter(c => 
-              c.date.toDateString() === day.toDateString()
-            );
-            const isToday = day.toDateString() === new Date().toDateString();
-            
-            return (
-              <div key={day.toISOString()} className={`aspect-square border rounded-lg p-2 ${
-                isToday ? 'border-blue-600 bg-blue-50' : 'border-slate-200 hover:border-slate-300'
-              } transition-all cursor-pointer`}>
-                <div className={`text-sm font-semibold mb-1 ${
-                  isToday ? 'text-blue-600' : 'text-slate-900'
-                }`}>
-                  {day.getDate()}
-                </div>
-                <div className="space-y-1">
-                  {dayCourses.map(course => (
-                    <div key={course.id} className={`${course.color} text-white text-[10px] rounded px-1 py-0.5 truncate`}>
-                      {course.title.split(' ')[0]}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        
-        {/* Légende */}
-        <div className="border-t border-slate-200 pt-6">
-          <h3 className="text-sm font-bold text-slate-900 mb-3">Légende :</h3>
-          <div className="flex flex-wrap gap-3">
-            {Array.from(new Set(monthCourses.map(c => c.title))).map(title => {
-              const course = monthCourses.find(c => c.title === title);
-              return (
-                <div key={title} className="flex items-center gap-2">
-                  <div className={`w-4 h-4 rounded ${course?.color}`}></div>
-                  <span className="text-sm text-slate-700">{title}</span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Stats du mois */}
-        <div className="mt-6 grid md:grid-cols-3 gap-4">
-          <div className="bg-blue-50 rounded-lg p-4">
-            <p className="text-sm text-blue-600 mb-1">Cours ce mois</p>
-            <p className="text-2xl font-bold text-blue-900">{monthCourses.length}</p>
-          </div>
-          <div className="bg-green-50 rounded-lg p-4">
-            <p className="text-sm text-green-600 mb-1">Total heures</p>
-            <p className="text-2xl font-bold text-green-900">
-              {Math.round(monthCourses.length * 3.75)}h
-            </p>
-          </div>
-          <div className="bg-purple-50 rounded-lg p-4">
-            <p className="text-sm text-purple-600 mb-1">Matières différentes</p>
-            <p className="text-2xl font-bold text-purple-900">
-              {new Set(monthCourses.map(c => c.title)).size}
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  // Render Vue Liste
-  const renderListView = () => {
-    const sortedCourses = [...courses].sort((a, b) => a.date.getTime() - b.date.getTime());
-    
-    return (
-      <div className="bg-white rounded-2xl shadow-lg p-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-slate-900">
-            Tous les cours (Sept 2025 → Mai 2026)
-          </h2>
-          <div className="flex items-center gap-2">
-            <button className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
-              <Filter className="w-4 h-4" />
-              <span className="text-sm font-medium">Filtrer</span>
-            </button>
-          </div>
-        </div>
-        
-        <div className="space-y-4">
-          {sortedCourses.map(course => (
-            <div key={course.id} className="border border-slate-200 rounded-xl p-5 hover:shadow-lg transition-all">
-              <div className="flex items-start gap-4">
-                <div className={`${course.color} rounded-lg p-3 text-white flex-shrink-0`}>
-                  <Calendar className="w-6 h-6" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm text-slate-600 mb-1 capitalize">
-                    {course.date.toLocaleDateString('fr-FR', { 
-                      weekday: 'long', 
-                      day: 'numeric', 
-                      month: 'long', 
-                      year: 'numeric' 
-                    })}
-                  </p>
-                  <h3 className="text-lg font-bold text-slate-900 mb-2">{course.title}</h3>
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-medium">
-                      {course.type}
-                    </span>
-                    <span className="text-xs text-slate-500">
-                      {course.periods} périodes
-                    </span>
-                  </div>
-                  <div className="grid md:grid-cols-3 gap-4 text-sm text-slate-600">
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      <span>{course.startTime} - {course.endTime}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4" />
-                      <span>{course.teacher}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
-                      <span>{course.room}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
@@ -677,7 +194,7 @@ export default function CommunautePage() {
             Communauté HorloLearn
           </h1>
           <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-            Échangez avec d'autres apprenants, partagez vos expériences et gérez votre planning scolaire
+            Échangez avec d'autres apprenants, partagez vos expériences et consultez votre planning scolaire
           </p>
         </div>
 
@@ -734,7 +251,7 @@ export default function CommunautePage() {
               }`}
             >
               <Calendar className="w-5 h-5" />
-              Planning Intelligent
+              Planning Scolaire
             </button>
             <button
               onClick={() => setActiveTab('discussions')}
@@ -750,181 +267,220 @@ export default function CommunautePage() {
           </div>
         </div>
 
-        {/* Planning Intelligent Section */}
+        {/* Planning Section */}
         {activeTab === 'planning' && (
           <section className="space-y-8">
             {/* Feature Cards */}
             <div className="grid md:grid-cols-3 gap-6 mb-8">
               <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-blue-600">
-                <Upload className="w-10 h-10 text-blue-600 mb-4" />
-                <h3 className="text-lg font-bold text-slate-900 mb-2">Import PDF automatique</h3>
+                <Lock className="w-10 h-10 text-blue-600 mb-4" />
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Accès sécurisé</h3>
                 <p className="text-sm text-slate-600">
-                  Uploadez votre planning PDF une seule fois et profitez de 3 vues différentes.
+                  Un code d'accès unique pour consulter le planning de votre promotion.
                 </p>
               </div>
               
               <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-green-600">
-                <Calendar className="w-10 h-10 text-green-600 mb-4" />
-                <h3 className="text-lg font-bold text-slate-900 mb-2">3 vues disponibles</h3>
+                <Eye className="w-10 h-10 text-green-600 mb-4" />
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Consultation en ligne</h3>
                 <p className="text-sm text-slate-600">
-                  Vue hebdomadaire, mensuelle et liste complète pour une planification optimale.
+                  Visualisez votre planning directement dans le navigateur, sans téléchargement.
                 </p>
               </div>
               
               <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-purple-600">
-                <Download className="w-10 h-10 text-purple-600 mb-4" />
-                <h3 className="text-lg font-bold text-slate-900 mb-2">Export calendrier</h3>
+                <RefreshCw className="w-10 h-10 text-purple-600 mb-4" />
+                <h3 className="text-lg font-bold text-slate-900 mb-2">Toujours à jour</h3>
                 <p className="text-sm text-slate-600">
-                  Exportez en .ics pour Google Calendar, Outlook ou Apple Calendar.
+                  Les modifications sont visibles immédiatement pour tous les élèves.
                 </p>
               </div>
             </div>
 
-            {/* Upload Section */}
-            {!analysisComplete && (
-              <div className="bg-white rounded-2xl shadow-lg p-8">
-                <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                  <Upload className="w-6 h-6 text-blue-600" />
-                  Importez votre planning
-                </h2>
-                
-                <div
-                  onDragOver={handleDragOver}
-                  onDrop={handleDrop}
-                  className="border-2 border-dashed border-slate-300 rounded-xl p-12 text-center hover:border-blue-500 transition-colors cursor-pointer"
-                >
-                  {!isAnalyzing ? (
-                    <>
-                      <FileText className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-                      <p className="text-lg font-semibold text-slate-900 mb-2">
-                        Glissez-déposez votre PDF ici
-                      </p>
-                      <p className="text-sm text-slate-600 mb-4">
-                        ou cliquez pour sélectionner un fichier
-                      </p>
-                      <label className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors cursor-pointer">
-                        Choisir un fichier
-                        <input
-                          type="file"
-                          accept=".pdf"
-                          onChange={handleFileUpload}
-                          className="hidden"
-                        />
-                      </label>
-                      <p className="text-xs text-slate-500 mt-4">
-                        Formats acceptés : PDF (max 5 MB)
-                      </p>
-                    </>
-                  ) : (
-                    <div className="flex flex-col items-center">
-                      <RefreshCw className="w-16 h-16 text-blue-600 animate-spin mb-4" />
-                      <p className="text-lg font-semibold text-slate-900 mb-2">
-                        Analyse en cours...
-                      </p>
-                      <p className="text-sm text-slate-600 mb-4">
-                        Extraction des cours, dates et horaires
-                      </p>
+            {/* Access Code Section */}
+            {!isAuthenticated ? (
+              <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto">
+                <div className="text-center mb-6">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                    <Lock className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                    Accès au Planning
+                  </h2>
+                  <p className="text-slate-600">
+                    Entrez votre code d'accès pour consulter le planning scolaire
+                  </p>
+                </div>
+
+                <form onSubmit={handleAccessSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Code d'accès
+                    </label>
+                    <input
+                      type="text"
+                      value={accessCode}
+                      onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
+                      placeholder="Entrez votre code"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                      required
+                    />
+                  </div>
+
+                  {authError && (
+                    <div className="flex items-center gap-2 text-red-600 bg-red-50 px-4 py-3 rounded-lg">
+                      <AlertCircle className="w-5 h-5" />
+                      <span className="text-sm">{authError}</span>
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                  >
+                    Accéder au planning
+                  </button>
+                </form>
+
+                <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                  <p className="text-sm text-blue-900 font-semibold mb-2">
+                    💡 Comment obtenir un code d'accès ?
+                  </p>
+                  <p className="text-sm text-blue-700">
+                    Le code vous est fourni par votre formateur en début de formation. Si vous ne l'avez pas reçu, contactez l'administration.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <>
+                {/* Planning Viewer */}
+                <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                  {/* Header avec actions */}
+                  <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3 text-white">
+                        <Calendar className="w-6 h-6" />
+                        <div>
+                          <h2 className="text-xl font-bold">Planning Scolaire 2025-2026</h2>
+                          <p className="text-sm text-blue-100">
+                            Formation modulaire en Horlogerie - Module de Base (HORL1_S925)
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {isAdmin && (
+                          <label className="flex items-center gap-2 px-4 py-2 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors cursor-pointer">
+                            <Upload className="w-5 h-5" />
+                            Mettre à jour
+                            <input
+                              type="file"
+                              accept=".pdf"
+                              onChange={handleFileUpload}
+                              className="hidden"
+                            />
+                          </label>
+                        )}
+                        <button
+                          onClick={downloadPlanning}
+                          className="flex items-center gap-2 px-4 py-2 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+                        >
+                          <Download className="w-5 h-5" />
+                          Télécharger
+                        </button>
+                        <button
+                          onClick={() => setIsFullscreen(!isFullscreen)}
+                          className="p-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                        >
+                          <Maximize2 className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* PDF Viewer */}
+                  <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-white' : 'relative'}`}>
+                    {isFullscreen && (
+                      <button
+                        onClick={() => setIsFullscreen(false)}
+                        className="absolute top-4 right-4 z-10 p-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700"
+                      >
+                        ✕ Fermer
+                      </button>
+                    )}
+                    <iframe
+                      src={planningUrl}
+                      className={`w-full ${isFullscreen ? 'h-screen' : 'h-[800px]'} border-0`}
+                      title="Planning Scolaire"
+                    />
+                  </div>
+
+                  {uploadedFile && isAdmin && (
+                    <div className="px-6 py-4 bg-green-50 border-t border-green-200">
+                      <div className="flex items-center gap-3">
+                        <CheckCircle className="w-5 h-5 text-green-600" />
+                        <div>
+                          <p className="text-sm font-semibold text-green-900">
+                            Planning mis à jour avec succès
+                          </p>
+                          <p className="text-xs text-green-700">
+                            {uploadedFile.name} • Tous les élèves verront la nouvelle version
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
-              </div>
-            )}
 
-            {/* Planning Display */}
-            {analysisComplete && planningInfo && (
-              <div className="space-y-6">
-                {/* Success Alert */}
-                <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl p-6">
-                  <div className="flex items-start gap-4">
-                    <CheckCircle className="w-8 h-8 text-green-600 flex-shrink-0" />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <GraduationCap className="w-5 h-5 text-blue-600" />
-                        <p className="font-bold text-green-900">{planningInfo.module}</p>
-                      </div>
-                      <p className="text-sm text-green-800 mb-3">
-                        Code module : <span className="font-semibold">{planningInfo.code}</span>
-                      </p>
-                      <div className="grid md:grid-cols-3 gap-4 text-sm">
-                        <div className="bg-white rounded-lg p-3">
-                          <p className="text-slate-600 mb-1">Période</p>
-                          <p className="text-lg font-bold text-blue-600">Sept 2025 → Mai 2026</p>
-                        </div>
-                        <div className="bg-white rounded-lg p-3">
-                          <p className="text-slate-600 mb-1">Total cours</p>
-                          <p className="text-lg font-bold text-green-600">{planningInfo.totalCourses}</p>
-                        </div>
-                        <div className="bg-white rounded-lg p-3">
-                          <p className="text-slate-600 mb-1">Total périodes</p>
-                          <p className="text-lg font-bold text-purple-600">{planningInfo.totalPeriods}</p>
-                        </div>
-                      </div>
+                {/* Informations complémentaires */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="bg-white rounded-xl p-6 shadow-lg">
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">📋 Informations</h3>
+                    <ul className="space-y-3 text-sm text-slate-700">
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-600">•</span>
+                        <span><strong>Période :</strong> Septembre 2025 → Mai 2026</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-600">•</span>
+                        <span><strong>Total périodes :</strong> 701</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-600">•</span>
+                        <span><strong>Jours de cours :</strong> Lundi, Mardi, Mercredi, Jeudi, Vendredi (et certains samedis)</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-600">•</span>
+                        <span><strong>Horaires :</strong> Généralement 17h00-21h15</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-white rounded-xl p-6 shadow-lg">
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">⚙️ Options</h3>
+                    <div className="space-y-3">
+                      <button className="w-full flex items-center gap-3 px-4 py-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
+                        <FileText className="w-5 h-5 text-blue-600" />
+                        <span className="text-sm font-medium text-slate-900">Imprimer le planning</span>
+                      </button>
+                      <button className="w-full flex items-center gap-3 px-4 py-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
+                        <Share2 className="w-5 h-5 text-green-600" />
+                        <span className="text-sm font-medium text-slate-900">Partager avec un collègue</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsAuthenticated(false);
+                          setIsAdmin(false);
+                          localStorage.removeItem('horlo_access');
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-3 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
+                      >
+                        <Lock className="w-5 h-5 text-red-600" />
+                        <span className="text-sm font-medium text-red-900">Se déconnecter</span>
+                      </button>
                     </div>
                   </div>
                 </div>
-
-                {/* View Mode Selector */}
-                <div className="flex items-center justify-between">
-                  <div className="bg-white rounded-xl shadow-lg p-2 inline-flex gap-2">
-                    <button
-                      onClick={() => setViewMode('week')}
-                      className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
-                        viewMode === 'week' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100'
-                      }`}
-                    >
-                      <Calendar className="w-5 h-5" />
-                      Vue Semaine
-                    </button>
-                    <button
-                      onClick={() => setViewMode('month')}
-                      className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
-                        viewMode === 'month' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100'
-                      }`}
-                    >
-                      <Calendar className="w-5 h-5" />
-                      Vue Mois
-                    </button>
-                    <button
-                      onClick={() => setViewMode('list')}
-                      className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
-                        viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-slate-600 hover:bg-slate-100'
-                      }`}
-                    >
-                      <List className="w-5 h-5" />
-                      Vue Liste
-                    </button>
-                  </div>
-
-                  <button
-                    onClick={exportToCalendar}
-                    className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors shadow-lg"
-                  >
-                    <Download className="w-5 h-5" />
-                    Exporter (.ics)
-                  </button>
-                </div>
-
-                {/* Conditional View Rendering */}
-                {viewMode === 'week' && renderWeekView()}
-                {viewMode === 'month' && renderMonthView()}
-                {viewMode === 'list' && renderListView()}
-
-                {/* Quick Actions */}
-                <div className="grid md:grid-cols-3 gap-4">
-                  <button className="bg-white rounded-xl p-4 shadow-lg hover:shadow-xl transition-all border border-slate-200 flex items-center gap-3">
-                    <RefreshCw className="w-5 h-5 text-blue-600" />
-                    <span className="font-semibold text-slate-900">Actualiser le planning</span>
-                  </button>
-                  <button className="bg-white rounded-xl p-4 shadow-lg hover:shadow-xl transition-all border border-slate-200 flex items-center gap-3">
-                    <Download className="w-5 h-5 text-green-600" />
-                    <span className="font-semibold text-slate-900">Télécharger en PDF</span>
-                  </button>
-                  <button className="bg-white rounded-xl p-4 shadow-lg hover:shadow-xl transition-all border border-slate-200 flex items-center gap-3">
-                    <Share2 className="w-5 h-5 text-purple-600" />
-                    <span className="font-semibold text-slate-900">Partager avec un ami</span>
-                  </button>
-                </div>
-              </div>
+              </>
             )}
           </section>
         )}
