@@ -1322,7 +1322,7 @@ export default function OutilsPage() {
           </div>
         </div>
 
-        {/* 12. Base de données de pièces */}
+                {/* 12. Base de données de pièces */}
         <div className="mt-8 bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
           <div className="flex items-center gap-3 mb-6">
             <div className="bg-sky-100 p-3 rounded-xl">
@@ -1377,7 +1377,7 @@ export default function OutilsPage() {
           <div className="mt-6 p-4 bg-sky-50 border border-sky-200 rounded-lg">
             <p className="text-sm text-sky-900">
               <strong>💡 Note :</strong> Les prix sont indicatifs. 
-              Base de données mise à jour mensuellement avec les références officielles ETA, Sellita, Miyota.
+              Base de données mise à jour mensuellement.
             </p>
           </div>
         </div>
