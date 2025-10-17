@@ -290,7 +290,7 @@ export default function CommunautePage() {
                       value={accessCode}
                       onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
                       placeholder="Entrez votre code"
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent text-slate-900"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white text-slate-900 placeholder:text-slate-400"
                       required
                       autoFocus
                     />
