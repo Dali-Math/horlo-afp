@@ -14,79 +14,12 @@ import {
   AlertCircle,
   FileText,
   Maximize2,
-  Eye
+  Eye,
+  ExternalLink,
+  Mail,
+  Construction
 } from 'lucide-react';
 import Link from 'next/link';
-
-interface Discussion {
-  id: string;
-  author: string;
-  avatar: string;
-  title: string;
-  category: string;
-  replies: number;
-  views: number;
-  lastActivity: string;
-  isHot: boolean;
-}
-
-const discussions: Discussion[] = [
-  {
-    id: '1',
-    author: 'Jean-Marc L.',
-    avatar: 'JM',
-    title: 'Aide : Problème avec le démontage du pont de balancier ETA 2824',
-    category: 'Pratique',
-    replies: 12,
-    views: 245,
-    lastActivity: 'Il y a 5 min',
-    isHot: true
-  },
-  {
-    id: '2',
-    author: 'Sophie D.',
-    avatar: 'SD',
-    title: 'Partage : Mon premier remontage complet réussi ! 🎉',
-    category: 'Succès',
-    replies: 28,
-    views: 412,
-    lastActivity: 'Il y a 1h',
-    isHot: true
-  },
-  {
-    id: '3',
-    author: 'Thomas B.',
-    avatar: 'TB',
-    title: 'Question : Différence entre spiral Nivarox et Anachron ?',
-    category: 'Théorie',
-    replies: 8,
-    views: 156,
-    lastActivity: 'Il y a 2h',
-    isHot: false
-  },
-  {
-    id: '4',
-    author: 'Marie P.',
-    avatar: 'MP',
-    title: 'Ressources : Collection de plans techniques ETA gratuits',
-    category: 'Ressources',
-    replies: 45,
-    views: 892,
-    lastActivity: 'Il y a 3h',
-    isHot: true
-  },
-  {
-    id: '5',
-    author: 'Laurent K.',
-    avatar: 'LK',
-    title: 'Stage : Manufacture Horlogère cherche apprenti à Neuchâtel',
-    category: 'Opportunités',
-    replies: 15,
-    views: 523,
-    lastActivity: 'Il y a 5h',
-    isHot: false
-  }
-];
 
 export default function CommunautePage() {
   const [activeTab, setActiveTab] = useState<'planning' | 'discussions'>('planning');
@@ -105,7 +38,6 @@ export default function CommunautePage() {
     if (accessCode === STUDENT_CODE) {
       setIsAuthenticated(true);
       setAuthError('');
-      // Sauvegarder dans sessionStorage (pas localStorage pour éviter la persistance)
       sessionStorage.setItem('horlo_access', 'true');
     } else {
       setAuthError('Code d\'accès invalide');
@@ -120,18 +52,7 @@ export default function CommunautePage() {
     link.click();
   };
 
-  const getCategoryColor = (category: string) => {
-    switch(category) {
-      case 'Pratique': return 'bg-blue-100 text-blue-700';
-      case 'Théorie': return 'bg-purple-100 text-purple-700';
-      case 'Succès': return 'bg-green-100 text-green-700';
-      case 'Ressources': return 'bg-orange-100 text-orange-700';
-      case 'Opportunités': return 'bg-pink-100 text-pink-700';
-      default: return 'bg-slate-100 text-slate-700';
-    }
-  };
-
-  // Vérifier l'authentification au chargement (sessionStorage seulement)
+  // Vérifier l'authentification au chargement
   React.useEffect(() => {
     const savedAccess = sessionStorage.getItem('horlo_access');
     if (savedAccess === 'true') {
@@ -162,7 +83,7 @@ export default function CommunautePage() {
             Communauté HorloLearn
           </h1>
           <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-            Échangez avec d'autres apprenants, partagez vos expériences et consultez votre planning scolaire
+            Consultez votre planning scolaire et découvrez les ressources partagées
           </p>
         </div>
 
@@ -230,7 +151,7 @@ export default function CommunautePage() {
               }`}
             >
               <MessageSquare className="w-5 h-5" />
-              Discussions
+              Forum Communauté
             </button>
           </div>
         </div>
@@ -324,7 +245,6 @@ export default function CommunautePage() {
               <>
                 {/* Planning Viewer */}
                 <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                  {/* Header avec actions */}
                   <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
                     <div className="flex items-center justify-between flex-wrap gap-4">
                       <div className="flex items-center gap-3 text-white">
@@ -354,7 +274,6 @@ export default function CommunautePage() {
                     </div>
                   </div>
 
-                  {/* PDF Viewer */}
                   <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-white' : 'relative'}`}>
                     {isFullscreen && (
                       <button
@@ -372,7 +291,6 @@ export default function CommunautePage() {
                   </div>
                 </div>
 
-                {/* Informations complémentaires */}
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="bg-white rounded-xl p-6 shadow-lg">
                     <h3 className="text-lg font-bold text-slate-900 mb-4">📋 Informations</h3>
@@ -409,7 +327,7 @@ export default function CommunautePage() {
                       <button 
                         onClick={() => {
                           navigator.clipboard.writeText(window.location.href);
-                          alert('Lien copié ! Partagez-le avec vos collègues.');
+                          alert('Lien copié !');
                         }}
                         className="w-full flex items-center gap-3 px-4 py-3 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
                       >
@@ -434,69 +352,94 @@ export default function CommunautePage() {
           </section>
         )}
 
-        {/* Discussions Section */}
+        {/* Forum Section - VERSION HONNÊTE */}
         {activeTab === 'discussions' && (
-          <section className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-slate-900">Discussions récentes</h2>
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2">
-                <MessageSquare className="w-5 h-5" />
-                Nouvelle discussion
-              </button>
-            </div>
+          <section className="space-y-8">
+            {/* Message principal */}
+            <div className="bg-white rounded-2xl shadow-xl p-12 border border-slate-200 text-center">
+              <div className="text-6xl mb-6">🚧</div>
+              <h2 className="text-3xl font-bold text-slate-900 mb-4">
+                Forum Communauté
+              </h2>
+              <p className="text-xl text-slate-600 mb-8">
+                Cette section sera bientôt disponible.
+              </p>
+              
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8 max-w-2xl mx-auto">
+                <p className="text-blue-900 text-left">
+                  <strong className="block mb-2">💡 Notre engagement :</strong>
+                  Nous ne créerons pas de fausses discussions. Le forum ouvrira quand nous aurons une vraie communauté d'utilisateurs actifs qui pourront échanger authentiquement.
+                </p>
+              </div>
 
-            <div className="space-y-4">
-              {discussions.map((discussion) => (
-                <div
-                  key={discussion.id}
-                  className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all border border-slate-200 cursor-pointer"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="bg-blue-100 text-blue-600 w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">
-                      {discussion.avatar}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-lg font-bold text-slate-900 hover:text-blue-600 transition-colors">
-                              {discussion.title}
-                            </h3>
-                            {discussion.isHot && (
-                              <span className="px-2 py-1 bg-red-100 text-red-600 rounded text-xs font-bold">
-                                🔥 HOT
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-sm text-slate-600">
-                            Par <span className="font-semibold">{discussion.author}</span> • {discussion.lastActivity}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4 mt-3">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(discussion.category)}`}>
-                          {discussion.category}
-                        </span>
-                        <div className="flex items-center gap-4 text-sm text-slate-600">
-                          <span className="flex items-center gap-1">
-                            <MessageSquare className="w-4 h-4" />
-                            {discussion.replies} réponses
-                          </span>
-                          <span className="flex items-center gap-1">
-                            👁️ {discussion.views} vues
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              <div className="space-y-4">
+                <p className="text-slate-700 font-semibold">En attendant, vous pouvez :</p>
+                <div className="grid md:grid-cols-2 gap-4 max-w-xl mx-auto">
+                  <a 
+                    href="mailto:contact@horlolearn.ch"
+                    className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                  >
+                    <Mail className="w-5 h-5" />
+                    Nous contacter
+                  </a>
+                  <Link
+                    href="/ressources"
+                    className="flex items-center justify-center gap-2 bg-slate-200 text-slate-700 px-6 py-3 rounded-lg font-semibold hover:bg-slate-300 transition-colors"
+                  >
+                    <BookOpen className="w-5 h-5" />
+                    Explorer les ressources
+                  </Link>
                 </div>
-              ))}
+              </div>
             </div>
 
-            <div className="text-center">
-              <button className="bg-white text-slate-700 px-8 py-3 rounded-lg font-semibold hover:bg-slate-100 transition-colors border border-slate-200">
-                Charger plus de discussions
-              </button>
+            {/* Communautés externes recommandées */}
+            <div className="text-left">
+              <h2 className="text-2xl font-bold text-slate-900 mb-6 text-center">
+                Communautés horlogères recommandées
+              </h2>
+              <div className="grid md:grid-cols-3 gap-6">
+                {[
+                  { 
+                    nom: "ForumAmontres", 
+                    url: "https://forumamontres.forumactif.com", 
+                    desc: "Le plus grand forum francophone d'horlogerie",
+                    membres: "50,000+"
+                  },
+                  { 
+                    nom: "Reddit r/Watchmaking", 
+                    url: "https://reddit.com/r/Watchmaking", 
+                    desc: "Communauté internationale active de passionnés",
+                    membres: "180,000+"
+                  },
+                  { 
+                    nom: "WatchUSeek", 
+                    url: "https://www.watchuseek.com/forums/", 
+                    desc: "Forum anglophone de référence mondiale",
+                    membres: "300,000+"
+                  }
+                ].map((forum, idx) => (
+                  <a
+                    key={idx}
+                    href={forum.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group bg-white rounded-xl p-6 shadow-lg border border-slate-200 hover:border-blue-400 hover:shadow-xl transition-all"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="font-bold text-slate-900 text-lg group-hover:text-blue-600 transition-colors">
+                        {forum.nom}
+                      </h3>
+                      <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-blue-600 transition-colors" />
+                    </div>
+                    <p className="text-slate-600 text-sm mb-3">{forum.desc}</p>
+                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                      <Users className="w-4 h-4" />
+                      <span>{forum.membres} membres</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
             </div>
           </section>
         )}
