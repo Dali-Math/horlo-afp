@@ -1,171 +1,283 @@
-"use client";
-import Link from "next/link";
-import { useState } from "react";
-import { CheckCircle, XCircle, X } from "lucide-react";
+'use client';
 
-type QuizQuestion = {
+import React, { useState } from 'react';
+import { ChevronLeft, CheckCircle, XCircle, Book, Ruler, Settings } from 'lucide-react';
+import Link from 'next/link';
+
+interface ToleranceExplanation {
+  id: string;
+  symbol: string;
+  name: string;
+  category: string;
+  description: string;
+  zoneType: string;
+  reference: string;
+  example: string;
+}
+
+const tolerancesData: ToleranceExplanation[] = [
+  {
+    id: 'rectitude',
+    symbol: '—',
+    name: 'Rectitude',
+    category: 'Forme',
+    description: 'Spécifie que l\'élément (ligne ou axe) doit être contenu dans une zone de tolérance',
+    zoneType: 'Espace entre deux droites parallèles ou cylindre',
+    reference: 'Non nécessaire',
+    example: 'Axe de pivotage balancier : rectitude Ø 0.002 mm'
+  },
+  {
+    id: 'planeite',
+    symbol: '⏥',
+    name: 'Planéité',
+    category: 'Forme',
+    description: 'Spécifie que la surface doit être contenue entre deux plans parallèles distants de la valeur de tolérance',
+    zoneType: 'Espace entre deux plans parallèles',
+    reference: 'Non nécessaire',
+    example: 'Face de platine : planéité 0.005 mm pour montage précis'
+  },
+  {
+    id: 'circularite',
+    symbol: '○',
+    name: 'Circularité',
+    category: 'Forme',
+    description: 'Spécifie que le contour d\'une section circulaire doit être compris entre deux cercles concentriques',
+    zoneType: 'Espace entre deux cercles concentriques',
+    reference: 'Non nécessaire',
+    example: 'Section de pivot : circularité 0.001 mm'
+  },
+  {
+    id: 'cylindricite',
+    symbol: '⌭',
+    name: 'Cylindricité',
+    category: 'Forme',
+    description: 'Spécifie que la surface cylindrique doit être comprise entre deux cylindres coaxiaux',
+    zoneType: 'Espace entre deux cylindres coaxiaux',
+    reference: 'Non nécessaire',
+    example: 'Alésage de barillet : cylindricité 0.003 mm'
+  },
+  {
+    id: 'parallelisme',
+    symbol: '∥',
+    name: 'Parallélisme',
+    category: 'Orientation',
+    description: 'Spécifie que l\'élément doit être contenu dans une zone parallèle à la référence',
+    zoneType: 'Plans parallèles ou cylindre parallèle',
+    reference: 'Oui (nécessaire)',
+    example: 'Face de pont parallèle à platine : 0.01 mm / A'
+  },
+  {
+    id: 'perpendicularite',
+    symbol: '⊥',
+    name: 'Perpendicularité',
+    category: 'Orientation',
+    description: 'Spécifie que l\'élément doit être perpendiculaire à la référence spécifiée',
+    zoneType: 'Plans perpendiculaires ou cylindre perpendiculaire',
+    reference: 'Oui (nécessaire)',
+    example: 'Axe perpendiculaire à platine : Ø 0.02 mm / A'
+  },
+  {
+    id: 'inclinaison',
+    symbol: '∠',
+    name: 'Inclinaison',
+    category: 'Orientation',
+    description: 'Spécifie que l\'élément doit être incliné d\'un angle théorique par rapport à la référence',
+    zoneType: 'Plans ou cylindre incliné',
+    reference: 'Oui (nécessaire)',
+    example: 'Surface inclinée 30° : 0.05 mm / A'
+  },
+  {
+    id: 'localisation',
+    symbol: '⊕',
+    name: 'Localisation',
+    category: 'Position',
+    description: 'Spécifie la position théorique exacte d\'un élément par rapport aux références',
+    zoneType: 'Cylindre, sphère ou plans parallèles',
+    reference: 'Oui (nécessaire)',
+    example: 'Position trou fixation : Ø 0.05 mm / A B'
+  },
+  {
+    id: 'coaxialite',
+    symbol: '◎',
+    name: 'Coaxialité',
+    category: 'Position',
+    description: 'Spécifie que l\'axe d\'un élément doit coïncider avec l\'axe de référence',
+    zoneType: 'Cylindre coaxial',
+    reference: 'Oui (nécessaire)',
+    example: 'Coaxialité pivots : Ø 0.005 mm / A'
+  },
+  {
+    id: 'symetrie',
+    symbol: '⌯',
+    name: 'Symétrie',
+    category: 'Position',
+    description: 'Spécifie que l\'élément médian doit être symétrique par rapport au plan de référence',
+    zoneType: 'Espace entre deux plans parallèles',
+    reference: 'Oui (nécessaire)',
+    example: 'Symétrie rainure : 0.01 mm / A'
+  },
+  {
+    id: 'battement-circulaire',
+    symbol: '↗',
+    name: 'Battement circulaire',
+    category: 'Battement',
+    description: 'Spécifie la variation radiale ou axiale lors d\'une rotation complète autour de l\'axe de référence',
+    zoneType: 'Zone entre deux cercles concentriques',
+    reference: 'Oui (nécessaire)',
+    example: 'Battement roue : 0.02 mm / A-B'
+  },
+  {
+    id: 'battement-total',
+    symbol: '⤧',
+    name: 'Battement total',
+    category: 'Battement',
+    description: 'Spécifie la variation totale de la surface lors d\'une rotation et d\'un déplacement axial',
+    zoneType: 'Zone entre deux cylindres ou plans',
+    reference: 'Oui (nécessaire)',
+    example: 'Battement total arbre : 0.03 mm / A-B'
+  }
+];
+
+interface QuizQuestion {
+  id: number;
   question: string;
   options: string[];
-  correct: number;
+  correctAnswer: number;
   explanation: string;
-};
+}
 
-export default function CotesEtTolerancesPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const quizData: QuizQuestion[] = [
+  {
+    id: 1,
+    question: "Quelle norme ISO régit la représentation des dimensions et tolérances sur les plans ?",
+    options: ["ISO 128-2", "ISO 129-1", "ISO 1302", "ISO 13715"],
+    correctAnswer: 1,
+    explanation: "La norme ISO 129-1:2018 établit les principes généraux pour la représentation des dimensions et des tolérances associées sur les dessins techniques."
+  },
+  {
+    id: 2,
+    question: "Quelle norme ISO traite du tolérancement géométrique ?",
+    options: ["ISO 128-3", "ISO 1302", "ISO 1101", "ISO 129-1"],
+    correctAnswer: 2,
+    explanation: "La norme ISO 1101 définit les tolérances géométriques : forme, orientation, position et battement des éléments."
+  },
+  {
+    id: 3,
+    question: "Combien de groupes de tolérances géométriques existe-t-il selon ISO 1101 ?",
+    options: ["2", "3", "4", "5"],
+    correctAnswer: 2,
+    explanation: "Il existe 4 groupes de tolérances géométriques : forme, orientation, position et battement."
+  },
+  {
+    id: 4,
+    question: "Quel symbole représente la planéité ?",
+    options: ["—", "⏥", "○", "⊥"],
+    correctAnswer: 1,
+    explanation: "Le symbole de la planéité est ⏥ (parallélogramme), utilisé pour spécifier qu'une surface doit être plane."
+  },
+  {
+    id: 5,
+    question: "Les tolérances de forme nécessitent-elles une référence spécifiée ?",
+    options: ["Oui, toujours", "Non, jamais", "Parfois", "Seulement pour les cylindres"],
+    correctAnswer: 1,
+    explanation: "Les tolérances de forme (rectitude, planéité, circularité, cylindricité) ne nécessitent JAMAIS de référence spécifiée."
+  },
+  {
+    id: 6,
+    question: "Que signifie le symbole ⊕ en tolérancement géométrique ?",
+    options: ["Coaxialité", "Localisation", "Concentricité", "Symétrie"],
+    correctAnswer: 1,
+    explanation: "Le symbole ⊕ représente la localisation (position), qui spécifie la position théorique exacte d'un élément par rapport aux références."
+  },
+  {
+    id: 7,
+    question: "Quelle tolérance garantit qu'un axe est perpendiculaire à une surface de référence ?",
+    options: ["Parallélisme", "Perpendicularité", "Inclinaison", "Rectitude"],
+    correctAnswer: 1,
+    explanation: "La perpendicularité (symbole ⊥) garantit qu'un élément est perpendiculaire à 90° par rapport à la référence spécifiée."
+  },
+  {
+    id: 8,
+    question: "Que signifie l'acronyme GPS en cotation ?",
+    options: ["Global Positioning System", "Géométrie Précise Suisse", "Spécification Géométrique des Produits", "Guide de Production Standard"],
+    correctAnswer: 2,
+    explanation: "GPS signifie Spécification Géométrique des Produits (Geometrical Product Specifications), un système cohérent de normes ISO."
+  },
+  {
+    id: 9,
+    question: "En horlogerie, les tolérances sont souvent exprimées en :",
+    options: ["Millimètres", "Micromètres (microns)", "Nanomètres", "Centimètres"],
+    correctAnswer: 1,
+    explanation: "En horlogerie de précision, les tolérances sont généralement exprimées en micromètres (µm), voire en nanomètres pour les pièces critiques."
+  },
+  {
+    id: 10,
+    question: "Quel symbole indique un diamètre avant une cote ?",
+    options: ["R", "Ø", "□", "SR"],
+    correctAnswer: 1,
+    explanation: "Le symbole Ø (lettre grecque phi) précède toujours une cote de diamètre sans espace, par exemple : Ø 10."
+  },
+  {
+    id: 11,
+    question: "Que représente une cote entre parenthèses sur un plan ?",
+    options: ["Cote critique", "Cote auxiliaire (non à contrôler)", "Cote théorique exacte", "Cote avec tolérance serrée"],
+    correctAnswer: 1,
+    explanation: "Une cote entre parenthèses est une cote auxiliaire (de repère) donnée à titre indicatif, qui ne doit pas être contrôlée."
+  },
+  {
+    id: 12,
+    question: "Quelle zone de tolérance pour la circularité ?",
+    options: ["Deux plans parallèles", "Deux cercles concentriques", "Deux cylindres coaxiaux", "Un cylindre unique"],
+    correctAnswer: 1,
+    explanation: "La zone de tolérance de circularité est l'espace entre deux cercles concentriques distants de la valeur de tolérance."
+  },
+  {
+    id: 13,
+    question: "Combien de références spécifiées au maximum peut-on utiliser ?",
+    options: ["1", "2", "3", "Illimité"],
+    correctAnswer: 2,
+    explanation: "On peut utiliser jusqu'à 3 références spécifiées (primaire, secondaire, tertiaire) pour définir un système de références complet."
+  },
+  {
+    id: 14,
+    question: "Que signifie une cote encadrée sur un plan ?",
+    options: ["Cote avec tolérance serrée", "Cote théorique exacte (TED)", "Cote à mesurer en priorité", "Cote en millimètres"],
+    correctAnswer: 1,
+    explanation: "Une cote encadrée est une cote Théoriquement Exacte (TED), qui définit la position théorique exacte sans tolérance."
+  },
+  {
+    id: 15,
+    question: "Quel est le principe de base du tolérancement ISO GPS ?",
+    options: ["Maximiser les tolérances", "Minimiser les coûts", "Spécifier selon la fonction", "Simplifier les contrôles"],
+    correctAnswer: 2,
+    explanation: "Le principe de base du GPS est de spécifier les tolérances selon les exigences fonctionnelles, sans sur-spécifier ni sous-spécifier."
+  }
+];
+
+export default function CotesTolerancesPage() {
+  const [selectedTolerance, setSelectedTolerance] = useState<string | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [showExplanation, setShowExplanation] = useState(false);
   const [score, setScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
-  const [showExplanation, setShowExplanation] = useState(false);
 
-  const erreurs = [
-    "Oublier d'indiquer une tolérance sur une cote fonctionnelle.",
-    "Définir une tolérance trop serrée (augmente le coût et les rejets).",
-    "Choisir une tolérance trop large (crée un jeu excessif).",
-    "Confondre la cote maximale et la cote minimale.",
-    "Négliger les tolérances géométriques (parallélisme, etc.).",
-    "Mélanger les unités de mesure (mm et µm) sans le préciser.",
-  ];
+  const handleToleranceClick = (tolId: string) => {
+    setSelectedTolerance(tolId);
+  };
 
-  const bonnes = [
-    "Analyser la fonction de la pièce pour définir une tolérance juste.",
-    "Utiliser les symboles et la syntaxe de la norme ISO appropriée.",
-    "Toujours relire la cotation en pensant à l'assemblage final.",
-    "Valider la faisabilité des tolérances avec l'atelier d'usinage.",
-    "Faire contrôler ses plans par un pair avant la production.",
-    "Rester cohérent dans les unités et la précision sur tout le plan.",
-  ];
-
-  const quizQuestions: QuizQuestion[] = [
-    {
-      question: 'Qu\'appelle-t-on "cote nominale" ?',
-      options: [
-        "La dimension idéale sans tolérance",
-        "La tolérance maximale autorisée",
-        "L'écart entre deux dimensions",
-      ],
-      correct: 0,
-      explanation:
-        "La cote nominale est la dimension idéale théorique d'une pièce, sans considération de tolérance.",
-    },
-    {
-      question: "En système ISO, quelle lettre utilise-t-on pour les alésages ?",
-      options: ["Des lettres minuscules", "Des lettres majuscules", "Des chiffres uniquement"],
-      correct: 1,
-      explanation:
-        "Les alésages (contenants) utilisent des lettres majuscules, tandis que les arbres (contenus) utilisent des minuscules.",
-    },
-    {
-      question: "Qu'est-ce qu'un arbre dans le système ISO ?",
-      options: [
-        "Tout ce qui est contenant",
-        "Tout ce qui est contenu",
-        "Un élément cylindrique uniquement",
-      ],
-      correct: 1,
-      explanation:
-        "Dans le système ISO, un arbre désigne tout élément contenu, peu importe sa forme.",
-    },
-    {
-      question: "Qu'est-ce qu'un alésage ?",
-      options: ["Un élément cylindrique creux", "Tout ce qui est contenant", "Une pièce rotative"],
-      correct: 1,
-      explanation: "L'alésage désigne tout élément contenant dans un assemblage.",
-    },
-    {
-      question: "Comment calcule-t-on l'intervalle de tolérance (IT) ?",
-      options: ["ES - EI (écart supérieur moins écart inférieur)", "Cote max + Cote min", "Cote nominale × 2"],
-      correct: 0,
-      explanation: "L'intervalle de tolérance est la différence entre l'écart supérieur et l'écart inférieur.",
-    },
-    {
-      question: "Pour un arbre, quelles lettres utilise-t-on ?",
-      options: ["Des lettres majuscules", "Des lettres minuscules", "Des symboles spéciaux"],
-      correct: 1,
-      explanation: "Les arbres (éléments contenus) sont désignés par des lettres minuscules.",
-    },
-    {
-      question: "Dans la cotation Ø60 H8/f7, que représente H8 ?",
-      options: ["La tolérance de l'arbre", "La tolérance de l'alésage", "La cote nominale"],
-      correct: 1,
-      explanation: "H8 (majuscule) désigne la tolérance de l'alésage, f7 (minuscule) celle de l'arbre.",
-    },
-    {
-      question: "Que signifie ES pour un alésage ?",
-      options: ["Écart Supérieur", "Écart Standard", "Élément Spécial"],
-      correct: 0,
-      explanation: "ES signifie Écart Supérieur, utilisé en majuscule pour les alésages.",
-    },
-    {
-      question: "Que signifie ei pour un arbre ?",
-      options: ["écart initial", "écart inférieur", "élément intérieur"],
-      correct: 1,
-      explanation: "ei (minuscule) représente l'écart inférieur pour un arbre.",
-    },
-    {
-      question: "Quelle est la cote maximale ?",
-      options: [
-        "La plus petite dimension acceptable",
-        "La plus grande dimension acceptable",
-        "La dimension moyenne",
-      ],
-      correct: 1,
-      explanation:
-        "La cote maximale correspond à la plus grande dimension acceptable pour la pièce.",
-    },
-    {
-      question: "Pour Ø60 F7, avec tolérances -0.030/-0.060, quelle est la cote minimale ?",
-      options: ["59.940 mm", "59.970 mm", "60.030 mm"],
-      correct: 0,
-      explanation: "Cote minimale = 60 - 0.060 = 59.940 mm",
-    },
-    {
-      question: "Pour Ø60 E8 avec tolérances +0.060/+0.106, quelle est la cote maximale ?",
-      options: ["60.060 mm", "60.106 mm", "60.166 mm"],
-      correct: 1,
-      explanation: "Cote maximale = 60 + 0.106 = 60.106 mm",
-    },
-    {
-      question: "Pourquoi utilise-t-on des tolérances prédéfinies en système ISO ?",
-      options: [
-        "Pour réduire les coûts uniquement",
-        "Pour standardiser et faciliter l'interchangeabilité",
-        "Pour compliquer la fabrication",
-      ],
-      correct: 1,
-      explanation:
-        "Les tolérances ISO standardisées permettent l'interchangeabilité des pièces et une communication universelle.",
-    },
-    {
-      question: "Dans un assemblage, si l'arbre mesure 59.97 mm et l'alésage 60.08 mm, quel est le jeu ?",
-      options: ["0.11 mm", "0.05 mm", "120.05 mm"],
-      correct: 0,
-      explanation: "Jeu = Alésage - Arbre = 60.08 - 59.97 = 0.11 mm",
-    },
-    {
-      question: "Quel organisme définit le système de tolérancement ISO ?",
-      options: [
-        "L'Organisation Internationale de Normalisation",
-        "L'Institut Suisse d'Horlogerie",
-        "L'Agence Européenne de Mécanique",
-      ],
-      correct: 0,
-      explanation:
-        "ISO signifie International Organization for Standardization (Organisation Internationale de Normalisation).",
-    },
-  ];
-
-  const handleAnswer = (optionIndex: number) => {
-    if (selectedAnswer !== null) return;
-    setSelectedAnswer(optionIndex.toString());
-    setShowExplanation(true);
-    if (optionIndex === quizQuestions[currentQuestion].correct) {
-      setScore(score + 1);
+  const handleAnswerSelect = (answerIndex: number) => {
+    if (selectedAnswer === null) {
+      setSelectedAnswer(answerIndex);
+      setShowExplanation(true);
+      if (answerIndex === quizData[currentQuestion].correctAnswer) {
+        setScore(score + 1);
+      }
     }
   };
 
-  const handleNext = () => {
-    if (currentQuestion + 1 < quizQuestions.length) {
+  const handleNextQuestion = () => {
+    if (currentQuestion < quizData.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedAnswer(null);
       setShowExplanation(false);
@@ -174,320 +286,600 @@ export default function CotesEtTolerancesPage() {
     }
   };
 
-  const restartQuiz = () => {
+  const resetQuiz = () => {
     setCurrentQuestion(0);
     setSelectedAnswer(null);
+    setShowExplanation(false);
     setScore(0);
     setQuizCompleted(false);
-    setShowExplanation(false);
+  };
+
+  const selectedToleranceData = tolerancesData.find(t => t.id === selectedTolerance);
+
+  const getCategoryColor = (category: string) => {
+    switch(category) {
+      case 'Forme': return 'bg-blue-100 text-blue-600 border-blue-200';
+      case 'Orientation': return 'bg-green-100 text-green-600 border-green-200';
+      case 'Position': return 'bg-purple-100 text-purple-600 border-purple-200';
+      case 'Battement': return 'bg-orange-100 text-orange-600 border-orange-200';
+      default: return 'bg-slate-100 text-slate-600 border-slate-200';
+    }
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 px-6 py-16 font-sans text-gray-800">
-      <div className="max-w-5xl mx-auto space-y-16">
-
-        <div className="mb-6">
-          <Link
-            href="/theorie/lecture-de-plan"
-            className="text-blue-700 hover:underline flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <Link href="/theorie/lecture-de-plan" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+            <ChevronLeft className="w-5 h-5 mr-1" />
             Retour
           </Link>
         </div>
+      </header>
 
-        <header className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-blue-900">
-            Cotes et Tolérances <span className="text-blue-600">(ISO 129-1 & 1101)</span>
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Title Section */}
+        <div className="text-center mb-12">
+          <div className="inline-block px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-4">
+            Les normes
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+            Cotes et Tolérances (ISO 129-1 & 1101)
           </h1>
-          <p className="text-gray-600 max-w-xl mx-auto text-lg leading-relaxed">
-            Maîtrise les règles de cotation et les tolérances indispensables à la qualité en horlogerie :
-            assemblage, usinage et contrôle dimensionnel.
+          <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+            Spécification Géométrique des Produits (GPS) : cotation dimensionnelle et tolérancement géométrique
           </p>
-        </header>
+        </div>
 
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10 text-center">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Schéma Interactif</h2>
-          <div className="mb-4 cursor-pointer" onClick={() => setIsModalOpen(true)}>
-            <img
-              src="/images/schema-cotes-tolerances.png"
-              alt="Schéma des tolérances horlogères"
-              className="mx-auto rounded-lg shadow max-w-md w-full hover:scale-105 transition-transform"
-              style={{ minHeight: "200px" }}
-            />
-            <p className="text-gray-500 text-sm mt-2">Cliquez sur l'image pour afficher l'explication pédagogique.</p>
-          </div>
-
-          {isModalOpen && (
-            <div
-              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-              onClick={() => setIsModalOpen(false)}
-            >
+        {/* Interactive Schema Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Tolérances Géométriques (ISO 1101)</h2>
+          <p className="text-slate-600 mb-8">Cliquez sur une tolérance pour voir ses caractéristiques détaillées.</p>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            {tolerancesData.map((tol) => (
               <div
-                className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full relative"
-                onClick={(e) => e.stopPropagation()}
+                key={tol.id}
+                onClick={() => handleToleranceClick(tol.id)}
+                className={`bg-white rounded-xl p-6 border-2 cursor-pointer transition-all hover:shadow-lg ${
+                  selectedTolerance === tol.id ? 'border-blue-600 shadow-lg' : 'border-slate-200'
+                }`}
               >
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="absolute top-3 right-3 text-gray-500 hover:text-red-500"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-                <h3 className="text-xl font-semibold text-blue-800 mb-4">Explication pédagogique</h3>
-                <img
-                  src="/images/schema-cotes-tolerances.png"
-                  alt="Mini schéma pédagogique"
-                  className="w-28 mx-auto rounded mb-5"
-                  style={{ display: "block" }}
-                />
-                <div className="mt-2 text-gray-700 text-left leading-relaxed text-base">
-                  <b>Les cotes et tolérances</b> sont fondamentales pour garantir la qualité en horlogerie.
-                  <br />
-                  <br />
-                  <ul className="list-disc pl-6">
-                    <li>La <b>cote nominale</b> est la valeur idéale d'une dimension.</li>
-                    <li>
-                      La <b>tolérance</b> détermine l'intervalle admissible autour de cette cote (exemple typique :
-                      ±0.02 mm pour l'ajustement précis d'un axe).
-                    </li>
-                    <li>
-                      Un bon choix de tolérance permet de trouver le juste compromis : ni trop serré (difficulté
-                      d'assemblage / coût) ni trop lâche (jeu excessif, imprécision).
-                    </li>
-                    <li>
-                      Il faut aussi prendre en compte les <b>tolérances géométriques</b> pour garantir la forme et la
-                      position (parallélisme, planéité).
-                    </li>
-                  </ul>
-                  <br />
-                  La <b>norme ISO</b> assure une lecture universelle sur les plans, facilitant la communication entre
-                  conception, atelier et contrôle qualité.
-                  <br />
-                  <b>En horlogerie</b>, c'est la clé pour obtenir des montres précises et fiables, avec des composants
-                  interchangeables et bien ajustés.
+                <div className="flex items-center justify-between mb-3">
+                  <div className="text-4xl font-bold text-blue-600">{tol.symbol}</div>
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getCategoryColor(tol.category)}`}>
+                    {tol.category}
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">{tol.name}</h3>
+                <p className="text-sm text-slate-600 line-clamp-2">{tol.description}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Explanation Panel */}
+          {selectedToleranceData && (
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border-l-4 border-blue-600">
+              <div className="flex items-center mb-4">
+                <div className="text-5xl font-bold text-blue-600 mr-4">{selectedToleranceData.symbol}</div>
+                <div>
+                  <h3 className="text-2xl font-bold text-slate-900">{selectedToleranceData.name}</h3>
+                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium border mt-2 ${getCategoryColor(selectedToleranceData.category)}`}>
+                    {selectedToleranceData.category}
+                  </span>
+                </div>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm font-bold text-slate-700 mb-1">Description :</p>
+                  <p className="text-slate-700 mb-3">{selectedToleranceData.description}</p>
+                  <p className="text-sm font-bold text-slate-700 mb-1">Zone de tolérance :</p>
+                  <p className="text-slate-700">{selectedToleranceData.zoneType}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-slate-700 mb-1">Référence spécifiée :</p>
+                  <p className="text-slate-700 mb-3">{selectedToleranceData.reference}</p>
+                  <p className="text-sm font-bold text-slate-700 mb-1">Exemple horlogerie :</p>
+                  <p className="text-slate-700">{selectedToleranceData.example}</p>
                 </div>
               </div>
             </div>
           )}
         </section>
 
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-10 text-center">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
-          <div className="grid md:grid-cols-2 gap-12">
-            <div>
-              <h3 className="flex items-center gap-2 text-red-600 text-lg font-semibold mb-4">
-                <XCircle className="w-5 h-5" /> Erreurs fréquentes
+        {/* Mémo Technique */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Erreurs */}
+            <div className="bg-red-50 rounded-xl p-6 border border-red-200">
+              <h3 className="text-xl font-bold text-red-900 mb-4 flex items-center">
+                <XCircle className="w-6 h-6 mr-2" />
+                Erreurs fréquentes
               </h3>
-              <ul className="space-y-3 text-gray-700">
-                {erreurs.map((e, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <XCircle className="w-4 h-4 mt-1 text-red-400" />
-                    <span>{e}</span>
-                  </li>
-                ))}
+              <ul className="space-y-3 text-slate-700">
+                <li className="flex items-start">
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Utiliser des tolérances de forme avec une référence spécifiée.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Oublier le symbole Ø devant un diamètre.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Sur-spécifier avec des tolérances trop serrées (coût élevé).</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Mélanger cotation dimensionnelle et géométrique sans cohérence.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Ne pas définir de système de références pour les tolérances d'orientation/position.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Coter des éléments cachés (éviter autant que possible).</span>
+                </li>
               </ul>
             </div>
-            <div>
-              <h3 className="flex items-center gap-2 text-green-700 text-lg font-semibold mb-4">
-                <CheckCircle className="w-5 h-5" /> Bonnes pratiques
+
+            {/* Bonnes pratiques */}
+            <div className="bg-green-50 rounded-xl p-6 border border-green-200">
+              <h3 className="text-xl font-bold text-green-900 mb-4 flex items-center">
+                <CheckCircle className="w-6 h-6 mr-2" />
+                Bonnes pratiques
               </h3>
-              <ul className="space-y-3 text-gray-700">
-                {bonnes.map((b, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <CheckCircle className="w-4 h-4 mt-1 text-green-500" />
-                    <span>{b}</span>
-                  </li>
-                ))}
+              <ul className="space-y-3 text-slate-700">
+                <li className="flex items-start">
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Toujours spécifier selon les exigences fonctionnelles (principe GPS).</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Placer les cotes dans la vue la plus claire (ISO 129-1).</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Définir un système de références cohérent (A, B, C) pour orientation/position.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Utiliser les indicateurs de propriétés (Ø, R, SR, □) selon ISO 129-1.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Privilégier les tolérances géométriques pour les exigences fonctionnelles.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Éviter la cotation redondante : chaque cote ne doit apparaître qu'une fois.</span>
+                </li>
               </ul>
             </div>
           </div>
         </section>
 
-        {/* Quiz */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Quiz : Teste tes connaissances</h2>
-          {!quizCompleted ? (
-            <>
-              <div className="mb-4 text-sm text-gray-600">
-                Question {currentQuestion + 1} sur {quizQuestions.length}
-              </div>
-              <p className="text-gray-700 font-medium mb-4 text-lg">
-                {quizQuestions[currentQuestion].question}
-              </p>
-              <div className="grid gap-4 mb-6">
-                {quizQuestions[currentQuestion].options.map((option, i) => (
+        {/* Quiz Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Quiz : Teste tes connaissances</h2>
+          
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            {!quizCompleted ? (
+              <>
+                <div className="mb-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-sm font-medium text-slate-600">
+                      Question {currentQuestion + 1} sur {quizData.length}
+                    </span>
+                    <span className="text-sm font-medium text-blue-600">
+                      Score: {score}/{quizData.length}
+                    </span>
+                  </div>
+                  <div className="w-full bg-slate-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${((currentQuestion + 1) / quizData.length) * 100}%` }}
+                    ></div>
+                  </div>
+                </div>
+
+                <h3 className="text-xl font-bold text-slate-900 mb-6">
+                  {quizData[currentQuestion].question}
+                </h3>
+
+                <div className="space-y-3 mb-6">
+                  {quizData[currentQuestion].options.map((option, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleAnswerSelect(index)}
+                      disabled={selectedAnswer !== null}
+                      className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                        selectedAnswer === null
+                          ? 'border-slate-200 hover:border-blue-400 hover:bg-blue-50'
+                          : index === quizData[currentQuestion].correctAnswer
+                          ? 'border-green-500 bg-green-50'
+                          : selectedAnswer === index
+                          ? 'border-red-500 bg-red-50'
+                          : 'border-slate-200 opacity-50'
+                      }`}
+                    >
+                      <div className="flex items-center">
+                        <span className="font-semibold mr-3 text-slate-700">
+                          {String.fromCharCode(65 + index)}.
+                        </span>
+                        <span className="text-slate-800">{option}</span>
+                        {selectedAnswer !== null && index === quizData[currentQuestion].correctAnswer && (
+                          <CheckCircle className="w-5 h-5 ml-auto text-green-600" />
+                        )}
+                        {selectedAnswer === index && index !== quizData[currentQuestion].correctAnswer && (
+                          <XCircle className="w-5 h-5 ml-auto text-red-600" />
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                {showExplanation && (
+                  <div className="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6 rounded">
+                    <p className="text-slate-700">
+                      <strong>Explication :</strong> {quizData[currentQuestion].explanation}
+                    </p>
+                  </div>
+                )}
+
+                {selectedAnswer !== null && (
                   <button
-                    key={i}
-                    onClick={() => handleAnswer(i)}
-                    disabled={selectedAnswer !== null}
-                    className={`text-left py-3 px-4 border rounded-lg transition-all ${
-                      selectedAnswer === null
-                        ? "border-gray-200 hover:bg-blue-50 hover:border-blue-300"
-                        : selectedAnswer === i.toString()
-                        ? i === quizQuestions[currentQuestion].correct
-                          ? "bg-green-100 border-green-500"
-                          : "bg-red-100 border-red-500"
-                        : i === quizQuestions[currentQuestion].correct
-                        ? "bg-green-100 border-green-500"
-                        : "border-gray-200 opacity-50"
-                    }`}
+                    onClick={handleNextQuestion}
+                    className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                   >
-                    {option}
+                    {currentQuestion < quizData.length - 1 ? 'Question suivante' : 'Voir les résultats'}
                   </button>
-                ))}
-              </div>
-              {showExplanation && (
-                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-gray-700">
-                    <strong>Explication :</strong> {quizQuestions[currentQuestion].explanation}
-                  </p>
+                )}
+              </>
+            ) : (
+              <div className="text-center">
+                <h3 className="text-3xl font-bold text-slate-900 mb-4">Quiz terminé !</h3>
+                <p className="text-xl text-slate-700 mb-6">
+                  Votre score : <span className="font-bold text-blue-600">{score}/{quizData.length}</span>
+                  {' '}({Math.round((score / quizData.length) * 100)}%)
+                </p>
+                <div className="mb-6">
+                  {score === quizData.length && (
+                    <p className="text-green-600 font-semibold text-lg">🎉 Parfait ! Tu maîtrises les cotes et tolérances !</p>
+                  )}
+                  {score >= quizData.length * 0.8 && score < quizData.length && (
+                    <p className="text-blue-600 font-semibold text-lg">👏 Excellent travail ! Quelques révisions et ce sera parfait !</p>
+                  )}
+                  {score >= quizData.length * 0.6 && score < quizData.length * 0.8 && (
+                    <p className="text-yellow-600 font-semibold text-lg">💪 Bon résultat ! Continue de t'entraîner !</p>
+                  )}
+                  {score < quizData.length * 0.6 && (
+                    <p className="text-orange-600 font-semibold text-lg">📚 Révise les notions et réessaie !</p>
+                  )}
                 </div>
-              )}
-              {selectedAnswer !== null && (
                 <button
-                  onClick={handleNext}
-                  className="bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-800 transition"
+                  onClick={resetQuiz}
+                  className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                 >
-                  {currentQuestion + 1 < quizQuestions.length ? "Question suivante" : "Voir les résultats"}
+                  Recommencer le quiz
                 </button>
-              )}
-            </>
-          ) : (
-            <div className="text-center space-y-6">
-              <h3 className="text-2xl font-bold text-blue-900">Quiz terminé !</h3>
-              <p className="text-xl text-gray-700">
-                Ton score : <span className="font-bold text-blue-700">{score}</span> sur {quizQuestions.length}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Context Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Contexte & Origines des Normes</h2>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* ISO 129-1 */}
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <div className="flex items-start mb-4">
+                <div className="bg-blue-100 p-3 rounded-lg mr-4">
+                  <Ruler className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">ISO 129-1:2018</h3>
+                  <p className="text-sm text-blue-800 font-semibold mb-3">Cotation dimensionnelle</p>
+                </div>
+              </div>
+              <p className="text-slate-700 leading-relaxed">
+                Cette norme établit les <strong>principes généraux de représentation des dimensions et tolérances</strong> sur les dessins techniques. Elle définit l'usage des éléments de cotation : lignes de dimension, extrémités, lignes d'attache, indicateurs de propriétés (Ø, R, SR, □), cotation tabulaire et valeurs des dimensions.
               </p>
-              <p className="text-gray-600">
-                {score >= 12
-                  ? "🎉 Excellent ! Tu maîtrises le sujet !"
-                  : score >= 9
-                  ? "👍 Très bien ! Continue comme ça !"
-                  : score >= 6
-                  ? "👌 Pas mal ! Révise encore un peu."
-                  : "📚 Continue à apprendre, tu vas y arriver !"}
-              </p>
-              <button
-                onClick={restartQuiz}
-                className="bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-800 transition"
-              >
-                Recommencer le quiz
-              </button>
             </div>
-          )}
-        </section>
 
-        {/* Vidéo pédagogique */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Vidéo : Cotation et Tolérances ISO</h2>
-          <div className="aspect-video overflow-hidden rounded-md border border-gray-200">
-            <iframe
-              className="w-full h-full"
-              src="https://www.youtube.com/embed/hE_a4JINrtM"
-              title="Cotation et tolérances ISO"
-              allowFullScreen
-            />
+            {/* ISO 1101 */}
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <div className="flex items-start mb-4">
+                <div className="bg-green-100 p-3 rounded-lg mr-4">
+                  <Settings className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">ISO 1101:2017</h3>
+                  <p className="text-sm text-green-800 font-semibold mb-3">Tolérancement géométrique</p>
+                </div>
+              </div>
+              <p className="text-slate-700 leading-relaxed">
+                Cette norme définit les <strong>tolérances géométriques</strong> : forme, orientation, position et battement. Elle fait partie du système GPS (Spécification Géométrique des Produits) et permet de spécifier sans ambiguïté les exigences fonctionnelles au-delà des simples dimensions.
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* Historique des normes */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Contexte & Origines des Normes</h2>
-          <p className="text-gray-700 leading-relaxed">
-            Les normes <strong>ISO 129-1</strong> et <strong>ISO 1101</strong> ont été introduites pour
-            harmoniser la manière de représenter les dimensions, tolérances et spécifications
-            géométriques sur les plans techniques. En horlogerie, leur application permet de garantir
-            l'interchangeabilité des pièces, la fiabilité des assemblages et la précision des mouvements.
-          </p>
-        </section>
-
-        {/* Tableau des tolérances */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Exemples de Tolérances en Horlogerie</h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full border-collapse text-sm text-left text-gray-700">
-              <thead className="bg-gray-100 text-gray-600 uppercase tracking-wide text-xs">
-                <tr>
-                  <th className="px-4 py-3 border">Type de pièce</th>
-                  <th className="px-4 py-3 border">Cote nominale</th>
-                  <th className="px-4 py-3 border">Tolérance</th>
-                  <th className="px-4 py-3 border">Fonction</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="hover:bg-blue-50 transition">
-                  <td className="px-4 py-3 border">Axe de balancier</td>
-                  <td className="px-4 py-3 border">Ø 0.80 mm</td>
-                  <td className="px-4 py-3 border">±0.005 mm</td>
-                  <td className="px-4 py-3 border">Pivotement fluide</td>
-                </tr>
-                <tr className="hover:bg-blue-50 transition">
-                  <td className="px-4 py-3 border">Trou de rubis</td>
-                  <td className="px-4 py-3 border">Ø 0.20 mm</td>
-                  <td className="px-4 py-3 border">+0.002 / -0 mm</td>
-                  <td className="px-4 py-3 border">Guidage précis</td>
-                </tr>
-                <tr className="hover:bg-blue-50 transition">
-                  <td className="px-4 py-3 border">Barillet</td>
-                  <td className="px-4 py-3 border">Ø 10.00 mm</td>
-                  <td className="px-4 py-3 border">±0.02 mm</td>
-                  <td className="px-4 py-3 border">Stockage d'énergie</td>
-                </tr>
-              </tbody>
-            </table>
+        {/* Table: Catégories ISO 1101 */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Les 4 Catégories de Tolérances Géométriques</h2>
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-100">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Catégorie</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Caractéristiques</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Référence nécessaire</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Objectif</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Forme</td>
+                    <td className="px-6 py-4 text-slate-700">Rectitude, Planéité, Circularité, Cylindricité</td>
+                    <td className="px-6 py-4 text-slate-700">❌ Non</td>
+                    <td className="px-6 py-4 text-slate-700">Contrôler la forme intrinsèque</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Orientation</td>
+                    <td className="px-6 py-4 text-slate-700">Parallélisme, Perpendicularité, Inclinaison</td>
+                    <td className="px-6 py-4 text-slate-700">✅ Oui</td>
+                    <td className="px-6 py-4 text-slate-700">Contrôler l'orientation par rapport à une référence</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Position</td>
+                    <td className="px-6 py-4 text-slate-700">Localisation, Coaxialité, Symétrie</td>
+                    <td className="px-6 py-4 text-slate-700">✅ Oui</td>
+                    <td className="px-6 py-4 text-slate-700">Contrôler la position exacte dans l'espace</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Battement</td>
+                    <td className="px-6 py-4 text-slate-700">Battement circulaire, Battement total</td>
+                    <td className="px-6 py-4 text-slate-700">✅ Oui</td>
+                    <td className="px-6 py-4 text-slate-700">Contrôler les variations lors de la rotation</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </section>
 
-        {/* Citation */}
-        <section className="bg-blue-50 border border-blue-100 shadow-sm rounded-2xl p-8 text-center">
-          <blockquote className="text-xl italic text-blue-900">
-            "La précision n'est pas une option, c'est une exigence en horlogerie."
-          </blockquote>
-          <p className="mt-4 text-blue-700 font-medium">— Principe fondamental de la cotation ISO</p>
+        {/* Table: Symboles indicateurs (ISO 129-1) */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Indicateurs de Propriétés (ISO 129-1)</h2>
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-100">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Symbole</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Désignation</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Exemple</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Utilisation horlogerie</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">Ø</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900">Diamètre</td>
+                    <td className="px-6 py-4 text-slate-700">Ø 10</td>
+                    <td className="px-6 py-4 text-slate-700">Diamètre pivot, alésage platine</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">R</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900">Rayon</td>
+                    <td className="px-6 py-4 text-slate-700">R 2.5</td>
+                    <td className="px-6 py-4 text-slate-700">Congés, arrondis de ponts</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">SR</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900">Rayon sphérique</td>
+                    <td className="px-6 py-4 text-slate-700">SR 1.2</td>
+                    <td className="px-6 py-4 text-slate-700">Rubis sphérique, dôme de verre</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">□</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900">Côté carré</td>
+                    <td className="px-6 py-4 text-slate-700">□ 8</td>
+                    <td className="px-6 py-4 text-slate-700">Section carrée d'axe</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">( )</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900">Cote auxiliaire</td>
+                    <td className="px-6 py-4 text-slate-700">(25)</td>
+                    <td className="px-6 py-4 text-slate-700">Cote de repère, non à contrôler</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">⌈⌉</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900">Cote théorique exacte (TED)</td>
+                    <td className="px-6 py-4 text-slate-700">⌈50⌉</td>
+                    <td className="px-6 py-4 text-slate-700">Position théorique pour tolérance géométrique</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* Table: Exemples horlogerie */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Applications en Horlogerie de Précision</h2>
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-100">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Composant</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Tolérance critique</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Valeur typique</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Justification fonctionnelle</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Axe de balancier</td>
+                    <td className="px-6 py-4 text-slate-700">Rectitude de l'axe</td>
+                    <td className="px-6 py-4 text-slate-700">Ø 0.002 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Garantir l'oscillation régulière sans frottement</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Platine</td>
+                    <td className="px-6 py-4 text-slate-700">Planéité face de montage</td>
+                    <td className="px-6 py-4 text-slate-700">0.005 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Assurer le montage précis des ponts</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Alésage de barillet</td>
+                    <td className="px-6 py-4 text-slate-700">Cylindricité</td>
+                    <td className="px-6 py-4 text-slate-700">0.003 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Rotation fluide du barillet sans jeu excessif</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Pont de balancier</td>
+                    <td className="px-6 py-4 text-slate-700">Perpendicularité trou / face</td>
+                    <td className="px-6 py-4 text-slate-700">Ø 0.02 mm / A</td>
+                    <td className="px-6 py-4 text-slate-700">Assurer l'alignement du balancier avec l'échappement</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Roue d'échappement</td>
+                    <td className="px-6 py-4 text-slate-700">Battement circulaire</td>
+                    <td className="px-6 py-4 text-slate-700">0.02 mm / A-B</td>
+                    <td className="px-6 py-4 text-slate-700">Éviter variations de couple et perte d'amplitude</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Trous de fixation</td>
+                    <td className="px-6 py-4 text-slate-700">Localisation</td>
+                    <td className="px-6 py-4 text-slate-700">Ø 0.05 mm / A B</td>
+                    <td className="px-6 py-4 text-slate-700">Interchangeabilité des composants</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* Quote */}
+        <section className="mb-16">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white text-center">
+            <blockquote className="text-2xl font-serif italic mb-4">
+              "La spécification GPS permet de définir sans ambiguïté les exigences fonctionnelles d'une pièce."
+            </blockquote>
+            <p className="text-blue-100">— Principe fondamental ISO GPS</p>
+          </div>
         </section>
 
         {/* FAQ */}
-        <section className="bg-white border border-gray-200 shadow-sm rounded-2xl p-10">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-6">Questions fréquentes (FAQ)</h2>
-          <div className="space-y-5 text-gray-700">
-            <details className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-              <summary className="cursor-pointer font-medium text-blue-700">
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Questions fréquentes (FAQ)</h2>
+          
+          <div className="space-y-4">
+            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
                 Quelle est la différence entre tolérance dimensionnelle et géométrique ?
+                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <p className="mt-2">
-                La tolérance dimensionnelle concerne les tailles (longueur, diamètre) tandis que la géométrique garantit la forme (planéité, perpendicularité, etc.).
-              </p>
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                <p className="text-slate-700">
+                  La <strong>tolérance dimensionnelle</strong> (ISO 129-1) définit les limites de taille (longueur, diamètre) d'un élément. La <strong>tolérance géométrique</strong> (ISO 1101) contrôle la forme, l'orientation, la position ou le battement indépendamment de la taille. Par exemple : un cylindre peut être dans la tolérance dimensionnelle (Ø 10 ±0.1) mais hors tolérance de cylindricité (forme non cylindrique).
+                </p>
+              </div>
             </details>
-            <details className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-              <summary className="cursor-pointer font-medium text-blue-700">
-                Puis-je utiliser plusieurs unités sur un même plan ?
+
+            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+                Pourquoi les tolérances de forme ne nécessitent-elles pas de référence ?
+                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <p className="mt-2">
-                Oui, mais il faut clairement indiquer le changement d'unité pour éviter toute ambiguïté lors de la fabrication.
-              </p>
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                <p className="text-slate-700">
+                  Les tolérances de forme (rectitude, planéité, circularité, cylindricité) contrôlent la <strong>forme intrinsèque</strong> de l'élément lui-même, sans relation avec d'autres éléments. Elles ne dépendent donc pas d'un système de références. En revanche, orientation, position et battement nécessitent une référence car ils positionnent l'élément par rapport à d'autres éléments de la pièce.
+                </p>
+              </div>
+            </details>
+
+            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+                Comment définir un système de références cohérent ?
+                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                <p className="text-slate-700">
+                  Un système de références se construit hiérarchiquement : <strong>Référence primaire (A)</strong> : généralement une surface plane pour bloquer 3 degrés de liberté. <strong>Référence secondaire (B)</strong> : bloque 2 degrés supplémentaires (rotation + translation). <strong>Référence tertiaire (C)</strong> : bloque le dernier degré (rotation). Les références doivent être choisies selon les <strong>surfaces fonctionnelles</strong> de montage/assemblage.
+                </p>
+              </div>
+            </details>
+
+            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+                Qu'est-ce qu'une cote théorique exacte (TED) ?
+                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                <p className="text-slate-700">
+                  Une cote <strong>Théoriquement Exacte</strong> (encadrée ⌈50⌉) définit la position théorique parfaite d'un élément sans tolérance. Elle est utilisée avec les tolérances géométriques de position/localisation : la tolérance n'est pas sur la cote elle-même mais dans la zone de tolérance géométrique (par exemple : localisation Ø 0.1). Ceci évite l'ambiguïté d'une double tolérance.
+                </p>
+              </div>
+            </details>
+
+            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+                Pourquoi l'horlogerie nécessite-t-elle des tolérances aussi serrées ?
+                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                <p className="text-slate-700">
+                  L'horlogerie mécanique nécessite des <strong>tolérances de l'ordre du micromètre</strong> (0.001-0.010 mm) car : les frottements doivent être minimaux pour préserver l'amplitude du balancier, les engrenages nécessitent un jeu précis pour transmettre l'énergie sans perte, les pivots tournent à des vitesses élevées (balancier : 5-10 Hz), et l'interchangeabilité des composants est essentielle pour la maintenance. Une déviation de quelques microns peut affecter la précision horométrique.
+                </p>
+              </div>
             </details>
           </div>
         </section>
 
-        {/* Lien ISO */}
-        <section className="text-center py-10">
-          <p className="text-gray-600 text-lg mb-4">📘 Tu veux aller plus loin ?</p>
-          <a
-            href="https://www.iso.org/fr/standard/70382.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-800 transition"
-          >
-            Consulter la norme ISO 129-1 complète
-          </a>
+        {/* CTA */}
+        <section className="text-center">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white inline-block">
+            <p className="text-lg mb-4">📘 Tu veux aller plus loin ?</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a 
+                href="https://www.iso.org/standard/64007.html" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+              >
+                Consulter ISO 129-1
+              </a>
+              <a 
+                href="https://www.iso.org/standard/66777.html" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+              >
+                Consulter ISO 1101
+              </a>
+            </div>
+          </div>
         </section>
+      </main>
 
-        <footer className="text-center text-sm text-gray-500 mt-6">
-          © HorloLearn 2025 — Normes ISO 129-1 & ISO 1101.
-        </footer>
-      </div>
-    </main>
+      {/* Footer */}
+      <footer className="bg-slate-900 text-white py-8 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-slate-400">© 2025 HorloLearn - Passion & Découverte Horlogère Suisse</p>
+        </div>
+      </footer>
+    </div>
   );
 }
