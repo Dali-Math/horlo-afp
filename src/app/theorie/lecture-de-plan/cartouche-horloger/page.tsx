@@ -269,6 +269,41 @@ const quizData: QuizQuestion[] = [
     correctAnswer: 1,
     explanation: "Le traitement de surface est conditionnel : il n'est obligatoire que s'il est nécessaire à la fonction de la pièce."
   }
+{
+    id: 11,
+    question: "Quel matériau horloger traditionnel est souvent indiqué dans le cartouche ?",
+    options: ["Aluminium", "Maillechort", "Plastique", "Titane"],
+    correctAnswer: 1,
+    explanation: "Le maillechort (alliage cuivre-nickel-zinc) est un matériau traditionnel très utilisé en horlogerie pour les platines et ponts."
+  },
+  {
+    id: 12,
+    question: "À quoi sert le tableau de révision au-dessus du cartouche ?",
+    options: ["Décoration", "Tracer l'historique des modifications", "Indiquer les tolérances", "Ajouter des notes"],
+    correctAnswer: 1,
+    explanation: "Le tableau de révision documente l'historique des modifications : indice, date, auteur, nature des changements."
+  },
+  {
+    id: 13,
+    question: "Quelle information n'est PAS obligatoire dans un cartouche selon ISO 7200 ?",
+    options: ["Titre", "Auteur", "Masse", "Format"],
+    correctAnswer: 2,
+    explanation: "La masse est un champ conditionnel (C), pas obligatoire, bien qu'elle soit importante en horlogerie pour l'équilibrage."
+  },
+  {
+    id: 14,
+    question: "Quel traitement de surface est typique en horlogerie de luxe ?",
+    options: ["Galvanisation", "Rhodiage", "Peinture", "Vernissage"],
+    correctAnswer: 1,
+    explanation: "Le rhodiage est un traitement de surface noble très utilisé en haute horlogerie pour protéger et embellir les pièces."
+  },
+  {
+    id: 15,
+    question: "Que signifie une échelle '5:1' sur un plan horloger ?",
+    options: ["La pièce est 5 fois plus petite", "La pièce est 5 fois plus grande", "5 pièces identiques", "5 vues différentes"],
+    correctAnswer: 1,
+    explanation: "Une échelle 5:1 signifie que le dessin est 5 fois plus grand que la pièce réelle, nécessaire pour les composants miniatures horlogers."
+  }
 ];
 
 export default function CartoucheHorlogerPage() {
