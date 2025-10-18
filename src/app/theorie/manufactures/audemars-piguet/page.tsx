@@ -4,9 +4,9 @@ import React from "react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Audemars Piguet - L'Avant-Garde de l'Horlogerie | HorloLearn",
-  description: "Découvrez Audemars Piguet depuis 1875 : Royal Oak révolutionnaire, innovations techniques, grandes complications et indépendance familiale dans la Vallée de Joux.",
-  keywords: "Audemars Piguet, Royal Oak, Vallée de Joux, Gérald Genta, tourbillon, manufacture indépendante, Le Brassus",
+  title: "Audemars Piguet - Manufacture Indépendante | HorloLearn",
+  description: "Découvrez Audemars Piguet (1875) : Royal Oak, tradition familiale, Grande Complication, innovation horlogère suisse du Brassus.",
+  keywords: "Audemars Piguet, Royal Oak, Le Brassus, manufacture indépendante, grande complication, horlogerie suisse",
 };
 
 export default function AudemarsPiguetPage() {
@@ -28,68 +28,56 @@ export default function AudemarsPiguetPage() {
       </div>
 
       {/* Hero */}
-      <section className="bg-white dark:bg-neutral-900">
+      <section className="bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 text-white">
         <div className="container mx-auto px-4 py-12 md:py-16 max-w-6xl">
           <div className="mb-6">
-            <span className="inline-block bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200 text-sm font-medium px-4 py-1.5 rounded-full">
-              Manufacture de la Vallée de Joux
+            <span className="inline-block bg-purple-100 text-purple-900 text-sm font-medium px-4 py-1.5 rounded-full">
+              Manufacture Indépendante
             </span>
           </div>
 
           <div className="flex items-start gap-4 mb-6">
-            <div className="text-6xl">🔷</div>
+            <div className="text-5xl">🏔️</div>
             <div className="flex-1">
-              <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-gray-100 leading-tight mb-2">
+              <h1 className="text-4xl md:text-6xl font-bold leading-tight">
                 Audemars Piguet
               </h1>
-              <p className="text-xl text-purple-600 dark:text-purple-400 font-semibold italic">
-                "To break the rules, you must first master them"
+              <p className="text-xl text-purple-200 mt-2">
+                Le Brassus, Vallée de Joux - 1875
               </p>
             </div>
           </div>
 
-          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-4xl mb-8">
-            Fondée en 1875 au Brassus par Jules Louis Audemars et Edward Auguste Piguet, Audemars Piguet est restée indépendante et familiale depuis sa création. Pionnière des grandes complications et créatrice de la légendaire Royal Oak, elle incarne l'audace et l'avant-garde horlogère.
+          <p className="text-lg md:text-xl text-purple-100 leading-relaxed max-w-4xl mb-8">
+            Fondée en 1875 par Jules Louis Audemars et Edward Auguste Piguet dans la Vallée de Joux, Audemars Piguet demeure l'une des rares manufactures horlogères suisses encore dirigées par les familles fondatrices. Pionnière de la haute horlogerie sportive avec la Royal Oak (1972), elle incarne l'excellence technique et l'audace créative.
           </p>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <StatCard number="1875" label="Année de fondation" color="purple" />
-            <StatCard number="100%" label="Indépendante" color="blue" />
-            <StatCard number="50K" label="Montres/an" color="green" />
-            <StatCard number="1140m" label="Altitude Le Brassus" color="orange" />
+            <StatCard number="1875" label="Année de fondation" />
+            <StatCard number="100%" label="Indépendante" />
+            <StatCard number="50K" label="Montres/an" />
+            <StatCard number="1140m" label="Altitude Le Brassus" />
           </div>
         </div>
       </section>
 
-      {/* Fondation */}
+      {/* Histoire */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-5xl">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8">
-            Les Fondateurs de la Vallée de Joux
+            Histoire et Héritage Familial
           </h2>
 
           <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-8 mb-6">
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-              En <span className="font-semibold text-gray-900 dark:text-gray-100">1875</span>, deux jeunes horlogers de 24 et 22 ans, <span className="font-semibold text-gray-900 dark:text-gray-100">Jules Louis Audemars</span> et <span className="font-semibold text-gray-900 dark:text-gray-100">Edward Auguste Piguet</span>, s'associent au Brassus, village isolé de la Vallée de Joux dans le canton de Vaud.
+              En <span className="font-semibold text-gray-900 dark:text-gray-100">1875</span>, Jules Louis Audemars s'associe à Edward Auguste Piguet pour créer une manufacture horlogère dans le petit village du Brassus, situé dans la Vallée de Joux suisse, à plus de 1000 mètres d'altitude.
             </p>
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-              Audemars se charge de la conception et fabrication des mouvements complexes, tandis que Piguet s'occupe de la commercialisation et de la gestion. Leur complémentarité parfaite et leur passion pour les <span className="font-semibold text-gray-900 dark:text-gray-100">complications horlogères</span> posent les bases d'une manufacture d'exception.
+              Dès ses débuts, la manufacture se distingue par la fabrication de <span className="font-semibold text-gray-900 dark:text-gray-100">montres à complications extrêmement sophistiquées</span> : quantièmes perpétuels, répétitions minutes, chronographes. En 1892, AP présente la première montre-bracelet à répétition minutes au monde.
             </p>
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-              Dès 1882, ils créent la première <span className="font-semibold text-gray-900 dark:text-gray-100">montre de poche à quantième perpétuel</span> avec phase de lune, affirmant leur maîtrise technique.
+              Aujourd'hui encore, Audemars Piguet reste <span className="font-semibold text-gray-900 dark:text-gray-100">100% indépendante et familiale</span>, refusant toute fusion ou rachat par des groupes horlogers. Cette indépendance garantit une liberté créative totale et une vision à très long terme.
             </p>
-          </div>
-
-          <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border-l-4 border-purple-500 rounded-xl p-6">
-            <div className="flex items-start gap-3">
-              <span className="text-2xl">🏔️</span>
-              <div>
-                <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">La Vallée de Joux : Berceau de l'Horlogerie Complexe</h4>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  Située à 1140 mètres d'altitude, la Vallée de Joux a développé une tradition horlogère unique grâce aux longs hivers qui poussaient les agriculteurs à pratiquer l'horlogerie pendant la saison froide. Aujourd'hui encore, AP n'a jamais quitté Le Brassus.
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -98,64 +86,52 @@ export default function AudemarsPiguetPage() {
       <section className="bg-white dark:bg-neutral-900 py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-6xl">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8">
-            Royal Oak : La Révolution de 1972
+            La Royal Oak : Révolution 1972
           </h2>
 
           <div className="grid md:grid-cols-2 gap-8 mb-8">
             <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-8">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">🎨 Gérald Genta : Le Design Iconique</h3>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Genèse du Modèle</h3>
               <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-                En 1971, face à la crise du quartz, Audemars Piguet commande au designer <span className="font-semibold text-gray-900 dark:text-gray-100">Gérald Genta</span> une montre de sport de luxe révolutionnaire.
-              </p>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-                Genta s'inspire des <span className="font-semibold text-gray-900 dark:text-gray-100">scaphandriers</span> et des hublots de navires. En une nuit, il dessine un boîtier octogonal avec 8 vis hexagonales apparentes.
+                En 1972, face à la crise du quartz qui menace l'horlogerie mécanique, Audemars Piguet prend un risque colossal : lancer une <span className="font-semibold text-gray-900 dark:text-gray-100">montre de sport de luxe en acier</span> au prix d'une montre en or.
               </p>
               <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                Lancée au salon de Bâle en <span className="font-semibold text-gray-900 dark:text-gray-100">1972</span>, la Royal Oak (référence 5402ST) choque : une montre en acier au prix de l'or ! Mais elle devient rapidement une icône absolue.
+                Dessinée par le légendaire Gérald Genta en une seule nuit, la Royal Oak s'inspire des <span className="font-semibold text-gray-900 dark:text-gray-100">hublots de navires de guerre britanniques</span>, avec sa lunette octogonale et ses 8 vis hexagonales apparentes.
               </p>
             </div>
 
             <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-8">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">✨ Caractéristiques Techniques</h3>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Caractéristiques Iconiques</h3>
               <ul className="space-y-3 text-gray-700 dark:text-gray-300">
                 <li className="flex items-start">
                   <span className="text-purple-600 dark:text-purple-400 mr-2">•</span>
-                  <span><span className="font-semibold">Boîtier octogonal</span> inspiré d'un scaphandre</span>
+                  <span><span className="font-semibold">Lunette octogonale</span> : 8 vis apparentes en or blanc</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-purple-600 dark:text-purple-400 mr-2">•</span>
-                  <span><span className="font-semibold">8 vis hexagonales</span> apparentes sur la lunette</span>
+                  <span><span className="font-semibold">Bracelet intégré</span> : seamless avec boîtier</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-purple-600 dark:text-purple-400 mr-2">•</span>
-                  <span><span className="font-semibold">Cadran "Tapisserie"</span> guillochage exclusif</span>
+                  <span><span className="font-semibold">Cadran "Tapisserie"</span> : motif guilloché signature</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-purple-600 dark:text-purple-400 mr-2">•</span>
-                  <span><span className="font-semibold">Bracelet intégré</span> design fluide avec le boîtier</span>
+                  <span><span className="font-semibold">Étanchéité</span> : 50m (rare pour montres habillées 1970s)</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-purple-600 dark:text-purple-400 mr-2">•</span>
-                  <span><span className="font-semibold">Acier inoxydable</span> finitions haute horlogerie</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-purple-600 dark:text-purple-400 mr-2">•</span>
-                  <span><span className="font-semibold">Étanchéité 50m</span> (évoluée à 100m)</span>
+                  <span><span className="font-semibold">Calibre ultra-plat</span> : 3,05mm d'épaisseur (record 1972)</span>
                 </li>
               </ul>
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-800 rounded-xl p-8">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 text-center">🌟 Impact et Héritage</h3>
-            <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-center mb-4">
-              La Royal Oak crée la catégorie des <span className="font-semibold text-gray-900 dark:text-gray-100">"montres de sport de luxe en acier"</span>, imitée par toute l'industrie (Patek Nautilus, Vacheron Overseas...). Elle sauve Audemars Piguet de la crise du quartz et devient l'icône absolue de la marque.
+          <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border-l-4 border-purple-500 rounded-xl p-6">
+            <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-3">🏆 Impact Culturel</h4>
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+              La Royal Oak fut d'abord un échec commercial : trop chère, trop avant-gardiste. Mais dans les années 1980-90, elle devient l'icône de la haute horlogerie sportive, créant une catégorie entièrement nouvelle. Aujourd'hui, la Royal Oak représente plus de 50% des ventes d'Audemars Piguet et influence toute l'industrie horlogère moderne.
             </p>
-            <div className="flex justify-center gap-4 flex-wrap">
-              <span className="bg-white dark:bg-neutral-800 px-4 py-2 rounded-lg text-sm font-semibold text-gray-900 dark:text-gray-100">Royal Oak Chronograph</span>
-              <span className="bg-white dark:bg-neutral-800 px-4 py-2 rounded-lg text-sm font-semibold text-gray-900 dark:text-gray-100">Royal Oak Offshore</span>
-              <span className="bg-white dark:bg-neutral-800 px-4 py-2 rounded-lg text-sm font-semibold text-gray-900 dark:text-gray-100">Royal Oak Concept</span>
-            </div>
           </div>
         </div>
       </section>
@@ -163,99 +139,50 @@ export default function AudemarsPiguetPage() {
       {/* Innovations */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-6xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8">
-            Innovations et Complications
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8 text-center">
+            Innovations Techniques Majeures
           </h2>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             <InnovationCard
               year="1892"
-              title="Première Répétition Minutes"
-              description="Audemars Piguet crée la première montre-bracelet à répétition minutes au monde, complication rarissime."
-              icon="🔔"
+              title="Répétition Minutes Montre-Bracelet"
+              description="Première montre-bracelet au monde équipée d'une répétition minutes, complication sonnant l'heure à la demande."
             />
             <InnovationCard
               year="1986"
               title="Montre la Plus Compliquée"
-              description="Création d'une montre de poche avec 40 complications, record mondial détenu pendant des années."
-              icon="🏆"
-            />
-            <InnovationCard
-              year="1993"
-              title="Royal Oak Offshore"
-              description="Version oversized (42mm) de la Royal Oak, audacieuse et sportive. Devient culte auprès des collectionneurs."
-              icon="💪"
+              description="Calibre 2870 : 1168 pièces, quantième perpétuel, répétition minutes, chronographe rattrapante, phases de lune."
             />
             <InnovationCard
               year="1997"
-              title="Millenary"
-              description="Boîtier elliptique avec mouvement visible. Design architectural avant-gardiste unique."
-              icon="⚙️"
-            />
-            <InnovationCard
-              year="2006"
-              title="Royal Oak Concept"
-              description="Ligne ultra-technique en matériaux composites (carbone, céramique, titane). Futurisme horloger."
-              icon="🚀"
-            />
-            <InnovationCard
-              year="2019"
-              title="Code 11.59"
-              description="Nouvelle collection habillée avec boîtier complexe à double courbure. Architecture innovante."
-              icon="🎯"
+              title="Royal Oak Offshore"
+              description="Version surdimensionnée (42mm) de la Royal Oak. Design extrême qui définit l'horlogerie sportive moderne."
             />
           </div>
         </div>
       </section>
 
-      {/* Indépendance */}
+      {/* Philosophie */}
       <section className="bg-white dark:bg-neutral-900 py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-5xl">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8">
-            Indépendance et Valeurs
+            Philosophie et Savoir-Faire
           </h2>
 
-          <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-8">
-            <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-              Audemars Piguet est l'une des <span className="font-semibold text-gray-900 dark:text-gray-100">rares manufactures encore totalement indépendantes et familiales</span>. Aucun actionnaire externe, aucun groupe financier : les familles fondatrices contrôlent toujours la marque.
-            </p>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-6">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">🏔️ Vallée de Joux</h3>
+              <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                Depuis 1875, toutes les montres AP sont conçues, fabriquées et assemblées au Brassus, dans la Vallée de Joux. Cet isolement géographique a forgé une culture horlogère unique, où l'excellence technique se transmet de génération en génération.
+              </p>
+            </div>
 
-            <div className="grid md:grid-cols-2 gap-6 mt-6">
-              <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4">
-                <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-3">🎯 Philosophie</h4>
-                <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                  <li className="flex items-start">
-                    <span className="text-purple-600 dark:text-purple-400 mr-2">•</span>
-                    <span><span className="font-semibold">Audace créative</span> : repousser les limites</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-purple-600 dark:text-purple-400 mr-2">•</span>
-                    <span><span className="font-semibold">Excellence technique</span> : complications</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-purple-600 dark:text-purple-400 mr-2">•</span>
-                    <span><span className="font-semibold">Tradition moderne</span> : héritage + innovation</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
-                <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-3">🏭 Production</h4>
-                <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                  <li className="flex items-start">
-                    <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                    <span><span className="font-semibold">~50 000 montres/an</span> : exclusivité</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                    <span><span className="font-semibold">Manufacture intégrée</span> : Le Brassus</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                    <span><span className="font-semibold">Artisanat d'exception</span> : finitions manuelles</span>
-                  </li>
-                </ul>
-              </div>
+            <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-6">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">🎨 Audace Créative</h3>
+              <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                AP incarne l'audace : Royal Oak en acier luxe (1972), Royal Oak Offshore XXL (1993), montres squelettes ultra-techniques. La manufacture repousse constamment les limites du design tout en préservant l'excellence horlogère traditionnelle.
+              </p>
             </div>
           </div>
         </div>
@@ -264,12 +191,12 @@ export default function AudemarsPiguetPage() {
       {/* Call to Action */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-4xl">
-          <div className="bg-gradient-to-br from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700 rounded-2xl shadow-xl p-8 md:p-12 text-center text-white">
+          <div className="bg-gradient-to-br from-purple-500 to-indigo-600 dark:from-purple-600 dark:to-indigo-700 rounded-2xl shadow-xl p-8 md:p-12 text-center text-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              🏛️ Explorez les Autres Manufactures
+              🏛️ Découvrez les Autres Manufactures
             </h2>
             <p className="text-xl text-purple-50 mb-8">
-              Découvrez Patek Philippe, Rolex, Vacheron Constantin et Omega
+              Explorez Patek Philippe, Rolex, Vacheron Constantin et Omega
             </p>
             <a
               href="/theorie/manufactures"
@@ -287,4 +214,25 @@ export default function AudemarsPiguetPage() {
   );
 }
 
-// Components (mêmes que précédemment - StatCard, InnovationCard...)
+// ==========================================
+// COMPONENTS
+// ==========================================
+
+function StatCard({ number, label }: { number: string; label: string }) {
+  return (
+    <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4">
+      <div className="text-3xl font-bold mb-1">{number}</div>
+      <div className="text-xs font-medium opacity-80">{label}</div>
+    </div>
+  );
+}
+
+function InnovationCard({ year, title, description }: { year: string; title: string; description: string }) {
+  return (
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-6">
+      <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-3">{year}</div>
+      <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">{title}</h3>
+      <p className="text-gray-700 dark:text-gray-300 text-sm">{description}</p>
+    </div>
+  );
+}
