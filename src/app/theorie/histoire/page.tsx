@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { ChevronRight, Award, Clock } from 'lucide-react'
+import { ChevronRight, Clock } from 'lucide-react'
 
 export default function HistoirePage() {
   const [isDark, setIsDark] = useState(false)
@@ -298,63 +298,109 @@ export default function HistoirePage() {
           </div>
         </motion.section>
 
-        {/* Quiz Section */}
+        {/* Quiz Section - NOUVEAU DESIGN */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
           className={`mb-12 p-8 rounded-2xl shadow-xl ${
-            isDark ? 'bg-gradient-to-br from-amber-900 to-orange-900' : 'bg-gradient-to-br from-amber-100 to-orange-100'
+            isDark ? 'bg-gray-800' : 'bg-white'
           }`}
         >
-          <h2 className="text-3xl font-bold mb-6 flex items-center">
-            <Award className="mr-3 text-yellow-500" />
-            Quiz de Certification
+          <h2 className="text-3xl font-bold mb-6">
+            Quiz : Testez vos connaissances
           </h2>
           
           {!showResults ? (
-            <div className="space-y-6">
-              {quizQuestions.map((q, index) => (
-                <div key={index} className={`p-6 rounded-xl ${
-                  isDark ? 'bg-gray-800' : 'bg-white'
-                }`}>
-                  <p className="font-bold text-lg mb-4">{index + 1}. {q.question}</p>
-                  <div className="space-y-2">
-                    {q.options.map((option, optIndex) => (
-                      <label key={optIndex} className="flex items-center space-x-3 cursor-pointer">
-                        <input
-                          type="radio"
-                          name={`question-${index}`}
-                          value={optIndex}
-                          onChange={(e) => setQuizAnswers({...quizAnswers, [index]: e.target.value})}
-                          className="w-4 h-4"
-                        />
-                        <span>{option}</span>
-                      </label>
-                    ))}
-                  </div>
+            <>
+              {/* Progress bar */}
+              <div className="mb-8">
+                <div className="flex justify-between items-center mb-2">
+                  <span className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Question {Math.min(Object.keys(quizAnswers).length + 1, quizQuestions.length)} sur {quizQuestions.length}
+                  </span>
+                  <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                    Score : 0/{quizQuestions.length}
+                  </span>
                 </div>
-              ))}
+                <div className={`w-full rounded-full h-2 ${isDark ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                  <div
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${(Object.keys(quizAnswers).length / quizQuestions.length) * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-12">
+                {quizQuestions.map((q, index) => (
+                  <div key={index}>
+                    <p className={`font-bold text-xl mb-6 ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>
+                      {q.question}
+                    </p>
+                    <div className="grid gap-3">
+                      {q.options.map((option, optIndex) => {
+                        const letters = ['A', 'B', 'C', 'D'];
+                        const isSelected = quizAnswers[index] === String(optIndex);
+                        
+                        return (
+                          <button
+                            key={optIndex}
+                            onClick={() => setQuizAnswers({...quizAnswers, [index]: String(optIndex)})}
+                            className={`flex items-center p-4 rounded-xl border-2 transition-all text-left ${
+                              isSelected
+                                ? isDark
+                                  ? 'border-blue-500 bg-blue-900/30'
+                                  : 'border-blue-500 bg-blue-50'
+                                : isDark
+                                ? 'border-gray-600 bg-gray-700/50 hover:border-gray-500'
+                                : 'border-gray-300 bg-gray-50 hover:border-gray-400'
+                            }`}
+                          >
+                            <div className={`flex items-center justify-center w-10 h-10 rounded-lg mr-4 font-bold text-sm ${
+                              isSelected
+                                ? 'bg-blue-600 text-white'
+                                : isDark
+                                ? 'bg-gray-600 text-gray-300'
+                                : 'bg-gray-200 text-gray-700'
+                            }`}>
+                              {letters[optIndex]}.
+                            </div>
+                            <span className={isDark ? 'text-gray-200' : 'text-gray-800'}>{option}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
               
               <button
                 onClick={handleQuizSubmit}
                 disabled={Object.keys(quizAnswers).length !== quizQuestions.length}
-                className="w-full py-4 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-xl font-bold text-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full mt-8 py-4 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-xl font-bold text-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale"
               >
-                Valider mes réponses
+                {Object.keys(quizAnswers).length === quizQuestions.length 
+                  ? 'Valider mes réponses' 
+                  : `Répondez à toutes les questions (${Object.keys(quizAnswers).length}/${quizQuestions.length})`
+                }
               </button>
-            </div>
+            </>
           ) : (
-            <div className="text-center">
-              <div className={`text-6xl font-bold mb-4 ${
+            <div className="text-center py-8">
+              <div className={`text-7xl font-bold mb-6 ${
                 score >= 4 ? 'text-green-500' : score >= 3 ? 'text-yellow-500' : 'text-red-500'
               }`}>
                 {score}/{quizQuestions.length}
               </div>
-              <p className="text-2xl mb-6">
-                {score >= 4 ? '🎉 Excellent ! Vous connaissez l\'histoire suisse !' :
-                 score >= 3 ? '👍 Bien ! Continuez à apprendre.' :
-                 '📚 Relisez le cours pour améliorer vos connaissances.'}
+              <p className="text-3xl font-bold mb-4">
+                {score >= 4 ? '🎉 Excellent !' :
+                 score >= 3 ? '👍 Bien joué !' :
+                 '📚 Continuez à apprendre'}
+              </p>
+              <p className={`text-lg mb-8 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                {score >= 4 ? "Vous maîtrisez parfaitement l'histoire de l'horlogerie suisse !" :
+                 score >= 3 ? 'Vous avez de bonnes connaissances, continuez comme ça !' :
+                 'Relisez le cours pour améliorer vos connaissances.'}
               </p>
               <button
                 onClick={() => {
@@ -362,7 +408,7 @@ export default function HistoirePage() {
                   setQuizAnswers({})
                   setScore(0)
                 }}
-                className="px-8 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+                className="px-8 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors font-semibold"
               >
                 Recommencer le quiz
               </button>
