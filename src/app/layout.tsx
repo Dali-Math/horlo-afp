@@ -49,28 +49,32 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const org = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "HorloLearn",
-    "url": "https://www.horlolearn.ch",
-    "logo": "https://www.horlolearn.ch/og-image.jpg",
-    "description":
+    name: "HorloLearn",
+    url: "https://www.horlolearn.ch",
+    logo: "https://www.horlolearn.ch/og-image.jpg",
+    description:
       "HorloLearn est une organisation suisse indépendante dédiée aux passionnés d'horlogerie. Elle propose des fiches techniques, quiz, vidéos et ressources pour découvrir et comprendre les savoir-faire horlogers, sans offrir de formation officielle.",
-    "address": {
+    address: {
       "@type": "PostalAddress",
-      "addressCountry": "CH",
+      addressCountry: "CH",
     },
-    "contactPoint": [
+    contactPoint: [
       {
         "@type": "ContactPoint",
-        "email": "contact.horlogeries@gmail.com",
-        "contactType": "information",
-        "availableLanguage": ["fr-CH", "fr", "en"],
+        email: "contact.horlogeries@gmail.com",
+        contactType: "information",
+        availableLanguage: ["fr-CH", "fr", "en"],
       },
     ],
-    "sameAs": [
+    sameAs: [
       "https://github.com/Dali-Math",
       "https://www.youtube.com/@HorloLearn",
       "https://www.linkedin.com/in/...",
@@ -80,26 +84,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const siteSearch = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "url": "https://www.horlolearn.ch",
-    "name": "HorloLearn",
-    "potentialAction": {
+    url: "https://www.horlolearn.ch",
+    name: "HorloLearn",
+    potentialAction: {
       "@type": "SearchAction",
-      "target": "https://www.horlolearn.ch/recherche?q={search_term_string}",
+      target: "https://www.horlolearn.ch/recherche?q={search_term_string}",
       "query-input": "required name=search_term_string",
     },
   };
 
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className="bg-white text-slate-900 dark:bg-[#0a0a0a] dark:text-gray-200 transition-colors duration-300">
-        <ThemeProvider 
-          attribute="class" 
-          defaultTheme="dark" 
-          enableSystem
-          disableTransitionOnChange={false}
-        >
+      <body className="bg-light-100 text-slate-900 dark:bg-dark-900 dark:text-light-100 transition-colors duration-300">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <Navbar />
-          {children}
+          <main>{children}</main>
           <Footer />
           <ScrollToTop />
           <Analytics />
