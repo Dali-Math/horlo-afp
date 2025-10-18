@@ -279,4 +279,135 @@ export default function DiagnosticPannesPage() {
   );
 }
 
-// Components simplifiés (ProblemCard, ToolCard, TestCard, RepairCard)
+// ==========================================
+// COMPONENTS
+// ==========================================
+
+interface ProblemCardProps {
+  icon: string;
+  title: string;
+  symptoms: string[];
+  cause: string;
+  solution: string;
+  prevention: string;
+  color: string;
+}
+
+function ProblemCard({ icon, title, symptoms, cause, solution, prevention, color }: ProblemCardProps) {
+  const colorClasses = {
+    red: 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800',
+    orange: 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800',
+    blue: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
+    cyan: 'bg-cyan-50 dark:bg-cyan-900/20 border-cyan-200 dark:border-cyan-800',
+  };
+
+  return (
+    <div className={`border rounded-xl p-6 ${colorClasses[color as keyof typeof colorClasses]}`}>
+      <div className="flex items-start gap-4 mb-4">
+        <span className="text-4xl">{icon}</span>
+        <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{title}</h3>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2">🔴 Symptômes</h4>
+          <ul className="space-y-1 text-sm text-gray-700 dark:text-gray-300">
+            {symptoms.map((s, idx) => (
+              <li key={idx}>• {s}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2">🔍 Cause</h4>
+          <p className="text-sm text-gray-700 dark:text-gray-300">{cause}</p>
+        </div>
+
+        <div>
+          <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2">✅ Solution</h4>
+          <p className="text-sm text-gray-700 dark:text-gray-300">{solution}</p>
+        </div>
+
+        <div>
+          <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-2">🛡️ Prévention</h4>
+          <p className="text-sm text-gray-700 dark:text-gray-300">{prevention}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface ToolCardProps {
+  name: string;
+  icon: string;
+  description: string;
+  price: string;
+  brands: string;
+}
+
+function ToolCard({ name, icon, description, price, brands }: ToolCardProps) {
+  return (
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-6">
+      <span className="text-4xl mb-3 block">{icon}</span>
+      <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">{name}</h3>
+      <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">{description}</p>
+      <div className="space-y-1 text-xs">
+        <div className="text-green-600 dark:text-green-400 font-semibold">{price}</div>
+        <div className="text-gray-600 dark:text-gray-400">{brands}</div>
+      </div>
+    </div>
+  );
+}
+
+interface TestCardProps {
+  title: string;
+  description: string;
+  procedure: string[];
+}
+
+function TestCard({ title, description, procedure }: TestCardProps) {
+  return (
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-6">
+      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{title}</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{description}</p>
+      <ol className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+        {procedure.map((step, idx) => (
+          <li key={idx} className="flex items-start">
+            <span className="font-bold text-blue-600 dark:text-blue-400 mr-2">{idx + 1}.</span>
+            <span>{step}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+interface RepairCardProps {
+  title: string;
+  difficulty: string;
+  duration: string;
+  steps: string[];
+}
+
+function RepairCard({ title, difficulty, duration, steps }: RepairCardProps) {
+  return (
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-6">
+      <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-3">{title}</h3>
+      <div className="flex gap-2 mb-4">
+        <span className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 px-2 py-1 rounded text-xs font-bold">
+          {difficulty}
+        </span>
+        <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded text-xs font-bold">
+          {duration}
+        </span>
+      </div>
+      <ol className="space-y-2 text-xs text-gray-700 dark:text-gray-300">
+        {steps.map((step, idx) => (
+          <li key={idx}>
+            {idx + 1}. {step}
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
