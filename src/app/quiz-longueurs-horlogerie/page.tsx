@@ -6,7 +6,7 @@ import { QUESTION_BANK } from "./questions";
 import { motion } from "framer-motion";
 import { Ruler } from "lucide-react";
 
-const CHOICE_COLORS = ["#FF4C4C", "#4C8CFF", "#4CFF74", "#FFD84C"];
+const CHOICE_COLORS = ["#FFD84C", "#E2B44F", "#f5cc66", "#b8941f"];
 const TEXT_COLOR = "#111";
 
 type AnswerRecord = {
@@ -108,33 +108,35 @@ export default function QuizLongueursHorlogeriePage() {
   const wrongCount = answers.length - correctCount;
 
   return (
-    <main className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-4 py-10">
+    <main className="min-h-screen bg-light-100 dark:bg-dark-900 flex items-center justify-center px-4 py-10 transition-colors duration-500">
       <motion.section
         initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl p-10"
+        className="w-full max-w-6xl bg-white dark:bg-dark-800 rounded-3xl shadow-2xl p-10 border border-gold/20"
       >
         {!done ? (
           <>
-            <header className="flex items-center justify-between mb-8 border-b pb-4">
+            {/* En-tête */}
+            <header className="flex items-center justify-between mb-8 border-b border-slate-200 dark:border-white/10 pb-4">
               <div className="flex items-center gap-3">
-                <Ruler className="text-[#E2B44F]" size={36} />
-                <h1 className="text-3xl font-bold text-[#111]">
-                  Quiz — <span className="text-[#E2B44F]">Conversions</span>
+                <Ruler className="text-gold" size={36} />
+                <h1 className="text-3xl font-bold text-slate-900 dark:text-light-100">
+                  Quiz — <span className="text-gold">Conversions</span>
                 </h1>
               </div>
-              <div className="text-[#E2B44F] font-semibold text-xl">
+              <div className="text-gold font-semibold text-xl">
                 ⏱ {secondsLeft}s
               </div>
             </header>
 
-            <p className="text-base text-gray-600 mb-4">
+            {/* Barre de progression */}
+            <p className="text-base text-slate-600 dark:text-light-200 mb-4">
               Question {index + 1} / {sessionQuestions.length}
             </p>
-            <div className="w-full h-3 bg-gray-200 rounded-full mb-8 overflow-hidden">
+            <div className="w-full h-3 bg-slate-200 dark:bg-dark-700 rounded-full mb-8 overflow-hidden">
               <motion.div
-                className="h-3 bg-[#E2B44F]"
+                className="h-3 bg-gold"
                 initial={{ width: 0 }}
                 animate={{
                   width: `${(index / sessionQuestions.length) * 100}%`,
@@ -143,17 +145,19 @@ export default function QuizLongueursHorlogeriePage() {
               />
             </div>
 
-            <h2 className="text-3xl font-semibold mb-8 text-center text-[#111]">
+            {/* Question */}
+            <h2 className="text-3xl font-semibold mb-8 text-center text-slate-900 dark:text-light-100">
               {q.prompt}
             </h2>
 
+            {/* Choix */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {q.choices.map((c, i) => (
                 <button
                   key={i}
                   onClick={() => onSelect(i)}
                   disabled={locked}
-                  className="rounded-xl px-6 py-5 font-semibold shadow-sm transition-transform active:scale-[0.98] text-lg"
+                  className="rounded-xl px-6 py-5 font-semibold shadow-sm transition-transform active:scale-[0.98] text-lg border border-slate-200 dark:border-white/10"
                   style={{
                     background: CHOICE_COLORS[i % CHOICE_COLORS.length],
                     color: TEXT_COLOR,
@@ -167,8 +171,8 @@ export default function QuizLongueursHorlogeriePage() {
               ))}
             </div>
 
-            <div className="flex items-center justify-between text-base text-gray-600">
-              <p>Réponds en 20 secondes, sinon la question est comptée fausse.</p>
+            <div className="flex items-center justify-between text-base text-slate-700 dark:text-light-200">
+              <p>⏳ 20 secondes par question.</p>
               <p>
                 ✅ {correctCount} · ❌ {wrongCount}
               </p>
@@ -176,47 +180,45 @@ export default function QuizLongueursHorlogeriePage() {
           </>
         ) : (
           <div>
-            <h2 className="text-4xl font-bold text-center text-[#E2B44F] mb-2">
+            <h2 className="text-4xl font-bold text-center text-gold mb-2">
               Résultats du Quiz
             </h2>
             <div className="text-center mb-8">
-              <p className="text-green-600 font-semibold">
+              <p className="text-green-600 dark:text-green-400 font-semibold">
                 ✅ Bonnes réponses : {correctCount}
               </p>
-              <p className="text-red-600 font-semibold">
+              <p className="text-red-600 dark:text-red-400 font-semibold">
                 ❌ Mauvaises réponses : {wrongCount}
               </p>
             </div>
 
             <div className="text-left">
-              <h3 className="text-2xl font-semibold mb-4 text-[#E2B44F]">
+              <h3 className="text-2xl font-semibold mb-4 text-gold">
                 Révisions
               </h3>
               <ul className="space-y-4">
                 {answers.map((a, idx) => (
                   <li
                     key={idx}
-                    className="rounded-xl border border-[#eee] p-4 bg-[#fafafa]"
+                    className="rounded-xl border border-slate-200 dark:border-white/10 p-4 bg-slate-50 dark:bg-dark-700 transition-colors"
                   >
-                    <p className="font-medium text-[#111] mb-2">
+                    <p className="font-medium text-slate-900 dark:text-light-100 mb-2">
                       {a.prompt}
                     </p>
 
                     <div
                       className={`p-2 rounded-md mb-1 ${
                         a.isCorrect
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
+                          ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                          : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
                       }`}
                     >
                       Ta réponse :{" "}
-                      {a.timedOut
-                        ? "⏳ Temps écoulé"
-                        : a.selectedText ?? "—"}
+                      {a.timedOut ? "⏳ Temps écoulé" : a.selectedText ?? "—"}
                     </div>
 
                     {!a.isCorrect && (
-                      <div className="p-2 rounded-md bg-green-50 text-green-700">
+                      <div className="p-2 rounded-md bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300">
                         Bonne réponse : {a.correctText}
                       </div>
                     )}
@@ -228,7 +230,7 @@ export default function QuizLongueursHorlogeriePage() {
             <div className="text-center mt-10">
               <button
                 onClick={restart}
-                className="px-8 py-4 rounded-lg font-semibold bg-[#E2B44F] text-black hover:bg-[#f5cc66] transition text-lg"
+                className="px-8 py-4 rounded-lg font-semibold bg-gold text-dark-900 hover:bg-gold-light transition text-lg"
               >
                 🔁 Rejouer une nouvelle série
               </button>
