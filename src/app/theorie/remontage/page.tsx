@@ -91,7 +91,7 @@ export default function RemontagePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-slate-800 py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
+        {/* Header avec bouton retour */}
         <div className="mb-8">
           <Link 
             href="/theorie"
