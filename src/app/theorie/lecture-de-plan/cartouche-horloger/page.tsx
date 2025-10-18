@@ -38,155 +38,168 @@ const cartoucheFieldsData: CartoucheField[] = [
     category: 'Descriptif',
     obligation: 'Obligatoire',
     description: 'Désignation de la pièce ou de l\'ensemble. Doit être clair et normalisé.',
-    example: 'PLATINE DE MOUVEMENT ETA 6497',
-    characters: '50 caractères',
+    example: 'Platine calibre 2824 / Pont de balancier',
+    characters: '25-30 caractères',
     x: 120,
     y: 10,
-    width: 200,
-    height: 20
+    width: 180,
+    height: 25
   },
   {
-    id: 'numero_plan',
-    name: 'Numéro du plan',
+    id: 'numero-piece',
+    name: 'Numéro de pièce',
     category: 'Identification',
     obligation: 'Obligatoire',
-    description: 'Code alphanumérique unique identifiant le plan dans le système de gestion documentaire.',
-    example: 'PLT-6497-001-A',
-    characters: '20 caractères',
-    x: 330,
+    description: 'Référence unique de la pièce dans le système de gestion.',
+    example: 'P-2824-001-A / MB-453-12',
+    characters: '15-20 caractères',
+    x: 310,
     y: 10,
-    width: 70,
-    height: 15
-  },
-  {
-    id: 'indice',
-    name: 'Indice de révision',
-    category: 'Traçabilité',
-    obligation: 'Obligatoire',
-    description: 'Lettre ou chiffre indiquant la version du plan (A, B, C... ou 01, 02, 03...).',
-    example: 'Rev. C',
-    characters: '5 caractères',
-    x: 330,
-    y: 30,
-    width: 70,
-    height: 10
-  },
-  {
-    id: 'echelle',
-    name: 'Échelle',
-    category: 'Technique',
-    obligation: 'Obligatoire',
-    description: 'Rapport de réduction ou d\'agrandissement du dessin par rapport à la pièce réelle.',
-    example: '2:1 (agrandi)',
-    characters: '10 caractères',
-    x: 330,
-    y: 45,
-    width: 70,
-    height: 10
+    width: 90,
+    height: 25
   },
   {
     id: 'materiau',
     name: 'Matériau',
     category: 'Technique',
     obligation: 'Obligatoire',
-    description: 'Matière première utilisée pour la fabrication de la pièce.',
-    example: 'Laiton CuZn37 (MS63)',
-    characters: '30 caractères',
+    description: 'Matière première utilisée selon nomenclature normalisée.',
+    example: 'Maillechort / Laiton CuZn40 / Acier inox 316L',
+    characters: '20 caractères',
     x: 120,
-    y: 35,
-    width: 200,
-    height: 15
+    y: 40,
+    width: 90,
+    height: 20
   },
   {
     id: 'traitement',
     name: 'Traitement de surface',
     category: 'Technique',
     obligation: 'Conditionnel',
-    description: 'Finition ou traitement thermique/chimique appliqué à la pièce.',
-    example: 'Rhodiage 3-5µm',
+    description: 'Traitements thermiques, revêtements, finitions spéciales.',
+    example: 'Rhodiage / Anglage / Perlage / PVD',
     characters: '30 caractères',
-    x: 120,
-    y: 55,
-    width: 200,
-    height: 15
+    x: 215,
+    y: 40,
+    width: 85,
+    height: 20
   },
   {
-    id: 'tolerance_generale',
+    id: 'masse',
+    name: 'Masse',
+    category: 'Technique',
+    obligation: 'Conditionnel',
+    description: 'Poids théorique de la pièce (important en horlogerie).',
+    example: '0.45 g / 2.3 g',
+    characters: '10 caractères',
+    x: 310,
+    y: 40,
+    width: 45,
+    height: 20
+  },
+  {
+    id: 'echelle',
+    name: 'Échelle',
+    category: 'Représentation',
+    obligation: 'Obligatoire',
+    description: 'Rapport entre les dimensions du dessin et les dimensions réelles.',
+    example: '1:1 / 2:1 / 5:1 / 10:1',
+    characters: '10 caractères',
+    x: 360,
+    y: 40,
+    width: 40,
+    height: 20
+  },
+  {
+    id: 'tolerance-generale',
     name: 'Tolérance générale',
     category: 'Technique',
-    obligation: 'Obligatoire',
-    description: 'Classe de tolérance ISO applicable aux cotes non spécifiées individuellement.',
-    example: 'ISO 2768-m',
-    characters: '15 caractères',
-    x: 330,
-    y: 60,
-    width: 70,
-    height: 10
+    obligation: 'Conditionnel',
+    description: 'Tolérances applicables aux cotes non tolérancées individuellement.',
+    example: 'ISO 2768-m / ±0.1 mm',
+    characters: '20 caractères',
+    x: 120,
+    y: 65,
+    width: 90,
+    height: 20
   },
   {
     id: 'projection',
     name: 'Méthode de projection',
-    category: 'Norme',
+    category: 'Représentation',
     obligation: 'Obligatoire',
-    description: 'Symbole indiquant la méthode de projection utilisée (européenne ou américaine).',
-    example: 'E (Européenne)',
-    characters: '5 caractères',
-    x: 330,
-    y: 75,
-    width: 30,
-    height: 15
+    description: 'Symbole indiquant la méthode européenne (E) ou américaine (A).',
+    example: 'Symbole E (1er dièdre) en Suisse',
+    characters: 'Symbole',
+    x: 215,
+    y: 65,
+    width: 40,
+    height: 20
+  },
+  {
+    id: 'format',
+    name: 'Format',
+    category: 'Document',
+    obligation: 'Obligatoire',
+    description: 'Format du plan selon ISO 5457 (A0, A1, A2, A3, A4).',
+    example: 'A4 / A3',
+    characters: '4 caractères',
+    x: 260,
+    y: 65,
+    width: 40,
+    height: 20
+  },
+  {
+    id: 'indice',
+    name: 'Indice de révision',
+    category: 'Gestion',
+    obligation: 'Obligatoire',
+    description: 'Lettre ou numéro indiquant la version du document.',
+    example: 'A / B / C / Rev.1',
+    characters: '4 caractères',
+    x: 310,
+    y: 65,
+    width: 45,
+    height: 20
   },
   {
     id: 'dessinateur',
     name: 'Dessinateur',
-    category: 'Traçabilité',
+    category: 'Administratif',
     obligation: 'Obligatoire',
-    description: 'Nom ou initiales de la personne ayant réalisé le dessin technique.',
-    example: 'J. Dupont',
+    description: 'Nom ou initiales de la personne ayant réalisé le dessin.',
+    example: 'J. Dupont / JD',
     characters: '20 caractères',
     x: 10,
     y: 55,
     width: 100,
-    height: 12
+    height: 15
   },
   {
     id: 'verificateur',
     name: 'Vérificateur',
-    category: 'Traçabilité',
-    obligation: 'Conditionnel',
-    description: 'Nom de la personne ayant vérifié la conformité du plan.',
-    example: 'M. Martin',
+    category: 'Administratif',
+    obligation: 'Obligatoire',
+    description: 'Nom ou initiales de la personne ayant vérifié le dessin.',
+    example: 'M. Martin / MM',
     characters: '20 caractères',
     x: 10,
-    y: 70,
+    y: 75,
     width: 100,
-    height: 12
+    height: 15
   },
   {
     id: 'date',
-    name: 'Date de création',
-    category: 'Traçabilité',
+    name: 'Date',
+    category: 'Administratif',
     obligation: 'Obligatoire',
-    description: 'Date de création ou de dernière révision du plan.',
-    example: '2025-10-18',
+    description: 'Date de création ou de dernière modification.',
+    example: '17.10.2025 / 2025-10-17',
     characters: '10 caractères',
-    x: 10,
-    y: 85,
-    width: 100,
-    height: 12
-  },
-  {
-    id: 'unite',
-    name: 'Unité de mesure',
-    category: 'Norme',
-    obligation: 'Obligatoire',
-    description: 'Unité utilisée pour les cotes (millimètres par défaut en horlogerie).',
-    example: 'mm',
-    characters: '5 caractères',
-    x: 365,
-    y: 75,
-    width: 35,
-    height: 15
+    x: 360,
+    y: 65,
+    width: 40,
+    height: 20
   }
 ];
 
@@ -201,73 +214,108 @@ interface QuizQuestion {
 const quizData: QuizQuestion[] = [
   {
     id: 1,
-    question: "Quelle norme ISO régit le contenu et la disposition du cartouche ?",
-    options: ["ISO 128", "ISO 7200", "ISO 1101", "ISO 5457"],
+    question: "Quelle norme ISO régit les champs de données dans les cartouches d'inscription ?",
+    options: ["ISO 5457", "ISO 7200", "ISO 128-1", "ISO 1101"],
     correctAnswer: 1,
-    explanation: "La norme ISO 7200 définit le contenu, la structure et la disposition des champs de données dans le cartouche d'inscription."
+    explanation: "La norme ISO 7200:2004 spécifie les champs de données à utiliser dans les cartouches d'inscription et les têtes de documents techniques."
   },
   {
     id: 2,
-    question: "Où doit être placé le cartouche sur un plan technique ?",
-    options: ["Coin supérieur gauche", "Centre du plan", "Coin inférieur droit", "Coin supérieur droit"],
-    correctAnswer: 2,
-    explanation: "Selon ISO 5457, le cartouche doit toujours être positionné dans le coin inférieur droit du plan."
+    question: "Où doit obligatoirement se situer le cartouche sur un plan technique ?",
+    options: ["En haut à gauche", "En bas à gauche", "En haut à droite", "En bas à droite"],
+    correctAnswer: 3,
+    explanation: "Selon ISO 5457, le cartouche doit obligatoirement se situer dans le coin inférieur droit du document, dans le sens de lecture."
   },
   {
     id: 3,
-    question: "Quel champ du cartouche identifie de façon unique un plan ?",
-    options: ["Titre", "Numéro du plan", "Date", "Échelle"],
-    correctAnswer: 1,
-    explanation: "Le numéro du plan est l'identifiant unique et obligatoire permettant de référencer le document dans le système de gestion."
+    question: "Quelle est la dimension maximale de la zone d'identification du cartouche selon ISO 7200 ?",
+    options: ["100 mm", "120 mm", "170 mm", "210 mm"],
+    correctAnswer: 2,
+    explanation: "La zone d'identification du cartouche doit avoir une longueur maximale de 170 mm selon ISO 7200."
   },
   {
     id: 4,
-    question: "Que signifie l'échelle '2:1' sur un plan horloger ?",
-    options: ["La pièce est 2 fois plus petite", "Le dessin est 2 fois plus grand que la pièce réelle", "La pièce mesure 2mm", "Le dessin est réduit de moitié"],
+    question: "Pour un format A4, quelle est la marge minimale recommandée selon ISO 5457 ?",
+    options: ["5 mm", "10 mm", "20 mm", "25 mm"],
     correctAnswer: 1,
-    explanation: "Une échelle 2:1 signifie que le dessin est agrandi 2 fois par rapport aux dimensions réelles de la pièce."
+    explanation: "Les formats A4, A3 et A2 ont une marge de 10 mm, tandis que les formats A1 et A0 ont une marge de 20 mm."
   },
   {
     id: 5,
-    question: "Quel symbole indique la méthode de projection européenne ?",
-    options: ["A", "E", "ISO", "P"],
+    question: "Quel champ du cartouche est obligatoire selon ISO 7200 ?",
+    options: ["Masse de la pièce", "Titre", "Traitement de surface", "Tolérance générale"],
     correctAnswer: 1,
-    explanation: "Le symbole 'E' (pour Européenne) avec un cône tronqué à gauche indique la projection du 1er dièdre."
+    explanation: "Le titre est un champ obligatoire (O) selon ISO 7200, car il identifie le contenu du document."
   },
   {
     id: 6,
-    question: "Que désigne 'ISO 2768-m' dans un cartouche ?",
-    options: ["Le matériau", "La tolérance générale", "L'échelle", "La méthode de projection"],
+    question: "Que signifie un indice de révision 'C' sur un plan ?",
+    options: ["Confidentiel", "3ème révision", "Contrôlé", "Copie"],
     correctAnswer: 1,
-    explanation: "ISO 2768-m définit la classe de tolérance générale moyenne applicable aux cotes non tolérancées individuellement."
+    explanation: "L'indice de révision suit généralement l'ordre alphabétique : A (1ère révision), B (2ème), C (3ème), etc."
   },
   {
     id: 7,
-    question: "L'indice de révision est-il obligatoire dans un cartouche ?",
-    options: ["Oui, toujours", "Non, jamais", "Seulement si le plan a été modifié", "Seulement pour les plans complexes"],
-    correctAnswer: 0,
-    explanation: "L'indice de révision est obligatoire selon ISO 7200, même pour la version initiale (généralement notée A ou 01)."
+    question: "Quel format de plan est le plus utilisé en horlogerie pour les pièces de mouvement ?",
+    options: ["A0", "A1", "A2", "A3 ou A4"],
+    correctAnswer: 3,
+    explanation: "En horlogerie, les formats A3 et A4 sont les plus courants pour les pièces de mouvement, en raison de leur taille réduite."
   },
   {
     id: 8,
-    question: "Quel est le format standard d'un numéro de plan horloger ?",
-    options: ["Libre", "Code alphanumérique structuré", "Uniquement des chiffres", "Uniquement des lettres"],
+    question: "Que doit contenir le champ 'Méthode de projection' en Suisse ?",
+    options: ["Méthode américaine (A)", "Méthode européenne (E)", "Méthode asiatique", "Projection isométrique"],
     correctAnswer: 1,
-    explanation: "Un numéro de plan horloger suit généralement un code alphanumérique structuré (ex: PLT-6497-001-A) pour une traçabilité optimale."
+    explanation: "En Suisse et en Europe, la méthode européenne (E) ou projection du 1er dièdre est le standard."
   },
   {
     id: 9,
-    question: "Le champ 'Vérificateur' est-il obligatoire ?",
-    options: ["Oui, toujours", "Non, c'est conditionnel", "Seulement pour les plans d'assemblage", "Seulement pour les pièces critiques"],
+    question: "Quelle tolérance générale est souvent indiquée dans les cartouches horlogers ?",
+    options: ["ISO 2768-c", "ISO 2768-m", "ISO 2768-f", "ISO 2768-v"],
     correctAnswer: 1,
-    explanation: "Le champ 'Vérificateur' est conditionnel : il n'est obligatoire que si une procédure de vérification formelle existe dans l'entreprise."
+    explanation: "ISO 2768-m (moyenne) est couramment utilisée en horlogerie, sauf pour les pièces nécessitant une précision fine (ISO 2768-f)."
   },
   {
     id: 10,
-    question: "Quelle information n'est PAS obligatoire dans un cartouche horloger ?",
-    options: ["Titre de la pièce", "Traitement de surface", "Numéro du plan", "Échelle"],
+    question: "Combien de caractères sont recommandés pour le champ 'Titre' selon ISO 7200 ?",
+    options: ["10-15", "15-20", "25-30", "40-50"],
+    correctAnswer: 2,
+    explanation: "ISO 7200 recommande 25 à 30 caractères pour le titre (30 pour les langues à caractères doubles comme le japonais)."
+  },
+  {
+    id: 11,
+    question: "Quel matériau horloger traditionnel est souvent indiqué dans le cartouche ?",
+    options: ["Aluminium", "Maillechort", "Plastique", "Titane"],
     correctAnswer: 1,
-    explanation: "Le traitement de surface est conditionnel : il n'est obligatoire que s'il est nécessaire à la fonction de la pièce."
+    explanation: "Le maillechort (alliage cuivre-nickel-zinc) est un matériau traditionnel très utilisé en horlogerie pour les platines et ponts."
+  },
+  {
+    id: 12,
+    question: "À quoi sert le tableau de révision au-dessus du cartouche ?",
+    options: ["Décoration", "Tracer l'historique des modifications", "Indiquer les tolérances", "Ajouter des notes"],
+    correctAnswer: 1,
+    explanation: "Le tableau de révision documente l'historique des modifications : indice, date, auteur, nature des changements."
+  },
+  {
+    id: 13,
+    question: "Quelle information n'est PAS obligatoire dans un cartouche selon ISO 7200 ?",
+    options: ["Titre", "Auteur", "Masse", "Format"],
+    correctAnswer: 2,
+    explanation: "La masse est un champ conditionnel (C), pas obligatoire, bien qu'elle soit importante en horlogerie pour l'équilibrage."
+  },
+  {
+    id: 14,
+    question: "Quel traitement de surface est typique en horlogerie de luxe ?",
+    options: ["Galvanisation", "Rhodiage", "Peinture", "Vernissage"],
+    correctAnswer: 1,
+    explanation: "Le rhodiage est un traitement de surface noble très utilisé en haute horlogerie pour protéger et embellir les pièces."
+  },
+  {
+    id: 15,
+    question: "Que signifie une échelle '5:1' sur un plan horloger ?",
+    options: ["La pièce est 5 fois plus petite", "La pièce est 5 fois plus grande", "5 pièces identiques", "5 vues différentes"],
+    correctAnswer: 1,
+    explanation: "Une échelle 5:1 signifie que le dessin est 5 fois plus grand que la pièce réelle, nécessaire pour les composants miniatures horlogers."
   }
 ];
 
@@ -315,27 +363,27 @@ export default function CartoucheHorlogerPage() {
 
   const getCategoryColor = (category: string) => {
     switch(category) {
-      case 'Identification': return 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 border-blue-300 dark:border-blue-700';
-      case 'Descriptif': return 'bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 border-purple-300 dark:border-purple-700';
-      case 'Technique': return 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 border-green-300 dark:border-green-700';
-      case 'Traçabilité': return 'bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-200 border-orange-300 dark:border-orange-700';
-      case 'Norme': return 'bg-pink-100 dark:bg-pink-900/50 text-pink-800 dark:text-pink-200 border-pink-300 dark:border-pink-700';
-      default: return 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-700';
+      case 'Descriptif': return 'bg-blue-100 text-blue-600 border-blue-200';
+      case 'Identification': return 'bg-purple-100 text-purple-600 border-purple-200';
+      case 'Technique': return 'bg-green-100 text-green-600 border-green-200';
+      case 'Représentation': return 'bg-orange-100 text-orange-600 border-orange-200';
+      case 'Document': return 'bg-cyan-100 text-cyan-600 border-cyan-200';
+      case 'Administratif': return 'bg-pink-100 text-pink-600 border-pink-200';
+      case 'Gestion': return 'bg-amber-100 text-amber-600 border-amber-200';
+      default: return 'bg-slate-100 text-slate-600 border-slate-200';
     }
   };
 
   const getObligationColor = (obligation: string) => {
-    return obligation === 'Obligatoire' 
-      ? 'text-red-600 dark:text-red-400' 
-      : 'text-blue-600 dark:text-blue-400';
+    return obligation === 'Obligatoire' ? 'text-red-600 font-bold' : 'text-blue-600';
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
-      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700">
+      <header className="bg-white shadow-sm border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link href="/theorie/lecture-de-plan" className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+          <Link href="/theorie/lecture-de-plan" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
             <ChevronLeft className="w-5 h-5 mr-1" />
             Retour
           </Link>
@@ -346,59 +394,79 @@ export default function CartoucheHorlogerPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Title Section */}
         <div className="text-center mb-12">
-          <div className="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium mb-4">
+          <div className="inline-block px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-4">
             Les normes
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
             Cartouche Horloger (Normes techniques)
           </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
+          <p className="text-lg text-slate-600 max-w-3xl mx-auto">
             ISO 7200 & ISO 5457 : identification et traçabilité des plans techniques
           </p>
         </div>
+
         {/* Interactive Cartouche Schema Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Schéma Interactif du Cartouche</h2>
-          <p className="text-slate-600 dark:text-slate-300 mb-8">Cliquez sur un champ dans le schéma ou dans la liste ci-dessous pour voir ses détails.</p>
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Schéma Interactif du Cartouche</h2>
+          <p className="text-slate-600 mb-8">Cliquez sur un champ dans le schéma ou dans la liste ci-dessous pour voir ses détails.</p>
           
           {/* SVG Cartouche */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6">
+          <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
             <div className="mb-4 text-center">
-              <span className="text-sm font-medium text-slate-600 dark:text-slate-300">Position : Coin inférieur droit du plan (ISO 5457)</span>
+              <span className="text-sm font-medium text-slate-600">Position : Coin inférieur droit du plan (ISO 5457)</span>
             </div>
-            <svg viewBox="0 0 410 100" className="w-full h-auto border-2 border-slate-300 dark:border-slate-600 rounded-lg">
+            <svg viewBox="0 0 410 100" className="w-full h-auto border-2 border-slate-300 rounded-lg">
               {/* Titre général */}
-              <text x="205" y="-5" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1e40af" className="dark:fill-blue-400">
+              <text x="205" y="-5" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1e40af">
                 Cartouche d'inscription ISO 7200
               </text>
               
               {/* Cadre extérieur */}
-              <rect x="0" y="0" width="410" height="100" fill="none" stroke="#1e293b" className="dark:stroke-slate-400" strokeWidth="2"/>
+              <rect x="0" y="0" width="410" height="100" fill="none" stroke="#1e293b" strokeWidth="2"/>
               
               {/* Champs interactifs */}
               {cartoucheFieldsData.map((field) => (
-                <g key={field.id} onClick={() => handleFieldClick(field.id)} className="cursor-pointer hover:opacity-80 transition-opacity">
-                  <rect 
-                    x={field.x} 
-                    y={field.y} 
-                    width={field.width} 
-                    height={field.height} 
-                    fill={field.obligation === 'Obligatoire' ? '#fecaca' : '#bfdbfe'} 
-                    fillOpacity="0.3" 
-                    stroke={field.obligation === 'Obligatoire' ? '#ef4444' : '#3b82f6'} 
-                    strokeWidth="1.5"
-                    className={selectedField === field.id ? 'fill-opacity-60' : ''}
+                <g key={field.id} onClick={() => handleFieldClick(field.id)} className="cursor-pointer">
+                  <rect
+                    x={field.x}
+                    y={field.y}
+                    width={field.width}
+                    height={field.height}
+                    fill={selectedField === field.id ? '#fde68a' : '#ffffff'}
+                    stroke={selectedField === field.id ? '#f59e0b' : '#64748b'}
+                    strokeWidth={selectedField === field.id ? 3 : 1}
+                    className="transition-all duration-200"
                   />
-                  <text 
-                    x={field.x + field.width / 2} 
-                    y={field.y + field.height / 2 + 3} 
-                    textAnchor="middle" 
-                    fontSize="7" 
-                    fontWeight="bold" 
-                    fill="#1e293b"
-                    className="dark:fill-slate-300 pointer-events-none"
+                  <text
+                    x={field.x + field.width / 2}
+                    y={field.y + field.height / 2 + 4}
+                    textAnchor="middle"
+                    fontSize={field.width < 50 ? '7' : '9'}
+                    fill={selectedField === field.id ? '#92400e' : '#334155'}
+                    fontWeight={selectedField === field.id ? 'bold' : 'normal'}
+                    className="pointer-events-none"
                   >
-                    {field.name.length > 20 ? field.name.substring(0, 18) + '...' : field.name}
+                    {field.name.length > 15 ? field.name.substring(0, 13) + '...' : field.name}
+                  </text>
+                  
+                  {/* Indicateur O/C */}
+                  <circle
+                    cx={field.x + field.width - 8}
+                    cy={field.y + 8}
+                    r="6"
+                    fill={field.obligation === 'Obligatoire' ? '#ef4444' : '#3b82f6'}
+                    className="pointer-events-none"
+                  />
+                  <text
+                    x={field.x + field.width - 8}
+                    y={field.y + 11}
+                    textAnchor="middle"
+                    fontSize="8"
+                    fill="white"
+                    fontWeight="bold"
+                    className="pointer-events-none"
+                  >
+                    {field.obligation === 'Obligatoire' ? 'O' : 'C'}
                   </text>
                 </g>
               ))}
@@ -406,21 +474,21 @@ export default function CartoucheHorlogerPage() {
               {/* Légende */}
               <g>
                 <circle cx="15" cy="95" r="4" fill="#ef4444"/>
-                <text x="22" y="98" fontSize="7" fill="#64748b" className="dark:fill-slate-400">Obligatoire (O)</text>
+                <text x="22" y="98" fontSize="7" fill="#64748b">Obligatoire (O)</text>
                 
                 <circle cx="80" cy="95" r="4" fill="#3b82f6"/>
-                <text x="87" y="98" fontSize="7" fill="#64748b" className="dark:fill-slate-400">Conditionnel (C)</text>
+                <text x="87" y="98" fontSize="7" fill="#64748b">Conditionnel (C)</text>
               </g>
             </svg>
           </div>
 
           {/* Explanation Panel */}
           {selectedFieldData && (
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-xl p-6 border-l-4 border-blue-600 dark:border-blue-400 animate-fadeIn">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border-l-4 border-blue-600 animate-fadeIn">
               <div className="flex items-center mb-4">
-                <FileText className="w-6 h-6 text-blue-600 dark:text-blue-400 mr-3" />
+                <FileText className="w-6 h-6 text-blue-600 mr-3" />
                 <div>
-                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{selectedFieldData.name}</h3>
+                  <h3 className="text-2xl font-bold text-slate-900">{selectedFieldData.name}</h3>
                   <div className="flex items-center gap-3 mt-2">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getCategoryColor(selectedFieldData.category)}`}>
                       {selectedFieldData.category}
@@ -433,18 +501,18 @@ export default function CartoucheHorlogerPage() {
               </div>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-1">Description :</p>
-                  <p className="text-slate-700 dark:text-slate-200 mb-3">{selectedFieldData.description}</p>
-                  <p className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-1">Nombre de caractères :</p>
-                  <p className="text-slate-700 dark:text-slate-200">{selectedFieldData.characters}</p>
+                  <p className="text-sm font-bold text-slate-700 mb-1">Description :</p>
+                  <p className="text-slate-700 mb-3">{selectedFieldData.description}</p>
+                  <p className="text-sm font-bold text-slate-700 mb-1">Nombre de caractères :</p>
+                  <p className="text-slate-700">{selectedFieldData.characters}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-1">Exemple horlogerie :</p>
-                  <p className="text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 px-4 py-3 rounded-lg border border-blue-200 dark:border-blue-700 font-mono text-sm">
+                  <p className="text-sm font-bold text-slate-700 mb-1">Exemple horlogerie :</p>
+                  <p className="text-slate-700 bg-white px-4 py-3 rounded-lg border border-blue-200 font-mono text-sm">
                     {selectedFieldData.example}
                   </p>
-                  <p className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-1 mt-3">Position dans le cartouche :</p>
-                  <p className="text-slate-700 dark:text-slate-200 text-xs">
+                  <p className="text-sm font-bold text-slate-700 mb-1 mt-3">Position dans le cartouche :</p>
+                  <p className="text-slate-700 text-xs">
                     x: {selectedFieldData.x}mm, y: {selectedFieldData.y}mm (largeur: {selectedFieldData.width}mm × hauteur: {selectedFieldData.height}mm)
                   </p>
                 </div>
@@ -455,14 +523,14 @@ export default function CartoucheHorlogerPage() {
 
         {/* List of Fields */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Liste des Champs de Données</h2>
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Liste des Champs de Données</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {cartoucheFieldsData.map((field) => (
               <div
                 key={field.id}
                 onClick={() => handleFieldClick(field.id)}
-                className={`bg-white dark:bg-slate-800 rounded-xl p-5 border-2 cursor-pointer transition-all hover:shadow-lg ${
-                  selectedField === field.id ? 'border-blue-600 dark:border-blue-400 shadow-lg ring-2 ring-blue-200 dark:ring-blue-700' : 'border-slate-200 dark:border-slate-700'
+                className={`bg-white rounded-xl p-5 border-2 cursor-pointer transition-all hover:shadow-lg ${
+                  selectedField === field.id ? 'border-blue-600 shadow-lg ring-2 ring-blue-200' : 'border-slate-200'
                 }`}
               >
                 <div className="flex items-center justify-between mb-3">
@@ -473,8 +541,8 @@ export default function CartoucheHorlogerPage() {
                     {field.obligation === 'Obligatoire' ? 'O' : 'C'}
                   </span>
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{field.name}</h3>
-                <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2">{field.description}</p>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">{field.name}</h3>
+                <p className="text-sm text-slate-600 line-clamp-2">{field.description}</p>
               </div>
             ))}
           </div>
@@ -482,73 +550,73 @@ export default function CartoucheHorlogerPage() {
 
         {/* Mémo Technique */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
           
           <div className="grid md:grid-cols-2 gap-6">
             {/* Erreurs */}
-            <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-6 border border-red-200 dark:border-red-700/40">
-              <h3 className="text-xl font-bold text-red-900 dark:text-red-300 mb-4 flex items-center">
+            <div className="bg-red-50 rounded-xl p-6 border border-red-200">
+              <h3 className="text-xl font-bold text-red-900 mb-4 flex items-center">
                 <XCircle className="w-6 h-6 mr-2" />
                 Erreurs fréquentes
               </h3>
-              <ul className="space-y-3 text-slate-700 dark:text-slate-200">
+              <ul className="space-y-3 text-slate-700">
                 <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
-                  <span>Oublier d'indiquer l'indice de révision (même pour la version initiale).</span>
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Oublier de renseigner les champs obligatoires (titre, auteur, date).</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
-                  <span>Utiliser une échelle sans la mentionner dans le cartouche.</span>
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Ne pas mettre à jour l'indice de révision après modification.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
-                  <span>Ne pas spécifier la tolérance générale ISO 2768.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
-                  <span>Placer le cartouche ailleurs qu'en bas à droite.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
+                  <span className="text-red-600 mr-2">•</span>
                   <span>Utiliser des abréviations non normalisées pour le matériau.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
-                  <span>Omettre le symbole de projection (E ou A).</span>
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Placer le cartouche ailleurs qu'en bas à droite.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Omettre la méthode de projection (symbole E/A).</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red-600 mr-2">•</span>
+                  <span>Ne pas spécifier les tolérances générales applicables.</span>
                 </li>
               </ul>
             </div>
 
             {/* Bonnes pratiques */}
-            <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-6 border border-green-200 dark:border-green-700/40">
-              <h3 className="text-xl font-bold text-green-900 dark:text-green-300 mb-4 flex items-center">
+            <div className="bg-green-50 rounded-xl p-6 border border-green-200">
+              <h3 className="text-xl font-bold text-green-900 mb-4 flex items-center">
                 <CheckCircle className="w-6 h-6 mr-2" />
                 Bonnes pratiques
               </h3>
-              <ul className="space-y-3 text-slate-700 dark:text-slate-200">
+              <ul className="space-y-3 text-slate-700">
                 <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                  <span>Utiliser un système de numérotation cohérent et structuré.</span>
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Remplir systématiquement tous les champs obligatoires (O) selon ISO 7200.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                  <span>Vérifier la conformité avec les normes ISO 7200 et ISO 5457.</span>
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Utiliser des désignations normalisées pour les matériaux horlogers.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                  <span>Remplir tous les champs obligatoires avant validation.</span>
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Indiquer clairement les tolérances générales (ISO 2768-m ou f).</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                  <span>Utiliser les désignations normalisées pour les matériaux (EN, ASTM).</span>
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Maintenir un tableau de révision au-dessus du cartouche.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                  <span>Dater chaque modification et incrémenter l'indice de révision.</span>
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Préciser les traitements de surface spécifiques (rhodiage, anglage, etc.).</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                  <span>Conserver un historique de toutes les révisions du plan.</span>
+                  <span className="text-green-600 mr-2">•</span>
+                  <span>Respecter les marges ISO 5457 pour archivage et pliage.</span>
                 </li>
               </ul>
             </div>
@@ -557,29 +625,29 @@ export default function CartoucheHorlogerPage() {
 
         {/* Quiz Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Quiz : Teste tes connaissances</h2>
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Quiz : Teste tes connaissances</h2>
           
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8">
+          <div className="bg-white rounded-2xl shadow-lg p-8">
             {!quizCompleted ? (
               <>
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-4">
-                    <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                    <span className="text-sm font-medium text-slate-600">
                       Question {currentQuestion + 1} sur {quizData.length}
                     </span>
-                    <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                    <span className="text-sm font-medium text-blue-600">
                       Score: {score}/{quizData.length}
                     </span>
                   </div>
-                  <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                  <div className="w-full bg-slate-200 rounded-full h-2">
                     <div 
-                      className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${((currentQuestion + 1) / quizData.length) * 100}%` }}
                     ></div>
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
+                <h3 className="text-xl font-bold text-slate-900 mb-6">
                   {quizData[currentQuestion].question}
                 </h3>
 
@@ -591,24 +659,24 @@ export default function CartoucheHorlogerPage() {
                       disabled={selectedAnswer !== null}
                       className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                         selectedAnswer === null
-                          ? 'border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30'
+                          ? 'border-slate-200 hover:border-blue-400 hover:bg-blue-50'
                           : index === quizData[currentQuestion].correctAnswer
-                          ? 'border-green-500 dark:border-green-600 bg-green-50 dark:bg-green-900/30'
+                          ? 'border-green-500 bg-green-50'
                           : selectedAnswer === index
-                          ? 'border-red-500 dark:border-red-600 bg-red-50 dark:bg-red-900/30'
-                          : 'border-slate-200 dark:border-slate-700 opacity-50'
+                          ? 'border-red-500 bg-red-50'
+                          : 'border-slate-200 opacity-50'
                       }`}
                     >
                       <div className="flex items-center">
-                        <span className="font-semibold mr-3 text-slate-700 dark:text-slate-200">
+                        <span className="font-semibold mr-3 text-slate-700">
                           {String.fromCharCode(65 + index)}.
                         </span>
-                        <span className="text-slate-800 dark:text-slate-100">{option}</span>
+                        <span className="text-slate-800">{option}</span>
                         {selectedAnswer !== null && index === quizData[currentQuestion].correctAnswer && (
-                          <CheckCircle className="w-5 h-5 ml-auto text-green-600 dark:text-green-400" />
+                          <CheckCircle className="w-5 h-5 ml-auto text-green-600" />
                         )}
                         {selectedAnswer === index && index !== quizData[currentQuestion].correctAnswer && (
-                          <XCircle className="w-5 h-5 ml-auto text-red-600 dark:text-red-400" />
+                          <XCircle className="w-5 h-5 ml-auto text-red-600" />
                         )}
                       </div>
                     </button>
@@ -616,8 +684,8 @@ export default function CartoucheHorlogerPage() {
                 </div>
 
                 {showExplanation && (
-                  <div className="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-600 dark:border-blue-400 p-4 mb-6 rounded">
-                    <p className="text-slate-700 dark:text-slate-200">
+                  <div className="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6 rounded">
+                    <p className="text-slate-700">
                       <strong>Explication :</strong> {quizData[currentQuestion].explanation}
                     </p>
                   </div>
@@ -626,7 +694,7 @@ export default function CartoucheHorlogerPage() {
                 {selectedAnswer !== null && (
                   <button
                     onClick={handleNextQuestion}
-                    className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white py-3 rounded-lg font-semibold transition-colors"
+                    className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                   >
                     {currentQuestion < quizData.length - 1 ? 'Question suivante' : 'Voir les résultats'}
                   </button>
@@ -634,28 +702,28 @@ export default function CartoucheHorlogerPage() {
               </>
             ) : (
               <div className="text-center">
-                <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Quiz terminé !</h3>
-                <p className="text-xl text-slate-700 dark:text-slate-300 mb-6">
-                  Votre score : <span className="font-bold text-blue-600 dark:text-blue-400">{score}/{quizData.length}</span>
+                <h3 className="text-3xl font-bold text-slate-900 mb-4">Quiz terminé !</h3>
+                <p className="text-xl text-slate-700 mb-6">
+                  Votre score : <span className="font-bold text-blue-600">{score}/{quizData.length}</span>
                   {' '}({Math.round((score / quizData.length) * 100)}%)
                 </p>
                 <div className="mb-6">
                   {score === quizData.length && (
-                    <p className="text-green-600 dark:text-green-400 font-semibold text-lg">🎉 Parfait ! Tu maîtrises le cartouche horloger !</p>
+                    <p className="text-green-600 font-semibold text-lg">🎉 Parfait ! Tu maîtrises les cartouches techniques !</p>
                   )}
                   {score >= quizData.length * 0.8 && score < quizData.length && (
-                    <p className="text-blue-600 dark:text-blue-400 font-semibold text-lg">👏 Excellent travail ! Quelques révisions et ce sera parfait !</p>
+                    <p className="text-blue-600 font-semibold text-lg">👏 Excellent travail ! Quelques révisions et ce sera parfait !</p>
                   )}
                   {score >= quizData.length * 0.6 && score < quizData.length * 0.8 && (
-                    <p className="text-yellow-600 dark:text-yellow-400 font-semibold text-lg">💪 Bon résultat ! Continue de t'entraîner !</p>
+                    <p className="text-yellow-600 font-semibold text-lg">💪 Bon résultat ! Continue de t'entraîner !</p>
                   )}
                   {score < quizData.length * 0.6 && (
-                    <p className="text-orange-600 dark:text-orange-400 font-semibold text-lg">📚 Révise les notions et réessaie !</p>
+                    <p className="text-orange-600 font-semibold text-lg">📚 Révise les notions et réessaie !</p>
                   )}
                 </div>
                 <button
                   onClick={resetQuiz}
-                  className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+                  className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                 >
                   Recommencer le quiz
                 </button>
@@ -663,56 +731,205 @@ export default function CartoucheHorlogerPage() {
             )}
           </div>
         </section>
-                {/* Context Section */}
+
+        {/* Context Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Contexte & Origines des Normes</h2>
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8">
-            <div className="mb-6 flex items-start">
-              <div className="bg-blue-100 dark:bg-blue-900/50 p-3 rounded-lg mr-4">
-                <Book className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Contexte & Origines des Normes</h2>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* ISO 7200 */}
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <div className="flex items-start mb-4">
+                <div className="bg-blue-100 p-3 rounded-lg mr-4">
+                  <FileText className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">ISO 7200:2004</h3>
+                  <p className="text-sm text-blue-800 font-semibold mb-3">Champs de données dans les cartouches</p>
+                </div>
               </div>
-              <div className="flex-1">
-                <p className="text-slate-700 dark:text-slate-200 leading-relaxed mb-4">
-                  La norme <strong className="text-blue-600 dark:text-blue-400">ISO 7200</strong> définit le cartouche technique sur tous les plans industriels.
-                  La norme <strong className="text-blue-600 dark:text-blue-400">ISO 5457</strong> fixe la position du cartouche et le format des feuilles.
-                  Ces deux normes assurent l'unification internationale de la traçabilité documentaire et facilitent la production et maintenance horlogère.
-                </p>
+              <p className="text-slate-700 leading-relaxed">
+                Cette norme spécifie les <strong>champs de données</strong> à utiliser dans les cartouches d'inscription et les têtes de documents techniques. Elle définit les noms de champ, leur contenu et leur longueur pour faciliter les échanges de documents et assurer leur cohérence internationale.
+              </p>
+            </div>
+
+            {/* ISO 5457 */}
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <div className="flex items-start mb-4">
+                <div className="bg-green-100 p-3 rounded-lg mr-4">
+                  <Book className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">ISO 5457:1999</h3>
+                  <p className="text-sm text-green-800 font-semibold mb-3">Formats et présentation des dessins</p>
+                </div>
               </div>
+              <p className="text-slate-700 leading-relaxed">
+                Cette norme définit les <strong>formats de papier</strong>, les marges, les zones d'inscription et les cadres utilisés pour les plans techniques. Elle garantit la compatibilité, la reproductibilité et le pliage standardisé des documents.
+              </p>
             </div>
           </div>
         </section>
 
-        {/* Tableau récapitulatif et Exemples */}
+        {/* Table: Formats ISO 5457 */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Tableau synthétique</h2>
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Formats Normalisés ISO 5457</h2>
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-100 dark:bg-slate-700">
+                <thead className="bg-slate-100">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Champ</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Catégorie</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Obligation</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Exemple</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Format</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Dimensions (mm)</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Marge minimale</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Usage horlogerie</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                  {cartoucheFieldsData.map((field) => (
-                    <tr key={field.id} className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
-                      <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">{field.name}</td>
-                      <td className="px-6 py-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getCategoryColor(field.category)}`}>
-                          {field.category}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`font-semibold ${getObligationColor(field.obligation)}`}>
-                          {field.obligation}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-slate-700 dark:text-slate-200 font-mono text-sm">{field.example}</td>
-                    </tr>
-                  ))}
+                <tbody className="divide-y divide-slate-200">
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">A4</td>
+                    <td className="px-6 py-4 text-slate-700">210 × 297</td>
+                    <td className="px-6 py-4 text-slate-700">10 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Pièces de mouvement, composants unitaires</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">A3</td>
+                    <td className="px-6 py-4 text-slate-700">297 × 420</td>
+                    <td className="px-6 py-4 text-slate-700">10 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Ensembles de mouvement, platines complètes</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">A2</td>
+                    <td className="px-6 py-4 text-slate-700">420 × 594</td>
+                    <td className="px-6 py-4 text-slate-700">10 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Éclatés complexes, assemblages complets</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">A1</td>
+                    <td className="px-6 py-4 text-slate-700">594 × 841</td>
+                    <td className="px-6 py-4 text-slate-700">20 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Plans d'atelier, nomenclatures étendues</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">A0</td>
+                    <td className="px-6 py-4 text-slate-700">841 × 1189</td>
+                    <td className="px-6 py-4 text-slate-700">20 mm</td>
+                    <td className="px-6 py-4 text-slate-700">Rarement utilisé en horlogerie</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* Table: Matériaux horlogers */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Matériaux Horlogers Courants</h2>
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-100">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Désignation normalisée</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Nom courant</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Composition</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Usage</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">CuNi18Zn20</td>
+                    <td className="px-6 py-4 text-slate-700">Maillechort</td>
+                    <td className="px-6 py-4 text-slate-700">Cu-Ni 18% - Zn 20%</td>
+                    <td className="px-6 py-4 text-slate-700">Platines, ponts, leviers</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">CuZn40</td>
+                    <td className="px-6 py-4 text-slate-700">Laiton</td>
+                    <td className="px-6 py-4 text-slate-700">Cu-Zn 40%</td>
+                    <td className="px-6 py-4 text-slate-700">Roues, pignons, platines</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">X5CrNi18-10 (316L)</td>
+                    <td className="px-6 py-4 text-slate-700">Acier inoxydable</td>
+                    <td className="px-6 py-4 text-slate-700">Acier austénitique</td>
+                    <td className="px-6 py-4 text-slate-700">Axes, visserie, boîtiers</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Glucydur</td>
+                    <td className="px-6 py-4 text-slate-700">Glucydur</td>
+                    <td className="px-6 py-4 text-slate-700">Alliage Cu-Be</td>
+                    <td className="px-6 py-4 text-slate-700">Balanciers (antimagnétique)</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Nivaflex</td>
+                    <td className="px-6 py-4 text-slate-700">Nivaflex</td>
+                    <td className="px-6 py-4 text-slate-700">Alliage Ni-Cr-Co-Ti-Be</td>
+                    <td className="px-6 py-4 text-slate-700">Spiraux (antimagnétique)</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Rubis synthétique</td>
+                    <td className="px-6 py-4 text-slate-700">Rubis</td>
+                    <td className="px-6 py-4 text-slate-700">Corindon Al₂O₃</td>
+                    <td className="px-6 py-4 text-slate-700">Paliers, contre-pivots</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* Table: Traitements de surface */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Traitements de Surface Horlogers</h2>
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-100">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Traitement</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Description</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Objectif</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Application</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Rhodiage</td>
+                    <td className="px-6 py-4 text-slate-700">Dépôt électrolytique de rhodium</td>
+                    <td className="px-6 py-4 text-slate-700">Protection, aspect blanc brillant</td>
+                    <td className="px-6 py-4 text-slate-700">Platines, ponts de luxe</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Anglage</td>
+                    <td className="px-6 py-4 text-slate-700">Polissage des arêtes à 45°</td>
+                    <td className="px-6 py-4 text-slate-700">Esthétique haute horlogerie</td>
+                    <td className="px-6 py-4 text-slate-700">Ponts, leviers, bascules</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Perlage</td>
+                    <td className="px-6 py-4 text-slate-700">Motif circulaire décoratif</td>
+                    <td className="px-6 py-4 text-slate-700">Esthétique, finition noble</td>
+                    <td className="px-6 py-4 text-slate-700">Platines, ponts</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Côtes de Genève</td>
+                    <td className="px-6 py-4 text-slate-700">Rayures parallèles ondulées</td>
+                    <td className="px-6 py-4 text-slate-700">Finition traditionnelle genevoise</td>
+                    <td className="px-6 py-4 text-slate-700">Ponts, masses oscillantes</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">PVD</td>
+                    <td className="px-6 py-4 text-slate-700">Dépôt physique en phase vapeur</td>
+                    <td className="px-6 py-4 text-slate-700">Dureté, résistance, couleur</td>
+                    <td className="px-6 py-4 text-slate-700">Boîtiers, composants sportifs</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900">Satinage</td>
+                    <td className="px-6 py-4 text-slate-700">Finition mate directionnelle</td>
+                    <td className="px-6 py-4 text-slate-700">Esthétique, anti-reflets</td>
+                    <td className="px-6 py-4 text-slate-700">Boîtiers, bracelets</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -721,64 +938,111 @@ export default function CartoucheHorlogerPage() {
 
         {/* Quote */}
         <section className="mb-16">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-800 rounded-2xl p-8 text-white text-center">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white text-center">
             <blockquote className="text-2xl font-serif italic mb-4">
-              "Un cartouche clair, c'est un plan exploitable et durable."
+              "Le cartouche est la carte d'identité du plan technique : précision et traçabilité garanties."
             </blockquote>
-            <p className="text-blue-100 dark:text-blue-200">— Principe ISO</p>
+            <p className="text-blue-100">— Principe fondamental ISO 7200</p>
           </div>
         </section>
 
         {/* FAQ */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Questions fréquentes (FAQ)</h2>
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">Questions fréquentes (FAQ)</h2>
+          
           <div className="space-y-4">
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-white cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex justify-between items-center">
-                Est-ce que tous les champs doivent être remplis ?
-                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
+            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+                Quelle est la différence entre un champ obligatoire (O) et conditionnel (C) ?
+                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
-                <p className="text-slate-700 dark:text-slate-200">
-                  Non : seuls les champs <strong>obligatoires</strong> sont requis pour tout plan. Les champs <strong>conditionnels</strong> sont à renseigner si la situation le justifie (traitement, vérificateur...).
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                <p className="text-slate-700">
+                  Un champ <strong>obligatoire (O)</strong> doit toujours être renseigné selon ISO 7200 (titre, auteur, date, format, etc.). Un champ <strong>conditionnel (C)</strong> n'est obligatoire que si l'information est pertinente pour le document (masse, traitement de surface, tolérance générale). En horlogerie, la masse et les traitements sont souvent considérés comme obligatoires de facto.
                 </p>
               </div>
             </details>
 
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-white cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex justify-between items-center">
-                Peut-on personnaliser le cartouche ?
-                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
+            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+                Comment gérer les révisions d'un plan technique ?
+                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
-                <p className="text-slate-700 dark:text-slate-200">
-                  Oui, dans la limite de conserver tous les champs imposés par ISO 7200.
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                <p className="text-slate-700">
+                  Chaque modification doit être documentée dans un <strong>tableau de révision</strong> au-dessus du cartouche : <strong>Indice</strong> (A, B, C...), <strong>Date</strong>, <strong>Auteur</strong>, <strong>Nature de la modification</strong> (description concise), <strong>Visa</strong> (vérificateur). L'indice dans le cartouche principal doit être mis à jour. En production, seule la dernière révision est valide.
+                </p>
+              </div>
+            </details>
+
+            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+                Pourquoi l'échelle est-elle souvent supérieure à 1:1 en horlogerie ?
+                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                <p className="text-slate-700">
+                  Les composants horlogers sont miniatures (pivots de 0.08 mm, rubis de 0.2 mm). Une échelle <strong>2:1, 5:1 ou même 10:1</strong> agrandit le dessin pour permettre une cotation lisible et précise. Le dessinateur peut ainsi spécifier des tolérances de l'ordre du micromètre. L'échelle réelle doit toujours être clairement indiquée dans le cartouche.
+                </p>
+              </div>
+            </details>
+
+            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+                Quelles tolérances générales indiquer dans le cartouche horloger ?
+                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                <p className="text-slate-700">
+                  En horlogerie, on utilise généralement <strong>ISO 2768-m</strong> (moyenne) ou <strong>ISO 2768-f</strong> (fine) pour les pièces de précision. Ces normes définissent les tolérances linéaires et angulaires pour les cotes non tolérancées individuellement. Pour les mouvements haut de gamme, ISO 2768-f est préférable. Les cotes critiques doivent toujours avoir des tolérances spécifiques.
+                </p>
+              </div>
+            </details>
+
+            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+                Peut-on personnaliser le cartouche selon l'entreprise ?
+                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
+                <p className="text-slate-700">
+                  Oui, les entreprises peuvent créer des <strong>cartouches personnalisés</strong> tant que les <strong>champs obligatoires ISO 7200</strong> sont présents et que le cartouche reste en <strong>bas à droite</strong>. La plupart des manufactures horlogères suisses ont un modèle standardisé incluant leur logo, des champs spécifiques (n° de calibre, série, client) et des zones pour validation qualité. Le respect des normes ISO garantit néanmoins l'interchangeabilité des documents.
                 </p>
               </div>
             </details>
           </div>
         </section>
 
-        {/* CTA ISO */}
+        {/* CTA */}
         <section className="text-center">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-800 rounded-2xl p-8 text-white inline-block">
-            <p className="text-lg mb-4">📘 Pour aller plus loin :</p>
-            <a 
-              href="https://www.iso.org/standard/68916.html" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-block bg-white dark:bg-slate-100 text-blue-600 dark:text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-slate-200 transition-colors"
-            >
-              Découvrir la norme ISO 7200 complète
-            </a>
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white inline-block">
+            <p className="text-lg mb-4">📘 Tu veux aller plus loin ?</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a 
+                href="https://www.iso.org/standard/35446.html" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+              >
+                Consulter ISO 7200
+              </a>
+              <a 
+                href="https://www.iso.org/standard/5281.html" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+              >
+                Consulter ISO 5457
+              </a>
+            </div>
           </div>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-900 dark:bg-slate-950 text-white py-8 mt-16 border-t border-slate-800 dark:border-slate-700">
+      <footer className="bg-slate-900 text-white py-8 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-slate-400 dark:text-slate-500">© 2025 HorloLearn - Passion & Découverte Horlogère Suisse</p>
+          <p className="text-slate-400">© 2025 HorloLearn - Passion & Découverte Horlogère Suisse</p>
         </div>
       </footer>
     </div>
