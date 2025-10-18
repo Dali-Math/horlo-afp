@@ -258,4 +258,35 @@ export default function PhasesLunePage() {
   );
 }
 
-// Components simples (StatCard, PhaseCard, ManufactureCard)
+// ==========================================
+// COMPONENTS
+// ==========================================
+
+function StatCard({ number, label }: { number: string; label: string }) {
+  return (
+    <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4">
+      <div className="text-3xl font-bold mb-1">{number}</div>
+      <div className="text-xs font-medium opacity-80">{label}</div>
+    </div>
+  );
+}
+
+function PhaseCard({ phase, name, description }: { phase: string; name: string; description: string }) {
+  return (
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-4 text-center">
+      <div className="text-4xl mb-2">{phase}</div>
+      <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100 mb-1">{name}</h3>
+      <p className="text-xs text-gray-600 dark:text-gray-400">{description}</p>
+    </div>
+  );
+}
+
+function ManufactureCard({ name, achievement, specialty }: { name: string; achievement: string; specialty: string }) {
+  return (
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-6">
+      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{name}</h3>
+      <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-3">{achievement}</p>
+      <p className="text-gray-700 dark:text-gray-300 text-sm">{specialty}</p>
+    </div>
+  );
+}
