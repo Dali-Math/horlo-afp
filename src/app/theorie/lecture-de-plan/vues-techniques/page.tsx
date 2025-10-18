@@ -253,41 +253,42 @@ export default function VuesTechniquesPage() {
                 <text x="400" y="335" textAnchor="middle" fontSize="14" fill="#475569">Vue de face</text>
               </g>
 
-              {/* Vue de dessus (B) */}
+              {/* Vue de dessus (B) - Dessous en méthode E */}
               <g onClick={() => handleViewClick('B')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="325" y="400" width="150" height="120" fill="#10b981" fillOpacity="0.2" stroke="#10b981" strokeWidth="3" rx="8"/>
                 <text x="400" y="470" textAnchor="middle" fontSize="24" fontWeight="bold" fill="#047857">B</text>
                 <text x="400" y="495" textAnchor="middle" fontSize="14" fill="#475569">Vue de dessus</text>
               </g>
 
-              {/* Vue de droite (D) */}
+              {/* Vue de droite (D) - Gauche en méthode E */}
               <g onClick={() => handleViewClick('D')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="150" y="225" width="150" height="150" fill="#f59e0b" fillOpacity="0.2" stroke="#f59e0b" strokeWidth="3" rx="8"/>
                 <text x="225" y="310" textAnchor="middle" fontSize="24" fontWeight="bold" fill="#d97706">D</text>
                 <text x="225" y="335" textAnchor="middle" fontSize="14" fill="#475569">Vue de droite</text>
               </g>
 
-              {/* Vue de gauche (C) */}
+              {/* Vue de gauche (C) - Droite en méthode E */}
               <g onClick={() => handleViewClick('C')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="500" y="225" width="150" height="150" fill="#8b5cf6" fillOpacity="0.2" stroke="#8b5cf6" strokeWidth="3" rx="8"/>
                 <text x="575" y="310" textAnchor="middle" fontSize="24" fontWeight="bold" fill="#6d28d9">C</text>
                 <text x="575" y="335" textAnchor="middle" fontSize="14" fill="#475569">Vue de gauche</text>
               </g>
 
-              {/* Vue de dessous (E) */}
+              {/* Vue de dessous (E) - Dessus en méthode E */}
               <g onClick={() => handleViewClick('E')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="325" y="80" width="150" height="120" fill="#ec4899" fillOpacity="0.2" stroke="#ec4899" strokeWidth="3" rx="8"/>
                 <text x="400" y="150" textAnchor="middle" fontSize="24" fontWeight="bold" fill="#be185d">E</text>
                 <text x="400" y="175" textAnchor="middle" fontSize="14" fill="#475569">Vue de dessous</text>
               </g>
 
-              {/* Vue d'arrière (F) */}
+              {/* Vue d'arrière (F) - Extrémité droite */}
               <g onClick={() => handleViewClick('F')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="25" y="225" width="100" height="150" fill="#ef4444" fillOpacity="0.2" stroke="#ef4444" strokeWidth="3" rx="8"/>
                 <text x="75" y="310" textAnchor="middle" fontSize="24" fontWeight="bold" fill="#dc2626">F</text>
                 <text x="75" y="335" textAnchor="middle" fontSize="14" fill="#475569">Arrière</text>
               </g>
 
+              {/* Légende méthode européenne */}
               <text x="400" y="560" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-300">Disposition - Méthode Européenne (E) - 1er Dièdre</text>
             </svg>
           </div>
@@ -506,9 +507,243 @@ export default function VuesTechniquesPage() {
           </div>
         </section>
 
-        {/* Reste des sections : Context, Projection Methods, Tables, FAQ, CTA... */}
-        {/* Continue avec le même pattern dark: pour chaque élément */}
+        {/* Context Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Contexte & Origines des Normes</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8">
+            <div className="mb-6 flex items-start">
+              <div className="bg-blue-100 dark:bg-blue-900/50 p-3 rounded-lg mr-4">
+                <Book className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div className="flex-1">
+                <p className="text-slate-700 dark:text-slate-200 leading-relaxed mb-4">
+                  La norme <strong className="text-blue-600 dark:text-blue-400">ISO 128-3</strong> (anciennement ISO 128-30 et ISO 128-34) établit les principes généraux de représentation des vues, sections et coupes en dessin technique. Publiée en 2020 et révisée en 2022, elle harmonise les méthodes de projection orthographique à travers le monde.
+                </p>
+                <p className="text-slate-700 dark:text-slate-200 leading-relaxed">
+                  En horlogerie, la maîtrise des projections orthogonales est essentielle pour représenter avec précision les composants miniatures du mouvement. La <strong className="text-blue-600 dark:text-blue-400">méthode européenne</strong> (projection du 1er dièdre) est universellement adoptée en Suisse et permet de visualiser clairement les relations spatiales entre les pièces, garantissant ainsi une fabrication rigoureuse et un assemblage parfait.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
 
+        {/* Projection Methods */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Méthodes de Projection</h2>
+          
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            {/* Méthode Européenne */}
+            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border-2 border-blue-200 dark:border-blue-700/40">
+              <div className="flex items-center mb-4">
+                <div className="bg-blue-600 dark:bg-blue-700 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">
+                  E
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Méthode Européenne</h3>
+              </div>
+              <p className="text-sm text-blue-800 dark:text-blue-200 font-semibold mb-3">1er Dièdre</p>
+              <p className="text-slate-700 dark:text-slate-200 mb-4">
+                Dans cette méthode, l'objet est placé <strong>entre l'observateur et le plan de projection</strong>. La vue de dessus se trouve <strong>sous</strong> la vue de face, et la vue de droite se trouve à <strong>gauche</strong> de la vue de face.
+              </p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">
+                ✓ Standard en Suisse et en Europe<br/>
+                ✓ Symbole : Cône tronqué à gauche
+              </p>
+            </div>
+
+            {/* Méthode Américaine */}
+            <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-6 border-2 border-orange-200 dark:border-orange-700/40">
+              <div className="flex items-center mb-4">
+                <div className="bg-orange-600 dark:bg-orange-700 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">
+                  A
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Méthode Américaine</h3>
+              </div>
+              <p className="text-sm text-orange-800 dark:text-orange-200 font-semibold mb-3">3ème Dièdre</p>
+              <p className="text-slate-700 dark:text-slate-200 mb-4">
+                Le plan de projection se trouve <strong>entre l'observateur et l'objet</strong>. La vue de dessus se trouve <strong>au-dessus</strong> de la vue de face, et la vue de droite se trouve à <strong>droite</strong> de la vue de face.
+              </p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">
+                ✓ Utilisée en Amérique du Nord<br/>
+                ✓ Symbole : Cône tronqué à droite
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Les 6 Vues Principales - Table */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Les 6 Vues Principales</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-100 dark:bg-slate-700">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Vue</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Position</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Information principale</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Vue de face (A)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Vue principale</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Forme caractéristique de la pièce</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Vue de dessus (B)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">En dessous (méthode E)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Profil supérieur, perçages</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Vue de gauche (C)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">À droite (méthode E)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Épaisseur, profil latéral</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Vue de droite (D)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">À gauche (méthode E)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Symétrie, détails latéraux</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Vue de dessous (E)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Au-dessus (méthode E)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Face inférieure, fixations</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Vue d'arrière (F)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">À l'extrémité droite</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Face arrière, sorties</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* Exemples en Horlogerie - Table */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Exemples en Horlogerie</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-100 dark:bg-slate-700">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Type de pièce</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Vues nécessaires</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Justification</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Platine</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Face + Dessus + Coupe</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Visualiser les logements et épaisseurs</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Pont de balancier</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Face + Droite</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Montrer le profil et les fixations</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Roue d'échappement</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Face + Coupe</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Détailler la denture et l'épaisseur</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Axe de balancier</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Face + Détail agrandi</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Préciser les pivots et portées</td>
+                  </tr>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Barillet complet</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Face + Coupe longitudinale</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Révéler le ressort et le tambour</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* Quote */}
+        <section className="mb-16">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-800 rounded-2xl p-8 text-white text-center">
+            <blockquote className="text-2xl font-serif italic mb-4">
+              "Une vue bien choisie vaut mieux que trois vues confuses."
+            </blockquote>
+            <p className="text-blue-100 dark:text-blue-200">— Principe fondamental de la représentation technique</p>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Questions fréquentes (FAQ)</h2>
+          
+          <div className="space-y-4">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-white cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex justify-between items-center">
+                Combien de vues faut-il pour représenter une pièce horlogère ?
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-200">
+                  En général, <strong>2 à 3 vues</strong> suffisent. La vue de face doit être la plus informative, complétée par une ou deux vues supplémentaires selon la complexité. Les coupes remplacent souvent avantageusement certaines vues.
+                </p>
+              </div>
+            </details>
+
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-white cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex justify-between items-center">
+                Quelle méthode de projection utiliser en horlogerie suisse ?
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-200">
+                  La <strong>méthode européenne (E)</strong> ou projection du 1er dièdre est la norme en Suisse et dans toute l'Europe. Elle doit être clairement indiquée dans le cartouche du plan avec le symbole approprié.
+                </p>
+              </div>
+            </details>
+
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-white cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex justify-between items-center">
+                Comment choisir la meilleure vue de face ?
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-200">
+                  Sélectionnez la face qui montre la <strong>forme la plus caractéristique</strong> de la pièce, celle qui permet de comprendre immédiatement sa fonction. Pour un pont, c'est la vue montrant les logements ; pour une roue, c'est la vue de la denture.
+                </p>
+              </div>
+            </details>
+
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-white cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex justify-between items-center">
+                Quand utiliser une coupe plutôt qu'une vue ?
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-200">
+                  Utilisez une <strong>coupe</strong> lorsque l'intérieur de la pièce contient des informations essentielles (logements, alésages, épaisseurs variables) qui seraient cachées ou confuses avec des traits interrompus dans une vue normale.
+                </p>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="text-center">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-800 rounded-2xl p-8 text-white inline-block">
+            <p className="text-lg mb-4">📘 Tu veux aller plus loin ?</p>
+            <a 
+              href="https://www.iso.org/standard/69130.html" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-block bg-white dark:bg-slate-100 text-blue-600 dark:text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-slate-200 transition-colors"
+            >
+              Consulter la norme ISO 128-3 complète
+            </a>
+          </div>
+        </section>
       </main>
 
       {/* Footer */}
