@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  Clock, Gauge, Zap, Settings2, ChevronLeft, BookOpen, Cog, RotateCw, BookText,
+  Clock, Gauge, Zap, Settings2, ChevronLeft, BookOpen, Cog, RotateCw, Book,
 } from 'lucide-react';
 
 const pagesFonctionnement = [
@@ -50,7 +50,7 @@ const pagesHistoireCulture = [
     slug: 'histoire-horlogerie-suisse',
     titre: "Histoire de l'Horlogerie Suisse",
     description: "Origines, établissage, crises et succès depuis le 16ème siècle.",
-    icon: <BookText className="w-7 h-7 text-amber-600 dark:text-amber-400" />,
+    icon: <Book className="w-7 h-7 text-amber-600 dark:text-amber-400" />,
   },
 ];
 
