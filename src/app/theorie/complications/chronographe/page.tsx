@@ -306,4 +306,132 @@ export default function ChronographePage() {
   );
 }
 
-// Components (StatCard, FunctionCard, MechanismCard, VariantCard, ScaleCard, LegendCard - à définir comme précédemment)
+// ==========================================
+// COMPONENTS
+// ==========================================
+
+function StatCard({ number, label, color }: { number: string; label: string; color: string }) {
+  return (
+    <div className="bg-white/10 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+      <div className="text-3xl font-bold mb-1">{number}</div>
+      <div className="text-xs font-medium opacity-80">{label}</div>
+    </div>
+  );
+}
+
+interface FunctionCardProps {
+  number: string;
+  title: string;
+  description: string;
+  icon: string;
+  color: string;
+}
+
+function FunctionCard({ number, title, description, icon, color }: FunctionCardProps) {
+  return (
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-6">
+      <div className="flex items-center gap-3 mb-3">
+        <span className="text-4xl">{icon}</span>
+        <div className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-bold">
+          {number}
+        </div>
+      </div>
+      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{title}</h3>
+      <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{description}</p>
+    </div>
+  );
+}
+
+interface MechanismCardProps {
+  title: string;
+  icon: string;
+  description: string;
+  advantages: string[];
+  disadvantages: string[];
+  color: string;
+}
+
+function MechanismCard({ title, icon, description, advantages, disadvantages, color }: MechanismCardProps) {
+  return (
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-6">
+      <div className="flex items-center gap-3 mb-4">
+        <span className="text-4xl">{icon}</span>
+        <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{title}</h3>
+      </div>
+      <p className="text-gray-700 dark:text-gray-300 mb-4">{description}</p>
+      
+      <div className="mb-4">
+        <h4 className="font-bold text-green-700 dark:text-green-300 mb-2">✅ Avantages</h4>
+        <ul className="space-y-1 text-sm">
+          {advantages.map((adv, idx) => (
+            <li key={idx} className="text-gray-700 dark:text-gray-300">• {adv}</li>
+          ))}
+        </ul>
+      </div>
+      
+      <div>
+        <h4 className="font-bold text-red-700 dark:text-red-300 mb-2">⚠️ Inconvénients</h4>
+        <ul className="space-y-1 text-sm">
+          {disadvantages.map((dis, idx) => (
+            <li key={idx} className="text-gray-700 dark:text-gray-300">• {dis}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+interface VariantCardProps {
+  title: string;
+  icon: string;
+  description: string;
+  color: string;
+}
+
+function VariantCard({ title, icon, description, color }: VariantCardProps) {
+  return (
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-6">
+      <span className="text-4xl mb-3 block">{icon}</span>
+      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{title}</h3>
+      <p className="text-gray-700 dark:text-gray-300 text-sm">{description}</p>
+    </div>
+  );
+}
+
+interface ScaleCardProps {
+  title: string;
+  description: string;
+  example: string;
+  icon: string;
+}
+
+function ScaleCard({ title, description, example, icon }: ScaleCardProps) {
+  return (
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-6">
+      <span className="text-4xl mb-3 block">{icon}</span>
+      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{title}</h3>
+      <p className="text-gray-700 dark:text-gray-300 text-sm mb-3">{description}</p>
+      <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded text-xs text-gray-700 dark:text-gray-300">
+        <strong>Exemple :</strong> {example}
+      </div>
+    </div>
+  );
+}
+
+interface LegendCardProps {
+  name: string;
+  year: string;
+  description: string;
+  icon: string;
+}
+
+function LegendCard({ name, year, description, icon }: LegendCardProps) {
+  return (
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-6">
+      <span className="text-4xl mb-3 block">{icon}</span>
+      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">{name}</h3>
+      <p className="text-sm text-blue-600 dark:text-blue-400 mb-2">{year}</p>
+      <p className="text-gray-700 dark:text-gray-300 text-sm">{description}</p>
+    </div>
+  );
+}
