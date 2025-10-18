@@ -36,7 +36,7 @@ export default function RouagePage() {
           {/* Icon avec rotation */}
           <div className="mb-6 flex justify-center md:justify-start">
             <div className="relative">
-              <svg className="w-20 h-20 text-orange-500 animate-spin-slow" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg className="w-20 h-20 text-orange-500 animate-spin-slow gear-3d" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="50" cy="50" r="35" />
                 <circle cx="50" cy="50" r="20" />
                 {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => (
@@ -394,49 +394,49 @@ export default function RouagePage() {
 // COMPONENTS
 // ========================================
 
-// Composant Roues Animées (SVG)
+// Composant Roues Animées avec Effets 3D
 function AnimatedGears() {
   return (
     <div className="absolute inset-0 overflow-hidden">
-      {/* Grande roue principale - tourne lentement sens horaire */}
+      {/* Grande roue principale - tourne lentement sens horaire avec effet 3D */}
       <svg
-        className="absolute top-10 right-10 w-64 h-64 text-orange-500/30 animate-spin-slow"
+        className="absolute top-10 right-10 w-64 h-64 text-orange-500/30 animate-spin-slow gear-3d"
         viewBox="0 0 100 100"
         fill="currentColor"
       >
         <Gear size={100} teeth={12} />
       </svg>
 
-      {/* Roue moyenne - tourne moyennement sens anti-horaire */}
+      {/* Roue moyenne - tourne moyennement sens anti-horaire avec effet 3D */}
       <svg
-        className="absolute top-40 left-20 w-40 h-40 text-orange-400/25 animate-spin-reverse"
+        className="absolute top-40 left-20 w-40 h-40 text-orange-400/25 animate-spin-reverse gear-3d"
         viewBox="0 0 100 100"
         fill="currentColor"
       >
         <Gear size={100} teeth={10} />
       </svg>
 
-      {/* Petite roue rapide - tourne vite sens horaire */}
+      {/* Petite roue rapide - tourne vite sens horaire avec effet 3D */}
       <svg
-        className="absolute bottom-20 right-32 w-28 h-28 text-amber-500/20 animate-spin-fast"
+        className="absolute bottom-20 right-32 w-28 h-28 text-amber-500/20 animate-spin-fast gear-3d"
         viewBox="0 0 100 100"
         fill="currentColor"
       >
         <Gear size={100} teeth={8} />
       </svg>
 
-      {/* Roue décorative mobile */}
+      {/* Roue décorative mobile avec effet 3D */}
       <svg
-        className="absolute bottom-40 left-1/4 w-32 h-32 text-orange-300/15 animate-spin-slow-reverse"
+        className="absolute bottom-40 left-1/4 w-32 h-32 text-orange-300/15 animate-spin-slow-reverse gear-3d"
         viewBox="0 0 100 100"
         fill="currentColor"
       >
         <Gear size={100} teeth={9} />
       </svg>
 
-      {/* Roue supplémentaire centre gauche */}
+      {/* Roue supplémentaire centre gauche avec effet 3D */}
       <svg
-        className="hidden md:block absolute top-1/2 left-10 w-36 h-36 text-amber-400/20 animate-spin-reverse"
+        className="hidden md:block absolute top-1/2 left-10 w-36 h-36 text-amber-400/20 animate-spin-reverse gear-3d"
         viewBox="0 0 100 100"
         fill="currentColor"
       >
