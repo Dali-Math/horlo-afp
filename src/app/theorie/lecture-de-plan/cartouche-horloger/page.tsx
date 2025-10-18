@@ -362,21 +362,22 @@ export default function CartoucheHorlogerPage() {
   const selectedFieldData = cartoucheFieldsData.find(f => f.id === selectedField);
 
   const getCategoryColor = (category: string) => {
-    switch(category) {
-      case 'Descriptif': return 'bg-blue-100 text-blue-600 border-blue-200';
-      case 'Identification': return 'bg-purple-100 text-purple-600 border-purple-200';
-      case 'Technique': return 'bg-green-100 text-green-600 border-green-200';
-      case 'Représentation': return 'bg-orange-100 text-orange-600 border-orange-200';
-      case 'Document': return 'bg-cyan-100 text-cyan-600 border-cyan-200';
-      case 'Administratif': return 'bg-pink-100 text-pink-600 border-pink-200';
-      case 'Gestion': return 'bg-amber-100 text-amber-600 border-amber-200';
-      default: return 'bg-slate-100 text-slate-600 border-slate-200';
-    }
-  };
+  switch(category) {
+    case 'Identification': return 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 border-blue-300 dark:border-blue-700';
+    case 'Descriptif': return 'bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 border-purple-300 dark:border-purple-700';
+    case 'Technique': return 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 border-green-300 dark:border-green-700';
+    case 'Traçabilité': return 'bg-orange-100 dark:bg-orange-900/50 text-orange-800 dark:text-orange-200 border-orange-300 dark:border-orange-700';
+    case 'Norme': return 'bg-pink-100 dark:bg-pink-900/50 text-pink-800 dark:text-pink-200 border-pink-300 dark:border-pink-700';
+    default: return 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-700';
+  }
+};
 
-  const getObligationColor = (obligation: string) => {
-    return obligation === 'Obligatoire' ? 'text-red-600 font-bold' : 'text-blue-600';
-  };
+const getObligationColor = (obligation: string) => {
+  return obligation === 'Obligatoire' 
+    ? 'text-red-600 dark:text-red-400' 
+    : 'text-blue-600 dark:text-blue-400';
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
