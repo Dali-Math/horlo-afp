@@ -11,13 +11,13 @@ export const metadata: Metadata = {
 
 export default function RouagePage() {
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50 dark:bg-neutral-950">
       {/* Header avec breadcrumb */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white dark:bg-neutral-900 border-b border-gray-200 dark:border-neutral-800">
         <div className="container mx-auto px-4 py-6 max-w-6xl">
           <a
             href="/theorie"
-            className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 transition-colors group"
+            className="inline-flex items-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors group"
           >
             <svg className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -27,43 +27,38 @@ export default function RouagePage() {
         </div>
       </div>
 
-      {/* Hero Section avec Roues Animées */}
-      <section className="bg-white relative overflow-hidden">
-        {/* Animated Gears Background - Visible et subtil */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.08]">
-          <AnimatedGears />
-        </div>
-
-        <div className="container mx-auto px-4 py-12 md:py-16 max-w-6xl relative z-10">
+      {/* Hero Section */}
+      <section className="bg-white dark:bg-neutral-900">
+        <div className="container mx-auto px-4 py-12 md:py-16 max-w-6xl">
           {/* Badge catégorie */}
           <div className="mb-6">
-            <span className="inline-block bg-blue-100 text-blue-700 text-sm font-medium px-4 py-1.5 rounded-full">
+            <span className="inline-block bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 text-sm font-medium px-4 py-1.5 rounded-full">
               Théorie de base
             </span>
           </div>
 
           {/* Titre avec roue animée */}
           <div className="flex items-start gap-4 mb-6">
-            <div className="relative">
+            <div className="relative flex-shrink-0">
               <svg 
-                className="w-16 h-16 md:w-20 md:h-20 text-blue-600 animate-spin-slow" 
+                className="w-16 h-16 md:w-20 md:h-20 text-blue-600 dark:text-orange-400 animate-spin-slow" 
                 viewBox="0 0 100 100" 
                 fill="none" 
                 stroke="currentColor" 
                 strokeWidth="3"
               >
-                <Gear size={100} teeth={8} />
+                <GearIcon size={100} teeth={8} />
               </svg>
-              <div className="absolute inset-0 bg-blue-400/20 blur-xl rounded-full"></div>
+              <div className="absolute inset-0 bg-blue-400/20 dark:bg-orange-400/20 blur-xl rounded-full"></div>
             </div>
             <div className="flex-1">
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
                 La Transmission Cinématique
               </h1>
             </div>
           </div>
 
-          <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-4xl">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-4xl">
             Le rouage est le cœur de la transmission mécanique dans une montre. Il transforme l'énergie du barillet en un mouvement précis et régulé qui anime les aiguilles.
           </p>
 
@@ -80,30 +75,30 @@ export default function RouagePage() {
       {/* Définition et Fonction */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-5xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8">
             Définition et Fonction
           </h2>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-6">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Système de Transmission de l'Énergie</h3>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Le <span className="font-semibold text-gray-900">rouage</span> (ou train d'engrenages) est l'ensemble des roues dentées et pignons qui transmettent l'énergie du barillet vers l'échappement dans une montre mécanique. Il constitue le <span className="font-semibold text-gray-900">système de transmission cinématique central</span> du mouvement horloger.
+          <div className="bg-white dark:bg-neutral-900 rounded-2xl shadow-sm border border-gray-200 dark:border-neutral-800 p-8 mb-6">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Système de Transmission de l'Énergie</h3>
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+              Le <span className="font-semibold text-gray-900 dark:text-gray-100">rouage</span> (ou train d'engrenages) est l'ensemble des roues dentées et pignons qui transmettent l'énergie du barillet vers l'échappement dans une montre mécanique. Il constitue le <span className="font-semibold text-gray-900 dark:text-gray-100">système de transmission cinématique central</span> du mouvement horloger.
             </p>
-            <p className="text-gray-700 leading-relaxed mb-4">
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
               Le rouage transforme le flux d'énergie continu provenant du ressort moteur en un mouvement régulé et précis. Chaque engrenage est conçu et apparié avec une précision micrométrique pour réguler le mouvement et la vitesse de transmission.
             </p>
-            <p className="text-gray-700 leading-relaxed">
-              Le train de rouage commence au niveau du ressort dans le barillet et se termine à l'échappement. Chaque roue du train est reliée à une autre par l'intermédiaire de pignons, ce qui permet de <span className="font-semibold text-gray-900">modifier progressivement la vitesse de transfert</span> de l'énergie.
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+              Le train de rouage commence au niveau du ressort dans le barillet et se termine à l'échappement. Chaque roue du train est reliée à une autre par l'intermédiaire de pignons, ce qui permet de <span className="font-semibold text-gray-900 dark:text-gray-100">modifier progressivement la vitesse de transfert</span> de l'énergie.
             </p>
           </div>
 
-          <div className="bg-gradient-to-br from-orange-50 to-orange-100 border-l-4 border-orange-500 rounded-xl p-6">
+          <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 border-l-4 border-orange-500 rounded-xl p-6">
             <div className="flex items-start gap-3">
               <span className="text-2xl">⚡</span>
               <div>
-                <h4 className="text-lg font-bold text-gray-900 mb-2">Fonction Principale</h4>
-                <p className="text-gray-700 leading-relaxed">
-                  Le rouage assure la <span className="font-semibold text-gray-900">transmission du couple moteur</span> depuis le barillet jusqu'à l'échappement, tout en démultipliant la vitesse pour atteindre la fréquence d'oscillation nécessaire au balancier-spiral.
+                <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Fonction Principale</h4>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  Le rouage assure la <span className="font-semibold text-gray-900 dark:text-gray-100">transmission du couple moteur</span> depuis le barillet jusqu'à l'échappement, tout en démultipliant la vitesse pour atteindre la fréquence d'oscillation nécessaire au balancier-spiral.
                 </p>
               </div>
             </div>
@@ -112,62 +107,62 @@ export default function RouagePage() {
       </section>
 
       {/* Le Rouage de Finissage */}
-      <section className="bg-white py-12 md:py-16">
+      <section className="bg-white dark:bg-neutral-900 py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-5xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8">
             Le Rouage de Finissage
           </h2>
 
           <div className="mb-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Rouage Multiplicatif</h3>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              Le <span className="font-semibold text-gray-900">rouage de finissage</span> est un rouage multiplicatif, ce qui signifie que chaque mobile tourne plus rapidement que celui qui le précède dans la chaîne cinématique. Cette accélération progressive est essentielle pour atteindre la <span className="font-semibold text-gray-900">fréquence d'oscillation nécessaire</span> au balancier.
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Rouage Multiplicatif</h3>
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+              Le <span className="font-semibold text-gray-900 dark:text-gray-100">rouage de finissage</span> est un rouage multiplicatif, ce qui signifie que chaque mobile tourne plus rapidement que celui qui le précède dans la chaîne cinématique. Cette accélération progressive est essentielle pour atteindre la <span className="font-semibold text-gray-900 dark:text-gray-100">fréquence d'oscillation nécessaire</span> au balancier.
             </p>
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
               Le rouage de finissage divise l'unité de temps donnée par l'oscillateur (ensemble balancier-spiral-échappement) pour créer les indications des heures, minutes et secondes. Il est composé de plusieurs mobiles successifs qui multiplient la vitesse de rotation.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-              <h4 className="text-lg font-bold text-gray-900 mb-4">Caractéristiques</h4>
-              <ul className="space-y-3 text-gray-700">
+            <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-6 shadow-sm">
+              <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Caractéristiques</h4>
+              <ul className="space-y-3 text-gray-700 dark:text-gray-300">
                 <li className="flex items-start">
-                  <span className="text-blue-600 mr-2">•</span>
+                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
                   <span><span className="font-semibold">Multiplication de vitesse</span> : chaque roue tourne plus vite</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-600 mr-2">•</span>
+                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
                   <span><span className="font-semibold">Démultiplication du couple</span> : force réduite progressivement</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-600 mr-2">•</span>
+                  <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
                   <span><span className="font-semibold">Précision accrue</span> : réduction des erreurs cumulées</span>
                 </li>
               </ul>
             </div>
 
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-              <h4 className="text-lg font-bold text-gray-900 mb-4">Performances</h4>
-              <ul className="space-y-3 text-gray-700">
+            <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-6 shadow-sm">
+              <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">Performances</h4>
+              <ul className="space-y-3 text-gray-700 dark:text-gray-300">
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span><span className="font-semibold">Fréquence élevée</span> : jusqu'à 5 Hz (36 000 alt/h)</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span><span className="font-semibold">Efficacité optimale</span> : rendement &gt; 95%</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span><span className="font-semibold">Durabilité</span> : usure minimale sur décennies</span>
                 </li>
               </ul>
             </div>
           </div>
 
-          <div className="bg-blue-50 border-l-4 border-blue-500 rounded-xl p-6">
-            <p className="text-gray-700 text-sm leading-relaxed italic">
+          <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded-xl p-6">
+            <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed italic">
               L'efficience du train de rouage permet aux mouvements modernes de fonctionner à des fréquences élevées tout en offrant un remarquable niveau de performance et de réserve de marche.
             </p>
           </div>
@@ -177,12 +172,12 @@ export default function RouagePage() {
       {/* Composition du Train de Rouage */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-6xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-6">
             Composition du Train de Rouage
           </h2>
 
-          <p className="text-lg text-gray-600 mb-10 max-w-4xl">
-            Un train de rouage standard se compose généralement de <span className="font-semibold text-gray-900">quatre mobiles principaux</span>. Chaque mobile est constitué d'une roue dentée et d'un pignon qui engrène avec la roue suivante.
+          <p className="text-lg text-gray-600 dark:text-gray-300 mb-10 max-w-4xl">
+            Un train de rouage standard se compose généralement de <span className="font-semibold text-gray-900 dark:text-gray-100">quatre mobiles principaux</span>. Chaque mobile est constitué d'une roue dentée et d'un pignon qui engrène avec la roue suivante.
           </p>
 
           <div className="grid md:grid-cols-2 gap-6">
@@ -216,193 +211,10 @@ export default function RouagePage() {
             />
           </div>
 
-          <div className="mt-8 bg-white border border-gray-200 rounded-xl shadow-sm p-6">
-            <p className="text-gray-700 leading-relaxed">
-              Dans le rouage, un engrenage se compose d'une roue dont les dents pénètrent entre les dents (appelées ailes) d'un pignon. Cette interaction mécanique permet une <span className="font-semibold text-gray-900">transmission précise</span> du mouvement et du couple moteur.
+          <div className="mt-8 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl shadow-sm p-6">
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+              Dans le rouage, un engrenage se compose d'une roue dont les dents pénètrent entre les dents (appelées ailes) d'un pignon. Cette interaction mécanique permet une <span className="font-semibold text-gray-900 dark:text-gray-100">transmission précise</span> du mouvement et du couple moteur.
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Rapport de Transmission */}
-      <section className="bg-white py-12 md:py-16">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            Rapport de Transmission
-          </h2>
-
-          <p className="text-lg text-gray-600 mb-8">
-            Dans un train d'engrenages simple, le <span className="font-semibold text-gray-900">rapport de transmission</span> est égal au produit des nombres de dents des roues menantes divisé par celui des roues menées. Cette formule mathématique permet de calculer précisément les vitesses de rotation.
-          </p>
-
-          <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-8 mb-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">Formule du Rapport de Transmission</h3>
-            
-            <div className="bg-gray-50 rounded-lg p-6 mb-6 font-mono text-center border border-gray-200">
-              <div className="text-2xl text-gray-900 mb-4">
-                ω<sub className="text-sm">sortie</sub> / ω<sub className="text-sm">entrée</sub> = (∏ Z<sub className="text-sm">menantes</sub>) / (∏ Z<sub className="text-sm">menées</sub>)
-              </div>
-            </div>
-
-            <div className="space-y-3 text-gray-700 text-sm">
-              <div className="flex items-start">
-                <span className="font-bold text-gray-900 mr-3 min-w-[100px]">ω (oméga)</span>
-                <span>Vitesse angulaire (rad/s ou tr/min)</span>
-              </div>
-              <div className="flex items-start">
-                <span className="font-bold text-gray-900 mr-3 min-w-[100px]">Z</span>
-                <span>Nombre de dents de la roue</span>
-              </div>
-              <div className="flex items-start">
-                <span className="font-bold text-gray-900 mr-3 min-w-[100px]">∏ (produit)</span>
-                <span>Multiplication successive</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 border-l-4 border-blue-500 rounded-xl p-6">
-            <div className="flex items-start gap-3">
-              <span className="text-2xl">💡</span>
-              <div>
-                <h4 className="text-lg font-bold text-gray-900 mb-3">Exemple Pratique</h4>
-                <p className="text-gray-700 leading-relaxed mb-3">
-                  Pour une roue de 80 dents engrenant avec un pignon de 10 dents :
-                </p>
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-blue-600 mr-2">•</span>
-                    <span>Rapport = 80 / 10 = <span className="font-bold text-gray-900">8</span></span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-blue-600 mr-2">•</span>
-                    <span>Le pignon tourne <span className="font-bold text-gray-900">8 fois plus vite</span> que la roue</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-blue-600 mr-2">•</span>
-                    <span>Le couple est <span className="font-bold text-gray-900">divisé par 8</span></span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <p className="text-gray-600 text-sm leading-relaxed mt-6 italic">
-            Ce calcul permet aux horlogers de concevoir des trains de rouage qui produisent exactement les rapports de vitesse nécessaires pour une mesure précise du temps. La précision de ces engrenages est cruciale pour la fiabilité chronométrique de la montre.
-          </p>
-        </div>
-      </section>
-
-      {/* Rouage et Minuterie */}
-      <section className="py-12 md:py-16">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            Rouage et Minuterie
-          </h2>
-
-          <p className="text-lg text-gray-600 mb-8">
-            Le <span className="font-semibold text-gray-900">rouage des minutes</span> est un système spécifique qui transmet la rotation du pignon des minutes à l'aiguille des heures. Ce mécanisme assure que l'aiguille des heures tourne <span className="font-semibold text-gray-900">12 fois plus lentement</span> que celle des minutes.
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-2xl">🕐</span>
-                <h3 className="text-xl font-bold text-gray-900">Rapport Horaire</h3>
-              </div>
-              <p className="text-gray-700 mb-4">La minuterie assure le rapport 1:12 entre minutes et heures :</p>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-blue-600 mr-2">•</span>
-                  <span><span className="font-semibold">Chaussée</span> : 1 tour/heure</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-600 mr-2">•</span>
-                  <span><span className="font-semibold">Roue des heures</span> : 1 tour/12 heures</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-600 mr-2">•</span>
-                  <span><span className="font-semibold">Pignon de minuterie</span> : transmission intermédiaire</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-2xl">⚡</span>
-                <h3 className="text-xl font-bold text-gray-900">Complications</h3>
-              </div>
-              <p className="text-gray-700 mb-4">Le rouage transmet aussi l'énergie vers :</p>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
-                  <span><span className="font-semibold">Quantième</span> : affichage de la date</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
-                  <span><span className="font-semibold">Phases de lune</span> : cycle lunaire</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
-                  <span><span className="font-semibold">Chronographe</span> : fonction de chronométrage</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <p className="text-gray-700 leading-relaxed">
-            La minuterie est un ensemble d'engrenages situé côté cadran qui permet l'affichage des heures. Elle reçoit le mouvement de la roue de centre (qui fait un tour par heure) et le démultiplie pour actionner l'aiguille des heures. Les rouages transmettent le couple moteur et le mouvement vers d'autres éléments du mécanisme, comme les complications horlogères. Cette transmission doit être à la fois <span className="font-semibold text-gray-900">efficace et précise</span> pour garantir le bon fonctionnement de toutes les fonctions.
-          </p>
-        </div>
-      </section>
-
-      {/* Précision et Qualité */}
-      <section className="bg-white py-12 md:py-16">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 text-center">
-            Précision et Qualité
-          </h2>
-
-          <p className="text-lg text-gray-600 text-center mb-12 max-w-3xl mx-auto">
-            La qualité du rouage est déterminante pour la <span className="font-semibold text-gray-900">précision et la fiabilité</span> d'une montre mécanique. Chaque engrenage doit être usiné avec une tolérance de l'ordre du <span className="font-semibold text-gray-900">micromètre (µm)</span> pour assurer une transmission optimale.
-          </p>
-
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <QualityCard
-              title="Tolérance"
-              value="< 1 µm"
-              description="Précision d'usinage requise"
-              color="blue"
-            />
-            <QualityCard
-              title="Rendement"
-              value="> 95%"
-              description="Efficacité de transmission"
-              color="green"
-            />
-            <QualityCard
-              title="Durabilité"
-              value="10-20 ans"
-              description="Durée de vie avec entretien"
-              color="purple"
-            />
-          </div>
-
-          <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-8 mb-6">
-            <p className="text-gray-700 leading-relaxed mb-6">
-              Le mouvement final des engrenages est converti en un <span className="font-semibold text-gray-900">tic-tac régulier</span> de la montre qui donne une heure précise. Toute imperfection dans la conception ou la fabrication du rouage peut entraîner des variations de marche et affecter la précision chronométrique.
-            </p>
-
-            <div className="bg-gradient-to-br from-green-50 to-green-100 border-l-4 border-green-500 rounded-xl p-6">
-              <div className="flex items-start gap-3">
-                <span className="text-2xl">🇨🇭</span>
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">Innovation Suisse</h3>
-                  <p className="text-gray-700 leading-relaxed">
-                    Les manufactures horlogères suisses investissent massivement dans la recherche et le développement de nouveaux matériaux et designs pour améliorer l'efficacité des trains de rouage. L'utilisation de nouveaux alliages, de traitements de surface et de géométries optimisées permet de réduire les frottements et d'augmenter la réserve de marche.
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -410,7 +222,7 @@ export default function RouagePage() {
       {/* Call to Action - Quiz */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-4xl">
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-xl p-8 md:p-12 text-center text-white">
+          <div className="bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-2xl shadow-xl p-8 md:p-12 text-center text-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               📝 Testez vos connaissances
             </h2>
@@ -437,66 +249,22 @@ export default function RouagePage() {
 // COMPONENTS
 // ========================================
 
-// Composant Roues Animées pour fond (design clair)
-function AnimatedGears() {
-  return (
-    <div className="absolute inset-0 overflow-hidden">
-      {/* Grande roue principale - droite haut */}
-      <svg
-        className="absolute top-10 right-10 w-80 h-80 text-blue-600 animate-spin-slow"
-        viewBox="0 0 100 100"
-        fill="currentColor"
-      >
-        <Gear size={100} teeth={12} />
-      </svg>
-
-      {/* Roue moyenne - gauche milieu */}
-      <svg
-        className="absolute top-1/3 left-10 w-52 h-52 text-green-600 animate-spin-reverse"
-        viewBox="0 0 100 100"
-        fill="currentColor"
-      >
-        <Gear size={100} teeth={10} />
-      </svg>
-
-      {/* Petite roue rapide - droite bas */}
-      <svg
-        className="absolute bottom-20 right-1/4 w-36 h-36 text-purple-600 animate-spin-fast"
-        viewBox="0 0 100 100"
-        fill="currentColor"
-      >
-        <Gear size={100} teeth={8} />
-      </svg>
-
-      {/* Roue décorative - gauche bas */}
-      <svg
-        className="absolute bottom-32 left-1/4 w-44 h-44 text-orange-600 animate-spin-slow-reverse"
-        viewBox="0 0 100 100"
-        fill="currentColor"
-      >
-        <Gear size={100} teeth={9} />
-      </svg>
-    </div>
-  );
-}
-
-// Composant Roue Dentée SVG (stroke pour design clair)
-interface GearProps {
+// Composant Roue Dentée SVG pour animation
+interface GearIconProps {
   size: number;
   teeth: number;
 }
 
-function Gear({ size, teeth }: GearProps) {
+function GearIcon({ size, teeth }: GearIconProps) {
   const center = size / 2;
-  const outerRadius = size / 2 - 2;
-  const innerRadius = outerRadius * 0.7;
+  const outerRadius = size / 2 - 4;
+  const innerRadius = outerRadius * 0.65;
 
-  // Génération des dents
   let pathData = "";
   for (let i = 0; i < teeth; i++) {
     const angle1 = (i * 2 * Math.PI) / teeth;
-    const angle2 = ((i + 0.4) * 2 * Math.PI) / teeth;
-    const angle3 = ((i + 0.6) * 2 * Math.PI) / teeth;
+    const angle2 = ((i + 0.35) * 2 * Math.PI) / teeth;
+    const angle3 = ((i + 0.65) * 2 * Math.PI) / teeth;
     const angle4 = ((i + 1) * 2 * Math.PI) / teeth;
 
     const x1 = center + innerRadius * Math.cos(angle1);
@@ -508,21 +276,16 @@ function Gear({ size, teeth }: GearProps) {
     const x4 = center + innerRadius * Math.cos(angle4);
     const y4 = center + innerRadius * Math.sin(angle4);
 
-    if (i === 0) {
-      pathData += `M ${x1} ${y1} `;
-    }
+    if (i === 0) pathData += `M ${x1} ${y1} `;
     pathData += `L ${x2} ${y2} L ${x3} ${y3} L ${x4} ${y4} `;
   }
   pathData += "Z";
 
   return (
     <g>
-      {/* Corps de la roue */}
-      <path d={pathData} fill="currentColor" opacity="0.15" stroke="currentColor" strokeWidth="1.5" />
-      {/* Centre de la roue */}
-      <circle cx={center} cy={center} r={innerRadius * 0.3} fill="currentColor" opacity="0.2" />
-      {/* Trou central */}
-      <circle cx={center} cy={center} r={innerRadius * 0.15} fill="none" stroke="currentColor" strokeWidth="2" opacity="0.3" />
+      <path d={pathData} fill="none" stroke="currentColor" strokeWidth="2.5" />
+      <circle cx={center} cy={center} r={innerRadius * 0.35} fill="none" stroke="currentColor" strokeWidth="2.5" />
+      <circle cx={center} cy={center} r={innerRadius * 0.15} fill="none" stroke="currentColor" strokeWidth="2" />
     </g>
   );
 }
@@ -536,10 +299,10 @@ interface StatCardProps {
 
 function StatCard({ number, label, color }: StatCardProps) {
   const colorClasses = {
-    blue: 'bg-blue-50 border-blue-200 text-blue-700',
-    green: 'bg-green-50 border-green-200 text-green-700',
-    purple: 'bg-purple-50 border-purple-200 text-purple-700',
-    orange: 'bg-orange-50 border-orange-200 text-orange-700',
+    blue: 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300',
+    green: 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300',
+    purple: 'bg-purple-50 dark:bg-purple-900/30 border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300',
+    orange: 'bg-orange-50 dark:bg-orange-900/30 border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-300',
   };
 
   return (
@@ -561,17 +324,17 @@ interface MobileCardProps {
 
 function MobileCard({ icon, number, title, description, color }: MobileCardProps) {
   const colorClasses = {
-    blue: 'bg-blue-50 border-blue-200',
-    green: 'bg-green-50 border-green-200',
-    purple: 'bg-purple-50 border-purple-200',
-    orange: 'bg-orange-50 border-orange-200',
+    blue: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
+    green: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800',
+    purple: 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800',
+    orange: 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800',
   };
 
   const badgeClasses = {
-    blue: 'bg-blue-100 text-blue-700',
-    green: 'bg-green-100 text-green-700',
-    purple: 'bg-purple-100 text-purple-700',
-    orange: 'bg-orange-100 text-orange-700',
+    blue: 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200',
+    green: 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-200',
+    purple: 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200',
+    orange: 'bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-200',
   };
 
   return (
@@ -581,35 +344,11 @@ function MobileCard({ icon, number, title, description, color }: MobileCardProps
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             <span className={`text-sm font-bold ${badgeClasses[color]} px-2 py-1 rounded`}>{number}</span>
-            <h3 className="text-lg font-bold text-gray-900">{title}</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">{title}</h3>
           </div>
         </div>
       </div>
-      <p className="text-gray-700 text-sm leading-relaxed">{description}</p>
-    </div>
-  );
-}
-
-// Composant Quality Card
-interface QualityCardProps {
-  title: string;
-  value: string;
-  description: string;
-  color: 'blue' | 'green' | 'purple';
-}
-
-function QualityCard({ title, value, description, color }: QualityCardProps) {
-  const colorClasses = {
-    blue: 'bg-blue-50 border-blue-200 text-blue-700',
-    green: 'bg-green-50 border-green-200 text-green-700',
-    purple: 'bg-purple-50 border-purple-200 text-purple-700',
-  };
-
-  return (
-    <div className={`${colorClasses[color]} border rounded-xl p-6 text-center transition-all hover:shadow-md`}>
-      <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
-      <div className="text-4xl font-bold mb-3">{value}</div>
-      <p className="text-gray-600 text-sm">{description}</p>
+      <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{description}</p>
     </div>
   );
 }
