@@ -306,7 +306,10 @@ export default function RevisionCompletePage() {
   );
 }
 
-// Components
+// ==========================================
+// COMPONENTS
+// ==========================================
+
 function StatCard({ number, label }: { number: string; label: string }) {
   return (
     <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4">
@@ -316,4 +319,74 @@ function StatCard({ number, label }: { number: string; label: string }) {
   );
 }
 
-// StepCard, PriceCard components...
+interface StepCardProps {
+  number: string;
+  title: string;
+  duration: string;
+  description: string;
+  details: string[];
+  color: string;
+}
+
+function StepCard({ number, title, duration, description, details, color }: StepCardProps) {
+  const colorClasses = {
+    blue: 'border-blue-500',
+    purple: 'border-purple-500',
+    cyan: 'border-cyan-500',
+    orange: 'border-orange-500',
+    green: 'border-green-500',
+    red: 'border-red-500',
+    indigo: 'border-indigo-500',
+    teal: 'border-teal-500',
+    pink: 'border-pink-500',
+  };
+
+  return (
+    <div className={`bg-white dark:bg-neutral-900 border-l-4 ${colorClasses[color as keyof typeof colorClasses]} border border-gray-200 dark:border-neutral-800 rounded-xl p-6 shadow-lg`}>
+      <div className="flex items-start gap-4 mb-4">
+        <div className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0">
+          {number}
+        </div>
+        <div className="flex-1">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{title}</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">⏱️ {duration}</p>
+          <p className="text-sm text-gray-700 dark:text-gray-300 mt-2">{description}</p>
+        </div>
+      </div>
+      
+      <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+        {details.map((detail, idx) => (
+          <li key={idx} className="flex items-start">
+            <span className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0">•</span>
+            <span>{detail}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+interface PriceCardProps {
+  type: string;
+  price: string;
+  description: string;
+  includes: string[];
+}
+
+function PriceCard({ type, price, description, includes }: PriceCardProps) {
+  return (
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-6">
+      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{type}</h3>
+      <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">{price}</div>
+      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{description}</p>
+      <div className="space-y-2">
+        {includes.map((item, idx) => (
+          <div key={idx} className="flex items-start text-xs text-gray-700 dark:text-gray-300">
+            <span className="text-green-600 dark:text-green-400 mr-2">✓</span>
+            <span>{item}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
