@@ -210,112 +210,6 @@ export default function QuantiemePage() {
         </div>
       </section>
 
-      {/* Grande Date */}
-      <section className="bg-white dark:bg-neutral-900 py-12 md:py-16">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8">
-            La Grande Date
-          </h2>
-
-          <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-xl p-8">
-            <div className="flex items-start gap-4 mb-6">
-              <span className="text-4xl">🔢</span>
-              <div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Affichage Surdimensionné</h3>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-                  La <span className="font-semibold text-gray-900 dark:text-gray-100">grande date</span> utilise deux disques superposés pour afficher la date avec des chiffres beaucoup plus grands et lisibles qu'un quantième classique.
-                </p>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  Le disque des unités (0-9) et celui des dizaines (0-3) se combinent pour former la date. Ce système, popularisé par A. Lange & Söhne, offre une lisibilité exceptionnelle mais nécessite un mécanisme d'avancement instantané très puissant car les deux disques doivent changer simultanément à minuit.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Réglage et Entretien */}
-      <section className="py-12 md:py-16">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8">
-            Réglage et Entretien
-          </h2>
-
-          <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 border-l-4 border-red-500 rounded-xl p-6 mb-8">
-            <div className="flex items-start gap-3">
-              <span className="text-2xl">⚠️</span>
-              <div>
-                <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Zone Interdite de Correction</h4>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3">
-                  <span className="font-semibold">Ne JAMAIS corriger le quantième entre 22h et 2h du matin</span>. Le mécanisme est en plein changement de date et toute intervention peut endommager gravement les roues, leviers et dents du calendrier.
-                </p>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
-                  Si une correction est nécessaire, avancer les aiguilles jusqu'à 6h du matin, puis effectuer le réglage du calendrier en toute sécurité.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-6 shadow-sm">
-              <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">📅 Mise en Route</h4>
-              <ol className="space-y-3 text-gray-700 dark:text-gray-300 list-decimal list-inside">
-                <li>Positionner les aiguilles sur 6h du matin</li>
-                <li>Régler le jour et le mois (si affichés)</li>
-                <li>Régler l'année et l'année bissextile (QP)</li>
-                <li>Régler la date du quantième</li>
-                <li>Avancer les aiguilles jusqu'à l'heure actuelle</li>
-              </ol>
-            </div>
-
-            <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-6 shadow-sm">
-              <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">🔧 Maintenance</h4>
-              <ul className="space-y-3 text-gray-700 dark:text-gray-300">
-                <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                  <span><span className="font-semibold">Révision</span> : tous les 5-7 ans recommandés</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                  <span><span className="font-semibold">Lubrification</span> : essentielle pour fluidité du mécanisme</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                  <span><span className="font-semibold">Port régulier</span> : évite l'arrêt et le grippage</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Manufactures */}
-      <section className="bg-white dark:bg-neutral-900 py-12 md:py-16">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8 text-center">
-            Manufactures de Référence
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            <ManufactureCard
-              name="Patek Philippe"
-              achievement="Première montre-bracelet QP (1925)"
-              specialty="Maître absolu du quantième perpétuel depuis près d'un siècle"
-            />
-            <ManufactureCard
-              name="A. Lange & Söhne"
-              achievement="Grande date iconique"
-              specialty="Système de came à 48 crans visible côté cadran"
-            />
-            <ManufactureCard
-              name="IWC Schaffhausen"
-              achievement="Quantième perpétuel modulaire"
-              specialty="Système Da Vinci (1985) facilite l'entretien"
-            />
-          </div>
-        </div>
-      </section>
-
       {/* Call to Action */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-4xl">
@@ -342,4 +236,53 @@ export default function QuantiemePage() {
   );
 }
 
-// Components (StatCard, TypeCard, ManufactureCard - identiques aux pages précédentes)
+// ==========================================
+// COMPONENTS
+// ==========================================
+
+function StatCard({ number, label, color }: { number: string; label: string; color: string }) {
+  return (
+    <div className="bg-white/10 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+      <div className="text-3xl font-bold mb-1">{number}</div>
+      <div className="text-xs font-medium opacity-80">{label}</div>
+    </div>
+  );
+}
+
+interface TypeCardProps {
+  icon: string;
+  title: string;
+  description: string;
+  complexity: string;
+  color: string;
+  correction: string;
+}
+
+function TypeCard({ icon, title, description, complexity, color, correction }: TypeCardProps) {
+  const colorClasses = {
+    blue: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
+    green: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800',
+    purple: 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800',
+    orange: 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800',
+  };
+
+  return (
+    <div className={`border rounded-xl p-6 ${colorClasses[color as keyof typeof colorClasses]}`}>
+      <div className="flex items-start gap-4">
+        <span className="text-4xl">{icon}</span>
+        <div className="flex-1">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{title}</h3>
+          <p className="text-gray-700 dark:text-gray-300 text-sm mb-3">{description}</p>
+          <div className="flex gap-3">
+            <span className="bg-white dark:bg-neutral-800 px-3 py-1 rounded text-xs font-bold">
+              Complexité: {complexity}
+            </span>
+            <span className="bg-white dark:bg-neutral-800 px-3 py-1 rounded text-xs font-bold">
+              Correction: {correction}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
