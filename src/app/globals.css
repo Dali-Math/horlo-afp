@@ -122,6 +122,85 @@ body {
 }
 
 /* ========================================
+   ANIMATIONS ROUES DENTÉES - Page Rouage
+   ======================================== */
+
+/* Rotation lente (sens horaire) - 40 secondes */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 40s linear infinite;
+  transform-origin: center;
+}
+
+/* Rotation lente inverse (sens anti-horaire) - 50 secondes */
+@keyframes spin-slow-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.animate-spin-slow-reverse {
+  animation: spin-slow-reverse 50s linear infinite;
+  transform-origin: center;
+}
+
+/* Rotation moyenne inverse - 25 secondes */
+@keyframes spin-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.animate-spin-reverse {
+  animation: spin-reverse 25s linear infinite;
+  transform-origin: center;
+}
+
+/* Rotation rapide (sens horaire) - 15 secondes */
+@keyframes spin-fast {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-fast {
+  animation: spin-fast 15s linear infinite;
+  transform-origin: center;
+}
+
+/* Pause animation au hover de la section */
+.gear-container:hover svg {
+  animation-play-state: paused;
+}
+
+/* Effet 3D sur les roues dentées */
+.gear-3d {
+  filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5));
+  transition: filter 0.3s ease;
+}
+
+.gear-3d:hover {
+  filter: drop-shadow(4px 8px 12px rgba(251, 146, 60, 0.4));
+}
+
+/* ========================================
    ANIMATION UTILITY CLASSES
    ======================================== */
 
@@ -254,6 +333,23 @@ body {
   .timeline-item {
     animation-delay: 0s !important; /* Pas de délai stagéré sur mobile */
   }
+
+  /* Animations roues plus rapides sur mobile pour économiser batterie */
+  .animate-spin-slow {
+    animation-duration: 60s;
+  }
+  
+  .animate-spin-reverse {
+    animation-duration: 35s;
+  }
+  
+  .animate-spin-fast {
+    animation-duration: 25s;
+  }
+
+  .animate-spin-slow-reverse {
+    animation-duration: 70s;
+  }
 }
 
 /* ========================================
@@ -267,4 +363,53 @@ body {
 /* Transitions pour liens et boutons */
 a, button {
   transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+/* ========================================
+   ACCESSIBILITY - Reduced Motion
+   ======================================== */
+
+/* Réduire mouvement pour préférence accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin-slow,
+  .animate-spin-reverse,
+  .animate-spin-fast,
+  .animate-spin-slow-reverse,
+  .animate-carousel,
+  .animate-marquee-footer,
+  .timeline-item {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ========================================
+   PERFORMANCE OPTIMIZATIONS
+   ======================================== */
+
+/* GPU Acceleration pour animations fluides */
+.animate-spin-slow,
+.animate-spin-reverse,
+.animate-spin-fast,
+.animate-spin-slow-reverse {
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimisation des rendus SVG */
+svg {
+  shape-rendering: geometricPrecision;
+}
+
+/* Anti-aliasing amélioré pour les roues */
+.gear-smooth {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
