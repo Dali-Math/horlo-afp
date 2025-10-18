@@ -379,32 +379,19 @@ export default function CartoucheHorlogerPage() {
   };
 
   return (
-  <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-    {/* Header */}
-    <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-        <Link
-          href="/theorie/lecture-de-plan"
-          className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-yellow-400 dark:hover:text-yellow-300 transition-colors"
-        >
-          <ChevronLeft className="w-5 h-5 mr-1" />
-          Retour
-        </Link>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <Link href="/theorie/lecture-de-plan" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+            <ChevronLeft className="w-5 h-5 mr-1" />
+            Retour
+          </Link>
+        </div>
+      </header>
 
-        {/* Bouton clair/sombre */}
-        <button
-          onClick={() => document.documentElement.classList.toggle('dark')}
-          className="p-2 rounded-md border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-yellow-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-        >
-          🌙 / ☀️
-        </button>
-      </div>
-    </header>
-
-    {/* Main Content */}
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      
-
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Title Section */}
         <div className="text-center mb-12">
           <div className="inline-block px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-4">
