@@ -63,7 +63,7 @@ const personnalites: Personnalite[] = [
     specialite: "Inventeur du chronomètre de marine",
     description: "Horloger britannique qui révolutionna la navigation maritime avec le chronomètre H4.",
     biographieComplete: "John Harrison, charpentier de formation, s'intéressa très jeune à l'horlogerie. Face au problème du calcul de la longitude en mer, il créa le chronomètre H4 en 1761, d'une précision révolutionnaire. Après des années de lutte pour la reconnaissance, il reçut finalement le prix du Board of Longitude à 80 ans.",
-    image: "/images/personnalites/lecoultre.jpg",  // ✅ Utilise lecoultre (tu n'as pas harrison.jpg)
+    image: "/images/personnalites/john.harrison.jpg",  // ✅ Utilise lecoultre (tu n'as pas harrison.jpg)
     contribution: "Chronomètre de marine H4, précision horlogère"
   },
   {
