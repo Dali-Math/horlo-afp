@@ -53,7 +53,7 @@ const personnalites: Personnalite[] = [
     specialite: "Maître horloger indépendant",
     description: "Horloger britannique légendaire, créateur de l'échappement co-axial.",
     biographieComplete: "George Daniels était autodidacte et devint l'un des plus grands horlogers du XXe siècle. Il créa l'échappement co-axial, adopté plus tard par Omega. Capable de fabriquer entièrement une montre à la main, il ne produisit que 37 montres de poche complètes dans sa vie, toutes considérées comme des chefs-d'œuvre.",
-    image: "/images/personnalites/heuer.jpg",  // ✅ Utilise heuer (tu n'as pas daniels.jpg)
+    image: "/images/personnalites/george-daniels.jpg",  // ✅ Utilise heuer (tu n'as pas daniels.jpg)
     contribution: "Échappement co-axial, horlogerie artisanale"
   },
   {
