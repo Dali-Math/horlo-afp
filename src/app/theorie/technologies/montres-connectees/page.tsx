@@ -67,13 +67,13 @@ export default function MontresConnecteesPage() {
 
           <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-8 mb-6">
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-              Une <span className="font-semibold text-gray-900 dark:text-gray-100">montre connectée</span> (ou smartwatch) est un ordinateur miniaturisé porté au poignet, capable de se connecter à un smartphone via Bluetooth, WiFi ou réseau cellulaire (4G/5G)[web:247][web:249].
+              Une <span className="font-semibold text-gray-900 dark:text-gray-100">montre connectée</span> (ou smartwatch) est un ordinateur miniaturisé porté au poignet, capable de se connecter à un smartphone via Bluetooth, WiFi ou réseau cellulaire (4G/5G).
             </p>
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-              Au-delà de l'affichage de l'heure, elle intègre de multiples <span className="font-semibold text-gray-900 dark:text-gray-100">capteurs biométriques</span> (cardiofréquencemètre, oxymètre, accéléromètre), un GPS, des applications, et permet de recevoir notifications, appels et messages directement sur son écran tactile[web:245][web:249].
+              Au-delà de l'affichage de l'heure, elle intègre de multiples <span className="font-semibold text-gray-900 dark:text-gray-100">capteurs biométriques</span> (cardiofréquencemètre, oxymètre, accéléromètre), un GPS, des applications, et permet de recevoir notifications, appels et messages directement sur son écran tactile.
             </p>
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-              Lancée en <span className="font-semibold text-gray-900 dark:text-gray-100">avril 2015</span>, l'Apple Watch a popularisé la catégorie et domine aujourd'hui le marché mondial avec plus de 50% des parts de marché[web:250][web:253].
+              Lancée en <span className="font-semibold text-gray-900 dark:text-gray-100">avril 2015</span>, l'Apple Watch a popularisé la catégorie et domine aujourd'hui le marché mondial avec plus de 50% des parts de marché.
             </p>
           </div>
         </div>
@@ -170,14 +170,14 @@ export default function MontresConnecteesPage() {
 
           <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-8 mb-8">
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
-              L'autonomie est le <span className="font-semibold text-gray-900 dark:text-gray-100">talon d'Achille</span> des montres connectées. Contrairement aux montres mécaniques (autonomie infinie avec remontage) ou quartz (2-5 ans), les smartwatches nécessitent une recharge quotidienne ou biquotidienne[web:250][web:253].
+              L'autonomie est le <span className="font-semibold text-gray-900 dark:text-gray-100">talon d'Achille</span> des montres connectées. Contrairement aux montres mécaniques (autonomie infinie avec remontage) ou quartz (2-5 ans), les smartwatches nécessitent une recharge quotidienne ou biquotidienne.
             </p>
 
             <div className="grid md:grid-cols-3 gap-6">
               <BatteryCard
                 brand="Apple Watch"
                 autonomy="18-24h"
-                details="Series 11 : 24h usage normal + 6h suivi sommeil. Mode économie : 38h[web:253]"
+                details="Series 11 : 24h usage normal + 6h suivi sommeil. Mode économie : 38h"
                 color="blue"
               />
               <BatteryCard
@@ -285,7 +285,7 @@ export default function MontresConnecteesPage() {
             />
             <BrandCard
               name="TAG Heuer Connected"
-              description="Luxe suisse connecté. Calibre E4, boîtier 42-45mm. Design sport-chic[web:251][web:254]."
+              description="Luxe suisse connecté. Calibre E4, boîtier 42-45mm. Design sport-chic."
               icon="🇨🇭"
             />
           </div>
@@ -318,4 +318,97 @@ export default function MontresConnecteesPage() {
   );
 }
 
-// Components (StatCard, SensorCard, BatteryCard, ComparisonCard, BrandCard)
+// ==========================================
+// COMPONENTS
+// ==========================================
+
+function StatCard({ number, label }: { number: string; label: string }) {
+  return (
+    <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4">
+      <div className="text-3xl font-bold mb-1">{number}</div>
+      <div className="text-xs font-medium opacity-80">{label}</div>
+    </div>
+  );
+}
+
+interface SensorCardProps {
+  icon: string;
+  title: string;
+  description: string;
+  tech: string;
+}
+
+function SensorCard({ icon, title, description, tech }: SensorCardProps) {
+  return (
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-6">
+      <span className="text-4xl mb-3 block">{icon}</span>
+      <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">{title}</h3>
+      <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">{description}</p>
+      <div className="bg-purple-50 dark:bg-purple-900/20 px-3 py-1 rounded text-xs text-purple-700 dark:text-purple-300">
+        {tech}
+      </div>
+    </div>
+  );
+}
+
+interface BatteryCardProps {
+  brand: string;
+  autonomy: string;
+  details: string;
+  color: string;
+}
+
+function BatteryCard({ brand, autonomy, details, color }: BatteryCardProps) {
+  const colorClasses = {
+    blue: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
+    purple: 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800',
+    green: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800',
+  };
+
+  return (
+    <div className={`border rounded-xl p-6 ${colorClasses[color as keyof typeof colorClasses]}`}>
+      <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">{brand}</h3>
+      <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">{autonomy}</div>
+      <p className="text-sm text-gray-700 dark:text-gray-300">{details}</p>
+    </div>
+  );
+}
+
+interface ComparisonCardProps {
+  title: string;
+  points: string[];
+  color: string;
+}
+
+function ComparisonCard({ title, points, color }: ComparisonCardProps) {
+  const colorClasses = {
+    green: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800',
+    red: 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800',
+  };
+
+  return (
+    <div className={`border rounded-xl p-6 ${colorClasses[color as keyof typeof colorClasses]}`}>
+      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">{title}</h3>
+      <ul className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
+        {points.map((point, idx) => (
+          <li key={idx} className="flex items-start">
+            <span className={color === 'green' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'} style={{marginRight: '8px'}}>
+              •
+            </span>
+            <span>{point}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function BrandCard({ name, description, icon }: { name: string; description: string; icon: string }) {
+  return (
+    <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-6">
+      <span className="text-4xl mb-3 block">{icon}</span>
+      <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">{name}</h3>
+      <p className="text-sm text-gray-700 dark:text-gray-300">{description}</p>
+    </div>
+  );
+}
