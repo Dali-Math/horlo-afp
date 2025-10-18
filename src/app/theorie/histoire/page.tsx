@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { ChevronRight, Clock, Landmark, Factory, TrendingUp, AlertTriangle, Award as AwardIcon } from 'lucide-react'
+import { ChevronRight, Clock, Landmark, Factory, TrendingUp, AlertTriangle, Award, CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
 
 export default function HistoirePage() {
@@ -13,17 +13,17 @@ export default function HistoirePage() {
 
   const quizQuestions = [
     {
-      question: "Qui est considéré comme le père fondateur de l'horlogerie suisse ?",
+      question: "Qui est le père fondateur de l'horlogerie suisse ?",
       options: [
         "Jean Calvin",
-        "Daniel Jean-Richard (Bressel)",
+        "Daniel Jean-Richard",
         "Abraham-Louis Breguet",
         "Frédéric Ingold"
       ],
       correct: 1
     },
     {
-      question: "Dans quelle ville suisse l'horlogerie est-elle née au 16ème siècle ?",
+      question: "Ville de naissance de l'horlogerie au 16ème ?",
       options: [
         "Berne",
         "Zurich",
@@ -35,15 +35,15 @@ export default function HistoirePage() {
     {
       question: "Qu'est-ce que l'établissage ?",
       options: [
-        "Une technique de polissage des composants",
-        "Un système de production basé sur la sous-traitance spécialisée",
-        "Un type de mouvement horloger spécifique",
-        "Une méthode de remontage automatique"
+        "Technique de polissage",
+        "Sous-traitance spécialisée",
+        "Mouvement horloger",
+        "Méthode de remontage"
       ],
       correct: 1
     },
     {
-      question: "Dans les années 1960, quel pourcentage de la production horlogère mondiale était suisse ?",
+      question: "Production suisse mondiale en 1960 ?",
       options: [
         "30%",
         "45%",
@@ -53,12 +53,12 @@ export default function HistoirePage() {
       correct: 2
     },
     {
-      question: "Quelle réforme religieuse a indirectement favorisé le développement de l'horlogerie à Genève ?",
+      question: "Réforme ayant favorisé l'horlogerie ?",
       options: [
-        "Le catholicisme romain",
-        "Le luthéranisme allemand",
-        "Le calvinisme réformé",
-        "L'anglicanisme britannique"
+        "Catholicisme",
+        "Luthéranisme",
+        "Calvinisme",
+        "Anglicanisme"
       ],
       correct: 2
     }
@@ -77,539 +77,352 @@ export default function HistoirePage() {
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${
-      isDark ? 'bg-slate-950 text-gray-100' : 'bg-gradient-to-br from-amber-50 via-white to-orange-50 text-slate-900'
+      isDark ? 'bg-slate-950 text-gray-100' : 'bg-slate-50 text-slate-900'
     }`}>
-      {/* Header Premium */}
-      <header className={`${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'} shadow-lg border-b sticky top-0 z-50 backdrop-blur-sm bg-opacity-95`}>
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex justify-between items-center mb-4">
+      {/* Header Minimal et Professionnel */}
+      <header className={`${isDark ? 'bg-slate-900/95 border-slate-800' : 'bg-white/95 border-slate-200'} shadow-sm border-b sticky top-0 z-50 backdrop-blur-md`}>
+        <div className="max-w-7xl mx-auto px-8 py-6">
+          <div className="flex justify-between items-center">
             <div>
               <Link 
                 href="/theorie" 
-                className={`text-sm mb-2 inline-flex items-center ${isDark ? 'text-amber-400 hover:text-amber-300' : 'text-amber-600 hover:text-amber-700'} transition-colors`}
+                className={`text-sm mb-2 inline-flex items-center ${isDark ? 'text-slate-400 hover:text-slate-300' : 'text-slate-600 hover:text-slate-800'} transition-colors font-medium`}
               >
-                ← Retour à la théorie
+                ← Théorie
               </Link>
-              <h1 className="text-5xl font-bold bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 bg-clip-text text-transparent mt-2">
+              <h1 className="text-4xl font-bold mt-1 bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
                 Histoire de l'Horlogerie Suisse
               </h1>
             </div>
             <button
               onClick={() => setIsDark(!isDark)}
-              className={`px-5 py-2.5 rounded-xl transition-all font-medium ${
+              className={`px-4 py-2 rounded-lg transition-all text-sm font-medium ${
                 isDark 
-                  ? 'bg-slate-800 hover:bg-slate-700 text-gray-100 border border-slate-700' 
-                  : 'bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-300'
+                  ? 'bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700' 
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300'
               }`}
             >
-              {isDark ? '☀️ Mode Clair' : '🌙 Mode Sombre'}
+              {isDark ? '☀️' : '🌙'}
             </button>
           </div>
-          <p className={`text-lg ${isDark ? 'text-slate-300' : 'text-slate-600'} font-light`}>
-            Presque 350 ans de tradition, d'excellence et de savoir-faire horloger
-          </p>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        
-        {/* Timeline Introduction */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`mb-16 p-8 rounded-2xl ${
-            isDark ? 'bg-gradient-to-br from-amber-900/20 to-orange-900/20 border border-amber-800/30' : 'bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200'
-          }`}
-        >
-          <div className="text-center">
-            <Clock className="w-16 h-16 mx-auto mb-4 text-amber-600" />
-            <h2 className="text-3xl font-bold mb-4">Un Héritage Séculaire</h2>
-            <p className={`text-lg max-w-3xl mx-auto leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-              La Suisse est incontestablement le pays de l'horlogerie. Cette industrie atypique fait figure de symbole du « Made in Switzerland », synonyme de qualité, de précision et d'excellence dans l'imaginaire collectif mondial[web:7][web:10].
-            </p>
-          </div>
-        </motion.div>
-
-        {/* Section 1: Les Origines (16ème siècle) */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className={`mb-12 p-10 rounded-2xl shadow-xl ${
-            isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white border border-slate-200'
-          }`}
-        >
-          <div className="flex items-start gap-4 mb-6">
-            <div className={`p-4 rounded-xl ${isDark ? 'bg-amber-900/30' : 'bg-amber-100'}`}>
-              <Landmark className="w-8 h-8 text-amber-600" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold mb-2">Les Origines (16ème siècle)</h2>
-              <p className="text-amber-600 font-medium">Genève et la Réforme Protestante</p>
-            </div>
-          </div>
-          <div className="space-y-5 text-lg leading-relaxed">
-            <p>
-              L'industrie horlogère suisse est née à <strong>Genève au milieu du 16ème siècle</strong>, suite à la montée en puissance d'un grand courant religieux : le calvinisme[web:10][web:56]. Cette naissance est intimement liée à des événements religieux qui ont transformé le paysage économique de la ville[web:7].
-            </p>
-            <p>
-              En 1541, le pasteur français <strong>Jean Calvin</strong> (1509-1564) s'établit à Genève après avoir quitté l'Église catholique pour défendre les idées de la réforme protestante[web:10]. Il aide le Conseil de la ville à réformer les lois en vigueur, instaurant une société basée sur l'austérité et la rigueur[web:56].
-            </p>
-            <p>
-              Parmi ces réformes figure notamment l'<strong>interdiction du port d'objets ornementaux ostentatoires</strong> comme les bijoux[web:10][web:13]. Les nombreux orfèvres et joailliers de la place, soudainement privés de leur activité principale, doivent alors se tourner vers un autre secteur : l'horlogerie[web:10][web:56].
-            </p>
-            <div className={`p-6 rounded-xl ${isDark ? 'bg-slate-800 border-l-4 border-amber-600' : 'bg-amber-50 border-l-4 border-amber-500'} my-6`}>
-              <p className="font-semibold mb-2 text-amber-600">💡 Le saviez-vous ?</p>
-              <p>
-                Cette reconversion forcée des artisans du luxe vers l'horlogerie explique pourquoi les montres suisses ont toujours été caractérisées par une <strong>finition exceptionnelle</strong> et un souci du détail esthétique hérité des traditions de l'orfèvrerie[web:10][web:62].
+      {/* Layout avec Sidebar Quiz */}
+      <div className="max-w-7xl mx-auto px-8 py-12">
+        <div className="flex gap-8">
+          
+          {/* Contenu Principal */}
+          <div className="flex-1">
+            
+            {/* Introduction */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`mb-12 p-6 rounded-xl border ${
+                isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200'
+              }`}
+            >
+              <p className="text-lg leading-relaxed">
+                La Suisse est le pays de l'horlogerie par excellence. Près de <strong>350 ans de tradition</strong> ont façonné une industrie symbole du « Swiss Made », synonyme de qualité, précision et excellence mondiale[web:7][web:10].
               </p>
-            </div>
-          </div>
-        </motion.section>
+            </motion.div>
 
-        {/* Section 2: Bressel et la Naissance (17ème siècle) */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className={`mb-12 p-10 rounded-2xl shadow-xl ${
-            isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white border border-slate-200'
-          }`}
-        >
-          <div className="flex items-start gap-4 mb-6">
-            <div className={`p-4 rounded-xl ${isDark ? 'bg-blue-900/30' : 'bg-blue-100'}`}>
-              <ChevronRight className="w-8 h-8 text-blue-600" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold mb-2">Bressel, le Père Fondateur (17ème)</h2>
-              <p className="text-blue-600 font-medium">Daniel Jean-Richard et la Première Montre Suisse</p>
-            </div>
-          </div>
-          <div className="space-y-5 text-lg leading-relaxed">
-            <p>
-              L'horlogerie suisse naît véritablement dans la 2ème moitié du XVIIème siècle, sous l'impulsion d'un homme : <strong>Daniel Jean-Richard</strong>, dit "Bressel", un horloger jurassien né à La Sagne en 1665[web:7][web:53].
-            </p>
-            <p>
-              Bressel dévoile la <strong>première montre suisse en 1681</strong>, fortement inspirée d'un modèle anglais inventé deux ans plus tôt[web:7]. Bien que la montre ne soit pas une invention suisse originale, Bressel a le génie d'adapter et d'améliorer les techniques existantes, posant les bases d'une industrie florissante[web:7][web:53].
-            </p>
-            <p>
-              Véritable figure tutélaire de l'horlogerie jurassienne, Bressel est devenu, à la postérité, le <strong>symbole de l'horlogerie suisse traditionnelle</strong>[web:7]. Mais il apparaît également comme le garant du principe de l'établissage, un système révolutionnaire qui va transformer la production horlogère[web:7].
-            </p>
-            <p>
-              L'horlogerie suisse s'est ensuite développée dans l'<strong>arc jurassien de Genève à Schaffhouse</strong> au XVIIe siècle, par l'émigration d'un grand nombre d'artisans spécialisés, notamment des Huguenots français fuyant les persécutions religieuses[web:19][web:53]. Cette dispersion géographique va favoriser l'émergence de différents centres horlogers, chacun développant ses propres spécialités[web:7][web:50].
-            </p>
-          </div>
-        </motion.section>
-
-        {/* Section 3: L'Établissage */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className={`mb-12 p-10 rounded-2xl shadow-xl ${
-            isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white border border-slate-200'
-          }`}
-        >
-          <div className="flex items-start gap-4 mb-6">
-            <div className={`p-4 rounded-xl ${isDark ? 'bg-emerald-900/30' : 'bg-emerald-100'}`}>
-              <Factory className="w-8 h-8 text-emerald-600" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold mb-2">La Tradition de l'Établissage</h2>
-              <p className="text-emerald-600 font-medium">Un Système de Production Révolutionnaire</p>
-            </div>
-          </div>
-          <div className="space-y-5 text-lg leading-relaxed">
-            <p>
-              L'<strong>établissage</strong> est un moyen de production basé sur une sous-traitance très avancée[web:7]. Il consiste à produire une montre en divisant le travail en <strong>petites entités indépendantes et très spécialisées</strong>, pour n'assembler le tout qu'au dernier moment, dans un atelier appelé "comptoir"[web:7][web:53].
-            </p>
-            <p>
-              Ce système permet une <strong>spécialisation extrême</strong> de la tâche, et donc l'acquisition rapide d'un savoir-faire inégalable par des artisans plus généralistes[web:7]. Le produit final bénéficie de l'expertise cumulée de toutes les personnes y ayant participé, garantissant une qualité exceptionnelle[web:7].
-            </p>
-            
-            <div className={`grid md:grid-cols-2 gap-4 my-8`}>
-              <div className={`p-6 rounded-xl ${isDark ? 'bg-slate-800' : 'bg-gradient-to-br from-emerald-50 to-teal-50'}`}>
-                <h3 className="font-bold text-xl mb-4 flex items-center gap-2">
-                  <span className="text-2xl">🔧</span> Avantages Techniques
-                </h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-600 font-bold">•</span>
-                    <span><strong>Spécialisation extrême</strong> : chaque artisan maîtrise parfaitement sa tâche</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-600 font-bold">•</span>
-                    <span><strong>Qualité optimale</strong> : expertise cumulée de multiples spécialistes</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-600 font-bold">•</span>
-                    <span><strong>Innovation constante</strong> : amélioration continue des processus</span>
-                  </li>
-                </ul>
+            {/* Section 1: Origines */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className={`mb-10 p-8 rounded-xl border ${
+                isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200'
+              }`}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className={`p-2.5 rounded-lg ${isDark ? 'bg-amber-900/30' : 'bg-amber-100'}`}>
+                  <Landmark className="w-6 h-6 text-amber-600" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold">Les Origines (16ème siècle)</h2>
+                  <p className="text-sm text-amber-600 font-medium">Genève et la Réforme</p>
+                </div>
               </div>
-              
-              <div className={`p-6 rounded-xl ${isDark ? 'bg-slate-800' : 'bg-gradient-to-br from-amber-50 to-orange-50'}`}>
-                <h3 className="font-bold text-xl mb-4 flex items-center gap-2">
-                  <span className="text-2xl">🏔️</span> Avantages Sociaux
-                </h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-2">
-                    <span className="text-amber-600 font-bold">•</span>
-                    <span><strong>Travail à domicile</strong> : adaptation aux montagnes jurassiennes</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-amber-600 font-bold">•</span>
-                    <span><strong>Revenus hivernaux</strong> : complément pour les fermiers</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-amber-600 font-bold">•</span>
-                    <span><strong>Emploi familial</strong> : toute la famille participait</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <p>
-              Au milieu des montagnes jurassiennes, cette répartition du travail présentait un avantage crucial[web:7]. Les artisans horlogers n'étaient à l'origine que de simples fermiers, dont l'activité cessait dès l'arrivée de l'hiver[web:7]. L'établissage leur permettait de <strong>travailler à domicile</strong> en employant toute leur famille, mais aussi d'<strong>assurer des revenus pendant la période hivernale</strong>[web:7][web:53].
-            </p>
-          </div>
-        </motion.section>
-
-        {/* Section 4: Industrialisation et Âge d'Or */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className={`mb-12 p-10 rounded-2xl shadow-xl ${
-            isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white border border-slate-200'
-          }`}
-        >
-          <div className="flex items-start gap-4 mb-6">
-            <div className={`p-4 rounded-xl ${isDark ? 'bg-blue-900/30' : 'bg-blue-100'}`}>
-              <TrendingUp className="w-8 h-8 text-blue-600" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold mb-2">Industrialisation et Âge d'Or</h2>
-              <p className="text-blue-600 font-medium">19ème - 20ème Siècle : L'Apogée Suisse</p>
-            </div>
-          </div>
-          <div className="space-y-5 text-lg leading-relaxed">
-            <p>
-              La <strong>mécanisation de la fabrication</strong> prend place au début du 20ème siècle grâce aux recherches d'horlogers réputés comme Frédéric Ingold ou Georges Léschot[web:10]. Cette révolution industrielle permet à la Suisse de passer d'une production artisanale à une production en série tout en maintenant une qualité exceptionnelle[web:53][web:62].
-            </p>
-            <p>
-              En 1876, Jacques David, de Longines, fait un rapport détaillé de la méthode américaine de standardisation aux autorités helvétiques[web:53]. Ce rapport déclenche une réaction salutaire auprès de l'industrie horlogère suisse, qui adopte progressivement ces nouvelles méthodes tout en préservant son excellence artisanale[web:53].
-            </p>
-            
-            <div className={`p-8 rounded-xl ${isDark ? 'bg-gradient-to-r from-blue-900/30 to-indigo-900/30 border border-blue-800/50' : 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200'} my-8`}>
-              <div className="text-center">
-                <div className="text-6xl font-bold text-blue-600 mb-3">60%</div>
-                <p className="text-xl font-semibold mb-2">de la production mondiale</p>
-                <p className={isDark ? 'text-slate-300' : 'text-slate-600'}>
-                  Dans les années 1960, l'horlogerie suisse atteint son apogée : 60% des produits de l'horlogerie mondiale sont fabriqués en Suisse[web:16][web:10].
+              <div className="space-y-4 text-base leading-relaxed">
+                <p>
+                  L'industrie horlogère suisse naît à <strong>Genève au milieu du 16ème siècle</strong>, suite à la réforme protestante menée par Jean Calvin[web:10][web:56]. Cette naissance est intimement liée à des événements religieux transformant le paysage économique de la ville[web:7].
+                </p>
+                <p>
+                  En 1541, Jean Calvin (1509-1564) s'établit à Genève et réforme les lois, notamment l'<strong>interdiction des objets ornementaux ostentatoires</strong> comme les bijoux[web:10][web:13]. Les orfèvres et joailliers se tournent alors vers l'horlogerie[web:10][web:56].
+                </p>
+                <p>
+                  Cette reconversion explique pourquoi les montres suisses ont toujours été caractérisées par une <strong>finition exceptionnelle</strong> héritée des traditions d'orfèvrerie[web:10][web:62].
                 </p>
               </div>
-            </div>
+            </motion.section>
 
-            <p>
-              Depuis plus de quatre siècles, <strong>tradition, savoir-faire, technologie et innovation</strong> ont permis au pays alpin de maintenir son leadership sur le marché mondial de la montre[web:10][web:57]. L'horlogerie suisse est mondialement réputée pour la beauté et la précision de ses montres[web:10][web:16].
-            </p>
-            <p>
-              Cette industrie atypique fait figure de <strong>symbole du « Made in Switzerland »</strong>[web:10][web:58]. Le label suisse est devenu synonyme de qualité, de précision et d'excellence dans l'imaginaire collectif mondial, protégé par une législation stricte depuis 2017[web:58].
-            </p>
-          </div>
-        </motion.section>
-
-        {/* Section 5: La Crise du Quartz */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className={`mb-12 p-10 rounded-2xl shadow-xl ${
-            isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white border border-slate-200'
-          }`}
-        >
-          <div className="flex items-start gap-4 mb-6">
-            <div className={`p-4 rounded-xl ${isDark ? 'bg-red-900/30' : 'bg-red-100'}`}>
-              <AlertTriangle className="w-8 h-8 text-red-600" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold mb-2">Crises et Résilience</h2>
-              <p className="text-red-600 font-medium">1970-1980 : La Crise du Quartz</p>
-            </div>
-          </div>
-          <div className="space-y-5 text-lg leading-relaxed">
-            <p>
-              L'histoire de l'horlogerie suisse n'est pas un long fleuve tranquille[web:7]. Loin de là, les <strong>difficultés et les crises</strong> se sont succédées et ont souvent mis à mal les maisons horlogères helvétiques[web:7].
-            </p>
-            <p>
-              La plus grande crise survient dans les années 1970-1980 avec l'arrivée des <strong>montres à quartz japonaises</strong>[web:16][web:62]. Cette "crise du quartz" menace l'existence même de l'industrie horlogère suisse traditionnelle[web:7]. Les montres électroniques, moins chères et plus précises, envahissent le marché mondial et provoquent la faillite de nombreuses manufactures[web:16].
-            </p>
-            
-            <div className={`p-8 rounded-xl ${isDark ? 'bg-red-900/20 border-l-4 border-red-600' : 'bg-red-50 border-l-4 border-red-500'} my-8`}>
-              <h3 className="font-bold text-2xl mb-4 text-red-600 flex items-center gap-3">
-                <AlertTriangle className="w-7 h-7" />
-                Une Hécatombe Industrielle
-              </h3>
-              <div className="grid md:grid-cols-3 gap-6 text-center">
-                <div>
-                  <div className="text-4xl font-bold text-red-600 mb-2">90,000 → 30,000</div>
-                  <p className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Emplois perdus (1970-1983)</p>
+            {/* Section 2: Bressel */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className={`mb-10 p-8 rounded-xl border ${
+                isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200'
+              }`}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className={`p-2.5 rounded-lg ${isDark ? 'bg-blue-900/30' : 'bg-blue-100'}`}>
+                  <ChevronRight className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                  <div className="text-4xl font-bold text-red-600 mb-2">1,000+</div>
-                  <p className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Fabricants disparus</p>
+                  <h2 className="text-2xl font-bold">Bressel, le Père Fondateur (17ème)</h2>
+                  <p className="text-sm text-blue-600 font-medium">Daniel Jean-Richard</p>
+                </div>
+              </div>
+              <div className="space-y-4 text-base leading-relaxed">
+                <p>
+                  <strong>Daniel Jean-Richard</strong>, dit "Bressel", horloger jurassien né en 1665, dévoile la <strong>première montre suisse en 1681</strong>[web:7][web:53]. Bien qu'inspirée d'un modèle anglais, Bressel adapte et améliore les techniques existantes[web:7].
+                </p>
+                <p>
+                  Figure tutélaire de l'horlogerie jurassienne, il devient le <strong>symbole de la tradition suisse</strong> et le garant du principe de l'établissage[web:7]. L'horlogerie se développe ensuite dans l'arc jurassien par l'émigration d'artisans spécialisés[web:19][web:53].
+                </p>
+              </div>
+            </motion.section>
+
+            {/* Section 3: Établissage */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className={`mb-10 p-8 rounded-xl border ${
+                isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200'
+              }`}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className={`p-2.5 rounded-lg ${isDark ? 'bg-emerald-900/30' : 'bg-emerald-100'}`}>
+                  <Factory className="w-6 h-6 text-emerald-600" />
                 </div>
                 <div>
-                  <div className="text-4xl font-bold text-red-600 mb-2">13 ans</div>
-                  <p className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Durée de la crise</p>
+                  <h2 className="text-2xl font-bold">L'Établissage</h2>
+                  <p className="text-sm text-emerald-600 font-medium">Production Révolutionnaire</p>
                 </div>
               </div>
-              <p className="mt-6 text-center italic">
-                Entre 1970 et 1983, l'emploi dans l'horlogerie suisse passe de 90 000 à 30 000 personnes. Plus de 1000 fabricants disparaissent. C'est une véritable hécatombe pour l'industrie[web:7].
-              </p>
-            </div>
-
-            <p>
-              La Suisse se réinvente en se repositionnant sur le <strong>segment du luxe et de la haute horlogerie mécanique</strong>[web:16][web:57]. Plutôt que de concurrencer les montres à quartz bon marché, les manufactures suisses mettent en avant leur savoir-faire artisanal, leur héritage historique et l'émotion associée aux montres mécaniques[web:10][web:62].
-            </p>
-            <p>
-              Cette stratégie s'avère gagnante : aujourd'hui, la Suisse domine le marché mondial des montres de luxe et continue d'incarner l'excellence horlogère[web:10][web:57]. Les montres mécaniques suisses sont redevenues des objets de désir et des investissements prisés par les collectionneurs du monde entier[web:16][web:62].
-            </p>
-          </div>
-        </motion.section>
-
-        {/* Section 6: L'Horlogerie Suisse Aujourd'hui */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className={`mb-12 p-10 rounded-2xl shadow-xl ${
-            isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white border border-slate-200'
-          }`}
-        >
-          <div className="flex items-start gap-4 mb-6">
-            <div className={`p-4 rounded-xl ${isDark ? 'bg-emerald-900/30' : 'bg-emerald-100'}`}>
-              <AwardIcon className="w-8 h-8 text-emerald-600" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold mb-2">L'Excellence Suisse Aujourd'hui</h2>
-              <p className="text-emerald-600 font-medium">21ème Siècle : Innovation et Tradition</p>
-            </div>
-          </div>
-          <div className="space-y-5 text-lg leading-relaxed">
-            <p>
-              Aujourd'hui, la Suisse demeure incontestablement le <strong>pays de l'horlogerie</strong>[web:10][web:16]. L'industrie horlogère suisse continue de fasciner et d'inspirer le monde entier par son attachement à l'excellence et à l'innovation[web:10][web:57].
-            </p>
-            <p>
-              Les manufactures suisses investissent massivement dans la <strong>recherche et le développement</strong>[web:57]. Elles développent de nouveaux matériaux (silicium, céramique, alliages innovants), perfectionnent les mouvements pour augmenter la précision et la réserve de marche, et créent des complications toujours plus sophistiquées[web:57][web:62].
-            </p>
-            
-            <div className={`grid md:grid-cols-2 lg:grid-cols-3 gap-6 my-8`}>
-              <div className={`p-6 rounded-xl text-center ${isDark ? 'bg-gradient-to-br from-blue-900/30 to-blue-800/30 border border-blue-800/50' : 'bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200'}`}>
-                <div className="text-4xl mb-3">🎯</div>
-                <h3 className="font-bold text-lg mb-2">Positionnement Luxe</h3>
-                <p className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Domination du segment haut de gamme mondial</p>
-              </div>
-              
-              <div className={`p-6 rounded-xl text-center ${isDark ? 'bg-gradient-to-br from-purple-900/30 to-purple-800/30 border border-purple-800/50' : 'bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200'}`}>
-                <div className="text-4xl mb-3">🔬</div>
-                <h3 className="font-bold text-lg mb-2">Innovation Constante</h3>
-                <p className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Nouveaux matériaux et technologies de pointe</p>
-              </div>
-              
-              <div className={`p-6 rounded-xl text-center ${isDark ? 'bg-gradient-to-br from-amber-900/30 to-amber-800/30 border border-amber-800/50' : 'bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200'}`}>
-                <div className="text-4xl mb-3">🏛️</div>
-                <h3 className="font-bold text-lg mb-2">Héritage Historique</h3>
-                <p className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Près de 350 ans de tradition horlogère</p>
-              </div>
-              
-              <div className={`p-6 rounded-xl text-center ${isDark ? 'bg-gradient-to-br from-emerald-900/30 to-emerald-800/30 border border-emerald-800/50' : 'bg-gradient-to-br from-emerald-50 to-emerald-100 border border-emerald-200'}`}>
-                <div className="text-4xl mb-3">✨</div>
-                <h3 className="font-bold text-lg mb-2">Savoir-Faire Artisanal</h3>
-                <p className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Expertise transmise de génération en génération</p>
-              </div>
-              
-              <div className={`p-6 rounded-xl text-center ${isDark ? 'bg-gradient-to-br from-rose-900/30 to-rose-800/30 border border-rose-800/50' : 'bg-gradient-to-br from-rose-50 to-rose-100 border border-rose-200'}`}>
-                <div className="text-4xl mb-3">🌍</div>
-                <h3 className="font-bold text-lg mb-2">Rayonnement Mondial</h3>
-                <p className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Symbole d'excellence universellement reconnu</p>
-              </div>
-              
-              <div className={`p-6 rounded-xl text-center ${isDark ? 'bg-gradient-to-br from-indigo-900/30 to-indigo-800/30 border border-indigo-800/50' : 'bg-gradient-to-br from-indigo-50 to-indigo-100 border border-indigo-200'}`}>
-                <div className="text-4xl mb-3">📚</div>
-                <h3 className="font-bold text-lg mb-2">Formation d'Excellence</h3>
-                <p className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>Écoles d'horlogerie de renommée mondiale</p>
-              </div>
-            </div>
-
-            <div className={`p-8 rounded-xl ${isDark ? 'bg-gradient-to-r from-amber-900/30 to-orange-900/30 border border-amber-800/50' : 'bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200'} my-8`}>
-              <h3 className="font-bold text-2xl mb-4 flex items-center gap-3">
-                <span className="text-3xl">🇨🇭</span> Le Label "Swiss Made"
-              </h3>
-              <p className="mb-4">
-                Le label <strong>"Swiss Made"</strong> est devenu l'un des plus prestigieux au monde[web:10][web:58]. Il garantit non seulement l'origine suisse, mais aussi un niveau de qualité, de précision et de finition exceptionnel qui justifie la position dominante de la Suisse sur le marché horloger mondial[web:58][web:61].
-              </p>
-              <div className={`grid md:grid-cols-2 gap-4 mt-6`}>
-                <div>
-                  <h4 className="font-semibold mb-2 text-amber-600">Critères depuis 2017 :</h4>
-                  <ul className="space-y-2 text-sm">
-                    <li>• <strong>60% minimum</strong> de valeur suisse</li>
-                    <li>• <strong>Assemblage final</strong> en Suisse</li>
-                    <li>• <strong>Contrôle qualité</strong> sur territoire helvétique</li>
-                    <li>• <strong>Développement technique</strong> en Suisse</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-2 text-amber-600">Impact économique :</h4>
-                  <ul className="space-y-2 text-sm">
-                    <li>• <strong>2,500-3,000</strong> entreprises horlogères</li>
-                    <li>• <strong>60,000+</strong> emplois directs</li>
-                    <li>• <strong>$20+ milliards</strong> d'exportations annuelles</li>
-                    <li>• <strong>Leader mondial</strong> du luxe horloger</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <p>
-              L'horlogerie suisse représente une <strong>success story</strong> unique, où tradition et innovation coexistent harmonieusement[web:10][web:57]. Cette industrie continue d'attirer les meilleurs talents et de captiver les passionnés du monde entier, perpétuant ainsi un héritage horloger séculaire[web:7][web:10][web:62].
-            </p>
-          </div>
-        </motion.section>
-
-        {/* Quiz Section */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className={`mb-12 p-10 rounded-2xl shadow-2xl ${
-            isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white border border-slate-200'
-          }`}
-        >
-          <h2 className="text-4xl font-bold mb-8 flex items-center gap-3">
-            <span className="text-5xl">📝</span>
-            Quiz : Testez vos connaissances
-          </h2>
-          
-          {!showResults ? (
-            <>
-              {/* Progress bar */}
-              <div className="mb-10">
-                <div className="flex justify-between items-center mb-3">
-                  <span className={`text-sm font-semibold tracking-wide ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-                    QUESTION {Math.min(Object.keys(quizAnswers).filter((k) => quizAnswers[parseInt(k)] !== undefined).length + 1, quizQuestions.length)} SUR {quizQuestions.length}
-                  </span>
-                  <span className="text-sm font-semibold text-blue-600 dark:text-blue-400 tracking-wide">
-                    SCORE : 0/{quizQuestions.length}
-                  </span>
-                </div>
-                <div className={`w-full rounded-full h-3 ${isDark ? 'bg-slate-800' : 'bg-slate-200'} overflow-hidden`}>
-                  <div
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600 h-3 rounded-full transition-all duration-500 ease-out"
-                    style={{ width: `${(Object.keys(quizAnswers).filter((k) => quizAnswers[parseInt(k)] !== undefined).length / quizQuestions.length) * 100}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Une seule question à la fois */}
-              {(() => {
-                const currentIndex = Object.keys(quizAnswers).filter((k) => quizAnswers[parseInt(k)] !== undefined).length;
-                if (currentIndex >= quizQuestions.length) {
-                  return (
-                    <div className="text-center py-12">
-                      <div className="text-6xl mb-6">✅</div>
-                      <p className="text-2xl font-bold mb-8">Toutes les questions ont été répondues !</p>
-                      <button
-                        onClick={handleQuizSubmit}
-                        className="px-12 py-5 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-2xl font-bold text-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
-                      >
-                        📊 Voir mes résultats
-                      </button>
-                    </div>
-                  );
-                }
-                
-                const q = quizQuestions[currentIndex];
-                const letters = ['A', 'B', 'C', 'D'];
-                
-                return (
-                  <div key={currentIndex} className="space-y-6">
-                    <p className={`font-bold text-2xl mb-8 leading-relaxed ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>
-                      {q.question}
-                    </p>
-                    <div className="grid gap-4">
-                      {q.options.map((option, optIndex) => {
-                        const isSelected = quizAnswers[currentIndex] === String(optIndex);
-                        
-                        return (
-                          <button
-                            key={optIndex}
-                            onClick={() => {
-                              setQuizAnswers({...quizAnswers, [currentIndex]: String(optIndex)});
-                            }}
-                            className={`flex items-center p-5 rounded-2xl border-2 transition-all duration-300 text-left group ${
-                              isSelected
-                                ? isDark
-                                  ? 'border-blue-500 bg-blue-900/40 shadow-lg shadow-blue-900/50'
-                                  : 'border-blue-500 bg-blue-50 shadow-lg shadow-blue-200/50'
-                                : isDark
-                                ? 'border-slate-700 bg-slate-800/50 hover:border-slate-600 hover:bg-slate-800'
-                                : 'border-slate-300 bg-slate-50 hover:border-slate-400 hover:bg-slate-100 hover:shadow-md'
-                            }`}
-                          >
-                            <div className={`flex items-center justify-center w-12 h-12 rounded-xl mr-5 font-bold text-lg transition-all duration-300 ${
-                              isSelected
-                                ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-lg'
-                                : isDark
-                                ? 'bg-slate-700 text-slate-300 group-hover:bg-slate-600'
-                                : 'bg-slate-200 text-slate-700 group-hover:bg-slate-300'
-                            }`}>
-                              {letters[optIndex]}.
-                            </div>
-                            <span className={`text-lg ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>{option}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
+              <div className="space-y-4 text-base leading-relaxed">
+                <p>
+                  L'<strong>établissage</strong> divise la production en petites entités indépendantes très spécialisées, assemblées au dernier moment dans un "comptoir"[web:7][web:53]. Ce système permet une <strong>spécialisation extrême</strong> et un savoir-faire inégalable[web:7].
+                </p>
+                <div className={`grid grid-cols-2 gap-4 my-6 p-5 rounded-lg ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
+                  <div>
+                    <p className="font-semibold mb-2 text-emerald-600">Avantages techniques</p>
+                    <ul className="text-sm space-y-1">
+                      <li>• Spécialisation extrême</li>
+                      <li>• Qualité optimale</li>
+                      <li>• Innovation constante</li>
+                    </ul>
                   </div>
-                );
-              })()}
-            </>
-          ) : (
-            <div className="text-center py-12">
-              <div className={`text-8xl font-black mb-8 ${
-                score >= 4 ? 'text-green-500' : score >= 3 ? 'text-yellow-500' : 'text-red-500'
-              }`}>
-                {score}/{quizQuestions.length}
+                  <div>
+                    <p className="font-semibold mb-2 text-amber-600">Avantages sociaux</p>
+                    <ul className="text-sm space-y-1">
+                      <li>• Travail à domicile</li>
+                      <li>• Revenus hivernaux</li>
+                      <li>• Emploi familial</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
-              <div className="text-7xl mb-6">
-                {score >= 4 ? '🏆' : score >= 3 ? '👍' : '📚'}
-              </div>
-              <p className="text-4xl font-bold mb-4">
-                {score >= 4 ? 'Excellent !' :
-                 score >= 3 ? 'Bien joué !' :
-                 'Continuez à apprendre'}
-              </p>
-              <p className={`text-xl mb-10 max-w-2xl mx-auto ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
-                {score >= 4 ? "Vous maîtrisez parfaitement l'histoire de l'horlogerie suisse ! Votre connaissance honore cette tradition séculaire." :
-                 score >= 3 ? "Vous avez de bonnes connaissances sur l'horlogerie suisse. Continuez à approfondir cet héritage fascinant !" :
-                 "Relisez attentivement le cours pour mieux comprendre cette histoire exceptionnelle de l'horlogerie suisse."}
-              </p>
-              <button
-                onClick={() => {
-                  setShowResults(false)
-                  setQuizAnswers({})
-                  setScore(0)
-                }}
-                className="px-10 py-4 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-xl hover:shadow-2xl transition-all duration-300 font-bold text-lg hover:scale-105"
-              >
-                🔄 Recommencer le quiz
-              </button>
-            </div>
-          )}
-        </motion.section>
+            </motion.section>
 
+            {/* Section 4: Âge d'Or */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className={`mb-10 p-8 rounded-xl border ${
+                isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200'
+              }`}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className={`p-2.5 rounded-lg ${isDark ? 'bg-blue-900/30' : 'bg-blue-100'}`}>
+                  <TrendingUp className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold">Industrialisation et Âge d'Or</h2>
+                  <p className="text-sm text-blue-600 font-medium">19ème - 20ème Siècle</p>
+                </div>
+              </div>
+              <div className="space-y-4 text-base leading-relaxed">
+                <p>
+                  La <strong>mécanisation</strong> au début du 20ème siècle permet à la Suisse de passer à une production en série tout en maintenant l'excellence[web:10][web:53]. Dans les <strong>années 1960</strong>, l'apogée : <strong>60% de la production mondiale</strong> est suisse[web:16][web:10].
+                </p>
+                <div className={`text-center p-6 rounded-lg ${isDark ? 'bg-blue-900/20 border border-blue-800/30' : 'bg-blue-50 border border-blue-200'} my-6`}>
+                  <div className="text-5xl font-bold text-blue-600 mb-2">60%</div>
+                  <p className="text-sm font-medium">Production horlogère mondiale (1960)</p>
+                </div>
+                <p>
+                  Le label <strong>"Swiss Made"</strong> devient synonyme de qualité, précision et excellence dans l'imaginaire collectif mondial[web:10][web:58].
+                </p>
+              </div>
+            </motion.section>
+
+            {/* Section 5: Crise du Quartz */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className={`mb-10 p-8 rounded-xl border ${
+                isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200'
+              }`}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className={`p-2.5 rounded-lg ${isDark ? 'bg-red-900/30' : 'bg-red-100'}`}>
+                  <AlertTriangle className="w-6 h-6 text-red-600" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold">Crises et Résilience</h2>
+                  <p className="text-sm text-red-600 font-medium">1970-1980 : Crise du Quartz</p>
+                </div>
+              </div>
+              <div className="space-y-4 text-base leading-relaxed">
+                <p>
+                  La <strong>crise du quartz</strong> (1970-1980) menace l'existence de l'industrie suisse avec l'arrivée des montres japonaises électroniques[web:16][web:62]. C'est une hécatombe : de 90 000 à 30 000 emplois, plus de 1000 fabricants disparus[web:7].
+                </p>
+                <div className={`grid grid-cols-3 gap-4 my-6 p-5 rounded-lg ${isDark ? 'bg-red-900/10 border border-red-800/30' : 'bg-red-50 border border-red-200'}`}>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-red-600">-60k</div>
+                    <p className="text-xs mt-1">Emplois perdus</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-red-600">1000+</div>
+                    <p className="text-xs mt-1">Fabricants disparus</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-red-600">13 ans</div>
+                    <p className="text-xs mt-1">Durée de crise</p>
+                  </div>
+                </div>
+                <p>
+                  La Suisse se réinvente en se repositionnant sur le <strong>luxe et la haute horlogerie mécanique</strong>[web:16][web:57], mettant en avant son savoir-faire artisanal et son héritage[web:10][web:62].
+                </p>
+              </div>
+            </motion.section>
+
+            {/* Section 6: Aujourd'hui */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className={`mb-10 p-8 rounded-xl border ${
+                isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200'
+              }`}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className={`p-2.5 rounded-lg ${isDark ? 'bg-emerald-900/30' : 'bg-emerald-100'}`}>
+                  <Award className="w-6 h-6 text-emerald-600" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold">L'Excellence Suisse Aujourd'hui</h2>
+                  <p className="text-sm text-emerald-600 font-medium">21ème Siècle</p>
+                </div>
+              </div>
+              <div className="space-y-4 text-base leading-relaxed">
+                <p>
+                  Aujourd'hui, la Suisse domine le <strong>marché mondial du luxe horloger</strong>[web:10][web:57]. Les manufactures investissent massivement en R&D : nouveaux matériaux (silicium, céramique), mouvements perfectionnés, complications sophistiquées[web:57][web:62].
+                </p>
+                <div className={`grid grid-cols-3 gap-3 my-6`}>
+                  <div className={`p-4 rounded-lg text-center ${isDark ? 'bg-slate-800/50' : 'bg-gradient-to-br from-blue-50 to-indigo-50'}`}>
+                    <div className="text-2xl mb-2">🎯</div>
+                    <p className="text-xs font-semibold">Luxe Premium</p>
+                  </div>
+                  <div className={`p-4 rounded-lg text-center ${isDark ? 'bg-slate-800/50' : 'bg-gradient-to-br from-emerald-50 to-teal-50'}`}>
+                    <div className="text-2xl mb-2">🔬</div>
+                    <p className="text-xs font-semibold">Innovation</p>
+                  </div>
+                  <div className={`p-4 rounded-lg text-center ${isDark ? 'bg-slate-800/50' : 'bg-gradient-to-br from-amber-50 to-orange-50'}`}>
+                    <div className="text-2xl mb-2">🏛️</div>
+                    <p className="text-xs font-semibold">Héritage</p>
+                  </div>
+                </div>
+                <p>
+                  Le label <strong>"Swiss Made"</strong> garantit 60% minimum de valeur suisse, assemblage final et contrôle qualité en Suisse[web:58][web:61]. L'horlogerie suisse représente une success story unique où tradition et innovation coexistent[web:10][web:57].
+                </p>
+              </div>
+            </motion.section>
+
+          </div>
+
+          {/* Sidebar Quiz Compact */}
+          <div className="w-80 flex-shrink-0">
+            <div className={`sticky top-24 p-6 rounded-xl border ${
+              isDark ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200'
+            } shadow-lg`}>
+              <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                <Award className="w-5 h-5 text-amber-600" />
+                Quiz de Certification
+              </h3>
+              
+              {!showResults ? (
+                <div className="space-y-4">
+                  {quizQuestions.map((q, index) => (
+                    <div key={index} className={`p-4 rounded-lg ${
+                      isDark ? 'bg-slate-800/50' : 'bg-slate-50'
+                    }`}>
+                      <p className="font-semibold text-sm mb-3">{index + 1}. {q.question}</p>
+                      <div className="space-y-2">
+                        {q.options.map((option, optIndex) => (
+                          <label key={optIndex} className="flex items-start gap-2 cursor-pointer text-sm">
+                            <input
+                              type="radio"
+                              name={`question-${index}`}
+                              value={optIndex}
+                              onChange={(e) => setQuizAnswers({...quizAnswers, [index]: e.target.value})}
+                              className="mt-0.5 text-blue-600"
+                            />
+                            <span className="leading-tight">{option}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                  
+                  <button
+                    onClick={handleQuizSubmit}
+                    disabled={Object.keys(quizAnswers).length !== quizQuestions.length}
+                    className="w-full py-3 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                  >
+                    Valider
+                  </button>
+                </div>
+              ) : (
+                <div className="text-center py-6">
+                  <div className={`text-5xl font-bold mb-4 ${
+                    score >= 4 ? 'text-green-500' : score >= 3 ? 'text-yellow-500' : 'text-red-500'
+                  }`}>
+                    {score}/5
+                  </div>
+                  <p className="text-lg font-bold mb-2">
+                    {score >= 4 ? '🏆 Excellent !' :
+                     score >= 3 ? '👍 Bien !' :
+                     '📚 À revoir'}
+                  </p>
+                  <p className="text-xs mb-6 text-slate-600 dark:text-slate-400">
+                    {score >= 4 ? "Parfaite maîtrise !" :
+                     score >= 3 ? 'Bonnes connaissances' :
+                     'Relisez le cours'}
+                  </p>
+                  <button
+                    onClick={() => {
+                      setShowResults(false)
+                      setQuizAnswers({})
+                      setScore(0)
+                    }}
+                    className="px-6 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors text-sm font-medium"
+                  >
+                    Recommencer
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   )
