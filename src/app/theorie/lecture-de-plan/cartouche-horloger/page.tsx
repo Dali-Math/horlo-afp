@@ -663,7 +663,7 @@ export default function CartoucheHorlogerPage() {
             )}
           </div>
         </section>
-        {/* Context Section */}
+                {/* Context Section */}
         <section className="mb-16">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Contexte & Origines des Normes</h2>
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8">
@@ -673,22 +673,18 @@ export default function CartoucheHorlogerPage() {
               </div>
               <div className="flex-1">
                 <p className="text-slate-700 dark:text-slate-200 leading-relaxed mb-4">
-                  La norme <strong className="text-blue-600 dark:text-blue-400">ISO 7200:2004</strong> définit le contenu, la structure et la disposition des champs de données dans le cartouche d'inscription des dessins techniques. Elle assure l'interopérabilité internationale des plans et la traçabilité documentaire.
-                </p>
-                <p className="text-slate-700 dark:text-slate-200 leading-relaxed mb-4">
-                  La norme <strong className="text-blue-600 dark:text-blue-400">ISO 5457:1999</strong> spécifie les formats, la présentation et la disposition des dessins techniques, notamment l'emplacement du cartouche (coin inférieur droit).
-                </p>
-                <p className="text-slate-700 dark:text-slate-200 leading-relaxed">
-                  En horlogerie, le respect rigoureux de ces normes garantit la <strong>traçabilité complète</strong> des pièces, facilite les échanges entre manufactures et permet une gestion documentaire efficace des milliers de composants d'un mouvement.
+                  La norme <strong className="text-blue-600 dark:text-blue-400">ISO 7200</strong> définit le cartouche technique sur tous les plans industriels.
+                  La norme <strong className="text-blue-600 dark:text-blue-400">ISO 5457</strong> fixe la position du cartouche et le format des feuilles.
+                  Ces deux normes assurent l'unification internationale de la traçabilité documentaire et facilitent la production et maintenance horlogère.
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Tableau récapitulatif des champs obligatoires */}
+        {/* Tableau récapitulatif et Exemples */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Tableau Récapitulatif des Champs</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Tableau synthétique</h2>
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -697,7 +693,7 @@ export default function CartoucheHorlogerPage() {
                     <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Champ</th>
                     <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Catégorie</th>
                     <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Obligation</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Exemple horlogerie</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Exemple</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
@@ -723,145 +719,57 @@ export default function CartoucheHorlogerPage() {
           </div>
         </section>
 
-        {/* Exemples de cartouches par type de pièce */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Exemples par Type de Pièce</h2>
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-slate-100 dark:bg-slate-700">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Type de pièce</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Numéro de plan</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Échelle typique</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-white">Matériau usuel</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Platine</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200 font-mono text-sm">PLT-6497-001-A</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">1:1</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Laiton CuZn37</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Roue d'échappement</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200 font-mono text-sm">ROU-ECH-015-B</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">5:1</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Acier inox 316L</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Pont de balancier</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200 font-mono text-sm">PON-BAL-023-C</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">2:1</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Maillechort CuNi18Zn20</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Axe de balancier</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200 font-mono text-sm">AXE-BAL-008-A</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">10:1</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Acier trempé 100Cr6</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">Barillet complet</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200 font-mono text-sm">BAR-CPL-042-D</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">1:1</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Laiton CuZn37</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
         {/* Quote */}
         <section className="mb-16">
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-800 rounded-2xl p-8 text-white text-center">
             <blockquote className="text-2xl font-serif italic mb-4">
-              "Un cartouche bien rempli est la mémoire technique d'une pièce horlogère."
+              "Un cartouche clair, c'est un plan exploitable et durable."
             </blockquote>
-            <p className="text-blue-100 dark:text-blue-200">— Principe fondamental de la documentation technique</p>
+            <p className="text-blue-100 dark:text-blue-200">— Principe ISO</p>
           </div>
         </section>
 
         {/* FAQ */}
         <section className="mb-16">
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Questions fréquentes (FAQ)</h2>
-          
           <div className="space-y-4">
             <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
               <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-white cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex justify-between items-center">
-                Tous les champs du cartouche sont-ils obligatoires ?
+                Est-ce que tous les champs doivent être remplis ?
                 <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
                 <p className="text-slate-700 dark:text-slate-200">
-                  Non. Selon ISO 7200, certains champs sont <strong>obligatoires</strong> (titre, numéro de plan, échelle, date, etc.) tandis que d'autres sont <strong>conditionnels</strong> (vérificateur, traitement de surface) et ne sont requis que dans des contextes spécifiques.
+                  Non : seuls les champs <strong>obligatoires</strong> sont requis pour tout plan. Les champs <strong>conditionnels</strong> sont à renseigner si la situation le justifie (traitement, vérificateur...).
                 </p>
               </div>
             </details>
 
             <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
               <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-white cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex justify-between items-center">
-                Quelle est la différence entre ISO 7200 et ISO 5457 ?
+                Peut-on personnaliser le cartouche ?
                 <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
                 <p className="text-slate-700 dark:text-slate-200">
-                  <strong>ISO 7200</strong> définit le <strong>contenu et la structure</strong> des champs du cartouche. <strong>ISO 5457</strong> définit les <strong>formats de feuilles</strong> et la <strong>position du cartouche</strong> (coin inférieur droit). Les deux normes sont complémentaires.
-                </p>
-              </div>
-            </details>
-
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-white cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex justify-between items-center">
-                Comment numéroter efficacement les plans horlogers ?
-                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
-                <p className="text-slate-700 dark:text-slate-200">
-                  Utilisez un <strong>système structuré</strong> : [TYPE]-[CALIBRE/PROJET]-[NUMÉRO SÉQUENTIEL]-[INDICE]. Exemple : <code className="bg-blue-100 dark:bg-blue-900/50 px-2 py-1 rounded text-blue-800 dark:text-blue-200">PLT-6497-001-A</code> (Platine, calibre 6497, plan n°001, révision A).
-                </p>
-              </div>
-            </details>
-
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-white cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex justify-between items-center">
-                Faut-il indiquer l'indice de révision dès la première version ?
-                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
-                <p className="text-slate-700 dark:text-slate-200">
-                  <strong>Oui, absolument.</strong> Même la première version doit avoir un indice (généralement <strong>A</strong> ou <strong>01</strong>). Cela facilite la traçabilité et évite toute confusion lors de futures révisions.
-                </p>
-              </div>
-            </details>
-
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-white cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex justify-between items-center">
-                Quelle tolérance générale utiliser en horlogerie ?
-                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
-                <p className="text-slate-700 dark:text-slate-200">
-                  La classe <strong>ISO 2768-m</strong> (moyenne) est souvent utilisée pour les pièces mécaniques horlogères. Pour les pièces de précision critique, on peut descendre à <strong>ISO 2768-f</strong> (fine) ou spécifier des tolérances individuelles.
+                  Oui, dans la limite de conserver tous les champs imposés par ISO 7200.
                 </p>
               </div>
             </details>
           </div>
         </section>
 
-        {/* CTA */}
+        {/* CTA ISO */}
         <section className="text-center">
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-800 rounded-2xl p-8 text-white inline-block">
-            <p className="text-lg mb-4">📘 Tu veux aller plus loin ?</p>
+            <p className="text-lg mb-4">📘 Pour aller plus loin :</p>
             <a 
               href="https://www.iso.org/standard/68916.html" 
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-block bg-white dark:bg-slate-100 text-blue-600 dark:text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-slate-200 transition-colors"
             >
-              Consulter la norme ISO 7200 complète
+              Découvrir la norme ISO 7200 complète
             </a>
           </div>
         </section>
