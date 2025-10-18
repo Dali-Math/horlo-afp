@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  Clock, Gauge, Zap, Settings2, ChevronLeft, BookOpen,
+  Clock, Gauge, Zap, Settings2, ChevronLeft, BookOpen, Cog, RotateCw, BookText,
 } from 'lucide-react';
 
 const pagesFonctionnement = [
@@ -20,6 +20,12 @@ const pagesFonctionnement = [
     icon: <Gauge className="w-7 h-7 text-yellow-600 dark:text-yellow-300" />,
   },
   {
+    slug: 'rouage',
+    titre: "Le Rouage (Train d'engrenages)",
+    description: "Transmission de l'énergie, calculs et rapports.",
+    icon: <Cog className="w-7 h-7 text-blue-600 dark:text-blue-400" />,
+  },
+  {
     slug: 'echappement-ancre',
     titre: "L'Échappement à Ancre Suisse",
     description: "Organe de distribution - rôle, éléments, phases.",
@@ -31,6 +37,21 @@ const pagesFonctionnement = [
     description: "Organe réglant, oscillations, réglage, matériaux.",
     icon: <Settings2 className="w-7 h-7 text-green-600 dark:text-green-300" />,
   },
+  {
+    slug: 'remontage',
+    titre: "Le Remontage",
+    description: "Manuel et automatique, procédure et réserve de marche.",
+    icon: <RotateCw className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />,
+  },
+];
+
+const pagesHistoireCulture = [
+  {
+    slug: 'histoire-horlogerie-suisse',
+    titre: "Histoire de l'Horlogerie Suisse",
+    description: "Origines, établissage, crises et succès depuis le 16ème siècle.",
+    icon: <BookText className="w-7 h-7 text-amber-600 dark:text-amber-400" />,
+  },
 ];
 
 const pagesLecturePlan = [
@@ -38,7 +59,7 @@ const pagesLecturePlan = [
     slug: 'lecture-de-plan',
     titre: "Lecture de Plans Horlogers",
     description: "Vues techniques, cartouche, tolérances, ISO/NIHS.",
-    icon: <BookOpen className="w-7 h-7 text-slate-700 dark:text-light-200" />,
+    icon: <BookOpen className="w-7 h-7 text-slate-700 dark:text-slate-200" />,
   },
 ];
 
@@ -50,7 +71,7 @@ export default function TheoriePage() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <Link href="/" className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
             <ChevronLeft className="w-5 h-5 mr-1" />
-            Retour à l’accueil
+            Retour à l'accueil
           </Link>
         </div>
       </header>
@@ -60,7 +81,7 @@ export default function TheoriePage() {
           Théorie Horlogère Suisse
         </h1>
         <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mb-8">
-          Parcours indépendant, passion et savoir-faire : découvrez
+          Parcours indépendant, passion et savoir-faire : découvrez
           le fonctionnement complet de la montre mécanique et la lecture de plans techniques.
         </p>
 
@@ -86,8 +107,30 @@ export default function TheoriePage() {
           ))}
         </div>
 
+        {/* Section Histoire et Culture */}
+        <h2 className="text-2xl font-bold text-amber-600 dark:text-amber-400 mb-3 mt-12">
+          Histoire et Culture Horlogère
+        </h2>
+        <div className="grid md:grid-cols-2 gap-6 mb-12">
+          {pagesHistoireCulture.map((p) => (
+            <Link
+              key={p.slug}
+              href={`/theorie/${p.slug}`}
+              className="flex gap-4 items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all group"
+            >
+              <div>{p.icon}</div>
+              <div>
+                <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                  {p.titre}
+                </div>
+                <div className="text-sm text-slate-700 dark:text-slate-300">{p.description}</div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
         {/* Section lecture de plans */}
-        <h2 className="text-2xl font-bold text-slate-800 dark:text-light-300 mb-3">
+        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-300 mb-3">
           Lecture de plans, normes & cartouches
         </h2>
         <div className="grid md:grid-cols-2 gap-6">
@@ -107,8 +150,6 @@ export default function TheoriePage() {
             </Link>
           ))}
         </div>
-
-        {/* Ajoute ici d'autres sections si tu veux plus tard */}
       </section>
     </main>
   );
