@@ -122,6 +122,42 @@ body {
 }
 
 /* ========================================
+   ANIMATION LOGOS DÉFILANTS - Footer
+   ======================================== */
+
+/* Animation scroll logos (défilement horizontal continu) */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Animation normale (30 secondes) */
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+/* Animation rapide (20 secondes) */
+.animate-scroll-fast {
+  animation: scroll 20s linear infinite;
+}
+
+/* Animation lente (40 secondes) */
+.animate-scroll-slow {
+  animation: scroll 40s linear infinite;
+}
+
+/* Pause au hover (survol souris) */
+.animate-scroll:hover,
+.animate-scroll-fast:hover,
+.animate-scroll-slow:hover {
+  animation-play-state: paused;
+}
+
+/* ========================================
    ANIMATIONS ROUES DENTÉES - Page Rouage
    ======================================== */
 
@@ -350,6 +386,15 @@ body {
   .animate-spin-slow-reverse {
     animation-duration: 70s;
   }
+
+  /* Logos défilants plus lents sur mobile */
+  .animate-scroll {
+    animation-duration: 40s;
+  }
+  
+  .animate-scroll-fast {
+    animation-duration: 30s;
+  }
 }
 
 /* ========================================
@@ -377,6 +422,9 @@ a, button {
   .animate-spin-slow-reverse,
   .animate-carousel,
   .animate-marquee-footer,
+  .animate-scroll,
+  .animate-scroll-fast,
+  .animate-scroll-slow,
   .timeline-item {
     animation: none !important;
     opacity: 1 !important;
@@ -397,7 +445,10 @@ a, button {
 .animate-spin-slow,
 .animate-spin-reverse,
 .animate-spin-fast,
-.animate-spin-slow-reverse {
+.animate-spin-slow-reverse,
+.animate-scroll,
+.animate-scroll-fast,
+.animate-scroll-slow {
   will-change: transform;
   backface-visibility: hidden;
   perspective: 1000px;
@@ -412,18 +463,4 @@ svg {
 .gear-smooth {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-/* Animation pour faire tourner la roue */
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 12s linear infinite;
-  transform-origin: center;
 }
