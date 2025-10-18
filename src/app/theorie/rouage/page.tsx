@@ -225,7 +225,7 @@ export default function RouagePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 font-bold">•</span>
-                    <span><strong>Efficacité optimale</strong> : rendement > 95%</span>
+                    <span><strong>Efficacité optimale</strong> : rendement &gt; 95%</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 font-bold">•</span>
