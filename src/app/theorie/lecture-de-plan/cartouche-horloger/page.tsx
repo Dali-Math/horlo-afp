@@ -418,7 +418,7 @@ const getObligationColor = (obligation: string) => {
             </div>
             <svg viewBox="0 0 410 100" className="w-full h-auto border-2 border-slate-300 rounded-lg">
               {/* Titre général */}
-              <text x="205" y="-5" textAnchor="middle" fontSize="10" fontWeight="bold" className="fill-blue-700 dark:fill-blue-400">
+              <text x="205" y="-5" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1e40af">
                 Cartouche d'inscription ISO 7200
               </text>
               
@@ -789,33 +789,33 @@ const getObligationColor = (obligation: string) => {
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-bold text-2xl text-blue-600 dark:text-blue-400">A4</td>
-                    <td className="px-6 py-4 text-slate-700">210 × 297</td>
-                    <td className="px-6 py-4 text-slate-700">10 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Pièces de mouvement, composants unitaires</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">210 × 297</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">10 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Pièces de mouvement, composants unitaires</td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-bold text-2xl text-blue-600 dark:text-blue-400">A3</td>
-                    <td className="px-6 py-4 text-slate-700">297 × 420</td>
-                    <td className="px-6 py-4 text-slate-700">10 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Ensembles de mouvement, platines complètes</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">297 × 420</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">10 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Ensembles de mouvement, platines complètes</td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-bold text-2xl text-blue-600 dark:text-blue-400">A2</td>
-                    <td className="px-6 py-4 text-slate-700">420 × 594</td>
-                    <td className="px-6 py-4 text-slate-700">10 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Éclatés complexes, assemblages complets</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">420 × 594</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">10 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Éclatés complexes, assemblages complets</td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-bold text-2xl text-blue-600 dark:text-blue-400">A1</td>
-                    <td className="px-6 py-4 text-slate-700">594 × 841</td>
-                    <td className="px-6 py-4 text-slate-700">20 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Plans d'atelier, nomenclatures étendues</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">594 × 841</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">20 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Plans d'atelier, nomenclatures étendues</td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-bold text-2xl text-blue-600 dark:text-blue-400">A0</td>
-                    <td className="px-6 py-4 text-slate-700">841 × 1189</td>
-                    <td className="px-6 py-4 text-slate-700">20 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Rarement utilisé en horlogerie</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">841 × 1189</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">20 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Rarement utilisé en horlogerie</td>
                   </tr>
                 </tbody>
               </table>
@@ -840,39 +840,39 @@ const getObligationColor = (obligation: string) => {
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-semibold text-slate-900">CuNi18Zn20</td>
-                    <td className="px-6 py-4 text-slate-700">Maillechort</td>
-                    <td className="px-6 py-4 text-slate-700">Cu-Ni 18% - Zn 20%</td>
-                    <td className="px-6 py-4 text-slate-700">Platines, ponts, leviers</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Maillechort</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Cu-Ni 18% - Zn 20%</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Platines, ponts, leviers</td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-semibold text-slate-900">CuZn40</td>
-                    <td className="px-6 py-4 text-slate-700">Laiton</td>
-                    <td className="px-6 py-4 text-slate-700">Cu-Zn 40%</td>
-                    <td className="px-6 py-4 text-slate-700">Roues, pignons, platines</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Laiton</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Cu-Zn 40%</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Roues, pignons, platines</td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-semibold text-slate-900">X5CrNi18-10 (316L)</td>
-                    <td className="px-6 py-4 text-slate-700">Acier inoxydable</td>
-                    <td className="px-6 py-4 text-slate-700">Acier austénitique</td>
-                    <td className="px-6 py-4 text-slate-700">Axes, visserie, boîtiers</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Acier inoxydable</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Acier austénitique</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Axes, visserie, boîtiers</td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-semibold text-slate-900">Glucydur</td>
-                    <td className="px-6 py-4 text-slate-700">Glucydur</td>
-                    <td className="px-6 py-4 text-slate-700">Alliage Cu-Be</td>
-                    <td className="px-6 py-4 text-slate-700">Balanciers (antimagnétique)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Glucydur</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Alliage Cu-Be</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Balanciers (antimagnétique)</td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-semibold text-slate-900">Nivaflex</td>
-                    <td className="px-6 py-4 text-slate-700">Nivaflex</td>
-                    <td className="px-6 py-4 text-slate-700">Alliage Ni-Cr-Co-Ti-Be</td>
-                    <td className="px-6 py-4 text-slate-700">Spiraux (antimagnétique)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Nivaflex</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Alliage Ni-Cr-Co-Ti-Be</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Spiraux (antimagnétique)</td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-semibold text-slate-900">Rubis synthétique</td>
-                    <td className="px-6 py-4 text-slate-700">Rubis</td>
-                    <td className="px-6 py-4 text-slate-700">Corindon Al₂O₃</td>
-                    <td className="px-6 py-4 text-slate-700">Paliers, contre-pivots</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Rubis</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Corindon Al₂O₃</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Paliers, contre-pivots</td>
                   </tr>
                 </tbody>
               </table>
@@ -897,39 +897,39 @@ const getObligationColor = (obligation: string) => {
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-semibold text-slate-900">Rhodiage</td>
-                    <td className="px-6 py-4 text-slate-700">Dépôt électrolytique de rhodium</td>
-                    <td className="px-6 py-4 text-slate-700">Protection, aspect blanc brillant</td>
-                    <td className="px-6 py-4 text-slate-700">Platines, ponts de luxe</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Dépôt électrolytique de rhodium</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Protection, aspect blanc brillant</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Platines, ponts de luxe</td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-semibold text-slate-900">Anglage</td>
-                    <td className="px-6 py-4 text-slate-700">Polissage des arêtes à 45°</td>
-                    <td className="px-6 py-4 text-slate-700">Esthétique haute horlogerie</td>
-                    <td className="px-6 py-4 text-slate-700">Ponts, leviers, bascules</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Polissage des arêtes à 45°</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Esthétique haute horlogerie</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Ponts, leviers, bascules</td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-semibold text-slate-900">Perlage</td>
-                    <td className="px-6 py-4 text-slate-700">Motif circulaire décoratif</td>
-                    <td className="px-6 py-4 text-slate-700">Esthétique, finition noble</td>
-                    <td className="px-6 py-4 text-slate-700">Platines, ponts</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Motif circulaire décoratif</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Esthétique, finition noble</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Platines, ponts</td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-semibold text-slate-900">Côtes de Genève</td>
-                    <td className="px-6 py-4 text-slate-700">Rayures parallèles ondulées</td>
-                    <td className="px-6 py-4 text-slate-700">Finition traditionnelle genevoise</td>
-                    <td className="px-6 py-4 text-slate-700">Ponts, masses oscillantes</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Rayures parallèles ondulées</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Finition traditionnelle genevoise</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Ponts, masses oscillantes</td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-semibold text-slate-900">PVD</td>
-                    <td className="px-6 py-4 text-slate-700">Dépôt physique en phase vapeur</td>
-                    <td className="px-6 py-4 text-slate-700">Dureté, résistance, couleur</td>
-                    <td className="px-6 py-4 text-slate-700">Boîtiers, composants sportifs</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Dépôt physique en phase vapeur</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Dureté, résistance, couleur</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Boîtiers, composants sportifs</td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                     <td className="px-6 py-4 font-semibold text-slate-900">Satinage</td>
-                    <td className="px-6 py-4 text-slate-700">Finition mate directionnelle</td>
-                    <td className="px-6 py-4 text-slate-700">Esthétique, anti-reflets</td>
-                    <td className="px-6 py-4 text-slate-700">Boîtiers, bracelets</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Finition mate directionnelle</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Esthétique, anti-reflets</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-200">Boîtiers, bracelets</td>
                   </tr>
                 </tbody>
               </table>
