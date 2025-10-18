@@ -73,7 +73,7 @@ const personnalites: Personnalite[] = [
     specialite: "Fondateur de Seiko",
     description: "Entrepreneur japonais qui fonda Seiko et révolutionna l'horlogerie avec le quartz.",
     biographieComplete: "Kintarō Hattori ouvrit sa première boutique d'horlogerie à Tokyo en 1881. En 1892, il créa la manufacture Seikosha. Son fils Genzo poursuivit l'œuvre et Seiko lança la première montre à quartz en 1969, révolutionnant l'industrie mondiale et déclenchant la 'crise du quartz'.",
-    image: "/images/personnalites/tissot.jpg",  // ✅ Utilise tissot (tu n'as pas hattori.jpg)
+    image: "/images/personnalites/kintaro.hattori.jpg",  // ✅ Utilise tissot (tu n'as pas hattori.jpg)
     contribution: "Seiko, montre à quartz, révolution horlogère"
   }
 ];
