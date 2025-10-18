@@ -27,9 +27,14 @@ export default function RouagePage() {
         </div>
       </div>
 
-      {/* Hero Section */}
-      <section className="bg-white">
-        <div className="container mx-auto px-4 py-12 md:py-16 max-w-6xl">
+      {/* Hero Section avec Roues Animées */}
+      <section className="bg-white relative overflow-hidden">
+        {/* Animated Gears Background - Visible et subtil */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.08]">
+          <AnimatedGears />
+        </div>
+
+        <div className="container mx-auto px-4 py-12 md:py-16 max-w-6xl relative z-10">
           {/* Badge catégorie */}
           <div className="mb-6">
             <span className="inline-block bg-blue-100 text-blue-700 text-sm font-medium px-4 py-1.5 rounded-full">
@@ -37,10 +42,26 @@ export default function RouagePage() {
             </span>
           </div>
 
-          {/* Titre et description */}
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-            La Transmission Cinématique
-          </h1>
+          {/* Titre avec roue animée */}
+          <div className="flex items-start gap-4 mb-6">
+            <div className="relative">
+              <svg 
+                className="w-16 h-16 md:w-20 md:h-20 text-blue-600 animate-spin-slow" 
+                viewBox="0 0 100 100" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="3"
+              >
+                <Gear size={100} teeth={8} />
+              </svg>
+              <div className="absolute inset-0 bg-blue-400/20 blur-xl rounded-full"></div>
+            </div>
+            <div className="flex-1">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+                La Transmission Cinématique
+              </h1>
+            </div>
+          </div>
 
           <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-4xl">
             Le rouage est le cœur de la transmission mécanique dans une montre. Il transforme l'énergie du barillet en un mouvement précis et régulé qui anime les aiguilles.
@@ -415,6 +436,96 @@ export default function RouagePage() {
 // ========================================
 // COMPONENTS
 // ========================================
+
+// Composant Roues Animées pour fond (design clair)
+function AnimatedGears() {
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      {/* Grande roue principale - droite haut */}
+      <svg
+        className="absolute top-10 right-10 w-80 h-80 text-blue-600 animate-spin-slow"
+        viewBox="0 0 100 100"
+        fill="currentColor"
+      >
+        <Gear size={100} teeth={12} />
+      </svg>
+
+      {/* Roue moyenne - gauche milieu */}
+      <svg
+        className="absolute top-1/3 left-10 w-52 h-52 text-green-600 animate-spin-reverse"
+        viewBox="0 0 100 100"
+        fill="currentColor"
+      >
+        <Gear size={100} teeth={10} />
+      </svg>
+
+      {/* Petite roue rapide - droite bas */}
+      <svg
+        className="absolute bottom-20 right-1/4 w-36 h-36 text-purple-600 animate-spin-fast"
+        viewBox="0 0 100 100"
+        fill="currentColor"
+      >
+        <Gear size={100} teeth={8} />
+      </svg>
+
+      {/* Roue décorative - gauche bas */}
+      <svg
+        className="absolute bottom-32 left-1/4 w-44 h-44 text-orange-600 animate-spin-slow-reverse"
+        viewBox="0 0 100 100"
+        fill="currentColor"
+      >
+        <Gear size={100} teeth={9} />
+      </svg>
+    </div>
+  );
+}
+
+// Composant Roue Dentée SVG (stroke pour design clair)
+interface GearProps {
+  size: number;
+  teeth: number;
+}
+
+function Gear({ size, teeth }: GearProps) {
+  const center = size / 2;
+  const outerRadius = size / 2 - 2;
+  const innerRadius = outerRadius * 0.7;
+
+  // Génération des dents
+  let pathData = "";
+  for (let i = 0; i < teeth; i++) {
+    const angle1 = (i * 2 * Math.PI) / teeth;
+    const angle2 = ((i + 0.4) * 2 * Math.PI) / teeth;
+    const angle3 = ((i + 0.6) * 2 * Math.PI) / teeth;
+    const angle4 = ((i + 1) * 2 * Math.PI) / teeth;
+
+    const x1 = center + innerRadius * Math.cos(angle1);
+    const y1 = center + innerRadius * Math.sin(angle1);
+    const x2 = center + outerRadius * Math.cos(angle2);
+    const y2 = center + outerRadius * Math.sin(angle2);
+    const x3 = center + outerRadius * Math.cos(angle3);
+    const y3 = center + outerRadius * Math.sin(angle3);
+    const x4 = center + innerRadius * Math.cos(angle4);
+    const y4 = center + innerRadius * Math.sin(angle4);
+
+    if (i === 0) {
+      pathData += `M ${x1} ${y1} `;
+    }
+    pathData += `L ${x2} ${y2} L ${x3} ${y3} L ${x4} ${y4} `;
+  }
+  pathData += "Z";
+
+  return (
+    <g>
+      {/* Corps de la roue */}
+      <path d={pathData} fill="currentColor" opacity="0.15" stroke="currentColor" strokeWidth="1.5" />
+      {/* Centre de la roue */}
+      <circle cx={center} cy={center} r={innerRadius * 0.3} fill="currentColor" opacity="0.2" />
+      {/* Trou central */}
+      <circle cx={center} cy={center} r={innerRadius * 0.15} fill="none" stroke="currentColor" strokeWidth="2" opacity="0.3" />
+    </g>
+  );
+}
 
 // Composant Stat Card
 interface StatCardProps {
