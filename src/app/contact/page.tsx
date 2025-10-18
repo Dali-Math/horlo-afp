@@ -23,14 +23,14 @@ export default function ContactPage() {
   };
 
   return (
-    <section className="py-20 px-6 bg-[#0a0a0a] text-gray-200">
+    <section className="py-20 px-6 bg-light-100 dark:bg-dark-900 text-slate-900 dark:text-light-100 transition-colors duration-500">
       <div className="max-w-xl mx-auto">
-        <h2 className="text-4xl font-bold text-[#E2B44F] mb-6">Contact</h2>
+        <h2 className="text-4xl font-bold text-gold mb-6">Contact</h2>
 
-        <p className="text-gray-400 mb-8 leading-relaxed">
-          Tu veux proposer une idée ou demander d'ajouter une ressource sur le site&nbsp;?{" "}
+        <p className="text-slate-600 dark:text-light-200 mb-8 leading-relaxed">
+          Tu veux proposer une idée ou demander d’ajouter une ressource sur le site&nbsp;?{" "}
           <br />
-          <span className="text-[#E2B44F] font-semibold animate-glow hover:text-[#f9d56e] transition-colors duration-500">
+          <span className="text-gold font-semibold animate-glow hover:text-gold-light transition-colors duration-500">
             Écris-moi ici 👇
           </span>
         </p>
@@ -41,32 +41,32 @@ export default function ContactPage() {
             name="name"
             placeholder="Votre nom"
             required
-            className="w-full p-3 rounded bg-[#1a1a1a] border border-gray-700"
+            className="w-full p-3 rounded bg-white dark:bg-dark-800 border border-slate-300 dark:border-white/10 focus:ring-2 focus:ring-gold outline-none transition-colors duration-300"
           />
           <input
             type="email"
             name="email"
             placeholder="Votre email"
             required
-            className="w-full p-3 rounded bg-[#1a1a1a] border border-gray-700"
+            className="w-full p-3 rounded bg-white dark:bg-dark-800 border border-slate-300 dark:border-white/10 focus:ring-2 focus:ring-gold outline-none transition-colors duration-300"
           />
           <textarea
             name="message"
             placeholder="Votre message"
             required
-            className="w-full p-3 h-40 rounded bg-[#1a1a1a] border border-gray-700"
+            className="w-full p-3 h-40 rounded bg-white dark:bg-dark-800 border border-slate-300 dark:border-white/10 focus:ring-2 focus:ring-gold outline-none transition-colors duration-300"
           />
           <button
             type="submit"
-            className="bg-[#E2B44F] text-black px-6 py-3 rounded font-bold hover:bg-[#f0ca67] transition"
+            className="bg-gold text-dark-900 px-6 py-3 rounded font-bold hover:bg-gold-light transition-colors duration-300"
           >
             Envoyer
           </button>
-          {status && <p className="mt-3 text-green-400">{status}</p>}
+          {status && <p className="mt-3 text-green-500 dark:text-green-400">{status}</p>}
         </form>
       </div>
 
-      {/* Animation dorée personnalisée */}
+      {/* Animation dorée */}
       <style jsx>{`
         @keyframes glow {
           0%, 100% {
