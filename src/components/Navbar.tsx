@@ -4,12 +4,13 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { useState, useRef } from "react";
-import { ThemeToggle } from "@/components/ThemeToggle"; // 🆕 IMPORT
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [theorieOpen, setTheorieOpen] = useState(false);
+  const [theorieOpenDesktop, setTheorieOpenDesktop] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const navLinks = [
@@ -26,11 +27,11 @@ export default function Navbar() {
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setTheorieOpen(true);
+    setTheorieOpenDesktop(true);
   };
 
   const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => setTheorieOpen(false), 250);
+    timeoutRef.current = setTimeout(() => setTheorieOpenDesktop(false), 250);
   };
 
   return (
@@ -74,13 +75,13 @@ export default function Navbar() {
             Théorie{" "}
             <ChevronDown
               className={`w-4 h-4 mt-0.5 transition-transform duration-200 ${
-                theorieOpen ? "rotate-180 text-[#E2B44F]" : ""
+                theorieOpenDesktop ? "rotate-180 text-[#E2B44F]" : ""
               }`}
             />
           </Link>
 
           {/* Sous-menu stable */}
-          {theorieOpen && (
+          {theorieOpenDesktop && (
             <div
               className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-[#111] border border-[#E2B44F33] rounded-lg shadow-lg transition-all duration-200 ease-out opacity-100 translate-y-0 z-50"
               onMouseEnter={handleMouseEnter}
@@ -112,14 +113,14 @@ export default function Navbar() {
         ))}
       </div>
 
-      {/* 🆕 BOUTONS À DROITE (Desktop) */}
+      {/* Boutons à droite (Desktop) */}
       <div className="hidden lg:flex items-center gap-3">
         <ThemeToggle />
       </div>
 
       {/* Bouton menu mobile */}
       <div className="lg:hidden flex items-center gap-3">
-        <ThemeToggle /> {/* 🆕 BOUTON THEME MOBILE */}
+        <ThemeToggle />
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="p-2 text-slate-900 dark:text-white hover:text-[#E2B44F] transition-colors"
@@ -133,26 +134,48 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div className="lg:hidden w-full mt-4 pb-4 border-t border-gray-200 dark:border-gray-800 pt-4 bg-white dark:bg-[#0A0A0A] rounded-lg">
           <div className="flex flex-col space-y-3">
-            {/* Bloc Théorie dans mobile */}
-            <details className="group">
-              <summary
-                className={`flex justify-between items-center py-2 px-2 rounded cursor-pointer ${
-                  pathname.startsWith("/theorie")
-                    ? "text-[#E2B44F] font-semibold bg-gray-100 dark:bg-gray-900 border-l-4 border-[#E2B44F]"
-                    : "text-slate-700 dark:text-gray-300 hover:text-[#E2B44F] hover:bg-gray-100 dark:hover:bg-gray-900"
-                }`}
-              >
-                Théorie
-                <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180 text-[#E2B44F]" />
-              </summary>
-              <Link
-                href="/theorie/lecture-de-plan"
-                className="pl-6 py-2 text-slate-600 dark:text-gray-400 hover:text-[#E2B44F] transition-colors block"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                ↳ Lecture de Plan
-              </Link>
-            </details>
+            {/* ✅ Bloc Théorie cliquable + toggle séparé */}
+            <div className="flex flex-col">
+              {/* Ligne avec lien + bouton toggle */}
+              <div className="flex items-center justify-between">
+                {/* Lien cliquable vers /theorie */}
+                <Link
+                  href="/theorie"
+                  className={`flex-1 py-2 px-2 rounded ${
+                    pathname.startsWith("/theorie")
+                      ? "text-[#E2B44F] font-semibold bg-gray-100 dark:bg-gray-900 border-l-4 border-[#E2B44F]"
+                      : "text-slate-700 dark:text-gray-300 hover:text-[#E2B44F] hover:bg-gray-100 dark:hover:bg-gray-900"
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Théorie
+                </Link>
+                
+                {/* Bouton toggle sous-menu */}
+                <button
+                  onClick={() => setTheorieOpen(!theorieOpen)}
+                  className="p-2 text-slate-700 dark:text-gray-300 hover:text-[#E2B44F]"
+                  aria-label="Toggle sous-menu Théorie"
+                >
+                  <ChevronDown 
+                    className={`w-4 h-4 transition-transform ${
+                      theorieOpen ? 'rotate-180 text-[#E2B44F]' : ''
+                    }`}
+                  />
+                </button>
+              </div>
+              
+              {/* Sous-menu */}
+              {theorieOpen && (
+                <Link
+                  href="/theorie/lecture-de-plan"
+                  className="pl-6 py-2 text-slate-600 dark:text-gray-400 hover:text-[#E2B44F] transition-colors block"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  ↳ Lecture de Plan
+                </Link>
+              )}
+            </div>
 
             {/* Autres liens */}
             {navLinks.map(({ href, label }) => (
