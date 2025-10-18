@@ -33,7 +33,7 @@ const personnalites: Personnalite[] = [
     specialite: "Fondateur de Rolex",
     description: "Entrepreneur visionnaire qui fonda Rolex en 1905 et révolutionna le marketing horloger.",
     biographieComplete: "Hans Wilsdorf naquit en Bavière en 1881. Orphelin très jeune, il entra dans l'horlogerie par passion. En 1905, il fonda Rolex à Londres, puis déménagea la manufacture à Genève. Il créa la première montre étanche Oyster en 1926 et popularisa les certifications chronométriques. Sa vision marketing fit de Rolex le symbole ultime du luxe horloger.",
-    image: "/images/personnalites/choppard.png",  // ✅ Utilise choppard (tu n'as pas wilsdorf.jpg)
+    image: "/images/personnalites/wilsdorf.jpg",  // ✅ Utilise choppard (tu n'as pas wilsdorf.jpg)
     contribution: "Rolex Oyster, marketing horloger, certification COSC"
   },
   {
