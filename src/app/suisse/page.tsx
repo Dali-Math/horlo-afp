@@ -10,7 +10,8 @@ import FooterSuisse from "./components/FooterSuisse";
 
 export default function SuissePage() {
   return (
-    <div className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-light-100 dark:bg-dark-900 text-slate-900 dark:text-light-100 transition-colors duration-500">
+      {/* Sections principales */}
       <HeroSectionSuisse />
       <DocumentsGuidesSuisse />
       <CarteInteractiveSuisse />
@@ -20,6 +21,6 @@ export default function SuissePage() {
       <AttestationAFP />
       <QuizSuisse />
       <FooterSuisse />
-    </div>
+    </main>
   );
 }
