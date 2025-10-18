@@ -376,7 +376,7 @@ export default function CartoucheHorlogerPage() {
 
   const getObligationColor = (obligation: string) => {
     return obligation === 'Obligatoire' ? 'text-red-600 font-bold' : 'text-blue-600';
-  };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
