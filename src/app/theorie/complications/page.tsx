@@ -1,152 +1,122 @@
+// app/[locale]/theorie/complications/page.tsx
+
+import React from "react";
+import { Metadata } from "next";
+import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Complications Horlogères | HorloLearn",
+  description: "Découvrez les complications horlogères : quantième (date), chronographe, phases de lune et tourbillon. Fonctionnement, histoire et modèles iconiques.",
+  keywords: "complication horlogère, quantième, chronographe, phases de lune, tourbillon, montre mécanique, horlogerie suisse",
+};
+
 export default function ComplicationsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-amber-900 to-amber-700 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-5xl font-bold mb-6">Les Complications Horlogères</h1>
-          <p className="text-xl text-amber-100 max-w-3xl">
-            Explorez les fonctions avancées qui enrichissent les montres mécaniques : chronographe, quantième, répétition minutes, et bien plus.
+    <main className="min-h-screen bg-gray-50 dark:bg-neutral-950">
+      {/* Header */}
+      <div className="bg-white dark:bg-neutral-900 border-b border-gray-200 dark:border-neutral-800">
+        <div className="container mx-auto px-4 py-6 max-w-6xl">
+          <a
+            href="/theorie"
+            className="inline-flex items-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors group"
+          >
+            <svg className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Retour à la théorie
+          </a>
+        </div>
+      </div>
+
+      {/* Hero */}
+      <section className="bg-white dark:bg-neutral-900">
+        <div className="container mx-auto px-4 py-12 md:py-16 max-w-6xl">
+          <div className="mb-6">
+            <span className="inline-block bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 text-sm font-medium px-4 py-1.5 rounded-full">
+              Mécanique d’exception
+            </span>
+          </div>
+          <div className="flex items-start gap-4 mb-6">
+            <div className="text-5xl">⚙️</div>
+            <div className="flex-1">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
+                Complications Horlogères
+              </h1>
+            </div>
+          </div>
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-4xl mb-8">
+            Les complications transforment une montre mécanique en chef-d’œuvre d’ingéniosité : calendrier perpétuel, chronographe, phases de lune, tourbillon… Plongez dans l’univers fascinant des complications horlogères, entre défi technique et poésie mécanique.
           </p>
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Introduction aux Complications</h2>
-          <div className="prose prose-lg max-w-none text-slate-700">
-            <p className="mb-4">
-              En horlogerie, une complication désigne toute fonction qui dépasse la simple indication des heures, minutes et secondes. Ces mécanismes supplémentaires représentent le sommet de l'art horloger et de l'ingénierie de précision.
-            </p>
-            <p className="mb-4">
-              Des complications simples comme la date aux grandes complications telles que le tourbillon, le chronographe perpétuel ou la répétition minutes, chaque mécanisme répond à un besoin spécifique et démontre le savoir-faire du maître horloger.
-            </p>
-            <p>
-              La compréhension et la maîtrise des complications sont essentielles pour tout horloger professionnel, car elles représentent à la fois un défi technique et une source d'inspiration constante.
-            </p>
+      {/* Liste des complications */}
+      <section className="py-12 md:py-16">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ComplicationCard
+              icon="📅"
+              title="Quantième (Date)"
+              description="Du simple affichage de la date au quantième perpétuel avec gestion des années bissextiles. Une mémoire mécanique fascinante."
+              href="/theorie/complications/quantieme"
+              color="purple"
+            />
+            <ComplicationCard
+              icon="⏱️"
+              title="Chronographe"
+              description="Mécanisme de mesure des temps courts : roues à colonnes, rattrapante, flyback… Complication sportive par excellence."
+              href="/theorie/complications/chronographe"
+              color="green"
+            />
+            <ComplicationCard
+              icon="🌙"
+              title="Phases de lune"
+              description="Poésie astronomique… Suivi du cycle lunaire affiché sur le cadran, précision sur 122 ans pour les modèles les plus avancés."
+              href="/theorie/complications/phases-lune"
+              color="blue"
+            />
+            <ComplicationCard
+              icon="🌀"
+              title="Tourbillon"
+              description="Inventé pour compenser la gravité, le tourbillon tourne sur lui-même. Génie mécanique et pièce maîtresse de Haute Horlogerie."
+              href="/theorie/complications/tourbillon"
+              color="orange"
+            />
           </div>
         </div>
       </section>
+    </main>
+  );
+}
 
-      {/* Ressources pédagogiques */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-slate-50">
-        <h2 className="text-3xl font-bold text-slate-900 mb-8">Ressources Pédagogiques</h2>
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-bold text-slate-900 mb-4">📚 Documentation technique</h3>
-            <ul className="space-y-3 text-slate-700">
-              <li>
-                <a href="https://www.hautehorlogerie.org/fr/encyclopedie/lexique-de-lhorlogerie/s/complications-5157/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                  FHH - Encyclopédie des complications
-                </a>
-              </li>
-              <li>
-                <a href="https://www.patek.com/fr/company/savoir-faire" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                  Patek Philippe - Savoir-faire des grandes complications
-                </a>
-              </li>
-              <li>
-                <a href="https://www.vacheron-constantin.com/fr/home.html" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                  Vacheron Constantin - Les métiers d'art
-                </a>
-              </li>
-            </ul>
-          </div>
+// =======================
+// Components
+// =======================
+interface ComplicationCardProps {
+  icon: string;
+  title: string;
+  description: string;
+  href: string;
+  color: 'blue' | 'green' | 'purple' | 'orange';
+}
 
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-bold text-slate-900 mb-4">🔗 Liens utiles</h3>
-            <ul className="space-y-3 text-slate-700">
-              <li>
-                <a href="https://www.hodinkee.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                  Hodinkee - Actualités et analyses de complications
-                </a>
-              </li>
-              <li>
-                <a href="https://www.ablogtowatch.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                  aBlogtoWatch - Revues techniques approfondies
-                </a>
-              </li>
-              <li>
-                <a href="https://quilletparis.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                  Quillet Paris - Formation aux complications
-                </a>
-              </li>
-            </ul>
-          </div>
+function ComplicationCard({ icon, title, description, href, color }: ComplicationCardProps) {
+  const colorClasses = {
+    blue: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 hover:border-blue-500',
+    green: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 hover:border-green-500',
+    purple: 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800 hover:border-purple-500',
+    orange: 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800 hover:border-orange-500',
+  };
+
+  return (
+    <Link href={href}>
+      <div className={`border rounded-xl p-6 flex gap-4 transition-all hover:shadow-lg cursor-pointer ${colorClasses[color]} h-full`}>
+        <div className="text-4xl">{icon}</div>
+        <div className="flex-1">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{title}</h3>
+          <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{description}</p>
         </div>
-      </section>
-
-      {/* Tutoriels et Vidéos */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-3xl font-bold text-slate-900 mb-8">Tutoriels et Vidéos</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="aspect-video bg-amber-200 rounded-lg mb-4 flex items-center justify-center">
-              <span className="text-amber-700 text-4xl">▶️</span>
-            </div>
-            <h3 className="font-bold text-slate-900 mb-2">Le chronographe expliqué</h3>
-            <p className="text-slate-600 text-sm mb-4">
-              Comprendre le mécanisme du chronographe, de la colonne à roues au chronographe vertical moderne.
-            </p>
-            <a href="https://www.youtube.com/watch?v=qvRUm7RC_zg" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm">
-              Voir la vidéo →
-            </a>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="aspect-video bg-amber-200 rounded-lg mb-4 flex items-center justify-center">
-              <span className="text-amber-700 text-4xl">▶️</span>
-            </div>
-            <h3 className="font-bold text-slate-900 mb-2">Le calendrier perpétuel</h3>
-            <p className="text-slate-600 text-sm mb-4">
-              Découverte du calendrier perpétuel, capable de gérer automatiquement les mois courts et les années bissextiles.
-            </p>
-            <a href="https://www.youtube.com/watch?v=vIJoZUUl4mQ" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm">
-              Voir la vidéo →
-            </a>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="aspect-video bg-amber-200 rounded-lg mb-4 flex items-center justify-center">
-              <span className="text-amber-700 text-4xl">▶️</span>
-            </div>
-            <h3 className="font-bold text-slate-900 mb-2">Le tourbillon démystifié</h3>
-            <p className="text-slate-600 text-sm mb-4">
-              Analyse technique du tourbillon, invention d'Abraham-Louis Breguet pour améliorer la précision.
-            </p>
-            <a href="https://www.youtube.com/watch?v=nF1qISqm15s" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm">
-              Voir la vidéo →
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Section Aide */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-amber-50">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">💬 Besoin d'aide ?</h2>
-          <p className="text-slate-700 mb-6">
-            Vous avez des questions sur les complications horlogères ? Notre communauté d'experts est là pour vous accompagner.
-          </p>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="border-l-4 border-amber-500 pl-4">
-              <h3 className="font-bold text-slate-900 mb-2">Forum communautaire</h3>
-              <p className="text-slate-600 mb-3">Discutez des complications les plus complexes avec d'autres passionnés et professionnels.</p>
-              <a href="/communaute" className="text-blue-600 hover:underline font-medium">
-                Accéder au forum →
-              </a>
-            </div>
-            <div className="border-l-4 border-green-500 pl-4">
-              <h3 className="font-bold text-slate-900 mb-2">Contact direct</h3>
-              <p className="text-slate-600 mb-3">Besoin de conseils sur une complication spécifique ? Contactez nos experts.</p>
-              <a href="mailto:contact@horlo-afp.ch" className="text-blue-600 hover:underline font-medium">
-                Envoyer un email →
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+      </div>
+    </Link>
   );
 }
