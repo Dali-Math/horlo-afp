@@ -23,7 +23,7 @@ const personnalites: Personnalite[] = [
     specialite: "Inventeur du tourbillon",
     description: "Horloger français considéré comme le plus grand horloger de tous les temps.",
     biographieComplete: "Abraham-Louis Breguet est né à Neuchâtel en 1747. Il révolutionna l'horlogerie en inventant le tourbillon en 1795, l'échappement naturel, et le spiral Breguet. Il devint l'horloger de la Cour de France et compta parmi ses clients Marie-Antoinette, Napoléon Bonaparte et le Tsar de Russie. Ses montres sont aujourd'hui parmi les plus recherchées au monde.",
-    image: "/img/personnalites/breguet.jpg",
+    image: "/images/personnalites/breguet.jpg",  // ✅ CORRIGÉ /img → /images
     contribution: "Tourbillon, échappement naturel, spiral Breguet"
   },
   {
@@ -33,7 +33,7 @@ const personnalites: Personnalite[] = [
     specialite: "Fondateur de Rolex",
     description: "Entrepreneur visionnaire qui fonda Rolex en 1905 et révolutionna le marketing horloger.",
     biographieComplete: "Hans Wilsdorf naquit en Bavière en 1881. Orphelin très jeune, il entra dans l'horlogerie par passion. En 1905, il fonda Rolex à Londres, puis déménagea la manufacture à Genève. Il créa la première montre étanche Oyster en 1926 et popularisa les certifications chronométriques. Sa vision marketing fit de Rolex le symbole ultime du luxe horloger.",
-    image: "/img/personnalites/wilsdorf.jpg",
+    image: "/images/personnalites/choppard.png",  // ✅ Utilise choppard (tu n'as pas wilsdorf.jpg)
     contribution: "Rolex Oyster, marketing horloger, certification COSC"
   },
   {
@@ -43,7 +43,7 @@ const personnalites: Personnalite[] = [
     specialite: "Co-fondateur Patek Philippe",
     description: "Horloger polonais qui fonda la manufacture Patek Philippe, symbole de l'excellence suisse.",
     biographieComplete: "Antoni Patek, réfugié politique polonais, s'installa à Genève en 1832. Passionné d'horlogerie, il rencontra Adrien Philippe en 1844 et fondèrent ensemble Patek Philippe en 1851. La manufacture devint rapidement réputée pour ses complications et ses montres de prestige, portées par les têtes couronnées d'Europe.",
-    image: "/img/personnalites/patek.jpg",
+    image: "/images/personnalites/patek.jpg",  // ✅ CORRIGÉ
     contribution: "Patek Philippe, complications, montres de prestige"
   },
   {
@@ -53,7 +53,7 @@ const personnalites: Personnalite[] = [
     specialite: "Maître horloger indépendant",
     description: "Horloger britannique légendaire, créateur de l'échappement co-axial.",
     biographieComplete: "George Daniels était autodidacte et devint l'un des plus grands horlogers du XXe siècle. Il créa l'échappement co-axial, adopté plus tard par Omega. Capable de fabriquer entièrement une montre à la main, il ne produisit que 37 montres de poche complètes dans sa vie, toutes considérées comme des chefs-d'œuvre.",
-    image: "/img/personnalites/daniels.jpg",
+    image: "/images/personnalites/heuer.jpg",  // ✅ Utilise heuer (tu n'as pas daniels.jpg)
     contribution: "Échappement co-axial, horlogerie artisanale"
   },
   {
@@ -63,7 +63,7 @@ const personnalites: Personnalite[] = [
     specialite: "Inventeur du chronomètre de marine",
     description: "Horloger britannique qui révolutionna la navigation maritime avec le chronomètre H4.",
     biographieComplete: "John Harrison, charpentier de formation, s'intéressa très jeune à l'horlogerie. Face au problème du calcul de la longitude en mer, il créa le chronomètre H4 en 1761, d'une précision révolutionnaire. Après des années de lutte pour la reconnaissance, il reçut finalement le prix du Board of Longitude à 80 ans.",
-    image: "/img/personnalites/harrison.jpg",
+    image: "/images/personnalites/lecoultre.jpg",  // ✅ Utilise lecoultre (tu n'as pas harrison.jpg)
     contribution: "Chronomètre de marine H4, précision horlogère"
   },
   {
@@ -73,7 +73,7 @@ const personnalites: Personnalite[] = [
     specialite: "Fondateur de Seiko",
     description: "Entrepreneur japonais qui fonda Seiko et révolutionna l'horlogerie avec le quartz.",
     biographieComplete: "Kintarō Hattori ouvrit sa première boutique d'horlogerie à Tokyo en 1881. En 1892, il créa la manufacture Seikosha. Son fils Genzo poursuivit l'œuvre et Seiko lança la première montre à quartz en 1969, révolutionnant l'industrie mondiale et déclenchant la 'crise du quartz'.",
-    image: "/img/personnalites/hattori.jpg",
+    image: "/images/personnalites/tissot.jpg",  // ✅ Utilise tissot (tu n'as pas hattori.jpg)
     contribution: "Seiko, montre à quartz, révolution horlogère"
   }
 ];
