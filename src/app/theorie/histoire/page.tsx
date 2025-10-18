@@ -13,52 +13,52 @@ export default function HistoireHorlogeriePage() {
 
   const quizQuestions = [
     {
-      question: "À quel siècle l'horlogerie a-t-elle commencé à se développer en Suisse ?",
+      question: "Qui est considéré comme le père fondateur de l'horlogerie suisse ?",
       options: [
-        "XVème siècle",
-        "XVIème siècle",
-        "XVIIème siècle",
-        "XVIIIème siècle"
+        "Jean Calvin",
+        "Daniel Jean-Richard (Bressel)",
+        "Abraham-Louis Breguet",
+        "Frédéric Ingold"
       ],
       correct: 1
     },
     {
-      question: "Quelle région de Suisse est particulièrement connue pour l'horlogerie ?",
+      question: "Dans quelle ville suisse l'horlogerie est-elle née au 16ème siècle ?",
       options: [
-        "Les Alpes centrales",
-        "Le Plateau suisse",
-        "L'arc Jurassien",
-        "Le Tessin"
+        "Berne",
+        "Zurich",
+        "Genève",
+        "Bâle"
       ],
       correct: 2
     },
     {
-      question: "Qui a créé la Waltham Watch Company en 1854 ?",
+      question: "Qu'est-ce que l'établissage ?",
       options: [
-        "Jacques David",
-        "Aaron Lufkin Dennison",
-        "Abraham-Louis Breguet",
-        "Daniel Jean-Richard"
+        "Une technique de polissage",
+        "Un système de production basé sur la sous-traitance spécialisée",
+        "Un type de mouvement horloger",
+        "Une méthode de remontage"
       ],
       correct: 1
     },
     {
-      question: "Quel événement historique a favorisé l'arrivée d'artisans horlogers en Suisse ?",
+      question: "Dans les années 1960, quel pourcentage de la production horlogère mondiale était suisse ?",
       options: [
-        "La Révolution française",
-        "La révocation de l'édit de Nantes",
-        "La Révolution industrielle",
-        "La guerre de Trente Ans"
+        "30%",
+        "45%",
+        "60%",
+        "75%"
       ],
-      correct: 1
+      correct: 3
     },
     {
-      question: "En quelle année Jacques David a-t-il fait son rapport sur les méthodes américaines ?",
+      question: "Quelle réforme religieuse a indirectement favorisé le développement de l'horlogerie à Genève ?",
       options: [
-        "1854",
-        "1865",
-        "1876",
-        "1900"
+        "Le catholicisme",
+        "Le luthéranisme",
+        "Le calvinisme",
+        "L'anglicanisme"
       ],
       correct: 2
     }
@@ -91,13 +91,13 @@ export default function HistoireHorlogeriePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-slate-800 py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        {/* Header avec bouton retour */}
+        {/* BOUTON RETOUR - TOUJOURS VISIBLE */}
         <div className="mb-8">
           <Link 
             href="/theorie"
-            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-4 transition-colors"
+            className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-6 transition-colors font-medium"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <ArrowLeft className="w-5 h-5" />
             Retour à la théorie
           </Link>
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -272,7 +272,7 @@ export default function HistoireHorlogeriePage() {
                   </div>
                 </div>
 
-                <div className="space-x-4">
+                <div className="flex gap-4 justify-center">
                   <button
                     onClick={resetQuiz}
                     className="bg-blue-600 dark:bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
@@ -281,7 +281,7 @@ export default function HistoireHorlogeriePage() {
                   </button>
                   <Link
                     href="/theorie"
-                    className="inline-block bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                    className="inline-flex items-center bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                   >
                     Retour à la théorie
                   </Link>
