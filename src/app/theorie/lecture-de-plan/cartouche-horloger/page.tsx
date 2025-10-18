@@ -489,7 +489,7 @@ const getObligationColor = (obligation: string) => {
               <div className="flex items-center mb-4">
                 <FileText className="w-6 h-6 text-blue-600 mr-3" />
                 <div>
-                  <h3 className="text-2xl font-bold text-slate-900">{selectedFieldData.name}</h3>
+                  <h3 className="text-2xl font-bold text-slate-100 dark:text-white">{selectedFieldData.name}</h3>
                   <div className="flex items-center gap-3 mt-2">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getCategoryColor(selectedFieldData.category)}`}>
                       {selectedFieldData.category}
@@ -502,18 +502,18 @@ const getObligationColor = (obligation: string) => {
               </div>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-1">Description :</p>
-                  <p className="text-slate-700 mb-3">{selectedFieldData.description}</p>
-                  <p className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-1">Nombre de caractères :</p>
-                  <p className="text-slate-700 dark:text-slate-300">{selectedFieldData.characters}</p>
+                  <p className="text-sm font-semibold text-slate-300 dark:text-slate-200 mb-1">Description :</p>
+                  <p className="text-slate-200 dark:text-slate-100 mb-3">{selectedFieldData.description}</p>
+                  <p className="text-sm font-semibold text-slate-300 dark:text-slate-200 mb-1">Nombre de caractères :</p>
+                  <p className="text-slate-200 dark:text-slate-100">{selectedFieldData.characters}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-1">Exemple horlogerie :</p>
+                  <p className="text-sm font-semibold text-slate-300 dark:text-slate-200 mb-1">Exemple horlogerie :</p>
                   <p className="text-slate-700 bg-white px-4 py-3 rounded-lg border border-blue-200 font-mono text-sm">
                     {selectedFieldData.example}
                   </p>
                   <p className="text-sm font-bold text-slate-700 mb-1 mt-3">Position dans le cartouche :</p>
-                  <p className="text-slate-700 text-xs">
+                  <p className="text-slate-300 dark:text-slate-200 text-xs text-[13px]">
                     x: {selectedFieldData.x}mm, y: {selectedFieldData.y}mm (largeur: {selectedFieldData.width}mm × hauteur: {selectedFieldData.height}mm)
                   </p>
                 </div>
