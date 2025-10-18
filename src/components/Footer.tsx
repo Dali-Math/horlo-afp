@@ -13,7 +13,6 @@ export default function Footer() {
     { src: "/icons/iso128-2.png", alt: "Norme ISO 128-2" },
     { src: "/icons/eta-movement.png", alt: "Mouvement ETA" },
     { src: "/icons/swiss-made.png", alt: "Swiss Made" },
-    // Ajoute/enlève pour longueur (loop auto)
   ];
 
   // Titre texte (intégrée au scroll)
@@ -83,14 +82,12 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Section marquee : Titre + icônes défilent ensemble (comme image) */}
+        {/* ✅ Section LOGOS DÉFILANTS CORRIGÉE */}
         <div className="relative overflow-hidden bg-black border border-gray-700 rounded-lg py-3">
-          {/* Bande défilement unie (titre intégré + icônes) */}
+          {/* Container avec overflow caché */}
           <div className="flex items-center">
-            <div 
-              className="marquee-container flex animate-marquee-footer whitespace-nowrap"
-              style={{ animationDuration: '25s' }} // Vitesse lente, fluide
-            >
+            {/* ✅ Changé : animate-marquee-footer → animate-scroll */}
+            <div className="marquee-container flex animate-scroll whitespace-nowrap">
               {/* Contenu original : Titre + icônes */}
               <div className="flex items-center gap-6 px-4">
                 {/* Titre jaune intégré au scroll */}
@@ -131,7 +128,7 @@ export default function Footer() {
             </div>
           </div>
           
-          {/* Texte bas fixe (optionnel) */}
+          {/* Texte bas fixe */}
           <p className="mt-2 text-xs text-gray-500 text-center opacity-75">
             Ressources gratuites et open-source pour la formation en horlogerie.
           </p>
