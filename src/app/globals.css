@@ -41,7 +41,11 @@ body {
   }
 }
 
-/* Custom animations for Swiss watchmaking theme */
+/* ========================================
+   ANIMATIONS - Swiss Watchmaking Theme
+   ======================================== */
+
+/* Fade In Up - Utilisé pour timeline et sections */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -53,6 +57,7 @@ body {
   }
 }
 
+/* Fade In Simple */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -62,6 +67,19 @@ body {
   }
 }
 
+/* Fade In with slight translation */
+@keyframes fadeInSmooth {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide In Left */
 @keyframes slideInLeft {
   from {
     opacity: 0;
@@ -73,6 +91,7 @@ body {
   }
 }
 
+/* Glow Effect - Or horloger */
 @keyframes glow {
   0%, 100% {
     box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
@@ -81,6 +100,30 @@ body {
     box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
   }
 }
+
+/* Carousel Animation - Logos défilants */
+@keyframes carousel {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Marquee footer : Titre + icônes défilent ensemble (linéaire droite → gauche) */
+@keyframes marquee-footer {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%); /* Seamless avec duplication */
+  }
+}
+
+/* ========================================
+   ANIMATION UTILITY CLASSES
+   ======================================== */
 
 .animate-fade-in {
   animation: fadeIn 1s ease-out;
@@ -94,20 +137,54 @@ body {
   animation: fadeIn 1s ease-out 0.6s both;
 }
 
-/* Animation infinite carousel logos */
-@keyframes carousel {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+.animate-fadeIn {
+  animation: fadeInSmooth 0.3s ease-out;
 }
+
 .animate-carousel {
   animation: carousel 24s linear infinite;
 }
 
-/* Scrollbar styling - thème sombre doré */
+.animate-marquee-footer {
+  animation: marquee-footer linear infinite;
+  width: 200%; /* Double pour loop sans saut */
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* Gap uniforme pour titre/icônes */
+}
+
+/* ========================================
+   TIMELINE ANIMATIONS - Page Histoire
+   ======================================== */
+
+.timeline-item {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.timeline-item:nth-child(1) { animation-delay: 0.1s; }
+.timeline-item:nth-child(2) { animation-delay: 0.2s; }
+.timeline-item:nth-child(3) { animation-delay: 0.3s; }
+.timeline-item:nth-child(4) { animation-delay: 0.4s; }
+.timeline-item:nth-child(5) { animation-delay: 0.5s; }
+.timeline-item:nth-child(6) { animation-delay: 0.6s; }
+.timeline-item:nth-child(7) { animation-delay: 0.7s; }
+.timeline-item:nth-child(8) { animation-delay: 0.8s; }
+
+/* Hover Effects - Cards & Timeline */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(251, 146, 60, 0.15);
+}
+
+/* ========================================
+   SCROLLBAR - Thème sombre doré
+   ======================================== */
+
 ::-webkit-scrollbar {
   width: 12px;
 }
@@ -125,13 +202,20 @@ body {
   background: linear-gradient(180deg, #f7d070, #d4af37);
 }
 
-/* Selection styling */
+/* ========================================
+   SELECTION STYLING
+   ======================================== */
+
 ::selection {
   background-color: rgba(212, 175, 55, 0.3);
   color: inherit;
 }
 
-/* Atelier horloger - Gold accents */
+/* ========================================
+   CUSTOM UTILITIES - Atelier Horloger
+   ======================================== */
+
+/* Gold accents */
 .gold-border {
   border: 1px solid var(--gold);
 }
@@ -140,30 +224,16 @@ body {
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
 }
 
-/* Marquee footer : Titre + icônes défilent ensemble (linéaire droite → gauche) */
-@keyframes marquee-footer {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%); /* Seamless avec duplication */
-  }
-}
-
-.animate-marquee-footer {
-  animation: marquee-footer linear infinite;
-  width: 200%; /* Double pour loop sans saut */
-  display: flex;
-  align-items: center;
-  gap: 1.5rem; /* Gap uniforme pour titre/icônes */
-}
+/* ========================================
+   RESPONSIVE BEHAVIOR
+   ======================================== */
 
 /* Pause au hover (tout s'arrête : titre + icônes) */
 .marquee-container:hover .animate-marquee-footer {
   animation-play-state: paused;
 }
 
-/* Responsive : Plus lent avec texte long, tailles réduites mobile */
+/* Mobile optimizations */
 @media (max-width: 768px) {
   .animate-marquee-footer {
     animation-duration: 45s; /* Plus lent pour lisibilité (texte + icônes) */
@@ -179,18 +249,22 @@ body {
   .animate-marquee-footer span {
     font-size: 0.875rem !important; /* Titre plus petit mobile */
   }
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  /* Timeline responsive */
+  .timeline-item {
+    animation-delay: 0s !important; /* Pas de délai stagéré sur mobile */
   }
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-out;
+/* ========================================
+   SMOOTH TRANSITIONS GLOBALES
+   ======================================== */
+
+* {
+  scroll-behavior: smooth;
+}
+
+/* Transitions pour liens et boutons */
+a, button {
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
