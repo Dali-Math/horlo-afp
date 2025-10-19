@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import {
   Clock, Gauge, Zap, Settings2, ChevronLeft, BookOpen, Cog, RotateCw, Book,
-  Building2, Watch, Cpu, Wrench, Factory, Award, Moon, Timer, Tornado
+  Building2, Watch, Cpu, Wrench, Factory, Award, Moon, Timer, Tornado, Boxes
 } from 'lucide-react';
 
 const pagesFonctionnement = [
@@ -43,6 +43,39 @@ const pagesFonctionnement = [
     titre: "Le Remontage",
     description: "Manuel et automatique, procédure et réserve de marche.",
     icon: <RotateCw className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />,
+  },
+];
+
+const pagesMouvement = [
+  {
+    slug: 'mouvements',
+    titre: "Architecture du Mouvement",
+    description: "Vue d'ensemble : platine, ponts, fixation et décoration.",
+    icon: <Boxes className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
+  },
+  {
+    slug: 'mouvements/platine-ponts',
+    titre: "La Platine et les Ponts",
+    description: "Définition, fonction et rôle dans le mouvement.",
+    icon: <Factory className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
+  },
+  {
+    slug: 'mouvements/systeme-fixation',
+    titre: "Système de fixation",
+    description: "Montage, stabilité et précision dimensionnelle.",
+    icon: <Wrench className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
+  },
+  {
+    slug: 'mouvements/stabilite-dimensionnelle',
+    titre: "Stabilité dimensionnelle",
+    description: "Matériaux, impact sur la régularité et traitements.",
+    icon: <Award className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
+  },
+  {
+    slug: 'mouvements/finitions-decoratives',
+    titre: "Finitions décoratives",
+    description: "Perlage, Côtes de Genève, anglage, guillochage.",
+    icon: <Timer className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
   },
 ];
 
@@ -136,6 +169,28 @@ export default function TheoriePage() {
               <div>{p.icon}</div>
               <div>
                 <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  {p.titre}
+                </div>
+                <div className="text-sm text-slate-700 dark:text-slate-300">{p.description}</div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* ⭐ NOUVELLE SECTION : Architecture du Mouvement ⭐ */}
+        <h2 className="text-2xl font-bold text-slate-700 dark:text-slate-300 mb-3 mt-12">
+          🏗️ Architecture du Mouvement
+        </h2>
+        <div className="grid md:grid-cols-2 gap-6 mb-12">
+          {pagesMouvement.map((p) => (
+            <Link
+              key={p.slug}
+              href={`/theorie/${p.slug}`}
+              className="flex gap-4 items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all group"
+            >
+              <div>{p.icon}</div>
+              <div>
+                <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-slate-600 dark:group-hover:text-slate-400 transition-colors">
                   {p.titre}
                 </div>
                 <div className="text-sm text-slate-700 dark:text-slate-300">{p.description}</div>
