@@ -1,156 +1,77 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useState } from "react";
+import React from 'react';
+import Link from 'next/link';
+import { ChevronLeft, Factory, Wrench, Award, Timer } from 'lucide-react';
 
-// Bloc 1 : Intro Architecture
-function MouvementIntro() {
+const sousPagesM ouvement = [
+  {
+    slug: 'platine-ponts',
+    titre: "La Platine et les Ponts",
+    description: "Définition, fonction et rôle dans le mouvement.",
+    icon: <Factory className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
+  },
+  {
+    slug: 'systeme-fixation',
+    titre: "Système de fixation",
+    description: "Montage, stabilité et précision dimensionnelle.",
+    icon: <Wrench className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
+  },
+  {
+    slug: 'stabilite-dimensionnelle',
+    titre: "Stabilité dimensionnelle",
+    description: "Matériaux, impact sur la régularité et traitements.",
+    icon: <Award className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
+  },
+  {
+    slug: 'finitions-decoratives',
+    titre: "Finitions décoratives",
+    description: "Perlage, Côtes de Genève, anglage, guillochage.",
+    icon: <Timer className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
+  },
+];
+
+export default function MouvementsPage() {
   return (
-    <section className="bg-neutral-900 text-white px-6 py-10 rounded-xl shadow mb-10">
-      <h1 className="text-3xl font-bold mb-6">Architecture du mouvement</h1>
-      <p className="text-lg mb-2">
-        L'architecture d'un mouvement horloger conditionne la précision, la durabilité et la beauté de l'ensemble. Points clés : platine, ponts, fixation et décoration.
-      </p>
-    </section>
-  );
-}
+    <main className="min-h-screen bg-slate-50 dark:bg-slate-950">
+      {/* HEADER */}
+      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <Link href="/theorie" className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+            <ChevronLeft className="w-5 h-5 mr-1" />
+            Retour à Théorie
+          </Link>
+        </div>
+      </header>
 
-// Bloc 2 : Platine & Ponts
-function PlatineEtPonts() {
-  return (
-    <section className="bg-gradient-to-br from-zinc-700 via-gray-800 to-neutral-900 text-gray-100 p-7 rounded-xl mb-10 shadow">
-      <h2 className="text-2xl font-semibold mb-3">La Platine et les Ponts</h2>
-      <p>
-        La <b>platine</b> établit la base du mouvement ; les <b>ponts</b> maintiennent 
-        les organes mobiles. Exemple régional : le "coq" pour pont de balancier dans le Jura.
-      </p>
-      <div className="flex flex-wrap gap-5 mt-5">
-        <Image src="/images/platine-decoree.webp" alt="Platine décorée" width={240} height={150} className="rounded shadow" />
-        <Image src="/images/pont-anglage.webp" alt="Pont anglé" width={180} height={110} className="rounded shadow" />
-      </div>
-    </section>
-  );
-}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16">
+        <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">
+          🏗️ Architecture du Mouvement
+        </h1>
+        <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mb-12">
+          Découvrez la structure fondamentale du mouvement horloger : platine, ponts, systèmes de fixation, 
+          stabilité dimensionnelle et finitions décoratives exceptionnelles.
+        </p>
 
-// Bloc 3 : Fixations
-function FixationSysteme() {
-  return (
-    <section className="bg-neutral-800 text-neutral-200 p-6 rounded-xl mb-8">
-      <h3 className="text-xl font-bold mb-4">Système de fixation</h3>
-      <ul className="list-disc pl-5 space-y-2">
-        <li>Montage des ponts sur la platine : vissage, ajustements de précision.</li>
-        <li>Stabilité et précision dimensionnelle : matériaux étudiés, ajustages de haute qualité.</li>
-        <li>Fixations : vis, rubis, logement conique ou poli.</li>
-      </ul>
-    </section>
-  );
-}
-
-// Bloc 4 : Stabilité dimensionnelle
-function StabiliteBloc() {
-  return (
-    <section className="bg-gradient-to-br from-gray-800 via-neutral-800 to-gray-900 text-gray-200 p-6 rounded-xl mb-10 shadow">
-      <h3 className="text-xl font-bold mb-4">Stabilité dimensionnelle</h3>
-      <ul className="list-disc pl-5 space-y-2">
-        <li>Matériaux : laiton, maillechort…</li>
-        <li>Impact sur régularité, fiabilité, résistance aux chocs et à la déformation.</li>
-        <li>Traitement anti-déformation : finitions, polissage, traitements thermiques.</li>
-      </ul>
-    </section>
-  );
-}
-
-// Bloc 5 : Finitions décoratives
-function FinitionBloc() {
-  return (
-    <section className="bg-neutral-900 text-gray-100 p-8 rounded-xl mb-10">
-      <h3 className="text-2xl font-semibold mb-3">Finitions décoratives</h3>
-      <ul className="list-disc pl-5 space-y-1">
-        <li>Perlage</li>
-        <li>Côtes de Genève</li>
-        <li>Anglage (chanfrein manuel)</li>
-        <li>Guillochage</li>
-        <li>Satinage</li>
-      </ul>
-      <p className="mt-3">Outils et savoir-faire : lime, cabrons, bois, polisseuse. Exemples : Audemars Piguet, Breguet, Voutilainen.</p>
-      <div className="flex gap-5 mt-5">
-        <Image src="/images/cotes-de-geneve.webp" alt="Côtes de Genève" width={120} height={100} className="rounded" />
-        <Image src="/images/perlage.webp" alt="Perlage" width={120} height={100} className="rounded" />
-      </div>
-    </section>
-  );
-}
-
-// Bloc 6 : Animation/Quiz
-function FinitionQuiz() {
-  const questions = [
-    {
-      image: "/images/finition-1.webp",
-      options: ["Perlage", "Anglage", "Satinage", "Guillochage"],
-      answer: "Perlage"
-    },
-    {
-      image: "/images/finition-2.webp",
-      options: ["Côtes de Genève", "Anglage", "Perlage", "Satinage"],
-      answer: "Côtes de Genève"
-    }
-  ];
-  const [current, setCurrent] = useState(0);
-  const [score, setScore] = useState(0);
-  const [selected, setSelected] = useState("");
-
-  function submit(opt: string) {
-    setSelected(opt);
-    setTimeout(() => {
-      if (opt === questions[current].answer) setScore(score + 1);
-      setCurrent(cur => cur + 1);
-      setSelected("");
-    }, 800);
-  }
-
-  if (current >= questions.length) {
-    return (
-      <div className="p-6 bg-neutral-900 rounded-xl text-white">
-        <h4 className="font-bold mb-3">Quiz terminé !</h4>
-        <p>Score : {score} / {questions.length}</p>
-      </div>
-    );
-  }
-
-  const q = questions[current];
-  return (
-    <div className="p-6 bg-zinc-800 rounded-xl text-white shadow-lg">
-      <Image src={q.image} alt="Exemple de finition" width={220} height={150} className="mb-4 rounded shadow-xl" />
-      <div className="space-y-2">
-        {q.options.map(opt => (
-          <button
-            key={opt}
-            disabled={!!selected}
-            className={`px-4 py-2 rounded border 
-              ${selected === opt 
-                ? opt === q.answer ? "bg-green-700 border-green-400" : "bg-red-700 border-red-400"
-                : "bg-gray-700 border-gray-500 hover:bg-gray-600"}
-            `}
-            onClick={() => submit(opt)}
-          >
-            {opt}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// --- PAGE PRINCIPALE ---
-export default function Mouvements() {
-  return (
-    <main className="w-full min-h-screen bg-neutral-950 p-2 md:p-8">
-      <MouvementIntro />
-      <PlatineEtPonts />
-      <FixationSysteme />
-      <StabiliteBloc />
-      <FinitionBloc />
-      <FinitionQuiz />
+        {/* Grille des sous-pages */}
+        <div className="grid md:grid-cols-2 gap-6">
+          {sousPagesM ouvement.map((p) => (
+            <Link
+              key={p.slug}
+              href={`/theorie/mouvements/${p.slug}`}
+              className="flex gap-4 items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all group"
+            >
+              <div>{p.icon}</div>
+              <div>
+                <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-slate-600 dark:group-hover:text-slate-400 transition-colors">
+                  {p.titre}
+                </div>
+                <div className="text-sm text-slate-700 dark:text-slate-300">{p.description}</div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
