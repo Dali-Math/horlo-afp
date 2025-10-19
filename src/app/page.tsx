@@ -14,7 +14,9 @@ import {
   TrendingUp,
   ExternalLink,
   Heart,
-  Star
+  Star,
+  Users,
+  Video
 } from 'lucide-react';
 
 // ---- HERO AVEC CERCLES CANVAS ANIMÉS ----
@@ -30,12 +32,11 @@ function HeroSection() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // Cercles avec lignes pointillées qui tournent
     const circles = [
-      { x: 0.2, y: 0.3, radius: 250, speed: 0.0005, angle: 0, opacity: 0.3, dashLength: 15, gapLength: 10, color: 'rgba(56, 189, 248, 0.4)' },
-      { x: 0.2, y: 0.3, radius: 200, speed: 0.0007, angle: 45, opacity: 0.25, dashLength: 10, gapLength: 15, color: 'rgba(96, 165, 250, 0.3)' },
-      { x: 0.8, y: 0.7, radius: 280, speed: -0.0006, angle: 90, opacity: 0.3, dashLength: 20, gapLength: 8, color: 'rgba(129, 140, 248, 0.4)' },
-      { x: 0.8, y: 0.7, radius: 220, speed: -0.0008, angle: 135, opacity: 0.25, dashLength: 12, gapLength: 12, color: 'rgba(165, 180, 252, 0.3)' },
+      { x: 0.2, y: 0.3, radius: 250, speed: 0.0005, angle: 0, dashLength: 15, gapLength: 10, color: 'rgba(56, 189, 248, 0.4)' },
+      { x: 0.2, y: 0.3, radius: 200, speed: 0.0007, angle: 45, dashLength: 10, gapLength: 15, color: 'rgba(96, 165, 250, 0.3)' },
+      { x: 0.8, y: 0.7, radius: 280, speed: -0.0006, angle: 90, dashLength: 20, gapLength: 8, color: 'rgba(129, 140, 248, 0.4)' },
+      { x: 0.8, y: 0.7, radius: 220, speed: -0.0008, angle: 135, dashLength: 12, gapLength: 12, color: 'rgba(165, 180, 252, 0.3)' },
     ];
 
     let animationId: number;
@@ -96,10 +97,10 @@ function HeroSection() {
         </p>
 
         <div className="flex flex-wrap justify-center gap-4 mb-10">
-          <StatBox icon="📚" value="2,500+" label="Ressources" />
-          <StatBox icon="👥" value="1,200+" label="Passionnés" color="text-green-300" />
-          <StatBox icon="🎬" value="150h+" label="Vidéos" color="text-purple-300" />
-          <StatBox icon="⭐" value="100%" label="Gratuit" color="text-yellow-300" />
+          <StatBox icon={BookOpen} value="2,500+" label="Ressources" color="text-cyan-300" />
+          <StatBox icon={Users} value="1,200+" label="Passionnés" color="text-green-300" />
+          <StatBox icon={Video} value="150h+" label="Vidéos" color="text-purple-300" />
+          <StatBox icon={Star} value="100%" label="Gratuit" color="text-yellow-300" />
         </div>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
@@ -127,10 +128,10 @@ function HeroSection() {
   );
 }
 
-function StatBox({ icon, value, label, color = "" }: { icon: string; value: string; label: string; color?: string }) {
+function StatBox({ icon: Icon, value, label, color = "" }: { icon: any; value: string; label: string; color?: string }) {
   return (
     <div className="flex flex-col items-center justify-center rounded-2xl bg-white/5 border border-blue-900/30 w-36 h-24 shadow-xl transition hover:scale-105">
-      <div className="text-3xl mb-2">{icon}</div>
+      <Icon className={`w-8 h-8 mb-2 ${color}`} />
       <div className={`text-2xl font-bold ${color || 'text-sky-300'}`}>{value}</div>
       <div className="text-xs text-blue-100 font-medium">{label}</div>
     </div>
