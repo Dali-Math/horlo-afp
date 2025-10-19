@@ -1,842 +1,723 @@
-'use client';
-
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { Clock, MapPin, Factory, Award, Users, BookOpen, Sparkles, Mountain, Globe, TrendingUp, ChevronLeft } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Clock, MapPin, Factory, Award, Users, BookOpen, Sparkles, Mountain, Globe, TrendingUp, ChevronLeft, Star, CheckCircle, Zap, Target, Trophy, Rocket, Gem, Crown, Play, Pause, Volume2, Eye, Heart, Share2, Download, Filter, Search, ArrowRight, Compass, Layers, Box, Radio } from 'lucide-react';
 
 export default function HistoireHorlogerieSuisse() {
-  const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null);
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
-  const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: string }>({});
+  const [selectedPeriod, setSelectedPeriod] = useState(null);
+  const [selectedRegion, setSelectedRegion] = useState(null);
+  const [hoveredManufacture, setHoveredManufacture] = useState(null);
+  const [scrollY, setScrollY] = useState(0);
+  const [activeView, setActiveView] = useState('immersive');
+  const [progress, setProgress] = useState(0);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentYear, setCurrentYear] = useState(1541);
+  const [showComparison, setShowComparison] = useState(false);
+  const [quiz, setQuiz] = useState({ active: false, score: 0, question: 0 });
+  const [favorites, setFavorites] = useState([]);
+  const [filter, setFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress((window.scrollY / docHeight) * 100);
+    };
+    const handleMouseMove = (e) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+
+  // Animation automatique de la timeline
+  useEffect(() => {
+    if (isPlaying) {
+      const interval = setInterval(() => {
+        setCurrentYear(prev => {
+          if (prev >= 1983) return 1541;
+          if (prev < 1685) return 1685;
+          if (prev < 1740) return 1740;
+          if (prev < 1800) return 1800;
+          if (prev < 1929) return 1929;
+          return 1970;
+        });
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [isPlaying]);
+
+  // Canvas animation
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = Array.from({ length: 100 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      size: Math.random() * 2 + 1
+    }));
+
+    function animate() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+        
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(59, 130, 246, ${0.5 + Math.random() * 0.5})`;
+        ctx.fill();
+      });
+      
+      requestAnimationFrame(animate);
+    }
+    animate();
+  }, []);
+
+  const timelineData = [
+    {
+      id: 1541, year: '1541', era: 'Renaissance', color: 'blue',
+      icon: Users, emoji: '⛪',
+      title: 'GENÈSE CALVINISTE',
+      subtitle: 'La révolution religieuse crée l\'horlogerie',
+      description: 'Calvin bannit les ornements → Orfèvres deviennent horlogers',
+      impact: 'FONDATEUR',
+      stats: { artisans: 100, ateliers: 20, production: '500/an' },
+      keyFigures: ['Jean Calvin', 'Orfèvres genevois'],
+      innovations: ['Boîtes de montres ornées', 'Premier établissage'],
+      funFact: '💎 Les premières montres étaient des bijoux avant d\'être précises',
+      image: '🏛️',
+      quiz: 'Pourquoi les orfèvres se sont reconvertis ?',
+      details: [
+        '📜 Règlement 1566: Fin des objets religieux catholiques',
+        '💍 Boîtes de montres = nouveaux bijoux luxueux',
+        '🎨 Naissance horlogerie d\'art genevoise',
+        '⚖️ Contournement astucieux des lois calvinistes'
+      ]
+    },
+    {
+      id: 1685, year: '1685', era: 'Expansion', color: 'indigo',
+      icon: Mountain, emoji: '🏔️',
+      title: 'DIASPORA HUGUENOTE',
+      subtitle: 'L\'exode français enrichit la Suisse',
+      description: 'Révocation Édit de Nantes → 5000 réfugiés qualifiés',
+      impact: 'EXPLOSION',
+      stats: { refugies: 5000, villes: 12, croissance: '+400%' },
+      keyFigures: ['Réfugiés huguenots', 'Abraham-Louis Perrelet'],
+      innovations: ['Expansion Arc jurassien', 'Réseaux commerciaux'],
+      funFact: '🇫🇷 La France perd son élite, la Suisse gagne un empire',
+      image: '⛰️',
+      quiz: 'Combien de huguenots ont fui vers la Suisse ?',
+      details: [
+        '👨‍👩‍👧‍👦 5000+ artisans qualifiés arrivent',
+        '💰 Apport capital + savoir-faire + réseaux',
+        '🗺️ De Genève à Schaffhouse: route horlogère',
+        '⚡ Éthique protestante: précision & persévérance'
+      ]
+    },
+    {
+      id: 1740, year: '1740', era: 'Ruralisation', color: 'green',
+      icon: Factory, emoji: '🏡',
+      title: 'VALLÉE DE JOUX',
+      subtitle: 'Les fermes deviennent manufactures',
+      description: 'Paysans-horlogers: été agriculture, hiver horlogerie',
+      impact: 'INDUSTRIEL',
+      stats: { fermes: 26, familles: 200, pieces: '10K/an' },
+      keyFigures: ['Combiers', 'Famille LeCoultre'],
+      innovations: ['Fermes horlogères', 'Établissage familial'],
+      funFact: '❄️ Les longs hivers ont créé la haute horlogerie',
+      image: '🏔️',
+      quiz: 'Combien de fermes horlogères historiques existent encore ?',
+      details: [
+        '🏠 26 fermes historiques avec grandes fenêtres',
+        '⚒️ Tradition du fer → précision mécanique',
+        '🌾 Agriculture été / Horlogerie hiver',
+        '👨‍👩‍👧 Transmission familiale du savoir-faire'
+      ]
+    },
+    {
+      id: 1800, year: '1800-1900', era: 'Âge d\'Or', color: 'amber',
+      icon: Award, emoji: '👑',
+      title: 'SIÈCLE DES GÉNIES',
+      subtitle: 'Breguet, complications & domination mondiale',
+      description: 'Tourbillon, chronographe, répétition minutes',
+      impact: 'LÉGENDE',
+      stats: { inventions: 50, brevets: 200, exports: '1M/an' },
+      keyFigures: ['A-L. Breguet', 'Patek', 'Philippe'],
+      innovations: ['Tourbillon (1801)', 'Chronographe', 'Quantième perpétuel'],
+      funFact: '🌙 Napoléon, Marie-Antoinette, Victoria: clients Breguet',
+      image: '⚙️',
+      quiz: 'Quelle complication compense la gravité ?',
+      details: [
+        '🌪️ Tourbillon: Chef-d\'œuvre anti-gravité',
+        '⏱️ Chronographe: Précision au 1/5 seconde',
+        '📅 Quantième perpétuel automatique',
+        '🔔 Répétition minutes: Sonnerie mécanique'
+      ]
+    },
+    {
+      id: 1929, year: '1929-1945', era: 'Crise', color: 'red',
+      icon: TrendingUp, emoji: '📉',
+      title: 'GRANDE DÉPRESSION',
+      subtitle: 'Union ou disparition',
+      description: 'SSIH + ASUAG: La survie par la fusion',
+      impact: 'SURVIVAL',
+      stats: { faillites: 1000, fusions: 15, emplois: '-50%' },
+      keyFigures: ['Fondateurs SSIH', 'Direction ASUAG'],
+      innovations: ['Consolidation industrielle', 'Groupes horlogers'],
+      funFact: '💪 La crise a forgé les géants d\'aujourd\'hui',
+      image: '🤝',
+      quiz: 'Quels groupes ont fusionné pour survivre ?',
+      details: [
+        '🏢 SSIH (1930): Omega + Tissot + Lemania',
+        '🏭 ASUAG (1931): 15 marques + ETA',
+        '📊 Mutualisation ressources & expertises',
+        '🛡️ Protection contre concurrence étrangère'
+      ]
+    },
+    {
+      id: 1970, year: '1970-1983', era: 'Renaissance', color: 'purple',
+      icon: Rocket, emoji: '🚀',
+      title: 'RÉVOLUTION SWATCH',
+      subtitle: 'Du désastre au triomphe',
+      description: 'Crise quartz → Swatch sauve tout',
+      impact: 'PHOENIX',
+      stats: { perte: '-70%', comeback: '+300%', montres: '100M' },
+      keyFigures: ['Nicolas Hayek', 'Ernst Thomke'],
+      innovations: ['Swatch', 'Quartz suisse', 'Marketing moderne'],
+      funFact: '⌚ Une montre plastique à 50 CHF a sauvé le luxe',
+      image: '🎨',
+      quiz: 'Qui est le visionnaire derrière Swatch ?',
+      details: [
+        '📉 50%→15% parts marché (1970-1983)',
+        '💡 Nicolas Hayek: Vision révolutionnaire',
+        '🎨 Swatch: Mode + technologie + prix',
+        '🏆 Retour #1 mondial en 10 ans'
+      ]
+    }
+  ];
+
+  const worldMap = {
+    suisse: { x: 50, y: 45, size: 40, color: 'blue', label: 'SUISSE 🇨🇭', value: '50%' },
+    japon: { x: 85, y: 50, size: 25, color: 'red', label: 'Japon 🇯🇵', value: '15%' },
+    allemagne: { x: 48, y: 42, size: 20, color: 'yellow', label: 'Allemagne 🇩🇪', value: '8%' },
+    usa: { x: 20, y: 48, size: 18, color: 'purple', label: 'USA 🇺🇸', value: '5%' },
+    france: { x: 46, y: 46, size: 15, color: 'pink', label: 'France 🇫🇷', value: '3%' }
+  };
+
+  const innovations3D = [
+    { year: 1801, name: 'Tourbillon', icon: '🌪️', genius: 'Breguet', wow: 'Défie la gravité', color: 'blue' },
+    { year: 1820, name: 'Chronographe', icon: '⏱️', genius: 'Rieussec', wow: '1/100 seconde', color: 'green' },
+    { year: 1867, name: 'Répétition', icon: '🔔', genius: 'Diverses', wow: 'Sonnerie magique', color: 'purple' },
+    { year: 1889, name: 'Quantième', icon: '📅', genius: 'Collectif', wow: 'Calendrier éternel', color: 'amber' },
+    { year: 1969, name: 'Quartz', icon: '💎', genius: 'CEH/Seiko', wow: 'Précision atomique', color: 'red' },
+    { year: 1983, name: 'Swatch', icon: '🎨', genius: 'Hayek', wow: 'Art portable', color: 'pink' },
+  ];
+
+  const legendaryWatches = [
+    { brand: 'Patek Philippe', model: 'Calatrava', year: 1932, value: '∞', icon: '👑', fact: 'La plus désirable' },
+    { brand: 'Rolex', model: 'Submariner', year: 1953, value: '300m', icon: '🌊', fact: 'Plongée légendaire' },
+    { brand: 'Omega', model: 'Speedmaster', year: 1969, value: '🌕', icon: '🚀', fact: 'Sur la Lune' },
+    { brand: 'Audemars Piguet', model: 'Royal Oak', year: 1972, value: 'Icône', icon: '⚡', fact: 'Révolution acier' },
+  ];
+
+  const quizQuestions = [
+    { q: 'Qui a inventé le tourbillon ?', a: ['Breguet', 'Patek', 'Rolex', 'Omega'], correct: 0 },
+    { q: 'En quelle année Calvin a-t-il banni les ornements ?', a: ['1541', '1685', '1740', '1800'], correct: 0 },
+    { q: 'Combien de fermes horlogères à Vallée de Joux ?', a: ['10', '26', '50', '100'], correct: 1 },
+    { q: 'Qui a sauvé l\'horlogerie suisse dans les années 80 ?', a: ['Rolex', 'Swatch', 'Omega', 'Patek'], correct: 1 }
+  ];
+
+  const currentPeriod = timelineData.find(p => p.id === currentYear) || timelineData[0];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
-      {/* Header Sticky avec Bouton Retour */}
-      <header className="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
+      {/* Canvas background */}
+      <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none opacity-30" />
+
+      {/* Cursor personnalisé */}
+      <div 
+        className="fixed w-8 h-8 border-2 border-blue-500 rounded-full pointer-events-none z-50 mix-blend-difference transition-all duration-100"
+        style={{ 
+          left: mousePos.x - 16, 
+          top: mousePos.y - 16,
+          transform: hoveredManufacture ? 'scale(2)' : 'scale(1)'
+        }}
+      />
+
+      {/* Progress bar ultra-design */}
+      <div className="fixed top-0 left-0 right-0 h-1 bg-gray-900 z-50">
+        <div 
+          className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-300 shadow-lg shadow-blue-500/50"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      {/* Header flottant avec glassmorphism */}
+      <header className="fixed top-2 left-4 right-4 z-40 bg-black/40 backdrop-blur-2xl border border-gray-700/50 rounded-3xl shadow-2xl">
+        <div className="px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <Link 
-                href="/theorie" 
-                className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
-                <ChevronLeft className="w-5 h-5" />
+            <div className="flex items-center gap-4">
+              <a href="/theorie" className="flex items-center gap-2 text-gray-400 hover:text-white transition-all group px-4 py-2 rounded-xl hover:bg-white/5">
+                <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                 <span className="font-medium">Retour</span>
-              </Link>
+              </a>
+              <div className="h-8 w-px bg-gray-700" />
               <div className="flex items-center gap-3">
-                <Clock className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-                <h1 className="text-2xl font-bold text-slate-900 dark:text-white">HorloLearn</h1>
+                <div className="relative">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center animate-pulse">
+                    <Clock className="w-7 h-7" />
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-ping" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-black tracking-tight">HorloLearn</h1>
+                  <p className="text-xs text-gray-500">Excellence Suisse</p>
+                </div>
               </div>
             </div>
-            <nav className="hidden md:flex items-center gap-6">
-              <a href="#histoire" className="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                Histoire
-              </a>
-              <a href="#regions" className="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                Régions
-              </a>
-              <a href="#manufactures" className="text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                Manufactures
-              </a>
-            </nav>
+
+            {/* Navigation moderne */}
+            <div className="hidden md:flex items-center gap-2 bg-gray-900/50 p-1 rounded-2xl">
+              {[
+                { id: 'immersive', icon: Box, label: 'Immersif' },
+                { id: 'timeline', icon: Radio, label: 'Timeline' },
+                { id: 'map', icon: Compass, label: 'Carte' },
+                { id: 'quiz', icon: Target, label: 'Quiz' }
+              ].map(view => (
+                <button
+                  key={view.id}
+                  onClick={() => setActiveView(view.id)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${
+                    activeView === view.id
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                      : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <view.icon className="w-4 h-4" />
+                  <span className="text-sm font-medium">{view.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Actions rapides */}
+            <div className="flex items-center gap-2">
+              <button className="p-2 rounded-xl bg-gray-800/50 hover:bg-gray-700/50 transition-all">
+                <Search className="w-5 h-5" />
+              </button>
+              <button className="p-2 rounded-xl bg-gray-800/50 hover:bg-gray-700/50 transition-all relative">
+                <Heart className="w-5 h-5" />
+                {favorites.length > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs flex items-center justify-center">
+                    {favorites.length}
+                  </span>
+                )}
+              </button>
+              <button className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all font-medium flex items-center gap-2">
+                <Download className="w-4 h-4" />
+                <span>Télécharger</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Hero Section avec Montagnes Suisses en Arrière-Plan */}
-      <section className="relative py-20 overflow-hidden">
-        {/* SVG Alpes Suisses en Arrière-Plan */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <svg
-            className="absolute bottom-0 w-full h-48 opacity-10 dark:opacity-5"
-            viewBox="0 0 1200 200"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-          >
-            {/* Montagne 1 (gauche) */}
-            <path
-              d="M0 200 L150 80 L300 200 Z"
-              className="fill-slate-400 dark:fill-slate-600"
-            />
-            {/* Montagne 2 (centre-gauche) */}
-            <path
-              d="M200 200 L400 40 L600 200 Z"
-              className="fill-slate-500 dark:fill-slate-700"
-            />
-            {/* Montagne 3 (centre) - La plus haute */}
-            <path
-              d="M450 200 L650 20 L850 200 Z"
-              className="fill-slate-600 dark:fill-slate-800"
-            />
-            {/* Montagne 4 (centre-droite) */}
-            <path
-              d="M700 200 L900 60 L1100 200 Z"
-              className="fill-slate-500 dark:fill-slate-700"
-            />
-            {/* Montagne 5 (droite) */}
-            <path
-              d="M950 200 L1100 90 L1200 200 Z"
-              className="fill-slate-400 dark:fill-slate-600"
-            />
-            {/* Pics de neige (sommets blancs) */}
-            <path
-              d="M650 20 L620 50 L680 50 Z"
-              className="fill-white dark:fill-slate-300 opacity-80"
-            />
-            <path
-              d="M400 40 L380 65 L420 65 Z"
-              className="fill-white dark:fill-slate-300 opacity-70"
-            />
-            <path
-              d="M900 60 L880 80 L920 80 Z"
-              className="fill-white dark:fill-slate-300 opacity-70"
-            />
-          </svg>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center">
-            <div className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-              <Sparkles className="w-4 h-4" />
-              Histoire & Tradition
+      {/* HERO IMMERSIF ULTRA */}
+      {activeView === 'immersive' && (
+        <>
+          <section className="relative min-h-screen flex items-center justify-center pt-24 pb-12">
+            {/* Background 3D grid */}
+            <div className="absolute inset-0 overflow-hidden">
+              <div 
+                className="absolute inset-0 opacity-20"
+                style={{
+                  backgroundImage: 'linear-gradient(rgba(59, 130, 246, 0.3) 2px, transparent 2px), linear-gradient(90deg, rgba(59, 130, 246, 0.3) 2px, transparent 2px)',
+                  backgroundSize: '100px 100px',
+                  transform: `perspective(1000px) rotateX(60deg) translateZ(-200px) translateY(${scrollY * 0.3}px)`
+                }}
+              />
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6">
-              L'Histoire de l'Horlogerie Suisse
-            </h1>
-            <p className="text-xl text-slate-700 dark:text-slate-300 max-w-3xl mx-auto mb-8">
-              Du XVIe siècle à nos jours, découvrez comment la Suisse est devenue la référence mondiale de l'horlogerie de luxe et de précision
-            </p>
-            <div className="flex items-center justify-center gap-4 flex-wrap">
-              <div className="bg-white dark:bg-slate-800 rounded-xl px-6 py-4 shadow-lg border border-slate-200 dark:border-slate-700">
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">500+</div>
-                <div className="text-sm text-slate-600 dark:text-slate-400">Ans d'histoire</div>
+
+            {/* Particules 3D flottantes */}
+            <div className="absolute inset-0 overflow-hidden">
+              {Array.from({ length: 20 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    animationDelay: `${Math.random() * 3}s`,
+                    animationDuration: `${3 + Math.random() * 2}s`
+                  }}
+                />
+              ))}
+            </div>
+
+            <div className="max-w-7xl mx-auto px-4 relative z-10">
+              {/* Badge animé */}
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 border border-blue-500/30 px-6 py-3 rounded-full backdrop-blur-sm animate-pulse">
+                  <Sparkles className="w-6 h-6 text-blue-400 animate-spin" style={{ animationDuration: '3s' }} />
+                  <span className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    500+ Ans d'Excellence Absolue
+                  </span>
+                  <Crown className="w-6 h-6 text-yellow-400" />
+                </div>
               </div>
-              <div className="bg-white dark:bg-slate-800 rounded-xl px-6 py-4 shadow-lg border border-slate-200 dark:border-slate-700">
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">21,7</div>
-                <div className="text-sm text-slate-600 dark:text-slate-400">Milliards CHF (2019)</div>
+
+              {/* Titre MEGA */}
+              <h1 className="text-center mb-12">
+                <div className="text-8xl md:text-[12rem] font-black leading-none mb-4 tracking-tighter">
+                  <span 
+                    className="inline-block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse"
+                    style={{ 
+                      textShadow: '0 0 80px rgba(59, 130, 246, 0.5)',
+                      animation: 'pulse 2s ease-in-out infinite'
+                    }}
+                  >
+                    SWISS
+                  </span>
+                </div>
+                <div className="text-6xl md:text-8xl font-black tracking-tight">
+                  <span className="bg-gradient-to-r from-gray-200 to-gray-500 bg-clip-text text-transparent">
+                    WATCHMAKING
+                  </span>
+                </div>
+              </h1>
+
+              {/* Description épique */}
+              <p className="text-center text-2xl md:text-3xl text-gray-400 max-w-4xl mx-auto mb-16 leading-relaxed">
+                De l'<span className="text-blue-400 font-bold">artisanat genevois</span> du XVIe siècle 
+                à la <span className="text-purple-400 font-bold">domination mondiale</span> absolue.
+                <br />
+                <span className="text-sm text-gray-600">Une saga de 500 ans de génie, passion & excellence</span>
+              </p>
+
+              {/* Mega Stats Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16">
+                {[
+                  { value: '21.7', unit: 'Milliards CHF', label: 'Exports 2019', icon: TrendingUp, color: 'from-green-500 to-emerald-600', gradient: 'green' },
+                  { value: '500', unit: 'Ans', label: 'd\'Histoire', icon: Clock, color: 'from-blue-500 to-cyan-600', gradient: 'blue' },
+                  { value: '#1', unit: 'Mondial', label: 'Haute Horlogerie', icon: Crown, color: 'from-yellow-500 to-orange-600', gradient: 'yellow' },
+                  { value: '95%', unit: 'Luxe', label: 'Parts de marché', icon: Gem, color: 'from-purple-500 to-pink-600', gradient: 'purple' }
+                ].map((stat, i) => (
+                  <div
+                    key={i}
+                    className="group relative bg-gradient-to-br from-gray-900 to-black p-8 rounded-3xl border border-gray-800 hover:border-gray-600 transition-all duration-500 hover:scale-110 cursor-pointer overflow-hidden"
+                    style={{ animationDelay: `${i * 100}ms` }}
+                  >
+                    <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+                    <stat.icon className={`w-12 h-12 mb-4 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent group-hover:scale-125 transition-transform`} />
+                    <div className={`text-5xl font-black mb-2 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
+                      {stat.value}
+                    </div>
+                    <div className="text-sm text-gray-600 mb-1">{stat.unit}</div>
+                    <div className="text-xs text-gray-500">{stat.label}</div>
+                    
+                    {/* Barre de progression animée */}
+                    <div className="mt-4 h-1 bg-gray-800 rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full bg-gradient-to-r ${stat.color} animate-pulse`}
+                        style={{ width: '100%', animation: `slideIn 1.5s ease-out ${i * 0.2}s both` }}
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="bg-white dark:bg-slate-800 rounded-xl px-6 py-4 shadow-lg border border-slate-200 dark:border-slate-700">
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">N°1</div>
-                <div className="text-sm text-slate-600 dark:text-slate-400">Mondial du luxe</div>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                <button
+                  onClick={() => setActiveView('timeline')}
+                  className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-2xl font-bold text-lg transition-all hover:scale-105 flex items-center gap-3 shadow-2xl shadow-blue-500/50"
+                >
+                  <Play className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                  <span>Explorer la Timeline</span>
+                  <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                </button>
+                
+                <button
+                  onClick={() => setActiveView('quiz')}
+                  className="px-8 py-4 bg-gray-800/50 hover:bg-gray-700/50 border border-gray-700 rounded-2xl font-bold text-lg transition-all hover:scale-105 flex items-center gap-3"
+                >
+                  <Target className="w-6 h-6" />
+                  <span>Testez vos connaissances</span>
+                </button>
+
+                <button
+                  onClick={() => setShowComparison(!showComparison)}
+                  className="px-8 py-4 bg-gray-800/50 hover:bg-gray-700/50 border border-gray-700 rounded-2xl font-bold text-lg transition-all hover:scale-105 flex items-center gap-3"
+                >
+                  <Compass className="w-6 h-6" />
+                  <span>Carte Mondiale</span>
+                </button>
+              </div>
+            </div>
+
+            <style>{`
+              @keyframes slideIn {
+                from { width: 0; }
+                to { width: 100%; }
+              }
+            `}</style>
+          </section>
+
+          {/* Section innovations scrollable */}
+          <section className="py-24 relative">
+            <div className="max-w-7xl mx-auto px-4">
+              <h2 className="text-6xl font-black text-center mb-16">
+                <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+                  INNOVATIONS LÉGENDAIRES
+                </span>
+              </h2>
+
+              <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-6">
+                {innovations3D.map((innov, i) => (
+                  <div
+                    key={i}
+                    className="group relative bg-gradient-to-br from-gray-900 to-black p-6 rounded-3xl border border-gray-800 hover:border-gray-600 transition-all duration-500 hover:scale-110 cursor-pointer"
+                  >
+                    <div className="text-6xl mb-4 group-hover:scale-125 transition-transform">{innov.icon}</div>
+                    <div className="text-sm text-gray-500 mb-2">{innov.year}</div>
+                    <div className="font-bold text-lg mb-1">{innov.name}</div>
+                    <div className="text-xs text-gray-600 mb-2">{innov.genius}</div>
+                    <div className="text-xs text-blue-400">{innov.wow}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Montres légendaires */}
+          <section className="py-24 relative">
+            <div className="max-w-7xl mx-auto px-4">
+              <h2 className="text-6xl font-black text-center mb-16">
+                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                  MONTRES ICONIQUES
+                </span>
+              </h2>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {legendaryWatches.map((watch, i) => (
+                  <div
+                    key={i}
+                    onMouseEnter={() => setHoveredManufacture(watch.brand)}
+                    onMouseLeave={() => setHoveredManufacture(null)}
+                    className="group bg-gradient-to-br from-gray-900 to-black p-8 rounded-3xl border-2 border-gray-800 hover:border-blue-500 transition-all duration-500 hover:scale-105 cursor-pointer"
+                  >
+                    <div className="text-6xl mb-4">{watch.icon}</div>
+                    <div className="text-2xl font-black mb-2">{watch.brand}</div>
+                    <div className="text-blue-400 font-bold mb-2">{watch.model}</div>
+                    <div className="text-sm text-gray-500 mb-4">Année {watch.year}</div>
+                    <div className="text-3xl font-black text-yellow-400 mb-2">{watch.value}</div>
+                    <div className="text-xs text-gray-600">{watch.fact}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+
+      {/* TIMELINE INTERACTIVE */}
+      {activeView === 'timeline' && (
+        <section className="pt-32 pb-24 relative">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-6xl font-black mb-4">
+                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                  VOYAGE DANS LE TEMPS
+                </span>
+              </h2>
+              <p className="text-gray-400 text-xl">Explorez 500 ans d'histoire</p>
+            </div>
+
+            {/* Contrôles de lecture */}
+            <div className="flex items-center justify-center gap-4 mb-12">
+              <button
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl font-bold flex items-center gap-3 hover:scale-105 transition-all"
+              >
+                {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
+                <span>{isPlaying ? 'Pause' : 'Lecture Auto'}</span>
+              </button>
+            </div>
+
+            {/* Timeline horizontale */}
+            <div className="mb-16 overflow-x-auto pb-6">
+              <div className="flex gap-4 min-w-max justify-center">
+                {timelineData.map((period) => (
+                  <button
+                    key={period.id}
+                    onClick={() => setCurrentYear(period.id)}
+                    className={`flex-shrink-0 transition-all duration-500 ${
+                      currentYear === period.id ? 'scale-125' : 'opacity-50 hover:opacity-100'
+                    }`}
+                  >
+                    <div className={`w-32 h-2 bg-gradient-to-r from-${period.color}-500 to-${period.color}-600 rounded-full mb-3`} />
+                    <div className="text-center">
+                      <div className="text-3xl font-black">{period.year}</div>
+                      <div className="text-sm text-gray-500">{period.emoji}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Carte de période actuelle */}
+            <div className="bg-gradient-to-br from-gray-900 to-black rounded-3xl border-2 border-blue-500 p-12 shadow-2xl shadow-blue-500/20">
+              <div className="flex items-start gap-8">
+                <div className="text-9xl">{currentPeriod.emoji}</div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="px-4 py-2 bg-blue-500/20 border border-blue-500/50 rounded-full text-sm font-bold text-blue-400">
+                      {currentPeriod.era}
+                    </span>
+                    <span className="px-4 py-2 bg-red-500/20 border border-red-500/50 rounded-full text-sm font-bold text-red-400">
+                      {currentPeriod.impact}
+                    </span>
+                  </div>
+                  
+                  <h3 className="text-5xl font-black mb-4">{currentPeriod.title}</h3>
+                  <p className="text-2xl text-gray-400 mb-6">{currentPeriod.subtitle}</p>
+                  <p className="text-xl text-gray-300 mb-8">{currentPeriod.description}</p>
+
+                  {/* Stats */}
+                  <div className="grid grid-cols-3 gap-4 mb-8">
+                    {Object.entries(currentPeriod.stats).map(([key, value]) => (
+                      <div key={key} className="bg-black/50 p-4 rounded-2xl">
+                        <div className="text-3xl font-black text-blue-400">{value}</div>
+                        <div className="text-xs text-gray-500 uppercase">{key}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Détails */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {currentPeriod.details.map((detail, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-4 bg-black/30 rounded-xl">
+                        <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-1" />
+                        <span className="text-gray-300">{detail}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Fun Fact */}
+                  <div className="mt-8 p-6 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/30 rounded-2xl">
+                    <div className="text-sm font-bold text-yellow-400 mb-2">💡 LE SAVIEZ-VOUS ?</div>
+                    <div className="text-lg">{currentPeriod.funFact}</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* Timeline Interactive */}
-      <section id="histoire" className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4 text-center">Chronologie Historique</h2>
-          <p className="text-center text-slate-700 dark:text-slate-300 mb-12 max-w-2xl mx-auto">
-            Les grandes étapes qui ont façonné l'excellence horlogère suisse
-          </p>
+      {/* CARTE MONDIALE */}
+      {activeView === 'map' && (
+        <section className="pt-32 pb-24 relative">
+          <div className="max-w-7xl mx-auto px-4">
+            <h2 className="text-6xl font-black text-center mb-16">
+              <span className="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
+                DOMINATION MONDIALE
+              </span>
+            </h2>
 
-          <div className="grid gap-6">
-            {/* 1541 - Les Origines */}
-            <div
-              onClick={() => setSelectedPeriod(selectedPeriod === '1541' ? null : '1541')}
-              className={`bg-white dark:bg-slate-800 rounded-xl border-2 ${
-                selectedPeriod === '1541'
-                  ? 'border-blue-600 dark:border-blue-400 shadow-lg'
-                  : 'border-slate-200 dark:border-slate-700'
-              } hover:shadow-lg dark:hover:bg-slate-700 transition-colors cursor-pointer overflow-hidden`}
-            >
-              <div className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-4 py-2 rounded-lg font-bold text-xl shrink-0">
-                    1541
+            <div className="relative bg-gray-900 rounded-3xl p-12 border border-gray-800" style={{ height: '600px' }}>
+              {Object.entries(worldMap).map(([key, loc]) => (
+                <div
+                  key={key}
+                  className="absolute transition-all duration-500 hover:scale-150 cursor-pointer"
+                  style={{
+                    left: `${loc.x}%`,
+                    top: `${loc.y}%`,
+                    width: `${loc.size}px`,
+                    height: `${loc.size}px`
+                  }}
+                >
+                  <div className={`w-full h-full bg-${loc.color}-500 rounded-full animate-pulse flex items-center justify-center text-2xl font-black shadow-2xl`}>
+                    {loc.value}
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-                      Les Origines : Jean Calvin et la Naissance à Genève
-                    </h3>
-                    <p className="text-slate-700 dark:text-slate-300">
-                      Le réformateur Jean Calvin bannit le port d'objets ornementaux à Genève, forçant les orfèvres et joailliers à se reconvertir dans l'horlogerie. C'est la naissance de l'industrie horlogère suisse.
-                    </p>
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 text-sm font-bold whitespace-nowrap">
+                    {loc.label}
                   </div>
-                  <Users className="w-8 h-8 text-blue-600 dark:text-blue-400 shrink-0" />
                 </div>
-                {selectedPeriod === '1541' && (
-                  <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 p-6 rounded-lg border-l-4 border-blue-600 dark:border-blue-400">
-                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
-                      <BookOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                      Contexte Historique
-                    </h4>
-                    <ul className="space-y-2 text-slate-700 dark:text-slate-300">
-                      <li className="flex items-start gap-2">
-                        <span className="text-blue-600 dark:text-blue-400 mt-1">•</span>
-                        <span>Le règlement des orfèvres de 1566 interdit la fabrication de croix, calices et objets catholiques</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-blue-600 dark:text-blue-400 mt-1">•</span>
-                        <span>Les artisans se tournent vers "la boîte de montre" : véritables bijoux incrustés de pierres précieuses</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-blue-600 dark:text-blue-400 mt-1">•</span>
-                        <span>Naissance de l'horlogerie de luxe genevoise, échappant aux règles calvinistes</span>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* 1685 - Réfugiés Huguenots */}
-            <div
-              onClick={() => setSelectedPeriod(selectedPeriod === '1685' ? null : '1685')}
-              className={`bg-white dark:bg-slate-800 rounded-xl border-2 ${
-                selectedPeriod === '1685'
-                  ? 'border-blue-600 dark:border-blue-400 shadow-lg'
-                  : 'border-slate-200 dark:border-slate-700'
-              } hover:shadow-lg dark:hover:bg-slate-700 transition-colors cursor-pointer overflow-hidden`}
-            >
-              <div className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-4 py-2 rounded-lg font-bold text-xl shrink-0">
-                    1685
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-                      Les Réfugiés Huguenots : Expansion dans l'Arc Jurassien
-                    </h3>
-                    <p className="text-slate-700 dark:text-slate-300">
-                      La révocation de l'Édit de Nantes provoque l'arrivée massive de réfugiés huguenots français, apportant capitaux, savoir-faire et réseaux commerciaux. L'horlogerie se développe de Genève à Schaffhouse.
-                    </p>
-                  </div>
-                  <Mountain className="w-8 h-8 text-indigo-600 dark:text-indigo-400 shrink-0" />
-                </div>
-                {selectedPeriod === '1685' && (
-                  <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 p-6 rounded-lg border-l-4 border-indigo-600 dark:border-indigo-400">
-                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3">Facteurs de Succès</h4>
-                    <ul className="space-y-2 text-slate-700 dark:text-slate-300">
-                      <li className="flex items-start gap-2">
-                        <span className="text-indigo-600 dark:text-indigo-400 mt-1">•</span>
-                        <span>Main-d'œuvre disponible dans l'arc jurassien (agriculture saisonnière)</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-indigo-600 dark:text-indigo-400 mt-1">•</span>
-                        <span>Proximité avec les centres urbains marchands (Genève, Neuchâtel)</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-indigo-600 dark:text-indigo-400 mt-1">•</span>
-                        <span>Absence de corporations permettant un développement libre</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-indigo-600 dark:text-indigo-400 mt-1">•</span>
-                        <span>Vertus protestantes : patience, minutie, droiture et persévérance</span>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* 1740 - Vallée de Joux */}
-            <div
-              onClick={() => setSelectedPeriod(selectedPeriod === '1740' ? null : '1740')}
-              className={`bg-white dark:bg-slate-800 rounded-xl border-2 ${
-                selectedPeriod === '1740'
-                  ? 'border-blue-600 dark:border-blue-400 shadow-lg'
-                  : 'border-slate-200 dark:border-slate-700'
-              } hover:shadow-lg dark:hover:bg-slate-700 transition-colors cursor-pointer overflow-hidden`}
-            >
-              <div className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-4 py-2 rounded-lg font-bold text-xl shrink-0">
-                    1740
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-                      Vallée de Joux : Berceau de la Haute Horlogerie
-                    </h3>
-                    <p className="text-slate-700 dark:text-slate-300">
-                      Les agriculteurs combiers fabriquent des pièces horlogères pendant les longs hivers. Naissance des "fermes horlogères" avec fenêtres supplémentaires pour maximiser la lumière naturelle.
-                    </p>
-                  </div>
-                  <Factory className="w-8 h-8 text-green-600 dark:text-green-400 shrink-0" />
-                </div>
-                {selectedPeriod === '1740' && (
-                  <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 p-6 rounded-lg border-l-4 border-green-600 dark:border-green-400">
-                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3">L'Industrie Rurale</h4>
-                    <ul className="space-y-2 text-slate-700 dark:text-slate-300">
-                      <li className="flex items-start gap-2">
-                        <span className="text-green-600 dark:text-green-400 mt-1">•</span>
-                        <span>Tradition née de l'industrie du fer, permettant la fabrication de pièces mécaniques</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-green-600 dark:text-green-400 mt-1">•</span>
-                        <span>Paysans formés par des horlogers de la région lémanique</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-green-600 dark:text-green-400 mt-1">•</span>
-                        <span>Agriculture en été, horlogerie en hiver : modèle économique unique</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-green-600 dark:text-green-400 mt-1">•</span>
-                        <span>26 fermes horlogères historiques encore visibles aujourd'hui</span>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* XIXe siècle - Âge d'Or */}
-            <div
-              onClick={() => setSelectedPeriod(selectedPeriod === '1800' ? null : '1800')}
-              className={`bg-white dark:bg-slate-800 rounded-xl border-2 ${
-                selectedPeriod === '1800'
-                  ? 'border-blue-600 dark:border-blue-400 shadow-lg'
-                  : 'border-slate-200 dark:border-slate-700'
-              } hover:shadow-lg dark:hover:bg-slate-700 transition-colors cursor-pointer overflow-hidden`}
-            >
-              <div className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 px-4 py-2 rounded-lg font-bold text-xl shrink-0">
-                    XIXe
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-                      L'Âge d'Or : Innovations et Production en Série
-                    </h3>
-                    <p className="text-slate-700 dark:text-slate-300">
-                      Nouvelles techniques de fabrication, production en série, exportations massives vers les États-Unis. Apparition des montres bracelet. Invention du tourbillon par Abraham-Louis Breguet (1801).
-                    </p>
-                  </div>
-                  <Award className="w-8 h-8 text-amber-600 dark:text-amber-400 shrink-0" />
-                </div>
-                {selectedPeriod === '1800' && (
-                  <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30 p-6 rounded-lg border-l-4 border-amber-600 dark:border-amber-400">
-                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3">Innovations Majeures</h4>
-                    <ul className="space-y-2 text-slate-700 dark:text-slate-300">
-                      <li className="flex items-start gap-2">
-                        <span className="text-amber-600 dark:text-amber-400 mt-1">•</span>
-                        <span>Tourbillon (1801) : compense les effets de la gravité</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-amber-600 dark:text-amber-400 mt-1">•</span>
-                        <span>Chronographe : mesure de temps courts avec précision</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-amber-600 dark:text-amber-400 mt-1">•</span>
-                        <span>Quantième perpétuel : gestion automatique des années bissextiles</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-amber-600 dark:text-amber-400 mt-1">•</span>
-                        <span>Répétition minutes : sonnerie acoustique des heures sur demande</span>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* 1929 - Grande Dépression */}
-            <div
-              onClick={() => setSelectedPeriod(selectedPeriod === '1929' ? null : '1929')}
-              className={`bg-white dark:bg-slate-800 rounded-xl border-2 ${
-                selectedPeriod === '1929'
-                  ? 'border-blue-600 dark:border-blue-400 shadow-lg'
-                  : 'border-slate-200 dark:border-slate-700'
-              } hover:shadow-lg dark:hover:bg-slate-700 transition-colors cursor-pointer overflow-hidden`}
-            >
-              <div className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 px-4 py-2 rounded-lg font-bold text-xl shrink-0">
-                    1929
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-                      Grande Dépression : Naissance des Grands Groupes
-                    </h3>
-                    <p className="text-slate-700 dark:text-slate-300">
-                      La crise économique force les petites maisons à se regrouper. Création de la SSIH (Omega + Tissot, 1930) et de l'ASUAG (Longines, Mido, Hamilton, 1931).
-                    </p>
-                  </div>
-                  <TrendingUp className="w-8 h-8 text-red-600 dark:text-red-400 shrink-0" />
-                </div>
-                {selectedPeriod === '1929' && (
-                  <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30 p-6 rounded-lg border-l-4 border-red-600 dark:border-red-400">
-                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3">Consolidation Industrielle</h4>
-                    <ul className="space-y-2 text-slate-700 dark:text-slate-300">
-                      <li className="flex items-start gap-2">
-                        <span className="text-red-600 dark:text-red-400 mt-1">•</span>
-                        <span>SSIH (1930) : Omega, Tissot, puis Lemania (calibres chronographes)</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-red-600 dark:text-red-400 mt-1">•</span>
-                        <span>ASUAG (1931) : 15 marques + fabricants d'ébauches (ancêtre ETA)</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-red-600 dark:text-red-400 mt-1">•</span>
-                        <span>Stratégie de survie : mutualisation des ressources et expertises</span>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* 1970-1983 - Crise du Quartz */}
-            <div
-              onClick={() => setSelectedPeriod(selectedPeriod === '1970' ? null : '1970')}
-              className={`bg-white dark:bg-slate-800 rounded-xl border-2 ${
-                selectedPeriod === '1970'
-                  ? 'border-blue-600 dark:border-blue-400 shadow-lg'
-                  : 'border-slate-200 dark:border-slate-700'
-              } hover:shadow-lg dark:hover:bg-slate-700 transition-colors cursor-pointer overflow-hidden`}
-            >
-              <div className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-4 py-2 rounded-lg font-bold text-xl shrink-0">
-                    1970-83
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-                      Crise du Quartz : La Swatch Sauve l'Industrie
-                    </h3>
-                    <p className="text-slate-700 dark:text-slate-300">
-                      Les montres à quartz japonaises font chuter les parts de marché suisses de 50% à 15%. Fusion SSIH + ASUAG = Swatch Group (1983). La montre Swatch relance l'industrie.
-                    </p>
-                  </div>
-                  <Globe className="w-8 h-8 text-purple-600 dark:text-purple-400 shrink-0" />
-                </div>
-                {selectedPeriod === '1970' && (
-                  <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 p-6 rounded-lg border-l-4 border-purple-600 dark:border-purple-400">
-                    <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3">Renaissance Horlogère</h4>
-                    <ul className="space-y-2 text-slate-700 dark:text-slate-300">
-                      <li className="flex items-start gap-2">
-                        <span className="text-purple-600 dark:text-purple-400 mt-1">•</span>
-                        <span>Nicolas Hayek : visionnaire de la fusion SSIH + ASUAG → SMH (Swatch Group)</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-purple-600 dark:text-purple-400 mt-1">•</span>
-                        <span>Swatch ("second watch") : montre plastique à quartz, abordable et tendance</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-purple-600 dark:text-purple-400 mt-1">•</span>
-                        <span>Ironie : une montre d'entrée de gamme sauve la haute horlogerie suisse</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-purple-600 dark:text-purple-400 mt-1">•</span>
-                        <span>Retour à la compétitivité mondiale et préservation du savoir-faire traditionnel</span>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* Régions Horlogères */}
-      <section id="regions" className="py-16 bg-white dark:bg-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4 text-center">Les Régions Horlogères</h2>
-          <p className="text-center text-slate-700 dark:text-slate-300 mb-12 max-w-2xl mx-auto">
-            Chaque région de Suisse romande a développé son propre savoir-faire et ses spécialités
-          </p>
+      {/* QUIZ */}
+      {activeView === 'quiz' && (
+        <section className="pt-32 pb-24 relative">
+          <div className="max-w-4xl mx-auto px-4">
+            <h2 className="text-6xl font-black text-center mb-16">
+              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                TESTEZ VOS CONNAISSANCES
+              </span>
+            </h2>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Genève */}
-            <div
-              onClick={() => setSelectedRegion(selectedRegion === 'geneve' ? null : 'geneve')}
-              className={`bg-white dark:bg-slate-800 rounded-xl border-2 ${
-                selectedRegion === 'geneve'
-                  ? 'border-blue-600 dark:border-blue-400 shadow-lg'
-                  : 'border-slate-200 dark:border-slate-700'
-              } hover:shadow-lg dark:hover:bg-slate-700 transition-colors cursor-pointer p-6`}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">Genève</h3>
-                  <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 text-sm">
-                    <MapPin className="w-4 h-4" />
-                    <span>Berceau de l'horlogerie</span>
-                  </div>
+            {quiz.active ? (
+              <div className="bg-gradient-to-br from-gray-900 to-black rounded-3xl p-12 border-2 border-purple-500">
+                <div className="text-center mb-8">
+                  <div className="text-sm text-gray-500 mb-2">Question {quiz.question + 1} / {quizQuestions.length}</div>
+                  <h3 className="text-3xl font-bold mb-8">{quizQuestions[quiz.question].q}</h3>
                 </div>
-                <div className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-xs font-semibold">
-                  1541
+
+                <div className="grid gap-4">
+                  {quizQuestions[quiz.question].a.map((answer, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        if (i === quizQuestions[quiz.question].correct) {
+                          setQuiz({ ...quiz, score: quiz.score + 1, question: quiz.question + 1 });
+                        } else {
+                          setQuiz({ ...quiz, question: quiz.question + 1 });
+                        }
+                      }}
+                      className="p-6 bg-gray-800 hover:bg-gray-700 rounded-2xl text-left font-bold text-xl transition-all hover:scale-105"
+                    >
+                      {answer}
+                    </button>
+                  ))}
                 </div>
               </div>
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Capitale mondiale de l'horlogerie de luxe, siège de Patek Philippe, Rolex, Vacheron Constantin.
-              </p>
-              {selectedRegion === 'geneve' && (
-                <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
-                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Manufactures emblématiques</h4>
-                  <ul className="space-y-1 text-sm text-slate-700 dark:text-slate-300">
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-400 rounded-full"></span>
-                      Patek Philippe (1839)
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-400 rounded-full"></span>
-                      Rolex (1905)
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-400 rounded-full"></span>
-                      Vacheron Constantin (1755)
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            {/* Vallée de Joux */}
-            <div
-              onClick={() => setSelectedRegion(selectedRegion === 'joux' ? null : 'joux')}
-              className={`bg-white dark:bg-slate-800 rounded-xl border-2 ${
-                selectedRegion === 'joux'
-                  ? 'border-blue-600 dark:border-blue-400 shadow-lg'
-                  : 'border-slate-200 dark:border-slate-700'
-              } hover:shadow-lg dark:hover:bg-slate-700 transition-colors cursor-pointer p-6`}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">Vallée de Joux</h3>
-                  <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 text-sm">
-                    <MapPin className="w-4 h-4" />
-                    <span>Haute horlogerie</span>
-                  </div>
-                </div>
-                <div className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full text-xs font-semibold">
-                  1740
-                </div>
+            ) : (
+              <div className="text-center">
+                <button
+                  onClick={() => setQuiz({ active: true, score: 0, question: 0 })}
+                  className="px-12 py-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl font-black text-2xl hover:scale-105 transition-all"
+                >
+                  Commencer le Quiz
+                </button>
               </div>
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Berceau des grandes complications horlogères. 26 fermes horlogères historiques.
-              </p>
-              {selectedRegion === 'joux' && (
-                <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
-                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Manufactures prestigieuses</h4>
-                  <ul className="space-y-1 text-sm text-slate-700 dark:text-slate-300">
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-green-600 dark:bg-green-400 rounded-full"></span>
-                      Audemars Piguet (1875)
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-green-600 dark:bg-green-400 rounded-full"></span>
-                      Jaeger-LeCoultre (1833)
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-green-600 dark:bg-green-400 rounded-full"></span>
-                      Blancpain (1735)
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            {/* Neuchâtel */}
-            <div
-              onClick={() => setSelectedRegion(selectedRegion === 'neuchatel' ? null : 'neuchatel')}
-              className={`bg-white dark:bg-slate-800 rounded-xl border-2 ${
-                selectedRegion === 'neuchatel'
-                  ? 'border-blue-600 dark:border-blue-400 shadow-lg'
-                  : 'border-slate-200 dark:border-slate-700'
-              } hover:shadow-lg dark:hover:bg-slate-700 transition-colors cursor-pointer p-6`}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">Neuchâtel</h3>
-                  <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 text-sm">
-                    <MapPin className="w-4 h-4" />
-                    <span>Innovation technique</span>
-                  </div>
-                </div>
-                <div className="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-3 py-1 rounded-full text-xs font-semibold">
-                  XVIIe
-                </div>
-              </div>
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Centre d'innovation et de recherche horlogère.
-              </p>
-              {selectedRegion === 'neuchatel' && (
-                <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
-                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Spécialités</h4>
-                  <ul className="space-y-1 text-sm text-slate-700 dark:text-slate-300">
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-indigo-600 dark:bg-indigo-400 rounded-full"></span>
-                      Centre d'ébauches et composants
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-indigo-600 dark:bg-indigo-400 rounded-full"></span>
-                      Recherche horlogère avancée
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            {/* Bienne/Biel */}
-            <div
-              onClick={() => setSelectedRegion(selectedRegion === 'bienne' ? null : 'bienne')}
-              className={`bg-white dark:bg-slate-800 rounded-xl border-2 ${
-                selectedRegion === 'bienne'
-                  ? 'border-blue-600 dark:border-blue-400 shadow-lg'
-                  : 'border-slate-200 dark:border-slate-700'
-              } hover:shadow-lg dark:hover:bg-slate-700 transition-colors cursor-pointer p-6`}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">Bienne/Biel</h3>
-                  <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 text-sm">
-                    <MapPin className="w-4 h-4" />
-                    <span>Production industrielle</span>
-                  </div>
-                </div>
-                <div className="bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 px-3 py-1 rounded-full text-xs font-semibold">
-                  XXe
-                </div>
-              </div>
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Siège d'Omega, Swatch Group. Centre industriel majeur.
-              </p>
-              {selectedRegion === 'bienne' && (
-                <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
-                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Marques importantes</h4>
-                  <ul className="space-y-1 text-sm text-slate-700 dark:text-slate-300">
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-amber-600 dark:bg-amber-400 rounded-full"></span>
-                      Omega (1848)
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-amber-600 dark:bg-amber-400 rounded-full"></span>
-                      Swatch (1983)
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            {/* La Chaux-de-Fonds */}
-            <div
-              onClick={() => setSelectedRegion(selectedRegion === 'chaux' ? null : 'chaux')}
-              className={`bg-white dark:bg-slate-800 rounded-xl border-2 ${
-                selectedRegion === 'chaux'
-                  ? 'border-blue-600 dark:border-blue-400 shadow-lg'
-                  : 'border-slate-200 dark:border-slate-700'
-              } hover:shadow-lg dark:hover:bg-slate-700 transition-colors cursor-pointer p-6`}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">La Chaux-de-Fonds</h3>
-                  <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 text-sm">
-                    <MapPin className="w-4 h-4" />
-                    <span>Patrimoine UNESCO</span>
-                  </div>
-                </div>
-                <div className="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold">
-                  XVIIIe
-                </div>
-              </div>
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Ville horlogère inscrite au patrimoine mondial UNESCO.
-              </p>
-              {selectedRegion === 'chaux' && (
-                <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
-                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Caractéristiques</h4>
-                  <ul className="space-y-1 text-sm text-slate-700 dark:text-slate-300">
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-purple-600 dark:bg-purple-400 rounded-full"></span>
-                      Musée international d'horlogerie
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-purple-600 dark:bg-purple-400 rounded-full"></span>
-                      Urbanisme horloger unique
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            {/* Schaffhouse */}
-            <div
-              onClick={() => setSelectedRegion(selectedRegion === 'schaffhouse' ? null : 'schaffhouse')}
-              className={`bg-white dark:bg-slate-800 rounded-xl border-2 ${
-                selectedRegion === 'schaffhouse'
-                  ? 'border-blue-600 dark:border-blue-400 shadow-lg'
-                  : 'border-slate-200 dark:border-slate-700'
-              } hover:shadow-lg dark:hover:bg-slate-700 transition-colors cursor-pointer p-6`}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">Schaffhouse</h3>
-                  <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400 text-sm">
-                    <MapPin className="w-4 h-4" />
-                    <span>Horlogerie allemande-suisse</span>
-                  </div>
-                </div>
-                <div className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 px-3 py-1 rounded-full text-xs font-semibold">
-                  XIXe
-                </div>
-              </div>
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Siège d'IWC Schaffhausen, manufacture prestigieuse.
-              </p>
-              {selectedRegion === 'schaffhouse' && (
-                <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
-                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Manufacture principale</h4>
-                  <ul className="space-y-1 text-sm text-slate-700 dark:text-slate-300">
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-red-600 dark:bg-red-400 rounded-full"></span>
-                      IWC Schaffhausen (1868)
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
+            )}
           </div>
-        </div>
-      </section>
-
-      {/* Grandes Manufactures */}
-      <section id="manufactures" className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4 text-center">Les Grandes Manufactures</h2>
-          <p className="text-center text-slate-700 dark:text-slate-300 mb-12 max-w-2xl mx-auto">
-            Les marques emblématiques qui ont façonné la réputation mondiale
-          </p>
-
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-700">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-slate-100 dark:bg-slate-900">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Manufacture</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Fondation</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Lieu</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Spécialité</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 text-slate-900 dark:text-slate-100 font-semibold">Patek Philippe</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1839</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Genève</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Grandes complications</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 text-slate-900 dark:text-slate-100 font-semibold">Rolex</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1905</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Genève</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Montres de sport, robustesse</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 text-slate-900 dark:text-slate-100 font-semibold">Omega</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1848</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Bienne</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Speedmaster, précision</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 text-slate-900 dark:text-slate-100 font-semibold">Audemars Piguet</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1875</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Le Brassus</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Royal Oak, complications</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 text-slate-900 dark:text-slate-100 font-semibold">Jaeger-LeCoultre</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1833</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Le Sentier</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Reverso, calibres manufacture</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 text-slate-900 dark:text-slate-100 font-semibold">Vacheron Constantin</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1755</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Genève</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Plus ancienne manufacture</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 text-slate-900 dark:text-slate-100 font-semibold">Blancpain</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1735</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Le Brassus</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Fifty Fathoms, complications</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 text-slate-900 dark:text-slate-100 font-semibold">Breguet</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1775</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Vallée de Joux</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Tourbillon (inventeur)</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Footer */}
-      <footer className="bg-slate-900 dark:bg-slate-950 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Clock className="w-6 h-6 text-blue-400" />
-                <span className="text-lg font-bold">HorloLearn</span>
-              </div>
-              <p className="text-slate-400 text-sm">
-                Votre plateforme éducative pour découvrir l'excellence de l'horlogerie suisse
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4">Sections</h3>
-              <ul className="space-y-2 text-sm text-slate-400">
-                <li>
-                  <a href="#histoire" className="hover:text-blue-400 transition-colors">
-                    Histoire
-                  </a>
-                </li>
-                <li>
-                  <a href="#regions" className="hover:text-blue-400 transition-colors">
-                    Régions
-                  </a>
-                </li>
-                <li>
-                  <a href="#manufactures" className="hover:text-blue-400 transition-colors">
-                    Manufactures
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4">Ressources</h3>
-              <ul className="space-y-2 text-sm text-slate-400">
-                <li>
-                  <a href="#" className="hover:text-blue-400 transition-colors">
-                    Mouvements
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-400 transition-colors">
-                    Complications
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-400 transition-colors">
-                    Techniques
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4">Exportations 2019</h3>
-              <div className="bg-slate-800 dark:bg-slate-900 rounded-lg p-4">
-                <div className="text-2xl font-bold text-blue-400 mb-1">21,7 Mia CHF</div>
-                <div className="text-xs text-slate-400">+2,4% vs 2018</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 pt-8 border-t border-slate-800 dark:border-slate-700 text-center text-sm text-slate-400">
-            <p>© 2025 HorloLearn. Plateforme éducative sur l'horlogerie suisse.</p>
-          </div>
+      <footer className="border-t border-gray-800 py-12 bg-black">
+        <div className="max-w-7xl mx-auto px-4 text-center text-gray-500">
+          <p>© 2025 HorloLearn • Excellence Horlogère Suisse</p>
         </div>
       </footer>
     </div>
