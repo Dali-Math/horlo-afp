@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import {
   Clock, Gauge, Zap, Settings2, ChevronLeft, BookOpen, Cog, RotateCw, Book,
-  Building2, Watch, Cpu, Wrench, Factory, Award, Moon, Timer, Tornado, Boxes
+  Building2, Watch, Cpu, Wrench, Boxes
 } from 'lucide-react';
 
 const pagesFonctionnement = [
@@ -46,36 +46,13 @@ const pagesFonctionnement = [
   },
 ];
 
+// ⭐ UNE SEULE CARTE POUR "MOUVEMENT" ⭐
 const pagesMouvement = [
   {
     slug: 'mouvements',
     titre: "Architecture du Mouvement",
     description: "Vue d'ensemble : platine, ponts, fixation et décoration.",
     icon: <Boxes className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
-  },
-  {
-    slug: 'mouvements/platine-ponts',
-    titre: "La Platine et les Ponts",
-    description: "Définition, fonction et rôle dans le mouvement.",
-    icon: <Factory className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
-  },
-  {
-    slug: 'mouvements/systeme-fixation',
-    titre: "Système de fixation",
-    description: "Montage, stabilité et précision dimensionnelle.",
-    icon: <Wrench className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
-  },
-  {
-    slug: 'mouvements/stabilite-dimensionnelle',
-    titre: "Stabilité dimensionnelle",
-    description: "Matériaux, impact sur la régularité et traitements.",
-    icon: <Award className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
-  },
-  {
-    slug: 'mouvements/finitions-decoratives',
-    titre: "Finitions décoratives",
-    description: "Perlage, Côtes de Genève, anglage, guillochage.",
-    icon: <Timer className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
   },
 ];
 
@@ -177,7 +154,7 @@ export default function TheoriePage() {
           ))}
         </div>
 
-        {/* ⭐ NOUVELLE SECTION : Architecture du Mouvement ⭐ */}
+        {/* ⭐ SECTION MOUVEMENT - UNE SEULE CARTE ⭐ */}
         <h2 className="text-2xl font-bold text-slate-700 dark:text-slate-300 mb-3 mt-12">
           🏗️ Architecture du Mouvement
         </h2>
