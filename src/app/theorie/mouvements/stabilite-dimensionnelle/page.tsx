@@ -523,7 +523,7 @@ export default function StabiliteDimensionnellePage() {
                     Finitions Mécaniques de Précision
                   </h4>
                   <p className="text-slate-700 dark:text-slate-300 mb-3 leading-relaxed">
-                    Lappage et rodage pour obtenir des surfaces parfaitement planes (planéité < 1 μm) 
+                    Lappage et rodage pour obtenir des surfaces parfaitement planes (planéité inférieure à 1 μm) 
                     et des faces parallèles. Élimine les micro-contraintes de surface.
                   </p>
                   <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
