@@ -47,9 +47,59 @@ export default function HistoireHorlogerieSuisse() {
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero Section avec Montagnes Suisses en Arrière-Plan */}
       <section className="relative py-20 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* SVG Alpes Suisses en Arrière-Plan */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <svg
+            className="absolute bottom-0 w-full h-48 opacity-10 dark:opacity-5"
+            viewBox="0 0 1200 200"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+          >
+            {/* Montagne 1 (gauche) */}
+            <path
+              d="M0 200 L150 80 L300 200 Z"
+              className="fill-slate-400 dark:fill-slate-600"
+            />
+            {/* Montagne 2 (centre-gauche) */}
+            <path
+              d="M200 200 L400 40 L600 200 Z"
+              className="fill-slate-500 dark:fill-slate-700"
+            />
+            {/* Montagne 3 (centre) - La plus haute */}
+            <path
+              d="M450 200 L650 20 L850 200 Z"
+              className="fill-slate-600 dark:fill-slate-800"
+            />
+            {/* Montagne 4 (centre-droite) */}
+            <path
+              d="M700 200 L900 60 L1100 200 Z"
+              className="fill-slate-500 dark:fill-slate-700"
+            />
+            {/* Montagne 5 (droite) */}
+            <path
+              d="M950 200 L1100 90 L1200 200 Z"
+              className="fill-slate-400 dark:fill-slate-600"
+            />
+            {/* Pics de neige (sommets blancs) */}
+            <path
+              d="M650 20 L620 50 L680 50 Z"
+              className="fill-white dark:fill-slate-300 opacity-80"
+            />
+            <path
+              d="M400 40 L380 65 L420 65 Z"
+              className="fill-white dark:fill-slate-300 opacity-70"
+            />
+            <path
+              d="M900 60 L880 80 L920 80 Z"
+              className="fill-white dark:fill-slate-300 opacity-70"
+            />
+          </svg>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
             <div className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-4 py-2 rounded-full text-sm font-semibold mb-6">
               <Sparkles className="w-4 h-4" />
@@ -61,7 +111,7 @@ export default function HistoireHorlogerieSuisse() {
             <p className="text-xl text-slate-700 dark:text-slate-300 max-w-3xl mx-auto mb-8">
               Du XVIe siècle à nos jours, découvrez comment la Suisse est devenue la référence mondiale de l'horlogerie de luxe et de précision
             </p>
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center justify-center gap-4 flex-wrap">
               <div className="bg-white dark:bg-slate-800 rounded-xl px-6 py-4 shadow-lg border border-slate-200 dark:border-slate-700">
                 <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">500+</div>
                 <div className="text-sm text-slate-600 dark:text-slate-400">Ans d'histoire</div>
@@ -1183,8 +1233,6 @@ export default function HistoireHorlogerieSuisse() {
                   ))}
                 </div>
               </div>
-
-              {/* Suite des questions 6-10... (tronqué pour la longueur) */}
             </div>
 
             <div className="mt-8 text-center">
