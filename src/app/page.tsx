@@ -1,468 +1,475 @@
-'use client'
+'use client';
 
-import { useEffect, useRef, useState } from 'react'
-import Link from 'next/link'
-import * as THREE from 'three'
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { 
+  BookOpen, 
+  Wrench, 
+  GraduationCap, 
+  Users, 
+  Award,
+  TrendingUp,
+  Star,
+  ArrowRight,
+  Play,
+  CheckCircle,
+  Bell,
+  Rss,
+  Sparkles,
+  Calendar,
+  Clock,
+  ExternalLink,
+  Heart
+} from 'lucide-react';
+import AstuceDuJour from '@/components/AstuceDuJour';
+import MouvementDuMois from '@/components/MouvementDuMois';
+import GalerieVideos from '@/components/GalerieVideos';
+import ComparaisonMouvements from '@/components/ComparaisonMouvements';
 
-export default function HomePage() {
-  const [isDark, setIsDark] = useState(true)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const mouseRef = useRef({ x: 0, y: 0 })
-
-  // Three.js Setup
+// Hook pour animer les compteurs
+function useCounter(end: number, duration: number = 2000) {
+  const [count, setCount] = useState(0);
+  
   useEffect(() => {
-    if (!canvasRef.current) return
-
-    const canvas = canvasRef.current
-    const scene = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-    camera.position.z = 10
-
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      alpha: true,
-      antialias: true,
-    })
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
-    // Lumières
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
-    scene.add(ambientLight)
-
-    const pointLight1 = new THREE.PointLight(0xd4af37, 1, 100)
-    pointLight1.position.set(5, 5, 5)
-    scene.add(pointLight1)
-
-    const pointLight2 = new THREE.PointLight(0xffffff, 0.5, 100)
-    pointLight2.position.set(-5, -5, 5)
-    scene.add(pointLight2)
-
-    // Fonction pour créer un engrenage
-    const createGear = (radius: number, thickness: number, teeth: number) => {
-      const group = new THREE.Group()
+    let startTime: number;
+    let animationFrame: number;
+    
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime;
+      const progress = Math.min((currentTime - startTime) / duration, 1);
       
-      // Corps de l'engrenage (tore)
-      const bodyGeometry = new THREE.TorusGeometry(radius, thickness, 16, 100)
-      const material = new THREE.MeshStandardMaterial({
-        color: 0xd4af37,
-        metalness: 0.8,
-        roughness: 0.2,
-      })
-      const body = new THREE.Mesh(bodyGeometry, material)
-      group.add(body)
-
-      // Dents
-      for (let i = 0; i < teeth; i++) {
-        const angle = (i / teeth) * Math.PI * 2
-        const toothGeometry = new THREE.BoxGeometry(0.1, thickness * 2, 0.15)
-        const tooth = new THREE.Mesh(toothGeometry, material)
-        tooth.position.x = Math.cos(angle) * (radius + thickness)
-        tooth.position.y = Math.sin(angle) * (radius + thickness)
-        tooth.rotation.z = angle
-        group.add(tooth)
+      setCount(Math.floor(progress * end));
+      
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
       }
+    };
+    
+    animationFrame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [end, duration]);
+  
+  return count;
+}
 
-      return group
-    }
-
-    // Créer 4 engrenages
-    const gear1 = createGear(1.5, 0.2, 24)
-    gear1.position.set(-3, 2, 0)
-    scene.add(gear1)
-
-    const gear2 = createGear(1.2, 0.18, 24)
-    gear2.position.set(3, 1, 0)
-    scene.add(gear2)
-
-    const gear3 = createGear(1, 0.15, 24)
-    gear3.position.set(-2, -2, 0)
-    scene.add(gear3)
-
-    const gear4 = createGear(1.3, 0.2, 24)
-    gear4.position.set(2.5, -1.5, 0)
-    scene.add(gear4)
-
-    // Mouse move handler
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current = {
-        x: (e.clientX / window.innerWidth) * 2 - 1,
-        y: -(e.clientY / window.innerHeight) * 2 + 1,
-      }
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-
-    // Animation loop
-    const animate = () => {
-      requestAnimationFrame(animate)
-
-      // Rotation des engrenages
-      gear1.rotation.z += 0.005
-      gear2.rotation.z -= 0.008
-      gear3.rotation.z += 0.01
-      gear4.rotation.z -= 0.012
-
-      // Camera lerp vers position souris
-      camera.position.x += (mouseRef.current.x * 0.5 - camera.position.x) * 0.05
-      camera.position.y += (mouseRef.current.y * 0.5 - camera.position.y) * 0.05
-
-      renderer.render(scene, camera)
-    }
-    animate()
-
-    // Resize handler
-    const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight
-      camera.updateProjectionMatrix()
-      renderer.setSize(window.innerWidth, window.innerHeight)
-    }
-    window.addEventListener('resize', handleResize)
-
-    // Cleanup
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('resize', handleResize)
-      renderer.dispose()
-    }
-  }, [])
-
-  // Toggle theme
-  const toggleTheme = () => setIsDark(!isDark)
+// Composant Stats Animées RESPONSIVE avec dark mode
+function AnimatedStats() {
+  const ressources = useCounter(156);
+  const outils = useCounter(25);
+  const visiteurs = useCounter(1247);
+  const heures = useCounter(50);
 
   return (
-    <div
-      className="min-h-screen transition-colors duration-500"
-      style={{
-        backgroundColor: isDark ? '#0a0a0a' : '#ffffff',
-        color: isDark ? '#ffffff' : '#0a0a0a',
-      }}
-    >
-      {/* Toggle Dark/Light */}
-      <button
-        onClick={toggleTheme}
-        className="fixed top-6 right-6 z-50 w-14 h-14 rounded-full border-2 transition-all duration-300 hover:scale-110"
-        style={{
-          backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5',
-          borderColor: '#d4af37',
-          boxShadow: '0 4px 15px rgba(212, 175, 55, 0.3)',
-        }}
-      >
-        <span className="text-2xl">{isDark ? '☀️' : '🌙'}</span>
-      </button>
-
-      {/* HERO SECTION */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Canvas Three.js */}
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 w-full h-full"
-          style={{
-            opacity: isDark ? 0.15 : 0.1,
-          }}
-        />
-
-        {/* Grille animée */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: `linear-gradient(${isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)'} 1px, transparent 1px), linear-gradient(90deg, ${isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)'} 1px, transparent 1px)`,
-            backgroundSize: '50px 50px',
-            animation: 'gridMove 20s linear infinite',
-          }}
-        />
-
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
-          {/* Badge */}
-          <div
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 mb-8"
-            style={{
-              backgroundColor: isDark ? 'rgba(26, 26, 26, 0.8)' : 'rgba(245, 245, 245, 0.8)',
-              borderColor: '#d4af37',
-              backdropFilter: 'blur(10px)',
-            }}
-          >
-            <span className="text-xl">🇨🇭</span>
-            <span
-              className="font-semibold tracking-wider text-sm"
-              style={{ color: '#d4af37' }}
-            >
-              HORLOGERIE SUISSE
-            </span>
-          </div>
-
-          {/* Titre */}
-          <h1
-            className="font-light mb-6 leading-tight"
-            style={{
-              fontSize: 'clamp(2.5rem, 8vw, 4rem)',
-              letterSpacing: '0.5px',
-              background: `linear-gradient(135deg, ${isDark ? '#ffffff' : '#0a0a0a'} 0%, #d4af37 100%)`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              animation: 'fadeInDown 1s ease-out',
-            }}
-          >
-            L'Excellence Horlogère
-            <br />à Portée de Main
-          </h1>
-
-          {/* Sous-titre */}
-          <p
-            className="text-xl max-w-3xl mx-auto mb-12 leading-relaxed"
-            style={{
-              color: isDark ? '#b0b0b0' : '#505050',
-              animation: 'fadeInUp 1s ease-out 0.2s both',
-            }}
-          >
-            Une bibliothèque vivante de savoirs horlogers partagés par des passionnés. 
-            Tutoriels, ressources techniques et connaissances pratiques — entièrement gratuit.
-          </p>
-
-          {/* CTAs */}
-          <div className="flex items-center justify-center gap-4 flex-wrap mb-16">
-            <Link
-              href="/theorie"
-              className="group px-8 py-4 rounded-lg font-semibold transition-all duration-300 hover:-translate-y-1"
-              style={{
-                backgroundColor: '#d4af37',
-                color: '#0a0a0a',
-                boxShadow: '0 10px 30px rgba(212, 175, 55, 0.3)',
-              }}
-            >
-              Explorer les Ressources →
-            </Link>
-            <Link
-              href="/theorie"
-              className="px-8 py-4 rounded-lg font-semibold border-2 transition-all duration-300 hover:-translate-y-1"
-              style={{
-                backgroundColor: 'transparent',
-                borderColor: '#d4af37',
-                color: '#d4af37',
-              }}
-            >
-              Découvrir HorloLearn
-            </Link>
-          </div>
-
-          {/* Scroll indicator */}
-          <div className="animate-bounce">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              style={{ color: '#d4af37' }}
-            >
-              <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
-            </svg>
+    <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 w-full">
+      {[
+        { label: "Ressources partagées", value: ressources, icon: "📚", color: "from-blue-600 to-cyan-600" },
+        { label: "Outils disponibles", value: outils, icon: "🔧", color: "from-purple-600 to-pink-600" },
+        { label: "Passionnés ce mois", value: visiteurs, icon: "👥", color: "from-orange-600 to-red-600" },
+        { label: "Heures de contenu", value: heures, icon: "⏱️", color: "from-green-600 to-emerald-600" }
+      ].map((stat, idx) => (
+        <div 
+          key={idx}
+          className="relative group"
+        >
+          <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-slate-200 dark:border-white/20 hover:bg-slate-50 dark:hover:bg-white/15 transition-all text-center h-full min-h-[160px] flex flex-col items-center justify-center">
+            <div className="text-4xl sm:text-5xl mb-3 group-hover:scale-110 transition-transform">
+              {stat.icon}
+            </div>
+            <div className="mb-1">
+              <span className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">{stat.value}</span>
+              {idx === 2 && <span className="text-lg sm:text-xl text-blue-600 dark:text-blue-300 ml-1">+</span>}
+              {idx === 3 && <span className="text-lg sm:text-xl text-blue-600 dark:text-blue-300 ml-1">h</span>}
+            </div>
+            <p className="text-slate-700 dark:text-white font-semibold text-xs sm:text-sm px-2">{stat.label}</p>
           </div>
         </div>
-      </section>
-
-      {/* SECTION STATS */}
-      <section className="py-32 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {[
-              { value: '100%', label: 'GRATUIT' },
-              { value: '∞', label: 'RESSOURCES' },
-              { value: '0', label: 'INSCRIPTION' },
-              { value: '🇨🇭', label: 'QUALITÉ SUISSE' },
-            ].map((stat, index) => (
-              <div
-                key={index}
-                className="text-center p-8 rounded-2xl border transition-all duration-300 hover:-translate-y-2"
-                style={{
-                  backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5',
-                  borderColor: isDark ? '#2a2a2a' : '#e5e5e5',
-                }}
-              >
-                <div
-                  className="text-5xl font-bold mb-3"
-                  style={{ color: '#d4af37' }}
-                >
-                  {stat.value}
-                </div>
-                <div
-                  className="text-sm tracking-widest"
-                  style={{
-                    color: isDark ? '#b0b0b0' : '#505050',
-                    letterSpacing: '2px',
-                  }}
-                >
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION FEATURES */}
-      <section className="py-32 px-6">
-        <div className="max-w-7xl mx-auto">
-          <h2
-            className="text-4xl font-light text-center mb-4"
-            style={{ letterSpacing: '1px' }}
-          >
-            Une Plateforme Dédiée aux Passionnés
-          </h2>
-          <div
-            className="w-24 h-1 mx-auto mb-16"
-            style={{
-              background: 'linear-gradient(90deg, transparent, #d4af37, transparent)',
-            }}
-          />
-
-          <div className="grid gap-8" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
-            {[
-              {
-                emoji: '📚',
-                title: 'Bibliothèque Technique',
-                desc: 'Accédez à une collection complète de guides, schémas et documentation technique sur l\'horlogerie suisse.',
-              },
-              {
-                emoji: '⚙️',
-                title: 'Tutoriels Pratiques',
-                desc: 'Apprenez le démontage, remontage et réglage avec des tutoriels détaillés étape par étape.',
-              },
-              {
-                emoji: '🔍',
-                title: 'Savoir-Faire Horloger',
-                desc: 'Découvrez les secrets de fabrication des montres suisses et leur histoire fascinante.',
-              },
-              {
-                emoji: '🤝',
-                title: 'Communauté Passionnée',
-                desc: 'Partagez vos connaissances et apprenez auprès d\'autres passionnés d\'horlogerie.',
-              },
-              {
-                emoji: '🎯',
-                title: 'Accès Immédiat',
-                desc: 'Aucune inscription requise. Commencez votre exploration immédiatement et librement.',
-              },
-              {
-                emoji: '🔄',
-                title: 'Contenu Évolutif',
-                desc: 'Nouvelles ressources ajoutées régulièrement par la communauté pour enrichir le savoir.',
-              },
-            ].map((feature, index) => (
-              <div
-                key={index}
-                className="group relative p-8 rounded-2xl border-2 transition-all duration-400 hover:-translate-y-2"
-                style={{
-                  backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5',
-                  borderColor: isDark ? '#2a2a2a' : '#e5e5e5',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#d4af37'
-                  e.currentTarget.style.boxShadow = '0 10px 30px rgba(212, 175, 55, 0.3)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = isDark ? '#2a2a2a' : '#e5e5e5'
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
-              >
-                {/* Ligne supérieure dorée au hover */}
-                <div
-                  className="absolute top-0 left-0 right-0 h-1 transition-all duration-400"
-                  style={{
-                    background: 'linear-gradient(90deg, #d4af37, #c9a959)',
-                    opacity: 0,
-                  }}
-                  ref={(el) => {
-                    if (el) {
-                      el.parentElement?.addEventListener('mouseenter', () => {
-                        el.style.opacity = '1'
-                      })
-                      el.parentElement?.addEventListener('mouseleave', () => {
-                        el.style.opacity = '0'
-                      })
-                    }
-                  }}
-                />
-                
-                <div className="text-5xl mb-4">{feature.emoji}</div>
-                <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                <p
-                  style={{
-                    color: isDark ? '#b0b0b0' : '#505050',
-                    lineHeight: '1.8',
-                  }}
-                >
-                  {feature.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION CTA FINALE */}
-      <section className="py-32 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2
-            className="text-4xl font-light mb-6"
-            style={{ letterSpacing: '1px' }}
-          >
-            Prêt à Plonger dans l'Univers Horloger ?
-          </h2>
-          <p
-            className="text-xl mb-12 max-w-2xl mx-auto leading-relaxed"
-            style={{ color: isDark ? '#b0b0b0' : '#505050' }}
-          >
-            Rejoignez des milliers de passionnés qui explorent l'excellence horlogère suisse chaque jour. Aucune inscription, aucun engagement — juste la passion.
-          </p>
-          <Link
-            href="/theorie"
-            className="inline-block px-10 py-5 rounded-lg font-bold text-lg transition-all duration-300 hover:-translate-y-1"
-            style={{
-              backgroundColor: '#d4af37',
-              color: '#0a0a0a',
-              boxShadow: '0 10px 30px rgba(212, 175, 55, 0.3)',
-            }}
-          >
-            Commencer l'Exploration →
-          </Link>
-        </div>
-      </section>
-
-      {/* Animations CSS */}
-      <style jsx>{`
-        @keyframes fadeInDown {
-          from {
-            opacity: 0;
-            transform: translateY(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes gridMove {
-          from {
-            transform: translate(0, 0);
-          }
-          to {
-            transform: translate(50px, 50px);
-          }
-        }
-      `}</style>
+      ))}
     </div>
-  )
+  );
+}
+
+// Composant Ressource de la Semaine avec dark mode
+function RessourceDeLaSemaine() {
+  return (
+    <div className="bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-6 sm:p-8 shadow-xl border-2 border-yellow-200 dark:border-yellow-700/50 mb-8 sm:mb-12">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4 sm:mb-6">
+        <div className="bg-yellow-500 dark:bg-yellow-600 p-3 rounded-xl flex-shrink-0">
+          <Star className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+        </div>
+        <div>
+          <p className="text-xs sm:text-sm text-orange-700 dark:text-orange-300 font-semibold uppercase">Ressource de la semaine</p>
+          <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Guide complet ETA 2824-2</h3>
+        </div>
+      </div>
+      <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 mb-4 sm:mb-6">
+        Document PDF haute résolution : démontage complet, éclaté annoté, couples de serrage et procédures de réglage. Partagé par la communauté.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+        <Link
+          href="/ressources"
+          className="flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors w-full sm:w-auto"
+        >
+          <BookOpen className="w-5 h-5" />
+          Télécharger gratuitement
+        </Link>
+        <span className="flex items-center justify-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+          <Clock className="w-4 h-4" />
+          Lecture : 15 min
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// Composant Fil d'Actualités avec dark mode
+function FilActualites() {
+  const actualites = [
+    {
+      titre: "Watches & Wonders 2026 : Dates confirmées",
+      date: "Il y a 2 jours",
+      url: "https://www.watches-and-wonders.com"
+    },
+    {
+      titre: "Nouveau calibre Sellita SW330-2 annoncé",
+      date: "Il y a 5 jours",
+      url: "#"
+    },
+    {
+      titre: "Formation AFP : Nouveaux programmes 2026",
+      date: "Il y a 1 semaine",
+      url: "#"
+    }
+  ];
+
+  return (
+    <div className="bg-white dark:bg-slate-800 rounded-xl p-4 sm:p-6 shadow-lg border border-slate-200 dark:border-slate-700 mb-8 sm:mb-12 transition-colors duration-300">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-2">
+        <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+          Actualités horlogères
+        </h3>
+        <Link href="/evenements" className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold">
+          Voir tout →
+        </Link>
+      </div>
+      <div className="space-y-3 sm:space-y-4">
+        {actualites.map((actu, idx) => (
+          <a
+            key={idx}
+            href={actu.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors group"
+          >
+            <div className="flex-shrink-0 w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full mt-2"></div>
+            <div className="flex-1 min-w-0">
+              <h4 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors break-words">
+                {actu.titre}
+              </h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{actu.date}</p>
+            </div>
+            <ExternalLink className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 flex-shrink-0" />
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Composant Newsletter avec dark mode
+function NewsletterSignup() {
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Email souscrit:', email);
+    setSubscribed(true);
+    setTimeout(() => setSubscribed(false), 3000);
+  };
+
+  return (
+    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-800 rounded-2xl sm:rounded-3xl p-6 sm:p-12 text-white text-center mb-8 sm:mb-12">
+      <div className="max-w-2xl mx-auto">
+        <div className="inline-block p-3 bg-white/20 rounded-full mb-4">
+          <Bell className="w-6 h-6 sm:w-8 sm:h-8" />
+        </div>
+        <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Restez informé</h2>
+        <p className="text-base sm:text-xl text-blue-100 dark:text-blue-200 mb-6 sm:mb-8 px-4">
+          Recevez chaque semaine : nouvelles ressources partagées, astuces d'atelier et actualités horlogères
+        </p>
+        {!subscribed ? (
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-md mx-auto px-4 sm:px-0">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="votre@email.com"
+              required
+              className="flex-1 px-4 sm:px-6 py-3 sm:py-4 rounded-xl text-slate-900 dark:text-slate-900 font-medium focus:outline-none focus:ring-4 focus:ring-white/50"
+            />
+            <button
+              type="submit"
+              className="bg-white dark:bg-slate-100 text-blue-600 dark:text-blue-700 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold hover:shadow-xl transition-all whitespace-nowrap"
+            >
+              S'abonner
+            </button>
+          </form>
+        ) : (
+          <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 sm:p-6 max-w-md mx-auto">
+            <CheckCircle className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3" />
+            <p className="text-base sm:text-lg font-semibold">Merci ! Vous êtes inscrit 🎉</p>
+          </div>
+        )}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mt-6 sm:mt-8 text-xs sm:text-sm text-blue-200 dark:text-blue-300">
+          <span className="flex items-center gap-2">
+            <Rss className="w-4 h-4" />
+            Flux RSS disponible
+          </span>
+          <span className="flex items-center gap-2">
+            <Bell className="w-4 h-4" />
+            Notifications activables
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Animation balancier CSS
+const BalancierAnimation = () => (
+  <style jsx>{`
+    @keyframes swing {
+      0%, 100% { transform: rotate(-15deg); }
+      50% { transform: rotate(15deg); }
+    }
+    .balancier {
+      animation: swing 2s ease-in-out infinite;
+      transform-origin: center top;
+    }
+  `}</style>
+);
+
+export default function HomePage() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-colors duration-300">
+      <BalancierAnimation />
+
+      {/* HERO SECTION avec dark mode */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 dark:from-blue-900 dark:via-indigo-900 dark:to-purple-900 text-slate-900 dark:text-white py-12 sm:py-20 transition-colors duration-300">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-4xl mx-auto">
+            {/* Badges avec dark mode */}
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6 flex-wrap px-4">
+              <div className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-100 dark:bg-white/10 backdrop-blur-sm rounded-full text-xs sm:text-sm font-semibold border border-blue-200 dark:border-white/20 text-slate-900 dark:text-white">
+                🇨🇭 Passion Horlogère Suisse
+              </div>
+              <div className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-green-100 dark:bg-green-500/20 backdrop-blur-sm rounded-full text-xs sm:text-sm font-semibold border border-green-200 dark:border-green-400/30 text-green-900 dark:text-green-300">
+                ✨ 100% Gratuit
+              </div>
+              <div className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-100 dark:bg-orange-500/20 backdrop-blur-sm rounded-full text-xs sm:text-sm font-semibold border border-orange-200 dark:border-orange-400/30 text-orange-900 dark:text-orange-300">
+                👥 Communauté
+              </div>
+            </div>
+
+            {/* Titre principal */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight px-4">
+              <span className="text-slate-900 dark:text-white">Explorez l'univers de l'</span>
+              <span className="bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">
+                horlogerie suisse
+              </span>
+            </h1>
+
+            {/* Sous-titre */}
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-700 dark:text-blue-100 mb-6 sm:mb-8 leading-relaxed px-4">
+              Une bibliothèque collaborative de ressources, tutoriels et outils pour passionnés d'horlogerie. 
+              <strong className="text-slate-900 dark:text-white"> Par la communauté, pour la communauté.</strong>
+            </p>
+
+            {/* CTA avec dark mode */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4">
+              <Link 
+                href="/theorie" 
+                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 dark:bg-white dark:hover:bg-blue-50 text-white dark:text-blue-900 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:shadow-2xl hover:scale-105 transition-all"
+              >
+                <BookOpen className="w-5 h-5" />
+                Explorer les ressources
+              </Link>
+              <Link 
+                href="/communaute" 
+                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white dark:bg-white/10 backdrop-blur-sm text-slate-900 dark:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-slate-100 dark:hover:bg-white/20 transition-all border border-slate-300 dark:border-white/30"
+              >
+                <Users className="w-5 h-5" />
+                Rejoindre
+              </Link>
+            </div>
+
+            {/* Petit texte */}
+            <p className="mt-6 sm:mt-8 text-xs sm:text-sm text-slate-600 dark:text-blue-200 px-4">
+              Aucune inscription requise • Aucun diplôme délivré • Simplement la passion du geste horloger
+            </p>
+          </div>
+        </div>
+
+        {/* Stats Animées */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16 relative z-10">
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-white/10 dark:bg-white/10 backdrop-blur-md rounded-full border border-slate-300 dark:border-white/30">
+              <p className="text-slate-900 dark:text-white font-semibold flex items-center gap-2 sm:gap-3 text-sm sm:text-base">
+                <span className="text-xl sm:text-2xl">📚</span>
+                Ressources Partagées
+                <span className="text-xl sm:text-2xl">🤝</span>
+              </p>
+            </div>
+          </div>
+          <AnimatedStats />
+          <div className="mt-8 sm:mt-12 text-center px-4">
+            <p className="text-xl sm:text-2xl font-light text-slate-900 dark:text-white mb-2">
+              L'horlogerie accessible à tous
+            </p>
+            <p className="text-slate-700 dark:text-blue-200 text-xs sm:text-sm">
+              Pas de certification, juste la passion du savoir-faire horloger
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* MAIN CONTENT */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+        
+        <RessourceDeLaSemaine />
+        <FilActualites />
+        <AstuceDuJour />
+
+        {/* Parcours d'Apprentissage avec dark mode */}
+        <section className="mb-12 sm:mb-16">
+          <div className="text-center mb-8 sm:mb-12 px-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4">Explorer par Thématique</h2>
+            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              Des ressources organisées pour progresser à votre rythme
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            {[
+              {
+                title: "Théorie",
+                icon: BookOpen,
+                color: "from-blue-600 to-cyan-600",
+                description: "Principes fondamentaux, histoire et terminologie horlogère",
+                link: "/theorie",
+                features: ["Cours détaillés", "Schémas annotés", "Glossaire illustré"]
+              },
+              {
+                title: "Pratique",
+                icon: Wrench,
+                color: "from-purple-600 to-pink-600",
+                description: "Démontage, remontage et réglage de mouvements",
+                link: "/pratique",
+                features: ["Tutoriels vidéo", "Plans techniques", "Guides pas-à-pas"]
+              },
+              {
+                title: "Évaluation",
+                icon: Award,
+                color: "from-orange-600 to-red-600",
+                description: "Testez vos connaissances avec nos quiz",
+                link: "/quiz",
+                features: ["Quiz interactifs", "Correction détaillée", "Suivi progrès"]
+              }
+            ].map((parcours, idx) => (
+              <Link 
+                key={idx}
+                href={parcours.link}
+                className="group bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all border border-slate-200 dark:border-slate-700 hover:scale-105"
+              >
+                <div className={`inline-block p-3 sm:p-4 rounded-xl bg-gradient-to-br ${parcours.color} mb-4 sm:mb-6 group-hover:scale-110 transition-transform`}>
+                  <parcours.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2 sm:mb-3">{parcours.title}</h3>
+                <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 mb-4 sm:mb-6">{parcours.description}</p>
+                <ul className="space-y-2 mb-4 sm:mb-6">
+                  {parcours.features.map((feature, i) => (
+                    <li key={i} className="flex items-center gap-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                      <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold group-hover:gap-4 transition-all text-sm sm:text-base">
+                  Découvrir <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <MouvementDuMois />
+        <NewsletterSignup />
+        <GalerieVideos />
+        <ComparaisonMouvements />
+
+      </main>
+
+      {/* FOOTER avec dark mode */}
+      <footer className="bg-slate-900 dark:bg-slate-950 text-white py-8 sm:py-12 mt-12 sm:mt-20 border-t border-slate-800 dark:border-slate-700 transition-colors duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
+            <div className="col-span-1 sm:col-span-2">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-2 rounded-xl">
+                  <Award className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                </div>
+                <span className="text-xl sm:text-2xl font-bold">HorloLearn</span>
+              </div>
+              <p className="text-sm sm:text-base text-slate-400 dark:text-slate-500 mb-4">
+                La première plateforme collaborative francophone dédiée au partage de connaissances horlogères.
+              </p>
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 dark:text-slate-600">
+                <Heart className="w-4 h-4 text-red-500" />
+                <span>Fait avec passion par la communauté</span>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">Explorer</h3>
+              <ul className="space-y-2 text-sm sm:text-base text-slate-400 dark:text-slate-500">
+                <li><Link href="/theorie" className="hover:text-white dark:hover:text-slate-300 transition-colors">Théorie</Link></li>
+                <li><Link href="/pratique" className="hover:text-white dark:hover:text-slate-300 transition-colors">Pratique</Link></li>
+                <li><Link href="/quiz" className="hover:text-white dark:hover:text-slate-300 transition-colors">Quiz</Link></li>
+                <li><Link href="/ressources" className="hover:text-white dark:hover:text-slate-300 transition-colors">Ressources</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">Communauté</h3>
+              <ul className="space-y-2 text-sm sm:text-base text-slate-400 dark:text-slate-500">
+                <li><Link href="/communaute" className="hover:text-white dark:hover:text-slate-300 transition-colors">Forum</Link></li>
+                <li><Link href="/outils" className="hover:text-white dark:hover:text-slate-300 transition-colors">Outils</Link></li>
+                <li><Link href="/culture" className="hover:text-white dark:hover:text-slate-300 transition-colors">Culture</Link></li>
+                <li><Link href="/contact" className="hover:text-white dark:hover:text-slate-300 transition-colors">Contact</Link></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-slate-800 dark:border-slate-700 pt-6 sm:pt-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
+              <p className="text-slate-400 dark:text-slate-500 text-xs sm:text-sm text-center md:text-left">
+                © 2025 HorloLearn – Passion & Découverte Horlogère Suisse
+              </p>
+              <div className="flex gap-4 sm:gap-6 text-xs sm:text-sm text-slate-400 dark:text-slate-500">
+                <Link href="/mentions-legales" className="hover:text-white dark:hover:text-slate-300 transition-colors">Mentions légales</Link>
+                <Link href="/politique-confidentialite" className="hover:text-white dark:hover:text-slate-300 transition-colors">Confidentialité</Link>
+              </div>
+            </div>
+            <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-600 text-center px-4">
+              💡 HorloLearn n'est ni une école ni un centre de formation officiel. Aucun diplôme ou certification reconnue n'est délivré. 
+              Il s'agit d'une plateforme collaborative de partage de connaissances horlogères.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
 }
