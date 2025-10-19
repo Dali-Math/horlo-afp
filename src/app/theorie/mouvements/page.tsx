@@ -1,152 +1,154 @@
-export default function MouvementsPage() {
+import Image from "next/image";
+import { useState } from "react";
+
+// Bloc 1 : Intro Architecture
+function MouvementIntro() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-slate-900 to-slate-700 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-5xl font-bold mb-6">Les Mouvements Horlogers</h1>
-          <p className="text-xl text-slate-300 max-w-3xl">
-            Découvrez les mécanismes qui animent les montres, des calibres mécaniques traditionnels aux mouvements à quartz modernes.
-          </p>
-        </div>
-      </section>
+    <section className="bg-neutral-900 text-white px-6 py-10 rounded-xl shadow mb-10">
+      <h1 className="text-3xl font-bold mb-6">Architecture du mouvement</h1>
+      <p className="text-lg mb-2">
+        L’architecture d’un mouvement horloger conditionne la précision, la durabilité et la beauté de l’ensemble. Points clés : platine, ponts, fixation et décoration.
+      </p>
+    </section>
+  );
+}
 
-      {/* Introduction */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Introduction aux Mouvements</h2>
-          <div className="prose prose-lg max-w-none text-slate-700">
-            <p className="mb-4">
-              Le mouvement horloger, ou calibre, est le cœur battant de toute montre. Il s'agit du mécanisme qui transforme l'énergie en un mouvement régulier des aiguilles pour indiquer l'heure avec précision.
-            </p>
-            <p className="mb-4">
-              Il existe trois grandes catégories de mouvements : mécaniques à remontage manuel, mécaniques à remontage automatique, et à quartz. Chacun possède ses caractéristiques, avantages et applications spécifiques dans l'horlogerie moderne.
-            </p>
-            <p>
-              La maîtrise des mouvements horlogers est essentielle pour tout horloger en formation, qu'il s'agisse de comprendre leur fonctionnement, de les entretenir ou de les réparer.
-            </p>
-          </div>
-        </div>
-      </section>
+// Bloc 2 : Platine & Ponts
+function PlatineEtPonts() {
+  return (
+    <section className="bg-gradient-to-br from-zinc-700 via-gray-800 to-neutral-900 text-gray-100 p-7 rounded-xl mb-10 shadow">
+      <h2 className="text-2xl font-semibold mb-3">La Platine et les Ponts</h2>
+      <p>
+        La <b>platine</b> établit la base du mouvement ; les <b>ponts</b> maintiennent les organes mobiles. Exemple régional : le "coq" pour pont de balancier dans le Jura.
+      </p>
+      <div className="flex flex-wrap gap-5 mt-5">
+        <Image src="/images/platine-decoree.webp" alt="Platine décorée" width={240} height={150} className="rounded shadow" />
+        <Image src="/images/pont-anglage.webp" alt="Pont anglé" width={180} height={110} className="rounded shadow" />
+      </div>
+    </section>
+  );
+}
 
-      {/* Ressources pédagogiques */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-slate-50">
-        <h2 className="text-3xl font-bold text-slate-900 mb-8">Ressources Pédagogiques</h2>
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-bold text-slate-900 mb-4">📚 Documentation technique</h3>
-            <ul className="space-y-3 text-slate-700">
-              <li>
-                <a href="https://www.hautehorlogerie.org/fr/encyclopedie/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                  Fondation de la Haute Horlogerie - Encyclopédie des mouvements
-                </a>
-              </li>
-              <li>
-                <a href="https://www.eta.ch/fr/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                  ETA SA - Calibres et mouvements standards
-                </a>
-              </li>
-              <li>
-                <a href="https://www.nihs.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                  NIHS - Normes techniques horlogères suisses
-                </a>
-              </li>
-            </ul>
-          </div>
+// Bloc 3 : Fixations
+function FixationSysteme() {
+  return (
+    <section className="bg-neutral-800 text-neutral-200 p-6 rounded-xl mb-8">
+      <h3 className="text-xl font-bold mb-4">Système de fixation</h3>
+      <ul className="list-disc pl-5 space-y-2">
+        <li>Montage des ponts sur la platine : vissage, ajustements de précision.</li>
+        <li>Stabilité et précision dimensionnelle : matériaux étudiés, ajustages de haute qualité.</li>
+        <li>Fixations : vis, rubis, logement conique ou poli.</li>
+      </ul>
+    </section>
+  );
+}
 
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-bold text-slate-900 mb-4">🔗 Liens utiles</h3>
-            <ul className="space-y-3 text-slate-700">
-              <li>
-                <a href="https://www.watchtime.ch/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                  WatchTime - Actualités et technique horlogère
-                </a>
-              </li>
-              <li>
-                <a href="https://monochrome-watches.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                  Monochrome - Analyses détaillées de mouvements
-                </a>
-              </li>
-              <li>
-                <a href="https://www.revolution.watch/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                  Revolution - Magazine spécialisé en horlogerie
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
+// Bloc 4 : Stabilité dimensionnelle
+function StabiliteBloc() {
+  return (
+    <section className="bg-gradient-to-br from-gray-800 via-neutral-800 to-gray-900 text-gray-200 p-6 rounded-xl mb-10 shadow">
+      <h3 className="text-xl font-bold mb-4">Stabilité dimensionnelle</h3>
+      <ul className="list-disc pl-5 space-y-2">
+        <li>Matériaux : laiton, maillechort…</li>
+        <li>Impact sur régularité, fiabilité, résistance aux chocs et à la déformation.</li>
+        <li>Traitement anti-déformation : finitions, polissage, traitements thermiques.</li>
+      </ul>
+    </section>
+  );
+}
 
-      {/* Tutoriels et Vidéos */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-3xl font-bold text-slate-900 mb-8">Tutoriels et Vidéos</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="aspect-video bg-slate-200 rounded-lg mb-4 flex items-center justify-center">
-              <span className="text-slate-500 text-4xl">▶️</span>
-            </div>
-            <h3 className="font-bold text-slate-900 mb-2">Fonctionnement d'un mouvement mécanique</h3>
-            <p className="text-slate-600 text-sm mb-4">
-              Découvrez les principes fondamentaux du mouvement mécanique à remontage manuel, du barillet à l'échappement.
-            </p>
-            <a href="https://www.youtube.com/watch?v=508-rmdY4jQ" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm">
-              Voir la vidéo →
-            </a>
-          </div>
+// Bloc 5 : Finitions décoratives
+function FinitionBloc() {
+  return (
+    <section className="bg-neutral-900 text-gray-100 p-8 rounded-xl mb-10">
+      <h3 className="text-2xl font-semibold mb-3">Finitions décoratives</h3>
+      <ul className="list-disc pl-5 space-y-1">
+        <li>Perlage</li>
+        <li>Côtes de Genève</li>
+        <li>Anglage (chanfrein manuel)</li>
+        <li>Guillochage</li>
+        <li>Satinage</li>
+      </ul>
+      <p className="mt-3">Outils et savoir-faire : lime, cabrons, bois, polisseuse. Exemples : Audemars Piguet, Breguet, Voutilainen.</p>
+      <div className="flex gap-5 mt-5">
+        <Image src="/images/cotes-de-geneve.webp" alt="Côtes de Genève" width={120} height={100} className="rounded" />
+        <Image src="/images/perlage.webp" alt="Perlage" width={120} height={100} className="rounded" />
+      </div>
+    </section>
+  );
+}
 
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="aspect-video bg-slate-200 rounded-lg mb-4 flex items-center justify-center">
-              <span className="text-slate-500 text-4xl">▶️</span>
-            </div>
-            <h3 className="font-bold text-slate-900 mb-2">Le remontage automatique expliqué</h3>
-            <p className="text-slate-600 text-sm mb-4">
-              Comprendre le système de masse oscillante et le mécanisme de remontage automatique des montres mécaniques.
-            </p>
-            <a href="https://www.youtube.com/watch?v=rg8Y-1lj2qo" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm">
-              Voir la vidéo →
-            </a>
-          </div>
+// Bloc 6 : Animation/Quiz (simplifié, exemple de quiz)
+function FinitionQuiz() {
+  const questions = [
+    {
+      image: "/images/finition-1.webp",
+      options: ["Perlage", "Anglage", "Satinage", "Guillochage"],
+      answer: "Perlage"
+    },
+    {
+      image: "/images/finition-2.webp",
+      options: ["Côtes de Genève", "Anglage", "Perlage", "Satinage"],
+      answer: "Côtes de Genève"
+    }
+  ];
+  const [current, setCurrent] = useState(0);
+  const [score, setScore] = useState(0);
+  const [selected, setSelected] = useState("");
 
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="aspect-video bg-slate-200 rounded-lg mb-4 flex items-center justify-center">
-              <span className="text-slate-500 text-4xl">▶️</span>
-            </div>
-            <h3 className="font-bold text-slate-900 mb-2">Mouvements à quartz vs mécaniques</h3>
-            <p className="text-slate-600 text-sm mb-4">
-              Comparaison technique et pratique entre les mouvements à quartz et les mouvements mécaniques traditionnels.
-            </p>
-            <a href="https://www.youtube.com/watch?v=_2By2ane2I4" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm">
-              Voir la vidéo →
-            </a>
-          </div>
-        </div>
-      </section>
+  function submit(opt: string) {
+    setSelected(opt);
+    setTimeout(() => {
+      if (opt === questions[current].answer) setScore(score + 1);
+      setCurrent(cur => cur + 1);
+      setSelected("");
+    }, 800);
+  }
 
-      {/* Section Aide */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-blue-50">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">💬 Besoin d'aide ?</h2>
-          <p className="text-slate-700 mb-6">
-            Vous avez des questions sur les mouvements horlogers ? Notre communauté d'horlogers et d'experts est là pour vous aider.
-          </p>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="border-l-4 border-blue-500 pl-4">
-              <h3 className="font-bold text-slate-900 mb-2">Forum communautaire</h3>
-              <p className="text-slate-600 mb-3">Posez vos questions techniques et partagez vos expériences avec d'autres apprenants.</p>
-              <a href="/communaute" className="text-blue-600 hover:underline font-medium">
-                Accéder au forum →
-              </a>
-            </div>
-            <div className="border-l-4 border-green-500 pl-4">
-              <h3 className="font-bold text-slate-900 mb-2">Contact direct</h3>
-              <p className="text-slate-600 mb-3">Besoin d'un conseil personnalisé ? Contactez nos formateurs horlogers professionnels.</p>
-              <a href="mailto:contact@horlo-afp.ch" className="text-blue-600 hover:underline font-medium">
-                Envoyer un email →
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+  if (current >= questions.length) {
+    return (
+      <div className="p-6 bg-neutral-900 rounded-xl text-white">
+        <h4 className="font-bold mb-3">Quiz terminé !</h4>
+        <p>Score : {score} / {questions.length}</p>
+      </div>
+    );
+  }
+
+  const q = questions[current];
+  return (
+    <div className="p-6 bg-zinc-800 rounded-xl text-white shadow-lg">
+      <Image src={q.image} alt="Exemple de finition" width={220} height={150} className="mb-4 rounded shadow-xl" />
+      <div className="space-y-2">
+        {q.options.map(opt => (
+          <button
+            key={opt}
+            disabled={!!selected}
+            className={`px-4 py-2 rounded border 
+              ${selected === opt 
+                ? opt === q.answer ? "bg-green-700 border-green-400" : "bg-red-700 border-red-400"
+                : "bg-gray-700 border-gray-500 hover:bg-gray-600"}
+            `}
+            onClick={() => submit(opt)}
+          >
+            {opt}
+          </button>
+        ))}
+      </div>
     </div>
+  );
+}
+
+// --- PAGE PRINCIPALE ---
+export default function Mouvements() {
+  return (
+    <main className="w-full min-h-screen bg-neutral-950 p-2 md:p-8">
+      <MouvementIntro />
+      <PlatineEtPonts />
+      <FixationSysteme />
+      <StabiliteBloc />
+      <FinitionBloc />
+      <FinitionQuiz />
+      {/* Tu peux ajouter des galeries, boutons switch dark/calcaire, schémas SVG stylisés etc. */}
+    </main>
   );
 }
