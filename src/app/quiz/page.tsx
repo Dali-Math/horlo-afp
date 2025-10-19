@@ -2,14 +2,14 @@
 
 export default function Quiz() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900 transition-colors duration-500">
+    <main className="min-h-screen bg-light-100 dark:bg-dark-900 text-slate-900 dark:text-light-100 transition-colors duration-500">
       <div className="max-w-7xl mx-auto px-6 py-16">
         {/* Header Section */}
         <header className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-yellow-500 dark:text-yellow-400 mb-4">
+          <h1 className="text-5xl font-bold text-gold mb-4">
             Quiz & Tests Horlogerie
           </h1>
-          <p className="text-xl text-slate-700 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-slate-700 dark:text-light-200 max-w-2xl mx-auto leading-relaxed">
             Testez vos connaissances et progressez dans l’art de l’horlogerie suisse
           </p>
         </header>
@@ -17,40 +17,37 @@ export default function Quiz() {
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Plateformes de Quiz */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg dark:hover:bg-slate-700 transition-colors p-6 hover:scale-[1.03]">
+          <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg border border-gold/20 hover:border-gold/50 transition-all hover:shadow-gold/10 p-6 hover:scale-[1.03]">
             <div className="flex items-center mb-4">
               <div className="bg-blue-600 text-white rounded-full p-3 mr-4">
                 🎯
               </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-light-100">
                 Plateformes Quiz
               </h2>
             </div>
-            <p className="text-slate-600 dark:text-slate-400 mb-6 text-sm">
+            <p className="text-slate-600 dark:text-light-300 mb-6 text-sm">
               Évaluez vos connaissances sur des plateformes reconnues.
             </p>
             <div className="space-y-3">
               <a
                 href="https://www.proprofs.com/quiz-school/topic/watches"
                 target="_blank"
-                rel="noopener noreferrer"
-                className="block bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-800 text-blue-700 dark:text-blue-300 px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+                className="block bg-blue-50 dark:bg-dark-700 hover:bg-blue-100 dark:hover:bg-dark-600 text-blue-700 dark:text-blue-300 px-4 py-3 rounded-lg text-sm font-medium transition-all"
               >
                 ProProfs – Quiz Horlogerie
               </a>
               <a
                 href="https://quizlet.com/search?query=horology"
                 target="_blank"
-                rel="noopener noreferrer"
-                className="block bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-800 text-blue-700 dark:text-blue-300 px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+                className="block bg-blue-50 dark:bg-dark-700 hover:bg-blue-100 dark:hover:bg-dark-600 text-blue-700 dark:text-blue-300 px-4 py-3 rounded-lg text-sm font-medium transition-all"
               >
                 Quizlet – Flashcards
               </a>
               <a
                 href="https://www.sporcle.com/games/category/watches"
                 target="_blank"
-                rel="noopener noreferrer"
-                className="block bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-800 text-blue-700 dark:text-blue-300 px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+                className="block bg-blue-50 dark:bg-dark-700 hover:bg-blue-100 dark:hover:bg-dark-600 text-blue-700 dark:text-blue-300 px-4 py-3 rounded-lg text-sm font-medium transition-all"
               >
                 Sporcle – Quiz Montres
               </a>
@@ -58,28 +55,28 @@ export default function Quiz() {
           </div>
 
           {/* Tests de Connaissances */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg dark:hover:bg-slate-700 transition-colors p-6 hover:scale-[1.03]">
+          <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg border border-gold/20 hover:border-gold/50 transition-all hover:shadow-gold/10 p-6 hover:scale-[1.03]">
             <div className="flex items-center mb-4">
               <div className="bg-emerald-600 text-white rounded-full p-3 mr-4">
                 📝
               </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-light-100">
                 Tests de Connaissances
               </h2>
             </div>
-            <p className="text-slate-600 dark:text-slate-400 mb-6 text-sm">
+            <p className="text-slate-600 dark:text-light-300 mb-6 text-sm">
               Tests thématiques pour évaluer votre niveau.
             </p>
             <div className="space-y-3">
               <a
                 href="/quiz-certification"
-                className="block bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-800 text-emerald-700 dark:text-emerald-300 px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+                className="block bg-emerald-50 dark:bg-dark-700 hover:bg-emerald-100 dark:hover:bg-dark-600 text-emerald-700 dark:text-emerald-300 px-4 py-3 rounded-lg text-sm font-medium transition-all"
               >
                 Quiz Certification CFC
               </a>
               <a
                 href="/quiz-longueurs-horlogerie"
-                className="block bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-800 text-emerald-700 dark:text-emerald-300 px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+                className="block bg-emerald-50 dark:bg-dark-700 hover:bg-emerald-100 dark:hover:bg-dark-600 text-emerald-700 dark:text-emerald-300 px-4 py-3 rounded-lg text-sm font-medium transition-all"
               >
                 Quiz Longueurs Horlogerie
               </a>
@@ -87,30 +84,29 @@ export default function Quiz() {
           </div>
 
           {/* Mémorisation */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg dark:hover:bg-slate-700 transition-colors p-6 hover:scale-[1.03]">
+          <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg border border-gold/20 hover:border-gold/50 transition-all hover:shadow-gold/10 p-6 hover:scale-[1.03]">
             <div className="flex items-center mb-4">
               <div className="bg-purple-600 text-white rounded-full p-3 mr-4">
                 🎴
               </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-light-100">
                 Mémorisation
               </h2>
             </div>
-            <p className="text-slate-600 dark:text-slate-400 mb-6 text-sm">
+            <p className="text-slate-600 dark:text-light-300 mb-6 text-sm">
               Cartes mémoire et techniques d’apprentissage.
             </p>
             <div className="space-y-3">
               <a
                 href="https://quizlet.com/latest/horology-4"
                 target="_blank"
-                rel="noopener noreferrer"
-                className="block bg-purple-50 dark:bg-purple-900/30 hover:bg-purple-100 dark:hover:bg-purple-800 text-purple-700 dark:text-purple-300 px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+                className="block bg-purple-50 dark:bg-dark-700 hover:bg-purple-100 dark:hover:bg-dark-600 text-purple-700 dark:text-purple-300 px-4 py-3 rounded-lg text-sm font-medium transition-all"
               >
                 Quizlet – Cartes mémoires
               </a>
               <a
                 href="/quiz/mouvement-6497"
-                className="block text-center bg-white dark:bg-slate-900 border border-blue-400/40 dark:border-blue-400/30 rounded-xl p-4 text-blue-600 dark:text-blue-300 font-semibold hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors"
+                className="block text-center bg-white dark:bg-dark-900 border border-gold/40 rounded-xl p-4 text-gold font-semibold hover:bg-gold/10 transition-all"
               >
                 Mouvement 6497 – Cartes mémoire horlogères
               </a>
@@ -118,22 +114,22 @@ export default function Quiz() {
           </div>
 
           {/* Jeux Éducatifs */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg dark:hover:bg-slate-700 transition-colors p-6 hover:scale-[1.03]">
+          <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg border border-gold/20 hover:border-gold/50 transition-all hover:shadow-gold/10 p-6 hover:scale-[1.03]">
             <div className="flex items-center mb-4">
               <div className="bg-amber-500 text-white rounded-full p-3 mr-4">
                 🎮
               </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-light-100">
                 Jeux Éducatifs
               </h2>
             </div>
-            <p className="text-slate-600 dark:text-slate-400 mb-6 text-sm">
+            <p className="text-slate-600 dark:text-light-300 mb-6 text-sm">
               Apprenez en vous amusant avec des jeux interactifs.
             </p>
             <div className="space-y-3">
               <a
                 href="/quiz/yesno-game"
-                className="block bg-amber-50 dark:bg-amber-900/30 hover:bg-amber-100 dark:hover:bg-amber-800 text-amber-700 dark:text-amber-300 px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+                className="block bg-amber-50 dark:bg-dark-700 hover:bg-amber-100 dark:hover:bg-dark-600 text-amber-700 dark:text-amber-300 px-4 py-3 rounded-lg text-sm font-medium transition-all"
               >
                 Yes/No Game – Horlogerie
               </a>
@@ -142,7 +138,7 @@ export default function Quiz() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-16 text-center text-sm text-slate-600 dark:text-slate-400">
+        <footer className="mt-16 text-center text-sm text-slate-600 dark:text-light-300">
           © 2025 HorloLearn — Quiz & Formation Horlogère Suisse 🇨🇭
         </footer>
       </div>
