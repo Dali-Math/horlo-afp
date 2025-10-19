@@ -13,13 +13,9 @@ import {
   Clock,
   TrendingUp,
   ExternalLink,
-  Heart,
-  Star,
-  Users,
-  Video
+  Heart
 } from 'lucide-react';
 
-// ---- HERO AVEC CERCLES CANVAS ANIMÉS ----
 function HeroSection() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -96,13 +92,6 @@ function HeroSection() {
           Explorez <span className="font-bold text-white">2,500+ ressources</span> partagées par des passionnés pour des passionnés
         </p>
 
-        <div className="flex flex-wrap justify-center gap-4 mb-10">
-          <StatBox icon={BookOpen} value="2,500+" label="Ressources" color="text-cyan-300" />
-          <StatBox icon={Users} value="1,200+" label="Passionnés" color="text-green-300" />
-          <StatBox icon={Video} value="150h+" label="Vidéos" color="text-purple-300" />
-          <StatBox icon={Star} value="100%" label="Gratuit" color="text-yellow-300" />
-        </div>
-
         <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
           <Link
             href="/theorie"
@@ -128,22 +117,12 @@ function HeroSection() {
   );
 }
 
-function StatBox({ icon: Icon, value, label, color = "" }: { icon: any; value: string; label: string; color?: string }) {
-  return (
-    <div className="flex flex-col items-center justify-center rounded-2xl bg-white/5 border border-blue-900/30 w-36 h-24 shadow-xl transition hover:scale-105">
-      <Icon className={`w-8 h-8 mb-2 ${color}`} />
-      <div className={`text-2xl font-bold ${color || 'text-sky-300'}`}>{value}</div>
-      <div className="text-xs text-blue-100 font-medium">{label}</div>
-    </div>
-  );
-}
-
 function RessourceDeLaSemaine() {
   return (
     <div className="bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-6 sm:p-8 shadow-xl border-2 border-yellow-200 dark:border-yellow-700/50 mb-8 sm:mb-12">
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4 sm:mb-6">
         <div className="bg-yellow-500 dark:bg-yellow-600 p-3 rounded-xl flex-shrink-0">
-          <Star className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
         </div>
         <div>
           <p className="text-xs sm:text-sm text-orange-700 dark:text-orange-300 font-semibold uppercase">Ressource de la semaine</p>
