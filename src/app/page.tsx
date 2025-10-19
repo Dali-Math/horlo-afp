@@ -6,7 +6,6 @@ import Link from 'next/link'
 export default function HomePage() {
   const [isDark, setIsDark] = useState(true)
 
-  // Toggle theme
   const toggleTheme = () => setIsDark(!isDark)
 
   return (
@@ -32,7 +31,7 @@ export default function HomePage() {
 
       {/* HERO SECTION */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Grille animée en arrière-plan (remplace Three.js) */}
+        {/* Grille animée en arrière-plan */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
