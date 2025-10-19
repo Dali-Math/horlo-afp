@@ -1,9 +1,5 @@
 'use client';
 
-// 🔥 FORCER LE MODE DYNAMIQUE (désactive le cache)
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Clock, MapPin, Factory, Award, Users, BookOpen, Sparkles, Mountain, Globe, TrendingUp, ChevronLeft } from 'lucide-react';
@@ -467,7 +463,7 @@ export default function HistoireHorlogerieSuisse() {
                 </div>
               </div>
               <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Capitale mondiale de l'horlogerie de luxe, siège de Patek Philippe, Rolex, Vacheron Constantin. 10'300 employés (2019).
+                Capitale mondiale de l'horlogerie de luxe, siège de Patek Philippe, Rolex, Vacheron Constantin.
               </p>
               {selectedRegion === 'geneve' && (
                 <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
@@ -512,7 +508,7 @@ export default function HistoireHorlogerieSuisse() {
                 </div>
               </div>
               <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Berceau des grandes complications horlogères. Villages du Sentier, Le Brassus, Le Chenit. 26 fermes horlogères historiques.
+                Berceau des grandes complications horlogères. 26 fermes horlogères historiques.
               </p>
               {selectedRegion === 'joux' && (
                 <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
@@ -557,7 +553,7 @@ export default function HistoireHorlogerieSuisse() {
                 </div>
               </div>
               <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Tradition horlogère dans les montagnes, notamment au village de La Sagne. Centre d'innovation et de recherche horlogère.
+                Centre d'innovation et de recherche horlogère.
               </p>
               {selectedRegion === 'neuchatel' && (
                 <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
@@ -598,7 +594,7 @@ export default function HistoireHorlogerieSuisse() {
                 </div>
               </div>
               <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Siège d'Omega, Swatch Group. Centre industriel majeur de l'horlogerie moderne et innovante.
+                Siège d'Omega, Swatch Group. Centre industriel majeur.
               </p>
               {selectedRegion === 'bienne' && (
                 <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
@@ -639,7 +635,7 @@ export default function HistoireHorlogerieSuisse() {
                 </div>
               </div>
               <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Ville horlogère inscrite au patrimoine mondial UNESCO. Architecture urbaine dédiée à l'horlogerie.
+                Ville horlogère inscrite au patrimoine mondial UNESCO.
               </p>
               {selectedRegion === 'chaux' && (
                 <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
@@ -680,7 +676,7 @@ export default function HistoireHorlogerieSuisse() {
                 </div>
               </div>
               <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Extrémité orientale de l'arc horloger. Siège d'IWC Schaffhausen, manufacture prestigieuse fondée par un Américain.
+                Siège d'IWC Schaffhausen, manufacture prestigieuse.
               </p>
               {selectedRegion === 'schaffhouse' && (
                 <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
@@ -703,7 +699,7 @@ export default function HistoireHorlogerieSuisse() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4 text-center">Les Grandes Manufactures</h2>
           <p className="text-center text-slate-700 dark:text-slate-300 mb-12 max-w-2xl mx-auto">
-            Les marques emblématiques qui ont façonné la réputation mondiale de l'horlogerie suisse
+            Les marques emblématiques qui ont façonné la réputation mondiale
           </p>
 
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-700">
@@ -715,7 +711,6 @@ export default function HistoireHorlogerieSuisse() {
                     <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Fondation</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Lieu</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Spécialité</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 dark:text-slate-100">Réputation</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
@@ -724,524 +719,51 @@ export default function HistoireHorlogerieSuisse() {
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1839</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Genève</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Grandes complications</td>
-                    <td className="px-6 py-4">
-                      <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 px-3 py-1 rounded-full text-xs font-semibold">
-                        Prestige absolu
-                      </span>
-                    </td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
                     <td className="px-6 py-4 text-slate-900 dark:text-slate-100 font-semibold">Rolex</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1905</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Genève</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Montres de sport, robustesse</td>
-                    <td className="px-6 py-4">
-                      <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-xs font-semibold">
-                        N°1 mondial
-                      </span>
-                    </td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
                     <td className="px-6 py-4 text-slate-900 dark:text-slate-100 font-semibold">Omega</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1848</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Bienne</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Speedmaster (Lune), précision</td>
-                    <td className="px-6 py-4">
-                      <span className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full text-xs font-semibold">
-                        Innovation
-                      </span>
-                    </td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Speedmaster, précision</td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
                     <td className="px-6 py-4 text-slate-900 dark:text-slate-100 font-semibold">Audemars Piguet</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1875</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Le Brassus</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Royal Oak, complications</td>
-                    <td className="px-6 py-4">
-                      <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-3 py-1 rounded-full text-xs font-semibold">
-                        Haute horlogerie
-                      </span>
-                    </td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
                     <td className="px-6 py-4 text-slate-900 dark:text-slate-100 font-semibold">Jaeger-LeCoultre</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1833</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Le Sentier</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Reverso, calibres manufacture</td>
-                    <td className="px-6 py-4">
-                      <span className="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-3 py-1 rounded-full text-xs font-semibold">
-                        Maîtrise technique
-                      </span>
-                    </td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
                     <td className="px-6 py-4 text-slate-900 dark:text-slate-100 font-semibold">Vacheron Constantin</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1755</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Genève</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Plus ancienne manufacture</td>
-                    <td className="px-6 py-4">
-                      <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 px-3 py-1 rounded-full text-xs font-semibold">
-                        Tradition
-                      </span>
-                    </td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
                     <td className="px-6 py-4 text-slate-900 dark:text-slate-100 font-semibold">Blancpain</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1735</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Le Brassus</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Fifty Fathoms, complications</td>
-                    <td className="px-6 py-4">
-                      <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-xs font-semibold">
-                        Excellence
-                      </span>
-                    </td>
                   </tr>
                   <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
                     <td className="px-6 py-4 text-slate-900 dark:text-slate-100 font-semibold">Breguet</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">1775</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Vallée de Joux</td>
                     <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Tourbillon (inventeur)</td>
-                    <td className="px-6 py-4">
-                      <span className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 px-3 py-1 rounded-full text-xs font-semibold">
-                        Inventeur
-                      </span>
-                    </td>
                   </tr>
                 </tbody>
               </table>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Complications Horlogères */}
-      <section className="py-16 bg-white dark:bg-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4 text-center">Les Grandes Complications</h2>
-          <p className="text-center text-slate-700 dark:text-slate-300 mb-12 max-w-2xl mx-auto">
-            Les prouesses techniques qui distinguent l'horlogerie suisse
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Tourbillon */}
-            <div className="bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-200 dark:border-slate-700 p-6 hover:shadow-lg transition-colors">
-              <div className="flex items-start gap-4 mb-4">
-                <div className="bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-700 p-3 rounded-lg">
-                  <Clock className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-1">Tourbillon</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">Inventé par Abraham-Louis Breguet (1801)</p>
-                </div>
-              </div>
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
-                L'organe réglant et l'échappement tournent dans une cage mobile pour compenser les effets de la gravité. Symbole de maîtrise horlogère absolue.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-xs">Précision</span>
-                <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-3 py-1 rounded-full text-xs">Prestige</span>
-              </div>
-            </div>
-
-            {/* Chronographe */}
-            <div className="bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-200 dark:border-slate-700 p-6 hover:shadow-lg transition-colors">
-              <div className="flex items-start gap-4 mb-4">
-                <div className="bg-gradient-to-br from-green-500 to-emerald-600 dark:from-green-600 dark:to-emerald-700 p-3 rounded-lg">
-                  <Clock className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-1">Chronographe</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">Complication la plus répandue</p>
-                </div>
-              </div>
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Mesure des temps courts via poussoirs et aiguilles additionnelles. Mécanisme de chronométrage indépendant du mouvement principal.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <span className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full text-xs">Fonctionnel</span>
-                <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-xs">Sport</span>
-              </div>
-            </div>
-
-            {/* Quantième Perpétuel */}
-            <div className="bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-200 dark:border-slate-700 p-6 hover:shadow-lg transition-colors">
-              <div className="flex items-start gap-4 mb-4">
-                <div className="bg-gradient-to-br from-amber-500 to-orange-600 dark:from-amber-600 dark:to-orange-700 p-3 rounded-lg">
-                  <Clock className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-1">Quantième Perpétuel</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">Calendrier automatique complet</p>
-                </div>
-              </div>
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
-                Gère automatiquement les jours, mois, années et années bissextiles sans intervention humaine. Complication mécanique complexe.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 px-3 py-1 rounded-full text-xs">Complexité</span>
-                <span className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 px-3 py-1 rounded-full text-xs">Rare</span>
-              </div>
-            </div>
-
-            {/* Répétition Minutes */}
-            <div className="bg-white dark:bg-slate-800 rounded-xl border-2 border-slate-200 dark:border-slate-700 p-6 hover:shadow-lg transition-colors">
-              <div className="flex items-start gap-4 mb-4">
-                <div className="bg-gradient-to-br from-red-500 to-pink-600 dark:from-red-600 dark:to-pink-700 p-3 rounded-lg">
-                  <Clock className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-1">Répétition Minutes</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">Sonnerie acoustique sur demande</p>
-                </div>
-              </div>
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
-                La montre sonne les heures, quarts et minutes par activation d'un poussoir. Condensé de miniaturisation et d'acoustique mécanique.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <span className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 px-3 py-1 rounded-full text-xs">Rare</span>
-                <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-3 py-1 rounded-full text-xs">Acoustique</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Record de complexité */}
-          <div className="mt-8 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-2xl p-8 text-center">
-            <h3 className="text-2xl font-bold text-white mb-3">Record Mondial de Complexité</h3>
-            <p className="text-blue-100 dark:text-blue-200 mb-4 max-w-2xl mx-auto">
-              La Vacheron Constantin référence 57260 détient le record avec 57 complications différentes pour un poids de près d'un kilogramme.
-            </p>
-            <div className="flex items-center justify-center gap-4 flex-wrap">
-              <div className="bg-white/20 backdrop-blur-sm rounded-lg px-6 py-3">
-                <div className="text-3xl font-bold text-white">57</div>
-                <div className="text-sm text-blue-100 dark:text-blue-200">Complications</div>
-              </div>
-              <div className="bg-white/20 backdrop-blur-sm rounded-lg px-6 py-3">
-                <div className="text-3xl font-bold text-white">~1 kg</div>
-                <div className="text-sm text-blue-100 dark:text-blue-200">Poids total</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Accordion */}
-      <section className="py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-4 text-center">Questions Fréquentes</h2>
-          <p className="text-center text-slate-700 dark:text-slate-300 mb-12">
-            Tout ce que vous devez savoir sur l'histoire horlogère suisse
-          </p>
-
-          <div className="space-y-4">
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center justify-between">
-                <span>Pourquoi l'horlogerie suisse est-elle devenue si prestigieuse ?</span>
-                <span className="text-blue-600 dark:text-blue-400">▼</span>
-              </summary>
-              <div className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 px-6 py-4">
-                <p className="text-slate-700 dark:text-slate-300">
-                  L'excellence horlogère suisse résulte de plusieurs facteurs : l'arrivée de réfugiés huguenots qualifiés au XVIe siècle, l'interdiction calviniste des bijoux qui a poussé les orfèvres vers l'horlogerie, la disponibilité d'une main-d'œuvre rurale minutieuse dans l'arc jurassien, l'absence de corporations permettant l'innovation libre, et une tradition continue d'excellence technique sur plus de 500 ans.
-                </p>
-              </div>
-            </details>
-
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center justify-between">
-                <span>Quel est le rôle de Jean Calvin dans l'horlogerie suisse ?</span>
-                <span className="text-blue-600 dark:text-blue-400">▼</span>
-              </summary>
-              <div className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 px-6 py-4">
-                <p className="text-slate-700 dark:text-slate-300">
-                  En 1541, Jean Calvin a banni le port d'objets ornementaux à Genève dans un souci d'austérité religieuse. Cette décision a forcé les orfèvres et joailliers genevois, réputés en Europe, à se reconvertir dans l'horlogerie. Ils ont alors créé des boîtiers de montres incrustés de pierres précieuses, échappant ainsi à l'interdiction calviniste. C'est la naissance de l'horlogerie de luxe genevoise.
-                </p>
-              </div>
-            </details>
-
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center justify-between">
-                <span>Comment la Suisse a-t-elle survécu à la crise du quartz ?</span>
-                <span className="text-blue-600 dark:text-blue-400">▼</span>
-              </summary>
-              <div className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 px-6 py-4">
-                <p className="text-slate-700 dark:text-slate-300">
-                  Dans les années 1970-80, les montres à quartz japonaises ont fait chuter la part de marché suisse de 50% à 15%. Le salut est venu de Nicolas Hayek qui a fusionné les groupes SSIH et ASUAG en 1983 pour créer le Swatch Group. Ironiquement, c'est la Swatch, une montre plastique à quartz d'entrée de gamme, qui a sauvé l'industrie suisse en générant des profits permettant de préserver le savoir-faire traditionnel de la haute horlogerie.
-                </p>
-              </div>
-            </details>
-
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center justify-between">
-                <span>Qu'est-ce qu'une "ferme horlogère" dans la Vallée de Joux ?</span>
-                <span className="text-blue-600 dark:text-blue-400">▼</span>
-              </summary>
-              <div className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 px-6 py-4">
-                <p className="text-slate-700 dark:text-slate-300">
-                  À partir de 1740, les agriculteurs de la Vallée de Joux fabriquaient des pièces horlogères pendant les longs hivers. Ils ont construit des fenêtres supplémentaires dans les greniers de leurs fermes pour maximiser la lumière naturelle, permettant un travail précis plus longtemps dans la journée. Ces "fermes horlogères" caractéristiques sont un symbole architectural unique : 26 d'entre elles sont encore visibles aujourd'hui et témoignent de cette tradition rurale.
-                </p>
-              </div>
-            </details>
-
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center justify-between">
-                <span>Quelle est la différence entre Genève et la Vallée de Joux ?</span>
-                <span className="text-blue-600 dark:text-blue-400">▼</span>
-              </summary>
-              <div className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 px-6 py-4">
-                <p className="text-slate-700 dark:text-slate-300">
-                  Genève est le berceau historique de l'horlogerie suisse (1541) et reste la capitale de l'horlogerie de luxe avec Patek Philippe, Rolex et Vacheron Constantin. La Vallée de Joux s'est spécialisée dans les grandes complications horlogères et la haute horlogerie technique avec Audemars Piguet, Jaeger-LeCoultre et Blancpain. Genève représente le prestige urbain, la Vallée de Joux incarne la maîtrise technique rurale.
-                </p>
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      {/* Erreurs Communes et Bonnes Pratiques */}
-      <section className="py-16 bg-white dark:bg-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-12 text-center">Idées Reçues & Réalités</h2>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Erreurs Communes */}
-            <div className="bg-red-50 dark:bg-red-950/30 rounded-xl border border-red-200 dark:border-red-800 p-6">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
-                <span className="text-red-600 dark:text-red-400">✗</span>
-                Idées Reçues
-              </h3>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 dark:text-red-400 text-xl">•</span>
-                  <span className="text-slate-700 dark:text-slate-300">
-                    <strong className="text-slate-900 dark:text-slate-100">Mythe :</strong> Les Suisses ont inventé l'horlogerie mécanique
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 dark:text-red-400 text-xl">•</span>
-                  <span className="text-slate-700 dark:text-slate-300">
-                    <strong className="text-slate-900 dark:text-slate-100">Mythe :</strong> Toutes les montres suisses sont ultra-chères
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 dark:text-red-400 text-xl">•</span>
-                  <span className="text-slate-700 dark:text-slate-300">
-                    <strong className="text-slate-900 dark:text-slate-100">Mythe :</strong> La révocation de l'Édit de Nantes a créé l'horlogerie suisse
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 dark:text-red-400 text-xl">•</span>
-                  <span className="text-slate-700 dark:text-slate-300">
-                    <strong className="text-slate-900 dark:text-slate-100">Mythe :</strong> Les montres à quartz ont détruit l'horlogerie suisse
-                  </span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Bonnes Pratiques */}
-            <div className="bg-green-50 dark:bg-green-950/30 rounded-xl border border-green-200 dark:border-green-800 p-6">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
-                <span className="text-green-600 dark:text-green-400">✓</span>
-                Réalités Historiques
-              </h3>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-3">
-                  <span className="text-green-600 dark:text-green-400 text-xl">•</span>
-                  <span className="text-slate-700 dark:text-slate-300">
-                    <strong className="text-slate-900 dark:text-slate-100">Réalité :</strong> Les Suisses ont perfectionné et industrialisé l'horlogerie
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-green-600 dark:text-green-400 text-xl">•</span>
-                  <span className="text-slate-700 dark:text-slate-300">
-                    <strong className="text-slate-900 dark:text-slate-100">Réalité :</strong> La Swatch a démocratisé l'horlogerie suisse moderne
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-green-600 dark:text-green-400 text-xl">•</span>
-                  <span className="text-slate-700 dark:text-slate-300">
-                    <strong className="text-slate-900 dark:text-slate-100">Réalité :</strong> Les huguenots ont accéléré un développement déjà amorcé
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-green-600 dark:text-green-400 text-xl">•</span>
-                  <span className="text-slate-700 dark:text-slate-300">
-                    <strong className="text-slate-900 dark:text-slate-100">Réalité :</strong> La crise du quartz a forcé l'innovation et le renouveau
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Quiz Final */}
-      <section className="py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border-2 border-slate-200 dark:border-slate-700 p-8">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                <Award className="w-4 h-4" />
-                Quiz de Certification
-              </div>
-              <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Testez Vos Connaissances</h2>
-              <p className="text-slate-700 dark:text-slate-300">
-                10 questions sur l'histoire de l'horlogerie suisse
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              {/* Question 1 */}
-              <div className="bg-slate-50 dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-                <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">
-                  1. En quelle année Jean Calvin a-t-il banni les objets ornementaux à Genève ?
-                </h3>
-                <div className="space-y-2">
-                  {['1541', '1566', '1685', '1740'].map((option) => (
-                    <label
-                      key={option}
-                      className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
-                        quizAnswers[1] === option
-                          ? 'border-blue-600 dark:border-blue-400 bg-blue-50 dark:bg-blue-950/30'
-                          : 'border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="q1"
-                        value={option}
-                        checked={quizAnswers[1] === option}
-                        onChange={(e) => setQuizAnswers({ ...quizAnswers, 1: e.target.value })}
-                        className="text-blue-600 dark:text-blue-400"
-                      />
-                      <span className="text-slate-700 dark:text-slate-300">{option}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Question 2 */}
-              <div className="bg-slate-50 dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-                <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">
-                  2. Qui a inventé le tourbillon horloger ?
-                </h3>
-                <div className="space-y-2">
-                  {['Abraham-Louis Breguet', 'Daniel Jean-Richard', 'Jean Calvin', 'Nicolas Hayek'].map((option) => (
-                    <label
-                      key={option}
-                      className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
-                        quizAnswers[2] === option
-                          ? 'border-blue-600 dark:border-blue-400 bg-blue-50 dark:bg-blue-950/30'
-                          : 'border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="q2"
-                        value={option}
-                        checked={quizAnswers[2] === option}
-                        onChange={(e) => setQuizAnswers({ ...quizAnswers, 2: e.target.value })}
-                        className="text-blue-600 dark:text-blue-400"
-                      />
-                      <span className="text-slate-700 dark:text-slate-300">{option}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Question 3 */}
-              <div className="bg-slate-50 dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-                <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">
-                  3. Quelle manufacture est la plus ancienne encore en activité ?
-                </h3>
-                <div className="space-y-2">
-                  {['Blancpain (1735)', 'Vacheron Constantin (1755)', 'Breguet (1775)', 'Patek Philippe (1839)'].map((option) => (
-                    <label
-                      key={option}
-                      className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
-                        quizAnswers[3] === option
-                          ? 'border-blue-600 dark:border-blue-400 bg-blue-50 dark:bg-blue-950/30'
-                          : 'border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="q3"
-                        value={option}
-                        checked={quizAnswers[3] === option}
-                        onChange={(e) => setQuizAnswers({ ...quizAnswers, 3: e.target.value })}
-                        className="text-blue-600 dark:text-blue-400"
-                      />
-                      <span className="text-slate-700 dark:text-slate-300">{option}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Question 4 */}
-              <div className="bg-slate-50 dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-                <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">
-                  4. Quel groupe horloger a été créé par la fusion SSIH + ASUAG en 1983 ?
-                </h3>
-                <div className="space-y-2">
-                  {['Swatch Group (SMH)', 'Richemont', 'LVMH', 'Rolex SA'].map((option) => (
-                    <label
-                      key={option}
-                      className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
-                        quizAnswers[4] === option
-                          ? 'border-blue-600 dark:border-blue-400 bg-blue-50 dark:bg-blue-950/30'
-                          : 'border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="q4"
-                        value={option}
-                        checked={quizAnswers[4] === option}
-                        onChange={(e) => setQuizAnswers({ ...quizAnswers, 4: e.target.value })}
-                        className="text-blue-600 dark:text-blue-400"
-                      />
-                      <span className="text-slate-700 dark:text-slate-300">{option}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Question 5 */}
-              <div className="bg-slate-50 dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-                <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-4">
-                  5. Dans quelle région se trouvent les "fermes horlogères" à fenêtres multiples ?
-                </h3>
-                <div className="space-y-2">
-                  {['Vallée de Joux', 'Genève', 'Neuchâtel', 'Schaffhouse'].map((option) => (
-                    <label
-                      key={option}
-                      className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
-                        quizAnswers[5] === option
-                          ? 'border-blue-600 dark:border-blue-400 bg-blue-50 dark:bg-blue-950/30'
-                          : 'border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="q5"
-                        value={option}
-                        checked={quizAnswers[5] === option}
-                        onChange={(e) => setQuizAnswers({ ...quizAnswers, 5: e.target.value })}
-                        className="text-blue-600 dark:text-blue-400"
-                      />
-                      <span className="text-slate-700 dark:text-slate-300">{option}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 text-center">
-              <button className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg transition-all">
-                Valider mes réponses
-              </button>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mt-4">
-                Obtenez votre certification en histoire horlogère suisse !
-              </p>
             </div>
           </div>
         </div>
