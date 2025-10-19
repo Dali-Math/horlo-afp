@@ -14,24 +14,24 @@ const config: Config = {
         foreground: "var(--foreground)",
         // Palette "atelier horloger" sombre et doré
         dark: {
-          900: '#0b0c10',  // Noir profond
-          800: '#1c1e26',  // Charbon
+          700: '#343A40',
+          800: '#1c1e26',
+          900: '#0b0c10',
         },
         gold: {
-          DEFAULT: '#d4af37',  // Or classique
+          DEFAULT: '#d4af37',
           light: '#f7d070',
           dark: '#b8941f',
         },
         light: {
-          100: '#f3f4f6',  // Gris très clair
-          200: '#b8b8b8',  // Gris moyen
+          100: '#f3f4f6',
+          200: '#b8b8b8',
+          300: '#DEE2E6',
         },
       },
       fontFamily: {
-        // Polices pour titres
         bebas: ['Bebas Neue', 'Oswald', 'sans-serif'],
         oswald: ['Oswald', 'sans-serif'],
-        // Polices pour texte
         inter: ['Inter', 'sans-serif'],
         poppins: ['Poppins', 'sans-serif'],
       },
@@ -40,6 +40,7 @@ const config: Config = {
         'fade-in-up': 'fadeInUp 0.6s ease-out',
         'slide-in-left': 'slideInLeft 0.8s ease-out',
         'glow': 'glow 2s ease-in-out infinite',
+        'spin-slow': 'spin 20s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -63,22 +64,5 @@ const config: Config = {
   },
   plugins: [],
 };
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
-  darkMode: 'class',
-  theme: {
-    extend: {
-      animation: {
-        'spin-slow': 'spin 20s linear infinite',
-      },
-    },
-  },
-  plugins: [],
-}
 
 export default config;
