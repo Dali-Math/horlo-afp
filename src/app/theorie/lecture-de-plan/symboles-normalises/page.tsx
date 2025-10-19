@@ -306,11 +306,11 @@ export default function SymbolesNormalisesPage() {
   const selectedSymbolData = symbolsData.find(s => s.id === selectedSymbol);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-slate-200">
+      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link href="/theorie/lecture-de-plan" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+          <Link href="/theorie/lecture-de-plan" className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium">
             <ChevronLeft className="w-5 h-5 mr-1" />
             Retour
           </Link>
@@ -321,30 +321,33 @@ export default function SymbolesNormalisesPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Title Section */}
         <div className="text-center mb-12">
-          <div className="inline-block px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-4">
+          <div className="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm font-medium mb-4">
             Les normes
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">
             Symboles Normalisés (ISO 1302 & ISO 13715)
           </h1>
+          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
+            États de surface et arêtes : comprendre et maîtriser les symboles techniques
+          </p>
         </div>
 
         {/* Interactive Schema Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Schéma Interactif</h2>
-          <p className="text-slate-600 mb-8">Cliquez sur les symboles pour voir leur signification et utilisation.</p>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Schéma Interactif</h2>
+          <p className="text-slate-600 dark:text-slate-400 mb-8">Cliquez sur les symboles pour voir leur signification et utilisation.</p>
           
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 border border-slate-200 dark:border-slate-700">
             <svg viewBox="0 0 900 500" className="w-full h-auto">
-              <text x="450" y="30" textAnchor="middle" fontSize="20" fontWeight="bold" fill="#1e40af">Symboles ISO 1302 & ISO 13715</text>
+              <text x="450" y="30" textAnchor="middle" fontSize="20" fontWeight="bold" fill="#1e40af" className="dark:fill-blue-400">Symboles ISO 1302 & ISO 13715</text>
               
               {/* Symbole de base */}
               <g onClick={() => handleSymbolClick('base')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="50" y="60" width="180" height="140" fill="#3b82f6" fillOpacity="0.1" stroke="#3b82f6" strokeWidth="2" rx="8"/>
                 <path d="M 100 130 L 120 90 L 140 130" stroke="#1e40af" strokeWidth="3" fill="none"/>
                 <line x1="140" y1="90" x2="180" y2="90" stroke="#1e40af" strokeWidth="2"/>
-                <text x="140" y="160" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b">Symbole de base</text>
-                <text x="140" y="180" textAnchor="middle" fontSize="12" fill="#64748b">ISO 1302</text>
+                <text x="140" y="160" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Symbole de base</text>
+                <text x="140" y="180" textAnchor="middle" fontSize="12" fill="#64748b" className="dark:fill-slate-400">ISO 1302</text>
               </g>
 
               {/* Avec trait (usinage obligatoire) */}
@@ -353,8 +356,8 @@ export default function SymbolesNormalisesPage() {
                 <path d="M 310 130 L 330 90 L 350 130" stroke="#047857" strokeWidth="3" fill="none"/>
                 <line x1="350" y1="90" x2="390" y2="90" stroke="#047857" strokeWidth="2"/>
                 <line x1="310" y1="82" x2="350" y2="82" stroke="#047857" strokeWidth="3"/>
-                <text x="350" y="160" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b">Avec trait</text>
-                <text x="350" y="180" textAnchor="middle" fontSize="12" fill="#64748b">Usinage obligatoire</text>
+                <text x="350" y="160" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Avec trait</text>
+                <text x="350" y="180" textAnchor="middle" fontSize="12" fill="#64748b" className="dark:fill-slate-400">Usinage obligatoire</text>
               </g>
 
               {/* Avec cercle (brut) */}
@@ -363,8 +366,8 @@ export default function SymbolesNormalisesPage() {
                 <path d="M 520 130 L 540 90 L 560 130" stroke="#d97706" strokeWidth="3" fill="none"/>
                 <line x1="560" y1="90" x2="600" y2="90" stroke="#d97706" strokeWidth="2"/>
                 <circle cx="540" cy="110" r="12" stroke="#d97706" strokeWidth="3" fill="none"/>
-                <text x="560" y="160" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b">Avec cercle</text>
-                <text x="560" y="180" textAnchor="middle" fontSize="12" fill="#64748b">Enlèvement interdit</text>
+                <text x="560" y="160" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Avec cercle</text>
+                <text x="560" y="180" textAnchor="middle" fontSize="12" fill="#64748b" className="dark:fill-slate-400">Enlèvement interdit</text>
               </g>
 
               {/* Symbole complété */}
@@ -374,120 +377,120 @@ export default function SymbolesNormalisesPage() {
                 <line x1="770" y1="90" x2="810" y2="90" stroke="#6d28d9" strokeWidth="2"/>
                 <line x1="730" y1="82" x2="770" y2="82" stroke="#6d28d9" strokeWidth="3"/>
                 <text x="750" y="150" textAnchor="middle" fontSize="11" fill="#6d28d9" fontWeight="bold">Ra 0.8</text>
-                <text x="770" y="160" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b">Complété</text>
-                <text x="770" y="180" textAnchor="middle" fontSize="12" fill="#64748b">Avec valeurs</text>
+                <text x="770" y="160" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Complété</text>
+                <text x="770" y="180" textAnchor="middle" fontSize="12" fill="#64748b" className="dark:fill-slate-400">Avec valeurs</text>
               </g>
 
               {/* Ligne séparatrice */}
-              <line x1="50" y1="240" x2="850" y2="240" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="5,5"/>
-              <text x="450" y="270" textAnchor="middle" fontSize="18" fontWeight="bold" fill="#1e40af">Symboles ISO 13715 (Arêtes)</text>
+              <line x1="50" y1="240" x2="850" y2="240" stroke="#cbd5e1" className="dark:stroke-slate-700" strokeWidth="2" strokeDasharray="5,5"/>
+              <text x="450" y="270" textAnchor="middle" fontSize="18" fontWeight="bold" fill="#1e40af" className="dark:fill-blue-400">Symboles ISO 13715 (Arêtes)</text>
 
               {/* Arête vive (a) */}
               <g onClick={() => handleSymbolClick('arete-vive')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="100" y="300" width="200" height="140" fill="#ef4444" fillOpacity="0.1" stroke="#ef4444" strokeWidth="2" rx="8"/>
-                <text x="200" y="350" textAnchor="middle" fontSize="40" fontWeight="bold" fill="#dc2626">a</text>
-                <text x="200" y="390" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b">Arête vive</text>
-                <text x="200" y="410" textAnchor="middle" fontSize="12" fill="#64748b">Brute, non ébavurée</text>
+                <text x="200" y="350" textAnchor="middle" fontSize="40" fontWeight="bold" fill="#dc2626" className="dark:fill-red-400">a</text>
+                <text x="200" y="390" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Arête vive</text>
+                <text x="200" y="410" textAnchor="middle" fontSize="12" fill="#64748b" className="dark:fill-slate-400">Brute, non ébavurée</text>
               </g>
 
               {/* Arête adoucie (b) */}
               <g onClick={() => handleSymbolClick('arete-adoucie')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="350" y="300" width="200" height="140" fill="#06b6d4" fillOpacity="0.1" stroke="#06b6d4" strokeWidth="2" rx="8"/>
-                <text x="450" y="350" textAnchor="middle" fontSize="40" fontWeight="bold" fill="#0891b2">b</text>
-                <text x="450" y="390" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b">Arête adoucie</text>
-                <text x="450" y="410" textAnchor="middle" fontSize="12" fill="#64748b">Ébavurée</text>
+                <text x="450" y="350" textAnchor="middle" fontSize="40" fontWeight="bold" fill="#0891b2" className="dark:fill-cyan-400">b</text>
+                <text x="450" y="390" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Arête adoucie</text>
+                <text x="450" y="410" textAnchor="middle" fontSize="12" fill="#64748b" className="dark:fill-slate-400">Ébavurée</text>
               </g>
 
               {/* Arête arrondie (c) */}
               <g onClick={() => handleSymbolClick('arete-arrondie')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="600" y="300" width="200" height="140" fill="#ec4899" fillOpacity="0.1" stroke="#ec4899" strokeWidth="2" rx="8"/>
-                <text x="700" y="350" textAnchor="middle" fontSize="40" fontWeight="bold" fill="#be185d">c</text>
-                <text x="700" y="390" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b">Arête arrondie</text>
-                <text x="700" y="410" textAnchor="middle" fontSize="12" fill="#64748b">Chanfreinée</text>
+                <text x="700" y="350" textAnchor="middle" fontSize="40" fontWeight="bold" fill="#be185d" className="dark:fill-pink-400">c</text>
+                <text x="700" y="390" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Arête arrondie</text>
+                <text x="700" y="410" textAnchor="middle" fontSize="12" fill="#64748b" className="dark:fill-slate-400">Chanfreinée</text>
               </g>
             </svg>
           </div>
 
           {/* Explanation Panel */}
           {selectedSymbolData && (
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border-l-4 border-blue-600">
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">{selectedSymbolData.title}</h3>
-              <p className="text-sm text-blue-800 font-semibold mb-3">Norme : {selectedSymbolData.norm}</p>
-              <p className="text-slate-700 mb-3"><strong>Description :</strong> {selectedSymbolData.description}</p>
-              <p className="text-slate-700 mb-3"><strong>Utilisation :</strong> {selectedSymbolData.usage}</p>
-              <p className="text-slate-700"><strong>Exemple :</strong> {selectedSymbolData.example}</p>
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl p-6 border-l-4 border-blue-600 dark:border-blue-400">
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{selectedSymbolData.title}</h3>
+              <p className="text-sm text-blue-800 dark:text-blue-400 font-semibold mb-3">Norme : {selectedSymbolData.norm}</p>
+              <p className="text-slate-700 dark:text-slate-300 mb-3"><strong>Description :</strong> {selectedSymbolData.description}</p>
+              <p className="text-slate-700 dark:text-slate-300 mb-3"><strong>Utilisation :</strong> {selectedSymbolData.usage}</p>
+              <p className="text-slate-700 dark:text-slate-300"><strong>Exemple :</strong> {selectedSymbolData.example}</p>
             </div>
           )}
         </section>
 
         {/* Mémo Technique */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
           
           <div className="grid md:grid-cols-2 gap-6">
             {/* Erreurs */}
-            <div className="bg-red-50 rounded-xl p-6 border border-red-200">
-              <h3 className="text-xl font-bold text-red-900 mb-4 flex items-center">
+            <div className="bg-red-50 dark:bg-red-950/30 rounded-xl p-6 border border-red-200 dark:border-red-800">
+              <h3 className="text-xl font-bold text-red-900 dark:text-red-300 mb-4 flex items-center">
                 <XCircle className="w-6 h-6 mr-2" />
                 Erreurs fréquentes
               </h3>
-              <ul className="space-y-3 text-slate-700">
+              <ul className="space-y-3 text-slate-700 dark:text-slate-300">
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Oublier d'indiquer l'état de surface exigé sur les plans critiques.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Utiliser le symbole d'état de surface sans compléter les valeurs (rugosité, procédé, stries).</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Oublier l'indication d'arête sur les fonds de rainure ou pièces complexes.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Mélanger plusieurs symboles pour la même exigence.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Placer les symboles trop loin ou sans ligne de repère claire.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Confondre Ra (rugosité arithmétique) et Rz (hauteur maximale du profil).</span>
                 </li>
               </ul>
             </div>
 
             {/* Bonnes pratiques */}
-            <div className="bg-green-50 rounded-xl p-6 border border-green-200">
-              <h3 className="text-xl font-bold text-green-900 mb-4 flex items-center">
+            <div className="bg-green-50 dark:bg-green-950/30 rounded-xl p-6 border border-green-200 dark:border-green-800">
+              <h3 className="text-xl font-bold text-green-900 dark:text-green-300 mb-4 flex items-center">
                 <CheckCircle className="w-6 h-6 mr-2" />
                 Bonnes pratiques
               </h3>
-              <ul className="space-y-3 text-slate-700">
+              <ul className="space-y-3 text-slate-700 dark:text-slate-300">
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Sélectionner le symbole adapté à chaque exigence (état de surface, arête, strie, procédé).</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Préciser systématiquement : rugosité, procédé d'usinage, orientation des stries.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Utiliser la ligne de repère, toujours orientée vers la surface concernée.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Regrouper les exigences similaires pour alléger le plan.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Vérifier la cohérence des symboles sur toutes les vues.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Indiquer une spécification générale dans le cartouche pour les surfaces non critiques.</span>
                 </li>
               </ul>
@@ -497,29 +500,29 @@ export default function SymbolesNormalisesPage() {
 
         {/* Quiz Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Quiz : Teste tes connaissances</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Quiz : Teste tes connaissances</h2>
           
-          <div className="bg-white rounded-2xl shadow-lg p-8">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-200 dark:border-slate-700">
             {!quizCompleted ? (
               <>
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-4">
-                    <span className="text-sm font-medium text-slate-600">
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
                       Question {currentQuestion + 1} sur {quizData.length}
                     </span>
-                    <span className="text-sm font-medium text-blue-600">
+                    <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
                       Score: {score}/{quizData.length}
                     </span>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2">
+                  <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
                     <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${((currentQuestion + 1) / quizData.length) * 100}%` }}
                     ></div>
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-900 mb-6">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
                   {quizData[currentQuestion].question}
                 </h3>
 
@@ -531,24 +534,24 @@ export default function SymbolesNormalisesPage() {
                       disabled={selectedAnswer !== null}
                       className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                         selectedAnswer === null
-                          ? 'border-slate-200 hover:border-blue-400 hover:bg-blue-50'
+                          ? 'border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/30'
                           : index === quizData[currentQuestion].correctAnswer
-                          ? 'border-green-500 bg-green-50'
+                          ? 'border-green-500 dark:border-green-600 bg-green-50 dark:bg-green-950/30'
                           : selectedAnswer === index
-                          ? 'border-red-500 bg-red-50'
-                          : 'border-slate-200 opacity-50'
+                          ? 'border-red-500 dark:border-red-600 bg-red-50 dark:bg-red-950/30'
+                          : 'border-slate-200 dark:border-slate-700 opacity-50'
                       }`}
                     >
                       <div className="flex items-center">
-                        <span className="font-semibold mr-3 text-slate-700">
+                        <span className="font-semibold mr-3 text-slate-700 dark:text-slate-300">
                           {String.fromCharCode(65 + index)}.
                         </span>
-                        <span className="text-slate-800">{option}</span>
+                        <span className="text-slate-800 dark:text-slate-200">{option}</span>
                         {selectedAnswer !== null && index === quizData[currentQuestion].correctAnswer && (
-                          <CheckCircle className="w-5 h-5 ml-auto text-green-600" />
+                          <CheckCircle className="w-5 h-5 ml-auto text-green-600 dark:text-green-400" />
                         )}
                         {selectedAnswer === index && index !== quizData[currentQuestion].correctAnswer && (
-                          <XCircle className="w-5 h-5 ml-auto text-red-600" />
+                          <XCircle className="w-5 h-5 ml-auto text-red-600 dark:text-red-400" />
                         )}
                       </div>
                     </button>
@@ -556,8 +559,8 @@ export default function SymbolesNormalisesPage() {
                 </div>
 
                 {showExplanation && (
-                  <div className="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6 rounded">
-                    <p className="text-slate-700">
+                  <div className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-600 dark:border-blue-400 p-4 mb-6 rounded">
+                    <p className="text-slate-700 dark:text-slate-300">
                       <strong>Explication :</strong> {quizData[currentQuestion].explanation}
                     </p>
                   </div>
@@ -566,7 +569,7 @@ export default function SymbolesNormalisesPage() {
                 {selectedAnswer !== null && (
                   <button
                     onClick={handleNextQuestion}
-                    className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                    className="w-full bg-blue-600 dark:bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                   >
                     {currentQuestion < quizData.length - 1 ? 'Question suivante' : 'Voir les résultats'}
                   </button>
@@ -574,28 +577,28 @@ export default function SymbolesNormalisesPage() {
               </>
             ) : (
               <div className="text-center">
-                <h3 className="text-3xl font-bold text-slate-900 mb-4">Quiz terminé !</h3>
-                <p className="text-xl text-slate-700 mb-6">
-                  Votre score : <span className="font-bold text-blue-600">{score}/{quizData.length}</span>
+                <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Quiz terminé !</h3>
+                <p className="text-xl text-slate-700 dark:text-slate-300 mb-6">
+                  Votre score : <span className="font-bold text-blue-600 dark:text-blue-400">{score}/{quizData.length}</span>
                   {' '}({Math.round((score / quizData.length) * 100)}%)
                 </p>
                 <div className="mb-6">
                   {score === quizData.length && (
-                    <p className="text-green-600 font-semibold text-lg">🎉 Parfait ! Tu maîtrises les symboles normalisés !</p>
+                    <p className="text-green-600 dark:text-green-400 font-semibold text-lg">🎉 Parfait ! Tu maîtrises les symboles normalisés !</p>
                   )}
                   {score >= quizData.length * 0.8 && score < quizData.length && (
-                    <p className="text-blue-600 font-semibold text-lg">👏 Excellent travail ! Quelques révisions et ce sera parfait !</p>
+                    <p className="text-blue-600 dark:text-blue-400 font-semibold text-lg">👏 Excellent travail ! Quelques révisions et ce sera parfait !</p>
                   )}
                   {score >= quizData.length * 0.6 && score < quizData.length * 0.8 && (
-                    <p className="text-yellow-600 font-semibold text-lg">💪 Bon résultat ! Continue de t'entraîner !</p>
+                    <p className="text-yellow-600 dark:text-yellow-400 font-semibold text-lg">💪 Bon résultat ! Continue de t'entraîner !</p>
                   )}
                   {score < quizData.length * 0.6 && (
-                    <p className="text-orange-600 font-semibold text-lg">📚 Révise les notions et réessaie !</p>
+                    <p className="text-orange-600 dark:text-orange-400 font-semibold text-lg">📚 Révise les notions et réessaie !</p>
                   )}
                 </div>
                 <button
                   onClick={resetQuiz}
-                  className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                  className="bg-blue-600 dark:bg-blue-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                 >
                   Recommencer le quiz
                 </button>
@@ -606,8 +609,8 @@ export default function SymbolesNormalisesPage() {
 
         {/* Video Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Vidéo : Symboles & Cotation des états de surface</h2>
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Vidéo : Symboles & Cotation des états de surface</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 border border-slate-200 dark:border-slate-700">
             <div className="aspect-video">
               <iframe 
                 width="100%" 
@@ -625,38 +628,38 @@ export default function SymbolesNormalisesPage() {
 
         {/* Context Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Contexte & Origines des Normes</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Contexte & Origines des Normes</h2>
           
           <div className="grid md:grid-cols-2 gap-6">
             {/* ISO 1302 */}
-            <div className="bg-white rounded-2xl shadow-lg p-8">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-200 dark:border-slate-700">
               <div className="flex items-start mb-4">
-                <div className="bg-blue-100 p-3 rounded-lg mr-4">
-                  <Book className="w-6 h-6 text-blue-600" />
+                <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-lg mr-4">
+                  <Book className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">ISO 1302 (États de surface)</h3>
-                  <p className="text-sm text-blue-800 font-semibold mb-3">Version 2002, mise à jour ISO 21920</p>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">ISO 1302 (États de surface)</h3>
+                  <p className="text-sm text-blue-800 dark:text-blue-400 font-semibold mb-3">Version 2002, mise à jour ISO 21920</p>
                 </div>
               </div>
-              <p className="text-slate-700 leading-relaxed">
-                La norme <strong className="text-blue-600">ISO 1302</strong> définit les symboles et la manière d'indiquer les spécifications d'états de surface sur les plans techniques. Elle permet de préciser la rugosité attendue (Ra, Rz), l'obligation d'usinage, l'orientation des stries ou encore le procédé à appliquer, rendant les exigences lisibles et universelles pour tous les ateliers d'usinage.
+              <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                La norme <strong className="text-blue-600 dark:text-blue-400">ISO 1302</strong> définit les symboles et la manière d'indiquer les spécifications d'états de surface sur les plans techniques. Elle permet de préciser la rugosité attendue (Ra, Rz), l'obligation d'usinage, l'orientation des stries ou encore le procédé à appliquer, rendant les exigences lisibles et universelles pour tous les ateliers d'usinage.
               </p>
             </div>
 
             {/* ISO 13715 */}
-            <div className="bg-white rounded-2xl shadow-lg p-8">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-200 dark:border-slate-700">
               <div className="flex items-start mb-4">
-                <div className="bg-green-100 p-3 rounded-lg mr-4">
-                  <Book className="w-6 h-6 text-green-600" />
+                <div className="bg-green-100 dark:bg-green-900/30 p-3 rounded-lg mr-4">
+                  <Book className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">ISO 13715 (Arêtes non définies)</h3>
-                  <p className="text-sm text-green-800 font-semibold mb-3">Version 2017</p>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">ISO 13715 (Arêtes non définies)</h3>
+                  <p className="text-sm text-green-800 dark:text-green-400 font-semibold mb-3">Version 2017</p>
                 </div>
               </div>
-              <p className="text-slate-700 leading-relaxed">
-                La norme <strong className="text-green-600">ISO 13715</strong> est dédiée à la cotation des arêtes de forme non définie : elle explicite comment indiquer si une arête doit rester vive, être adoucie, chanfreinée ou arrondie — là où aucune dimension précise n'est donnée. Ces indications sont essentielles pour l'usinage, le montage et la sécurité des composants horlogers.
+              <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                La norme <strong className="text-green-600 dark:text-green-400">ISO 13715</strong> est dédiée à la cotation des arêtes de forme non définie : elle explicite comment indiquer si une arête doit rester vive, être adoucie, chanfreinée ou arrondie — là où aucune dimension précise n'est donnée. Ces indications sont essentielles pour l'usinage, le montage et la sécurité des composants horlogers.
               </p>
             </div>
           </div>
@@ -664,37 +667,37 @@ export default function SymbolesNormalisesPage() {
 
         {/* Symboles Standards - Table ISO 1302 */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Symboles Standards ISO 1302 (États de surface)</h2>
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Symboles Standards ISO 1302 (États de surface)</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-700">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-100">
+                <thead className="bg-slate-100 dark:bg-slate-900">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Symbole</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Signification</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Utilisation</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Symbole</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Signification</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Utilisation</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Triangle de base (60°)</td>
-                    <td className="px-6 py-4 text-slate-700">État de surface pris en considération, sans exigence particulière</td>
-                    <td className="px-6 py-4 text-slate-700">Lecture/simple état de surface</td>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Triangle de base (60°)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">État de surface pris en considération, sans exigence particulière</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Lecture/simple état de surface</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Avec trait horizontal</td>
-                    <td className="px-6 py-4 text-slate-700">Obligation d'usinage par enlèvement de matière</td>
-                    <td className="px-6 py-4 text-slate-700">Usinage nécessaire (tournage, fraisage, rectification)</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Avec trait horizontal</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Obligation d'usinage par enlèvement de matière</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Usinage nécessaire (tournage, fraisage, rectification)</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Avec cercle</td>
-                    <td className="px-6 py-4 text-slate-700">Enlèvement de matière interdit, brut de fabrication</td>
-                    <td className="px-6 py-4 text-slate-700">Surface brute requise (moulage, fonderie, forge)</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Avec cercle</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Enlèvement de matière interdit, brut de fabrication</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Surface brute requise (moulage, fonderie, forge)</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Symbole complété (valeurs)</td>
-                    <td className="px-6 py-4 text-slate-700">Exigence de rugosité, stries, procédé</td>
-                    <td className="px-6 py-4 text-slate-700">Tolérancement précis (Ra, Rz, procédé, orientation)</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Symbole complété (valeurs)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Exigence de rugosité, stries, procédé</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Tolérancement précis (Ra, Rz, procédé, orientation)</td>
                   </tr>
                 </tbody>
               </table>
@@ -704,32 +707,32 @@ export default function SymbolesNormalisesPage() {
 
         {/* Symboles ISO 13715 - Table */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Symboles ISO 13715 (Arêtes)</h2>
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Symboles ISO 13715 (Arêtes)</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-700">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-100">
+                <thead className="bg-slate-100 dark:bg-slate-900">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Symbole</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Signification</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Utilisation</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Symbole</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Signification</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Utilisation</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 text-2xl">a</td>
-                    <td className="px-6 py-4 text-slate-700">Arête doit rester brute ou vive</td>
-                    <td className="px-6 py-4 text-slate-700">Fonds de rainure, bords non usinés, zones où l'arête vive est fonctionnelle</td>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 text-2xl">a</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Arête doit rester brute ou vive</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Fonds de rainure, bords non usinés, zones où l'arête vive est fonctionnelle</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 text-2xl">b</td>
-                    <td className="px-6 py-4 text-slate-700">Arête à adoucir, aucun défaut coupant toléré</td>
-                    <td className="px-6 py-4 text-slate-700">Pièces manipulées, zones à risques, assemblage manuel</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 text-2xl">b</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Arête à adoucir, aucun défaut coupant toléré</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Pièces manipulées, zones à risques, assemblage manuel</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 text-2xl">c</td>
-                    <td className="px-6 py-4 text-slate-700">Arête arrondie ou chanfreinée</td>
-                    <td className="px-6 py-4 text-slate-700">Montage facilité, sécurité, esthétique, guidage</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 text-2xl">c</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Arête arrondie ou chanfreinée</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Montage facilité, sécurité, esthétique, guidage</td>
                   </tr>
                 </tbody>
               </table>
@@ -739,42 +742,42 @@ export default function SymbolesNormalisesPage() {
 
         {/* Exemples en Horlogerie */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Exemples en Horlogerie</h2>
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Exemples en Horlogerie</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-700">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-100">
+                <thead className="bg-slate-100 dark:bg-slate-900">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Type de pièce</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Symbole/Spécification</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Justification</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Type de pièce</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Symbole/Spécification</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Justification</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Platine</td>
-                    <td className="px-6 py-4 text-slate-700">ISO 1302: Ra 0.8 µm, procédé « fraisé »</td>
-                    <td className="px-6 py-4 text-slate-700">Fonctionnement précis du mouvement</td>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Platine</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">ISO 1302: Ra 0.8 µm, procédé « fraisé »</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Fonctionnement précis du mouvement</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Barillet</td>
-                    <td className="px-6 py-4 text-slate-700">ISO 1302: brut, enlèvement interdit</td>
-                    <td className="px-6 py-4 text-slate-700">Pièce d'énergie, pas d'usinage secondaire</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Barillet</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">ISO 1302: brut, enlèvement interdit</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Pièce d'énergie, pas d'usinage secondaire</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Bords de platine</td>
-                    <td className="px-6 py-4 text-slate-700">ISO 13715: arête « b » (adoucie)</td>
-                    <td className="px-6 py-4 text-slate-700">Sécurité manipulation, montage facile</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Bords de platine</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">ISO 13715: arête « b » (adoucie)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Sécurité manipulation, montage facile</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Axe de balancier</td>
-                    <td className="px-6 py-4 text-slate-700">ISO 1302: Ra 0.2 µm, rectifié</td>
-                    <td className="px-6 py-4 text-slate-700">Pivotement fluide, réduction friction</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Axe de balancier</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">ISO 1302: Ra 0.2 µm, rectifié</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Pivotement fluide, réduction friction</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Visserie</td>
-                    <td className="px-6 py-4 text-slate-700">ISO 13715: arête « c » (chanfreinée)</td>
-                    <td className="px-6 py-4 text-slate-700">Guidage d'insertion, assemblage</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Visserie</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">ISO 13715: arête « c » (chanfreinée)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Guidage d'insertion, assemblage</td>
                   </tr>
                 </tbody>
               </table>
@@ -784,74 +787,74 @@ export default function SymbolesNormalisesPage() {
 
         {/* Quote */}
         <section className="mb-16">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white text-center">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-2xl p-8 text-white text-center">
             <blockquote className="text-2xl font-serif italic mb-4">
               "Sur un plan horloger, la clarté des symboles garantit la conformité de la pièce en atelier."
             </blockquote>
-            <p className="text-blue-100">— Principe fondamental des symboles normalisés</p>
+            <p className="text-blue-100 dark:text-blue-200">— Principe fondamental des symboles normalisés</p>
           </div>
         </section>
 
         {/* FAQ */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Questions fréquentes (FAQ)</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Questions fréquentes (FAQ)</h2>
           
           <div className="space-y-4">
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 À quoi sert la norme ISO 1302 ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   Elle définit comment indiquer l'état de surface (rugosité, procédé, orientation des stries) attendue pour chaque pièce, pour garantir la qualité, l'interchangeabilité et la conformité aux exigences fonctionnelles.
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Pourquoi une norme spécifique pour les arêtes (ISO 13715) ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   Certaines arêtes n'ont pas de cotation précise : ISO 13715 permet alors d'imposer, par symbole, si elles doivent rester vives (a), être adoucies/ébavurées (b) ou chanfreinées/arrondies (c), garantissant ainsi la sécurité et la qualité du montage.
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Peut-on cumuler rugosité et indication d'arête ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   Oui : l'exigence de rugosité (ISO 1302) concerne la surface plane, tandis que l'exigence d'arête (ISO 13715) se positionne sur la ligne ou le point de jonction. Elles sont complémentaires et peuvent coexister sur un même plan.
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Faut-il que chaque surface ait un symbole d'état de surface ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   Non : seules les surfaces avec une exigence particulière ou critique nécessitent le symbole. Il est d'usage de regrouper les surfaces similaires ou de définir une spécification générale dans le cartouche pour les surfaces non critiques.
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Quelle est la différence entre Ra et Rz ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   <strong>Ra</strong> (Roughness average) est la rugosité arithmétique moyenne, la plus utilisée. <strong>Rz</strong> (hauteur maximale du profil) mesure la distance entre le point le plus haut et le plus bas sur une longueur d'évaluation. Ra est plus représentatif de l'état général, Rz détecte les pics et creux extrêmes.
                 </p>
               </div>
@@ -861,14 +864,14 @@ export default function SymbolesNormalisesPage() {
 
         {/* CTA */}
         <section className="text-center">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white inline-block">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-2xl p-8 text-white inline-block">
             <p className="text-lg mb-4">📘 Tu veux aller plus loin ?</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="https://www.iso.org/standard/28089.html" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+                className="inline-block bg-white text-blue-600 dark:text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-blue-100 transition-colors"
               >
                 Consulter ISO 1302
               </a>
@@ -876,7 +879,7 @@ export default function SymbolesNormalisesPage() {
                 href="https://www.iso.org/standard/27925.html" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+                className="inline-block bg-white text-blue-600 dark:text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-blue-100 transition-colors"
               >
                 Consulter ISO 13715
               </a>
@@ -886,9 +889,9 @@ export default function SymbolesNormalisesPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-8 mt-16">
+      <footer className="bg-slate-900 dark:bg-slate-950 text-white py-8 mt-16 border-t border-slate-800 dark:border-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-slate-400">© 2025 HorloLearn - Passion & Découverte Horlogère Suisse</p>
+          <p className="text-slate-400 dark:text-slate-500">© 2025 HorloLearn - Passion & Découverte Horlogère Suisse</p>
         </div>
       </footer>
     </div>
