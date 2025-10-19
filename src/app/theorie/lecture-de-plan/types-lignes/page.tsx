@@ -248,11 +248,11 @@ export default function TypesLignesPage() {
   const selectedLineData = lineTypesData.find(l => l.id === selectedLine);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-slate-200">
+      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link href="/theorie/lecture-de-plan" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+          <Link href="/theorie/lecture-de-plan" className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium">
             <ChevronLeft className="w-5 h-5 mr-1" />
             Retour
           </Link>
@@ -263,101 +263,104 @@ export default function TypesLignesPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Title Section */}
         <div className="text-center mb-12">
-          <div className="inline-block px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-4">
+          <div className="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm font-medium mb-4">
             Les normes
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">
             Types de Lignes (ISO 128-2)
           </h1>
+          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
+            Comprendre et maîtriser les différents types de traits utilisés en dessin technique
+          </p>
         </div>
 
         {/* Interactive Schema Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Schéma Interactif</h2>
-          <p className="text-slate-600 mb-8">Cliquez sur chaque type de ligne pour afficher son explication et utilisation.</p>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Schéma Interactif</h2>
+          <p className="text-slate-600 dark:text-slate-400 mb-8">Cliquez sur chaque type de ligne pour afficher son explication et utilisation.</p>
           
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 border border-slate-200 dark:border-slate-700">
             <svg viewBox="0 0 800 700" className="w-full h-auto">
-              <text x="400" y="30" textAnchor="middle" fontSize="20" fontWeight="bold" fill="#1e40af">Types de Lignes ISO 128-2</text>
+              <text x="400" y="30" textAnchor="middle" fontSize="20" fontWeight="bold" fill="#1e40af" className="dark:fill-blue-400">Types de Lignes ISO 128-2</text>
               
               {/* Continu fort */}
               <g onClick={() => handleLineClick('continu-fort')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="50" y="60" width="700" height="60" fill="#3b82f6" fillOpacity="0.05" stroke="#3b82f6" strokeWidth="1" rx="4"/>
                 <line x1="200" y1="90" x2="600" y2="90" stroke="#1e40af" strokeWidth="4"/>
-                <text x="100" y="95" fontSize="14" fontWeight="bold" fill="#1e293b">Continu fort</text>
+                <text x="100" y="95" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Continu fort</text>
               </g>
 
               {/* Continu fin */}
               <g onClick={() => handleLineClick('continu-fin')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="50" y="130" width="700" height="60" fill="#10b981" fillOpacity="0.05" stroke="#10b981" strokeWidth="1" rx="4"/>
                 <line x1="200" y1="160" x2="600" y2="160" stroke="#047857" strokeWidth="1.5"/>
-                <text x="100" y="165" fontSize="14" fontWeight="bold" fill="#1e293b">Continu fin</text>
+                <text x="100" y="165" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Continu fin</text>
               </g>
 
               {/* Interrompu fort */}
               <g onClick={() => handleLineClick('interrompu-fort')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="50" y="200" width="700" height="60" fill="#f59e0b" fillOpacity="0.05" stroke="#f59e0b" strokeWidth="1" rx="4"/>
                 <line x1="200" y1="230" x2="600" y2="230" stroke="#d97706" strokeWidth="4" strokeDasharray="20,8"/>
-                <text x="100" y="235" fontSize="14" fontWeight="bold" fill="#1e293b">Interrompu fort</text>
+                <text x="100" y="235" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Interrompu fort</text>
               </g>
 
               {/* Interrompu fin */}
               <g onClick={() => handleLineClick('interrompu-fin')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="50" y="270" width="700" height="60" fill="#8b5cf6" fillOpacity="0.05" stroke="#8b5cf6" strokeWidth="1" rx="4"/>
                 <line x1="200" y1="300" x2="600" y2="300" stroke="#6d28d9" strokeWidth="1.5" strokeDasharray="15,6"/>
-                <text x="100" y="305" fontSize="14" fontWeight="bold" fill="#1e293b">Interrompu fin</text>
+                <text x="100" y="305" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Interrompu fin</text>
               </g>
 
               {/* Mixte fin */}
               <g onClick={() => handleLineClick('mixte-fin')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="50" y="340" width="700" height="60" fill="#ec4899" fillOpacity="0.05" stroke="#ec4899" strokeWidth="1" rx="4"/>
                 <line x1="200" y1="370" x2="600" y2="370" stroke="#be185d" strokeWidth="1.5" strokeDasharray="30,5,5,5"/>
-                <text x="100" y="375" fontSize="14" fontWeight="bold" fill="#1e293b">Mixte fin</text>
+                <text x="100" y="375" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Mixte fin</text>
               </g>
 
               {/* Mixte fort */}
               <g onClick={() => handleLineClick('mixte-fort')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="50" y="410" width="700" height="60" fill="#06b6d4" fillOpacity="0.05" stroke="#06b6d4" strokeWidth="1" rx="4"/>
                 <line x1="200" y1="440" x2="600" y2="440" stroke="#0891b2" strokeWidth="4" strokeDasharray="30,5,5,5"/>
-                <text x="100" y="445" fontSize="14" fontWeight="bold" fill="#1e293b">Mixte fort</text>
+                <text x="100" y="445" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Mixte fort</text>
               </g>
 
               {/* Mixte fin à deux tirets */}
               <g onClick={() => handleLineClick('mixte-deux-tirets')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="50" y="480" width="700" height="60" fill="#ef4444" fillOpacity="0.05" stroke="#ef4444" strokeWidth="1" rx="4"/>
                 <line x1="200" y1="510" x2="600" y2="510" stroke="#dc2626" strokeWidth="1.5" strokeDasharray="30,5,8,5,8,5"/>
-                <text x="100" y="515" fontSize="14" fontWeight="bold" fill="#1e293b">Mixte 2 tirets</text>
+                <text x="100" y="515" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Mixte 2 tirets</text>
               </g>
 
               {/* Main levée */}
               <g onClick={() => handleLineClick('main-levee')} className="cursor-pointer hover:opacity-80 transition-opacity">
                 <rect x="50" y="550" width="700" height="60" fill="#a855f7" fillOpacity="0.05" stroke="#a855f7" strokeWidth="1" rx="4"/>
                 <path d="M 200 580 Q 250 575 300 580 T 400 580 T 500 580 T 600 580" stroke="#7c3aed" strokeWidth="1.5" fill="none"/>
-                <text x="100" y="585" fontSize="14" fontWeight="bold" fill="#1e293b">Main levée</text>
+                <text x="100" y="585" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Main levée</text>
               </g>
 
               {/* Légende */}
-              <text x="400" y="650" textAnchor="middle" fontSize="12" fill="#64748b">Cliquez sur une ligne pour voir les détails</text>
+              <text x="400" y="650" textAnchor="middle" fontSize="12" fill="#64748b" className="dark:fill-slate-400">Cliquez sur une ligne pour voir les détails</text>
             </svg>
           </div>
 
           {/* Explanation Panel */}
           {selectedLineData && (
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border-l-4 border-blue-600">
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">{selectedLineData.name}</h3>
-              <p className="text-sm text-blue-800 font-semibold mb-3">Priorité de tracé : {selectedLineData.priority}</p>
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl p-6 border-l-4 border-blue-600 dark:border-blue-400">
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{selectedLineData.name}</h3>
+              <p className="text-sm text-blue-800 dark:text-blue-400 font-semibold mb-3">Priorité de tracé : {selectedLineData.priority}</p>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm font-bold text-slate-700 mb-1">Désignation :</p>
-                  <p className="text-slate-700 mb-3">{selectedLineData.designation}</p>
-                  <p className="text-sm font-bold text-slate-700 mb-1">Largeur typique :</p>
-                  <p className="text-slate-700">{selectedLineData.width}</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Désignation :</p>
+                  <p className="text-slate-700 dark:text-slate-300 mb-3">{selectedLineData.designation}</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Largeur typique :</p>
+                  <p className="text-slate-700 dark:text-slate-300">{selectedLineData.width}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-700 mb-1">Usage :</p>
-                  <p className="text-slate-700 mb-3">{selectedLineData.usage}</p>
-                  <p className="text-sm font-bold text-slate-700 mb-1">Exemple horlogerie :</p>
-                  <p className="text-slate-700">{selectedLineData.example}</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Usage :</p>
+                  <p className="text-slate-700 dark:text-slate-300 mb-3">{selectedLineData.usage}</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Exemple horlogerie :</p>
+                  <p className="text-slate-700 dark:text-slate-300">{selectedLineData.example}</p>
                 </div>
               </div>
             </div>
@@ -366,72 +369,72 @@ export default function TypesLignesPage() {
 
         {/* Mémo Technique */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
           
           <div className="grid md:grid-cols-2 gap-6">
             {/* Erreurs */}
-            <div className="bg-red-50 rounded-xl p-6 border border-red-200">
-              <h3 className="text-xl font-bold text-red-900 mb-4 flex items-center">
+            <div className="bg-red-50 dark:bg-red-950/30 rounded-xl p-6 border border-red-200 dark:border-red-800">
+              <h3 className="text-xl font-bold text-red-900 dark:text-red-300 mb-4 flex items-center">
                 <XCircle className="w-6 h-6 mr-2" />
                 Erreurs fréquentes
               </h3>
-              <ul className="space-y-3 text-slate-700">
+              <ul className="space-y-3 text-slate-700 dark:text-slate-300">
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Utiliser un trait continu fin pour les contours visibles.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Confondre trait interrompu (caché) et trait mixte (axe).</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Ne pas respecter le rapport 2:1 entre traits fort et fin.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Laisser se croiser deux traits forts.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Dessiner tous les traits cachés, même non nécessaires.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Oublier l'ordre de priorité lors de superpositions.</span>
                 </li>
               </ul>
             </div>
 
             {/* Bonnes pratiques */}
-            <div className="bg-green-50 rounded-xl p-6 border border-green-200">
-              <h3 className="text-xl font-bold text-green-900 mb-4 flex items-center">
+            <div className="bg-green-50 dark:bg-green-950/30 rounded-xl p-6 border border-green-200 dark:border-green-800">
+              <h3 className="text-xl font-bold text-green-900 dark:text-green-300 mb-4 flex items-center">
                 <CheckCircle className="w-6 h-6 mr-2" />
                 Bonnes pratiques
               </h3>
-              <ul className="space-y-3 text-slate-700">
+              <ul className="space-y-3 text-slate-700 dark:text-slate-300">
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Toujours utiliser trait continu fort pour contours visibles.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Respecter l'ordre de priorité : 1. Fort, 2. Interrompu, 3. Mixte.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Maintenir un rapport constant 2:1 (fort/fin) sur tout le plan.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Omettre les traits cachés non essentiels pour clarifier le dessin.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Utiliser traits mixtes fins pour tous les axes de symétrie.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Vérifier la cohérence des types de traits sur toutes les vues.</span>
                 </li>
               </ul>
@@ -441,29 +444,29 @@ export default function TypesLignesPage() {
 
         {/* Quiz Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Quiz : Teste tes connaissances</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Quiz : Teste tes connaissances</h2>
           
-          <div className="bg-white rounded-2xl shadow-lg p-8">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-200 dark:border-slate-700">
             {!quizCompleted ? (
               <>
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-4">
-                    <span className="text-sm font-medium text-slate-600">
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
                       Question {currentQuestion + 1} sur {quizData.length}
                     </span>
-                    <span className="text-sm font-medium text-blue-600">
+                    <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
                       Score: {score}/{quizData.length}
                     </span>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2">
+                  <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
                     <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${((currentQuestion + 1) / quizData.length) * 100}%` }}
                     ></div>
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-900 mb-6">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
                   {quizData[currentQuestion].question}
                 </h3>
 
@@ -475,24 +478,24 @@ export default function TypesLignesPage() {
                       disabled={selectedAnswer !== null}
                       className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                         selectedAnswer === null
-                          ? 'border-slate-200 hover:border-blue-400 hover:bg-blue-50'
+                          ? 'border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/30'
                           : index === quizData[currentQuestion].correctAnswer
-                          ? 'border-green-500 bg-green-50'
+                          ? 'border-green-500 dark:border-green-600 bg-green-50 dark:bg-green-950/30'
                           : selectedAnswer === index
-                          ? 'border-red-500 bg-red-50'
-                          : 'border-slate-200 opacity-50'
+                          ? 'border-red-500 dark:border-red-600 bg-red-50 dark:bg-red-950/30'
+                          : 'border-slate-200 dark:border-slate-700 opacity-50'
                       }`}
                     >
                       <div className="flex items-center">
-                        <span className="font-semibold mr-3 text-slate-700">
+                        <span className="font-semibold mr-3 text-slate-700 dark:text-slate-300">
                           {String.fromCharCode(65 + index)}.
                         </span>
-                        <span className="text-slate-800">{option}</span>
+                        <span className="text-slate-800 dark:text-slate-200">{option}</span>
                         {selectedAnswer !== null && index === quizData[currentQuestion].correctAnswer && (
-                          <CheckCircle className="w-5 h-5 ml-auto text-green-600" />
+                          <CheckCircle className="w-5 h-5 ml-auto text-green-600 dark:text-green-400" />
                         )}
                         {selectedAnswer === index && index !== quizData[currentQuestion].correctAnswer && (
-                          <XCircle className="w-5 h-5 ml-auto text-red-600" />
+                          <XCircle className="w-5 h-5 ml-auto text-red-600 dark:text-red-400" />
                         )}
                       </div>
                     </button>
@@ -500,8 +503,8 @@ export default function TypesLignesPage() {
                 </div>
 
                 {showExplanation && (
-                  <div className="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6 rounded">
-                    <p className="text-slate-700">
+                  <div className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-600 dark:border-blue-400 p-4 mb-6 rounded">
+                    <p className="text-slate-700 dark:text-slate-300">
                       <strong>Explication :</strong> {quizData[currentQuestion].explanation}
                     </p>
                   </div>
@@ -510,7 +513,7 @@ export default function TypesLignesPage() {
                 {selectedAnswer !== null && (
                   <button
                     onClick={handleNextQuestion}
-                    className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                    className="w-full bg-blue-600 dark:bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                   >
                     {currentQuestion < quizData.length - 1 ? 'Question suivante' : 'Voir les résultats'}
                   </button>
@@ -518,28 +521,28 @@ export default function TypesLignesPage() {
               </>
             ) : (
               <div className="text-center">
-                <h3 className="text-3xl font-bold text-slate-900 mb-4">Quiz terminé !</h3>
-                <p className="text-xl text-slate-700 mb-6">
-                  Votre score : <span className="font-bold text-blue-600">{score}/{quizData.length}</span>
+                <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Quiz terminé !</h3>
+                <p className="text-xl text-slate-700 dark:text-slate-300 mb-6">
+                  Votre score : <span className="font-bold text-blue-600 dark:text-blue-400">{score}/{quizData.length}</span>
                   {' '}({Math.round((score / quizData.length) * 100)}%)
                 </p>
                 <div className="mb-6">
                   {score === quizData.length && (
-                    <p className="text-green-600 font-semibold text-lg">🎉 Parfait ! Tu maîtrises les types de lignes !</p>
+                    <p className="text-green-600 dark:text-green-400 font-semibold text-lg">🎉 Parfait ! Tu maîtrises les types de lignes !</p>
                   )}
                   {score >= quizData.length * 0.8 && score < quizData.length && (
-                    <p className="text-blue-600 font-semibold text-lg">👏 Excellent travail ! Quelques révisions et ce sera parfait !</p>
+                    <p className="text-blue-600 dark:text-blue-400 font-semibold text-lg">👏 Excellent travail ! Quelques révisions et ce sera parfait !</p>
                   )}
                   {score >= quizData.length * 0.6 && score < quizData.length * 0.8 && (
-                    <p className="text-yellow-600 font-semibold text-lg">💪 Bon résultat ! Continue de t'entraîner !</p>
+                    <p className="text-yellow-600 dark:text-yellow-400 font-semibold text-lg">💪 Bon résultat ! Continue de t'entraîner !</p>
                   )}
                   {score < quizData.length * 0.6 && (
-                    <p className="text-orange-600 font-semibold text-lg">📚 Révise les notions et réessaie !</p>
+                    <p className="text-orange-600 dark:text-orange-400 font-semibold text-lg">📚 Révise les notions et réessaie !</p>
                   )}
                 </div>
                 <button
                   onClick={resetQuiz}
-                  className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                  className="bg-blue-600 dark:bg-blue-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                 >
                   Recommencer le quiz
                 </button>
@@ -550,8 +553,8 @@ export default function TypesLignesPage() {
 
         {/* Video Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Vidéo : Types de Traits en Dessin Technique</h2>
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Vidéo : Types de Traits en Dessin Technique</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 border border-slate-200 dark:border-slate-700">
             <div className="aspect-video">
               <iframe 
                 width="100%" 
@@ -569,20 +572,20 @@ export default function TypesLignesPage() {
 
         {/* Context Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Contexte & Origines de la Norme</h2>
-          <div className="bg-white rounded-2xl shadow-lg p-8">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Contexte & Origines de la Norme</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-200 dark:border-slate-700">
             <div className="flex items-start mb-6">
-              <div className="bg-blue-100 p-3 rounded-lg mr-4">
-                <Book className="w-6 h-6 text-blue-600" />
+              <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-lg mr-4">
+                <Book className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div className="flex-1">
-                <p className="text-slate-700 leading-relaxed mb-4">
-                  La norme <strong className="text-blue-600">ISO 128-2:2020</strong> établit les types de traits utilisés dans les dessins techniques (schémas, plans, cartes), leurs désignations et leurs configurations, ainsi que les règles générales pour le tracé de traits. Elle remplace l'ancienne norme ISO 128 de 1982.
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                  La norme <strong className="text-blue-600 dark:text-blue-400">ISO 128-2:2020</strong> établit les types de traits utilisés dans les dessins techniques (schémas, plans, cartes), leurs désignations et leurs configurations, ainsi que les règles générales pour le tracé de traits. Elle remplace l'ancienne norme ISO 128 de 1982.
                 </p>
-                <p className="text-slate-700 leading-relaxed mb-4">
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
                   Cette norme définit <strong>deux largeurs de trait</strong> principales : <strong>fort (épais)</strong> et <strong>fin (mince)</strong>, avec un rapport minimal de <strong>2:1</strong>. Les largeurs recommandées sont : 0.18, 0.25, 0.35, 0.5, 0.7, 1, 1.4 et 2 mm.
                 </p>
-                <p className="text-slate-700 leading-relaxed">
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
                   En horlogerie, le respect strict de ces conventions est essentiel pour garantir la lisibilité des plans techniques de mouvements, où la précision dimensionnelle et la clarté des spécifications sont cruciales pour l'usinage de composants miniatures.
                 </p>
               </div>
@@ -592,66 +595,66 @@ export default function TypesLignesPage() {
 
         {/* Table: Types de traits */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Types de Traits : Récapitulatif Complet</h2>
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Types de Traits : Récapitulatif Complet</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-700">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-100">
+                <thead className="bg-slate-100 dark:bg-slate-900">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Type de trait</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Désignation</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Largeur</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Applications principales</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Type de trait</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Désignation</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Largeur</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Applications principales</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Continu fort</td>
-                    <td className="px-6 py-4 text-slate-700">Trait plein épais</td>
-                    <td className="px-6 py-4 text-slate-700">0.5 - 0.7 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Contours visibles, arêtes vues</td>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Continu fort</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Trait plein épais</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.5 - 0.7 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Contours visibles, arêtes vues</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Continu fin</td>
-                    <td className="px-6 py-4 text-slate-700">Trait plein mince</td>
-                    <td className="px-6 py-4 text-slate-700">0.25 - 0.35 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Lignes de cote, hachures, lignes d'attache</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Continu fin</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Trait plein mince</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.25 - 0.35 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Lignes de cote, hachures, lignes d'attache</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Interrompu fort</td>
-                    <td className="px-6 py-4 text-slate-700">Trait discontinu épais</td>
-                    <td className="px-6 py-4 text-slate-700">0.5 - 0.7 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Contours cachés, arêtes non visibles</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Interrompu fort</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Trait discontinu épais</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.5 - 0.7 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Contours cachés, arêtes non visibles</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Interrompu fin</td>
-                    <td className="px-6 py-4 text-slate-700">Trait discontinu mince</td>
-                    <td className="px-6 py-4 text-slate-700">0.25 - 0.35 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Contours cachés secondaires</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Interrompu fin</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Trait discontinu mince</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.25 - 0.35 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Contours cachés secondaires</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Mixte fin</td>
-                    <td className="px-6 py-4 text-slate-700">Tiret-point mince</td>
-                    <td className="px-6 py-4 text-slate-700">0.25 - 0.35 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Axes de symétrie, plans de coupe</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Mixte fin</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Tiret-point mince</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.25 - 0.35 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Axes de symétrie, plans de coupe</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Mixte fort</td>
-                    <td className="px-6 py-4 text-slate-700">Tiret-point épais</td>
-                    <td className="px-6 py-4 text-slate-700">0.5 - 0.7 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Surfaces avec spécifications particulières</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Mixte fort</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Tiret-point épais</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.5 - 0.7 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Surfaces avec spécifications particulières</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Mixte fin 2 tirets</td>
-                    <td className="px-6 py-4 text-slate-700">Double tiret-point</td>
-                    <td className="px-6 py-4 text-slate-700">0.25 - 0.35 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Pièces voisines, positions alternatives</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Mixte fin 2 tirets</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Double tiret-point</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.25 - 0.35 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Pièces voisines, positions alternatives</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Continu fin main levée</td>
-                    <td className="px-6 py-4 text-slate-700">Trait ondulé/zigzag</td>
-                    <td className="px-6 py-4 text-slate-700">0.25 - 0.35 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Limites de vues partielles, coupes interrompues</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Continu fin main levée</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Trait ondulé/zigzag</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.25 - 0.35 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Limites de vues partielles, coupes interrompues</td>
                   </tr>
                 </tbody>
               </table>
@@ -661,49 +664,49 @@ export default function TypesLignesPage() {
 
         {/* Table: Ordre de priorité */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Ordre de Priorité des Traits</h2>
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Ordre de Priorité des Traits</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-700">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-100">
+                <thead className="bg-slate-100 dark:bg-slate-900">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Priorité</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Type de trait</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Règle en cas de superposition</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Priorité</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Type de trait</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Règle en cas de superposition</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-bold text-blue-600 text-lg">1</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900">Continu fort</td>
-                    <td className="px-6 py-4 text-slate-700">Priorité absolue, masque tous les autres traits</td>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-bold text-blue-600 dark:text-blue-400 text-lg">1</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Continu fort</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Priorité absolue, masque tous les autres traits</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-bold text-blue-600 text-lg">2</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900">Interrompu fort</td>
-                    <td className="px-6 py-4 text-slate-700">Priorité sur les traits mixtes et fins</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-bold text-blue-600 dark:text-blue-400 text-lg">2</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Interrompu fort</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Priorité sur les traits mixtes et fins</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-bold text-blue-600 text-lg">3</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900">Continu fin</td>
-                    <td className="px-6 py-4 text-slate-700">Priorité sur les traits mixtes</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-bold text-blue-600 dark:text-blue-400 text-lg">3</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Continu fin</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Priorité sur les traits mixtes</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-bold text-blue-600 text-lg">4</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900">Interrompu fin</td>
-                    <td className="px-6 py-4 text-slate-700">Priorité secondaire</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-bold text-blue-600 dark:text-blue-400 text-lg">4</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Interrompu fin</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Priorité secondaire</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-bold text-blue-600 text-lg">5</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900">Mixte fin</td>
-                    <td className="px-6 py-4 text-slate-700">Priorité faible, souvent masqué</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-bold text-blue-600 dark:text-blue-400 text-lg">5</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Mixte fin</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Priorité faible, souvent masqué</td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
-          <div className="mt-4 bg-amber-50 border-l-4 border-amber-600 p-4 rounded">
-            <p className="text-slate-700">
+          <div className="mt-4 bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-600 dark:border-amber-500 p-4 rounded">
+            <p className="text-slate-700 dark:text-slate-300">
               <strong>Règle importante :</strong> Les traits forts ne se croisent jamais entre eux ! En cas de superposition, toujours appliquer l'ordre de priorité ci-dessus.
             </p>
           </div>
@@ -711,74 +714,74 @@ export default function TypesLignesPage() {
 
         {/* Quote */}
         <section className="mb-16">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white text-center">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-2xl p-8 text-white text-center">
             <blockquote className="text-2xl font-serif italic mb-4">
               "La maîtrise des types de lignes est la base de tout dessin technique précis."
             </blockquote>
-            <p className="text-blue-100">— Principe fondamental ISO 128-2</p>
+            <p className="text-blue-100 dark:text-blue-200">— Principe fondamental ISO 128-2</p>
           </div>
         </section>
 
         {/* FAQ */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Questions fréquentes (FAQ)</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Questions fréquentes (FAQ)</h2>
           
           <div className="space-y-4">
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Quelle est la différence entre un trait continu fort et un trait continu fin ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   Le <strong>trait continu fort</strong> (épais, 0.5-0.7 mm) représente les contours et arêtes visibles. Le <strong>trait continu fin</strong> (mince, 0.25-0.35 mm) est utilisé pour les lignes de cote, hachures et lignes d'attache. Le rapport entre les deux doit être d'au moins 2:1.
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Pourquoi les traits forts ne peuvent-ils jamais se croiser ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   C'est une règle fondamentale de clarté : si deux traits forts (contours visibles) se croisent, cela signifie que deux arêtes vues se superposent exactement, ce qui est physiquement impossible ou crée une ambiguïté. Dans ce cas, on doit choisir la vue qui évite cette superposition ou appliquer l'ordre de priorité.
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Quand doit-on omettre les traits cachés ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   Les traits cachés (interrompus) peuvent être omis lorsqu'ils ne sont <strong>pas nécessaires à la définition de la pièce</strong>. Ceci permet d'alléger le dessin et de faciliter la lecture. En horlogerie, on privilégie les coupes pour montrer les détails internes plutôt que de multiplier les traits cachés.
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Comment distinguer un axe (mixte fin) d'une arête cachée (interrompu) ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   Le <strong>trait mixte fin</strong> (tiret-point) représente un élément <strong>théorique</strong> (axe de symétrie, plan de coupe) qui n'existe pas physiquement sur la pièce. Le <strong>trait interrompu</strong> représente une arête ou un contour <strong>réel mais caché</strong> derrière une surface opaque. La configuration est différente : tiret-point vs tirets réguliers.
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Quelles largeurs de trait choisir pour un plan A4 ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   Pour un plan format A4, les largeurs recommandées sont : <strong>trait fort = 0.5 mm</strong> et <strong>trait fin = 0.25 mm</strong> (rapport 2:1). Pour des formats plus grands (A3, A2), on peut utiliser trait fort = 0.7 mm et trait fin = 0.35 mm. L'important est de maintenir le rapport 2:1 et d'être constant sur tout le plan.
                 </p>
               </div>
@@ -788,13 +791,13 @@ export default function TypesLignesPage() {
 
         {/* CTA */}
         <section className="text-center">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white inline-block">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-2xl p-8 text-white inline-block">
             <p className="text-lg mb-4">📘 Tu veux aller plus loin ?</p>
             <a 
               href="https://www.iso.org/standard/69129.html" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+              className="inline-block bg-white text-blue-600 dark:text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-blue-100 transition-colors"
             >
               Consulter la norme ISO 128-2 complète
             </a>
@@ -803,9 +806,9 @@ export default function TypesLignesPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-8 mt-16">
+      <footer className="bg-slate-900 dark:bg-slate-950 text-white py-8 mt-16 border-t border-slate-800 dark:border-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-slate-400">© 2025 HorloLearn - Passion & Découverte Horlogère Suisse</p>
+          <p className="text-slate-400 dark:text-slate-500">© 2025 HorloLearn - Passion & Découverte Horlogère Suisse</p>
         </div>
       </footer>
     </div>
