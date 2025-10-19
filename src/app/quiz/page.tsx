@@ -6,7 +6,7 @@ export default function Quiz() {
       <div className="max-w-7xl mx-auto px-6 py-16">
         {/* Header Section */}
         <header className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-gold dark:text-yellow-400 mb-4">
+          <h1 className="text-5xl font-bold text-yellow-500 dark:text-yellow-400 mb-4">
             Quiz & Tests Horlogerie
           </h1>
           <p className="text-xl text-slate-700 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
