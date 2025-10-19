@@ -1,14 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
-
-// Import dynamique de Three.js (chargé uniquement côté client, sans SSR)
-const ThreeScene = dynamic(() => import('@/components/ThreeScene'), {
-  ssr: false,
-  loading: () => <div className="absolute inset-0" />,
-})
 
 export default function HomePage() {
   const [isDark, setIsDark] = useState(true)
@@ -39,21 +32,21 @@ export default function HomePage() {
 
       {/* HERO SECTION */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Canvas Three.js chargé dynamiquement */}
-        <div 
-          className="absolute inset-0"
-          style={{ opacity: isDark ? 0.15 : 0.1 }}
-        >
-          <ThreeScene isDark={isDark} />
-        </div>
-
-        {/* Grille animée */}
+        {/* Grille animée en arrière-plan (remplace Three.js) */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            backgroundImage: `linear-gradient(${isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)'} 1px, transparent 1px), linear-gradient(90deg, ${isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)'} 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(${isDark ? 'rgba(212,175,55,0.05)' : 'rgba(212,175,55,0.03)'} 1px, transparent 1px), linear-gradient(90deg, ${isDark ? 'rgba(212,175,55,0.05)' : 'rgba(212,175,55,0.03)'} 1px, transparent 1px)`,
             backgroundSize: '50px 50px',
             animation: 'gridMove 20s linear infinite',
+          }}
+        />
+
+        {/* Effet de dégradé radial */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(circle at center, transparent 0%, ${isDark ? 'rgba(212,175,55,0.1)' : 'rgba(212,175,55,0.05)'} 100%)`,
           }}
         />
 
