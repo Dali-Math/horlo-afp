@@ -324,11 +324,11 @@ export default function NormesNIHSPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-slate-200">
+      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link href="/theorie/lecture-de-plan" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+          <Link href="/theorie/lecture-de-plan" className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium">
             <ChevronLeft className="w-5 h-5 mr-1" />
             Retour
           </Link>
@@ -339,69 +339,69 @@ export default function NormesNIHSPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Title Section */}
         <div className="text-center mb-12">
-          <div className="inline-block px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-4">
+          <div className="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm font-medium mb-4">
             Les normes
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">
             Éléments d'Horlogerie (Normes NIHS)
           </h1>
-          <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
             Normes de l'Industrie Horlogère Suisse : standards de qualité, fiabilité et précision
           </p>
         </div>
 
         {/* Interactive Schema Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Normes Principales</h2>
-          <p className="text-slate-600 mb-8">Cliquez sur une norme pour voir ses détails et applications.</p>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Normes Principales</h2>
+          <p className="text-slate-600 dark:text-slate-400 mb-8">Cliquez sur une norme pour voir ses détails et applications.</p>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
             {normsData.map((norm) => (
               <div
                 key={norm.id}
                 onClick={() => handleNormClick(norm.id)}
-                className={`bg-white rounded-xl p-6 border-2 cursor-pointer transition-all hover:shadow-lg ${
-                  selectedNorm === norm.id ? 'border-blue-600 shadow-lg' : 'border-slate-200'
+                className={`bg-white dark:bg-slate-800 rounded-xl p-6 border-2 cursor-pointer transition-all hover:shadow-lg ${
+                  selectedNorm === norm.id ? 'border-blue-600 dark:border-blue-400 shadow-lg' : 'border-slate-200 dark:border-slate-700'
                 }`}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className={`p-2 rounded-lg ${
-                    norm.category === 'Fiabilité' ? 'bg-blue-100 text-blue-600' :
-                    norm.category === 'Fiabilité mécanique' ? 'bg-green-100 text-green-600' :
-                    norm.category === 'Précision' ? 'bg-purple-100 text-purple-600' :
-                    'bg-orange-100 text-orange-600'
+                    norm.category === 'Fiabilité' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' :
+                    norm.category === 'Fiabilité mécanique' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' :
+                    norm.category === 'Précision' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400' :
+                    'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400'
                   }`}>
                     {getCategoryIcon(norm.category)}
                   </div>
-                  <span className="text-xs font-medium text-slate-500">{norm.category}</span>
+                  <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{norm.category}</span>
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">{norm.code}</h3>
-                <p className="text-sm font-semibold text-blue-600 mb-2">{norm.title}</p>
-                <p className="text-sm text-slate-600 line-clamp-3">{norm.description}</p>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{norm.code}</h3>
+                <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">{norm.title}</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-3">{norm.description}</p>
               </div>
             ))}
           </div>
 
           {/* Explanation Panel */}
           {selectedNormData && (
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border-l-4 border-blue-600">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl p-6 border-l-4 border-blue-600 dark:border-blue-400">
               <div className="flex items-center mb-3">
-                <h3 className="text-2xl font-bold text-slate-900">{selectedNormData.code}</h3>
-                <span className="ml-4 px-3 py-1 bg-blue-600 text-white text-xs rounded-full">{selectedNormData.category}</span>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{selectedNormData.code}</h3>
+                <span className="ml-4 px-3 py-1 bg-blue-600 dark:bg-blue-500 text-white text-xs rounded-full">{selectedNormData.category}</span>
               </div>
-              <p className="text-lg text-blue-800 font-semibold mb-4">{selectedNormData.title}</p>
+              <p className="text-lg text-blue-800 dark:text-blue-300 font-semibold mb-4">{selectedNormData.title}</p>
               <div className="space-y-3">
                 <div>
-                  <p className="text-sm font-bold text-slate-700 mb-1">Description :</p>
-                  <p className="text-slate-700">{selectedNormData.description}</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Description :</p>
+                  <p className="text-slate-700 dark:text-slate-300">{selectedNormData.description}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-700 mb-1">Application :</p>
-                  <p className="text-slate-700">{selectedNormData.application}</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Application :</p>
+                  <p className="text-slate-700 dark:text-slate-300">{selectedNormData.application}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-700 mb-1">Exemple :</p>
-                  <p className="text-slate-700">{selectedNormData.example}</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Exemple :</p>
+                  <p className="text-slate-700 dark:text-slate-300">{selectedNormData.example}</p>
                 </div>
               </div>
             </div>
@@ -410,72 +410,72 @@ export default function NormesNIHSPage() {
 
         {/* Mémo Technique */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
           
           <div className="grid md:grid-cols-2 gap-6">
             {/* Erreurs */}
-            <div className="bg-red-50 rounded-xl p-6 border border-red-200">
-              <h3 className="text-xl font-bold text-red-900 mb-4 flex items-center">
+            <div className="bg-red-50 dark:bg-red-950/30 rounded-xl p-6 border border-red-200 dark:border-red-800">
+              <h3 className="text-xl font-bold text-red-900 dark:text-red-300 mb-4 flex items-center">
                 <XCircle className="w-6 h-6 mr-2" />
                 Erreurs fréquentes
               </h3>
-              <ul className="space-y-3 text-slate-700">
+              <ul className="space-y-3 text-slate-700 dark:text-slate-300">
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Confondre étanchéité 50m (NIHS 92-20) avec aptitude à la plongée.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Négliger les tests de chocs (NIHS 91-30) lors de la conception.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Utiliser des filetages non conformes à NIHS 06-12.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Oublier le vieillissement mécanique (NIHS 93-20) avant commercialisation.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Revendiquer "antimagnétique" sans tester selon ISO 764.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Ignorer les critères COSC (ISO 3159) pour un chronomètre.</span>
                 </li>
               </ul>
             </div>
 
             {/* Bonnes pratiques */}
-            <div className="bg-green-50 rounded-xl p-6 border border-green-200">
-              <h3 className="text-xl font-bold text-green-900 mb-4 flex items-center">
+            <div className="bg-green-50 dark:bg-green-950/30 rounded-xl p-6 border border-green-200 dark:border-green-800">
+              <h3 className="text-xl font-bold text-green-900 dark:text-green-300 mb-4 flex items-center">
                 <CheckCircle className="w-6 h-6 mr-2" />
                 Bonnes pratiques
               </h3>
-              <ul className="space-y-3 text-slate-700">
+              <ul className="space-y-3 text-slate-700 dark:text-slate-300">
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Respecter strictement NIHS 92-20 ou 92-11 selon l'usage prévu.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Valider la tenue aux chocs NIHS 91-30 dès la phase prototype.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Utiliser exclusivement des jauges certifiées NIHS 06-12 pour filetages.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Soumettre les mouvements à des tests de vieillissement Chronofiable®.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Documenter tous les tests NIHS/ISO dans le dossier technique.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Former le personnel aux exigences normatives spécifiques à l'horlogerie.</span>
                 </li>
               </ul>
@@ -485,29 +485,29 @@ export default function NormesNIHSPage() {
 
         {/* Quiz Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Quiz : Teste tes connaissances</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Quiz : Teste tes connaissances</h2>
           
-          <div className="bg-white rounded-2xl shadow-lg p-8">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-200 dark:border-slate-700">
             {!quizCompleted ? (
               <>
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-4">
-                    <span className="text-sm font-medium text-slate-600">
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
                       Question {currentQuestion + 1} sur {quizData.length}
                     </span>
-                    <span className="text-sm font-medium text-blue-600">
+                    <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
                       Score: {score}/{quizData.length}
                     </span>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2">
+                  <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
                     <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${((currentQuestion + 1) / quizData.length) * 100}%` }}
                     ></div>
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-900 mb-6">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
                   {quizData[currentQuestion].question}
                 </h3>
 
@@ -519,24 +519,24 @@ export default function NormesNIHSPage() {
                       disabled={selectedAnswer !== null}
                       className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                         selectedAnswer === null
-                          ? 'border-slate-200 hover:border-blue-400 hover:bg-blue-50'
+                          ? 'border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/30'
                           : index === quizData[currentQuestion].correctAnswer
-                          ? 'border-green-500 bg-green-50'
+                          ? 'border-green-500 dark:border-green-600 bg-green-50 dark:bg-green-950/30'
                           : selectedAnswer === index
-                          ? 'border-red-500 bg-red-50'
-                          : 'border-slate-200 opacity-50'
+                          ? 'border-red-500 dark:border-red-600 bg-red-50 dark:bg-red-950/30'
+                          : 'border-slate-200 dark:border-slate-700 opacity-50'
                       }`}
                     >
                       <div className="flex items-center">
-                        <span className="font-semibold mr-3 text-slate-700">
+                        <span className="font-semibold mr-3 text-slate-700 dark:text-slate-300">
                           {String.fromCharCode(65 + index)}.
                         </span>
-                        <span className="text-slate-800">{option}</span>
+                        <span className="text-slate-800 dark:text-slate-200">{option}</span>
                         {selectedAnswer !== null && index === quizData[currentQuestion].correctAnswer && (
-                          <CheckCircle className="w-5 h-5 ml-auto text-green-600" />
+                          <CheckCircle className="w-5 h-5 ml-auto text-green-600 dark:text-green-400" />
                         )}
                         {selectedAnswer === index && index !== quizData[currentQuestion].correctAnswer && (
-                          <XCircle className="w-5 h-5 ml-auto text-red-600" />
+                          <XCircle className="w-5 h-5 ml-auto text-red-600 dark:text-red-400" />
                         )}
                       </div>
                     </button>
@@ -544,8 +544,8 @@ export default function NormesNIHSPage() {
                 </div>
 
                 {showExplanation && (
-                  <div className="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6 rounded">
-                    <p className="text-slate-700">
+                  <div className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-600 dark:border-blue-400 p-4 mb-6 rounded">
+                    <p className="text-slate-700 dark:text-slate-300">
                       <strong>Explication :</strong> {quizData[currentQuestion].explanation}
                     </p>
                   </div>
@@ -554,7 +554,7 @@ export default function NormesNIHSPage() {
                 {selectedAnswer !== null && (
                   <button
                     onClick={handleNextQuestion}
-                    className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                    className="w-full bg-blue-600 dark:bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                   >
                     {currentQuestion < quizData.length - 1 ? 'Question suivante' : 'Voir les résultats'}
                   </button>
@@ -562,28 +562,28 @@ export default function NormesNIHSPage() {
               </>
             ) : (
               <div className="text-center">
-                <h3 className="text-3xl font-bold text-slate-900 mb-4">Quiz terminé !</h3>
-                <p className="text-xl text-slate-700 mb-6">
-                  Votre score : <span className="font-bold text-blue-600">{score}/{quizData.length}</span>
+                <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Quiz terminé !</h3>
+                <p className="text-xl text-slate-700 dark:text-slate-300 mb-6">
+                  Votre score : <span className="font-bold text-blue-600 dark:text-blue-400">{score}/{quizData.length}</span>
                   {' '}({Math.round((score / quizData.length) * 100)}%)
                 </p>
                 <div className="mb-6">
                   {score === quizData.length && (
-                    <p className="text-green-600 font-semibold text-lg">🎉 Parfait ! Tu maîtrises les normes NIHS !</p>
+                    <p className="text-green-600 dark:text-green-400 font-semibold text-lg">🎉 Parfait ! Tu maîtrises les normes NIHS !</p>
                   )}
                   {score >= quizData.length * 0.8 && score < quizData.length && (
-                    <p className="text-blue-600 font-semibold text-lg">👏 Excellent travail ! Quelques révisions et ce sera parfait !</p>
+                    <p className="text-blue-600 dark:text-blue-400 font-semibold text-lg">👏 Excellent travail ! Quelques révisions et ce sera parfait !</p>
                   )}
                   {score >= quizData.length * 0.6 && score < quizData.length * 0.8 && (
-                    <p className="text-yellow-600 font-semibold text-lg">💪 Bon résultat ! Continue de t'entraîner !</p>
+                    <p className="text-yellow-600 dark:text-yellow-400 font-semibold text-lg">💪 Bon résultat ! Continue de t'entraîner !</p>
                   )}
                   {score < quizData.length * 0.6 && (
-                    <p className="text-orange-600 font-semibold text-lg">📚 Révise les notions et réessaie !</p>
+                    <p className="text-orange-600 dark:text-orange-400 font-semibold text-lg">📚 Révise les notions et réessaie !</p>
                   )}
                 </div>
                 <button
                   onClick={resetQuiz}
-                  className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                  className="bg-blue-600 dark:bg-blue-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                 >
                   Recommencer le quiz
                 </button>
@@ -594,20 +594,20 @@ export default function NormesNIHSPage() {
 
         {/* Context Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Contexte & Origines des Normes NIHS</h2>
-          <div className="bg-white rounded-2xl shadow-lg p-8">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Contexte & Origines des Normes NIHS</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-200 dark:border-slate-700">
             <div className="flex items-start mb-6">
-              <div className="bg-blue-100 p-3 rounded-lg mr-4">
-                <Book className="w-6 h-6 text-blue-600" />
+              <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-lg mr-4">
+                <Book className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div className="flex-1">
-                <p className="text-slate-700 leading-relaxed mb-4">
-                  Les <strong className="text-blue-600">Normes de l'Industrie Horlogère Suisse (NIHS)</strong> sont élaborées, éditées et distribuées par la <strong>Fédération de l'industrie horlogère suisse (FH)</strong>. Plus de <strong>150 normes horlogères</strong> (NIHS, CEN, ISO) existent et sont régulièrement mises à jour.
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                  Les <strong className="text-blue-600 dark:text-blue-400">Normes de l'Industrie Horlogère Suisse (NIHS)</strong> sont élaborées, éditées et distribuées par la <strong>Fédération de l'industrie horlogère suisse (FH)</strong>. Plus de <strong>150 normes horlogères</strong> (NIHS, CEN, ISO) existent et sont régulièrement mises à jour.
                 </p>
-                <p className="text-slate-700 leading-relaxed mb-4">
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
                   Ces normes couvrent des domaines aussi variés que la <strong>construction</strong>, les <strong>matériaux luminescents</strong>, les <strong>tests et exigences en matière d'étanchéité</strong>, de <strong>résistance aux chocs et au magnétisme</strong>, ainsi que les <strong>exigences minimales pour la certification des mouvements chronomètres</strong>.
                 </p>
-                <p className="text-slate-700 leading-relaxed">
+                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
                   En Suisse, la normalisation horlogère est affiliée à l'<strong>Association suisse de normalisation (SNV)</strong>. Sur le plan international, elle est gérée par le comité technique <strong>ISO/TC 114 - Horlogerie</strong>, dont la FH assure le secrétariat. Les documents normatifs les plus récents portent un numéro <strong>SN</strong> en plus du numéro NIHS.
                 </p>
               </div>
@@ -617,47 +617,47 @@ export default function NormesNIHSPage() {
 
         {/* Table: Normes par catégorie */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Classification des Normes NIHS</h2>
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Classification des Normes NIHS</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-700">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-100">
+                <thead className="bg-slate-100 dark:bg-slate-900">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Catégorie</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Normes principales</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Objectif</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Catégorie</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Normes principales</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Objectif</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Construction</td>
-                    <td className="px-6 py-4 text-slate-700">NIHS 02-03, 04-01, 04-03, 06-12</td>
-                    <td className="px-6 py-4 text-slate-700">Vocabulaire, tolérances, filetages, dessins techniques</td>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Construction</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">NIHS 02-03, 04-01, 04-03, 06-12</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Vocabulaire, tolérances, filetages, dessins techniques</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Fiabilité mécanique</td>
-                    <td className="px-6 py-4 text-slate-700">NIHS 91-30, 93-20, ISO 1413</td>
-                    <td className="px-6 py-4 text-slate-700">Résistance aux chocs, vieillissement, fiabilité</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Fiabilité mécanique</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">NIHS 91-30, 93-20, ISO 1413</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Résistance aux chocs, vieillissement, fiabilité</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Étanchéité</td>
-                    <td className="px-6 py-4 text-slate-700">NIHS 92-20, 92-11, ISO 22810, ISO 6425</td>
-                    <td className="px-6 py-4 text-slate-700">Résistance à l'eau, montres de plongée</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Étanchéité</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">NIHS 92-20, 92-11, ISO 22810, ISO 6425</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Résistance à l'eau, montres de plongée</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Résistances</td>
-                    <td className="px-6 py-4 text-slate-700">ISO 764, NIHS 96-50, ISO 23160</td>
-                    <td className="px-6 py-4 text-slate-700">Magnétisme, agents chimiques, rayures</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Résistances</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">ISO 764, NIHS 96-50, ISO 23160</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Magnétisme, agents chimiques, rayures</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Précision</td>
-                    <td className="px-6 py-4 text-slate-700">ISO 3159</td>
-                    <td className="px-6 py-4 text-slate-700">Certification chronomètre COSC</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Précision</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">ISO 3159</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Certification chronomètre COSC</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Habillage</td>
-                    <td className="px-6 py-4 text-slate-700">ISO 14368, NIHS 96-60</td>
-                    <td className="px-6 py-4 text-slate-700">Verres saphir/minéral, bracelets, boîtiers</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Habillage</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">ISO 14368, NIHS 96-60</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Verres saphir/minéral, bracelets, boîtiers</td>
                   </tr>
                 </tbody>
               </table>
@@ -667,42 +667,42 @@ export default function NormesNIHSPage() {
 
         {/* Table: Exemples d'application */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Exemples d'Application en Horlogerie</h2>
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Exemples d'Application en Horlogerie</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-700">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-100">
+                <thead className="bg-slate-100 dark:bg-slate-900">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Type de montre</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Normes applicables</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Exigences clés</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Type de montre</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Normes applicables</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Exigences clés</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Montre quotidienne</td>
-                    <td className="px-6 py-4 text-slate-700">NIHS 92-20, 91-30</td>
-                    <td className="px-6 py-4 text-slate-700">Étanche 30-50m, résistance chocs 1m</td>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Montre quotidienne</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">NIHS 92-20, 91-30</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Étanche 30-50m, résistance chocs 1m</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Montre de plongée</td>
-                    <td className="px-6 py-4 text-slate-700">NIHS 92-11, ISO 6425</td>
-                    <td className="px-6 py-4 text-slate-700">Étanche ≥100m, lunette, lisibilité nocturne</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Montre de plongée</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">NIHS 92-11, ISO 6425</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Étanche ≥100m, lunette, lisibilité nocturne</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Chronomètre certifié</td>
-                    <td className="px-6 py-4 text-slate-700">ISO 3159</td>
-                    <td className="px-6 py-4 text-slate-700">Précision -4/+6 s/j, 5 positions, 3 températures</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Chronomètre certifié</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">ISO 3159</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Précision -4/+6 s/j, 5 positions, 3 températures</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Montre antimagnétique</td>
-                    <td className="px-6 py-4 text-slate-700">ISO 764</td>
-                    <td className="px-6 py-4 text-slate-700">Résistance ≥4800 A/m sans altération</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Montre antimagnétique</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">ISO 764</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Résistance ≥4800 A/m sans altération</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Montre sport/aventure</td>
-                    <td className="px-6 py-4 text-slate-700">NIHS 91-30, 93-20, 92-20</td>
-                    <td className="px-6 py-4 text-slate-700">Multi-chocs, vieillissement accéléré, étanche</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Montre sport/aventure</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">NIHS 91-30, 93-20, 92-20</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Multi-chocs, vieillissement accéléré, étanche</td>
                   </tr>
                 </tbody>
               </table>
@@ -712,74 +712,74 @@ export default function NormesNIHSPage() {
 
         {/* Quote */}
         <section className="mb-16">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white text-center">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-2xl p-8 text-white text-center">
             <blockquote className="text-2xl font-serif italic mb-4">
               "Les normes NIHS garantissent la qualité légendaire de l'horlogerie suisse."
             </blockquote>
-            <p className="text-blue-100">— Fédération de l'industrie horlogère suisse (FH)</p>
+            <p className="text-blue-100 dark:text-blue-200">— Fédération de l'industrie horlogère suisse (FH)</p>
           </div>
         </section>
 
         {/* FAQ */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Questions fréquentes (FAQ)</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Questions fréquentes (FAQ)</h2>
           
           <div className="space-y-4">
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Quelle est la différence entre NIHS 92-20 et NIHS 92-11 ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   <strong>NIHS 92-20</strong> (ISO 22810) concerne les montres étanches pour usage quotidien (minimum 2 bar / 20m) : douche, natation courte durée. <strong>NIHS 92-11</strong> (ISO 6425) concerne les montres de plongée professionnelles (minimum 100m) avec exigences supplémentaires : lunette unidirectionnelle, lisibilité dans l'obscurité, résistance renforcée.
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Comment obtenir une certification chronomètre COSC selon ISO 3159 ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   Le mouvement doit être soumis au COSC (Contrôle Officiel Suisse des Chronomètres) pour des tests sur 15 jours dans 5 positions et 3 températures. La précision doit être de -4 à +6 secondes par jour. Le mouvement reçoit alors un bulletin officiel et peut porter la mention "Chronomètre" ou "Chronometer".
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Qu'est-ce que le protocole Chronofiable® ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   Le Chronofiable® est un test de fiabilité propriétaire qui simule 6 mois de port en 21 jours. Il inclut des rotations continues, des chocs radiaux (450-550 G) et axiaux (25-100 G), ainsi que des cycles de chaleur et d'humidité. Il va au-delà des exigences NIHS 93-20 standard.
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Où se procurer les normes NIHS officielles ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
-                  Les normes NIHS sont disponibles sur le site de la <strong>Fédération de l'industrie horlogère suisse (FH)</strong> : <a href="https://www.fhs.swiss" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">www.fhs.swiss</a>. Elles peuvent être achetées individuellement ou en recueil complet (Extrait des Normes NIHS). Les membres FH bénéficient de conditions préférentielles.
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
+                  Les normes NIHS sont disponibles sur le site de la <strong>Fédération de l'industrie horlogère suisse (FH)</strong> : <a href="https://www.fhs.swiss" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">www.fhs.swiss</a>. Elles peuvent être achetées individuellement ou en recueil complet (Extrait des Normes NIHS). Les membres FH bénéficient de conditions préférentielles.
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Les normes NIHS sont-elles obligatoires en Suisse ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   Les normes NIHS ne sont pas juridiquement obligatoires, mais elles constituent des <strong>standards industriels reconnus</strong>. Leur respect est essentiel pour garantir la qualité, obtenir certaines certifications (Swiss Made, COSC, etc.) et répondre aux attentes du marché horloger international. De nombreuses manufactures les imposent contractuellement à leurs fournisseurs.
                 </p>
               </div>
@@ -789,13 +789,13 @@ export default function NormesNIHSPage() {
 
         {/* CTA */}
         <section className="text-center">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white inline-block">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-2xl p-8 text-white inline-block">
             <p className="text-lg mb-4">📘 Tu veux aller plus loin ?</p>
             <a 
               href="https://www.fhs.swiss/fre/normalisation.html" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+              className="inline-block bg-white text-blue-600 dark:text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-blue-100 transition-colors"
             >
               Consulter les normes NIHS officielles
             </a>
@@ -804,9 +804,9 @@ export default function NormesNIHSPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-8 mt-16">
+      <footer className="bg-slate-900 dark:bg-slate-950 text-white py-8 mt-16 border-t border-slate-800 dark:border-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-slate-400">© 2025 HorloLearn - Passion & Découverte Horlogère Suisse</p>
+          <p className="text-slate-400 dark:text-slate-500">© 2025 HorloLearn - Passion & Découverte Horlogère Suisse</p>
         </div>
       </footer>
     </div>
