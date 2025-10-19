@@ -18,19 +18,31 @@ import {
   Star
 } from 'lucide-react';
 
-// ---- HERO AVEC CERCLES ANIMÉS ----
+// ---- HERO AVEC CERCLES ANIMÉS VISIBLES ----
 function HeroSection() {
   return (
     <section className="min-h-screen bg-[#0a122a] relative overflow-hidden flex flex-col justify-center items-center px-4">
-      {/* Cercles animés en arrière-plan */}
+      {/* Cercles animés VISIBLES */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Grand cercle gauche */}
-        <div className="absolute top-1/4 left-[-10%] w-[500px] h-[500px] border-[2px] border-sky-500/20 rounded-full animate-spin-slow" />
-        <div className="absolute top-1/4 left-[-10%] w-[400px] h-[400px] border-[2px] border-cyan-400/20 rounded-full animate-spin-slower" />
+        {/* Cercle GAUCHE GRAND */}
+        <div 
+          className="absolute top-[20%] left-[-15%] w-[600px] h-[600px] rounded-full border-[3px] border-cyan-400/30"
+          style={{ animation: 'spin-slow 35s linear infinite' }}
+        />
+        <div 
+          className="absolute top-[20%] left-[-15%] w-[500px] h-[500px] rounded-full border-[2px] border-blue-300/25"
+          style={{ animation: 'spin-slower 45s linear infinite' }}
+        />
         
-        {/* Grand cercle droit */}
-        <div className="absolute bottom-1/4 right-[-10%] w-[600px] h-[600px] border-[2px] border-blue-400/20 rounded-full animate-spin-reverse" />
-        <div className="absolute bottom-1/4 right-[-10%] w-[450px] h-[450px] border-[2px] border-indigo-400/20 rounded-full animate-spin-slow-reverse" />
+        {/* Cercle DROITE GRAND */}
+        <div 
+          className="absolute bottom-[15%] right-[-15%] w-[700px] h-[700px] rounded-full border-[3px] border-indigo-400/30"
+          style={{ animation: 'spin-reverse 40s linear infinite' }}
+        />
+        <div 
+          className="absolute bottom-[15%] right-[-15%] w-[550px] h-[550px] rounded-full border-[2px] border-sky-300/25"
+          style={{ animation: 'spin-slow-reverse 50s linear infinite' }}
+        />
         
         {/* Effets de lumière */}
         <div className="absolute -top-40 -left-40 w-[400px] h-[400px] rounded-full bg-sky-600/10 blur-3xl animate-pulse-slow" />
@@ -108,27 +120,6 @@ function HeroSection() {
           from { transform: rotate(360deg); }
           to { transform: rotate(0deg); }
         }
-        .animate-spin-slow {
-          animation: spin-slow 30s linear infinite;
-        }
-        .animate-spin-slower {
-          animation: spin-slower 40s linear infinite;
-        }
-        .animate-spin-reverse {
-          animation: spin-reverse 35s linear infinite;
-        }
-        .animate-spin-slow-reverse {
-          animation: spin-slow-reverse 45s linear infinite;
-        }
-        .animate-pulse-slow {
-          animation: pulse 11s ease-in-out infinite;
-        }
-        .animate-pulse-slow2 {
-          animation: pulse2 14s ease-in-out infinite;
-        }
-        .animate-pulse-slow3 {
-          animation: pulse3 17s ease-in-out infinite;
-        }
         @keyframes pulse {
           0%, 100% { opacity: 0.37; }
           50% { opacity: 0.14; }
@@ -140,6 +131,15 @@ function HeroSection() {
         @keyframes pulse3 {
           0%, 100% { opacity: 0.23; }
           50% { opacity: 0.09; }
+        }
+        .animate-pulse-slow {
+          animation: pulse 11s ease-in-out infinite;
+        }
+        .animate-pulse-slow2 {
+          animation: pulse2 14s ease-in-out infinite;
+        }
+        .animate-pulse-slow3 {
+          animation: pulse3 17s ease-in-out infinite;
         }
       `}</style>
     </section>
