@@ -235,9 +235,9 @@ export default function HistoireHorlogerie() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-orange-50 dark:from-slate-950 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
       {/* HEADER */}
-      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10 backdrop-blur-sm bg-white/90 dark:bg-slate-900/90">
+      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10 backdrop-blur-sm bg-white/90 dark:bg-slate-900/90">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <Link
             href="/theorie"
@@ -263,19 +263,19 @@ export default function HistoireHorlogerie() {
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4">
+              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 hover:shadow-lg transition-all">
                 <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-1">1541</div>
                 <div className="text-xs text-slate-600 dark:text-slate-400">Origines à Genève</div>
               </div>
-              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4">
+              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 hover:shadow-lg transition-all">
                 <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-1">60K</div>
                 <div className="text-xs text-slate-600 dark:text-slate-400">Montres exportées (1790)</div>
               </div>
-              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4">
+              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 hover:shadow-lg transition-all">
                 <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-1">21</div>
                 <div className="text-xs text-slate-600 dark:text-slate-400">Manufactures Beta 21</div>
               </div>
-              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4">
+              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 hover:shadow-lg transition-all">
                 <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-1">N°1</div>
                 <div className="text-xs text-slate-600 dark:text-slate-400">Leader mondial</div>
               </div>
@@ -300,7 +300,7 @@ export default function HistoireHorlogerie() {
               <div key={period.id}>
                 <button
                   onClick={() => setSelectedPeriod(selectedPeriod === period.id ? '' : period.id)}
-                  className="w-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl p-6 hover:border-orange-400 dark:hover:border-orange-500 transition-all text-left"
+                  className="w-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl p-6 hover:border-orange-400 dark:hover:border-orange-500 hover:shadow-lg dark:hover:bg-slate-700 transition-all text-left"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 flex-1">
@@ -375,7 +375,7 @@ export default function HistoireHorlogerie() {
               <div key={figure.id}>
                 <button
                   onClick={() => setSelectedFigure(selectedFigure === figure.id ? '' : figure.id)}
-                  className="w-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl p-6 hover:border-orange-400 dark:hover:border-orange-500 transition-all text-left"
+                  className="w-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl p-6 hover:border-orange-400 dark:hover:border-orange-500 hover:shadow-lg dark:hover:bg-slate-700 transition-all text-left"
                 >
                   <h3 className="text-xl font-bold text-orange-600 dark:text-orange-400 mb-1">{figure.name}</h3>
                   <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">{figure.years}</p>
@@ -441,9 +441,9 @@ export default function HistoireHorlogerie() {
       </article>
 
       {/* FOOTER */}
-      <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-8 mt-16">
+      <footer className="bg-slate-900 dark:bg-slate-950 border-t border-slate-800 py-8 mt-16">
         <div className="max-w-6xl mx-auto px-4 text-center">
-          <p className="text-sm text-slate-600 dark:text-slate-400">
+          <p className="text-sm text-slate-400">
             © 2025 HorloLearn - Formation en Horlogerie Suisse
           </p>
         </div>
