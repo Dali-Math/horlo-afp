@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ChevronLeft, Factory, Wrench, Award, Timer } from 'lucide-react';
 
-const sousPagesM ouvement = [
+const sousPagesMouvement = [
   {
     slug: 'platine-ponts',
     titre: "La Platine et les Ponts",
@@ -55,7 +55,7 @@ export default function MouvementsPage() {
 
         {/* Grille des sous-pages */}
         <div className="grid md:grid-cols-2 gap-6">
-          {sousPagesM ouvement.map((p) => (
+          {sousPagesMouvement.map((p) => (
             <Link
               key={p.slug}
               href={`/theorie/mouvements/${p.slug}`}
