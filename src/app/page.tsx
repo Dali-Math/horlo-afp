@@ -18,14 +18,25 @@ import {
   Star
 } from 'lucide-react';
 
-// ---- HERO MODERNE AVEC STATS ----
+// ---- HERO AVEC CERCLES ANIMÉS ----
 function HeroSection() {
   return (
     <section className="min-h-screen bg-[#0a122a] relative overflow-hidden flex flex-col justify-center items-center px-4">
-      {/* Effets de fond */}
-      <div className="absolute -top-40 -left-40 w-[400px] h-[400px] rounded-full bg-sky-600/10 blur-3xl animate-pulse-slow" />
-      <div className="absolute top-1/3 right-0 w-[300px] h-[300px] rounded-full bg-indigo-300/10 blur-2xl animate-pulse-slow2" />
-      <div className="absolute bottom-0 left-1/4 w-[550px] h-[550px] rounded-full bg-blue-400/10 blur-[140px] animate-pulse-slow3" />
+      {/* Cercles animés en arrière-plan */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Grand cercle gauche */}
+        <div className="absolute top-1/4 left-[-10%] w-[500px] h-[500px] border-[2px] border-sky-500/20 rounded-full animate-spin-slow" />
+        <div className="absolute top-1/4 left-[-10%] w-[400px] h-[400px] border-[2px] border-cyan-400/20 rounded-full animate-spin-slower" />
+        
+        {/* Grand cercle droit */}
+        <div className="absolute bottom-1/4 right-[-10%] w-[600px] h-[600px] border-[2px] border-blue-400/20 rounded-full animate-spin-reverse" />
+        <div className="absolute bottom-1/4 right-[-10%] w-[450px] h-[450px] border-[2px] border-indigo-400/20 rounded-full animate-spin-slow-reverse" />
+        
+        {/* Effets de lumière */}
+        <div className="absolute -top-40 -left-40 w-[400px] h-[400px] rounded-full bg-sky-600/10 blur-3xl animate-pulse-slow" />
+        <div className="absolute top-1/3 right-0 w-[300px] h-[300px] rounded-full bg-indigo-300/10 blur-2xl animate-pulse-slow2" />
+        <div className="absolute bottom-0 left-1/4 w-[550px] h-[550px] rounded-full bg-blue-400/10 blur-[140px] animate-pulse-slow3" />
+      </div>
 
       <div className="relative z-10 max-w-5xl mx-auto text-center">
         {/* Badge */}
@@ -81,6 +92,34 @@ function HeroSection() {
       </div>
 
       <style jsx>{`
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes spin-slower {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes spin-reverse {
+          from { transform: rotate(360deg); }
+          to { transform: rotate(0deg); }
+        }
+        @keyframes spin-slow-reverse {
+          from { transform: rotate(360deg); }
+          to { transform: rotate(0deg); }
+        }
+        .animate-spin-slow {
+          animation: spin-slow 30s linear infinite;
+        }
+        .animate-spin-slower {
+          animation: spin-slower 40s linear infinite;
+        }
+        .animate-spin-reverse {
+          animation: spin-reverse 35s linear infinite;
+        }
+        .animate-spin-slow-reverse {
+          animation: spin-slow-reverse 45s linear infinite;
+        }
         .animate-pulse-slow {
           animation: pulse 11s ease-in-out infinite;
         }
