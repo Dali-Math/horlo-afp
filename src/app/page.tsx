@@ -10,7 +10,6 @@ import {
 export default function HomePage() {
   const [liveUsers, setLiveUsers] = useState(48)
 
-  // Simulation utilisateurs en temps réel
   useEffect(() => {
     const interval = setInterval(() => {
       setLiveUsers(prev => prev + Math.floor(Math.random() * 3) - 1)
@@ -21,7 +20,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900">
       
-      {/* HERO SECTION ÉPURÉ */}
+      {/* HERO SECTION */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4">
         {/* Cercles décoratifs subtils */}
         <div className="absolute inset-0 overflow-hidden opacity-10">
@@ -34,10 +33,10 @@ export default function HomePage() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-blue-500/20 backdrop-blur-sm border border-blue-400/30 text-blue-300 px-4 py-2 rounded-full text-sm font-semibold mb-8">
             <Sparkles className="w-4 h-4" />
-            Plateforme Éducative Collaborative
+            Bibliothèque Collaborative
           </div>
 
-          {/* Titre principal */}
+          {/* Titre */}
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
             L'horlogerie suisse
             <br />
@@ -47,48 +46,28 @@ export default function HomePage() {
           </h1>
 
           <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed">
-            Plongez dans l'univers du savoir-faire horloger avec la première plateforme éducative collaborative francophone
+            Explorez librement ressources, tutoriels et savoirs horlogers partagés par des passionnés pour des passionnés
           </p>
 
-          {/* Stats minimalistes */}
-          <div className="flex items-center justify-center gap-4 flex-wrap mb-12">
-            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl px-6 py-4 min-w-[140px]">
-              <div className="text-3xl font-bold text-blue-400 mb-1">2,500+</div>
-              <div className="text-sm text-slate-400">Ressources partagées</div>
-            </div>
-            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl px-6 py-4 min-w-[140px]">
-              <div className="text-3xl font-bold text-blue-400 mb-1">1,200+</div>
-              <div className="text-sm text-slate-400">Passionnés actifs</div>
-            </div>
-            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl px-6 py-4 min-w-[140px]">
-              <div className="text-3xl font-bold text-blue-400 mb-1">150h+</div>
-              <div className="text-sm text-slate-400">Contenu vidéo</div>
-            </div>
-            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl px-6 py-4 min-w-[140px]">
-              <div className="text-3xl font-bold text-green-400 mb-1">0€</div>
-              <div className="text-sm text-slate-400">D'inscription</div>
-            </div>
-          </div>
-
-          {/* CTAs simples */}
+          {/* CTAs */}
           <div className="flex items-center justify-center gap-4 flex-wrap mb-8">
             <Link
               href="/theorie"
               className="group bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-semibold transition-all flex items-center gap-2 shadow-lg shadow-blue-600/50"
             >
-              Commencer l'aventure
+              Explorer les ressources
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
-              href="/ressources"
+              href="/communaute"
               className="bg-slate-800/70 hover:bg-slate-700 border border-slate-600 text-white px-8 py-4 rounded-xl font-semibold transition-all flex items-center gap-2"
             >
-              <BookOpen className="w-5 h-5" />
-              Explorer les ressources
+              <Users className="w-5 h-5" />
+              Rejoindre la communauté
             </Link>
           </div>
 
-          {/* Utilisateurs en ligne */}
+          {/* Live users */}
           <div className="flex items-center justify-center gap-2 text-slate-400">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             <span className="text-sm">{liveUsers} passionnés en ligne maintenant</span>
@@ -96,23 +75,43 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SECTION COMMUNAUTAIRE */}
+      {/* SECTION BIBLIOTHÈQUE */}
       <section className="py-20 px-4 bg-slate-900/50">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-bold text-white mb-3 text-center">Une bibliothèque vivante</h2>
           <p className="text-center text-slate-400 mb-16 max-w-2xl mx-auto">
-            Par les passionnés, pour les passionnés. Aucune certification, juste le plaisir du partage.
+            Aucune inscription requise • Aucun diplôme délivré • Simplement la passion du geste horloger
           </p>
 
+          <div className="grid md:grid-cols-4 gap-6 mb-16">
+            {/* Stats */}
+            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 text-center">
+              <div className="text-4xl font-bold text-blue-400 mb-2">2,500+</div>
+              <div className="text-sm text-slate-400">Ressources partagées</div>
+            </div>
+            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 text-center">
+              <div className="text-4xl font-bold text-blue-400 mb-2">1,200+</div>
+              <div className="text-sm text-slate-400">Passionnés actifs</div>
+            </div>
+            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 text-center">
+              <div className="text-4xl font-bold text-blue-400 mb-2">150h+</div>
+              <div className="text-sm text-slate-400">Tutoriels vidéo</div>
+            </div>
+            <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 text-center">
+              <div className="text-4xl font-bold text-green-400 mb-2">100%</div>
+              <div className="text-sm text-slate-400">Gratuit & ouvert</div>
+            </div>
+          </div>
+
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Card 1 */}
+            {/* Théorie */}
             <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-8 hover:border-blue-500/50 transition-all">
               <div className="bg-blue-500/10 w-14 h-14 rounded-full flex items-center justify-center mb-6">
                 <BookOpen className="w-7 h-7 text-blue-400" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">Théorie Accessible</h3>
+              <h3 className="text-xl font-bold text-white mb-3">Documentation</h3>
               <p className="text-slate-400 mb-4 leading-relaxed">
-                Cours détaillés, schémas annotés et glossaire illustré pour comprendre l'horlogerie suisse.
+                Guides, schémas techniques et glossaire illustré pour tout comprendre.
               </p>
               <Link href="/theorie" className="text-blue-400 hover:text-blue-300 font-semibold inline-flex items-center gap-2">
                 Découvrir
@@ -120,14 +119,14 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Card 2 */}
+            {/* Pratique */}
             <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-8 hover:border-green-500/50 transition-all">
               <div className="bg-green-500/10 w-14 h-14 rounded-full flex items-center justify-center mb-6">
                 <Video className="w-7 h-7 text-green-400" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">Tutoriels Pratiques</h3>
+              <h3 className="text-xl font-bold text-white mb-3">Tutoriels</h3>
               <p className="text-slate-400 mb-4 leading-relaxed">
-                Démontage, remontage et réglage avec des guides vidéo détaillés et plans techniques.
+                Vidéos pas-à-pas : démontage, remontage, huilage et réglage.
               </p>
               <Link href="/pratique" className="text-green-400 hover:text-green-300 font-semibold inline-flex items-center gap-2">
                 Explorer
@@ -135,14 +134,14 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Card 3 */}
+            {/* Communauté */}
             <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-8 hover:border-purple-500/50 transition-all">
               <div className="bg-purple-500/10 w-14 h-14 rounded-full flex items-center justify-center mb-6">
                 <Users className="w-7 h-7 text-purple-400" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">Communauté Active</h3>
+              <h3 className="text-xl font-bold text-white mb-3">Partage</h3>
               <p className="text-slate-400 mb-4 leading-relaxed">
-                Partagez vos découvertes, posez vos questions et apprenez avec d'autres passionnés.
+                Partagez vos découvertes et apprenez avec d'autres passionnés.
               </p>
               <Link href="/communaute" className="text-purple-400 hover:text-purple-300 font-semibold inline-flex items-center gap-2">
                 Rejoindre
@@ -203,7 +202,6 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {/* Activity 1 */}
             <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-blue-500/50 transition-all">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
@@ -223,7 +221,6 @@ export default function HomePage() {
               </button>
             </div>
 
-            {/* Activity 2 */}
             <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-green-500/50 transition-all">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
@@ -243,7 +240,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Activity 3 */}
             <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-purple-500/50 transition-all">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center">
@@ -266,21 +262,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA FINAL SIMPLE */}
+      {/* CTA FINAL */}
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl p-12">
             <h2 className="text-3xl font-bold text-white mb-4">
-              Prêt à explorer l'horlogerie ?
+              Prêt à explorer ?
             </h2>
             <p className="text-blue-100 mb-8 text-lg max-w-2xl mx-auto">
-              Rejoignez 1,200+ passionnés et accédez gratuitement à toutes les ressources partagées
+              Rejoignez 1,200+ passionnés et accédez gratuitement à toutes les ressources
             </p>
             <Link
               href="/theorie"
               className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all shadow-lg"
             >
-              Commencer maintenant
+              Commencer l'exploration
               <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
