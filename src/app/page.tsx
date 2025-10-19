@@ -1,11 +1,132 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import * as THREE from 'three'
 
 export default function HomePage() {
   const [isDark, setIsDark] = useState(true)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const mouseRef = useRef({ x: 0, y: 0 })
 
+  // Three.js Setup
+  useEffect(() => {
+    if (!canvasRef.current) return
+
+    const canvas = canvasRef.current
+    const scene = new THREE.Scene()
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+    camera.position.z = 10
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: true,
+    })
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+    // Lumières
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
+    scene.add(ambientLight)
+
+    const pointLight1 = new THREE.PointLight(0xd4af37, 1, 100)
+    pointLight1.position.set(5, 5, 5)
+    scene.add(pointLight1)
+
+    const pointLight2 = new THREE.PointLight(0xffffff, 0.5, 100)
+    pointLight2.position.set(-5, -5, 5)
+    scene.add(pointLight2)
+
+    // Fonction pour créer un engrenage
+    const createGear = (radius: number, thickness: number, teeth: number) => {
+      const group = new THREE.Group()
+      
+      // Corps de l'engrenage (tore)
+      const bodyGeometry = new THREE.TorusGeometry(radius, thickness, 16, 100)
+      const material = new THREE.MeshStandardMaterial({
+        color: 0xd4af37,
+        metalness: 0.8,
+        roughness: 0.2,
+      })
+      const body = new THREE.Mesh(bodyGeometry, material)
+      group.add(body)
+
+      // Dents
+      for (let i = 0; i < teeth; i++) {
+        const angle = (i / teeth) * Math.PI * 2
+        const toothGeometry = new THREE.BoxGeometry(0.1, thickness * 2, 0.15)
+        const tooth = new THREE.Mesh(toothGeometry, material)
+        tooth.position.x = Math.cos(angle) * (radius + thickness)
+        tooth.position.y = Math.sin(angle) * (radius + thickness)
+        tooth.rotation.z = angle
+        group.add(tooth)
+      }
+
+      return group
+    }
+
+    // Créer 4 engrenages
+    const gear1 = createGear(1.5, 0.2, 24)
+    gear1.position.set(-3, 2, 0)
+    scene.add(gear1)
+
+    const gear2 = createGear(1.2, 0.18, 24)
+    gear2.position.set(3, 1, 0)
+    scene.add(gear2)
+
+    const gear3 = createGear(1, 0.15, 24)
+    gear3.position.set(-2, -2, 0)
+    scene.add(gear3)
+
+    const gear4 = createGear(1.3, 0.2, 24)
+    gear4.position.set(2.5, -1.5, 0)
+    scene.add(gear4)
+
+    // Mouse move handler
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseRef.current = {
+        x: (e.clientX / window.innerWidth) * 2 - 1,
+        y: -(e.clientY / window.innerHeight) * 2 + 1,
+      }
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+
+    // Animation loop
+    const animate = () => {
+      requestAnimationFrame(animate)
+
+      // Rotation des engrenages
+      gear1.rotation.z += 0.005
+      gear2.rotation.z -= 0.008
+      gear3.rotation.z += 0.01
+      gear4.rotation.z -= 0.012
+
+      // Camera lerp vers position souris
+      camera.position.x += (mouseRef.current.x * 0.5 - camera.position.x) * 0.05
+      camera.position.y += (mouseRef.current.y * 0.5 - camera.position.y) * 0.05
+
+      renderer.render(scene, camera)
+    }
+    animate()
+
+    // Resize handler
+    const handleResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight
+      camera.updateProjectionMatrix()
+      renderer.setSize(window.innerWidth, window.innerHeight)
+    }
+    window.addEventListener('resize', handleResize)
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('resize', handleResize)
+      renderer.dispose()
+    }
+  }, [])
+
+  // Toggle theme
   const toggleTheme = () => setIsDark(!isDark)
 
   return (
@@ -31,21 +152,22 @@ export default function HomePage() {
 
       {/* HERO SECTION */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Grille animée en arrière-plan */}
-        <div
-          className="absolute inset-0 pointer-events-none"
+        {/* Canvas Three.js */}
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 w-full h-full"
           style={{
-            backgroundImage: `linear-gradient(${isDark ? 'rgba(212,175,55,0.05)' : 'rgba(212,175,55,0.03)'} 1px, transparent 1px), linear-gradient(90deg, ${isDark ? 'rgba(212,175,55,0.05)' : 'rgba(212,175,55,0.03)'} 1px, transparent 1px)`,
-            backgroundSize: '50px 50px',
-            animation: 'gridMove 20s linear infinite',
+            opacity: isDark ? 0.15 : 0.1,
           }}
         />
 
-        {/* Effet de dégradé radial */}
+        {/* Grille animée */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: `radial-gradient(circle at center, transparent 0%, ${isDark ? 'rgba(212,175,55,0.1)' : 'rgba(212,175,55,0.05)'} 100%)`,
+            backgroundImage: `linear-gradient(${isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)'} 1px, transparent 1px), linear-gradient(90deg, ${isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)'} 1px, transparent 1px)`,
+            backgroundSize: '50px 50px',
+            animation: 'gridMove 20s linear infinite',
           }}
         />
 
@@ -244,6 +366,25 @@ export default function HomePage() {
                   e.currentTarget.style.boxShadow = 'none'
                 }}
               >
+                {/* Ligne supérieure dorée au hover */}
+                <div
+                  className="absolute top-0 left-0 right-0 h-1 transition-all duration-400"
+                  style={{
+                    background: 'linear-gradient(90deg, #d4af37, #c9a959)',
+                    opacity: 0,
+                  }}
+                  ref={(el) => {
+                    if (el) {
+                      el.parentElement?.addEventListener('mouseenter', () => {
+                        el.style.opacity = '1'
+                      })
+                      el.parentElement?.addEventListener('mouseleave', () => {
+                        el.style.opacity = '0'
+                      })
+                    }
+                  }}
+                />
+                
                 <div className="text-5xl mb-4">{feature.emoji}</div>
                 <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
                 <p
