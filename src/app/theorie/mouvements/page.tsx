@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { useState } from "react";
 
@@ -7,7 +9,7 @@ function MouvementIntro() {
     <section className="bg-neutral-900 text-white px-6 py-10 rounded-xl shadow mb-10">
       <h1 className="text-3xl font-bold mb-6">Architecture du mouvement</h1>
       <p className="text-lg mb-2">
-        L’architecture d’un mouvement horloger conditionne la précision, la durabilité et la beauté de l’ensemble. Points clés : platine, ponts, fixation et décoration.
+        L'architecture d'un mouvement horloger conditionne la précision, la durabilité et la beauté de l'ensemble. Points clés : platine, ponts, fixation et décoration.
       </p>
     </section>
   );
@@ -19,7 +21,8 @@ function PlatineEtPonts() {
     <section className="bg-gradient-to-br from-zinc-700 via-gray-800 to-neutral-900 text-gray-100 p-7 rounded-xl mb-10 shadow">
       <h2 className="text-2xl font-semibold mb-3">La Platine et les Ponts</h2>
       <p>
-        La <b>platine</b> établit la base du mouvement ; les <b>ponts</b> maintiennent les organes mobiles. Exemple régional : le "coq" pour pont de balancier dans le Jura.
+        La <b>platine</b> établit la base du mouvement ; les <b>ponts</b> maintiennent 
+        les organes mobiles. Exemple régional : le "coq" pour pont de balancier dans le Jura.
       </p>
       <div className="flex flex-wrap gap-5 mt-5">
         <Image src="/images/platine-decoree.webp" alt="Platine décorée" width={240} height={150} className="rounded shadow" />
@@ -35,9 +38,9 @@ function FixationSysteme() {
     <section className="bg-neutral-800 text-neutral-200 p-6 rounded-xl mb-8">
       <h3 className="text-xl font-bold mb-4">Système de fixation</h3>
       <ul className="list-disc pl-5 space-y-2">
-        <li>Montage des ponts sur la platine : vissage, ajustements de précision.</li>
-        <li>Stabilité et précision dimensionnelle : matériaux étudiés, ajustages de haute qualité.</li>
-        <li>Fixations : vis, rubis, logement conique ou poli.</li>
+        <li>Montage des ponts sur la platine : vissage, ajustements de précision.</li>
+        <li>Stabilité et précision dimensionnelle : matériaux étudiés, ajustages de haute qualité.</li>
+        <li>Fixations : vis, rubis, logement conique ou poli.</li>
       </ul>
     </section>
   );
@@ -49,9 +52,9 @@ function StabiliteBloc() {
     <section className="bg-gradient-to-br from-gray-800 via-neutral-800 to-gray-900 text-gray-200 p-6 rounded-xl mb-10 shadow">
       <h3 className="text-xl font-bold mb-4">Stabilité dimensionnelle</h3>
       <ul className="list-disc pl-5 space-y-2">
-        <li>Matériaux : laiton, maillechort…</li>
+        <li>Matériaux : laiton, maillechort…</li>
         <li>Impact sur régularité, fiabilité, résistance aux chocs et à la déformation.</li>
-        <li>Traitement anti-déformation : finitions, polissage, traitements thermiques.</li>
+        <li>Traitement anti-déformation : finitions, polissage, traitements thermiques.</li>
       </ul>
     </section>
   );
@@ -69,7 +72,7 @@ function FinitionBloc() {
         <li>Guillochage</li>
         <li>Satinage</li>
       </ul>
-      <p className="mt-3">Outils et savoir-faire : lime, cabrons, bois, polisseuse. Exemples : Audemars Piguet, Breguet, Voutilainen.</p>
+      <p className="mt-3">Outils et savoir-faire : lime, cabrons, bois, polisseuse. Exemples : Audemars Piguet, Breguet, Voutilainen.</p>
       <div className="flex gap-5 mt-5">
         <Image src="/images/cotes-de-geneve.webp" alt="Côtes de Genève" width={120} height={100} className="rounded" />
         <Image src="/images/perlage.webp" alt="Perlage" width={120} height={100} className="rounded" />
@@ -78,7 +81,7 @@ function FinitionBloc() {
   );
 }
 
-// Bloc 6 : Animation/Quiz (simplifié, exemple de quiz)
+// Bloc 6 : Animation/Quiz
 function FinitionQuiz() {
   const questions = [
     {
@@ -108,7 +111,7 @@ function FinitionQuiz() {
   if (current >= questions.length) {
     return (
       <div className="p-6 bg-neutral-900 rounded-xl text-white">
-        <h4 className="font-bold mb-3">Quiz terminé !</h4>
+        <h4 className="font-bold mb-3">Quiz terminé !</h4>
         <p>Score : {score} / {questions.length}</p>
       </div>
     );
@@ -148,7 +151,6 @@ export default function Mouvements() {
       <StabiliteBloc />
       <FinitionBloc />
       <FinitionQuiz />
-      {/* Tu peux ajouter des galeries, boutons switch dark/calcaire, schémas SVG stylisés etc. */}
     </main>
   );
 }
