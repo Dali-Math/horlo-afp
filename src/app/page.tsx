@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
   BookOpen, 
@@ -17,68 +17,6 @@ import {
   Heart,
   Star
 } from 'lucide-react';
-
-// Hook pour animer les compteurs
-function useCounter(end: number, duration: number = 2000) {
-  const [count, setCount] = useState(0);
-  
-  useEffect(() => {
-    let startTime: number;
-    let animationFrame: number;
-    
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const progress = Math.min((currentTime - startTime) / duration, 1);
-      
-      setCount(Math.floor(progress * end));
-      
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate);
-      }
-    };
-    
-    animationFrame = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrame);
-  }, [end, duration]);
-  
-  return count;
-}
-
-// Composant Stats Animées
-function AnimatedStats() {
-  const ressources = useCounter(156);
-  const outils = useCounter(25);
-  const visiteurs = useCounter(1247);
-  const heures = useCounter(50);
-
-  return (
-    <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 w-full">
-      {[
-        { label: "Ressources partagées", value: ressources, icon: "📚", color: "from-blue-600 to-cyan-600" },
-        { label: "Outils disponibles", value: outils, icon: "🔧", color: "from-purple-600 to-pink-600" },
-        { label: "Passionnés ce mois", value: visiteurs, icon: "👥", color: "from-orange-600 to-red-600" },
-        { label: "Heures de contenu", value: heures, icon: "⏱️", color: "from-green-600 to-emerald-600" }
-      ].map((stat, idx) => (
-        <div 
-          key={idx}
-          className="relative group"
-        >
-          <div className="bg-white dark:bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-slate-200 dark:border-white/20 hover:bg-slate-50 dark:hover:bg-white/15 transition-all text-center h-full min-h-[160px] flex flex-col items-center justify-center">
-            <div className="text-4xl sm:text-5xl mb-3 group-hover:scale-110 transition-transform">
-              {stat.icon}
-            </div>
-            <div className="mb-1">
-              <span className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">{stat.value}</span>
-              {idx === 2 && <span className="text-lg sm:text-xl text-blue-600 dark:text-blue-300 ml-1">+</span>}
-              {idx === 3 && <span className="text-lg sm:text-xl text-blue-600 dark:text-blue-300 ml-1">h</span>}
-            </div>
-            <p className="text-slate-700 dark:text-white font-semibold text-xs sm:text-sm px-2">{stat.label}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 // Composant Ressource de la Semaine
 function RessourceDeLaSemaine() {
@@ -281,11 +219,6 @@ export default function HomePage() {
               Aucune inscription requise • Aucun diplôme délivré • Simplement la passion du geste horloger
             </p>
           </div>
-        </div>
-
-        {/* Stats Animées */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16 relative z-10">
-          <AnimatedStats />
         </div>
       </section>
 
