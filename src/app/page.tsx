@@ -30,74 +30,52 @@ function HeroSection() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const particles: Array<{
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      size: number;
-    }> = Array.from({ length: 150 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      size: Math.random() * 2 + 1
-    }));
+    // Cercles avec lignes pointillées qui tournent
+    const circles = [
+      { x: 0.2, y: 0.3, radius: 250, speed: 0.0005, angle: 0, opacity: 0.3, dashLength: 15, gapLength: 10, color: 'rgba(56, 189, 248, 0.4)' },
+      { x: 0.2, y: 0.3, radius: 200, speed: 0.0007, angle: 45, opacity: 0.25, dashLength: 10, gapLength: 15, color: 'rgba(96, 165, 250, 0.3)' },
+      { x: 0.8, y: 0.7, radius: 280, speed: -0.0006, angle: 90, opacity: 0.3, dashLength: 20, gapLength: 8, color: 'rgba(129, 140, 248, 0.4)' },
+      { x: 0.8, y: 0.7, radius: 220, speed: -0.0008, angle: 135, opacity: 0.25, dashLength: 12, gapLength: 12, color: 'rgba(165, 180, 252, 0.3)' },
+    ];
 
     let animationId: number;
 
     function animate() {
       if (!ctx || !canvas) return;
       
-      ctx.fillStyle = 'rgba(10, 18, 42, 0.1)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      circles.forEach(circle => {
+        circle.angle += circle.speed * 100;
+        
+        const centerX = canvas.width * circle.x;
+        const centerY = canvas.height * circle.y;
+        
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(circle.angle * Math.PI / 180);
+        ctx.translate(-centerX, -centerY);
         
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(56, 189, 248, ${0.3 + Math.random() * 0.4})`;
-        ctx.fill();
+        ctx.arc(centerX, centerY, circle.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = circle.color;
+        ctx.lineWidth = 2;
+        ctx.setLineDash([circle.dashLength, circle.gapLength]);
+        ctx.stroke();
+        
+        ctx.restore();
       });
       
       animationId = requestAnimationFrame(animate);
     }
     animate();
 
-    return () => {
-      cancelAnimationFrame(animationId);
-    };
+    return () => cancelAnimationFrame(animationId);
   }, []);
 
   return (
     <section className="min-h-screen bg-[#0a122a] relative overflow-hidden flex flex-col justify-center items-center px-4">
-      <canvas 
-        ref={canvasRef} 
-        className="absolute inset-0 pointer-events-none opacity-40" 
-      />
-
-      <div className="absolute inset-0 pointer-events-none">
-        <div 
-          className="absolute top-[20%] left-[-15%] w-[600px] h-[600px] rounded-full border-[3px] border-cyan-400/30"
-          style={{ animation: 'spin-slow 35s linear infinite' }}
-        />
-        <div 
-          className="absolute top-[20%] left-[-15%] w-[500px] h-[500px] rounded-full border-[2px] border-blue-300/25"
-          style={{ animation: 'spin-slower 45s linear infinite' }}
-        />
-        <div 
-          className="absolute bottom-[15%] right-[-15%] w-[700px] h-[700px] rounded-full border-[3px] border-indigo-400/30"
-          style={{ animation: 'spin-reverse 40s linear infinite' }}
-        />
-        <div 
-          className="absolute bottom-[15%] right-[-15%] w-[550px] h-[550px] rounded-full border-[2px] border-sky-300/25"
-          style={{ animation: 'spin-slow-reverse 50s linear infinite' }}
-        />
-      </div>
+      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
 
       <div className="relative z-10 max-w-5xl mx-auto text-center">
         <div className="flex justify-center mb-8">
@@ -141,17 +119,10 @@ function HeroSection() {
 
         <div className="flex justify-center">
           <span className="px-5 py-2 rounded-full bg-gradient-to-r from-green-600 to-emerald-500 text-white text-xs font-semibold shadow-lg">
-            🟢 48 passionnés en ligne
+            🟢 53 passionnés en ligne
           </span>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes spin-slower { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes spin-reverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-        @keyframes spin-slow-reverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-      `}</style>
     </section>
   );
 }
@@ -182,7 +153,10 @@ function RessourceDeLaSemaine() {
         Document PDF haute résolution : démontage complet, éclaté annoté, couples de serrage et procédures de réglage.
       </p>
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-        <Link href="/ressources" className="flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors w-full sm:w-auto">
+        <Link
+          href="/ressources"
+          className="flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors w-full sm:w-auto"
+        >
           <BookOpen className="w-5 h-5" />
           Télécharger gratuitement
         </Link>
@@ -215,10 +189,18 @@ function FilActualites() {
       </div>
       <div className="space-y-3 sm:space-y-4">
         {actualites.map((actu, idx) => (
-          <a key={idx} href={actu.url} target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors group">
+          <a
+            key={idx}
+            href={actu.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors group"
+          >
             <div className="flex-shrink-0 w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full mt-2"></div>
             <div className="flex-1 min-w-0">
-              <h4 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors break-words">{actu.titre}</h4>
+              <h4 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors break-words">
+                {actu.titre}
+              </h4>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{actu.date}</p>
             </div>
             <ExternalLink className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 flex-shrink-0" />
@@ -247,12 +229,24 @@ function NewsletterSignup() {
         </div>
         <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Restez informé</h2>
         <p className="text-base sm:text-xl text-blue-100 dark:text-blue-200 mb-6 sm:mb-8 px-4">
-          Recevez chaque semaine : nouvelles ressources, astuces d&apos;atelier et actualités horlogères
+          Recevez chaque semaine : nouvelles ressources partagées, astuces d&apos;atelier et actualités horlogères
         </p>
         {!subscribed ? (
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-md mx-auto px-4 sm:px-0">
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="votre@email.com" required className="flex-1 px-4 sm:px-6 py-3 sm:py-4 rounded-xl text-slate-900 font-medium focus:outline-none focus:ring-4 focus:ring-white/50" />
-            <button type="submit" className="bg-white text-blue-600 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold hover:shadow-xl transition-all whitespace-nowrap">S&apos;abonner</button>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="votre@email.com"
+              required
+              className="flex-1 px-4 sm:px-6 py-3 sm:py-4 rounded-xl text-slate-900 font-medium focus:outline-none focus:ring-4 focus:ring-white/50"
+            />
+            <button
+              type="submit"
+              className="bg-white text-blue-600 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold hover:shadow-xl transition-all whitespace-nowrap"
+            >
+              S&apos;abonner
+            </button>
           </form>
         ) : (
           <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 sm:p-6 max-w-md mx-auto">
@@ -281,16 +275,43 @@ export default function HomePage() {
         <section className="mb-12 sm:mb-16">
           <div className="text-center mb-8 sm:mb-12 px-4">
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4">Explorer par Thématique</h2>
-            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Des ressources organisées pour progresser à votre rythme</p>
+            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              Des ressources organisées pour progresser à votre rythme
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {[
-              { title: "Théorie", icon: BookOpen, color: "from-blue-600 to-cyan-600", description: "Principes fondamentaux, histoire et terminologie horlogère", link: "/theorie", features: ["Cours détaillés", "Schémas annotés", "Glossaire illustré"] },
-              { title: "Pratique", icon: Wrench, color: "from-purple-600 to-pink-600", description: "Démontage, remontage et réglage de mouvements", link: "/pratique", features: ["Tutoriels vidéo", "Plans techniques", "Guides pas-à-pas"] },
-              { title: "Évaluation", icon: Award, color: "from-orange-600 to-red-600", description: "Testez vos connaissances avec nos quiz", link: "/quiz", features: ["Quiz interactifs", "Correction détaillée", "Suivi progrès"] }
+              {
+                title: "Théorie",
+                icon: BookOpen,
+                color: "from-blue-600 to-cyan-600",
+                description: "Principes fondamentaux, histoire et terminologie horlogère",
+                link: "/theorie",
+                features: ["Cours détaillés", "Schémas annotés", "Glossaire illustré"]
+              },
+              {
+                title: "Pratique",
+                icon: Wrench,
+                color: "from-purple-600 to-pink-600",
+                description: "Démontage, remontage et réglage de mouvements",
+                link: "/pratique",
+                features: ["Tutoriels vidéo", "Plans techniques", "Guides pas-à-pas"]
+              },
+              {
+                title: "Évaluation",
+                icon: Award,
+                color: "from-orange-600 to-red-600",
+                description: "Testez vos connaissances avec nos quiz",
+                link: "/quiz",
+                features: ["Quiz interactifs", "Correction détaillée", "Suivi progrès"]
+              }
             ].map((parcours, idx) => (
-              <Link key={idx} href={parcours.link} className="group bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all border border-slate-200 dark:border-slate-700 hover:scale-105">
+              <Link 
+                key={idx}
+                href={parcours.link}
+                className="group bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all border border-slate-200 dark:border-slate-700 hover:scale-105"
+              >
                 <div className={`inline-block p-3 sm:p-4 rounded-xl bg-gradient-to-br ${parcours.color} mb-4 sm:mb-6 group-hover:scale-110 transition-transform`}>
                   <parcours.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </div>
@@ -315,7 +336,7 @@ export default function HomePage() {
         <NewsletterSignup />
       </main>
 
-      <footer className="bg-slate-900 dark:bg-slate-950 text-white py-8 sm:py-12 mt-12 sm:mt-20 border-t border-slate-800 dark:border-slate-700">
+      <footer className="bg-slate-900 dark:bg-slate-950 text-white py-8 sm:py-12 mt-12 sm:mt-20 border-t border-slate-800 dark:border-slate-700 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
             <div className="col-span-1 sm:col-span-2">
@@ -325,7 +346,9 @@ export default function HomePage() {
                 </div>
                 <span className="text-xl sm:text-2xl font-bold">HorloLearn</span>
               </div>
-              <p className="text-sm sm:text-base text-slate-400 mb-4">La première plateforme collaborative francophone dédiée au partage de connaissances horlogères.</p>
+              <p className="text-sm sm:text-base text-slate-400 mb-4">
+                La première plateforme collaborative francophone dédiée au partage de connaissances horlogères.
+              </p>
               <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500">
                 <Heart className="w-4 h-4 text-red-500" />
                 <span>Fait avec passion par la communauté</span>
@@ -355,14 +378,17 @@ export default function HomePage() {
 
           <div className="border-t border-slate-800 pt-6 sm:pt-8">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
-              <p className="text-slate-400 text-xs sm:text-sm text-center md:text-left">© 2025 HorloLearn – Passion & Découverte Horlogère Suisse</p>
+              <p className="text-slate-400 text-xs sm:text-sm text-center md:text-left">
+                © 2025 HorloLearn – Passion & Découverte Horlogère Suisse
+              </p>
               <div className="flex gap-4 sm:gap-6 text-xs sm:text-sm text-slate-400">
                 <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link>
                 <Link href="/politique-confidentialite" className="hover:text-white transition-colors">Confidentialité</Link>
               </div>
             </div>
             <p className="text-[10px] sm:text-xs text-slate-500 text-center px-4">
-              💡 HorloLearn n&apos;est ni une école ni un centre de formation officiel. Aucun diplôme ou certification reconnue n&apos;est délivré.
+              💡 HorloLearn n&apos;est ni une école ni un centre de formation officiel. Aucun diplôme ou certification reconnue n&apos;est délivré. 
+              Il s&apos;agit d&apos;une plateforme collaborative de partage de connaissances horlogères.
             </p>
           </div>
         </div>
