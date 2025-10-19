@@ -298,20 +298,20 @@ export default function CotesTolerancesPage() {
 
   const getCategoryColor = (category: string) => {
     switch(category) {
-      case 'Forme': return 'bg-blue-100 text-blue-600 border-blue-200';
-      case 'Orientation': return 'bg-green-100 text-green-600 border-green-200';
-      case 'Position': return 'bg-purple-100 text-purple-600 border-purple-200';
-      case 'Battement': return 'bg-orange-100 text-orange-600 border-orange-200';
-      default: return 'bg-slate-100 text-slate-600 border-slate-200';
+      case 'Forme': return 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-700';
+      case 'Orientation': return 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 border-green-200 dark:border-green-700';
+      case 'Position': return 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-700';
+      case 'Battement': return 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-700';
+      default: return 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-slate-200">
+      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link href="/theorie/lecture-de-plan" className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+          <Link href="/theorie/lecture-de-plan" className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium">
             <ChevronLeft className="w-5 h-5 mr-1" />
             Retour
           </Link>
@@ -322,50 +322,50 @@ export default function CotesTolerancesPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Title Section */}
         <div className="text-center mb-12">
-          <div className="inline-block px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-4">
+          <div className="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm font-medium mb-4">
             Les normes
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">
             Cotes et Tolérances (ISO 129-1 & 1101)
           </h1>
-          <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
             Spécification Géométrique des Produits (GPS) : cotation dimensionnelle et tolérancement géométrique
           </p>
         </div>
 
         {/* Interactive Schema Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Tolérances Géométriques (ISO 1101)</h2>
-          <p className="text-slate-600 mb-8">Cliquez sur une tolérance pour voir ses caractéristiques détaillées.</p>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Tolérances Géométriques (ISO 1101)</h2>
+          <p className="text-slate-600 dark:text-slate-400 mb-8">Cliquez sur une tolérance pour voir ses caractéristiques détaillées.</p>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             {tolerancesData.map((tol) => (
               <div
                 key={tol.id}
                 onClick={() => handleToleranceClick(tol.id)}
-                className={`bg-white rounded-xl p-6 border-2 cursor-pointer transition-all hover:shadow-lg ${
-                  selectedTolerance === tol.id ? 'border-blue-600 shadow-lg' : 'border-slate-200'
+                className={`bg-white dark:bg-slate-800 rounded-xl p-6 border-2 cursor-pointer transition-all hover:shadow-lg ${
+                  selectedTolerance === tol.id ? 'border-blue-600 dark:border-blue-400 shadow-lg' : 'border-slate-200 dark:border-slate-700'
                 }`}
               >
                 <div className="flex items-center justify-between mb-3">
-                  <div className="text-4xl font-bold text-blue-600">{tol.symbol}</div>
+                  <div className="text-4xl font-bold text-blue-600 dark:text-blue-400">{tol.symbol}</div>
                   <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getCategoryColor(tol.category)}`}>
                     {tol.category}
                   </span>
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">{tol.name}</h3>
-                <p className="text-sm text-slate-600 line-clamp-2">{tol.description}</p>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{tol.name}</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">{tol.description}</p>
               </div>
             ))}
           </div>
 
           {/* Explanation Panel */}
           {selectedToleranceData && (
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border-l-4 border-blue-600">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl p-6 border-l-4 border-blue-600 dark:border-blue-400">
               <div className="flex items-center mb-4">
-                <div className="text-5xl font-bold text-blue-600 mr-4">{selectedToleranceData.symbol}</div>
+                <div className="text-5xl font-bold text-blue-600 dark:text-blue-400 mr-4">{selectedToleranceData.symbol}</div>
                 <div>
-                  <h3 className="text-2xl font-bold text-slate-900">{selectedToleranceData.name}</h3>
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{selectedToleranceData.name}</h3>
                   <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium border mt-2 ${getCategoryColor(selectedToleranceData.category)}`}>
                     {selectedToleranceData.category}
                   </span>
@@ -373,16 +373,16 @@ export default function CotesTolerancesPage() {
               </div>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm font-bold text-slate-700 mb-1">Description :</p>
-                  <p className="text-slate-700 mb-3">{selectedToleranceData.description}</p>
-                  <p className="text-sm font-bold text-slate-700 mb-1">Zone de tolérance :</p>
-                  <p className="text-slate-700">{selectedToleranceData.zoneType}</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Description :</p>
+                  <p className="text-slate-700 dark:text-slate-300 mb-3">{selectedToleranceData.description}</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Zone de tolérance :</p>
+                  <p className="text-slate-700 dark:text-slate-300">{selectedToleranceData.zoneType}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-700 mb-1">Référence spécifiée :</p>
-                  <p className="text-slate-700 mb-3">{selectedToleranceData.reference}</p>
-                  <p className="text-sm font-bold text-slate-700 mb-1">Exemple horlogerie :</p>
-                  <p className="text-slate-700">{selectedToleranceData.example}</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Référence spécifiée :</p>
+                  <p className="text-slate-700 dark:text-slate-300 mb-3">{selectedToleranceData.reference}</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Exemple horlogerie :</p>
+                  <p className="text-slate-700 dark:text-slate-300">{selectedToleranceData.example}</p>
                 </div>
               </div>
             </div>
@@ -391,72 +391,72 @@ export default function CotesTolerancesPage() {
 
         {/* Mémo Technique */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
           
           <div className="grid md:grid-cols-2 gap-6">
             {/* Erreurs */}
-            <div className="bg-red-50 rounded-xl p-6 border border-red-200">
-              <h3 className="text-xl font-bold text-red-900 mb-4 flex items-center">
+            <div className="bg-red-50 dark:bg-red-950/30 rounded-xl p-6 border border-red-200 dark:border-red-800">
+              <h3 className="text-xl font-bold text-red-900 dark:text-red-300 mb-4 flex items-center">
                 <XCircle className="w-6 h-6 mr-2" />
                 Erreurs fréquentes
               </h3>
-              <ul className="space-y-3 text-slate-700">
+              <ul className="space-y-3 text-slate-700 dark:text-slate-300">
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Utiliser des tolérances de forme avec une référence spécifiée.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Oublier le symbole Ø devant un diamètre.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Sur-spécifier avec des tolérances trop serrées (coût élevé).</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Mélanger cotation dimensionnelle et géométrique sans cohérence.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Ne pas définir de système de références pour les tolérances d'orientation/position.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
+                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
                   <span>Coter des éléments cachés (éviter autant que possible).</span>
                 </li>
               </ul>
             </div>
 
             {/* Bonnes pratiques */}
-            <div className="bg-green-50 rounded-xl p-6 border border-green-200">
-              <h3 className="text-xl font-bold text-green-900 mb-4 flex items-center">
+            <div className="bg-green-50 dark:bg-green-950/30 rounded-xl p-6 border border-green-200 dark:border-green-800">
+              <h3 className="text-xl font-bold text-green-900 dark:text-green-300 mb-4 flex items-center">
                 <CheckCircle className="w-6 h-6 mr-2" />
                 Bonnes pratiques
               </h3>
-              <ul className="space-y-3 text-slate-700">
+              <ul className="space-y-3 text-slate-700 dark:text-slate-300">
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Toujours spécifier selon les exigences fonctionnelles (principe GPS).</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Placer les cotes dans la vue la plus claire (ISO 129-1).</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Définir un système de références cohérent (A, B, C) pour orientation/position.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Utiliser les indicateurs de propriétés (Ø, R, SR, □) selon ISO 129-1.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Privilégier les tolérances géométriques pour les exigences fonctionnelles.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-green-600 mr-2">•</span>
+                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
                   <span>Éviter la cotation redondante : chaque cote ne doit apparaître qu'une fois.</span>
                 </li>
               </ul>
@@ -466,29 +466,29 @@ export default function CotesTolerancesPage() {
 
         {/* Quiz Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Quiz : Teste tes connaissances</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Quiz : Teste tes connaissances</h2>
           
-          <div className="bg-white rounded-2xl shadow-lg p-8">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8">
             {!quizCompleted ? (
               <>
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-4">
-                    <span className="text-sm font-medium text-slate-600">
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
                       Question {currentQuestion + 1} sur {quizData.length}
                     </span>
-                    <span className="text-sm font-medium text-blue-600">
+                    <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
                       Score: {score}/{quizData.length}
                     </span>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2">
+                  <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
                     <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${((currentQuestion + 1) / quizData.length) * 100}%` }}
                     ></div>
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-900 mb-6">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
                   {quizData[currentQuestion].question}
                 </h3>
 
@@ -500,24 +500,24 @@ export default function CotesTolerancesPage() {
                       disabled={selectedAnswer !== null}
                       className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                         selectedAnswer === null
-                          ? 'border-slate-200 hover:border-blue-400 hover:bg-blue-50'
+                          ? 'border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/30'
                           : index === quizData[currentQuestion].correctAnswer
-                          ? 'border-green-500 bg-green-50'
+                          ? 'border-green-500 dark:border-green-600 bg-green-50 dark:bg-green-950/30'
                           : selectedAnswer === index
-                          ? 'border-red-500 bg-red-50'
-                          : 'border-slate-200 opacity-50'
+                          ? 'border-red-500 dark:border-red-600 bg-red-50 dark:bg-red-950/30'
+                          : 'border-slate-200 dark:border-slate-700 opacity-50'
                       }`}
                     >
                       <div className="flex items-center">
-                        <span className="font-semibold mr-3 text-slate-700">
+                        <span className="font-semibold mr-3 text-slate-700 dark:text-slate-300">
                           {String.fromCharCode(65 + index)}.
                         </span>
-                        <span className="text-slate-800">{option}</span>
+                        <span className="text-slate-800 dark:text-slate-200">{option}</span>
                         {selectedAnswer !== null && index === quizData[currentQuestion].correctAnswer && (
-                          <CheckCircle className="w-5 h-5 ml-auto text-green-600" />
+                          <CheckCircle className="w-5 h-5 ml-auto text-green-600 dark:text-green-400" />
                         )}
                         {selectedAnswer === index && index !== quizData[currentQuestion].correctAnswer && (
-                          <XCircle className="w-5 h-5 ml-auto text-red-600" />
+                          <XCircle className="w-5 h-5 ml-auto text-red-600 dark:text-red-400" />
                         )}
                       </div>
                     </button>
@@ -525,8 +525,8 @@ export default function CotesTolerancesPage() {
                 </div>
 
                 {showExplanation && (
-                  <div className="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6 rounded">
-                    <p className="text-slate-700">
+                  <div className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-600 dark:border-blue-400 p-4 mb-6 rounded">
+                    <p className="text-slate-700 dark:text-slate-300">
                       <strong>Explication :</strong> {quizData[currentQuestion].explanation}
                     </p>
                   </div>
@@ -535,7 +535,7 @@ export default function CotesTolerancesPage() {
                 {selectedAnswer !== null && (
                   <button
                     onClick={handleNextQuestion}
-                    className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                    className="w-full bg-blue-600 dark:bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                   >
                     {currentQuestion < quizData.length - 1 ? 'Question suivante' : 'Voir les résultats'}
                   </button>
@@ -543,28 +543,28 @@ export default function CotesTolerancesPage() {
               </>
             ) : (
               <div className="text-center">
-                <h3 className="text-3xl font-bold text-slate-900 mb-4">Quiz terminé !</h3>
-                <p className="text-xl text-slate-700 mb-6">
-                  Votre score : <span className="font-bold text-blue-600">{score}/{quizData.length}</span>
+                <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Quiz terminé !</h3>
+                <p className="text-xl text-slate-700 dark:text-slate-300 mb-6">
+                  Votre score : <span className="font-bold text-blue-600 dark:text-blue-400">{score}/{quizData.length}</span>
                   {' '}({Math.round((score / quizData.length) * 100)}%)
                 </p>
                 <div className="mb-6">
                   {score === quizData.length && (
-                    <p className="text-green-600 font-semibold text-lg">🎉 Parfait ! Tu maîtrises les cotes et tolérances !</p>
+                    <p className="text-green-600 dark:text-green-400 font-semibold text-lg">🎉 Parfait ! Tu maîtrises les cotes et tolérances !</p>
                   )}
                   {score >= quizData.length * 0.8 && score < quizData.length && (
-                    <p className="text-blue-600 font-semibold text-lg">👏 Excellent travail ! Quelques révisions et ce sera parfait !</p>
+                    <p className="text-blue-600 dark:text-blue-400 font-semibold text-lg">👏 Excellent travail ! Quelques révisions et ce sera parfait !</p>
                   )}
                   {score >= quizData.length * 0.6 && score < quizData.length * 0.8 && (
-                    <p className="text-yellow-600 font-semibold text-lg">💪 Bon résultat ! Continue de t'entraîner !</p>
+                    <p className="text-yellow-600 dark:text-yellow-400 font-semibold text-lg">💪 Bon résultat ! Continue de t'entraîner !</p>
                   )}
                   {score < quizData.length * 0.6 && (
-                    <p className="text-orange-600 font-semibold text-lg">📚 Révise les notions et réessaie !</p>
+                    <p className="text-orange-600 dark:text-orange-400 font-semibold text-lg">📚 Révise les notions et réessaie !</p>
                   )}
                 </div>
                 <button
                   onClick={resetQuiz}
-                  className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                  className="bg-blue-600 dark:bg-blue-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                 >
                   Recommencer le quiz
                 </button>
@@ -575,37 +575,37 @@ export default function CotesTolerancesPage() {
 
         {/* Context Section */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Contexte & Origines des Normes</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Contexte & Origines des Normes</h2>
           
           <div className="grid md:grid-cols-2 gap-6">
             {/* ISO 129-1 */}
-            <div className="bg-white rounded-2xl shadow-lg p-8">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8">
               <div className="flex items-start mb-4">
-                <div className="bg-blue-100 p-3 rounded-lg mr-4">
-                  <Ruler className="w-6 h-6 text-blue-600" />
+                <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-lg mr-4">
+                  <Ruler className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">ISO 129-1:2018</h3>
-                  <p className="text-sm text-blue-800 font-semibold mb-3">Cotation dimensionnelle</p>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">ISO 129-1:2018</h3>
+                  <p className="text-sm text-blue-800 dark:text-blue-400 font-semibold mb-3">Cotation dimensionnelle</p>
                 </div>
               </div>
-              <p className="text-slate-700 leading-relaxed">
+              <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
                 Cette norme établit les <strong>principes généraux de représentation des dimensions et tolérances</strong> sur les dessins techniques. Elle définit l'usage des éléments de cotation : lignes de dimension, extrémités, lignes d'attache, indicateurs de propriétés (Ø, R, SR, □), cotation tabulaire et valeurs des dimensions.
               </p>
             </div>
 
             {/* ISO 1101 */}
-            <div className="bg-white rounded-2xl shadow-lg p-8">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8">
               <div className="flex items-start mb-4">
-                <div className="bg-green-100 p-3 rounded-lg mr-4">
-                  <Settings className="w-6 h-6 text-green-600" />
+                <div className="bg-green-100 dark:bg-green-900/30 p-3 rounded-lg mr-4">
+                  <Settings className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">ISO 1101:2017</h3>
-                  <p className="text-sm text-green-800 font-semibold mb-3">Tolérancement géométrique</p>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">ISO 1101:2017</h3>
+                  <p className="text-sm text-green-800 dark:text-green-400 font-semibold mb-3">Tolérancement géométrique</p>
                 </div>
               </div>
-              <p className="text-slate-700 leading-relaxed">
+              <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
                 Cette norme définit les <strong>tolérances géométriques</strong> : forme, orientation, position et battement. Elle fait partie du système GPS (Spécification Géométrique des Produits) et permet de spécifier sans ambiguïté les exigences fonctionnelles au-delà des simples dimensions.
               </p>
             </div>
@@ -614,42 +614,42 @@ export default function CotesTolerancesPage() {
 
         {/* Table: Catégories ISO 1101 */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Les 4 Catégories de Tolérances Géométriques</h2>
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Les 4 Catégories de Tolérances Géométriques</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-100">
+                <thead className="bg-slate-100 dark:bg-slate-900">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Catégorie</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Caractéristiques</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Référence nécessaire</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Objectif</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Catégorie</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Caractéristiques</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Référence nécessaire</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Objectif</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Forme</td>
-                    <td className="px-6 py-4 text-slate-700">Rectitude, Planéité, Circularité, Cylindricité</td>
-                    <td className="px-6 py-4 text-slate-700">❌ Non</td>
-                    <td className="px-6 py-4 text-slate-700">Contrôler la forme intrinsèque</td>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Forme</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Rectitude, Planéité, Circularité, Cylindricité</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">❌ Non</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Contrôler la forme intrinsèque</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Orientation</td>
-                    <td className="px-6 py-4 text-slate-700">Parallélisme, Perpendicularité, Inclinaison</td>
-                    <td className="px-6 py-4 text-slate-700">✅ Oui</td>
-                    <td className="px-6 py-4 text-slate-700">Contrôler l'orientation par rapport à une référence</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Orientation</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Parallélisme, Perpendicularité, Inclinaison</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">✅ Oui</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Contrôler l'orientation par rapport à une référence</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Position</td>
-                    <td className="px-6 py-4 text-slate-700">Localisation, Coaxialité, Symétrie</td>
-                    <td className="px-6 py-4 text-slate-700">✅ Oui</td>
-                    <td className="px-6 py-4 text-slate-700">Contrôler la position exacte dans l'espace</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Position</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Localisation, Coaxialité, Symétrie</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">✅ Oui</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Contrôler la position exacte dans l'espace</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Battement</td>
-                    <td className="px-6 py-4 text-slate-700">Battement circulaire, Battement total</td>
-                    <td className="px-6 py-4 text-slate-700">✅ Oui</td>
-                    <td className="px-6 py-4 text-slate-700">Contrôler les variations lors de la rotation</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Battement</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Battement circulaire, Battement total</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">✅ Oui</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Contrôler les variations lors de la rotation</td>
                   </tr>
                 </tbody>
               </table>
@@ -659,54 +659,54 @@ export default function CotesTolerancesPage() {
 
         {/* Table: Symboles indicateurs (ISO 129-1) */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Indicateurs de Propriétés (ISO 129-1)</h2>
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Indicateurs de Propriétés (ISO 129-1)</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-100">
+                <thead className="bg-slate-100 dark:bg-slate-900">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Symbole</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Désignation</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Exemple</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Utilisation horlogerie</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Symbole</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Désignation</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Exemple</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Utilisation horlogerie</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">Ø</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900">Diamètre</td>
-                    <td className="px-6 py-4 text-slate-700">Ø 10</td>
-                    <td className="px-6 py-4 text-slate-700">Diamètre pivot, alésage platine</td>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600 dark:text-blue-400">Ø</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Diamètre</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Ø 10</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Diamètre pivot, alésage platine</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">R</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900">Rayon</td>
-                    <td className="px-6 py-4 text-slate-700">R 2.5</td>
-                    <td className="px-6 py-4 text-slate-700">Congés, arrondis de ponts</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600 dark:text-blue-400">R</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Rayon</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">R 2.5</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Congés, arrondis de ponts</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">SR</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900">Rayon sphérique</td>
-                    <td className="px-6 py-4 text-slate-700">SR 1.2</td>
-                    <td className="px-6 py-4 text-slate-700">Rubis sphérique, dôme de verre</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600 dark:text-blue-400">SR</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Rayon sphérique</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">SR 1.2</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Rubis sphérique, dôme de verre</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">□</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900">Côté carré</td>
-                    <td className="px-6 py-4 text-slate-700">□ 8</td>
-                    <td className="px-6 py-4 text-slate-700">Section carrée d'axe</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600 dark:text-blue-400">□</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Côté carré</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">□ 8</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Section carrée d'axe</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">( )</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900">Cote auxiliaire</td>
-                    <td className="px-6 py-4 text-slate-700">(25)</td>
-                    <td className="px-6 py-4 text-slate-700">Cote de repère, non à contrôler</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600 dark:text-blue-400">( )</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Cote auxiliaire</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">(25)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Cote de repère, non à contrôler</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-bold text-2xl text-blue-600">⌈⌉</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900">Cote théorique exacte (TED)</td>
-                    <td className="px-6 py-4 text-slate-700">⌈50⌉</td>
-                    <td className="px-6 py-4 text-slate-700">Position théorique pour tolérance géométrique</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-bold text-2xl text-blue-600 dark:text-blue-400">⌈⌉</td>
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Cote théorique exacte (TED)</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">⌈50⌉</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Position théorique pour tolérance géométrique</td>
                   </tr>
                 </tbody>
               </table>
@@ -716,54 +716,54 @@ export default function CotesTolerancesPage() {
 
         {/* Table: Exemples horlogerie */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Applications en Horlogerie de Précision</h2>
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Applications en Horlogerie de Précision</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-100">
+                <thead className="bg-slate-100 dark:bg-slate-900">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Composant</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Tolérance critique</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Valeur typique</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900">Justification fonctionnelle</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Composant</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Tolérance critique</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Valeur typique</th>
+                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Justification fonctionnelle</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200">
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Axe de balancier</td>
-                    <td className="px-6 py-4 text-slate-700">Rectitude de l'axe</td>
-                    <td className="px-6 py-4 text-slate-700">Ø 0.002 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Garantir l'oscillation régulière sans frottement</td>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Axe de balancier</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Rectitude de l'axe</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Ø 0.002 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Garantir l'oscillation régulière sans frottement</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Platine</td>
-                    <td className="px-6 py-4 text-slate-700">Planéité face de montage</td>
-                    <td className="px-6 py-4 text-slate-700">0.005 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Assurer le montage précis des ponts</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Platine</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Planéité face de montage</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.005 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Assurer le montage précis des ponts</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Alésage de barillet</td>
-                    <td className="px-6 py-4 text-slate-700">Cylindricité</td>
-                    <td className="px-6 py-4 text-slate-700">0.003 mm</td>
-                    <td className="px-6 py-4 text-slate-700">Rotation fluide du barillet sans jeu excessif</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Alésage de barillet</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Cylindricité</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.003 mm</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Rotation fluide du barillet sans jeu excessif</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Pont de balancier</td>
-                    <td className="px-6 py-4 text-slate-700">Perpendicularité trou / face</td>
-                    <td className="px-6 py-4 text-slate-700">Ø 0.02 mm / A</td>
-                    <td className="px-6 py-4 text-slate-700">Assurer l'alignement du balancier avec l'échappement</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Pont de balancier</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Perpendicularité trou / face</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Ø 0.02 mm / A</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Assurer l'alignement du balancier avec l'échappement</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Roue d'échappement</td>
-                    <td className="px-6 py-4 text-slate-700">Battement circulaire</td>
-                    <td className="px-6 py-4 text-slate-700">0.02 mm / A-B</td>
-                    <td className="px-6 py-4 text-slate-700">Éviter variations de couple et perte d'amplitude</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Roue d'échappement</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Battement circulaire</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.02 mm / A-B</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Éviter variations de couple et perte d'amplitude</td>
                   </tr>
-                  <tr className="hover:bg-blue-50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900">Trous de fixation</td>
-                    <td className="px-6 py-4 text-slate-700">Localisation</td>
-                    <td className="px-6 py-4 text-slate-700">Ø 0.05 mm / A B</td>
-                    <td className="px-6 py-4 text-slate-700">Interchangeabilité des composants</td>
+                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
+                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Trous de fixation</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Localisation</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Ø 0.05 mm / A B</td>
+                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Interchangeabilité des composants</td>
                   </tr>
                 </tbody>
               </table>
@@ -773,74 +773,74 @@ export default function CotesTolerancesPage() {
 
         {/* Quote */}
         <section className="mb-16">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white text-center">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-2xl p-8 text-white text-center">
             <blockquote className="text-2xl font-serif italic mb-4">
               "La spécification GPS permet de définir sans ambiguïté les exigences fonctionnelles d'une pièce."
             </blockquote>
-            <p className="text-blue-100">— Principe fondamental ISO GPS</p>
+            <p className="text-blue-100 dark:text-blue-200">— Principe fondamental ISO GPS</p>
           </div>
         </section>
 
         {/* FAQ */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 mb-6">Questions fréquentes (FAQ)</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Questions fréquentes (FAQ)</h2>
           
           <div className="space-y-4">
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Quelle est la différence entre tolérance dimensionnelle et géométrique ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   La <strong>tolérance dimensionnelle</strong> (ISO 129-1) définit les limites de taille (longueur, diamètre) d'un élément. La <strong>tolérance géométrique</strong> (ISO 1101) contrôle la forme, l'orientation, la position ou le battement indépendamment de la taille. Par exemple : un cylindre peut être dans la tolérance dimensionnelle (Ø 10 ±0.1) mais hors tolérance de cylindricité (forme non cylindrique).
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Pourquoi les tolérances de forme ne nécessitent-elles pas de référence ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   Les tolérances de forme (rectitude, planéité, circularité, cylindricité) contrôlent la <strong>forme intrinsèque</strong> de l'élément lui-même, sans relation avec d'autres éléments. Elles ne dépendent donc pas d'un système de références. En revanche, orientation, position et battement nécessitent une référence car ils positionnent l'élément par rapport à d'autres éléments de la pièce.
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Comment définir un système de références cohérent ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   Un système de références se construit hiérarchiquement : <strong>Référence primaire (A)</strong> : généralement une surface plane pour bloquer 3 degrés de liberté. <strong>Référence secondaire (B)</strong> : bloque 2 degrés supplémentaires (rotation + translation). <strong>Référence tertiaire (C)</strong> : bloque le dernier degré (rotation). Les références doivent être choisies selon les <strong>surfaces fonctionnelles</strong> de montage/assemblage.
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Qu'est-ce qu'une cote théorique exacte (TED) ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   Une cote <strong>Théoriquement Exacte</strong> (encadrée ⌈50⌉) définit la position théorique parfaite d'un élément sans tolérance. Elle est utilisée avec les tolérances géométriques de position/localisation : la tolérance n'est pas sur la cote elle-même mais dans la zone de tolérance géométrique (par exemple : localisation Ø 0.1). Ceci évite l'ambiguïté d'une double tolérance.
                 </p>
               </div>
             </details>
 
-            <details className="bg-white rounded-xl shadow-lg overflow-hidden group">
-              <summary className="px-6 py-4 font-semibold text-slate-900 cursor-pointer hover:bg-slate-50 transition-colors flex justify-between items-center">
+            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group">
+              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
                 Pourquoi l'horlogerie nécessite-t-elle des tolérances aussi serrées ?
-                <span className="text-blue-600 group-open:rotate-180 transition-transform">▼</span>
+                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <p className="text-slate-700">
+              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-slate-700 dark:text-slate-300">
                   L'horlogerie mécanique nécessite des <strong>tolérances de l'ordre du micromètre</strong> (0.001-0.010 mm) car : les frottements doivent être minimaux pour préserver l'amplitude du balancier, les engrenages nécessitent un jeu précis pour transmettre l'énergie sans perte, les pivots tournent à des vitesses élevées (balancier : 5-10 Hz), et l'interchangeabilité des composants est essentielle pour la maintenance. Une déviation de quelques microns peut affecter la précision horométrique.
                 </p>
               </div>
@@ -850,14 +850,14 @@ export default function CotesTolerancesPage() {
 
         {/* CTA */}
         <section className="text-center">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white inline-block">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-2xl p-8 text-white inline-block">
             <p className="text-lg mb-4">📘 Tu veux aller plus loin ?</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="https://www.iso.org/standard/64007.html" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+                className="inline-block bg-white text-blue-600 dark:text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-blue-100 transition-colors"
               >
                 Consulter ISO 129-1
               </a>
@@ -865,7 +865,7 @@ export default function CotesTolerancesPage() {
                 href="https://www.iso.org/standard/66777.html" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+                className="inline-block bg-white text-blue-600 dark:text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-blue-100 transition-colors"
               >
                 Consulter ISO 1101
               </a>
@@ -875,9 +875,9 @@ export default function CotesTolerancesPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-8 mt-16">
+      <footer className="bg-slate-900 dark:bg-slate-950 text-white py-8 mt-16 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-slate-400">© 2025 HorloLearn - Passion & Découverte Horlogère Suisse</p>
+          <p className="text-slate-400 dark:text-slate-500">© 2025 HorloLearn - Passion & Découverte Horlogère Suisse</p>
         </div>
       </footer>
     </div>
