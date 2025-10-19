@@ -41,6 +41,7 @@ const config: Config = {
         'slide-in-left': 'slideInLeft 0.8s ease-out',
         'glow': 'glow 2s ease-in-out infinite',
         'spin-slow': 'spin 20s linear infinite',
+        'spin-reverse': 'spin-reverse 15s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -58,6 +59,10 @@ const config: Config = {
         glow: {
           '0%, 100%': { boxShadow: '0 0 5px rgba(212, 175, 55, 0.3)' },
           '50%': { boxShadow: '0 0 20px rgba(212, 175, 55, 0.6)' },
+        },
+        'spin-reverse': {
+          from: { transform: 'rotate(360deg)' },
+          to: { transform: 'rotate(0deg)' },
         },
       },
     },
