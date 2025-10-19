@@ -52,13 +52,13 @@ export default function CommunautePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-dark-900 dark:to-dark-800 transition-colors duration-500">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900 transition-colors duration-500">
       {/* Header */}
-      <header className="bg-white dark:bg-dark-900 shadow-sm border-b border-slate-200 dark:border-white/10">
+      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <Link
             href="/"
-            className="inline-flex items-center text-blue-600 dark:text-gold hover:text-blue-800 dark:hover:text-gold-light transition-colors"
+            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
           >
             <ChevronLeft className="w-5 h-5 mr-1" />
             Retour à l'accueil
@@ -70,26 +70,26 @@ export default function CommunautePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Title Section */}
         <div className="text-center mb-12">
-          <div className="inline-block px-4 py-2 bg-blue-100 dark:bg-gold/10 text-blue-800 dark:text-gold rounded-full text-sm font-medium mb-4">
+          <div className="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm font-medium mb-4">
             Espace collaboratif
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-light-100 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">
             Communauté HorloLearn
           </h1>
-          <p className="text-lg text-slate-600 dark:text-light-200 max-w-3xl mx-auto">
+          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
             Consultez votre planning scolaire et découvrez les ressources disponibles
           </p>
         </div>
 
         {/* Tabs */}
         <div className="mb-8">
-          <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-2 inline-flex gap-2 border border-slate-200 dark:border-white/10">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-2 inline-flex gap-2 border border-slate-200 dark:border-slate-700">
             <button
               onClick={() => setActiveTab('planning')}
               className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
                 activeTab === 'planning'
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'text-slate-600 dark:text-light-200 hover:bg-slate-100 dark:hover:bg-dark-700'
+                  ? 'bg-blue-600 dark:bg-blue-500 text-white shadow-md'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               <Calendar className="w-5 h-5" />
@@ -99,8 +99,8 @@ export default function CommunautePage() {
               onClick={() => setActiveTab('discussions')}
               className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
                 activeTab === 'discussions'
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'text-slate-600 dark:text-light-200 hover:bg-slate-100 dark:hover:bg-dark-700'
+                  ? 'bg-blue-600 dark:bg-blue-500 text-white shadow-md'
+                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               <MessageSquare className="w-5 h-5" />
@@ -114,34 +114,34 @@ export default function CommunautePage() {
           <section className="space-y-8">
             <div className="grid md:grid-cols-3 gap-6 mb-8">
               {[
-                { icon: <Lock className="w-10 h-10 text-blue-600 dark:text-gold" />, title: 'Accès sécurisé', desc: "Un code d'accès unique pour consulter le planning de votre promotion." },
-                { icon: <Eye className="w-10 h-10 text-green-600 dark:text-gold-light" />, title: 'Consultation en ligne', desc: "Visualisez votre planning directement dans le navigateur, sans téléchargement." },
-                { icon: <Download className="w-10 h-10 text-purple-600 dark:text-gold-dark" />, title: 'Téléchargement', desc: "Téléchargez le PDF pour le consulter hors ligne ou l'imprimer." },
+                { icon: <Lock className="w-10 h-10 text-blue-600 dark:text-blue-400" />, title: 'Accès sécurisé', desc: "Un code d'accès unique pour consulter le planning de votre promotion." },
+                { icon: <Eye className="w-10 h-10 text-green-600 dark:text-green-400" />, title: 'Consultation en ligne', desc: "Visualisez votre planning directement dans le navigateur, sans téléchargement." },
+                { icon: <Download className="w-10 h-10 text-purple-600 dark:text-purple-400" />, title: 'Téléchargement', desc: "Téléchargez le PDF pour le consulter hors ligne ou l'imprimer." },
               ].map((item, i) => (
-                <div key={i} className="bg-white dark:bg-dark-800 rounded-xl p-6 shadow-lg border-l-4 border-blue-600 dark:border-gold transition-colors duration-300">
+                <div key={i} className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border-l-4 border-blue-600 dark:border-blue-400 transition-colors duration-300">
                   {item.icon}
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-light-100 mb-2">{item.title}</h3>
-                  <p className="text-sm text-slate-600 dark:text-light-200">{item.desc}</p>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{item.title}</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-300">{item.desc}</p>
                 </div>
               ))}
             </div>
 
             {!isAuthenticated ? (
-              <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg p-8 max-w-md mx-auto transition-colors duration-300">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 max-w-md mx-auto transition-colors duration-300">
                 <div className="text-center mb-6">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-gold/20 rounded-full mb-4">
-                    <Lock className="w-8 h-8 text-blue-600 dark:text-gold" />
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4">
+                    <Lock className="w-8 h-8 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <h2 className="text-2xl font-bold text-slate-900 dark:text-light-100 mb-2">
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
                     Accès au Planning
                   </h2>
-                  <p className="text-slate-600 dark:text-light-200">
+                  <p className="text-slate-600 dark:text-slate-300">
                     Entrez votre code d'accès pour consulter le planning scolaire
                   </p>
                 </div>
 
                 <form onSubmit={handleAccessSubmit} className="space-y-4">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-light-200 mb-2">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     Code d'accès
                   </label>
                   <input
@@ -149,12 +149,12 @@ export default function CommunautePage() {
                     value={accessCode}
                     onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
                     placeholder="Entrez votre code"
-                    className="w-full px-4 py-3 border border-slate-300 dark:border-white/20 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white dark:bg-dark-900 text-slate-900 dark:text-light-100"
+                    className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:border-transparent bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
                     required
                   />
 
                   {authError && (
-                    <div className="flex items-center gap-2 text-red-600 bg-red-50 dark:bg-red-900/30 px-4 py-3 rounded-lg">
+                    <div className="flex items-center gap-2 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 px-4 py-3 rounded-lg">
                       <AlertCircle className="w-5 h-5" />
                       <span className="text-sm">{authError}</span>
                     </div>
@@ -162,26 +162,26 @@ export default function CommunautePage() {
 
                   <button
                     type="submit"
-                    className="w-full bg-blue-600 dark:bg-gold text-white dark:text-dark-900 py-3 rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-gold-light transition-colors"
+                    className="w-full bg-blue-600 dark:bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                   >
                     Accéder au planning
                   </button>
                 </form>
 
-                <div className="mt-6 p-4 bg-blue-50 dark:bg-dark-700 rounded-lg">
-                  <p className="text-sm text-blue-900 dark:text-gold font-semibold mb-2">
+                <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                  <p className="text-sm text-blue-900 dark:text-blue-300 font-semibold mb-2">
                     💡 Comment obtenir un code d'accès ?
                   </p>
-                  <p className="text-sm text-blue-700 dark:text-light-200">
+                  <p className="text-sm text-blue-700 dark:text-blue-400">
                     Le code vous est fourni par votre formateur en début de formation.
                   </p>
                 </div>
               </div>
             ) : (
               <>
-                <div className="bg-white dark:bg-dark-800 rounded-2xl shadow-lg overflow-hidden transition-colors duration-300">
-                  <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-gold dark:to-gold-dark px-6 py-4">
-                    <div className="flex items-center justify-between flex-wrap gap-4 text-white dark:text-dark-900">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden transition-colors duration-300">
+                  <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 px-6 py-4">
+                    <div className="flex items-center justify-between flex-wrap gap-4 text-white">
                       <div className="flex items-center gap-3">
                         <Calendar className="w-6 h-6" />
                         <div>
@@ -192,14 +192,14 @@ export default function CommunautePage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={downloadPlanning}
-                          className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-dark-900 text-blue-600 dark:text-gold rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-dark-700"
+                          className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors"
                         >
                           <Download className="w-5 h-5" />
                           Télécharger
                         </button>
                         <button
                           onClick={() => setIsFullscreen(!isFullscreen)}
-                          className="p-2 bg-white dark:bg-dark-900 text-blue-600 dark:text-gold rounded-lg hover:bg-blue-50 dark:hover:bg-dark-700"
+                          className="p-2 bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors"
                         >
                           <Maximize2 className="w-5 h-5" />
                         </button>
@@ -207,11 +207,11 @@ export default function CommunautePage() {
                     </div>
                   </div>
 
-                  <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-white dark:bg-dark-900' : 'relative'}`}>
+                  <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-white dark:bg-slate-900' : 'relative'}`}>
                     {isFullscreen && (
                       <button
                         onClick={() => setIsFullscreen(false)}
-                        className="absolute top-4 right-4 z-10 p-2 bg-slate-800 text-white rounded-lg"
+                        className="absolute top-4 right-4 z-10 p-2 bg-slate-800 dark:bg-slate-700 text-white rounded-lg hover:bg-slate-700 dark:hover:bg-slate-600"
                       >
                         ✕ Fermer
                       </button>
@@ -227,12 +227,27 @@ export default function CommunautePage() {
             )}
           </section>
         )}
+
+        {/* Discussions Section */}
+        {activeTab === 'discussions' && (
+          <section className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 transition-colors duration-300">
+            <div className="text-center py-12">
+              <MessageSquare className="w-16 h-16 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                Forum en construction
+              </h3>
+              <p className="text-slate-600 dark:text-slate-300">
+                Cette section sera bientôt disponible pour échanger avec la communauté.
+              </p>
+            </div>
+          </section>
+        )}
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-900 dark:bg-black text-white py-8 mt-16">
+      <footer className="bg-slate-900 dark:bg-slate-950 text-white py-8 mt-16 border-t border-slate-800 dark:border-slate-700">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-slate-400">© 2025 HorloLearn</p>
+          <p className="text-slate-400 dark:text-slate-500">© 2025 HorloLearn – Passion & Découverte Horlogère Suisse</p>
         </div>
       </footer>
     </div>
