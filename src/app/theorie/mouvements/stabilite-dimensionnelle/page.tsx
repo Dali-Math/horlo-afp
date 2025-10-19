@@ -208,7 +208,7 @@ export default function StabiliteDimensionnellePage() {
           </div>
         </section>
 
-        {/* SECTION 2: FACTEURS AFFECTANT LA STABILITÉ */}
+        {/* SECTION 2: FACTEURS AFFECTANT LA STABILITÉ - CORRIGÉE */}
         <section className="mb-12">
           <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
             Facteurs Affectant la Stabilité
@@ -221,31 +221,108 @@ export default function StabiliteDimensionnellePage() {
 
           <div className="grid gap-4 mb-8">
             {factors.map((factor) => (
-              <div
-                key={factor.id}
-                onClick={() => toggleFactor(factor.id)}
-                className={`bg-white dark:bg-slate-800 rounded-xl border-2 p-6 cursor-pointer transition-all ${
-                  selectedFactors.includes(factor.id)
-                    ? 'border-blue-600 dark:border-blue-400 shadow-lg'
-                    : 'border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <span className="text-3xl mr-4">{factor.icon}</span>
-                    <div>
-                      <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-1">
-                        {factor.name}
-                      </h4>
-                      <p className="text-slate-700 dark:text-slate-300">
-                        {factor.description}
-                      </p>
+              <div key={factor.id}>
+                <div
+                  onClick={() => toggleFactor(factor.id)}
+                  className={`bg-white dark:bg-slate-800 rounded-xl border-2 p-6 cursor-pointer transition-all ${
+                    selectedFactors.includes(factor.id)
+                      ? 'border-blue-600 dark:border-blue-400 shadow-lg'
+                      : 'border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <span className="text-3xl mr-4">{factor.icon}</span>
+                      <div>
+                        <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-1">
+                          {factor.name}
+                        </h4>
+                        <p className="text-slate-700 dark:text-slate-300">
+                          {factor.description}
+                        </p>
+                      </div>
                     </div>
+                    {selectedFactors.includes(factor.id) && (
+                      <CheckCircle2 className="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0 ml-4" />
+                    )}
                   </div>
-                  {selectedFactors.includes(factor.id) && (
-                    <CheckCircle2 className="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0 ml-4" />
-                  )}
                 </div>
+
+                {/* CONTENU DÉTAILLÉ QUI S'AFFICHE AU CLIC */}
+                {selectedFactors.includes(factor.id) && (
+                  <div className="mt-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl p-6 border-l-4 border-blue-600 dark:border-blue-400">
+                    {factor.id === 'temperature' && (
+                      <>
+                        <h5 className="font-bold text-slate-900 dark:text-white mb-3">Impact des Variations Thermiques</h5>
+                        <p className="text-slate-700 dark:text-slate-300 mb-3 leading-relaxed">
+                          Tous les matériaux se dilatent à la chaleur et se contractent au froid selon leur coefficient de dilatation thermique. 
+                          Pour le laiton (18×10⁻⁶/°C), une platine de 30 mm exposée à +20°C se dilate de 0,011 mm.
+                        </p>
+                        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+                          <p className="text-sm text-slate-600 dark:text-slate-400">
+                            <strong className="text-slate-900 dark:text-slate-100">Plage de température d'usage :</strong> -10°C à +60°C pour montres-bracelets
+                          </p>
+                        </div>
+                      </>
+                    )}
+                    {factor.id === 'humidity' && (
+                      <>
+                        <h5 className="font-bold text-slate-900 dark:text-white mb-3">Effet de l'Humidité</h5>
+                        <p className="text-slate-700 dark:text-slate-300 mb-3 leading-relaxed">
+                          Bien que moins critique que la température, l'humidité peut causer une oxydation de surface 
+                          modifiant légèrement les dimensions. Les traitements de surface (rhodiage, dorage) protègent contre ce phénomène.
+                        </p>
+                        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+                          <p className="text-sm text-slate-600 dark:text-slate-400">
+                            <strong className="text-slate-900 dark:text-slate-100">Humidité relative recommandée :</strong> 40-60% pour stockage optimal
+                          </p>
+                        </div>
+                      </>
+                    )}
+                    {factor.id === 'stress' && (
+                      <>
+                        <h5 className="font-bold text-slate-900 dark:text-white mb-3">Contraintes Internes Résiduelles</h5>
+                        <p className="text-slate-700 dark:text-slate-300 mb-3 leading-relaxed">
+                          L'usinage mécanique (fraisage, tournage, perçage) crée des tensions internes dans le matériau. 
+                          Ces contraintes se relâchent progressivement, causant des déformations différées sur plusieurs mois.
+                        </p>
+                        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+                          <p className="text-sm text-slate-600 dark:text-slate-400">
+                            <strong className="text-slate-900 dark:text-slate-100">Solution :</strong> Recuit de détente à 200-250°C élimine 70-90% des contraintes
+                          </p>
+                        </div>
+                      </>
+                    )}
+                    {factor.id === 'aging' && (
+                      <>
+                        <h5 className="font-bold text-slate-900 dark:text-white mb-3">Vieillissement Métallurgique</h5>
+                        <p className="text-slate-700 dark:text-slate-300 mb-3 leading-relaxed">
+                          Au fil des années, la structure cristalline du métal évolue naturellement (relaxation des dislocations, 
+                          diffusion atomique). Ce phénomène est lent mais peut affecter la stabilité sur 20-30 ans.
+                        </p>
+                        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+                          <p className="text-sm text-slate-600 dark:text-slate-400">
+                            <strong className="text-slate-900 dark:text-slate-100">Prévention :</strong> Cycles de vieillissement artificiel accéléré
+                          </p>
+                        </div>
+                      </>
+                    )}
+                    {factor.id === 'shock' && (
+                      <>
+                        <h5 className="font-bold text-slate-900 dark:text-white mb-3">Chocs et Vibrations</h5>
+                        <p className="text-slate-700 dark:text-slate-300 mb-3 leading-relaxed">
+                          Les chocs violents peuvent causer des déformations plastiques permanentes si la limite élastique 
+                          est dépassée. Les vibrations répétées créent une fatigue du matériau.
+                        </p>
+                        <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+                          <p className="text-sm text-slate-600 dark:text-slate-400">
+                            <strong className="text-slate-900 dark:text-slate-100">Résistance aux chocs :</strong> Normes ISO 1413 (chute 1m sur surface dure)
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
