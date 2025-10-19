@@ -19,15 +19,28 @@ import {
 function HeroSection() {
   return (
     <section className="relative min-h-screen bg-[#0a122a] overflow-hidden flex items-center justify-center px-4">
+      {/* Styles CSS pour les animations */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes spin-reverse {
+          from { transform: rotate(360deg); }
+          to { transform: rotate(0deg); }
+        }
+        .gear-slow {
+          animation: spin-slow 20s linear infinite;
+        }
+        .gear-reverse {
+          animation: spin-reverse 15s linear infinite;
+        }
+      `}} />
+
       {/* Rouages animés en arrière-plan */}
       <div className="absolute inset-0 overflow-hidden opacity-10">
         {/* Grand rouage gauche */}
-        <svg
-          className="absolute top-20 left-10 w-96 h-96 animate-spin-slow"
-          viewBox="0 0 200 200"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg className="absolute top-20 left-10 w-96 h-96 gear-slow" viewBox="0 0 200 200" fill="none">
           <circle cx="100" cy="100" r="80" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
           <circle cx="100" cy="100" r="60" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
           <circle cx="100" cy="100" r="10" fill="currentColor" className="text-blue-300" />
@@ -40,12 +53,7 @@ function HeroSection() {
         </svg>
 
         {/* Moyen rouage droite */}
-        <svg
-          className="absolute top-40 right-20 w-64 h-64 animate-spin-reverse"
-          viewBox="0 0 200 200"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg className="absolute top-40 right-20 w-64 h-64 gear-reverse" viewBox="0 0 200 200" fill="none">
           <circle cx="100" cy="100" r="70" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
           <circle cx="100" cy="100" r="50" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
           <circle cx="100" cy="100" r="8" fill="currentColor" className="text-blue-300" />
@@ -58,12 +66,7 @@ function HeroSection() {
         </svg>
 
         {/* Petit rouage bas droite */}
-        <svg
-          className="absolute bottom-20 right-40 w-48 h-48 animate-spin-slow"
-          viewBox="0 0 200 200"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg className="absolute bottom-20 right-40 w-48 h-48 gear-slow" viewBox="0 0 200 200" fill="none">
           <circle cx="100" cy="100" r="60" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
           <circle cx="100" cy="100" r="45" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
           <circle cx="100" cy="100" r="6" fill="currentColor" className="text-blue-300" />
@@ -76,12 +79,7 @@ function HeroSection() {
         </svg>
 
         {/* Grand rouage bas gauche */}
-        <svg
-          className="absolute bottom-10 left-20 w-80 h-80 animate-spin-reverse"
-          viewBox="0 0 200 200"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg className="absolute bottom-10 left-20 w-80 h-80 gear-reverse" viewBox="0 0 200 200" fill="none">
           <circle cx="100" cy="100" r="75" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
           <circle cx="100" cy="100" r="55" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
           <circle cx="100" cy="100" r="9" fill="currentColor" className="text-blue-300" />
@@ -94,12 +92,7 @@ function HeroSection() {
         </svg>
 
         {/* Petit rouage haut droite */}
-        <svg
-          className="absolute top-10 right-60 w-40 h-40 animate-spin-slow"
-          viewBox="0 0 200 200"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg className="absolute top-10 right-60 w-40 h-40 gear-slow" viewBox="0 0 200 200" fill="none">
           <circle cx="100" cy="100" r="55" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
           <circle cx="100" cy="100" r="40" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
           <circle cx="100" cy="100" r="5" fill="currentColor" className="text-blue-300" />
@@ -112,12 +105,7 @@ function HeroSection() {
         </svg>
 
         {/* Moyen rouage centre gauche */}
-        <svg
-          className="absolute top-1/2 left-40 w-56 h-56 animate-spin-reverse transform -translate-y-1/2"
-          viewBox="0 0 200 200"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg className="absolute top-1/2 left-40 w-56 h-56 gear-reverse" style={{ transform: 'translateY(-50%)' }} viewBox="0 0 200 200" fill="none">
           <circle cx="100" cy="100" r="65" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
           <circle cx="100" cy="100" r="48" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
           <circle cx="100" cy="100" r="7" fill="currentColor" className="text-blue-300" />
@@ -150,16 +138,10 @@ function HeroSection() {
         </p>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
-          <Link
-            href="/theorie"
-            className="px-8 py-4 bg-gradient-to-r from-blue-600 to-sky-500 text-white font-bold rounded-xl shadow-lg hover:scale-105 transition inline-flex items-center justify-center gap-2"
-          >
+          <Link href="/theorie" className="px-8 py-4 bg-gradient-to-r from-blue-600 to-sky-500 text-white font-bold rounded-xl shadow-lg hover:scale-105 transition inline-flex items-center justify-center gap-2">
             ⚡ Explorer maintenant <span className="text-xl">→</span>
           </Link>
-          <Link
-            href="/communaute"
-            className="px-8 py-4 bg-[#151f38] border border-blue-800 text-white font-bold rounded-xl hover:bg-blue-900/80 hover:scale-105 transition inline-flex items-center justify-center gap-2"
-          >
+          <Link href="/communaute" className="px-8 py-4 bg-[#151f38] border border-blue-800 text-white font-bold rounded-xl hover:bg-blue-900/80 hover:scale-105 transition inline-flex items-center justify-center gap-2">
             👥 Rejoindre la communauté
           </Link>
         </div>
@@ -170,23 +152,6 @@ function HeroSection() {
           </span>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @keyframes spin-reverse {
-          from { transform: rotate(360deg); }
-          to { transform: rotate(0deg); }
-        }
-        .animate-spin-slow {
-          animation: spin-slow 20s linear infinite;
-        }
-        .animate-spin-reverse {
-          animation: spin-reverse 15s linear infinite;
-        }
-      `}</style>
     </section>
   );
 }
