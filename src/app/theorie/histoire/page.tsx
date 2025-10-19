@@ -235,13 +235,13 @@ export default function HistoireHorlogerie() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
+    <div className="min-h-screen bg-neutral-950">
       {/* HEADER */}
-      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10 backdrop-blur-sm bg-white/90 dark:bg-slate-900/90">
+      <header className="border-b border-neutral-800 sticky top-0 z-10 backdrop-blur-sm bg-neutral-950/90">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <Link
             href="/theorie"
-            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium"
+            className="inline-flex items-center text-gray-400 hover:text-orange-400 transition-colors font-medium"
           >
             <ChevronLeft className="w-5 h-5 mr-1" />
             Retour à la théorie
@@ -250,34 +250,34 @@ export default function HistoireHorlogerie() {
       </header>
 
       {/* HERO */}
-      <section className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+      <section className="border-b border-neutral-800">
         <div className="max-w-6xl mx-auto px-4 py-16 md:py-24">
           <div className="max-w-4xl">
-            <h1 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white leading-tight mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500 bg-clip-text text-transparent leading-tight mb-6">
               Histoire de l'Horlogerie Suisse
             </h1>
             
-            <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 leading-relaxed mb-12">
+            <p className="text-xl md:text-2xl text-gray-300 leading-relaxed mb-12">
               Quatre siècles d'excellence, d'innovations et de savoir-faire qui ont positionné la Suisse comme 
               référence mondiale incontestée de l'art horloger.
             </p>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 hover:shadow-lg transition-all">
-                <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-1">1541</div>
-                <div className="text-xs text-slate-600 dark:text-slate-400">Origines à Genève</div>
+              <div className="bg-neutral-900/50 backdrop-blur border border-neutral-800 rounded-lg p-4 hover:border-orange-500/50 transition-all">
+                <div className="text-3xl font-bold text-orange-400 mb-1">1541</div>
+                <div className="text-xs text-gray-400">Origines à Genève</div>
               </div>
-              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 hover:shadow-lg transition-all">
-                <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-1">60K</div>
-                <div className="text-xs text-slate-600 dark:text-slate-400">Montres exportées (1790)</div>
+              <div className="bg-neutral-900/50 backdrop-blur border border-neutral-800 rounded-lg p-4 hover:border-orange-500/50 transition-all">
+                <div className="text-3xl font-bold text-orange-400 mb-1">60K</div>
+                <div className="text-xs text-gray-400">Montres exportées (1790)</div>
               </div>
-              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 hover:shadow-lg transition-all">
-                <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-1">21</div>
-                <div className="text-xs text-slate-600 dark:text-slate-400">Manufactures Beta 21</div>
+              <div className="bg-neutral-900/50 backdrop-blur border border-neutral-800 rounded-lg p-4 hover:border-orange-500/50 transition-all">
+                <div className="text-3xl font-bold text-orange-400 mb-1">21</div>
+                <div className="text-xs text-gray-400">Manufactures Beta 21</div>
               </div>
-              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 hover:shadow-lg transition-all">
-                <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-1">N°1</div>
-                <div className="text-xs text-slate-600 dark:text-slate-400">Leader mondial</div>
+              <div className="bg-neutral-900/50 backdrop-blur border border-neutral-800 rounded-lg p-4 hover:border-orange-500/50 transition-all">
+                <div className="text-3xl font-bold text-orange-400 mb-1">N°1</div>
+                <div className="text-xs text-gray-400">Leader mondial</div>
               </div>
             </div>
           </div>
@@ -289,8 +289,8 @@ export default function HistoireHorlogerie() {
         {/* TIMELINE */}
         <section className="mb-20">
           <div className="flex items-center mb-12">
-            <Clock className="w-8 h-8 text-orange-600 dark:text-orange-400 mr-3" />
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
+            <Clock className="w-8 h-8 text-orange-400 mr-3" />
+            <h2 className="text-3xl font-bold text-white">
               Chronologie
             </h2>
           </div>
@@ -300,29 +300,29 @@ export default function HistoireHorlogerie() {
               <div key={period.id}>
                 <button
                   onClick={() => setSelectedPeriod(selectedPeriod === period.id ? '' : period.id)}
-                  className="w-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl p-6 hover:border-orange-400 dark:hover:border-orange-500 hover:shadow-lg dark:hover:bg-slate-700 transition-all text-left"
+                  className="w-full bg-neutral-900/80 backdrop-blur border-2 border-neutral-800 rounded-xl p-6 hover:border-orange-500/50 hover:shadow-xl hover:shadow-orange-500/10 transition-all text-left"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 flex-1">
                       <div className="flex flex-col items-center">
-                        <span className="px-3 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-sm font-bold rounded-full">
+                        <span className="px-3 py-1 bg-orange-100 text-orange-900 text-sm font-bold rounded-full">
                           {period.year}
                         </span>
-                        <span className="text-xs text-slate-500 dark:text-slate-400 mt-1">{period.category}</span>
+                        <span className="text-xs text-gray-500 mt-1">{period.category}</span>
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
+                        <h3 className="text-lg font-bold text-gray-100 mb-1">
                           {period.title}
                         </h3>
                         {selectedPeriod !== period.id && (
-                          <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-1">
+                          <p className="text-sm text-gray-400 line-clamp-1">
                             {period.content.intro}
                           </p>
                         )}
                       </div>
                     </div>
                     <ChevronDown 
-                      className={`w-6 h-6 text-slate-400 transition-transform flex-shrink-0 ml-4 ${
+                      className={`w-6 h-6 text-gray-400 transition-transform flex-shrink-0 ml-4 ${
                         selectedPeriod === period.id ? 'rotate-180' : ''
                       }`} 
                     />
@@ -330,26 +330,26 @@ export default function HistoireHorlogerie() {
                 </button>
 
                 {selectedPeriod === period.id && (
-                  <div className="mt-3 bg-slate-50 dark:bg-slate-900 border-l-4 border-orange-600 dark:border-orange-400 rounded-r-xl p-6">
-                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                  <div className="mt-3 bg-neutral-900/50 border-l-4 border-orange-500 rounded-r-xl p-6">
+                    <p className="text-gray-300 leading-relaxed mb-4">
                       {period.content.intro}
                     </p>
-                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                    <p className="text-gray-300 leading-relaxed mb-4">
                       {period.content.details}
                     </p>
                     {period.content.highlight && (
-                      <div className={`${period.content.warning ? 'bg-red-50 dark:bg-red-950/30 border-red-600 dark:border-red-500' : 'bg-orange-50 dark:bg-orange-950/30 border-orange-600 dark:border-orange-500'} border-l-4 rounded-r-lg p-4 mb-4`}>
-                        <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
+                      <div className={`${period.content.warning ? 'bg-red-950/20 border-red-500/30' : 'bg-neutral-900 border-orange-500/30'} border-l-4 rounded-r-lg p-4 mb-4`}>
+                        <p className="text-sm font-semibold text-orange-300 mb-2">
                           {period.content.impact}
                         </p>
-                        <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                        <p className="text-sm text-gray-300 leading-relaxed">
                           {period.content.highlight}
                         </p>
                       </div>
                     )}
                     {!period.content.highlight && (
-                      <div className="bg-orange-50 dark:bg-orange-950/30 border-l-4 border-orange-600 dark:border-orange-500 rounded-r-lg p-4">
-                        <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                      <div className="bg-neutral-900 border-l-4 border-orange-500/30 rounded-r-lg p-4">
+                        <p className="text-sm font-semibold text-orange-300">
                           {period.content.impact}
                         </p>
                       </div>
@@ -364,8 +364,8 @@ export default function HistoireHorlogerie() {
         {/* FIGURES */}
         <section className="mb-20">
           <div className="flex items-center mb-12">
-            <Users className="w-8 h-8 text-orange-600 dark:text-orange-400 mr-3" />
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
+            <Users className="w-8 h-8 text-orange-400 mr-3" />
+            <h2 className="text-3xl font-bold text-white">
               Figures Emblématiques
             </h2>
           </div>
@@ -375,22 +375,22 @@ export default function HistoireHorlogerie() {
               <div key={figure.id}>
                 <button
                   onClick={() => setSelectedFigure(selectedFigure === figure.id ? '' : figure.id)}
-                  className="w-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl p-6 hover:border-orange-400 dark:hover:border-orange-500 hover:shadow-lg dark:hover:bg-slate-700 transition-all text-left"
+                  className="w-full bg-neutral-900 border-2 border-neutral-800 rounded-xl p-6 hover:border-orange-500/50 hover:shadow-xl hover:shadow-orange-500/10 transition-all text-left"
                 >
-                  <h3 className="text-xl font-bold text-orange-600 dark:text-orange-400 mb-1">{figure.name}</h3>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">{figure.years}</p>
-                  <p className="text-slate-900 dark:text-white font-semibold mb-2">{figure.role}</p>
+                  <h3 className="text-xl font-bold text-orange-400 mb-1">{figure.name}</h3>
+                  <p className="text-sm text-gray-500 mb-3">{figure.years}</p>
+                  <p className="text-gray-200 font-semibold mb-2">{figure.role}</p>
                   {selectedFigure !== figure.id && (
-                    <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">{figure.achievement}</p>
+                    <p className="text-sm text-gray-400 line-clamp-2">{figure.achievement}</p>
                   )}
                 </button>
 
                 {selectedFigure === figure.id && (
-                  <div className="mt-3 bg-orange-50 dark:bg-orange-950/30 border-l-4 border-orange-600 dark:border-orange-400 rounded-r-xl p-6">
-                    <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-3">
-                      <strong className="text-slate-900 dark:text-slate-100">Réalisation :</strong> {figure.achievement}
+                  <div className="mt-3 bg-neutral-900/50 border-l-4 border-orange-500 rounded-r-xl p-6">
+                    <p className="text-sm text-gray-300 leading-relaxed mb-3">
+                      <strong className="text-gray-100">Réalisation :</strong> {figure.achievement}
                     </p>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    <p className="text-sm text-gray-400 leading-relaxed">
                       {figure.details}
                     </p>
                   </div>
@@ -403,37 +403,37 @@ export default function HistoireHorlogerie() {
         {/* INNOVATIONS */}
         <section className="mb-20">
           <div className="flex items-center mb-12">
-            <Lightbulb className="w-8 h-8 text-orange-600 dark:text-orange-400 mr-3" />
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
+            <Lightbulb className="w-8 h-8 text-orange-400 mr-3" />
+            <h2 className="text-3xl font-bold text-white">
               Innovations Majeures
             </h2>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
             {innovations.map((innovation, index) => (
-              <div key={index} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 hover:shadow-lg transition-all">
+              <div key={index} className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 hover:shadow-xl hover:shadow-orange-500/10 transition-all">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">{innovation.title}</h3>
-                  <span className="text-xs font-mono text-slate-500 dark:text-slate-400">{innovation.year}</span>
+                  <h3 className="text-lg font-bold text-gray-100">{innovation.title}</h3>
+                  <span className="text-xs font-mono text-gray-500">{innovation.year}</span>
                 </div>
-                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{innovation.description}</p>
+                <p className="text-sm text-gray-400 leading-relaxed">{innovation.description}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* CONCLUSION */}
-        <section className="bg-gradient-to-br from-orange-50 to-slate-50 dark:from-slate-900 dark:to-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-12 text-center">
-          <Award className="w-12 h-12 text-orange-600 dark:text-orange-400 mx-auto mb-6" />
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">
+        <section className="bg-gradient-to-br from-orange-950/20 via-neutral-900 to-neutral-950 border border-neutral-800 rounded-2xl p-12 text-center">
+          <Award className="w-12 h-12 text-orange-400 mx-auto mb-6" />
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent mb-6">
             Un héritage vivant
           </h2>
-          <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed mb-6 max-w-3xl mx-auto">
+          <p className="text-lg text-gray-300 leading-relaxed mb-6 max-w-3xl mx-auto">
             L'horlogerie suisse incarne plus de quatre siècles d'excellence, d'innovation et de passion. Des ateliers 
             artisanaux de Daniel Jeanrichard aux manufactures high-tech contemporaines, elle a su traverser les crises, 
             s'adapter aux révolutions technologiques et maintenir son statut de référence mondiale absolue.
           </p>
-          <p className="text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-gray-400 leading-relaxed max-w-2xl mx-auto">
             Aujourd'hui, le <em>« Swiss Made »</em> reste synonyme de précision, d'élégance intemporelle et de savoir-faire 
             artisanal unique — un patrimoine horloger inégalé que les horlogers suisses continuent d'enrichir chaque jour.
           </p>
@@ -441,9 +441,9 @@ export default function HistoireHorlogerie() {
       </article>
 
       {/* FOOTER */}
-      <footer className="bg-slate-900 dark:bg-slate-950 border-t border-slate-800 py-8 mt-16">
+      <footer className="border-t border-neutral-800 py-8 mt-16">
         <div className="max-w-6xl mx-auto px-4 text-center">
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-gray-400">
             © 2025 HorloLearn - Formation en Horlogerie Suisse
           </p>
         </div>
