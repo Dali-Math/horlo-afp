@@ -10,10 +10,8 @@ import {
   ExternalLink,
   BookOpen,
   Globe,
-  Database,
   Users,
   Star,
-  Clock,
   Calendar,
 } from 'lucide-react';
 
@@ -37,7 +35,7 @@ const resources: Resource[] = [
     id: '1',
     title: 'Le Chronographe Mécanique',
     description:
-      'Découvrez le fonctionnement du chronographe mécanique, un mécanisme emblématique de l'horlogerie avec schémas détaillés.',
+      'Découvrez le fonctionnement du chronographe mécanique, un mécanisme emblématique de l\'horlogerie avec schémas détaillés.',
     url: '/documents/chronographe-mecanique.pdf',
     type: 'PDF',
     category: 'Documents techniques',
@@ -76,7 +74,7 @@ const resources: Resource[] = [
     id: '4',
     title: 'Évolution des Manufactures Horlogères',
     description:
-      'Article retraçant l'évolution des manufactures horlogères suisses depuis le XIXe siècle.',
+      'Article retraçant l\'évolution des manufactures horlogères suisses depuis le XIXe siècle.',
     url: 'https://www.fhs.swiss/histoire-manufactures',
     type: 'Article',
     category: 'Histoire',
@@ -92,6 +90,26 @@ const resources: Resource[] = [
     category: 'Sites de référence',
     language: 'Multilingue',
     isFeatured: true,
+  },
+  {
+    id: '6',
+    title: 'Glossaire Technique FHH',
+    description:
+      'Dictionnaire officiel de la Fondation de la Haute Horlogerie avec plus de 600 termes techniques.',
+    url: 'https://www.hautehorlogerie.org/fr/encyclopedie/glossaire',
+    type: 'Glossaire',
+    category: 'Glossaires',
+    language: 'Multilingue',
+  },
+  {
+    id: '7',
+    title: 'Archives Horlogères Numériques',
+    description:
+      'Base de données de calibres historiques et documents d\'époque numérisés.',
+    url: 'https://www.horlogerie-suisse.com/archives',
+    type: 'Base de données',
+    category: 'Sites de référence',
+    language: 'FR',
   },
 ];
 
@@ -117,7 +135,7 @@ export default function RessourcesPage() {
             className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
           >
             <ChevronLeft className="w-5 h-5 mr-1" />
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </Link>
         </div>
       </header>
@@ -134,7 +152,7 @@ export default function RessourcesPage() {
           </h1>
           <p className="text-lg text-slate-700 dark:text-slate-300 max-w-3xl mx-auto">
             Documents techniques, guides et sites de référence pour approfondir
-            l'art horloger suisse.
+            l&apos;art horloger suisse.
           </p>
         </div>
 
@@ -166,6 +184,7 @@ export default function RessourcesPage() {
                   key={r.id}
                   href={r.url}
                   target={r.url.startsWith('/') ? '_self' : '_blank'}
+                  rel="noopener noreferrer"
                   className="block bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 shadow-lg hover:shadow-xl transition-all p-6"
                 >
                   <div className="flex items-center justify-between mb-3">
@@ -215,6 +234,7 @@ export default function RessourcesPage() {
                 key={r.id}
                 href={r.url}
                 target={r.url.startsWith('/') ? '_self' : '_blank'}
+                rel="noopener noreferrer"
                 className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 rounded-xl p-6 shadow-md hover:shadow-lg transition-all"
               >
                 <div className="flex items-center justify-between mb-3">
