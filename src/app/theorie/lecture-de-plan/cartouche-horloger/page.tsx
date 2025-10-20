@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, CheckCircle, XCircle, Book, FileText, User, AlertCircle, Award, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import './animations.css';
 
 interface CartoucheField {
   id: string;
@@ -256,7 +255,7 @@ export default function CartoucheHorlogerPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative">
         {/* Hero section avec animation */}
-        <div className="text-center mb-16 opacity-0 animate-[fadeIn_0.5s_ease-out_forwards]">
+        <div className="text-center mb-16 transition-all duration-500">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-full text-blue-700 dark:text-blue-300 text-sm font-semibold mb-6">
             <Award className="w-4 h-4" />
             <span>ISO 7200 & ISO 5457</span>
