@@ -1,3 +1,5 @@
+'use client';
+
 import "./globals.css";
 import type { Metadata } from "next";
 import { SITE } from "@/lib/seo";
