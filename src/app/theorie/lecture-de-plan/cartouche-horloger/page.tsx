@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, CheckCircle, XCircle, Book, FileText, User, AlertCircle, Award, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import './animations.css';
 
 interface CartoucheField {
   id: string;
@@ -255,7 +256,7 @@ export default function CartoucheHorlogerPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative">
         {/* Hero section avec animation */}
-        <div className="text-center mb-16 animate-fade-in">
+        <div className="text-center mb-16 opacity-0 animate-[fadeIn_0.5s_ease-out_forwards]">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-full text-blue-700 dark:text-blue-300 text-sm font-semibold mb-6">
             <Award className="w-4 h-4" />
             <span>ISO 7200 & ISO 5457</span>
@@ -357,7 +358,7 @@ export default function CartoucheHorlogerPage() {
             {/* Détails du champ sélectionné avec animation */}
             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 border border-slate-200 dark:border-slate-700">
               {selectedFieldData ? (
-                <div className="space-y-6 animate-fade-in">
+                <div className="space-y-6 transition-opacity duration-500 opacity-100">
                   <div>
                     <div className="flex items-center gap-3 mb-4">
                       <div className={`px-3 py-1 rounded-full text-xs font-bold ${
@@ -588,7 +589,7 @@ export default function CartoucheHorlogerPage() {
                     {isCorrect ? (
                       <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400 flex-shrink-0 animate-bounce" />
                     ) : (
-                      <XCircle className="w-8 h-8 text-red-600 dark:text-red-400 flex-shrink-0 animate-shake" />
+                      <XCircle className="w-8 h-8 text-red-600 dark:text-red-400 flex-shrink-0 animate-bounce" />
                     )}
                     <div>
                       <p className={`font-bold text-lg mb-2 ${
@@ -868,7 +869,7 @@ export default function CartoucheHorlogerPage() {
                 </span>
                 <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform duration-300">▼</span>
               </summary>
-              <div className="px-6 py-5 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 animate-fade-in">
+              <div className="px-6 py-5 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 transition-opacity duration-500 opacity-100">
                 <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
                   Un champ <strong className="text-blue-600 dark:text-blue-400">obligatoire (O)</strong> doit toujours être renseigné selon ISO 7200 (titre, auteur, date, format, etc.). Un champ <strong className="text-orange-600 dark:text-orange-400">conditionnel (C)</strong> n'est obligatoire que si l'information est pertinente pour le document (masse, traitement de surface, tolérance générale). En horlogerie, la masse et les traitements sont souvent considérés comme obligatoires de facto.
                 </p>
@@ -883,7 +884,7 @@ export default function CartoucheHorlogerPage() {
                 </span>
                 <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform duration-300">▼</span>
               </summary>
-              <div className="px-6 py-5 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 animate-fade-in">
+              <div className="px-6 py-5 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 transition-opacity duration-500 opacity-100">
                 <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
                   Chaque modification doit être documentée dans un <strong className="text-blue-600 dark:text-blue-400">tableau de révision</strong> au-dessus du cartouche : <strong>Indice</strong> (A, B, C...), <strong>Date</strong>, <strong>Auteur</strong>, <strong>Nature de la modification</strong> (description concise), <strong>Visa</strong> (vérificateur). L'indice dans le cartouche principal doit être mis à jour. En production, seule la dernière révision est valide.
                 </p>
@@ -898,7 +899,7 @@ export default function CartoucheHorlogerPage() {
                 </span>
                 <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform duration-300">▼</span>
               </summary>
-              <div className="px-6 py-5 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 animate-fade-in">
+              <div className="px-6 py-5 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 transition-opacity duration-500 opacity-100">
                 <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
                   Les composants horlogers sont miniatures (pivots de 0.08 mm, rubis de 0.2 mm). Une échelle <strong className="text-blue-600 dark:text-blue-400">2:1, 5:1 ou même 10:1</strong> agrandit le dessin pour permettre une cotation lisible et précise. Le dessinateur peut ainsi spécifier des tolérances de l'ordre du micromètre. L'échelle réelle doit toujours être clairement indiquée dans le cartouche.
                 </p>
@@ -913,7 +914,7 @@ export default function CartoucheHorlogerPage() {
                 </span>
                 <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform duration-300">▼</span>
               </summary>
-              <div className="px-6 py-5 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 animate-fade-in">
+              <div className="px-6 py-5 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 transition-opacity duration-500 opacity-100">
                 <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
                   En horlogerie, on utilise généralement <strong className="text-blue-600 dark:text-blue-400">ISO 2768-m</strong> (moyenne) ou <strong className="text-blue-600 dark:text-blue-400">ISO 2768-f</strong> (fine) pour les pièces de précision. Ces normes définissent les tolérances linéaires et angulaires pour les cotes non tolérancées individuellement. Pour les mouvements haut de gamme, ISO 2768-f est préférable. Les cotes critiques doivent toujours avoir des tolérances spécifiques.
                 </p>
@@ -928,7 +929,7 @@ export default function CartoucheHorlogerPage() {
                 </span>
                 <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform duration-300">▼</span>
               </summary>
-              <div className="px-6 py-5 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 animate-fade-in">
+              <div className="px-6 py-5 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 transition-opacity duration-500 opacity-100">
                 <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
                   Oui, les entreprises peuvent créer des <strong className="text-blue-600 dark:text-blue-400">cartouches personnalisés</strong> tant que les <strong>champs obligatoires ISO 7200</strong> sont présents et que le cartouche reste en <strong>bas à droite</strong>. La plupart des manufactures horlogères suisses ont un modèle standardisé incluant leur logo, des champs spécifiques (n° de calibre, série, client) et des zones pour validation qualité. Le respect des normes ISO garantit néanmoins l'interchangeabilité des documents.
                 </p>
@@ -979,32 +980,6 @@ export default function CartoucheHorlogerPage() {
         </div>
       </footer>
 
-      <style jsx>{`
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-5px); }
-          75% { transform: translateX(5px); }
-        }
-
-        .animate-fade-in {
-          animation: fade-in 0.5s ease-out;
-        }
-
-        .animate-shake {
-          animation: shake 0.5s ease-in-out;
-        }
-      `}</style>
     </div>
   );
 }
