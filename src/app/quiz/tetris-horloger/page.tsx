@@ -620,15 +620,31 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
               <h4 className="font-cinzel text-[#d4af37] text-center mb-2 text-sm">🏆 Objectifs</h4>
               <div className="text-[#e0c87e] text-xs">
                 {[
-                  ['10 lignes', 'Apprenti'],
-                  ['25 lignes', 'Compagnon'],
-                  ['50 lignes', 'Maître Horloger'],
-                  ['100 lignes', 'Grande Complication'],
-                ].map(([lines, rank], idx) => (
-                  <div key={idx} className="py-1 border-b border-[#d4af3750] last:border-0">
-                    ✓ Assembler {lines}: <strong>{rank}</strong>
-                  </div>
-                ))}
+                  [10, 'Apprenti'],
+                  [25, 'Compagnon'],
+                  [50, 'Maître Horloger'],
+                  [100, 'Grande Complication'],
+                ].map(([targetLines, rank], idx) => {
+                  const isCompleted = gameState.lines >= targetLines;
+                  const isCurrent = gameState.lines < targetLines && (idx === 0 || gameState.lines >= [10, 25, 50, 100][idx - 1]);
+                  return (
+                    <div 
+                      key={idx} 
+                      className={`py-1 border-b border-[#d4af3750] last:border-0 flex items-center justify-between ${
+                        isCompleted ? 'text-green-400 font-bold' : isCurrent ? 'text-[#f0c14b]' : 'text-[#8b6914]'
+                      }`}
+                    >
+                      <span>
+                        {isCompleted ? '✅' : isCurrent ? '🔄' : '⭕'} Assembler {targetLines} lignes: <strong>{rank}</strong>
+                      </span>
+                      {isCurrent && (
+                        <span className="text-[#d4af37] text-[10px]">
+                          {gameState.lines}/{targetLines}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
