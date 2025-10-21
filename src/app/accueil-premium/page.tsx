@@ -459,45 +459,28 @@ export default function HorloLearnHome() {
         </div>
       </section>
 
-      {/* Section Statistiques - NOUVEAU DESIGN SELON L'IMAGE */}
+      {/* Section Statistiques */}
       <FadeInSection className="py-20 px-4 bg-slate-900/30">
         <div className="max-w-7xl mx-auto">
-          {/* Bordure rose elliptique */}
-          <div className="relative">
-            {/* Ellipse avec bordure rose/magenta */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div 
-                className="border-4 border-pink-600/60 rounded-[50%] w-full h-full"
-                style={{
-                  borderRadius: '50% / 35%',
-                  transform: 'rotate(-2deg)'
-                }}
-              />
-            </div>
-
-            {/* Contenu des statistiques */}
-            <div className="relative z-10 py-16">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-                {stats.map((stat, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    className="text-center group cursor-pointer"
-                  >
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-900/30 backdrop-blur-sm rounded-2xl mb-4 group-hover:scale-110 transition-transform border border-amber-500/20">
-                      <stat.icon className="w-8 h-8 text-amber-400" />
-                    </div>
-                    <div className="text-4xl font-bold text-amber-400 mb-2 group-hover:scale-110 transition-transform">
-                      {stat.value}
-                    </div>
-                    <p className="text-gray-300 text-sm font-medium">{stat.label}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="text-center group cursor-pointer"
+              >
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-amber-500/20 to-amber-600/20 rounded-2xl mb-4 group-hover:scale-110 transition-transform">
+                  <stat.icon className="w-8 h-8 text-amber-400" />
+                </div>
+                <div className="text-4xl font-bold text-amber-400 mb-2 group-hover:scale-110 transition-transform">
+                  {stat.value}
+                </div>
+                <p className="text-gray-400 text-sm">{stat.label}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </FadeInSection>
