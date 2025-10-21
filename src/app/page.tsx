@@ -183,11 +183,6 @@ export default function HorloLearnHome() {
           </svg>
         </motion.div>
       </div>
-
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-slate-950/80 backdrop-blur-xl z-50 border-b border-amber-500/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
             
             {/* Logo */}
             <div className="flex items-center space-x-3">
@@ -220,34 +215,7 @@ export default function HorloLearnHome() {
                 <p className="text-xs text-amber-300/70">Passion & Découverte</p>
               </div>
             </div>
-
-            {/* Navigation Desktop */}
-            <div className="hidden md:flex items-center space-x-8 font-medium text-sm">
-              {navigationLinks.map((link) => (
-                <a 
-                  key={link.label}
-                  href={link.href} 
-                  className="text-gray-300 hover:text-amber-400 transition-colors relative group"
-                >
-                  {link.label}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300" />
-                </a>
-              ))}
-              <button className="flex items-center space-x-2 px-6 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full hover:shadow-lg hover:shadow-amber-500/50 transition-all duration-300 font-semibold">
-                <Heart className="w-4 h-4" />
-                <span>Contribuer</span>
-              </button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <div className="md:hidden">
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-amber-400">
-                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
-            </div>
-          </div>
-        </div>
-
+            
         {/* Mobile Menu */}
         {isMenuOpen && (
           <motion.div 
