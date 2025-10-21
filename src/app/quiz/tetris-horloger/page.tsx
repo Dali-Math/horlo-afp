@@ -2,11 +2,10 @@
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 
-function AtelierHorloger() {
-  // -- ton code exactement comme tu l’as donné --
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const nextCanvasRef = useRef<HTMLCanvasElement>(null);
 
+function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const nextCanvasRef = useRef<HTMLCanvasElement>(null);
+  
   const [gameState, setGameState] = useState({
     score: 0,
     level: 1,
@@ -17,7 +16,7 @@ function AtelierHorloger() {
     showPseudoModal: true,
     showGameOverModal: false,
   });
-
+  
   const [pseudoInput, setPseudoInput] = useState('');
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
   const [gameOverLeaderboard, setGameOverLeaderboard] = useState<any[]>([]);
@@ -39,15 +38,7 @@ function AtelierHorloger() {
 
   const COLORS = ['#c9a659', '#8b4513', '#dc143c', '#4169e1', '#32cd32', '#9370db', '#ff6347'];
   const PIECE_NAMES = ['⚖️ Balancier-Spiral', '⚙️ Échappement', '💎 Rubis', '⬛ Platine', '🔄 Rotor', '🎯 Rouage', '👑 Couronne'];
-  const SHAPES = [
-    [[1,1,1,1]],
-    [[1,1],[1,1]],
-    [[0,1,0],[1,1,1]],
-    [[1,0,0],[1,1,1]],
-    [[0,0,1],[1,1,1]],
-    [[0,1,1],[1,1,0]],
-    [[1,1,0],[0,1,1]]
-  ];
+  const SHAPES = [[[1,1,1,1]], [[1,1],[1,1]], [[0,1,0],[1,1,1]], [[1,0,0],[1,1,1]], [[0,0,1],[1,1,1]], [[0,1,1],[1,1,0]], [[1,1,0],[0,1,1]]];
 
   const historicalFacts = [
     "En 1770, Abraham-Louis Perrelet invente le mécanisme de remontage automatique.",
@@ -400,8 +391,156 @@ function AtelierHorloger() {
   };
 
   return (
-    // ... tout ton JSX, que tu avais donné, SANS MODIFICATION ...
+    <div className="min-h-screen bg-gradient-to-br from-[#14141e] via-[#28201e] to-[#14141e] text-[#d4af37] p-5" style={{ fontFamily: "'Crimson Text', serif" }}>
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital@0;1&display=swap');
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        @keyframes gearRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .rotating-gear { display: inline-block; animation: gearRotate 4s linear infinite; }
+      `}</style>
+
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-8 bg-gradient-to-br from-[#d4af3720] to-[#b8860b20] p-8 rounded-2xl border-2 border-[#d4af37]">
+          <h1 className="font-cinzel text-5xl text-[#d4af37] mb-3 tracking-widest">
+            <span className="rotating-gear">⚙️</span> ATELIER D'ASSEMBLAGE HORLOGER <span className="rotating-gear">⚙️</span>
+          </h1>
+          <div className="text-xl italic text-[#c9a659]">Manufacture de Haute Précision Suisse</div>
+          <div className="inline-block mt-4 px-8 py-2 border-2 border-[#d4af37] rounded-full text-sm tracking-widest bg-[#d4af3710]">GENÈVE 1755</div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr_300px] gap-6">
+          <div className="bg-gradient-to-br from-[#3c281490] to-[#281e1490] border-2 border-[#8b6914] rounded-xl p-5">
+            <h3 className="font-cinzel text-xl text-center border-b-2 border-[#8b6914] pb-2 mb-4">📊 Établi</h3>
+            <div className="bg-[#00000066] p-4 rounded-xl text-center mb-3 border-2 border-[#d4af37]">
+              <div className="text-xs text-[#c9a659]">Points</div>
+              <div className="font-cinzel text-4xl font-bold text-[#d4af37]">{gameState.score}</div>
+            </div>
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              <div className="bg-[#00000066] p-3 rounded-xl text-center border border-[#8b6914]">
+                <div className="text-xs text-[#c9a659]">Calibre</div>
+                <div className="font-cinzel text-2xl font-bold text-[#d4af37]">{gameState.level}</div>
+              </div>
+              <div className="bg-[#00000066] p-3 rounded-xl text-center border border-[#8b6914]">
+                <div className="text-xs text-[#c9a659]">Assemblages</div>
+                <div className="font-cinzel text-2xl font-bold text-[#d4af37]">{gameState.lines}</div>
+              </div>
+            </div>
+            <div className="bg-[#00000066] p-3 rounded-xl mb-3 border border-[#8b6914] text-xs">
+              <div className="font-cinzel text-[#d4af37] mb-2 text-center">Progression</div>
+              <div className="h-5 bg-[#00000080] rounded-xl overflow-hidden border border-[#8b6914]">
+                <div className="h-full bg-gradient-to-r from-[#d4af37] to-[#f0c14b] flex items-center justify-center text-[10px] font-bold text-[#1a1410]" style={{ width: `${Math.min(100, (gameState.lines / 100) * 100)}%` }}>
+                  {Math.min(100, Math.round((gameState.lines / 100) * 100))}%
+                </div>
+              </div>
+            </div>
+            <div className="bg-[#00000050] p-3 rounded-xl mb-3 border border-[#8b6914] text-xs italic text-[#e0c87e] leading-relaxed">
+              📜 {historicalFact}
+            </div>
+            <div className="bg-[#00000066] p-3 rounded-xl border border-[#d4af37]">
+              <h4 className="font-cinzel text-[#d4af37] text-center mb-2 text-sm">🏆 Hall of Fame</h4>
+              {leaderboard.length === 0 ? (
+                <div className="text-center py-3 text-[#8b6914] italic text-xs">Aucun score</div>
+              ) : (
+                leaderboard.map((e, i) => (
+                  <div key={i} className={`p-2 my-1 rounded flex items-center gap-2 text-xs ${i < 3 ? 'bg-[#d4af3720]' : ''}`}>
+                    <span>{i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '⚙️'}</span>
+                    <div className="flex-1">
+                      <div className="font-bold text-[#d4af37]">{e.pseudo}</div>
+                      <div className="text-[10px] text-[#a89152]">{e.lines} • Calibre {e.level}</div>
+                    </div>
+                    <div className="font-cinzel font-bold text-[#d4af37]">{e.score}</div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center">
+            <canvas ref={canvasRef} width={300} height={600} className="border-4 border-[#d4af37] rounded-xl mb-4" style={{ background: 'linear-gradient(135deg, #1a1410, #2a2010)' }} />
+            <div className="flex gap-3 mb-4">
+              {!gameState.gameRunning ? (
+                <button onClick={startGame} className="font-cinzel bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-[#1a1410] px-6 py-3 rounded-lg font-bold uppercase">
+                  ▶️ Démarrer
+                </button>
+              ) : (
+                <button onClick={togglePause} className="font-cinzel bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-[#1a1410] px-6 py-3 rounded-lg font-bold uppercase">
+                  {gameState.gamePaused ? '▶️ Reprendre' : '⏸️ Pause'}
+                </button>
+              )}
+            </div>
+            <div className="bg-gradient-to-br from-[#00000099] to-[#281e1499] p-4 rounded-xl border-2 border-[#8b6914] text-center w-full max-w-[300px]">
+              <h4 className="font-cinzel text-[#d4af37] mb-3">Prochain Composant</h4>
+              <canvas ref={nextCanvasRef} width={120} height={120} className="mx-auto border-2 border-[#8b6914] rounded mb-2" style={{ background: 'rgba(0,0,0,0.3)' }} />
+              <div className="text-[#d4af37] italic text-sm">{nextComponentName}</div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-[#3c281490] to-[#281e1490] border-2 border-[#8b6914] rounded-xl p-5">
+            <h3 className="font-cinzel text-xl text-center border-b-2 border-[#8b6914] pb-2 mb-4">🎓 Examen</h3>
+            <div className="bg-[#00000050] p-3 rounded-xl mb-3 border border-[#8b6914] text-xs" dangerouslySetInnerHTML={{ __html: encyclopediaEntry }} />
+          </div>
+        </div>
+      </div>
+
+      {gameState.showPseudoModal && (
+        <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-50">
+          <div className="bg-gradient-to-br from-[#281e14f0] to-[#3c2814f0] p-10 rounded-3xl text-center border-4 border-[#d4af37] max-w-xl">
+            <h2 className="font-cinzel text-4xl text-[#d4af37] mb-5">⚙️ BIENVENUE ⚙️</h2>
+            <div className="bg-[#d4af3720] p-5 rounded-xl mb-6 border-2 border-[#d4af37]">Entrez votre nom d'horloger</div>
+            <input type="text" value={pseudoInput} onChange={(e) => setPseudoInput(e.target.value)} onKeyPress={(e) => e.key === 'Enter' && savePseudoAndStart()} placeholder="Votre pseudo..." maxLength={20} autoFocus className="w-full p-3 text-lg font-cinzel bg-[#00000066] border-2 border-[#d4af37] rounded-xl text-[#d4af37] text-center mb-6 placeholder-[#8b6914]" />
+            <button onClick={savePseudoAndStart} className="font-cinzel bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-[#1a1410] px-8 py-3 rounded-xl font-bold uppercase">
+              ✨ Commencer
+            </button>
+          </div>
+        </div>
+      )}
+
+      {gameState.showGameOverModal && (
+        <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-gradient-to-br from-[#281e14f0] to-[#3c2814f0] p-8 rounded-3xl text-center border-4 border-[#d4af37] max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 className="font-cinzel text-4xl text-[#d4af37] mb-4">⚙️ FIN ⚙️</h2>
+            <div className="bg-[#d4af3720] p-4 rounded-xl mb-4 border-2 border-[#d4af37] whitespace-pre-line text-sm">{finalStats.certification}</div>
+            <div className="grid grid-cols-3 gap-3 mb-4">
+              {[['Points', finalStats.score], ['Assemblages', finalStats.lines], ['Calibre', finalStats.level]].map(([label, val], i) => (
+                <div key={i} className="bg-[#00000066] p-3 rounded-xl border-2 border-[#8b6914]">
+                  <div className="text-xs text-[#c9a659]">{label}</div>
+                  <div className="font-cinzel text-2xl font-bold text-[#d4af37]">{val}</div>
+                </div>
+              ))}
+            </div>
+            <div className="text-[#c9a659] italic mb-4">Rang: {finalStats.rank}</div>
+            <div className="bg-[#00000080] p-4 rounded-xl mb-4 border-2 border-[#d4af37]">
+              <h3 className="font-cinzel text-xl text-[#d4af37] mb-3">🏆 TOP 5 🏆</h3>
+              {gameOverLeaderboard.length === 0 ? (
+                <div className="text-center py-3 text-[#8b6914] italic text-sm">Premier horloger !</div>
+              ) : (
+                gameOverLeaderboard.map((e, i) => {
+                  const isCurrent = e.score === finalStats.score && e.pseudo === gameState.playerPseudo;
+                  return (
+                    <div key={i} className={`p-2 my-2 rounded-lg flex items-center gap-2 text-sm ${isCurrent ? 'bg-[#d4af3750] border-2 border-[#d4af37]' : i < 3 ? 'bg-[#d4af3720]' : 'bg-[#00000033]'}`}>
+                      <span className="text-xl">{i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}</span>
+                      <div className="flex-1">
+                        <div className="font-bold text-[#d4af37]">{e.pseudo} {isCurrent && '⭐'}</div>
+                        <div className="text-xs text-[#a89152]">{e.lines} • Calibre {e.level}</div>
+                      </div>
+                      <div className="font-cinzel font-bold text-[#d4af37]">{e.score}</div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+            <div className="flex gap-3 justify-center flex-wrap">
+              <button onClick={quickRestart} className="font-cinzel bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-[#1a1410] px-6 py-3 rounded-xl font-bold uppercase">
+                ▶️ Nouvelle Partie
+              </button>
+              <button onClick={changePseudo} className="font-cinzel bg-gradient-to-br from-[#8b6914] to-[#6b5210] text-[#d4af37] px-6 py-3 rounded-xl font-bold uppercase">
+                ✏️ Changer Pseudo
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
-
 export default dynamic(() => Promise.resolve(AtelierHorloger), { ssr: false });
