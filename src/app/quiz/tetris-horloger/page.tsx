@@ -494,7 +494,39 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
 
           <div className="bg-gradient-to-br from-[#3c281490] to-[#281e1490] border-2 border-[#8b6914] rounded-xl p-5">
             <h3 className="font-cinzel text-xl text-center border-b-2 border-[#8b6914] pb-2 mb-4">🎓 Examen</h3>
-            <div className="bg-[#00000050] p-3 rounded-xl mb-3 border border-[#8b6914] text-xs" dangerouslySetInnerHTML={{ __html: encyclopediaEntry }} />
+            
+            {/* Section Quiz */}
+            <div className="bg-gradient-to-br from-[#143c5050] to-[#14283c50] p-4 rounded-xl border-2 border-[#5a7fa0] mb-3">
+              <h4 className="font-cinzel text-[#8bb4d9] text-center mb-3 text-sm">Questions Techniques</h4>
+              <div className="bg-[#00000066] p-3 rounded-lg border-l-2 border-[#8bb4d9] text-xs">
+                <div className="text-[#c9d4e0] leading-relaxed">
+                  Complétez 3 assemblages pour débloquer l'examen technique !
+                </div>
+              </div>
+            </div>
+            
+            {/* Encyclopédie */}
+            <div className="bg-[#00000050] p-3 rounded-xl mb-3 border border-[#8b6914] text-xs">
+              <h4 className="font-cinzel text-[#d4af37] text-center mb-2">📚 Encyclopédie</h4>
+              <div className="text-[#c9a659] leading-relaxed" dangerouslySetInnerHTML={{ __html: encyclopediaEntry }} />
+            </div>
+            
+            {/* Objectifs */}
+            <div className="bg-gradient-to-br from-[#8b691420] to-[#d4af3720] p-3 rounded-xl border-2 border-[#d4af37]">
+              <h4 className="font-cinzel text-[#d4af37] text-center mb-2 text-sm">🏆 Objectifs</h4>
+              <div className="text-[#e0c87e] text-xs">
+                {[
+                  ['10 lignes', 'Apprenti'],
+                  ['25 lignes', 'Compagnon'],
+                  ['50 lignes', 'Maître Horloger'],
+                  ['100 lignes', 'Grande Complication'],
+                ].map(([lines, rank], idx) => (
+                  <div key={idx} className="py-1 border-b border-[#d4af3750] last:border-0">
+                    ✓ Assembler {lines}: <strong>{rank}</strong>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
