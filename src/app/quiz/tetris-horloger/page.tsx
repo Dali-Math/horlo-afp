@@ -28,12 +28,24 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [questionAnswered, setQuestionAnswered] = useState(false);
 
+  // Système de badges
+  const [badges, setBadges] = useState<any[]>([]);
+  const [showBadgesModal, setShowBadgesModal] = useState(false);
+  const [playerStats, setPlayerStats] = useState({
+    totalGames: 0,
+    totalLines: 0,
+    bestScore: 0,
+    quizCorrect: 0,
+    quizTotal: 0,
+  });
+
   const gameDataRef = useRef<any>({
     board: [],
     currentQuestionIndex: 0,
     currentPiece: null,
     nextPiece: null,
     dropInterval: null,
+    gameStartTime: 0,
   });
 
   const COLS = 10;
@@ -43,6 +55,20 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
   const COLORS = ['#c9a659', '#8b4513', '#dc143c', '#4169e1', '#32cd32', '#9370db', '#ff6347'];
   const PIECE_NAMES = ['⚖️ Balancier-Spiral', '⚙️ Échappement', '💎 Rubis', '⬛ Platine', '🔄 Rotor', '🎯 Rouage', '👑 Couronne'];
   const SHAPES = [[[1,1,1,1]], [[1,1],[1,1]], [[0,1,0],[1,1,1]], [[1,0,0],[1,1,1]], [[0,0,1],[1,1,1]], [[0,1,1],[1,1,0]], [[1,1,0],[0,1,1]]];
+
+  // Définition des badges - ULTRA DIFFICILES
+  const ALL_BADGES = [
+    { id: 'apprentice', name: 'Apprenti Horloger', icon: '🔰', desc: 'Compléter 25 parties complètes', target: 25, stat: 'totalGames' },
+    { id: 'precision_100', name: 'Précision Suisse', icon: '🎖️', desc: 'Assembler 100 lignes au total', target: 100, stat: 'totalLines' },
+    { id: 'precision_500', name: 'Maître Artisan', icon: '⚙️', desc: 'Assembler 500 lignes au total', target: 500, stat: 'totalLines' },
+    { id: 'precision_1000', name: 'Compagnon Certifié', icon: '🔧', desc: 'Assembler 1000 lignes au total', target: 1000, stat: 'totalLines' },
+    { id: 'precision_2500', name: 'Grande Complication', icon: '👑', desc: 'Assembler 2500 lignes au total', target: 2500, stat: 'totalLines' },
+    { id: 'quiz_master', name: 'Expert COSC', icon: '🎓', desc: 'Répondre correctement à 50 questions', target: 50, stat: 'quizCorrect' },
+    { id: 'score_25000', name: 'Horloger Confirmé', icon: '💎', desc: 'Atteindre 25000 points en une partie', target: 25000, stat: 'bestScore' },
+    { id: 'score_50000', name: 'Maître Horloger', icon: '🏆', desc: 'Atteindre 50000 points en une partie', target: 50000, stat: 'bestScore' },
+    { id: 'score_100000', name: 'Légende Horlogère', icon: '⭐', desc: 'Atteindre 100000 points en une partie', target: 100000, stat: 'bestScore' },
+    { id: 'veteran', name: 'Vétéran du Calibre', icon: '🛡️', desc: 'Jouer 100 parties complètes', target: 100, stat: 'totalGames' },
+  ];
 
   const historicalFacts = [
     "En 1770, Abraham-Louis Perrelet invente le mécanisme de remontage automatique.",
@@ -95,6 +121,64 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
     return [];
   };
 
+  const loadPlayerStats = () => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('horlogerStats');
+      return saved ? JSON.parse(saved) : { totalGames: 0, totalLines: 0, bestScore: 0, quizCorrect: 0, quizTotal: 0 };
+    }
+    return { totalGames: 0, totalLines: 0, bestScore: 0, quizCorrect: 0, quizTotal: 0 };
+  };
+
+  const savePlayerStats = (stats: any) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('horlogerStats', JSON.stringify(stats));
+    }
+  };
+
+  const loadBadges = () => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('horlogerBadges');
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  };
+
+  const saveBadges = (badgesList: any[]) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('horlogerBadges', JSON.stringify(badgesList));
+    }
+  };
+
+  const checkAndUnlockBadges = (currentStats: any) => {
+    const unlockedBadges = loadBadges();
+    let newBadge = null;
+    for (const badge of ALL_BADGES) {
+      if (!unlockedBadges.includes(badge.id)) {
+        const statValue = currentStats[badge.stat] || 0;
+        if (statValue >= badge.target) {
+          unlockedBadges.push(badge.id);
+          newBadge = badge;
+          saveBadges(unlockedBadges);
+          setBadges(unlockedBadges);
+          break;
+        }
+      }
+    }
+    if (newBadge) {
+      setTimeout(() => {
+        alert(`🎉 NOUVEAU BADGE DÉBLOQUÉ!\n\n${newBadge.icon} ${newBadge.name}\n${newBadge.desc}`);
+      }, 500);
+    }
+  };
+
+  const updateStats = (updates: any) => {
+    const currentStats = loadPlayerStats();
+    const newStats = { ...currentStats, ...updates };
+    savePlayerStats(newStats);
+    setPlayerStats(newStats);
+    checkAndUnlockBadges(newStats);
+  };
+
   const saveHighScores = (scores: any[]) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('horlogerScores', JSON.stringify(scores));
@@ -112,6 +196,8 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     setLeaderboard(loadHighScores());
+    setPlayerStats(loadPlayerStats());
+    setBadges(loadBadges());
     setHistoricalFact(historicalFacts[Math.floor(Math.random() * historicalFacts.length)]);
     setEncyclopediaEntry(encyclopediaEntries[Math.floor(Math.random() * encyclopediaEntries.length)]);
     initBoard();
@@ -349,12 +435,14 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
     
     if (answerIndex === currentQuestion.correct) {
       setGameState(prev => ({ ...prev, score: prev.score + 750 }));
+      updateStats({ quizCorrect: playerStats.quizCorrect + 1, quizTotal: playerStats.quizTotal + 1 });
       setTimeout(() => {
         alert('✅ Excellent ! Maîtrise technique confirmée. +750 points');
         setCurrentQuestion(null);
         gameDataRef.current.currentQuestionIndex++;
       }, 500);
     } else {
+      updateStats({ quizTotal: playerStats.quizTotal + 1 });
       setTimeout(() => {
         alert('❌ Réponse incorrecte. La bonne réponse: ' + currentQuestion.options[currentQuestion.correct]);
         setCurrentQuestion(null);
@@ -402,6 +490,13 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const gameOver = () => {
     if (gameDataRef.current.dropInterval) clearInterval(gameDataRef.current.dropInterval);
+    
+    updateStats({
+      totalGames: playerStats.totalGames + 1,
+      totalLines: playerStats.totalLines + gameState.lines,
+      bestScore: Math.max(playerStats.bestScore, gameState.score)
+    });
+    
     let rank = '';
     let certification = '';
     if (gameState.lines < 10) {
@@ -435,6 +530,7 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const startGame = () => {
     initBoard();
+    gameDataRef.current.gameStartTime = Date.now();
     setGameState(prev => ({ ...prev, score: 0, level: 1, lines: 0, gameRunning: true, gamePaused: false }));
     spawnNewPiece();
     drawBoard();
@@ -527,6 +623,37 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
             </div>
             <div className="bg-[#00000050] p-3 rounded-xl mb-3 border border-[#8b6914] text-xs italic text-[#e0c87e] leading-relaxed">
               📜 {historicalFact}
+            </div>
+            
+            {/* Bouton Badges */}
+            <button
+              onClick={() => setShowBadgesModal(true)}
+              className="w-full bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-[#1a1410] px-4 py-3 rounded-xl font-cinzel font-bold text-sm mb-3 hover:shadow-lg transition-all"
+            >
+              🏅 Mes Badges ({badges.length}/10)
+            </button>
+
+            {/* Statistiques */}
+            <div className="bg-[#00000066] p-3 rounded-xl border border-[#d4af37] mb-3">
+              <h4 className="font-cinzel text-[#d4af37] text-center mb-2 text-xs">📊 Statistiques</h4>
+              <div className="space-y-1 text-[10px] text-[#c9a659]">
+                <div className="flex justify-between">
+                  <span>Parties:</span>
+                  <strong className="text-[#d4af37]">{playerStats.totalGames}</strong>
+                </div>
+                <div className="flex justify-between">
+                  <span>Meilleur score:</span>
+                  <strong className="text-[#d4af37]">{playerStats.bestScore}</strong>
+                </div>
+                <div className="flex justify-between">
+                  <span>Total lignes:</span>
+                  <strong className="text-[#d4af37]">{playerStats.totalLines}</strong>
+                </div>
+                <div className="flex justify-between">
+                  <span>Quiz:</span>
+                  <strong className="text-[#d4af37]">{playerStats.quizCorrect}/{playerStats.quizTotal}</strong>
+                </div>
+              </div>
             </div>
             <div className="bg-[#00000066] p-3 rounded-xl border border-[#d4af37]">
               <h4 className="font-cinzel text-[#d4af37] text-center mb-2 text-sm">🏆 Hall of Fame</h4>
@@ -706,6 +833,77 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
                 ✏️ Changer Pseudo
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Badges */}
+      {showBadgesModal && (
+        <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4">
+          <div className="bg-gradient-to-br from-[#281e14f0] to-[#3c2814f0] p-8 rounded-3xl border-4 border-[#d4af37] max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 className="font-cinzel text-4xl text-[#d4af37] mb-6 text-center drop-shadow-[0_0_20px_rgba(212,175,55,0.6)]">
+              🏅 Collection de Badges
+            </h2>
+            
+            <div className="mb-6 text-center text-[#c9a659]">
+              <span className="text-2xl font-bold text-[#d4af37]">{badges.length}</span> / 10 badges débloqués
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+              {ALL_BADGES.map(badge => {
+                const isUnlocked = badges.includes(badge.id);
+                const progress = playerStats[badge.stat] || 0;
+                const percent = Math.min(100, Math.round((progress / badge.target) * 100));
+                
+                return (
+                  <div 
+                    key={badge.id}
+                    className={`p-4 rounded-xl border-2 transition-all ${
+                      isUnlocked 
+                        ? 'bg-gradient-to-br from-[#d4af3750] to-[#b8860b30] border-[#d4af37] shadow-lg shadow-[#d4af3730]' 
+                        : 'bg-[#00000070] border-[#8b6914]'
+                    }`}
+                  >
+                    <div className="text-5xl mb-3 text-center">
+                      {isUnlocked ? badge.icon : '🔒'}
+                    </div>
+                    <div className={`font-cinzel text-center text-sm mb-2 ${isUnlocked ? 'text-[#d4af37] font-bold' : 'text-[#8b6914]'}`}>
+                      {badge.name}
+                    </div>
+                    <div className={`text-xs text-center mb-3 ${isUnlocked ? 'text-[#c9a659]' : 'text-[#6b5210]'}`}>
+                      {badge.desc}
+                    </div>
+                    
+                    {!isUnlocked && (
+                      <div>
+                        <div className="w-full h-2 bg-[#00000080] rounded-full overflow-hidden mb-1">
+                          <div 
+                            className="h-full bg-gradient-to-r from-[#8b6914] to-[#d4af37]"
+                            style={{ width: `${percent}%` }}
+                          />
+                        </div>
+                        <div className="text-[10px] text-center text-[#8b6914]">
+                          {progress} / {badge.target}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {isUnlocked && (
+                      <div className="text-center text-green-400 text-sm font-bold">
+                        ✅ DÉBLOQUÉ
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            <button
+              onClick={() => setShowBadgesModal(false)}
+              className="font-cinzel bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-[#1a1410] px-8 py-4 rounded-xl font-bold w-full text-lg uppercase hover:shadow-xl transition-all"
+            >
+              ✨ Fermer
+            </button>
           </div>
         </div>
       )}
