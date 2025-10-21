@@ -25,9 +25,13 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [historicalFact, setHistoricalFact] = useState('');
   const [encyclopediaEntry, setEncyclopediaEntry] = useState('');
   const [nextComponentName, setNextComponentName] = useState('---');
+  const [currentQuestion, setCurrentQuestion] = useState<any>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [questionAnswered, setQuestionAnswered] = useState(false);
 
   const gameDataRef = useRef<any>({
     board: [],
+    currentQuestionIndex: 0,
     currentPiece: null,
     nextPiece: null,
     dropInterval: null,
@@ -54,6 +58,34 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
     "<strong>L'Échappement</strong> transforme l'énergie continue du barillet en impulsions régulières pour le balancier.",
     "<strong>Les Rubis</strong> sont des paliers en corindon synthétique qui réduisent les frottements à près de zéro.",
     "<strong>La Platine</strong> est la base du mouvement sur laquelle tous les composants sont assemblés."
+  ];
+
+  const quizQuestions = [
+    {
+      question: "Quelle est la fréquence standard d'un mouvement mécanique moderne ?",
+      options: ["18'000 alt/h", "21'600 alt/h", "28'800 alt/h", "36'000 alt/h"],
+      correct: 2
+    },
+    {
+      question: "Combien de rubis contient typiquement un mouvement ETA 2824-2 ?",
+      options: ["17 rubis", "21 rubis", "25 rubis", "31 rubis"],
+      correct: 2
+    },
+    {
+      question: "Qu'est-ce que l'échappement à ancre suisse ?",
+      options: ["Un système de remontage", "Un mécanisme régulateur", "Un indicateur de réserve", "Un type de spiral"],
+      correct: 1
+    },
+    {
+      question: "Quelle est la réserve de marche typique d'un calibre automatique ?",
+      options: ["24 heures", "38-42 heures", "7 jours", "14 jours"],
+      correct: 1
+    },
+    {
+      question: "Que signifie 'COSC' en horlogerie ?",
+      options: ["Centre Optique Suisse Cadran", "Contrôle Officiel Suisse Chronomètres", "Comité Organisation Suisse Calibres", "Centre Observation Spiraux Chronomètres"],
+      correct: 1
+    }
   ];
 
   const loadHighScores = () => {
@@ -297,6 +329,40 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
     }
   };
 
+
+  const showQuizQuestion = () => {
+    const idx = gameDataRef.current.currentQuestionIndex;
+    if (idx >= quizQuestions.length) {
+      gameDataRef.current.currentQuestionIndex = 0;
+      return;
+    }
+    const question = quizQuestions[idx];
+    setCurrentQuestion(question);
+    setSelectedAnswer(null);
+    setQuestionAnswered(false);
+  };
+
+  const checkAnswer = (answerIndex: number) => {
+    if (questionAnswered || !currentQuestion) return;
+    
+    setSelectedAnswer(answerIndex);
+    setQuestionAnswered(true);
+    
+    if (answerIndex === currentQuestion.correct) {
+      setGameState(prev => ({ ...prev, score: prev.score + 750 }));
+      setTimeout(() => {
+        alert('✅ Excellent ! Maîtrise technique confirmée. +750 points');
+        setCurrentQuestion(null);
+        gameDataRef.current.currentQuestionIndex++;
+      }, 500);
+    } else {
+      setTimeout(() => {
+        alert('❌ Réponse incorrecte. La bonne réponse: ' + currentQuestion.options[currentQuestion.correct]);
+        setCurrentQuestion(null);
+        gameDataRef.current.currentQuestionIndex++;
+      }, 500);
+    }
+  };
   const clearLines = () => {
     let linesCleared = 0;
     const board = gameDataRef.current.board;
@@ -317,6 +383,14 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
       });
       setHistoricalFact(historicalFacts[Math.floor(Math.random() * historicalFacts.length)]);
       setEncyclopediaEntry(encyclopediaEntries[Math.floor(Math.random() * encyclopediaEntries.length)]);
+      
+      // Afficher une question tous les 3 assemblages
+      setGameState(prevState => {
+        if (prevState.lines % 3 === 0 && prevState.lines > 0) {
+          showQuizQuestion();
+        }
+        return prevState;
+      });
     }
   };
 
@@ -498,12 +572,40 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
             <h3 className="font-cinzel text-xl text-center border-b-2 border-[#8b6914] pb-2 mb-4">🎓 Examen</h3>
             
             {/* Section Quiz */}
+            {/* Section Quiz */}
             <div className="bg-gradient-to-br from-[#143c5050] to-[#14283c50] p-4 rounded-xl border-2 border-[#5a7fa0] mb-3">
               <h4 className="font-cinzel text-[#8bb4d9] text-center mb-3 text-sm">Questions Techniques</h4>
               <div className="bg-[#00000066] p-3 rounded-lg border-l-2 border-[#8bb4d9] text-xs">
-                <div className="text-[#c9d4e0] leading-relaxed">
-                  Complétez 3 assemblages pour débloquer l'examen technique !
-                </div>
+                {!currentQuestion ? (
+                  <div className="text-[#c9d4e0] leading-relaxed">
+                    Complétez 3 assemblages pour débloquer l'examen technique !
+                  </div>
+                ) : (
+                  <div>
+                    <div className="text-[#c9d4e0] font-bold mb-3 leading-relaxed">
+                      {currentQuestion.question}
+                    </div>
+                    <div className="space-y-2">
+                      {currentQuestion.options.map((option: string, index: number) => (
+                        <div
+                          key={index}
+                          onClick={() => checkAnswer(index)}
+                          className={`p-2 rounded cursor-pointer transition-all ${
+                            questionAnswered
+                              ? index === currentQuestion.correct
+                                ? 'bg-green-900/50 border-2 border-green-500 text-green-200'
+                                : index === selectedAnswer
+                                ? 'bg-red-900/50 border-2 border-red-500 text-red-200'
+                                : 'bg-[#5a7fa020] text-[#c9d4e0]'
+                              : 'bg-[#5a7fa020] hover:bg-[#5a7fa040] border-2 border-transparent hover:border-[#8bb4d9] text-[#c9d4e0]'
+                          } ${questionAnswered ? 'pointer-events-none' : ''}`}
+                        >
+                          {option}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             
