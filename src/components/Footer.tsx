@@ -87,7 +87,7 @@ export default function Footer() {
           {/* Container avec overflow caché */}
           <div className="flex items-center">
             {/* ✅ Changé : animate-marquee-footer → animate-scroll */}
-            <div className="marquee-container flex animate-scroll whitespace-nowrap">
+            <div className="marquee-container flex animate-scroll whitespace-nowrap [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
               {/* Contenu original : Titre + icônes */}
               <div className="flex items-center gap-6 px-4">
                 {/* Titre jaune intégré au scroll */}
