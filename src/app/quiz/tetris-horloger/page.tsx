@@ -57,7 +57,7 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
   const PIECE_NAMES = ['⚖️ Balancier-Spiral', '⚙️ Échappement', '💎 Rubis', '⬛ Platine', '🔄 Rotor', '🎯 Rouage', '👑 Couronne'];
   const SHAPES = [[[1,1,1,1]], [[1,1],[1,1]], [[0,1,0],[1,1,1]], [[1,0,0],[1,1,1]], [[0,0,1],[1,1,1]], [[0,1,1],[1,1,0]], [[1,1,0],[0,1,1]]];
 
-  // Définition des badges - ULTRA DIFFICILES / HARDCORE
+  // Définition des badges - ULTRA DIFFICILES
   const ALL_BADGES = [
     { id: 'apprentice', name: 'Apprenti Horloger', icon: '🔰', desc: 'Compléter 25 parties complètes', target: 25, stat: 'totalGames' },
     { id: 'precision_100', name: 'Précision Suisse', icon: '🎖️', desc: 'Assembler 100 lignes au total', target: 100, stat: 'totalLines' },
@@ -65,9 +65,9 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
     { id: 'precision_1000', name: 'Compagnon Certifié', icon: '🔧', desc: 'Assembler 1000 lignes au total', target: 1000, stat: 'totalLines' },
     { id: 'precision_2500', name: 'Grande Complication', icon: '👑', desc: 'Assembler 2500 lignes au total', target: 2500, stat: 'totalLines' },
     { id: 'quiz_master', name: 'Expert COSC', icon: '🎓', desc: 'Répondre correctement à 50 questions', target: 50, stat: 'quizCorrect' },
-    { id: 'score_25000', name: 'Horloger Confirmé', icon: '💎', desc: 'Atteindre 25\'000 points en une partie', target: 25000, stat: 'bestScore' },
-    { id: 'score_50000', name: 'Maître Horloger', icon: '🏆', desc: 'Atteindre 50\'000 points en une partie', target: 50000, stat: 'bestScore' },
-    { id: 'score_100000', name: 'Légende Horlogère', icon: '⭐', desc: 'Atteindre 100\'000 points en une partie', target: 100000, stat: 'bestScore' },
+    { id: 'score_25000', name: 'Horloger Confirmé', icon: '💎', desc: 'Atteindre 25000 points en une partie', target: 25000, stat: 'bestScore' },
+    { id: 'score_50000', name: 'Maître Horloger', icon: '🏆', desc: 'Atteindre 50000 points en une partie', target: 50000, stat: 'bestScore' },
+    { id: 'score_100000', name: 'Légende Horlogère', icon: '⭐', desc: 'Atteindre 100000 points en une partie', target: 100000, stat: 'bestScore' },
     { id: 'veteran', name: 'Vétéran du Calibre', icon: '🛡️', desc: 'Jouer 100 parties complètes', target: 100, stat: 'totalGames' },
   ];
 
@@ -627,12 +627,13 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
             <div className="bg-[#00000050] p-3 rounded-xl mb-3 border border-[#8b6914] text-xs italic text-[#e0c87e] leading-relaxed">
               📜 {historicalFact}
             </div>
+            
             {/* Bouton Badges */}
             <button
               onClick={() => setShowBadgesModal(true)}
               className="w-full bg-gradient-to-br from-[#d4af37] to-[#b8860b] text-[#1a1410] px-4 py-3 rounded-xl font-cinzel font-bold text-sm mb-3 hover:shadow-lg transition-all"
             >
-              🏅 Mes Badges ({badges.length}/{ALL_BADGES.length})
+              🏅 Mes Badges ({badges.length}/10)
             </button>
 
             {/* Statistiques */}
@@ -850,7 +851,7 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
             </h2>
             
             <div className="mb-6 text-center text-[#c9a659]">
-              <span className="text-2xl font-bold text-[#d4af37]">{badges.length}</span> / {ALL_BADGES.length} badges débloqués
+              <span className="text-2xl font-bold text-[#d4af37]">{badges.length}</span> / 10 badges débloqués
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
@@ -911,6 +912,7 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
           </div>
         </div>
       )}
+    </div>
   );
 }
 export default dynamic(() => Promise.resolve(AtelierHorloger), { ssr: false });
