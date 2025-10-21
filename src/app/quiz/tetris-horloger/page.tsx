@@ -852,7 +852,7 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
               {ALL_BADGES.map(badge => {
                 const isUnlocked = badges.includes(badge.id);
-                const progress = playerStats[badge.stat] || 0;
+                const progress = (playerStats as any)[badge.stat] || 0;
                 const percent = Math.min(100, Math.round((progress / badge.target) * 100));
                 
                 return (
