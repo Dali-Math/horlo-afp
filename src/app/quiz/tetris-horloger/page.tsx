@@ -347,7 +347,7 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
     const scores = addToLeaderboard(gameState.playerPseudo, gameState.score, gameState.lines, gameState.level);
     setGameOverLeaderboard(scores);
     setLeaderboard(scores);
-    const playerRank = scores.findIndex(s => s.pseudo === gameState.playerPseudo && s.score === gameState.score) + 1;
+    const playerRank = scores.findIndex((s: { pseudo: string; score: number }) => s.pseudo === gameState.playerPseudo && s.score === gameState.score) + 1;
     if (playerRank > 0 && playerRank <= 3) {
       certification += `\n\n🏆 INCROYABLE ! Vous êtes ${playerRank === 1 ? 'N°1 👑' : playerRank === 2 ? 'N°2 🥈' : 'N°3 🥉'} du classement !`;
     } else if (playerRank > 0 && playerRank <= 5) {
