@@ -72,7 +72,7 @@ export default function AtelierHorloger() {
   const addToLeaderboard = (pseudo: string, score: number, lines: number, level: number) => {
     let scores = loadHighScores();
     scores.push({ pseudo, score, lines, level, date: new Date().toISOString() });
-    scores.sort((a, b) => b.score - a.score);
+    scores.sort((a: any, b: any) => b.score - a.score);
     scores = scores.slice(0, 5);
     saveHighScores(scores);
     return scores;
