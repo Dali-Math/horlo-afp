@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect, useRef } from 'react'
-import { motion, useScroll, useTransform, useInView } from 'framer-motion'
+import React, { useState } from 'react';
+import Link from 'next/link';
 import { 
   Clock, 
   Watch, 
