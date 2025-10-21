@@ -625,8 +625,9 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
                   [50, 'Maître Horloger'],
                   [100, 'Grande Complication'],
                 ].map(([targetLines, rank], idx) => {
-                  const isCompleted = gameState.lines >= targetLines;
-                  const isCurrent = gameState.lines < targetLines && (idx === 0 || gameState.lines >= [10, 25, 50, 100][idx - 1]);
+                  const target = targetLines as number;
+                  const isCompleted = gameState.lines >= target;
+                  const isCurrent = gameState.lines < target && (idx === 0 || gameState.lines >= ([10, 25, 50, 100][idx - 1]));
                   return (
                     <div 
                       key={idx} 
@@ -635,11 +636,11 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
                       }`}
                     >
                       <span>
-                        {isCompleted ? '✅' : isCurrent ? '🔄' : '⭕'} Assembler {targetLines} lignes: <strong>{rank}</strong>
+                        {isCompleted ? '✅' : isCurrent ? '🔄' : '⭕'} Assembler {target} lignes: <strong>{rank}</strong>
                       </span>
                       {isCurrent && (
                         <span className="text-[#d4af37] text-[10px]">
-                          {gameState.lines}/{targetLines}
+                          {gameState.lines}/{target}
                         </span>
                       )}
                     </div>
