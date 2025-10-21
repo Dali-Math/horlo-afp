@@ -309,10 +309,12 @@ function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
       }
     }
     if (linesCleared > 0) {
-      const newLines = gameState.lines + linesCleared;
-      const newScore = gameState.score + linesCleared * 150 * gameState.level;
-      const newLevel = Math.floor(newLines / 10) + 1;
-      setGameState(prev => ({ ...prev, lines: newLines, score: newScore, level: newLevel }));
+      setGameState(prev => {
+        const newLines = prev.lines + linesCleared;
+        const newScore = prev.score + linesCleared * 150 * prev.level;
+        const newLevel = Math.floor(newLines / 10) + 1;
+        return { ...prev, lines: newLines, score: newScore, level: newLevel };
+      });
       setHistoricalFact(historicalFacts[Math.floor(Math.random() * historicalFacts.length)]);
       setEncyclopediaEntry(encyclopediaEntries[Math.floor(Math.random() * encyclopediaEntries.length)]);
     }
