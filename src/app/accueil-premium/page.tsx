@@ -1,8 +1,9 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect, useRef } from 'react'
+import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { 
+
   Clock, 
   Watch, 
   BookOpen, 
@@ -42,15 +43,7 @@ const FadeInSection = ({ id, children, className = "" }: { id?: string; children
   )
 }
 
-// --- Page Principale ---
-export default function HorloLearnHome() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [time, setTime] = useState(new Date())
-  const [onlineUsers] = useState(48)
-  const { scrollYProgress } = useScroll()
-  
-  const gearRotate = useTransform(scrollYProgress, [0, 1], [0, 360])
-  const gearRotateReverse = useTransform(scrollYProgress, [0, 1], [0, -360])
+
 
   // Mise à jour de l'horloge
   useEffect(() => {
