@@ -134,15 +134,7 @@ export default function HorloLearnHome() {
     },
   ]
 
-  export default function HorloLearnHome() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [time, setTime] = useState(new Date());
-  const [onlineUsers] = useState(48);
-  const { scrollYProgress } = useScroll();
-
-  const gearRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
-  const gearRotateReverse = useTransform(scrollYProgress, [0, 1], [0, -360]);
-
+  
   const actualites = [
     {
       title: 'Watches & Wonders 2026 : Dates confirmées',
