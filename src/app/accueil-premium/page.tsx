@@ -1,406 +1,430 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useScroll } from 'framer-motion';
+import { 
+  Clock, 
+  History, 
+  Wrench, 
+  BookOpen, 
+  Phone, 
+  Mail, 
+  MapPin, 
+  ArrowRight, 
+  Menu, 
+  X, 
+  Play, 
+  Users, 
+  Award,
+  ChevronDown 
+} from 'lucide-react';
 
-// Couleurs thématiques HorloLearn
-const COLORS = {
-  gold: "#d4af37",
-  black: "#0a0a0a",
-  steel: "#b0b0b0",
-  offWhite: "#f5f5f5",
-};
+// Composant : Horloge en temps réel
+const LiveClock = () => {
+  const [time, setTime] = useState(new Date());
 
-export default function HomePage() {
-  const [darkMode, setDarkMode] = useState(true);
-  const [currentTime, setCurrentTime] = useState("");
-
-  // Horloge en temps réel
   useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      setCurrentTime(
-        now.toLocaleTimeString("fr-CH", {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        })
-      );
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
   }, []);
 
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="fixed top-6 right-6 z-50 bg-white/90 backdrop-blur-md rounded-full p-4 shadow-xl border border-gold/30"
+    >
+      <div className="text-center text-sm font-mono">
+        {time.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+      </div>
+    </motion.div>
+  );
+};
+
+// Composant : Carte d'information
+const InfoCard = ({ 
+  icon, title, description, link, delay 
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  link: string;
+  delay: number;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.6, delay }}
+    whileHover={{ y: -10, scale: 1.02 }}
+    className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-gold/30 group"
+  >
+    <div className="mb-6 text-gold group-hover:rotate-12 transition-transform duration-500">
+      {icon}
+    </div>
+    <h3 className="text-2xl font-bold text-dark mb-4">{title}</h3>
+    <p className="text-gray-600 mb-6 leading-relaxed">{description}</p>
+    <a href={link} className="inline-flex items-center text-gold font-semibold">
+      En savoir plus <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
+    </a>
+  </motion.div>
+);
+
+// Composant : Élément de timeline
+const TimelineItem = ({ year, title, description, isLeft }: {
+  year: string;
+  title: string;
+  description: string;
+  isLeft: boolean;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, x: isLeft ? -50 : 50 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    viewport={{ once: true }}
+    className={`relative flex ${isLeft ? 'flex-row' : 'flex-row-reverse'} items-center gap-8 mb-16`}
+  >
+    <div className="bg-white p-6 rounded-xl shadow-lg w-2/5 border border-gold/20">
+      <span className="text-sm font-bold text-gold">{year}</span>
+      <h4 className="text-xl font-bold text-dark mt-2">{title}</h4>
+      <p className="text-gray-600 mt-3">{description}</p>
+    </div>
+    <div className="hidden lg:block w-1/5 flex justify-center">
+      <motion.div
+        whileHover={{ scale: 1.2 }}
+        className="w-6 h-6 bg-gold rounded-full shadow-lg relative z-10"
+      >
+        <Clock className="w-3 h-3 text-white absolute inset-0 m-auto" />
+      </motion.div>
+    </div>
+    <div className="hidden lg:block w-2/5 h-0.5 bg-gradient-to-r from-transparent via-gold to-transparent"></div>
+  </motion.div>
+);
+
+// Page principale
+export default function HorlogerieHomePage() {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { scrollYProgress } = useScroll();
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
-  // Statistiques authentiques
-  const stats = [
-    { value: "100%", label: "Gratuit" },
-    { value: "∞", label: "Ressources" },
-    { value: "0", label: "Inscription" },
-    { value: "🇨🇭", label: "Qualité Suisse" },
-  ];
-
-  // Sections principales
-  const features = [
-    {
-      icon: "📚",
-      title: "Bibliothèque Technique",
-      description: "Accédez à des manuels, schémas, plans et guides détaillés sur les calibres mécaniques suisses.",
-    },
-    {
-      icon: "⚙️",
-      title: "Tutoriels Pratiques",
-      description: "Apprenez les gestes fondamentaux : démontage, remontage, réglage et entretien des mouvements.",
-    },
-    {
-      icon: "🔍",
-      title: "Savoir-Faire Horloger",
-      description: "Découvrez les techniques ancestrales transmises par les maîtres horlogers depuis des générations.",
-    },
-    {
-      icon: "🤝",
-      title: "Communauté Passionnée",
-      description: "Rejoignez des milliers d’amateurs et de professionnels pour échanger, poser des questions et partager.",
-    },
-    {
-      icon: "🎯",
-      title: "Accès Immédiat",
-      description: "Pas d’inscription, pas de paywall. Toutes les ressources sont disponibles dès maintenant, gratuitement.",
-    },
-    {
-      icon: "🔄",
-      title: "Contenu Évolutif",
-      description: "Notre bibliothèque s’enrichit chaque mois grâce aux contributions de la communauté horlogère.",
-    },
-  ];
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <div className={`min-h-screen transition-colors duration-700 ${darkMode ? "bg-[#0a0a0a] text-[#f5f5f5]" : "bg-[#f5f5f5] text-[#0a0a0a]"}`}>
-      {/* ========== HEADER ========== */}
-      <header className={`fixed top-0 w-full z-50 transition-all duration-500 backdrop-blur-lg ${darkMode ? "bg-[#0a0a0a]/90 border-b border-[#d4af37]/20" : "bg-white/90 border-b border-[#b0b0b0]/20"}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                className="w-10 h-10 rounded-full border-2 border-[#d4af37] flex items-center justify-center"
-              >
-                <span className="text-[#d4af37] text-xl">⚙</span>
-              </motion.div>
-              <span className="text-xl font-light tracking-wide">HorloLearn</span>
-            </Link>
+    <div className="min-h-screen bg-light text-dark font-sans">
+      {/* Barre de progression */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-gold z-50 origin-left"
+        style={{ scaleX: scrollYProgress }}
+      />
 
-            {/* Navigation */}
-            <nav className="hidden md:flex items-center gap-8 text-sm font-light">
-              {["Formation", "Histoire", "Techniques", "Musée", "Communauté"].map((item) => (
-                <Link
-                  key={item}
-                  href={`/${item.toLowerCase()}`}
-                  className="relative hover:text-[#d4af37] transition-colors duration-300 group"
-                >
-                  {item}
-                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#d4af37] group-hover:w-full transition-all"></span>
-                </Link>
-              ))}
-            </nav>
+      {/* Horloge */}
+      <LiveClock />
 
-            {/* Toggle & CTA */}
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setDarkMode(!darkMode)}
-                aria-label="Changer de thème"
-                className={`w-14 h-7 rounded-full flex items-center px-1 transition-all ${
-                  darkMode ? "bg-gray-700 justify-end" : "bg-gray-300 justify-start"
-                }`}
-              >
-                <motion.div
-                  layout
-                  className={`w-5 h-5 rounded-full ${darkMode ? "bg-[#d4af37]" : "bg-[#0a0a0a]"}`}
-                />
-              </button>
-              <Link
-                href="/catalogue"
-                className="hidden sm:inline-block px-5 py-2 bg-[#d4af37] text-[#0a0a0a] rounded-md text-sm font-medium hover:shadow-lg transition-all"
-              >
-                Catalogue
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* ========== HERO ========== */}
-      <motion.section
-        style={{ opacity: heroOpacity }}
-        className="relative h-screen flex items-center justify-center pt-16 overflow-hidden"
+      {/* Header */}
+      <motion.header
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className={`fixed w-full top-0 z-40 transition-all duration-300 ${
+          scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg py-4' : 'bg-transparent py-6'
+        }`}
       >
-        {/* Fond animé : engrenages SVG */}
-        <div className="absolute inset-0 opacity-5">
-          <svg width="100%" height="100%" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="gearPattern" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
-                <circle cx="60" cy="60" r="45" fill="none" stroke="#d4af37" strokeWidth="1" />
-                {[...Array(12)].map((_, i) => (
-                  <rect
-                    key={i}
-                    x="55"
-                    y="15"
-                    width="10"
-                    height="30"
-                    fill="#d4af37"
-                    transform={`rotate(${i * 30} 60 60)`}
-                  />
-                ))}
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#gearPattern)" />
-          </svg>
-        </div>
+        <div className="container mx-auto px-6 flex justify-between items-center">
+          <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-3">
+            <Clock className="h-8 w-8 text-gold" />
+            <h1 className="text-2xl font-serif font-bold">Horlogerie<br />Patrimoine</h1>
+          </motion.div>
 
-        {/* Horloge animée (desktop) */}
-        <div className="absolute top-1/4 right-10 hidden lg:block">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 0.1, scale: 1 }}
-            transition={{ duration: 1.5 }}
-            className="relative w-64 h-64"
-          >
-            {/* Cadran */}
-            <div className="absolute inset-0 border-2 border-[#d4af37] rounded-full" />
-            {/* Heures */}
-            {[...Array(12)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-1 h-4 bg-[#d4af37] top-2 left-1/2 -translate-x-1/2"
-                style={{
-                  transformOrigin: "50% 126px",
-                  transform: `translateX(-50%) rotate(${i * 30}deg)`,
-                }}
-              />
+          {/* Navigation */}
+          <nav className="hidden lg:flex gap-8">
+            {['Accueil', 'Histoire', 'Techniques', 'Ressources', 'Contact'].map((item, i) => (
+              <motion.a
+                key={item}
+                href={`#${item.toLowerCase()}`}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="font-medium relative group"
+              >
+                {item}
+                <span className="absolute inset-0 -bottom-1 left-0 w-0 h-0.5 bg-gold group-hover:w-full transition-all duration-300"></span>
+              </motion.a>
             ))}
-            {/* Aiguille des heures */}
-            <motion.div
-              className="absolute w-2 h-20 bg-[#d4af37] rounded-full top-1/2 left-1/2 origin-bottom"
-              style={{ transform: "translateX(-50%) translateY(-100%)" }}
-              animate={{
-                rotate: (new Date().getHours() % 12) * 30 + new Date().getMinutes() * 0.5,
-              }}
-              transition={{ duration: 0 }}
-            />
-            {/* Aiguille des minutes */}
-            <motion.div
-              className="absolute w-1.5 h-28 bg-[#d4af37] rounded-full top-1/2 left-1/2 origin-bottom"
-              style={{ transform: "translateX(-50%) translateY(-100%)" }}
-              animate={{ rotate: new Date().getMinutes() * 6 }}
-              transition={{ duration: 0 }}
-            />
-            {/* Aiguille des secondes */}
-            <motion.div
-              className="absolute w-0.5 h-32 bg-red-500 rounded-full top-1/2 left-1/2 origin-bottom"
-              style={{ transform: "translateX(-50%) translateY(-100%)" }}
-              animate={{ rotate: new Date().getSeconds() * 6 }}
-              transition={{ duration: 0 }}
-            />
-            {/* Centre */}
-            <div className="absolute w-4 h-4 bg-[#d4af37] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-          </motion.div>
+          </nav>
+
+          {/* Mobile menu button */}
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden"
+          >
+            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          </motion.button>
         </div>
 
-        {/* Contenu principal */}
-        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="inline-block mb-6 px-4 py-2 border border-[#d4af37] rounded-full text-sm tracking-wider"
-          >
-            🇨🇭 Horlogerie Suisse
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-light mb-6 leading-tight"
-          >
-            L'Art du Temps,<br />
-            <span className="bg-gradient-to-r from-white via-[#d4af37] to-white bg-clip-text text-transparent">
-              La Science de la Précision
-            </span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-lg md:text-xl mb-10 opacity-80 max-w-2xl mx-auto font-light"
-          >
-            Une bibliothèque vivante de savoirs horlogers partagés par des passionnés. Tutoriels, ressources techniques et connaissances pratiques — entièrement gratuit.
-          </motion.p>
-
-          {/* Horloge réelle en temps réel */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="mb-10 text-3xl md:text-4xl font-mono text-[#d4af37] tracking-wider"
-          >
-            {currentTime}
-          </motion.div>
-
-          {/* CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-          >
-            <Link
-              href="/catalogue"
-              className="px-8 py-4 bg-[#d4af37] text-[#0a0a0a] rounded-lg font-medium hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+        {/* Mobile menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="lg:hidden bg-white border-t border-gold/20"
             >
-              Explorer les Ressources
-            </Link>
-            <Link
-              href="/histoire"
-              className="px-8 py-4 border border-[#d4af37] rounded-lg font-medium hover:bg-[#d4af37]/10 transition-all duration-300"
-            >
-              Découvrir l’Histoire
-            </Link>
-          </motion.div>
-        </div>
+              <nav className="container mx-auto px-6 py-4 space-y-4">
+                {['Accueil', 'Histoire', 'Techniques', 'Ressources', 'Contact'].map((item) => (
+                  <motion.a
+                    key={item}
+                    href={`#${item.toLowerCase()}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block text-lg hover:text-gold transition"
+                  >
+                    {item}
+                  </motion.a>
+                ))}
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.header>
 
-        {/* Indicateur de scroll (aiguille qui bouge) */}
+      {/* Hero Section */}
+      <section id="accueil" className="relative min-h-screen flex items-center justify-center text-center px-6">
+        {/* Rouages animés */}
         <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
+          className="absolute top-1/4 left-1/4 w-32 h-32 opacity-10"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='%23C9A86A' stroke-width='2'/%3E%3Ccircle cx='50' cy='50' r='5' fill='%23C9A86A'/%3E%3C/svg%3E")`,
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat'
+          }}
+        />
+        <motion.div
+          animate={{ rotate: -360 }}
+          transition={{ duration: 80, repeat: Infinity, ease: 'linear' }}
+          className="absolute bottom-1/4 right-1/4 w-24 h-24 opacity-10"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='35' fill='none' stroke='%23B0BEC5' stroke-width='3'/%3E%3Ccircle cx='50' cy='50' r='5' fill='%23B0BEC5'/%3E%3C/svg%3E")`,
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat'
+          }}
+        />
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.3 }}
+          className="max-w-4xl"
         >
-          <div className="w-6 h-10 border-2 border-[#d4af37] rounded-full flex justify-center pt-2">
-            <div className="w-1 h-3 bg-[#d4af37] rounded-full"></div>
+          <h1 className="text-5xl md:text-7xl font-serif font-bold mb-6">
+            L'Art du <span className="text-gold block">Temps</span>
+          </h1>
+          <p className="text-xl md:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto">
+            Explorez l'univers fascinant de l'horlogerie : histoire, techniques, maîtres horlogers et patrimoine culturel.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <motion.a
+              href="#ressources"
+              whileHover={{ scale: 1.05 }}
+              className="bg-gold text-dark px-8 py-4 rounded-full font-semibold shadow-lg"
+            >
+              Commencer l'apprentissage
+            </motion.a>
+            <motion.a
+              href="#histoire"
+              whileHover={{ scale: 1.05 }}
+              className="border-2 border-gold text-gold px-8 py-4 rounded-full font-semibold"
+            >
+              Découvrir l'histoire
+            </motion.a>
           </div>
         </motion.div>
-      </motion.section>
-
-      {/* ========== STATISTIQUES ========== */}
-      <section className="py-20 px-6 border-y border-[#d4af37]/10">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-light mb-4">Notre Engagement</h2>
-            <p className="text-lg opacity-80 max-w-2xl mx-auto">
-              Une plateforme libre, gratuite et ouverte à tous les passionnés d’horlogerie.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.6 }}
-                className="text-center p-6"
-              >
-                <div className="text-4xl md:text-5xl font-light text-[#d4af37] mb-2">{stat.value}</div>
-                <div className="text-sm uppercase tracking-wider opacity-70">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
       </section>
 
-      {/* ========== CARTE DES DOMAINES ========== */}
-      <section className="py-24 px-6">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-light mb-4">Nos Domaines d’Excellence</h2>
-            <p className="text-lg opacity-80 max-w-2xl mx-auto">
-              Explorez l’univers de l’horlogerie suisse, de la théorie à la pratique, avec passion et précision.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.6 }}
-                whileHover={{ y: -8 }}
-                className="p-8 rounded-xl border border-[#d4af37]/20 bg-gradient-to-br from-[#1a1a1a]/10 to-transparent hover:border-[#d4af37]/50 transition-all duration-300"
-              >
-                <div className="text-5xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-medium mb-3">{feature.title}</h3>
-                <p className="opacity-80 text-sm">{feature.description}</p>
-                <div className="mt-4 h-px bg-gradient-to-r from-transparent via-[#d4af37] to-transparent"></div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ========== CTA FINAL ========== */}
-      <section className="py-24 px-6 text-center">
-        <div className="max-w-3xl mx-auto">
+      {/* Section Approches */}
+      <section id="approches" className="py-24 bg-white">
+        <div className="container mx-auto px-6">
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl md:text-4xl font-light mb-6"
+            className="text-4xl md:text-5xl font-serif font-bold text-center mb-16"
           >
-            Prêt à plonger dans l’univers horloger ?
+            Notre Approche Éducative
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
+          <div className="grid md:grid-cols-3 gap-8">
+            <InfoCard
+              icon={<History size={48} />}
+              title="Histoire & Patrimoine"
+              description="Découvrez les époques qui ont façonné l'horlogerie, des horloges astronomiques aux montres-bracelets."
+              link="#histoire"
+              delay={0}
+            />
+            <InfoCard
+              icon={<Wrench size={48} />}
+              title="Techniques & Mécanismes"
+              description="Maîtrisez les secrets des mouvements, échappements et complications horlogères."
+              link="#techniques"
+              delay={1}
+            />
+            <InfoCard
+              icon={<BookOpen size={48} />}
+              title="Ressources Pédagogiques"
+              description="Cours interactifs, vidéos, quiz et certifications pour tous niveaux."
+              link="#ressources"
+              delay={2}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Section Timeline */}
+      <section id="histoire" className="py-24 bg-light">
+        <div className="container mx-auto px-6">
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-lg opacity-80 mb-10"
+            className="text-4xl md:text-5xl font-serif font-bold text-center mb-16"
           >
-            Que vous soyez débutant curieux ou horloger expérimenté, HorloLearn vous offre un accès immédiat à des ressources horlogères de qualité suisse, entièrement gratuites et sans restriction.
-          </motion.p>
+            Chronologie de l'Horlogerie
+          </motion.h2>
+          <div className="max-w-6xl mx-auto">
+            <TimelineItem
+              year="1300"
+              title="Premières Horloges Mécaniques"
+              description="Naissance de l'horlogerie européenne avec les horloges à poids."
+              isLeft
+            />
+            <TimelineItem
+              year="1656"
+              title="Pendule de Huygens"
+              description="Révolution de la précision grâce au pendule régulateur."
+              isLeft={false}
+            />
+            <TimelineItem
+              year="1759"
+              title="Chronomètre de Marine"
+              description="Harrison résout le problème de la longitude."
+              isLeft
+            />
+            <TimelineItem
+              year="1904"
+              title="Première Montre-Bracelet"
+              description="Cartier crée la Santos pour Santos-Dumont."
+              isLeft={false}
+            />
+            <TimelineItem
+              year="1969"
+              title="Révolution du Quartz"
+              description="Seiko lance la première montre à quartz."
+              isLeft
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Section Statistiques */}
+      <section className="py-24 bg-dark text-white">
+        <div className="container mx-auto px-6 text-center">
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-serif font-bold mb-16"
+          >
+            Nos Chiffres Clés
+          </motion.h2>
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <StatCard number="500+" label="Cours disponibles" icon={<BookOpen size={48} />} />
+            <StatCard number="10k+" label="Apprentis formés" icon={<Users size={48} />} />
+            <StatCard number="150+" label="Maîtres horlogers" icon={<Award size={48} />} />
+          </div>
+        </div>
+      </section>
+
+      {/* Section Newsletter */}
+      <section id="ressources" className="py-24 bg-white">
+        <div className="container mx-auto px-6 text-center">
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-serif font-bold mb-6"
+          >
+            Restez à l'heure des nouveautés
+          </motion.h2>
+          <p className="text-xl text-gray-600 mb-8">
+            Recevez nos actualités, cours exclusifs et événements culturels.
+          </p>
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
+            className="max-w-md mx-auto flex"
           >
-            <Link
-              href="/catalogue"
-              className="px-10 py-4 bg-[#d4af37] text-[#0a0a0a] rounded-lg font-medium hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
-            >
-              Commencer l’exploration
-            </Link>
+            <input
+              type="email"
+              placeholder="Votre adresse email"
+              className="flex-1 px-6 py-4 rounded-l-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gold"
+            />
+            <button className="bg-gold text-dark px-8 py-4 rounded-r-full font-semibold hover:bg-gold/90 transition">
+              S'abonner
+            </button>
           </motion.div>
         </div>
       </section>
 
-      {/* ========== FOOTER ========== */}
-      <footer className="py-12 px-6 border-t border-[#d4af37]/20 text-center opacity-70 text-sm">
-        <div className="max-w-7xl mx-auto">
-          <p>© {new Date().getFullYear()} HorloLearn — Une initiative communautaire pour la préservation du savoir horloger suisse.</p>
-          <p className="mt-4">
-            <Link href="/mentions-legales" className="hover:text-[#d4af37] mr-4">Mentions Légales</Link>
-            <Link href="/accessibilite" className="hover:text-[#d4af37]">Accessibilité</Link>
-          </p>
+      {/* Footer */}
+      <footer id="contact" className="bg-dark text-gray-300 py-16">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <h3 className="text-xl font-serif font-bold text-white mb-4">Horlogerie Patrimoine</h3>
+              <p className="text-sm">La référence en éducation horlogère et patrimoine culturel.</p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-white mb-4">Navigation</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#accueil" className="hover:text-gold">Accueil</a></li>
+                <li><a href="#histoire" className="hover:text-gold">Histoire</a></li>
+                <li><a href="#approches" className="hover:text-gold">Techniques</a></li>
+                <li><a href="#ressources" className="hover:text-gold">Ressources</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-white mb-4">Contact</h4>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center gap-2">
+                  <Phone size={16} className="text-gold" />
+                  <span>+33 1 23 45 67 89</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Mail size={16} className="text-gold" />
+                  <span>contact@horlogerie.fr</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <MapPin size={16} className="text-gold" />
+                  <span>Paris, France</span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-white mb-4">Suivez-nous</h4>
+              <div className="flex gap-4">
+                <a href="#" className="text-gold hover:text-gold/80">Instagram</a>
+                <a href="#" className="text-gold hover:text-gold/80">YouTube</a>
+                <a href="#" className="text-gold hover:text-gold/80">LinkedIn</a>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-gray-700 pt-8 text-center text-sm text-gray-500">
+            © 2024 Horlogerie Patrimoine. Tous droits réservés.
+          </div>
         </div>
       </footer>
     </div>
