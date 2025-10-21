@@ -304,23 +304,22 @@ export default function HorloLearnHome() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3 }}
-              className="inline-flex items-center space-x-2 px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full backdrop-blur-sm"
+              className="inline-flex items-center space-x-2 px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-full backdrop-blur-sm"
             >
-              <Clock className="w-4 h-4 text-amber-400" />
-              <span className="text-sm text-amber-300">Bienvenue dans l'univers horloger</span>
+              <Radio className="w-4 h-4 text-green-400 animate-pulse" />
+              <span className="text-sm text-green-300">{onlineUsers} passionnés en ligne</span>
             </motion.div>
 
             <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-              Le Temps à{' '}
+              L'horlogerie suisse{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500">
-                l'État Pur
+                n'a jamais été aussi accessible
               </span>
             </h1>
 
             <p className="text-xl text-gray-300 leading-relaxed max-w-xl">
-              Plongez dans l'univers fascinant de l'horlogerie. Explorez l'histoire, 
-              maîtrisez les techniques, et découvrez les secrets de ces merveilles 
-              mécaniques qui battent au rythme du temps.
+              Explorez <span className="text-amber-400 font-bold">2,500+ ressources</span> partagées par des passionnés pour des passionnés. 
+              Documents techniques, vidéos, guides pratiques — 100% gratuit.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -460,28 +459,45 @@ export default function HorloLearnHome() {
         </div>
       </section>
 
-      {/* Section Statistiques */}
+      {/* Section Statistiques - NOUVEAU DESIGN SELON L'IMAGE */}
       <FadeInSection className="py-20 px-4 bg-slate-900/30">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center group cursor-pointer"
-              >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-amber-500/20 to-amber-600/20 rounded-2xl mb-4 group-hover:scale-110 transition-transform">
-                  <stat.icon className="w-8 h-8 text-amber-400" />
-                </div>
-                <div className="text-4xl font-bold text-amber-400 mb-2 group-hover:scale-110 transition-transform">
-                  {stat.value}
-                </div>
-                <p className="text-gray-400 text-sm">{stat.label}</p>
-              </motion.div>
-            ))}
+          {/* Bordure rose elliptique */}
+          <div className="relative">
+            {/* Ellipse avec bordure rose/magenta */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div 
+                className="border-4 border-pink-600/60 rounded-[50%] w-full h-full"
+                style={{
+                  borderRadius: '50% / 35%',
+                  transform: 'rotate(-2deg)'
+                }}
+              />
+            </div>
+
+            {/* Contenu des statistiques */}
+            <div className="relative z-10 py-16">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                {stats.map((stat, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="text-center group cursor-pointer"
+                  >
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-900/30 backdrop-blur-sm rounded-2xl mb-4 group-hover:scale-110 transition-transform border border-amber-500/20">
+                      <stat.icon className="w-8 h-8 text-amber-400" />
+                    </div>
+                    <div className="text-4xl font-bold text-amber-400 mb-2 group-hover:scale-110 transition-transform">
+                      {stat.value}
+                    </div>
+                    <p className="text-gray-300 text-sm font-medium">{stat.label}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </FadeInSection>
