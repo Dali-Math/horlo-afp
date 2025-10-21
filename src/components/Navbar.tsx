@@ -133,33 +133,8 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-
-      {/* Menu Mobile */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden bg-slate-900/95 border-t border-amber-500/20 px-4 py-4 space-y-2">
-          <Link
-            href="/theorie"
-            className="block text-gray-300 hover:text-amber-400 py-2"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            Théorie
-          </Link>
-          {navLinks.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className="block text-gray-300 hover:text-amber-400 py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {label}
-            </Link>
-          ))}
-          <button className="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-amber-500/40 transition-all flex items-center justify-center space-x-2 text-white">
-            <Heart className="w-4 h-4" />
-            <span>Contribuer</span>
-          </button>
-        </div>
-      )}
+     )}
+      
     </nav>
   );
 }
