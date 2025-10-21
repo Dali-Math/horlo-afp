@@ -134,23 +134,40 @@ export default function HorloLearnHome() {
     },
   ]
 
+  export default function HorloLearnHome() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [time, setTime] = useState(new Date());
+  const [onlineUsers] = useState(48);
+  const { scrollYProgress } = useScroll();
+
+  const gearRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
+  const gearRotateReverse = useTransform(scrollYProgress, [0, 1], [0, -360]);
+
   const actualites = [
     {
       title: 'Watches & Wonders 2026 : Dates confirmées',
       time: 'Il y a 2 jours',
-      category: 'Événement'
+      category: 'Événement',
     },
     {
       title: 'Nouveau calibre Sellita SW330-2 annoncé',
       time: 'Il y a 5 jours',
-      category: 'Innovation'
+      category: 'Innovation',
     },
     {
       title: 'Formation AFP : Nouveaux programmes 2026',
       time: 'Il y a 1 semaine',
-      category: 'Formation'
+      category: 'Formation',
     },
-  ]
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden">
+      {/* ton contenu ici */}
+    </div>
+  );
+}
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden">
