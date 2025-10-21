@@ -1,9 +1,10 @@
-'use client';
 
+'use client';
+import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 
-export default function AtelierHorloger() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+function AtelierHorloger() {  const canvasRef = useRef<HTMLCanvasElement>(null);
   const nextCanvasRef = useRef<HTMLCanvasElement>(null);
   
   const [gameState, setGameState] = useState({
@@ -72,7 +73,7 @@ export default function AtelierHorloger() {
   const addToLeaderboard = (pseudo: string, score: number, lines: number, level: number) => {
     let scores = loadHighScores();
     scores.push({ pseudo, score, lines, level, date: new Date().toISOString() });
-    scores.sort((a: any, b: any) => b.score - a.score);
+    scores.sort((a: { score: number }, b: { score: number }) => b.score - a.score);
     scores = scores.slice(0, 5);
     saveHighScores(scores);
     return scores;
@@ -347,7 +348,7 @@ export default function AtelierHorloger() {
     const scores = addToLeaderboard(gameState.playerPseudo, gameState.score, gameState.lines, gameState.level);
     setGameOverLeaderboard(scores);
     setLeaderboard(scores);
-    const playerRank = scores.findIndex(s => s.pseudo === gameState.playerPseudo && s.score === gameState.score) + 1;
+    const playerRank = scores.findIndex((s: { pseudo: string; score: number }) => s.pseudo === gameState.playerPseudo && s.score === gameState.score) + 1;
     if (playerRank > 0 && playerRank <= 3) {
       certification += `\n\n🏆 INCROYABLE ! Vous êtes ${playerRank === 1 ? 'N°1 👑' : playerRank === 2 ? 'N°2 🥈' : 'N°3 🥉'} du classement !`;
     } else if (playerRank > 0 && playerRank <= 5) {
@@ -559,3 +560,4 @@ export default function AtelierHorloger() {
     </div>
   );
 }
+export default dynamic(() => Promise.resolve(AtelierHorloger), { ssr: false });
