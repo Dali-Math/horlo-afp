@@ -162,8 +162,8 @@ export default function HorloLearnHome() {
           className="absolute top-10 right-10 w-96 h-96"
         >
           <svg viewBox="0 0 100 100" className="w-full h-full text-amber-400">
-            ircle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="="0.5" />
-            ircle cx="50" cy="50" r="30" fill="none" stroke="currentColor" strokeWidth="0.5.5" />
+            <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="0.5" />
+            <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" strokeWidth="0.5" />
             {[...Array(12)].map((_, i) => (
               <rect key={i} x="48" y="10" width="4" height="10" fill="currentColor" 
                 style={{ transform: `rotate(${i * 30}deg)`, transformOrigin: '50px 50px' }} />
@@ -175,7 +175,7 @@ export default function HorloLearnHome() {
           className="absolute bottom-20 left-10 w-72 h-72"
         >
           <svg viewBox="0 0 100 100" className="w-full h-full text-blue-400">
-            ircle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth="0.5.5" />
+            <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth="0.5" />
             {[...Array(8)].map((_, i) => (
               <rect key={i} x="48" y="15" width="4" height="8" fill="currentColor" 
                 style={{ transform: `rotate(${i * 45}deg)`, transformOrigin: '50px 50px' }} />
@@ -198,8 +198,8 @@ export default function HorloLearnHome() {
                   animate={{ rotate: 360 }}
                   transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                 >
-                  ircle cx="25" cy="25" r="22" fill="none" stroke="url(#gradient)" strokeWidth="1"1.5" />
-                  ircle cx="25" cy="25" r="18" fill="none" stroke="url(#gradient)" strokeWidth="1" opacity="0.5.5" />
+                  <circle cx="25" cy="25" r="22" fill="none" stroke="url(#gradient)" strokeWidth="1.5" />
+                  <circle cx="25" cy="25" r="18" fill="none" stroke="url(#gradient)" strokeWidth="1" opacity="0.5" />
                   <defs>
                     <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stopColor="#f59e0b" />
@@ -274,7 +274,7 @@ export default function HorloLearnHome() {
         )}
       </nav>
 
-      {/* Hero Section - MODIFIÉE */}
+      {/* Hero Section */}
       <section id="accueil" className="relative min-h-screen flex items-center justify-center pt-20 px-4">
         
         {/* Effets lumineux */}
@@ -293,7 +293,7 @@ export default function HorloLearnHome() {
 
         <div className="relative z-10 max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           
-          {/* Texte Hero MODIFIÉ */}
+          {/* Texte Hero */}
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -304,21 +304,22 @@ export default function HorloLearnHome() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3 }}
-              className="inline-flex items-center space-x-2 px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full backdrop-blur-sm"
+              className="inline-flex items-center space-x-2 px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-full backdrop-blur-sm"
             >
-              <Clock className="w-4 h-4 text-amber-400" />
-              <span className="text-sm text-amber-300">Bienvenue dans l'univers horloger</span>
+              <Radio className="w-4 h-4 text-green-400 animate-pulse" />
+              <span className="text-sm text-green-300">{onlineUsers} passionnés en ligne</span>
             </motion.div>
 
             <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-              Le Temps à{' '}
+              L'horlogerie suisse{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500">
-                l'État Pur
+                n'a jamais été aussi accessible
               </span>
             </h1>
 
             <p className="text-xl text-gray-300 leading-relaxed max-w-xl">
-              Plongez dans l'univers fascinant de l'horlogerie. Explorez l'histoire, maîtrisez les techniques, et découvrez les secrets de ces merveilles mécaniques qui battent au rythme du temps.
+              Explorez <span className="text-amber-400 font-bold">2,500+ ressources</span> partagées par des passionnés pour des passionnés. 
+              Documents techniques, vidéos, guides pratiques — 100% gratuit.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
