@@ -217,7 +217,7 @@ export default function HorloLearnHome() {
                   <span className="text-amber-400">Horlo</span>
                   <span className="text-white">Learn</span>
                 </h1>
-                <p className="text-xs text-amber-300/70">Passion & Découverte</p>
+                <p className="text-xs text-amber-300/70">Swiss Community</p>
               </div>
             </div>
 
@@ -304,22 +304,21 @@ export default function HorloLearnHome() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3 }}
-              className="inline-flex items-center space-x-2 px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-full backdrop-blur-sm"
+              className="inline-flex items-center space-x-2 px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full backdrop-blur-sm"
             >
-              <Radio className="w-4 h-4 text-green-400 animate-pulse" />
-              <span className="text-sm text-green-300">{onlineUsers} passionnés en ligne</span>
+              <Clock className="w-4 h-4 text-amber-400" />
+              <span className="text-sm text-amber-300">Bienvenue dans l'univers horloger</span>
             </motion.div>
 
             <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-              L'horlogerie suisse{' '}
+              Le Temps à{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500">
-                n'a jamais été aussi accessible
+                l'État Pur
               </span>
             </h1>
 
             <p className="text-xl text-gray-300 leading-relaxed max-w-xl">
-              Explorez <span className="text-amber-400 font-bold">2,500+ ressources</span> partagées par des passionnés pour des passionnés. 
-              Documents techniques, vidéos, guides pratiques — 100% gratuit.
+              Plongez dans l'univers fascinant de l'horlogerie. Explorez l'histoire, maîtrisez les techniques, et découvrez les secrets de ces merveilles mécaniques qui battent au rythme du temps.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
