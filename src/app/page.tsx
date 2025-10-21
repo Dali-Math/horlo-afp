@@ -1,365 +1,793 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect, useRef } from 'react'
+import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { 
+  Clock, 
+  Watch, 
   BookOpen, 
-  Wrench, 
-  Award,
-  CheckCircle,
-  ArrowRight,
-  Bell,
-  Rss,
-  Clock,
+  Award, 
+  Heart, 
+  ChevronRight, 
+  Menu, 
+  X, 
+  Users, 
+  Share2,
+  Download,
+  PlayCircle,
+  FileText,
   TrendingUp,
-  ExternalLink,
-  Heart
-} from 'lucide-react';
+  Sparkles,
+  ArrowRight,
+  Radio,
+  Globe
+} from 'lucide-react'
 
-function HeroSection() {
+// --- Composant d'animation au scroll ---
+const FadeInSection = ({ id, children, className = "" }: { id?: string; children: React.ReactNode; className?: string }) => {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: "-100px" })
+
   return (
-    <section className="relative min-h-screen bg-[#0a122a] overflow-hidden flex items-center justify-center px-4">
-      {/* Styles CSS pour les animations */}
-      <style dangerouslySetInnerHTML={{__html: `
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @keyframes spin-reverse {
-          from { transform: rotate(360deg); }
-          to { transform: rotate(0deg); }
-        }
-        .gear-slow {
-          animation: spin-slow 20s linear infinite;
-        }
-        .gear-reverse {
-          animation: spin-reverse 15s linear infinite;
-        }
-      `}} />
-
-      {/* Rouages animés en arrière-plan */}
-      <div className="absolute inset-0 overflow-hidden opacity-10">
-        {/* Grand rouage gauche */}
-        <svg className="absolute top-20 left-10 w-96 h-96 gear-slow" viewBox="0 0 200 200" fill="none">
-          <circle cx="100" cy="100" r="80" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
-          <circle cx="100" cy="100" r="60" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
-          <circle cx="100" cy="100" r="10" fill="currentColor" className="text-blue-300" />
-          {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle) => (
-            <g key={angle} transform={`rotate(${angle} 100 100)`}>
-              <rect x="95" y="20" width="10" height="25" fill="currentColor" className="text-blue-300" />
-              <circle cx="100" cy="20" r="8" fill="currentColor" className="text-blue-400" />
-            </g>
-          ))}
-        </svg>
-
-        {/* Moyen rouage droite */}
-        <svg className="absolute top-40 right-20 w-64 h-64 gear-reverse" viewBox="0 0 200 200" fill="none">
-          <circle cx="100" cy="100" r="70" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
-          <circle cx="100" cy="100" r="50" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
-          <circle cx="100" cy="100" r="8" fill="currentColor" className="text-blue-300" />
-          {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => (
-            <g key={angle} transform={`rotate(${angle} 100 100)`}>
-              <rect x="95" y="30" width="10" height="20" fill="currentColor" className="text-blue-300" />
-              <circle cx="100" cy="30" r="7" fill="currentColor" className="text-blue-400" />
-            </g>
-          ))}
-        </svg>
-
-        {/* Petit rouage bas droite */}
-        <svg className="absolute bottom-20 right-40 w-48 h-48 gear-slow" viewBox="0 0 200 200" fill="none">
-          <circle cx="100" cy="100" r="60" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
-          <circle cx="100" cy="100" r="45" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
-          <circle cx="100" cy="100" r="6" fill="currentColor" className="text-blue-300" />
-          {[0, 60, 120, 180, 240, 300].map((angle) => (
-            <g key={angle} transform={`rotate(${angle} 100 100)`}>
-              <rect x="95" y="40" width="10" height="18" fill="currentColor" className="text-blue-300" />
-              <circle cx="100" cy="40" r="6" fill="currentColor" className="text-blue-400" />
-            </g>
-          ))}
-        </svg>
-
-        {/* Grand rouage bas gauche */}
-        <svg className="absolute bottom-10 left-20 w-80 h-80 gear-reverse" viewBox="0 0 200 200" fill="none">
-          <circle cx="100" cy="100" r="75" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
-          <circle cx="100" cy="100" r="55" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
-          <circle cx="100" cy="100" r="9" fill="currentColor" className="text-blue-300" />
-          {[0, 40, 80, 120, 160, 200, 240, 280, 320].map((angle) => (
-            <g key={angle} transform={`rotate(${angle} 100 100)`}>
-              <rect x="95" y="25" width="10" height="23" fill="currentColor" className="text-blue-300" />
-              <circle cx="100" cy="25" r="7.5" fill="currentColor" className="text-blue-400" />
-            </g>
-          ))}
-        </svg>
-
-        {/* Petit rouage haut droite */}
-        <svg className="absolute top-10 right-60 w-40 h-40 gear-slow" viewBox="0 0 200 200" fill="none">
-          <circle cx="100" cy="100" r="55" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
-          <circle cx="100" cy="100" r="40" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
-          <circle cx="100" cy="100" r="5" fill="currentColor" className="text-blue-300" />
-          {[0, 72, 144, 216, 288].map((angle) => (
-            <g key={angle} transform={`rotate(${angle} 100 100)`}>
-              <rect x="95" y="45" width="10" height="15" fill="currentColor" className="text-blue-300" />
-              <circle cx="100" cy="45" r="5.5" fill="currentColor" className="text-blue-400" />
-            </g>
-          ))}
-        </svg>
-
-        {/* Moyen rouage centre gauche */}
-        <svg className="absolute top-1/2 left-40 w-56 h-56 gear-reverse" style={{ transform: 'translateY(-50%)' }} viewBox="0 0 200 200" fill="none">
-          <circle cx="100" cy="100" r="65" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
-          <circle cx="100" cy="100" r="48" stroke="currentColor" strokeWidth="2" className="text-blue-300" />
-          <circle cx="100" cy="100" r="7" fill="currentColor" className="text-blue-300" />
-          {[0, 51.4, 102.8, 154.2, 205.6, 257, 308.4].map((angle) => (
-            <g key={angle} transform={`rotate(${angle} 100 100)`}>
-              <rect x="95" y="35" width="10" height="19" fill="currentColor" className="text-blue-300" />
-              <circle cx="100" cy="35" r="6.5" fill="currentColor" className="text-blue-400" />
-            </g>
-          ))}
-        </svg>
-      </div>
-
-      {/* Contenu */}
-      <div className="relative z-10 max-w-5xl mx-auto text-center">
-        <div className="flex justify-center mb-8">
-          <span className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-800 to-sky-600/60 text-white font-medium text-xs shadow-lg backdrop-blur border border-blue-700/30">
-            🔧 Bibliothèque Collaborative
-          </span>
-        </div>
-
-        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-br from-white via-sky-400 to-cyan-400 bg-clip-text text-transparent leading-tight">
-          L&apos;horlogerie suisse<br />
-          <span className="bg-gradient-to-r from-sky-500 via-cyan-400 to-cyan-300 bg-clip-text text-transparent">
-            n&apos;a jamais été aussi accessible
-          </span>
-        </h1>
-
-        <p className="text-lg sm:text-xl text-blue-100/90 mb-10 font-light">
-          Explorez <span className="font-bold text-white">2,500+ ressources</span> partagées par des passionnés pour des passionnés
-        </p>
-
-        <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
-          <Link href="/theorie" className="px-8 py-4 bg-gradient-to-r from-blue-600 to-sky-500 text-white font-bold rounded-xl shadow-lg hover:scale-105 transition inline-flex items-center justify-center gap-2">
-            ⚡ Explorer maintenant <span className="text-xl">→</span>
-          </Link>
-          <Link href="/communaute" className="px-8 py-4 bg-[#151f38] border border-blue-800 text-white font-bold rounded-xl hover:bg-blue-900/80 hover:scale-105 transition inline-flex items-center justify-center gap-2">
-            👥 Rejoindre la communauté
-          </Link>
-        </div>
-
-        <div className="flex justify-center">
-          <span className="px-5 py-2 rounded-full bg-gradient-to-r from-green-600 to-emerald-500 text-white text-xs font-semibold shadow-lg">
-            🟢 53 passionnés en ligne
-          </span>
-        </div>
-      </div>
-    </section>
-  );
+    <motion.section
+      id={id}
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className={className}
+    >
+      {children}
+    </motion.section>
+  )
 }
 
-function RessourceDeLaSemaine() {
-  return (
-    <div className="bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-6 sm:p-8 shadow-xl border-2 border-yellow-200 dark:border-yellow-700/50 mb-8 sm:mb-12">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4 sm:mb-6">
-        <div className="bg-yellow-500 dark:bg-yellow-600 p-3 rounded-xl flex-shrink-0">
-          <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-        </div>
-        <div>
-          <p className="text-xs sm:text-sm text-orange-700 dark:text-orange-300 font-semibold uppercase">Ressource de la semaine</p>
-          <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Guide complet ETA 2824-2</h3>
-        </div>
-      </div>
-      <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 mb-4 sm:mb-6">
-        Document PDF haute résolution : démontage complet, éclaté annoté, couples de serrage et procédures de réglage.
-      </p>
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-        <Link href="/ressources" className="flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors w-full sm:w-auto">
-          <BookOpen className="w-5 h-5" />
-          Télécharger gratuitement
-        </Link>
-        <span className="flex items-center justify-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-          <Clock className="w-4 h-4" />
-          Lecture : 15 min
-        </span>
-      </div>
-    </div>
-  );
-}
+// --- Page Principale ---
+export default function HorloLearnHome() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [time, setTime] = useState(new Date())
+  const [onlineUsers] = useState(48)
+  const { scrollYProgress } = useScroll()
+  
+  const gearRotate = useTransform(scrollYProgress, [0, 1], [0, 360])
+  const gearRotateReverse = useTransform(scrollYProgress, [0, 1], [0, -360])
 
-function FilActualites() {
+  // Mise à jour de l'horloge
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const secondsDegrees = (time.getSeconds() / 60) * 360
+  const minutesDegrees = ((time.getMinutes() + time.getSeconds() / 60) / 60) * 360
+  const hoursDegrees = ((time.getHours() % 12 + time.getMinutes() / 60) / 12) * 360
+
+  const navigationLinks = [
+    { label: 'Accueil', href: '#accueil' },
+    { label: 'Ressources', href: '#ressources' },
+    { label: 'Communauté', href: '#communaute' },
+    { label: 'Actualités', href: '#actualites' },
+    { label: 'Contribuer', href: '#contribuer' },
+  ]
+
+  const stats = [
+    { value: '2,500+', label: 'Ressources Partagées', icon: FileText },
+    { value: '1,200+', label: 'Passionnés Actifs', icon: Users },
+    { value: '150h+', label: 'Vidéos Tutoriels', icon: PlayCircle },
+    { value: '100%', label: 'Gratuit & Libre', icon: Heart },
+  ]
+
+  const thematiques = [
+    {
+      icon: '📚',
+      title: 'Théorie',
+      description: 'Principes fondamentaux, histoire et terminologie horlogère',
+      items: ['Cours détaillés', 'Schémas annotés', 'Glossaire illustré'],
+      color: 'from-blue-500 to-cyan-500',
+      resources: '850+'
+    },
+    {
+      icon: '🔧',
+      title: 'Pratique',
+      description: 'Démontage, remontage et réglage de mouvements',
+      items: ['Tutoriels vidéo', 'Plans techniques', 'Guides pas-à-pas'],
+      color: 'from-amber-500 to-orange-500',
+      resources: '1,200+'
+    },
+    {
+      icon: '✅',
+      title: 'Évaluation',
+      description: 'Testez vos connaissances avec nos quiz interactifs',
+      items: ['Quiz interactifs', 'Correction détaillée', 'Suivi progrès'],
+      color: 'from-green-500 to-emerald-500',
+      resources: '450+'
+    },
+  ]
+
+  const featuredResources = [
+    {
+      type: 'PDF',
+      title: 'Guide complet ETA 2824-2',
+      description: 'Document PDF haute résolution : démontage complet, éclaté annoté, couples de serrage',
+      author: 'Michel R.',
+      downloads: '2,340',
+      readTime: '15 min',
+      badge: 'Ressource de la semaine'
+    },
+    {
+      type: 'Vidéo',
+      title: 'Réglage spiral ETA 6497',
+      description: 'Tutoriel vidéo HD : technique professionnelle de réglage du spiral',
+      author: 'Jean-Claude B.',
+      downloads: '1,890',
+      readTime: '22 min',
+      badge: 'Populaire'
+    },
+    {
+      type: 'Guide',
+      title: 'Révision complète Valjoux 7750',
+      description: 'Guide pas-à-pas avec photos et conseils d\'expert',
+      author: 'Sophie L.',
+      downloads: '1,560',
+      readTime: '35 min',
+      badge: 'Nouveau'
+    },
+  ]
+
   const actualites = [
-    { titre: "Watches & Wonders 2026 : Dates confirmées", date: "Il y a 2 jours", url: "https://www.watches-and-wonders.com" },
-    { titre: "Nouveau calibre Sellita SW330-2 annoncé", date: "Il y a 5 jours", url: "#" },
-    { titre: "Formation AFP : Nouveaux programmes 2026", date: "Il y a 1 semaine", url: "#" }
-  ];
+    {
+      title: 'Watches & Wonders 2026 : Dates confirmées',
+      time: 'Il y a 2 jours',
+      category: 'Événement'
+    },
+    {
+      title: 'Nouveau calibre Sellita SW330-2 annoncé',
+      time: 'Il y a 5 jours',
+      category: 'Innovation'
+    },
+    {
+      title: 'Formation AFP : Nouveaux programmes 2026',
+      time: 'Il y a 1 semaine',
+      category: 'Formation'
+    },
+  ]
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl p-4 sm:p-6 shadow-lg border border-slate-200 dark:border-slate-700 mb-8 sm:mb-12">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-2">
-        <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-          Actualités horlogères
-        </h3>
-        <Link href="/evenements" className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold">
-          Voir tout →
-        </Link>
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden">
+      
+      {/* Arrière-plan animé avec engrenages */}
+      <div className="fixed inset-0 opacity-5 pointer-events-none overflow-hidden">
+        <motion.div 
+          style={{ rotate: gearRotate }}
+          className="absolute top-10 right-10 w-96 h-96"
+        >
+          <svg viewBox="0 0 100 100" className="w-full h-full text-amber-400">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="0.5" />
+            <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" strokeWidth="0.5" />
+            {[...Array(12)].map((_, i) => (
+              <rect key={i} x="48" y="10" width="4" height="10" fill="currentColor" 
+                style={{ transform: `rotate(${i * 30}deg)`, transformOrigin: '50px 50px' }} />
+            ))}
+          </svg>
+        </motion.div>
+        <motion.div 
+          style={{ rotate: gearRotateReverse }}
+          className="absolute bottom-20 left-10 w-72 h-72"
+        >
+          <svg viewBox="0 0 100 100" className="w-full h-full text-blue-400">
+            <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth="0.5" />
+            {[...Array(8)].map((_, i) => (
+              <rect key={i} x="48" y="15" width="4" height="8" fill="currentColor" 
+                style={{ transform: `rotate(${i * 45}deg)`, transformOrigin: '50px 50px' }} />
+            ))}
+          </svg>
+        </motion.div>
       </div>
-      <div className="space-y-3 sm:space-y-4">
-        {actualites.map((actu, idx) => (
-          <a key={idx} href={actu.url} target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors group">
-            <div className="flex-shrink-0 w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full mt-2"></div>
-            <div className="flex-1 min-w-0">
-              <h4 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors break-words">{actu.titre}</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{actu.date}</p>
+
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full bg-slate-950/80 backdrop-blur-xl z-50 border-b border-amber-500/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            
+            {/* Logo */}
+            <div className="flex items-center space-x-3">
+              <div className="relative w-12 h-12">
+                <motion.svg
+                  viewBox="0 0 50 50"
+                  className="w-full h-full"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                >
+                  <circle cx="25" cy="25" r="22" fill="none" stroke="url(#gradient)" strokeWidth="1.5" />
+                  <circle cx="25" cy="25" r="18" fill="none" stroke="url(#gradient)" strokeWidth="1" opacity="0.5" />
+                  <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#f59e0b" />
+                      <stop offset="100%" stopColor="#d97706" />
+                    </linearGradient>
+                  </defs>
+                  {[...Array(12)].map((_, i) => (
+                    <line key={i} x1="25" y1="5" x2="25" y2="9" stroke="#f59e0b" strokeWidth="1"
+                      style={{ transform: `rotate(${i * 30}deg)`, transformOrigin: '25px 25px' }} />
+                  ))}
+                </motion.svg>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold">
+                  <span className="text-amber-400">Horlo</span>
+                  <span className="text-white">Learn</span>
+                </h1>
+                <p className="text-xs text-amber-300/70">Passion & Découverte</p>
+              </div>
             </div>
-            <ExternalLink className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 flex-shrink-0" />
-          </a>
-        ))}
-      </div>
-    </div>
-  );
-}
 
-function NewsletterSignup() {
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
+            {/* Navigation Desktop */}
+            <div className="hidden md:flex items-center space-x-8 font-medium text-sm">
+              {navigationLinks.map((link) => (
+                <a 
+                  key={link.label}
+                  href={link.href} 
+                  className="text-gray-300 hover:text-amber-400 transition-colors relative group"
+                >
+                  {link.label}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300" />
+                </a>
+              ))}
+              <button className="flex items-center space-x-2 px-6 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full hover:shadow-lg hover:shadow-amber-500/50 transition-all duration-300 font-semibold">
+                <Heart className="w-4 h-4" />
+                <span>Contribuer</span>
+              </button>
+            </div>
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubscribed(true);
-    setTimeout(() => setSubscribed(false), 3000);
-  };
-
-  return (
-    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-800 rounded-2xl sm:rounded-3xl p-6 sm:p-12 text-white text-center mb-8 sm:mb-12">
-      <div className="max-w-2xl mx-auto">
-        <div className="inline-block p-3 bg-white/20 rounded-full mb-4">
-          <Bell className="w-6 h-6 sm:w-8 sm:h-8" />
-        </div>
-        <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Restez informé</h2>
-        <p className="text-base sm:text-xl text-blue-100 dark:text-blue-200 mb-6 sm:mb-8 px-4">
-          Recevez chaque semaine : nouvelles ressources partagées, astuces d&apos;atelier et actualités horlogères
-        </p>
-        {!subscribed ? (
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-md mx-auto px-4 sm:px-0">
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="votre@email.com" required className="flex-1 px-4 sm:px-6 py-3 sm:py-4 rounded-xl text-slate-900 font-medium focus:outline-none focus:ring-4 focus:ring-white/50" />
-            <button type="submit" className="bg-white text-blue-600 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold hover:shadow-xl transition-all whitespace-nowrap">S&apos;abonner</button>
-          </form>
-        ) : (
-          <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 sm:p-6 max-w-md mx-auto">
-            <CheckCircle className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3" />
-            <p className="text-base sm:text-lg font-semibold">Merci ! Vous êtes inscrit 🎉</p>
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-amber-400">
+                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
-        )}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mt-6 sm:mt-8 text-xs sm:text-sm text-blue-200">
-          <span className="flex items-center gap-2"><Rss className="w-4 h-4" /> Flux RSS disponible</span>
-          <span className="flex items-center gap-2"><Bell className="w-4 h-4" /> Notifications activables</span>
         </div>
-      </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-slate-900/95 border-t border-amber-500/20 px-4 py-4 space-y-3"
+          >
+            {navigationLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="block text-gray-300 hover:text-amber-400 transition-colors py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {link.label}
+              </a>
+            ))}
+            <button className="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold mt-4 flex items-center justify-center space-x-2">
+              <Heart className="w-4 h-4" />
+              <span>Contribuer</span>
+            </button>
+          </motion.div>
+        )}
+      </nav>
+
+      {/* Hero Section */}
+      <section id="accueil" className="relative min-h-screen flex items-center justify-center pt-20 px-4">
+        
+        {/* Effets lumineux */}
+        <div className="absolute inset-0">
+          <motion.div 
+            animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
+            transition={{ duration: 8, repeat: Infinity }}
+            className="absolute top-20 left-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl"
+          />
+          <motion.div 
+            animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.15, 0.1] }}
+            transition={{ duration: 10, repeat: Infinity, delay: 1 }}
+            className="absolute bottom-20 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"
+          />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+          
+          {/* Texte Hero */}
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+            className="space-y-8"
+          >
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3 }}
+              className="inline-flex items-center space-x-2 px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-full backdrop-blur-sm"
+            >
+              <Radio className="w-4 h-4 text-green-400 animate-pulse" />
+              <span className="text-sm text-green-300">{onlineUsers} passionnés en ligne</span>
+            </motion.div>
+
+            <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
+              L'horlogerie suisse{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500">
+                n'a jamais été aussi accessible
+              </span>
+            </h1>
+
+            <p className="text-xl text-gray-300 leading-relaxed max-w-xl">
+              Explorez <span className="text-amber-400 font-bold">2,500+ ressources</span> partagées par des passionnés pour des passionnés. 
+              Documents techniques, vidéos, guides pratiques — 100% gratuit.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="group px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full font-semibold hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 flex items-center justify-center"
+              >
+                <Sparkles className="mr-2 w-5 h-5" />
+                Explorer maintenant
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </motion.button>
+
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 border-2 border-amber-400/50 rounded-full font-semibold hover:bg-amber-500/10 transition-all duration-300 flex items-center justify-center"
+              >
+                <Users className="mr-2 w-5 h-5" />
+                Rejoindre la communauté
+              </motion.button>
+            </div>
+
+            {/* Mini badges */}
+            <div className="flex flex-wrap gap-4 pt-4">
+              {['100% Gratuit', 'Pas d\'inscription', 'Partage communautaire'].map((feature, i) => (
+                <div key={i} className="flex items-center space-x-2 text-sm bg-slate-800/50 px-4 py-2 rounded-full border border-amber-500/20">
+                  <Heart className="w-4 h-4 text-amber-400" />
+                  <span className="text-gray-300">{feature}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Horloge Interactive */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            className="relative flex justify-center items-center"
+          >
+            <div className="relative w-96 h-96">
+              
+              {/* Cercles lumineux d'arrière-plan */}
+              <motion.div 
+                animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="absolute inset-0 bg-amber-500/20 rounded-full blur-2xl"
+              />
+              
+              {/* Cadran principal */}
+              <div className="relative w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 rounded-full shadow-2xl border-8 border-amber-500/20 flex items-center justify-center">
+                
+                {/* Anneaux décoratifs */}
+                <div className="absolute inset-8 border-2 border-amber-500/10 rounded-full" />
+                <div className="absolute inset-12 border border-amber-500/5 rounded-full" />
+                
+                {/* Marqueurs d'heures */}
+                {[...Array(12)].map((_, i) => (
+                  <div 
+                    key={i} 
+                    className={`absolute ${i % 3 === 0 ? 'w-2 h-8 bg-amber-400' : 'w-1 h-4 bg-amber-500/50'}`}
+                    style={{ 
+                      transform: `rotate(${i * 30}deg) translateY(-170px)`,
+                      transformOrigin: 'center'
+                    }} 
+                  />
+                ))}
+
+                {/* Chiffres aux positions principales */}
+                {[12, 3, 6, 9].map((num, i) => {
+                  const angle = (num === 12 ? 0 : num === 3 ? 90 : num === 6 ? 180 : 270) - 90;
+                  const radian = (angle * Math.PI) / 180;
+                  const x = Math.cos(radian) * 140;
+                  const y = Math.sin(radian) * 140;
+                  return (
+                    <div 
+                      key={num}
+                      className="absolute text-2xl font-bold text-amber-400"
+                      style={{ 
+                        transform: `translate(${x}px, ${y}px)`
+                      }}
+                    >
+                      {num}
+                    </div>
+                  );
+                })}
+
+                {/* Aiguilles */}
+                <motion.div 
+                  className="absolute w-3 h-28 bg-gradient-to-t from-amber-400 to-amber-500 rounded-full origin-bottom shadow-lg"
+                  style={{ 
+                    bottom: '50%',
+                    left: 'calc(50% - 6px)',
+                    rotate: hoursDegrees,
+                  }}
+                />
+                
+                <motion.div 
+                  className="absolute w-2 h-36 bg-gradient-to-t from-amber-300 to-amber-400 rounded-full origin-bottom shadow-lg"
+                  style={{ 
+                    bottom: '50%',
+                    left: 'calc(50% - 4px)',
+                    rotate: minutesDegrees,
+                  }}
+                />
+                
+                <motion.div 
+                  className="absolute w-1 h-40 bg-gradient-to-t from-red-500 to-red-400 rounded-full origin-bottom shadow-lg"
+                  style={{ 
+                    bottom: '50%',
+                    left: 'calc(50% - 2px)',
+                    rotate: secondsDegrees,
+                  }}
+                  transition={{ ease: "linear", duration: 0.1 }}
+                />
+                
+                {/* Centre */}
+                <div className="absolute w-6 h-6 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full z-10 border-2 border-white shadow-lg" />
+                <div className="absolute w-4 h-4 bg-slate-900 rounded-full z-20" />
+
+                {/* Affichage numérique */}
+                <div className="absolute bottom-24 bg-slate-900/80 backdrop-blur-sm px-4 py-2 rounded-lg border border-amber-500/30">
+                  <span className="text-amber-400 font-mono text-sm">
+                    {time.toLocaleTimeString('fr-FR')}
+                  </span>
+                </div>
+
+                {/* Texte de marque */}
+                <div className="absolute top-28 text-center">
+                  <p className="text-amber-400 font-serif text-sm">HORLOLEARN</p>
+                  <p className="text-amber-500/70 text-xs">Swiss Community</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Section d’introduction inspirée du site original */}
+<FadeInSection className="py-32 text-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+  <div className="max-w-3xl mx-auto px-4">
+    <div className="inline-flex items-center space-x-2 px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full mb-8">
+      <Clock className="w-4 h-4 text-amber-400" />
+      <span className="text-sm text-amber-300">Bienvenue dans l'univers horloger</span>
     </div>
-  );
-}
 
-export default function HomePage() {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-colors duration-300">
-      <HeroSection />
+    <h2 className="text-5xl md:text-6xl font-bold mb-6 text-amber-400">
+      Le Temps à l'État Pur
+    </h2>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-        <RessourceDeLaSemaine />
-        <FilActualites />
+    <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto">
+      Plongez dans l'univers fascinant de l'horlogerie. Explorez l'histoire,
+      maîtrisez les techniques, et découvrez les secrets de ces merveilles
+      mécaniques qui battent au rythme du temps.
+    </p>
+  </div>
+</FadeInSection>
 
-        <section className="mb-12 sm:mb-16">
-          <div className="text-center mb-8 sm:mb-12 px-4">
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4">Explorer par Thématique</h2>
-            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+
+      {/* Section Ressources Featured */}
+      <FadeInSection id="ressources" className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <motion.span 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              className="text-amber-400 font-semibold tracking-wider uppercase text-sm"
+            >
+              Ressources Populaires
+            </motion.span>
+            <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6">
+              Partagées par la <span className="text-amber-400">Communauté</span>
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+              Des documents techniques de qualité professionnelle, gratuits et accessibles à tous
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {featuredResources.map((resource, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.2 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -10 }}
+                className="group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl overflow-hidden border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300"
+              >
+                <div className="relative p-8">
+                  {/* Badge + Type */}
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-xs font-bold text-amber-300">
+                      {resource.badge}
+                    </span>
+                    <span className="px-3 py-1 bg-blue-500/20 border border-blue-500/30 rounded-full text-xs font-bold text-blue-300">
+                      {resource.type}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-bold mb-3 text-white group-hover:text-amber-400 transition-colors">
+                    {resource.title}
+                  </h3>
+
+                  <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+                    {resource.description}
+                  </p>
+
+                  <div className="space-y-3 mb-6 text-sm text-gray-500">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <Users className="w-4 h-4 mr-2 text-amber-400" />
+                        <span>Par {resource.author}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Download className="w-4 h-4 mr-2 text-green-400" />
+                        <span>{resource.downloads}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      <Clock className="w-4 h-4 mr-2 text-amber-400" />
+                      <span>Lecture : {resource.readTime}</span>
+                    </div>
+                  </div>
+
+                  <button className="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-amber-500/50 transition-all duration-300 flex items-center justify-center group/btn">
+                    <Download className="mr-2 w-5 h-5 group-hover/btn:translate-y-1 transition-transform" />
+                    Télécharger gratuitement
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <button className="px-8 py-4 border-2 border-amber-400/50 rounded-full font-semibold hover:bg-amber-500/10 transition-all duration-300 inline-flex items-center">
+              Voir toutes les ressources
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </FadeInSection>
+
+      {/* Section Thématiques */}
+      <FadeInSection className="py-20 px-4 bg-slate-900/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Explorer par <span className="text-amber-400">Thématique</span>
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto text-lg">
               Des ressources organisées pour progresser à votre rythme
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            {[
-              { title: "Théorie", icon: BookOpen, color: "from-blue-600 to-cyan-600", description: "Principes fondamentaux, histoire et terminologie horlogère", link: "/theorie", features: ["Cours détaillés", "Schémas annotés", "Glossaire illustré"] },
-              { title: "Pratique", icon: Wrench, color: "from-purple-600 to-pink-600", description: "Démontage, remontage et réglage de mouvements", link: "/pratique", features: ["Tutoriels vidéo", "Plans techniques", "Guides pas-à-pas"] },
-              { title: "Évaluation", icon: Award, color: "from-orange-600 to-red-600", description: "Testez vos connaissances avec nos quiz", link: "/quiz", features: ["Quiz interactifs", "Correction détaillée", "Suivi progrès"] }
-            ].map((parcours, idx) => (
-              <Link key={idx} href={parcours.link} className="group bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all border border-slate-200 dark:border-slate-700 hover:scale-105">
-                <div className={`inline-block p-3 sm:p-4 rounded-xl bg-gradient-to-br ${parcours.color} mb-4 sm:mb-6 group-hover:scale-110 transition-transform`}>
-                  <parcours.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+          <div className="grid md:grid-cols-3 gap-8">
+            {thematiques.map((theme, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.2 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.05 }}
+                className="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300 overflow-hidden group"
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${theme.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+                
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="text-5xl">{theme.icon}</div>
+                    <span className="px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-xs font-bold text-amber-300">
+                      {theme.resources}
+                    </span>
+                  </div>
+
+                  <h3 className="text-2xl font-bold mb-3 text-amber-400">{theme.title}</h3>
+                  <p className="text-gray-400 mb-6">{theme.description}</p>
+
+                  <ul className="space-y-2 mb-6">
+                    {theme.items.map((item, i) => (
+                      <li key={i} className="flex items-center text-sm text-gray-300">
+                        <ChevronRight className="w-4 h-4 mr-2 text-amber-400" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button className="w-full py-3 border-2 border-amber-400/50 rounded-lg font-semibold hover:bg-amber-500/10 transition-all duration-300">
+                    Découvrir
+                  </button>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2 sm:mb-3">{parcours.title}</h3>
-                <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 mb-4 sm:mb-6">{parcours.description}</p>
-                <ul className="space-y-2 mb-4 sm:mb-6">
-                  {parcours.features.map((feature, i) => (
-                    <li key={i} className="flex items-center gap-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-                      <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold group-hover:gap-4 transition-all text-sm sm:text-base">
-                  Découvrir <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                </div>
-              </Link>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </div>
+      </FadeInSection>
 
-        <NewsletterSignup />
-      </main>
+      {/* Section Actualités */}
+      <FadeInSection id="actualites" className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-end mb-12">
+            <div>
+              <h2 className="text-4xl font-bold mb-4">
+                <span className="text-amber-400">Actualités</span> Horlogères
+              </h2>
+              <p className="text-gray-400">Restez informé des dernières nouveautés</p>
+            </div>
+            <button className="hidden md:block text-amber-400 font-semibold hover:text-amber-300 transition-colors flex items-center">
+              Voir tout <ArrowRight className="ml-2 w-5 h-5" />
+            </button>
+          </div>
 
-      <footer className="bg-slate-900 dark:bg-slate-950 text-white py-8 sm:py-12 mt-12 sm:mt-20 border-t border-slate-800 dark:border-slate-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
-            <div className="col-span-1 sm:col-span-2">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-2 rounded-xl">
-                  <Award className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                </div>
-                <span className="text-xl sm:text-2xl font-bold">HorloLearn</span>
+          <div className="grid md:grid-cols-3 gap-6">
+            {actualites.map((news, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 rounded-xl p-6 border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer group"
+              >
+                <span className="inline-block px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-xs font-bold text-amber-300 mb-4">
+                  {news.category}
+                </span>
+                <h3 className="text-lg font-bold mb-3 text-white group-hover:text-amber-400 transition-colors">
+                  {news.title}
+                </h3>
+                <p className="text-sm text-gray-500">{news.time}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </FadeInSection>
+
+      {/* Section Newsletter */}
+      <FadeInSection className="py-20 px-4 bg-slate-900/30">
+        <div className="max-w-4xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="relative bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 rounded-3xl p-12 border border-amber-500/30 overflow-hidden text-center"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-500/10 to-transparent animate-pulse" />
+            
+            <div className="relative z-10">
+              <Globe className="w-12 h-12 text-amber-400 mx-auto mb-6" />
+              
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Restez Informé
+              </h2>
+              
+              <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+                Recevez chaque semaine : nouvelles ressources partagées, astuces d'atelier et actualités horlogères
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                <input
+                  type="email"
+                  placeholder="Votre email"
+                  className="flex-1 bg-slate-900/50 border border-amber-500/30 rounded-lg px-6 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-colors backdrop-blur-sm"
+                />
+                <button className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 whitespace-nowrap">
+                  S'Abonner
+                </button>
               </div>
-              <p className="text-sm sm:text-base text-slate-400 mb-4">La première plateforme collaborative francophone dédiée au partage de connaissances horlogères.</p>
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500">
-                <Heart className="w-4 h-4 text-red-500" />
-                <span>Fait avec passion par la communauté</span>
+
+              <div className="flex items-center justify-center gap-6 mt-6 text-sm text-gray-400">
+                <span className="flex items-center">
+                  <Share2 className="w-4 h-4 mr-2 text-amber-400" />
+                  Flux RSS disponible
+                </span>
+                <span className="flex items-center">
+                  <Radio className="w-4 h-4 mr-2 text-green-400" />
+                  Notifications activables
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </FadeInSection>
+
+      {/* Footer */}
+      <footer className="relative border-t border-amber-500/10 bg-slate-950/50 py-16 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <Watch className="w-6 h-6 text-amber-400" />
+                <span className="text-xl font-bold">
+                  <span className="text-amber-400">Horlo</span>
+                  <span className="text-white">Learn</span>
+                </span>
+              </div>
+              <p className="text-sm text-gray-400 mb-6">
+                Plateforme communautaire de partage de ressources horlogères. Par des passionnés, pour des passionnés.
+              </p>
+              <div className="flex items-center space-x-2 text-sm">
+                <Heart className="w-4 h-4 text-red-400" />
+                <span className="text-gray-400">100% Gratuit & Collaboratif</span>
               </div>
             </div>
 
             <div>
-              <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">Explorer</h3>
-              <ul className="space-y-2 text-sm sm:text-base text-slate-400">
-                <li><Link href="/theorie" className="hover:text-white transition-colors">Théorie</Link></li>
-                <li><Link href="/pratique" className="hover:text-white transition-colors">Pratique</Link></li>
-                <li><Link href="/quiz" className="hover:text-white transition-colors">Quiz</Link></li>
-                <li><Link href="/ressources" className="hover:text-white transition-colors">Ressources</Link></li>
+              <h4 className="font-bold text-amber-400 mb-6 uppercase tracking-wider text-sm">Explorer</h4>
+              <ul className="space-y-3 text-sm text-gray-400">
+                {['Théorie', 'Pratique', 'Évaluation', 'Actualités'].map((item, i) => (
+                  <li key={i}>
+                    <a href="#" className="hover:text-amber-400 transition-colors">
+                      {item}
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
 
             <div>
-              <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">Communauté</h3>
-              <ul className="space-y-2 text-sm sm:text-base text-slate-400">
-                <li><Link href="/communaute" className="hover:text-white transition-colors">Forum</Link></li>
-                <li><Link href="/outils" className="hover:text-white transition-colors">Outils</Link></li>
-                <li><Link href="/culture" className="hover:text-white transition-colors">Culture</Link></li>
-                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+              <h4 className="font-bold text-amber-400 mb-6 uppercase tracking-wider text-sm">Communauté</h4>
+              <ul className="space-y-3 text-sm text-gray-400">
+                {['Forum', 'Contribuer', 'Discord', 'Newsletter'].map((item, i) => (
+                  <li key={i}>
+                    <a href="#" className="hover:text-amber-400 transition-colors">
+                      {item}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-amber-400 mb-6 uppercase tracking-wider text-sm">Légal</h4>
+              <ul className="space-y-3 text-sm text-gray-400">
+                {['CGU', 'Confidentialité', 'Mentions légales', 'Contact'].map((item, i) => (
+                  <li key={i}>
+                    <a href="#" className="hover:text-amber-400 transition-colors">
+                      {item}
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-slate-800 pt-6 sm:pt-8">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
-              <p className="text-slate-400 text-xs sm:text-sm text-center md:text-left">© 2025 HorloLearn – Passion & Découverte Horlogère Suisse</p>
-              <div className="flex gap-4 sm:gap-6 text-xs sm:text-sm text-slate-400">
-                <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link>
-                <Link href="/politique-confidentialite" className="hover:text-white transition-colors">Confidentialité</Link>
-              </div>
+          <div className="border-t border-amber-500/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+            <p>© 2025 HorloLearn. Projet communautaire open-source 🇨🇭</p>
+            <div className="flex items-center space-x-2 mt-4 md:mt-0">
+              <span>Fait avec</span>
+              <Heart className="w-4 h-4 text-red-400 animate-pulse" />
+              <span>par la communauté horlogère</span>
             </div>
-            <p className="text-[10px] sm:text-xs text-slate-500 text-center px-4">
-              💡 HorloLearn n&apos;est ni une école ni un centre de formation officiel. Aucun diplôme ou certification reconnue n&apos;est délivré. 
-              Il s&apos;agit d&apos;une plateforme collaborative de partage de connaissances horlogères.
-            </p>
           </div>
         </div>
       </footer>
+
+      {/* Styles globaux */}
+      <style jsx global>{`
+        html {
+          scroll-behavior: smooth;
+        }
+
+        body {
+          margin: 0;
+          padding: 0;
+        }
+      `}</style>
     </div>
-  );
+  )
 }
