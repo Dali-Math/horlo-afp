@@ -1,514 +1,315 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { ChevronRight, Clock, Cog, BookOpen, Users, ArrowRight, Menu, X } from 'lucide-react';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { motion, useScroll, useTransform } from "framer-motion";
 
-export default function HorlogerieAccueil() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [time, setTime] = useState<string>('');
+// ==========================================
+// CONFIGURATION DES COULEURS THÉMATIQUES
+// ==========================================
+const COLORS = {
+  gold: "#d4af37",
+  black: "#0a0a0a",
+  darkGray: "#1a1a1a",
+  steel: "#b0b0b0",
+  offWhite: "#f5f5f5",
+  white: "#ffffff",
+};
 
-  // Mettre à jour l'heure en temps réel
+// ==========================================
+// COMPOSANTS RÉUTILISABLES
+// ==========================================
+
+// Bouton CTA principal
+const PrimaryButton = ({ href, children, className = "" }: { href: string; children: React.ReactNode; className?: string }) => (
+  <Link
+    href={href}
+    className={`inline-block px-8 py-4 rounded-lg font-medium transition-all duration-300 bg-[#d4af37] text-[#0a0a0a] hover:shadow-2xl hover:shadow-[#d4af37]/40 hover:-translate-y-1 ${className}`}
+  >
+    {children}
+  </Link>
+);
+
+// Bouton CTA secondaire
+const SecondaryButton = ({ href, children, className = "" }: { href: string; children: React.ReactNode; className?: string }) => (
+  <Link
+    href={href}
+    className={`inline-block px-8 py-4 border-2 border-[#d4af37] rounded-lg font-medium transition-all duration-300 hover:bg-[#d4af37]/10 hover:border-[#d4af37] ${className}`}
+  >
+    {children}
+  </Link>
+);
+
+// Carte de section avec effet hover
+const SectionCard = ({ 
+  icon, 
+  title, 
+  description, 
+  link, 
+  delay = 0 
+}: { 
+  icon: string; 
+  title: string; 
+  description: string; 
+  link: string; 
+  delay?: number;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 30 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, amount: 0.3 }}
+    transition={{ delay, duration: 0.6 }}
+  >
+    <Link
+      href={link}
+      className="block h-full p-8 rounded-2xl border border-[#d4af37]/20 bg-gradient-to-br from-[#1a1a1a]/30 to-transparent transition-all duration-400 hover:border-[#d4af37]/60 hover:bg-[#d4af37]/5 hover:-translate-y-3 hover:shadow-xl hover:shadow-[#d4af37]/20"
+    >
+      <div className="text-5xl mb-4">{icon}</div>
+      <h3 className="text-2xl font-light mb-3 text-[#d4af37]">{title}</h3>
+      <p className="opacity-80 text-sm leading-relaxed mb-6">{description}</p>
+      <span className="inline-flex items-center gap-2 text-[#d4af37] font-medium text-sm">
+        En savoir plus
+        <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </span>
+    </Link>
+  </motion.div>
+);
+
+// ==========================================
+// COMPOSANT PRINCIPAL DE LA PAGE
+// ==========================================
+
+export default function HorloLearnHomePage() {
+  const [darkMode, setDarkMode] = useState(true);
+  const [currentTime, setCurrentTime] = useState("");
+  const { scrollYProgress } = useScroll();
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.3], [1, 0.95]);
+
+  // Horloge en temps réel
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      setTime(
-        now.toLocaleTimeString('fr-FR', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
+      setCurrentTime(
+        now.toLocaleTimeString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
         })
       );
     };
-
     updateTime();
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
 
-  const navigationLinks = [
-    { label: 'Accueil', href: '#accueil' },
-    { label: 'Histoire', href: '#histoire' },
-    { label: 'Techniques', href: '#techniques' },
-    { label: 'Formations', href: '#formations' },
-    { label: 'Ressources', href: '#ressources' },
-    { label: 'Contact', href: '#contact' },
+  // Données structurées
+  const stats = [
+    { value: "250+", label: "Années de Patrimoine", icon: "🕰️" },
+    { value: "50+", label: "Cours Disponibles", icon: "📚" },
+    { value: "200+", label: "Ressources Techniques", icon: "⚙️" },
+    { value: "100%", label: "Accès Gratuit", icon: "🎁" },
   ];
 
-  const domains = [
+  const mainSections = [
     {
-      icon: '🕰️',
-      title: 'Histoire & Patrimoine',
-      description:
-        'Explorez l\'évolution de l\'horlogerie à travers les siècles, des cadrans solaires aux montres modernes.',
-      color: 'from-blue-500 to-blue-600',
+      icon: "🎓",
+      title: "Formation Complète",
+      description: "Parcours structurés du débutant à l'expert : démontage, assemblage, réglage et complications horlogères.",
+      link: "/formation",
     },
     {
-      icon: '⚙️',
-      title: 'Mécanismes & Techniques',
-      description:
-        'Comprenez les secrets des mouvements horlogers, des échappements aux complications sophistiquées.',
-      color: 'from-purple-500 to-purple-600',
+      icon: "🏛️",
+      title: "Histoire & Culture",
+      description: "Explorez 250 ans d'innovation suisse, des premières montres de poche aux chefs-d'œuvre contemporains.",
+      link: "/histoire",
     },
     {
-      icon: '👨‍🏫',
-      title: 'Formations Interactives',
-      description:
-        'Apprenez l\'horlogerie avec nos cours en ligne, tutoriels et ateliers pratiques pour tous niveaux.',
-      color: 'from-amber-500 to-amber-600',
-    },
-  ];
-
-  const resources = [
-    {
-      icon: '📚',
-      title: 'Bibliothèque Numérique',
-      description: 'Accès à plus de 500 ressources : livres, articles et documents historiques.',
-      action: 'Découvrir',
+      icon: "🔧",
+      title: "Techniques Pratiques",
+      description: "Tutoriels vidéo et guides illustrés pour maîtriser les outils et gestes des maîtres horlogers.",
+      link: "/techniques",
     },
     {
-      icon: '🎥',
-      title: 'Vidéothèque',
-      description:
-        'Tutoriels, documentaires et démonstrations techniques de maîtres horlogers.',
-      action: 'Regarder',
+      icon: "🖼️",
+      title: "Musée Virtuel",
+      description: "Collections 3D interactives de calibres légendaires, complications rares et pièces d'exception.",
+      link: "/musee",
     },
     {
-      icon: '🗺️',
-      title: 'Visites Virtuelles',
-      description: 'Explorez les ateliers et musées horlogers en réalité virtuelle 360°.',
-      action: 'Visiter',
+      icon: "🤝",
+      title: "Communauté",
+      description: "Rejoignez des milliers de passionnés, partagez vos projets et participez à des ateliers en ligne.",
+      link: "/communaute",
     },
     {
-      icon: '🏆',
-      title: 'Collections Prestigieuses',
-      description: 'Découvrez les pièces d\'exception des plus grands horlogers mondiaux.',
-      action: 'Explorer',
+      icon: "📖",
+      title: "Bibliothèque",
+      description: "Accès à des ouvrages de référence, schémas techniques et documentation historique numérisée.",
+      link: "/bibliotheque",
     },
   ];
 
-  const testimonials = [
-    {
-      quote: 'L\'horlogerie est l\'art de traduire le temps en beauté mécanique.',
-      author: 'Abraham-Louis Breguet',
-    },
-    {
-      quote: 'Chaque montre raconte une histoire de précision, de passion et de dévouement.',
-      author: 'Jean-Claude Biver',
-    },
-    {
-      quote: 'Le temps est l\'illusion la plus précieuse de l\'humanité.',
-      author: 'Cartier Fondateur',
-    },
-  ];
+  const featuredCourse = {
+    title: "Démontage du Calibre ETA 6497",
+    subtitle: "Tutoriel pas-à-pas avec modèle 3D interactif",
+    description: "Apprenez à démonter et remonter l'un des mouvements mécaniques les plus emblématiques de l'horlogerie suisse.",
+    image: "https://images.unsplash.com/photo-1612543734639-6515569c4516?w=1200&q=80",
+    link: "/tutoriels/eta-6497",
+  };
 
   return (
-    <div className="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white min-h-screen overflow-hidden">
-      {/* Arrière-plan animé avec rouages */}
-      <div className="fixed inset-0 opacity-5 pointer-events-none">
-        <svg
-          className="absolute inset-0 w-full h-full"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="xMidYMid slice"
-        >
-          <defs>
-            <pattern id="gears" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-              <circle cx="10" cy="10" r="3" fill="currentColor" />
-            </pattern>
-          </defs>
-          <rect width="100" height="100" fill="url(#gears)" />
-        </svg>
-      </div>
-
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 bg-gradient-to-b from-slate-950 to-transparent backdrop-blur-md z-50 border-b border-amber-500/10">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10">
-              <svg
-                viewBox="0 0 40 40"
-                className="w-full h-full text-amber-400 animate-spin"
-                style={{ animationDuration: '8s' }}
+    <div className={`min-h-screen transition-colors duration-700 ${darkMode ? "bg-[#0a0a0a] text-[#f5f5f5]" : "bg-[#f5f5f5] text-[#0a0a0a]"}`}>
+      
+      {/* ========================================== */}
+      {/* HEADER FIXE                                */}
+      {/* ========================================== */}
+      <header className={`fixed top-0 w-full z-50 transition-all duration-500 backdrop-blur-lg ${darkMode ? "bg-[#0a0a0a]/90 border-b border-[#d4af37]/20" : "bg-white/90 border-b border-gray-200"}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex justify-between items-center">
+            
+            {/* Logo avec engrenage animé */}
+            <Link href="/" className="flex items-center gap-3 group">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                className="w-10 h-10 rounded-full border-2 border-[#d4af37] flex items-center justify-center"
               >
-                <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                <circle cx="20" cy="20" r="14" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.5" />
-                <line x1="20" y1="6" x2="20" y2="14" stroke="currentColor" strokeWidth="1.5" />
-                <line x1="20" y1="26" x2="20" y2="34" stroke="currentColor" strokeWidth="1" />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-amber-400">Chronosophia</h1>
-              <p className="text-xs text-amber-300">{time}</p>
+                <span className="text-[#d4af37] text-xl">⚙</span>
+              </motion.div>
+              <span className="text-xl font-light tracking-wide group-hover:text-[#d4af37] transition-colors">
+                HorloLearn
+              </span>
+            </Link>
+
+            {/* Navigation principale */}
+            <nav className="hidden md:flex items-center gap-8 text-sm font-light">
+              {["Formation", "Histoire", "Techniques", "Musée", "Communauté"].map((item) => (
+                <Link
+                  key={item}
+                  href={`/${item.toLowerCase()}`}
+                  className="relative hover:text-[#d4af37] transition-colors duration-300 group"
+                >
+                  {item}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#d4af37] group-hover:w-full transition-all duration-300"></span>
+                </Link>
+              ))}
+            </nav>
+
+            {/* Toggle Dark/Light + CTA */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setDarkMode(!darkMode)}
+                aria-label="Changer de thème"
+                className={`w-14 h-7 rounded-full flex items-center px-1 transition-all duration-300 ${
+                  darkMode ? "bg-gray-700 justify-end" : "bg-gray-300 justify-start"
+                }`}
+              >
+                <motion.div
+                  layout
+                  className={`w-5 h-5 rounded-full ${darkMode ? "bg-[#d4af37]" : "bg-[#0a0a0a]"}`}
+                />
+              </button>
+              <Link
+                href="/commencer"
+                className="hidden sm:inline-block px-5 py-2 bg-[#d4af37] text-[#0a0a0a] rounded-md text-sm font-medium hover:shadow-lg transition-all"
+              >
+                Commencer
+              </Link>
             </div>
           </div>
-
-          {/* Navigation Desktop */}
-          <nav className="hidden md:flex gap-8">
-            {navigationLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="text-sm text-gray-300 hover:text-amber-400 transition-colors duration-300 relative group"
-              >
-                {link.label}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300" />
-              </a>
-            ))}
-          </nav>
-
-          {/* Bouton Menu Mobile */}
-          <button
-            className="md:hidden text-amber-400"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
         </div>
-
-        {/* Menu Mobile */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-slate-900/95 border-t border-amber-500/20 px-4 py-4 space-y-3">
-            {navigationLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="block text-sm text-gray-300 hover:text-amber-400 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-        )}
       </header>
 
-      {/* Section Hero */}
-      <section id="accueil" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-        {/* Animated background elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        </div>
-
-        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
-          <div className="mb-6 inline-block">
-            <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-full px-4 py-2 backdrop-blur-sm">
-              <Clock size={16} className="text-amber-400" />
-              <span className="text-sm text-amber-300">Bienvenue dans l'univers horloger</span>
-            </div>
+      <main>
+        {/* ========================================== */}
+        {/* SECTION HÉROS (100vh)                      */}
+        {/* ========================================== */}
+        <motion.section
+          style={{ opacity: heroOpacity, scale: heroScale }}
+          className="relative h-screen flex items-center justify-center pt-16 overflow-hidden"
+        >
+          {/* Animation de fond : engrenages SVG */}
+          <div className="absolute inset-0 z-0 opacity-5">
+            <motion.svg
+              width="100%"
+              height="100%"
+              viewBox="0 0 400 400"
+              xmlns="http://www.w3.org/2000/svg"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+            >
+              <circle cx="200" cy="200" r="150" fill="none" stroke={COLORS.gold} strokeWidth="2" />
+              <circle cx="200" cy="200" r="20" fill={COLORS.gold} />
+              {[...Array(12)].map((_, i) => (
+                <rect
+                  key={i}
+                  x="195"
+                  y="50"
+                  width="10"
+                  height="40"
+                  fill={COLORS.gold}
+                  transform={`rotate(${i * 30} 200 200)`}
+                />
+              ))}
+            </motion.svg>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500">
-              Le Temps à l'État Pur
-            </span>
-          </h1>
-
-          <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Plongez dans l'univers fascinant de l'horlogerie. Explorez l'histoire, maîtrisez les techniques,
-            et découvrez les secrets de ces merveilles mécaniques qui battent au rythme du temps.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <button className="group relative px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-amber-500/50 transition-all duration-300 overflow-hidden">
-              <span className="relative z-10 flex items-center justify-center gap-2">
-                Commencer l'Exploration
-                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-              </span>
-            </button>
-
-            <button className="px-8 py-4 border border-amber-400/50 rounded-lg font-semibold hover:bg-amber-500/10 transition-colors duration-300">
-              En Savoir Plus
-            </button>
-          </div>
-
-          {/* Animated clock visualization */}
-          <div className="mt-12 inline-block">
-            <div className="relative w-32 h-32 mx-auto">
-              <svg viewBox="0 0 100 100" className="w-full h-full">
-                <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(251, 146, 60, 0.2)" strokeWidth="1" />
-                <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(251, 146, 60, 0.3)" strokeWidth="1.5" />
-
-                {/* Hour markers */}
-                {[...Array(12)].map((_, i) => {
-                  const angle = (i * 30 * Math.PI) / 180;
-                  const x1 = 50 + 38 * Math.sin(angle);
-                  const y1 = 50 - 38 * Math.cos(angle);
-                  const x2 = 50 + 42 * Math.sin(angle);
-                  const y2 = 50 - 42 * Math.cos(angle);
-                  return (
-                    <line
-                      key={i}
-                      x1={x1}
-                      y1={y1}
-                      x2={x2}
-                      y2={y2}
-                      stroke="rgba(251, 146, 60, 0.6)"
-                      strokeWidth="1"
-                    />
-                  );
-                })}
-
-                {/* Hour hand */}
-                <line
-                  x1="50"
-                  y1="50"
-                  x2="50"
-                  y2="25"
-                  stroke="rgba(251, 146, 60, 0.8)"
-                  strokeWidth="2"
+          {/* Horloge animée (visible sur desktop) */}
+          <div className="absolute top-1/4 right-10 hidden xl:block">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 0.1, scale: 1 }}
+              transition={{ duration: 1.5 }}
+              className="relative w-64 h-64"
+            >
+              <div className="absolute inset-0 border-2 border-[#d4af37] rounded-full" />
+              {[...Array(12)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-1 h-4 bg-[#d4af37] top-2 left-1/2 -translate-x-1/2"
                   style={{
-                    transform: 'rotate(45deg)',
-                    transformOrigin: '50px 50px',
-                    animation: 'rotate 43200s linear infinite',
+                    transformOrigin: "50% 126px",
+                    transform: `translateX(-50%) rotate(${i * 30}deg)`,
                   }}
                 />
-
-                {/* Minute hand */}
-                <line
-                  x1="50"
-                  y1="50"
-                  x2="50"
-                  y2="15"
-                  stroke="rgba(251, 146, 60, 0.9)"
-                  strokeWidth="1.5"
-                  style={{
-                    transform: 'rotate(120deg)',
-                    transformOrigin: '50px 50px',
-                    animation: 'rotate 3600s linear infinite',
-                  }}
-                />
-
-                {/* Second hand */}
-                <line
-                  x1="50"
-                  y1="50"
-                  x2="50"
-                  y2="10"
-                  stroke="rgba(239, 68, 68, 0.7)"
-                  strokeWidth="1"
-                  style={{
-                    transform: 'rotate(240deg)',
-                    transformOrigin: '50px 50px',
-                    animation: 'rotate 60s linear infinite',
-                  }}
-                />
-
-                <circle cx="50" cy="50" r="3" fill="rgba(251, 146, 60, 1)" />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section Domaines */}
-      <section id="techniques" className="relative py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Nos Univers</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
-              Explorez trois univers complémentaires pour une compréhension complète de l'horlogerie
-            </p>
+              ))}
+              {/* Aiguille des heures */}
+              <motion.div
+                className="absolute w-2 h-20 bg-[#d4af37] rounded-full top-1/2 left-1/2 origin-bottom"
+                style={{ transform: "translateX(-50%) translateY(-100%)" }}
+                animate={{
+                  rotate: (new Date().getHours() % 12) * 30 + new Date().getMinutes() * 0.5,
+                }}
+                transition={{ duration: 0 }}
+              />
+              {/* Aiguille des minutes */}
+              <motion.div
+                className="absolute w-1.5 h-28 bg-[#d4af37] rounded-full top-1/2 left-1/2 origin-bottom"
+                style={{ transform: "translateX(-50%) translateY(-100%)" }}
+                animate={{ rotate: new Date().getMinutes() * 6 }}
+                transition={{ duration: 0 }}
+              />
+              {/* Aiguille des secondes */}
+              <motion.div
+                className="absolute w-0.5 h-32 bg-red-500 rounded-full top-1/2 left-1/2 origin-bottom"
+                style={{ transform: "translateX(-50%) translateY(-100%)" }}
+                animate={{ rotate: new Date().getSeconds() * 6 }}
+                transition={{ duration: 0 }}
+              />
+              <div className="absolute w-4 h-4 bg-[#d4af37] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+            </motion.div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {domains.map((domain, index) => (
-              <div
-                key={index}
-                className="group relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-8 border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300 overflow-hidden"
-              >
-                <div className={`absolute inset-0 bg-gradient-to-br ${domain.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
-
-                <div className="relative z-10">
-                  <div className="text-5xl mb-4">{domain.icon}</div>
-                  <h3 className="text-xl font-bold mb-3 text-amber-400">{domain.title}</h3>
-                  <p className="text-gray-400 mb-6">{domain.description}</p>
-
-                  <button className="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 transition-colors group/btn">
-                    Découvrir <ChevronRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
-                  </button>
-                </div>
-
-                <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/5 rounded-full -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-300" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Section Ressources */}
-      <section id="ressources" className="relative py-20 px-4 bg-slate-900/50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Ressources Pédagogiques</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
-              Accédez à nos contenus exclusifs pour approfondir vos connaissances
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {resources.map((resource, index) => (
-              <div
-                key={index}
-                className="group bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-lg border border-amber-500/10 hover:border-amber-500/30 p-6 transition-all duration-300 hover:scale-105"
-              >
-                <div className="text-4xl mb-4">{resource.icon}</div>
-                <h3 className="font-bold text-lg mb-2 text-amber-400">{resource.title}</h3>
-                <p className="text-sm text-gray-400 mb-4">{resource.description}</p>
-                <button className="text-amber-400 text-sm font-semibold hover:text-amber-300 transition-colors inline-flex items-center gap-1 group/link">
-                  {resource.action} <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Section Statistiques */}
-      <section className="relative py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            {[
-              { value: '500+', label: 'Ressources' },
-              { value: '50+', label: 'Formations' },
-              { value: '10,000+', label: 'Apprenants' },
-              { value: '2025', label: 'Depuis' },
-            ].map((stat, index) => (
-              <div key={index} className="group">
-                <div className="text-3xl md:text-4xl font-bold text-amber-400 mb-2 group-hover:scale-110 transition-transform">
-                  {stat.value}
-                </div>
-                <p className="text-gray-400">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Section Témoignages */}
-      <section className="relative py-20 px-4 bg-slate-900/50">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-12">Citations Inspirantes</h2>
-
-          <div className="space-y-6">
-            {testimonials.map((testimonial, index) => (
-              <div
-                key={index}
-                className="bg-gradient-to-r from-amber-500/10 to-purple-500/10 border border-amber-500/20 rounded-lg p-8 hover:border-amber-500/40 transition-colors duration-300"
-              >
-                <p className="text-lg text-gray-100 mb-3 italic">"{testimonial.quote}"</p>
-                <p className="text-amber-400 font-semibold">— {testimonial.author}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Section Newsletter */}
-      <section className="relative py-20 px-4">
-        <div className="max-w-2xl mx-auto text-center bg-gradient-to-r from-amber-500/10 to-purple-500/10 border border-amber-500/20 rounded-xl p-12">
-          <h2 className="text-3xl font-bold mb-4">Restez Connecté au Monde de l'Horlogerie</h2>
-          <p className="text-gray-400 mb-6">
-            Recevez chaque mois nos derniers articles, tutoriels et découvertes exclusives.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-3">
-            <input
-              type="email"
-              placeholder="Votre adresse email"
-              className="flex-1 bg-slate-800/50 border border-amber-500/20 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500/50 transition-colors"
-            />
-            <button className="bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg px-6 py-3 font-semibold hover:shadow-lg hover:shadow-amber-500/50 transition-all duration-300">
-              S'Abonner
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="relative border-t border-amber-500/10 bg-gradient-to-t from-slate-950 to-slate-900/50 py-12 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h4 className="font-bold text-amber-400 mb-4">Chronosophia</h4>
-              <p className="text-sm text-gray-400">
-                Plateforme éducative et culturelle dédiée à l'horlogerie et à l'art du temps.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-amber-400 mb-4">Navigation</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                {navigationLinks.map((link) => (
-                  <li key={link.label}>
-                    <a href={link.href} className="hover:text-amber-400 transition-colors">
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-amber-400 mb-4">Légal</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-amber-400 transition-colors">Conditions d'Utilisation</a></li>
-                <li><a href="#" className="hover:text-amber-400 transition-colors">Politique de Confidentialité</a></li>
-                <li><a href="#" className="hover:text-amber-400 transition-colors">Mentions Légales</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-amber-400 mb-4">Nous Suivre</h4>
-              <div className="flex gap-3">
-                {['Facebook', 'Instagram', 'Twitter', 'LinkedIn'].map((social) => (
-                  <a
-                    key={social}
-                    href="#"
-                    className="w-10 h-10 bg-amber-500/10 border border-amber-500/20 rounded-full flex items-center justify-center hover:bg-amber-500/20 hover:border-amber-500/40 transition-all duration-300 text-sm font-semibold text-amber-400"
-                  >
-                    {social[0]}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-amber-500/10 pt-8 text-center text-sm text-gray-500">
-            <p>© 2025 Chronosophia. Tous droits réservés. | Conçu avec précision et passion pour l'horlogerie.</p>
-          </div>
-        </div>
-      </footer>
-
-      {/* Global Styles */}
-      <style jsx global>{`
-        @keyframes rotate {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.5;
-          }
-        }
-
-        html {
-          scroll-behavior: smooth;
-        }
-
-        body {
-          margin: 0;
-          padding: 0;
-        }
-      `}</style>
-    </div>
-  );
-}
+          {/* Contenu principal du héros */}
+          <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="inline-block mb-6 px-4 py-2 border border-[#d4af37] rounded-full text-sm tracking-wider backdrop-blur-sm"
+            >
+              🇨🇭 Savoir-faire Horloger Suisse
+            
