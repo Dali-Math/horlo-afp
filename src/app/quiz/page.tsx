@@ -137,6 +137,13 @@ export default function Quiz() {
               >
                 Yes/No Game – Horlogerie
               </a>
+
+              <a
+                href="/quiz/tetris-horloger"
+                className="block bg-amber-50 dark:bg-amber-900/30 hover:bg-amber-100 dark:hover:bg-amber-800 text-amber-700 dark:text-amber-300 px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+              >
+                Atelier Horloger – Jeu de Précision 🎮
+              </a>
             </div>
           </div>
         </div>
