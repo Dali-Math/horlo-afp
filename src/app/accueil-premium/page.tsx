@@ -192,11 +192,11 @@ export default function HorloLearnHome() {
 
       {/* Navigation - Responsive avec logo à gauche et menu à droite */}
       <nav className="fixed top-0 w-full bg-black z-50 border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
-          <div className="flex items-center justify-between h-16">
+        <div className="w-full px-8 lg:px-16">
+          <div className="flex items-center h-16">
             
-            {/* Logo HorloLearn - Avec animation du cercle - Plus espacé à gauche */}
-            <a href="#accueil" className="flex items-center space-x-3 -ml-4">
+            {/* Logo HorloLearn - Vraiment à gauche */}
+            <a href="#accueil" className="flex items-center space-x-3 mr-auto">
               <div className="relative w-10 h-10">
                 <motion.svg
                   viewBox="0 0 50 50"
@@ -225,8 +225,8 @@ export default function HorloLearnHome() {
               </div>
             </a>
 
-            {/* Navigation Desktop - Légèrement décalé vers la gauche */}
-            <div className="hidden lg:flex items-center space-x-8 absolute left-[45%] transform -translate-x-1/2">
+            {/* Navigation Desktop - Bien espacé */}
+            <div className="hidden lg:flex items-center space-x-10 flex-1 justify-center ml-12">
               {navigationLinks.map((link, index) => (
                 <a
                   key={index}
