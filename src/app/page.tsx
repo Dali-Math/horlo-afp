@@ -152,54 +152,68 @@ export default function HorloLearnHome() {
   ]
 
   const actualites = [
-    {
-      title: 'Watches & Wonders 2026 : Dates confirmées',
-      time: 'Il y a 2 jours',
-      category: 'Événement'
-    },
-    {
-      title: 'Nouveau calibre Sellita SW330-2 annoncé',
-      time: 'Il y a 5 jours',
-      category: 'Innovation'
-    },
-    {
-      title: 'Formation AFP : Nouveaux programmes 2026',
-      time: 'Il y a 1 semaine',
-      category: 'Formation'
-    },
-  ]
+  {
+    title: "Watches & Wonders 2026 : Dates confirmées",
+    time: "Il y a 2 jours",
+    category: "Événement",
+    link: "/evenements",
+  },
+  {
+    title: "Nouveau Calibre Sellita SW330-2 annoncé",
+    time: "Il y a 5 jours",
+    category: "Innovation",
+    link: "/innovations",
+  },
+  {
+    title: "Programmes horlogers officiels 2026 : mise à jour nationale",
+    time: "Il y a 1 semaine",
+    category: "Patrimoine",
+    link: "/patrimoine",
+  },
+];
 
+export default function ActualitesHorlogeres() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden">
-      
-      {/* Arrière-plan animé avec engrenages */}
-      <div className="fixed inset-0 opacity-5 pointer-events-none overflow-hidden">
-        <motion.div 
-          style={{ rotate: gearRotate }}
-          className="absolute top-10 right-10 w-96 h-96"
-        >
-          <svg viewBox="0 0 100 100" className="w-full h-full text-amber-400">
-            <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            {[...Array(12)].map((_, i) => (
-              <rect key={i} x="48" y="10" width="4" height="10" fill="currentColor" 
-                style={{ transform: `rotate(${i * 30}deg)`, transformOrigin: '50px 50px' }} />
-            ))}
-          </svg>
-        </motion.div>
-        <motion.div 
-          style={{ rotate: gearRotateReverse }}
-          className="absolute bottom-20 left-10 w-72 h-72"
-        >
-          <svg viewBox="0 0 100 100" className="w-full h-full text-blue-400">
-            <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            {[...Array(8)].map((_, i) => (
-              <rect key={i} x="48" y="15" width="4" height="8" fill="currentColor" 
-                style={{ transform: `rotate(${i * 45}deg)`, transformOrigin: '50px 50px' }} />
-            ))}
-          </svg>
-        </motion.div>
+    <section className="min-h-screen bg-white dark:bg-[#0a0a0a] text-slate-900 dark:text-white transition-colors duration-300">
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <h2 className="text-3xl font-bold mb-2">
+          <span className="dark:text-yellow-400 text-slate-800">Actualités </span>
+          Horlogères
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-8">
+          Restez informé des dernières nouveautés
+        </p>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {actualites.map((item, index) => (
+            <Link
+              key={index}
+              href={item.link}
+              className="block p-6 rounded-2xl border border-gray-200 dark:border-gray-800 hover:dark:border-yellow-400 hover:border-gray-400 transition-all duration-200 bg-gray-50 dark:bg-[#121212]"
+            >
+              <span className="inline-block text-sm bg-yellow-100 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 font-medium px-3 py-1 rounded-full mb-3">
+                {item.category}
+              </span>
+              <h3 className="text-lg font-semibold mb-2 leading-snug dark:text-yellow-400 text-gray-800">
+                {item.title}
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{item.time}</p>
+            </Link>
+          ))}
+        </div>
+
+        <div className="text-right mt-6">
+          <Link
+            href="/actualites"
+            className="text-yellow-600 dark:text-yellow-400 hover:underline transition-all duration-200"
+          >
+            Voir tout →
+          </Link>
+        </div>
       </div>
+    </section>
+  );
+}
 
       {/* Navigation - Responsive avec logo à gauche et menu à droite */}
       <nav className="fixed top-0 w-full bg-black z-50 border-b border-gray-800">
