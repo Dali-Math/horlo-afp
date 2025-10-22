@@ -202,434 +202,351 @@ export default function HorloLearnHome() {
         </motion.div>
       </div>
 
-      {/* Navigation - Responsive avec logo à gauche et menu à droite */}
-      <nav className="fixed top-0 w-full bg-black z-50 border-b border-gray-800">
-        <div className="w-full px-8 lg:px-16">
-          <div className="flex items-center h-16">
-            
-            {/* Logo HorloLearn - Vraiment à gauche */}
-            <Link href="/" className="flex items-center space-x-3 mr-auto">
-              <div className="relative w-10 h-10">
-                <motion.svg
-                  viewBox="0 0 50 50"
-                  className="w-full h-full"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                >
-                  <circle cx="25" cy="25" r="23" fill="none" stroke="#f59e0b" strokeWidth="1" />
-                  {[...Array(12)].map((_, i) => (
-                    <circle 
-                      key={i} 
-                      cx={25 + 19 * Math.cos((i * 30 - 90) * Math.PI / 180)} 
-                      cy={25 + 19 * Math.sin((i * 30 - 90) * Math.PI / 180)} 
-                      r="1.5" 
-                      fill="#f59e0b" 
-                    />
-                  ))}
-                </motion.svg>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold leading-tight">
-                  <span className="text-amber-400">Horlo</span>
-                  <span className="text-white">Learn</span>
-                </span>
-                <span className="text-xs text-gray-400 leading-tight">Passion & Découverte</span>
-              </div>
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-amber-500/10">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link href="/" className="flex items-center space-x-2 group">
+              <Watch className="w-8 h-8 text-amber-400 group-hover:rotate-12 transition-transform duration-300" />
+              <span className="text-2xl font-bold">
+                <span className="text-amber-400">Horlo</span>
+                <span className="text-white">Learn</span>
+              </span>
             </Link>
 
-            {/* Navigation Desktop - Bien espacé */}
-            <div className="hidden lg:flex items-center space-x-10 flex-1 justify-center ml-12">
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center space-x-1">
               {navigationLinks.map((link, index) => (
-                <div 
-                  key={index}
-                  className="relative"
-                  onMouseEnter={() => link.hasDropdown && setOpenDropdown(link.label)}
-                  onMouseLeave={() => setOpenDropdown(null)}
-                >
-                  <Link
-                    href={link.href}
-                    className="text-white text-sm hover:text-gray-300 transition-colors duration-200 flex items-center whitespace-nowrap"
-                  >
-                    {link.label}
-                    {link.hasDropdown && <span className="ml-1 text-xs">▼</span>}
-                  </Link>
-
-                  {/* Menu déroulant */}
-                  {link.hasDropdown && link.subLinks && openDropdown === link.label && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="absolute top-full left-0 mt-2 w-56 bg-gray-900 border border-gray-800 rounded-lg shadow-xl py-2 z-50"
-                    >
-                      {link.subLinks.map((subLink, subIndex) => (
-                        <Link
-                          key={subIndex}
-                          href={subLink.href}
-                          className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-amber-400 transition-colors duration-200"
+                <div key={index} className="relative group">
+                  {link.hasDropdown ? (
+                    <>
+                      <button 
+                        className="px-4 py-2 text-gray-300 hover:text-amber-400 transition-colors duration-200 font-medium"
+                        onMouseEnter={() => setOpenDropdown(link.label)}
+                        onMouseLeave={() => setOpenDropdown(null)}
+                      >
+                        {link.label}
+                      </button>
+                      {openDropdown === link.label && (
+                        <div 
+                          className="absolute top-full left-0 mt-2 bg-slate-900/95 backdrop-blur-lg border border-amber-500/20 rounded-lg shadow-2xl py-2 min-w-[200px]"
+                          onMouseEnter={() => setOpenDropdown(link.label)}
+                          onMouseLeave={() => setOpenDropdown(null)}
                         >
-                          {subLink.label}
-                        </Link>
-                      ))}
-                    </motion.div>
+                          {link.subLinks?.map((subLink, subIndex) => (
+                            <Link 
+                              key={subIndex}
+                              href={subLink.href}
+                              className="block px-4 py-2 text-gray-300 hover:text-amber-400 hover:bg-amber-500/5 transition-colors duration-200"
+                            >
+                              {subLink.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <Link 
+                      href={link.href}
+                      className="px-4 py-2 text-gray-300 hover:text-amber-400 transition-colors duration-200 font-medium"
+                    >
+                      {link.label}
+                    </Link>
                   )}
                 </div>
               ))}
             </div>
 
-            {/* Bouton Menu Mobile - À droite */}
-            <button
+            {/* CTA Buttons */}
+            <div className="hidden lg:flex items-center space-x-4">
+              <div className="flex items-center space-x-2 px-3 py-1.5 bg-green-500/10 border border-green-500/30 rounded-full">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                <span className="text-xs font-semibold text-green-300">{onlineUsers} en ligne</span>
+              </div>
+              <Link href="/contribuer" className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-amber-500/50 transition-all duration-300">
+                Contribuer
+              </Link>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button 
+              className="lg:hidden p-2 text-amber-400 hover:bg-amber-500/10 rounded-lg transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2 text-white hover:text-gray-300 transition-colors ml-auto"
-              aria-label="Menu"
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
-        </div>
 
-        {/* Menu Mobile Déroulant */}
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-black border-t border-gray-800"
-          >
-            <div className="px-4 py-4 space-y-1">
-              {navigationLinks.map((link, index) => (
-                <div key={index}>
-                  <Link
+          {/* Mobile Menu */}
+          {isMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="lg:hidden mt-4 pb-4 border-t border-amber-500/10 pt-4"
+            >
+              <div className="space-y-2">
+                {navigationLinks.map((link, index) => (
+                  <Link 
+                    key={index}
                     href={link.href}
-                    onClick={() => !link.hasDropdown && setIsMenuOpen(false)}
-                    className="block px-4 py-3 text-white hover:text-gray-300 hover:bg-gray-900 rounded transition-colors duration-200"
+                    className="block px-4 py-2 text-gray-300 hover:text-amber-400 hover:bg-amber-500/5 rounded-lg transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
                   >
                     {link.label}
-                    {link.hasDropdown && <span className="ml-2 text-xs">▼</span>}
                   </Link>
-                  
-                  {/* Sous-menu mobile */}
-                  {link.hasDropdown && link.subLinks && (
-                    <div className="ml-4 mt-1 space-y-1">
-                      {link.subLinks.map((subLink, subIndex) => (
-                        <Link
-                          key={subIndex}
-                          href={subLink.href}
-                          onClick={() => setIsMenuOpen(false)}
-                          className="block px-4 py-2 text-sm text-gray-400 hover:text-amber-400 hover:bg-gray-900 rounded transition-colors duration-200"
-                        >
-                          {subLink.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
+                ))}
+                <Link 
+                  href="/contribuer"
+                  className="block px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold text-center mt-4"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Contribuer
+                </Link>
+              </div>
+            </motion.div>
+          )}
+        </div>
       </nav>
 
       {/* Hero Section */}
-      <section id="accueil" className="relative min-h-screen flex items-center justify-center px-4 pt-20">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-          
-          {/* Colonne Texte */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
+      <section className="relative pt-32 pb-20 px-4 overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            
+            {/* Contenu Gauche */}
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="inline-flex items-center px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full mb-8"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
             >
-              <Sparkles className="w-5 h-5 text-amber-400 mr-2" />
-              <span className="text-amber-400 font-semibold text-sm">L'horlogerie suisse accessible à tous</span>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center space-x-2 bg-amber-500/10 border border-amber-500/30 rounded-full px-4 py-2 mb-6"
+              >
+                <Sparkles className="w-4 h-4 text-amber-400" />
+                <span className="text-sm font-semibold text-amber-300">Plateforme Communautaire Suisse</span>
+              </motion.div>
+
+              <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
+                <span className="text-white">Maîtrisez l'</span>
+                <span className="bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
+                  Horlogerie
+                </span>
+              </h1>
+
+              <p className="text-xl text-gray-400 mb-8 leading-relaxed">
+                Accédez gratuitement à <span className="text-amber-400 font-semibold">2,500+ ressources</span> partagées 
+                par la communauté : tutoriels, plans techniques, vidéos et bien plus.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                <Link href="/ressources" className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 text-center">
+                  Explorer les Ressources
+                </Link>
+                <Link href="/contribuer" className="px-8 py-4 border-2 border-amber-400/50 rounded-lg font-semibold hover:bg-amber-500/10 transition-all duration-300 text-center">
+                  Rejoindre la Communauté
+                </Link>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-2 gap-4">
+                {stats.slice(0, 2).map((stat, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 + index * 0.1 }}
+                    className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 rounded-lg p-4 border border-amber-500/10"
+                  >
+                    <stat.icon className="w-6 h-6 text-amber-400 mb-2" />
+                    <div className="text-2xl font-bold text-amber-400">{stat.value}</div>
+                    <div className="text-sm text-gray-400">{stat.label}</div>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
 
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              <span className="text-white">Passion & Découverte</span>
-              <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500">
-                Horlogère Suisse
-              </span>
-            </h1>
-
-            <p className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
-              Explorez librement ressources, tutoriels et savoirs horlogers partagés par des <span className="text-amber-400 font-semibold">passionnés</span> pour des <span className="text-amber-400 font-semibold">passionnés</span>
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold text-lg hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 flex items-center justify-center"
-              >
-                Commencer l'exploration
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </motion.button>
-
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 border-2 border-amber-400/50 rounded-lg font-semibold text-lg hover:bg-amber-500/10 transition-all duration-300 flex items-center justify-center"
-              >
-                <PlayCircle className="mr-2 w-6 h-6" />
-                Voir la démo
-              </motion.button>
-            </div>
-
-            {/* Badges de confiance */}
-            <div className="flex flex-wrap items-center gap-6 text-sm">
-              <div className="flex items-center space-x-2 text-gray-400">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                <span><span className="text-white font-semibold">{onlineUsers}</span> passionnés en ligne</span>
-              </div>
-              <div className="flex items-center space-x-2 text-gray-400">
-                <Heart className="w-5 h-5 text-red-400" />
-                <span className="text-white font-semibold">100% Gratuit</span>
-              </div>
-              <div className="flex items-center space-x-2 text-gray-400">
-                <span className="text-2xl">🇨🇭</span>
-                <span>Made in Switzerland</span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Horloge Interactive */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="relative flex justify-center items-center"
-          >
-            <div className="relative w-96 h-96">
-              
-              {/* Cercles lumineux d'arrière-plan */}
-              <motion.div 
-                animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }}
-                transition={{ duration: 3, repeat: Infinity }}
-                className="absolute inset-0 bg-amber-500/20 rounded-full blur-2xl"
-              />
-              
-              {/* Cadran principal */}
-              <div className="relative w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 rounded-full shadow-2xl border-8 border-amber-500/20 flex items-center justify-center">
+            {/* Horloge Interactive Droite */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="relative hidden lg:block"
+            >
+              <div className="relative w-96 h-96 mx-auto">
+                {/* Cercle externe lumineux */}
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-full blur-3xl animate-pulse" />
                 
-                {/* Anneaux décoratifs */}
-                <div className="absolute inset-8 border-2 border-amber-500/10 rounded-full" />
-                <div className="absolute inset-12 border border-amber-500/5 rounded-full" />
-                
-                {/* Marqueurs d'heures */}
-                {[...Array(12)].map((_, i) => (
-                  <div 
-                    key={i} 
-                    className={`absolute ${i % 3 === 0 ? 'w-2 h-8 bg-amber-400' : 'w-1 h-4 bg-amber-500/50'}`}
-                    style={{ 
-                      transform: `rotate(${i * 30}deg) translateY(-170px)`,
-                      transformOrigin: 'center'
-                    }} 
-                  />
-                ))}
-
-                {/* Chiffres aux positions principales */}
-                {[12, 3, 6, 9].map((num, i) => {
-                  const angle = (num === 12 ? 0 : num === 3 ? 90 : num === 6 ? 180 : 270) - 90;
-                  const radian = (angle * Math.PI) / 180;
-                  const x = Math.cos(radian) * 140;
-                  const y = Math.sin(radian) * 140;
-                  return (
-                    <div 
-                      key={num}
-                      className="absolute text-2xl font-bold text-amber-400"
-                      style={{ 
-                        transform: `translate(${x}px, ${y}px)`
+                {/* Cadran principal */}
+                <div className="relative w-full h-full bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-full border-4 border-amber-500/30 shadow-2xl backdrop-blur-sm">
+                  
+                  {/* Marques horaires */}
+                  {[...Array(12)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute top-1/2 left-1/2 w-1 h-4 bg-amber-400"
+                      style={{
+                        transform: `translate(-50%, -50%) rotate(${i * 30}deg) translateY(-170px)`,
+                        transformOrigin: 'center',
                       }}
-                    >
-                      {num}
-                    </div>
-                  );
-                })}
+                    />
+                  ))}
 
-                {/* Aiguilles */}
-                <motion.div 
-                  className="absolute w-3 h-28 bg-gradient-to-t from-amber-400 to-amber-500 rounded-full origin-bottom shadow-lg"
-                  style={{ 
-                    bottom: '50%',
-                    left: 'calc(50% - 6px)',
-                    rotate: hoursDegrees,
-                  }}
-                />
-                
-                <motion.div 
-                  className="absolute w-2 h-36 bg-gradient-to-t from-amber-300 to-amber-400 rounded-full origin-bottom shadow-lg"
-                  style={{ 
-                    bottom: '50%',
-                    left: 'calc(50% - 4px)',
-                    rotate: minutesDegrees,
-                  }}
-                />
-                
-                <motion.div 
-                  className="absolute w-1 h-40 bg-gradient-to-t from-red-500 to-red-400 rounded-full origin-bottom shadow-lg"
-                  style={{ 
-                    bottom: '50%',
-                    left: 'calc(50% - 2px)',
-                    rotate: secondsDegrees,
-                  }}
-                  transition={{ ease: "linear", duration: 0.1 }}
-                />
-                
-                {/* Centre */}
-                <div className="absolute w-6 h-6 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full z-10 border-2 border-white shadow-lg" />
-                <div className="absolute w-4 h-4 bg-slate-900 rounded-full z-20" />
+                  {/* Centre */}
+                  <div className="absolute top-1/2 left-1/2 w-4 h-4 bg-amber-500 rounded-full transform -translate-x-1/2 -translate-y-1/2 z-10 shadow-lg shadow-amber-500/50" />
 
-                {/* Affichage numérique */}
-                <div className="absolute bottom-24 bg-slate-900/80 backdrop-blur-sm px-4 py-2 rounded-lg border border-amber-500/30">
-                  <span className="text-amber-400 font-mono text-sm">
-                    {time.toLocaleTimeString('fr-FR')}
-                  </span>
+                  {/* Aiguille des heures */}
+                  <div
+                    className="absolute top-1/2 left-1/2 w-2 h-24 bg-gradient-to-t from-amber-400 to-amber-500 rounded-full origin-bottom shadow-lg"
+                    style={{
+                      transform: `translate(-50%, -100%) rotate(${hoursDegrees}deg)`,
+                      transformOrigin: 'bottom center',
+                    }}
+                  />
+
+                  {/* Aiguille des minutes */}
+                  <div
+                    className="absolute top-1/2 left-1/2 w-1.5 h-32 bg-gradient-to-t from-gray-300 to-white rounded-full origin-bottom shadow-lg"
+                    style={{
+                      transform: `translate(-50%, -100%) rotate(${minutesDegrees}deg)`,
+                      transformOrigin: 'bottom center',
+                    }}
+                  />
+
+                  {/* Aiguille des secondes */}
+                  <div
+                    className="absolute top-1/2 left-1/2 w-0.5 h-36 bg-red-500 rounded-full origin-bottom shadow-lg"
+                    style={{
+                      transform: `translate(-50%, -100%) rotate(${secondsDegrees}deg)`,
+                      transformOrigin: 'bottom center',
+                    }}
+                  />
                 </div>
 
-                {/* Texte de marque */}
-                <div className="absolute top-28 text-center">
-                  <p className="text-amber-400 font-serif text-sm">HORLOLEARN</p>
-                  <p className="text-amber-500/70 text-xs">Swiss Community</p>
+                {/* Heure digitale */}
+                <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 bg-slate-900/80 backdrop-blur-md px-6 py-3 rounded-xl border border-amber-500/30">
+                  <div className="text-2xl font-mono text-amber-400">
+                    {time.toLocaleTimeString('fr-CH')}
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
-        </div>
+            </motion.div>
 
-        {/* Flèche de scroll */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
-          className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
-        >
-          <ChevronRight className="w-8 h-8 text-amber-400 rotate-90" />
-        </motion.div>
+          </div>
+        </div>
       </section>
 
-      {/* Section d'introduction - Bienvenue dans l'univers horloger */}
-      <FadeInSection id="theorie" className="py-32 text-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-        <div className="max-w-3xl mx-auto px-4">
-          <div className="inline-flex items-center space-x-2 px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full mb-8">
-            <Clock className="w-4 h-4 text-amber-400" />
-            <span className="text-sm text-amber-300">Bienvenue dans l'univers horloger</span>
-          </div>
-
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500">
-            Le Temps à l'État Pur
-          </h2>
-
-          <p className="text-xl text-gray-300 leading-relaxed">
-            Plongez dans l'univers fascinant de l'horlogerie. Explorez l'histoire,
-            maîtrisez les techniques, et découvrez les secrets de ces merveilles
-            mécaniques qui battent au rythme du temps.
-          </p>
-        </div>
-      </FadeInSection>
-
-      {/* Section Ressources Phares */}
-      <FadeInSection id="ressources" className="py-20 px-4">
+      {/* Section Stats */}
+      <FadeInSection className="py-12 px-4 bg-slate-900/30">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Ressources <span className="text-amber-400">Phares</span>
-            </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Découvrez nos contenus les plus appréciés par la communauté
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {featuredResources.map((resource, index) => (
+          <div className="grid md:grid-cols-4 gap-6">
+            {stats.map((stat, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.15 }}
+                transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl overflow-hidden border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300"
+                className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 rounded-xl p-6 border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300 text-center group"
               >
-                <div className="absolute top-4 right-4 z-10">
-                  <span className="px-3 py-1 bg-amber-500/90 text-white text-xs font-bold rounded-full">
-                    {resource.badge}
-                  </span>
-                </div>
-
-                <div className="p-8">
-                  <div className="flex items-center space-x-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center">
-                      <FileText className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-sm font-bold text-amber-400 uppercase tracking-wider">
-                      {resource.type}
-                    </span>
-                  </div>
-
-                  <h3 className="text-xl font-bold mb-3 text-white group-hover:text-amber-400 transition-colors">
-                    {resource.title}
-                  </h3>
-
-                  <p className="text-gray-400 mb-6 text-sm leading-relaxed">
-                    {resource.description}
-                  </p>
-
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
-                    <span className="flex items-center">
-                      <Users className="w-4 h-4 mr-1" />
-                      {resource.author}
-                    </span>
-                    <span>{resource.readTime}</span>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-6 border-t border-amber-500/10">
-                    <div className="flex items-center text-sm text-gray-400">
-                      <Download className="w-4 h-4 mr-2 text-amber-400" />
-                      {resource.downloads} téléchargements
-                    </div>
-                    <button className="text-amber-400 font-semibold hover:text-amber-300 transition-colors flex items-center">
-                      Voir <ArrowRight className="ml-1 w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
+                <stat.icon className="w-10 h-10 text-amber-400 mx-auto mb-4 group-hover:scale-110 transition-transform" />
+                <div className="text-3xl font-bold text-amber-400 mb-2">{stat.value}</div>
+                <div className="text-sm text-gray-400">{stat.label}</div>
               </motion.div>
             ))}
           </div>
         </div>
       </FadeInSection>
 
-      {/* Section Thématiques */}
-      <FadeInSection id="communaute" className="py-20 px-4 bg-slate-900/30">
+      {/* Section Ressources Vedettes */}
+      <FadeInSection id="ressources" className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Explorez par <span className="text-amber-400">Thématique</span>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">
+              <span className="text-amber-400">Ressources</span> de la Semaine
             </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Une bibliothèque vivante organisée pour votre apprentissage
-            </p>
+            <p className="text-gray-400 text-lg">Les contributions les plus populaires de la communauté</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {featuredResources.map((resource, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 rounded-xl p-6 border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300 group cursor-pointer"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <span className="px-3 py-1 bg-blue-500/20 border border-blue-500/30 rounded-full text-xs font-bold text-blue-300">
+                    {resource.type}
+                  </span>
+                  <span className="px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-xs font-bold text-amber-300">
+                    {resource.badge}
+                  </span>
+                </div>
+
+                <h3 className="text-xl font-bold mb-3 text-white group-hover:text-amber-400 transition-colors">
+                  {resource.title}
+                </h3>
+                
+                <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+                  {resource.description}
+                </p>
+
+                <div className="flex items-center justify-between pt-4 border-t border-amber-500/10">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center text-xs font-bold">
+                      {resource.author.charAt(0)}
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-300 font-medium">{resource.author}</div>
+                      <div className="text-xs text-gray-500">{resource.readTime}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2 text-gray-400">
+                    <Download className="w-4 h-4" />
+                    <span className="text-sm">{resource.downloads}</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link href="/ressources" className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300">
+              Voir Toutes les Ressources
+              <ChevronRight className="ml-2 w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+      </FadeInSection>
+
+      {/* Section Thématiques */}
+      <FadeInSection id="thematiques" className="py-20 px-4 bg-slate-900/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">
+              Explorer par <span className="text-amber-400">Thématique</span>
+            </h2>
+            <p className="text-gray-400 text-lg">Découvrez nos contenus organisés par domaine d'expertise</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {thematiques.map((theme, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.1 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.15 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -10 }}
-                className="relative group"
+                className="group"
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${theme.color} opacity-10 group-hover:opacity-20 rounded-2xl blur-xl transition-opacity duration-300`} />
-                
-                <div className="relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 rounded-2xl p-8 border border-amber-500/10 group-hover:border-amber-500/30 transition-all duration-300 backdrop-blur-sm">
+                <div className="h-full bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl p-8 border border-amber-500/20 hover:border-amber-500/50 transition-all duration-500 hover:transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/20">
                   <div className="flex items-center justify-between mb-6">
                     <div className="text-5xl">{theme.icon}</div>
                     <span className="px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-xs font-bold text-amber-300">
@@ -669,30 +586,42 @@ export default function HorloLearnHome() {
               </h2>
               <p className="text-gray-400">Restez informé des dernières nouveautés</p>
             </div>
-            <button className="hidden md:block text-amber-400 font-semibold hover:text-amber-300 transition-colors flex items-center">
+            <Link href="/evenements" className="hidden md:block text-amber-400 font-semibold hover:text-amber-300 transition-colors flex items-center">
               Voir tout <ArrowRight className="ml-2 w-5 h-5" />
-            </button>
+            </Link>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {actualites.map((news, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 rounded-xl p-6 border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer group"
-              >
-                <span className="inline-block px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-xs font-bold text-amber-300 mb-4">
-                  {news.category}
-                </span>
-                <h3 className="text-lg font-bold mb-3 text-white group-hover:text-amber-400 transition-colors">
-                  {news.title}
-                </h3>
-                <p className="text-sm text-gray-500">{news.time}</p>
-              </motion.div>
-            ))}
+            {actualites.map((news, index) => {
+              // Définir le lien selon la catégorie
+              const categoryLinks: Record<string, string> = {
+                'Événement': '/evenements',
+                'Innovation': '/actualites/innovations',
+                'Formation': '/actualites/formations'
+              };
+
+              const link = categoryLinks[news.category] || '/evenements';
+
+              return (
+                <Link href={link} key={index}>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 rounded-xl p-6 border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer group"
+                  >
+                    <span className="inline-block px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-xs font-bold text-amber-300 mb-4">
+                      {news.category}
+                    </span>
+                    <h3 className="text-lg font-bold mb-3 text-white group-hover:text-amber-400 transition-colors">
+                      {news.title}
+                    </h3>
+                    <p className="text-sm text-gray-500">{news.time}</p>
+                  </motion.div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </FadeInSection>
