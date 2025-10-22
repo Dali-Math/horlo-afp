@@ -511,7 +511,7 @@ export default function HorloLearnHome() {
       </section>
 
       {/* Section d'introduction - Bienvenue dans l'univers horloger */}
-      <FadeInSection className="py-32 text-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+      <FadeInSection id="theorie" className="py-32 text-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
         <div className="max-w-3xl mx-auto px-4">
           <div className="inline-flex items-center space-x-2 px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full mb-8">
             <Clock className="w-4 h-4 text-amber-400" />
@@ -527,6 +527,76 @@ export default function HorloLearnHome() {
             maîtrisez les techniques, et découvrez les secrets de ces merveilles
             mécaniques qui battent au rythme du temps.
           </p>
+        </div>
+      </FadeInSection>
+
+      {/* Section Pratique */}
+      <FadeInSection id="pratique" className="py-20 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-4">
+            <span className="text-amber-400">Pratique</span>
+          </h2>
+          <p className="text-gray-400">Section en cours de développement</p>
+        </div>
+      </FadeInSection>
+
+      {/* Section Quiz */}
+      <FadeInSection id="quiz" className="py-20 px-4 bg-slate-900/30">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-4">
+            <span className="text-amber-400">Quiz</span>
+          </h2>
+          <p className="text-gray-400">Section en cours de développement</p>
+        </div>
+      </FadeInSection>
+
+      {/* Section Outils */}
+      <FadeInSection id="outils" className="py-20 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-4">
+            <span className="text-amber-400">Outils</span>
+          </h2>
+          <p className="text-gray-400">Section en cours de développement</p>
+        </div>
+      </FadeInSection>
+
+      {/* Section CH Horlogerie Suisse */}
+      <FadeInSection id="horlogerie-suisse" className="py-20 px-4 bg-slate-900/30">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-4">
+            <span className="text-amber-400">CH Horlogerie Suisse</span>
+          </h2>
+          <p className="text-gray-400">Section en cours de développement</p>
+        </div>
+      </FadeInSection>
+
+      {/* Section Podcasts */}
+      <FadeInSection id="podcasts" className="py-20 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-4">
+            <span className="text-amber-400">Podcasts</span>
+          </h2>
+          <p className="text-gray-400">Section en cours de développement</p>
+        </div>
+      </FadeInSection>
+
+      {/* Section Culture */}
+      <FadeInSection id="culture" className="py-20 px-4 bg-slate-900/30">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-4">
+            <span className="text-amber-400">Culture</span>
+          </h2>
+          <p className="text-gray-400">Section en cours de développement</p>
+        </div>
+      </FadeInSection>
+
+      {/* Section Événements */}
+      <FadeInSection id="evenements" className="py-20 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-4">
+            <span className="text-amber-400">Événements</span>
+          </h2>
+          <p className="text-gray-400">Section en cours de développement</p>
         </div>
       </FadeInSection>
 
