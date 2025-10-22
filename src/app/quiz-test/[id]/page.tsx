@@ -1,15 +1,40 @@
-// app/quiz/[id]/page.tsx
-import { notFound } from 'next/navigation';
+// app/quiz-test/[id]/page.tsx
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import InteractiveQuiz from '@/components/Quiz/InteractiveQuiz';
 import { getQuizById } from '@/data/quizzes';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 export default function QuizPage({ params }: { params: { id: string } }) {
-  const quiz = getQuizById(params.id);
+  const [quiz, setQuiz] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  if (!quiz) {
-    notFound();
+  useEffect(() => {
+    const foundQuiz = getQuizById(params.id);
+    
+    if (!foundQuiz) {
+      // Rediriger vers la liste si le quiz n'existe pas
+      router.push('/quiz-test');
+      return;
+    }
+    
+    setQuiz(foundQuiz);
+    setLoading(false);
+  }, [params.id, router]);
+
+  if (loading || !quiz) {
+    return (
+      <main className="min-h-screen bg-dark-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto mb-4"></div>
+          <p className="font-inter text-light-200">Chargement du quiz...</p>
+        </div>
+      </main>
+    );
   }
 
   return (
@@ -17,7 +42,7 @@ export default function QuizPage({ params }: { params: { id: string } }) {
       <div className="max-w-4xl mx-auto">
         {/* Bouton retour */}
         <Link 
-          href="/quiz" 
+          href="/quiz-test" 
           className="inline-flex items-center gap-2 mb-8 text-light-200 hover:text-gold transition font-inter text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -68,38 +93,4 @@ export default function QuizPage({ params }: { params: { id: string } }) {
       </div>
     </main>
   );
-}
-
-// Générer les métadonnées SEO
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const quiz = getQuizById(params.id);
-
-  if (!quiz) {
-    return {
-      title: 'Quiz introuvable',
-    };
-  }
-
-  return {
-    title: `${quiz.title} | HorloLearn`,
-    description: quiz.description,
-    openGraph: {
-      title: quiz.title,
-      description: quiz.description,
-      type: 'website',
-    },
-  };
-}
-
-// Générer les routes statiques (optionnel)
-export async function generateStaticParams() {
-  const quizzes = [
-    { id: 'echappement-suisse' },
-    { id: 'base-horlogerie' },
-    { id: 'calibre-eta2824' },
-  ];
-
-  return quizzes.map((quiz) => ({
-    id: quiz.id,
-  }));
 }
