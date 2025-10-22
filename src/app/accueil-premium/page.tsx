@@ -1,3 +1,4 @@
+
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -459,31 +460,26 @@ export default function HorloLearnHome() {
         </div>
       </section>
 
-      {/* Section Statistiques */}
-      <FadeInSection className="py-20 px-4 bg-slate-900/30">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center group cursor-pointer"
-              >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-amber-500/20 to-amber-600/20 rounded-2xl mb-4 group-hover:scale-110 transition-transform">
-                  <stat.icon className="w-8 h-8 text-amber-400" />
-                </div>
-                <div className="text-4xl font-bold text-amber-400 mb-2 group-hover:scale-110 transition-transform">
-                  {stat.value}
-                </div>
-                <p className="text-gray-400 text-sm">{stat.label}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </FadeInSection>
+      {/* Section d’introduction inspirée du site original */}
+<FadeInSection className="py-32 text-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+  <div className="max-w-3xl mx-auto px-4">
+    <div className="inline-flex items-center space-x-2 px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full mb-8">
+      <Clock className="w-4 h-4 text-amber-400" />
+      <span className="text-sm text-amber-300">Bienvenue dans l'univers horloger</span>
+    </div>
+
+    <h2 className="text-5xl md:text-6xl font-bold mb-6 text-amber-400">
+      Le Temps à l'État Pur
+    </h2>
+
+    <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto">
+      Plongez dans l'univers fascinant de l'horlogerie. Explorez l'histoire,
+      maîtrisez les techniques, et découvrez les secrets de ces merveilles
+      mécaniques qui battent au rythme du temps.
+    </p>
+  </div>
+</FadeInSection>
+
 
       {/* Section Ressources Featured */}
       <FadeInSection id="ressources" className="py-20 px-4">
