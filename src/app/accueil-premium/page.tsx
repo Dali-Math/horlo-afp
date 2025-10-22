@@ -46,6 +46,7 @@ const FadeInSection = ({ id, children, className = "" }: { id?: string; children
 // --- Page Principale ---
 export default function HorloLearnHome() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [time, setTime] = useState(new Date())
   const [onlineUsers] = useState(48)
   const { scrollYProgress } = useScroll()
@@ -64,7 +65,14 @@ export default function HorloLearnHome() {
   const hoursDegrees = ((time.getHours() % 12 + time.getMinutes() / 60) / 12) * 360
 
   const navigationLinks = [
-    { label: 'Théorie', href: '#theorie', hasDropdown: true },
+    { 
+      label: 'Théorie', 
+      href: '#theorie', 
+      hasDropdown: true,
+      subLinks: [
+        { label: 'Lecture de plan', href: '/theorie/lecture-de-plan' },
+      ]
+    },
     { label: 'Pratique', href: '#pratique' },
     { label: 'Quiz', href: '#quiz' },
     { label: 'Outils', href: '#outils' },
@@ -228,14 +236,40 @@ export default function HorloLearnHome() {
             {/* Navigation Desktop - Bien espacé */}
             <div className="hidden lg:flex items-center space-x-10 flex-1 justify-center ml-12">
               {navigationLinks.map((link, index) => (
-                <a
+                <div 
                   key={index}
-                  href={link.href}
-                  className="text-white text-sm hover:text-gray-300 transition-colors duration-200 flex items-center whitespace-nowrap"
+                  className="relative"
+                  onMouseEnter={() => link.hasDropdown && setOpenDropdown(link.label)}
+                  onMouseLeave={() => setOpenDropdown(null)}
                 >
-                  {link.label}
-                  {link.hasDropdown && <span className="ml-1 text-xs">▼</span>}
-                </a>
+                  <a
+                    href={link.href}
+                    className="text-white text-sm hover:text-gray-300 transition-colors duration-200 flex items-center whitespace-nowrap"
+                  >
+                    {link.label}
+                    {link.hasDropdown && <span className="ml-1 text-xs">▼</span>}
+                  </a>
+
+                  {/* Menu déroulant */}
+                  {link.hasDropdown && link.subLinks && openDropdown === link.label && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute top-full left-0 mt-2 w-56 bg-gray-900 border border-gray-800 rounded-lg shadow-xl py-2 z-50"
+                    >
+                      {link.subLinks.map((subLink, subIndex) => (
+                        <a
+                          key={subIndex}
+                          href={subLink.href}
+                          className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-amber-400 transition-colors duration-200"
+                        >
+                          {subLink.label}
+                        </a>
+                      ))}
+                    </motion.div>
+                  )}
+                </div>
               ))}
             </div>
 
@@ -260,15 +294,32 @@ export default function HorloLearnHome() {
           >
             <div className="px-4 py-4 space-y-1">
               {navigationLinks.map((link, index) => (
-                <a
-                  key={index}
-                  href={link.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block px-4 py-3 text-white hover:text-gray-300 hover:bg-gray-900 rounded transition-colors duration-200"
-                >
-                  {link.label}
-                  {link.hasDropdown && <span className="ml-2 text-xs">▼</span>}
-                </a>
+                <div key={index}>
+                  <a
+                    href={link.href}
+                    onClick={() => !link.hasDropdown && setIsMenuOpen(false)}
+                    className="block px-4 py-3 text-white hover:text-gray-300 hover:bg-gray-900 rounded transition-colors duration-200"
+                  >
+                    {link.label}
+                    {link.hasDropdown && <span className="ml-2 text-xs">▼</span>}
+                  </a>
+                  
+                  {/* Sous-menu mobile */}
+                  {link.hasDropdown && link.subLinks && (
+                    <div className="ml-4 mt-1 space-y-1">
+                      {link.subLinks.map((subLink, subIndex) => (
+                        <a
+                          key={subIndex}
+                          href={subLink.href}
+                          onClick={() => setIsMenuOpen(false)}
+                          className="block px-4 py-2 text-sm text-gray-400 hover:text-amber-400 hover:bg-gray-900 rounded transition-colors duration-200"
+                        >
+                          {subLink.label}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           </motion.div>
