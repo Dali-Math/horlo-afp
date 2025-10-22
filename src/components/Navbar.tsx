@@ -23,6 +23,8 @@ export default function Navbar() {
     { href: "/culture", label: "Culture" },
     { href: "/evenements", label: "Événements" },
     { href: "/communaute", label: "Communauté" },
+    { href: "/actualites", label: "Actualités" },
+
   ];
 
   const handleMouseEnter = () => {
