@@ -2,6 +2,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { 
   Clock, 
@@ -67,21 +68,21 @@ export default function HorloLearnHome() {
   const navigationLinks = [
     { 
       label: 'Théorie', 
-      href: '#theorie', 
+      href: '/theorie', 
       hasDropdown: true,
       subLinks: [
         { label: 'Lecture de plan', href: '/theorie/lecture-de-plan' },
       ]
     },
-    { label: 'Pratique', href: '#pratique' },
-    { label: 'Quiz', href: '#quiz' },
-    { label: 'Outils', href: '#outils' },
-    { label: 'Ressources', href: '#ressources' },
-    { label: 'CH Horlogerie Suisse', href: '#horlogerie-suisse' },
-    { label: 'Podcasts', href: '#podcasts' },
-    { label: 'Culture', href: '#culture' },
-    { label: 'Événements', href: '#evenements' },
-    { label: 'Communauté', href: '#communaute' },
+    { label: 'Pratique', href: '/pratique' },
+    { label: 'Quiz', href: '/quiz' },
+    { label: 'Outils', href: '/outils' },
+    { label: 'Ressources', href: '/ressources' },
+    { label: 'CH Horlogerie Suisse', href: '/ch-horlogerie-suisse' },
+    { label: 'Podcasts', href: '/podcasts' },
+    { label: 'Culture', href: '/culture' },
+    { label: 'Événements', href: '/evenements' },
+    { label: 'Communauté', href: '/communaute' },
   ]
 
   const stats = [
@@ -204,7 +205,7 @@ export default function HorloLearnHome() {
           <div className="flex items-center h-16">
             
             {/* Logo HorloLearn - Vraiment à gauche */}
-            <a href="#accueil" className="flex items-center space-x-3 mr-auto">
+            <Link href="/" className="flex items-center space-x-3 mr-auto">
               <div className="relative w-10 h-10">
                 <motion.svg
                   viewBox="0 0 50 50"
@@ -231,7 +232,7 @@ export default function HorloLearnHome() {
                 </span>
                 <span className="text-xs text-gray-400 leading-tight">Passion & Découverte</span>
               </div>
-            </a>
+            </Link>
 
             {/* Navigation Desktop - Bien espacé */}
             <div className="hidden lg:flex items-center space-x-10 flex-1 justify-center ml-12">
@@ -242,13 +243,13 @@ export default function HorloLearnHome() {
                   onMouseEnter={() => link.hasDropdown && setOpenDropdown(link.label)}
                   onMouseLeave={() => setOpenDropdown(null)}
                 >
-                  <a
+                  <Link
                     href={link.href}
                     className="text-white text-sm hover:text-gray-300 transition-colors duration-200 flex items-center whitespace-nowrap"
                   >
                     {link.label}
                     {link.hasDropdown && <span className="ml-1 text-xs">▼</span>}
-                  </a>
+                  </Link>
 
                   {/* Menu déroulant */}
                   {link.hasDropdown && link.subLinks && openDropdown === link.label && (
@@ -259,13 +260,13 @@ export default function HorloLearnHome() {
                       className="absolute top-full left-0 mt-2 w-56 bg-gray-900 border border-gray-800 rounded-lg shadow-xl py-2 z-50"
                     >
                       {link.subLinks.map((subLink, subIndex) => (
-                        <a
+                        <Link
                           key={subIndex}
                           href={subLink.href}
                           className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-amber-400 transition-colors duration-200"
                         >
                           {subLink.label}
-                        </a>
+                        </Link>
                       ))}
                     </motion.div>
                   )}
@@ -295,27 +296,27 @@ export default function HorloLearnHome() {
             <div className="px-4 py-4 space-y-1">
               {navigationLinks.map((link, index) => (
                 <div key={index}>
-                  <a
+                  <Link
                     href={link.href}
                     onClick={() => !link.hasDropdown && setIsMenuOpen(false)}
                     className="block px-4 py-3 text-white hover:text-gray-300 hover:bg-gray-900 rounded transition-colors duration-200"
                   >
                     {link.label}
                     {link.hasDropdown && <span className="ml-2 text-xs">▼</span>}
-                  </a>
+                  </Link>
                   
                   {/* Sous-menu mobile */}
                   {link.hasDropdown && link.subLinks && (
                     <div className="ml-4 mt-1 space-y-1">
                       {link.subLinks.map((subLink, subIndex) => (
-                        <a
+                        <Link
                           key={subIndex}
                           href={subLink.href}
                           onClick={() => setIsMenuOpen(false)}
                           className="block px-4 py-2 text-sm text-gray-400 hover:text-amber-400 hover:bg-gray-900 rounded transition-colors duration-200"
                         >
                           {subLink.label}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   )}
@@ -527,76 +528,6 @@ export default function HorloLearnHome() {
             maîtrisez les techniques, et découvrez les secrets de ces merveilles
             mécaniques qui battent au rythme du temps.
           </p>
-        </div>
-      </FadeInSection>
-
-      {/* Section Pratique */}
-      <FadeInSection id="pratique" className="py-20 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-4">
-            <span className="text-amber-400">Pratique</span>
-          </h2>
-          <p className="text-gray-400">Section en cours de développement</p>
-        </div>
-      </FadeInSection>
-
-      {/* Section Quiz */}
-      <FadeInSection id="quiz" className="py-20 px-4 bg-slate-900/30">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-4">
-            <span className="text-amber-400">Quiz</span>
-          </h2>
-          <p className="text-gray-400">Section en cours de développement</p>
-        </div>
-      </FadeInSection>
-
-      {/* Section Outils */}
-      <FadeInSection id="outils" className="py-20 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-4">
-            <span className="text-amber-400">Outils</span>
-          </h2>
-          <p className="text-gray-400">Section en cours de développement</p>
-        </div>
-      </FadeInSection>
-
-      {/* Section CH Horlogerie Suisse */}
-      <FadeInSection id="horlogerie-suisse" className="py-20 px-4 bg-slate-900/30">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-4">
-            <span className="text-amber-400">CH Horlogerie Suisse</span>
-          </h2>
-          <p className="text-gray-400">Section en cours de développement</p>
-        </div>
-      </FadeInSection>
-
-      {/* Section Podcasts */}
-      <FadeInSection id="podcasts" className="py-20 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-4">
-            <span className="text-amber-400">Podcasts</span>
-          </h2>
-          <p className="text-gray-400">Section en cours de développement</p>
-        </div>
-      </FadeInSection>
-
-      {/* Section Culture */}
-      <FadeInSection id="culture" className="py-20 px-4 bg-slate-900/30">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-4">
-            <span className="text-amber-400">Culture</span>
-          </h2>
-          <p className="text-gray-400">Section en cours de développement</p>
-        </div>
-      </FadeInSection>
-
-      {/* Section Événements */}
-      <FadeInSection id="evenements" className="py-20 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-4">
-            <span className="text-amber-400">Événements</span>
-          </h2>
-          <p className="text-gray-400">Section en cours de développement</p>
         </div>
       </FadeInSection>
 
