@@ -99,7 +99,8 @@ export default function HorloLearnHome() {
       description: 'Principes fondamentaux, histoire et terminologie horlogère',
       items: ['Cours détaillés', 'Schémas annotés', 'Glossaire illustré'],
       color: 'from-blue-500 to-cyan-500',
-      resources: '850+'
+      resources: '850+',
+      link: '/theorie'
     },
     {
       icon: '🔧',
@@ -107,7 +108,8 @@ export default function HorloLearnHome() {
       description: 'Démontage, remontage et réglage de mouvements',
       items: ['Tutoriels vidéo', 'Plans techniques', 'Guides pas-à-pas'],
       color: 'from-amber-500 to-orange-500',
-      resources: '1,200+'
+      resources: '1,200+',
+      link: '/pratique'
     },
     {
       icon: '✅',
@@ -115,7 +117,8 @@ export default function HorloLearnHome() {
       description: 'Testez vos connaissances avec nos quiz interactifs',
       items: ['Quiz interactifs', 'Correction détaillée', 'Suivi progrès'],
       color: 'from-green-500 to-emerald-500',
-      resources: '450+'
+      resources: '450+',
+      link: '/quiz'
     },
   ]
 
@@ -646,9 +649,9 @@ export default function HorloLearnHome() {
                     ))}
                   </ul>
 
-                  <button className="w-full py-3 border-2 border-amber-400/50 rounded-lg font-semibold hover:bg-amber-500/10 transition-all duration-300">
+                  <Link href={theme.link} className="block w-full py-3 border-2 border-amber-400/50 rounded-lg font-semibold hover:bg-amber-500/10 transition-all duration-300 text-center">
                     Découvrir
-                  </button>
+                  </Link>
                 </div>
               </motion.div>
             ))}
