@@ -20,7 +20,7 @@ export const quizzes = [
         ],
         correctAnswer: 2,
         explanation: 'L\'ETA 2824-2 oscille à 28,800 alternances/heure, soit 4 Hz. C\'est la fréquence standard pour la plupart des mouvements modernes, offrant un excellent compromis entre précision et autonomie de marche.',
-        difficulty: 'facile',
+        difficulty: 'facile' as const,
         category: 'Mouvements',
       },
       {
@@ -34,7 +34,7 @@ export const quizzes = [
         ],
         correctAnswer: 1,
         explanation: 'Un échappement à ancre suisse complet comprend 3 composants principaux : l\'ancre avec ses palettes, la roue d\'échappement avec ses dents, et le plateau (double plateau) fixé sur l\'axe du balancier avec sa cheville.',
-        difficulty: 'moyen',
+        difficulty: 'moyen' as const,
         category: 'Échappement',
       },
       {
@@ -48,7 +48,7 @@ export const quizzes = [
         ],
         correctAnswer: 1,
         explanation: 'L\'échappement a deux fonctions essentielles : diviser le temps en intervalles réguliers en contrôlant le déroulement de la force motrice, et entretenir les oscillations du balancier en lui transmettant de petites impulsions d\'énergie.',
-        difficulty: 'facile',
+        difficulty: 'facile' as const,
         category: 'Théorie',
       },
       {
@@ -62,7 +62,7 @@ export const quizzes = [
         ],
         correctAnswer: 2,
         explanation: 'L\'amplitude optimale d\'un balancier se situe généralement entre 270° et 310°. Une amplitude trop faible indique un manque d\'énergie ou des frottements excessifs, tandis qu\'une amplitude trop élevée peut causer des problèmes de dégagement.',
-        difficulty: 'moyen',
+        difficulty: 'moyen' as const,
         category: 'Réglage',
       },
       {
@@ -76,7 +76,7 @@ export const quizzes = [
         ],
         correctAnswer: 0,
         explanation: 'Le tirage est la composante tangentielle de la force exercée par la dent d\'échappement sur la palette, qui maintient l\'ancre fermement contre sa butée. C\'est un élément essentiel pour la sécurité de l\'échappement.',
-        difficulty: 'difficile',
+        difficulty: 'difficile' as const,
         category: 'Technique avancée',
       },
       {
@@ -90,7 +90,7 @@ export const quizzes = [
         ],
         correctAnswer: 1,
         explanation: 'Une roue d\'échappement suisse standard possède généralement 15 dents. Ce nombre permet un bon équilibre entre la taille de la roue, la sécurité de l\'échappement et la transmission d\'énergie au balancier.',
-        difficulty: 'moyen',
+        difficulty: 'moyen' as const,
         category: 'Composants',
       },
       {
@@ -104,7 +104,7 @@ export const quizzes = [
         ],
         correctAnswer: 2,
         explanation: 'L\'échappement à ancre suisse est supérieur à l\'échappement à cylindre car il offre une meilleure sécurité (tirage), des frottements réduits (échappement à repos) et une meilleure transmission d\'énergie. C\'est pourquoi il a largement remplacé l\'échappement à cylindre.',
-        difficulty: 'moyen',
+        difficulty: 'moyen' as const,
         category: 'Histoire',
       },
       {
@@ -118,7 +118,7 @@ export const quizzes = [
         ],
         correctAnswer: 1,
         explanation: 'Le couple de serrage recommandé pour les vis du coq sur un ETA 2824-2 est de 1.0 à 1.5 Ncm. Un serrage trop faible risque le desserrage, tandis qu\'un serrage excessif peut endommager le filetage ou déformer les pièces.',
-        difficulty: 'difficile',
+        difficulty: 'difficile' as const,
         category: 'Pratique',
       },
       {
@@ -132,7 +132,7 @@ export const quizzes = [
         ],
         correctAnswer: 1,
         explanation: 'Le dégagement est le moment crucial où l\'impulsion du balancier sur la cheville pousse l\'ancre, libérant ainsi la dent de la roue d\'échappement. C\'est à cet instant que la roue transmet une impulsion au balancier via la palette.',
-        difficulty: 'moyen',
+        difficulty: 'moyen' as const,
         category: 'Fonctionnement',
       },
       {
@@ -146,7 +146,7 @@ export const quizzes = [
         ],
         correctAnswer: 2,
         explanation: 'L\'huile spécifique pour échappement, comme la Moebius 9415, est utilisée sur les palettes. Elle a une viscosité adaptée aux hautes vitesses et aux faibles charges de l\'échappement, tout en résistant au vieillissement.',
-        difficulty: 'difficile',
+        difficulty: 'difficile' as const,
         category: 'Lubrification',
       },
     ],
@@ -170,7 +170,7 @@ export const quizzes = [
         ],
         correctAnswer: 1,
         explanation: 'Un calibre désigne le mouvement horloger dans son ensemble, avec toutes ses caractéristiques techniques : dimensions, nombre de rubis, fréquence, autonomie, complications, etc. Par exemple, "ETA 2824-2" est un calibre automatique de 25.6mm.',
-        difficulty: 'facile',
+        difficulty: 'facile' as const,
         category: 'Vocabulaire',
       },
       {
@@ -184,7 +184,7 @@ export const quizzes = [
         ],
         correctAnswer: 1,
         explanation: 'Le barillet est un tambour cylindrique qui contient le ressort moteur. Lorsqu\'on remonte la montre, on enroule ce ressort qui stocke l\'énergie mécanique. En se déroulant progressivement, il fournit l\'énergie nécessaire au fonctionnement du mouvement.',
-        difficulty: 'facile',
+        difficulty: 'facile' as const,
         category: 'Composants',
       },
       {
@@ -198,7 +198,7 @@ export const quizzes = [
         ],
         correctAnswer: 1,
         explanation: 'Un mouvement mécanique de qualité possède généralement entre 15 et 17 rubis. Ces pierres synthétiques sont utilisées comme paliers pour réduire les frottements aux points de pivotement. Un ETA 2824-2 standard a 25 rubis.',
-        difficulty: 'facile',
+        difficulty: 'facile' as const,
         category: 'Technique',
       },
       {
@@ -212,7 +212,7 @@ export const quizzes = [
         ],
         correctAnswer: 1,
         explanation: 'Une montre automatique possède un rotor (masse oscillante) qui tourne librement avec les mouvements du poignet et remonte automatiquement le ressort moteur. Une montre manuelle nécessite un remontage quotidien via la couronne.',
-        difficulty: 'facile',
+        difficulty: 'facile' as const,
         category: 'Types de montres',
       },
       {
@@ -226,7 +226,7 @@ export const quizzes = [
         ],
         correctAnswer: 2,
         explanation: 'La réserve de marche indique la durée pendant laquelle la montre continue de fonctionner après avoir été complètement remontée. Par exemple, l\'ETA 2824-2 offre environ 38 heures de réserve de marche.',
-        difficulty: 'facile',
+        difficulty: 'facile' as const,
         category: 'Caractéristiques',
       },
     ],
@@ -250,7 +250,7 @@ export const quizzes = [
         ],
         correctAnswer: 1,
         explanation: 'Le calibre ETA 2824 a été introduit en 1972 par ETA SA, basé sur le calibre Eterna 1427. La version 2824-2, qui est la plus courante aujourd\'hui, a suivi quelques années plus tard avec des améliorations techniques.',
-        difficulty: 'moyen',
+        difficulty: 'moyen' as const,
         category: 'Histoire',
       },
       {
@@ -264,7 +264,7 @@ export const quizzes = [
         ],
         correctAnswer: 1,
         explanation: 'Le calibre ETA 2824-2 mesure 25.6 mm de diamètre, soit 11.5 lignes françaises. Son épaisseur est de 4.6 mm. Ces dimensions en font un mouvement compact et polyvalent.',
-        difficulty: 'moyen',
+        difficulty: 'moyen' as const,
         category: 'Spécifications',
       },
       {
@@ -278,7 +278,7 @@ export const quizzes = [
         ],
         correctAnswer: 2,
         explanation: 'L\'ETA 2824-2 dispose d\'un système de remontage automatique bidirectionnel. Le rotor remonte le ressort moteur quelle que soit sa direction de rotation, ce qui améliore l\'efficacité du remontage automatique.',
-        difficulty: 'moyen',
+        difficulty: 'moyen' as const,
         category: 'Fonctionnement',
       },
       {
@@ -292,7 +292,7 @@ export const quizzes = [
         ],
         correctAnswer: 2,
         explanation: 'Un ETA 2824-2 de qualité chronométrique est réglé en 5 positions : cadran haut, cadran bas, couronne haut, couronne bas, couronne gauche. Certains calibres de haute précision peuvent même être réglés en 6 positions.',
-        difficulty: 'difficile',
+        difficulty: 'difficile' as const,
         category: 'Réglage',
       },
       {
@@ -306,7 +306,7 @@ export const quizzes = [
         ],
         correctAnswer: 2,
         explanation: 'L\'ETA 2824-2 possède un système de changement de date rapide mais non instantané. Le disque de date bascule en quelques minutes autour de minuit, contrairement aux systèmes instantanés qui changent en une fraction de seconde.',
-        difficulty: 'moyen',
+        difficulty: 'moyen' as const,
         category: 'Complications',
       },
     ],
