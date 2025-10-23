@@ -150,7 +150,14 @@ export default function QuizBattleOnline() {
     });
 
     if (!response.ok) {
-      alert('❌ Code invalide ou partie pleine !');
+      const error = await response.json();
+      if (response.status === 404) {
+        alert('❌ Cette partie n\'existe pas !\n\nVérifie le code ou demande à ton adversaire de créer une partie d\'abord.');
+      } else if (response.status === 400) {
+        alert('⚠️ Cette partie est pleine (2 joueurs max) !');
+      } else {
+        alert('❌ Erreur : ' + (error.error || 'Impossible de rejoindre'));
+      }
       return;
     }
 
@@ -268,7 +275,7 @@ export default function QuizBattleOnline() {
     if (!isHost) return;
 
     const difficulty: 'facile' | 'moyen' | 'difficile' | 'mixte' = 'mixte';
-    const questions = getQuestionsByDifficulty(difficulty);
+    const questions = getQuestionsByDifficulty(difficulty, 10);
 
     await fetch('/api/rooms/start', {
       method: 'POST',
