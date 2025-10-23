@@ -15,31 +15,57 @@ export async function POST(request: NextRequest) {
   try {
     const { roomCode, player } = await request.json();
 
-    // ✅ ATTENTION : on attend la Promise ici
-    const room = await roomStore.get(roomCode);
+    if (!roomCode || !player) {
+      console.log('❌ Missing roomCode or player data.');
+      return NextResponse.json({ error: 'Invalid request data' }, { status: 400 });
+    }
 
+    const code = roomCode.trim().toUpperCase();
+    const room = await roomStore.get(code);
+
+    // ✅ Vérifier si la room existe
     if (!room) {
-      console.log('❌ Room not found:', roomCode);
-      return NextResponse.json({ error: 'Room not found' }, { status: 404 });
+      console.log('❌ Room not found:', code);
+      return NextResponse.json({ error: 'Code invalide ou partie introuvable.' }, { status: 404 });
     }
 
+    // ✅ Vérifier si la room est pleine
     if (room.players.length >= 2) {
-      console.log('❌ Room full:', roomCode);
-      return NextResponse.json({ error: 'Room is full' }, { status: 400 });
+      console.log('⚠️ Room full:', code);
+      return NextResponse.json({ error: 'Partie déjà pleine.' }, { status: 400 });
     }
 
-    // ✅ Ajouter le joueur manuellement (au lieu de .addPlayer pour tracer)
-    room.players.push(player);
-    await roomStore.update(roomCode, room);
+    // ✅ Vérifier si le joueur est déjà dans la partie
+    const alreadyInRoom = room.players.some(p => p.id === player.id);
+    if (alreadyInRoom) {
+      console.log('⚠️ Player already in room:', player.name);
+      return NextResponse.json({ success: true });
+    }
 
-    console.log(`✅ Player joined room ${roomCode}:`, player.name);
+    // ✅ Ajouter le joueur
+    room.players.push({
+      id: player.id,
+      name: player.name || 'Joueur',
+      avatar: player.avatar || '🙂',
+      score: 0,
+      streak: 0,
+      ready: false,
+      currentAnswer: null,
+      hasAnswered: false,
+    });
 
-    // 🔔 Notifier les autres joueurs
-    await pusher.trigger(`room-${roomCode}`, 'player-joined', { player });
+    await roomStore.update(code, room);
+    console.log(`✅ Player joined room ${code}: ${player.name}`);
+
+    // ✅ Notifier via Pusher
+    await pusher.trigger(`room-${code}`, 'player-joined', { player });
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (error: any) {
     console.error('🔥 Error joining room:', error);
-    return NextResponse.json({ error: 'Failed to join room' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Erreur lors de la tentative de rejoindre la partie.' },
+      { status: 500 }
+    );
   }
 }
