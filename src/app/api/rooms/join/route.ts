@@ -1,49 +1,98 @@
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+export const preferredRegion = 'auto';
 
 import { NextRequest, NextResponse } from 'next/server';
 import Pusher from 'pusher';
 import { roomStore } from '@/lib/room-store';
 
+const {
+  PUSHER_APP_ID,
+  NEXT_PUBLIC_PUSHER_KEY,
+  PUSHER_SECRET,
+  NEXT_PUBLIC_PUSHER_CLUSTER,
+} = process.env;
+
 const pusher = new Pusher({
-  appId: process.env.PUSHER_APP_ID || '',
-  key: process.env.NEXT_PUBLIC_PUSHER_KEY || '',
-  secret: process.env.PUSHER_SECRET || '',
-  cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || 'eu',
+  appId: PUSHER_APP_ID ?? '',
+  key: NEXT_PUBLIC_PUSHER_KEY ?? '',
+  secret: PUSHER_SECRET ?? '',
+  cluster: NEXT_PUBLIC_PUSHER_CLUSTER ?? 'eu',
   useTLS: true,
 });
 
 export async function POST(request: NextRequest) {
   try {
-    const { roomCode, player } = await request.json();
-    const normalized = roomCode.trim().toUpperCase();
+    const body = await request.json();
+    const { roomCode, player } = body || {};
 
-    const room = await roomStore.get(normalized);
+    // Validation de l’entrée
+    if (!roomCode || !player || !player.id) {
+      return NextResponse.json(
+        { error: 'Invalid payload' },
+        { status: 400 }
+      );
+    }
+
+    // Récupération de la room
+    const room = await roomStore.get(roomCode);
     if (!room) {
-      console.log('❌ Room not found:', normalized);
-      return NextResponse.json({ error: 'Room not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Room not found' },
+        { status: 404 }
+      );
     }
 
-    if (room.players.length >= 2) {
-      console.log('❌ Room full:', normalized);
-      return NextResponse.json({ error: 'Room is full' }, { status: 400 });
+    // Vérifier si le joueur existe déjà
+    const alreadyJoined = room.players.some((p: any) => p.id === player.id);
+    if (alreadyJoined) {
+      return NextResponse.json(
+        { error: 'Player already in room' },
+        { status: 400 }
+      );
     }
 
-    const already = room.players.find(p => p.id === player.id);
-    if (!already) {
-      room.players.push(player);
-      await roomStore.update(normalized, room);
-      console.log(`✅ Player joined ${normalized}:`, player.name);
+    // Ajouter le joueur
+    const success = await roomStore.addPlayer(roomCode, player);
+    if (!success) {
+      return NextResponse.json(
+        { error: 'Room is full or unavailable' },
+        { status: 403 }
+      );
     }
 
-    await pusher.trigger(`room-${normalized}`, 'player-joined', {
-      player,
-      players: room.players,
-      roomCode: normalized,
+    // Notifier les autres joueurs via Pusher
+    try {
+      await pusher.trigger(`room-${roomCode}`, 'player-joined', { player });
+    } catch (pushError) {
+      console.error('Pusher trigger failed:', pushError);
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: `Player ${player.name} joined room ${roomCode}`,
     });
-
-    return NextResponse.json({ success: true, room });
-  } catch (error) {
-    console.error('🔥 Error joining room:', error);
-    return NextResponse.json({ error: 'Failed to join room' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Error in /api/rooms/join:', error);
+    return NextResponse.json(
+      {
+        error: 'Internal server error',
+        details: error?.message || error,
+      },
+      { status: 500 }
+    );
   }
+}
+
+// --- GET : sert uniquement à empêcher Next de “collecter” la page au build ---
+export async function GET() {
+  return NextResponse.json({
+    status: 'join endpoint active',
+    timestamp: Date.now(),
+  });
+}
+
+// --- HEAD : idem, pour bloquer la pré-rendu ---
+export async function HEAD() {
+  return NextResponse.json({ status: 'ok' });
 }
