@@ -1,67 +1,107 @@
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-export const preferredRegion = 'auto';
+import { Redis } from "@upstash/redis";
 
-import { NextRequest, NextResponse } from 'next/server';
-import Pusher from 'pusher';
-import { roomStore } from '@/lib/room-store';
-
-const { PUSHER_APP_ID, NEXT_PUBLIC_PUSHER_KEY, PUSHER_SECRET, NEXT_PUBLIC_PUSHER_CLUSTER } = process.env;
-
-const pusher = new Pusher({
-  appId: PUSHER_APP_ID ?? '',
-  key: NEXT_PUBLIC_PUSHER_KEY ?? '',
-  secret: PUSHER_SECRET ?? '',
-  cluster: NEXT_PUBLIC_PUSHER_CLUSTER ?? 'eu',
-  useTLS: true,
-});
-
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { roomCode, playerId, answer } = body || {};
-
-    if (!roomCode || !playerId) {
-      return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
-    }
-
-    const room = await roomStore.get(roomCode);
-    if (!room) {
-      return NextResponse.json({ error: 'Room not found' }, { status: 404 });
-    }
-
-    const player = room.players.find((p: any) => p.id === playerId);
-    if (!player) {
-      return NextResponse.json({ error: 'Player not found' }, { status: 404 });
-    }
-
-    // Sauvegarder la réponse du joueur
-    player.currentAnswer = answer ?? null;
-    player.hasAnswered = true;
-
-    await roomStore.update(roomCode, room);
-
-    // Notifier via Pusher
-    try {
-      await pusher.trigger(`room-${roomCode}`, 'player-answered', { playerId, answer });
-    } catch (pushError) {
-      console.error('Pusher trigger failed:', pushError);
-    }
-
-    return NextResponse.json({ success: true });
-  } catch (error: any) {
-    console.error('Error in /api/rooms/answer:', error);
-    return NextResponse.json(
-      { error: 'Internal server error', details: error.message || error },
-      { status: 500 }
-    );
-  }
+export interface Player {
+  id: string;
+  name: string;
+  avatar: string;
+  score: number;
+  streak: number;
+  ready: boolean;
+  currentAnswer: number | null;
+  hasAnswered: boolean;
 }
 
-export async function GET() {
-  return NextResponse.json({ status: 'answer endpoint active' });
+export interface Room {
+  code: string;
+  host: string;
+  players: Player[];
+  gameState: any | null;
+  createdAt: number;
 }
 
-export async function HEAD() {
-  return NextResponse.json({ status: 'ok' });
+// --- Configuration Redis ---
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+const redis =
+  redisUrl && redisToken
+    ? new Redis({ url: redisUrl, token: redisToken })
+    : null;
+
+// --- Fallback local (si Redis absent) ---
+const localRooms = new Map<string, Room>();
+
+export const roomStore = {
+  // Créer une room
+  async create(roomCode: string, host: Player): Promise<Room> {
+    const room: Room = {
+      code: roomCode,
+      host: host.id,
+      players: [host],
+      gameState: null,
+      createdAt: Date.now(),
+    };
+
+    if (redis) {
+      await redis.set(`room:${roomCode}`, room);
+    } else {
+      localRooms.set(roomCode, room);
+    }
+
+    return room;
+  },
+
+  // Obtenir une room
+  async get(roomCode: string): Promise<Room | null> {
+    if (redis) {
+      const room = await redis.get<Room>(`room:${roomCode}`);
+      return room || null;
+    }
+    return localRooms.get(roomCode) || null;
+  },
+
+  // Mettre à jour une room
+  async update(roomCode: string, updatedRoom: Room): Promise<void> {
+    if (redis) {
+      await redis.set(`room:${roomCode}`, updatedRoom);
+    } else {
+      localRooms.set(roomCode, updatedRoom);
+    }
+  },
+
+  // Ajouter un joueur
+  async addPlayer(roomCode: string, player: Player): Promise<boolean> {
+    const room = await this.get(roomCode);
+    if (!room || room.players.length >= 2) return false;
+
+    room.players.push(player);
+    await this.update(roomCode, room);
+    return true;
+  },
+
+  // Supprimer une room
+  async delete(roomCode: string): Promise<void> {
+    if (redis) {
+      await redis.del(`room:${roomCode}`);
+    } else {
+      localRooms.delete(roomCode);
+    }
+  },
+
+  // Nettoyage automatique (fallback local)
+  cleanup(): void {
+    const oneHourAgo = Date.now() - 60 * 60 * 1000;
+    for (const [code, room] of localRooms.entries()) {
+      if (room.createdAt < oneHourAgo) {
+        localRooms.delete(code);
+      }
+    }
+  },
+};
+
+// Supprime les vieilles rooms toutes les 10 minutes (local seulement)
+if (typeof window === "undefined" && !redis) {
+  setInterval(() => roomStore.cleanup(), 10 * 60 * 1000);
 }
+
+export default roomStore;
