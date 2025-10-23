@@ -1,5 +1,7 @@
 // lib/room-store.ts
-import { Redis } from '@upstash/redis';
+// Gestion des rooms avec Upstash Redis (et fallback mémoire pour le dev local)
+
+import { Redis } from "@upstash/redis";
 
 export interface Player {
   id: string;
@@ -20,12 +22,20 @@ export interface Room {
   createdAt: number;
 }
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+// --- Configuration Redis ---
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+const redis =
+  redisUrl && redisToken
+    ? new Redis({ url: redisUrl, token: redisToken })
+    : null;
+
+// --- Fallback local (si Redis absent) ---
+const localRooms = new Map<string, Room>();
 
 export const roomStore = {
+  // Créer une room
   async create(roomCode: string, host: Player): Promise<Room> {
     const room: Room = {
       code: roomCode,
@@ -34,24 +44,65 @@ export const roomStore = {
       gameState: null,
       createdAt: Date.now(),
     };
-    await redis.set(`room:${roomCode}`, room);
+
+    if (redis) {
+      await redis.set(`room:${roomCode}`, room);
+    } else {
+      localRooms.set(roomCode, room);
+    }
+
     return room;
   },
 
+  // Obtenir une room
   async get(roomCode: string): Promise<Room | null> {
-    return await redis.get<Room>(`room:${roomCode}`);
+    if (redis) {
+      const room = await redis.get<Room>(`room:${roomCode}`);
+      return room || null;
+    }
+    return localRooms.get(roomCode) || null;
   },
 
+  // Mettre à jour une room
+  async update(roomCode: string, updatedRoom: Room): Promise<void> {
+    if (redis) {
+      await redis.set(`room:${roomCode}`, updatedRoom);
+    } else {
+      localRooms.set(roomCode, updatedRoom);
+    }
+  },
+
+  // Ajouter un joueur
   async addPlayer(roomCode: string, player: Player): Promise<boolean> {
-    const room = await redis.get<Room>(`room:${roomCode}`);
+    const room = await this.get(roomCode);
     if (!room || room.players.length >= 2) return false;
 
     room.players.push(player);
-    await redis.set(`room:${roomCode}`, room);
+    await this.update(roomCode, room);
     return true;
   },
 
+  // Supprimer une room
   async delete(roomCode: string): Promise<void> {
-    await redis.del(`room:${roomCode}`);
+    if (redis) {
+      await redis.del(`room:${roomCode}`);
+    } else {
+      localRooms.delete(roomCode);
+    }
+  },
+
+  // Nettoyage automatique (fallback local)
+  cleanup(): void {
+    const oneHourAgo = Date.now() - 60 * 60 * 1000;
+    for (const [code, room] of localRooms.entries()) {
+      if (room.createdAt < oneHourAgo) {
+        localRooms.delete(code);
+      }
+    }
   },
 };
+
+// Supprime les vieilles rooms toutes les 10 minutes (local seulement)
+if (typeof window === "undefined" && !redis) {
+  setInterval(() => roomStore.cleanup(), 10 * 60 * 1000);
+}
