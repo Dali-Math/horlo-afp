@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
   try {
     const { roomCode, playerId, answer, timeLeft } = await request.json();
 
-    const room = roomStore.get(roomCode);
+    const room = await roomStore.get(roomCode);
 
     if (!room || !room.gameState) {
       return NextResponse.json({ error: 'Room or game not found' }, { status: 404 });
@@ -44,19 +44,21 @@ export async function POST(request: NextRequest) {
 
       room.players.forEach(player => {
         if (player.currentAnswer === correctAnswer) {
-          // Bonne réponse
-          const basePoints = currentQuestion.difficulty === 'facile' ? 100 :
-                             currentQuestion.difficulty === 'moyen' ? 200 : 300;
-          const bonusTime = timeLeft * 2; // Bonus de temps
+          const basePoints =
+            currentQuestion.difficulty === 'facile'
+              ? 100
+              : currentQuestion.difficulty === 'moyen'
+              ? 200
+              : 300;
+          const bonusTime = timeLeft * 2;
           player.score += basePoints + bonusTime;
           player.streak += 1;
         } else {
-          // Mauvaise réponse
           player.streak = 0;
         }
       });
 
-      roomStore.update(roomCode, room);
+      await roomStore.update(roomCode, room);
 
       // Envoyer les résultats
       await pusher.trigger(`room-${roomCode}`, 'question-result', {
@@ -68,37 +70,34 @@ export async function POST(request: NextRequest) {
 
       // Attendre 3 secondes puis passer à la question suivante
       setTimeout(async () => {
-        const updatedRoom = roomStore.get(roomCode);
+        const updatedRoom = await roomStore.get(roomCode);
         if (!updatedRoom || !updatedRoom.gameState) return;
 
         const nextIndex = updatedRoom.gameState.currentQuestionIndex + 1;
 
         if (nextIndex < updatedRoom.gameState.questions.length) {
-          // Question suivante
           updatedRoom.gameState.currentQuestionIndex = nextIndex;
           updatedRoom.players.forEach(p => {
             p.hasAnswered = false;
             p.currentAnswer = null;
           });
-          roomStore.update(roomCode, updatedRoom);
+
+          await roomStore.update(roomCode, updatedRoom);
 
           await pusher.trigger(`room-${roomCode}`, 'next-question', {
             question: updatedRoom.gameState.questions[nextIndex],
             index: nextIndex,
           });
         } else {
-          // Partie terminée
-          const winner = updatedRoom.players[0].score > updatedRoom.players[1].score
-            ? updatedRoom.players[0]
-            : updatedRoom.players[0].score < updatedRoom.players[1].score
-            ? updatedRoom.players[1]
-            : null; // Égalité
+          const winner =
+            updatedRoom.players[0].score > updatedRoom.players[1].score
+              ? updatedRoom.players[0]
+              : updatedRoom.players[0].score < updatedRoom.players[1].score
+              ? updatedRoom.players[1]
+              : null;
 
-          await pusher.trigger(`room-${roomCode}`, 'game-over', {
-            winner,
-          });
+          await pusher.trigger(`room-${roomCode}`, 'game-over', { winner });
 
-          // Supprimer la room après 30 secondes
           setTimeout(() => {
             roomStore.delete(roomCode);
           }, 30000);
