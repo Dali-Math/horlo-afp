@@ -1,4 +1,5 @@
-// app/api/rooms/create/route.ts
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from "next/server";
 import Pusher from "pusher";
 import { roomStore } from "@/lib/room-store";
@@ -15,8 +16,9 @@ export async function POST(request: NextRequest) {
   try {
     const { roomCode, host } = await request.json();
 
-    // 🔒 Vérifier si la room existe déjà
+    // ✅ On attend explicitement la promesse
     const existing = await roomStore.get(roomCode);
+
     if (existing) {
       return NextResponse.json(
         { error: "Room already exists" },
@@ -24,9 +26,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ✅ Créer la nouvelle room
+    // ✅ Création propre de la room
     const room = await roomStore.create(roomCode, host);
 
+    // ✅ Notification Pusher
     await pusher.trigger(`room-${roomCode}`, "room-created", {
       roomCode,
       host,
@@ -34,7 +37,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, room });
   } catch (error) {
-    console.error("Error creating room:", error);
+    console.error("🔥 Error creating room:", error);
     return NextResponse.json(
       { error: "Failed to create room" },
       { status: 500 }
