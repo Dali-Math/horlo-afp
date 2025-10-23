@@ -1,4 +1,5 @@
-// app/api/rooms/answer/route.ts
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import Pusher from 'pusher';
 import { roomStore } from '@/lib/room-store';
@@ -21,24 +22,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Room or game not found' }, { status: 404 });
     }
 
-    // Enregistrer la réponse
     const player = room.players.find(p => p.id === playerId);
     if (player) {
       player.currentAnswer = answer;
       player.hasAnswered = true;
     }
 
-    // Notifier que le joueur a répondu
     await pusher.trigger(`room-${roomCode}`, 'player-answered', {
       playerId,
       answer,
     });
 
-    // Vérifier si les 2 joueurs ont répondu
     const allAnswered = room.players.every(p => p.hasAnswered);
 
     if (allAnswered) {
-      // Calculer les scores
       const currentQuestion = room.gameState.questions[room.gameState.currentQuestionIndex];
       const correctAnswer = currentQuestion.correctAnswer;
 
@@ -60,7 +57,6 @@ export async function POST(request: NextRequest) {
 
       await roomStore.update(roomCode, room);
 
-      // Envoyer les résultats
       await pusher.trigger(`room-${roomCode}`, 'question-result', {
         correctAnswer,
         player1Score: room.players[0].score,
@@ -68,7 +64,6 @@ export async function POST(request: NextRequest) {
         player1Id: room.players[0].id,
       });
 
-      // Attendre 3 secondes puis passer à la question suivante
       setTimeout(async () => {
         const updatedRoom = await roomStore.get(roomCode);
         if (!updatedRoom || !updatedRoom.gameState) return;
