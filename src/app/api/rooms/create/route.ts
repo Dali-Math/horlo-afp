@@ -1,6 +1,7 @@
 // app/api/rooms/create/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import Pusher from 'pusher';
+import { roomStore } from '@/lib/room-store';
 
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID || '',
@@ -10,21 +11,12 @@ const pusher = new Pusher({
   useTLS: true,
 });
 
-// Store rooms in memory (en production, utilisez Redis ou une DB)
-const rooms = new Map<string, any>();
-
 export async function POST(request: NextRequest) {
   try {
     const { roomCode, host } = await request.json();
 
     // Créer la room
-    rooms.set(roomCode, {
-      code: roomCode,
-      host: host.id,
-      players: [host],
-      gameState: null,
-      createdAt: Date.now(),
-    });
+    roomStore.create(roomCode, host);
 
     // Trigger event
     await pusher.trigger(`room-${roomCode}`, 'room-created', {
