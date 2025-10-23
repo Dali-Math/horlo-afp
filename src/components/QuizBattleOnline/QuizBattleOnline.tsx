@@ -268,7 +268,7 @@ export default function QuizBattleOnline() {
     if (!isHost) return;
 
     const difficulty: 'facile' | 'moyen' | 'difficile' | 'mixte' = 'mixte';
-    const questions = getQuestionsByDifficulty(difficulty, 10);
+    const questions = getQuestionsByDifficulty(difficulty);
 
     await fetch('/api/rooms/start', {
       method: 'POST',
