@@ -1,3 +1,4 @@
+
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
@@ -45,6 +46,7 @@ const FadeInSection = ({ id, children, className = "" }: { id?: string; children
 // --- Page Principale ---
 export default function HorloLearnHome() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [time, setTime] = useState(new Date())
   const [onlineUsers] = useState(48)
   const { scrollYProgress } = useScroll()
@@ -63,11 +65,23 @@ export default function HorloLearnHome() {
   const hoursDegrees = ((time.getHours() % 12 + time.getMinutes() / 60) / 12) * 360
 
   const navigationLinks = [
-    { label: 'Accueil', href: '#accueil' },
+    { 
+      label: 'Théorie', 
+      href: '#theorie', 
+      hasDropdown: true,
+      subLinks: [
+        { label: 'Lecture de plan', href: '/theorie/lecture-de-plan' },
+      ]
+    },
+    { label: 'Pratique', href: '#pratique' },
+    { label: 'Quiz', href: '#quiz' },
+    { label: 'Outils', href: '#outils' },
     { label: 'Ressources', href: '#ressources' },
+    { label: 'CH Horlogerie Suisse', href: '#horlogerie-suisse' },
+    { label: 'Podcasts', href: '#podcasts' },
+    { label: 'Culture', href: '#culture' },
+    { label: 'Événements', href: '#evenements' },
     { label: 'Communauté', href: '#communaute' },
-    { label: 'Actualités', href: '#actualites' },
-    { label: 'Contribuer', href: '#contribuer' },
   ]
 
   const stats = [
@@ -184,173 +198,200 @@ export default function HorloLearnHome() {
         </motion.div>
       </div>
 
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-slate-950/80 backdrop-blur-xl z-50 border-b border-amber-500/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+      {/* Navigation - Responsive avec logo à gauche et menu à droite */}
+      <nav className="fixed top-0 w-full bg-black z-50 border-b border-gray-800">
+        <div className="w-full px-8 lg:px-16">
+          <div className="flex items-center h-16">
             
-            {/* Logo */}
-            <div className="flex items-center space-x-3">
-              <div className="relative w-12 h-12">
+            {/* Logo HorloLearn - Vraiment à gauche */}
+            <a href="#accueil" className="flex items-center space-x-3 mr-auto">
+              <div className="relative w-10 h-10">
                 <motion.svg
                   viewBox="0 0 50 50"
                   className="w-full h-full"
                   animate={{ rotate: 360 }}
                   transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                 >
-                  <circle cx="25" cy="25" r="22" fill="none" stroke="url(#gradient)" strokeWidth="1.5" />
-                  <circle cx="25" cy="25" r="18" fill="none" stroke="url(#gradient)" strokeWidth="1" opacity="0.5" />
-                  <defs>
-                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#f59e0b" />
-                      <stop offset="100%" stopColor="#d97706" />
-                    </linearGradient>
-                  </defs>
+                  <circle cx="25" cy="25" r="23" fill="none" stroke="#f59e0b" strokeWidth="1" />
                   {[...Array(12)].map((_, i) => (
-                    <line key={i} x1="25" y1="5" x2="25" y2="9" stroke="#f59e0b" strokeWidth="1"
-                      style={{ transform: `rotate(${i * 30}deg)`, transformOrigin: '25px 25px' }} />
+                    <circle 
+                      key={i} 
+                      cx={25 + 19 * Math.cos((i * 30 - 90) * Math.PI / 180)} 
+                      cy={25 + 19 * Math.sin((i * 30 - 90) * Math.PI / 180)} 
+                      r="1.5" 
+                      fill="#f59e0b" 
+                    />
                   ))}
                 </motion.svg>
               </div>
-              <div>
-                <h1 className="text-2xl font-bold">
+              <div className="flex flex-col">
+                <span className="text-xl font-bold leading-tight">
                   <span className="text-amber-400">Horlo</span>
                   <span className="text-white">Learn</span>
-                </h1>
-                <p className="text-xs text-amber-300/70">Passion & Découverte</p>
+                </span>
+                <span className="text-xs text-gray-400 leading-tight">Passion & Découverte</span>
               </div>
-            </div>
+            </a>
 
-            {/* Navigation Desktop */}
-            <div className="hidden md:flex items-center space-x-8 font-medium text-sm">
-              {navigationLinks.map((link) => (
-                <a 
-                  key={link.label}
-                  href={link.href} 
-                  className="text-gray-300 hover:text-amber-400 transition-colors relative group"
+            {/* Navigation Desktop - Bien espacé */}
+            <div className="hidden lg:flex items-center space-x-10 flex-1 justify-center ml-12">
+              {navigationLinks.map((link, index) => (
+                <div 
+                  key={index}
+                  className="relative"
+                  onMouseEnter={() => link.hasDropdown && setOpenDropdown(link.label)}
+                  onMouseLeave={() => setOpenDropdown(null)}
                 >
-                  {link.label}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-400 group-hover:w-full transition-all duration-300" />
-                </a>
+                  <a
+                    href={link.href}
+                    className="text-white text-sm hover:text-gray-300 transition-colors duration-200 flex items-center whitespace-nowrap"
+                  >
+                    {link.label}
+                    {link.hasDropdown && <span className="ml-1 text-xs">▼</span>}
+                  </a>
+
+                  {/* Menu déroulant */}
+                  {link.hasDropdown && link.subLinks && openDropdown === link.label && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute top-full left-0 mt-2 w-56 bg-gray-900 border border-gray-800 rounded-lg shadow-xl py-2 z-50"
+                    >
+                      {link.subLinks.map((subLink, subIndex) => (
+                        <a
+                          key={subIndex}
+                          href={subLink.href}
+                          className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-amber-400 transition-colors duration-200"
+                        >
+                          {subLink.label}
+                        </a>
+                      ))}
+                    </motion.div>
+                  )}
+                </div>
               ))}
-              <button className="flex items-center space-x-2 px-6 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full hover:shadow-lg hover:shadow-amber-500/50 transition-all duration-300 font-semibold">
-                <Heart className="w-4 h-4" />
-                <span>Contribuer</span>
-              </button>
             </div>
 
-            {/* Mobile Menu Button */}
-            <div className="md:hidden">
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-amber-400">
-                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </button>
-            </div>
+            {/* Bouton Menu Mobile - À droite */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-2 text-white hover:text-gray-300 transition-colors ml-auto"
+              aria-label="Menu"
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Menu Mobile Déroulant */}
         {isMenuOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-slate-900/95 border-t border-amber-500/20 px-4 py-4 space-y-3"
+            className="lg:hidden bg-black border-t border-gray-800"
           >
-            {navigationLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="block text-gray-300 hover:text-amber-400 transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {link.label}
-              </a>
-            ))}
-            <button className="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold mt-4 flex items-center justify-center space-x-2">
-              <Heart className="w-4 h-4" />
-              <span>Contribuer</span>
-            </button>
+            <div className="px-4 py-4 space-y-1">
+              {navigationLinks.map((link, index) => (
+                <div key={index}>
+                  <a
+                    href={link.href}
+                    onClick={() => !link.hasDropdown && setIsMenuOpen(false)}
+                    className="block px-4 py-3 text-white hover:text-gray-300 hover:bg-gray-900 rounded transition-colors duration-200"
+                  >
+                    {link.label}
+                    {link.hasDropdown && <span className="ml-2 text-xs">▼</span>}
+                  </a>
+                  
+                  {/* Sous-menu mobile */}
+                  {link.hasDropdown && link.subLinks && (
+                    <div className="ml-4 mt-1 space-y-1">
+                      {link.subLinks.map((subLink, subIndex) => (
+                        <a
+                          key={subIndex}
+                          href={subLink.href}
+                          onClick={() => setIsMenuOpen(false)}
+                          className="block px-4 py-2 text-sm text-gray-400 hover:text-amber-400 hover:bg-gray-900 rounded transition-colors duration-200"
+                        >
+                          {subLink.label}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </motion.div>
         )}
       </nav>
 
       {/* Hero Section */}
-      <section id="accueil" className="relative min-h-screen flex items-center justify-center pt-20 px-4">
-        
-        {/* Effets lumineux */}
-        <div className="absolute inset-0">
-          <motion.div 
-            animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-            transition={{ duration: 8, repeat: Infinity }}
-            className="absolute top-20 left-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl"
-          />
-          <motion.div 
-            animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.15, 0.1] }}
-            transition={{ duration: 10, repeat: Infinity, delay: 1 }}
-            className="absolute bottom-20 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"
-          />
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+      <section id="accueil" className="relative min-h-screen flex items-center justify-center px-4 pt-20">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
           
-          {/* Texte Hero */}
-          <motion.div 
+          {/* Colonne Texte */}
+          <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1 }}
-            className="space-y-8"
+            transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="inline-flex items-center space-x-2 px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-full backdrop-blur-sm"
+              className="inline-flex items-center px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full mb-8"
             >
-              <Radio className="w-4 h-4 text-green-400 animate-pulse" />
-              <span className="text-sm text-green-300">{onlineUsers} passionnés en ligne</span>
+              <Sparkles className="w-5 h-5 text-amber-400 mr-2" />
+              <span className="text-amber-400 font-semibold text-sm">L'horlogerie suisse accessible à tous</span>
             </motion.div>
 
-            <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-              L'horlogerie suisse{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500">
-                n'a jamais été aussi accessible
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+              <span className="text-white">Passion & Découverte</span>
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500">
+                Horlogère Suisse
               </span>
             </h1>
 
-            <p className="text-xl text-gray-300 leading-relaxed max-w-xl">
-              Explorez <span className="text-amber-400 font-bold">2,500+ ressources</span> partagées par des passionnés pour des passionnés. 
-              Documents techniques, vidéos, guides pratiques — 100% gratuit.
+            <p className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
+              Explorez librement ressources, tutoriels et savoirs horlogers partagés par des <span className="text-amber-400 font-semibold">passionnés</span> pour des <span className="text-amber-400 font-semibold">passionnés</span>
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <motion.button 
+            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+              <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="group px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full font-semibold hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 flex items-center justify-center"
+                className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold text-lg hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 flex items-center justify-center"
               >
-                <Sparkles className="mr-2 w-5 h-5" />
-                Explorer maintenant
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                Commencer l'exploration
+                <ArrowRight className="ml-2 w-5 h-5" />
               </motion.button>
 
-              <motion.button 
+              <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 border-2 border-amber-400/50 rounded-full font-semibold hover:bg-amber-500/10 transition-all duration-300 flex items-center justify-center"
+                className="px-8 py-4 border-2 border-amber-400/50 rounded-lg font-semibold text-lg hover:bg-amber-500/10 transition-all duration-300 flex items-center justify-center"
               >
-                <Users className="mr-2 w-5 h-5" />
-                Rejoindre la communauté
+                <PlayCircle className="mr-2 w-6 h-6" />
+                Voir la démo
               </motion.button>
             </div>
 
-            {/* Mini badges */}
-            <div className="flex flex-wrap gap-4 pt-4">
-              {['100% Gratuit', 'Pas d\'inscription', 'Partage communautaire'].map((feature, i) => (
-                <div key={i} className="flex items-center space-x-2 text-sm bg-slate-800/50 px-4 py-2 rounded-full border border-amber-500/20">
-                  <Heart className="w-4 h-4 text-amber-400" />
-                  <span className="text-gray-300">{feature}</span>
-                </div>
-              ))}
+            {/* Badges de confiance */}
+            <div className="flex flex-wrap items-center gap-6 text-sm">
+              <div className="flex items-center space-x-2 text-gray-400">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                <span><span className="text-white font-semibold">{onlineUsers}</span> passionnés en ligne</span>
+              </div>
+              <div className="flex items-center space-x-2 text-gray-400">
+                <Heart className="w-5 h-5 text-red-400" />
+                <span className="text-white font-semibold">100% Gratuit</span>
+              </div>
+              <div className="flex items-center space-x-2 text-gray-400">
+                <span className="text-2xl">🇨🇭</span>
+                <span>Made in Switzerland</span>
+              </div>
             </div>
           </motion.div>
 
@@ -457,45 +498,47 @@ export default function HorloLearnHome() {
             </div>
           </motion.div>
         </div>
+
+        {/* Flèche de scroll */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+          className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+        >
+          <ChevronRight className="w-8 h-8 text-amber-400 rotate-90" />
+        </motion.div>
       </section>
 
-      {/* Section d’introduction inspirée du site original */}
-<FadeInSection className="py-32 text-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-  <div className="max-w-3xl mx-auto px-4">
-    <div className="inline-flex items-center space-x-2 px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full mb-8">
-      <Clock className="w-4 h-4 text-amber-400" />
-      <span className="text-sm text-amber-300">Bienvenue dans l'univers horloger</span>
-    </div>
+      {/* Section d'introduction - Bienvenue dans l'univers horloger */}
+      <FadeInSection className="py-32 text-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+        <div className="max-w-3xl mx-auto px-4">
+          <div className="inline-flex items-center space-x-2 px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full mb-8">
+            <Clock className="w-4 h-4 text-amber-400" />
+            <span className="text-sm text-amber-300">Bienvenue dans l'univers horloger</span>
+          </div>
 
-    <h2 className="text-5xl md:text-6xl font-bold mb-6 text-amber-400">
-      Le Temps à l'État Pur
-    </h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500">
+            Le Temps à l'État Pur
+          </h2>
 
-    <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-2xl mx-auto">
-      Plongez dans l'univers fascinant de l'horlogerie. Explorez l'histoire,
-      maîtrisez les techniques, et découvrez les secrets de ces merveilles
-      mécaniques qui battent au rythme du temps.
-    </p>
-  </div>
-</FadeInSection>
+          <p className="text-xl text-gray-300 leading-relaxed">
+            Plongez dans l'univers fascinant de l'horlogerie. Explorez l'histoire,
+            maîtrisez les techniques, et découvrez les secrets de ces merveilles
+            mécaniques qui battent au rythme du temps.
+          </p>
+        </div>
+      </FadeInSection>
 
-
-      {/* Section Ressources Featured */}
+      {/* Section Ressources Phares */}
       <FadeInSection id="ressources" className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <motion.span 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              className="text-amber-400 font-semibold tracking-wider uppercase text-sm"
-            >
-              Ressources Populaires
-            </motion.span>
-            <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6">
-              Partagées par la <span className="text-amber-400">Communauté</span>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Ressources <span className="text-amber-400">Phares</span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto text-lg">
-              Des documents techniques de qualité professionnelle, gratuits et accessibles à tous
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Découvrez nos contenus les plus appréciés par la communauté
             </p>
           </div>
 
@@ -505,18 +548,22 @@ export default function HorloLearnHome() {
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2 }}
+                transition={{ delay: index * 0.15 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -10 }}
                 className="group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl overflow-hidden border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300"
               >
-                <div className="relative p-8">
-                  {/* Badge + Type */}
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-xs font-bold text-amber-300">
-                      {resource.badge}
-                    </span>
-                    <span className="px-3 py-1 bg-blue-500/20 border border-blue-500/30 rounded-full text-xs font-bold text-blue-300">
+                <div className="absolute top-4 right-4 z-10">
+                  <span className="px-3 py-1 bg-amber-500/90 text-white text-xs font-bold rounded-full">
+                    {resource.badge}
+                  </span>
+                </div>
+
+                <div className="p-8">
+                  <div className="flex items-center space-x-3 mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center">
+                      <FileText className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-sm font-bold text-amber-400 uppercase tracking-wider">
                       {resource.type}
                     </span>
                   </div>
@@ -525,54 +572,43 @@ export default function HorloLearnHome() {
                     {resource.title}
                   </h3>
 
-                  <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+                  <p className="text-gray-400 mb-6 text-sm leading-relaxed">
                     {resource.description}
                   </p>
 
-                  <div className="space-y-3 mb-6 text-sm text-gray-500">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <Users className="w-4 h-4 mr-2 text-amber-400" />
-                        <span>Par {resource.author}</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Download className="w-4 h-4 mr-2 text-green-400" />
-                        <span>{resource.downloads}</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="w-4 h-4 mr-2 text-amber-400" />
-                      <span>Lecture : {resource.readTime}</span>
-                    </div>
+                  <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+                    <span className="flex items-center">
+                      <Users className="w-4 h-4 mr-1" />
+                      {resource.author}
+                    </span>
+                    <span>{resource.readTime}</span>
                   </div>
 
-                  <button className="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-amber-500/50 transition-all duration-300 flex items-center justify-center group/btn">
-                    <Download className="mr-2 w-5 h-5 group-hover/btn:translate-y-1 transition-transform" />
-                    Télécharger gratuitement
-                  </button>
+                  <div className="flex items-center justify-between pt-6 border-t border-amber-500/10">
+                    <div className="flex items-center text-sm text-gray-400">
+                      <Download className="w-4 h-4 mr-2 text-amber-400" />
+                      {resource.downloads} téléchargements
+                    </div>
+                    <button className="text-amber-400 font-semibold hover:text-amber-300 transition-colors flex items-center">
+                      Voir <ArrowRight className="ml-1 w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <button className="px-8 py-4 border-2 border-amber-400/50 rounded-full font-semibold hover:bg-amber-500/10 transition-all duration-300 inline-flex items-center">
-              Voir toutes les ressources
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </button>
           </div>
         </div>
       </FadeInSection>
 
       {/* Section Thématiques */}
-      <FadeInSection className="py-20 px-4 bg-slate-900/30">
+      <FadeInSection id="communaute" className="py-20 px-4 bg-slate-900/30">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Explorer par <span className="text-amber-400">Thématique</span>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Explorez par <span className="text-amber-400">Thématique</span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto text-lg">
-              Des ressources organisées pour progresser à votre rythme
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Une bibliothèque vivante organisée pour votre apprentissage
             </p>
           </div>
 
@@ -580,16 +616,16 @@ export default function HorloLearnHome() {
             {thematiques.map((theme, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                whileHover={{ scale: 1.05 }}
-                className="relative bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300 overflow-hidden group"
+                whileHover={{ y: -10 }}
+                className="relative group"
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${theme.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+                <div className={`absolute inset-0 bg-gradient-to-br ${theme.color} opacity-10 group-hover:opacity-20 rounded-2xl blur-xl transition-opacity duration-300`} />
                 
-                <div className="relative z-10">
+                <div className="relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 rounded-2xl p-8 border border-amber-500/10 group-hover:border-amber-500/30 transition-all duration-300 backdrop-blur-sm">
                   <div className="flex items-center justify-between mb-6">
                     <div className="text-5xl">{theme.icon}</div>
                     <span className="px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-xs font-bold text-amber-300">
@@ -658,7 +694,7 @@ export default function HorloLearnHome() {
       </FadeInSection>
 
       {/* Section Newsletter */}
-      <FadeInSection className="py-20 px-4 bg-slate-900/30">
+      <FadeInSection id="contribuer" className="py-20 px-4 bg-slate-900/30">
         <div className="max-w-4xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}

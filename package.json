@@ -27,7 +27,11 @@
     "next-themes": "^0.4.6",
     "node-fetch": "^3.3.2",
     "pdfjs-dist": "^3.11.174",
+<<<<<<< HEAD
     "pusher": "^5.2.0",
+=======
+    "pusher": "^5.1.2",
+>>>>>>> 18d58ff437f1b5f5d56d867fd58f5c4ef0461b50
     "pusher-js": "^8.4.0",
     "react": "^18",
     "react-dom": "^18",
