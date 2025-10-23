@@ -1,98 +1,73 @@
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-export const preferredRegion = 'auto';
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const preferredRegion = "auto";
+export const revalidate = 0; // empêche tout pré-rendu
 
-import { NextRequest, NextResponse } from 'next/server';
-import Pusher from 'pusher';
-import { roomStore } from '@/lib/room-store';
+import { NextRequest, NextResponse } from "next/server";
+import { roomStore } from "@/lib/room-store";
 
-const {
-  PUSHER_APP_ID,
-  NEXT_PUBLIC_PUSHER_KEY,
-  PUSHER_SECRET,
-  NEXT_PUBLIC_PUSHER_CLUSTER,
-} = process.env;
-
-const pusher = new Pusher({
-  appId: PUSHER_APP_ID ?? '',
-  key: NEXT_PUBLIC_PUSHER_KEY ?? '',
-  secret: PUSHER_SECRET ?? '',
-  cluster: NEXT_PUBLIC_PUSHER_CLUSTER ?? 'eu',
-  useTLS: true,
-});
-
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { roomCode, player } = body || {};
+    const { searchParams } = new URL(request.url);
+    const roomCode = searchParams.get("code");
 
-    // Validation de l’entrée
-    if (!roomCode || !player || !player.id) {
-      return NextResponse.json(
-        { error: 'Invalid payload' },
-        { status: 400 }
-      );
+    if (!roomCode) {
+      // Retour léger = pas de data collect
+      return new Response("Debug endpoint active", {
+        status: 200,
+        headers: { "Content-Type": "text/plain" },
+      });
     }
 
-    // Récupération de la room
     const room = await roomStore.get(roomCode);
     if (!room) {
       return NextResponse.json(
-        { error: 'Room not found' },
+        { error: "Room not found", code: roomCode },
         { status: 404 }
       );
     }
 
-    // Vérifier si le joueur existe déjà
-    const alreadyJoined = room.players.some((p: any) => p.id === player.id);
-    if (alreadyJoined) {
-      return NextResponse.json(
-        { error: 'Player already in room' },
-        { status: 400 }
-      );
-    }
-
-    // Ajouter le joueur
-    const success = await roomStore.addPlayer(roomCode, player);
-    if (!success) {
-      return NextResponse.json(
-        { error: 'Room is full or unavailable' },
-        { status: 403 }
-      );
-    }
-
-    // Notifier les autres joueurs via Pusher
-    try {
-      await pusher.trigger(`room-${roomCode}`, 'player-joined', { player });
-    } catch (pushError) {
-      console.error('Pusher trigger failed:', pushError);
-    }
-
     return NextResponse.json({
-      success: true,
-      message: `Player ${player.name} joined room ${roomCode}`,
+      code: room.code,
+      players: room.players.length,
+      host: room.host,
+      createdAt: room.createdAt,
+      hasGameState: !!room.gameState,
     });
   } catch (error: any) {
-    console.error('Error in /api/rooms/join:', error);
+    console.error("Error in /api/debug/rooms:", error);
     return NextResponse.json(
-      {
-        error: 'Internal server error',
-        details: error?.message || error,
-      },
+      { error: "Internal server error", details: error?.message || error },
       { status: 500 }
     );
   }
 }
 
-// --- GET : sert uniquement à empêcher Next de “collecter” la page au build ---
-export async function GET() {
-  return NextResponse.json({
-    status: 'join endpoint active',
-    timestamp: Date.now(),
-  });
+export async function DELETE(request: NextRequest) {
+  try {
+    const { roomCode } = await request.json();
+    if (!roomCode) {
+      return NextResponse.json(
+        { error: "Missing roomCode" },
+        { status: 400 }
+      );
+    }
+
+    await roomStore.delete(roomCode);
+    return NextResponse.json({
+      success: true,
+      message: `Room ${roomCode} deleted.`,
+    });
+  } catch (error: any) {
+    console.error("Error deleting room:", error);
+    return NextResponse.json(
+      { error: "Failed to delete room", details: error?.message || error },
+      { status: 500 }
+    );
+  }
 }
 
-// --- HEAD : idem, pour bloquer la pré-rendu ---
+// --- pour empêcher Next de collecter des données pendant le build ---
 export async function HEAD() {
-  return NextResponse.json({ status: 'ok' });
+  return new Response("ok", { status: 200 });
 }
