@@ -35,11 +35,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Player not found' }, { status: 404 });
     }
 
-    // Sauvegarder la réponse du joueur
-    player.answer = answer;
+    // ✅ Sauvegarder la réponse du joueur selon ton modèle
+    player.currentAnswer = answer ?? null;
+    player.hasAnswered = true;
+
     await roomStore.update(roomCode, room);
 
-    // Notifier via Pusher
+    // ✅ Notifier via Pusher
     try {
       await pusher.trigger(`room-${roomCode}`, 'player-answered', { playerId, answer });
     } catch (pushError) {
