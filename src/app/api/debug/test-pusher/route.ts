@@ -1,33 +1,37 @@
-import { NextResponse } from 'next/server';
-import Pusher from 'pusher';
+import { NextResponse } from "next/server";
+import Pusher from "pusher";
+
+const { PUSHER_APP_ID, NEXT_PUBLIC_PUSHER_KEY, PUSHER_SECRET, NEXT_PUBLIC_PUSHER_CLUSTER } = process.env;
+
+if (!PUSHER_APP_ID || !NEXT_PUBLIC_PUSHER_KEY || !PUSHER_SECRET || !NEXT_PUBLIC_PUSHER_CLUSTER) {
+  console.error("❌ Variables Pusher manquantes !");
+}
 
 const pusher = new Pusher({
-  appId: process.env.PUSHER_APP_ID || '',
-  key: process.env.NEXT_PUBLIC_PUSHER_KEY || '',
-  secret: process.env.PUSHER_SECRET || '',
-  cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || 'eu',
+  appId: PUSHER_APP_ID!,
+  key: NEXT_PUBLIC_PUSHER_KEY!,
+  secret: PUSHER_SECRET!,
+  cluster: NEXT_PUBLIC_PUSHER_CLUSTER!,
   useTLS: true,
 });
 
 export async function GET() {
   try {
-    // On envoie un petit message de test
-    const channel = 'test-channel';
-    const event = 'test-event';
-    const data = { message: '✅ Pusher fonctionne parfaitement !' };
-
-    await pusher.trigger(channel, event, data);
+    // Test simple d'envoi
+    await pusher.trigger("debug-channel", "test-event", {
+      message: "✅ Pusher fonctionne parfaitement !",
+      timestamp: new Date().toISOString(),
+    });
 
     return NextResponse.json({
       success: true,
-      message: '✅ Test envoyé à Pusher avec succès',
-      details: { channel, event, data },
+      message: "✅ Test envoyé à Pusher avec succès",
     });
-  } catch (error) {
-    console.error('❌ Erreur Pusher:', error);
-    return NextResponse.json({
-      success: false,
-      error: String(error),
-    }, { status: 500 });
+  } catch (error: any) {
+    console.error("🔥 Erreur Pusher :", error);
+    return NextResponse.json(
+      { success: false, error: error.message || String(error) },
+      { status: 500 }
+    );
   }
 }
