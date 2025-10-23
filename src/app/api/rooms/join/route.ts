@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
   try {
     const { roomCode, player } = await request.json();
 
-    const room = roomStore.get(roomCode);
+    const room = await roomStore.get(roomCode);
 
     if (!room) {
       return NextResponse.json({ error: 'Room not found' }, { status: 404 });
@@ -26,8 +26,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Ajouter le joueur
-    const success = roomStore.addPlayer(roomCode, player);
-    
+    const success = await roomStore.addPlayer(roomCode, player);
+
     if (!success) {
       return NextResponse.json({ error: 'Failed to join room' }, { status: 400 });
     }
