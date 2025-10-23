@@ -1,48 +1,51 @@
-import { NextRequest, NextResponse } from "next/server";
-import Pusher from "pusher";
-import { roomStore } from "@/lib/room-store";
+import { NextRequest, NextResponse } from 'next/server';
+import Pusher from 'pusher';
+import { roomStore } from '@/lib/room-store';
 
 const pusher = new Pusher({
-  appId: process.env.PUSHER_APP_ID || "",
-  key: process.env.NEXT_PUBLIC_PUSHER_KEY || "",
-  secret: process.env.PUSHER_SECRET || "",
-  cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || "eu",
+  appId: process.env.PUSHER_APP_ID || '',
+  key: process.env.NEXT_PUBLIC_PUSHER_KEY || '',
+  secret: process.env.PUSHER_SECRET || '',
+  cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || 'eu',
   useTLS: true,
 });
 
 export async function POST(request: NextRequest) {
   try {
     const { roomCode, player } = await request.json();
+    const normalized = roomCode.trim().toUpperCase();
 
-    // ✅ Nettoyage du code pour éviter erreurs (majuscules / espaces)
-    const normalizedCode = roomCode.trim().toUpperCase();
-
-    console.log("🔍 Tentative de rejoindre la room :", normalizedCode);
-
-    const room = await roomStore.get(normalizedCode);
-
+    // Récupération de la room
+    const room = await roomStore.get(normalized);
     if (!room) {
-      console.warn("❌ Room introuvable dans Redis :", normalizedCode);
-      return NextResponse.json({ error: "Room not found" }, { status: 404 });
+      console.log('❌ Room not found:', normalized);
+      return NextResponse.json({ error: 'Room not found' }, { status: 404 });
     }
 
     if (room.players.length >= 2) {
-      console.warn("🚫 Room pleine :", normalizedCode);
-      return NextResponse.json({ error: "Room is full" }, { status: 400 });
+      console.log('❌ Room full:', normalized);
+      return NextResponse.json({ error: 'Room is full' }, { status: 400 });
     }
 
-    // ✅ Ajouter le joueur et sauvegarder
-    room.players.push(player);
-    await roomStore.update(normalizedCode, room);
+    // Vérifie si déjà présent
+    const already = room.players.find(p => p.id === player.id);
+    if (!already) {
+      room.players.push(player);
+      await roomStore.update(normalized, room);
+      console.log(`✅ Player joined ${normalized}:`, player.name);
+    }
 
-    console.log(`✅ Joueur ${player.name} ajouté à ${normalizedCode}`);
+    // ✅ Notifier le host via Pusher
+    await pusher.trigger(`room-${normalized}`, 'player-joined', {
+      player,
+      players: room.players,
+      roomCode: normalized,
+    });
 
-    // 🔔 Notifier les autres joueurs via Pusher
-    await pusher.trigger(`room-${normalizedCode}`, "player-joined", { player });
-
-    return NextResponse.json({ success: true });
+    // ✅ Retourne l’état complet de la room
+    return NextResponse.json({ success: true, room });
   } catch (error) {
-    console.error("🔥 Erreur join room :", error);
-    return NextResponse.json({ error: "Failed to join room" }, { status: 500 });
+    console.error('🔥 Error joining room:', error);
+    return NextResponse.json({ error: 'Failed to join room' }, { status: 500 });
   }
 }
