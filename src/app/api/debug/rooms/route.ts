@@ -1,32 +1,30 @@
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-import { NextResponse } from "next/server";
-import { Redis } from "@upstash/redis";
+import { NextRequest, NextResponse } from 'next/server';
+import { roomStore } from '@/lib/room-store';
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL || "",
-  token: process.env.UPSTASH_REDIS_REST_TOKEN || "",
-});
-
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const keys = await redis.keys("room:*");
+    const rooms = await roomStore.getAll?.(); // si ton store le permet
+    return NextResponse.json({ rooms: rooms || [] });
+  } catch (error) {
+    console.error('Error in /api/debug/rooms:', error);
+    return NextResponse.json({ error: 'Failed to fetch rooms' }, { status: 500 });
+  }
+}
 
-    if (!keys || keys.length === 0) {
-      return NextResponse.json({ message: "Aucune room à supprimer." });
+export async function DELETE(request: NextRequest) {
+  try {
+    const { roomCode } = await request.json();
+    if (!roomCode) {
+      return NextResponse.json({ error: 'Missing roomCode' }, { status: 400 });
     }
 
-    for (const key of keys) {
-      await redis.del(key);
-    }
-
-    return NextResponse.json({
-      success: true,
-      deleted: keys.length,
-      message: `🧹 ${keys.length} room(s) supprimée(s) de Redis.`,
-    });
-  } catch (err) {
-    console.error("Erreur clear rooms:", err);
-    return NextResponse.json({ error: "Échec du nettoyage Redis." }, { status: 500 });
+    await roomStore.delete?.(roomCode);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting room:', error);
+    return NextResponse.json({ error: 'Failed to delete room' }, { status: 500 });
   }
 }
