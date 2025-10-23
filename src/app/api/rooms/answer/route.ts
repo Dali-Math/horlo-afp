@@ -1,9 +1,10 @@
+// --- Blocage complet du pré-rendu ---
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 export const preferredRegion = "auto";
-export const revalidate = 0; // empêche Next d'essayer de pré-rendre quoi que ce soit
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import Pusher from "pusher";
 import { roomStore } from "@/lib/room-store";
 
@@ -22,50 +23,55 @@ const pusher = new Pusher({
   useTLS: true,
 });
 
+// ✅ Route POST protégée contre les erreurs de build
 export async function POST(request: NextRequest) {
   try {
+    // On parse sans crasher si le body est vide pendant le build
     const body = await request.json().catch(() => ({}));
     const { roomCode, playerId, answer } = body || {};
 
+    // Vérifications minimales
     if (!roomCode || !playerId) {
-      return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+      return new Response("invalid payload", { status: 400 });
     }
 
     const room = await roomStore.get(roomCode);
     if (!room) {
-      return NextResponse.json({ error: "Room not found" }, { status: 404 });
+      return new Response("room not found", { status: 404 });
     }
 
     const player = room.players.find((p: any) => p.id === playerId);
     if (!player) {
-      return NextResponse.json({ error: "Player not found" }, { status: 404 });
+      return new Response("player not found", { status: 404 });
     }
 
-    // ✅ Mise à jour du joueur
+    // ✅ Sauvegarde minimale
     player.currentAnswer = answer ?? null;
     player.hasAnswered = true;
-
     await roomStore.update(roomCode, room);
 
-    // ✅ Notification via Pusher
+    // ✅ Notif Pusher (protégée)
     try {
       await pusher.trigger(`room-${roomCode}`, "player-answered", {
         playerId,
         answer,
       });
     } catch (pushError) {
-      console.error("Pusher trigger failed:", pushError);
+      console.warn("Pusher trigger skipped:", pushError);
     }
 
-    // ✅ Réponse ultra-simple (pas de JSON lourd au build)
-    return new Response("ok", { status: 200 });
-  } catch (error: any) {
-    console.error("Error in /api/rooms/answer:", error);
+    // ✅ Réponse ultra-simple pour bloquer la collecte JSON
+    return new Response("ok", {
+      status: 200,
+      headers: { "Content-Type": "text/plain" },
+    });
+  } catch (err: any) {
+    console.error("Error in /api/rooms/answer:", err);
     return new Response("error", { status: 500 });
   }
 }
 
-// --- GET & HEAD : anti-prerender, réponse texte pour éviter la collecte JSON ---
+// ✅ GET & HEAD ultra-légers — aucun JSON, pas de data à collecter
 export async function GET() {
   return new Response("answer endpoint active", {
     status: 200,
