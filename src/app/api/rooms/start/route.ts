@@ -1,4 +1,5 @@
-// app/api/rooms/start/route.ts
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import Pusher from 'pusher';
 import { roomStore } from '@/lib/room-store';
@@ -21,7 +22,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Room not found' }, { status: 404 });
     }
 
-    // Créer le game state
     const gameState = {
       roomCode,
       currentQuestionIndex: 0,
@@ -34,14 +34,13 @@ export async function POST(request: NextRequest) {
     room.gameState = gameState;
     await roomStore.update(roomCode, room);
 
-    // Démarrer la partie
     await pusher.trigger(`room-${roomCode}`, 'game-started', {
       gameState,
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error starting game:', error);
+    console.error('🔥 Error starting game:', error);
     return NextResponse.json({ error: 'Failed to start game' }, { status: 500 });
   }
 }
