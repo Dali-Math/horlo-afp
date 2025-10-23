@@ -16,12 +16,11 @@ export default function Quiz() {
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
           {/* Plateformes de Quiz */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg dark:hover:bg-slate-700 transition-colors p-6 hover:scale-[1.03]">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg dark:hover:bg-slate-700 transition-transform p-6 hover:scale-[1.03]">
             <div className="flex items-center mb-4">
-              <div className="bg-blue-600 text-white rounded-full p-3 mr-4">
-                🎯
-              </div>
+              <div className="bg-blue-600 text-white rounded-full p-3 mr-4">🎯</div>
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                 Plateformes Quiz
               </h2>
@@ -58,11 +57,9 @@ export default function Quiz() {
           </div>
 
           {/* Tests de Connaissances */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg dark:hover:bg-slate-700 transition-colors p-6 hover:scale-[1.03]">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg dark:hover:bg-slate-700 transition-transform p-6 hover:scale-[1.03]">
             <div className="flex items-center mb-4">
-              <div className="bg-emerald-600 text-white rounded-full p-3 mr-4">
-                📝
-              </div>
+              <div className="bg-emerald-600 text-white rounded-full p-3 mr-4">📝</div>
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                 Tests de Connaissances
               </h2>
@@ -87,11 +84,9 @@ export default function Quiz() {
           </div>
 
           {/* Mémorisation */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg dark:hover:bg-slate-700 transition-colors p-6 hover:scale-[1.03]">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg dark:hover:bg-slate-700 transition-transform p-6 hover:scale-[1.03]">
             <div className="flex items-center mb-4">
-              <div className="bg-purple-600 text-white rounded-full p-3 mr-4">
-                🎴
-              </div>
+              <div className="bg-purple-600 text-white rounded-full p-3 mr-4">🎴</div>
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                 Mémorisation
               </h2>
@@ -118,11 +113,9 @@ export default function Quiz() {
           </div>
 
           {/* Jeux Éducatifs */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg dark:hover:bg-slate-700 transition-colors p-6 hover:scale-[1.03]">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg dark:hover:bg-slate-700 transition-transform p-6 hover:scale-[1.03]">
             <div className="flex items-center mb-4">
-              <div className="bg-amber-500 text-white rounded-full p-3 mr-4">
-                🎮
-              </div>
+              <div className="bg-amber-500 text-white rounded-full p-3 mr-4">🎮</div>
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                 Jeux Éducatifs
               </h2>
@@ -137,12 +130,17 @@ export default function Quiz() {
               >
                 Yes/No Game – Horlogerie
               </a>
-
               <a
                 href="/quiz/tetris-horloger"
                 className="block bg-amber-50 dark:bg-amber-900/30 hover:bg-amber-100 dark:hover:bg-amber-800 text-amber-700 dark:text-amber-300 px-4 py-3 rounded-lg text-sm font-medium transition-colors"
               >
                 Atelier Horloger – Jeu de Précision 🎮
+              </a>
+              <a
+                href="/quiz/battle-online"
+                className="block bg-amber-50 dark:bg-amber-900/30 hover:bg-amber-100 dark:hover:bg-amber-800 text-amber-700 dark:text-amber-300 px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+              >
+                ⚔️ Quiz Battle Online – Duel en direct
               </a>
             </div>
           </div>
@@ -150,7 +148,7 @@ export default function Quiz() {
 
         {/* Footer */}
         <footer className="mt-16 text-center text-sm text-slate-600 dark:text-slate-400">
-          © 2025 HorloLearn — Quiz & Formation Horlogère Suisse 🇨🇭
+          © 2025 HorloLearn — Quiz & Culture Horlogère Suisse 🇨🇭
         </footer>
       </div>
     </main>
