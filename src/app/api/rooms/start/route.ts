@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
   try {
     const { roomCode, questions, difficulty } = await request.json();
 
-    const room = roomStore.get(roomCode);
+    const room = await roomStore.get(roomCode);
 
     if (!room) {
       return NextResponse.json({ error: 'Room not found' }, { status: 404 });
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     };
 
     room.gameState = gameState;
-    roomStore.update(roomCode, room);
+    await roomStore.update(roomCode, room);
 
     // Démarrer la partie
     await pusher.trigger(`room-${roomCode}`, 'game-started', {
