@@ -1,78 +1,77 @@
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-export const preferredRegion = 'auto';
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const preferredRegion = "auto";
+export const revalidate = 0; // empêche tout cache et toute pré-rendu
 
-import { NextRequest, NextResponse } from 'next/server';
-import { roomStore } from '@/lib/room-store';
+import { NextRequest, NextResponse } from "next/server";
+import { roomStore } from "@/lib/room-store";
 
-// --- GET : consulter une room spécifique ou liste simplifiée ---
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const roomCode = searchParams.get('code');
+    const roomCode = searchParams.get("code");
 
-    // Si aucun code n'est donné → message de debug générique
+    // ✅ Réponse ultra-légère pour éviter toute collecte de données
     if (!roomCode) {
-      return NextResponse.json({
-        status: 'debug endpoint active',
-        usage: '/api/debug/rooms?code=ROOMCODE',
-        timestamp: Date.now(),
+      return new Response("debug endpoint active", {
+        status: 200,
+        headers: { "Content-Type": "text/plain" },
       });
     }
 
     const room = await roomStore.get(roomCode);
     if (!room) {
-      return NextResponse.json(
-        { error: 'Room not found', code: roomCode },
-        { status: 404 }
-      );
+      return new Response("room not found", {
+        status: 404,
+        headers: { "Content-Type": "text/plain" },
+      });
     }
 
-    return NextResponse.json({
-      roomCode,
-      players: room.players.length,
-      host: room.host,
-      createdAt: room.createdAt,
-      hasGameState: !!room.gameState,
-      data: room,
+    // ✅ Réponse texte simple — pas de JSON complexe à collecter
+    const text = `Room: ${room.code}
+Players: ${room.players.length}
+Host: ${room.host}
+Created: ${new Date(room.createdAt).toISOString()}
+Has GameState: ${!!room.gameState}`;
+    return new Response(text, {
+      status: 200,
+      headers: { "Content-Type": "text/plain" },
     });
   } catch (error: any) {
-    console.error('Error in /api/debug/rooms (GET):', error);
-    return NextResponse.json(
-      { error: 'Internal server error', details: error?.message || error },
-      { status: 500 }
-    );
+    console.error("Error in /api/debug/rooms:", error);
+    return new Response("internal error", {
+      status: 500,
+      headers: { "Content-Type": "text/plain" },
+    });
   }
 }
 
-// --- DELETE : supprimer une room (debug) ---
+// ✅ DELETE : suppression simple d’une room (debug)
 export async function DELETE(request: NextRequest) {
   try {
-    const { roomCode } = await request.json();
-
+    const { roomCode } = await request.json().catch(() => ({}));
     if (!roomCode) {
-      return NextResponse.json(
-        { error: 'Missing roomCode' },
-        { status: 400 }
-      );
+      return new Response("missing roomCode", {
+        status: 400,
+        headers: { "Content-Type": "text/plain" },
+      });
     }
 
     await roomStore.delete(roomCode);
-
-    return NextResponse.json({
-      success: true,
-      message: `Room ${roomCode} deleted.`,
+    return new Response(`room ${roomCode} deleted`, {
+      status: 200,
+      headers: { "Content-Type": "text/plain" },
     });
   } catch (error: any) {
-    console.error('Error in /api/debug/rooms (DELETE):', error);
-    return NextResponse.json(
-      { error: 'Failed to delete room', details: error?.message || error },
-      { status: 500 }
-    );
+    console.error("Error deleting room:", error);
+    return new Response("delete failed", {
+      status: 500,
+      headers: { "Content-Type": "text/plain" },
+    });
   }
 }
 
-// --- HEAD : pour éviter les erreurs de "page data collection" pendant le build ---
+// ✅ HEAD : réponse minimale pour bloquer toute tentative de "page data collect"
 export async function HEAD() {
-  return NextResponse.json({ status: 'ok' });
+  return new Response("ok", { status: 200 });
 }
