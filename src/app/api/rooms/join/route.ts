@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import Pusher from 'pusher';
@@ -16,7 +17,6 @@ export async function POST(request: NextRequest) {
     const { roomCode, player } = await request.json();
     const normalized = roomCode.trim().toUpperCase();
 
-    // Récupération de la room
     const room = await roomStore.get(normalized);
     if (!room) {
       console.log('❌ Room not found:', normalized);
@@ -28,7 +28,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Room is full' }, { status: 400 });
     }
 
-    // Vérifie si déjà présent
     const already = room.players.find(p => p.id === player.id);
     if (!already) {
       room.players.push(player);
@@ -36,14 +35,12 @@ export async function POST(request: NextRequest) {
       console.log(`✅ Player joined ${normalized}:`, player.name);
     }
 
-    // ✅ Notifier le host via Pusher
     await pusher.trigger(`room-${normalized}`, 'player-joined', {
       player,
       players: room.players,
       roomCode: normalized,
     });
 
-    // ✅ Retourne l’état complet de la room
     return NextResponse.json({ success: true, room });
   } catch (error) {
     console.error('🔥 Error joining room:', error);
