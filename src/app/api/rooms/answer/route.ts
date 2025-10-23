@@ -1,21 +1,19 @@
-// ✅ Blocage total du pré-rendu et exécution pendant le build
+// ✅ Empêche toute exécution au moment du build
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const preferredRegion = "auto";
 export const revalidate = 0;
 
-// ❗ Aucun import dynamique ici — juste du texte statique
-// Cela empêche complètement Next de "collecter" la page data
-
+// 🧱 Réponses simples, pas de JSON ni d'import externe
 export async function GET() {
-  return new Response("answer endpoint ready", {
+  return new Response("endpoint active", {
     status: 200,
     headers: { "Content-Type": "text/plain" },
   });
 }
 
 export async function POST() {
-  return new Response("answer API active (runtime only)", {
+  return new Response("ok", {
     status: 200,
     headers: { "Content-Type": "text/plain" },
   });
