@@ -1,108 +1,65 @@
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+export const preferredRegion = 'auto';
 
 import { NextRequest, NextResponse } from 'next/server';
 import Pusher from 'pusher';
 import { roomStore } from '@/lib/room-store';
 
+const { PUSHER_APP_ID, NEXT_PUBLIC_PUSHER_KEY, PUSHER_SECRET, NEXT_PUBLIC_PUSHER_CLUSTER } = process.env;
+
 const pusher = new Pusher({
-  appId: process.env.PUSHER_APP_ID || '',
-  key: process.env.NEXT_PUBLIC_PUSHER_KEY || '',
-  secret: process.env.PUSHER_SECRET || '',
-  cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || 'eu',
+  appId: PUSHER_APP_ID ?? '',
+  key: NEXT_PUBLIC_PUSHER_KEY ?? '',
+  secret: PUSHER_SECRET ?? '',
+  cluster: NEXT_PUBLIC_PUSHER_CLUSTER ?? 'eu',
   useTLS: true,
 });
 
 export async function POST(request: NextRequest) {
   try {
-    const { roomCode, playerId, answer, timeLeft } = await request.json();
+    const body = await request.json();
+    const { roomCode, playerId, answer } = body || {};
+
+    if (!roomCode || !playerId) {
+      return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
+    }
 
     const room = await roomStore.get(roomCode);
-
-    if (!room || !room.gameState) {
-      return NextResponse.json({ error: 'Room or game not found' }, { status: 404 });
+    if (!room) {
+      return NextResponse.json({ error: 'Room not found' }, { status: 404 });
     }
 
-    const player = room.players.find(p => p.id === playerId);
-    if (player) {
-      player.currentAnswer = answer;
-      player.hasAnswered = true;
+    const player = room.players.find((p: any) => p.id === playerId);
+    if (!player) {
+      return NextResponse.json({ error: 'Player not found' }, { status: 404 });
     }
 
-    await pusher.trigger(`room-${roomCode}`, 'player-answered', {
-      playerId,
-      answer,
-    });
+    // Sauvegarder la réponse du joueur
+    player.answer = answer;
+    await roomStore.update(roomCode, room);
 
-    const allAnswered = room.players.every(p => p.hasAnswered);
-
-    if (allAnswered) {
-      const currentQuestion = room.gameState.questions[room.gameState.currentQuestionIndex];
-      const correctAnswer = currentQuestion.correctAnswer;
-
-      room.players.forEach(player => {
-        if (player.currentAnswer === correctAnswer) {
-          const basePoints =
-            currentQuestion.difficulty === 'facile'
-              ? 100
-              : currentQuestion.difficulty === 'moyen'
-              ? 200
-              : 300;
-          const bonusTime = timeLeft * 2;
-          player.score += basePoints + bonusTime;
-          player.streak += 1;
-        } else {
-          player.streak = 0;
-        }
-      });
-
-      await roomStore.update(roomCode, room);
-
-      await pusher.trigger(`room-${roomCode}`, 'question-result', {
-        correctAnswer,
-        player1Score: room.players[0].score,
-        player2Score: room.players[1].score,
-        player1Id: room.players[0].id,
-      });
-
-      setTimeout(async () => {
-        const updatedRoom = await roomStore.get(roomCode);
-        if (!updatedRoom || !updatedRoom.gameState) return;
-
-        const nextIndex = updatedRoom.gameState.currentQuestionIndex + 1;
-
-        if (nextIndex < updatedRoom.gameState.questions.length) {
-          updatedRoom.gameState.currentQuestionIndex = nextIndex;
-          updatedRoom.players.forEach(p => {
-            p.hasAnswered = false;
-            p.currentAnswer = null;
-          });
-
-          await roomStore.update(roomCode, updatedRoom);
-
-          await pusher.trigger(`room-${roomCode}`, 'next-question', {
-            question: updatedRoom.gameState.questions[nextIndex],
-            index: nextIndex,
-          });
-        } else {
-          const winner =
-            updatedRoom.players[0].score > updatedRoom.players[1].score
-              ? updatedRoom.players[0]
-              : updatedRoom.players[0].score < updatedRoom.players[1].score
-              ? updatedRoom.players[1]
-              : null;
-
-          await pusher.trigger(`room-${roomCode}`, 'game-over', { winner });
-
-          setTimeout(() => {
-            roomStore.delete(roomCode);
-          }, 30000);
-        }
-      }, 3000);
+    // Notifier via Pusher
+    try {
+      await pusher.trigger(`room-${roomCode}`, 'player-answered', { playerId, answer });
+    } catch (pushError) {
+      console.error('Pusher trigger failed:', pushError);
     }
 
     return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Error handling answer:', error);
-    return NextResponse.json({ error: 'Failed to handle answer' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Error in /api/rooms/answer:', error);
+    return NextResponse.json(
+      { error: 'Internal server error', details: error.message || error },
+      { status: 500 }
+    );
   }
+}
+
+export async function GET() {
+  return NextResponse.json({ status: 'answer endpoint active' });
+}
+
+export async function HEAD() {
+  return NextResponse.json({ status: 'ok' });
 }
