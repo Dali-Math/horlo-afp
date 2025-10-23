@@ -6,7 +6,7 @@ export function useSocket(onMessage: (data: any) => void) {
   const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:3001");
+    const ws = new WebSocket("wss://solid-sniffle-97g64gx79qpxcv46-3001.app.github.dev");
     socketRef.current = ws;
 
     ws.onopen = () => console.log("🟢 Connecté au serveur WebSocket");
