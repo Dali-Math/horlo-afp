@@ -1,4 +1,5 @@
-// app/api/debug/clear/route.ts
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 
