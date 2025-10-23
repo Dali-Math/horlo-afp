@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
   try {
     const { roomCode, playerId } = await request.json();
 
-    const room = roomStore.get(roomCode);
+    const room = await roomStore.get(roomCode);
 
     if (!room) {
       return NextResponse.json({ error: 'Room not found' }, { status: 404 });
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     const player = room.players.find(p => p.id === playerId);
     if (player) {
       player.ready = true;
-      roomStore.update(roomCode, room);
+      await roomStore.update(roomCode, room);
 
       // Notifier tous les joueurs
       await pusher.trigger(`room-${roomCode}`, 'player-ready', {
