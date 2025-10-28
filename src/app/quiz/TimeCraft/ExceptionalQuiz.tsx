@@ -1,7 +1,9 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import { Check, X, Trophy, Sparkles, Brain, Zap } from 'lucide-react';
 
-const questions = [
+const allQuestions = [
   {
     id: 1,
     question: "En quelle année a été fondée la marque Rolex ?",
@@ -805,11 +807,12 @@ const questions = [
 ];
 
 export default function ExceptionalQuiz() {
-  // Tirage aléatoire de 15 questions parmi la liste complète
-const [selectedQuestions] = useState(() => {
-  const shuffled = [...questions].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, 15);
-});
+  // Sélection de 15 questions aléatoires pour chaque partie
+  const [questions] = useState(() => {
+    const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 15);
+  });
+
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -821,7 +824,7 @@ const [selectedQuestions] = useState(() => {
   const handleAnswer = (index: number) => {
     if (selectedAnswer !== null) return;
     setSelectedAnswer(index);
-    const isCorrect = index === selectedQuestions[currentQuestion].correct;
+    const isCorrect = index === questions[currentQuestion].correct;
     if (isCorrect) {
       setScore(score + 1);
       setStreak(streak + 1);
@@ -845,15 +848,7 @@ const [selectedQuestions] = useState(() => {
     }
   };
 
-  const restartQuiz = () => {
-    setCurrentQuestion(0);
-    setScore(0);
-    setSelectedAnswer(null);
-    setShowResult(false);
-    setQuizComplete(false);
-    setShowFunFact(false);
-    setStreak(0);
-  };
+  const restartQuiz = () => { window.location.reload(); };
 
   const getScoreMessage = () => {
     const percentage = (score / questions.length) * 100;
@@ -865,8 +860,8 @@ const [selectedQuestions] = useState(() => {
   };
 
   if (quizComplete) {
-  return (
-    <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center p-4">
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-600 to-red-600 flex items-center justify-center p-4">
         <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center transform animate-pulse">
           <Trophy className="w-24 h-24 mx-auto text-yellow-500 mb-6" />
           <h1 className="text-4xl font-bold text-gray-800 mb-4">Quiz Terminé !</h1>
