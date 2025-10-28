@@ -860,9 +860,8 @@ export default function ExceptionalQuiz() {
   };
 
   if (quizComplete) {
-    return (
-      return (
-  <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center p-4 rounded-3xl shadow-xl mt-12">
+  return (
+    <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center p-4">
         <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center transform animate-pulse">
           <Trophy className="w-24 h-24 mx-auto text-yellow-500 mb-6" />
           <h1 className="text-4xl font-bold text-gray-800 mb-4">Quiz Terminé !</h1>
