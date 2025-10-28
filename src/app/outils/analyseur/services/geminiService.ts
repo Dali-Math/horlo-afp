@@ -1,13 +1,13 @@
-import { GoogleGenAI } from "@google/genai";
-import type { AnalysisResult } from '../types';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import type { AnalyseResult } from "../types";
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
 if (!API_KEY) {
-    throw new Error("API_KEY environment variable is not set.");
+  throw new Error("NEXT_PUBLIC_GEMINI_API_KEY environment variable is not set.");
 }
 
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+const ai = new GoogleGenerativeAI(API_KEY);
 
 const fileToGenerativePart = (base64Data: string, mimeType: string) => {
   return {
@@ -44,25 +44,30 @@ Structurez votre rapport en utilisant le formatage Markdown. Couvrez les section
 Veuillez être professionnel, détaillé et utiliser un langage clair et concis. Si un aspect ne peut être déterminé à partir de l'image, indiquez-le clairement.`;
 
 
-export const analyzeWatchImage = async (base64Image: string, mimeType: string): Promise<AnalysisResult> => {
+export const analyzeWatchImage = async (
+  base64Image: string,
+  mimeType: string
+): Promise<AnalyseResult> => {
   try {
     const imagePart = fileToGenerativePart(base64Image, mimeType);
-    
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: { parts: [imagePart, { text: PROMPT }] },
-    });
-    
-    const text = response.text;
+
+    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const result = await model.generateContent([
+      { inlineData: imagePart.inlineData },
+      { text: PROMPT },
+    ]);
+
+    const text = result.response.text();
     if (!text) {
       throw new Error("API returned no text in response.");
     }
-    return { report: text };
 
+    return { analysis: text };
   } catch (error) {
     console.error("Error analyzing image with Gemini API:", error);
     if (error instanceof Error) {
-        throw new Error(`Failed to analyze watch: ${error.message}`);
+      throw new Error(`Failed to analyze watch: ${error.message}`);
     }
     throw new Error("An unknown error occurred during analysis.");
   }
