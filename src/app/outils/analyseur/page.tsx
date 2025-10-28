@@ -4,7 +4,6 @@ import React, { useState, useCallback } from 'react';
 import { analyzeWatchImage } from './services/geminiService';
 import type { AnalyseResult } from './types';
 import { Upload, Watch, Loader2, RefreshCcw } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
 
 export default function App() {
   const [file, setFile] = useState<File | null>(null);
@@ -60,6 +59,19 @@ export default function App() {
     setPreviewUrl(null);
     setResult(null);
     setError(null);
+  };
+
+  // Fonction pour convertir le Markdown en HTML
+  const formatMarkdown = (text: string): string => {
+    return text
+      // Titres h2
+      .replace(/^## (.*?)$/gm, '<h2 class="text-[#E2B44F] text-xl font-bold mt-6 mb-3">$1</h2>')
+      // Gras
+      .replace(/\*\*(.*?)\*\*/g, '<strong class="text-[#E2B44F] font-semibold">$1</strong>')
+      // Listes à puces - début de liste
+      .replace(/^\* (.*?)$/gm, '<li class="ml-5 mb-2">• $1</li>')
+      // Retours à la ligne
+      .replace(/\n/g, '<br/>');
   };
 
   return (
@@ -161,9 +173,10 @@ export default function App() {
           )}
 
           {result && (
-            <article className="prose prose-invert max-w-none text-gray-100 leading-relaxed [&>h2]:text-[#E2B44F] [&>h2]:text-xl [&>h2]:font-bold [&>h2]:mt-6 [&>h2]:mb-3 [&>ul]:list-disc [&>ul]:ml-5 [&>li]:mb-2 [&>strong]:text-[#E2B44F] [&>strong]:font-semibold">
-              <ReactMarkdown>{result.analysis}</ReactMarkdown>
-            </article>
+            <article 
+              className="prose prose-invert max-w-none text-gray-100 leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: formatMarkdown(result.analysis) }}
+            />
           )}
         </div>
       </div>
