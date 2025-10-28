@@ -1,12 +1,13 @@
 'use client';
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "force-no-store";
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { analyzeWatchImage } from './services/geminiService';
 import type { AnalyseResult } from './types';
 import { Upload, Watch, Loader2, RefreshCcw } from 'lucide-react';
-
-// 👇 Empêche le prerendering statique (important pour les variables d'env)
-export const dynamic = 'force-dynamic';
 
 export default function App() {
   const [file, setFile] = useState<File | null>(null);
@@ -16,19 +17,17 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [apiReady, setApiReady] = useState(false);
 
-  // Vérification de la clé API Gemini
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
     if (!key) {
       console.error('❌ Clé API Gemini non détectée.');
-      setError('Clé API Gemini non détectée. Vérifie ta configuration sur Vercel.');
+      setError('Clé API Gemini non détectée. Vérifie la configuration sur Vercel.');
     } else {
       console.log('✅ Clé API détectée côté client.');
       setApiReady(true);
     }
   }, []);
 
-  // Convertit le fichier en base64 sans préfixe
   const fileToBase64 = (f: File): Promise<string> =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -37,7 +36,6 @@ export default function App() {
       reader.readAsDataURL(f);
     });
 
-  // Gestion de la sélection et du drag&drop
   const onPicked = (f: File) => {
     setFile(f);
     setPreviewUrl(URL.createObjectURL(f));
@@ -56,7 +54,6 @@ export default function App() {
 
   const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => e.preventDefault();
 
-  // Analyse de la montre
   const handleAnalyze = useCallback(async () => {
     if (!file) return;
     if (!apiReady) {
@@ -87,7 +84,6 @@ export default function App() {
     setError(null);
   };
 
-  // Conversion Markdown → HTML stylisé
   const formatMarkdown = (text: string): string => {
     return text
       .replace(/^## (.*?)$/gm, '<h2 class="text-[#E2B44F] text-xl font-bold mt-6 mb-3">$1</h2>')
@@ -99,8 +95,8 @@ export default function App() {
   return (
     <section className="min-h-[80vh] bg-[#F5F7FB] px-4 py-10 flex justify-center items-start">
       <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        {/* --- Colonne gauche : Upload & contrôle --- */}
+
+        {/* Zone gauche */}
         <div className="bg-[#1E2736] text-gray-100 rounded-2xl shadow-lg p-6 md:p-8 border border-[#2C3A4A]">
           <div className="flex items-center gap-3 mb-6">
             <Watch className="text-[#E2B44F]" size={22} />
@@ -118,7 +114,7 @@ export default function App() {
               <p className="text-sm text-gray-300 mb-1">
                 <span className="text-[#E2B44F] font-medium">Cliquez pour télécharger</span> ou glissez-déposez
               </p>
-              <p className="text-xs text-gray-400">Formats acceptés : PNG, JPG, WEBP</p>
+              <p className="text-xs text-gray-400">PNG, JPG, ou WEBP</p>
               <input
                 id="file-upload"
                 type="file"
@@ -167,7 +163,7 @@ export default function App() {
           )}
         </div>
 
-        {/* --- Colonne droite : Résultat --- */}
+        {/* Zone droite */}
         <div className="bg-[#1E2736] text-gray-100 rounded-2xl shadow-lg p-6 md:p-8 border border-[#2C3A4A]">
           <h2 className="text-lg md:text-xl font-semibold mb-4">Rapport d&apos;Analyse</h2>
 
