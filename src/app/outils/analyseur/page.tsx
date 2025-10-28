@@ -6,9 +6,7 @@ import type { AnalyseResult } from './types';
 import { Upload, Watch, Loader2, RefreshCcw } from 'lucide-react';
 
 // Ces lignes doivent être juste après les imports :
-export const dynamic = 'force-dynamic';
-export const revalidate = false;
-export const fetchCache = 'force-no-store';
+
 
 export default function App() {
   const [file, setFile] = useState<File | null>(null);
