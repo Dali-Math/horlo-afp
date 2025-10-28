@@ -54,7 +54,7 @@ export async function analyzeWatchImage(
   for (const MODEL_ID of MODELS) {
     try {
       const model = ai.getGenerativeModel({ model: MODEL_ID });
-
+      
       const result = await model.generateContent([
         {
           inlineData: {
@@ -66,8 +66,11 @@ export async function analyzeWatchImage(
       ]);
 
       const text = result.response.text();
+      
       if (!text) throw new Error('⚠️ Réponse vide reçue du modèle.');
+      
       console.log(`✅ Analyse réussie avec le modèle : ${MODEL_ID}`);
+      
       return { analysis: text };
     } catch (err: any) {
       const message = err?.message || 'Erreur inconnue';
@@ -78,6 +81,6 @@ export async function analyzeWatchImage(
 
   // Si tous échouent :
   throw new Error(
-    '❌ Aucun modèle Gemini compatible n’a pu être utilisé. Vérifie ta clé API ou les permissions AI Studio.'
+    '❌ Aucun modèle Gemini compatible n'a pu être utilisé. Vérifie ta clé API ou les permissions AI Studio.'
   );
 }
