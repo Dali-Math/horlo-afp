@@ -805,6 +805,11 @@ const questions = [
 ];
 
 export default function ExceptionalQuiz() {
+  // Tirage aléatoire de 15 questions parmi la liste complète
+const [selectedQuestions] = useState(() => {
+  const shuffled = [...questions].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, 15);
+});
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -816,7 +821,7 @@ export default function ExceptionalQuiz() {
   const handleAnswer = (index: number) => {
     if (selectedAnswer !== null) return;
     setSelectedAnswer(index);
-    const isCorrect = index === questions[currentQuestion].correct;
+    const isCorrect = index === selectedQuestions[currentQuestion].correct;
     if (isCorrect) {
       setScore(score + 1);
       setStreak(streak + 1);
