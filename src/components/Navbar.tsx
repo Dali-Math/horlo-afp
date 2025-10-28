@@ -9,17 +9,17 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [theorieOpen, setTheorieOpen] = useState(false);
   const [theorieOpenDesktop, setTheorieOpenDesktop] = useState(false);
+  const [outilsOpenDesktop, setOutilsOpenDesktop] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleMouseEnter = () => {
+  const handleMouseEnter = (setOpen: (value: boolean) => void) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setTheorieOpenDesktop(true);
+    setOpen(true);
   };
 
-  const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => setTheorieOpenDesktop(false), 250);
+  const handleMouseLeave = (setOpen: (value: boolean) => void) => {
+    timeoutRef.current = setTimeout(() => setOpen(false), 250);
   };
 
   return (
@@ -46,11 +46,11 @@ export default function Navbar() {
 
       {/* Liens desktop */}
       <div className="hidden lg:flex items-center gap-6 text-sm font-medium relative">
-        {/* Bloc Théorie avec sous-menu */}
+        {/* Bloc Théorie */}
         <div
           className="relative"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          onMouseEnter={() => handleMouseEnter(setTheorieOpenDesktop)}
+          onMouseLeave={() => handleMouseLeave(setTheorieOpenDesktop)}
         >
           <Link
             href="/theorie"
@@ -60,7 +60,7 @@ export default function Navbar() {
                 : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
             }`}
           >
-            Théorie{" "}
+            Théorie
             <ChevronDown
               className={`w-4 h-4 mt-0.5 transition-transform duration-200 ${
                 theorieOpenDesktop ? "rotate-180 text-[#E2B44F]" : ""
@@ -71,8 +71,8 @@ export default function Navbar() {
           {theorieOpenDesktop && (
             <div
               className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-[#111] border border-[#E2B44F33] rounded-lg shadow-lg z-50"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
+              onMouseEnter={() => handleMouseEnter(setTheorieOpenDesktop)}
+              onMouseLeave={() => handleMouseLeave(setTheorieOpenDesktop)}
             >
               <Link
                 href="/theorie/lecture-de-plan"
@@ -84,110 +84,54 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Outils avec flèche visuelle */}
-        <Link
-          href="/outils"
-          className={`flex items-center gap-1 transition-colors ${
-            pathname.startsWith("/outils")
-              ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
-              : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
-          }`}
+        {/* Bloc Outils (avec seulement "Analyseur de Montres IA") */}
+        <div
+          className="relative"
+          onMouseEnter={() => handleMouseEnter(setOutilsOpenDesktop)}
+          onMouseLeave={() => handleMouseLeave(setOutilsOpenDesktop)}
         >
-          Outils
-          <ChevronDown className="w-4 h-4 mt-0.5 text-gray-400 dark:text-gray-400" />
-        </Link>
+          <Link
+            href="/outils"
+            className={`flex items-center gap-1 transition-colors ${
+              pathname.startsWith("/outils")
+                ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
+                : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
+            }`}
+          >
+            Outils
+            <ChevronDown
+              className={`w-4 h-4 mt-0.5 transition-transform duration-200 ${
+                outilsOpenDesktop ? "rotate-180 text-[#E2B44F]" : ""
+              }`}
+            />
+          </Link>
+
+          {outilsOpenDesktop && (
+            <div
+              className="absolute top-full left-0 mt-2 w-72 bg-white dark:bg-[#111] border border-[#E2B44F33] rounded-lg shadow-lg z-50"
+              onMouseEnter={() => handleMouseEnter(setOutilsOpenDesktop)}
+              onMouseLeave={() => handleMouseLeave(setOutilsOpenDesktop)}
+            >
+              <Link
+                href="/outils/analyseur"
+                className="block px-4 py-3 text-sm text-slate-700 dark:text-gray-300 hover:bg-[#E2B44F22] hover:text-[#E2B44F]"
+              >
+                🔍 Analyseur de Montres IA
+              </Link>
+            </div>
+          )}
+        </div>
 
         {/* Autres liens */}
-        <Link
-          href="/pratique"
-          className={`transition-colors duration-200 ${
-            pathname === "/pratique"
-              ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
-              : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
-          }`}
-        >
-          Pratique
-        </Link>
-        <Link
-          href="/quiz"
-          className={`transition-colors duration-200 ${
-            pathname === "/quiz"
-              ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
-              : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
-          }`}
-        >
-          Quiz
-        </Link>
-        <Link
-          href="/ressources"
-          className={`transition-colors duration-200 ${
-            pathname === "/ressources"
-              ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
-              : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
-          }`}
-        >
-          Ressources
-        </Link>
-        <Link
-          href="/suisse"
-          className={`transition-colors duration-200 ${
-            pathname === "/suisse"
-              ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
-              : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
-          }`}
-        >
-          🇨🇭 Horlogerie Suisse
-        </Link>
-        <Link
-          href="/podcasts"
-          className={`transition-colors duration-200 ${
-            pathname === "/podcasts"
-              ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
-              : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
-          }`}
-        >
-          Podcasts
-        </Link>
-        <Link
-          href="/culture"
-          className={`transition-colors duration-200 ${
-            pathname === "/culture"
-              ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
-              : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
-          }`}
-        >
-          Culture
-        </Link>
-        <Link
-          href="/evenements"
-          className={`transition-colors duration-200 ${
-            pathname === "/evenements"
-              ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
-              : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
-          }`}
-        >
-          Événements
-        </Link>
-        <Link
-          href="/communaute"
-          className={`transition-colors duration-200 ${
-            pathname === "/communaute"
-              ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
-              : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
-          }`}
-        >
-          Communauté
-        </Link>
-        <Link
-          href="/actualites"
-          className={`transition-colors duration-200 ${
-            pathname === "/actualites"
-              ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
-              : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
-          }`}
-        >
-          Actualités
-        </Link>
+        <Link href="/pratique" className="hover:text-[#E2B44F] text-slate-700 dark:text-gray-300">Pratique</Link>
+        <Link href="/quiz" className="hover:text-[#E2B44F] text-slate-700 dark:text-gray-300">Quiz</Link>
+        <Link href="/ressources" className="hover:text-[#E2B44F] text-slate-700 dark:text-gray-300">Ressources</Link>
+        <Link href="/suisse" className="hover:text-[#E2B44F] text-slate-700 dark:text-gray-300">🇨🇭 Horlogerie Suisse</Link>
+        <Link href="/podcasts" className="hover:text-[#E2B44F] text-slate-700 dark:text-gray-300">Podcasts</Link>
+        <Link href="/culture" className="hover:text-[#E2B44F] text-slate-700 dark:text-gray-300">Culture</Link>
+        <Link href="/evenements" className="hover:text-[#E2B44F] text-slate-700 dark:text-gray-300">Événements</Link>
+        <Link href="/communaute" className="hover:text-[#E2B44F] text-slate-700 dark:text-gray-300">Communauté</Link>
+        <Link href="/actualites" className="hover:text-[#E2B44F] text-slate-700 dark:text-gray-300">Actualités</Link>
       </div>
 
       {/* Thème + menu mobile */}
