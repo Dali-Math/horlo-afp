@@ -1,13 +1,14 @@
 'use client';
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const fetchCache = "force-no-store";
-
 import React, { useState, useCallback, useEffect } from 'react';
 import { analyzeWatchImage } from './services/geminiService';
 import type { AnalyseResult } from './types';
 import { Upload, Watch, Loader2, RefreshCcw } from 'lucide-react';
+
+// Ces lignes doivent être juste après les imports :
+export const dynamic = 'force-dynamic';
+export const revalidate = false;
+export const fetchCache = 'force-no-store';
 
 export default function App() {
   const [file, setFile] = useState<File | null>(null);
@@ -21,7 +22,7 @@ export default function App() {
     const key = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
     if (!key) {
       console.error('❌ Clé API Gemini non détectée.');
-      setError('Clé API Gemini non détectée. Vérifie la configuration sur Vercel.');
+      setError('Clé API Gemini non détectée. Vérifie ta configuration sur Vercel.');
     } else {
       console.log('✅ Clé API détectée côté client.');
       setApiReady(true);
