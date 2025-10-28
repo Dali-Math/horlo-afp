@@ -81,6 +81,15 @@ export default function Quiz() {
               >
                 Quiz Longueurs Horlogerie
               </a>
+              {/* Nouveau lien TimeCraft */}
+              <a
+                href="/quiz/TimeCraft"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-800 text-emerald-700 dark:text-emerald-300 px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+              >
+                ⏱️ TimeCraft – Le Défi Horloger Suisse
+              </a>
             </div>
           </div>
 
@@ -146,28 +155,6 @@ export default function Quiz() {
             </div>
           </div>
         </div>
-
-        {/* --- INTÉGRATION DU QUIZ TIMCRAFT --- */}
-        <section className="mt-16">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-200 dark:border-slate-700 hover:shadow-xl dark:hover:bg-slate-700 transition-transform p-6">
-            <div className="flex items-center mb-6">
-              <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full p-3 mr-4">
-                🕰️
-              </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
-                TimeCraft – Le Défi Horloger Suisse
-              </h2>
-            </div>
-            <p className="text-slate-600 dark:text-slate-400 mb-6 text-sm">
-              Testez vos connaissances sur l’horlogerie suisse à travers 100 questions captivantes.
-            </p>
-
-            {/* Conteneur du quiz */}
-            <div className="rounded-2xl overflow-hidden shadow-xl">
-              <ExceptionalQuiz />
-            </div>
-          </div>
-        </section>
 
         {/* Footer */}
         <footer className="mt-16 text-center text-sm text-slate-600 dark:text-slate-400">
