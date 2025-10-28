@@ -4,6 +4,7 @@ import React, { useState, useCallback } from 'react';
 import { analyzeWatchImage } from './services/geminiService';
 import type { AnalyseResult } from './types';
 import { Upload, Watch, Loader2, RefreshCcw } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 export default function App() {
   const [file, setFile] = useState<File | null>(null);
@@ -160,11 +161,9 @@ export default function App() {
           )}
 
           {result && (
-            <article
-              className="prose prose-invert max-w-none text-gray-100 leading-relaxed"
-              // Le texte renvoyé est en Markdown ; si besoin on pourra parser, mais on affiche déjà lisible.
-              dangerouslySetInnerHTML={{ __html: result.analysis.replace(/\n/g, '<br/>') }}
-            />
+            <article className="prose prose-invert max-w-none text-gray-100 leading-relaxed [&>h2]:text-[#E2B44F] [&>h2]:text-xl [&>h2]:font-bold [&>h2]:mt-6 [&>h2]:mb-3 [&>ul]:list-disc [&>ul]:ml-5 [&>li]:mb-2 [&>strong]:text-[#E2B44F] [&>strong]:font-semibold">
+              <ReactMarkdown>{result.analysis}</ReactMarkdown>
+            </article>
           )}
         </div>
       </div>
