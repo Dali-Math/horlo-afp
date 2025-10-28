@@ -1,6 +1,3 @@
-
-export interface AnalysisResult {
-  report: string;
+export interface AnalyseResult {
+  analysis: string;
 }
-
-export type AppState = 'initial' | 'loading' | 'result' | 'error';
