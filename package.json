@@ -35,7 +35,8 @@
     "react-pageflip": "^2.0.3",
     "react-pdf": "^9.0.0",
     "three": "^0.180.0",
-    "@upstash/redis": "^1.35.6"
+    "@upstash/redis": "^1.35.6",
+    "@google/generative-ai": "^0.14.1"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
