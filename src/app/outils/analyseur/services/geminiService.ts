@@ -67,7 +67,9 @@ export async function analyzeWatchImage(
 
       const text = result.response.text();
       
-      if (!text) throw new Error('⚠️ Réponse vide reçue du modèle.');
+      if (!text) {
+        throw new Error('⚠️ Réponse vide reçue du modèle.');
+      }
       
       console.log(`✅ Analyse réussie avec le modèle : ${MODEL_ID}`);
       
@@ -75,12 +77,12 @@ export async function analyzeWatchImage(
     } catch (err: any) {
       const message = err?.message || 'Erreur inconnue';
       console.warn(`⚠️ Échec avec le modèle ${MODEL_ID}: ${message}`);
-      continue; // essaie le modèle suivant
+      continue;
     }
   }
 
   // Si tous échouent :
   throw new Error(
-    '❌ Aucun modèle Gemini compatible n'a pu être utilisé. Vérifie ta clé API ou les permissions AI Studio.'
+    '❌ Aucun modèle Gemini compatible n\'a pu être utilisé. Vérifie ta clé API ou les permissions AI Studio.'
   );
 }
