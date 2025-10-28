@@ -1,5 +1,7 @@
 "use client";
 
+import ExceptionalQuiz from "./TimeCraft/ExceptionalQuiz";
+
 export default function Quiz() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900 transition-colors duration-500">
@@ -16,7 +18,6 @@ export default function Quiz() {
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
           {/* Plateformes de Quiz */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg dark:hover:bg-slate-700 transition-transform p-6 hover:scale-[1.03]">
             <div className="flex items-center mb-4">
@@ -145,6 +146,16 @@ export default function Quiz() {
             </div>
           </div>
         </div>
+
+        {/* --- INTÉGRATION DU QUIZ TIMCRAFT --- */}
+        <section className="mt-24">
+          <h2 className="text-4xl font-bold text-center mb-10 text-slate-900 dark:text-white">
+            🕰️ TimeCraft – Le Défi Horloger Suisse
+          </h2>
+          <div className="rounded-3xl overflow-hidden shadow-2xl">
+            <ExceptionalQuiz />
+          </div>
+        </section>
 
         {/* Footer */}
         <footer className="mt-16 text-center text-sm text-slate-600 dark:text-slate-400">
