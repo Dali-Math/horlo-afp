@@ -1,7 +1,5 @@
 "use client";
 
-import ExceptionalQuiz from "./TimeCraft/ExceptionalQuiz";
-
 export default function Quiz() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900 transition-colors duration-500">
@@ -81,7 +79,6 @@ export default function Quiz() {
               >
                 Quiz Longueurs Horlogerie
               </a>
-              {/* Nouveau lien TimeCraft */}
               <a
                 href="/quiz/TimeCraft"
                 target="_blank"
