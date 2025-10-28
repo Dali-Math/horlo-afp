@@ -234,7 +234,7 @@ export default function App() {
   };
 
   return (
-    <main className="w-full h-full bg-slate-900 text-slate-100 font-sans p-4 md:p-8 box-border">
+    <main className="w-full h-full bg-[#F5F7FB] text-[#1E2736] font-sans p-4 md:p-8 box-border">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
         {/* Colonne gauche */}
         <div className="flex flex-col items-center p-6 bg-slate-800 rounded-xl shadow-lg ring-1 ring-slate-700">
