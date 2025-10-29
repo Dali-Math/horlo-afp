@@ -47,7 +47,7 @@ export default function Navbar() {
 
       {/* Liens desktop */}
       <div className="hidden lg:flex items-center gap-6 text-sm font-medium relative">
-        {/* Théorie */}
+        {/* --- Bloc Théorie --- */}
         <div
           className="relative"
           onMouseEnter={() => handleMouseEnter(setTheorieOpen)}
@@ -55,33 +55,41 @@ export default function Navbar() {
         >
           <Link
             href="/theorie"
-            className={`flex items-center gap-1 transition-colors ${
+            className={`flex items-center gap-1 transition-colors duration-300 ${
               pathname.startsWith("/theorie")
-                ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
+                ? "text-[#E2B44F] font-semibold border-b border-[#E2B44F]"
                 : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
             }`}
           >
             Théorie
             <ChevronDown
-              className={`w-4 h-4 mt-0.5 transition-transform duration-200 ${
+              className={`w-3.5 h-3.5 mt-0.5 transition-transform duration-200 ${
                 theorieOpen ? "rotate-180 text-[#E2B44F]" : ""
               }`}
             />
           </Link>
 
-          {theorieOpen && (
-            <div className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-[#111] border border-[#E2B44F33] rounded-lg shadow-lg z-50">
-              <Link
-                href="/theorie/lecture-de-plan"
-                className="block px-4 py-3 text-sm text-slate-700 dark:text-gray-300 hover:bg-[#E2B44F22] hover:text-[#E2B44F]"
+          <AnimatePresence>
+            {theorieOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute top-full left-0 mt-2 w-48 bg-white/95 dark:bg-[#111]/90 backdrop-blur-sm border border-[#E2B44F33] rounded-lg shadow-lg z-50"
               >
-                Lecture de Plan
-              </Link>
-            </div>
-          )}
+                <Link
+                  href="/theorie/lecture-de-plan"
+                  className="block px-4 py-2.5 text-sm text-slate-700 dark:text-gray-300 hover:bg-[#E2B44F22] hover:text-[#E2B44F] border-l-2 border-transparent hover:border-[#E2B44F] transition-all duration-200 shadow-[inset_0_0_10px_#e2b44f22]"
+                >
+                  Lecture de Plan
+                </Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Outils */}
+        {/* --- Bloc Outils --- */}
         <div
           className="relative"
           onMouseEnter={() => handleMouseEnter(setOutilsOpen)}
@@ -89,33 +97,41 @@ export default function Navbar() {
         >
           <Link
             href="/outils"
-            className={`flex items-center gap-1 transition-colors ${
+            className={`flex items-center gap-1 transition-colors duration-300 ${
               pathname.startsWith("/outils")
-                ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
+                ? "text-[#E2B44F] font-semibold border-b border-[#E2B44F]"
                 : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
             }`}
           >
             Outils
             <ChevronDown
-              className={`w-4 h-4 mt-0.5 transition-transform duration-200 ${
+              className={`w-3.5 h-3.5 mt-0.5 transition-transform duration-200 ${
                 outilsOpen ? "rotate-180 text-[#E2B44F]" : ""
               }`}
             />
           </Link>
 
-          {outilsOpen && (
-            <div className="absolute top-full left-0 mt-2 w-72 bg-white dark:bg-[#111] border border-[#E2B44F33] rounded-lg shadow-lg z-50">
-              <Link
-                href="/outils/analyseur"
-                className="block px-4 py-3 text-sm text-slate-700 dark:text-gray-300 hover:bg-[#E2B44F22] hover:text-[#E2B44F]"
+          <AnimatePresence>
+            {outilsOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute top-full left-0 mt-2 w-56 bg-white/95 dark:bg-[#111]/90 backdrop-blur-sm border border-[#E2B44F33] rounded-lg shadow-lg z-50"
               >
-                🔍 Analyseur de Montres IA
-              </Link>
-            </div>
-          )}
+                <Link
+                  href="/outils/analyseur"
+                  className="block px-4 py-2.5 text-sm text-slate-700 dark:text-gray-300 hover:bg-[#E2B44F22] hover:text-[#E2B44F] border-l-2 border-transparent hover:border-[#E2B44F] transition-all duration-200 shadow-[inset_0_0_10px_#e2b44f22]"
+                >
+                  🔍 Analyseur de Montres IA
+                </Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Autres liens */}
+        {/* --- Autres liens --- */}
         {[
           ["Pratique", "/pratique"],
           ["Quiz", "/quiz"],
@@ -127,7 +143,15 @@ export default function Navbar() {
           ["Communauté", "/communaute"],
           ["Actualités", "/actualites"],
         ].map(([label, href]) => (
-          <Link key={href} href={href} className="hover:text-[#E2B44F] text-slate-700 dark:text-gray-300">
+          <Link
+            key={href}
+            href={href}
+            className={`hover:text-[#E2B44F] transition-colors duration-300 ${
+              pathname === href
+                ? "text-[#E2B44F] font-semibold"
+                : "text-slate-700 dark:text-gray-300"
+            }`}
+          >
             {label}
           </Link>
         ))}
@@ -144,15 +168,15 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Menu mobile animé */}
+      {/* --- Menu mobile animé --- */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="absolute top-full left-0 w-full bg-white dark:bg-[#0A0A0A] border-t border-gray-200 dark:border-gray-800 shadow-lg lg:hidden"
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute top-full left-0 w-full bg-white/95 dark:bg-[#0A0A0A]/95 backdrop-blur-sm border-t border-gray-200 dark:border-gray-800 shadow-lg lg:hidden"
           >
             <motion.div
               initial={{ height: 0 }}
@@ -241,7 +265,7 @@ export default function Navbar() {
                   key={href}
                   href={href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block font-medium text-slate-800 dark:text-gray-200 hover:text-[#E2B44F]"
+                  className="block font-medium text-slate-800 dark:text-gray-200 hover:text-[#E2B44F] hover:bg-[#E2B44F10] rounded-md px-2 py-1 transition-colors duration-200"
                 >
                   {label}
                 </Link>
