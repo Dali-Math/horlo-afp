@@ -4,23 +4,36 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [theorieOpen, setTheorieOpen] = useState(false);
-  const [outilsOpen, setOutilsOpen] = useState(false);
+  const [theorieOpenDesktop, setTheorieOpenDesktop] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleMouseEnter = (setOpen: (v: boolean) => void) => {
+  const navLinks = [
+    { href: "/pratique", label: "Pratique" },
+    { href: "/quiz", label: "Quiz" },
+    { href: "/outils", label: "Outils" },
+    { href: "/ressources", label: "Ressources" },
+    { href: "/suisse", label: "🇨🇭 Horlogerie Suisse" },
+    { href: "/podcasts", label: "Podcasts" },
+    { href: "/culture", label: "Culture" },
+    { href: "/evenements", label: "Événements" },
+    { href: "/communaute", label: "Communauté" },
+    { href: "/actualites", label: "Actualités" },
+
+  ];
+
+  const handleMouseEnter = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setOpen(true);
+    setTheorieOpenDesktop(true);
   };
 
-  const handleMouseLeave = (setOpen: (v: boolean) => void) => {
-    timeoutRef.current = setTimeout(() => setOpen(false), 200);
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => setTheorieOpenDesktop(false), 250);
   };
 
   return (
@@ -39,7 +52,7 @@ export default function Navbar() {
           <span className="text-lg md:text-xl font-bold text-slate-900 dark:text-white">
             Horlo<span className="text-[#E2B44F]">Learn</span>
           </span>
-          <span className="text-[11px] text-[#E2B44F] leading-tight tracking-wide">
+          <span className="text-xs text-[#E2B44F] leading-tight">
             Culture & savoir-faire horloger
           </span>
         </div>
@@ -47,109 +60,54 @@ export default function Navbar() {
 
       {/* Liens desktop */}
       <div className="hidden lg:flex items-center gap-6 text-sm font-medium relative">
-        {/* --- Bloc Théorie --- */}
+        {/* Bloc Théorie avec sous-menu fluide */}
         <div
           className="relative"
-          onMouseEnter={() => handleMouseEnter(setTheorieOpen)}
-          onMouseLeave={() => handleMouseLeave(setTheorieOpen)}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           <Link
             href="/theorie"
-            className={`flex items-center gap-1 transition-colors duration-300 ${
+            className={`flex items-center gap-1 transition-colors ${
               pathname.startsWith("/theorie")
-                ? "text-[#E2B44F] font-semibold border-b border-[#E2B44F]"
+                ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
                 : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
             }`}
           >
-            Théorie
+            Théorie{" "}
             <ChevronDown
-              className={`w-3.5 h-3.5 mt-0.5 transition-transform duration-200 ${
-                theorieOpen ? "rotate-180 text-[#E2B44F]" : ""
+              className={`w-4 h-4 mt-0.5 transition-transform duration-200 ${
+                theorieOpenDesktop ? "rotate-180 text-[#E2B44F]" : ""
               }`}
             />
           </Link>
 
-          <AnimatePresence>
-            {theorieOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute top-full left-0 mt-2 w-48 bg-white/95 dark:bg-[#111]/90 backdrop-blur-sm border border-[#E2B44F33] rounded-lg shadow-lg z-50"
+          {/* Sous-menu stable */}
+          {theorieOpenDesktop && (
+            <div
+              className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-[#111] border border-[#E2B44F33] rounded-lg shadow-lg transition-all duration-200 ease-out opacity-100 translate-y-0 z-50"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <Link
+                href="/theorie/lecture-de-plan"
+                className="block px-4 py-3 text-sm text-slate-700 dark:text-gray-300 hover:bg-[#E2B44F22] hover:text-[#E2B44F] transition-colors"
               >
-                <Link
-                  href="/theorie/lecture-de-plan"
-                  className="block px-4 py-2.5 text-sm text-slate-700 dark:text-gray-300 hover:bg-[#E2B44F22] hover:text-[#E2B44F] border-l-2 border-transparent hover:border-[#E2B44F] transition-all duration-200 shadow-[inset_0_0_10px_#e2b44f22]"
-                >
-                  Lecture de Plan
-                </Link>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                Lecture de Plan
+              </Link>
+            </div>
+          )}
         </div>
 
-        {/* --- Bloc Outils --- */}
-        <div
-          className="relative"
-          onMouseEnter={() => handleMouseEnter(setOutilsOpen)}
-          onMouseLeave={() => handleMouseLeave(setOutilsOpen)}
-        >
-          <Link
-            href="/outils"
-            className={`flex items-center gap-1 transition-colors duration-300 ${
-              pathname.startsWith("/outils")
-                ? "text-[#E2B44F] font-semibold border-b border-[#E2B44F]"
-                : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
-            }`}
-          >
-            Outils
-            <ChevronDown
-              className={`w-3.5 h-3.5 mt-0.5 transition-transform duration-200 ${
-                outilsOpen ? "rotate-180 text-[#E2B44F]" : ""
-              }`}
-            />
-          </Link>
-
-          <AnimatePresence>
-            {outilsOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute top-full left-0 mt-2 w-56 bg-white/95 dark:bg-[#111]/90 backdrop-blur-sm border border-[#E2B44F33] rounded-lg shadow-lg z-50"
-              >
-                <Link
-                  href="/outils/analyseur"
-                  className="block px-4 py-2.5 text-sm text-slate-700 dark:text-gray-300 hover:bg-[#E2B44F22] hover:text-[#E2B44F] border-l-2 border-transparent hover:border-[#E2B44F] transition-all duration-200 shadow-[inset_0_0_10px_#e2b44f22]"
-                >
-                  🔍 Analyseur de Montres IA
-                </Link>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* --- Autres liens --- */}
-        {[
-          ["Pratique", "/pratique"],
-          ["Quiz", "/quiz"],
-          ["Ressources", "/ressources"],
-          ["🇨🇭 Horlogerie Suisse", "/suisse"],
-          ["Podcasts", "/podcasts"],
-          ["Culture", "/culture"],
-          ["Événements", "/evenements"],
-          ["Communauté", "/communaute"],
-          ["Actualités", "/actualites"],
-        ].map(([label, href]) => (
+        {/* Autres liens */}
+        {navLinks.map(({ href, label }) => (
           <Link
             key={href}
             href={href}
-            className={`hover:text-[#E2B44F] transition-colors duration-300 ${
+            className={`transition-colors duration-200 ${
               pathname === href
-                ? "text-[#E2B44F] font-semibold"
-                : "text-slate-700 dark:text-gray-300"
+                ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
+                : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
             }`}
           >
             {label}
@@ -157,123 +115,88 @@ export default function Navbar() {
         ))}
       </div>
 
-      {/* Thème + menu mobile */}
-      <div className="flex items-center gap-3 lg:hidden">
+      {/* Boutons à droite (Desktop) */}
+      <div className="hidden lg:flex items-center gap-3">
+        <ThemeToggle />
+      </div>
+
+      {/* Bouton menu mobile */}
+      <div className="lg:hidden flex items-center gap-3">
         <ThemeToggle />
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 text-slate-900 dark:text-white hover:text-[#E2B44F]"
+          className="p-2 text-slate-900 dark:text-white hover:text-[#E2B44F] transition-colors"
+          aria-label="Toggle menu"
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
-      {/* --- Menu mobile animé --- */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute top-full left-0 w-full bg-white/95 dark:bg-[#0A0A0A]/95 backdrop-blur-sm border-t border-gray-200 dark:border-gray-800 shadow-lg lg:hidden"
-          >
-            <motion.div
-              initial={{ height: 0 }}
-              animate={{ height: "auto" }}
-              exit={{ height: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="overflow-hidden flex flex-col p-6 space-y-4"
-            >
-              {/* Théorie mobile */}
-              <button
-                onClick={() => setTheorieOpen(!theorieOpen)}
-                className="flex justify-between items-center text-left font-medium text-slate-800 dark:text-gray-200 hover:text-[#E2B44F]"
-              >
-                <span>Théorie</span>
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform ${
-                    theorieOpen ? "rotate-180 text-[#E2B44F]" : ""
-                  }`}
-                />
-              </button>
-              <AnimatePresence>
-                {theorieOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.25 }}
-                    className="ml-4 space-y-2"
-                  >
-                    <Link
-                      href="/theorie/lecture-de-plan"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="block text-sm text-gray-400 hover:text-[#E2B44F]"
-                    >
-                      Lecture de Plan
-                    </Link>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Outils mobile */}
-              <button
-                onClick={() => setOutilsOpen(!outilsOpen)}
-                className="flex justify-between items-center text-left font-medium text-slate-800 dark:text-gray-200 hover:text-[#E2B44F]"
-              >
-                <span>Outils</span>
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform ${
-                    outilsOpen ? "rotate-180 text-[#E2B44F]" : ""
-                  }`}
-                />
-              </button>
-              <AnimatePresence>
-                {outilsOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.25 }}
-                    className="ml-4 space-y-2"
-                  >
-                    <Link
-                      href="/outils/analyseur"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="block text-sm text-gray-400 hover:text-[#E2B44F]"
-                    >
-                      🔍 Analyseur de Montres IA
-                    </Link>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Autres liens */}
-              {[
-                ["Pratique", "/pratique"],
-                ["Quiz", "/quiz"],
-                ["Ressources", "/ressources"],
-                ["🇨🇭 Horlogerie Suisse", "/suisse"],
-                ["Podcasts", "/podcasts"],
-                ["Culture", "/culture"],
-                ["Événements", "/evenements"],
-                ["Communauté", "/communaute"],
-                ["Actualités", "/actualites"],
-              ].map(([label, href]) => (
+      {/* Menu mobile/tablette */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden w-full mt-4 pb-4 border-t border-gray-200 dark:border-gray-800 pt-4 bg-white dark:bg-[#0A0A0A] rounded-lg">
+          <div className="flex flex-col space-y-3">
+            {/* ✅ Bloc Théorie cliquable + toggle séparé */}
+            <div className="flex flex-col">
+              {/* Ligne avec lien + bouton toggle */}
+              <div className="flex items-center justify-between">
+                {/* Lien cliquable vers /theorie */}
                 <Link
-                  key={href}
-                  href={href}
+                  href="/theorie"
+                  className={`flex-1 py-2 px-2 rounded ${
+                    pathname.startsWith("/theorie")
+                      ? "text-[#E2B44F] font-semibold bg-gray-100 dark:bg-gray-900 border-l-4 border-[#E2B44F]"
+                      : "text-slate-700 dark:text-gray-300 hover:text-[#E2B44F] hover:bg-gray-100 dark:hover:bg-gray-900"
+                  }`}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block font-medium text-slate-800 dark:text-gray-200 hover:text-[#E2B44F] hover:bg-[#E2B44F10] rounded-md px-2 py-1 transition-colors duration-200"
                 >
-                  {label}
+                  Théorie
                 </Link>
-              ))}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                
+                {/* Bouton toggle sous-menu */}
+                <button
+                  onClick={() => setTheorieOpen(!theorieOpen)}
+                  className="p-2 text-slate-700 dark:text-gray-300 hover:text-[#E2B44F]"
+                  aria-label="Toggle sous-menu Théorie"
+                >
+                  <ChevronDown 
+                    className={`w-4 h-4 transition-transform ${
+                      theorieOpen ? 'rotate-180 text-[#E2B44F]' : ''
+                    }`}
+                  />
+                </button>
+              </div>
+              
+              {/* Sous-menu */}
+              {theorieOpen && (
+                <Link
+                  href="/theorie/lecture-de-plan"
+                  className="pl-6 py-2 text-slate-600 dark:text-gray-400 hover:text-[#E2B44F] transition-colors block"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  ↳ Lecture de Plan
+                </Link>
+              )}
+            </div>
+
+            {/* Autres liens */}
+            {navLinks.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`py-2 px-2 rounded ${
+                  pathname === href
+                    ? "text-[#E2B44F] font-semibold bg-gray-100 dark:bg-gray-900 border-l-4 border-[#E2B44F]"
+                    : "text-slate-700 dark:text-gray-300 hover:text-[#E2B44F] hover:bg-gray-100 dark:hover:bg-gray-900"
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
