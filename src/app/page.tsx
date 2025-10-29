@@ -6,18 +6,13 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { 
   Clock, 
   Watch, 
-  BookOpen, 
-  Award, 
   Heart, 
   ChevronRight, 
-  Menu, 
-  X, 
   Users, 
   Share2,
   Download,
   PlayCircle,
   FileText,
-  TrendingUp,
   Sparkles,
   ArrowRight,
   Radio,
@@ -45,8 +40,6 @@ const FadeInSection = ({ id, children, className = "" }: { id?: string; children
 
 // --- Page Principale ---
 export default function HorloLearnHome() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [time, setTime] = useState(new Date())
   const [onlineUsers] = useState(48)
   const { scrollYProgress } = useScroll()
@@ -63,26 +56,6 @@ export default function HorloLearnHome() {
   const secondsDegrees = (time.getSeconds() / 60) * 360
   const minutesDegrees = ((time.getMinutes() + time.getSeconds() / 60) / 60) * 360
   const hoursDegrees = ((time.getHours() % 12 + time.getMinutes() / 60) / 12) * 360
-
-  const navigationLinks = [
-    { 
-      label: 'Théorie', 
-      href: '/theorie', 
-      hasDropdown: true,
-      subLinks: [
-        { label: 'Lecture de plan', href: '/theorie/lecture-de-plan' },
-      ]
-    },
-    { label: 'Pratique', href: '/pratique' },
-    { label: 'Quiz', href: '/quiz' },
-    { label: 'Outils', href: '/outils' },
-    { label: 'Ressources', href: '/ressources' },
-    { label: 'CH Horlogerie Suisse', href: '/ch-horlogerie-suisse' },
-    { label: 'Podcasts', href: '/podcasts' },
-    { label: 'Culture', href: '/culture' },
-    { label: 'Événements', href: '/evenements' },
-    { label: 'Communauté', href: '/communaute' },
-  ]
 
   const stats = [
     { value: '2,500+', label: 'Ressources Partagées', icon: FileText },
@@ -200,134 +173,6 @@ export default function HorloLearnHome() {
           </svg>
         </motion.div>
       </div>
-
-      {/* Navigation - Responsive avec logo à gauche et menu à droite */}
-      <nav className="fixed top-0 w-full bg-black z-50 border-b border-gray-800">
-        <div className="w-full px-8 lg:px-16">
-          <div className="flex items-center h-16">
-            
-            {/* Logo HorloLearn - Vraiment à gauche */}
-            <Link href="/" className="flex items-center space-x-3 mr-auto">
-              <div className="relative w-10 h-10">
-                <motion.svg
-                  viewBox="0 0 50 50"
-                  className="w-full h-full"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                >
-                  <circle cx="25" cy="25" r="23" fill="none" stroke="#f59e0b" strokeWidth="1" />
-                  {[...Array(12)].map((_, i) => (
-                    <circle 
-                      key={i} 
-                      cx={25 + 19 * Math.cos((i * 30 - 90) * Math.PI / 180)} 
-                      cy={25 + 19 * Math.sin((i * 30 - 90) * Math.PI / 180)} 
-                      r="1.5" 
-                      fill="#f59e0b" 
-                    />
-                  ))}
-                </motion.svg>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold leading-tight">
-                  <span className="text-amber-400">Horlo</span>
-                  <span className="text-white">Learn</span>
-                </span>
-                <span className="text-xs text-gray-400 leading-tight">Passion & Découverte</span>
-              </div>
-            </Link>
-
-            {/* Navigation Desktop - Bien espacé */}
-            <div className="hidden lg:flex items-center space-x-10 flex-1 justify-center ml-12">
-              {navigationLinks.map((link, index) => (
-                <div 
-                  key={index}
-                  className="relative"
-                  onMouseEnter={() => link.hasDropdown && setOpenDropdown(link.label)}
-                  onMouseLeave={() => setOpenDropdown(null)}
-                >
-                  <Link
-                    href={link.href}
-                    className="text-white text-sm hover:text-gray-300 transition-colors duration-200 flex items-center whitespace-nowrap"
-                  >
-                    {link.label}
-                    {link.hasDropdown && <span className="ml-1 text-xs">▼</span>}
-                  </Link>
-
-                  {/* Menu déroulant */}
-                  {link.hasDropdown && link.subLinks && openDropdown === link.label && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="absolute top-full left-0 mt-2 w-56 bg-gray-900 border border-gray-800 rounded-lg shadow-xl py-2 z-50"
-                    >
-                      {link.subLinks.map((subLink, subIndex) => (
-                        <Link
-                          key={subIndex}
-                          href={subLink.href}
-                          className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-amber-400 transition-colors duration-200"
-                        >
-                          {subLink.label}
-                        </Link>
-                      ))}
-                    </motion.div>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* Bouton Menu Mobile - À droite */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2 text-white hover:text-gray-300 transition-colors ml-auto"
-              aria-label="Menu"
-            >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Menu Mobile Déroulant */}
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-black border-t border-gray-800"
-          >
-            <div className="px-4 py-4 space-y-1">
-              {navigationLinks.map((link, index) => (
-                <div key={index}>
-                  <Link
-                    href={link.href}
-                    onClick={() => !link.hasDropdown && setIsMenuOpen(false)}
-                    className="block px-4 py-3 text-white hover:text-gray-300 hover:bg-gray-900 rounded transition-colors duration-200"
-                  >
-                    {link.label}
-                    {link.hasDropdown && <span className="ml-2 text-xs">▼</span>}
-                  </Link>
-                  
-                  {/* Sous-menu mobile */}
-                  {link.hasDropdown && link.subLinks && (
-                    <div className="ml-4 mt-1 space-y-1">
-                      {link.subLinks.map((subLink, subIndex) => (
-                        <Link
-                          key={subIndex}
-                          href={subLink.href}
-                          onClick={() => setIsMenuOpen(false)}
-                          className="block px-4 py-2 text-sm text-gray-400 hover:text-amber-400 hover:bg-gray-900 rounded transition-colors duration-200"
-                        >
-                          {subLink.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </nav>
 
       {/* Hero Section */}
       <section id="accueil" className="relative min-h-screen flex items-center justify-center px-4 pt-20">
