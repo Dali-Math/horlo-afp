@@ -122,33 +122,39 @@ export default function HorloLearnHome() {
   ]
 
   const featuredResources = [
-    {
-      type: 'PDF',
-      title: 'Guide complet ETA 2824-2',
-      description: 'Document PDF haute résolution : démontage complet, éclaté annoté, couples de serrage',
-      author: 'Michel R.',
-      downloads: '2,340',
-      readTime: '15 min',
-      badge: 'Ressource de la semaine'
-    },
-    {
-      type: 'Vidéo',
-      title: 'Réglage spiral ETA 6497',
-      description: 'Tutoriel vidéo HD : technique professionnelle de réglage du spiral',
-      author: 'Jean-Claude B.',
-      downloads: '1,890',
-      readTime: '22 min',
-      badge: 'Populaire'
-    },
-    {
-      type: 'Guide',
-      title: 'Révision complète Valjoux 7750',
-      description: 'Guide pas-à-pas avec photos et conseils d\'expert',
-      author: 'Sophie L.',
-      downloads: '1,560',
-      readTime: '35 min',
-      badge: 'Nouveau'
-    },
+  {
+    type: 'Outil IA',
+    title: 'Analyseur de Montres IA',
+    description:
+      'Déposez une photo et obtenez une analyse détaillée : boîtier, cadran, index, aiguilles et style horloger.',
+    author: 'HorloLearn',
+    downloads: 'Nouveau',
+    readTime: '—',
+    badge: 'Ressource de la semaine',
+    href: '/outils/analyseur', // ✅ quand on clique sur "Voir"
+  },
+  {
+    type: 'Vidéo',
+    title: 'Réglage spiral ETA 6497',
+    description:
+      'Tutoriel vidéo HD : technique professionnelle de réglage du spiral horloger.',
+    author: 'Jean-Claude B.',
+    downloads: '1,890',
+    readTime: '22 min',
+    badge: 'Populaire',
+    href: '#',
+  },
+  {
+    type: 'Guide',
+    title: 'Révision complète Valjoux 7750',
+    description:
+      'Guide pas-à-pas avec photos et conseils d’expert pour démonter et remonter le mouvement.',
+    author: 'Sophie L.',
+    downloads: '1,560',
+    readTime: '35 min',
+    badge: 'Nouveau',
+    href: '#',
+  },
   ]
 
   const actualites = [
