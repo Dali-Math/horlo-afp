@@ -639,33 +639,36 @@ export default function HorloLearnHome() {
 
           <div className="grid md:grid-cols-3 gap-6">
   {actualites.map((news, index) => (
-    <motion.div
-      key={index}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1 }}
-      viewport={{ once: true }}
-      className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 rounded-xl p-6 border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer group"
+  <motion.div
+    key={index}
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ delay: index * 0.1 }}
+    viewport={{ once: true }}
+    className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 rounded-xl p-6 border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300 group"
+  >
+    <a
+      href={
+        news.title === 'Nouveau calibre Sellita SW330-2 annoncé'
+          ? '/horlogerie/ecoles/rapport-horlogerie-suisse'
+          : news.link || '#'
+      }
+      className="block no-underline cursor-pointer"
     >
       <span className="inline-block px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-xs font-bold text-amber-300 mb-4">
         {news.category}
       </span>
 
-      {news.link ? (
-        <Link href={news.link}>
-          <h3 className="text-lg font-bold mb-3 text-white group-hover:text-amber-400 transition-colors">
-            {news.title}
-          </h3>
-        </Link>
-      ) : (
-        <h3 className="text-lg font-bold mb-3 text-white">{news.title}</h3>
-      )}
+      <h3 className="text-lg font-bold mb-3 text-white group-hover:text-amber-400 transition-colors">
+        {news.title}
+      </h3>
 
       {news.time && (
         <p className="text-sm text-gray-500">{news.time}</p>
       )}
-    </motion.div>
-  ))}
+    </a>
+  </motion.div>
+))}
 </div>
         </div>
       </FadeInSection>
