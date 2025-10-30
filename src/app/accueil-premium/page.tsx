@@ -204,10 +204,10 @@ export default function VueAssemblage() {
                       <button
                         key={`${piece.id}-${idx}`}
                         onClick={() => setSelectedPiece(piece.id)}
-                        className={`absolute px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                        className={`absolute px-2 py-1 rounded-md text-[10px] font-bold transition-all duration-200 ${
                           selectedPiece === piece.id
                             ? 'bg-[#E2B44F] text-white scale-110 shadow-lg z-20'
-                            : 'bg-white/90 dark:bg-slate-800/90 text-gray-800 dark:text-gray-200 hover:bg-[#E2B44F]/20 dark:hover:bg-[#E2B44F]/20 z-10'
+                            : 'bg-slate-800/80 text-white hover:bg-[#E2B44F]/90 z-10 backdrop-blur-sm'
                         }`}
                         style={{ 
                           left: `${piece.x}%`, 
