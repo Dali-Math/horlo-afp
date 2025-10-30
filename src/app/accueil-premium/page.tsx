@@ -13,7 +13,7 @@ export default function VueAssemblage() {
     {
       id: 1,
       title: "Vue d'assemblage - Planche 1",
-      image: "/images/eta6497/assemblage-1.png",
+      image: "/images/eta6497/assemblage-1.jpg",
       pieces: [
         { id: "5", nom: "Balancier-spiral complet", x: 29, y: 24 },
         { id: "3", nom: "Roue d'échappement", x: 30, y: 41 },
@@ -27,8 +27,8 @@ export default function VueAssemblage() {
     },
     {
       id: 2,
-      title: 'Vue d\'assemblage - Planche 2',
-      image: '/images/eta6497/assemblage-2.png',
+      title: "Vue d'assemblage - Planche 2",
+      image: "/images/eta6497/assemblage-2.png",
       pieces: [
         { id: '901 VAR', nom: 'Vis de pont de seconde', x: 56, y: 98 },
         { id: '11', nom: 'Pont de seconde', x: 55, y: 89 },
@@ -41,8 +41,8 @@ export default function VueAssemblage() {
     },
     {
       id: 3,
-      title: 'Vue d\'assemblage - Planche 3',
-      image: '/images/eta6497/assemblage-3.png',
+      title: "Vue d'assemblage - Planche 3",
+      image: "/images/eta6497/assemblage-3.png",
       pieces: [
         { id: '902 VAR', nom: 'Vis de pont (gauche)', x: 35, y: 20 },
         { id: '902 VAR', nom: 'Vis de pont (droite)', x: 45, y: 20 },
@@ -55,8 +55,8 @@ export default function VueAssemblage() {
     },
     {
       id: 4,
-      title: 'Vue d\'assemblage - Planche 4',
-      image: '/images/eta6497/assemblage-4.png',
+      title: "Vue d'assemblage - Planche 4",
+      image: "/images/eta6497/assemblage-4.png",
       pieces: [
         { id: '902 VAR', nom: 'Vis de pont (gauche)', x: 10, y: 23 },
         { id: '902 VAR', nom: 'Vis de pont (centre)', x: 23, y: 19 },
@@ -75,8 +75,8 @@ export default function VueAssemblage() {
     },
     {
       id: 5,
-      title: 'Vue d\'assemblage - Planche 5',
-      image: '/images/eta6497/assemblage-5.png',
+      title: "Vue d'assemblage - Planche 5",
+      image: "/images/eta6497/assemblage-5.png",
       pieces: [
         { id: '902 VAR', nom: 'Vis de coq', x: 63, y: 17 },
         { id: '28-5', nom: 'Spiral flat overcoil', x: 32, y: 24 },
@@ -95,15 +95,15 @@ export default function VueAssemblage() {
     },
     {
       id: 6,
-      title: 'Vue d\'assemblage - Planche 6',
-      image: '/images/eta6497/assemblage-6.png',
+      title: "Vue d'assemblage - Planche 6",
+      image: "/images/eta6497/assemblage-6.png",
       pieces: [
         { id: '29 VAR', nom: 'Contre-pivot', x: 42, y: 31 },
       ]
     },
   ]
 
-  const currentPageData = pages[currentPage - 1];
+  const currentPageData = pages[currentPage - 1]
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
@@ -135,6 +135,7 @@ export default function VueAssemblage() {
               </button>
             </div>
           </div>
+          {/* NAVIGATION */}
           <div className="flex items-center gap-2 mt-6">
             {pages.map((page) => (
               <button
@@ -153,14 +154,15 @@ export default function VueAssemblage() {
       </section>
       <section className="max-w-7xl mx-auto px-6 py-8">
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* IMAGE BLOCK BEGIN */}
+          {/* IMAGE + LABELS */}
           <div className="lg:col-span-2 flex flex-col items-center">
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg w-full">
               <div className="bg-gray-50 dark:bg-slate-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                 <h3 className="font-semibold text-gray-900 dark:text-white">{currentPageData.title}</h3>
               </div>
               <div className="flex flex-col items-center justify-center py-8">
-                <div className="relative aspect-[1/1] w-full max-w-[700px] bg-white dark:bg-slate-950 rounded-xl border overflow-hidden"
+                {/* RATIO fixé sur la vraie image, tu peux changer pour aspect-[1/1] si tes PNG sont réellement carrés */}
+                <div className="relative w-full max-w-[700px] aspect-[620/700] bg-white dark:bg-slate-950 rounded-xl border overflow-hidden"
                   style={{ transition: "transform 300ms cubic-bezier(.4,0,.2,1)", transform: `scale(${zoom})` }}>
                   <Image
                     src={currentPageData.image}
@@ -190,11 +192,10 @@ export default function VueAssemblage() {
                       {piece.id}
                     </button>
                   ))}
-                  {/* Info Desk */}
+                  {/* Desktop Pop Info */}
                   {selectedPiece && (
                     <div
-                      className="hidden md:block absolute right-3 top-3 bg-white dark:bg-slate-900 border border-[#E2B44F]/40 rounded-xl shadow-lg p-5 min-w-[220px] max-w-xs z-40"
-                    >
+                      className="hidden md:block absolute right-3 top-3 bg-white dark:bg-slate-900 border border-[#E2B44F]/40 rounded-xl shadow-lg p-5 min-w-[220px] max-w-xs z-40">
                       <div className="flex justify-between items-center mb-1">
                         <span className="text-[#E2B44F] font-bold text-lg">{selectedPiece}</span>
                         <button onClick={() => setSelectedPiece(null)} aria-label="Fermer">
@@ -208,11 +209,11 @@ export default function VueAssemblage() {
                   )}
                 </div>
               </div>
+              {/* NAVIGATION PREV/NEXT */}
               <div className="bg-gray-50 dark:bg-slate-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
                 <button onClick={() => { setCurrentPage(prev => Math.max(1, prev - 1)); setSelectedPiece(null) }}
                   disabled={currentPage === 1}
-                  className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
-                >
+                  className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors">
                   <ChevronLeft className="w-4 h-4" /> Précédent
                 </button>
                 <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
@@ -220,19 +221,17 @@ export default function VueAssemblage() {
                 </span>
                 <button onClick={() => { setCurrentPage(prev => Math.min(pages.length, prev + 1)); setSelectedPiece(null) }}
                   disabled={currentPage === pages.length}
-                  className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
-                >
+                  className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors">
                   Suivant <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
+              {/* Zoom Mobile */}
               <div className="md:hidden flex items-center justify-center gap-2 mt-4 bg-gray-100 dark:bg-slate-800 rounded-lg p-2">
                 <button onClick={() => setZoom(z => Math.max(z - 0.2, 0.5))}
                   className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
                   <ZoomOut className="w-5 h-5 text-gray-700 dark:text-gray-300" />
                 </button>
-                <span className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px] text-center">
-                  {Math.round(zoom * 100)}%
-                </span>
+                <span className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px] text-center">{Math.round(zoom * 100)}%</span>
                 <button onClick={() => setZoom(z => Math.min(z + 0.2, 2))}
                   className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
                   <ZoomIn className="w-5 h-5 text-gray-700 dark:text-gray-300" />
@@ -245,8 +244,7 @@ export default function VueAssemblage() {
               </div>
             </div>
           </div>
-          {/* IMAGE BLOCK END */}
-          {/* PANEL NOMENCLATURE */}
+          {/* NOMENCLATURE */}
           <div className="lg:col-span-1">
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg sticky top-6">
               <div className="bg-gradient-to-r from-[#E2B44F] to-[#C9A043] px-6 py-4 rounded-t-2xl">
@@ -303,7 +301,7 @@ export default function VueAssemblage() {
           </div>
         </div>
       )}
-      {/* Infos générales */}
+      {/* Bloc d'infos général */}
       <section className="max-w-7xl mx-auto px-6 pb-16">
         <div className="bg-gradient-to-br from-[#E2B44F]/10 via-[#E2B44F]/5 to-transparent border border-[#E2B44F]/20 rounded-2xl p-8">
           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">À propos des vues d'assemblage</h3>
@@ -313,5 +311,5 @@ export default function VueAssemblage() {
         </div>
       </section>
     </main>
-  );
+  )
 }
