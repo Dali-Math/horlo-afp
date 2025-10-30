@@ -1,203 +1,161 @@
 // src/app/outils/outils-de-mesure/page.tsx
-import Image from "next/image";
-import Link from "next/link";
+'use client'
 
-export const metadata = {
-  title: "Outils de mesure en horlogerie moderne | HorloLearn",
-  description:
-    "Sélection des 10 outils de mesure les plus utilisés en horlogerie moderne : usages, particularités et visuels. Ressource culturelle HorloLearn.",
-};
+import Image from 'next/image'
+import Link from 'next/link'
 
-type Outil = {
-  id: string;
-  titre: string;
-  resume: string;
-  details: string;
-  img: string;
-  alt: string;
-};
+export default function OutilsDeMesure() {
+  const outils = [
+    {
+      id: 'pied-a-coulisse',
+      titre: 'Pied à coulisse numérique',
+      resume:
+        'Mesure rapide des diamètres, largeurs et entraxes avec lecture directe en mm/µm.',
+      details:
+        "Indispensable pour contrôler les dimensions des composants horlogers : ponts, boîtiers, barillets ou axes. Les versions numériques réduisent les erreurs de lecture.",
+      image: '/images/outils/pied-a-coulisse.webp',
+    },
+    {
+      id: 'micrometre',
+      titre: 'Micromètre de précision',
+      resume:
+        'Outil essentiel pour mesurer des épaisseurs fines et des micro-jeux avec une précision de l’ordre du micron.',
+      details:
+        "Permet de mesurer les hauteurs de ressorts, flasques et composants fins. Les versions à encliquetage garantissent une pression constante.",
+      image: '/images/outils/micrometre.webp',
+    },
+    {
+      id: 'comparateur',
+      titre: 'Comparateur sur colonne',
+      resume:
+        'Instrument servant à contrôler la planéité et la concentricité des pièces.',
+      details:
+        "Utilisé pour vérifier le faux-rond, le battement ou le voile d’une pièce. Monté sur support stable, il garantit la régularité des contrôles.",
+      image: '/images/outils/comparateur-colonne.webp',
+    },
+    {
+      id: 'jauges',
+      titre: 'Jauges d’épaisseur et de diamètres',
+      resume:
+        'Feuilles cales et jauges à trous pour contrôler des jeux très fins ou des diamètres de pivots.',
+      details:
+        "Elles permettent d’ajuster le jeu entre les rubis, les pivots et les axes, garantissant un fonctionnement sans friction excessive.",
+      image: '/images/outils/jauges-epaisseur.webp',
+    },
+    {
+      id: 'mesure-video',
+      titre: 'Système de mesure vidéo',
+      resume:
+        'Métrologie optique sans contact utilisée pour les micro-pièces horlogères.',
+      details:
+        "Permet d’effectuer des mesures précises de profils, rayons et entraxes grâce à une caméra haute résolution et un logiciel de traitement d’image.",
+      image: '/images/outils/mesure-video.webp',
+    },
+    {
+      id: 'loupe',
+      titre: 'Loupe binoculaire micrométrique',
+      resume:
+        'Observation détaillée des composants sous fort grossissement avec repères gradués intégrés.',
+      details:
+        "Utilisée pour examiner l’état de surface, les chanfreins et les arêtes des pièces. Outil de base dans tout atelier horloger moderne.",
+      image: '/images/outils/loupe-bino.webp',
+    },
+    {
+      id: 'profondeur',
+      titre: 'Micromètre de profondeur',
+      resume:
+        'Mesure les profondeurs de logements, rainures ou fraisures inaccessibles au pied à coulisse.',
+      details:
+        "Instrument précis pour contrôler la hauteur d’un composant dans son alésage ou l’épaisseur d’un fond usiné.",
+      image: '/images/outils/micrometre-profondeur.webp',
+    },
+    {
+      id: 'projecteur',
+      titre: 'Projecteur de profil',
+      resume:
+        'Permet le contrôle optique de la forme d’une pièce par projection agrandie sur écran.',
+      details:
+        "Utilisé pour comparer un profil à un gabarit, mesurer des angles ou des rayons, et détecter d’éventuelles déformations.",
+      image: '/images/outils/projecteur-profil.webp',
+    },
+    {
+      id: 'cmm',
+      titre: 'Machine de mesure tridimensionnelle (CMM)',
+      resume:
+        'Mesure automatisée des formes complexes en 3D par sonde tactile ou optique.',
+      details:
+        "Essentielle pour le contrôle qualité dans la microtechnique et l’horlogerie de précision.",
+      image: '/images/outils/cmm-3d.webp',
+    },
+    {
+      id: 'palpeur',
+      titre: 'Palpeur numérique',
+      resume:
+        'Sonde de contact utilisée pour la prise de références et le contrôle automatisé.',
+      details:
+        "Présente sur les centres d’usinage modernes, elle assure des mesures répétables sans intervention manuelle.",
+      image: '/images/outils/palpeur.webp',
+    },
+  ]
 
-const OR = "#E2B44F";
-
-const OUTILS: Outil[] = [
-  {
-    id: "pied-a-coulisse",
-    titre: "Pied à coulisse numérique",
-    resume:
-      "Mesure rapide des diamètres, largeurs et entraxes, lecture directe en mm/µm.",
-    details:
-      "Indispensable pour contrôler épaisseurs de ponts, ouvertures de boîte, diamètres de barillets ou axes. Version digitale = moins d’erreurs de lecture.",
-    img: "/images/outils/pied-a-coulisse.webp",
-    alt: "Pied à coulisse numérique pour l'horlogerie",
-  },
-  {
-    id: "micrometre",
-    titre: "Micromètre haute précision",
-    resume:
-      "Pour épaisseurs très fines et micro-jeux avec une excellente répétabilité.",
-    details:
-      "Externe/interne; utile pour ressorts, flasques, hauteurs de barillet. Versions numériques et à encliquetage pour force constante.",
-    img: "/images/outils/micrometre.webp",
-    alt: "Micromètre de précision horloger",
-  },
-  {
-    id: "comparateur",
-    titre: "Comparateur sur colonne",
-    resume:
-      "Vérifie planéité, faux-rond, battement; lecture des variations au centième/µm.",
-    details:
-      "Monté sur support granit/colonne. Sert fréquemment au contrôle de concentricité et de plateaux/pignons.",
-    img: "/images/outils/comparateur-colonne.webp",
-    alt: "Comparateur sur colonne pour contrôle",
-  },
-  {
-    id: "jauges-epaisseur",
-    titre: "Jauges d’épaisseur & jauges à trous",
-    resume:
-      "Feuilles cales pour jeux fins; jauges cylindriques/trous pour diamètres.",
-    details:
-      "Sélection de rubis/trous, contrôle d’appairage pivot/pierre et validation de jeux critiques.",
-    img: "/images/outils/jauges-epaisseur.webp",
-    alt: "Jauges d'épaisseur et jauges à trous",
-  },
-  {
-    id: "mesure-video",
-    titre: "Mesure vidéo sans contact",
-    resume:
-      "Métrologie optique 2D/3D pour micro-pièces: profils, rayons, entraxes, angles.",
-    details:
-      "Capture numérique, répétabilité élevée, utile pour petites séries et CQ moderne.",
-    img: "/images/outils/mesure-video.webp",
-    alt: "Système de mesure vidéo sans contact",
-  },
-  {
-    id: "loupe-bino",
-    titre: "Loupe micrométrique / Binoculaire",
-    resume:
-      "Grossissement stable pour inspection, avec réticule gradué pour mesures fines.",
-    details:
-      "Observation de surfaces, chanfreins, états de tribologie et lecture de dimensions via réticule.",
-    img: "/images/outils/loupe-bino.webp",
-    alt: "Binoculaire avec réticule micrométrique",
-  },
-  {
-    id: "micrometre-profondeur",
-    titre: "Micromètre de profondeur",
-    resume:
-      "Mesure profondeurs de rainures, logements, fraisures non accessibles.",
-    details:
-      "Semelle stable, touches interchangeables; contrôle précis là où le coulisse ne passe pas.",
-    img: "/images/outils/micrometre-profondeur.webp",
-    alt: "Micromètre de profondeur",
-  },
-  {
-    id: "projecteur-profil",
-    titre: "Projecteur de profil",
-    resume:
-      "Contrôle optique des formes: profils de dents, rayons, angles, avec écran.",
-    details:
-      "Comparaison à un gabarit, mesure d’angles de levée, contrôle géométrique non destructif.",
-    img: "/images/outils/projecteur-profil.webp",
-    alt: "Projecteur de profil optique",
-  },
-  {
-    id: "cmm-3d",
-    titre: "Machine de mesure 3D (CMM)",
-    resume:
-      "Mesure tridimensionnelle automatisée: géométries complexes, rapports CQ.",
-    details:
-      "Sonde tactile/optique, utile en micro-mécanique horlogère pour pièces complexes.",
-    img: "/images/outils/cmm-3d.webp",
-    alt: "Machine de mesure tridimensionnelle CMM",
-  },
-  {
-    id: "palpeur",
-    titre: "Palpeur numérique (Touch Probe)",
-    resume:
-      "Sonde de contact pour prises de références et mesures en cellule/FAO.",
-    details:
-      "Automatise datums et contrôles en production; réduit erreurs de réglage.",
-    img: "/images/outils/palpeur.webp",
-    alt: "Palpeur numérique de mesure",
-  },
-];
-
-export default function Page() {
   return (
-    <main className="min-h-screen bg-black text-neutral-200">
-      <section className="relative overflow-hidden border-b border-neutral-800">
-        <div className="mx-auto max-w-6xl px-4 py-14 md:py-18">
-          <div className="max-w-3xl">
-            <h1
-              className="text-3xl md:text-5xl font-semibold tracking-tight"
-              style={{ color: OR }}
-            >
-              Outils de mesure en horlogerie moderne
-            </h1>
-            <p className="mt-4 text-neutral-300">
-              Les instruments de précision qui garantissent l’exactitude du
-              travail horloger contemporain. Sélection de dix outils
-              couramment utilisés, avec leurs usages et particularités.
-            </p>
-            <div className="mt-6 flex gap-3">
-              <Link
-                href="/theorie/lecture-de-plan/vues-techniques"
-                className="rounded-xl px-4 py-2 border border-neutral-700 text-sm hover:border-neutral-500 transition"
-              >
-                Vues techniques
-              </Link>
-              <Link
-                href="/outils"
-                className="rounded-xl px-4 py-2 border border-neutral-700 text-sm hover:border-neutral-500 transition"
-              >
-                Tous les outils
-              </Link>
-            </div>
-          </div>
+    <main className="min-h-screen bg-white text-gray-800">
+      <section className="max-w-6xl mx-auto px-4 py-12 md:py-16">
+        <h1 className="text-3xl md:text-5xl font-semibold text-gray-900">
+          Outils de mesure en horlogerie moderne
+        </h1>
+        <p className="mt-4 text-gray-600 max-w-3xl">
+          Les instruments de mesure garantissent la précision et la fiabilité du travail horloger. 
+          Voici dix outils couramment utilisés aujourd’hui dans les ateliers, accompagnés de leurs fonctions principales.
+        </p>
+
+        <div className="mt-6 flex gap-3">
+          <Link
+            href="/theorie/lecture-de-plan/vues-techniques"
+            className="rounded-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
+          >
+            Vues techniques
+          </Link>
+          <Link
+            href="/outils"
+            className="rounded-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
+          >
+            Tous les outils
+          </Link>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-10 md:py-14">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {OUTILS.map((o) => (
-            <article
-              key={o.id}
-              className="group relative overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-950 hover:bg-neutral-900 transition"
-            >
-              <div className="relative h-52 w-full">
-                <Image
-                  src={o.img}
-                  alt={o.alt}
-                  fill
-                  sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
-                  className="object-cover"
-                  priority={false}
-                />
-                <div className="pointer-events-none absolute inset-0 ring-0 ring-inset ring-transparent group-hover:ring-1 group-hover:ring-neutral-700 transition" />
-              </div>
-              <div className="p-4">
-                <h2
-                  className="text-lg font-semibold"
-                  style={{ color: OR }}
-                >
-                  {o.titre}
-                </h2>
-                <p className="mt-2 text-sm text-neutral-300">{o.resume}</p>
-                <p className="mt-2 text-sm text-neutral-400">{o.details}</p>
-              </div>
-            </article>
-          ))}
-        </div>
+      <section className="max-w-6xl mx-auto px-4 pb-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {outils.map((outil) => (
+          <article
+            key={outil.id}
+            className="rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition overflow-hidden"
+          >
+            <div className="relative w-full h-48">
+              <Image
+                src={outil.image}
+                alt={outil.titre}
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="p-5">
+              <h2 className="text-lg font-semibold text-gray-900">{outil.titre}</h2>
+              <p className="mt-2 text-sm text-gray-700">{outil.resume}</p>
+              <p className="mt-2 text-sm text-gray-600">{outil.details}</p>
+            </div>
+          </article>
+        ))}
+      </section>
 
-        <div className="mt-12 rounded-2xl border border-neutral-800 bg-neutral-950 p-5 text-sm text-neutral-300">
+      <section className="max-w-6xl mx-auto px-4 pb-20">
+        <div className="rounded-lg bg-gray-50 border border-gray-200 p-5 text-sm text-gray-700">
           <p>
-            Note : cette sélection vise l’usage contemporain en atelier
-            horloger (inspection, contrôle dimensionnel, qualité). Elle complète
-            la vision historique des outils classiques, dans l’esprit ressource
-            culturelle HorloLearn.
+            Cette sélection présente les outils de mesure les plus utilisés dans les ateliers horlogers contemporains. 
+            Ils allient tradition et technologie pour garantir l’exactitude propre à l’horlogerie suisse.
           </p>
         </div>
       </section>
     </main>
-  );
+  )
 }
