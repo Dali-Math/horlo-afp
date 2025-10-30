@@ -45,12 +45,12 @@ export default function EcolesHorlogerie() {
         <h2 className="text-2xl font-semibold text-amber-600 dark:text-amber-400 mt-10 mb-4">Vaud</h2>
         <ul className="space-y-2 border-b border-neutral-300 dark:border-neutral-700 pb-4">
           <li>
-            <Link href="/horlogerie/ecoles/etvj-sentier" className="hover:text-amber-400 transition-colors">
+            <Link href="/horlogerie/ecoles/etvj-le-sentier" className="hover:text-amber-400 transition-colors">
               ETVJ – École Technique de la Vallée de Joux – Le Sentier
             </Link>
           </li>
           <li>
-            <Link href="/horlogerie/ecoles/heig-yd" className="hover:text-amber-400 transition-colors">
+            <Link href="/horlogerie/ecoles/heigvd-yverdon" className="hover:text-amber-400 transition-colors">
               HEIG-VD – Haute École d’Ingénierie et de Gestion du canton de Vaud – Yverdon-les-Bains
             </Link>
           </li>
@@ -60,7 +60,7 @@ export default function EcolesHorlogerie() {
         <h2 className="text-2xl font-semibold text-amber-600 dark:text-amber-400 mt-10 mb-4">Neuchâtel</h2>
         <ul className="space-y-2 border-b border-neutral-300 dark:border-neutral-700 pb-4">
           <li>
-            <Link href="/horlogerie/ecoles/cpne-locle" className="hover:text-amber-400 transition-colors">
+            <Link href="/horlogerie/ecoles/cpne-le-locle" className="hover:text-amber-400 transition-colors">
               CPNE – Centre de Formation Professionnelle Neuchâtelois – Le Locle
             </Link>
           </li>
