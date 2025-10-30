@@ -135,16 +135,13 @@ export default function HorloLearnHome() {
       href: '/outils/analyseur',
     },
     {
-      type: 'Vidéo',
-      title: 'Réglage spiral ETA 6497',
-      description:
-        'Tutoriel vidéo HD : technique professionnelle de réglage du spiral horloger.',
-      author: 'Jean-Claude B.',
-      downloads: '1,890',
-      readTime: '22 min',
-      badge: 'Populaire',
-      href: '#',
-    },
+  type: 'Vidéo',
+  title: 'Montage démontage mouvement 6497',
+  description:
+    'Tutoriel vidéo HD : technique professionnelle de montage et démontage mouvement 6497.',
+  badge: 'Populaire',
+  href: 'https://www.horlolearn.ch/pratique/demontage',
+},
     {
       type: 'Guide',
       title: 'Révision complète Valjoux 7750',
