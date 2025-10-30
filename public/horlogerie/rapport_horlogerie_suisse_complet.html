@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Horlogerie Suisse : Excellence et Tradition Mondiale</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="watch" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23watch)"/></svg>');
+        }
+        
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.3rem;
+            position: relative;
+            z-index: 1;
+            opacity: 0.95;
+        }
+        
+        .hero-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 60px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .section-history {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+        
+        .section-brands {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+        
+        .section-techniques {
+            background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
+        }
+        
+        .section-economy {
+            background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+        }
+        
+        .section-formation {
+            background: linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%);
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title::before {
+            content: '⌚';
+            font-size: 3rem;
+            margin-right: 20px;
+            color: #e74c3c;
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .section-image {
+            max-width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            color: #e74c3c;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .brand-logo {
+            width: 60px;
+            height: 60px;
+            background: #34495e;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .stats-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #f39c12;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+        
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #3498db;
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin: 40px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+        
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .timeline-content {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 45%;
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: 5%;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 5%;
+        }
+        
+        .timeline-date {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .footer h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #f39c12;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #a8e6cf 0%, #dcedc8 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #27ae60;
+        }
+        
+        .quote {
+            font-style: italic;
+            font-size: 1.2rem;
+            text-align: center;
+            color: #7f8c8d;
+            margin: 30px 0;
+            padding: 20px;
+            border-left: 4px solid #3498db;
+            background: rgba(52, 152, 219, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item {
+                flex-direction: column !important;
+                align-items: flex-start;
+            }
+            
+            .timeline-content {
+                width: calc(100% - 40px) !important;
+                margin-left: 40px !important;
+                margin-right: 0 !important;
+            }
+            
+            .timeline-date {
+                left: 20px !important;
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>L'Horlogerie Suisse</h1>
+            <p>Un Patrimoine d'Excellence Universelle</p>
+        </header>
+        
+        <img src="imgs/horlogerie_suisse_atelier.png" alt="Atelier d'horlogerie suisse dans les Alpes" class="hero-image">
+        
+        <div class="content">
+            <div class="quote">
+                "L'horlogerie suisse transcende le statut de simple industrie pour s'ériger en véritable emblème culturel, synonyme de précision, de luxe et d'un art de vivre intemporel."
+            </div>
+            
+            <!-- Section Histoire -->
+            <section class="section section-history">
+                <h2 class="section-title">Héritage Historique et Culturel</h2>
+                
+                <div class="image-container">
+                    <img src="imgs/horlogerie_suisse_carte.png" alt="Carte des régions horlogères suisses" class="section-image">
+                </div>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">1587</div>
+                        <div class="timeline-content">
+                            <h3>Les Origines Genevoises</h3>
+                            <p>Introduction de l'horlogerie à Genève après les réformes calvinistes. Les orfèvres locaux, interdits de créer des objets religieux, se tournent vers la mesure du temps.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">1601</div>
+                        <div class="timeline-content">
+                            <h3>Première Corporation Mondiale</h3>
+                            <p>Genève fonde la première corporation d'horlogers au monde, établissant les bases d'une tradition artisanale qui perdure.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">XVIIIe-XIXe</div>
+                        <div class="timeline-content">
+                            <h3>Extension à l'Arc Jurassien</h3>
+                            <p>Développement du système de l'établissage : production décentralisée où les familles paysannes spécialisées fabricaient les composants.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">1970s-1980s</div>
+                        <div class="timeline-content">
+                            <h3>Crise du Quartz et Résilience</h3>
+                            <p>La révolution quartz menace l'industrie, mais l'horlogerie suisse s'adapte par l'innovation (Swatch) et le positionnement luxe.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-date">2020</div>
+                        <div class="timeline-content">
+                            <h3>Reconnaissance UNESCO</h3>
+                            <p>Inscription des savoir-faire en mécanique horlogère et mécanique d'art au patrimoine culturel immatériel de l'humanité.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <h3>🎯 Patimoine UNESCO</h3>
+                    <p>En 2020, l'UNESCO reconnaît officiellement les savoir-faire horlogers suisses comme patrimoine culturel immatériel, validant leur importance mondiale.</p>
+                </div>
+            </section>
+            
+            <!-- Section Marques -->
+            <section class="section section-brands">
+                <h2 class="section-title">Les Grandes Maisons : Ambassadeurs de l'Excellence</h2>
+                
+                <div class="image-container">
+                    <img src="imgs/montres_emblematiques.png" alt="Collection de montres suisses emblématiques" class="section-image">
+                </div>
+                
+                <div class="grid">
+                    <div class="card">
+                        <div class="brand-logo">PP</div>
+                        <h3 class="card-title">Patek Philippe</h3>
+                        <p><strong>Fondée en 1839</strong> - Manufacture familiale indépendante</p>
+                        <p><strong>Modèles iconiques :</strong> Calatrava, Nautilus, Grandmaster Chime</p>
+                        <p><strong>Spécialité :</strong> Tradition et innovation, complications les plus sophistiquées</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="brand-logo">RO</div>
+                        <h3 class="card-title">Rolex</h3>
+                        <p><strong>Fondée en 1905</strong> - Marque la plus reconnue au monde</p>
+                        <p><strong>Modèles iconiques :</strong> Submariner, Daytona, Datejust</p>
+                        <p><strong>Spécialité :</strong> Robustesse, fiabilité, précision sportive</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="brand-logo">OM</div>
+                        <h3 class="card-title">Omega</h3>
+                        <p><strong>Fondée en 1848</strong> - Chronométreur officiel des JO</p>
+                        <p><strong>Modèles iconiques :</strong> Speedmaster (moonwatch), Seamaster</p>
+                        <p><strong>Spécialité :</strong> Performance, spirit d'aventure, innovation</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="brand-logo">AP</div>
+                        <h3 class="card-title">Audemars Piguet</h3>
+                        <p><strong>Fondée en 1875</strong> - Révolution de la Royal Oak</p>
+                        <p><strong>Modèles iconiques :</strong> Royal Oak (1972), Code 11.59</p>
+                        <p><strong>Spécialité :</strong> Premières montres de sport de luxe en acier</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="brand-logo">IWC</div>
+                        <h3 class="card-title">IWC Schaffhausen</h3>
+                        <p><strong>Fondée en 1868</strong> - Ingénierie horlogère de précision</p>
+                        <p><strong>Modèles iconiques :</strong> Pilot's Watch, Ingenieur, Port Automatique</p>
+                        <p><strong>Spécialité :</strong> Innovation technique, montres d'ingénieur</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="brand-logo">HU</div>
+                        <h3 class="card-title">Hublot</h3>
+                        <p><strong>Fondée en 1980</strong> - "Art de la Fusion"</p>
+                        <p><strong>Modèles iconiques :</strong> Big Bang, Spirit of Big Bang</p>
+                        <p><strong>Spécialité :</strong> Nouveaux matériaux, design futuriste</p>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <h3>🌟 Innovation Révolutionnaire : La Royal Oak</h3>
+                    <p>En 1972, Audemars Piguet révolutionne l'horlogerie avec la Royal Oak, première montre de sport de luxe en acier. Un coup de maître qui créé un nouveau segment et influence toute l'industrie.</p>
+                </div>
+            </section>
+            
+            <!-- Section Techniques -->
+            <section class="section section-techniques">
+                <h2 class="section-title">Savoir-Faire et Fabrication : L'Art de la Précision</h2>
+                
+                <div class="image-container">
+                    <img src="imgs/fabrication_precision.png" alt="Atelier d'horlogerie moderne avec précision" class="section-image">
+                </div>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h3 class="card-title">🔧 Techniques de Fabrication</h3>
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li>✅ <strong>Assemblage mécanique :</strong> Montage à la main, réglage, ajustement</li>
+                            <li>✅ <strong>Finitions traditionnelles :</strong> Côtes de Genève, perlage, anglage</li>
+                            <li>✅ <strong>Gravure et décoration :</strong> Guillochage, émaillage, gravures</li>
+                            <li>✅ <strong>Précision :</strong> Mesure au micron près (0,001mm)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">⚙️ Complications Horlogères</h3>
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li>🔸 <strong>Simples :</strong> Date, jour, réserve de marche</li>
+                            <li>🔸 <strong>Moyennes :</strong> Chronographe, phase de lune, GMT</li>
+                            <li>🔸 <strong>Grandes :</strong> Répétition minutes, calendrier perpétuel</li>
+                            <li>🔸 <strong>Ultimes :</strong> Équation du temps, tourbillon</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">💎 Matériaux et Innovation</h3>
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li>⚡ <strong>Traditionnels :</strong> Or, platine, titane, acier</li>
+                            <li>⚡ <strong>Modernes :</strong> Céramique, carbone, silicium</li>
+                            <li>⚡ <strong>Propriétaires :</strong> Magic Gold, ceramic haute densité</li>
+                            <li>⚡ <strong>Propriétés :</strong> Amagnétique, anti-rayure, léger</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">🎖️ Certification COSC</h3>
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li>🏆 <strong>2,4 millions</strong> de mouvements certifiés en 2024</li>
+                            <li>🏆 <strong>Tests :</strong> 12-20 jours, 7 critères de précision</li>
+                            <li>🏆 <strong>Critères :</strong> 65 manipulations et mesures</li>
+                            <li>🏆 <strong>Résultat :</strong> Variation <4 secondes/jour</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <h3>🔬 Innovation Technologique</h3>
+                    <p>L'industrie horlogère suisse intègre les technologies 4.0 : IA pour la conception, robots pour l'usinage de précision, impression 3D pour les prototypes. Le silicium offre des propriétés amagnétiques révolutionnaires, tandis que les nouvelles céramiques haute densité allient esthétique et performance.</p>
+                </div>
+            </section>
+            
+            <!-- Section Économie -->
+            <section class="section section-economy">
+                <h2 class="section-title">Impact Économique et Vision Stratégique</h2>
+                
+                <div class="stats-container">
+                    <h3 style="text-align: center; margin-bottom: 30px; font-size: 2rem;">Statistiques Clés 2024</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-number">26,0</span>
+                            <span class="stat-label">Milliards CHF d'exportations</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">15,3M</span>
+                            <span class="stat-label">Montres exportées</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">680</span>
+                            <span class="stat-label">Entreprises horlogères</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">72,988</span>
+                            <span class="stat-label">Emplois dans le secteur</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">50%</span>
+                            <span class="stat-label">Part de marché mondial</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">8,2%</span>
+                            <span class="stat-label">Contribution PIB manufacturier</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h3 class="card-title">📈 Marchés Principaux 2024</h3>
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li>🇺🇸 <strong>États-Unis</strong> : 15,3% (+5%) - Premier débouché</li>
+                            <li>🇨🇳 <strong>Chine</strong> : -25,8% - Contraction économique</li>
+                            <li>🇭🇰 <strong>Hong Kong</strong> : -18,7% - Perte du 3ème rang</li>
+                            <li>🇯🇵 <strong>Japon</strong> : +7,8% - Rebond touristique</li>
+                            <li>🇮🇳 <strong>Inde</strong> : +25,2% - Marché émergent</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">🎯 Défis Identifiés</h3>
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li>⚠️ <strong>Concurrence asiatique</strong> : Qualité/prix attractif</li>
+                            <li>⚠️ <strong>Révolution smartwatch</strong> : Connectivité et fonctions</li>
+                            <li>⚠️ <strong>Force du franc</strong> : Impact sur compétitivité</li>
+                            <li>⚠️ <strong>Génération Z</strong> : Nouveaux codes et attentes</li>
+                            <li>⚠️ <strong>Tensions géopolitiques</strong> : Instabilité mondiale</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">🚀 Opportunités 2025-2030</h3>
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li>✨ <strong>Marchés émergents</strong> : Inde, Brésil, Moyen-Orient</li>
+                            <li>✨ <strong>Personnalisation</strong> : Sur-mesure et exclusivité</li>
+                            <li>✨ <strong>Technologies 4.0</strong> : IA, robots, IoT</li>
+                            <li>✨ <strong>Durabilité</strong> : Économie circulaire, éco-matériaux</li>
+                            <li>✨ <strong>Digitalisation</strong> : E-commerce, marketing digital</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <h3>📊 Projection 2025-2030</h3>
+                    <p><strong>Marché mondial</strong> : 63,21 → 87,48 milliards USD<br>
+                    <strong>CAGR</strong> : 3,7% de croissance annuelle stable<br>
+                    <strong>Stratégie</strong> : Consolidation du leadership luxe, innovation durable, excellence opérationnelle</p>
+                </div>
+            </section>
+            
+            <!-- Section Formation -->
+            <section class="section section-formation">
+                <h2 class="section-title">Formation et Transmission : Garantir l'Avenir</h2>
+                
+                <div class="image-container">
+                    <img src="imgs/formation_horlogerie.png" alt="Formation en horlogerie genevoise" class="section-image">
+                </div>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h3 class="card-title">🏫 Établissements d'Élite</h3>
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li>🎓 <strong>CFH Genève</strong> : Formation continue modulaire</li>
+                            <li>🎓 <strong>Écoles CFC</strong> : 4 ans d'apprentissage</li>
+                            <li>🎓 <strong>HE-Arc</strong> : Bachelor et Master</li>
+                            <li>🎓 <strong>Rolex Academy</strong> : 10 000 collaborateurs/an</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">⚙️ Métiers d'Expertise</h3>
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li>🔧 <strong>Horloger-démonstrateur</strong> : Assemblage, réparation</li>
+                            <li>🔧 <strong>Rhabilleur</strong> : Restauration montres anciennes</li>
+                            <li>🔧 <strong>Termineur</strong> : Finitions et décorations</li>
+                            <li>🔧 <strong>Graveur</strong> : Personnalisation premium</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">📚 Système de Formation</h3>
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li>📖 <strong>CFC (4 ans)</strong> : Alternance 3-4j entreprise/1-2j école</li>
+                            <li>📖 <strong>64 jours</strong> de cours inter-entreprises</li>
+                            <li>📖 <strong>326 places</strong> d'apprentissage disponibles</li>
+                            <li>📖 <strong>5 878 CHF</strong> : Salaire médian (2025)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">🎯 Besoins Futurs</h3>
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li>👥 <strong>3 835</strong> nouveaux collaborateurs d'ici 2026</li>
+                            <li>👥 <strong>1 466</strong> nouveaux postes créés</li>
+                            <li>👥 <strong>2 369</strong> remplacements (départs retraite)</li>
+                            <li>👥 <strong>20%</strong> de croissance des besoins</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <h3>🤝 Transmission Intergénérationnelle</h3>
+                    <p>L'industrie horlogère suisse cultive une culture de transmission unique : mentorat maître-apprenti, préservation des techniques ancestrales, et innovation pédagogique. Les centres de formation internes des grands groupes assurent la continuité de l'expertise.</p>
+                </div>
+            </section>
+            
+            <!-- Section Impact Culturel -->
+            <section class="section" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+                <h2 class="section-title">L'Horlogerie Suisse dans le Monde</h2>
+                
+                <div class="grid">
+                    <div class="card">
+                        <h3 class="card-title">🏛️ Patrimoine Culturel</h3>
+                        <p>L'horlogerie suisse est un vecteur culturel majeur, incarnant les valeurs de qualité, précision et élégance. Elle façonne la perception de la Suisse à l'international.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">🎪 Événements Internationaux</h3>
+                        <p><strong>Watches and Wonders Genève</strong> : Le salon horloger mondial<br>
+                        <strong>Watch Valley</strong> : Itinéraires thématiques en Suisse<br>
+                        <strong>Musée International d'Horlogerie</strong> : 4 500 objets, 70 000 visiteurs/an</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">🌍 Influence Mondiale</h3>
+                        <p>La montre suisse symbolise l'excellence artisanale universelle. Elle transcende les cultures et les générations, becomes un langage universel de luxe et de précision.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">✈️ Attractivité Touristique</h3>
+                        <p><strong>Route du Temps</strong> : Itinéraire horloger de 100 km<br>
+                        <strong>Ateliers ouverts</strong> : Découverte du savoir-faire<br>
+                        <strong>Circuits VIP</strong> : Visites de manufactures</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <footer class="footer">
+            <h3>L'Excellence Sans Frontières</h3>
+            <p style="max-width: 800px; margin: 0 auto; font-size: 1.1rem; line-height: 1.8;">
+                L'horlogerie suisse est bien plus qu'une industrie : c'est un patrimoine vivant, un art de vivre et une quête incessante de perfection. 
+                De ses origines dans les montagnes du Jura à son statut de leader mondial, elle continue d'écrire l'histoire de l'excellence helvétique.
+            </p>
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.3);">
+                <p><strong>Rapport complet sur l'Horlogerie Suisse • 2024</strong></p>
+                <p>Une présentation de l'excellence horlogère helvétique pour le monde entier</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
