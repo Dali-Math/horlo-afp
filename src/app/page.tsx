@@ -143,16 +143,13 @@ export default function HorloLearnHome() {
   href: 'https://www.horlolearn.ch/pratique/demontage',
 },
     {
-      type: 'Guide',
-      title: 'Révision complète Valjoux 7750',
-      description:
-        'Guide pas-à-pas avec photos et conseils d’expert pour démonter et remonter le mouvement.',
-      author: 'Sophie L.',
-      downloads: '1,560',
-      readTime: '35 min',
-      badge: 'Nouveau',
-      href: '#',
-    },
+  type: 'Ressource',
+  title: 'Outils de mesure en horlogerie moderne',
+  description:
+    'Découvrez les 10 instruments essentiels utilisés aujourd’hui pour garantir la précision du travail horloger.',
+  badge: 'Nouveau',
+  href: 'https://www.horlolearn.ch/outils/outils-de-mesure',
+},
   ]
 
   const actualites = [
