@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronLeft, ChevronRight, Search, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw, X } from 'lucide-react'
 
 export default function VueAssemblage() {
   const [currentPage, setCurrentPage] = useState(1)
@@ -11,17 +11,17 @@ export default function VueAssemblage() {
   const pages = [
     {
       id: 1,
-    title: "Vue d'assemblage - Planche 1",
-    image: "/images/eta6497/assemblage-1.png",
-    pieces: [
-      { id: "5", nom: "Balancier-spiral complet", x: 29, y: 24 },
-      { id: "3", nom: "Roue d'échappement", x: 30, y: 41 },
-      { id: "4", nom: "Ancre", x: 29, y: 49 },
-      { id: "2", nom: "Coq", x: 34, y: 61 },
-      { id: "1-1", nom: "Platine côté cadran", x: 10, y: 62 },
-      { id: "1-2", nom: "Platine côté ponts (gauche)", x: 67, y: 65 },
-      { id: "1-2'", nom: "Platine côté ponts (droite)", x: 91, y: 61 },
-      { id: "900 VAR", nom: "Vis de réglage", x: 72, y: 50 },
+      title: "Vue d'assemblage - Planche 1",
+      image: "/images/eta6497/assemblage-1.png",
+      pieces: [
+        { id: "5", nom: "Balancier-spiral complet", x: 29, y: 24 },
+        { id: "3", nom: "Roue d'échappement", x: 30, y: 41 },
+        { id: "4", nom: "Ancre", x: 29, y: 49 },
+        { id: "2", nom: "Coq", x: 34, y: 61 },
+        { id: "1-1", nom: "Platine côté cadran", x: 10, y: 62 },
+        { id: "1-2", nom: "Platine côté ponts (gauche)", x: 67, y: 65 },
+        { id: "1-2'", nom: "Platine côté ponts (droite)", x: 91, y: 61 },
+        { id: "900 VAR", nom: "Vis de réglage", x: 72, y: 50 },
       ]
     },
     {
@@ -104,13 +104,13 @@ export default function VueAssemblage() {
 
   const currentPageData = pages[currentPage - 1]
 
-  const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.2, 2))
-  const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.2, 0.5))
+  // Handlers
+  const handleZoomIn = () => setZoom(z => Math.min(z + 0.2, 2))
+  const handleZoomOut = () => setZoom(z => Math.max(z - 0.2, 0.5))
   const handleResetZoom = () => setZoom(1)
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-      
       {/* Header */}
       <section className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-6 py-8">
@@ -123,48 +123,31 @@ export default function VueAssemblage() {
                 Nomenclature interactive des composants du mouvement
               </p>
             </div>
-
-            {/* Zoom Controls */}
             <div className="hidden md:flex items-center gap-2 bg-gray-100 dark:bg-slate-800 rounded-lg p-2">
-              <button
-                onClick={handleZoomOut}
-                className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors"
-                title="Zoom arrière"
-              >
+              <button onClick={handleZoomOut} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors" title="Zoom arrière">
                 <ZoomOut className="w-5 h-5 text-gray-700 dark:text-gray-300" />
               </button>
               <span className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px] text-center">
                 {Math.round(zoom * 100)}%
               </span>
-              <button
-                onClick={handleZoomIn}
-                className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors"
-                title="Zoom avant"
-              >
+              <button onClick={handleZoomIn} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors" title="Zoom avant">
                 <ZoomIn className="w-5 h-5 text-gray-700 dark:text-gray-300" />
               </button>
               <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
-              <button
-                onClick={handleResetZoom}
-                className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors"
-                title="Réinitialiser"
-              >
+              <button onClick={handleResetZoom} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors" title="Réinitialiser">
                 <RotateCcw className="w-5 h-5 text-gray-700 dark:text-gray-300" />
               </button>
             </div>
           </div>
-
-          {/* Page Navigation */}
           <div className="flex items-center gap-2 mt-6">
             {pages.map((page) => (
               <button
                 key={page.id}
-                onClick={() => setCurrentPage(page.id)}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
-                  currentPage === page.id
-                    ? 'bg-[#E2B44F] text-white shadow-md'
-                    : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
-                }`}
+                onClick={() => { setCurrentPage(page.id); setSelectedPiece(null) }}
+                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${currentPage === page.id
+                  ? 'bg-[#E2B44F] text-white shadow-md'
+                  : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
+                  }`}
               >
                 {page.id}
               </button>
@@ -173,10 +156,8 @@ export default function VueAssemblage() {
         </div>
       </section>
 
-      {/* Main Viewer */}
       <section className="max-w-7xl mx-auto px-6 py-8">
         <div className="grid lg:grid-cols-3 gap-8">
-          
           {/* Image Viewer */}
           <div className="lg:col-span-2">
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg overflow-hidden">
@@ -185,112 +166,99 @@ export default function VueAssemblage() {
                   {currentPageData.title}
                 </h3>
               </div>
-
-              <div className="relative bg-white dark:bg-slate-950 aspect-[4/3] overflow-auto">
-                <div 
-                  className="absolute inset-0 flex items-center justify-center p-8 transition-transform duration-300"
-                  style={{ transform: `scale(${zoom})` }}
+              <div className="relative bg-white dark:bg-slate-950 aspect-[4/3] overflow-auto" style={{ minHeight: 400 }}>
+                <div
+                  className="absolute inset-0 flex items-center justify-center transition-transform duration-300"
+                  style={{ transform: `scale(${zoom})`, transformOrigin: "50% 50%" }}
                 >
-                  {/* Placeholder - Remplacer par vraie image */}
-                  <div className="relative w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-slate-800 dark:to-slate-900 rounded-lg flex items-center justify-center">
-                    <div className="text-center">
-                      <Search className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
-                      <p className="text-gray-500 dark:text-gray-400 font-medium">
-                        Image technique - Planche {currentPageData.id}
-                      </p>
-                      <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
-                        Schéma d'assemblage ETA 6497
-                      </p>
+                  {/* IMAGE */}
+                  <img
+                    src={currentPageData.image}
+                    alt={currentPageData.title}
+                    className="w-full h-full object-contain pointer-events-none"
+                  />
+                  {/* LABELS */}
+                  {currentPageData.pieces.map((piece) => (
+                    <button
+                      key={piece.id}
+                      onClick={() => setSelectedPiece(piece.id)}
+                      className={`
+                        absolute px-3 py-1.5 rounded-md text-xs font-bold tracking-tight
+                        border border-[#baacc1] bg-[#f3e3e5] shadow hover:bg-[#E2B44F]/20
+                        transition-all duration-200
+                        ${selectedPiece === piece.id ? 'scale-110 ring-2 ring-[#E2B44F] z-20' : 'z-10'}
+                      `}
+                      style={{
+                        left: `${piece.x}%`,
+                        top: `${piece.y}%`,
+                        transform: 'translate(-50%, -50%)',
+                        minWidth: 35,
+                        minHeight: 25
+                      }}
+                      title={piece.nom}
+                    >
+                      {piece.id}
+                    </button>
+                  ))}
+                  {/* Infobox Desktop */}
+                  {selectedPiece && (
+                    <div
+                      className="hidden md:block absolute right-3 top-3 bg-white dark:bg-slate-900 border border-[#E2B44F]/40 rounded-xl shadow-lg p-5 min-w-[220px] max-w-xs z-40"
+                    >
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-[#E2B44F] font-bold text-lg">{selectedPiece}</span>
+                        <button onClick={() => setSelectedPiece(null)} aria-label="Fermer">
+                          <X className="w-5 h-5 text-gray-400 hover:text-[#E2B44F]" />
+                        </button>
+                      </div>
+                      <div className="font-medium text-gray-900 dark:text-white">
+                        {currentPageData.pieces.find(p => p.id === selectedPiece)?.nom}
+                      </div>
                     </div>
-
-                    {/* Labels des pièces (positionnement simulé) */}
-                    {currentPageData.pieces.map((piece) => (
-                      <button
-                        key={piece.id}
-                        onClick={() => setSelectedPiece(piece.id)}
-                        className={`absolute px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
-                          selectedPiece === piece.id
-                            ? 'bg-[#E2B44F] text-white scale-110 shadow-lg'
-                            : 'bg-white/90 dark:bg-slate-800/90 text-gray-800 dark:text-gray-200 hover:bg-[#E2B44F]/20 dark:hover:bg-[#E2B44F]/20'
-                        }`}
-                        style={{ 
-                          left: `${piece.x}%`, 
-                          top: `${piece.y}%`,
-                          transform: 'translate(-50%, -50%)'
-                        }}
-                      >
-                        {piece.id}
-                      </button>
-                    ))}
-                  </div>
+                  )}
                 </div>
               </div>
-
               {/* Navigation Controls */}
               <div className="bg-gray-50 dark:bg-slate-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
-                <button
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                <button onClick={() => { setCurrentPage(prev => Math.max(1, prev - 1)); setSelectedPiece(null) }}
                   disabled={currentPage === 1}
                   className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
                 >
-                  <ChevronLeft className="w-4 h-4" />
-                  Précédent
+                  <ChevronLeft className="w-4 h-4" /> Précédent
                 </button>
-
                 <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
                   Planche {currentPage} / {pages.length}
                 </span>
-
-                <button
-                  onClick={() => setCurrentPage(prev => Math.min(pages.length, prev + 1))}
+                <button onClick={() => { setCurrentPage(prev => Math.min(pages.length, prev + 1)); setSelectedPiece(null) }}
                   disabled={currentPage === pages.length}
                   className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
                 >
-                  Suivant
-                  <ChevronRight className="w-4 h-4" />
+                  Suivant <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
-
             {/* Zoom Controls Mobile */}
             <div className="md:hidden flex items-center justify-center gap-2 mt-4 bg-gray-100 dark:bg-slate-800 rounded-lg p-2">
-              <button
-                onClick={handleZoomOut}
-                className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors"
-              >
+              <button onClick={handleZoomOut} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
                 <ZoomOut className="w-5 h-5 text-gray-700 dark:text-gray-300" />
               </button>
-              <span className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px] text-center">
-                {Math.round(zoom * 100)}%
-              </span>
-              <button
-                onClick={handleZoomIn}
-                className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors"
-              >
+              <span className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px] text-center">{Math.round(zoom * 100)}%</span>
+              <button onClick={handleZoomIn} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
                 <ZoomIn className="w-5 h-5 text-gray-700 dark:text-gray-300" />
               </button>
               <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
-              <button
-                onClick={handleResetZoom}
-                className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors"
-              >
+              <button onClick={handleResetZoom} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
                 <RotateCcw className="w-5 h-5 text-gray-700 dark:text-gray-300" />
               </button>
             </div>
           </div>
-
           {/* Nomenclature Panel */}
           <div className="lg:col-span-1">
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg sticky top-6">
               <div className="bg-gradient-to-r from-[#E2B44F] to-[#C9A043] px-6 py-4 rounded-t-2xl">
-                <h3 className="font-bold text-white text-lg">
-                  Nomenclature
-                </h3>
-                <p className="text-sm text-white/80 mt-1">
-                  Cliquez sur une pièce pour la localiser
-                </p>
+                <h3 className="font-bold text-white text-lg">Nomenclature</h3>
+                <p className="text-sm text-white/80 mt-1">Cliquez sur une pièce pour la localiser</p>
               </div>
-
               <div className="p-4 max-h-[600px] overflow-y-auto">
                 <div className="space-y-2">
                   {currentPageData.pieces.map((piece) => (
@@ -305,12 +273,8 @@ export default function VueAssemblage() {
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <div className="font-mono text-sm font-bold text-[#E2B44F] mb-1">
-                            {piece.id}
-                          </div>
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">
-                            {piece.nom}
-                          </div>
+                          <div className="font-mono text-sm font-bold text-[#E2B44F] mb-1">{piece.id}</div>
+                          <div className="text-sm font-medium text-gray-900 dark:text-white">{piece.nom}</div>
                         </div>
                         {selectedPiece === piece.id && (
                           <div className="w-2 h-2 bg-[#E2B44F] rounded-full animate-pulse" />
@@ -320,33 +284,39 @@ export default function VueAssemblage() {
                   ))}
                 </div>
               </div>
-
               <div className="bg-gray-50 dark:bg-slate-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700 rounded-b-2xl">
                 <div className="text-xs text-gray-600 dark:text-gray-400">
-                  <strong className="text-gray-900 dark:text-white">
-                    {currentPageData.pieces.length}
-                  </strong> composants sur cette planche
+                  <strong className="text-gray-900 dark:text-white">{currentPageData.pieces.length}</strong> composants sur cette planche
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Info Section */}
       <section className="max-w-7xl mx-auto px-6 pb-16">
         <div className="bg-gradient-to-br from-[#E2B44F]/10 via-[#E2B44F]/5 to-transparent border border-[#E2B44F]/20 rounded-2xl p-8">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-            À propos des vues d'assemblage
-          </h3>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">À propos des vues d'assemblage</h3>
           <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-            Ces schémas techniques représentent l'assemblage complet du calibre ETA 6497-1, 
-            un mouvement mécanique à remontage manuel de référence dans l'horlogerie suisse. 
-            Chaque composant est numéroté et identifié pour faciliter la compréhension 
-            de la structure du mouvement.
+            Ces schémas techniques représentent l'assemblage complet du calibre ETA 6497-1, un mouvement mécanique à remontage manuel de référence dans l'horlogerie suisse. Chaque composant est numéroté et identifié pour faciliter la compréhension de la structure du mouvement.
           </p>
         </div>
       </section>
+      {/* Popover info pièce Mobile */}
+      {selectedPiece && (
+        <div className="md:hidden fixed inset-0 z-50 flex items-end">
+          <div className="w-full bg-white dark:bg-slate-900 border-t border-[#E2B44F]/40 rounded-t-2xl shadow-xl p-5">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-[#E2B44F] font-bold text-lg">{selectedPiece}</span>
+              <button onClick={() => setSelectedPiece(null)} aria-label="Fermer">
+                <X className="w-5 h-5 text-gray-400 hover:text-[#E2B44F]" />
+              </button>
+            </div>
+            <div className="font-medium text-gray-900 dark:text-white">
+              {currentPageData.pieces.find(p => p.id === selectedPiece)?.nom}
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }
