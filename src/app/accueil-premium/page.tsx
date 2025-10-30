@@ -191,27 +191,23 @@ export default function VueAssemblage() {
                   className="absolute inset-0 flex items-center justify-center p-8 transition-transform duration-300"
                   style={{ transform: `scale(${zoom})` }}
                 >
-                  {/* Placeholder - Remplacer par vraie image */}
-                  <div className="relative w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-slate-800 dark:to-slate-900 rounded-lg flex items-center justify-center">
-                    <div className="text-center">
-                      <Search className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
-                      <p className="text-gray-500 dark:text-gray-400 font-medium">
-                        Image technique - Planche {currentPageData.id}
-                      </p>
-                      <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
-                        Schéma d'assemblage ETA 6497
-                      </p>
-                    </div>
+                  {/* Image réelle */}
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    <img
+                      src={`/images/eta6497/assemblage-${currentPageData.id}.png`}
+                      alt={currentPageData.title}
+                      className="max-w-full max-h-full object-contain"
+                    />
 
-                    {/* Labels des pièces (positionnement simulé) */}
+                    {/* Labels des pièces positionnés sur l'image */}
                     {currentPageData.pieces.map((piece, idx) => (
                       <button
                         key={`${piece.id}-${idx}`}
                         onClick={() => setSelectedPiece(piece.id)}
                         className={`absolute px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
                           selectedPiece === piece.id
-                            ? 'bg-[#E2B44F] text-white scale-110 shadow-lg'
-                            : 'bg-white/90 dark:bg-slate-800/90 text-gray-800 dark:text-gray-200 hover:bg-[#E2B44F]/20 dark:hover:bg-[#E2B44F]/20'
+                            ? 'bg-[#E2B44F] text-white scale-110 shadow-lg z-20'
+                            : 'bg-white/90 dark:bg-slate-800/90 text-gray-800 dark:text-gray-200 hover:bg-[#E2B44F]/20 dark:hover:bg-[#E2B44F]/20 z-10'
                         }`}
                         style={{ 
                           left: `${piece.x}%`, 
