@@ -14,14 +14,14 @@ export default function VueAssemblage() {
       title: 'Vue d\'assemblage - Planche 1',
       image: '/images/eta6497/assemblage-1.png',
       pieces: [
-        { id: '5', nom: 'Balancier-spiral complet', x: 27, y: 28 },
-        { id: '3', nom: 'Roue d\'échappement', x: 24, y: 42 },
-        { id: '4', nom: 'Ancre', x: 24, y: 49 },
-        { id: '1-1', nom: 'Platine côté cadran', x: 13, y: 60 },
-        { id: '2', nom: 'Coq', x: 27, y: 60 },
-        { id: '1-2', nom: 'Platine côté ponts (haut)', x: 73, y: 60 },
-        { id: '1-2', nom: 'Platine côté ponts (bas)', x: 54, y: 63 },
-        { id: '900 VAR', nom: 'Vis de réglage', x: 66, y: 50 },
+        { id: '5', nom: 'Balancier-spiral complet', x: 29, y: 24 },
+        { id: '3', nom: 'Roue d\'échappement', x: 30, y: 41 },
+        { id: '4', nom: 'Ancre', x: 29, y: 49 },
+        { id: '2', nom: 'Coq', x: 34, y: 61 },
+        { id: '1-1', nom: 'Platine côté cadran', x: 10, y: 62 },
+        { id: '1-2', nom: 'Platine côté ponts (gauche)', x: 67, y: 65 },
+        { id: '1-2', nom: 'Platine côté ponts (droite)', x: 91, y: 61 },
+        { id: '900 VAR', nom: 'Vis de réglage', x: 72, y: 50 },
       ]
     },
     {
@@ -29,13 +29,13 @@ export default function VueAssemblage() {
       title: 'Vue d\'assemblage - Planche 2',
       image: '/images/eta6497/assemblage-2.png',
       pieces: [
-        { id: '901 VAR', nom: 'Vis de pont de seconde', x: 42, y: 15 },
-        { id: '11', nom: 'Pont de seconde', x: 43, y: 23 },
-        { id: '10 VAR', nom: 'Pignon de seconde', x: 43, y: 33 },
-        { id: '9', nom: 'Roue de seconde', x: 38, y: 40 },
-        { id: '8', nom: 'Goupille raquette', x: 40, y: 46 },
-        { id: '7', nom: 'Raquette', x: 27, y: 52 },
-        { id: '6', nom: 'Piton', x: 25, y: 58 },
+        { id: '901 VAR', nom: 'Vis de pont de seconde', x: 56, y: 98 },
+        { id: '11', nom: 'Pont de seconde', x: 55, y: 89 },
+        { id: '10 VAR', nom: 'Pignon de seconde', x: 56, y: 77 },
+        { id: '9', nom: 'Roue de seconde', x: 51, y: 69 },
+        { id: '8', nom: 'Goupille raquette', x: 55, y: 62 },
+        { id: '7', nom: 'Raquette', x: 31, y: 55 },
+        { id: '6', nom: 'Piton', x: 26, y: 48 },
       ]
     },
     {
