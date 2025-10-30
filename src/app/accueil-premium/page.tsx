@@ -11,7 +11,7 @@ export default function VueAssemblage() {
   const pages = [
     {
       id: 1,
-      title: 'Vue d\'assemblage - Planche 1',
+      title: 'Vue d'assemblage - Planche 1',
       image: '/images/eta6497/assemblage-1.png',
       pieces: [
         { id: '5', nom: 'Balancier-spiral complet', x: 29, y: 24 },
