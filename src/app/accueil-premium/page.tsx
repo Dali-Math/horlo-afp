@@ -11,17 +11,17 @@ export default function VueAssemblage() {
   const pages = [
     {
       id: 1,
-      title: 'Vue d'assemblage – Planche 1',
-      image: '/images/eta6497/assemblage-1.png',
-      pieces: [
-        { id: '5', nom: 'Balancier-spiral complet', x: 29, y: 24 },
-        { id: '3', nom: 'Roue d'échappement', x: 30, y: 41 },
-        { id: '4', nom: 'Ancre', x: 29, y: 49 },
-        { id: '2', nom: 'Coq', x: 34, y: 61 },
-        { id: '1-1', nom: 'Platine côté cadran', x: 10, y: 62 },
-        { id: '1-2', nom: 'Platine côté ponts (gauche)', x: 67, y: 65 },
-        { id: '1-2', nom: 'Platine côté ponts (droite)', x: 91, y: 61 },
-        { id: '900 VAR', nom: 'Vis de réglage', x: 72, y: 50 },
+    title: "Vue d'assemblage - Planche 1",
+    image: "/images/eta6497/assemblage-1.png",
+    pieces: [
+      { id: "5", nom: "Balancier-spiral complet", x: 29, y: 24 },
+      { id: "3", nom: "Roue d'échappement", x: 30, y: 41 },
+      { id: "4", nom: "Ancre", x: 29, y: 49 },
+      { id: "2", nom: "Coq", x: 34, y: 61 },
+      { id: "1-1", nom: "Platine côté cadran", x: 10, y: 62 },
+      { id: "1-2", nom: "Platine côté ponts (gauche)", x: 67, y: 65 },
+      { id: "1-2'", nom: "Platine côté ponts (droite)", x: 91, y: 61 },
+      { id: "900 VAR", nom: "Vis de réglage", x: 72, y: 50 },
       ]
     },
     {
