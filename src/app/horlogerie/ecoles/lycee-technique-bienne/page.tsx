@@ -53,7 +53,7 @@ export default function LyceeTechniqueBienne() {
         <p>
           🔗{' '}
           <a
-            href="https://www.cfp-bienne.ch/"
+            href="https://bbz-cfp.ch/fr/filieres-de-formation/lycee-technique"
             target="_blank"
             rel="noopener noreferrer"
             className="text-amber-500 hover:text-amber-400 underline"
