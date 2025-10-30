@@ -3,11 +3,26 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+function BackLink() {
+  return (
+    <Link
+      href="/horlogerie/ecoles"
+      className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-md border border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-100 hover:border-neutral-400 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800 transition-colors"
+    >
+      <span>←</span>
+      <span>Retour à la liste</span>
+    </Link>
+  )
+}
+
 export default function CfptGeneve() {
   return (
     <main className="min-h-screen bg-white dark:bg-neutral-950 text-neutral-800 dark:text-neutral-200 transition-colors">
       <section className="max-w-4xl mx-auto px-6 py-16">
-        <h1 className="text-3xl md:text-5xl font-bold mb-6 text-amber-600 dark:text-amber-400">
+        {/* Lien de retour */}
+        <BackLink />
+
+        <h1 className="mt-6 text-3xl md:text-5xl font-bold mb-6 text-amber-600 dark:text-amber-400">
           CFPT – École d’Horlogerie de Genève
         </h1>
         <p className="text-neutral-600 dark:text-neutral-400 mb-2">
