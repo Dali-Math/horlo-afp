@@ -8,23 +8,27 @@ export default function RapportHorlogerieSuisse() {
           L’Horlogerie Suisse : Excellence et Tradition
         </h1>
 
-        <div className="relative rounded-2xl overflow-hidden border border-amber-500/40 shadow-[0_0_30px_rgba(226,180,79,0.2)]">
+        {/* --- Conteneur principal --- */}
+        <div className="relative rounded-2xl overflow-hidden border border-amber-500/30 shadow-[0_0_30px_rgba(226,180,79,0.2)]">
           <iframe
-            src="/horlogerie/rapport_horlogerie_suisse_complet.html"
-            className="w-full h-[100dvh] border-0"
+            src="/rapport_horlogerie_suisse_complet.html"
+            title="Rapport complet sur l’horlogerie suisse"
+            className="w-full h-[100dvh] border-0 rounded-2xl"
             style={{
               backgroundColor: '#0a0a0a',
               colorScheme: 'dark',
             }}
           ></iframe>
 
+          {/* Bordure décorative transparente */}
           <div className="absolute inset-0 pointer-events-none rounded-2xl border border-amber-400/10 backdrop-blur-sm"></div>
         </div>
 
-        <div className="text-center mt-8">
+        {/* --- Bouton retour --- */}
+        <div className="text-center mt-10">
           <a
             href="/horlogerie/ecoles"
-            className="text-amber-400 hover:text-amber-300 transition-colors"
+            className="inline-block text-amber-400 hover:text-amber-300 border border-amber-500/40 px-4 py-2 rounded-lg transition-all duration-300 hover:bg-amber-500/10"
           >
             ← Retour aux Écoles d’Horlogerie
           </a>
