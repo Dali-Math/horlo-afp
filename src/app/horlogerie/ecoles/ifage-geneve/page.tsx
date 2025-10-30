@@ -3,11 +3,26 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+function BackLink() {
+  return (
+    <Link
+      href="/horlogerie/ecoles"
+      className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-md border border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-100 hover:border-neutral-400 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:bg-neutral-800 transition-colors"
+    >
+      <span>←</span>
+      <span>Retour à la liste</span>
+    </Link>
+  )
+}
+
 export default function IfageGeneve() {
   return (
     <main className="min-h-screen bg-white dark:bg-neutral-950 text-neutral-800 dark:text-neutral-200 transition-colors">
       <section className="max-w-4xl mx-auto px-6 py-16">
-        <h1 className="text-3xl md:text-5xl font-bold mb-6 text-amber-600 dark:text-amber-400">
+        {/* Lien de retour */}
+        <BackLink />
+
+        <h1 className="mt-6 text-3xl md:text-5xl font-bold mb-6 text-amber-600 dark:text-amber-400">
           Ifage – Fondation pour la Formation des Adultes
         </h1>
         <p className="text-neutral-600 dark:text-neutral-400 mb-2">
@@ -29,29 +44,29 @@ export default function IfageGeneve() {
               Histoire
             </h2>
             <p>
-              Fondée en <strong>1972</strong>, l’<strong>Ifage (Institut de Formation des Adultes de Genève)</strong> 
-              est née de la volonté de proposer des formations professionnelles continues adaptées au tissu économique genevois. 
-              L’institution a progressivement intégré la filière horlogère afin de répondre à la demande croissante de main-d’œuvre 
+              Fondée en <strong>1972</strong>, l’<strong>Ifage (Institut de Formation des Adultes de Genève)</strong>
+              est née de la volonté de proposer des formations professionnelles continues adaptées au tissu économique genevois.
+              L’institution a progressivement intégré la filière horlogère afin de répondre à la demande croissante de main-d’œuvre
               qualifiée dans ce secteur d’excellence.
             </p>
             <p className="mt-3">
-              Reconnue par le canton de Genève, l’Ifage s’est imposée comme un acteur clé de la formation technique, 
-              combinant enseignement pratique et théorie appliquée, notamment dans les domaines de la micromécanique 
+              Reconnue par le canton de Genève, l’Ifage s’est imposée comme un acteur clé de la formation technique,
+              combinant enseignement pratique et théorie appliquée, notamment dans les domaines de la micromécanique
               et de la production horlogère.
             </p>
           </div>
 
-          <div>
+        <div>
             <h2 className="text-2xl font-semibold text-amber-600 dark:text-amber-400 mb-3">
               Description actuelle
             </h2>
             <p>
-              L’Ifage propose aujourd’hui des cursus modulaires destinés aussi bien aux débutants qu’aux professionnels en reconversion. 
-              Son département horlogerie offre des formations en <strong>assemblage</strong>, <strong>réglage</strong> 
+              L’Ifage propose aujourd’hui des cursus modulaires destinés aussi bien aux débutants qu’aux professionnels en reconversion.
+              Son département horlogerie offre des formations en <strong>assemblage</strong>, <strong>réglage</strong>
               et <strong>contrôle qualité</strong>, en lien direct avec les manufactures locales.
             </p>
             <p className="mt-3">
-              L’école se distingue par sa pédagogie axée sur la pratique, la collaboration avec les entreprises horlogères de Genève 
+              L’école se distingue par sa pédagogie axée sur la pratique, la collaboration avec les entreprises horlogères de Genève
               et la possibilité d’obtenir des <strong>certificats fédéraux reconnus</strong> dans plusieurs métiers techniques.
             </p>
           </div>
