@@ -159,10 +159,12 @@ export default function HorloLearnHome() {
       category: 'Événement'
     },
     {
-      title: 'Nouveau calibre Sellita SW330-2 annoncé',
-      time: 'Il y a 5 jours',
-      category: 'Innovation'
-    },
+  title: 'Rapport complet sur l’Horlogerie Suisse 2024',
+  time: 'Publié par HorloLearn',
+  category: 'Découverte',
+  link: '/horlogerie/ecoles/rapport-horlogerie-suisse'
+},
+
     {
   title: 'Les Écoles Suisses d’Horlogerie',
   category: 'Découverte',
