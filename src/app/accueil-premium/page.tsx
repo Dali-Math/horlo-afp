@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw, X } from 'lucide-react'
 
 export default function VueAssemblage() {
@@ -106,7 +107,6 @@ export default function VueAssemblage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-      {/* Header Section */}
       <section className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex items-center justify-between">
@@ -119,15 +119,18 @@ export default function VueAssemblage() {
               </p>
             </div>
             <div className="hidden md:flex items-center gap-2 bg-gray-100 dark:bg-slate-800 rounded-lg p-2">
-              <button onClick={() => setZoom(z => Math.max(z - 0.2, 0.5))} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors" title="Zoom arrière">
+              <button onClick={() => setZoom(z => Math.max(z - 0.2, 0.5))}
+                className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors" title="Zoom arrière">
                 <ZoomOut className="w-5 h-5 text-gray-700 dark:text-gray-300" />
               </button>
               <span className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px] text-center">{Math.round(zoom * 100)}%</span>
-              <button onClick={() => setZoom(z => Math.min(z + 0.2, 2))} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors" title="Zoom avant">
+              <button onClick={() => setZoom(z => Math.min(z + 0.2, 2))}
+                className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors" title="Zoom avant">
                 <ZoomIn className="w-5 h-5 text-gray-700 dark:text-gray-300" />
               </button>
               <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
-              <button onClick={() => setZoom(1)} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors" title="Réinitialiser">
+              <button onClick={() => setZoom(1)}
+                className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors" title="Réinitialiser">
                 <RotateCcw className="w-5 h-5 text-gray-700 dark:text-gray-300" />
               </button>
             </div>
@@ -148,39 +151,24 @@ export default function VueAssemblage() {
           </div>
         </div>
       </section>
-
-      {/* MAIN ZONE */}
       <section className="max-w-7xl mx-auto px-6 py-8">
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Image viewer */}
-          <div className="lg:col-span-2 w-full">
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg overflow-hidden">
+          {/* IMAGE BLOCK BEGIN */}
+          <div className="lg:col-span-2 flex flex-col items-center">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg w-full">
               <div className="bg-gray-50 dark:bg-slate-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                 <h3 className="font-semibold text-gray-900 dark:text-white">{currentPageData.title}</h3>
               </div>
-              {/* BLOCK IMAGE XXL */}
-              <div className="relative flex justify-center items-center bg-white dark:bg-slate-950" style={{ width: "100%", minHeight: 600, height: "75vh", overflow: "visible" }}>
-                <div
-                  className="relative w-full"
-                  style={{
-                    height: "100%",
-                    transition: "transform 300ms cubic-bezier(.4,0,.2,1)",
-                    transform: `scale(${zoom})`
-                  }}
-                >
-                  {/* IMAGE XXL */}
-                  <img
+              <div className="flex flex-col items-center justify-center py-8">
+                <div className="relative aspect-[1/1] w-full max-w-[700px] bg-white dark:bg-slate-950 rounded-xl border overflow-hidden"
+                  style={{ transition: "transform 300ms cubic-bezier(.4,0,.2,1)", transform: `scale(${zoom})` }}>
+                  <Image
                     src={currentPageData.image}
                     alt={currentPageData.title}
-                    className="w-full h-full object-contain pointer-events-none"
-                    style={{
-                      maxHeight: "75vh",
-                      maxWidth: "100%",
-                      margin: "0 auto",
-                      display: "block"
-                    }}
+                    fill
+                    className="object-contain"
+                    priority
                   />
-                  {/* LABELS */}
                   {currentPageData.pieces.map((piece) => (
                     <button
                       key={piece.id}
@@ -195,15 +183,14 @@ export default function VueAssemblage() {
                         left: `${piece.x}%`,
                         top: `${piece.y}%`,
                         transform: 'translate(-50%, -50%)',
-                        minWidth: 35,
-                        minHeight: 25
+                        minWidth: 34, minHeight: 22
                       }}
                       title={piece.nom}
                     >
                       {piece.id}
                     </button>
                   ))}
-                  {/* Popover Desktop */}
+                  {/* Info Desk */}
                   {selectedPiece && (
                     <div
                       className="hidden md:block absolute right-3 top-3 bg-white dark:bg-slate-900 border border-[#E2B44F]/40 rounded-xl shadow-lg p-5 min-w-[220px] max-w-xs z-40"
@@ -221,7 +208,6 @@ export default function VueAssemblage() {
                   )}
                 </div>
               </div>
-              {/* Navigation Controls */}
               <div className="bg-gray-50 dark:bg-slate-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
                 <button onClick={() => { setCurrentPage(prev => Math.max(1, prev - 1)); setSelectedPiece(null) }}
                   disabled={currentPage === 1}
@@ -239,22 +225,28 @@ export default function VueAssemblage() {
                   Suivant <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
-            </div>
-            <div className="md:hidden flex items-center justify-center gap-2 mt-4 bg-gray-100 dark:bg-slate-800 rounded-lg p-2">
-              <button onClick={() => setZoom(z => Math.max(z - 0.2, 0.5))} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
-                <ZoomOut className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-              </button>
-              <span className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px] text-center">{Math.round(zoom * 100)}%</span>
-              <button onClick={() => setZoom(z => Math.min(z + 0.2, 2))} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
-                <ZoomIn className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-              </button>
-              <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
-              <button onClick={() => setZoom(1)} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
-                <RotateCcw className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-              </button>
+              <div className="md:hidden flex items-center justify-center gap-2 mt-4 bg-gray-100 dark:bg-slate-800 rounded-lg p-2">
+                <button onClick={() => setZoom(z => Math.max(z - 0.2, 0.5))}
+                  className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
+                  <ZoomOut className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                </button>
+                <span className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px] text-center">
+                  {Math.round(zoom * 100)}%
+                </span>
+                <button onClick={() => setZoom(z => Math.min(z + 0.2, 2))}
+                  className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
+                  <ZoomIn className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                </button>
+                <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
+                <button onClick={() => setZoom(1)}
+                  className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
+                  <RotateCcw className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                </button>
+              </div>
             </div>
           </div>
-          {/* Nomenclature Panel */}
+          {/* IMAGE BLOCK END */}
+          {/* PANEL NOMENCLATURE */}
           <div className="lg:col-span-1">
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg sticky top-6">
               <div className="bg-gradient-to-r from-[#E2B44F] to-[#C9A043] px-6 py-4 rounded-t-2xl">
@@ -295,15 +287,7 @@ export default function VueAssemblage() {
           </div>
         </div>
       </section>
-      <section className="max-w-7xl mx-auto px-6 pb-16">
-        <div className="bg-gradient-to-br from-[#E2B44F]/10 via-[#E2B44F]/5 to-transparent border border-[#E2B44F]/20 rounded-2xl p-8">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">À propos des vues d'assemblage</h3>
-          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-            Ces schémas techniques représentent l'assemblage complet du calibre ETA 6497-1, un mouvement mécanique à remontage manuel de référence dans l'horlogerie suisse. Chaque composant est numéroté et identifié pour faciliter la compréhension de la structure du mouvement.
-          </p>
-        </div>
-      </section>
-      {/* Infos Mobile */}
+      {/* Info pièce mobile */}
       {selectedPiece && (
         <div className="md:hidden fixed inset-0 z-50 flex items-end">
           <div className="w-full bg-white dark:bg-slate-900 border-t border-[#E2B44F]/40 rounded-t-2xl shadow-xl p-5">
@@ -319,6 +303,15 @@ export default function VueAssemblage() {
           </div>
         </div>
       )}
+      {/* Infos générales */}
+      <section className="max-w-7xl mx-auto px-6 pb-16">
+        <div className="bg-gradient-to-br from-[#E2B44F]/10 via-[#E2B44F]/5 to-transparent border border-[#E2B44F]/20 rounded-2xl p-8">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">À propos des vues d'assemblage</h3>
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+            Ces schémas techniques représentent l'assemblage complet du calibre ETA 6497-1, un mouvement mécanique à remontage manuel de référence dans l'horlogerie suisse. Chaque composant est numéroté et identifié pour faciliter la compréhension de la structure du mouvement.
+          </p>
+        </div>
+      </section>
     </main>
   );
 }
