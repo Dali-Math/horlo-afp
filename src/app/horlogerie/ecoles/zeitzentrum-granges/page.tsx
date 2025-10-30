@@ -51,7 +51,7 @@ export default function ZeitzentrumGranges() {
         <p>
           🔗{' '}
           <a
-            href="https://www.zeitzentrum.ch/"
+            href="https://bbzsogr.so.ch/zeitzentrum-gr/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-amber-500 hover:text-amber-400 underline"
