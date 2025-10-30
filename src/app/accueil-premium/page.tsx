@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { ChevronLeft, ChevronRight, Search, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
-import Image from 'next/image'
 
 export default function VueAssemblage() {
   const [currentPage, setCurrentPage] = useState(1)
@@ -15,13 +14,13 @@ export default function VueAssemblage() {
       title: 'Vue d\'assemblage - Planche 1',
       image: '/images/eta6497/assemblage-1.png',
       pieces: [
-        { id: '1-1', nom: 'Platine', x: 15, y: 75 },
-        { id: '1-2', nom: 'Pont de barillet', x: 85, y: 75 },
-        { id: '2', nom: 'Coq', x: 35, y: 72 },
-        { id: '3', nom: 'Roue d\'échappement', x: 28, y: 55 },
-        { id: '4', nom: 'Ancre', x: 28, y: 62 },
-        { id: '5', nom: 'Balancier', x: 28, y: 35 },
-        { id: '900 VAR', nom: 'Vis de réglage', x: 70, y: 62 },
+        { id: '1-1', nom: 'Platine côté cadran', x: 12, y: 73 },
+        { id: '1-2', nom: 'Platine côté ponts', x: 72, y: 68 },
+        { id: '2', nom: 'Coq', x: 25, y: 68 },
+        { id: '3', nom: 'Roue d\'échappement', x: 23, y: 50 },
+        { id: '4', nom: 'Ancre', x: 23, y: 57 },
+        { id: '5', nom: 'Balancier-spiral complet', x: 25, y: 30 },
+        { id: '900 VAR', nom: 'Vis de réglage', x: 58, y: 57 },
       ]
     },
     {
@@ -29,11 +28,13 @@ export default function VueAssemblage() {
       title: 'Vue d\'assemblage - Planche 2',
       image: '/images/eta6497/assemblage-2.png',
       pieces: [
-        { id: '6', nom: 'Spiral', x: 30, y: 40 },
-        { id: '7', nom: 'Virole', x: 35, y: 35 },
-        { id: '8', nom: 'Piton', x: 25, y: 45 },
-        { id: '9', nom: 'Raquette', x: 40, y: 40 },
-        { id: '10', nom: 'Goupille raquette', x: 45, y: 38 },
+        { id: '6', nom: 'Piton', x: 23, y: 65 },
+        { id: '7', nom: 'Raquette', x: 23, y: 58 },
+        { id: '8', nom: 'Goupille raquette', x: 42, y: 52 },
+        { id: '9', nom: 'Roue de seconde', x: 38, y: 45 },
+        { id: '10 VAR', nom: 'Pignon de seconde', x: 36, y: 37 },
+        { id: '11', nom: 'Pont de seconde', x: 42, y: 26 },
+        { id: '901 VAR', nom: 'Vis de pont de seconde', x: 39, y: 17 },
       ]
     },
     {
@@ -41,11 +42,12 @@ export default function VueAssemblage() {
       title: 'Vue d\'assemblage - Planche 3',
       image: '/images/eta6497/assemblage-3.png',
       pieces: [
-        { id: '11', nom: 'Roue de centre', x: 50, y: 50 },
-        { id: '12', nom: 'Chaussée', x: 50, y: 45 },
-        { id: '13', nom: 'Pignon de centre', x: 50, y: 55 },
-        { id: '14', nom: 'Roue de moyenne', x: 35, y: 60 },
-        { id: '15', nom: 'Roue de seconde', x: 65, y: 60 },
+        { id: '12', nom: 'Roue de centre', x: 48, y: 75 },
+        { id: '13', nom: 'Roue de moyenne', x: 35, y: 68 },
+        { id: '14 VAR', nom: 'Pignon de moyenne', x: 43, y: 57 },
+        { id: '15', nom: 'Roue de grande moyenne', x: 35, y: 47 },
+        { id: '16 VAR', nom: 'Pont de finissage', x: 48, y: 34 },
+        { id: '902 VAR', nom: 'Vis de pont (x2)', x: 35, y: 22 },
       ]
     },
     {
@@ -53,11 +55,17 @@ export default function VueAssemblage() {
       title: 'Vue d\'assemblage - Planche 4',
       image: '/images/eta6497/assemblage-4.png',
       pieces: [
-        { id: '16', nom: 'Barillet complet', x: 50, y: 50 },
-        { id: '17', nom: 'Tambour de barillet', x: 45, y: 45 },
-        { id: '18', nom: 'Couvercle barillet', x: 55, y: 45 },
-        { id: '19', nom: 'Arbre de barillet', x: 50, y: 60 },
-        { id: '20', nom: 'Ressort de barillet', x: 50, y: 55 },
+        { id: '17 VAR', nom: 'Tambour de barillet', x: 20, y: 52 },
+        { id: '18 VAR', nom: 'Pont de barillet', x: 20, y: 42 },
+        { id: '19', nom: 'Arbre de barillet', x: 60, y: 72 },
+        { id: '20 VAR', nom: 'Ressort de barillet', x: 58, y: 66 },
+        { id: '21', nom: 'Bride', x: 43, y: 60 },
+        { id: '22', nom: 'Rochet', x: 45, y: 54 },
+        { id: '23 VAR', nom: 'Roue de couronne', x: 62, y: 39 },
+        { id: '902 VAR', nom: 'Vis de pont (x3)', x: 18, y: 23 },
+        { id: '903 VAR', nom: 'Vis de rochet', x: 60, y: 60 },
+        { id: '904 VAR', nom: 'Vis de bride', x: 57, y: 48 },
+        { id: '905 VAR', nom: 'Cliquet', x: 58, y: 30 },
       ]
     },
     {
@@ -65,11 +73,18 @@ export default function VueAssemblage() {
       title: 'Vue d\'assemblage - Planche 5',
       image: '/images/eta6497/assemblage-5.png',
       pieces: [
-        { id: '21', nom: 'Rochet', x: 50, y: 40 },
-        { id: '22', nom: 'Couronne de remontoir', x: 30, y: 50 },
-        { id: '23', nom: 'Tige de remontoir', x: 20, y: 50 },
-        { id: '24', nom: 'Pignon coulant', x: 40, y: 55 },
-        { id: '25', nom: 'Renvoi', x: 60, y: 55 },
+        { id: '24 VAR', nom: 'Balancier seul', x: 15, y: 70 },
+        { id: '25', nom: 'Petite plateau', x: 72, y: 87 },
+        { id: '26 VAR', nom: 'Grande plateau', x: 72, y: 78 },
+        { id: '27', nom: 'Double plateau rivé', x: 62, y: 40 },
+        { id: '28 VAR', nom: 'Ellipse', x: 60, y: 25 },
+        { id: '28-1 VAR', nom: 'Virole', x: 28, y: 50 },
+        { id: '28-2', nom: 'Stud', x: 33, y: 45 },
+        { id: '28-3', nom: 'Spiral plat', x: 28, y: 40 },
+        { id: '28-4', nom: 'Spiral Breguet', x: 33, y: 34 },
+        { id: '28-5', nom: 'Spiral flat overcoil', x: 28, y: 27 },
+        { id: '902 VAR', nom: 'Vis de coq', x: 55, y: 18 },
+        { id: '906 VAR', nom: 'Chaton (x2)', x: 70, y: 65 },
       ]
     },
     {
@@ -77,11 +92,7 @@ export default function VueAssemblage() {
       title: 'Vue d\'assemblage - Planche 6',
       image: '/images/eta6497/assemblage-6.png',
       pieces: [
-        { id: '26', nom: 'Pont de finissage', x: 50, y: 35 },
-        { id: '27', nom: 'Vis de pont', x: 30, y: 60 },
-        { id: '28', nom: 'Chaton', x: 70, y: 40 },
-        { id: '29', nom: 'Pierre palier', x: 65, y: 50 },
-        { id: '30', nom: 'Contre-pivot', x: 75, y: 50 },
+        { id: '29 VAR', nom: 'Contre-pivot', x: 42, y: 33 },
       ]
     },
   ]
