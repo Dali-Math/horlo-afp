@@ -14,9 +14,9 @@ export default function VueAssemblage() {
   title: "Vue d'assemblage - Planche 1",
   image: "/images/eta6497/assemblage-1.png",
   pieces: [
-    { id: "5", nom: "Balancier-spiral complet", x: 184, y: 169 },      // Croix du haut
-    { id: "3", nom: "Roue d'échappement", x: 188, y: 283 },            // Croix juste en dessous
-    { id: "4", nom: "Ancre", x: 184, y: 344 },                         // Croix plus bas
+    { id: "5", nom: "Balancier-spiral complet", x: 302, y: 161 },      // Croix du haut
+    { id: "3", nom: "Roue d'échappement", x: 308, y: 250 },            // Croix juste en dessous
+    { id: "4", nom: "Ancre", x: 305, y: 294 },                         // Croix plus bas
     { id: "2", nom: "Coq", x: 211, y: 432 },                           // Croix à gauche au-dessus du cadran
     { id: "1-1", nom: "Platine côté cadran", x: 62, y: 435 },         // Croix tout à gauche en bas du 1er cadran
     { id: "1-2", nom: "Platine côté ponts (gauche)", x: 417, y: 457 }, // Croix en haut à gauche du 2e cadran
