@@ -1,19 +1,34 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, RefObject } from 'react'
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
 
 const IMG_WIDTH = 620
 const IMG_HEIGHT = 700
+
+type Piece = {
+  id: string
+  nom: string
+  x: number
+  y: number
+}
+type Page = {
+  id: number
+  title: string
+  image: string
+  pieces: Piece[]
+}
 
 export default function VueAssemblage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [zoom, setZoom] = useState(1)
   const [selectedPiece, setSelectedPiece] = useState<string | null>(null)
   const [hoveredPiece, setHoveredPiece] = useState<string | null>(null)
-  const nomenclatureRefs = useRef({})
 
-  const pages = [
+  // Type TS pour refs
+  const nomenclatureRefs = useRef<Record<string, RefObject<HTMLButtonElement>>>({});
+
+  const pages: Page[] = [
     {
       id: 1,
       title: "Vue d'assemblage - Planche 1",
@@ -112,7 +127,8 @@ export default function VueAssemblage() {
   useEffect(() => {
     if (selectedPiece) {
       const pieceIdx = currentPageData.pieces.findIndex(piece => piece.id === selectedPiece)
-      const ref = nomenclatureRefs.current[`${selectedPiece}-${pieceIdx}`]
+      const refKey = `${selectedPiece}-${pieceIdx}`;
+      const ref = nomenclatureRefs.current[refKey];
       if (ref && ref.current) {
         ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
       }
@@ -167,7 +183,6 @@ export default function VueAssemblage() {
                   {currentPageData.title}
                 </h3>
               </div>
-              {/* Image avec boutons positionnés */}
               <div className="flex justify-center items-center w-full">
                 <div
                   className="relative w-full max-w-[620px] aspect-[31/35] sm:rounded-xl overflow-hidden"
@@ -235,7 +250,6 @@ export default function VueAssemblage() {
                 </button>
               </div>
             </div>
-            {/* Contrôles zoom mobile */}
             <div className="md:hidden flex items-center justify-center gap-2 mt-4 bg-gray-100 dark:bg-slate-800 rounded-lg p-2">
               <button onClick={handleZoomOut} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
                 <ZoomOut className="w-5 h-5 text-gray-700 dark:text-gray-300" />
@@ -252,7 +266,7 @@ export default function VueAssemblage() {
               </button>
             </div>
           </div>
-          {/* Nomenclature Panel avec scroll automatique */}
+          {/* Nomenclature Panel avec scroll auto */}
           <div className="lg:col-span-1">
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg sticky top-6">
               <div className="bg-gradient-to-r from-[#E2B44F] to-[#C9A043] px-6 py-4 rounded-t-2xl">
@@ -262,13 +276,14 @@ export default function VueAssemblage() {
               <div className="p-4 max-h-[600px] overflow-y-auto">
                 <div className="space-y-2">
                   {currentPageData.pieces.map((piece, idx) => {
-                    if (!nomenclatureRefs.current[`${piece.id}-${idx}`]) {
-                      nomenclatureRefs.current[`${piece.id}-${idx}`] = useRef()
+                    const refKey = `${piece.id}-${idx}`;
+                    if (!nomenclatureRefs.current[refKey]) {
+                      nomenclatureRefs.current[refKey] = useRef<HTMLButtonElement>(null);
                     }
                     return (
                       <button
-                        ref={nomenclatureRefs.current[`${piece.id}-${idx}`]}
-                        key={`${piece.id}-${idx}`}
+                        ref={nomenclatureRefs.current[refKey]}
+                        key={refKey}
                         onClick={() => setSelectedPiece(piece.id)}
                         className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 ${
                           selectedPiece === piece.id
