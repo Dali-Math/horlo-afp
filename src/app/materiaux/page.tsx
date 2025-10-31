@@ -1,9 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-// ⚠️ Import spécial pour Next.js 14 (important !)
-import { Swiper, SwiperSlide } from 'swiper/react/swiper-react.js'
-import 'swiper/swiper-bundle.css'
+import { Swiper, SwiperSlide } from 'swiper/react'
+
+// --- Styles Swiper (à garder impérativement) ---
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import 'swiper/css/scrollbar'
+
 
 type Material = {
   icon: string
