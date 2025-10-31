@@ -104,7 +104,7 @@ const MATERIALS: Material[] = [
     useCases: [
       'Spiraux de balancier inamagnétiques',
       'Ancre en silicium',
-      'Roue d'échappement sans huile',
+      "Roue d'échappement sans huile",
     ],
     category: 'Innovation',
   },
@@ -341,3 +341,12 @@ export default function MateriauxPage() {
         @keyframes fadein {
           from { opacity: 0; transform: translateY(24px);}
           to { opacity: 1; transform: none;}
+        }
+        @keyframes zoomin {
+          from { opacity:0; transform: scale(.7);}
+          to { opacity:1; transform: scale(1);}
+        }
+      `}</style>
+    </main>
+  )
+}
