@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
+import { ChevronLeft } from 'lucide-react'
 import { Swiper, SwiperSlide } from 'swiper/react'
-
-// --- Styles Swiper (à garder impérativement) ---
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
@@ -235,6 +235,19 @@ export default function MateriauxPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors">
+      {/* 🔹 HEADER avec bouton retour */}
+      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <Link
+            href="/theorie"
+            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+          >
+            <ChevronLeft className="w-5 h-5 mr-1" />
+            Retour à la théorie
+          </Link>
+        </div>
+      </header>
+
       <div className="max-w-7xl mx-auto px-6 py-14">
         {/* Header Section */}
         <header className="max-w-3xl mx-auto text-center mb-14 animate-fadein">
@@ -321,7 +334,6 @@ export default function MateriauxPage() {
         </section>
       </div>
 
-      {/* Modale Zoom */}
       {zoom && (
         <ZoomModal
           src={zoom.src}
@@ -330,21 +342,16 @@ export default function MateriauxPage() {
         />
       )}
 
-      {/* Animations CSS */}
       <style>{`
-        .animate-fadein {
-          animation: fadein 0.8s ease;
-        }
-        .animate-zoomin {
-          animation: zoomin 0.35s cubic-bezier(.23,1.25,.32,1);
-        }
+        .animate-fadein { animation: fadein 0.8s ease; }
+        .animate-zoomin { animation: zoomin 0.35s cubic-bezier(.23,1.25,.32,1); }
         @keyframes fadein {
-          from { opacity: 0; transform: translateY(24px);}
-          to { opacity: 1; transform: none;}
+          from { opacity: 0; transform: translateY(24px); }
+          to { opacity: 1; transform: none; }
         }
         @keyframes zoomin {
-          from { opacity:0; transform: scale(.7);}
-          to { opacity:1; transform: scale(1);}
+          from { opacity:0; transform: scale(.7); }
+          to { opacity:1; transform: scale(1); }
         }
       `}</style>
     </main>
