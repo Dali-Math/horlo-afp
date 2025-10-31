@@ -143,12 +143,7 @@ export default function Quiz() {
               >
                 Atelier Horloger – Jeu de Précision 🎮
               </a>
-              <a
-                href="/quiz/battle-online"
-                className="block bg-amber-50 dark:bg-amber-900/30 hover:bg-amber-100 dark:hover:bg-amber-800 text-amber-700 dark:text-amber-300 px-4 py-3 rounded-lg text-sm font-medium transition-colors"
-              >
-                ⚔️ Quiz Battle Online – Duel en direct
-              </a>
+              {/* >>>>>>> la carte Quiz Battle Online a été SUPPRIMÉE ! */}
             </div>
           </div>
         </div>
