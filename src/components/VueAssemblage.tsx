@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect, RefObject } from 'react'
+import { useState, useRef, useEffect, RefObject, createRef } from 'react'
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
 
 const IMG_WIDTH = 620
@@ -25,7 +25,7 @@ export default function VueAssemblage() {
   const [selectedPiece, setSelectedPiece] = useState<string | null>(null)
   const [hoveredPiece, setHoveredPiece] = useState<string | null>(null)
 
-  // Type TS pour refs
+  // refs typées par id-idx pour chaque ligne
   const nomenclatureRefs = useRef<Record<string, RefObject<HTMLButtonElement>>>({});
 
   const pages: Page[] = [
@@ -130,7 +130,7 @@ export default function VueAssemblage() {
       const refKey = `${selectedPiece}-${pieceIdx}`;
       const ref = nomenclatureRefs.current[refKey];
       if (ref && ref.current) {
-        ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }
   }, [selectedPiece, currentPage])
@@ -183,6 +183,7 @@ export default function VueAssemblage() {
                   {currentPageData.title}
                 </h3>
               </div>
+              {/* Image avec boutons positionnés */}
               <div className="flex justify-center items-center w-full">
                 <div
                   className="relative w-full max-w-[620px] aspect-[31/35] sm:rounded-xl overflow-hidden"
@@ -278,7 +279,7 @@ export default function VueAssemblage() {
                   {currentPageData.pieces.map((piece, idx) => {
                     const refKey = `${piece.id}-${idx}`;
                     if (!nomenclatureRefs.current[refKey]) {
-                      nomenclatureRefs.current[refKey] = useRef<HTMLButtonElement>(null);
+                      nomenclatureRefs.current[refKey] = createRef<HTMLButtonElement>();
                     }
                     return (
                       <button
