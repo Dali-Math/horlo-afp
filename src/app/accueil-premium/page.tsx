@@ -20,12 +20,12 @@ export default function VueAssemblage() {
       pieces: [
         { id: "5", nom: "Tige de remontoir", x: 183, y: 169 },
         { id: "3", nom: "Pignon de remontoir", x: 188, y: 286 },
-        { id: "4", nom: "Ressort de tirette", x: 184, y: 345 },
+        { id: "4", nom: "Pignon coulant", x: 184, y: 345 },
         { id: "2", nom: "Tirette", x: 211, y: 432 },
-        { id: "1-1", nom: "Platine", x: 62, y: 435 },
-        { id: "1-2", nom: "Platine côté ponts", x: 417, y: 457 },
+        { id: "1-1", nom: "Amortisseur empieré de balancier", x: 62, y: 435 },
+        { id: "1-2", nom: "Fixateur de cadran", x: 417, y: 457 },
         { id: "900 VAR", nom: "Vis de tirette", x: 448, y: 350 },
-        { id: "1-2", nom: "Platine côté ponts", x: 562, y: 430 },
+        { id: "1-2", nom: "Fixateur de cadran", x: 562, y: 430 },
       ]
     },
     {
@@ -33,13 +33,13 @@ export default function VueAssemblage() {
       title: "Vue d'assemblage - Planche 2",
       image: "/images/eta6497/assemblage-2.png",
       pieces: [
-        { id: "901 VAR", nom: "Vis de pont", x: 344, y: 10 },
-        { id: "11", nom: "Pont de seconde", x: 339, y: 79 },
-        { id: "10 VAR", nom: "Pignon de seconde", x: 341, y: 162 },
-        { id: "9", nom: "Roue de seconde", x: 314, y: 218 },
-        { id: "8", nom: "Goupille raquette", x: 339, y: 270 },
-        { id: "7", nom: "Raquette", x: 190, y: 319 },
-        { id: "6", nom: "Piton", x: 163, y: 368 },
+        { id: "901 VAR", nom: "Vis du sauteur de tirette", x: 344, y: 10 },
+        { id: "11", nom: "Sauteur de tirette", x: 339, y: 79 },
+        { id: "10 VAR", nom: "Roue de minuterie, montée", x: 341, y: 162 },
+        { id: "9", nom: "Renvoi intermédiaire", x: 314, y: 218 },
+        { id: "8", nom: "Renvoi", x: 339, y: 270 },
+        { id: "7", nom: "Ressort de bascule", x: 190, y: 319 },
+        { id: "6", nom: "Bascule de pignon coulant", x: 163, y: 368 },
       ]
     },
     {
