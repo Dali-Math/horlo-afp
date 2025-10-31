@@ -50,10 +50,10 @@ export default function VueAssemblage() {
         { id: "902 VAR", nom: "Vis de pont de rouage", x: 264, y: 40 },
         { id: "902 VAR", nom: "Vis de pont de rouage", x: 345, y: 47 },
         { id: "16 VAR", nom: "Pont de rouage", x: 404, y: 121 },
-        { id: "15", nom: "Roue de grande moyenne", x: 311, y: 218 },
-        { id: "14 VAR", nom: "Pignon de moyenne", x: 382, y: 294 },
-        { id: "13", nom: "Roue de moyenne", x: 230, y: 375 },
-        { id: "12", nom: "Roue de centre", x: 365, y: 429 },
+        { id: "15", nom: "Roue de centre", x: 311, y: 218 },
+        { id: "14 VAR", nom: "Roue de seconde", x: 382, y: 294 },
+        { id: "13", nom: "Roue moyenne", x: 230, y: 375 },
+        { id: "12", nom: "Roue d’échappement", x: 365, y: 429 },
       ]
     },
     {
@@ -82,18 +82,18 @@ export default function VueAssemblage() {
       image: "/images/eta6497/assemblage-5.png",
       pieces: [
         { id: "902 VAR", nom: "Vis de coq", x: 456, y: 15 },
-        { id: "28 VAR", nom: "Ellipse", x: 431, y: 70 },
-        { id: "28-5", nom: "Spiral plat (flat overcoil)", x: 244, y: 65 },
-        { id: "28-4", nom: "Spiral Breguet", x: 213, y: 123 },
-        { id: "28-3", nom: "Spiral plat", x: 175, y: 163 },
-        { id: "28-2", nom: "Stud", x: 217, y: 200 },
+        { id: "28 VAR", nom: "Pont de balancier", x: 431, y: 70 },
+        { id: "28-5", nom: "Amortisseur empieré de balancier", x: 244, y: 65 },
+        { id: "28-4", nom: "Raquette supérieure", x: 213, y: 123 },
+        { id: "28-3", nom: "Raquette inférieure, montée", x: 175, y: 163 },
+        { id: "28-2", nom: "Porte-piton ETACHRON", x: 217, y: 200 },
         { id: "28-1 VAR", nom: "Virole", x: 195, y: 254 },
-        { id: "24 VAR", nom: "Balancier seul", x: 96, y: 377 },
-        { id: "27", nom: "Double plateau rivé", x: 549, y: 170 },
-        { id: "906 VAR", nom: "Chaton (haut)", x: 434, y: 419 },
-        { id: "906 VAR", nom: "Chaton (bas)", x: 560, y: 439 },
-        { id: "26 VAR", nom: "Grande plateau", x: 554, y: 477 },
-        { id: "25", nom: "Petite plateau", x: 528, y: 535 },
+        { id: "24 VAR", nom: "Chaussée entraîneuse", x: 96, y: 377 },
+        { id: "27", nom: "Balancier", x: 549, y: 170 },
+        { id: "906 VAR", nom: "Vis de pont d’ancre", x: 434, y: 419 },
+        { id: "906 VAR", nom: "Vis de pont d’ancre", x: 560, y: 439 },
+        { id: "26 VAR", nom: "Pont d’ancre", x: 554, y: 477 },
+        { id: "25", nom: "Ancre", x: 528, y: 535 },
       ]
     },
     {
@@ -101,7 +101,7 @@ export default function VueAssemblage() {
       title: "Vue d'assemblage - Planche 6",
       image: "/images/eta6497/assemblage-6.png",
       pieces: [
-        { id: "29 VAR", nom: "Contre-pivot", x: 312, y: 132 },
+        { id: "29 VAR", nom: "Roue des heures", x: 312, y: 132 },
       ]
     },
   ]
