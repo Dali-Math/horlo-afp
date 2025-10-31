@@ -32,13 +32,13 @@ export default function VueAssemblage() {
       title: "Vue d'assemblage - Planche 2",
       image: "/images/eta6497/assemblage-2.png",
       pieces: [
-        { id: "901 VAR", nom: "Vis de pont de seconde", x: 321, y: 106 },
-        { id: "11", nom: "Pont de seconde", x: 305, y: 158 },
-        { id: "10 VAR", nom: "Pignon de seconde", x: 308, y: 204 },
-        { id: "9", nom: "Roue de seconde", x: 304, y: 241 },
-        { id: "8", nom: "Goupille raquette", x: 305, y: 285 },
-        { id: "7", nom: "Raquette", x: 289, y: 322 },
-        { id: "6", nom: "Piton", x: 230, y: 345 },
+        { id: "901 VAR", nom: "Vis de pont de seconde", x: 344, y: 10 },
+        { id: "11", nom: "Pont de seconde", x: 339, y: 79 },
+        { id: "10 VAR", nom: "Pignon de seconde", x: 341, y: 162 },
+        { id: "9", nom: "Roue de seconde", x: 314, y: 218 },
+        { id: "8", nom: "Goupille raquette", x: 339, y: 270 },
+        { id: "7", nom: "Raquette", x: 190, y: 319 },
+        { id: "6", nom: "Piton", x: 163, y: 368 },
       ]
     },
     {
