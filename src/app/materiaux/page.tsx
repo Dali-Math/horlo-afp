@@ -86,7 +86,7 @@ const MATERIALS: Material[] = [
     colorClass: 'bg-neutral-700',
     illustration: '/images/materiaux/ceramique.jpg',
     description:
-      'Matériau composite extrêmement dur, pratiquement inrayable et résistant à l'usure. Sa finition mate ou brillante apporte un style contemporain et élégant.',
+      "Matériau composite extrêmement dur, pratiquement inrayable et résistant à l'usure. Sa finition mate ou brillante apporte un style contemporain et élégant.",
     useCases: [
       'Lunettes de montre (bezels)',
       'Boîtiers haut de gamme',
@@ -341,12 +341,3 @@ export default function MateriauxPage() {
         @keyframes fadein {
           from { opacity: 0; transform: translateY(24px);}
           to { opacity: 1; transform: none;}
-        }
-        @keyframes zoomin {
-          from { opacity:0; transform: scale(.7);}
-          to { opacity:1; transform: scale(1);}
-        }
-      `}</style>
-    </main>
-  )
-}
