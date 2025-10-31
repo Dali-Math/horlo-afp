@@ -114,11 +114,11 @@ const MATERIALS: Material[] = [
     colorClass: 'bg-rose-600',
     illustration: '/images/materiaux/rubis.jpg',
     description:
-      'Pierre précieuse synthétique utilisée comme palier antifriction. Les rubis réduisent considérablement l'usure des axes de roues et garantissent une longévité exceptionnelle au mouvement.',
+      "Pierre précieuse synthétique utilisée comme palier antifriction. Les rubis réduisent considérablement l'usure des axes de roues et garantissent une longévité exceptionnelle au mouvement.",
     useCases: [
       'Pierres de pivot (axes des roues)',
       'Contrepoids de balancier',
-      'Roulette d'ancre',
+      "Roulette d'ancre",
     ],
     category: 'Classiques',
   },
