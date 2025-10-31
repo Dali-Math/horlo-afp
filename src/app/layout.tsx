@@ -7,6 +7,8 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
 import ThemeProvider from "@/components/ThemeProvider";
+import 'swiper/css';
+
 
 export const metadata: Metadata = {
   title: "HorloLearn – Passion & Découverte Horlogère Suisse",
