@@ -90,7 +90,7 @@ export default function VueAssemblage() {
         { id: "24 VAR", nom: "Balancier seul", x: 96, y: 377 },
         { id: "27", nom: "Double plateau rivé", x: 549, y: 170 },
         { id: "906 VAR", nom: "Chaton (haut)", x: 434, y: 419 },
-        { id: "906 VAR", nom: "Chaton (bas)", x: 555, y: 477 },
+        { id: "906 VAR", nom: "Chaton (bas)", x: 560, y: 439 },
         { id: "26 VAR", nom: "Grande plateau", x: 554, y: 477 },
         { id: "25", nom: "Petite plateau", x: 528, y: 535 },
       ]
