@@ -27,6 +27,8 @@ export default function VueAssemblage() {
 
   // refs typées par id-idx pour chaque ligne
   const nomenclatureRefs = useRef<Record<string, RefObject<HTMLButtonElement>>>({});
+  // ref pour le panneau scrollable
+  const nomenclaturePanelRef = useRef<HTMLDivElement>(null);
 
   const pages: Page[] = [
     {
@@ -125,12 +127,17 @@ export default function VueAssemblage() {
   const currentPageData = pages[currentPage - 1]
 
   useEffect(() => {
-    if (selectedPiece) {
+    if (selectedPiece && nomenclaturePanelRef.current) {
       const pieceIdx = currentPageData.pieces.findIndex(piece => piece.id === selectedPiece)
       const refKey = `${selectedPiece}-${pieceIdx}`;
-      const ref = nomenclatureRefs.current[refKey];
-      if (ref && ref.current) {
-        ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const btnRef = nomenclatureRefs.current[refKey];
+      if (btnRef && btnRef.current) {
+        const panel = nomenclaturePanelRef.current;
+        const btn = btnRef.current;
+        const panelRect = panel.getBoundingClientRect();
+        const btnRect = btn.getBoundingClientRect();
+        // scroll le panneau interne uniquement, pas la page globale :
+        panel.scrollTop += (btnRect.top - panelRect.top) - (panel.clientHeight/2) + (btnRect.height/2);
       }
     }
   }, [selectedPiece, currentPage])
@@ -183,7 +190,6 @@ export default function VueAssemblage() {
                   {currentPageData.title}
                 </h3>
               </div>
-              {/* Image avec boutons positionnés */}
               <div className="flex justify-center items-center w-full">
                 <div
                   className="relative w-full max-w-[620px] aspect-[31/35] sm:rounded-xl overflow-hidden"
@@ -274,7 +280,10 @@ export default function VueAssemblage() {
                 <h3 className="font-bold text-white text-lg">Nomenclature</h3>
                 <p className="text-sm text-white/80 mt-1">Cliquez sur une pièce pour la localiser</p>
               </div>
-              <div className="p-4 max-h-[600px] overflow-y-auto">
+              <div
+                className="p-4 max-h-[600px] overflow-y-auto"
+                ref={nomenclaturePanelRef}
+              >
                 <div className="space-y-2">
                   {currentPageData.pieces.map((piece, idx) => {
                     const refKey = `${piece.id}-${idx}`;
