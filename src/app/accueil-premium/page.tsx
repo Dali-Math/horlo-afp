@@ -10,6 +10,7 @@ export default function VueAssemblage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [zoom, setZoom] = useState(1)
   const [selectedPiece, setSelectedPiece] = useState<string | null>(null)
+  const [hoveredPiece, setHoveredPiece] = useState<string | null>(null)
 
   const pages = [
     {
@@ -167,11 +168,14 @@ export default function VueAssemblage() {
                     <button
                       key={`${piece.id}-${idx}`}
                       onClick={() => setSelectedPiece(piece.id)}
-                      className={`absolute px-2 py-1 rounded-md text-[10px] font-bold transition-all duration-200 ${
-                        selectedPiece === piece.id
-                          ? 'bg-[#E2B44F] text-white scale-110 shadow-lg z-20'
-                          : 'bg-slate-800/80 text-white hover:bg-[#E2B44F]/90 z-10 backdrop-blur-sm'
-                      }`}
+                      onMouseEnter={() => setHoveredPiece(piece.id)}
+                      onMouseLeave={() => setHoveredPiece(null)}
+                      className={`absolute px-2 py-1 rounded-md text-[10px] font-bold transition-all duration-200
+                        ${
+                          selectedPiece === piece.id || hoveredPiece === piece.id
+                            ? 'bg-[#E2B44F] text-white scale-110 shadow-lg z-20 opacity-100'
+                            : 'bg-transparent text-transparent border-2 border-[#E2B44F]/10 opacity-0 hover:opacity-80 hover:bg-[#E2B44F]/60 hover:text-white z-10'
+                        }`}
                       style={getPosStyle(piece.x, piece.y)}
                     >
                       {piece.id}
@@ -189,7 +193,6 @@ export default function VueAssemblage() {
                   <ChevronLeft className="w-4 h-4" />
                   Précédent
                 </button>
-                {/* Pagination (boutons pages ici) */}
                 <div className="flex gap-2">
                   {pages.map((page) => (
                     <button
