@@ -1,9 +1,9 @@
-
 'use client'
 
 import { useState } from 'react'
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
 
+// Largeur et hauteur de référence pour le positionnement relatif
 const IMG_WIDTH = 620
 const IMG_HEIGHT = 700
 
@@ -157,8 +157,14 @@ export default function VueAssemblage() {
                   {currentPageData.title}
                 </h3>
               </div>
-              <div className="flex justify-center items-center" style={{ width: IMG_WIDTH, height: IMG_HEIGHT }}>
-                <div className="relative" style={{ width: IMG_WIDTH, height: IMG_HEIGHT, transform: `scale(${zoom})` }}>
+              {/* CONTENEUR responsive */}
+              <div className="flex justify-center items-center w-full">
+                <div
+                  className="relative w-full max-w-[620px] aspect-[31/35] sm:rounded-xl overflow-hidden"
+                  style={{
+                    transform: `scale(${zoom})`,
+                  }}
+                >
                   <img
                     src={currentPageData.image}
                     alt={currentPageData.title}
@@ -219,6 +225,7 @@ export default function VueAssemblage() {
                 </button>
               </div>
             </div>
+            {/* Contrôles zoom mobile */}
             <div className="md:hidden flex items-center justify-center gap-2 mt-4 bg-gray-100 dark:bg-slate-800 rounded-lg p-2">
               <button onClick={handleZoomOut} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
                 <ZoomOut className="w-5 h-5 text-gray-700 dark:text-gray-300" />
