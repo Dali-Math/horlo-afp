@@ -80,19 +80,19 @@ export default function VueAssemblage() {
       title: "Vue d'assemblage - Planche 5",
       image: "/images/eta6497/assemblage-5.png",
       pieces: [
-        { id: "902 VAR", nom: "Vis de coq", x: 355, y: 53 },
-        { id: "28 VAR", nom: "Ellipse", x: 373, y: 133 },
-        { id: "28-5", nom: "Spiral flat overcoil", x: 162, y: 131 },
-        { id: "28-4", nom: "Spiral Breguet", x: 130, y: 198 },
-        { id: "28-3", nom: "Spiral plat", x: 87, y: 247 },
-        { id: "28-2", nom: "Stud", x: 119, y: 291 },
-        { id: "28-1 VAR", nom: "Virole", x: 93, y: 340 },
-        { id: "24 VAR", nom: "Balancier seul", x: 31, y: 492 },
-        { id: "27", nom: "Double plateau rivé", x: 489, y: 244 },
-        { id: "906 VAR", nom: "Chaton (haut)", x: 475, y: 514 },
-        { id: "906 VAR", nom: "Chaton (bas)", x: 561, y: 527 },
-        { id: "26 VAR", nom: "Grande plateau", x: 543, y: 577 },
-        { id: "25", nom: "Petite plateau", x: 542, y: 622 },
+        { id: "902 VAR", nom: "Vis de coq", x: 4535, y: 13 },
+        { id: "28 VAR", nom: "Ellipse", x: 211, y: 123 },
+        { id: "28-5", nom: "Spiral flat overcoil", x: 244, y: 65 },
+        { id: "28-4", nom: "Spiral Breguet", x: 213, y: 123 },
+        { id: "28-3", nom: "Spiral plat", x: 175, y: 163 },
+        { id: "28-2", nom: "Stud", x: 217, y: 200 },
+        { id: "28-1 VAR", nom: "Virole", x: 195, y: 254 },
+        { id: "24 VAR", nom: "Balancier seul", x: 96, y: 377 },
+        { id: "27", nom: "Double plateau rivé", x: 549, y: 170 },
+        { id: "906 VAR", nom: "Chaton (haut)", x: 434, y: 419 },
+        { id: "906 VAR", nom: "Chaton (bas)", x: 555, y: 477 },
+        { id: "26 VAR", nom: "Grande plateau", x: 554, y: 477 },
+        { id: "25", nom: "Petite plateau", x: 528, y: 535 },
       ]
     },
     {
@@ -100,7 +100,7 @@ export default function VueAssemblage() {
       title: "Vue d'assemblage - Planche 6",
       image: "/images/eta6497/assemblage-6.png",
       pieces: [
-        { id: "29 VAR", nom: "Contre-pivot", x: 312, y: 152 },
+        { id: "29 VAR", nom: "Contre-pivot", x: 312, y: 132 },
       ]
     },
   ]
