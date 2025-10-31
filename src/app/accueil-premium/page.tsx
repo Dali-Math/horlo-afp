@@ -80,8 +80,8 @@ export default function VueAssemblage() {
       title: "Vue d'assemblage - Planche 5",
       image: "/images/eta6497/assemblage-5.png",
       pieces: [
-        { id: "902 VAR", nom: "Vis de coq", x: 4535, y: 13 },
-        { id: "28 VAR", nom: "Ellipse", x: 211, y: 123 },
+        { id: "902 VAR", nom: "Vis de coq", x: 456, y: 15 },
+        { id: "28 VAR", nom: "Ellipse", x: 431, y: 70 },
         { id: "28-5", nom: "Spiral flat overcoil", x: 244, y: 65 },
         { id: "28-4", nom: "Spiral Breguet", x: 213, y: 123 },
         { id: "28-3", nom: "Spiral plat", x: 175, y: 163 },
