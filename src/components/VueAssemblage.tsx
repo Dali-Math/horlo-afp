@@ -1,9 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
 
-// Largeur et hauteur de référence pour le positionnement relatif
 const IMG_WIDTH = 620
 const IMG_HEIGHT = 700
 
@@ -12,6 +11,7 @@ export default function VueAssemblage() {
   const [zoom, setZoom] = useState(1)
   const [selectedPiece, setSelectedPiece] = useState<string | null>(null)
   const [hoveredPiece, setHoveredPiece] = useState<string | null>(null)
+  const nomenclatureRefs = useRef({})
 
   const pages = [
     {
@@ -105,9 +105,19 @@ export default function VueAssemblage() {
         { id: "29 VAR", nom: "Roue des heures", x: 312, y: 132 },
       ]
     },
-  ]
+  ];
 
   const currentPageData = pages[currentPage - 1]
+
+  useEffect(() => {
+    if (selectedPiece) {
+      const pieceIdx = currentPageData.pieces.findIndex(piece => piece.id === selectedPiece)
+      const ref = nomenclatureRefs.current[`${selectedPiece}-${pieceIdx}`]
+      if (ref && ref.current) {
+        ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+    }
+  }, [selectedPiece, currentPage])
 
   const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.2, 2))
   const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.2, 0.5))
@@ -157,7 +167,7 @@ export default function VueAssemblage() {
                   {currentPageData.title}
                 </h3>
               </div>
-              {/* CONTENEUR responsive */}
+              {/* Image avec boutons positionnés */}
               <div className="flex justify-center items-center w-full">
                 <div
                   className="relative w-full max-w-[620px] aspect-[31/35] sm:rounded-xl overflow-hidden"
@@ -190,7 +200,7 @@ export default function VueAssemblage() {
                   ))}
                 </div>
               </div>
-              {/* Navigation Controls (Sous l'image) */}
+              {/* Navigation Controls */}
               <div className="bg-gray-50 dark:bg-slate-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
                 <button
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
@@ -242,7 +252,7 @@ export default function VueAssemblage() {
               </button>
             </div>
           </div>
-          {/* Nomenclature Panel */}
+          {/* Nomenclature Panel avec scroll automatique */}
           <div className="lg:col-span-1">
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg sticky top-6">
               <div className="bg-gradient-to-r from-[#E2B44F] to-[#C9A043] px-6 py-4 rounded-t-2xl">
@@ -251,31 +261,37 @@ export default function VueAssemblage() {
               </div>
               <div className="p-4 max-h-[600px] overflow-y-auto">
                 <div className="space-y-2">
-                  {currentPageData.pieces.map((piece, idx) => (
-                    <button
-                      key={`${piece.id}-${idx}`}
-                      onClick={() => setSelectedPiece(piece.id)}
-                      className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 ${
-                        selectedPiece === piece.id
-                          ? 'bg-[#E2B44F]/20 border-2 border-[#E2B44F] shadow-md'
-                          : 'bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 hover:border-[#E2B44F]/50'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-mono text-sm font-bold text-[#E2B44F] mb-1">
-                            {piece.id}
+                  {currentPageData.pieces.map((piece, idx) => {
+                    if (!nomenclatureRefs.current[`${piece.id}-${idx}`]) {
+                      nomenclatureRefs.current[`${piece.id}-${idx}`] = useRef()
+                    }
+                    return (
+                      <button
+                        ref={nomenclatureRefs.current[`${piece.id}-${idx}`]}
+                        key={`${piece.id}-${idx}`}
+                        onClick={() => setSelectedPiece(piece.id)}
+                        className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 ${
+                          selectedPiece === piece.id
+                            ? 'bg-[#E2B44F]/20 border-2 border-[#E2B44F] shadow-md'
+                            : 'bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 hover:border-[#E2B44F]/50'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="font-mono text-sm font-bold text-[#E2B44F] mb-1">
+                              {piece.id}
+                            </div>
+                            <div className="text-sm font-medium text-gray-900 dark:text-white">
+                              {piece.nom}
+                            </div>
                           </div>
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">
-                            {piece.nom}
-                          </div>
+                          {selectedPiece === piece.id && (
+                            <div className="w-2 h-2 bg-[#E2B44F] rounded-full animate-pulse" />
+                          )}
                         </div>
-                        {selectedPiece === piece.id && (
-                          <div className="w-2 h-2 bg-[#E2B44F] rounded-full animate-pulse" />
-                        )}
-                      </div>
-                    </button>
-                  ))}
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
               <div className="bg-gray-50 dark:bg-slate-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700 rounded-b-2xl">
