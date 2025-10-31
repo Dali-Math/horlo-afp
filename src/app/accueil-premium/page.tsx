@@ -3,20 +3,19 @@
 import { useState } from 'react'
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
 
-const IMG_WIDTH = 620 // px
-const IMG_HEIGHT = 700 // px
+const IMG_WIDTH = 620
+const IMG_HEIGHT = 700
 
 export default function VueAssemblage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [zoom, setZoom] = useState(1)
   const [selectedPiece, setSelectedPiece] = useState<string | null>(null)
 
-  // x/y = coordonnées en pixels - à ajuster au besoin pour chaque image
   const pages = [
     {
       id: 1,
       title: "Vue d'assemblage - Planche 1",
-      image: "/images/eta6497/assemblage-1.jpg",
+      image: "/images/eta6497/assemblage-1.png",
       pieces: [
         { id: "5", nom: "Balancier-spiral complet", x: 302, y: 161 },
         { id: "3", nom: "Roue d'échappement", x: 308, y: 250 },
@@ -31,7 +30,7 @@ export default function VueAssemblage() {
     {
       id: 2,
       title: "Vue d'assemblage - Planche 2",
-      image: "/images/eta6497/assemblage-2.jpg",
+      image: "/images/eta6497/assemblage-2.png",
       pieces: [
         { id: "901 VAR", nom: "Vis de pont de seconde", x: 321, y: 106 },
         { id: "11", nom: "Pont de seconde", x: 305, y: 158 },
@@ -45,7 +44,7 @@ export default function VueAssemblage() {
     {
       id: 3,
       title: "Vue d'assemblage - Planche 3",
-      image: "/images/eta6497/assemblage-3.jpg",
+      image: "/images/eta6497/assemblage-3.png",
       pieces: [
         { id: "902 VAR", nom: "Vis de pont (gauche)", x: 275, y: 82 },
         { id: "902 VAR", nom: "Vis de pont (droite)", x: 335, y: 82 },
@@ -59,7 +58,7 @@ export default function VueAssemblage() {
     {
       id: 4,
       title: "Vue d'assemblage - Planche 4",
-      image: "/images/eta6497/assemblage-4.jpg",
+      image: "/images/eta6497/assemblage-4.png",
       pieces: [
         { id: "902 VAR", nom: "Vis de pont (gauche)", x: 74, y: 78 },
         { id: "902 VAR", nom: "Vis de pont (centre)", x: 182, y: 55 },
@@ -79,7 +78,7 @@ export default function VueAssemblage() {
     {
       id: 5,
       title: "Vue d'assemblage - Planche 5",
-      image: "/images/eta6497/assemblage-5.jpg",
+      image: "/images/eta6497/assemblage-5.png",
       pieces: [
         { id: "902 VAR", nom: "Vis de coq", x: 355, y: 53 },
         { id: "28 VAR", nom: "Ellipse", x: 373, y: 133 },
@@ -99,7 +98,7 @@ export default function VueAssemblage() {
     {
       id: 6,
       title: "Vue d'assemblage - Planche 6",
-      image: "/images/eta6497/assemblage-6.jpg",
+      image: "/images/eta6497/assemblage-6.png",
       pieces: [
         { id: "29 VAR", nom: "Contre-pivot", x: 312, y: 152 },
       ]
@@ -112,7 +111,6 @@ export default function VueAssemblage() {
   const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.2, 0.5))
   const handleResetZoom = () => setZoom(1)
 
-  // Conversion pixel -> pourcentage pour la position CSS
   const getPosStyle = (x: number, y: number) => ({
     left: `${(x / IMG_WIDTH) * 100}%`,
     top: `${(y / IMG_HEIGHT) * 100}%`,
@@ -146,21 +144,6 @@ export default function VueAssemblage() {
               <RotateCcw className="w-5 h-5 text-gray-700 dark:text-gray-300" />
             </button>
           </div>
-        </div>
-        <div className="flex items-center gap-2 mt-6 px-6">
-          {pages.map((page) => (
-            <button
-              key={page.id}
-              onClick={() => setCurrentPage(page.id)}
-              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
-                currentPage === page.id
-                  ? 'bg-[#E2B44F] text-white shadow-md'
-                  : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
-              }`}
-            >
-              {page.id}
-            </button>
-          ))}
         </div>
       </section>
       <section className="max-w-7xl mx-auto px-6 py-8">
@@ -196,6 +179,7 @@ export default function VueAssemblage() {
                   ))}
                 </div>
               </div>
+              {/* Navigation Controls (Sous l'image) */}
               <div className="bg-gray-50 dark:bg-slate-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
                 <button
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
@@ -205,9 +189,22 @@ export default function VueAssemblage() {
                   <ChevronLeft className="w-4 h-4" />
                   Précédent
                 </button>
-                <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                  Planche {currentPage} / {pages.length}
-                </span>
+                {/* Pagination (boutons pages ici) */}
+                <div className="flex gap-2">
+                  {pages.map((page) => (
+                    <button
+                      key={page.id}
+                      onClick={() => setCurrentPage(page.id)}
+                      className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
+                        currentPage === page.id
+                          ? 'bg-[#E2B44F] text-white shadow-md'
+                          : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
+                      }`}
+                    >
+                      {page.id}
+                    </button>
+                  ))}
+                </div>
                 <button
                   onClick={() => setCurrentPage(prev => Math.min(pages.length, prev + 1))}
                   disabled={currentPage === pages.length}
@@ -234,6 +231,7 @@ export default function VueAssemblage() {
               </button>
             </div>
           </div>
+          {/* Nomenclature Panel */}
           <div className="lg:col-span-1">
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg sticky top-6">
               <div className="bg-gradient-to-r from-[#E2B44F] to-[#C9A043] px-6 py-4 rounded-t-2xl">
