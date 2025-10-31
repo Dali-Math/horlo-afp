@@ -1,54 +1,11 @@
 "use client";
 import Link from "next/link";
 import { ArrowLeft, BookOpen } from "lucide-react";
-import { useState } from "react";
 import FlipBookViewer from "@/components/FlipBookViewer";
 import Flashcards6497 from "@/components/Flashcards6497";
+import VueAssemblage from "@/components/VueAssemblage";
 
 export default function DemontagePage() {
-  const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: number | null }>({
-    0: null,
-    1: null,
-    2: null,
-  });
-
-  const questions = [
-    {
-      question: "Quelle est la première étape avant de démonter un mouvement ?",
-      options: [
-        "Retirer le balancier",
-        "Laisser l'horloge tourner pour épuiser le ressort",
-        "Démonter les aiguilles",
-        "Retirer le barillet",
-      ],
-      correct: 1,
-    },
-    {
-      question: "Pourquoi est-il important de retirer le balancier en premier ?",
-      options: [
-        "Pour faciliter le nettoyage",
-        "Pour éviter de l'endommager lors des autres manipulations",
-        "Pour accéder au cadran",
-        "Pour libérer le ressort",
-      ],
-      correct: 1,
-    },
-    {
-      question: "Quel outil est essentiel pour retirer les aiguilles sans les abîmer ?",
-      options: [
-        "Une pince standard",
-        "Un tournevis plat",
-        "Un tire-aiguilles",
-        "Un levier en métal",
-      ],
-      correct: 2,
-    },
-  ];
-
-  const handleAnswer = (questionIndex: number, answerIndex: number) => {
-    setQuizAnswers({ ...quizAnswers, [questionIndex]: answerIndex });
-  };
-
   return (
     <section className="bg-[#0a0a0a] min-h-screen py-20 px-4 sm:px-6 lg:px-8 overflow-visible">
       <div className="max-w-6xl mx-auto">
@@ -121,7 +78,6 @@ export default function DemontagePage() {
               </h2>
             </div>
             <FlipBookViewer file="/pdfs/demontage/ETA-6497-Demontage.pdf" />
-
             {/* 🔧 Lien vers la page Remontage */}
             <div className="text-center mt-6">
               <Link
@@ -134,53 +90,12 @@ export default function DemontagePage() {
           </div>
         </div>
 
-        {/* Mini Quiz */}
+        {/* Assemblage INTERACTIF EN REMPLACEMENT DU QUIZ */}
         <section className="bg-[#1a1a1a] p-6 md:p-8 rounded-lg mb-12">
           <h2 className="text-2xl md:text-3xl font-bold text-[#E2B44F] mb-6">
-            Mini-Quiz : Testez vos connaissances
+            Assemblage interactif : Mouvement ETA 6497
           </h2>
-          <div className="space-y-6">
-            {questions.map((q, qIndex) => (
-              <div className="bg-[#0a0a0a] p-4 md:p-6 rounded-lg" key={qIndex}>
-                <p className="text-white font-semibold mb-4">
-                  {qIndex + 1}. {q.question}
-                </p>
-                <div className="space-y-2">
-                  {q.options.map((option, oIndex) => {
-                    const isSelected = quizAnswers[qIndex] === oIndex;
-                    const isCorrect = oIndex === q.correct;
-                    const showResult = quizAnswers[qIndex] !== null;
-                    let buttonClass = "w-full text-left p-3 rounded-lg transition-all border ";
-                    if (showResult) {
-                      if (isCorrect) {
-                        buttonClass +=
-                          "bg-[#E2B44F] border-[#E2B44F] text-black font-semibold";
-                      } else if (isSelected && !isCorrect) {
-                        buttonClass +=
-                          "bg-red-900/30 border-red-500 text-gray-300";
-                      } else {
-                        buttonClass +=
-                          "bg-[#0a0a0a] border-gray-700 text-gray-400";
-                      }
-                    } else {
-                      buttonClass +=
-                        "bg-[#0a0a0a] border-gray-700 text-gray-300 hover:border-[#E2B44F] hover:text-white";
-                    }
-                    return (
-                      <button
-                        key={oIndex}
-                        onClick={() => handleAnswer(qIndex, oIndex)}
-                        className={buttonClass}
-                        disabled={showResult}
-                      >
-                        {option}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
+          <VueAssemblage />
         </section>
 
         {/* Flashcards interactives */}
