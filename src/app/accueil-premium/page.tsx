@@ -14,14 +14,14 @@ export default function VueAssemblage() {
   title: "Vue d'assemblage - Planche 1",
   image: "/images/eta6497/assemblage-1.png",
   pieces: [
-    { id: "5", nom: "Balancier-spiral complet", x: 53, y: 10 },      // Croix du haut
-    { id: "3", nom: "Roue d'échappement", x: 49, y: 23 },            // Croix juste en dessous
-    { id: "4", nom: "Ancre", x: 49, y: 30 },                         // Croix plus bas
-    { id: "2", nom: "Coq", x: 37, y: 47 },                           // Croix à gauche au-dessus du cadran
-    { id: "1-1", nom: "Platine côté cadran", x: 22, y: 57 },         // Croix tout à gauche en bas du 1er cadran
-    { id: "1-2", nom: "Platine côté ponts (gauche)", x: 63, y: 56 }, // Croix en haut à gauche du 2e cadran
-    { id: "900 VAR", nom: "Vis de réglage", x: 70, y: 30 },          // Croix au centre-haut 2e cadran, sous le texte
-    { id: "1-2", nom: "Platine côté ponts (droite)", x: 81, y: 44 }, // Croix la plus à droite du 2e cadran
+    { id: "5", nom: "Balancier-spiral complet", x: 184, y: 169 },      // Croix du haut
+    { id: "3", nom: "Roue d'échappement", x: 188, y: 283 },            // Croix juste en dessous
+    { id: "4", nom: "Ancre", x: 184, y: 344 },                         // Croix plus bas
+    { id: "2", nom: "Coq", x: 211, y: 432 },                           // Croix à gauche au-dessus du cadran
+    { id: "1-1", nom: "Platine côté cadran", x: 62, y: 435 },         // Croix tout à gauche en bas du 1er cadran
+    { id: "1-2", nom: "Platine côté ponts (gauche)", x: 417, y: 457 }, // Croix en haut à gauche du 2e cadran
+    { id: "900 VAR", nom: "Vis de réglage", x: 448, y: 350 },          // Croix au centre-haut 2e cadran, sous le texte
+    { id: "1-2", nom: "Platine côté ponts (droite)", x: 562, y: 430 }, // Croix la plus à droite du 2e cadran
       ]
     },
     {
