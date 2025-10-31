@@ -2,32 +2,39 @@
 
 import Link from 'next/link'
 
+type PageItem = {
+  slug: string
+  icon: string
+  titre: string
+  description: string
+}
+
 export default function TheoriePage() {
-  // --- Données existantes ---
-  const pagesFonctionnement = [
+  // — Fonctionnement d'une montre mécanique —
+  const pagesFonctionnement: PageItem[] = [
     {
       slug: 'introduction-montre-mecanique',
       icon: '🕰️',
       titre: 'Introduction à la montre mécanique',
-      description: 'Fonctionnement général, grands organes, bases.',
+      description: "Fonctionnement général, grands organes, bases.",
     },
     {
       slug: 'barillet-ressort-moteur',
       icon: '⚡',
       titre: 'Le Barillet et Ressort Moteur',
-      description: 'Source d’énergie mécanique et réserve de marche.',
+      description: "Source d'énergie mécanique et réserve de marche.",
     },
     {
       slug: 'rouage-train-engrenages',
       icon: '⚙️',
       titre: "Le Rouage (Train d'engrenages)",
-      description: 'Transmission de l’énergie, calculs et rapports.',
+      description: "Transmission de l'énergie, calculs et rapports.",
     },
     {
       slug: 'echappement-ancre-suisse',
       icon: '⛓️',
       titre: "L'Échappement à Ancre Suisse",
-      description: 'Organe de distribution – rôle, éléments, phases.',
+      description: 'Organe de distribution — rôle, éléments, phases.',
     },
     {
       slug: 'balancier-spiral',
@@ -43,7 +50,8 @@ export default function TheoriePage() {
     },
   ]
 
-  const pagesEntretien = [
+  // — Entretien & Maintenance —
+  const pagesEntretien: PageItem[] = [
     {
       slug: 'entretien',
       icon: '🧰',
@@ -53,16 +61,17 @@ export default function TheoriePage() {
     {
       slug: 'reglage',
       icon: '🪛',
-      titre: 'Réglage de Précision',
+      titre: 'Réglage de précision',
       description: 'Méthodes de réglage et contrôle du balancier-spiral.',
     },
   ]
 
-  const pagesHistoireCulture = [
+  // — Histoire & Culture —
+  const pagesHistoireCulture: PageItem[] = [
     {
       slug: 'origines-horlogerie-suisse',
       icon: '🏛️',
-      titre: 'Origines de l’Horlogerie Suisse',
+      titre: "Origines de l'Horlogerie Suisse",
       description: 'Des artisans aux manufactures modernes.',
     },
     {
@@ -73,7 +82,8 @@ export default function TheoriePage() {
     },
   ]
 
-  const pagesLecturePlan = [
+  // — Lecture de plans —
+  const pagesLecturePlan: PageItem[] = [
     {
       slug: 'lecture-de-plan',
       icon: '📐',
@@ -91,19 +101,20 @@ export default function TheoriePage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors">
       <section className="max-w-6xl mx-auto px-6 py-14">
+        {/* En-tête */}
         <header className="text-center mb-16">
           <h1 className="text-5xl font-extrabold text-slate-900 dark:text-white mb-4">
             Théorie Horlogère Suisse
           </h1>
           <p className="text-lg text-slate-700 dark:text-slate-300 max-w-3xl mx-auto">
-            Parcours complet de l'horlogerie suisse : mécanique, manufactures, complications,
-            technologies modernes et maintenance professionnelle.
+            Parcours complet de l&apos;horlogerie suisse : mécanique, manufactures,
+            complications, technologies modernes et maintenance professionnelle.
           </p>
         </header>
 
         {/* Section Fonctionnement */}
         <h2 className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-3">
-          ⚙️ Fonctionnement d'une montre mécanique
+          ⚙️ Fonctionnement d&apos;une montre mécanique
         </h2>
         <div className="grid md:grid-cols-2 gap-6 mb-12">
           {pagesFonctionnement.map((p) => (
@@ -123,7 +134,7 @@ export default function TheoriePage() {
           ))}
         </div>
 
-        {/* ✅ Nouvelle section Matériaux Horlogers */}
+        {/* NOUVELLE section : Matériaux */}
         <h2 className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mb-3 mt-12">
           🧱 Matériaux Horlogers
         </h2>
@@ -155,7 +166,7 @@ export default function TheoriePage() {
               href={`/theorie/${p.slug}`}
               className="flex gap-4 items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all group"
             >
-              <div>{p.icon}</div>
+              <div className="text-2xl">{p.icon}</div>
               <div>
                 <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
                   {p.titre}
@@ -166,7 +177,7 @@ export default function TheoriePage() {
           ))}
         </div>
 
-        {/* Section Histoire et Culture */}
+        {/* Section Histoire & Culture */}
         <h2 className="text-2xl font-bold text-amber-600 dark:text-amber-400 mb-3 mt-12">
           📚 Histoire et Culture Horlogère
         </h2>
@@ -177,7 +188,7 @@ export default function TheoriePage() {
               href={`/theorie/${p.slug}`}
               className="flex gap-4 items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all group"
             >
-              <div>{p.icon}</div>
+              <div className="text-2xl">{p.icon}</div>
               <div>
                 <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                   {p.titre}
@@ -199,7 +210,7 @@ export default function TheoriePage() {
               href={`/theorie/${p.slug}`}
               className="flex gap-4 items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all group"
             >
-              <div>{p.icon}</div>
+              <div className="text-2xl">{p.icon}</div>
               <div>
                 <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                   {p.titre}
