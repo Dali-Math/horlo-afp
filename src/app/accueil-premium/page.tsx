@@ -46,13 +46,13 @@ export default function VueAssemblage() {
       title: "Vue d'assemblage - Planche 3",
       image: "/images/eta6497/assemblage-3.png",
       pieces: [
-        { id: "902 VAR", nom: "Vis de pont (gauche)", x: 275, y: 82 },
-        { id: "902 VAR", nom: "Vis de pont (droite)", x: 335, y: 82 },
-        { id: "16 VAR", nom: "Pont de finissage", x: 310, y: 134 },
-        { id: "15", nom: "Roue de grande moyenne", x: 311, y: 208 },
-        { id: "14 VAR", nom: "Pignon de moyenne", x: 362, y: 259 },
-        { id: "13", nom: "Roue de moyenne", x: 235, y: 291 },
-        { id: "12", nom: "Roue de centre", x: 360, y: 365 },
+        { id: "902 VAR", nom: "Vis de pont (gauche)", x: 264, y: 40 },
+        { id: "902 VAR", nom: "Vis de pont (droite)", x: 345, y: 47 },
+        { id: "16 VAR", nom: "Pont de finissage", x: 404, y: 121 },
+        { id: "15", nom: "Roue de grande moyenne", x: 311, y: 218 },
+        { id: "14 VAR", nom: "Pignon de moyenne", x: 382, y: 294 },
+        { id: "13", nom: "Roue de moyenne", x: 230, y: 375 },
+        { id: "12", nom: "Roue de centre", x: 365, y: 429 },
       ]
     },
     {
