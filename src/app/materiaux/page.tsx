@@ -14,10 +14,114 @@ type Material = {
 };
 
 const MATERIALS: Material[] = [
-  // ... (Même data que précédemment pour les matériaux, voir message précédent)
-  // Pour chaque illustration, indique un chemin valide vers tes images /images/materiaux/*.jpg
-  // par exemple : illustration: "/images/materiaux/or.jpg"
-  // (si tu veux, je peux te donner une liste de belles images CC0 pour chaque matériau)
+  {
+    icon: "⬜",
+    title: "Acier inoxydable",
+    colorClass: "bg-sky-400",
+    illustration: "/images/materiaux/acier.jpg",
+    description: "Le matériau le plus utilisé pour les boîtiers et bracelets modernes. L'acier 316L combine résistance à la corrosion, robustesse et finitions impeccables (polies ou brossées).",
+    useCases: [
+      "Boîtiers & bracelets",
+      "Couronnes vissées",
+      "Boucles déployantes",
+      "Masses oscillantes"
+    ],
+    category: "Classiques"
+  },
+  {
+    icon: "🟨",
+    title: "Or",
+    colorClass: "bg-yellow-500",
+    illustration: "/images/materiaux/or.jpg",
+    description: "Symbole ultime de luxe en horlogerie. L'or 18K (750/1000), disponible en jaune, rose ou blanc, est prisé pour sa noblesse et son éclat intemporel.",
+    useCases: [
+      "Boîtiers de montres de prestige",
+      "Aiguilles et index",
+      "Ponts hautement décorés",
+      "Bracelets de luxe"
+    ],
+    category: "Classiques"
+  },
+  {
+    icon: "🥇",
+    title: "Laiton",
+    colorClass: "bg-yellow-700",
+    illustration: "/images/materiaux/laiton.jpg",
+    description: "Alliage de cuivre et zinc, base de la majorité des platines, ponts et roues. Facile à usiner, il offre une belle teinte jaune dorée souvent protégée par traitement galvanique.",
+    useCases: [
+      "Platines & ponts de mouvement",
+      "Roues de minuterie",
+      "Ébauches décoratives",
+      "Compteurs et modules"
+    ],
+    category: "Classiques"
+  },
+  {
+    icon: "⚙️",
+    title: "Titane",
+    colorClass: "bg-indigo-500",
+    illustration: "/images/materiaux/titane.jpg",
+    description: "Matériau high-tech ultra-léger (40% plus léger que l'acier), hypoallergénique et non magnétique. Son aspect mat et sa résistance en font un favori des montres sportives et professionnelles.",
+    useCases: [
+      "Boîtiers de montres techniques",
+      "Bracelets légers",
+      "Vis spéciales",
+      "Platines allégées"
+    ],
+    category: "Innovation"
+  },
+  {
+    icon: "⬛",
+    title: "Céramique",
+    colorClass: "bg-neutral-700",
+    illustration: "/images/materiaux/ceramique.jpg",
+    description: "Matériau composite extrêmement dur, pratiquement inrayable et résistant à l'usure. Sa finition mate ou brillante apporte un style contemporain et élégant.",
+    useCases: [
+      "Lunettes de montre (bezels)",
+      "Boîtiers haut de gamme",
+      "Composants décoratifs modernes"
+    ],
+    category: "Innovation"
+  },
+  {
+    icon: "🔬",
+    title: "Silicium",
+    colorClass: "bg-pink-600",
+    illustration: "/images/materiaux/silicium.jpg",
+    description: "Matériau révolutionnaire issu de la microtechnologie. Permet de fabriquer des composants de haute précision, amagnétiques et nécessitant peu ou pas de lubrification.",
+    useCases: [
+      "Spiraux de balancier inamagnétiques",
+      "Ancre en silicium",
+      "Roue d'échappement sans huile"
+    ],
+    category: "Innovation"
+  },
+  {
+    icon: "💎",
+    title: "Rubis synthétique",
+    colorClass: "bg-rose-600",
+    illustration: "/images/materiaux/rubis.jpg",
+    description: "Pierre précieuse synthétique utilisée comme palier antifriction. Les rubis réduisent considérablement l'usure des axes de roues et garantissent une longévité exceptionnelle au mouvement.",
+    useCases: [
+      "Pierres de pivot (axes des roues)",
+      "Contrepoids de balancier",
+      "Roulette d'ancre"
+    ],
+    category: "Classiques"
+  },
+  {
+    icon: "🌲",
+    title: "Bois",
+    colorClass: "bg-green-700",
+    illustration: "/images/materiaux/bois.jpg",
+    description: "Matériau rare et artisanal, utilisé par quelques créateurs pour des cadrans exclusifs ou des éléments décoratifs. Apporte une touche naturelle et unique à chaque pièce.",
+    useCases: [
+      "Cadrans exclusifs",
+      "Boîtiers ou maillons décoratifs",
+      "Maquettes pédagogiques"
+    ],
+    category: "Décoratif"
+  },
 ];
 
 const CATEGORIES = ["Tous", "Classiques", "Innovation", "Décoratif"] as const;
@@ -36,7 +140,7 @@ function MaterialCard({
     <div className="group bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-gray-800 shadow-xl overflow-hidden transition-transform hover:shadow-2xl hover:scale-105 flex flex-col">
       <button
         type="button"
-        className="w-full h-48 overflow-hidden focus:outline-none border-0 p-0 bg-transparent"
+        className="w-full h-48 overflow-hidden focus:outline-none border-0 p-0 bg-transparent cursor-pointer"
         onClick={onImageClick}
         tabIndex={0}
         aria-label={`Voir une grande image de ${title}`}
@@ -67,16 +171,23 @@ function MaterialCard({
 }
 
 function ZoomModal({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
-  // Empêche le scroll back sur le body
-  useState(() => {
+  // Empêche le scroll du body quand la modale est ouverte
+  if (typeof window !== "undefined") {
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
-  });
+  }
+  
+  const handleClose = () => {
+    if (typeof window !== "undefined") {
+      document.body.style.overflow = "";
+    }
+    onClose();
+  };
+
   return (
     <div
       tabIndex={-1}
-      onClick={onClose}
-      onKeyDown={e => { if (e.key === "Escape") onClose(); }}
+      onClick={handleClose}
+      onKeyDown={e => { if (e.key === "Escape") handleClose(); }}
       className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center animate-fadein cursor-zoom-out"
       aria-modal="true"
       role="dialog"
@@ -107,7 +218,7 @@ export default function MateriauxPage() {
             Matériaux en Horlogerie Suisse
           </h1>
           <p className="text-xl text-slate-700 dark:text-slate-200 font-medium animate-fadein">
-            Du savoir-faire traditionnel aux technologies de pointe, découvrez les matériaux qui façonnent les chefs-d’œuvre suisses.
+            Du savoir-faire traditionnel aux technologies de pointe, découvrez les matériaux qui façonnent les chefs-d'œuvre suisses.
           </p>
         </header>
 
@@ -138,7 +249,7 @@ export default function MateriauxPage() {
             ))}
           </Swiper>
         </div>
-        {/* Grille desktop */}
+        {/* Grille desktop */}
         <section className="hidden md:grid grid-cols-2 xl:grid-cols-3 gap-8 animate-fadein">
           {filtered.map((material, i) => (
             <MaterialCard key={i} {...material} onImageClick={() => setZoom({ src: material.illustration, alt: material.title })} />
@@ -148,7 +259,7 @@ export default function MateriauxPage() {
         <section className="max-w-2xl mx-auto mt-16 bg-white/90 dark:bg-slate-900/80 rounded-xl px-7 py-8 shadow text-slate-900 dark:text-slate-100 animate-fadein">
           <h2 className="text-2xl font-bold text-[#E2B44F] mb-2">À retenir</h2>
           <ul className="text-lg leading-relaxed list-disc pl-6 space-y-2 font-medium">
-            <li>Tradition (or, acier, laiton) + Innovation (titane, céramique, silicium) = histoire vivante de l’horlogerie suisse.</li>
+            <li>Tradition (or, acier, laiton) + Innovation (titane, céramique, silicium) = histoire vivante de l'horlogerie suisse.</li>
             <li>Choix du matériau = identité de la montre (luxueuse, sportive, technique, artistique...).</li>
             <li>Les finitions, traitements de surface et associations offrent des possibilités infinies !</li>
           </ul>
