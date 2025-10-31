@@ -11,17 +11,17 @@ export default function VueAssemblage() {
   const pages = [
     {
       id: 1,
-      title: 'Vue d\'assemblage - Planche 1',
-      image: '/images/eta6497/assemblage-1.png',
-      pieces: [
-        { id: '5', nom: 'Balancier-spiral complet', x: 32, y: 28 },
-        { id: '3', nom: 'Roue d\'échappement', x: 27, y: 45 },
-        { id: '4', nom: 'Ancre', x: 27, y: 54 },
-        { id: '2', nom: 'Coq', x: 10, y: 66 },
-        { id: '1-1', nom: 'Platine côté cadran', x: 15, y: 66 },
-        { id: '1-2', nom: 'Platine côté ponts (droite)', x: 70, y: 66 },
-        { id: '900 VAR', nom: 'Vis de réglage', x: 70, y: 54 },
-        { id: '1-2', nom: 'Platine côté ponts (gauche)', x: 82, y: 66 },
+  title: "Vue d'assemblage - Planche 1",
+  image: "/images/eta6497/assemblage-1.png",
+  pieces: [
+    { id: "5", nom: "Balancier-spiral complet", x: 53, y: 10 },      // Croix du haut
+    { id: "3", nom: "Roue d'échappement", x: 49, y: 23 },            // Croix juste en dessous
+    { id: "4", nom: "Ancre", x: 49, y: 30 },                         // Croix plus bas
+    { id: "2", nom: "Coq", x: 37, y: 47 },                           // Croix à gauche au-dessus du cadran
+    { id: "1-1", nom: "Platine côté cadran", x: 22, y: 57 },         // Croix tout à gauche en bas du 1er cadran
+    { id: "1-2", nom: "Platine côté ponts (gauche)", x: 63, y: 56 }, // Croix en haut à gauche du 2e cadran
+    { id: "900 VAR", nom: "Vis de réglage", x: 70, y: 30 },          // Croix au centre-haut 2e cadran, sous le texte
+    { id: "1-2", nom: "Platine côté ponts (droite)", x: 81, y: 44 }, // Croix la plus à droite du 2e cadran
       ]
     },
     {
