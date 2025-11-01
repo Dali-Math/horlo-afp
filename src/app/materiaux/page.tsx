@@ -123,61 +123,34 @@ function MaterialCard({
   illustration,
   onImageClick,
 }: Material & { onImageClick: () => void }) {
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    setIsVisible(true)
-  }, [])
-
   return (
-    <article
-      className={`group relative bg-white dark:bg-slate-900/50 rounded-3xl overflow-hidden 
-        transition-all duration-700 hover:shadow-2xl hover:shadow-amber-500/10 
-        border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-sm
-        hover:-translate-y-2 flex flex-col
-        ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-      style={{ transitionDelay: '100ms' }}
-    >
+    <article className="group relative bg-white/90 dark:bg-slate-900/40 rounded-3xl overflow-hidden border border-slate-200/50 dark:border-slate-700/50 hover:shadow-xl transition-all duration-500 hover:-translate-y-1 backdrop-blur-sm">
       <button
         type="button"
-        className="relative w-full h-56 overflow-hidden focus:outline-none border-0 p-0 bg-transparent cursor-pointer"
+        className="relative w-full h-48 sm:h-56 overflow-hidden border-0 p-0 bg-transparent cursor-pointer"
         onClick={onImageClick}
         aria-label={`Voir une grande image de ${title}`}
       >
-        <img
-          src={illustration}
-          alt={title}
-          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1"
-          loading="lazy"
-        />
+        <img src={illustration} alt={title} className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110" />
       </button>
 
-      <div className="p-6 flex-1 flex flex-col space-y-4">
-        <div className="flex items-start gap-4">
-          <div className={`${colorClass} text-white rounded-2xl p-3.5 text-2xl shadow-lg flex-shrink-0`}>
-            {icon}
-          </div>
-          <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">{title}</h2>
-            <div className="h-1 w-16 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full" />
-          </div>
+      <div className="p-6 flex flex-col space-y-3">
+        <div className="flex items-start gap-3">
+          <div className={`${colorClass} text-white rounded-2xl p-2.5 text-xl shadow-md`}>{icon}</div>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-amber-500 transition">
+            {title}
+          </h2>
         </div>
+        <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{description}</p>
 
-        <p className="text-slate-600 dark:text-slate-300 leading-relaxed flex-1 text-[15px]">{description}</p>
-
-        <div className="pt-4 border-t border-slate-200 dark:border-slate-700/50">
-          <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">
-            Applications principales
-          </span>
-          <ul className="space-y-2 mt-2">
-            {useCases.map((useCase, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-200">
-                <span className="text-amber-500 mt-0.5">▸</span>
-                <span>{useCase}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul className="border-t border-slate-200 dark:border-slate-700/50 pt-3 mt-2 text-sm text-slate-700 dark:text-slate-200 space-y-1.5">
+          {useCases.map((u, i) => (
+            <li key={i} className="flex items-center gap-2">
+              <span className="text-amber-500">▸</span>
+              {u}
+            </li>
+          ))}
+        </ul>
       </div>
     </article>
   )
@@ -185,12 +158,7 @@ function MaterialCard({
 
 function ZoomModal({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center"
-      aria-modal="true"
-      role="dialog"
-    >
+    <div onClick={onClose} className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center">
       <img src={src} alt={alt} className="max-h-[90vh] max-w-[90vw] rounded-3xl shadow-2xl border-4 border-amber-400/30" />
     </div>
   )
@@ -199,46 +167,23 @@ function ZoomModal({ src, alt, onClose }: { src: string; alt: string; onClose: (
 export default function MateriauxPage() {
   const [filter, setFilter] = useState<Category>('Tous')
   const [zoom, setZoom] = useState<null | { src: string; alt: string }>(null)
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   const filtered = filter === 'Tous' ? MATERIALS : MATERIALS.filter((m) => m.category === filter)
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/30 to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-      <header
-        className={`sticky top-0 z-30 transition-all duration-500 ${
-          scrolled
-            ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-lg'
-            : 'bg-white/60 dark:bg-slate-900/60 backdrop-blur-md'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <Link href="/theorie" className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-200">
-            <ChevronLeft className="w-5 h-5" /> Retour à la théorie
-          </Link>
-        </div>
-      </header>
-
+    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black text-white">
       <div className="max-w-7xl mx-auto px-4 py-16">
-        <h1 className="text-5xl sm:text-6xl font-black text-center mb-10 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600">
-          Matériaux d'Exception
-        </h1>
+        <h1 className="text-5xl sm:text-6xl font-black text-center mb-10 text-amber-400">Matériaux d'Exception</h1>
 
         <nav className="flex justify-center gap-3 mb-12 flex-wrap">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => setFilter(cat)}
-              className={`px-6 py-3 rounded-2xl font-semibold text-sm transition-all duration-300 ${
+              className={`px-6 py-2.5 rounded-2xl font-semibold text-sm transition-all ${
                 filter === cat
-                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg scale-105'
-                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:shadow-lg border border-slate-200 dark:border-slate-700'
+                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md'
+                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
               }`}
             >
               <span className="flex items-center gap-2">{CATEGORY_ICONS[cat]} {cat}</span>
@@ -246,9 +191,13 @@ export default function MateriauxPage() {
           ))}
         </nav>
 
-        <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filtered.map((material, i) => (
-            <MaterialCard key={i} {...material} onImageClick={() => setZoom({ src: material.illustration, alt: material.title })} />
+            <MaterialCard
+              key={i}
+              {...material}
+              onImageClick={() => setZoom({ src: material.illustration, alt: material.title })}
+            />
           ))}
         </section>
       </div>
