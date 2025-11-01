@@ -1,22 +1,31 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Matériaux Horlogers Suisses - Excellence</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- ✅ PATCH POUR IGNORER LE STYLE GLOBAL HORLOLEARN -->
+  <!-- Polices -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Correctif pour compatibilité avec HorloLearn -->
   <style>
     html, body {
-      all: unset;
-      all: revert;
       margin: 0 !important;
       padding: 0 !important;
       background: #ffffff !important;
     }
+    body {
+      all: revert;
+      display: block;
+      visibility: visible;
+    }
   </style>
 
+  <!-- Styles principaux -->
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -27,9 +36,16 @@
       --mh-gray-800: #1f2937;
       --mh-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
-    body { font-family: 'Inter', sans-serif; line-height: 1.6; color: var(--mh-gray-800); background: var(--mh-white); }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      color: var(--mh-gray-800);
+      background: var(--mh-white);
+    }
+
     .mh-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
-    
+
     /* HERO */
     .mh-hero {
       background: linear-gradient(135deg, var(--mh-red) 0%, #b91c3c 100%);
@@ -79,7 +95,7 @@
       opacity: 0.8;
       margin-top: 0.5rem;
     }
-    
+
     /* NAVIGATION */
     .mh-navigation {
       background: white;
@@ -113,7 +129,7 @@
       border-color: var(--mh-red);
       transform: translateY(-2px);
     }
-    
+
     /* SECTIONS */
     .mh-section { padding: 3rem 0; display: none; }
     .mh-section.active { display: block; }
@@ -131,12 +147,12 @@
       margin: 0 auto;
       border-radius: 2px;
     }
-    
+
     /* GRIDS */
     .mh-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
     .mh-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
     .mh-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
-    
+
     /* CARDS */
     .mh-card {
       background: white;
@@ -152,78 +168,7 @@
       margin-bottom: 0.5rem;
       font-family: 'Playfair Display', serif;
     }
-    .mh-company-logo {
-      width: 50px;
-      height: 50px;
-      background: var(--mh-red);
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-    }
-    
-    /* IMAGES */
-    .mh-image {
-      width: 100%;
-      height: auto;
-      border-radius: 16px;
-      box-shadow: var(--mh-shadow);
-      transition: all 0.3s ease;
-    }
-    .mh-image:hover { transform: scale(1.02); }
-    
-    /* LISTS */
-    .mh-list { list-style: none; padding: 0; }
-    .mh-list li {
-      padding: 0.3rem 0;
-      position: relative;
-      padding-left: 1rem;
-    }
-    .mh-list li::before {
-      content: '→';
-      position: absolute;
-      left: 0;
-      color: var(--mh-red);
-      font-weight: bold;
-    }
-    
-    /* TAGS */
-    .mh-tag {
-      display: inline-block;
-      background: var(--mh-red);
-      color: white;
-      padding: 0.2rem 0.6rem;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: 500;
-      margin: 0.2rem 0.4rem 0.2rem 0;
-    }
-    
-    /* TIMELINE */
-    .mh-timeline-item {
-      background: var(--mh-gray-50);
-      padding: 1.5rem;
-      border-radius: 12px;
-      margin-bottom: 1rem;
-      border-left: 4px solid var(--mh-red);
-    }
-    .mh-timeline-year {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--mh-red);
-      margin-bottom: 0.5rem;
-    }
-    
-    /* ANIMATIONS SIMPLIFIÉES */
-    @keyframes mhFadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .mh-reveal { opacity: 0; transition: all 0.5s ease; }
-    .mh-reveal.revealed { opacity: 1; }
-    
+
     /* RESPONSIVE */
     @media (max-width: 768px) {
       .mh-grid-2, .mh-grid-3, .mh-grid-4 { grid-template-columns: 1fr; }
@@ -234,7 +179,92 @@
     }
   </style>
 </head>
+
 <body>
-<!-- … ton contenu complet reste inchangé ici … -->
+  <section class="mh-hero">
+    <div class="mh-container">
+      <h1>Excellence et Innovation</h1>
+      <div class="mh-subtitle">dans les Matériaux Horlogers Suisses</div>
+      <p>
+        Analyse complète de l’évolution des matériaux horlogers suisses,
+        démontrant le leadership mondial en innovation et savoir-faire.
+      </p>
+
+      <div class="mh-stats">
+        <div class="mh-stat">
+          <span class="mh-stat-number">50</span>
+          <span class="mh-stat-label">% du marché mondial en valeur</span>
+        </div>
+        <div class="mh-stat">
+          <span class="mh-stat-number">65</span>
+          <span class="mh-stat-label">000 emplois en Suisse</span>
+        </div>
+        <div class="mh-stat">
+          <span class="mh-stat-number">500</span>
+          <span class="mh-stat-label">ans d’innovation continue</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="mh-navigation">
+    <div class="mh-nav-tabs">
+      <button class="mh-tab-btn active" onclick="showTab(0)">Métaux</button>
+      <button class="mh-tab-btn" onclick="showTab(1)">Alliages</button>
+      <button class="mh-tab-btn" onclick="showTab(2)">Précision</button>
+      <button class="mh-tab-btn" onclick="showTab(3)">Innovation</button>
+      <button class="mh-tab-btn" onclick="showTab(4)">Durabilité</button>
+    </div>
+  </nav>
+
+  <section class="mh-section active">
+    <div class="mh-container">
+      <div class="mh-section-header">
+        <h2 class="mh-section-title">Innovation et Vision d’Avenir</h2>
+        <div class="mh-section-divider"></div>
+      </div>
+
+      <div class="mh-grid-2">
+        <img src="https://idchufzbxxy7.space.minimax.io/assets/images/innovation_lab.jpg" alt="Innovation" class="mh-image" />
+
+        <div>
+          <h3>Tendances Futures</h3>
+          <ul class="mh-list">
+            <li>Matériaux recyclés (acier Lucent 50%)</li>
+            <li>Or éthique certifié Fairmined</li>
+            <li>Silicium & céramique avancée</li>
+            <li>Robots collaboratifs (cobots)</li>
+            <li>Impression 3D de composants</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mh-grid-3">
+        <div class="mh-card">
+          <h4>Alliages Intelligents</h4>
+          <p>Formes stables après déformation thermique.</p>
+        </div>
+        <div class="mh-card">
+          <h4>Fabrication Maîtrisée</h4>
+          <p>Impression 3D – géométries impossibles.</p>
+        </div>
+        <div class="mh-card">
+          <h4>Vision Solaire</h4>
+          <p>Récupération d’énergie et batteries solides.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const sections = document.querySelectorAll('.mh-section');
+    const buttons = document.querySelectorAll('.mh-tab-btn');
+    function showTab(index) {
+      sections.forEach((s, i) => {
+        s.classList.toggle('active', i === index);
+        buttons[i].classList.toggle('active', i === index);
+      });
+    }
+  </script>
 </body>
 </html>
