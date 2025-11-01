@@ -4,11 +4,13 @@ import { useEffect } from 'react'
 
 export default function MateriauxHorlogersSuisse() {
   useEffect(() => {
-    // Smooth scrolling
+    // --- Défilement fluide ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+      anchor.addEventListener('click', (e) => {
         e.preventDefault()
-        const target = document.querySelector(this.getAttribute('href')!)
+        const href = (anchor as HTMLAnchorElement).getAttribute('href')
+        if (!href) return
+        const target = document.querySelector(href)
         if (target) {
           const offsetTop = (target as HTMLElement).offsetTop - 70
           window.scrollTo({ top: offsetTop, behavior: 'smooth' })
@@ -16,19 +18,7 @@ export default function MateriauxHorlogersSuisse() {
       })
     })
 
-    // Tabs
-    const tabContainers = document.querySelectorAll('.tabs')
-    tabContainers.forEach(container => {
-      const tabs = container.querySelectorAll('.tab')
-      tabs.forEach(tab => {
-        tab.addEventListener('click', function () {
-          tabs.forEach(t => t.classList.remove('active'))
-          this.classList.add('active')
-        })
-      })
-    })
-
-    // Stat counters
+    // --- Animation des chiffres ---
     const statNumbers = document.querySelectorAll('.stat-number')
     statNumbers.forEach(stat => {
       const target = parseInt(stat.getAttribute('data-target') || '0')
@@ -43,16 +33,29 @@ export default function MateriauxHorlogersSuisse() {
         ;(stat as HTMLElement).textContent = Math.floor(current).toString()
       }, 30)
     })
+
+    // --- Gestion des onglets (tabs) ---
+    const tabContainers = document.querySelectorAll('.tabs')
+    tabContainers.forEach(container => {
+      const tabs = container.querySelectorAll('.tab')
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'))
+          tab.classList.add('active')
+        })
+      })
+    })
   }, [])
 
   return (
-    <>
+    <div>
+      {/* --- Feuille de style intégrée --- */}
       <style>{`
-        ${`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@400;500;600;700&display=swap');`}
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@400;500;600;700&display=swap');
         * {margin:0;padding:0;box-sizing:border-box;}
         :root {
           --red-primary:#E1263A;--red-bordeaux:#7B1F34;--red-bordeaux-dark:#521522;
-          --red-button:#E6004C;--red-dark:#A11A29;--white:#fff;
+          --red-button:#E6004C;--red-dark:#A11A29;--white:#FFFFFF;
           --gray-dark:#343A40;--gray-light:#E0E0E0;--black:#1A1A1A;
         }
         body {font-family:'Open Sans',sans-serif;line-height:1.6;color:var(--gray-dark);background:var(--white);}
@@ -106,10 +109,70 @@ export default function MateriauxHorlogersSuisse() {
         }
       `}</style>
 
-      {/* === HTML d’origine inséré directement === */}
-      <div dangerouslySetInnerHTML={{ __html: `
-        ${document?.querySelector('body')?.innerHTML || ''} 
-      ` }} />
-    </>
+      {/* --- HTML original directement intégré --- */}
+      <div
+        dangerouslySetInnerHTML={{
+          __html: `
+          <header class="header">
+            <div class="header-content">
+              <a href="/" class="logo">
+                <div class="logo-icon"></div>
+                <span class="logo-text">HorloLearn</span>
+              </a>
+              <nav>
+                <ul class="nav">
+                  <li><a href="#accueil" class="nav-link active">Accueil</a></li>
+                  <li><a href="#histoire" class="nav-link">Histoire</a></li>
+                  <li><a href="#materiaux" class="nav-link">Matériaux</a></li>
+                  <li><a href="#ecosysteme" class="nav-link">Écosystème</a></li>
+                  <li><a href="#innovation" class="nav-link">Innovation</a></li>
+                  <li><a href="#avenir" class="nav-link">Avenir</a></li>
+                  <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+              </nav>
+            </div>
+          </header>
+
+          <section class="hero" id="accueil">
+            <div class="hero-content">
+              <h1 class="hero-title">Excellence et Innovation</h1>
+              <h2 class="hero-subtitle">dans les Matériaux Horlogers Suisses</h2>
+              <p class="hero-description">
+                Une analyse complète de l'écosystème des matériaux horlogers suisses, démontrant pourquoi la Suisse demeure le leader mondial incontesté.
+              </p>
+              <div class="stats">
+                <div class="stat-card"><span class="stat-number" data-target="50">0</span><span class="stat-label">% du marché mondial</span></div>
+                <div class="stat-card"><span class="stat-number" data-target="65">0</span><span class="stat-label">000 emplois</span></div>
+                <div class="stat-card"><span class="stat-number" data-target="500">0</span><span class="stat-label">ans d'innovation</span></div>
+              </div>
+              <div class="hero-buttons">
+                <a href="#materiaux" class="btn btn-primary">Découvrir →</a>
+                <a href="#histoire" class="btn btn-secondary">Voir la Timeline</a>
+              </div>
+            </div>
+          </section>
+
+          <footer class="footer">
+            <div class="footer-content">
+              <div class="footer-grid">
+                <div class="footer-section">
+                  <h4>HorloLearn</h4>
+                  <p style="opacity: 0.8;">L'excellence et l'innovation dans les matériaux horlogers suisses.</p>
+                </div>
+                <div class="footer-section">
+                  <h4>Navigation</h4>
+                  <a href="#accueil">Accueil</a><a href="#materiaux">Matériaux</a><a href="#avenir">Avenir</a>
+                </div>
+                <div class="footer-section">
+                  <h4>Ressources</h4><a href="#">Documentation</a><a href="#">Partenaires</a>
+                </div>
+              </div>
+              <div class="footer-bottom">© 2025 HorloLearn</div>
+            </div>
+          </footer>
+        `,
+        }}
+      />
+    </div>
   )
 }
