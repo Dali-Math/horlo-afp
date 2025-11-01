@@ -166,50 +166,36 @@ function MaterialCard({
 
   return (
     <article
-      className={`group relative bg-white dark:bg-slate-900/50 rounded-3xl overflow-hidden 
-        transition-all duration-700 hover:shadow-2xl hover:shadow-amber-500/10 
-        border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-sm
-        hover:-translate-y-2 flex flex-col
-        ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+      className="group relative bg-white dark:bg-slate-900/50 rounded-3xl overflow-hidden transition-all duration-700 hover:shadow-2xl hover:shadow-amber-500/10 border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-sm hover:-translate-y-2 flex flex-col ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}"
       style={{ transitionDelay: '100ms' }}
     >
       {/* Effet de brillance au survol */}
-      <div className="absolute inset-0 bg-gradient-to-br from-amber-400/0 via-amber-400/0 to-amber-400/0 
-        group-hover:from-amber-400/5 group-hover:via-transparent group-hover:to-transparent 
-        transition-all duration-700 pointer-events-none z-10" />
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-400/0 via-amber-400/0 to-amber-400/0 group-hover:from-amber-400/5 group-hover:via-transparent group-hover:to-transparent transition-all duration-700 pointer-events-none z-10" />
 
       {/* Image avec overlay sophistiqué */}
       <button
         type="button"
-        className="relative w-full h-56 overflow-hidden focus:outline-none focus:ring-2 
-          focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900 
-          border-0 p-0 bg-transparent cursor-pointer group/image"
+        className="relative w-full h-56 overflow-hidden focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900 border-0 p-0 bg-transparent cursor-pointer group/image"
         onClick={onImageClick}
         aria-label={`Voir une grande image de ${title}`}
       >
         <img
           src={illustration}
           alt={title}
-          className="w-full h-full object-cover transition-all duration-700 
-            group-hover/image:scale-110 group-hover/image:rotate-1"
+          className="w-full h-full object-cover transition-all duration-700 group-hover/image:scale-110 group-hover/image:rotate-1"
           loading="lazy"
         />
         {/* Overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent 
-          opacity-0 group-hover/image:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity duration-500" />
         
         {/* Badge catégorie */}
-        <div className={`absolute top-4 right-4 ${colorClass} text-white px-3 py-1.5 
-          rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm
-          transform translate-x-20 group-hover/image:translate-x-0 transition-transform duration-500`}>
+        <div className={`absolute top-4 right-4 ${colorClass} text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm transform translate-x-20 group-hover/image:translate-x-0 transition-transform duration-500`}>
           {icon}
         </div>
         
         {/* Indication zoom */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 
-          group-hover/image:opacity-100 transition-opacity duration-300">
-          <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-4 py-2 
-            rounded-full text-sm font-medium text-slate-900 dark:text-white shadow-xl">
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-opacity duration-300">
+          <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium text-slate-900 dark:text-white shadow-xl">
             Cliquer pour agrandir
           </div>
         </div>
@@ -218,18 +204,14 @@ function MaterialCard({
       <div className="p-6 flex-1 flex flex-col space-y-4">
         {/* En-tête avec icône et titre */}
         <div className="flex items-start gap-4">
-          <div className={`${colorClass} text-white rounded-2xl p-3.5 text-2xl 
-            shadow-lg shadow-current/20 flex-shrink-0 
-            group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
+          <div className={`${colorClass} text-white rounded-2xl p-3.5 text-2xl shadow-lg shadow-current/20 flex-shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
             {icon}
           </div>
           <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1 
-              group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
               {title}
             </h2>
-            <div className="h-1 w-16 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full 
-              group-hover:w-24 transition-all duration-500" />
+            <div className="h-1 w-16 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full group-hover:w-24 transition-all duration-500" />
           </div>
         </div>
 
@@ -250,8 +232,7 @@ function MaterialCard({
             {useCases.map((useCase, i) => (
               <li
                 key={i}
-                className="flex items-start gap-2.5 text-sm text-slate-700 dark:text-slate-200 
-                  group-hover:translate-x-1 transition-transform duration-300"
+                className="flex items-start gap-2.5 text-sm text-slate-700 dark:text-slate-200 group-hover:translate-x-1 transition-transform duration-300"
                 style={{ transitionDelay: `${i * 50}ms` }}
               >
                 <span className="text-amber-500 mt-0.5 flex-shrink-0">▸</span>
@@ -263,9 +244,7 @@ function MaterialCard({
       </div>
 
       {/* Bordure lumineuse au survol */}
-      <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 
-        transition-opacity duration-500 pointer-events-none 
-        ring-1 ring-amber-400/50 ring-inset" />
+      <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none ring-1 ring-amber-400/50 ring-inset" />
     </article>
   )
 }
@@ -285,17 +264,14 @@ function ZoomModal({
       onKeyDown={(e) => {
         if (e.key === 'Escape') onClose()
       }}
-      className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center 
-        animate-fadein cursor-zoom-out px-4"
+      className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center animate-fadein cursor-zoom-out px-4"
       aria-modal="true"
       role="dialog"
       tabIndex={-1}
     >
       {/* Bouton fermer */}
       <button
-        className="absolute top-6 right-6 text-white/80 hover:text-white 
-          bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-3 
-          transition-all duration-300 z-10 group"
+        className="absolute top-6 right-6 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full p-3 transition-all duration-300 z-10 group"
         onClick={onClose}
         aria-label="Fermer"
       >
@@ -308,8 +284,7 @@ function ZoomModal({
       <img
         src={src}
         alt={alt}
-        className="max-h-[90vh] max-w-[95vw] rounded-3xl shadow-2xl 
-          border-4 border-amber-400/30 animate-zoomin"
+        className="max-h-[90vh] max-w-[95vw] rounded-3xl shadow-2xl border-4 border-amber-400/30 animate-zoomin"
         onClick={(e) => e.stopPropagation()}
       />
     </div>
@@ -335,8 +310,7 @@ export default function MateriauxPage() {
       : MATERIALS.filter((m) => m.category === filter)
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/30 to-slate-50 
-      dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors relative overflow-hidden">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/30 to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors relative overflow-hidden">
       
       {/* Effets de fond décoratifs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -353,9 +327,7 @@ export default function MateriauxPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <Link
             href="/theorie"
-            className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-200 
-              hover:text-amber-600 dark:hover:text-amber-400 transition-all duration-300 
-              group font-medium"
+            className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 transition-all duration-300 group font-medium"
           >
             <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             <span>Retour à la théorie</span>
@@ -367,21 +339,16 @@ export default function MateriauxPage() {
         
         {/* Hero Section */}
         <header className="max-w-4xl mx-auto text-center mb-16 animate-fadein space-y-6">
-          <div className="inline-flex items-center gap-2 bg-amber-100 dark:bg-amber-900/30 
-            px-4 py-2 rounded-full text-amber-800 dark:text-amber-300 text-sm font-semibold mb-4">
+          <div className="inline-flex items-center gap-2 bg-amber-100 dark:bg-amber-900/30 px-4 py-2 rounded-full text-amber-800 dark:text-amber-300 text-sm font-semibold mb-4">
             <Sparkles className="w-4 h-4" />
             Excellence Horlogère Suisse
           </div>
           
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black bg-clip-text text-transparent 
-            bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 
-            dark:from-amber-400 dark:via-yellow-300 dark:to-amber-400 
-            leading-tight tracking-tight">
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black bg-clip-text text-transparent bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 dark:from-amber-400 dark:via-yellow-300 dark:to-amber-400 leading-tight tracking-tight">
             Matériaux d'Exception
           </h1>
           
-          <p className="text-xl sm:text-2xl text-slate-600 dark:text-slate-300 
-            font-light leading-relaxed max-w-3xl mx-auto">
+          <p className="text-xl sm:text-2xl text-slate-600 dark:text-slate-300 font-light leading-relaxed max-w-3xl mx-auto">
             Du savoir-faire traditionnel aux technologies de pointe, explorez les matériaux 
             nobles qui donnent vie aux chefs-d'œuvre horlogers suisses.
           </p>
@@ -401,12 +368,7 @@ export default function MateriauxPage() {
             <button
               key={cat}
               onClick={() => setFilter(cat)}
-              className={`group relative px-6 py-3 rounded-2xl font-semibold text-sm 
-                transition-all duration-300 overflow-hidden
-                ${filter === cat
-                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/30 scale-105'
-                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:shadow-lg hover:scale-105 border border-slate-200 dark:border-slate-700'
-                }`}
+              className="group relative px-6 py-3 rounded-2xl font-semibold text-sm transition-all duration-300 overflow-hidden ${filter === cat ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/30 scale-105' : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:shadow-lg hover:scale-105 border border-slate-200 dark:border-slate-700'}"
             >
               <span className="relative z-10 flex items-center gap-2">
                 {CATEGORY_ICONS[cat]}
@@ -415,8 +377,7 @@ export default function MateriauxPage() {
               
               {/* Effet de brillance au survol */}
               {filter !== cat && (
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent 
-                  translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
               )}
             </button>
           ))}
@@ -484,10 +445,7 @@ export default function MateriauxPage() {
         {/* Section "À retenir" premium */}
         <section className="max-w-4xl mx-auto mt-20 animate-fadein" 
           style={{ animationDelay: '600ms' }}>
-          <div className="relative bg-gradient-to-br from-amber-50 to-yellow-50 
-            dark:from-slate-900/50 dark:to-amber-900/10 
-            rounded-3xl p-8 sm:p-10 shadow-xl border border-amber-200/50 dark:border-amber-800/30 
-            backdrop-blur-sm overflow-hidden">
+          <div className="relative bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-slate-900/50 dark:to-amber-900/10 rounded-3xl p-8 sm:p-10 shadow-xl border border-amber-200/50 dark:border-amber-800/30 backdrop-blur-sm overflow-hidden">
             
             {/* Effet décoratif */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-amber-400/10 to-transparent rounded-full blur-3xl" />
@@ -497,8 +455,7 @@ export default function MateriauxPage() {
                 <div className="bg-gradient-to-br from-amber-500 to-amber-600 p-3 rounded-2xl shadow-lg">
                   <Award className="w-6 h-6 text-white" />
                 </div>
-                <h2 className="text-3xl font-bold bg-clip-text text-transparent 
-                  bg-gradient-to-r from-amber-600 to-yellow-600 dark:from-amber-400 dark:to-yellow-400">
+                <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-yellow-600 dark:from-amber-400 dark:to-yellow-400">
                   À retenir
                 </h2>
               </div>
@@ -510,9 +467,7 @@ export default function MateriauxPage() {
                   'Les finitions, traitements de surface et associations offrent des possibilités infinies !',
                 ].map((point, i) => (
                   <li key={i} className="flex gap-4 items-start group">
-                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 
-                      flex items-center justify-center text-white font-bold text-sm shadow-lg 
-                      group-hover:scale-110 transition-transform">
+                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:scale-110 transition-transform">
                       {i + 1}
                     </span>
                     <span className="flex-1 leading-relaxed font-medium pt-1">
