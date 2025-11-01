@@ -16,24 +16,65 @@ export default function SwissWatchMaterialsPage() {
       setScrolled(window.scrollY > 50);
     };
 
-    // Counter animation
+    // Counter animation avec vérification des éléments
     const animateCounters = () => {
       const counters = document.querySelectorAll('[data-target]');
-      counters.forEach((counter) => {
-        const target = parseInt(counter.getAttribute('data-target') || '0');
-        const duration = 2000;
-        const step = target / (duration / 16);
-        let current = 0;
-
-        const timer = setInterval(() => {
-          current += step;
-          if (current >= target) {
-            counter.textContent = target.toString();
-            clearInterval(timer);
-          } else {
-            counter.textContent = Math.floor(current).toString();
+      
+      // Vérifier qu'il y a des compteurs à animer
+      if (counters.length === 0) {
+        // Si les éléments ne sont pas encore chargés, attendre et réessayer
+        setTimeout(() => {
+          const retryCounters = document.querySelectorAll('[data-target]');
+          if (retryCounters.length > 0) {
+            animateCounters();
           }
-        }, 16);
+        }, 100);
+        return;
+      }
+
+      console.log(`Trouvé ${counters.length} compteurs à animer`);
+
+      counters.forEach((counter, index) => {
+        // Vérifier que l'élément est visible et dans le DOM
+        if (!counter || !counter.parentElement) return;
+        
+        const target = parseInt(counter.getAttribute('data-target') || '0');
+        if (target === 0) return;
+        
+        // Initialiser le compteur à 0 avec délai pour créer un effet cascade
+        setTimeout(() => {
+          counter.textContent = '0';
+          counter.classList.add('counter-display');
+          
+          const duration = 2000;
+          const step = target / (duration / 16);
+          let current = 0;
+          let hasAnimated = false;
+
+          // Observer pour détecter quand l'élément devient visible
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting && !hasAnimated) {
+                hasAnimated = true;
+                console.log(`Animation du compteur ${index}: ${target}`);
+                
+                const timer = setInterval(() => {
+                  current += step;
+                  if (current >= target) {
+                    counter.textContent = target.toString();
+                    counter.classList.add('counter-animate');
+                    clearInterval(timer);
+                    observer.unobserve(counter);
+                  } else {
+                    counter.textContent = Math.floor(current).toString();
+                  }
+                }, 16);
+              }
+            });
+          }, { threshold: 0.1 });
+
+          observer.observe(counter);
+        }, index * 200); // Délai cascade entre les compteurs
       });
     };
 
@@ -49,12 +90,24 @@ export default function SwissWatchMaterialsPage() {
       });
     };
 
+    // Initialiser les animations avec délai pour s'assurer que le DOM est prêt
+    const initializeAnimations = () => {
+      setTimeout(() => {
+        animateCounters();
+        revealElements();
+      }, 500); // Délai pour laisser le temps au DOM de se charger
+    };
+
+    // Event listeners
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('scroll', revealElements);
     
-    // Initialize animations
-    setTimeout(animateCounters, 500);
-    revealElements();
+    // Démarrer les animations quand tout est chargé
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeAnimations);
+    } else {
+      initializeAnimations();
+    }
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -72,1416 +125,788 @@ export default function SwissWatchMaterialsPage() {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Merci pour votre inscription !');
+    // Handle form submission
   };
 
   return (
-    <div>
-      {/* Navigation fixe */}
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} id="navbar">
-        <div className="nav-container">
-          <div className="nav-logo">
-            <span className="swiss-cross">✚</span>
-            <span className="nav-title">Swiss Watch Materials</span>
-          </div>
-          <div className="nav-menu" id="nav-menu">
-            <a href="#hero" className="nav-link">Accueil</a>
-            <a href="#history" className="nav-link">Histoire</a>
-            <a href="#materials" className="nav-link">Matériaux</a>
-            <a href="#ecosystem" className="nav-link">Écosystème</a>
-            <a href="#innovation" className="nav-link">Innovation</a>
-            <a href="#future" className="nav-link">Avenir</a>
-            <a href="#contact" className="nav-link">Contact</a>
-          </div>
-          <div className="nav-toggle" id="nav-toggle">
-            <span></span>
-            <span></span>
-            <span></span>
+    <div className="min-h-screen bg-gray-50 page-materiaux">
+      {/* Navigation */}
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-lg' : 'bg-transparent'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <span className="text-2xl font-bold text-blue-900">HorloLearn</span>
+            </div>
+            <div className="hidden md:block">
+              <div className="ml-10 flex items-baseline space-x-4">
+                <a href="#hero" className="text-gray-700 hover:text-blue-900 px-3 py-2 rounded-md text-sm font-medium">Accueil</a>
+                <a href="#materiaux" className="text-gray-700 hover:text-blue-900 px-3 py-2 rounded-md text-sm font-medium">Matériaux</a>
+                <a href="#innovation" className="text-gray-700 hover:text-blue-900 px-3 py-2 rounded-md text-sm font-medium">Innovation</a>
+                <a href="#formation" className="text-gray-700 hover:text-blue-900 px-3 py-2 rounded-md text-sm font-medium">Formation</a>
+                <a href="#contact" className="text-gray-700 hover:text-blue-900 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+              </div>
+            </div>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section id="hero" className="hero">
-        <div className="hero-background">
-          <div className="hero-overlay"></div>
-        </div>
-        <div className="hero-content">
-          <div className="hero-badge">
-            <span className="badge-text">Rapport de Référence Mondial</span>
-          </div>
-          <h1 className="hero-title">
-            <span className="title-main">Excellence et Innovation</span>
-            <span className="title-sub">dans les Matériaux Horlogers Suisses</span>
-          </h1>
-          <p className="hero-description">
-            Une analyse complète de l&apos;écosystème des matériaux horlogers suisses, 
-            démontrant pourquoi la Suisse demeure le leader mondial incontesté 
-            en matière d&apos;innovation, de qualité et de savoir-faire.
-          </p>
-          <div className="hero-stats">
-            <div className="stat-item">
-              <span className="stat-number" data-target="50">0</span>
-              <span className="stat-label">% du marché mondial en valeur</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number" data-target="65">0</span>
-              <span className="stat-label">000 emplois en Suisse</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number" data-target="500">0</span>
-              <span className="stat-label">ans d&apos;innovation continue</span>
-            </div>
-          </div>
-          <div className="hero-actions">
-            <button className="btn btn-primary" onClick={() => scrollToSection('materials')}>
-              <span>Découvrir les Matériaux</span>
-              <svg className="btn-icon" viewBox="0 0 24 24">
-                <path d="M9 18l6-6-6-6"/>
-              </svg>
-            </button>
-            <button className="btn btn-secondary" onClick={() => scrollToSection('history')}>
-              Voir la Timeline
+      <section id="hero" className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900 text-white py-20">
+        <div className="absolute inset-0 bg-black opacity-20"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+              Matériaux Horlogers
+              <span className="block text-4xl md:text-5xl text-blue-300">de Suisse</span>
+            </h1>
+            <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+              Découvrez l'excellence et l'innovation des matériaux qui font la réputation mondiale de l'horlogerie suisse
+            </p>
+            <button 
+              onClick={() => scrollToSection('resume')}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors duration-300"
+            >
+              Découvrir
             </button>
           </div>
-        </div>
-        <div className="scroll-indicator">
-          <div className="scroll-arrow"></div>
         </div>
       </section>
 
       {/* Executive Summary */}
-      <section className="executive-summary">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Executive Summary</h2>
-            <div className="section-divider"></div>
+      <section id="resume" className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Résumé Exécutif</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              L'horlogerie suisse représente un écosystème exceptionnel où tradition et innovation se rencontrent 
+              pour créer des matériaux d'une qualité inégalée.
+            </p>
           </div>
-          <div className="summary-content">
-            <div className="summary-text">
-              <p className="lead">
-                Ce rapport offre une analyse complète et approfondie de l&apos;écosystème des matériaux horlogers suisses, 
-                démontrant pourquoi la Suisse demeure le leader mondial incontesté en matière d&apos;innovation, 
-                de qualité et de savoir-faire.
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center p-6 bg-blue-50 rounded-lg scroll-reveal">
+              <div className="text-3xl font-bold text-blue-600 mb-2">
+                <span data-target="95" className="counter-display">0</span>+
+              </div>
+              <p className="text-gray-700">Années d'expertise</p>
+            </div>
+            <div className="text-center p-6 bg-green-50 rounded-lg scroll-reveal">
+              <div className="text-3xl font-bold text-green-600 mb-2">
+                <span data-target="150" className="counter-display">0</span>
+              </div>
+              <p className="text-gray-700">Marques mondiales</p>
+            </div>
+            <div className="text-center p-6 bg-purple-50 rounded-lg scroll-reveal">
+              <div className="text-3xl font-bold text-purple-600 mb-2">
+                <span data-target="4" className="counter-display">0</span>
+              </div>
+              <p className="text-gray-700">Districts horlogers</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Historical Timeline */}
+      <section id="histoire" className="py-16 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Chronologie Historique</h2>
+            <p className="text-xl text-gray-600">Évolution des matériaux horlogers à travers les siècles</p>
+          </div>
+          
+          <div className="flex flex-wrap justify-center mb-8">
+            {['16th', '17th', '18th', '19th', '20th', '21st'].map((period) => (
+              <button
+                key={period}
+                onClick={() => setActiveTimeline(period)}
+                className={`m-2 px-6 py-3 rounded-full font-medium transition-colors duration-300 ${
+                  activeTimeline === period 
+                    ? 'bg-blue-600 text-white' 
+                    : 'bg-white text-gray-700 hover:bg-blue-50'
+                }`}
+              >
+                {period === '16th' && 'XVIe siècle'}
+                {period === '17th' && 'XVIIe siècle'}
+                {period === '18th' && 'XVIIIe siècle'}
+                {period === '19th' && 'XIXe siècle'}
+                {period === '20th' && 'XXe siècle'}
+                {period === '21st' && 'XXIe siècle'}
+              </button>
+            ))}
+          </div>
+
+          <div className="bg-white rounded-lg p-8 shadow-lg">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  {activeTimeline === '16th' && 'Naissance de l\'horlogerie suisse'}
+                  {activeTimeline === '17th' && 'Perfectionnement mécanique'}
+                  {activeTimeline === '18th' && 'Standardisation industrielle'}
+                  {activeTimeline === '19th' && 'Révolution des matériaux'}
+                  {activeTimeline === '20th' && 'Ère de l\'innovation'}
+                  {activeTimeline === '21st' && 'Futur des matériaux intelligents'}
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  {activeTimeline === '16th' && 'Les premiers maîtres horlogers s\'installent dans les vallées helvétiques, développant les techniques de base de l\'horlogerie.'}
+                  {activeTimeline === '17th' && 'Apparition des premiers mouvements complexes et des complications horlogères.'}
+                  {activeTimeline === '18th' && 'Développement des méthodes de production industrielle et normalisation des pièces.'}
+                  {activeTimeline === '19th' && 'Introduction de nouveaux matériaux comme l\'acier inoxydable et les alliages avancés.'}
+                  {activeTimeline === '20th' && 'Révolution avec le quartz, les matériaux synthétiques et les technologies modernes.'}
+                  {activeTimeline === '21st' && 'Ère des matériaux intelligents, durabilité et innovation matière.'}
+                </p>
+                <div className="text-sm text-blue-600">
+                  {activeTimeline === '16th' && '1525 - Arrivée des artisans huguenots'}
+                  {activeTimeline === '17th' && '1650 - Inventions de Huygens'}
+                  {activeTimeline === '18th' && '1750 - Industrialisation horlogère'}
+                  {activeTimeline === '19th' && '1850 - Production de masse'}
+                  {activeTimeline === '20th' && '1950 - Ère du quartz'}
+                  {activeTimeline === '21st' && '2000 - Matériaux du futur'}
+                </div>
+              </div>
+              <div className="relative">
+                <div className="w-full h-64 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center">
+                  <img 
+                    src="/chronologie_historique.png" 
+                    alt="Chronologie historique" 
+                    className="max-w-full max-h-full object-contain"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      target.parentElement!.innerHTML = '<div class="text-gray-500 text-center">Image chronologie</div>';
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Materials Section */}
+      <section id="materiaux" className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Matériaux Horlogers</h2>
+            <p className="text-xl text-gray-600">Des matériaux traditionnels aux innovations high-tech</p>
+          </div>
+          
+          <div className="flex flex-wrap justify-center mb-8">
+            {['precious', 'metals', 'ceramics', 'carbon'].map((material) => (
+              <button
+                key={material}
+                onClick={() => setActiveMaterial(material)}
+                className={`m-2 px-6 py-3 rounded-full font-medium transition-colors duration-300 ${
+                  activeMaterial === material 
+                    ? 'bg-blue-600 text-white' 
+                    : 'bg-white text-gray-700 hover:bg-blue-50 border border-gray-300'
+                }`}
+              >
+                {material === 'precious' && 'Métaux Précieux'}
+                {material === 'metals' && 'Métaux Techniques'}
+                {material === 'ceramics' && 'Céramiques'}
+                {material === 'carbon' && 'Fibres de Carbone'}
+              </button>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="space-y-6">
+              <div className="bg-blue-50 p-6 rounded-lg">
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Propriétés</h3>
+                <ul className="space-y-2 text-gray-700">
+                  {activeMaterial === 'precious' && (
+                    <>
+                      <li>• Résistance à la corrosion exceptionnelle</li>
+                      <li>• Propriétés hypoallergéniques</li>
+                      <li>• Durabilité sur plusieurs générations</li>
+                      <li>• Valeur et prestige</li>
+                    </>
+                  )}
+                  {activeMaterial === 'metals' && (
+                    <>
+                      <li>• Résistance mécanique élevée</li>
+                      <li>• Facilité d'usinage</li>
+                      <li>• Stabilté dimensionnelle</li>
+                      <li>• Coût оптимизирован</li>
+                    </>
+                  )}
+                  {activeMaterial === 'ceramics' && (
+                    <>
+                      <li>• Résistance aux rayures</li>
+                      <li>• Inertie chimique</li>
+                      <li>• Légéreté exceptionnelle</li>
+                      <li>• Couleurs durables</li>
+                    </>
+                  )}
+                  {activeMaterial === 'carbon' && (
+                    <>
+                      <li>• Ultra-légéreté</li>
+                      <li>• Résistance supérieure</li>
+                      <li>• Design moderne</li>
+                      <li>• Performance extrême</li>
+                    </>
+                  )}
+                </ul>
+              </div>
+              
+              <div className="bg-green-50 p-6 rounded-lg">
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Applications</h3>
+                <p className="text-gray-700">
+                  {activeMaterial === 'precious' && 'Boîtiers, bracelets de luxe, pièces décoratives'}
+                  {activeMaterial === 'metals' && 'Mécanismes, ressorts, balanciers, vis'}
+                  {activeMaterial === 'ceramics' && 'Boîtiers, lunette, éléments décoratifs'}
+                  {activeMaterial === 'carbon' && 'Boîtiers sport, bracelets, composants techniques'}
+                </p>
+              </div>
+            </div>
+            
+            <div className="relative">
+              <div className="w-full h-96 bg-gradient-to-br from-gray-100 to-blue-100 rounded-lg flex items-center justify-center">
+                <img 
+                  src="/materiaux_hightech_horlogerie.png" 
+                  alt="Matériaux horlogers" 
+                  className="max-w-full max-h-full object-contain"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    target.parentElement!.innerHTML = '<div class="text-gray-500 text-center">Image matériaux horlogers</div>';
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Innovation Section */}
+      <section id="innovation" className="py-16 bg-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">Innovation & Futur</h2>
+            <p className="text-xl text-gray-300">Les tendances qui façonnent l'horlogerie de demain</p>
+          </div>
+          
+          <div className="flex flex-wrap justify-center mb-8">
+            {['environment', 'digital', 'smart'].map((trend) => (
+              <button
+                key={trend}
+                onClick={() => setActiveTrend(trend)}
+                className={`m-2 px-6 py-3 rounded-full font-medium transition-colors duration-300 ${
+                  activeTrend === trend 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                }`}
+              >
+                {trend === 'environment' && 'Durabilité'}
+                {trend === 'digital' && 'Digitalisation'}
+                {trend === 'smart' && 'Intelligence'}
+              </button>
+            ))}
+          </div>
+
+          <div className="bg-gray-800 rounded-lg p-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-2xl font-bold mb-4">
+                  {activeTrend === 'environment' && 'Matériaux Durables'}
+                  {activeTrend === 'digital' && 'Révolution Numérique'}
+                  {activeTrend === 'smart' && 'Horlogerie Intelligente'}
+                </h3>
+                <p className="text-gray-300 mb-4">
+                  {activeTrend === 'environment' && 'Recherche de matériaux recyclables et processus de fabrication éco-responsables pour un impact environnemental minimal.'}
+                  {activeTrend === 'digital' && 'Intégration de technologies numériques pour optimiser la production et la personnalisation des matériaux.'}
+                  {activeTrend === 'smart' && 'Développement de matériaux intelligents capables de s\'adapter aux conditions d\'usage et aux préférences de l\'utilisateur.'}
+                </p>
+                <div className="space-y-2 text-blue-400">
+                  {activeTrend === 'environment' && (
+                    <>
+                      <div>• Recyclage des métaux précieux</div>
+                      <div>• Biomatériaux durables</div>
+                      <div>• Énergies renouvelables</div>
+                    </>
+                  )}
+                  {activeTrend === 'digital' && (
+                    <>
+                      <div>• Simulation numérique des matériaux</div>
+                      <div>• Production additive 3D</div>
+                      <div>• IoT dans la chaîne d’approvisionnement</div>
+                    </>
+                  )}
+                  {activeTrend === 'smart' && (
+                    <>
+                      <div>• Matériaux auto-réparateurs</div>
+                      <div>• Alliages adaptatifs</div>
+                      <div>• Capteurs intégrés</div>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="relative">
+                <div className="w-full h-64 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                  <img 
+                    src="/innovation_horlogerie_futur.png" 
+                    alt="Innovation horlogerie futur" 
+                    className="max-w-full max-h-full object-contain"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      target.parentElement!.innerHTML = '<div class="text-gray-400 text-center">Image innovation futur</div>';
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Districts Section */}
+      <section id="districts" className="py-16 bg-blue-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Districts Horlogers</h2>
+            <p className="text-xl text-gray-600">Les quatre régions clés de l'horlogerie suisse</p>
+          </div>
+          
+          <div className="flex flex-wrap justify-center mb-8">
+            {[
+              { key: 'geneve', label: 'Genève' },
+              { key: 'neuchatel', label: 'Neuchâtel' },
+              { key: 'vallee_de_joux', label: 'Vallée de Joux' },
+              { key: 'jura_bienne', label: 'Jura & Bienne' }
+            ].map((district) => (
+              <button
+                key={district.key}
+                onClick={() => setActiveDistrict(district.key)}
+                className={`m-2 px-6 py-3 rounded-full font-medium transition-colors duration-300 ${
+                  activeDistrict === district.key 
+                    ? 'bg-blue-600 text-white' 
+                    : 'bg-white text-gray-700 hover:bg-blue-50 border border-gray-300'
+                }`}
+              >
+                {district.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="bg-white rounded-lg p-8 shadow-lg">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  {activeDistrict === 'geneve' && 'District de Genève'}
+                  {activeDistrict === 'neuchatel' && 'District de Neuchâtel'}
+                  {activeDistrict === 'vallee_de_joux' && 'Vallée de Joux'}
+                  {activeDistrict === 'jura_bienne' && 'Jura & Bienne'}
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  {activeDistrict === 'geneve' && 'Centre du luxe et de la haute horlogerie, Genève regroupe les maisons les plus prestigieuses et les matériels les plus nobles.'}
+                  {activeDistrict === 'neuchatel' && 'Région spécialisée dans la fabrication de mouvements et de composants techniques de haute précision.'}
+                  {activeDistrict === 'vallee_de_joux' && 'Berceau de l\'horlogerie mécanique, cette vallée concentre les savoir-faire traditionnels et l\'expertise des complications.'}
+                  {activeDistrict === 'jura_bienne' && 'Hub industriel moderne spécialisé dans la production de masse et les innovations technologiques.'}
+                </p>
+                <div className="space-y-2 text-blue-600">
+                  {activeDistrict === 'geneve' && (
+                    <>
+                      <div>• Maisons de luxe: Patek Philippe, Vacheron Constantin</div>
+                      <div>• Spécialité: Complications majeures</div>
+                      <div>• Matériaux: Or, platine, diamants</div>
+                    </>
+                  )}
+                  {activeDistrict === 'neuchatel' && (
+                    <>
+                      <div>• Expertise: ETA, Valjoux</div>
+                      <div>• Spécialité: Mouvements de série</div>
+                      <div>• Innovation: Chronographes intégrés</div>
+                    </>
+                  )}
+                  {activeDistrict === 'vallee_de_joux' && (
+                    <>
+                      <div>• Maîtres: Audemars Piguet, Jaeger-LeCoultre</div>
+                      <div>• Spécialité: Réserves de marche</div>
+                      <div>• Tradition: SAV et pièces de rechange</div>
+                    </>
+                  )}
+                  {activeDistrict === 'jura_bienne' && (
+                    <>
+                      <div>• Leaders: Swatch Group</div>
+                      <div>• Production: Industrielle moderne</div>
+                      <div>• Innovation: Matériaux synthétique</div>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="relative">
+                <div className="w-full h-64 bg-gradient-to-br from-green-100 to-blue-100 rounded-lg flex items-center justify-center">
+                  <img 
+                    src="/districts_horlogers_suisse.png" 
+                    alt="Districts horlogers Suisse" 
+                    className="max-w-full max-h-full object-contain"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      target.parentElement!.innerHTML = '<div class="text-gray-500 text-center">Image districts horlogers</div>';
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Formation Section */}
+      <section id="formation" className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Formation & Savoir-faire</h2>
+            <p className="text-xl text-gray-600">L'excellence au service de la transmission des compétences</p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="relative">
+              <div className="w-full h-80 bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg flex items-center justify-center">
+                <img 
+                  src="/formation_horlogere_suisse.png" 
+                  alt="Formation horlogère Suisse" 
+                  className="max-w-full max-h-full object-contain"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    target.parentElement!.innerHTML = '<div class="text-gray-500 text-center">Image formation horlogère</div>';
+                  }}
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="bg-amber-50 p-6 rounded-lg">
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Écoles Spécialisées</h3>
+                <ul className="space-y-2 text-gray-700">
+                  <li>• École d'Horlogerie de Genève</li>
+                  <li>• Centre de Formation du Locle</li>
+                  <li>• Institut de la Vallée de Joux</li>
+                  <li>• École de Bienne</li>
+                </ul>
+              </div>
+              
+              <div className="bg-orange-50 p-6 rounded-lg">
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Formations Disponibles</h3>
+                <ul className="space-y-2 text-gray-700">
+                  <li>• Technicien en Horlogerie (3 ans)</li>
+                  <li>• Cadranier (2 ans)</li>
+                  <li>• Poinçonneur de kasus (2 ans)</li>
+                  <li>• Ingénieur Horloger (Master)</li>
+                </ul>
+              </div>
+              
+              <div className="bg-green-50 p-6 rounded-lg">
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Innovation Pédagogique</h3>
+                <p className="text-gray-700">
+                  Intégration des technologies numériques pour simuler l'usinage des matériaux 
+                  et former aux nouveaux procédés de fabrication.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Companies Section */}
+      <section id="entreprises" className="py-16 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Entreprises Leaders</h2>
+            <p className="text-xl text-gray-600">Les acteurs qui façonnent l'industrie horlogère</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-white p-6 rounded-lg shadow-lg">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Swatch Group</h3>
+              <p className="text-gray-600 mb-4">
+                Leader mondial de l'horlogerie avec 19 marques et une expertise complète 
+                dans tous les segments de matériaux.
               </p>
-              <p>
-                De l&apos;or 18 carats et des aciers spéciaux comme le 316L, qui ont défini les standards de l&apos;industrie, 
-                aux super-alliages modernes tels que le Ceratanium, le silicium et les composites en carbone, 
-                la Suisse a continuellement repoussé les limites de la science des matériaux.
+              <div className="text-blue-600 text-sm">
+                <div>• Omega, Longines, Tissot</div>
+                <div>• Innovation matériaux</div>
+                <div>• Production industrielle</div>
+              </div>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-lg">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Richemont Group</h3>
+              <p className="text-gray-600 mb-4">
+                Groupe de luxe focalisé sur la haute horlogerie et les matériaux nobles 
+                avec un portfolio de marques prestigieuses.
               </p>
-              <div className="highlight-box">
-                <h3>Points Clés</h3>
-                <ul className="highlight-list">
-                  <li>Maîtrise inégalée des matériaux de l&apos;or au silicium</li>
-                  <li>Écosystème industriel unique au monde</li>
-                  <li>Formation de renommée mondiale (ETVJ, WOSTEP)</li>
-                  <li>Innovation continue et R&D de pointe</li>
-                  <li>Leadership face à la concurrence internationale</li>
+              <div className="text-purple-600 text-sm">
+                <div>• Cartier, Jaeger-LeCoultre</div>
+                <div>• Haute horlogerie</div>
+                <div>• Métaux précieux</div>
+              </div>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-lg">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">LVMH Watch Division</h3>
+              <p className="text-gray-600 mb-4">
+                Division horlogerie du groupe LVMH regroupant TAG Heuer, Hublot, Bulgari 
+                et Zenith avec un focus sur l'innovation.
+              </p>
+              <div className="text-red-600 text-sm">
+                <div>• Hublot, TAG Heuer</div>
+                <div>• Matériaux innovantes</div>
+                <div>• Design moderne</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Future Vision Section */}
+      <section id="vision" className="py-16 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">Vision Future</h2>
+            <p className="text-xl text-blue-200">L'horlogerie suisse à l'horizon 2030</p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="bg-white/10 backdrop-blur rounded-lg p-6">
+              <h3 className="text-xl font-bold mb-4">Durabilité</h3>
+              <p className="text-blue-200 mb-4">
+                Transition vers des matériaux 100% recyclables et des processus 
+                de fabrication à empreinte carbone neutre.
+              </p>
+              <div className="text-green-400 text-sm">
+                <div>• 80% de matériaux recyclés d'ici 2030</div>
+                <div>• Énergie 100% renouvelable</div>
+                <div>• Économie circulaire</div>
+              </div>
+            </div>
+            
+            <div className="bg-white/10 backdrop-blur rounded-lg p-6">
+              <h3 className="text-xl font-bold mb-4">Innovation</h3>
+              <p className="text-blue-200 mb-4">
+                Développement de matériaux intelligents et de technologies 
+                de pointe pour les prochaines générations.
+              </p>
+              <div className="text-purple-400 text-sm">
+                <div>• Matériaux auto-réparateurs</div>
+                <div>• Intelligence artificielle</div>
+                <div>• Nanotechnologie</div>
+              </div>
+            </div>
+            
+            <div className="bg-white/10 backdrop-blur rounded-lg p-6">
+              <h3 className="text-xl font-bold mb-4">Excellence</h3>
+              <p className="text-blue-200 mb-4">
+                Maintien du leadership mondial par l'innovation constante 
+                et la maîtrise des matériaux d'exception.
+              </p>
+              <div className="text-yellow-400 text-sm">
+                <div>• R&D: 10% du CA</div>
+                <div>• Formation continue</div>
+                <div>• Partenariats universitaires</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Global Positioning */}
+      <section id="positionnement" className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Positionnement Mondial</h2>
+            <p className="text-xl text-gray-600">La Suisse, référence mondiale de l'excellence horlogère</p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+              <div className="bg-blue-50 p-8 rounded-lg mb-6">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Chiffres Clés</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-blue-600">21M</div>
+                    <p className="text-gray-700">Montres produites/an</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-green-600">52%</div>
+                    <p className="text-gray-700">Part marché mondial</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-purple-600">45B CHF</div>
+                    <p className="text-gray-700">Exportations 2023</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-orange-600">60K</div>
+                    <p className="text-gray-700">Emplois directs</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-green-50 p-6 rounded-lg">
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Avantages Concurrentiels</h3>
+                <ul className="space-y-2 text-gray-700">
+                  <li>• Savoir-faire traditionnel préservé</li>
+                  <li>• Innovation technologique continue</li>
+                  <li>• Écosystème industriel intégré</li>
+                  <li>• Formation d'excellence reconnue</li>
+                  <li>• Image de marque premium mondiale</li>
                 </ul>
               </div>
             </div>
-            <div className="summary-visual">
-              <img src="assets/images/materials_dashboard.png" alt="Dashboard des Matériaux" className="summary-image"/>
+            
+            <div className="space-y-6">
+              <div className="bg-yellow-50 p-6 rounded-lg">
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Marchés Principaux</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>Chine</span>
+                    <span className="font-bold">35%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>États-Unis</span>
+                    <span className="font-bold">22%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Hong Kong</span>
+                    <span className="font-bold">12%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Japon</span>
+                    <span className="font-bold">8%</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-red-50 p-6 rounded-lg">
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Défis & Opportunités</h3>
+                <div className="space-y-3">
+                  <div>
+                    <h4 className="font-semibold text-red-600">Défis</h4>
+                    <ul className="text-sm text-gray-700 mt-1">
+                      <li>• Concurrence quartz asiatique</li>
+                      <li>• Évolution des goûts consommateurs</li>
+                      <li>• Durabilité environnementale</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-green-600">Opportunités</h4>
+                    <ul className="text-sm text-gray-700 mt-1">
+                      <li>• Marché du luxe en croissance</li>
+                      <li>• Innovation matériaux</li>
+                      <li>• Horlogerie connectée</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Timeline Historique */}
-      <section id="history" className="timeline-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Chronologie Historique</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              L&apos;évolution des matériaux horlogers du XVIe siècle à aujourd&apos;hui
-            </p>
+      {/* Contact Section */}
+      <section id="contact" className="py-16 bg-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">Contactez-nous</h2>
+            <p className="text-xl text-gray-300">En savoir plus sur l'excellence des matériaux horlogers suisses</p>
           </div>
           
-          <div className="timeline-container">
-            <div className="timeline-visual">
-              <img src="assets/images/chronologie_historique.png" alt="Chronologie des Matériaux" className="timeline-image"/>
-            </div>
-            
-            <div className="timeline-details">
-              <div className="timeline-tabs">
-                <button 
-                  className={`tab-btn ${activeTimeline === '16th' ? 'active' : ''}`}
-                  onClick={() => setActiveTimeline('16th')}
-                >
-                  XVIe-XVIIe
-                </button>
-                <button 
-                  className={`tab-btn ${activeTimeline === '18th' ? 'active' : ''}`}
-                  onClick={() => setActiveTimeline('18th')}
-                >
-                  XVIIIe-XIXe
-                </button>
-                <button 
-                  className={`tab-btn ${activeTimeline === '20th' ? 'active' : ''}`}
-                  onClick={() => setActiveTimeline('20th')}
-                >
-                  XXe siècle
-                </button>
-                <button 
-                  className={`tab-btn ${activeTimeline === '21st' ? 'active' : ''}`}
-                  onClick={() => setActiveTimeline('21st')}
-                >
-                  XXIe siècle
-                </button>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-xl font-bold mb-4">Informations</h3>
+                <div className="space-y-3 text-gray-300">
+                  <div>📍 HorloLearn - Centre d'Excellence</div>
+                  <div>📍 Lausanne, Suisse</div>
+                  <div>📧 contact@horlolearn.ch</div>
+                  <div>📞 +41 (0)21 123 45 67</div>
+                </div>
               </div>
               
-              <div className="timeline-content">
-                <div className={`timeline-item ${activeTimeline === '16th' ? 'active' : ''}`}>
-                  <h3>Les Origines : Orfèvrerie et Métaux Précieux</h3>
-                  <p>L&apos;horlogerie suisse naît à Genève au XVIe siècle. L&apos;interdiction du port d&apos;objets ornementaux par Jean Calvin contraint les orfèvres à se reconvertir. Les premiers garde-temps sont naturellement fabriqués en or et argent.</p>
-                  <div className="timeline-materials">
-                    <span className="material-tag">Or 18 carats</span>
-                    <span className="material-tag">Argent sterling</span>
-                    <span className="material-tag">Platine</span>
-                  </div>
+              <div>
+                <h3 className="text-xl font-bold mb-4">Horaires</h3>
+                <div className="space-y-2 text-gray-300">
+                  <div>Lundi - Vendredi: 9h00 - 18h00</div>
+                  <div>Samedi: 10h00 - 16h00</div>
+                  <div>Dimanche: Fermé</div>
                 </div>
-                
-                <div className={`timeline-item ${activeTimeline === '18th' ? 'active' : ''}`}>
-                  <h3>L&apos;Âge de la Précision : Laiton, Acier et Alliages</h3>
-                  <p>Le XVIIIe siècle marque l&apos;avènement de l&apos;horlogerie de précision. Invention révolutionnaire des alliages par Charles-Édouard Guillaume (prix Nobel 1920) :</p>
-                  <ul>
-                    <li><strong>Invar (1896)</strong> : Coefficient de dilatation thermique faible</li>
-                    <li><strong>Elinvar (1912)</strong> : Module d&apos;élasticité constant</li>
-                  </ul>
-                  <div className="timeline-materials">
-                    <span className="material-tag">Invar</span>
-                    <span className="material-tag">Elinvar</span>
-                    <span className="material-tag">Laiton</span>
-                  </div>
-                </div>
-                
-                <div className={`timeline-item ${activeTimeline === '20th' ? 'active' : ''}`}>
-                  <h3>Industrialisation : L&apos;Ère de l&apos;Acier Inoxydable</h3>
-                  <p>Le XXe siècle voit l&apos;adoption généralisée de l&apos;<strong>acier inoxydable 316L</strong> et l&apos;émergence d&apos;alliages de précision pour l&apos;organe réglant :</p>
-                  <ul>
-                    <li><strong>Glucydur (années 1930)</strong> : Alliage cuivre-béryllium pour balanciers</li>
-                    <li><strong>Nivarox (années 1930)</strong> : Standard pour spiraux</li>
-                  </ul>
-                  <div className="timeline-materials">
-                    <span className="material-tag">Acier 316L</span>
-                    <span className="material-tag">Glucydur</span>
-                    <span className="material-tag">Nivarox</span>
-                  </div>
-                </div>
-                
-                <div className={`timeline-item ${activeTimeline === '21st' ? 'active' : ''}`}>
-                  <h3>Révolution High-Tech : Super-Alliages et Silicium</h3>
-                  <p>L&apos;horlogerie suisse embrasse les matériaux high-tech :</p>
-                  <ul>
-                    <li><strong>Titane</strong> : Légèreté et résistance</li>
-                    <li><strong>Céramique</strong> : Dureté et couleurs durables</li>
-                    <li><strong>Silicium</strong> : Revolution des composants mécaniques</li>
-                    <li><strong>Carbone forgé</strong> : Performance extreme</li>
-                  </ul>
-                  <div className="timeline-materials">
-                    <span className="material-tag">Silicium</span>
-                    <span className="material-tag">Ceratanium</span>
-                    <span className="material-tag">Carbone TPT</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Matériaux Traditionnels */}
-      <section id="materials" className="materials-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Matériaux Traditionnels</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Les piliers historiques de l&apos;horlogerie suisse : métaux précieux, aciers spéciaux et savoir-faire artisanal
-            </p>
-          </div>
-
-          <div className="materials-tabs">
-            <button 
-              className={`tab-btn ${activeMaterial === 'precious' ? 'active' : ''}`}
-              onClick={() => setActiveMaterial('precious')}
-            >
-              Métaux Précieux
-            </button>
-            <button 
-              className={`tab-btn ${activeMaterial === 'steel' ? 'active' : ''}`}
-              onClick={() => setActiveMaterial('steel')}
-            >
-              Aciers Spéciaux
-            </button>
-            <button 
-              className={`tab-btn ${activeMaterial === 'precision' ? 'active' : ''}`}
-              onClick={() => setActiveMaterial('precision')}
-            >
-              Alliages de Précision
-            </button>
-            <button 
-              className={`tab-btn ${activeMaterial === 'craft' ? 'active' : ''}`}
-              onClick={() => setActiveMaterial('craft')}
-            >
-              Savoir-Faire Artisanal
-            </button>
-          </div>
-
-          <div className="materials-content">
-            {/* Métaux Précieux */}
-            <div className={`tab-content ${activeMaterial === 'precious' ? 'active' : ''}`}>
-              <div className="materials-grid">
-                <div className="material-card gold">
-                  <div className="material-header">
-                    <div className="material-icon">🏆</div>
-                    <h3>Or 18 Carats</h3>
-                  </div>
-                  <div className="material-properties">
-                    <div className="property">
-                      <span className="property-label">Composition</span>
-                      <span className="property-value">75% Or + 25% alliages</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Densité</span>
-                      <span className="property-value">15-16 g/cm³</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Propriétés</span>
-                      <span className="property-value">Inoxydable, amagnétique</span>
-                    </div>
-                  </div>
-                  <div className="material-applications">
-                    <h4>Applications</h4>
-                    <ul>
-                      <li>Boîtiers de luxe</li>
-                      <li>Bracelets premium</li>
-                      <li>Masses oscillantes</li>
-                      <li>Aiguilles haut de gamme</li>
-                    </ul>
-                  </div>
-                  <div className="material-colors">
-                    <span className="color-sample yellow" title="Or Jaune 2N/3N"></span>
-                    <span className="color-sample rose" title="Or Rose 4N"></span>
-                    <span className="color-sample red" title="Or Rouge 5N"></span>
-                    <span className="color-sample white" title="Or Blanc 5N"></span>
-                  </div>
-                </div>
-
-                <div className="material-card platinum">
-                  <div className="material-header">
-                    <div className="material-icon">💎</div>
-                    <h3>Platine 950</h3>
-                  </div>
-                  <div className="material-properties">
-                    <div className="property">
-                      <span className="property-label">Composition</span>
-                      <span className="property-value">95% Platine + 5% autres</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Densité</span>
-                      <span className="property-value">20-21 g/cm³</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Propriétés</span>
-                      <span className="property-value">Plus noble des métaux</span>
-                    </div>
-                  </div>
-                  <div className="material-applications">
-                    <h4>Applications</h4>
-                    <ul>
-                      <li>Haute horlogerie exclusive</li>
-                      <li>Grandes complications</li>
-                      <li>Séries limitées</li>
-                      <li>Polissage miroir parfait</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="material-card silver">
-                  <div className="material-header">
-                    <div className="material-icon">✨</div>
-                    <h3>Argent 925</h3>
-                  </div>
-                  <div className="material-properties">
-                    <div className="property">
-                      <span className="property-label">Composition</span>
-                      <span className="property-value">92.5% Argent + 7.5% cuivre</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Densité</span>
-                      <span className="property-value">10.4 g/cm³</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Propriétés</span>
-                      <span className="property-value">Blanc, ductile</span>
-                    </div>
-                  </div>
-                  <div className="material-applications">
-                    <h4>Applications</h4>
-                    <ul>
-                      <li>Cadrans vintage</li>
-                      <li>Boîtiers rétro</li>
-                      <li>Ornementation</li>
-                      <li>Protégé par rhodiage</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Aciers Spéciaux */}
-            <div className={`tab-content ${activeMaterial === 'steel' ? 'active' : ''}`}>
-              <div className="materials-grid">
-                <div className="material-card steel-316l">
-                  <div className="material-header">
-                    <div className="material-icon">⚙️</div>
-                    <h3>Acier Inox 316L</h3>
-                  </div>
-                  <div className="material-properties">
-                    <div className="property">
-                      <span className="property-label">Composition</span>
-                      <span className="property-value">Fe-Cr-Ni-Mo + faible C</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Résistance</span>
-                      <span className="property-value">Corrosion marine</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Finitions</span>
-                      <span className="property-value">Polissage, satinage</span>
-                    </div>
-                  </div>
-                  <div className="material-applications">
-                    <h4>Applications</h4>
-                    <ul>
-                      <li>Boîtiers standard horloger</li>
-                      <li>Bracelets et maille</li>
-                      <li>Composants mouvement</li>
-                      <li>Production de masse</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="material-card steel-904l">
-                  <div className="material-header">
-                    <div className="material-icon">🏆</div>
-                    <h3>Acier 904L</h3>
-                  </div>
-                  <div className="material-properties">
-                    <div className="property">
-                      <span className="property-label">Composition</span>
-                      <span className="property-value">Super-acier Rolex</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Résistance</span>
-                      <span className="property-value">Acides + corrosion</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Éclat</span>
-                      <span className="property-value">Particulier après polissage</span>
-                    </div>
-                  </div>
-                  <div className="material-applications">
-                    <h4>Applications</h4>
-                    <ul>
-                      <li>Montres professionnelles</li>
-                      <li>Modèles de plongée</li>
-                      <li>Haute résistance environnementale</li>
-                      <li>Boîtiers d&apos;exception</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Alliages de Précision */}
-            <div className={`tab-content ${activeMaterial === 'precision' ? 'active' : ''}`}>
-              <div className="materials-grid">
-                <div className="material-card nivarox">
-                  <div className="material-header">
-                    <div className="material-icon">🔬</div>
-                    <h3>Nivarox</h3>
-                  </div>
-                  <div className="material-properties">
-                    <div className="property">
-                      <span className="property-label">Composition</span>
-                      <span className="property-value">Fe-Ni-Cr-Ti-Be</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Propriété</span>
-                      <span className="property-value">Thermo-élasticité nulle</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Usage</span>
-                      <span className="property-value">Spiraux depuis 1930</span>
-                    </div>
-                  </div>
-                  <div className="material-applications">
-                    <h4>Applications</h4>
-                    <ul>
-                      <li>Spiraux de haute qualité</li>
-                      <li>Standard horloger suisse</li>
-                      <li>Isochronisme parfait</li>
-                      <li>Amagnétisme total</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="material-card glucydur">
-                  <div className="material-header">
-                    <div className="material-icon">⚖️</div>
-                    <h3>Glucydur</h3>
-                  </div>
-                  <div className="material-properties">
-                    <div className="property">
-                      <span className="property-label">Composition</span>
-                      <span className="property-value">Cuivre-Béryllium-Fer</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Propriété</span>
-                      <span className="property-value">Dureté et stabilité</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Couleur</span>
-                      <span className="property-value">Dorée caractéristique</span>
-                    </div>
-                  </div>
-                  <div className="material-applications">
-                    <h4>Applications</h4>
-                    <ul>
-                      <li>Balanciers monométalliques</li>
-                      <li>Équilibrage parfait</li>
-                      <li>Résistance à l&apos;usure</li>
-                      <li>Couple idéal avec Nivarox</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Savoir-Faire Artisanal */}
-            <div className={`tab-content ${activeMaterial === 'craft' ? 'active' : ''}`}>
-              <div className="craft-showcase">
-                <img src="assets/images/atelier_artisanal_traditionnel.png" alt="Atelier Artisanal" className="craft-image"/>
-                <div className="craft-techniques">
-                  <h3>Techniques Artisanales Emblématiques</h3>
-                  <div className="techniques-grid">
-                    <div className="technique-card">
-                      <div className="technique-icon">🌊</div>
-                      <h4>Côtes de Genève</h4>
-                      <p>Rayures ondulées décorant ponts et masses oscillantes</p>
-                    </div>
-                    <div className="technique-card">
-                      <div className="technique-icon">⚫</div>
-                      <h4>Perlage</h4>
-                      <p>Petits cercles se chevauchant sur les platines</p>
-                    </div>
-                    <div className="technique-card">
-                      <div className="technique-icon">✨</div>
-                      <h4>Anglage</h4>
-                      <p>Chanfreinage et polissage des arêtes</p>
-                    </div>
-                    <div className="technique-card">
-                      <div className="technique-icon">🔮</div>
-                      <h4>Poli Miroir</h4>
-                      <p>Une finition si parfaite qu&apos;elle apparaît noire</p>
-                    </div>
-                    <div className="technique-card">
-                      <div className="technique-icon">🌀</div>
-                      <h4>Guillochage</h4>
-                      <p>Gravure de motifs géométriques complexes</p>
-                    </div>
-                    <div className="technique-card">
-                      <div className="technique-icon">🎨</div>
-                      <h4>Côtes de Genève</h4>
-                      <p>Rayures décoratives traditionnelles</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Innovation et High-Tech */}
-      <section id="innovation" className="innovation-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Innovation et High-Tech</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Matériaux modernes, composants électroniques et miniaturisation
-            </p>
-          </div>
-
-          <div className="innovation-showcase">
-            <div className="innovation-grid">
-              <div className="innovation-card">
-                <div className="card-visual">
-                  <img src="assets/images/materials_hightech_horlogerie.png" alt="Matériaux High-Tech" className="innovation-image"/>
-                </div>
-                <div className="card-content">
-                  <h3>Nouveaux Matériaux</h3>
-                  <div className="materials-showcase">
-                    <div className="material-showcase">
-                      <h4>La Céramique Technique</h4>
-                      <p>Oxydes de zirconium et carbure de tungstène :</p>
-                      <ul>
-                        <li>Dureté extrême (inrayable)</li>
-                        <li>Légèreté supérieure à l&apos;acier</li>
-                        <li>Couleurs stables dans la masse</li>
-                      </ul>
-                    </div>
-                    
-                    <div className="material-showcase">
-                      <h4>Le Titane Grade 5</h4>
-                      <p>Le métal de l&apos;aérospatiale :</p>
-                      <ul>
-                        <li>40% plus léger que l&apos;acier</li>
-                        <li>Résistance corrosion exceptionnelle</li>
-                        <li>Hypoallergénique</li>
-                      </ul>
-                    </div>
-                    
-                    <div className="material-showcase">
-                      <h4>Fibre de Carbone</h4>
-                      <p>Performance extrême :</p>
-                      <ul>
-                        <li>Légèreté spectaculaire</li>
-                        <li>Rigidité incomparable</li>
-                        <li>Carbone forgé Carbon TPT®</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="innovation-card silicon">
-                <div className="card-content">
-                  <h3>Révolution Silicium</h3>
-                  <div className="silicon-benefits">
-                    <div className="benefit-item">
-                      <span className="benefit-icon">🧲</span>
-                      <span className="benefit-text">Totalement amagnétique</span>
-                    </div>
-                    <div className="benefit-item">
-                      <span className="benefit-icon">⚡</span>
-                      <span className="benefit-text">Léger et basse inertie</span>
-                    </div>
-                    <div className="benefit-item">
-                      <span className="benefit-icon">🔧</span>
-                      <span className="benefit-text">Pas de lubrification</span>
-                    </div>
-                    <div className="benefit-item">
-                      <span className="benefit-icon">🎯</span>
-                      <span className="benefit-text">Précision géométrique micron</span>
-                    </div>
-                  </div>
-                  <div className="silicon-innovations">
-                    <h4>Innovations Marquantes</h4>
-                    <div className="innovation-list">
-                      <div className="innovation-item">
-                        <strong>Spiral Silinvar® (Patek Philippe)</strong>
-                        <p>Développé avec le CSEM, performance chronométrique exceptionnelle</p>
-                      </div>
-                      <div className="innovation-item">
-                        <strong>Échappement Co-Axial (OMEGA)</strong>
-                        <p>Composants en silicium, réduction friction</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="innovation-card electronics">
-                <div className="card-content">
-                  <h3>Composants Électroniques</h3>
-                  <div className="electronic-features">
-                    <h4>Smartwatches et Technologie</h4>
-                    <div className="features-grid">
-                      <div className="feature">
-                        <strong>SoC (System on Chip)</strong>
-                        <p>Cerveau miniature intégré</p>
-                      </div>
-                      <div className="feature">
-                        <strong>Capteurs Biomédicaux</strong>
-                        <p>PPG, ECG, SpO2, température</p>
-                      </div>
-                      <div className="feature">
-                        <strong>Connectivité</strong>
-                        <p>GPS, Bluetooth, Wi-Fi, 4G/5G</p>
-                      </div>
-                      <div className="feature">
-                        <strong>Affichage OLED</strong>
-                        <p>Couleurs vives, noirs profonds</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="miniaturization">
-                    <h4>Miniaturisation Extrême</h4>
-                    <div className="mini-tech">
-                      <div className="tech-item">
-                        <strong>System-in-Package (SiP)</strong>
-                        <p>Assemblage multiple puces dans module compact</p>
-                      </div>
-                      <div className="tech-item">
-                        <strong>Packaging 3D</strong>
-                        <p>Empilement vertical des puces</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Écosystème Industriel */}
-      <section id="ecosystem" className="ecosystem-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Écosystème Industriel</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Districts horlogers, formation et chaîne d&apos;approvisionnement
-            </p>
-          </div>
-
-          <div className="districts-showcase">
-            <div className="district-map">
-              <img src="assets/images/districts_horlogers_suisse.png" alt="Districts Horlogers Suisses" className="map-image"/>
-              <div className="map-overlay">
-                <h3>Arc Jurassien</h3>
-                <p>Concentration géographique du savoir-faire horloger</p>
               </div>
             </div>
             
-            <div className="districts-details">
-              <div className="district-tabs">
-                <button 
-                  className={`tab-btn ${activeDistrict === 'geneve' ? 'active' : ''}`}
-                  onClick={() => setActiveDistrict('geneve')}
-                >
-                  Genève
-                </button>
-                <button 
-                  className={`tab-btn ${activeDistrict === 'vallee-joux' ? 'active' : ''}`}
-                  onClick={() => setActiveDistrict('vallee-joux')}
-                >
-                  Vallée de Joux
-                </button>
-                <button 
-                  className={`tab-btn ${activeDistrict === 'neuchatel' ? 'active' : ''}`}
-                  onClick={() => setActiveDistrict('neuchatel')}
-                >
-                  Neuchâtel
-                </button>
-                <button 
-                  className={`tab-btn ${activeDistrict === 'bienne' ? 'active' : ''}`}
-                  onClick={() => setActiveDistrict('bienne')}
-                >
-                  Bienne
-                </button>
-              </div>
-              
-              <div className="district-content">
-                <div className={`district-info ${activeDistrict === 'geneve' ? 'active' : ''}`}>
-                  <h3>Genève - Capitale de la Haute Horlogerie</h3>
-                  <p>Berceau historique de l&apos;horlogerie de luxe, Genève concentre les sièges des plus grandes manufactures.</p>
-                  <div className="district-specialties">
-                    <h4>Spécialités</h4>
-                    <ul>
-                      <li>Finition et décoration de prestige</li>
-                      <li>Joaillerie et sertissage</li>
-                      <li>Assemblage grandes complications</li>
-                      <li>Poinçon de Genève</li>
-                    </ul>
+            <div className="bg-gray-800 p-6 rounded-lg">
+              <form onSubmit={handleFormSubmit}>
+                <h3 className="text-xl font-bold mb-4">Demande d'information</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Nom complet</label>
+                    <input 
+                      type="text" 
+                      className="w-full px-4 py-2 bg-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Votre nom"
+                    />
                   </div>
-                  <div className="district-companies">
-                    <h4>Entreprises</h4>
-                    <span className="company-tag">Patek Philippe</span>
-                    <span className="company-tag">Rolex</span>
-                    <span className="company-tag">Jaeger-LeCoultre</span>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Email</label>
+                    <input 
+                      type="email" 
+                      className="w-full px-4 py-2 bg-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="votre@email.com"
+                    />
                   </div>
-                </div>
-                
-                <div className={`district-info ${activeDistrict === 'vallee-joux' ? 'active' : ''}`}>
-                  <h3>Vallée de Joux - Cœur Battant Mécanique</h3>
-                  <p>Vallée isolée, berceau de la haute horlogerie mécanique et des grandes complications.</p>
-                  <div className="district-specialties">
-                    <h4>Spécialités</h4>
-                    <ul>
-                      <li>Mouvements à grandes complications</li>
-                      <li>Tourbillons et répétitions minutes</li>
-                      <li>Quantièmes perpétuels</li>
-                      <li>Haute horlogerie traditionnelle</li>
-                    </ul>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Sujet</label>
+                    <select className="w-full px-4 py-2 bg-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <option>Information générale</option>
+                      <option>Formation horlogère</option>
+                      <option>Partenariats</option>
+                      <option>Autre</option>
+                    </select>
                   </div>
-                  <div className="district-companies">
-                    <h4>Entreprises</h4>
-                    <span className="company-tag">Audemars Piguet</span>
-                    <span className="company-tag">Breguet</span>
-                    <span className="company-tag">Vacheron Constantin</span>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Message</label>
+                    <textarea 
+                      rows={4}
+                      className="w-full px-4 py-2 bg-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Votre message..."
+                    ></textarea>
                   </div>
+                  <button 
+                    type="submit"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300"
+                  >
+                    Envoyer le message
+                  </button>
                 </div>
-                
-                <div className={`district-info ${activeDistrict === 'neuchatel' ? 'active' : ''}`}>
-                  <h3>Neuchâtel - Cœur Industriel</h3>
-                  <p>Bastion de la fabrication de mouvements en grande série et des composants de précision.</p>
-                  <div className="district-specialties">
-                    <h4>Spécialités</h4>
-                    <ul>
-                      <li>Mouvements grande série</li>
-                      <li>Décolletage de précision</li>
-                      <li>Fabrication spiraux</li>
-                      <li>Sous-traitance spécialisée</li>
-                    </ul>
-                  </div>
-                  <div className="district-companies">
-                    <h4>Entreprises</h4>
-                    <span className="company-tag">ETA</span>
-                    <span className="company-tag">Sellita</span>
-                    <span className="company-tag">Nivarox-FAR</span>
-                  </div>
-                </div>
-                
-                <div className={`district-info ${activeDistrict === 'bienne' ? 'active' : ''}`}>
-                  <h3>Bienne - Nœud Stratégique</h3>
-                  <p>Centre névralgique du Swatch Group et des mouvements de précision.</p>
-                  <div className="district-specialties">
-                    <h4>Spécialités</h4>
-                    <ul>
-                      <li>Production mouvements Swatch Group</li>
-                      <li>Recherche et développement</li>
-                      <li>Coordination industrielle</li>
-                      <li>Innovation technologique</li>
-                    </ul>
-                  </div>
-                  <div className="district-companies">
-                    <h4>Entreprises</h4>
-                    <span className="company-tag">Swatch Group</span>
-                    <span className="company-tag">OMEGA</span>
-                    <span className="company-tag">ETA</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Formation et Transmission */}
-      <section className="formation-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Formation et Transmission</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Système de formation dual unique au monde
-            </p>
-          </div>
-
-          <div className="formation-showcase">
-            <div className="formation-visual">
-              <img src="assets/images/formation_horlogere_suisse.png" alt="Formation Horlogère Suisse" className="formation-image"/>
-            </div>
-            <div className="formation-details">
-              <div className="schools-grid">
-                <div className="school-card">
-                  <div className="school-header">
-                    <div className="school-icon">🎓</div>
-                    <h3>CFPT Genève</h3>
-                  </div>
-                  <p>L&apos;une des plus anciennes écoles horlogères, formation d&apos;horlogers et micromécaniciens d&apos;élite.</p>
-                  <div className="school-specialties">
-                    <span className="specialty">Horlogerie</span>
-                    <span className="specialty">Micromécanique</span>
-                    <span className="specialty">Finitions</span>
-                  </div>
-                </div>
-                
-                <div className="school-card">
-                  <div className="school-header">
-                    <div className="school-icon">🏔️</div>
-                    <h3>ETVJ Vallée de Joux</h3>
-                  </div>
-                  <p>Spécialisée dans la formation aux métiers de la haute horlogerie et des complications.</p>
-                  <div className="school-specialties">
-                    <span className="specialty">Haute Horlogerie</span>
-                    <span className="specialty">Grandes Complications</span>
-                    <span className="specialty">Artisanat</span>
-                  </div>
-                </div>
-                
-                <div className="school-card">
-                  <div className="school-header">
-                    <div className="school-icon">⚙️</div>
-                    <h3>CPNE Locle</h3>
-                  </div>
-                  <p>Pôle de formation dual au cœur industriel de l&apos;horlogerie suisse.</p>
-                  <div className="school-specialties">
-                    <span className="specialty">Formation Duale</span>
-                    <span className="specialty">Industrie</span>
-                    <span className="specialty">Précision</span>
-                  </div>
-                </div>
-                
-                <div className="school-card">
-                  <div className="school-header">
-                    <div className="school-icon">🌍</div>
-                    <h3>WOSTEP</h3>
-                  </div>
-                  <p>Formation mondiale, spécialisations avancées et standards internationaux.</p>
-                  <div className="school-specialties">
-                    <span className="specialty">Formation Internationale</span>
-                    <span className="specialty">Service Après-Vente</span>
-                    <span className="specialty">Standards Globaux</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="career-path">
-                <h3>Parcours de Formation</h3>
-                <div className="path-steps">
-                  <div className="step">
-                    <div className="step-number">1</div>
-                    <div className="step-content">
-                      <h4>CFC Horloger</h4>
-                      <p>Certificat Fédéral de Capacité - 4 ans d&apos;apprentissage</p>
-                    </div>
-                  </div>
-                  <div className="step">
-                    <div className="step-number">2</div>
-                    <div className="step-content">
-                      <h4>Brevet Fédéral</h4>
-                      <p>Responsable d&apos;atelier - Évolution management</p>
-                    </div>
-                  </div>
-                  <div className="step">
-                    <div className="step-number">3</div>
-                    <div className="step-content">
-                      <h4>Formations Continues</h4>
-                      <p>Spécialisations WOSTEP, chronographes, polissage</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Entreprises Leaders */}
-      <section className="companies-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Entreprises Leaders</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Moteurs d&apos;innovation et de l&apos;excellence suisse
-            </p>
-          </div>
-
-          <div className="companies-showcase">
-            <div className="companies-visual">
-              <img src="assets/images/entreprises_horlogeres_leaders.png" alt="Entreprises Horlogères Leaders" className="companies-image"/>
-            </div>
-            
-            <div className="companies-grid">
-              <div className="company-card">
-                <div className="company-header">
-                  <div className="company-logo">PP</div>
-                  <h3>Patek Philippe</h3>
-                </div>
-                <div className="company-innovation">
-                  <h4>Advanced Research</h4>
-                  <ul>
-                    <li><strong>Spiral Spiromax®</strong> en Silinvar® (2006)</li>
-                    <li><strong>Oscillomax®</strong> : organe réglant complet</li>
-                    <li><strong>Fortissimo</strong> : amplification sonore</li>
-                  </ul>
-                </div>
-                <div className="company-strategy">
-                  <span className="strategy-tag">Innovation Long Terme</span>
-                  <span className="strategy-tag">Partenariat CSEM</span>
-                </div>
-              </div>
-              
-              <div className="company-card">
-                <div className="company-header">
-                  <div className="company-logo">R</div>
-                  <h3>Rolex</h3>
-                </div>
-                <div className="company-innovation">
-                  <h4>Ingénierie Matériaux</h4>
-                  <ul>
-                    <li><strong>Céramique Cerachrom</strong> inaltérable</li>
-                    <li><strong>Acier Oystersteel</strong> 904L exclusive</li>
-                    <li><strong>Or Everose</strong> breveté</li>
-                    <li><strong>Échappement Chronergy</strong></li>
-                  </ul>
-                </div>
-                <div className="company-strategy">
-                  <span className="strategy-tag">Fonderie Propre</span>
-                  <span className="strategy-tag">Standards Robustes</span>
-                </div>
-              </div>
-              
-              <div className="company-card">
-                <div className="company-header">
-                  <div className="company-logo">AP</div>
-                  <h3>Audemars Piguet</h3>
-                </div>
-                <div className="company-innovation">
-                  <h4>Audace Matériaux</h4>
-                  <ul>
-                    <li><strong>Carbone forgé</strong> pionnier (2007)</li>
-                    <li><strong>Céramique couleur</strong> développée</li>
-                    <li><strong>Chroma Forged Technology</strong></li>
-                    <li><strong>Céramiques polychromes</strong></li>
-                  </ul>
-                </div>
-                <div className="company-strategy">
-                  <span className="strategy-tag">Design Innovation</span>
-                  <span className="strategy-tag">Matériaux Exclusifs</span>
-                </div>
-              </div>
-              
-              <div className="company-card">
-                <div className="company-header">
-                  <div className="company-logo">O</div>
-                  <h3>OMEGA</h3>
-                </div>
-                <div className="company-innovation">
-                  <h4>Anti-Magnétisme</h4>
-                  <ul>
-                    <li><strong>Master Chronometer</strong> certification</li>
-                    <li><strong>Résistance 15 000 gauss</strong></li>
-                    <li><strong>Spiral Si14</strong> en silicium</li>
-                    <li><strong>Nivagauss™</strong> composants</li>
-                  </ul>
-                </div>
-                <div className="company-strategy">
-                  <span className="strategy-tag">Swatch Group</span>
-                  <span className="strategy-tag">Certification METAS</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Vision d'Avenir */}
-      <section id="future" className="future-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Vision d&apos;Avenir</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Défis environnementaux, digitalisation et nouvelles technologies
-            </p>
-          </div>
-
-          <div className="future-showcase">
-            <div className="future-visual">
-              <img src="assets/images/innovation_horlogerie_futur.png" alt="Innovation Horlogerie Futur" className="future-image"/>
-            </div>
-            
-            <div className="future-trends">
-              <div className="trend-tabs">
-                <button 
-                  className={`tab-btn ${activeTrend === 'environment' ? 'active' : ''}`}
-                  onClick={() => setActiveTrend('environment')}
-                >
-                  Environnement
-                </button>
-                <button 
-                  className={`tab-btn ${activeTrend === 'digital' ? 'active' : ''}`}
-                  onClick={() => setActiveTrend('digital')}
-                >
-                  Digitalisation
-                </button>
-                <button 
-                  className={`tab-btn ${activeTrend === 'technology' ? 'active' : ''}`}
-                  onClick={() => setActiveTrend('technology')}
-                >
-                  Technologie
-                </button>
-              </div>
-              
-              <div className="trend-content">
-                <div className={`trend-item ${activeTrend === 'environment' ? 'active' : ''}`}>
-                  <h3>Durabilité et Économie Circulaire</h3>
-                  <div className="trend-details">
-                    <div className="trend-card">
-                      <h4>Matériaux Recyclés</h4>
-                      <ul>
-                        <li>Acier Lucent (Chopard) : 80% recyclé</li>
-                        <li>Or éthique certifié Fairmined</li>
-                        <li>Titane recyclé Grade 5</li>
-                      </ul>
-                    </div>
-                    <div className="trend-card">
-                      <h4>Production Propre</h4>
-                      <ul>
-                        <li>Bâtiments Minergie certifiés</li>
-                        <li>Énergies 100% renouvelables</li>
-                        <li>Circuits fermés eau et déchets</li>
-                      </ul>
-                    </div>
-                    <div className="trend-card">
-                      <h4>Économie Circulaire</h4>
-                      <ul>
-                        <li>Droit à la réparation</li>
-                        <li>Pièces garanties sur décennies</li>
-                        <li>Marché seconde main certifié</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className={`trend-item ${activeTrend === 'digital' ? 'active' : ''}`}>
-                  <h3>Transformation Numérique</h3>
-                  <div className="trend-details">
-                    <div className="trend-card">
-                      <h4>Manufacture 4.0</h4>
-                      <ul>
-                        <li>Robots collaboratifs (cobots)</li>
-                        <li>IA pour contrôle qualité</li>
-                        <li>Maintenance prédictive</li>
-                      </ul>
-                    </div>
-                    <div className="trend-card">
-                      <h4>Traçabilité Blockchain</h4>
-                      <ul>
-                        <li>Passeport numérique infalsifiable</li>
-                        <li>Matériaux traçables</li>
-                        <li>Lutte contrefaçon</li>
-                      </ul>
-                    </div>
-                    <div className="trend-card">
-                      <h4>Expérience Client Augmentée</h4>
-                      <ul>
-                        <li>Réalité augmentée (essai virtuel)</li>
-                        <li>Configurateur 3D</li>
-                        <li>Service connecté</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className={`trend-item ${activeTrend === 'technology' ? 'active' : ''}`}>
-                  <h3>Nouvelles Frontières</h3>
-                  <div className="trend-details">
-                    <div className="trend-card">
-                      <h4>Matériaux Intelligents</h4>
-                      <ul>
-                        <li>Alliages mémoire de forme</li>
-                        <li>Revêtements auto-cicatrisants</li>
-                        <li>Capteurs intégrés matière</li>
-                      </ul>
-                    </div>
-                    <div className="trend-card">
-                      <h4>Fabrication Additive</h4>
-                      <ul>
-                        <li>Impression 3D métallique</li>
-                        <li>Géométries impossibles</li>
-                        <li>Personnalisation de masse</li>
-                      </ul>
-                    </div>
-                    <div className="trend-card">
-                      <h4>Miniaturisation Extrême</h4>
-                      <ul>
-                        <li>Récupération énergie ambiante</li>
-                        <li>Micro-batteries état solide</li>
-                        <li>MEMS et nanotechnologies</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Positionnement Mondial */}
-      <section className="global-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Positionnement Mondial</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Leadership face à la concurrence internationale
-            </p>
-          </div>
-
-          <div className="competition-comparison">
-            <div className="comparison-table">
-              <div className="table-header">
-                <div className="header-cell">Pays</div>
-                <div className="header-cell">Stratégie</div>
-                <div className="header-cell">Forces</div>
-                <div className="header-cell">Marques</div>
-              </div>
-              
-              <div className="table-row swiss">
-                <div className="country-cell">
-                  <div className="country-flag">🇨🇭</div>
-                  <div className="country-name">Suisse</div>
-                </div>
-                <div className="strategy-cell">
-                  Leadership en valeur<br/>Luxe + Innovation matériaux
-                </div>
-                <div className="strengths-cell">
-                  • Savoir-faire artisanal<br/>
-                  • Écosystème intégré<br/>
-                  • R&D continue<br/>
-                  • Label &quot;Swiss Made&quot;
-                </div>
-                <div className="brands-cell">
-                  <span className="brand-tag">Rolex</span>
-                  <span className="brand-tag">Patek Philippe</span>
-                  <span className="brand-tag">Audemars Piguet</span>
-                  <span className="brand-tag">OMEGA</span>
-                </div>
-              </div>
-              
-              <div className="table-row german">
-                <div className="country-cell">
-                  <div className="country-flag">🇩🇪</div>
-                  <div className="country-name">Allemagne</div>
-                </div>
-                <div className="strategy-cell">
-                  Haute horlogerie mécanique<br/>Rigueur technique
-                </div>
-                <div className="strengths-cell">
-                  • Finitions impeccables<br/>
-                  • Style Glashütte<br/>
-                  • Perfection mécanique<br/>
-                  • Esthétique Bauhaus
-                </div>
-                <div className="brands-cell">
-                  <span className="brand-tag">A. Lange & Söhne</span>
-                  <span className="brand-tag">Glashütte Original</span>
-                  <span className="brand-tag">Nomos</span>
-                </div>
-              </div>
-              
-              <div className="table-row japanese">
-                <div className="country-cell">
-                  <div className="country-flag">🇯🇵</div>
-                  <div className="country-name">Japon</div>
-                </div>
-                <div className="strategy-cell">
-                  Innovation technologique<br/>Production de masse
-                </div>
-                <div className="strengths-cell">
-                  • Maîtrise du quartz<br/>
-                  • Technologies hybrides<br/>
-                  • Intégration verticale<br/>
-                  • Rapport qualité-prix
-                </div>
-                <div className="brands-cell">
-                  <span className="brand-tag">Seiko</span>
-                  <span className="brand-tag">Grand Seiko</span>
-                  <span className="brand-tag">Citizen</span>
-                  <span className="brand-tag">Casio</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="leadership-stats">
-            <div className="stat-highlight">
-              <div className="stat-large">50%</div>
-              <div className="stat-description">du marché mondial en valeur<br/>avec seulement 2% du volume</div>
-            </div>
-            <div className="stat-highlight">
-              <div className="stat-large">1200$</div>
-              <div className="stat-description">Prix moyen d&apos;une montre<br/>suisse exportée</div>
-            </div>
-            <div className="stat-highlight">
-              <div className="stat-large">65k</div>
-              <div className="stat-description">Emplois directs<br/>en Suisse en 2024</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="contact" className="contact-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Restez Informé</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Recevez les dernières innovations et tendances de l&apos;horlogerie suisse
-            </p>
-          </div>
-
-          <div className="contact-content">
-            <div className="contact-form">
-              <form className="newsletter-form" onSubmit={handleFormSubmit}>
-                <div className="form-group">
-                  <label htmlFor="email">Adresse Email</label>
-                  <input type="email" id="email" name="email" required placeholder="votre@email.com"/>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="name">Nom Complet</label>
-                  <input type="text" id="name" name="name" required placeholder="Votre nom"/>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="interest">Domaines d&apos;Intérêt</label>
-                  <select id="interest" name="interest" required>
-                    <option value="">Sélectionnez un domaine</option>
-                    <option value="materials">Matériaux Innovants</option>
-                    <option value="tradition">Tradition Artisanal</option>
-                    <option value="technology">Technologies</option>
-                    <option value="ecosystem">Écosystème</option>
-                    <option value="future">Vision d&apos;Avenir</option>
-                  </select>
-                </div>
-                <div className="form-group checkbox-group">
-                  <input type="checkbox" id="updates" name="updates" required/>
-                  <label htmlFor="updates">
-                    J&apos;accepte de recevoir les mises à jour sur l&apos;innovation horlogère suisse
-                  </label>
-                </div>
-                <button type="submit" className="btn btn-primary btn-full">
-                  <span>S&apos;abonner à la Newsletter</span>
-                  <svg className="btn-icon" viewBox="0 0 24 24">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                  </svg>
-                </button>
               </form>
-            </div>
-            
-            <div className="contact-info">
-              <div className="info-card">
-                <div className="info-icon">📊</div>
-                <h3>Données Exclusives</h3>
-                <p>Accédez aux dernières études de marché et analyses de l&apos;industrie</p>
-              </div>
-              
-              <div className="info-card">
-                <div className="info-icon">🔬</div>
-                <h3>Innovations R&D</h3>
-                <p>Découvrez les breakthrough technologiques avant leur commercialisation</p>
-              </div>
-              
-              <div className="info-card">
-                <div className="info-icon">🌍</div>
-                <h3>Analyse Internationale</h3>
-                <p>Perspectives globales sur l&apos;évolution de l&apos;horlogerie mondiale</p>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-main">
-              <div className="footer-brand">
-                <div className="footer-logo">
-                  <span className="swiss-cross">✚</span>
-                  <span className="footer-title">Swiss Watch Materials</span>
-                </div>
-                <p className="footer-description">
-                  Le rapport de référence mondial sur l&apos;excellence des matériaux horlogers suisses.
-                  Une analyse complète de l&apos;écosystème qui fait de la Suisse le leader incontesté.
-                </p>
-              </div>
-              
-              <div className="footer-links">
-                <div className="footer-column">
-                  <h4>Matériaux</h4>
-                  <ul>
-                    <li><a href="#materials">Métaux Précieux</a></li>
-                    <li><a href="#materials">Aciers Spéciaux</a></li>
-                    <li><a href="#materials">Alliages Précision</a></li>
-                    <li><a href="#materials">High-Tech</a></li>
-                  </ul>
-                </div>
-                
-                <div className="footer-column">
-                  <h4>Écosystème</h4>
-                  <ul>
-                    <li><a href="#ecosystem">Districts Horlogers</a></li>
-                    <li><a href="#ecosystem">Formation</a></li>
-                    <li><a href="#ecosystem">Chaîne Approvisionnement</a></li>
-                    <li><a href="#ecosystem">Entreprises</a></li>
-                  </ul>
-                </div>
-                
-                <div className="footer-column">
-                  <h4>Innovation</h4>
-                  <ul>
-                    <li><a href="#innovation">R&D</a></li>
-                    <li><a href="#innovation">Brevets</a></li>
-                    <li><a href="#innovation">Collaborations</a></li>
-                    <li><a href="#future">Vision Future</a></li>
-                  </ul>
-                </div>
-                
-                <div className="footer-column">
-                  <h4>Contact</h4>
-                  <ul>
-                    <li><a href="#contact">Newsletter</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="#hero">Retour au début</a></li>
-                  </ul>
-                </div>
-              </div>
+      <footer className="bg-black text-white py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="mb-4">
+              <h3 className="text-2xl font-bold text-blue-400">HorloLearn</h3>
+              <p className="text-gray-400">Excellence des Matériaux Horlogers Suisses</p>
             </div>
-            
-            <div className="footer-stats">
-              <div className="footer-stat">
-                <span className="stat-number" data-target="500">0</span>
-                <span className="stat-label">Ans d&apos;innovation</span>
-              </div>
-              <div className="footer-stat">
-                <span className="stat-number" data-target="50">0</span>
-                <span className="stat-label">% marché mondial</span>
-              </div>
-              <div className="footer-stat">
-                <span className="stat-number" data-target="65">0</span>
-                <span className="stat-label">000 emplois</span>
-              </div>
+            <div className="flex justify-center space-x-6 mb-4">
+              <a href="#hero" className="text-gray-400 hover:text-white transition-colors">Accueil</a>
+              <a href="#materiaux" className="text-gray-400 hover:text-white transition-colors">Matériaux</a>
+              <a href="#innovation" className="text-gray-400 hover:text-white transition-colors">Innovation</a>
+              <a href="#formation" className="text-gray-400 hover:text-white transition-colors">Formation</a>
+              <a href="#contact" className="text-gray-400 hover:text-white transition-colors">Contact</a>
             </div>
-            
-            <div className="footer-bottom">
-              <div className="footer-copyright">
-                <p>&copy; 2025 MiniMax Agent. Rapport sur l&apos;Excellence des Matériaux Horlogers Suisses.</p>
-                <p>Tous droits réservés. Une référence mondiale pour l&apos;industrie horlogère.</p>
-              </div>
-              <div className="footer-swiss">
-                <span className="swiss-badge">🇨🇭 Swiss Made Excellence</span>
-              </div>
+            <div className="text-gray-500 text-sm">
+              © 2024 HorloLearn. Tous droits réservés. | Créé avec passion pour l'excellence horlogère suisse.
             </div>
           </div>
         </div>
       </footer>
-
-      {/* MiniMax Floating Ball */}
-      <div id="minimax-floating-ball">
-        <div className="minimax-ball-content" onClick={() => window.open('https://agent.minimax.io/', '_blank')}>
-          <div className="minimax-logo-wave"></div>
-          <span className="minimax-ball-text">Created by MiniMax Agent</span>
-        </div>
-        <div className="minimax-close-icon" onClick={(e) => {
-          e.stopPropagation();
-          const ball = document.getElementById('minimax-floating-ball');
-          if (ball) ball.style.display = 'none';
-        }}>×</div>
-      </div>
     </div>
   );
 }
