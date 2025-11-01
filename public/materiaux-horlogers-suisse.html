@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matériaux Horlogers Suisses - HorloLearn</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@400;500;600;700&display=swap');
+
         * {
             margin: 0;
             padding: 0;
@@ -12,16 +14,15 @@
         }
 
         :root {
-            --red-primary: #E4002B;
-            --red-header: #C20C3E;
-            --red-bordeaux: #6C0F2F;
-            --red-bordeaux-dark: #3D081C;
+            --red-primary: #E1263A;
+            --red-bordeaux: #7B1F34;
+            --red-bordeaux-dark: #521522;
+            --red-button: #E6004C;
+            --red-dark: #A11A29;
             --white: #FFFFFF;
-            --gray-dark: #333333;
+            --gray-dark: #343A40;
             --gray-light: #E0E0E0;
-            --gray-very-light: #F8F8F8;
-            --gray-very-dark: #1A1A1A;
-            --red-transparent: rgba(160, 16, 59, 0.7);
+            --black: #1A1A1A;
         }
 
         body {
@@ -33,13 +34,13 @@
 
         /* Header */
         .header {
-            background: var(--white);
+            background: var(--black);
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: 70px;
         }
 
         .header-content {
@@ -48,25 +49,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 2rem;
+            padding: 0 30px;
+            height: 100%;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            font-family: 'Playfair Display', serif;
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: var(--red-primary);
+            gap: 12px;
             text-decoration: none;
         }
 
         .logo-icon {
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
             background: var(--red-primary);
             position: relative;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -77,39 +76,56 @@
             content: '';
             position: absolute;
             background: var(--white);
-            width: 16px;
+            width: 20px;
             height: 3px;
+            border-radius: 2px;
         }
 
         .logo-icon::after {
             transform: rotate(90deg);
         }
 
+        .logo-text {
+            color: var(--white);
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
         .nav {
             display: flex;
-            gap: 2rem;
+            gap: 40px;
+            list-style: none;
         }
 
         .nav-link {
-            color: var(--gray-dark);
+            color: var(--white);
             text-decoration: none;
-            padding: 0.5rem 1rem;
-            transition: all 0.3s ease;
+            font-weight: 500;
+            padding: 8px 0;
             position: relative;
+            transition: all 0.3s ease;
         }
 
-        .nav-link:hover {
-            color: var(--red-primary);
-        }
-
+        .nav-link:hover,
         .nav-link.active {
             color: var(--red-primary);
-            border-bottom: 2px solid var(--red-primary);
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--red-primary);
         }
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, var(--red-bordeaux) 0%, var(--red-bordeaux-dark) 100%);
+            background: radial-gradient(ellipse at center, var(--red-bordeaux) 0%, var(--red-bordeaux-dark) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -117,61 +133,58 @@
             text-align: center;
             color: var(--white);
             position: relative;
-            padding-top: 80px;
+            overflow: hidden;
+            padding-top: 70px;
         }
 
         .hero-content {
-            max-width: 800px;
-            padding: 2rem;
-        }
-
-        .hero-tagline {
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            margin-bottom: 1rem;
-            opacity: 0.8;
+            max-width: 1000px;
+            padding: 0 30px;
         }
 
         .hero-title {
             font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            font-weight: bold;
+            font-size: 4rem;
+            font-weight: 700;
             margin-bottom: 1rem;
-            line-height: 1.2;
+            color: #F0F0F0;
         }
 
         .hero-subtitle {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
+            font-size: 2.5rem;
+            font-weight: 400;
             margin-bottom: 2rem;
+            color: #F0F0F0;
         }
 
         .hero-description {
-            font-size: 1.1rem;
-            margin-bottom: 3rem;
-            opacity: 0.9;
-            max-width: 600px;
+            font-size: 1.2rem;
+            margin-bottom: 4rem;
+            color: #F0F0F0;
+            max-width: 800px;
             margin-left: auto;
             margin-right: auto;
+            line-height: 1.7;
         }
 
         /* Stats Cards */
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin: 3rem 0;
+            gap: 30px;
+            margin: 4rem 0;
             max-width: 900px;
             margin-left: auto;
             margin-right: auto;
         }
 
         .stat-card {
-            background: var(--red-transparent);
-            padding: 2rem;
-            border-radius: 12px;
-            text-align: center;
+            background: rgba(123, 31, 52, 0.5);
             backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 16px;
+            text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: transform 0.3s ease;
         }
@@ -182,135 +195,154 @@
 
         .stat-number {
             font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            font-weight: bold;
+            font-size: 3.5rem;
+            font-weight: 700;
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 8px;
+            color: #F0F0F0;
         }
 
         .stat-label {
-            font-size: 0.9rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #F0F0F0;
         }
 
         /* Buttons */
         .hero-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 20px;
             justify-content: center;
             flex-wrap: wrap;
-            margin-top: 3rem;
+            margin-top: 4rem;
         }
 
         .btn {
-            padding: 1rem 2rem;
+            padding: 15px 30px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
+            font-size: 1rem;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 8px;
         }
 
         .btn-primary {
-            background: var(--red-primary);
+            background: var(--red-button);
             color: var(--white);
         }
 
         .btn-primary:hover {
-            background: #C20326;
-            transform: translateY(-2px);
+            background: #C2003D;
+            transform: scale(1.05);
         }
 
         .btn-secondary {
             background: transparent;
             color: var(--white);
-            border: 2px solid var(--red-primary);
+            border: 2px solid var(--red-button);
         }
 
         .btn-secondary:hover {
-            background: var(--red-primary);
+            background: var(--red-button);
+            transform: scale(1.05);
         }
 
-        /* Content Sections */
+        /* Sections */
         .section {
-            padding: 5rem 0;
-        }
-
-        .section:nth-child(even) {
-            background: var(--gray-very-light);
-        }
-
-        .section-content {
+            padding: 100px 0;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding-left: 30px;
+            padding-right: 30px;
         }
 
         .section-title {
             font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
+            font-size: 3rem;
             color: var(--red-primary);
             text-align: center;
-            margin-bottom: 3rem;
-            position: relative;
+            margin-bottom: 1rem;
+            font-weight: 700;
         }
 
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: var(--red-primary);
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.3rem;
+            color: var(--gray-dark);
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         /* Two Column Layout */
         .two-column {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            gap: 60px;
             align-items: center;
         }
 
         .column {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 30px;
         }
 
         /* Content Cards */
         .content-card {
             background: var(--white);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
 
         .content-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
 
         .content-card h3 {
             font-family: 'Playfair Display', serif;
             color: var(--red-primary);
             margin-bottom: 1rem;
-            font-size: 1.3rem;
+            font-size: 1.8rem;
         }
 
-        /* Tab System */
+        .content-card h4 {
+            color: var(--gray-dark);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        /* Images */
+        .section-image {
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .section-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* Tabs */
         .tabs {
             display: flex;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
+            gap: 8px;
+            margin-bottom: 30px;
             flex-wrap: wrap;
         }
 
         .tab {
-            padding: 0.8rem 1.5rem;
+            padding: 12px 24px;
             border: 2px solid var(--gray-light);
             background: var(--white);
             color: var(--gray-dark);
@@ -331,26 +363,6 @@
             color: var(--red-primary);
         }
 
-        /* Images */
-        .section-image {
-            width: 100%;
-            max-width: 500px;
-            height: auto;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-            transition: transform 0.3s ease;
-        }
-
-        .section-image:hover {
-            transform: scale(1.02);
-        }
-
-        .content-image {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-
         /* Lists */
         .key-points {
             list-style: none;
@@ -359,49 +371,177 @@
 
         .key-points li {
             position: relative;
-            padding-left: 1.5rem;
-            margin-bottom: 1rem;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
         }
 
         .key-points li::before {
-            content: '→';
+            content: '▶';
             position: absolute;
             left: 0;
             color: var(--red-primary);
             font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .cards-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        /* Tables */
+        .comparison-table {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .table-header {
+            background: var(--red-primary);
+            color: var(--white);
+            padding: 20px;
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .table-cell {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .table-cell:first-child {
+            background: var(--red-dark);
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        /* Metrics Cards */
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: 4rem 0;
+        }
+
+        .metric-card {
+            background: var(--red-primary);
+            color: var(--white);
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 1rem;
+        }
+
+        /* Newsletter */
+        .newsletter {
+            background: var(--gray-light);
+            padding: 80px 0;
+        }
+
+        .newsletter-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        .newsletter-form {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--gray-dark);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
         }
 
         /* Footer */
         .footer {
-            background: var(--gray-very-dark);
+            background: var(--black);
             color: var(--white);
-            padding: 3rem 0 1rem;
+            padding: 60px 0 20px;
         }
 
         .footer-content {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0 30px;
         }
 
         .footer-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+            gap: 40px;
+            margin-bottom: 40px;
         }
 
         .footer-section h4 {
             color: var(--red-primary);
-            margin-bottom: 1rem;
+            margin-bottom: 20px;
             font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
         }
 
         .footer-section a {
             color: var(--white);
             text-decoration: none;
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 10px;
             opacity: 0.8;
             transition: opacity 0.3s ease;
         }
@@ -412,41 +552,41 @@
 
         .footer-bottom {
             text-align: center;
-            padding-top: 2rem;
+            padding-top: 30px;
             border-top: 1px solid rgba(255,255,255,0.1);
             opacity: 0.7;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .nav {
-                gap: 1rem;
-            }
-
             .hero-title {
                 font-size: 2.5rem;
             }
 
             .hero-subtitle {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+                gap: 40px;
             }
 
             .stats {
                 grid-template-columns: 1fr;
             }
 
-            .two-column {
+            .cards-grid,
+            .cards-grid-4 {
                 grid-template-columns: 1fr;
-                gap: 2rem;
             }
 
-            .tabs {
-                justify-content: center;
+            .metrics {
+                grid-template-columns: 1fr;
+            }
+
+            .nav {
+                gap: 20px;
             }
 
             .hero-buttons {
@@ -456,6 +596,15 @@
 
             .section-title {
                 font-size: 2rem;
+            }
+
+            .table-row {
+                grid-template-columns: 1fr;
+            }
+
+            .table-cell:first-child {
+                background: var(--white);
+                color: var(--red-primary);
             }
         }
 
@@ -482,16 +631,18 @@
         <div class="header-content">
             <a href="#" class="logo">
                 <div class="logo-icon"></div>
-                HorloLearn
+                <span class="logo-text">HorloLearn</span>
             </a>
-            <nav class="nav">
-                <a href="#accueil" class="nav-link active">Accueil</a>
-                <a href="#histoire" class="nav-link">Histoire</a>
-                <a href="#materiaux" class="nav-link">Matériaux</a>
-                <a href="#ecosysteme" class="nav-link">Écosystème</a>
-                <a href="#innovation" class="nav-link">Innovation</a>
-                <a href="#avenir" class="nav-link">Avenir</a>
-                <a href="#contact" class="nav-link">Contact</a>
+            <nav>
+                <ul class="nav">
+                    <li><a href="#accueil" class="nav-link active">Accueil</a></li>
+                    <li><a href="#histoire" class="nav-link">Histoire</a></li>
+                    <li><a href="#materiaux" class="nav-link">Matériaux</a></li>
+                    <li><a href="#ecosysteme" class="nav-link">Écosystème</a></li>
+                    <li><a href="#innovation" class="nav-link">Innovation</a></li>
+                    <li><a href="#avenir" class="nav-link">Avenir</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
             </nav>
         </div>
     </header>
@@ -499,7 +650,6 @@
     <!-- Hero Section -->
     <section class="hero" id="accueil">
         <div class="hero-content">
-            <div class="hero-tagline">RAPPORT DE RÉFÉRENCE MONDIAL</div>
             <h1 class="hero-title">Excellence et Innovation</h1>
             <h2 class="hero-subtitle">dans les Matériaux Horlogers Suisses</h2>
             <p class="hero-description">
@@ -508,15 +658,15 @@
 
             <div class="stats">
                 <div class="stat-card">
-                    <span class="stat-number">50</span>
+                    <span class="stat-number" data-target="50">0</span>
                     <span class="stat-label">% du marché mondial en valeur</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">65</span>
+                    <span class="stat-number" data-target="65">0</span>
                     <span class="stat-label">000 emplois en Suisse</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-number">500</span>
+                    <span class="stat-number" data-target="500">0</span>
                     <span class="stat-label">ans d'innovation continue</span>
                 </div>
             </div>
@@ -532,408 +682,468 @@
         </div>
     </section>
 
-    <!-- Section 1: Executive Summary -->
+    <!-- Executive Summary -->
     <section class="section" id="executive-summary">
-        <div class="section-content">
-            <h2 class="section-title">Executive Summary</h2>
-            <div class="two-column">
-                <div class="column">
-                    <div class="content-card">
-                        <h3>Position de Leader Mondial</h3>
+        <h2 class="section-title">Executive Summary</h2>
+        <p class="section-subtitle">
+            L'écosystème horloger suisse représente un modèle unique au monde, alliant savoir-faire ancestral, innovation technologique et excellence de la qualité pour maintenir son leadership mondial.
+        </p>
+        
+        <div class="two-column">
+            <div class="column">
+                <div class="content-card">
+                    <h3>Leadership Mondial Incontesté</h3>
+                    <p>
+                        La Suisse domine le marché horloger mondial avec plus de 50% de parts de marché en valeur. Cette supériorité repose sur un écosystème industriel intégré unique, combinant formation d'excellence, innovation continue et positionnement premium.
+                    </p>
+                    
+                    <h4>Points Clés</h4>
+                    <ul class="key-points">
+                        <li>Innovation continue en matériaux de pointe</li>
+                        <li>Écosystème industriel intégré et performant</li>
+                        <li>Formation d'excellence et transmission du savoir</li>
+                        <li>Positionnement premium sur les marchés mondiaux</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="column">
+                <img src="assets/images/materials_dashboard.png" alt="Dashboard des matériaux" class="section-image">
+            </div>
+        </div>
+    </section>
+
+    <!-- Chronologie Historique -->
+    <section class="section" id="histoire" style="background: #F8F8F8;">
+        <h2 class="section-title">Chronologie Historique</h2>
+        <p class="section-subtitle">L'évolution des matériaux horlogers du XVIe siècle à aujourd'hui</p>
+        
+        <div class="two-column">
+            <div class="column">
+                <img src="assets/images/chronologie_historique.png" alt="Chronologie historique" class="section-image">
+            </div>
+            <div class="column">
+                <div class="content-card">
+                    <h3>L'évolution de l'horlogerie suisse</h3>
+                    
+                    <div class="tabs">
+                        <button class="tab active">XVIe-XVIIe</button>
+                        <button class="tab">XVIIIe-XIXe</button>
+                        <button class="tab">XXe</button>
+                        <button class="tab">XXIe</button>
+                    </div>
+
+                    <div class="tab-content">
+                        <h4>XVIe-XVIIe Siècles - Les Débuts</h4>
                         <p>
-                            La Suisse demeure l'acteur dominant du marché horloger mondial avec plus de 50% de parts de marché en valeur. Cette domination repose sur un écosystème unique alliant innovation technologique, savoir-faire artisanal et excellence de la qualité.
+                            L'horlogerie suisse prend ses racines avec l'installation des premiers horlogers huguenots dans la région de Genève. Cette période voit les premiers développements de mécanismes de précision et l'établissement des standards qui perdurent encore aujourd'hui.
                         </p>
                         
-                        <h4 class="key-points-title">Points Clés</h4>
-                        <ul class="key-points">
-                            <li>Innovation continue en matériaux de pointe</li>
-                            <li>Écosystème industriel intégré et performant</li>
-                            <li>Formation d'excellence et transmission du savoir</li>
-                            <li>Positionnement premium sur les marchés mondiaux</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="column">
-                    <img src="assets/images/materials_dashboard.png" alt="Dashboard des matériaux" class="section-image">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 2: Chronologie Historique -->
-    <section class="section" id="histoire">
-        <div class="section-content">
-            <h2 class="section-title">Chronologie Historique</h2>
-            <div class="two-column">
-                <div class="column">
-                    <img src="assets/images/chronologie_historique.png" alt="Chronologie historique" class="section-image">
-                </div>
-                <div class="column">
-                    <div class="content-card">
-                        <h3>L'évolution de l'horlogerie suisse</h3>
-                        
-                        <div class="tabs">
-                            <button class="tab active">XVIe-XVIIe</button>
-                            <button class="tab">XVIIIe-XIXe</button>
-                            <button class="tab">XXe</button>
-                            <button class="tab">XXIe</button>
-                        </div>
-
-                        <div class="tab-content">
-                            <h4>XVIe-XVIIe Siècles - Les Débuts</h4>
-                            <p>
-                                L'horlogerie suisse prend ses racines avec l'installation des premiers horlogers huguenots dans la région de Genève. Cette période voit les premiers développements de mécanismes de précision.
-                            </p>
-                            
-                            <h4>Établissement des Guildes</h4>
-                            <p>
-                                Création des corporations horlogères qui posent les bases des standards de qualité et des techniques de fabrication qui perdurent encore aujourd'hui.
-                            </p>
-                        </div>
+                        <h4>Établissement des Guildes</h4>
+                        <p>
+                            Création des corporations horlogères qui posent les bases des standards de qualité et des techniques de fabrication, établissant la réputation d'excellence qui caractérise encore l'horlogerie helvétique.
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Section 3: Matériaux Traditionnels -->
+    <!-- Matériaux Traditionnels -->
     <section class="section" id="materiaux">
-        <div class="section-content">
-            <h2 class="section-title">Matériaux Traditionnels</h2>
-            <h3 style="text-align: center; color: var(--gray-dark); margin-bottom: 3rem;">Les piliers historiques de l'horlogerie suisse</h3>
-            
-            <div style="text-align: center; margin-bottom: 3rem;">
-                <div class="tabs">
-                    <button class="tab active">Métaux Précieux</button>
-                    <button class="tab">Aciers Spéciaux</button>
-                    <button class="tab">Alliages de Précision</button>
-                    <button class="tab">Savoir-Faire</button>
-                </div>
+        <h2 class="section-title">Matériaux Traditionnels</h2>
+        <p class="section-subtitle">Les piliers métalliques de l'horlogerie suisse</p>
+        
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <div class="tabs">
+                <button class="tab active">Métaux Précieux</button>
+                <button class="tab">Aciers Spéciaux</button>
+                <button class="tab">Alliages de Précision</button>
+                <button class="tab">Savoir-Faire</button>
             </div>
+        </div>
 
+        <div class="cards-grid">
             <div class="content-card">
-                <div class="two-column">
-                    <div class="column">
-                        <h3>Métaux Précieux</h3>
-                        <p>
-                            L'or 18 carats reste le matériau de prestige par excellence. Disponible en jaune, rose et blanc, il offre une durabilité exceptionnelle et une beauté intemporelle. L'alliage, composé de 75% d'or pur, 12,5% d'argent et 12,5% de cuivre pour l'or jaune, garantit une résistance optimale.
-                        </p>
-                        
-                        <h4>Propriétés Exceptionnelles</h4>
-                        <ul class="key-points">
-                            <li>Résistance à la corrosion et à l'oxydation</li>
-                            <li>Densité élevée garantissant la robustesse</li>
-                            <li>Aspect noble et prestigieux</li>
-                            <li>Facilité de travail et de finition</li>
-                        </ul>
-                    </div>
-                    <div class="column">
-                        <img src="assets/images/materiaux_hightech_horlogerie.png" alt="Matériaux high-tech" class="content-image">
-                    </div>
-                </div>
+                <h3>Or 18 Carats</h3>
+                <p>
+                    L'or 18 carats reste le matériau de prestige par excellence. Disponible en jaune, rose et blanc, il offre une durabilité exceptionnelle et une beauté intemporelle. L'alliage, composé de 75% d'or pur, 12,5% d'argent et 12,5% de cuivre pour l'or jaune, garantit une résistance optimale.
+                </p>
+                <ul class="key-points">
+                    <li>Résistance à la corrosion et à l'oxydation</li>
+                    <li>Densité élevée garantissant la robustesse</li>
+                    <li>Aspect noble et prestigieux</li>
+                    <li>Facilité de travail et de finition</li>
+                </ul>
+            </div>
+            
+            <div class="content-card">
+                <h3>Acier Inoxydable 316L</h3>
+                <p>
+                    L'acier 316L, resistant à la corrosion et hypoallergénique, reste le matériau de prédilection pour les boîtes et bracelets. Sa structure moléculaire garantit une durabilité exceptionnelle et une résistance à l'usure quotidienne.
+                </p>
+                <ul class="key-points">
+                    <li>Résistance à la corrosion supérieure</li>
+                    <li>Hypoallergénique et biocompatible</li>
+                    <li>Facilité d'entretien et de nettoyage</li>
+                    <li>Coût favorable pour la production de série</li>
+                </ul>
+            </div>
+            
+            <div class="content-card">
+                <h3>Platine</h3>
+                <p>
+                    La platine, métal précieux le plus rare, offre une densité exceptionnelle et une résistance incomparable à l'usure. Utilisée pour les pièces les plus prestigieuses, elle symbolise l'ultra-luxe horloger.
+                </p>
+                <ul class="key-points">
+                    <li>Densité la plus élevée des métaux précieux</li>
+                    <li>Résistance exceptionnelle à l'usure</li>
+                    <li>Couleurs naturelles stables</li>
+                    <li>Rareté et valeur d'investissement</li>
+                </ul>
             </div>
         </div>
     </section>
 
-    <!-- Section 4: Innovation et High-Tech -->
-    <section class="section" id="innovation">
-        <div class="section-content">
-            <h2 class="section-title">Innovation et High-Tech</h2>
-            <div class="two-column">
-                <div class="column">
-                    <div class="content-card">
-                        <h3>Smartwatches et Connectivité</h3>
-                        <p>
-                            L'intégration des technologies wearables dans l'horlogerie traditionnelle crée de nouvelles expériences utilisateur tout en préservant l'héritage artisanal. Les smartwatches représentent l'avenir de l'industrie.
-                        </p>
-                        
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0;">
-                            <div style="background: var(--gray-very-light); padding: 1.5rem; border-radius: 8px; text-align: center;">
-                                <h4>Capteurs</h4>
-                                <p>Monitoring santé en temps réel</p>
-                            </div>
-                            <div style="background: var(--gray-very-light); padding: 1.5rem; border-radius: 8px; text-align: center;">
-                                <h4>Connectivité</h4>
-                                <p>Synchronisation smartphone</p>
-                            </div>
-                            <div style="background: var(--gray-very-light); padding: 1.5rem; border-radius: 8px; text-align: center;">
-                                <h4>Interface</h4>
-                                <p>Écrans tactiles avancés</p>
-                            </div>
-                            <div style="background: var(--gray-very-light); padding: 1.5rem; border-radius: 8px; text-align: center;">
-                                <h4>Batterie</h4>
-                                <p>Autonomie optimisée</p>
-                            </div>
-                        </div>
-
-                        <h3>Miniaturisation Extrême</h3>
-                        <ul class="key-points">
-                            <li>Composants électroniques microscopiques</li>
-                            <li>Écrans flexibles et transparents</li>
-                            <li>Processeurs haute performance basse consommation</li>
-                            <li>Matériaux intelligents et auto-réparateurs</li>
-                        </ul>
-                    </div>
+    <!-- Innovation et High-Tech -->
+    <section class="section" id="innovation" style="background: #F8F8F8;">
+        <h2 class="section-title">Innovation et High-Tech</h2>
+        <p class="section-subtitle">Matériaux modernes, composants électroniques et miniaturisation</p>
+        
+        <div class="two-column">
+            <div class="column">
+                <div class="content-card">
+                    <h3>Nouveaux Matériaux</h3>
+                    <p>
+                        L'horlogerie suisse explore de nouveaux horizons avec des matériaux révolutionnaires qui repoussent les limites de la durabilité et de l'esthétique.
+                    </p>
+                    
+                    <ul class="key-points">
+                        <li><strong>Fibres de carbone</strong> - Légèreté et résistance exceptionnelles</li>
+                        <li><strong>Céramiques techniques</strong> - Résistance aux rayures et esthétique moderne</li>
+                        <li><strong>Titane grade 5</strong> - Résistance et biocompatibilité optimales</li>
+                        <li><strong>Matériaux composites</strong> - Combinaisons uniques de propriétés</li>
+                    </ul>
                 </div>
-                <div class="column">
-                    <img src="assets/images/innovation_horlogerie_futur.png" alt="Innovation et futur" class="section-image">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 5: Écosystème Industriel -->
-    <section class="section" id="ecosysteme">
-        <div class="section-content">
-            <h2 class="section-title">Écosystème Industriel</h2>
-            <div class="two-column">
-                <div class="column">
-                    <img src="assets/images/districts_horlogers_suisse.png" alt="Districts horlogers Suisse" class="section-image">
-                </div>
-                <div class="column">
-                    <div class="content-card">
-                        <h3>Distribution Géographique</h3>
-                        <p>
-                            L'horlogerie suisse est concentrée dans des districts spécialisés qui ont développé des compétences uniques au fil des siècles. Cette géographie industrielle favorise la collaboration et l'excellence.
-                        </p>
-                        
-                        <div class="tabs" style="margin-top: 2rem;">
-                            <button class="tab active">Jura & Bienne</button>
-                            <button class="tab">Genève</button>
-                            <button class="tab">Vallée de Joux</button>
-                        </div>
-
-                        <div class="tab-content">
-                            <h4>Jura & Bienne</h4>
-                            <p>
-                                Le cœur historique de l'horlogerie suisse regroupe les maisons les plus prestigieuses dans un triangle d'excellence reliant La Chaux-de-Fonds, Le Locle et Bienne. Cette région concentre plus de 80% de la production helvétique.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 6: Formation et Transmission -->
-    <section class="section" id="formation">
-        <div class="section-content">
-            <h2 class="section-title">Formation et Transmission</h2>
-            <div class="two-column">
-                <div class="column">
-                    <div class="content-card">
-                        <h3>Système de Formation Intégré</h3>
-                        <p>
-                            La Suisse dispose d'un système de formation horlogère unique au monde, alliant théorie et pratique dans un cadre d'excellence qui garantit la transmission des savoirs ancestraux.
-                        </p>
-                        
-                        <div style="margin: 2rem 0;">
-                            <h4>Parcours de Formation</h4>
-                            <ul class="key-points">
-                                <li><strong>CFC Horloger</strong> - Formation de base 4 ans</li>
-                                <li><strong>Brevet de Maîtrise</strong> - Spécialisation avancée</li>
-                                <li><strong>Formations continues</strong> - Veille technologique</li>
-                                <li><strong>Formation initiale en entreprise</strong></li>
-                            </ul>
-                        </div>
-
-                        <h4>Centres d'Excellence</h4>
-                        <p>
-                            L'École Polytechnique Fédérale de Lausanne (EPFL) et l'École Technique Supérieure en Horlogerie de Genève sont les piliers de l'innovation pédagogique dans le domaine.
-                        </p>
-                    </div>
-                </div>
-                <div class="column">
-                    <img src="assets/images/formation_horlogere_suisse.png" alt="Formation horlogère" class="section-image">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 7: Entreprises Leaders -->
-    <section class="section" id="entreprises">
-        <div class="section-content">
-            <h2 class="section-title">Entreprises Leaders</h2>
-            <div class="two-column">
-                <div class="column">
-                    <img src="assets/images/entreprises_horlogeres_leaders.png" alt="Entreprises horlogères leaders" class="section-image">
-                </div>
-                <div class="column">
-                    <div class="content-card">
-                        <h3>Les Géants Horlogers Suisses</h3>
-                        <p>
-                            L'industrie horlogère suisse est dominée par quelques maisonslegendaires qui ont défini les standards d'excellence mondiale et continue d'innover pour rester en tête du marché.
-                        </p>
-                        
-                        <div style="margin: 2rem 0;">
-                            <h4>Patek Philippe</h4>
-                            <p style="font-size: 0.9rem;">Fondée en 1839, reconnue pour ses complications ultra-sophistiquées et son montres d'exception. Créatrice de pièces légendaires comme la Grand Complication.</p>
-                        </div>
-
-                        <div style="margin: 1.5rem 0;">
-                            <h4>Rolex</h4>
-                            <p style="font-size: 0.9rem;">Symbole de prestige et de précision depuis 1905. Innovations majeures en précision et durabilité avec les calibres Perpetual.</p>
-                        </div>
-
-                        <div style="margin: 1.5rem 0;">
-                            <h4>Audemars Piguet</h4>
-                            <p style="font-size: 0.9rem;">Pionnière de la montre-bracelet de luxe, créateur du Royal Oak qui révolutionné le design horloger en 1972.</p>
-                        </div>
-
-                        <div style="margin: 1.5rem 0;">
-                            <h4>OMEGA</h4>
-                            <p style="font-size: 0.9rem;">Partenaire officiel des Jeux Olympiques, reconnue pour sa précision chronométrée et ses innovations techniques.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 8: Vision d'Avenir -->
-    <section class="section" id="avenir">
-        <div class="section-content">
-            <h2 class="section-title">Vision d'Avenir</h2>
-            <div class="two-column">
-                <div class="column">
-                    <div class="content-card">
-                        <h3>Les Défis du Futur</h3>
-                        <p>
-                            L'horlogerie suisse embrace les défis technologiques du XXIe siècle tout en préservant son identité traditionnelle et ses valeurs d'excellence artisanale.
-                        </p>
-                        
-                        <div class="tabs" style="margin-top: 2rem;">
-                            <button class="tab active">Environnement</button>
-                            <button class="tab">Digitalisation</button>
-                            <button class="tab">Technologies</button>
-                        </div>
-
-                        <div class="tab-content">
-                            <h4>Environnement et Durabilité</h4>
-                            <p>
-                                L'industrie horlogère suisse s'engage vers une production plus durable avec des matériaux recyclés, des processus éco-responsables et une économie circulaire pérenne.
-                            </p>
-                            
-                            <ul class="key-points">
-                                <li>Certification WATCHCLEAR pour l'or éthique</li>
-                                <li>Énergies renouvelables dans les ateliers</li>
-                                <li>Programmes de recyclage des composants</li>
-                                <li>Réduction de l'empreinte carbone de 50% d'ici 2030</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="column">
-                    <img src="assets/images/atelier_artisanal_traditionnel.png" alt="Atelier artisanal traditionnel" class="section-image">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 9: Positionnement Mondial -->
-    <section class="section" id="positionnement">
-        <div class="section-content">
-            <h2 class="section-title">Positionnement Mondial</h2>
-            <div style="background: var(--red-primary); color: var(--white); padding: 2rem; border-radius: 12px; margin-bottom: 3rem;">
-                <h3 style="text-align: center; margin-bottom: 2rem;">Comparaison Internationale</h3>
                 
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; text-align: center;">
-                    <div>
-                        <h4 style="margin-bottom: 1rem;">🇨🇭 SUISSE</h4>
-                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">50%</div>
-                        <div>Part de marché</div>
-                        <div style="margin-top: 1rem; font-size: 0.9rem;">Premium & Luxe</div>
-                    </div>
-                    <div style="opacity: 0.8;">
-                        <h4 style="margin-bottom: 1rem;">🇩🇪 ALLEMAGNE</h4>
-                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">15%</div>
-                        <div>Part de marché</div>
-                        <div style="margin-top: 1rem; font-size: 0.9rem;">Technique & Précision</div>
-                    </div>
-                    <div style="opacity: 0.8;">
-                        <h4 style="margin-bottom: 1rem;">🇯🇵 JAPON</h4>
-                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">12%</div>
-                        <div>Part de marché</div>
-                        <div style="margin-top: 1rem; font-size: 0.9rem;">Innovation & Accessibilité</div>
-                    </div>
+                <div class="content-card">
+                    <h3>Révolution Silicium</h3>
+                    <p>
+                        L'introduction du silicium dans l'horlogerie a révolutionné la précision et la durabilité des mouvements mécaniques.
+                    </p>
+                    <ul class="key-points">
+                        <li>Résistance magnétique améliorée</li>
+                        <li>Friction réduite pour une meilleure efficacité</li>
+                        <li>Stabilité dimensionnelle exceptionnelle</li>
+                        <li>Procédés de fabrication innovants</li>
+                    </ul>
                 </div>
             </div>
+            <div class="column">
+                <img src="assets/images/innovation_horlogerie_futur.png" alt="Innovation et futur" class="section-image">
+            </div>
+        </div>
+    </section>
 
-            <div class="two-column">
+    <!-- Écosystème Industriel -->
+    <section class="section" id="ecosysteme">
+        <h2 class="section-title">Écosystème Industriel</h2>
+        <p class="section-subtitle">Districts horlogers, formation et chaîne d'approvisionnement</p>
+        
+        <div class="two-column">
+            <div class="column">
+                <img src="assets/images/districts_horlogers_suisse.png" alt="Districts horlogers Suisse" class="section-image">
+            </div>
+            <div class="column">
                 <div class="content-card">
-                    <h3>Facteurs de Succès Suisses</h3>
-                    <ul class="key-points">
-                        <li>Écosystème industriel intégré</li>
-                        <li>Formation d'excellence reconnue</li>
-                        <li>Innovation technologique continue</li>
-                        <li>Positionnement premium sur les marchés</li>
-                        <li>Savoir-faire artisanale conservé et transmis</li>
-                        <li>Réseau de fournisseurs de proximité</li>
-                    </ul>
-                </div>
-                <div class="content-card">
-                    <h3>Défis et Opportunités</h3>
-                    <ul class="key-points">
-                        <li>Montée des économies émergentes</li>
-                        <li>Évolution des goûts des consommateurs</li>
-                        <li>Intégration des technologies digitales</li>
-                        <li>Exigences de durabilité environnementale</li>
-                        <li>Compétition sur les marchés émergents</li>
-                        <li>Nouveaux matériaux et procédés innovants</li>
-                    </ul>
+                    <h3>Districts Horlogers</h3>
+                    <p>
+                        L'horlogerie suisse est concentrée dans des districts spécialisés qui ont développé des compétences uniques au fil des siècles. Cette géographie industrielle favorise la collaboration et l'excellence.
+                    </p>
+                    
+                    <div class="tabs" style="margin-top: 2rem;">
+                        <button class="tab active">Jura & Bienne</button>
+                        <button class="tab">Genève</button>
+                        <button class="tab">Vallée de Joux</button>
+                    </div>
+
+                    <div class="tab-content">
+                        <h4>Jura & Bienne</h4>
+                        <p>
+                            Le cœur historique de l'horlogerie suisse regroupe les maisons les plus prestigieuses dans un triangle d'excellence reliant La Chaux-de-Fonds, Le Locle et Bienne. Cette région concentre plus de 80% de la production helvétique et est surnommée la "Watch Valley" helvétique.
+                        </p>
+                        
+                        <ul class="key-points">
+                            <li>Plus de 300 entreprises horlogères</li>
+                            <li>50 000 emplois directs et indirects</li>
+                            <li>Innovation technologique continue</li>
+                            <li>Réseau de fournisseurs de proximité</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Section 10: Newsletter -->
-    <section class="section" id="contact">
-        <div class="section-content">
-            <h2 class="section-title">Restez Informé</h2>
-            <div class="two-column">
-                <div class="column">
-                    <div class="content-card">
-                        <h3>Newsletter HorloLearn</h3>
-                        <p style="margin-bottom: 2rem;">
-                            Recevez les dernières actualités et analyses du secteur horloger suisse directement dans votre boîte mail.
+    <!-- Formation et Transmission -->
+    <section class="section" id="formation" style="background: #F8F8F8;">
+        <h2 class="section-title">Formation et Transmission</h2>
+        <p class="section-subtitle">Système de formation dual unique au monde</p>
+        
+        <div class="two-column">
+            <div class="column">
+                <div class="content-card">
+                    <h3>Centres d'Excellence</h3>
+                    <p>
+                        La Suisse dispose d'un système de formation horlogère unique au monde, alliant théorie et pratique dans un cadre d'excellence qui garantit la transmission des savoirs ancestraux.
+                    </p>
+                    
+                    <div class="cards-grid-4">
+                        <div class="content-card" style="padding: 20px;">
+                            <h4>École Polytechnique Fédérale de Lausanne</h4>
+                            <p style="font-size: 0.9rem;">Formation technique et recherche avancée</p>
+                        </div>
+                        <div class="content-card" style="padding: 20px;">
+                            <h4>École Technique Supérieure Genève</h4>
+                            <p style="font-size: 0.9rem;">Formation artisanale d'excellence</p>
+                        </div>
+                        <div class="content-card" style="padding: 20px;">
+                            <h4>CFA Horloger Jura</h4>
+                            <p style="font-size: 0.9rem;">Formation initiale et continue</p>
+                        </div>
+                        <div class="content-card" style="padding: 20px;">
+                            <h4>Institut SwissMade</h4>
+                            <p style="font-size: 0.9rem;">Formation management et innovation</p>
+                        </div>
+                    </div>
+
+                    <h4>Parcours de Formation</h4>
+                    <ul class="key-points">
+                        <li><strong>CFC Horloger</strong> - Formation de base 4 ans</li>
+                        <li><strong>Brevet de Maîtrise</strong> - Spécialisation avancée</li>
+                        <li><strong>Formations continues</strong> - Veille technologique</li>
+                        <li><strong>Formation initiale en entreprise</strong></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="column">
+                <img src="assets/images/formation_horlogere_suisse.png" alt="Formation horlogère" class="section-image">
+            </div>
+        </div>
+    </section>
+
+    <!-- Entreprises Leaders -->
+    <section class="section" id="entreprises">
+        <h2 class="section-title">Entreprises Leaders</h2>
+        <p class="section-subtitle">Moteurs d'innovation et de l'excellence suisse</p>
+        
+        <div class="two-column">
+            <div class="column">
+                <img src="assets/images/entreprises_horlogeres_leaders.png" alt="Entreprises horlogères leaders" class="section-image">
+            </div>
+            <div class="column">
+                <div class="cards-grid-4">
+                    <div class="content-card" style="padding: 25px;">
+                        <h4>Patek Philippe</h4>
+                        <p style="font-size: 0.9rem; margin-bottom: 1rem;">Fondée en 1839, reconnue pour ses complications ultra-sophistiquées et ses montres d'exception.</p>
+                        <div style="font-weight: 600; color: var(--red-primary);">Créatrice de pièces légendaires</div>
+                    </div>
+                    
+                    <div class="content-card" style="padding: 25px;">
+                        <h4>Rolex</h4>
+                        <p style="font-size: 0.9rem; margin-bottom: 1rem;">Symbole de prestige et de précision depuis 1905.</p>
+                        <div style="font-weight: 600; color: var(--red-primary);">Innovations en précision</div>
+                    </div>
+                    
+                    <div class="content-card" style="padding: 25px;">
+                        <h4>Audemars Piguet</h4>
+                        <p style="font-size: 0.9rem; margin-bottom: 1rem;">Pionnière de la montre-bracelet de luxe.</p>
+                        <div style="font-weight: 600; color: var(--red-primary);">Créateur du Royal Oak</div>
+                    </div>
+                    
+                    <div class="content-card" style="padding: 25px;">
+                        <h4>OMEGA</h4>
+                        <p style="font-size: 0.9rem; margin-bottom: 1rem;">Partenaire officiel des Jeux Olympiques.</p>
+                        <div style="font-weight: 600; color: var(--red-primary);">Précision chronométrée</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision d'Avenir -->
+    <section class="section" id="avenir" style="background: #F8F8F8;">
+        <h2 class="section-title">Vision d'Avenir</h2>
+        <p class="section-subtitle">Durabilité, digitalisation et nouvelles technologies</p>
+        
+        <div class="two-column">
+            <div class="column">
+                <div class="content-card">
+                    <h3>Défis et Opportunités du Futur</h3>
+                    <p>
+                        L'horlogerie suisse embrace les défis technologiques du XXIe siècle tout en préservant son identité traditionnelle et ses valeurs d'excellence artisanale.
+                    </p>
+                    
+                    <div class="tabs" style="margin-top: 2rem;">
+                        <button class="tab active">Durabilité</button>
+                        <button class="tab">Digitalisation</button>
+                        <button class="tab">Nouveaux Matériaux</button>
+                    </div>
+
+                    <div class="tab-content">
+                        <h4>Durabilité</h4>
+                        <p>
+                            L'industrie horlogère suisse s'engage vers une production plus durable avec des matériaux recyclés, des processus éco-responsables et une économie circulaire pérenne.
                         </p>
                         
-                        <form style="display: flex; flex-direction: column; gap: 1rem;">
-                            <input type="email" placeholder="Votre adresse email" style="padding: 1rem; border: 2px solid var(--gray-light); border-radius: 8px; font-size: 1rem;">
-                            <input type="text" placeholder="Votre nom" style="padding: 1rem; border: 2px solid var(--gray-light); border-radius: 8px; font-size: 1rem;">
+                        <ul class="key-points">
+                            <li>Certification WATCHCLEAR pour l'or éthique</li>
+                            <li>Énergies renouvelables dans les ateliers</li>
+                            <li>Programmes de recyclage des composants</li>
+                            <li>Réduction de l'empreinte carbone de 50% d'ici 2030</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <img src="assets/images/atelier_artisanal_traditionnel.png" alt="Atelier artisanal traditionnel" class="section-image">
+            </div>
+        </div>
+    </section>
+
+    <!-- Positionnement Mondial -->
+    <section class="section" id="positionnement">
+        <h2 class="section-title">Positionnement Mondial</h2>
+        <p class="section-subtitle">Leadership face à la concurrence internationale</p>
+        
+        <div class="comparison-table">
+            <div class="table-header">Comparaison Internationale - Parts de Marché</div>
+            <div class="table-row">
+                <div class="table-cell">🇨🇭 SUISSE</div>
+                <div class="table-cell">50%</div>
+                <div class="table-cell">Premium & Luxe - Leader technologique</div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">🇩🇪 ALLEMAGNE</div>
+                <div class="table-cell">15%</div>
+                <div class="table-cell">Technique & Précision - Tradition mécanique</div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">🇯🇵 JAPON</div>
+                <div class="table-cell">12%</div>
+                <div class="table-cell">Innovation & Accessibilité - Quartz & digital</div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">🇺🇸 ÉTATS-UNIS</div>
+                <div class="table-cell">8%</div>
+                <div class="table-cell">Design & Innovation - Smartwatches</div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">🌐 AUTRES</div>
+                <div class="table-cell">15%</div>
+                <div class="table-cell">Marchés émergents et niche</div>
+            </div>
+        </div>
+
+        <div class="two-column" style="margin-top: 4rem;">
+            <div class="content-card">
+                <h3>Facteurs de Succès Suisses</h3>
+                <ul class="key-points">
+                    <li>Écosystème industriel intégré</li>
+                    <li>Formation d'excellence reconnue</li>
+                    <li>Innovation technologique continue</li>
+                    <li>Positionnement premium sur les marchés</li>
+                    <li>Savoir-faire artisanale conservé et transmis</li>
+                    <li>Réseau de fournisseurs de proximité</li>
+                </ul>
+            </div>
+            <div class="content-card">
+                <h3>Défis et Opportunités</h3>
+                <ul class="key-points">
+                    <li>Montée des économies émergentes</li>
+                    <li>Évolution des goûts des consommateurs</li>
+                    <li>Intégration des technologies digitales</li>
+                    <li>Exigences de durabilité environnementale</li>
+                    <li>Compétition sur les marchés émergents</li>
+                    <li>Nouveaux matériaux et procédés innovants</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Metrics -->
+    <section class="section" id="metrics" style="background: #F8F8F8;">
+        <h2 class="section-title">Indicateurs Clés</h2>
+        
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-number">50%</div>
+                <div class="metric-label">Part de marché mondiale</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-number">1200€</div>
+                <div class="metric-label">Prix moyen exporté</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-number">65k</div>
+                <div class="metric-label">Emplois directs et indirects</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter" id="contact">
+        <div class="newsletter-content">
+            <h2 class="section-title" style="color: var(--gray-dark);">Restez Informé</h2>
+            <p class="section-subtitle" style="color: var(--gray-dark);">Recevez les dernières innovations et tendances</p>
+            
+            <div class="two-column">
+                <div class="column">
+                    <div class="newsletter-form">
+                        <h3 style="margin-bottom: 2rem; color: var(--red-primary);">Newsletter HorloLearn</h3>
+                        <form>
+                            <div class="form-group">
+                                <label for="email">Adresse email</label>
+                                <input type="email" id="email" placeholder="votre@email.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Nom complet</label>
+                                <input type="text" id="name" placeholder="Votre nom" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="domain">Domaine d'intérêt</label>
+                                <select id="domain">
+                                    <option>Matériaux traditionnels</option>
+                                    <option>Innovation High-Tech</option>
+                                    <option>Formation et transmission</option>
+                                    <option>Écosystème industriel</option>
+                                    <option>Futur de l'horlogerie</option>
+                                </select>
+                            </div>
                             
-                            <select style="padding: 1rem; border: 2px solid var(--gray-light); border-radius: 8px; font-size: 1rem;">
-                                <option>Votre domaine d'intérêt</option>
-                                <option>Matériaux traditionnels</option>
-                                <option>Innovation High-Tech</option>
-                                <option>Formation et transmission</option>
-                                <option>Écosystème industriel</option>
-                            </select>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="newsletter">
+                                <label for="newsletter">J'accepte de recevoir les newsletters et communications commerciales</label>
+                            </div>
                             
-                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
-                                <input type="checkbox">
-                                J'accepte de recevoir les newsletters et communications commerciales
-                            </label>
-                            
-                            <button type="submit" class="btn btn-primary" style="justify-content: center;">
-                                S'abonner
+                            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+                                S'abonner →
                             </button>
                         </form>
                     </div>
                 </div>
                 <div class="column">
-                    <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
-                        <div class="stat-card">
-                            <span class="stat-number">50%</span>
-                            <span class="stat-label">Part de marché mondiale</span>
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div class="content-card" style="text-align: center;">
+                            <h4>Analyses Exclusives</h4>
+                            <p>Accès aux rapports détaillés sur les tendances du marché</p>
                         </div>
-                        <div class="stat-card">
-                            <span class="stat-number">1200€</span>
-                            <span class="stat-label">Prix moyen exported</span>
+                        <div class="content-card" style="text-align: center;">
+                            <h4>Veille Technologique</h4>
+                            <p>Alertes sur les innovations et nouveaux matériaux</p>
                         </div>
-                        <div class="stat-card">
-                            <span class="stat-number">65k</span>
-                            <span class="stat-label">Emplois directs</span>
+                        <div class="content-card" style="text-align: center;">
+                            <h4>Formation Continue</h4>
+                            <p>Notifications sur les nouvelles opportunités de formation</p>
                         </div>
                     </div>
                 </div>
@@ -950,7 +1160,7 @@
                     <p style="opacity: 0.8; margin-bottom: 1rem;">
                         L'excellence et l'innovation dans les matériaux horlogers suisses au service de l'éducation et de la formation.
                     </p>
-                    <div style="display: flex; gap: 1rem;">
+                    <div style="display: flex; gap: 15px;">
                         <a href="#">Twitter</a>
                         <a href="#">LinkedIn</a>
                         <a href="#">YouTube</a>
@@ -999,9 +1209,10 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+                    const offsetTop = target.offsetTop - 70; // Header height
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
                     });
                 }
             });
@@ -1021,47 +1232,67 @@
                         // Add active class to clicked tab
                         this.classList.add('active');
                         
-                        // Update content (simplified - in real app would load specific content)
-                        const parentSection = this.closest('.section');
+                        // Update content (simplified)
+                        const parentSection = this.closest('.section, .content-card');
                         const tabContent = parentSection.querySelector('.tab-content');
                         
-                        if (tabContent && tab.textContent.includes('Jura')) {
-                            tabContent.innerHTML = `
-                                <h4>Jura & Bienne</h4>
-                                <p>Le cœur historique de l'horlogerie suisse regroupe les maisons les plus prestigieuses dans un triangle d'excellence.</p>
-                            `;
-                        } else if (tabContent && tab.textContent.includes('Environnement')) {
-                            tabContent.innerHTML = `
-                                <h4>Environnement et Durabilité</h4>
-                                <p>L'industrie horlogère suisse s'engage vers une production plus durable avec des matériaux recyclés.</p>
-                                <ul class="key-points">
-                                    <li>Certification WATCHCLEAR pour l'or éthique</li>
-                                    <li>Énergies renouvelables dans les ateliers</li>
-                                    <li>Programmes de recyclage des composants</li>
-                                    <li>Réduction de l'empreinte carbone de 50% d'ici 2030</li>
-                                </ul>
-                            `;
+                        if (tabContent) {
+                            const tabText = this.textContent;
+                            if (tabText.includes('XVIIIe-XIXe')) {
+                                tabContent.innerHTML = `
+                                    <h4>XVIIIe-XIXe Siècles - L'Établissement</h4>
+                                    <p>Genève devient le centre mondial de l'horlogerie avec l'établissement de guildes et de systèmes d'apprentissage qui perdurent encore aujourd'hui. La région développe une réputation d'excellence inégalée.</p>
+                                    <h4>Révolution Industrielle</h4>
+                                    <p>L'industrialisation permet une production de masse tout en conservant les standards de qualité qui font la réputation de l'horlogerie suisse.</p>
+                                `;
+                            } else if (tabText.includes('XXe')) {
+                                tabContent.innerHTML = `
+                                    <h4>XXe Siècle - La Révolution</h4>
+                                    <p>L'invention de la montre-bracelet et la démocratisation des techniques horlogères transforment l'industrie suisse en leader mondial. La montre automatique révolutionne le marché.</p>
+                                    <h4>Ère du Quartz</h4>
+                                    <p>Malgré la crise du quartz dans les années 70, l'industrie suisse se redéfinit et se repositionne sur le segment premium.</p>
+                                `;
+                            } else if (tabText.includes('XXIe')) {
+                                tabContent.innerHTML = `
+                                    <h4>XXIe Siècle - L'Innovation Continue</h4>
+                                    <p>L'ère moderne voit l'émergence des nouvelles technologies, des matériaux high-tech et de la digitalisation de l'horlogerie tout en préservant l'artisanat traditionnel.</p>
+                                    <h4>Smartwatches et Connectivité</h4>
+                                    <p>L'intégration des technologies connectées ouvre de nouveaux horizons pour l'industrie horlogère helvétique.</p>
+                                `;
+                            } else if (tabText.includes('Aciers')) {
+                                tabContent.innerHTML = `
+                                    <h4>Aciers Spéciaux</h4>
+                                    <p>Les aciers de specialité développés spécifiquement pour l'horlogerie offrent des propriétés exceptionnelles en termes de résistance, de finition et de esthétique.</p>
+                                `;
+                            } else if (tabText.includes('Alliages')) {
+                                tabContent.innerHTML = `
+                                    <h4>Alliages de Précision</h4>
+                                    <p>Les alliages propriétaires développés par les maisons horlogères garantissent des propriétés uniques adaptées aux exigences spécifiques de l'horlogerie de luxe.</p>
+                                `;
+                            } else if (tabText.includes('Genève')) {
+                                tabContent.innerHTML = `
+                                    <h4>Genève</h4>
+                                    <p>Capitale mondiale du luxe horloger, Genève concentre les marques les plus prestigieuses et les salons internationaux du secteur. La Manufacture d'Horlogerie de Genève perpétue les traditions artisanales.</p>
+                                `;
+                            } else if (tabText.includes('Joux')) {
+                                tabContent.innerHTML = `
+                                    <h4>Vallée de Joux</h4>
+                                    <p>Fief des complications horlogères, cette vallée alpine regroupe les meilleurs fabricants de complications et de finitions de luxe. Surnommée "Le berceau de l'horlogerie complication".</p>
+                                `;
+                            } else if (tabText.includes('Digitalisation')) {
+                                tabContent.innerHTML = `
+                                    <h4>Digitalisation</h4>
+                                    <p>L'intégration des technologies digitales transforme les processus de fabrication et la relation client, ouvrant de nouvelles opportunités de croissance et d'innovation.</p>
+                                `;
+                            } else if (tabText.includes('Nouveaux')) {
+                                tabContent.innerHTML = `
+                                    <h4>Nouveaux Matériaux</h4>
+                                    <p>Les avancées scientifiques permettent l'utilisation de matériaux révolutionnaires qui repoussent les limites de la durabilité, de l'esthétique et de la performance.</p>
+                                `;
+                            }
                         }
                     });
                 });
-            });
-        }
-
-        // Intersection Observer for animations
-        function setupAnimations() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate-in');
-                    }
-                });
-            }, {
-                threshold: 0.1
-            });
-
-            // Observe all sections
-            document.querySelectorAll('.section').forEach(section => {
-                observer.observe(section);
             });
         }
 
@@ -1070,10 +1301,9 @@
             const statNumbers = document.querySelectorAll('.stat-number');
             
             statNumbers.forEach(stat => {
-                const target = parseInt(stat.textContent);
-                const isPercentage = stat.textContent.includes('%');
-                const isEuro = stat.textContent.includes('€');
-                const isThousands = stat.textContent.includes('k');
+                const target = parseInt(stat.getAttribute('data-target'));
+                const hasK = stat.textContent.includes('k');
+                const hasPercent = stat.textContent.includes('%');
                 
                 let current = 0;
                 const increment = target / 50;
@@ -1087,12 +1317,10 @@
                     
                     let displayValue = Math.floor(current);
                     
-                    if (isThousands) {
-                        displayValue = Math.floor(current) + 'k';
-                    } else if (isEuro) {
-                        displayValue = Math.floor(current) + '€';
-                    } else if (isPercentage) {
-                        displayValue = Math.floor(current) + '%';
+                    if (hasPercent) {
+                        displayValue = displayValue + '%';
+                    } else if (hasK) {
+                        displayValue = displayValue + 'k';
                     }
                     
                     stat.textContent = displayValue;
@@ -1132,7 +1360,6 @@
         // Initialize everything
         document.addEventListener('DOMContentLoaded', function() {
             setupTabs();
-            setupAnimations();
             animateStats();
             setupNavigation();
         });
