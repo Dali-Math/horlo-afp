@@ -486,4 +486,11 @@ section {
   overflow: visible !important;
   position: relative !important;
 }
+/* Correction - restaure la grille matériaux */
+.materials-section {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+  gap: 2rem !important;
+  place-items: stretch;
+}
 
