@@ -464,3 +464,13 @@ svg {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+html, body, #__next, main {
+  height: auto !important;
+  min-height: 100% !important;
+  overflow-y: visible !important;
+  overflow-x: hidden !important;
+  scroll-behavior: smooth;
+}
+section, div {
+  overflow: visible !important;
+}
