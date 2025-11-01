@@ -191,15 +191,18 @@ export default function MateriauxPage() {
           ))}
         </nav>
 
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filtered.map((material, i) => (
-            <MaterialCard
-              key={i}
-              {...material}
-              onImageClick={() => setZoom({ src: material.illustration, alt: material.title })}
-            />
-          ))}
-        </section>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 place-items-stretch">
+    {filtered.map((material, i) => (
+      <div key={i} className="h-full">
+        <MaterialCard
+          {...material}
+          onImageClick={() => setZoom({ src: material.illustration, alt: material.title })}
+        />
+      </div>
+    ))}
+  </section>
+</div>
       </div>
 
       {zoom && <ZoomModal src={zoom.src} alt={zoom.alt} onClose={() => setZoom(null)} />}
