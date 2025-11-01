@@ -1,270 +1,955 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Matériaux Horlogers Suisses - Excellence</title>
-
-  <!-- Polices -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
-
-  <!-- Correctif pour compatibilité avec HorloLearn -->
-  <style>
-    html, body {
-      margin: 0 !important;
-      padding: 0 !important;
-      background: #ffffff !important;
-    }
-    body {
-      all: revert;
-      display: block;
-      visibility: visible;
-    }
-  </style>
-
-  <!-- Styles principaux -->
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --mh-red: #DC143C;
-      --mh-white: #FFFFFF;
-      --mh-gray-50: #f9fafb;
-      --mh-gray-200: #e5e7eb;
-      --mh-gray-800: #1f2937;
-      --mh-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      line-height: 1.6;
-      color: var(--mh-gray-800);
-      background: var(--mh-white);
-    }
-
-    .mh-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
-
-    /* HERO */
-    .mh-hero {
-      background: linear-gradient(135deg, var(--mh-red) 0%, #b91c3c 100%);
-      color: white;
-      padding: 4rem 0;
-      text-align: center;
-    }
-    .mh-hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 3rem;
-      font-weight: 900;
-      margin-bottom: 1rem;
-    }
-    .mh-hero .mh-subtitle {
-      font-size: 1.5rem;
-      margin-bottom: 2rem;
-      opacity: 0.9;
-    }
-    .mh-hero p {
-      font-size: 1.1rem;
-      max-width: 600px;
-      margin: 0 auto 2rem;
-      opacity: 0.9;
-    }
-    .mh-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-      margin: 2rem 0;
-    }
-    .mh-stat {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      padding: 1.5rem;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    .mh-stat-number {
-      display: block;
-      font-size: 2.5rem;
-      font-weight: 900;
-      font-family: 'Playfair Display', serif;
-      color: var(--mh-white);
-    }
-    .mh-stat-label {
-      font-size: 0.9rem;
-      opacity: 0.8;
-      margin-top: 0.5rem;
-    }
-
-    /* NAVIGATION */
-    .mh-navigation {
-      background: white;
-      padding: 1.5rem 0;
-      box-shadow: var(--mh-shadow);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .mh-nav-tabs {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 1rem;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .mh-tab-btn {
-      padding: 0.8rem 1rem;
-      background: var(--mh-gray-50);
-      border: 2px solid var(--mh-gray-200);
-      border-radius: 12px;
-      font-weight: 600;
-      color: var(--mh-gray-800);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: center;
-    }
-    .mh-tab-btn:hover, .mh-tab-btn.active {
-      background: var(--mh-red);
-      color: white;
-      border-color: var(--mh-red);
-      transform: translateY(-2px);
-    }
-
-    /* SECTIONS */
-    .mh-section { padding: 3rem 0; display: none; }
-    .mh-section.active { display: block; }
-    .mh-section-header { text-align: center; margin-bottom: 2rem; }
-    .mh-section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      color: var(--mh-red);
-      margin-bottom: 1rem;
-    }
-    .mh-section-divider {
-      width: 80px;
-      height: 4px;
-      background: var(--mh-red);
-      margin: 0 auto;
-      border-radius: 2px;
-    }
-
-    /* GRIDS */
-    .mh-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
-    .mh-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-    .mh-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
-
-    /* CARDS */
-    .mh-card {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 16px;
-      box-shadow: var(--mh-shadow);
-      border: 1px solid var(--mh-gray-200);
-      transition: all 0.3s ease;
-    }
-    .mh-card:hover { transform: translateY(-3px); }
-    .mh-card h3, .mh-card h4 {
-      color: var(--mh-red);
-      margin-bottom: 0.5rem;
-      font-family: 'Playfair Display', serif;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      .mh-grid-2, .mh-grid-3, .mh-grid-4 { grid-template-columns: 1fr; }
-      .mh-nav-tabs { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 480px) {
-      .mh-nav-tabs { grid-template-columns: 1fr; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matériaux Horlogers Suisses - HorloLearn</title>
+    <style>
+        /* STYLES ADAPTÉS POUR HORLOLEARN.CH */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            background: #f8f9fa;
+        }
+        
+        /* Conteneur principal compatible avec HorloLearn */
+        .hl-container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+        }
+        
+        /* Hero section avec style HorloLearn */
+        .hl-hero {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            border-radius: 20px;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hl-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>') repeat;
+            opacity: 0.3;
+        }
+        
+        .hl-hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .hl-hero .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hl-hero p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Statistiques avec style HorloLearn */
+        .hl-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hl-stat {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .hl-stat:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .hl-stat-number {
+            display: block;
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hl-stat-label {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        /* Navigation par onglets style HorloLearn */
+        .hl-nav-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 3rem 0;
+            gap: 1rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .hl-tab-btn {
+            padding: 12px 24px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #495057;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .hl-tab-btn:hover, .hl-tab-btn.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+        }
+        
+        /* Sections avec style HorloLearn */
+        .hl-section { 
+            display: none; 
+            padding: 3rem 0; 
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .hl-section.active { 
+            display: block; 
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hl-section-title {
+            font-size: 2.5rem;
+            color: #2563eb;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+        
+        .hl-section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: #2563eb;
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+        
+        /* Grilles style HorloLearn */
+        .hl-grid-2 { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 3rem; 
+            margin-bottom: 3rem; 
+        }
+        
+        .hl-grid-3 { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 2rem; 
+            margin-bottom: 2rem;
+        }
+        
+        .hl-grid-4 { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 1.5rem; 
+        }
+        
+        /* Cartes style HorloLearn */
+        .hl-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hl-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #2563eb, #1d4ed8);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .hl-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .hl-card:hover { 
+            transform: translateY(-8px) scale(1.02); 
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15); 
+        }
+        
+        .hl-card h3, .hl-card h4 {
+            color: #2563eb;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+        
+        .hl-card h5 {
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Listes style HorloLearn */
+        .hl-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .hl-list li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .hl-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #2563eb;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        /* Timeline style HorloLearn */
+        .hl-timeline-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #2563eb;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .hl-timeline-item:hover {
+            transform: translateX(5px);
+            box-shadow: -5px 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .hl-timeline-year {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 0.8rem;
+            position: relative;
+        }
+        
+        .hl-timeline-year::before {
+            content: '●';
+            position: absolute;
+            left: -1.5rem;
+            color: #2563eb;
+            font-size: 1.5rem;
+        }
+        
+        /* Tags style HorloLearn */
+        .hl-tag {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0.3rem 0.5rem 0.3rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .hl-tag:hover {
+            background: #1d4ed8;
+            transform: scale(1.05);
+        }
+        
+        /* Placeholders pour images style HorloLearn */
+        .hl-image-placeholder {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-weight: 600;
+            border: 2px dashed #dee2e6;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .hl-image-placeholder:hover {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+        
+        /* Responsive design compatible HorloLearn */
+        @media (max-width: 768px) {
+            .hl-grid-2 { grid-template-columns: 1fr; gap: 2rem; }
+            .hl-stats { grid-template-columns: 1fr; }
+            .hl-nav-tabs { flex-direction: column; align-items: center; }
+            .hl-hero h1 { font-size: 2.2rem; }
+            .hl-section-title { font-size: 2rem; }
+            .hl-card { padding: 1.5rem; }
+        }
+        
+        @media (max-width: 480px) {
+            .hl-hero { padding: 2rem 0; }
+            .hl-hero h1 { font-size: 1.8rem; }
+            .hl-stat-number { font-size: 2rem; }
+            .hl-tab-btn { padding: 10px 16px; font-size: 0.9rem; }
+        }
+        
+        /* Animation au scroll */
+        .hl-animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        
+        .hl-animate-on-scroll.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Boutons style HorloLearn */
+        .hl-btn {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .hl-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+    </style>
 </head>
-
 <body>
-  <section class="mh-hero">
-    <div class="mh-container">
-      <h1>Excellence et Innovation</h1>
-      <div class="mh-subtitle">dans les Matériaux Horlogers Suisses</div>
-      <p>
-        Analyse complète de l’évolution des matériaux horlogers suisses,
-        démontrant le leadership mondial en innovation et savoir-faire.
-      </p>
+    <div class="hl-container">
+        <!-- HERO SECTION HORLOLEARN -->
+        <section class="hl-hero">
+            <h1>🕰️ Matériaux Horlogers Suisses</h1>
+            <div class="subtitle">Excellence et Innovation</div>
+            <p>Analyse complète de l'écosystème des matériaux horlogers suisses, démontrant le leadership mondial en innovation et savoir-faire artisanal.</p>
+            
+            <div class="hl-stats">
+                <div class="hl-stat">
+                    <span class="hl-stat-number" data-target="50">0</span>
+                    <div class="hl-stat-label">% du marché mondial en valeur</div>
+                </div>
+                <div class="hl-stat">
+                    <span class="hl-stat-number" data-target="65">0</span>
+                    <div class="hl-stat-label">000 emplois en Suisse</div>
+                </div>
+                <div class="hl-stat">
+                    <span class="hl-stat-number" data-target="500">0</span>
+                    <div class="hl-stat-label">ans d'innovation continue</div>
+                </div>
+            </div>
+        </section>
 
-      <div class="mh-stats">
-        <div class="mh-stat">
-          <span class="mh-stat-number">50</span>
-          <span class="mh-stat-label">% du marché mondial en valeur</span>
+        <!-- NAVIGATION HORLOLEARN -->
+        <div class="hl-nav-tabs">
+            <button class="hl-tab-btn active" data-tab="histoire">📚 Histoire</button>
+            <button class="hl-tab-btn" data-tab="materiaux">🔧 Matériaux</button>
+            <button class="hl-tab-btn" data-tab="entreprises">✅ Entreprises</button>
+            <button class="hl-tab-btn" data-tab="formation">🎓 Formation</button>
+            <button class="hl-tab-btn" data-tab="innovation">🚀 Innovation</button>
         </div>
-        <div class="mh-stat">
-          <span class="mh-stat-number">65</span>
-          <span class="mh-stat-label">000 emplois en Suisse</span>
-        </div>
-        <div class="mh-stat">
-          <span class="mh-stat-number">500</span>
-          <span class="mh-stat-label">ans d’innovation continue</span>
-        </div>
-      </div>
+
+        <!-- SECTION HISTOIRE HORLOLEARN -->
+        <section id="histoire" class="hl-section active">
+            <h2 class="hl-section-title">Histoire et Évolution</h2>
+            
+            <div class="hl-grid-2">
+                <div>
+                    <div class="hl-image-placeholder">
+                        📈 Chronologie Historique<br>
+                        <small>(À remplacer par chronologie_historique.png)</small>
+                    </div>
+                </div>
+                <div>
+                    <div class="hl-timeline-item">
+                        <div class="hl-timeline-year">XVIe-XVIIe Siècles</div>
+                        <h4>Origines de l'Orfèvrerie Genevoise</h4>
+                        <p>Naissance de l'horlogerie suisse à Genève. Reconversion des orfèvres vers l'horlogerie en or et argent, établissant les bases de l'excellence suisse.</p>
+                    </div>
+                    <div class="hl-timeline-item">
+                        <div class="hl-timeline-year">XVIIIe-XIXe Siècles</div>
+                        <h4>L'Âge de la Précision</h4>
+                        <p>Révolutions scientifiques : <strong>Invar (1896)</strong> et <strong>Elinvar (1912)</strong> par Charles-Édouard Guillaume, révolutionnant la précision horlogère.</p>
+                    </div>
+                    <div class="hl-timeline-item">
+                        <div class="hl-timeline-year">XXe Siècle</div>
+                        <h4>Industrialisation et Standards</h4>
+                        <p>Standardisation : <strong>Acier 316L</strong>, <strong>Glucydur</strong> et <strong>Nivarox</strong> - Fondation des standards modernes de l'horlogerie.</p>
+                    </div>
+                    <div class="hl-timeline-item">
+                        <div class="hl-timeline-year">XXIe Siècle</div>
+                        <h4>Ère High-Tech</h4>
+                        <p>Super-alliages modernes : <strong>silicium</strong>, <strong>céramique avancée</strong>, <strong>titane Grade 5</strong>, <strong>carbone forgé</strong>.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hl-card hl-animate-on-scroll">
+                <h3>Dates Clés de l'Innovation</h3>
+                <div class="hl-grid-3">
+                    <div>
+                        <h4>1530</h4>
+                        <p>Premier atelier horloger à Genève</p>
+                    </div>
+                    <div>
+                        <h4>1896</h4>
+                        <p>Invention de l'Invar (Guillaume)</p>
+                    </div>
+                    <div>
+                        <h4>2006</h4>
+                        <p>Spiral Spiromax® en Silinvar®</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION MATERIAUX HORLOLEARN -->
+        <section id="materiaux" class="hl-section">
+            <h2 class="hl-section-title">Matériaux Horlogers</h2>
+            
+            <div class="hl-grid-2">
+                <div>
+                    <div class="hl-image-placeholder">
+                        📊 Dashboard des Matériaux<br>
+                        <small>(À remplacer par materials_dashboard.png)</small>
+                    </div>
+                </div>
+                <div>
+                    <h3>Matériaux Traditionnels d'Excellence</h3>
+                    <div class="hl-card">
+                        <h4>Or 18 Carats</h4>
+                        <ul class="hl-list">
+                            <li>75% or pur + 25% alliages précisément dosés</li>
+                            <li>Variations : Jaune, Rose, Blanc, Everose</li>
+                            <li>Manipulation artisanale traditionnelle</li>
+                            <li>Valeur patrimoniale et symbolique</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="hl-card">
+                        <h4>Platine 950</h4>
+                        <ul class="hl-list">
+                            <li>95% platine pur (standard horloger)</li>
+                            <li>Densité exceptionnelle : 21,45 g/cm³</li>
+                            <li>Résistance à l'usure supérieure</li>
+                            <li>Hypoallergénique et durable</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Alliages de Précision Révolutionnaires</h3>
+            <div class="hl-grid-3">
+                <div class="hl-card">
+                    <h4>Nivarox</h4>
+                    <p>Alliage fer-nickel-chrome développé en 1930 pour spiraux. Thermo-élasticité quasi nulle, garantissant une précision exceptionnelle.</p>
+                    <span class="hl-tag">Spiraux</span>
+                    <span class="hl-tag">Précision</span>
+                </div>
+                <div class="hl-card">
+                    <h4>Glucydur</h4>
+                    <p>Cuivre-béryllium pour balanciers. Dureté et résistance aux chocs exceptionnelles, révolutionnant la stabilité.</p>
+                    <span class="hl-tag">Balanciers</span>
+                    <span class="hl-tag">Stabilité</span>
+                </div>
+                <div class="hl-card">
+                    <h4>Invar/Elinvar</h4>
+                    <p>Fer-nickel (64/36%) avec dilatation thermique minimale. Base de la précision chronométrique moderne.</p>
+                    <span class="hl-tag">Thermo</span>
+                    <span class="hl-tag">Stabilité</span>
+                </div>
+            </div>
+            
+            <div class="hl-grid-2">
+                <div>
+                    <div class="hl-image-placeholder">
+                        ⚡ Matériaux High-Tech<br>
+                        <small>(À remplacer par materiaux_hightech_horlogerie.png)</small>
+                    </div>
+                </div>
+                <div>
+                    <h3>Matériaux High-Tech du Futur</h3>
+                    <div class="hl-grid-4">
+                        <div class="hl-card">
+                            <h4>Céramique</h4>
+                            <p>Dureté extrême (2000 HV), inrayable, couleurs durables.</p>
+                            <span class="hl-tag">Innovation</span>
+                        </div>
+                        <div class="hl-card">
+                            <h4>Titane Grade 5</h4>
+                            <p>40% plus léger que l'acier, résistance supérieure à la corrosion.</p>
+                            <span class="hl-tag">Légèreté</span>
+                        </div>
+                        <div class="hl-card">
+                            <h4>Silicium</h4>
+                            <p>Amagnétique, précision micron, sans lubrification.</p>
+                            <span class="hl-tag">Futur</span>
+                        </div>
+                        <div class="hl-card">
+                            <h4>Carbone</h4>
+                            <p>Légèreté extrême, rigidité Carbon TPT®.</p>
+                            <span class="hl-tag">Performance</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION ENTREPRISES HORLOLEARN -->
+        <section id="entreprises" class="hl-section">
+            <h2 class="hl-section-title">Entreprises Leaders</h2>
+            
+            <div class="hl-grid-2">
+                <div>
+                    <div class="hl-image-placeholder">
+                        🏢 Entreprises Leaders<br>
+                        <small>(À remplacer par entreprises_horlogeres_leaders.png)</small>
+                    </div>
+                </div>
+                <div>
+                    <div class="hl-image-placeholder">
+                        🗺️ Districts Horlogers<br>
+                        <small>(À remplacer par districts_horlogers_suisse.png)</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hl-grid-4">
+                <div class="hl-card">
+                    <h4>Patek Philippe</h4>
+                    <h5>Advanced Research Division</h5>
+                    <ul class="hl-list">
+                        <li>Spiral Spiromax® en Silinvar® (2006)</li>
+                        <li>Oscillomax® : organe réglant complet</li>
+                        <li>Partenariat stratégique CSEM</li>
+                        <li>Recherche fondamentale en matériaux</li>
+                    </ul>
+                    <span class="hl-tag">Innovation</span>
+                    <span class="hl-tag">Recherche</span>
+                </div>
+                
+                <div class="hl-card">
+                    <h4>Rolex</h4>
+                    <h5>Ingénierie Matériaux Exclusive</h5>
+                    <ul class="hl-list">
+                        <li>Céramique Cerachrom inaltérable</li>
+                        <li>Acier Oystersteel 904L exclusif</li>
+                        <li>Or Everose patenté inaltérable</li>
+                        <li>Tests de résistance extrêmes</li>
+                    </ul>
+                    <span class="hl-tag">Matériaux</span>
+                    <span class="hl-tag">Exclusif</span>
+                </div>
+                
+                <div class="hl-card">
+                    <h4>Audemars Piguet</h4>
+                    <h5>Audace Matériaux</h5>
+                    <ul class="hl-list">
+                        <li>Carbone forgé pionnier (2007)</li>
+                        <li>Céramique couleur développée</li>
+                        <li>Chroma Forged Technology</li>
+                        <li>Design matériaux révolutionnaire</li>
+                    </ul>
+                    <span class="hl-tag">Design</span>
+                    <span class="hl-tag">Audace</span>
+                </div>
+                
+                <div class="hl-card">
+                    <h4>OMEGA</h4>
+                    <h5>Anti-Magnétisme Avancé</h5>
+                    <ul class="hl-list">
+                        <li>Master Chronometer certification</li>
+                        <li>Résistance 15 000 gauss</li>
+                        <li>Spiral Si14 en silicium</li>
+                        <li>Standards de l'industrie</li>
+                    </ul>
+                    <span class="hl-tag">Swatch</span>
+                    <span class="hl-tag">Certification</span>
+                </div>
+            </div>
+            
+            <div class="hl-card hl-animate-on-scroll">
+                <h3>Districts Horlogers Suisses</h3>
+                <div class="hl-grid-4">
+                    <div>
+                        <h4>Vallée de Joux</h4>
+                        <p>Épicentre haute horlogerie, complications.</p>
+                        <span class="hl-tag">Haute Horlogerie</span>
+                    </div>
+                    <div>
+                        <h4>Genève</h4>
+                        <p>Marques prestiges, sophistication.</p>
+                        <span class="hl-tag">Prestige</span>
+                    </div>
+                    <div>
+                        <h4>Neuchâtel</h4>
+                        <p>Innovation et R&D, technologies.</p>
+                        <span class="hl-tag">Innovation</span>
+                    </div>
+                    <div>
+                        <h4>Bienne</h4>
+                        <p>Production industrielle, volumes.</p>
+                        <span class="hl-tag">Production</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION FORMATION HORLOLEARN -->
+        <section id="formation" class="hl-section">
+            <h2 class="hl-section-title">Formation et Transmission</h2>
+            
+            <div class="hl-grid-2">
+                <div>
+                    <div class="hl-image-placeholder">
+                        🎓 Formation Horlogère<br>
+                        <small>(À remplacer par formation_horlogere_suisse.png)</small>
+                    </div>
+                </div>
+                <div>
+                    <div class="hl-image-placeholder">
+                        ⚒️ Atelier Artisanal<br>
+                        <small>(À remplacer par atelier_artisanal_traditionnel.png)</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hl-grid-4">
+                <div class="hl-card">
+                    <h4>CFPT Genève</h4>
+                    <p>Ancienne école horlogère, formation des élites du secteur.</p>
+                    <span class="hl-tag">Horlogerie</span>
+                    <span class="hl-tag">Tradition</span>
+                </div>
+                
+                <div class="hl-card">
+                    <h4>ETVJ Vallée de Joux</h4>
+                    <p>Spécialisée haute horlogerie et complications extrêmes.</p>
+                    <span class="hl-tag">Complications</span>
+                    <span class="hl-tag">Excellence</span>
+                </div>
+                
+                <div class="hl-card">
+                    <h4>CPNE Locle</h4>
+                    <p>Pôle formation dual cœur industriel et artisanal.</p>
+                    <span class="hl-tag">Industrie</span>
+                    <span class="hl-tag">Dual</span>
+                </div>
+                
+                <div class="hl-card">
+                    <h4>WOSTEP</h4>
+                    <p>Formation mondiale et standards internationaux.</p>
+                    <span class="hl-tag">International</span>
+                    <span class="hl-tag">Standards</span>
+                </div>
+            </div>
+            
+            <div class="hl-card hl-animate-on-scroll">
+                <h3>Parcours de Formation Structuré</h3>
+                <div class="hl-grid-3">
+                    <div>
+                        <h4>1. CFC Horloger</h4>
+                        <p><strong>Certificat Fédéral de Capacité</strong><br>
+                        Durée : 4 ans d'apprentissage<br>
+                        75% pratique, 25% théorie</p>
+                        <span class="hl-tag">Fondamental</span>
+                    </div>
+                    <div>
+                        <h4>2. Brevet Fédéral</h4>
+                        <p><strong>Responsable d'Atelier</strong><br>
+                        Fonctions management et technique<br>
+                        Spécialisation avancée</p>
+                        <span class="hl-tag">Management</span>
+                    </div>
+                    <div>
+                        <h4>3. Formations Continues</h4>
+                        <p><strong>Spécialisations WOSTEP</strong><br>
+                        Nouvelles technologies et matériaux<br>
+                        Mise à jour permanente</p>
+                        <span class="hl-tag">Innovation</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION INNOVATION HORLOLEARN -->
+        <section id="innovation" class="hl-section">
+            <h2 class="hl-section-title">Innovation et Vision d'Avenir</h2>
+            
+            <div class="hl-grid-2">
+                <div>
+                    <div class="hl-image-placeholder">
+                        🚀 Innovation Futur<br>
+                        <small>(À remplacer par innovation_horlogerie_futur.png)</small>
+                    </div>
+                </div>
+                <div>
+                    <h3>Tendances Révolutionnaires</h3>
+                    <div class="hl-card">
+                        <h4>Durabilité et Économie Circulaire</h4>
+                        <ul class="hl-list">
+                            <li>Matériaux recyclés (acier Lucent 80% recycled)</li>
+                            <li>Or éthique certifié Fairmined (extraction responsable)</li>
+                            <li>Bâtiments de production Minergie certifiés</li>
+                            <li>Programme "Watch & Jewellery 2030"</li>
+                        </ul>
+                        <span class="hl-tag">Écologie</span>
+                    </div>
+                    <div class="hl-card">
+                        <h4>Digitalisation 4.0</h4>
+                        <ul class="hl-list">
+                            <li>Robots collaboratifs (cobots) en production</li>
+                            <li>Intelligence Artificielle pour contrôle qualité</li>
+                            <li>Passeport numérique blockchain par montre</li>
+                            <li>Jumeaux numériques pour optimisation</li>
+                        </ul>
+                        <span class="hl-tag">Digital</span>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Matériaux Intelligents et Futurs</h3>
+            <div class="hl-grid-3">
+                <div class="hl-card">
+                    <h4>Alliages à Mémoire de Forme</h4>
+                    <p>Matériaux qui retrouvent leur forme initiale après déformation thermique, ouvrant de nouvelles possibilités de design.</p>
+                    <span class="hl-tag">Smart Materials</span>
+                </div>
+                <div class="hl-card">
+                    <h4>Fabrication Additive</h4>
+                    <p>Impression 3D métallique : géométries impossibles, structures optimisées, pièces uniques personnalisées.</p>
+                    <span class="hl-tag">3D Printing</span>
+                </div>
+                <div class="hl-card">
+                    <h4>Miniaturisation Énergétique</h4>
+                    <p>Récupération d'énergie cinétique et batteries solides à haute densité pour montres intelligentes.</p>
+                    <span class="hl-tag">Énergie</span>
+                </div>
+            </div>
+            
+            <div class="hl-card hl-animate-on-scroll">
+                <h3>Positionnement Mondial de l'Excellence</h3>
+                <div class="hl-grid-3">
+                    <div>
+                        <h4>Suisse</h4>
+                        <p><strong>50%</strong> du marché mondial en valeur<br>
+                        <strong>2%</strong> du volume mondial<br>
+                        Prix moyen : <strong>1200$</strong></p>
+                        <p>Leadership reconnu en innovation et prestige.</p>
+                        <span class="hl-tag">Leader Mondial</span>
+                    </div>
+                    <div>
+                        <h4>Allemagne</h4>
+                        <p>Rigueur technique et innovation.<br>
+                        Style Glashütte Distinctif.<br>
+                        Focus sur l'ingénierie précision.</p>
+                        <span class="hl-tag">Technique</span>
+                    </div>
+                    <div>
+                        <h4>Japon</h4>
+                        <p>Innovation quartz historique.<br>
+                        Technologies hybrides mécaniques-quartz.<br>
+                        Excellence Grand Seiko.</p>
+                        <span class="hl-tag">Hybride</span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-  </section>
 
-  <nav class="mh-navigation">
-    <div class="mh-nav-tabs">
-      <button class="mh-tab-btn active" onclick="showTab(0)">Métaux</button>
-      <button class="mh-tab-btn" onclick="showTab(1)">Alliages</button>
-      <button class="mh-tab-btn" onclick="showTab(2)">Précision</button>
-      <button class="mh-tab-btn" onclick="showTab(3)">Innovation</button>
-      <button class="mh-tab-btn" onclick="showTab(4)">Durabilité</button>
-    </div>
-  </nav>
-
-  <section class="mh-section active">
-    <div class="mh-container">
-      <div class="mh-section-header">
-        <h2 class="mh-section-title">Innovation et Vision d’Avenir</h2>
-        <div class="mh-section-divider"></div>
-      </div>
-
-      <div class="mh-grid-2">
-        <img src="https://idchufzbxxy7.space.minimax.io/assets/images/innovation_lab.jpg" alt="Innovation" class="mh-image" />
-
-        <div>
-          <h3>Tendances Futures</h3>
-          <ul class="mh-list">
-            <li>Matériaux recyclés (acier Lucent 50%)</li>
-            <li>Or éthique certifié Fairmined</li>
-            <li>Silicium & céramique avancée</li>
-            <li>Robots collaboratifs (cobots)</li>
-            <li>Impression 3D de composants</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="mh-grid-3">
-        <div class="mh-card">
-          <h4>Alliages Intelligents</h4>
-          <p>Formes stables après déformation thermique.</p>
-        </div>
-        <div class="mh-card">
-          <h4>Fabrication Maîtrisée</h4>
-          <p>Impression 3D – géométries impossibles.</p>
-        </div>
-        <div class="mh-card">
-          <h4>Vision Solaire</h4>
-          <p>Récupération d’énergie et batteries solides.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <script>
-    const sections = document.querySelectorAll('.mh-section');
-    const buttons = document.querySelectorAll('.mh-tab-btn');
-    function showTab(index) {
-      sections.forEach((s, i) => {
-        s.classList.toggle('active', i === index);
-        buttons[i].classList.toggle('active', i === index);
-      });
-    }
-  </script>
+    <script>
+        // JavaScript identique mais avec préfixe hl- au lieu de mh-
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeNavigation();
+            initializeAnimations();
+            initializeCounters();
+            initializeScrollReveal();
+        });
+        
+        function initializeNavigation() {
+            const tabButtons = document.querySelectorAll('.hl-tab-btn');
+            const sections = document.querySelectorAll('.hl-section');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetTab = button.getAttribute('data-tab');
+                    
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    sections.forEach(section => section.classList.remove('active'));
+                    
+                    button.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+                    
+                    const activeSection = document.getElementById(targetTab);
+                    activeSection.style.opacity = '0';
+                    activeSection.style.transform = 'translateY(20px)';
+                    
+                    setTimeout(() => {
+                        activeSection.style.opacity = '1';
+                        activeSection.style.transform = 'translateY(0)';
+                    }, 50);
+                    
+                    window.scrollTo({ 
+                        top: 0, 
+                        behavior: 'smooth' 
+                    });
+                });
+            });
+        }
+        
+        function initializeCounters() {
+            const counters = document.querySelectorAll('.hl-stat-number[data-target]');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            counters.forEach(counter => {
+                observer.observe(counter);
+            });
+        }
+        
+        function animateCounter(element) {
+            const target = parseInt(element.getAttribute('data-target'));
+            const duration = 2000;
+            const increment = target / (duration / 16);
+            let current = 0;
+            
+            const updateCounter = () => {
+                current += increment;
+                if (current < target) {
+                    element.textContent = Math.floor(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    element.textContent = target.toLocaleString();
+                }
+            };
+            
+            element.style.opacity = '0';
+            element.style.transform = 'scale(0.5)';
+            
+            setTimeout(() => {
+                element.style.opacity = '1';
+                element.style.transform = 'scale(1)';
+                updateCounter();
+            }, 300);
+        }
+        
+        function initializeScrollReveal() {
+            const revealElements = document.querySelectorAll('.hl-animate-on-scroll');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, { 
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+            
+            revealElements.forEach(element => {
+                observer.observe(element);
+            });
+        }
+        
+        function initializeAnimations() {
+            const cards = document.querySelectorAll('.hl-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('hl-animate-on-scroll');
+            });
+        }
+        
+        console.log('🕰️ HorloLearn - Matériaux Horlogers Suisses Chargé !');
+    </script>
 </body>
 </html>
