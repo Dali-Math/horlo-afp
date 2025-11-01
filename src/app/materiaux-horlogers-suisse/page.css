@@ -1945,3 +1945,159 @@ text-shadow: none !important;
   min-width: 2ch;
   text-align: center;
 }
+
+/* === HorloLearn Patch : Page "Matériaux Horlogers Suisses" === */
+/* Objectif : restaurer le design original (fond bordeaux, texte clair, contraste or/blanc) */
+
+/* 1. Isolation du style */
+body.page-materiaux,
+body.page-materiaux * {
+  all: revert;
+  box-sizing: border-box;
+}
+
+/* 2. Couleurs et typographie principales */
+body.page-materiaux {
+  background: linear-gradient(135deg, #4A0E19 0%, #25060C 100%) !important;
+  color: #F8F8F8 !important;
+  font-family: 'Inter', 'Playfair Display', sans-serif !important;
+  line-height: 1.6;
+  overflow-x: hidden !important;
+}
+
+/* 3. Textes et titres */
+body.page-materiaux h1,
+body.page-materiaux h2,
+body.page-materiaux h3,
+body.page-materiaux h4,
+body.page-materiaux h5,
+body.page-materiaux h6,
+body.page-materiaux p,
+body.page-materiaux span,
+body.page-materiaux li,
+body.page-materiaux a {
+  color: #FFFFFF !important;
+}
+
+/* 4. Fond des sections */
+body.page-materiaux .hero,
+body.page-materiaux .materials-section,
+body.page-materiaux .innovation-section,
+body.page-materiaux .ecosystem-section,
+body.page-materiaux .formation-section,
+body.page-materiaux .companies-section,
+body.page-materiaux .future-section,
+body.page-materiaux .global-section,
+body.page-materiaux .contact-section {
+  background: transparent !important;
+  color: #FFFFFF !important;
+}
+
+/* 5. Navbar */
+body.page-materiaux .navbar {
+  background: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+body.page-materiaux .nav-link {
+  color: #F5F5F5 !important;
+}
+body.page-materiaux .nav-link:hover {
+  color: #FFD700 !important;
+}
+
+/* 6. Cartes et blocs */
+body.page-materiaux .material-card,
+body.page-materiaux .innovation-card,
+body.page-materiaux .highlight-box,
+body.page-materiaux .districts-details,
+body.page-materiaux .career-path,
+body.page-materiaux .company-card,
+body.page-materiaux .trend-card,
+body.page-materiaux .feature {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #FFF !important;
+}
+
+/* 7. Boutons */
+body.page-materiaux .btn-primary {
+  background: linear-gradient(135deg, #DC143C, #9C102A) !important;
+  color: white !important;
+  border: none !important;
+}
+body.page-materiaux .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
+}
+body.page-materiaux .btn-secondary {
+  border: 2px solid #FFD700 !important;
+  color: #FFD700 !important;
+  background: transparent !important;
+}
+body.page-materiaux .btn-secondary:hover {
+  background: #FFD700 !important;
+  color: #000 !important;
+}
+
+/* 8. Titres dorés */
+body.page-materiaux .section-title,
+body.page-materiaux .material-card h3,
+body.page-materiaux .innovation-card h3 {
+  color: #FFD700 !important;
+}
+
+/* 9. Footer */
+body.page-materiaux .footer {
+  background: rgba(0, 0, 0, 0.9) !important;
+  color: #EEE !important;
+}
+body.page-materiaux .footer a {
+  color: #FFD700 !important;
+}
+
+/* 10. Suppression du fond blanc hérité du site global */
+body.page-materiaux [class*="bg-white"],
+body.page-materiaux [class*="bg-gray"],
+body.page-materiaux.bg-white {
+  background: transparent !important;
+}
+
+/* 11. Ajustement du z-index */
+body.page-materiaux .hero-content {
+  position: relative;
+  z-index: 2;
+}
+body.page-materiaux .hero-background {
+  z-index: 1;
+}
+
+/* 12. Images et boutons */
+body.page-materiaux img {
+  max-width: 100%;
+  height: auto;
+}
+body.page-materiaux .btn,
+body.page-materiaux button {
+  cursor: pointer;
+}
+
+/* === Correction visibilité du texte dans les boîtes blanches === */
+body.page-materiaux .highlight-box {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+body.page-materiaux .highlight-box h3,
+body.page-materiaux .highlight-box li,
+body.page-materiaux .highlight-box p {
+  color: #fff !important;
+  font-weight: 500 !important;
+}
+
+body.page-materiaux .highlight-list li::before {
+  color: #FFD700 !important;
+  font-weight: bold !important;
+}
