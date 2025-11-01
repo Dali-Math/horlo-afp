@@ -1,1497 +1,1878 @@
-'use client';
+/* ===== RESET & BASE STYLES ===== */
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
 
-import React, { useEffect, useState } from 'react';
-import './page.css';
+html {
+scroll-behavior: smooth;
+font-size: 16px;
+}
 
-export default function SwissWatchMaterialsPage() {
-  const [activeTimeline, setActiveTimeline] = useState('16th');
-  const [activeMaterial, setActiveMaterial] = useState('precious');
-  const [activeDistrict, setActiveDistrict] = useState('geneve');
-  const [activeTrend, setActiveTrend] = useState('environment');
-  const [scrolled, setScrolled] = useState(false);
+body {
+font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+line-height: 1.6;
+color: #2c3e50;
+background-color: #ffffff;
+overflow-x: hidden;
+}
 
-  useEffect(() => {
-    // Navbar scroll effect
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+/* ===== CSS VARIABLES ===== */
+:root {
+--swiss-red: #DC143C;
+--swiss-white: #FFFFFF;
+--swiss-black: #000000;
+--gray-50: #f9fafb;
+--gray-100: #f3f4f6;
+--gray-200: #e5e7eb;
+--gray-300: #d1d5db;
+--gray-400: #9ca3af;
+--gray-500: #6b7280;
+--gray-600: #4b5563;
+--gray-700: #374151;
+--gray-800: #1f2937;
+--gray-900: #111827;
 
-    // Counter animation
-    const animateCounters = () => {
-      const counters = document.querySelectorAll('[data-target]');
-      counters.forEach((counter) => {
-        const target = parseInt(counter.getAttribute('data-target') || '0');
-        const duration = 2000;
-        const step = target / (duration / 16);
-        let current = 0;
+--gold: #FFD700;
+--platinum: #E5E4E2;
+--silver: #C0C0C0;
+--steel: #7f8c8d;
+--titanium: #b8b8b8;
 
-        const timer = setInterval(() => {
-          current += step;
-          if (current >= target) {
-            counter.textContent = target.toString();
-            clearInterval(timer);
-          } else {
-            counter.textContent = Math.floor(current).toString();
-          }
-        }, 16);
-      });
-    };
+--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+--shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+--shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+--shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
-    // Scroll reveal
-    const revealElements = () => {
-      const reveals = document.querySelectorAll('.scroll-reveal');
-      reveals.forEach((element) => {
-        const elementTop = element.getBoundingClientRect().top;
-        const windowHeight = window.innerHeight;
-        if (elementTop < windowHeight - 100) {
-          element.classList.add('revealed');
-        }
-      });
-    };
+--transition-fast: 0.15s ease-out;
+--transition-base: 0.3s ease-out;
+--transition-slow: 0.5s ease-out;
+}
 
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('scroll', revealElements);
-    
-    // Initialize animations
-    setTimeout(animateCounters, 500);
-    revealElements();
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h3, h4, h5, h6 {
+font-family: 'Playfair Display', serif;
+font-weight: 700;
+line-height: 1.2;
+margin-bottom: 1rem;
+}
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('scroll', revealElements);
-    };
-  }, []);
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
+h3 { font-size: clamp(1.25rem, 3vw, 1.875rem); }
+h4 { font-size: clamp(1.125rem, 2.5vw, 1.5rem); }
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+p {
+margin-bottom: 1rem;
+font-size: 1.1rem;
+line-height: 1.7;
+}
 
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    alert('Merci pour votre inscription !');
-  };
+.lead {
+font-size: 1.25rem;
+font-weight: 500;
+color: var(--gray-700);
+}
 
-  return (
-    <div>
-      {/* Navigation fixe */}
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} id="navbar">
-        <div className="nav-container">
-          <div className="nav-logo">
-            <span className="swiss-cross">✚</span>
-            <span className="nav-title">Swiss Watch Materials</span>
-          </div>
-          <div className="nav-menu" id="nav-menu">
-            <a href="#hero" className="nav-link">Accueil</a>
-            <a href="#history" className="nav-link">Histoire</a>
-            <a href="#materials" className="nav-link">Matériaux</a>
-            <a href="#ecosystem" className="nav-link">Écosystème</a>
-            <a href="#innovation" className="nav-link">Innovation</a>
-            <a href="#future" className="nav-link">Avenir</a>
-            <a href="#contact" className="nav-link">Contact</a>
-          </div>
-          <div className="nav-toggle" id="nav-toggle">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-      </nav>
+/* ===== LAYOUT UTILITIES ===== */
+.container {
+max-width: 1400px;
+margin: 0 auto;
+padding: 0 2rem;
+}
 
-      {/* Hero Section */}
-      <section id="hero" className="hero">
-        <div className="hero-background">
-          <div className="hero-overlay"></div>
-        </div>
-        <div className="hero-content">
-          <div className="hero-badge">
-            <span className="badge-text">Rapport de Référence Mondial</span>
-          </div>
-          <h1 className="hero-title">
-            <span className="title-main">Excellence et Innovation</span>
-            <span className="title-sub">dans les Matériaux Horlogers Suisses</span>
-          </h1>
-          <p className="hero-description">
-            Une analyse complète de l&apos;écosystème des matériaux horlogers suisses, 
-            démontrant pourquoi la Suisse demeure le leader mondial incontesté 
-            en matière d&apos;innovation, de qualité et de savoir-faire.
-          </p>
-          <div className="hero-stats">
-            <div className="stat-item">
-              <span className="stat-number" data-target="50">0</span>
-              <span className="stat-label">% du marché mondial en valeur</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number" data-target="65">0</span>
-              <span className="stat-label">000 emplois en Suisse</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number" data-target="500">0</span>
-              <span className="stat-label">ans d&apos;innovation continue</span>
-            </div>
-          </div>
-          <div className="hero-actions">
-            <button className="btn btn-primary" onClick={() => scrollToSection('materials')}>
-              <span>Découvrir les Matériaux</span>
-              <svg className="btn-icon" viewBox="0 0 24 24">
-                <path d="M9 18l6-6-6-6"/>
-              </svg>
-            </button>
-            <button className="btn btn-secondary" onClick={() => scrollToSection('history')}>
-              Voir la Timeline
-            </button>
-          </div>
-        </div>
-        <div className="scroll-indicator">
-          <div className="scroll-arrow"></div>
-        </div>
-      </section>
+.section-header {
+text-align: center;
+margin-bottom: 4rem;
+}
 
-      {/* Executive Summary */}
-      <section className="executive-summary">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Executive Summary</h2>
-            <div className="section-divider"></div>
-          </div>
-          <div className="summary-content">
-            <div className="summary-text">
-              <p className="lead">
-                Ce rapport offre une analyse complète et approfondie de l&apos;écosystème des matériaux horlogers suisses, 
-                démontrant pourquoi la Suisse demeure le leader mondial incontesté en matière d&apos;innovation, 
-                de qualité et de savoir-faire.
-              </p>
-              <p>
-                De l&apos;or 18 carats et des aciers spéciaux comme le 316L, qui ont défini les standards de l&apos;industrie, 
-                aux super-alliages modernes tels que le Ceratanium, le silicium et les composites en carbone, 
-                la Suisse a continuellement repoussé les limites de la science des matériaux.
-              </p>
-              <div className="highlight-box">
-                <h3>Points Clés</h3>
-                <ul className="highlight-list">
-                  <li>Maîtrise inégalée des matériaux de l&apos;or au silicium</li>
-                  <li>Écosystème industriel unique au monde</li>
-                  <li>Formation de renommée mondiale (ETVJ, WOSTEP)</li>
-                  <li>Innovation continue et R&D de pointe</li>
-                  <li>Leadership face à la concurrence internationale</li>
-                </ul>
-              </div>
-            </div>
-            <div className="summary-visual">
-              <img src="assets/images/materials_dashboard.png" alt="Dashboard des Matériaux" className="summary-image"/>
-            </div>
-          </div>
-        </div>
-      </section>
+.section-title {
+color: var(--swiss-red);
+margin-bottom: 1rem;
+}
 
-      {/* Timeline Historique */}
-      <section id="history" className="timeline-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Chronologie Historique</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              L&apos;évolution des matériaux horlogers du XVIe siècle à aujourd&apos;hui
-            </p>
-          </div>
-          
-          <div className="timeline-container">
-            <div className="timeline-visual">
-              <img src="assets/images/chronologie_historique.png" alt="Chronologie des Matériaux" className="timeline-image"/>
-            </div>
-            
-            <div className="timeline-details">
-              <div className="timeline-tabs">
-                <button 
-                  className={`tab-btn ${activeTimeline === '16th' ? 'active' : ''}`}
-                  onClick={() => setActiveTimeline('16th')}
-                >
-                  XVIe-XVIIe
-                </button>
-                <button 
-                  className={`tab-btn ${activeTimeline === '18th' ? 'active' : ''}`}
-                  onClick={() => setActiveTimeline('18th')}
-                >
-                  XVIIIe-XIXe
-                </button>
-                <button 
-                  className={`tab-btn ${activeTimeline === '20th' ? 'active' : ''}`}
-                  onClick={() => setActiveTimeline('20th')}
-                >
-                  XXe siècle
-                </button>
-                <button 
-                  className={`tab-btn ${activeTimeline === '21st' ? 'active' : ''}`}
-                  onClick={() => setActiveTimeline('21st')}
-                >
-                  XXIe siècle
-                </button>
-              </div>
-              
-              <div className="timeline-content">
-                <div className={`timeline-item ${activeTimeline === '16th' ? 'active' : ''}`}>
-                  <h3>Les Origines : Orfèvrerie et Métaux Précieux</h3>
-                  <p>L&apos;horlogerie suisse naît à Genève au XVIe siècle. L&apos;interdiction du port d&apos;objets ornementaux par Jean Calvin contraint les orfèvres à se reconvertir. Les premiers garde-temps sont naturellement fabriqués en or et argent.</p>
-                  <div className="timeline-materials">
-                    <span className="material-tag">Or 18 carats</span>
-                    <span className="material-tag">Argent sterling</span>
-                    <span className="material-tag">Platine</span>
-                  </div>
-                </div>
-                
-                <div className={`timeline-item ${activeTimeline === '18th' ? 'active' : ''}`}>
-                  <h3>L&apos;Âge de la Précision : Laiton, Acier et Alliages</h3>
-                  <p>Le XVIIIe siècle marque l&apos;avènement de l&apos;horlogerie de précision. Invention révolutionnaire des alliages par Charles-Édouard Guillaume (prix Nobel 1920) :</p>
-                  <ul>
-                    <li><strong>Invar (1896)</strong> : Coefficient de dilatation thermique faible</li>
-                    <li><strong>Elinvar (1912)</strong> : Module d&apos;élasticité constant</li>
-                  </ul>
-                  <div className="timeline-materials">
-                    <span className="material-tag">Invar</span>
-                    <span className="material-tag">Elinvar</span>
-                    <span className="material-tag">Laiton</span>
-                  </div>
-                </div>
-                
-                <div className={`timeline-item ${activeTimeline === '20th' ? 'active' : ''}`}>
-                  <h3>Industrialisation : L&apos;Ère de l&apos;Acier Inoxydable</h3>
-                  <p>Le XXe siècle voit l&apos;adoption généralisée de l&apos;<strong>acier inoxydable 316L</strong> et l&apos;émergence d&apos;alliages de précision pour l&apos;organe réglant :</p>
-                  <ul>
-                    <li><strong>Glucydur (années 1930)</strong> : Alliage cuivre-béryllium pour balanciers</li>
-                    <li><strong>Nivarox (années 1930)</strong> : Standard pour spiraux</li>
-                  </ul>
-                  <div className="timeline-materials">
-                    <span className="material-tag">Acier 316L</span>
-                    <span className="material-tag">Glucydur</span>
-                    <span className="material-tag">Nivarox</span>
-                  </div>
-                </div>
-                
-                <div className={`timeline-item ${activeTimeline === '21st' ? 'active' : ''}`}>
-                  <h3>Révolution High-Tech : Super-Alliages et Silicium</h3>
-                  <p>L&apos;horlogerie suisse embrasse les matériaux high-tech :</p>
-                  <ul>
-                    <li><strong>Titane</strong> : Légèreté et résistance</li>
-                    <li><strong>Céramique</strong> : Dureté et couleurs durables</li>
-                    <li><strong>Silicium</strong> : Revolution des composants mécaniques</li>
-                    <li><strong>Carbone forgé</strong> : Performance extreme</li>
-                  </ul>
-                  <div className="timeline-materials">
-                    <span className="material-tag">Silicium</span>
-                    <span className="material-tag">Ceratanium</span>
-                    <span className="material-tag">Carbone TPT</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+.section-divider {
+width: 80px;
+height: 4px;
+background: linear-gradient(90deg, var(--swiss-red), var(--swiss-red));
+margin: 0 auto 2rem;
+border-radius: 2px;
+}
 
-      {/* Matériaux Traditionnels */}
-      <section id="materials" className="materials-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Matériaux Traditionnels</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Les piliers historiques de l&apos;horlogerie suisse : métaux précieux, aciers spéciaux et savoir-faire artisanal
-            </p>
-          </div>
+.section-description {
+font-size: 1.2rem;
+color: var(--gray-600);
+max-width: 600px;
+margin: 0 auto;
+}
 
-          <div className="materials-tabs">
-            <button 
-              className={`tab-btn ${activeMaterial === 'precious' ? 'active' : ''}`}
-              onClick={() => setActiveMaterial('precious')}
-            >
-              Métaux Précieux
-            </button>
-            <button 
-              className={`tab-btn ${activeMaterial === 'steel' ? 'active' : ''}`}
-              onClick={() => setActiveMaterial('steel')}
-            >
-              Aciers Spéciaux
-            </button>
-            <button 
-              className={`tab-btn ${activeMaterial === 'precision' ? 'active' : ''}`}
-              onClick={() => setActiveMaterial('precision')}
-            >
-              Alliages de Précision
-            </button>
-            <button 
-              className={`tab-btn ${activeMaterial === 'craft' ? 'active' : ''}`}
-              onClick={() => setActiveMaterial('craft')}
-            >
-              Savoir-Faire Artisanal
-            </button>
-          </div>
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp {
+from {
+opacity: 0;
+transform: translateY(30px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
 
-          <div className="materials-content">
-            {/* Métaux Précieux */}
-            <div className={`tab-content ${activeMaterial === 'precious' ? 'active' : ''}`}>
-              <div className="materials-grid">
-                <div className="material-card gold">
-                  <div className="material-header">
-                    <div className="material-icon">🏆</div>
-                    <h3>Or 18 Carats</h3>
-                  </div>
-                  <div className="material-properties">
-                    <div className="property">
-                      <span className="property-label">Composition</span>
-                      <span className="property-value">75% Or + 25% alliages</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Densité</span>
-                      <span className="property-value">15-16 g/cm³</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Propriétés</span>
-                      <span className="property-value">Inoxydable, amagnétique</span>
-                    </div>
-                  </div>
-                  <div className="material-applications">
-                    <h4>Applications</h4>
-                    <ul>
-                      <li>Boîtiers de luxe</li>
-                      <li>Bracelets premium</li>
-                      <li>Masses oscillantes</li>
-                      <li>Aiguilles haut de gamme</li>
-                    </ul>
-                  </div>
-                  <div className="material-colors">
-                    <span className="color-sample yellow" title="Or Jaune 2N/3N"></span>
-                    <span className="color-sample rose" title="Or Rose 4N"></span>
-                    <span className="color-sample red" title="Or Rouge 5N"></span>
-                    <span className="color-sample white" title="Or Blanc 5N"></span>
-                  </div>
-                </div>
+@keyframes fadeInLeft {
+from {
+opacity: 0;
+transform: translateX(-30px);
+}
+to {
+opacity: 1;
+transform: translateX(0);
+}
+}
 
-                <div className="material-card platinum">
-                  <div className="material-header">
-                    <div className="material-icon">💎</div>
-                    <h3>Platine 950</h3>
-                  </div>
-                  <div className="material-properties">
-                    <div className="property">
-                      <span className="property-label">Composition</span>
-                      <span className="property-value">95% Platine + 5% autres</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Densité</span>
-                      <span className="property-value">20-21 g/cm³</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Propriétés</span>
-                      <span className="property-value">Plus noble des métaux</span>
-                    </div>
-                  </div>
-                  <div className="material-applications">
-                    <h4>Applications</h4>
-                    <ul>
-                      <li>Haute horlogerie exclusive</li>
-                      <li>Grandes complications</li>
-                      <li>Séries limitées</li>
-                      <li>Polissage miroir parfait</li>
-                    </ul>
-                  </div>
-                </div>
+@keyframes fadeInRight {
+from {
+opacity: 0;
+transform: translateX(30px);
+}
+to {
+opacity: 1;
+transform: translateX(0);
+}
+}
 
-                <div className="material-card silver">
-                  <div className="material-header">
-                    <div className="material-icon">✨</div>
-                    <h3>Argent 925</h3>
-                  </div>
-                  <div className="material-properties">
-                    <div className="property">
-                      <span className="property-label">Composition</span>
-                      <span className="property-value">92.5% Argent + 7.5% cuivre</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Densité</span>
-                      <span className="property-value">10.4 g/cm³</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Propriétés</span>
-                      <span className="property-value">Blanc, ductile</span>
-                    </div>
-                  </div>
-                  <div className="material-applications">
-                    <h4>Applications</h4>
-                    <ul>
-                      <li>Cadrans vintage</li>
-                      <li>Boîtiers rétro</li>
-                      <li>Ornementation</li>
-                      <li>Protégé par rhodiage</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
+@keyframes pulse {
+0%, 100% {
+transform: scale(1);
+}
+50% {
+transform: scale(1.05);
+}
+}
 
-            {/* Aciers Spéciaux */}
-            <div className={`tab-content ${activeMaterial === 'steel' ? 'active' : ''}`}>
-              <div className="materials-grid">
-                <div className="material-card steel-316l">
-                  <div className="material-header">
-                    <div className="material-icon">⚙️</div>
-                    <h3>Acier Inox 316L</h3>
-                  </div>
-                  <div className="material-properties">
-                    <div className="property">
-                      <span className="property-label">Composition</span>
-                      <span className="property-value">Fe-Cr-Ni-Mo + faible C</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Résistance</span>
-                      <span className="property-value">Corrosion marine</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Finitions</span>
-                      <span className="property-value">Polissage, satinage</span>
-                    </div>
-                  </div>
-                  <div className="material-applications">
-                    <h4>Applications</h4>
-                    <ul>
-                      <li>Boîtiers standard horloger</li>
-                      <li>Bracelets et maille</li>
-                      <li>Composants mouvement</li>
-                      <li>Production de masse</li>
-                    </ul>
-                  </div>
-                </div>
+@keyframes float {
+0%, 100% {
+transform: translateY(0px);
+}
+50% {
+transform: translateY(-10px);
+}
+}
 
-                <div className="material-card steel-904l">
-                  <div className="material-header">
-                    <div className="material-icon">🏆</div>
-                    <h3>Acier 904L</h3>
-                  </div>
-                  <div className="material-properties">
-                    <div className="property">
-                      <span className="property-label">Composition</span>
-                      <span className="property-value">Super-acier Rolex</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Résistance</span>
-                      <span className="property-value">Acides + corrosion</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Éclat</span>
-                      <span className="property-value">Particulier après polissage</span>
-                    </div>
-                  </div>
-                  <div className="material-applications">
-                    <h4>Applications</h4>
-                    <ul>
-                      <li>Montres professionnelles</li>
-                      <li>Modèles de plongée</li>
-                      <li>Haute résistance environnementale</li>
-                      <li>Boîtiers d&apos;exception</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
+@keyframes shimmer {
+0% {
+background-position: -200px 0;
+}
+100% {
+background-position: calc(200px + 100%) 0;
+}
+}
 
-            {/* Alliages de Précision */}
-            <div className={`tab-content ${activeMaterial === 'precision' ? 'active' : ''}`}>
-              <div className="materials-grid">
-                <div className="material-card nivarox">
-                  <div className="material-header">
-                    <div className="material-icon">🔬</div>
-                    <h3>Nivarox</h3>
-                  </div>
-                  <div className="material-properties">
-                    <div className="property">
-                      <span className="property-label">Composition</span>
-                      <span className="property-value">Fe-Ni-Cr-Ti-Be</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Propriété</span>
-                      <span className="property-value">Thermo-élasticité nulle</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Usage</span>
-                      <span className="property-value">Spiraux depuis 1930</span>
-                    </div>
-                  </div>
-                  <div className="material-applications">
-                    <h4>Applications</h4>
-                    <ul>
-                      <li>Spiraux de haute qualité</li>
-                      <li>Standard horloger suisse</li>
-                      <li>Isochronisme parfait</li>
-                      <li>Amagnétisme total</li>
-                    </ul>
-                  </div>
-                </div>
+.fade-in-up {
+animation: fadeInUp 0.8s ease-out forwards;
+}
 
-                <div className="material-card glucydur">
-                  <div className="material-header">
-                    <div className="material-icon">⚖️</div>
-                    <h3>Glucydur</h3>
-                  </div>
-                  <div className="material-properties">
-                    <div className="property">
-                      <span className="property-label">Composition</span>
-                      <span className="property-value">Cuivre-Béryllium-Fer</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Propriété</span>
-                      <span className="property-value">Dureté et stabilité</span>
-                    </div>
-                    <div className="property">
-                      <span className="property-label">Couleur</span>
-                      <span className="property-value">Dorée caractéristique</span>
-                    </div>
-                  </div>
-                  <div className="material-applications">
-                    <h4>Applications</h4>
-                    <ul>
-                      <li>Balanciers monométalliques</li>
-                      <li>Équilibrage parfait</li>
-                      <li>Résistance à l&apos;usure</li>
-                      <li>Couple idéal avec Nivarox</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
+.fade-in-left {
+animation: fadeInLeft 0.8s ease-out forwards;
+}
 
-            {/* Savoir-Faire Artisanal */}
-            <div className={`tab-content ${activeMaterial === 'craft' ? 'active' : ''}`}>
-              <div className="craft-showcase">
-                <img src="assets/images/atelier_artisanal_traditionnel.png" alt="Atelier Artisanal" className="craft-image"/>
-                <div className="craft-techniques">
-                  <h3>Techniques Artisanales Emblématiques</h3>
-                  <div className="techniques-grid">
-                    <div className="technique-card">
-                      <div className="technique-icon">🌊</div>
-                      <h4>Côtes de Genève</h4>
-                      <p>Rayures ondulées décorant ponts et masses oscillantes</p>
-                    </div>
-                    <div className="technique-card">
-                      <div className="technique-icon">⚫</div>
-                      <h4>Perlage</h4>
-                      <p>Petits cercles se chevauchant sur les platines</p>
-                    </div>
-                    <div className="technique-card">
-                      <div className="technique-icon">✨</div>
-                      <h4>Anglage</h4>
-                      <p>Chanfreinage et polissage des arêtes</p>
-                    </div>
-                    <div className="technique-card">
-                      <div className="technique-icon">🔮</div>
-                      <h4>Poli Miroir</h4>
-                      <p>Une finition si parfaite qu&apos;elle apparaît noire</p>
-                    </div>
-                    <div className="technique-card">
-                      <div className="technique-icon">🌀</div>
-                      <h4>Guillochage</h4>
-                      <p>Gravure de motifs géométriques complexes</p>
-                    </div>
-                    <div className="technique-card">
-                      <div className="technique-icon">🎨</div>
-                      <h4>Côtes de Genève</h4>
-                      <p>Rayures décoratives traditionnelles</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+.fade-in-right {
+animation: fadeInRight 0.8s ease-out forwards;
+}
 
-      {/* Innovation High-Tech - Continued in next part due to length */}
-      {/* ... Remaining sections follow the same pattern ... */}
+/* ===== NAVIGATION ===== */
+.navbar {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 1000;
+background: rgba(255, 255, 255, 0.95);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid var(--gray-200);
+transition: all var(--transition-base);
+}
 
-      {/* Newsletter Contact */}
+.navbar.scrolled {
+background: rgba(255, 255, 255, 0.98);
+box-shadow: var(--shadow-lg);
+}
 
-      {/* Innovation et High-Tech */}
-      <section id="innovation" className="innovation-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Innovation et High-Tech</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Matériaux modernes, composants électroniques et miniaturisation
-            </p>
-          </div>
+.nav-container {
+max-width: 1400px;
+margin: 0 auto;
+padding: 0 2rem;
+display: flex;
+align-items: center;
+justify-content: space-between;
+height: 80px;
+}
 
-          <div className="innovation-showcase">
-            <div className="innovation-grid">
-              <div className="innovation-card">
-                <div className="card-visual">
-                  <img src="assets/images/materials_hightech_horlogerie.png" alt="Matériaux High-Tech" className="innovation-image"/>
-                </div>
-                <div className="card-content">
-                  <h3>Nouveaux Matériaux</h3>
-                  <div className="materials-showcase">
-                    <div className="material-showcase">
-                      <h4>La Céramique Technique</h4>
-                      <p>Oxydes de zirconium et carbure de tungstène :</p>
-                      <ul>
-                        <li>Dureté extrême (inrayable)</li>
-                        <li>Légèreté supérieure à l&apos;acier</li>
-                        <li>Couleurs stables dans la masse</li>
-                      </ul>
-                    </div>
-                    
-                    <div className="material-showcase">
-                      <h4>Le Titane Grade 5</h4>
-                      <p>Le métal de l&apos;aérospatiale :</p>
-                      <ul>
-                        <li>40% plus léger que l&apos;acier</li>
-                        <li>Résistance corrosion exceptionnelle</li>
-                        <li>Hypoallergénique</li>
-                      </ul>
-                    </div>
-                    
-                    <div className="material-showcase">
-                      <h4>Fibre de Carbone</h4>
-                      <p>Performance extrême :</p>
-                      <ul>
-                        <li>Légèreté spectaculaire</li>
-                        <li>Rigidité incomparable</li>
-                        <li>Carbone forgé Carbon TPT®</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
+.nav-logo {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+font-family: 'Playfair Display', serif;
+font-weight: 700;
+font-size: 1.5rem;
+color: var(--swiss-red);
+text-decoration: none;
+}
 
-              <div className="innovation-card silicon">
-                <div className="card-content">
-                  <h3>Révolution Silicium</h3>
-                  <div className="silicon-benefits">
-                    <div className="benefit-item">
-                      <span className="benefit-icon">🧲</span>
-                      <span className="benefit-text">Totalement amagnétique</span>
-                    </div>
-                    <div className="benefit-item">
-                      <span className="benefit-icon">⚡</span>
-                      <span className="benefit-text">Léger et basse inertie</span>
-                    </div>
-                    <div className="benefit-item">
-                      <span className="benefit-icon">🔧</span>
-                      <span className="benefit-text">Pas de lubrification</span>
-                    </div>
-                    <div className="benefit-item">
-                      <span className="benefit-icon">🎯</span>
-                      <span className="benefit-text">Précision géométrique micron</span>
-                    </div>
-                  </div>
-                  <div className="silicon-innovations">
-                    <h4>Innovations Marquantes</h4>
-                    <div className="innovation-list">
-                      <div className="innovation-item">
-                        <strong>Spiral Silinvar® (Patek Philippe)</strong>
-                        <p>Développé avec le CSEM, performance chronométrique exceptionnelle</p>
-                      </div>
-                      <div className="innovation-item">
-                        <strong>Échappement Co-Axial (OMEGA)</strong>
-                        <p>Composants en silicium, réduction friction</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+.swiss-cross {
+font-size: 1.75rem;
+font-weight: 900;
+display: flex;
+align-items: center;
+justify-content: center;
+width: 40px;
+height: 40px;
+border: 2px solid var(--swiss-red);
+border-radius: 8px;
+}
 
-              <div className="innovation-card electronics">
-                <div className="card-content">
-                  <h3>Composants Électroniques</h3>
-                  <div className="electronic-features">
-                    <h4>Smartwatches et Technologie</h4>
-                    <div className="features-grid">
-                      <div className="feature">
-                        <strong>SoC (System on Chip)</strong>
-                        <p>Cerveau miniature intégré</p>
-                      </div>
-                      <div className="feature">
-                        <strong>Capteurs Biomédicaux</strong>
-                        <p>PPG, ECG, SpO2, température</p>
-                      </div>
-                      <div className="feature">
-                        <strong>Connectivité</strong>
-                        <p>GPS, Bluetooth, Wi-Fi, 4G/5G</p>
-                      </div>
-                      <div className="feature">
-                        <strong>Affichage OLED</strong>
-                        <p>Couleurs vives, noirs profonds</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="miniaturization">
-                    <h4>Miniaturisation Extrême</h4>
-                    <div className="mini-tech">
-                      <div className="tech-item">
-                        <strong>System-in-Package (SiP)</strong>
-                        <p>Assemblage multiple puces dans module compact</p>
-                      </div>
-                      <div className="tech-item">
-                        <strong>Packaging 3D</strong>
-                        <p>Empilement vertical des puces</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+.nav-menu {
+display: flex;
+gap: 2rem;
+list-style: none;
+}
 
+.nav-link {
+text-decoration: none;
+color: var(--gray-700);
+font-weight: 500;
+padding: 0.5rem 1rem;
+border-radius: 8px;
+transition: all var(--transition-fast);
+position: relative;
+}
 
-      {/* Écosystème Industriel */}
-      <section id="ecosystem" className="ecosystem-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Écosystème Industriel</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Districts horlogers, formation et chaîne d&apos;approvisionnement
-            </p>
-          </div>
+.nav-link:hover {
+color: var(--swiss-red);
+background: var(--gray-50);
+}
 
-          <div className="districts-showcase">
-            <div className="district-map">
-              <img src="assets/images/districts_horlogers_suisse.png" alt="Districts Horlogers Suisses" className="map-image"/>
-              <div className="map-overlay">
-                <h3>Arc Jurassien</h3>
-                <p>Concentration géographique du savoir-faire horloger</p>
-              </div>
-            </div>
-            
-            <div className="districts-details">
-              <div className="district-tabs">
-                <button 
-                  className={`tab-btn ${activeDistrict === 'geneve' ? 'active' : ''}`}
-                  onClick={() => setActiveDistrict('geneve')}
-                >
-                  Genève
-                </button>
-                <button 
-                  className={`tab-btn ${activeDistrict === 'vallee-joux' ? 'active' : ''}`}
-                  onClick={() => setActiveDistrict('vallee-joux')}
-                >
-                  Vallée de Joux
-                </button>
-                <button 
-                  className={`tab-btn ${activeDistrict === 'neuchatel' ? 'active' : ''}`}
-                  onClick={() => setActiveDistrict('neuchatel')}
-                >
-                  Neuchâtel
-                </button>
-                <button 
-                  className={`tab-btn ${activeDistrict === 'bienne' ? 'active' : ''}`}
-                  onClick={() => setActiveDistrict('bienne')}
-                >
-                  Bienne
-                </button>
-              </div>
-              
-              <div className="district-content">
-                <div className={`district-info ${activeDistrict === 'geneve' ? 'active' : ''}`}>
-                  <h3>Genève - Capitale de la Haute Horlogerie</h3>
-                  <p>Berceau historique de l&apos;horlogerie de luxe, Genève concentre les sièges des plus grandes manufactures.</p>
-                  <div className="district-specialties">
-                    <h4>Spécialités</h4>
-                    <ul>
-                      <li>Finition et décoration de prestige</li>
-                      <li>Joaillerie et sertissage</li>
-                      <li>Assemblage grandes complications</li>
-                      <li>Poinçon de Genève</li>
-                    </ul>
-                  </div>
-                  <div className="district-companies">
-                    <h4>Entreprises</h4>
-                    <span className="company-tag">Patek Philippe</span>
-                    <span className="company-tag">Rolex</span>
-                    <span className="company-tag">Jaeger-LeCoultre</span>
-                  </div>
-                </div>
-                
-                <div className={`district-info ${activeDistrict === 'vallee-joux' ? 'active' : ''}`}>
-                  <h3>Vallée de Joux - Cœur Battant Mécanique</h3>
-                  <p>Vallée isolée, berceau de la haute horlogerie mécanique et des grandes complications.</p>
-                  <div className="district-specialties">
-                    <h4>Spécialités</h4>
-                    <ul>
-                      <li>Mouvements à grandes complications</li>
-                      <li>Tourbillons et répétitions minutes</li>
-                      <li>Quantièmes perpétuels</li>
-                      <li>Haute horlogerie traditionnelle</li>
-                    </ul>
-                  </div>
-                  <div className="district-companies">
-                    <h4>Entreprises</h4>
-                    <span className="company-tag">Audemars Piguet</span>
-                    <span className="company-tag">Breguet</span>
-                    <span className="company-tag">Vacheron Constantin</span>
-                  </div>
-                </div>
-                
-                <div className={`district-info ${activeDistrict === 'neuchatel' ? 'active' : ''}`}>
-                  <h3>Neuchâtel - Cœur Industriel</h3>
-                  <p>Bastion de la fabrication de mouvements en grande série et des composants de précision.</p>
-                  <div className="district-specialties">
-                    <h4>Spécialités</h4>
-                    <ul>
-                      <li>Mouvements grande série</li>
-                      <li>Décolletage de précision</li>
-                      <li>Fabrication spiraux</li>
-                      <li>Sous-traitance spécialisée</li>
-                    </ul>
-                  </div>
-                  <div className="district-companies">
-                    <h4>Entreprises</h4>
-                    <span className="company-tag">ETA</span>
-                    <span className="company-tag">Sellita</span>
-                    <span className="company-tag">Nivarox-FAR</span>
-                  </div>
-                </div>
-                
-                <div className={`district-info ${activeDistrict === 'bienne' ? 'active' : ''}`}>
-                  <h3>Bienne - Nœud Stratégique</h3>
-                  <p>Centre névralgique du Swatch Group et des mouvements de précision.</p>
-                  <div className="district-specialties">
-                    <h4>Spécialités</h4>
-                    <ul>
-                      <li>Production mouvements Swatch Group</li>
-                      <li>Recherche et développement</li>
-                      <li>Coordination industrielle</li>
-                      <li>Innovation technologique</li>
-                    </ul>
-                  </div>
-                  <div className="district-companies">
-                    <h4>Entreprises</h4>
-                    <span className="company-tag">Swatch Group</span>
-                    <span className="company-tag">OMEGA</span>
-                    <span className="company-tag">ETA</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+.nav-link::after {
+content: '';
+position: absolute;
+bottom: -2px;
+left: 50%;
+width: 0;
+height: 2px;
+background: var(--swiss-red);
+transition: all var(--transition-base);
+transform: translateX(-50%);
+}
 
+.nav-link:hover::after {
+width: 80%;
+}
 
-      {/* Formation et Transmission */}
-      <section className="formation-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Formation et Transmission</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Système de formation dual unique au monde
-            </p>
-          </div>
+.nav-toggle {
+display: none;
+flex-direction: column;
+gap: 4px;
+cursor: pointer;
+}
 
-          <div className="formation-showcase">
-            <div className="formation-visual">
-              <img src="assets/images/formation_horlogere_suisse.png" alt="Formation Horlogère Suisse" className="formation-image"/>
-            </div>
-            <div className="formation-details">
-              <div className="schools-grid">
-                <div className="school-card">
-                  <div className="school-header">
-                    <div className="school-icon">🎓</div>
-                    <h3>CFPT Genève</h3>
-                  </div>
-                  <p>L&apos;une des plus anciennes écoles horlogères, formation d&apos;horlogers et micromécaniciens d&apos;élite.</p>
-                  <div className="school-specialties">
-                    <span className="specialty">Horlogerie</span>
-                    <span className="specialty">Micromécanique</span>
-                    <span className="specialty">Finitions</span>
-                  </div>
-                </div>
-                
-                <div className="school-card">
-                  <div className="school-header">
-                    <div className="school-icon">🏔️</div>
-                    <h3>ETVJ Vallée de Joux</h3>
-                  </div>
-                  <p>Spécialisée dans la formation aux métiers de la haute horlogerie et des complications.</p>
-                  <div className="school-specialties">
-                    <span className="specialty">Haute Horlogerie</span>
-                    <span className="specialty">Grandes Complications</span>
-                    <span className="specialty">Artisanat</span>
-                  </div>
-                </div>
-                
-                <div className="school-card">
-                  <div className="school-header">
-                    <div className="school-icon">⚙️</div>
-                    <h3>CPNE Locle</h3>
-                  </div>
-                  <p>Pôle de formation dual au cœur industriel de l&apos;horlogerie suisse.</p>
-                  <div className="school-specialties">
-                    <span className="specialty">Formation Duale</span>
-                    <span className="specialty">Industrie</span>
-                    <span className="specialty">Précision</span>
-                  </div>
-                </div>
-                
-                <div className="school-card">
-                  <div className="school-header">
-                    <div className="school-icon">🌍</div>
-                    <h3>WOSTEP</h3>
-                  </div>
-                  <p>Formation mondiale, spécialisations avancées et standards internationaux.</p>
-                  <div className="school-specialties">
-                    <span className="specialty">Formation Internationale</span>
-                    <span className="specialty">Service Après-Vente</span>
-                    <span className="specialty">Standards Globaux</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="career-path">
-                <h3>Parcours de Formation</h3>
-                <div className="path-steps">
-                  <div className="step">
-                    <div className="step-number">1</div>
-                    <div className="step-content">
-                      <h4>CFC Horloger</h4>
-                      <p>Certificat Fédéral de Capacité - 4 ans d&apos;apprentissage</p>
-                    </div>
-                  </div>
-                  <div className="step">
-                    <div className="step-number">2</div>
-                    <div className="step-content">
-                      <h4>Brevet Fédéral</h4>
-                      <p>Responsable d&apos;atelier - Évolution management</p>
-                    </div>
-                  </div>
-                  <div className="step">
-                    <div className="step-number">3</div>
-                    <div className="step-content">
-                      <h4>Formations Continues</h4>
-                      <p>Spécialisations WOSTEP, chronographes, polissage</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+.nav-toggle span {
+width: 25px;
+height: 3px;
+background: var(--gray-700);
+border-radius: 2px;
+transition: all var(--transition-fast);
+}
 
+/* ===== BUTTONS ===== */
+.btn {
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+padding: 0.875rem 2rem;
+border: none;
+border-radius: 12px;
+font-size: 1rem;
+font-weight: 600;
+text-decoration: none;
+cursor: pointer;
+transition: all var(--transition-base);
+position: relative;
+overflow: hidden;
+}
 
-      {/* Entreprises Leaders */}
-      <section className="companies-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Entreprises Leaders</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Moteurs d&apos;innovation et de l&apos;excellence suisse
-            </p>
-          </div>
+.btn-primary {
+background: linear-gradient(135deg, var(--swiss-red), #b91c3c);
+color: white;
+box-shadow: var(--shadow-md);
+}
 
-          <div className="companies-showcase">
-            <div className="companies-visual">
-              <img src="assets/images/entreprises_horlogeres_leaders.png" alt="Entreprises Horlogères Leaders" className="companies-image"/>
-            </div>
-            
-            <div className="companies-grid">
-              <div className="company-card">
-                <div className="company-header">
-                  <div className="company-logo">PP</div>
-                  <h3>Patek Philippe</h3>
-                </div>
-                <div className="company-innovation">
-                  <h4>Advanced Research</h4>
-                  <ul>
-                    <li><strong>Spiral Spiromax®</strong> en Silinvar® (2006)</li>
-                    <li><strong>Oscillomax®</strong> : organe réglant complet</li>
-                    <li><strong>Fortissimo</strong> : amplification sonore</li>
-                  </ul>
-                </div>
-                <div className="company-strategy">
-                  <span className="strategy-tag">Innovation Long Terme</span>
-                  <span className="strategy-tag">Partenariat CSEM</span>
-                </div>
-              </div>
-              
-              <div className="company-card">
-                <div className="company-header">
-                  <div className="company-logo">R</div>
-                  <h3>Rolex</h3>
-                </div>
-                <div className="company-innovation">
-                  <h4>Ingénierie Matériaux</h4>
-                  <ul>
-                    <li><strong>Céramique Cerachrom</strong> inaltérable</li>
-                    <li><strong>Acier Oystersteel</strong> 904L exclusive</li>
-                    <li><strong>Or Everose</strong> breveté</li>
-                    <li><strong>Échappement Chronergy</strong></li>
-                  </ul>
-                </div>
-                <div className="company-strategy">
-                  <span className="strategy-tag">Fonderie Propre</span>
-                  <span className="strategy-tag">Standards Robustes</span>
-                </div>
-              </div>
-              
-              <div className="company-card">
-                <div className="company-header">
-                  <div className="company-logo">AP</div>
-                  <h3>Audemars Piguet</h3>
-                </div>
-                <div className="company-innovation">
-                  <h4>Audace Matériaux</h4>
-                  <ul>
-                    <li><strong>Carbone forgé</strong> pionnier (2007)</li>
-                    <li><strong>Céramique couleur</strong> développée</li>
-                    <li><strong>Chroma Forged Technology</strong></li>
-                    <li><strong>Céramiques polychromes</strong></li>
-                  </ul>
-                </div>
-                <div className="company-strategy">
-                  <span className="strategy-tag">Design Innovation</span>
-                  <span className="strategy-tag">Matériaux Exclusifs</span>
-                </div>
-              </div>
-              
-              <div className="company-card">
-                <div className="company-header">
-                  <div className="company-logo">O</div>
-                  <h3>OMEGA</h3>
-                </div>
-                <div className="company-innovation">
-                  <h4>Anti-Magnétisme</h4>
-                  <ul>
-                    <li><strong>Master Chronometer</strong> certification</li>
-                    <li><strong>Résistance 15 000 gauss</strong></li>
-                    <li><strong>Spiral Si14</strong> en silicium</li>
-                    <li><strong>Nivagauss™</strong> composants</li>
-                  </ul>
-                </div>
-                <div className="company-strategy">
-                  <span className="strategy-tag">Swatch Group</span>
-                  <span className="strategy-tag">Certification METAS</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+.btn-primary:hover {
+transform: translateY(-2px);
+box-shadow: var(--shadow-xl);
+}
 
+.btn-secondary {
+background: transparent;
+color: var(--swiss-red);
+border: 2px solid var(--swiss-red);
+}
 
-      {/* Vision d'Avenir */}
-      <section id="future" className="future-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Vision d&apos;Avenir</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Défis environnementaux, digitalisation et nouvelles technologies
-            </p>
-          </div>
+.btn-secondary:hover {
+background: var(--swiss-red);
+color: white;
+}
 
-          <div className="future-showcase">
-            <div className="future-visual">
-              <img src="assets/images/innovation_horlogerie_futur.png" alt="Innovation Horlogerie Futur" className="future-image"/>
-            </div>
-            
-            <div className="future-trends">
-              <div className="trend-tabs">
-                <button 
-                  className={`tab-btn ${activeTrend === 'environment' ? 'active' : ''}`}
-                  onClick={() => setActiveTrend('environment')}
-                >
-                  Environnement
-                </button>
-                <button 
-                  className={`tab-btn ${activeTrend === 'digital' ? 'active' : ''}`}
-                  onClick={() => setActiveTrend('digital')}
-                >
-                  Digitalisation
-                </button>
-                <button 
-                  className={`tab-btn ${activeTrend === 'technology' ? 'active' : ''}`}
-                  onClick={() => setActiveTrend('technology')}
-                >
-                  Technologie
-                </button>
-              </div>
-              
-              <div className="trend-content">
-                <div className={`trend-item ${activeTrend === 'environment' ? 'active' : ''}`}>
-                  <h3>Durabilité et Économie Circulaire</h3>
-                  <div className="trend-details">
-                    <div className="trend-card">
-                      <h4>Matériaux Recyclés</h4>
-                      <ul>
-                        <li>Acier Lucent (Chopard) : 80% recyclé</li>
-                        <li>Or éthique certifié Fairmined</li>
-                        <li>Titane recyclé Grade 5</li>
-                      </ul>
-                    </div>
-                    <div className="trend-card">
-                      <h4>Production Propre</h4>
-                      <ul>
-                        <li>Bâtiments Minergie certifiés</li>
-                        <li>Énergies 100% renouvelables</li>
-                        <li>Circuits fermés eau et déchets</li>
-                      </ul>
-                    </div>
-                    <div className="trend-card">
-                      <h4>Économie Circulaire</h4>
-                      <ul>
-                        <li>Droit à la réparation</li>
-                        <li>Pièces garanties sur décennies</li>
-                        <li>Marché seconde main certifié</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className={`trend-item ${activeTrend === 'digital' ? 'active' : ''}`}>
-                  <h3>Transformation Numérique</h3>
-                  <div className="trend-details">
-                    <div className="trend-card">
-                      <h4>Manufacture 4.0</h4>
-                      <ul>
-                        <li>Robots collaboratifs (cobots)</li>
-                        <li>IA pour contrôle qualité</li>
-                        <li>Maintenance prédictive</li>
-                      </ul>
-                    </div>
-                    <div className="trend-card">
-                      <h4>Traçabilité Blockchain</h4>
-                      <ul>
-                        <li>Passeport numérique infalsifiable</li>
-                        <li>Matériaux traçables</li>
-                        <li>Lutte contrefaçon</li>
-                      </ul>
-                    </div>
-                    <div className="trend-card">
-                      <h4>Expérience Client Augmentée</h4>
-                      <ul>
-                        <li>Réalité augmentée (essai virtuel)</li>
-                        <li>Configurateur 3D</li>
-                        <li>Service connecté</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className={`trend-item ${activeTrend === 'technology' ? 'active' : ''}`}>
-                  <h3>Nouvelles Frontières</h3>
-                  <div className="trend-details">
-                    <div className="trend-card">
-                      <h4>Matériaux Intelligents</h4>
-                      <ul>
-                        <li>Alliages mémoire de forme</li>
-                        <li>Revêtements auto-cicatrisants</li>
-                        <li>Capteurs intégrés matière</li>
-                      </ul>
-                    </div>
-                    <div className="trend-card">
-                      <h4>Fabrication Additive</h4>
-                      <ul>
-                        <li>Impression 3D métallique</li>
-                        <li>Géométries impossibles</li>
-                        <li>Personnalisation de masse</li>
-                      </ul>
-                    </div>
-                    <div className="trend-card">
-                      <h4>Miniaturisation Extrême</h4>
-                      <ul>
-                        <li>Récupération énergie ambiante</li>
-                        <li>Micro-batteries état solide</li>
-                        <li>MEMS et nanotechnologies</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+.btn-full {
+width: 100%;
+justify-content: center;
+}
 
+.btn-icon {
+width: 20px;
+height: 20px;
+fill: currentColor;
+}
 
-      {/* Positionnement Mondial */}
-      <section className="global-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Positionnement Mondial</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Leadership face à la concurrence internationale
-            </p>
-          </div>
+/* ===== HERO SECTION ===== */
+.hero {
+position: relative;
+min-height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+text-align: center;
+color: white;
+overflow: hidden;
+}
 
-          <div className="competition-comparison">
-            <div className="comparison-table">
-              <div className="table-header">
-                <div className="header-cell">Pays</div>
-                <div className="header-cell">Stratégie</div>
-                <div className="header-cell">Forces</div>
-                <div className="header-cell">Marques</div>
-              </div>
-              
-              <div className="table-row swiss">
-                <div className="country-cell">
-                  <div className="country-flag">🇨🇭</div>
-                  <div className="country-name">Suisse</div>
-                </div>
-                <div className="strategy-cell">
-                  Leadership en valeur<br/>Luxe + Innovation matériaux
-                </div>
-                <div className="strengths-cell">
-                  • Savoir-faire artisanal<br/>
-                  • Écosystème intégré<br/>
-                  • R&D continue<br/>
-                  • Label &quot;Swiss Made&quot;
-                </div>
-                <div className="brands-cell">
-                  <span className="brand-tag">Rolex</span>
-                  <span className="brand-tag">Patek Philippe</span>
-                  <span className="brand-tag">Audemars Piguet</span>
-                  <span className="brand-tag">OMEGA</span>
-                </div>
-              </div>
-              
-              <div className="table-row german">
-                <div className="country-cell">
-                  <div className="country-flag">🇩🇪</div>
-                  <div className="country-name">Allemagne</div>
-                </div>
-                <div className="strategy-cell">
-                  Haute horlogerie mécanique<br/>Rigueur technique
-                </div>
-                <div className="strengths-cell">
-                  • Finitions impeccables<br/>
-                  • Style Glashütte<br/>
-                  • Perfection mécanique<br/>
-                  • Esthétique Bauhaus
-                </div>
-                <div className="brands-cell">
-                  <span className="brand-tag">A. Lange & Söhne</span>
-                  <span className="brand-tag">Glashütte Original</span>
-                  <span className="brand-tag">Nomos</span>
-                </div>
-              </div>
-              
-              <div className="table-row japanese">
-                <div className="country-cell">
-                  <div className="country-flag">🇯🇵</div>
-                  <div className="country-name">Japon</div>
-                </div>
-                <div className="strategy-cell">
-                  Innovation technologique<br/>Production de masse
-                </div>
-                <div className="strengths-cell">
-                  • Maîtrise du quartz<br/>
-                  • Technologies hybrides<br/>
-                  • Intégration verticale<br/>
-                  • Rapport qualité-prix
-                </div>
-                <div className="brands-cell">
-                  <span className="brand-tag">Seiko</span>
-                  <span className="brand-tag">Grand Seiko</span>
-                  <span className="brand-tag">Citizen</span>
-                  <span className="brand-tag">Casio</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="leadership-stats">
-            <div className="stat-highlight">
-              <div className="stat-large">50%</div>
-              <div className="stat-description">du marché mondial en valeur<br/>avec seulement 2% du volume</div>
-            </div>
-            <div className="stat-highlight">
-              <div className="stat-large">1200$</div>
-              <div className="stat-description">Prix moyen d&apos;une montre<br/>suisse exportée</div>
-            </div>
-            <div className="stat-highlight">
-              <div className="stat-large">65k</div>
-              <div className="stat-description">Emplois directs<br/>en Suisse en 2024</div>
-            </div>
-          </div>
-        </div>
-      </section>
+.hero-background {
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: linear-gradient(135deg, 
+var(--swiss-red) 0%, 
+#b91c3c 25%, 
+#9c1329 50%, 
+#7f1020 75%, 
+var(--swiss-black) 100%);
+z-index: -2;
+}
 
-      <section id="contact" className="contact-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Restez Informé</h2>
-            <div className="section-divider"></div>
-            <p className="section-description">
-              Recevez les dernières innovations et tendances de l&apos;horlogerie suisse
-            </p>
-          </div>
+.hero-overlay {
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(0, 0, 0, 0.4);
+z-index: -1;
+}
 
-          <div className="contact-content">
-            <div className="contact-form">
-              <form className="newsletter-form" onSubmit={handleFormSubmit}>
-                <div className="form-group">
-                  <label htmlFor="email">Adresse Email</label>
-                  <input type="email" id="email" name="email" required placeholder="votre@email.com"/>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="name">Nom Complet</label>
-                  <input type="text" id="name" name="name" required placeholder="Votre nom"/>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="interest">Domaines d&apos;Intérêt</label>
-                  <select id="interest" name="interest" required>
-                    <option value="">Sélectionnez un domaine</option>
-                    <option value="materials">Matériaux Innovants</option>
-                    <option value="tradition">Tradition Artisanal</option>
-                    <option value="technology">Technologies</option>
-                    <option value="ecosystem">Écosystème</option>
-                    <option value="future">Vision d&apos;Avenir</option>
-                  </select>
-                </div>
-                <div className="form-group checkbox-group">
-                  <input type="checkbox" id="updates" name="updates" required/>
-                  <label htmlFor="updates">
-                    J&apos;accepte de recevoir les mises à jour sur l&apos;innovation horlogère suisse
-                  </label>
-                </div>
-                <button type="submit" className="btn btn-primary btn-full">
-                  <span>S&apos;abonner à la Newsletter</span>
-                  <svg className="btn-icon" viewBox="0 0 24 24">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                  </svg>
-                </button>
-              </form>
-            </div>
-            
-            <div className="contact-info">
-              <div className="info-card">
-                <div className="info-icon">📊</div>
-                <h3>Données Exclusives</h3>
-                <p>Accédez aux dernières études de marché et analyses de l&apos;industrie</p>
-              </div>
-              
-              <div className="info-card">
-                <div className="info-icon">🔬</div>
-                <h3>Innovations R&D</h3>
-                <p>Découvrez les breakthrough technologiques avant leur commercialisation</p>
-              </div>
-              
-              <div className="info-card">
-                <div className="info-icon">🌍</div>
-                <h3>Analyse Internationale</h3>
-                <p>Perspectives globales sur l&apos;évolution de l&apos;horlogerie mondiale</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+.hero-content {
+max-width: 900px;
+padding: 2rem;
+animation: fadeInUp 1s ease-out;
+}
 
-      {/* Footer */}
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-main">
-              <div className="footer-brand">
-                <div className="footer-logo">
-                  <span className="swiss-cross">✚</span>
-                  <span className="footer-title">Swiss Watch Materials</span>
-                </div>
-                <p className="footer-description">
-                  Le rapport de référence mondial sur l&apos;excellence des matériaux horlogers suisses.
-                  Une analyse complète de l&apos;écosystème qui fait de la Suisse le leader incontesté.
-                </p>
-              </div>
-              
-              <div className="footer-links">
-                <div className="footer-column">
-                  <h4>Matériaux</h4>
-                  <ul>
-                    <li><a href="#materials">Métaux Précieux</a></li>
-                    <li><a href="#materials">Aciers Spéciaux</a></li>
-                    <li><a href="#materials">Alliages Précision</a></li>
-                    <li><a href="#materials">High-Tech</a></li>
-                  </ul>
-                </div>
-                
-                <div className="footer-column">
-                  <h4>Écosystème</h4>
-                  <ul>
-                    <li><a href="#ecosystem">Districts Horlogers</a></li>
-                    <li><a href="#ecosystem">Formation</a></li>
-                    <li><a href="#ecosystem">Chaîne Approvisionnement</a></li>
-                    <li><a href="#ecosystem">Entreprises</a></li>
-                  </ul>
-                </div>
-                
-                <div className="footer-column">
-                  <h4>Innovation</h4>
-                  <ul>
-                    <li><a href="#innovation">R&D</a></li>
-                    <li><a href="#innovation">Brevets</a></li>
-                    <li><a href="#innovation">Collaborations</a></li>
-                    <li><a href="#future">Vision Future</a></li>
-                  </ul>
-                </div>
-                
-                <div className="footer-column">
-                  <h4>Contact</h4>
-                  <ul>
-                    <li><a href="#contact">Newsletter</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="#hero">Retour au début</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            
-            <div className="footer-stats">
-              <div className="footer-stat">
-                <span className="stat-number" data-target="500">0</span>
-                <span className="stat-label">Ans d&apos;innovation</span>
-              </div>
-              <div className="footer-stat">
-                <span className="stat-number" data-target="50">0</span>
-                <span className="stat-label">% marché mondial</span>
-              </div>
-              <div className="footer-stat">
-                <span className="stat-number" data-target="65">0</span>
-                <span className="stat-label">000 emplois</span>
-              </div>
-            </div>
-            
-            <div className="footer-bottom">
-              <div className="footer-copyright">
-                <p>&copy; 2025 MiniMax Agent. Rapport sur l&apos;Excellence des Matériaux Horlogers Suisses.</p>
-                <p>Tous droits réservés. Une référence mondiale pour l&apos;industrie horlogère.</p>
-              </div>
-              <div className="footer-swiss">
-                <span className="swiss-badge">🇨🇭 Swiss Made Excellence</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+.hero-badge {
+display: inline-block;
+padding: 0.75rem 1.5rem;
+background: rgba(255, 255, 255, 0.15);
+backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.2);
+border-radius: 50px;
+margin-bottom: 2rem;
+animation: float 3s ease-in-out infinite;
+}
 
-      {/* MiniMax Floating Ball */}
-      <div id="minimax-floating-ball">
-        <div className="minimax-ball-content" onClick={() => window.open('https://agent.minimax.io/', '_blank')}>
-          <div className="minimax-logo-wave"></div>
-          <span className="minimax-ball-text">Created by MiniMax Agent</span>
-        </div>
-        <div className="minimax-close-icon" onClick={(e) => {
-          e.stopPropagation();
-          const ball = document.getElementById('minimax-floating-ball');
-          if (ball) ball.style.display = 'none';
-        }}>×</div>
-      </div>
-    </div>
-  );
+.badge-text {
+font-size: 0.9rem;
+font-weight: 600;
+letter-spacing: 0.5px;
+text-transform: uppercase;
+}
+
+.hero-title {
+margin-bottom: 2rem;
+}
+
+.title-main {
+display: block;
+font-size: clamp(2.5rem, 6vw, 4rem);
+font-weight: 900;
+margin-bottom: 0.5rem;
+background: linear-gradient(135deg, white, #f3f4f6);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+
+.title-sub {
+display: block;
+font-size: clamp(1.5rem, 3vw, 2rem);
+font-weight: 400;
+opacity: 0.9;
+}
+
+.hero-description {
+font-size: 1.25rem;
+margin-bottom: 3rem;
+opacity: 0.9;
+max-width: 700px;
+margin-left: auto;
+margin-right: auto;
+}
+
+.hero-stats {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 2rem;
+margin: 3rem 0;
+}
+
+.stat-item {
+text-align: center;
+padding: 1.5rem;
+background: rgba(255, 255, 255, 0.1);
+backdrop-filter: blur(20px);
+border-radius: 16px;
+border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-number {
+display: block;
+font-size: 2.5rem;
+font-weight: 900;
+color: white;
+font-family: 'Playfair Display', serif;
+}
+
+.stat-label {
+display: block;
+font-size: 0.9rem;
+opacity: 0.8;
+margin-top: 0.5rem;
+}
+
+.hero-actions {
+display: flex;
+gap: 1.5rem;
+justify-content: center;
+flex-wrap: wrap;
+}
+
+.scroll-indicator {
+position: absolute;
+bottom: 2rem;
+left: 50%;
+transform: translateX(-50%);
+animation: float 2s ease-in-out infinite;
+}
+
+.scroll-arrow {
+width: 24px;
+height: 24px;
+border: 2px solid white;
+border-top: none;
+border-right: none;
+transform: rotate(-45deg);
+}
+
+/* ===== EXECUTIVE SUMMARY ===== */
+.executive-summary {
+padding: 8rem 0;
+background: linear-gradient(135deg, var(--gray-50), white);
+}
+
+.summary-content {
+display: grid;
+grid-template-columns: 2fr 1fr;
+gap: 4rem;
+align-items: center;
+}
+
+.summary-text .lead {
+font-size: 1.3rem;
+margin-bottom: 2rem;
+}
+
+.highlight-box {
+background: white;
+padding: 2rem;
+border-radius: 16px;
+box-shadow: var(--shadow-lg);
+margin-top: 2rem;
+border-left: 4px solid var(--swiss-red);
+}
+
+.highlight-box h3 {
+color: var(--swiss-red);
+margin-bottom: 1rem;
+}
+
+.highlight-list {
+list-style: none;
+padding-left: 0;
+}
+
+.highlight-list li {
+padding: 0.5rem 0;
+position: relative;
+padding-left: 1.5rem;
+}
+
+.highlight-list li::before {
+content: '✓';
+position: absolute;
+left: 0;
+color: var(--swiss-red);
+font-weight: bold;
+}
+
+.summary-visual {
+position: relative;
+}
+
+.summary-image {
+width: 100%;
+border-radius: 16px;
+box-shadow: var(--shadow-xl);
+transform: perspective(1000px) rotateY(-5deg);
+transition: transform var(--transition-slow);
+}
+
+.summary-image:hover {
+transform: perspective(1000px) rotateY(0deg) scale(1.05);
+}
+
+/* ===== TIMELINE SECTION ===== */
+.timeline-section {
+padding: 8rem 0;
+background: white;
+}
+
+.timeline-container {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 4rem;
+align-items: start;
+}
+
+.timeline-visual {
+position: sticky;
+top: 2rem;
+}
+
+.timeline-image {
+width: 100%;
+border-radius: 16px;
+box-shadow: var(--shadow-xl);
+}
+
+.timeline-details {
+background: var(--gray-50);
+padding: 3rem;
+border-radius: 16px;
+border: 1px solid var(--gray-200);
+}
+
+.timeline-tabs {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 1rem;
+margin-bottom: 2rem;
+}
+
+.tab-btn {
+padding: 0.75rem;
+background: white;
+border: 2px solid var(--gray-200);
+border-radius: 8px;
+font-weight: 500;
+cursor: pointer;
+transition: all var(--transition-base);
+}
+
+.tab-btn.active {
+background: var(--swiss-red);
+color: white;
+border-color: var(--swiss-red);
+}
+
+.tab-btn:hover {
+border-color: var(--swiss-red);
+}
+
+.timeline-item {
+display: none;
+animation: fadeInUp 0.5s ease-out;
+}
+
+.timeline-item.active {
+display: block;
+}
+
+.timeline-item h3 {
+color: var(--swiss-red);
+margin-bottom: 1rem;
+}
+
+.timeline-materials {
+display: flex;
+gap: 0.5rem;
+flex-wrap: wrap;
+margin-top: 1.5rem;
+}
+
+.material-tag {
+background: var(--swiss-red);
+color: white;
+padding: 0.25rem 0.75rem;
+border-radius: 20px;
+font-size: 0.8rem;
+font-weight: 500;
+}
+
+/* ===== MATERIALS SECTION ===== */
+.materials-section {
+padding: 8rem 0;
+background: linear-gradient(135deg, var(--gray-50), white);
+}
+
+.materials-tabs {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 1rem;
+margin-bottom: 4rem;
+}
+
+.materials-content {
+position: relative;
+}
+
+.tab-content {
+display: none;
+animation: fadeInUp 0.6s ease-out;
+}
+
+.tab-content.active {
+display: block;
+}
+
+.materials-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+gap: 2rem;
+}
+
+.material-card {
+background: white;
+padding: 2.5rem;
+border-radius: 16px;
+box-shadow: var(--shadow-lg);
+transition: all var(--transition-base);
+border: 1px solid var(--gray-200);
+}
+
+.material-card:hover {
+transform: translateY(-5px);
+box-shadow: var(--shadow-xl);
+}
+
+.material-header {
+display: flex;
+align-items: center;
+gap: 1rem;
+margin-bottom: 2rem;
+}
+
+.material-icon {
+font-size: 2rem;
+}
+
+.material-card h3 {
+color: var(--swiss-red);
+margin: 0;
+}
+
+.material-properties {
+margin-bottom: 2rem;
+}
+
+.property {
+display: flex;
+justify-content: space-between;
+padding: 0.5rem 0;
+border-bottom: 1px solid var(--gray-100);
+}
+
+.property:last-child {
+border-bottom: none;
+}
+
+.property-label {
+font-weight: 600;
+color: var(--gray-700);
+}
+
+.property-value {
+color: var(--gray-600);
+}
+
+.material-applications h4 {
+color: var(--swiss-red);
+margin-bottom: 1rem;
+font-size: 1rem;
+}
+
+.material-applications ul {
+list-style: none;
+padding-left: 0;
+}
+
+.material-applications li {
+padding: 0.25rem 0;
+position: relative;
+padding-left: 1rem;
+}
+
+.material-applications li::before {
+content: '•';
+position: absolute;
+left: 0;
+color: var(--swiss-red);
+font-weight: bold;
+}
+
+.material-colors {
+display: flex;
+gap: 0.5rem;
+margin-top: 1.5rem;
+}
+
+.color-sample {
+width: 30px;
+height: 30px;
+border-radius: 50%;
+border: 2px solid var(--gray-300);
+cursor: pointer;
+transition: transform var(--transition-fast);
+}
+
+.color-sample:hover {
+transform: scale(1.1);
+}
+
+.color-sample.yellow { background: var(--gold); }
+.color-sample.rose { background: #e91e63; }
+.color-sample.red { background: #c2185b; }
+.color-sample.white { background: #f5f5f5; }
+
+/* Specific material card styling */
+.gold { border-left: 4px solid var(--gold); }
+.platinum { border-left: 4px solid var(--platinum); }
+.silver { border-left: 4px solid var(--silver); }
+.steel-316l { border-left: 4px solid var(--steel); }
+.steel-904l { border-left: 4px solid #34495e; }
+.nivarox { border-left: 4px solid #ff6b6b; }
+.glucydur { border-left: 4px solid #ffd700; }
+
+/* ===== INNOVATION SECTION ===== */
+.innovation-section {
+padding: 8rem 0;
+background: white;
+}
+
+.innovation-showcase {
+margin-top: 4rem;
+}
+
+.innovation-grid {
+display: grid;
+grid-template-columns: 2fr 1fr;
+gap: 4rem;
+}
+
+.innovation-card {
+background: var(--gray-50);
+border-radius: 16px;
+overflow: hidden;
+box-shadow: var(--shadow-lg);
+border: 1px solid var(--gray-200);
+}
+
+.innovation-image {
+width: 100%;
+height: 200px;
+object-fit: cover;
+}
+
+.innovation-card.silicon {
+grid-row: span 2;
+}
+
+.innovation-card.electronics {
+grid-column: span 2;
+}
+
+.card-content {
+padding: 2.5rem;
+}
+
+.card-content h3 {
+color: var(--swiss-red);
+margin-bottom: 2rem;
+}
+
+.material-showcase {
+margin-bottom: 2rem;
+padding-bottom: 2rem;
+border-bottom: 1px solid var(--gray-200);
+}
+
+.material-showcase:last-child {
+border-bottom: none;
+}
+
+.material-showcase h4 {
+color: var(--gray-800);
+margin-bottom: 1rem;
+}
+
+.material-showcase ul {
+list-style: none;
+padding-left: 0;
+}
+
+.material-showcase li {
+padding: 0.25rem 0;
+position: relative;
+padding-left: 1rem;
+}
+
+.material-showcase li::before {
+content: '→';
+position: absolute;
+left: 0;
+color: var(--swiss-red);
+}
+
+.silicon-benefits {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 1rem;
+margin-bottom: 2rem;
+}
+
+.benefit-item {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+padding: 1rem;
+background: white;
+border-radius: 8px;
+border: 1px solid var(--gray-200);
+}
+
+.benefit-icon {
+font-size: 1.25rem;
+}
+
+.benefit-text {
+font-weight: 500;
+color: var(--gray-700);
+}
+
+.innovation-list {
+margin-top: 1.5rem;
+}
+
+.innovation-item {
+padding: 1rem;
+background: white;
+border-radius: 8px;
+margin-bottom: 1rem;
+border-left: 4px solid var(--swiss-red);
+}
+
+.innovation-item strong {
+color: var(--swiss-red);
+}
+
+.features-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 1rem;
+margin-bottom: 2rem;
+}
+
+.feature {
+padding: 1rem;
+background: white;
+border-radius: 8px;
+border: 1px solid var(--gray-200);
+}
+
+.feature strong {
+display: block;
+color: var(--swiss-red);
+margin-bottom: 0.5rem;
+}
+
+/* ===== ECOSYSTEM SECTION ===== */
+.ecosystem-section {
+padding: 8rem 0;
+background: linear-gradient(135deg, var(--gray-50), white);
+}
+
+.districts-showcase {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 4rem;
+align-items: start;
+}
+
+.district-map {
+position: relative;
+border-radius: 16px;
+overflow: hidden;
+box-shadow: var(--shadow-xl);
+}
+
+.map-image {
+width: 100%;
+height: auto;
+}
+
+.map-overlay {
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+background: linear-gradient(transparent, rgba(0,0,0,0.8));
+color: white;
+padding: 2rem;
+}
+
+.map-overlay h3 {
+margin-bottom: 0.5rem;
+}
+
+.districts-details {
+background: white;
+padding: 2.5rem;
+border-radius: 16px;
+box-shadow: var(--shadow-lg);
+border: 1px solid var(--gray-200);
+}
+
+.district-tabs {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 0.5rem;
+margin-bottom: 2rem;
+}
+
+.district-info {
+display: none;
+animation: fadeInUp 0.5s ease-out;
+}
+
+.district-info.active {
+display: block;
+}
+
+.district-info h3 {
+color: var(--swiss-red);
+margin-bottom: 1rem;
+}
+
+.district-specialties h4 {
+color: var(--gray-800);
+margin: 1.5rem 0 1rem;
+font-size: 1.1rem;
+}
+
+.district-specialties ul {
+list-style: none;
+padding-left: 0;
+}
+
+.district-specialties li {
+padding: 0.25rem 0;
+position: relative;
+padding-left: 1rem;
+}
+
+.district-specialties li::before {
+content: '•';
+position: absolute;
+left: 0;
+color: var(--swiss-red);
+font-weight: bold;
+}
+
+.district-companies h4 {
+color: var(--gray-800);
+margin: 1.5rem 0 1rem;
+font-size: 1.1rem;
+}
+
+.company-tag {
+display: inline-block;
+background: var(--swiss-red);
+color: white;
+padding: 0.25rem 0.75rem;
+border-radius: 20px;
+font-size: 0.8rem;
+font-weight: 500;
+margin: 0.25rem 0.5rem 0.25rem 0;
+}
+
+/* ===== FORMATION SECTION ===== */
+.formation-section {
+padding: 8rem 0;
+background: white;
+}
+
+.formation-showcase {
+display: grid;
+grid-template-columns: 1fr 2fr;
+gap: 4rem;
+align-items: start;
+}
+
+.formation-image {
+width: 100%;
+border-radius: 16px;
+box-shadow: var(--shadow-xl);
+position: sticky;
+top: 2rem;
+}
+
+.schools-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 2rem;
+margin-bottom: 3rem;
+}
+
+.school-card {
+background: var(--gray-50);
+padding: 2rem;
+border-radius: 12px;
+border: 1px solid var(--gray-200);
+transition: all var(--transition-base);
+}
+
+.school-card:hover {
+transform: translateY(-3px);
+box-shadow: var(--shadow-md);
+}
+
+.school-header {
+display: flex;
+align-items: center;
+gap: 1rem;
+margin-bottom: 1rem;
+}
+
+.school-icon {
+font-size: 1.5rem;
+}
+
+.school-card h3 {
+color: var(--swiss-red);
+margin: 0;
+}
+
+.school-specialties {
+display: flex;
+flex-wrap: wrap;
+gap: 0.5rem;
+margin-top: 1rem;
+}
+
+.specialty {
+background: var(--swiss-red);
+color: white;
+padding: 0.25rem 0.5rem;
+border-radius: 12px;
+font-size: 0.8rem;
+font-weight: 500;
+}
+
+.career-path {
+background: var(--gray-50);
+padding: 2.5rem;
+border-radius: 16px;
+border: 1px solid var(--gray-200);
+}
+
+.career-path h3 {
+color: var(--swiss-red);
+margin-bottom: 2rem;
+}
+
+.path-steps {
+display: flex;
+flex-direction: column;
+gap: 2rem;
+}
+
+.step {
+display: flex;
+align-items: center;
+gap: 1.5rem;
+}
+
+.step-number {
+width: 40px;
+height: 40px;
+background: var(--swiss-red);
+color: white;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 900;
+font-size: 1.1rem;
+flex-shrink: 0;
+}
+
+.step-content h4 {
+color: var(--gray-800);
+margin-bottom: 0.5rem;
+}
+
+/* ===== COMPANIES SECTION ===== */
+.companies-section {
+padding: 8rem 0;
+background: linear-gradient(135deg, var(--gray-50), white);
+}
+
+.companies-showcase {
+display: grid;
+grid-template-columns: 1fr 2fr;
+gap: 4rem;
+align-items: start;
+}
+
+.companies-image {
+width: 100%;
+border-radius: 16px;
+box-shadow: var(--shadow-xl);
+position: sticky;
+top: 2rem;
+}
+
+.companies-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 2rem;
+}
+
+.company-card {
+background: white;
+padding: 2rem;
+border-radius: 12px;
+box-shadow: var(--shadow-lg);
+border: 1px solid var(--gray-200);
+transition: all var(--transition-base);
+}
+
+.company-card:hover {
+transform: translateY(-3px);
+box-shadow: var(--shadow-xl);
+}
+
+.company-header {
+display: flex;
+align-items: center;
+gap: 1rem;
+margin-bottom: 1.5rem;
+}
+
+.company-logo {
+width: 50px;
+height: 50px;
+background: var(--swiss-red);
+color: white;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 900;
+font-size: 1.2rem;
+}
+
+.company-card h3 {
+color: var(--swiss-red);
+margin: 0;
+}
+
+.company-innovation h4 {
+color: var(--gray-800);
+margin-bottom: 1rem;
+font-size: 1rem;
+}
+
+.company-innovation ul {
+list-style: none;
+padding-left: 0;
+}
+
+.company-innovation li {
+padding: 0.25rem 0;
+position: relative;
+padding-left: 1rem;
+font-size: 0.9rem;
+}
+
+.company-innovation li::before {
+content: '▸';
+position: absolute;
+left: 0;
+color: var(--swiss-red);
+}
+
+.company-strategy {
+display: flex;
+gap: 0.5rem;
+margin-top: 1.5rem;
+flex-wrap: wrap;
+}
+
+.strategy-tag {
+background: var(--gray-100);
+color: var(--gray-700);
+padding: 0.25rem 0.75rem;
+border-radius: 12px;
+font-size: 0.8rem;
+font-weight: 500;
+}
+
+/* ===== FUTURE SECTION ===== */
+.future-section {
+padding: 8rem 0;
+background: white;
+}
+
+.future-showcase {
+display: grid;
+grid-template-columns: 1fr 2fr;
+gap: 4rem;
+align-items: start;
+}
+
+.future-image {
+width: 100%;
+border-radius: 16px;
+box-shadow: var(--shadow-xl);
+position: sticky;
+top: 2rem;
+}
+
+.future-trends {
+background: var(--gray-50);
+padding: 2.5rem;
+border-radius: 16px;
+border: 1px solid var(--gray-200);
+}
+
+.trend-tabs {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 1rem;
+margin-bottom: 2rem;
+}
+
+.trend-item {
+display: none;
+animation: fadeInUp 0.5s ease-out;
+}
+
+.trend-item.active {
+display: block;
+}
+
+.trend-item h3 {
+color: var(--swiss-red);
+margin-bottom: 2rem;
+}
+
+.trend-details {
+display: grid;
+gap: 1.5rem;
+}
+
+.trend-card {
+background: white;
+padding: 1.5rem;
+border-radius: 8px;
+border: 1px solid var(--gray-200);
+}
+
+.trend-card h4 {
+color: var(--gray-800);
+margin-bottom: 1rem;
+font-size: 1rem;
+}
+
+.trend-card ul {
+list-style: none;
+padding-left: 0;
+}
+
+.trend-card li {
+padding: 0.25rem 0;
+position: relative;
+padding-left: 1rem;
+font-size: 0.9rem;
+}
+
+.trend-card li::before {
+content: '✓';
+position: absolute;
+left: 0;
+color: var(--swiss-red);
+font-weight: bold;
+}
+
+/* ===== GLOBAL SECTION ===== */
+.global-section {
+padding: 8rem 0;
+background: linear-gradient(135deg, var(--gray-50), white);
+}
+
+.comparison-table {
+background: white;
+border-radius: 16px;
+overflow: hidden;
+box-shadow: var(--shadow-xl);
+border: 1px solid var(--gray-200);
+}
+
+.table-header {
+display: grid;
+grid-template-columns: 1fr 2fr 2fr 2fr;
+background: var(--swiss-red);
+color: white;
+font-weight: 600;
+}
+
+.header-cell {
+padding: 1.5rem;
+text-align: center;
+}
+
+.table-row {
+display: grid;
+grid-template-columns: 1fr 2fr 2fr 2fr;
+border-bottom: 1px solid var(--gray-200);
+}
+
+.table-row:last-child {
+border-bottom: none;
+}
+
+.country-cell {
+padding: 1.5rem;
+display: flex;
+align-items: center;
+gap: 1rem;
+}
+
+.country-flag {
+font-size: 1.5rem;
+}
+
+.country-name {
+font-weight: 600;
+color: var(--gray-800);
+}
+
+.strategy-cell,
+.strengths-cell,
+.brands-cell {
+padding: 1.5rem;
+}
+
+.brand-tag {
+display: inline-block;
+background: var(--swiss-red);
+color: white;
+padding: 0.25rem 0.75rem;
+border-radius: 12px;
+font-size: 0.8rem;
+font-weight: 500;
+margin: 0.25rem 0.5rem 0.25rem 0;
+}
+
+.leadership-stats {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 3rem;
+margin-top: 4rem;
+}
+
+.stat-highlight {
+text-align: center;
+padding: 2rem;
+background: white;
+border-radius: 16px;
+box-shadow: var(--shadow-lg);
+border: 1px solid var(--gray-200);
+}
+
+.stat-large {
+font-size: 3rem;
+font-weight: 900;
+color: var(--swiss-red);
+font-family: 'Playfair Display', serif;
+display: block;
+margin-bottom: 0.5rem;
+}
+
+.stat-description {
+color: var(--gray-600);
+font-weight: 500;
+}
+
+/* ===== CONTACT SECTION ===== */
+.contact-section {
+padding: 8rem 0;
+background: white;
+}
+
+.contact-content {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 4rem;
+}
+
+.contact-form {
+background: var(--gray-50);
+padding: 3rem;
+border-radius: 16px;
+border: 1px solid var(--gray-200);
+}
+
+.form-group {
+margin-bottom: 1.5rem;
+}
+
+.form-group label {
+display: block;
+margin-bottom: 0.5rem;
+font-weight: 600;
+color: var(--gray-700);
+}
+
+.form-group input,
+.form-group select {
+width: 100%;
+padding: 1rem;
+border: 2px solid var(--gray-200);
+border-radius: 8px;
+font-size: 1rem;
+transition: border-color var(--transition-fast);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+outline: none;
+border-color: var(--swiss-red);
+}
+
+.checkbox-group {
+display: flex;
+align-items: flex-start;
+gap: 0.75rem;
+}
+
+.checkbox-group input {
+width: auto;
+margin: 0;
+flex-shrink: 0;
+margin-top: 0.25rem;
+}
+
+.checkbox-group label {
+margin: 0;
+font-size: 0.9rem;
+line-height: 1.5;
+}
+
+.contact-info {
+display: flex;
+flex-direction: column;
+gap: 2rem;
+}
+
+.info-card {
+background: var(--gray-50);
+padding: 2rem;
+border-radius: 12px;
+border: 1px solid var(--gray-200);
+text-align: center;
+}
+
+.info-icon {
+font-size: 2rem;
+margin-bottom: 1rem;
+}
+
+.info-card h3 {
+color: var(--swiss-red);
+margin-bottom: 1rem;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+background: var(--gray-900);
+color: white;
+padding: 4rem 0 2rem;
+}
+
+.footer-content {
+display: flex;
+flex-direction: column;
+gap: 3rem;
+}
+
+.footer-main {
+display: grid;
+grid-template-columns: 1fr 2fr;
+gap: 4rem;
+}
+
+.footer-brand {
+display: flex;
+flex-direction: column;
+gap: 1.5rem;
+}
+
+.footer-logo {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+font-family: 'Playfair Display', serif;
+font-weight: 700;
+font-size: 1.5rem;
+}
+
+.footer-title {
+color: white;
+}
+
+.footer-description {
+color: var(--gray-300);
+line-height: 1.6;
+}
+
+.footer-links {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 2rem;
+}
+
+.footer-column h4 {
+color: var(--swiss-red);
+margin-bottom: 1rem;
+font-size: 1.1rem;
+}
+
+.footer-column ul {
+list-style: none;
+padding-left: 0;
+}
+
+.footer-column li {
+margin-bottom: 0.5rem;
+}
+
+.footer-column a {
+color: var(--gray-300);
+text-decoration: none;
+transition: color var(--transition-fast);
+}
+
+.footer-column a:hover {
+color: var(--swiss-red);
+}
+
+.footer-stats {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 2rem;
+padding: 2rem 0;
+border-top: 1px solid var(--gray-700);
+border-bottom: 1px solid var(--gray-700);
+}
+
+.footer-stat {
+text-align: center;
+}
+
+.footer-stat .stat-number {
+display: block;
+font-size: 2rem;
+font-weight: 900;
+color: var(--swiss-red);
+font-family: 'Playfair Display', serif;
+}
+
+.footer-stat .stat-label {
+display: block;
+color: var(--gray-300);
+font-size: 0.9rem;
+margin-top: 0.5rem;
+}
+
+.footer-bottom {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding-top: 2rem;
+}
+
+.footer-copyright {
+color: var(--gray-400);
+font-size: 0.9rem;
+}
+
+.swiss-badge {
+background: var(--swiss-red);
+color: white;
+padding: 0.5rem 1rem;
+border-radius: 20px;
+font-weight: 600;
+font-size: 0.9rem;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1200px) {
+.container {
+padding: 0 1.5rem;
+}
+
+.nav-container {
+padding: 0 1.5rem;
+}
+
+.companies-grid,
+.schools-grid {
+grid-template-columns: 1fr;
+}
+
+.materials-grid {
+grid-template-columns: 1fr;
+}
+}
+
+@media (max-width: 968px) {
+.nav-menu {
+position: fixed;
+top: 80px;
+left: 0;
+right: 0;
+background: white;
+flex-direction: column;
+padding: 2rem;
+box-shadow: var(--shadow-lg);
+transform: translateY(-100%);
+opacity: 0;
+visibility: hidden;
+transition: all var(--transition-base);
+}
+
+.nav-menu.active {
+transform: translateY(0);
+opacity: 1;
+visibility: visible;
+}
+
+.nav-toggle {
+display: flex;
+}
+
+.hero-actions {
+flex-direction: column;
+align-items: center;
+}
+
+.summary-content,
+.timeline-container,
+.innovation-grid,
+.districts-showcase,
+.formation-showcase,
+.companies-showcase,
+.future-showcase,
+.contact-content {
+grid-template-columns: 1fr;
+gap: 2rem;
+}
+
+.hero-stats {
+grid-template-columns: 1fr;
+}
+
+.timeline-tabs,
+.materials-tabs,
+.trend-tabs {
+grid-template-columns: repeat(2, 1fr);
+}
+
+.district-tabs {
+grid-template-columns: repeat(2, 1fr);
+}
+
+.comparison-table {
+overflow-x: auto;
+}
+
+.footer-main {
+grid-template-columns: 1fr;
+gap: 2rem;
+}
+
+.footer-links {
+grid-template-columns: repeat(2, 1fr);
+}
+
+.leadership-stats,
+.footer-stats {
+grid-template-columns: 1fr;
+}
+
+.silicon-benefits,
+.features-grid {
+grid-template-columns: 1fr;
+}
+}
+
+@media (max-width: 640px) {
+.container {
+padding: 0 1rem;
+}
+
+.nav-container {
+padding: 0 1rem;
+}
+
+.materials-tabs,
+.timeline-tabs,
+.district-tabs,
+.trend-tabs {
+grid-template-columns: 1fr;
+}
+
+.table-header,
+.table-row {
+grid-template-columns: 1fr;
+}
+
+.table-cell {
+text-align: center !important;
+}
+
+.footer-links {
+grid-template-columns: 1fr;
+}
+
+.footer-bottom {
+flex-direction: column;
+gap: 1rem;
+text-align: center;
+}
+
+.btn {
+padding: 0.75rem 1.5rem;
+font-size: 0.9rem;
+}
+}
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+* {
+animation-duration: 0.01ms !important;
+animation-iteration-count: 1 !important;
+transition-duration: 0.01ms !important;
+}
+
+.scroll-indicator,
+.hero-badge {
+animation: none;
+}
+}
+
+/* ===== UTILITIES ===== */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+
+/* ===== LOADING STATES ===== */
+.loading {
+position: relative;
+overflow: hidden;
+}
+
+.loading::after {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+background-size: 200px 100%;
+animation: shimmer 1.5s infinite;
+}
+
+/* ===== SCROLL REVEAL ===== */
+.scroll-reveal {
+opacity: 0;
+transform: translateY(30px);
+transition: all 0.8s ease-out;
+}
+
+.scroll-reveal.revealed {
+opacity: 1;
+transform: translateY(0);
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+.navbar,
+.hero-actions,
+.contact-section,
+.footer {
+display: none;
+}
+
+.hero {
+background: none;
+color: black;
+}
+
+* {
+box-shadow: none !important;
+text-shadow: none !important;
 }
 }
