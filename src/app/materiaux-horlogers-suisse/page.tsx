@@ -6,27 +6,10 @@ export default function MateriauxHorlogersSuisse() {
   const [htmlContent, setHtmlContent] = useState('')
 
   useEffect(() => {
-    // Charger dynamiquement le HTML depuis /public
     fetch('/materiaux-horlogers-suisse.html')
       .then((res) => res.text())
       .then((data) => setHtmlContent(data))
       .catch((err) => console.error('Erreur de chargement du HTML :', err))
-
-    // Défilement fluide
-    setTimeout(() => {
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', (e) => {
-          e.preventDefault()
-          const href = (anchor as HTMLAnchorElement).getAttribute('href')
-          if (!href) return
-          const target = document.querySelector(href)
-          if (target) {
-            const offsetTop = (target as HTMLElement).offsetTop - 70
-            window.scrollTo({ top: offsetTop, behavior: 'smooth' })
-          }
-        })
-      })
-    }, 500)
   }, [])
 
   if (!htmlContent) {
@@ -34,6 +17,26 @@ export default function MateriauxHorlogersSuisse() {
   }
 
   return (
-    <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+    <div>
+      <style>{`
+        html, body {
+          background-color: #1A1A1A !important;
+          color: #F5F5F5 !important;
+          font-family: 'Open Sans', sans-serif !important;
+          text-align: center;
+          overflow-x: hidden;
+        }
+        section, .hero, .header, .footer {
+          margin: 0 auto !important;
+          max-width: 100vw !important;
+        }
+        .hero-content, .section {
+          text-align: center !important;
+          justify-content: center !important;
+          align-items: center !important;
+        }
+      `}</style>
+      <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+    </div>
   )
 }
