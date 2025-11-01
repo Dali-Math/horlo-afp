@@ -100,7 +100,7 @@ export default function RootLayout({
       <body className="bg-light-100 text-slate-900 dark:bg-dark-900 dark:text-light-100 transition-colors duration-300">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <Navbar />
-          <main>{children}</main>
+          <main className="min-h-screen overflow-visible relative">{children}</main>
           <Footer />
           <ScrollToTop />
           <Analytics />
