@@ -6,10 +6,23 @@ export default function MateriauxHorlogersSuisse() {
   const [htmlContent, setHtmlContent] = useState('')
 
   useEffect(() => {
+    // Charger dynamiquement le HTML
     fetch('/materiaux-horlogers-suisse.html')
-      .then((res) => res.text())
-      .then((data) => setHtmlContent(data))
-      .catch((err) => console.error('Erreur de chargement du HTML :', err))
+      .then(res => res.text())
+      .then(data => {
+        // Extraire le CSS interne et l'injecter dans <head>
+        const parser = new DOMParser()
+        const doc = parser.parseFromString(data, 'text/html')
+        const styleTags = doc.querySelectorAll('style, link[rel="stylesheet"]')
+
+        styleTags.forEach(tag => {
+          document.head.appendChild(tag)
+        })
+
+        // Garder uniquement le corps pour le rendu
+        setHtmlContent(doc.body.innerHTML)
+      })
+      .catch(err => console.error('Erreur de chargement du HTML :', err))
   }, [])
 
   if (!htmlContent) {
@@ -17,26 +30,13 @@ export default function MateriauxHorlogersSuisse() {
   }
 
   return (
-    <div>
-      <style>{`
-        html, body {
-          background-color: #1A1A1A !important;
-          color: #F5F5F5 !important;
-          font-family: 'Open Sans', sans-serif !important;
-          text-align: center;
-          overflow-x: hidden;
-        }
-        section, .hero, .header, .footer {
-          margin: 0 auto !important;
-          max-width: 100vw !important;
-        }
-        .hero-content, .section {
-          text-align: center !important;
-          justify-content: center !important;
-          align-items: center !important;
-        }
-      `}</style>
-      <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
-    </div>
+    <div
+      style={{
+        width: '100%',
+        overflowX: 'hidden',
+        backgroundColor: '#1a1a1a',
+      }}
+      dangerouslySetInnerHTML={{ __html: htmlContent }}
+    />
   )
 }
