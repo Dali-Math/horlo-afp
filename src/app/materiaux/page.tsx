@@ -245,52 +245,48 @@ function MaterialCard({
 
   return (
     <article
-      className={`group relative bg-white dark:bg-slate-900/50 rounded-3xl overflow-hidden 
-        transition-all duration-700 hover:shadow-2xl hover:shadow-amber-500/10 
-        border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-sm
-        hover:-translate-y-2 flex flex-col
+      className={`group relative bg-slate-800/90 dark:bg-slate-900/90 rounded-2xl overflow-hidden 
+        transition-all duration-500 hover:shadow-xl hover:shadow-amber-500/20 
+        border border-slate-700/50 backdrop-blur-sm hover:-translate-y-1 flex flex-col
         ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-      style={{ transitionDelay: '100ms' }}
+      style={{ transitionDelay: '50ms' }}
     >
+      <div className="flex items-center gap-3 p-4 border-b border-slate-700/50">
+        <div className={`${colorClass} text-white rounded-xl p-2 text-xl shadow-md flex-shrink-0`}>
+          {icon}
+        </div>
+        <h2 className="text-lg font-bold text-white flex-1">{title}</h2>
+        <div className="bg-slate-700/50 text-slate-300 px-2 py-1 rounded-md text-[10px] font-semibold flex items-center gap-1">
+          <Clock className="w-3 h-3" />
+          {historicalPeriod}
+        </div>
+      </div>
+
       <button
         type="button"
-        className="relative w-full h-56 overflow-hidden focus:outline-none border-0 p-0 bg-transparent cursor-pointer"
+        className="relative w-full h-32 overflow-hidden focus:outline-none border-0 p-0 bg-transparent cursor-pointer"
         onClick={onImageClick}
         aria-label={`Voir une grande image de ${title}`}
       >
         <img
           src={illustration}
           alt={title}
-          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1"
+          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
           loading="lazy"
         />
-        <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
-          <Clock className="w-3 h-3" />
-          {historicalPeriod}
-        </div>
       </button>
 
-      <div className="p-6 flex-1 flex flex-col space-y-4">
-        <div className="flex items-start gap-4">
-          <div className={`${colorClass} text-white rounded-2xl p-3.5 text-2xl shadow-lg flex-shrink-0`}>
-            {icon}
-          </div>
-          <div className="flex-1 min-w-0">
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">{title}</h2>
-            <div className="h-1 w-16 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full" />
-          </div>
-        </div>
+      <div className="p-4 flex-1 flex flex-col space-y-3">
+        <p className="text-slate-300 leading-relaxed text-xs line-clamp-2">{description}</p>
 
-        <p className="text-slate-600 dark:text-slate-300 leading-relaxed flex-1 text-[15px]">{description}</p>
-
-        <div className="pt-4 border-t border-slate-200 dark:border-slate-700/50">
-          <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">
+        <div className="pt-2 border-t border-slate-700/50">
+          <span className="text-[10px] uppercase tracking-wider text-amber-400 font-bold">
             Applications principales
           </span>
-          <ul className="space-y-2 mt-2">
-            {useCases.map((useCase, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-200">
-                <span className="text-amber-500 mt-0.5">▸</span>
+          <ul className="space-y-1 mt-1.5">
+            {useCases.slice(0, 3).map((useCase, i) => (
+              <li key={i} className="flex items-start gap-1.5 text-[11px] text-slate-300">
+                <span className="text-amber-400 mt-0.5 text-xs">▸</span>
                 <span>{useCase}</span>
               </li>
             ))}
@@ -298,20 +294,19 @@ function MaterialCard({
         </div>
 
         {technicalDetails && (
-          <div className="pt-3 border-t border-slate-200 dark:border-slate-700/50">
-            <button
-              onClick={() => setShowDetails(!showDetails)}
-              className="flex items-center gap-2 text-xs uppercase tracking-wider text-amber-600 dark:text-amber-400 font-bold hover:text-amber-700 dark:hover:text-amber-300 transition-colors"
-            >
-              <Gem className="w-3 h-3" />
-              Détails techniques
-            </button>
-            {showDetails && (
-              <p className="mt-2 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                {technicalDetails}
-              </p>
-            )}
-          </div>
+          <button
+            onClick={() => setShowDetails(!showDetails)}
+            className="flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-wider text-amber-400 font-bold hover:text-amber-300 transition-colors pt-2 border-t border-slate-700/50"
+          >
+            <Gem className="w-3 h-3" />
+            {showDetails ? 'Masquer' : 'Détails techniques'}
+          </button>
+        )}
+        
+        {showDetails && technicalDetails && (
+          <p className="text-[10px] text-slate-400 leading-relaxed bg-slate-900/50 p-2 rounded-lg">
+            {technicalDetails}
+          </p>
         )}
       </div>
     </article>
@@ -390,7 +385,7 @@ export default function MateriauxPage() {
           ))}
         </nav>
 
-        <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mb-16">
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
           {filtered.map((material, i) => (
             <MaterialCard key={i} {...material} onImageClick={() => setZoom({ src: material.illustration, alt: material.title })} />
           ))}
