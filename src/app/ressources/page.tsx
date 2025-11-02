@@ -46,7 +46,7 @@ const RessourcesPage: React.FC = () => {
       badge: 'Populaire',
       views: 2847,
       rating: 4.9,
-      image: '/imgs/marques_header.png',
+      image: '/imgs/ressources/marques_header.png',
       tags: ['Vacheron Constantin', 'Grande Complication', '57 complications', 'Ultra-fin'],
       specs: {
         composants: 2826,
@@ -66,7 +66,7 @@ const RessourcesPage: React.FC = () => {
       badge: 'Premium',
       views: 1923,
       rating: 4.8,
-      image: '/imgs/rolex_4130.png',
+      image: '/imgs/ressources/rolex_4130.png',
       tags: ['Rolex', 'Chronographe', 'Intégré', 'Daytona'],
       specs: {
         composants: 201,
@@ -86,7 +86,7 @@ const RessourcesPage: React.FC = () => {
       badge: 'Certifié',
       views: 3156,
       rating: 4.9,
-      image: '/imgs/patek_calatrava.png',
+      image: '/imgs/ressources/patek_calatrava.png',
       tags: ['Patek Philippe', 'Calatrava', 'Finger-bridge', 'Ultra-fin'],
       specs: {
         epaisseur: '2,53mm (calibre 240)',
@@ -107,7 +107,7 @@ const RessourcesPage: React.FC = () => {
       badge: 'Populaire',
       views: 4521,
       rating: 4.5,
-      image: '/imgs/eta7750_chronographe.png',
+      image: '/imgs/ressources/eta7750_chronographe.png',
       tags: ['ETA', '7750', 'Chronographe', 'Production'],
       specs: {
         diametre: '30,00mm',
@@ -127,7 +127,7 @@ const RessourcesPage: React.FC = () => {
       badge: 'Nouveau',
       views: 1892,
       rating: 4.6,
-      image: '/imgs/mouvements_header.png',
+      image: '/imgs/ressources/mouvements_header.png',
       tags: ['Omega', 'Co-Axial', 'ETA 2892', 'Innovation'],
       specs: {
         base: 'ETA 2892 modifié',
@@ -146,7 +146,7 @@ const RessourcesPage: React.FC = () => {
       niveau: 'Avancé',
       views: 1567,
       rating: 4.7,
-      image: '/imgs/jaeger_lecoultre_889.png',
+      image: '/imgs/ressources/jaeger_lecoultre_889.png',
       tags: ['Jaeger-LeCoultre', '889/2', 'Manufacture', 'Tractor'],
       specs: {
         diametre: '26,0mm',
@@ -168,7 +168,7 @@ const RessourcesPage: React.FC = () => {
       badge: 'Certifié',
       views: 5234,
       rating: 4.9,
-      image: '/imgs/tourbillon_breguet.png',
+      image: '/imgs/ressources/tourbillon_breguet.png',
       tags: ['Breguet', 'Tourbillon', 'Gravité', '1801'],
       specs: {
         rotation: '60 secondes',
@@ -188,7 +188,7 @@ const RessourcesPage: React.FC = () => {
       badge: 'Premium',
       views: 3421,
       rating: 4.8,
-      image: '/imgs/complications_header.png',
+      image: '/imgs/ressources/complications_header.png',
       tags: ['Répétition', 'Acoustique', 'Sonnerie', 'JLC'],
       specs: {
         sequences: 'Heures + Quarts + Minutes',
@@ -207,7 +207,7 @@ const RessourcesPage: React.FC = () => {
       niveau: 'Expert',
       views: 2876,
       rating: 4.7,
-      image: '/imgs/complications_header.png',
+      image: '/imgs/ressources/complications_header.png',
       tags: ['Quantième', 'Calendrier', 'Bissextile', 'Grégorien'],
       specs: {
         cycle: 'Gregorian automatique',
@@ -229,7 +229,7 @@ const RessourcesPage: React.FC = () => {
       badge: 'Premium',
       views: 2145,
       rating: 4.9,
-      image: '/imgs/formation_header.png',
+      image: '/imgs/ressources/formation_header.png',
       tags: ['WOSTEP', 'International', '22 mois', 'Formation'],
       specs: {
         duree: '22 mois',
@@ -249,7 +249,7 @@ const RessourcesPage: React.FC = () => {
       badge: 'Certifié',
       views: 1876,
       rating: 4.8,
-      image: '/imgs/formation_header.png',
+      image: '/imgs/ressources/formation_header.png',
       tags: ['CFPT', 'Genève', 'Bicentenaire', 'Locaux modernes'],
       specs: {
         fondation: '1824',
@@ -269,7 +269,7 @@ const RessourcesPage: React.FC = () => {
       badge: 'Certifié',
       views: 3421,
       rating: 4.8,
-      image: '/imgs/chronoscope_swiss_made.png',
+      image: '/imgs/ressources/chronoscope_swiss_made.png',
       tags: ['COSC', 'Certification', 'Chronomètre', '50 ans'],
       specs: {
         duree_tests: '12-20 jours',
@@ -290,7 +290,7 @@ const RessourcesPage: React.FC = () => {
       niveau: 'Avancé',
       views: 2145,
       rating: 4.6,
-      image: '/imgs/chronoscope_swiss_made.png',
+      image: '/imgs/ressources/chronoscope_swiss_made.png',
       tags: ['Anglage', 'Chanfrein', 'Polissage', 'Bevelling'],
       specs: {
         outils: 'Limes, touret, badeco',
@@ -310,7 +310,7 @@ const RessourcesPage: React.FC = () => {
       badge: 'Populaire',
       views: 1892,
       rating: 4.7,
-      image: '/imgs/chronoscope_swiss_made.png',
+      image: '/imgs/ressources/chronoscope_swiss_made.png',
       tags: ['Côtes', 'Genève', 'Vallée de Joux', 'Bande'],
       specs: {
         variations: 'Droites, éventail, circulaires',
@@ -330,7 +330,7 @@ const RessourcesPage: React.FC = () => {
       badge: 'Certifié',
       views: 4567,
       rating: 4.9,
-      image: '/imgs/chronoscope_swiss_made.png',
+      image: '/imgs/ressources/chronoscope_swiss_made.png',
       tags: ['Swiss Made', 'Réglementation', '2017', 'Valeur'],
       specs: {
         valeur_montre: '≥60%',
