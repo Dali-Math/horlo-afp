@@ -2,6 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import ReactMarkdown from 'react-markdown';
 import { 
   Search, Filter, Star, Award, Clock, Users, BookOpen, 
   Settings, ChevronDown, ExternalLink, Badge, Eye, 
@@ -31,6 +35,7 @@ const RessourcesPage: React.FC = () => {
   const [typeFilter, setTypeFilter] = useState('tous');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [resources, setResources] = useState<Resource[]>([]);
+  const [categoryContent, setCategoryContent] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
   // Données des ressources enrichies
@@ -351,6 +356,44 @@ const RessourcesPage: React.FC = () => {
     }, 800);
   }, []);
 
+  useEffect(() => {
+  const loadCategoryContent = async () => {
+    try {
+      let fileName = '';
+
+      switch (activeTab) {
+        case 'marques':
+          fileName = 'marques_legendaires.md';
+          break;
+        case 'calibres':
+          fileName = 'calibres_techniques.md';
+          break;
+        case 'complications':
+          fileName = 'complications_avancees.md';
+          break;
+        case 'formation':
+          fileName = 'formation_professionnelle.md';
+          break;
+        case 'finitions':
+          fileName = 'finitions_swiss_made.md';
+          break;
+        default:
+          setCategoryContent('');
+          return;
+      }
+
+      const filePath = `/content/ressources/${fileName}`;
+      const res = await fetch(filePath);
+      const text = await res.text();
+      setCategoryContent(text);
+    } catch (err) {
+      console.error('Erreur chargement markdown:', err);
+    }
+  };
+
+  loadCategoryContent();
+}, [activeTab]);
+
   const filteredResources = resources.filter(resource => {
     const matchesTab = activeTab === 'tous' || resource.category.toLowerCase() === activeTab.toLowerCase();
     const matchesSearch = resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -640,6 +683,12 @@ const RessourcesPage: React.FC = () => {
             </div>
           </div>
         </div>
+        {/* 🆕 Bloc Markdown dynamique */}
+{categoryContent && (
+  <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-md p-8 mb-10 prose dark:prose-invert max-w-none">
+    <ReactMarkdown>{categoryContent}</ReactMarkdown>
+  </div>
+)}
 
         {/* Résultats */}
         <div className="flex items-center justify-between mb-6">
