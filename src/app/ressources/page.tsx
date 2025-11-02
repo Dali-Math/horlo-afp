@@ -239,7 +239,7 @@ const RessourcesPage: React.FC = () => {
         langue: 'Anglais',
         certification: 'WOSTEP Certificate'
       },
-      url: 'https://www.wostep.org/'
+      url: 'https://www.wostep.ch/'
     },
     {
       id: 'cfpt-geneva',
