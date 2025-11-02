@@ -230,7 +230,12 @@ function ZoomModal({ src, alt, onClose }: { src: string; alt: string; onClose: (
     </div>
   )
 }
-
+const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
+  Tous: <Layers className="w-4 h-4" />,
+  Classiques: <Award className="w-4 h-4" />,
+  Innovation: <Sparkles className="w-4 h-4" />,
+  Décoratif: <Hammer className="w-4 h-4" />,
+}
 export default function MateriauxPage() {
   const [filter, setFilter] = useState<Category>('Tous')
   const [zoom, setZoom] = useState<null | { src: string; alt: string }>(null)
