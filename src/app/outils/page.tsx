@@ -1,70 +1,26 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import {
-  Clock, TrendingUp, AlertCircle, CheckCircle, Info, BookOpen, Activity, Watch, Battery,
-  Stethoscope, BadgeCheck, Scale, Zap, Timer, Share2, Sigma, Percent, Waves, PieChart, Database
-} from 'lucide-react'
+import { Clock, TrendingUp, AlertCircle, CheckCircle, Info } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { HorloLearnSidebar } from '@/components/HorloLearnSidebar'
 
-// Sidebar menu config
-const menu = [
-  { icon: BookOpen, label: "Bibliothèque de Ressources" },
-  { icon: Activity, label: "Calculateur Précision COSC" },
-  { icon: Watch, label: "Simulateur de Complications" },
-  { icon: Battery, label: "Réserve de Marche" },
-  { icon: Stethoscope, label: "Diagnostiqueur de Problèmes" },
-  { icon: BadgeCheck, label: "Finitions Swiss Made" },
-  { icon: Scale, label: "Convertisseur d'Unités" },
-  { icon: Zap, label: "Fréquences & Oscillations" },
-  { icon: Timer, label: "Chronographe Avancé" },
-  { icon: Share2, label: "Rapport d'Engrenages" },
-  { icon: Sigma, label: "Longueur de Spiral" },
-  { icon: Percent, label: "Tableau des Couples" },
-  { icon: Waves, label: "Guide d'Amplitude" },
-  { icon: PieChart, label: "Simulateur d'Échappement" },
-  { icon: Database, label: "Base de Données des Pièces" },
-]
+type PositionKey = 'pos6H_1' | 'pos6H_2' | 'pos3H_1' | 'pos3H_2' | 'pos9H_1' | 'pos9H_2' | 'posFH_1' | 'posFH_2' | 'posCH_1' | 'posCH_2'
+type ThermalKey = 'temp8' | 'temp38' | 'temp23_15'
 
-// Sidebar component
-function HorloLearnSidebar() {
-  return (
-    <aside className="h-screen fixed top-0 left-0 w-[260px] bg-[#16203a] flex flex-col shadow-xl z-30 select-none">
-      <div className="flex items-center gap-3 px-5 py-6 mb-6 border-b border-slate-700">
-        <span className="bg-blue-700 p-2 rounded-lg">
-          <Watch className="h-7 w-7 text-blue-300" />
-        </span>
-        <div>
-          <div className="font-bold text-lg tracking-wide text-white">HorloLearn Tools</div>
-          <div className="text-xs text-slate-400">Outils Professionnels d&apos;Horlogerie</div>
-        </div>
-      </div>
-      <nav className="flex-1 overflow-y-auto">
-        <ul className="flex flex-col gap-1 px-3">
-          {menu.map((item, idx) => (
-            <li key={item.label} className={`flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-blue-700/20 hover:text-white cursor-pointer text-slate-200 transition
-              ${idx === 1 && "bg-blue-700/70 text-white font-semibold"}`}>
-              <item.icon className="h-5 w-5 opacity-80" />
-              <span>{item.label}</span>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <div className="flex-grow" />
-    </aside>
-  )
-}
-
-// Main calculator component
 export default function COSCCalculator() {
-  const [positions, setPositions] = useState({
+  const [positions, setPositions] = useState<Record<PositionKey, number>>({
     pos6H_1: 0, pos6H_2: 0,
     pos3H_1: 0, pos3H_2: 0,
     pos9H_1: 0, pos9H_2: 0,
     posFH_1: 0, posFH_2: 0,
     posCH_1: 0, posCH_2: 0,
   })
-  const [thermal, setThermal] = useState({ temp8: 0, temp38: 0, temp23_15: 0 })
+  const [thermal, setThermal] = useState<Record<ThermalKey, number>>({ 
+    temp8: 0, 
+    temp38: 0, 
+    temp23_15: 0 
+  })
 
   const results = useMemo(() => {
     const Mi = [
@@ -181,16 +137,19 @@ export default function COSCCalculator() {
             </div>
             <div className="mb-6 text-sm text-slate-400">Saisir la marche journalière en secondes/jour pour chaque position</div>
             {[
-              { name: "6H (Cadran Haut)", k1: "pos6H_1", k2: "pos6H_2" },
-              { name: "3H (Couronne Droite)", k1: "pos3H_1", k2: "pos3H_2" },
-              { name: "9H (Couronne Gauche)", k1: "pos9H_1", k2: "pos9H_2" },
-              { name: "FH (Cadran Face)", k1: "posFH_1", k2: "posFH_2" },
-              { name: "CH (Cadran Bas)", k1: "posCH_1", k2: "posCH_2" },
+              { name: "6H (Cadran Haut)", k1: "pos6H_1" as const, k2: "pos6H_2" as const },
+              { name: "3H (Couronne Droite)", k1: "pos3H_1" as const, k2: "pos3H_2" as const },
+              { name: "9H (Couronne Gauche)", k1: "pos9H_1" as const, k2: "pos9H_2" as const },
+              { name: "FH (Cadran Face)", k1: "posFH_1" as const, k2: "posFH_2" as const },
+              { name: "CH (Cadran Bas)", k1: "posCH_1" as const, k2: "posCH_2" as const },
             ].map(({ name, k1, k2 }) => (
               <div key={name} className="bg-slate-800/70 p-4 rounded-lg mb-3">
                 <div className="text-blue-300 font-semibold mb-2">{`Position ${name}`}</div>
                 <div className="grid grid-cols-2 gap-4">
-                  {[{ label: "Jour 1", key: k1 }, { label: "Jour 2", key: k2 }].map(({ label, key }) => (
+                  {[
+                    { label: "Jour 1", key: k1 }, 
+                    { label: "Jour 2", key: k2 }
+                  ].map(({ label, key }) => (
                     <div key={key}>
                       <label className="block text-xs text-slate-400 mb-1">{label}</label>
                       <input
@@ -216,9 +175,9 @@ export default function COSCCalculator() {
               </div>
               <div className="mb-4 text-xs text-slate-400">Mesures de marche aux différentes températures</div>
               {[
-                { name: "M11 - Température 8°C", key: "temp8", color: "text-blue-400" },
-                { name: "M13 - Température 38°C", key: "temp38", color: "text-orange-400" },
-                { name: "M15 - Température 23°C (reprise)", key: "temp23_15", color: "text-blue-400" },
+                { name: "M11 - Température 8°C", key: "temp8" as const, color: "text-blue-400" },
+                { name: "M13 - Température 38°C", key: "temp38" as const, color: "text-orange-400" },
+                { name: "M15 - Température 23°C (reprise)", key: "temp23_15" as const, color: "text-blue-400" },
               ].map(({ name, key, color }) => (
                 <div key={key} className="bg-slate-800/70 p-3 rounded-lg mb-3">
                   <label className={`block text-sm font-medium ${color} mb-2`}>{name}</label>
@@ -257,7 +216,7 @@ export default function COSCCalculator() {
 
         {/* Graphique */}
         <div className="p-6 rounded-xl bg-slate-800/50 border border-slate-700 shadow">
-          <h3 className="text-lg font-semibold text-white mb-4">Évolution des Marches Journalieres</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">Évolution des Marches Journalières</h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
