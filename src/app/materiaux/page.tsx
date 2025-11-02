@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, Sparkles, Award, Layers } from 'lucide-react'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -124,7 +124,7 @@ function MaterialCard({
   onImageClick,
 }: Material & { onImageClick: () => void }) {
   return (
-    <article className="group relative bg-white/90 dark:bg-slate-900/40 rounded-3xl overflow-hidden border border-slate-200/50 dark:border-slate-700/50 hover:shadow-xl transition-all duration-500 hover:-translate-y-1 backdrop-blur-sm">
+    <article className="group relative bg-white/90 dark:bg-slate-900/40 rounded-3xl overflow-hidden border border-slate-200/50 dark:border-slate-700/50 hover:shadow-[0_0_20px_rgba(212,175,55,0.25)] transition-all duration-500 hover:-translate-y-1 backdrop-blur-sm">
       <button
         type="button"
         className="relative w-full h-48 sm:h-56 overflow-hidden border-0 p-0 bg-transparent cursor-pointer"
@@ -158,7 +158,7 @@ function MaterialCard({
 
 function ZoomModal({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
   return (
-    <div onClick={onClose} className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center">
+    <div onClick={onClose} className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center cursor-zoom-out">
       <img src={src} alt={alt} className="max-h-[90vh] max-w-[90vw] rounded-3xl shadow-2xl border-4 border-amber-400/30" />
     </div>
   )
@@ -191,18 +191,16 @@ export default function MateriauxPage() {
           ))}
         </nav>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-  <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 place-items-stretch">
-    {filtered.map((material, i) => (
-      <div key={i} className="h-full">
-        <MaterialCard
-          {...material}
-          onImageClick={() => setZoom({ src: material.illustration, alt: material.title })}
-        />
-      </div>
-    ))}
-  </section>
-</div>
+        {/* Grille rétablie avec classe indépendante */}
+        <div className="materials-section">
+          {filtered.map((material, i) => (
+            <MaterialCard
+              key={i}
+              {...material}
+              onImageClick={() => setZoom({ src: material.illustration, alt: material.title })}
+            />
+          ))}
+        </div>
       </div>
 
       {zoom && <ZoomModal src={zoom.src} alt={zoom.alt} onClose={() => setZoom(null)} />}
