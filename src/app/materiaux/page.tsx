@@ -1,8 +1,16 @@
 
 'use client'
 
-import { useState } from 'react'
-import { Sparkles, Award, Layers } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { ChevronLeft, Sparkles, Award, Layers } from 'lucide-react'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Pagination, Autoplay, EffectCoverflow } from 'swiper/modules'
+
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import 'swiper/css/effect-coverflow'
 
 type Material = {
   icon: string
@@ -107,112 +115,146 @@ const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
   Décoratif: <Sparkles className="w-4 h-4" />,
 }
 
+function MaterialCard({
+  icon,
+  title,
+  colorClass,
+  description,
+  useCases,
+  illustration,
+  onImageClick,
+}: Material & { onImageClick: () => void }) {
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
+
+  return (
+    <article
+      className={`group relative bg-white dark:bg-slate-900/50 rounded-3xl overflow-hidden 
+        transition-all duration-700 hover:shadow-2xl hover:shadow-amber-500/10 
+        border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-sm
+        hover:-translate-y-2 flex flex-col
+        ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+      style={{ transitionDelay: '100ms' }}
+    >
+      <button
+        type="button"
+        className="relative w-full h-56 overflow-hidden focus:outline-none border-0 p-0 bg-transparent cursor-pointer"
+        onClick={onImageClick}
+        aria-label={`Voir une grande image de ${title}`}
+      >
+        <img
+          src={illustration}
+          alt={title}
+          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1"
+          loading="lazy"
+        />
+      </button>
+
+      <div className="p-6 flex-1 flex flex-col space-y-4">
+        <div className="flex items-start gap-4">
+          <div className={`${colorClass} text-white rounded-2xl p-3.5 text-2xl shadow-lg flex-shrink-0`}>
+            {icon}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">{title}</h2>
+            <div className="h-1 w-16 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full" />
+          </div>
+        </div>
+
+        <p className="text-slate-600 dark:text-slate-300 leading-relaxed flex-1 text-[15px]">{description}</p>
+
+        <div className="pt-4 border-t border-slate-200 dark:border-slate-700/50">
+          <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">
+            Applications principales
+          </span>
+          <ul className="space-y-2 mt-2">
+            {useCases.map((useCase, i) => (
+              <li key={i} className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-200">
+                <span className="text-amber-500 mt-0.5">▸</span>
+                <span>{useCase}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </article>
+  )
+}
+
+function ZoomModal({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+  return (
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center"
+      aria-modal="true"
+      role="dialog"
+    >
+      <img src={src} alt={alt} className="max-h-[90vh] max-w-[90vw] rounded-3xl shadow-2xl border-4 border-amber-400/30" />
+    </div>
+  )
+}
+
 export default function MateriauxPage() {
   const [filter, setFilter] = useState<Category>('Tous')
+  const [zoom, setZoom] = useState<null | { src: string; alt: string }>(null)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   const filtered = filter === 'Tous' ? MATERIALS : MATERIALS.filter((m) => m.category === filter)
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black text-white">
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <h1 className="text-5xl sm:text-6xl font-black text-center mb-12 text-amber-400 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/30 to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+      <header
+        className={`sticky top-0 z-30 transition-all duration-500 ${
+          scrolled
+            ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-lg'
+            : 'bg-white/60 dark:bg-slate-900/60 backdrop-blur-md'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <Link href="/theorie" className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-200">
+            <ChevronLeft className="w-5 h-5" /> Retour à la théorie
+          </Link>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <h1 className="text-5xl sm:text-6xl font-black text-center mb-10 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600">
           Matériaux d'Exception
         </h1>
 
-        {/* Filtres */}
-        <div className="flex justify-center gap-3 mb-12 flex-wrap">
+        <nav className="flex justify-center gap-3 mb-12 flex-wrap">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => setFilter(cat)}
-              className={`px-6 py-2.5 rounded-2xl font-semibold text-sm transition-all ${
+              className={`px-6 py-3 rounded-2xl font-semibold text-sm transition-all duration-300 ${
                 filter === cat
-                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md'
-                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg scale-105'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:shadow-lg border border-slate-200 dark:border-slate-700'
               }`}
             >
               <span className="flex items-center gap-2">{CATEGORY_ICONS[cat]} {cat}</span>
             </button>
           ))}
-        </div>
+        </nav>
 
-        {/* Grille des matériaux */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filtered.map((m, i) => (
-            <article
-              key={i}
-              className="bg-slate-900/60 border border-slate-700 rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300"
-            >
-              <img src={m.illustration} alt={m.title} className="w-full h-48 object-cover" />
-              <div className="p-5">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className={`${m.colorClass} p-2 rounded-lg text-lg`}>{m.icon}</div>
-                  <h3 className="font-semibold text-lg">{m.title}</h3>
-                </div>
-                <p className="text-slate-400 text-sm mb-3">{m.description}</p>
-                <ul className="text-sm text-slate-300 list-disc list-inside space-y-1">
-                  {m.useCases.map((u, j) => (
-                    <li key={j}>{u}</li>
-                  ))}
-                </ul>
-              </div>
-            </article>
+        <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+          {filtered.map((material, i) => (
+            <MaterialCard key={i} {...material} onImageClick={() => setZoom({ src: material.illustration, alt: material.title })} />
           ))}
-        </div>
+        </section>
       </div>
 
-      {/* === SECTION FINALE : SWISS WATCH MATERIALS === */}
-      <section
-        id="final-section"
-        className="relative mt-32 overflow-hidden py-28"
-        style={{
-          clipPath: 'polygon(0 12%, 100% 0, 100% 100%, 0 100%)',
-          background: 'linear-gradient(180deg, #0b0c10 0%, #111217 40%, #000 100%)',
-        }}
-      >
-        {/* Halo lumineux */}
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-transparent to-amber-500/10 blur-3xl" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05)_0%,transparent_70%)]" />
-
-        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center space-y-6">
-          <h2 className="text-5xl sm:text-6xl font-extrabold text-amber-400 tracking-tight animate-pulse-slow drop-shadow-[0_0_25px_rgba(212,175,55,0.3)]">
-            Swiss Watch Materials
-          </h2>
-
-          <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-            Fusion entre innovation et héritage, les matériaux suisses incarnent l’excellence 
-            et la précision au cœur de l’horlogerie mondiale.
-          </p>
-
-          <div className="flex justify-center gap-4 pt-6">
-            <a
-              href="#top"
-              className="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-semibold shadow-lg shadow-amber-500/30 transition-all"
-            >
-              Explorer à nouveau
-            </a>
-            <a
-              href="/"
-              className="px-6 py-3 rounded-xl border border-amber-400 text-amber-400 hover:bg-amber-400/10 transition-all"
-            >
-              Retour à l’accueil
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <style jsx global>{`
-        @keyframes pulse-slow {
-          0%, 100% {
-            text-shadow: 0 0 10px rgba(212,175,55,0.4), 0 0 20px rgba(212,175,55,0.3);
-          }
-          50% {
-            text-shadow: 0 0 20px rgba(212,175,55,0.7), 0 0 40px rgba(212,175,55,0.5);
-          }
-        }
-        .animate-pulse-slow {
-          animation: pulse-slow 5s ease-in-out infinite;
-        }
-      `}</style>
+      {zoom && <ZoomModal src={zoom.src} alt={zoom.alt} onClose={() => setZoom(null)} />}
     </main>
   )
 }
