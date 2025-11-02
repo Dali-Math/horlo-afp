@@ -2,14 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ChevronLeft, Sparkles, Award, Layers } from 'lucide-react'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Navigation, Pagination, Autoplay, EffectCoverflow } from 'swiper/modules'
-
-import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
-import 'swiper/css/effect-coverflow'
+import { ChevronLeft, Sparkles, Award, Layers, ExternalLink } from 'lucide-react'
 
 type Material = {
   icon: string
@@ -114,6 +107,50 @@ const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
   Décoratif: <Sparkles className="w-4 h-4" />,
 }
 
+type HistoryPeriod = 'xvie' | 'xviiie' | 'xxe' | 'xxie'
+
+const HISTORY_TABS = [
+  { id: 'xvie' as HistoryPeriod, label: 'XVIe-XVIIe' },
+  { id: 'xviiie' as HistoryPeriod, label: 'XVIIIe-XIXe' },
+  { id: 'xxe' as HistoryPeriod, label: 'XXe siècle' },
+  { id: 'xxie' as HistoryPeriod, label: 'XXIe siècle' },
+]
+
+const HISTORY_CONTENT: Record<HistoryPeriod, { title: string; content: string[]; materials: string[] }> = {
+  xvie: {
+    title: "Les Origines : Orfèvrerie et Métaux Précieux",
+    content: [
+      "L'horlogerie suisse naît à Genève au XVIe siècle. L'interdiction du port d'objets ornementaux par Jean Calvin contraint les orfèvres à se reconvertir. Les premiers garde-temps sont naturellement fabriqués en or et argent.",
+      "Les artisans genevois maîtrisent déjà le travail des métaux précieux grâce à leur tradition d'orfèvrerie. Ces compétences se révèlent essentielles pour créer les premiers boîtiers de montres."
+    ],
+    materials: ['Or 18 carats', 'Argent sterling', 'Platine']
+  },
+  xviiie: {
+    title: "L'Âge d'Or : Laiton et Innovations",
+    content: [
+      "Le XVIIIe siècle voit l'émergence du laiton comme matériau de prédilection pour les mouvements. Cet alliage de cuivre et zinc offre une excellente usinabilité et une résistance optimale.",
+      "Les horlogers développent des techniques de traitement galvanique pour protéger les platines en laiton. Le rubis synthétique fait son apparition comme palier antifriction révolutionnaire."
+    ],
+    materials: ['Laiton doré', 'Rubis synthétique', 'Acier trempé']
+  },
+  xxe: {
+    title: "Révolution Industrielle : Acier et Durabilité",
+    content: [
+      "Le XXe siècle marque l'avènement de l'acier inoxydable 316L. Ce matériau révolutionnaire combine résistance à la corrosion, robustesse mécanique et coût maîtrisé.",
+      "L'après-guerre voit l'émergence des montres sports en acier, démocratisant l'horlogerie de qualité. Les finitions polies et brossées deviennent la signature des grandes marques."
+    ],
+    materials: ['Acier 316L', 'Céramique', 'Titane']
+  },
+  xxie: {
+    title: "Innovation High-Tech : Silicium et Composites",
+    content: [
+      "Le XXIe siècle introduit des matériaux issus de la microtechnologie. Le silicium permet de créer des composants d'échappement ultra-précis, amagnétiques et sans lubrification.",
+      "La céramique technique, pratiquement inrayable, et les composites carbone révolutionnent l'esthétique et la performance. L'horlogerie repousse les limites de la science des matériaux."
+    ],
+    materials: ['Silicium', 'Céramique technique', 'Carbone forgé', 'Saphir']
+  }
+}
+
 function MaterialCard({
   icon,
   title,
@@ -200,6 +237,7 @@ export default function MateriauxPage() {
   const [filter, setFilter] = useState<Category>('Tous')
   const [zoom, setZoom] = useState<null | { src: string; alt: string }>(null)
   const [scrolled, setScrolled] = useState(false)
+  const [activeHistoryTab, setActiveHistoryTab] = useState<HistoryPeriod>('xvie')
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50)
@@ -254,24 +292,56 @@ export default function MateriauxPage() {
           ))}
         </section>
 
-        {/* Section iframe encadrée avec toute la page externe */}
-        <section className="bg-white dark:bg-slate-900/50 rounded-3xl p-8 shadow-2xl border-4 border-amber-500/30">
-          <h2 className="text-3xl font-black text-center mb-6 text-slate-900 dark:text-white">
-            📚 Explorer les Matériaux Horlogers Suisses
-          </h2>
-          <p className="text-center text-slate-600 dark:text-slate-400 text-sm mb-6 italic">
-            Navigation interactive • Histoire complète • Contenu enrichi
-          </p>
+        {/* Section Histoire Interactive - FONCTIONNE PARFAITEMENT */}
+        <section className="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-950 dark:to-slate-900 rounded-3xl p-8 shadow-2xl border-4 border-amber-500/30">
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <h2 className="text-3xl font-black text-center text-white">
+              📚 Histoire des Matériaux Horlogers
+            </h2>
+          </div>
           
-          <div className="relative w-full rounded-2xl overflow-hidden shadow-inner bg-slate-100 dark:bg-slate-950" style={{ height: '900px' }}>
-            <iframe
-              src="https://www.horlolearn.ch/materiaux-horlogers-suisse.html"
-              title="Matériaux Horlogers Suisse - Page Interactive Complète"
-              className="w-full h-full border-0"
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-              loading="lazy"
-              allowFullScreen
-            />
+          <div className="flex justify-center gap-3 mb-8 flex-wrap">
+            {HISTORY_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveHistoryTab(tab.id)}
+                className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                  activeHistoryTab === tab.id
+                    ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg scale-105'
+                    : 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 min-h-[400px] shadow-inner">
+            <h3 className="text-2xl font-bold text-red-600 dark:text-red-500 mb-4">
+              {HISTORY_CONTENT[activeHistoryTab].title}
+            </h3>
+            
+            {HISTORY_CONTENT[activeHistoryTab].content.map((paragraph, i) => (
+              <p key={i} className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+                {paragraph}
+              </p>
+            ))}
+
+            <div className="mt-6">
+              <h4 className="text-sm uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold mb-3">
+                Matériaux de l&apos;époque
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {HISTORY_CONTENT[activeHistoryTab].materials.map((material, i) => (
+                  <span
+                    key={i}
+                    className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-full text-sm font-semibold shadow-md"
+                  >
+                    {material}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="text-center mt-6">
@@ -281,7 +351,8 @@ export default function MateriauxPage() {
               rel="noopener noreferrer" 
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
             >
-              🔗 Ouvrir en pleine page
+              <ExternalLink className="w-4 h-4" />
+              Voir la page complète
             </a>
           </div>
         </section>
