@@ -159,21 +159,21 @@ export default function MateriauxPage() {
         </div>
       </div>
 
-      {/* === SECTION FINALE : SWISS WATCH MATERIALS === */}
+      {/* === SECTION FINALE === */}
       <section
         id="final-section"
-        className="relative mt-32 overflow-hidden py-28"
+        className="relative mt-32 overflow-hidden py-28 border-t border-amber-500/30"
         style={{
           clipPath: 'polygon(0 12%, 100% 0, 100% 100%, 0 100%)',
-          background: 'linear-gradient(180deg, #0b0c10 0%, #111217 40%, #000 100%)',
+          background: 'linear-gradient(180deg, #111217 0%, #1a1302 50%, #000 100%)',
         }}
       >
-        {/* Halo lumineux */}
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-transparent to-amber-500/10 blur-3xl" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05)_0%,transparent_70%)]" />
+        {/* Halo animé */}
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 via-amber-600/10 to-amber-400/10 blur-2xl animate-glow-border" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.08)_0%,transparent_70%)]" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center space-y-6">
-          <h2 className="text-5xl sm:text-6xl font-extrabold text-amber-400 tracking-tight animate-pulse-slow drop-shadow-[0_0_25px_rgba(212,175,55,0.3)]">
+          <h2 className="text-5xl sm:text-6xl font-extrabold text-amber-400 tracking-tight animate-pulse-slow drop-shadow-[0_0_25px_rgba(212,175,55,0.5)]">
             Swiss Watch Materials
           </h2>
 
@@ -199,17 +199,28 @@ export default function MateriauxPage() {
         </div>
       </section>
 
+      {/* Effets visuels */}
       <style jsx global>{`
         @keyframes pulse-slow {
           0%, 100% {
             text-shadow: 0 0 10px rgba(212,175,55,0.4), 0 0 20px rgba(212,175,55,0.3);
           }
           50% {
-            text-shadow: 0 0 20px rgba(212,175,55,0.7), 0 0 40px rgba(212,175,55,0.5);
+            text-shadow: 0 0 25px rgba(212,175,55,0.8), 0 0 45px rgba(212,175,55,0.6);
           }
         }
+
+        @keyframes glow-border {
+          0% { box-shadow: inset 0 0 25px rgba(212,175,55,0.4); }
+          50% { box-shadow: inset 0 0 55px rgba(212,175,55,0.7); }
+          100% { box-shadow: inset 0 0 25px rgba(212,175,55,0.4); }
+        }
+
         .animate-pulse-slow {
           animation: pulse-slow 5s ease-in-out infinite;
+        }
+        .animate-glow-border {
+          animation: glow-border 6s ease-in-out infinite;
         }
       `}</style>
     </main>
