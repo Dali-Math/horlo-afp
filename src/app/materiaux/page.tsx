@@ -3,6 +3,13 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, Sparkles, Award, Layers } from 'lucide-react'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Pagination, Autoplay, EffectCoverflow } from 'swiper/modules'
+
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import 'swiper/css/effect-coverflow'
 
 type Material = {
   icon: string
@@ -124,46 +131,47 @@ function MaterialCard({
 
   return (
     <article
-      className={`group relative bg-white dark:bg-slate-900/50 rounded-2xl overflow-hidden 
-        transition-all duration-500 hover:shadow-xl hover:shadow-amber-500/10 
+      className={`group relative bg-white dark:bg-slate-900/50 rounded-3xl overflow-hidden 
+        transition-all duration-700 hover:shadow-2xl hover:shadow-amber-500/10 
         border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-sm
-        hover:-translate-y-1 flex flex-col
+        hover:-translate-y-2 flex flex-col
         ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-      style={{ transitionDelay: '50ms' }}
+      style={{ transitionDelay: '100ms' }}
     >
       <button
         type="button"
-        className="relative w-full h-36 overflow-hidden focus:outline-none border-0 p-0 bg-transparent cursor-pointer"
+        className="relative w-full h-56 overflow-hidden focus:outline-none border-0 p-0 bg-transparent cursor-pointer"
         onClick={onImageClick}
         aria-label={`Voir une grande image de ${title}`}
       >
         <img
           src={illustration}
           alt={title}
-          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1"
           loading="lazy"
         />
       </button>
 
-      <div className="p-4 flex-1 flex flex-col space-y-3">
-        <div className="flex items-center gap-3">
-          <div className={`${colorClass} text-white rounded-xl p-2.5 text-xl shadow-md flex-shrink-0`}>
+      <div className="p-6 flex-1 flex flex-col space-y-4">
+        <div className="flex items-start gap-4">
+          <div className={`${colorClass} text-white rounded-2xl p-3.5 text-2xl shadow-lg flex-shrink-0`}>
             {icon}
           </div>
           <div className="flex-1 min-w-0">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">{title}</h2>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">{title}</h2>
+            <div className="h-1 w-16 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full" />
           </div>
         </div>
 
-        <p className="text-slate-600 dark:text-slate-300 leading-relaxed flex-1 text-[13px]">{description}</p>
+        <p className="text-slate-600 dark:text-slate-300 leading-relaxed flex-1 text-[15px]">{description}</p>
 
-        <div className="pt-3 border-t border-slate-200 dark:border-slate-700/50">
-          <span className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">
-            Applications
+        <div className="pt-4 border-t border-slate-200 dark:border-slate-700/50">
+          <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold">
+            Applications principales
           </span>
-          <ul className="space-y-1.5 mt-1.5">
+          <ul className="space-y-2 mt-2">
             {useCases.map((useCase, i) => (
-              <li key={i} className="flex items-start gap-2 text-[12px] text-slate-700 dark:text-slate-200">
+              <li key={i} className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-200">
                 <span className="text-amber-500 mt-0.5">▸</span>
                 <span>{useCase}</span>
               </li>
@@ -217,17 +225,17 @@ export default function MateriauxPage() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <h1 className="text-4xl sm:text-5xl font-black text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600">
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <h1 className="text-5xl sm:text-6xl font-black text-center mb-10 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600">
           Matériaux d&apos;Exception
         </h1>
 
-        <nav className="flex justify-center gap-3 mb-10 flex-wrap" aria-label="Filtrer les matériaux">
+        <nav className="flex justify-center gap-3 mb-12 flex-wrap" aria-label="Filtrer les matériaux">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => setFilter(cat)}
-              className={`px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 ${
+              className={`px-6 py-3 rounded-2xl font-semibold text-sm transition-all duration-300 ${
                 filter === cat
                   ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg scale-105'
                   : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:shadow-lg border border-slate-200 dark:border-slate-700'
@@ -240,15 +248,15 @@ export default function MateriauxPage() {
           ))}
         </nav>
 
-        <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
+        <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mb-16">
           {filtered.map((material, i) => (
             <MaterialCard key={i} {...material} onImageClick={() => setZoom({ src: material.illustration, alt: material.title })} />
           ))}
         </section>
 
         {/* Section iframe encadrée avec toute la page externe */}
-        <section className="bg-white dark:bg-slate-900/50 rounded-3xl p-6 shadow-2xl border-4 border-amber-500/30">
-          <h2 className="text-2xl sm:text-3xl font-black text-center mb-4 text-slate-900 dark:text-white">
+        <section className="bg-white dark:bg-slate-900/50 rounded-3xl p-8 shadow-2xl border-4 border-amber-500/30">
+          <h2 className="text-3xl font-black text-center mb-6 text-slate-900 dark:text-white">
             📚 Explorer les Matériaux Horlogers Suisses
           </h2>
           <p className="text-center text-slate-600 dark:text-slate-400 text-sm mb-6 italic">
@@ -260,18 +268,18 @@ export default function MateriauxPage() {
               src="https://www.horlolearn.ch/materiaux-horlogers-suisse.html"
               title="Matériaux Horlogers Suisse - Page Interactive Complète"
               className="w-full h-full border-0"
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
               loading="lazy"
               allowFullScreen
             />
           </div>
 
-          <div className="text-center mt-4">
+          <div className="text-center mt-6">
             <a 
               href="https://www.horlolearn.ch/materiaux-horlogers-suisse.html" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
             >
               🔗 Ouvrir en pleine page
             </a>
