@@ -12,8 +12,7 @@ import {
   FileText,
 } from 'lucide-react'
 
-/* ----------------------------- Données cartes ----------------------------- */
-
+// Typage et données
 type Material = {
   icon: string
   title: string
@@ -110,8 +109,6 @@ const MATERIALS: Material[] = [
 const CATEGORIES = ['Tous', 'Classiques', 'Innovation', 'Décoratif'] as const
 type Category = (typeof CATEGORIES)[number]
 
-/* ----------------------------- Composant carte ----------------------------- */
-
 function MaterialCard({
   icon,
   title,
@@ -130,17 +127,12 @@ function MaterialCard({
           loading="lazy"
         />
       </div>
-
       <div className="p-4 space-y-2">
         <div className="flex items-center gap-3">
           <div className={`${colorClass} text-white rounded-xl px-2.5 py-1 text-base shadow`}>{icon}</div>
           <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{title}</h3>
         </div>
-
-        <p className="text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed">
-          {description}
-        </p>
-
+        <p className="text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed">{description}</p>
         <ul className="pt-2 border-t border-slate-200 dark:border-slate-700/50 text-[13px] text-slate-700 dark:text-slate-200 space-y-1">
           {useCases.map((u, i) => (
             <li key={i} className="flex items-start gap-2">
@@ -154,14 +146,9 @@ function MaterialCard({
   )
 }
 
-/* ---------------------------------- Page ---------------------------------- */
-
 export default function MateriauxHorlogersSuisse() {
   const [filter, setFilter] = useState<Category>('Tous')
-  const [isLoading, setIsLoading] = useState(true)
-
-  const filtered =
-    filter === 'Tous' ? MATERIALS : MATERIALS.filter((m) => m.category === filter)
+  const filtered = filter === 'Tous' ? MATERIALS : MATERIALS.filter((m) => m.category === filter)
 
   const infos = [
     { icon: Gem, label: 'Matériaux d’Excellence', value: '9 Types' },
@@ -173,13 +160,12 @@ export default function MateriauxHorlogersSuisse() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
 
-      {/* ---------------------------- HERO (comme rapport) ---------------------------- */}
+      {/* HERO */}
       <section className="relative overflow-hidden border-b border-amber-500/10">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-24 right-24 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-24 left-24 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-3xl" />
         </div>
-
         <div className="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-16 md:py-24">
           <div className="flex items-center gap-2 text-sm text-gray-400 mb-8">
             <Link
@@ -192,27 +178,23 @@ export default function MateriauxHorlogersSuisse() {
             <ChevronRight className="w-4 h-4" />
             <span className="text-white font-medium">Matériaux Horlogers</span>
           </div>
-
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full mb-6">
                 <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
                 <span className="text-sm font-semibold text-amber-400">Swiss Watch Materials</span>
               </div>
-
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
                 <span className="text-white">Excellence et Innovation</span>
-                <br />
+                <br /> <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500">
                   dans les Matériaux Horlogers
                 </span>
               </h1>
-
               <p className="text-lg sm:text-xl text-gray-300 mb-8 leading-relaxed">
                 L’union parfaite entre tradition, recherche et design suisse. Explorez les
                 matériaux d’exception qui façonnent la haute horlogerie.
               </p>
-
               <div className="inline-flex items-center gap-2 px-5 py-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
                 <FileText className="w-5 h-5 text-amber-400" />
                 <span className="text-sm font-medium text-amber-300">
@@ -220,7 +202,6 @@ export default function MateriauxHorlogersSuisse() {
                 </span>
               </div>
             </div>
-
             <div className="grid grid-cols-2 gap-4">
               {infos.map((info, index) => (
                 <div
@@ -241,9 +222,8 @@ export default function MateriauxHorlogersSuisse() {
         </div>
       </section>
 
-      {/* ----------------------------- Filtres + Grille ----------------------------- */}
+      {/* Filtres et grille */}
       <section className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-10">
-        {/* Filtres */}
         <nav className="flex flex-wrap gap-3 mb-8">
           {CATEGORIES.map((cat) => (
             <button
@@ -259,8 +239,6 @@ export default function MateriauxHorlogersSuisse() {
             </button>
           ))}
         </nav>
-
-        {/* Grille de cartes (compacte comme avant) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((m, i) => (
             <MaterialCard key={i} {...m} />
@@ -268,39 +246,45 @@ export default function MateriauxHorlogersSuisse() {
         </div>
       </section>
 
-      {/* ------------------------------ Fenêtre intégrée ----------------------------- */}
+      {/* Présentation (autrefois dans l’iframe — maintenant “native” React) */}
       <section className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12 md:py-16">
-        <div className="relative">
-          {isLoading && (
-            <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm rounded-2xl">
-              <div className="text-center">
-                <div className="w-16 h-16 border-4 border-amber-500/30 border-t-amber-500 rounded-full animate-spin mx-auto mb-4" />
-                <p className="text-gray-400 font-medium">Chargement de la page…</p>
+        <div className="relative rounded-2xl overflow-hidden border border-amber-500/20 shadow-2xl bg-slate-900">
+          <div className="flex items-center justify-between px-6 py-4 bg-slate-800/50 backdrop-blur-sm border-b border-amber-500/10">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-amber-500/10 rounded-lg">
+                <Layers className="w-5 h-5 text-amber-400" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">Matériaux Horlogers Suisses — Présentation</h3>
+                <p className="text-xs text-gray-400">Section présentée en React pour interactivité maximale</p>
               </div>
             </div>
-          )}
-
-          <div className="relative rounded-2xl overflow-hidden border border-amber-500/20 shadow-2xl bg-slate-900">
-            <div className="flex items-center justify-between px-6 py-4 bg-slate-800/50 backdrop-blur-sm border-b border-amber-500/10">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-amber-500/10 rounded-lg">
-                  <Layers className="w-5 h-5 text-amber-400" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-white">Matériaux Horlogers Suisses — Présentation</h3>
-                  <p className="text-xs text-gray-400">
-                    Contenu HTML intégré depuis votre page statique
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <iframe
-              src="/materiaux-horlogers-suisse.html"
-              className="w-full h-[140vh] bg-white"
-              onLoad={() => setIsLoading(false)}
-              title="Matériaux Horlogers Suisses"
-            />
+          </div>
+          <div className="p-8 text-slate-200 leading-relaxed">
+            <h2 className="text-2xl font-bold mb-4">Excellence et Innovation dans les Matériaux Horlogers Suisses</h2>
+            <p>
+              L’horlogerie suisse se distingue par l’adoption de matériaux innovants et la préservation de traditions pluri-centenaires.
+              Ici sont réunis l’acier inoxydable, l’or, les alliages comme le laiton, ou encore des avancées pointues comme le silicium ou la céramique.
+              Chaque matériau répond à des exigences précises – résistance, esthétique, noblesse, innovation technologique – pour sublimer la montre.
+            </p>
+            <ul className="list-disc ml-6 my-6 space-y-1">
+              <li>
+                <b>Classiques :</b> acier inoxydable, or, laiton et rubis synthétique offrent robustesse, éclat ou anti-friction.
+              </li>
+              <li>
+                <b>Innovations :</b> titane (légèreté), céramique (dureté, design), silicium (amagnétisme, précision).
+              </li>
+              <li>
+                <b>Décoratif :</b> bois pour des pièces de cadrans exclusives, au rendu naturel et unique.
+              </li>
+            </ul>
+            <p>
+              L’exploration et la maîtrise de ces matériaux font de l’horlogerie suisse un modèle d’excellence technique et artistique reconnu dans le monde entier.
+              <br/>
+              <span className="text-amber-400 font-medium">
+                Découvrez chaque matériau en détail dans la galerie interactive plus haut !
+              </span>
+            </p>
           </div>
         </div>
       </section>
