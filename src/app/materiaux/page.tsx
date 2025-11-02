@@ -406,7 +406,7 @@ export default function MateriauxPage() {
 
           <div className="text-center mt-8">
             <a 
-              href="https://www.horlolearn.ch/materiaux-horlogers-suisse.html" 
+              href="https://idchufzbxxy7.space.minimax.io/" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
