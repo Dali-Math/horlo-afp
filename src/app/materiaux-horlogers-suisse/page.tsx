@@ -815,27 +815,6 @@ export default function SwissWatchMaterialsPage() {
             <p className="text-xl text-gray-300">En savoir plus sur l'excellence des matériaux horlogers suisses</p>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-xl font-bold mb-4">Informations</h3>
-                <div className="space-y-3 text-gray-300">
-                  <div>📍 HorloLearn - Centre d'Excellence</div>
-                  <div>📍 Lausanne, Suisse</div>
-                  <div>📧 contact@horlolearn.ch</div>
-                  <div>📞 +41 (0)21 123 45 67</div>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-xl font-bold mb-4">Horaires</h3>
-                <div className="space-y-2 text-gray-300">
-                  <div>Lundi - Vendredi: 9h00 - 18h00</div>
-                  <div>Samedi: 10h00 - 16h00</div>
-                  <div>Dimanche: Fermé</div>
-                </div>
-              </div>
-            </div>
             
             <div className="bg-gray-800 p-6 rounded-lg">
               <form onSubmit={handleFormSubmit}>
