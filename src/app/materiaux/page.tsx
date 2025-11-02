@@ -159,24 +159,33 @@ export default function MateriauxPage() {
         </div>
       </div>
 
-      {/* --- SECTION FINALE --- */}
+      {/* === SECTION FINALE : SWISS WATCH MATERIALS === */}
       <section
         id="final-section"
-        className="relative mt-32 bg-gradient-to-br from-amber-600/10 via-slate-900 to-black overflow-hidden py-24"
+        className="relative mt-32 overflow-hidden py-28"
+        style={{
+          clipPath: 'polygon(0 12%, 100% 0, 100% 100%, 0 100%)',
+          background: 'linear-gradient(180deg, #0b0c10 0%, #111217 40%, #000 100%)',
+        }}
       >
-        <div className="absolute inset-0 -skew-y-3 bg-gradient-to-r from-amber-400/10 via-transparent to-amber-600/10" />
+        {/* Halo lumineux */}
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-transparent to-amber-500/10 blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05)_0%,transparent_70%)]" />
+
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center space-y-6">
-          <h2 className="text-5xl sm:text-6xl font-extrabold text-amber-400 tracking-tight drop-shadow-[0_0_20px_rgba(212,175,55,0.3)]">
+          <h2 className="text-5xl sm:text-6xl font-extrabold text-amber-400 tracking-tight animate-pulse-slow drop-shadow-[0_0_25px_rgba(212,175,55,0.3)]">
             Swiss Watch Materials
           </h2>
+
           <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
             Fusion entre innovation et héritage, les matériaux suisses incarnent l’excellence 
             et la précision au cœur de l’horlogerie mondiale.
           </p>
+
           <div className="flex justify-center gap-4 pt-6">
             <a
               href="#top"
-              className="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-semibold shadow-lg shadow-amber-500/20 transition-all"
+              className="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-semibold shadow-lg shadow-amber-500/30 transition-all"
             >
               Explorer à nouveau
             </a>
@@ -189,6 +198,20 @@ export default function MateriauxPage() {
           </div>
         </div>
       </section>
+
+      <style jsx global>{`
+        @keyframes pulse-slow {
+          0%, 100% {
+            text-shadow: 0 0 10px rgba(212,175,55,0.4), 0 0 20px rgba(212,175,55,0.3);
+          }
+          50% {
+            text-shadow: 0 0 20px rgba(212,175,55,0.7), 0 0 40px rgba(212,175,55,0.5);
+          }
+        }
+        .animate-pulse-slow {
+          animation: pulse-slow 5s ease-in-out infinite;
+        }
+      `}</style>
     </main>
   )
 }
