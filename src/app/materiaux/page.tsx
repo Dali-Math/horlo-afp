@@ -245,49 +245,49 @@ function MaterialCard({
 
   return (
     <article
-      className={`group relative bg-slate-800/90 dark:bg-slate-900/90 rounded-2xl overflow-hidden 
-        transition-all duration-500 hover:shadow-xl hover:shadow-amber-500/20 
-        border border-slate-700/50 backdrop-blur-sm hover:-translate-y-1 flex flex-col
-        ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-      style={{ transitionDelay: '50ms' }}
+      className={`group relative bg-slate-900/80 rounded-xl overflow-hidden 
+        transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/20 
+        border border-slate-700/30 backdrop-blur-sm hover:-translate-y-0.5
+        ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
     >
-      <div className="flex items-center gap-3 p-4 border-b border-slate-700/50">
-        <div className={`${colorClass} text-white rounded-xl p-2 text-xl shadow-md flex-shrink-0`}>
+      {/* Header compact avec icône et titre */}
+      <div className="flex items-center gap-2 px-3 py-2 bg-slate-800/50 border-b border-slate-700/30">
+        <div className={`${colorClass} rounded-lg p-1.5 text-base flex-shrink-0`}>
           {icon}
         </div>
-        <h2 className="text-lg font-bold text-white flex-1">{title}</h2>
-        <div className="bg-slate-700/50 text-slate-300 px-2 py-1 rounded-md text-[10px] font-semibold flex items-center gap-1">
-          <Clock className="w-3 h-3" />
-          {historicalPeriod}
+        <h2 className="text-sm font-bold text-white flex-1 truncate">{title}</h2>
+        <div className="bg-slate-700/50 text-slate-400 px-1.5 py-0.5 rounded text-[9px] font-medium flex items-center gap-1">
+          <Clock className="w-2.5 h-2.5" />
+          <span className="hidden sm:inline">{historicalPeriod?.split(' ')[0]}</span>
         </div>
       </div>
 
+      {/* Image compacte */}
       <button
         type="button"
-        className="relative w-full h-32 overflow-hidden focus:outline-none border-0 p-0 bg-transparent cursor-pointer"
+        className="relative w-full h-24 overflow-hidden focus:outline-none border-0 p-0 bg-slate-800 cursor-pointer"
         onClick={onImageClick}
-        aria-label={`Voir une grande image de ${title}`}
+        aria-label={`Voir ${title}`}
       >
         <img
           src={illustration}
           alt={title}
-          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           loading="lazy"
         />
       </button>
 
-      <div className="p-4 flex-1 flex flex-col space-y-3">
-        <p className="text-slate-300 leading-relaxed text-xs line-clamp-2">{description}</p>
+      {/* Contenu ultra-compact */}
+      <div className="p-3 space-y-2">
+        <p className="text-slate-300 text-[11px] leading-snug line-clamp-2">{description}</p>
 
-        <div className="pt-2 border-t border-slate-700/50">
-          <span className="text-[10px] uppercase tracking-wider text-amber-400 font-bold">
-            Applications principales
-          </span>
-          <ul className="space-y-1 mt-1.5">
+        <div className="pt-2 border-t border-slate-700/30">
+          <span className="text-[9px] uppercase tracking-wide text-amber-400/90 font-bold">Applications</span>
+          <ul className="space-y-0.5 mt-1">
             {useCases.slice(0, 3).map((useCase, i) => (
-              <li key={i} className="flex items-start gap-1.5 text-[11px] text-slate-300">
-                <span className="text-amber-400 mt-0.5 text-xs">▸</span>
-                <span>{useCase}</span>
+              <li key={i} className="flex items-start gap-1 text-[10px] text-slate-400">
+                <span className="text-amber-500 mt-0.5">▸</span>
+                <span className="line-clamp-1">{useCase}</span>
               </li>
             ))}
           </ul>
@@ -296,17 +296,17 @@ function MaterialCard({
         {technicalDetails && (
           <button
             onClick={() => setShowDetails(!showDetails)}
-            className="flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-wider text-amber-400 font-bold hover:text-amber-300 transition-colors pt-2 border-t border-slate-700/50"
+            className="w-full flex items-center justify-center gap-1 text-[9px] uppercase tracking-wide text-amber-400/80 hover:text-amber-400 font-bold pt-2 border-t border-slate-700/30 transition-colors"
           >
-            <Gem className="w-3 h-3" />
-            {showDetails ? 'Masquer' : 'Détails techniques'}
+            <Gem className="w-2.5 h-2.5" />
+            Détails techniques
           </button>
         )}
         
         {showDetails && technicalDetails && (
-          <p className="text-[10px] text-slate-400 leading-relaxed bg-slate-900/50 p-2 rounded-lg">
+          <div className="text-[9px] text-slate-400 leading-relaxed bg-slate-800/50 p-2 rounded border border-slate-700/30">
             {technicalDetails}
-          </p>
+          </div>
         )}
       </div>
     </article>
