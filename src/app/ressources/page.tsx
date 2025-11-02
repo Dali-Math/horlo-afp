@@ -427,8 +427,10 @@ const RessourcesPage: React.FC = () => {
         <div className="p-6">
           <div className="flex items-start justify-between mb-3">
             <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2">
-              {resource.title}
-            </h3>
+  <Link href={`/ressources/${resource.id}`} className="hover:underline">
+    {resource.title}
+  </Link>
+</h3>
             {resource.rating && (
               <div className="flex items-center gap-1 text-yellow-500">
                 <Star className="w-4 h-4 fill-current" />
