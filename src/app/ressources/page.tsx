@@ -7,6 +7,7 @@ import {
   Settings, ChevronDown, ExternalLink, Badge, Eye, 
   Heart, TrendingUp, Target, Shield, ChevronLeft
 } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile'
 
 interface Resource {
   id: string;
