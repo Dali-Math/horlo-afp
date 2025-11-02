@@ -1,3 +1,11 @@
+'use client'
+
+import { useState, useMemo } from 'react'
+import { Clock, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+
+// ... le reste du code
+
 import { useState, useMemo } from 'react'
 import { Clock, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
