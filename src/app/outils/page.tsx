@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import {
   Clock, TrendingUp, AlertCircle, CheckCircle, Info, BookOpen, Activity, Watch, Battery,
-  Stethoscope, BadgeCheck, Scale, Zap, Timer, Share2, Sigma, Percent, WaveSquare, PieChart, Database
+  Stethoscope, BadgeCheck, Scale, Zap, Timer, Share2, Sigma, Percent, Waves, PieChart, Database
 } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
@@ -21,7 +21,7 @@ const menu = [
   { icon: Share2, label: "Rapport d'Engrenages" },
   { icon: Sigma, label: "Longueur de Spiral" },
   { icon: Percent, label: "Tableau des Couples" },
-  { icon: WaveSquare, label: "Guide d'Amplitude" },
+  { icon: Waves, label: "Guide d'Amplitude" },
   { icon: PieChart, label: "Simulateur d'Échappement" },
   { icon: Database, label: "Base de Données des Pièces" },
 ]
