@@ -493,4 +493,17 @@ section {
   gap: 2rem !important;
   place-items: stretch;
 }
+.sidebar-item {
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  color: #bfd3f8;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.sidebar-item:hover,
+.sidebar-item.active {
+  background: #204483;
+  color: #fff;
+}
 
