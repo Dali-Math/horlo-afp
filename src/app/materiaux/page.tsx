@@ -106,70 +106,19 @@ const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
   Décoratif: <Sparkles className="w-4 h-4" />,
 }
 
-function MaterialCard({
-  icon,
-  title,
-  colorClass,
-  description,
-  useCases,
-  illustration,
-  onImageClick,
-}: Material & { onImageClick: () => void }) {
-  return (
-    <article className="group relative bg-white/90 dark:bg-slate-900/40 rounded-3xl overflow-hidden border border-slate-200/50 dark:border-slate-700/50 hover:shadow-xl transition-all duration-500 hover:-translate-y-1 backdrop-blur-sm">
-      <button
-        type="button"
-        className="relative w-full h-48 sm:h-56 overflow-hidden border-0 p-0 bg-transparent cursor-pointer"
-        onClick={onImageClick}
-        aria-label={`Voir une grande image de ${title}`}
-      >
-        <img src={illustration} alt={title} className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110" />
-      </button>
-
-      <div className="p-6 flex flex-col space-y-3">
-        <div className="flex items-start gap-3">
-          <div className={`${colorClass} text-white rounded-2xl p-2.5 text-xl shadow-md`}>{icon}</div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-amber-500 transition">
-            {title}
-          </h2>
-        </div>
-        <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{description}</p>
-
-        <ul className="border-t border-slate-200 dark:border-slate-700/50 pt-3 mt-2 text-sm text-slate-700 dark:text-slate-200 space-y-1.5">
-          {useCases.map((u, i) => (
-            <li key={i} className="flex items-center gap-2">
-              <span className="text-amber-500">▸</span>
-              {u}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </article>
-  )
-}
-
-function ZoomModal({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
-  return (
-    <div onClick={onClose} className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center">
-      <img src={src} alt={alt} className="max-h-[90vh] max-w-[90vw] rounded-3xl shadow-2xl border-4 border-amber-400/30" />
-    </div>
-  )
-}
-
 export default function MateriauxPage() {
   const [filter, setFilter] = useState<Category>('Tous')
-  const [zoom, setZoom] = useState<null | { src: string; alt: string }>(null)
-
   const filtered = filter === 'Tous' ? MATERIALS : MATERIALS.filter((m) => m.category === filter)
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black text-white">
-      <div className="max-w-7xl mx-auto px-4 py-16">
-        <h1 className="text-5xl sm:text-6xl font-black text-center mb-10 text-amber-400 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        <h1 className="text-5xl sm:text-6xl font-black text-center mb-12 text-amber-400 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]">
           Matériaux d'Exception
         </h1>
 
-        <nav className="flex justify-center gap-3 mb-12 flex-wrap">
+        {/* Filtres */}
+        <div className="flex justify-center gap-3 mb-12 flex-wrap">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
@@ -183,25 +132,37 @@ export default function MateriauxPage() {
               <span className="flex items-center gap-2">{CATEGORY_ICONS[cat]} {cat}</span>
             </button>
           ))}
-        </nav>
+        </div>
 
         {/* Grille des matériaux */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 place-items-stretch">
-          {filtered.map((material, i) => (
-            <div key={i} className="h-full">
-              <MaterialCard
-                {...material}
-                onImageClick={() => setZoom({ src: material.illustration, alt: material.title })}
-              />
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filtered.map((m, i) => (
+            <article
+              key={i}
+              className="bg-slate-900/60 border border-slate-700 rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300"
+            >
+              <img src={m.illustration} alt={m.title} className="w-full h-48 object-cover" />
+              <div className="p-5">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className={`${m.colorClass} p-2 rounded-lg text-lg`}>{m.icon}</div>
+                  <h3 className="font-semibold text-lg">{m.title}</h3>
+                </div>
+                <p className="text-slate-400 text-sm mb-3">{m.description}</p>
+                <ul className="text-sm text-slate-300 list-disc list-inside space-y-1">
+                  {m.useCases.map((u, j) => (
+                    <li key={j}>{u}</li>
+                  ))}
+                </ul>
+              </div>
+            </article>
           ))}
-        </section>
+        </div>
       </div>
 
-      {/* Section finale – Swiss Watch Materials */}
+      {/* --- SECTION FINALE --- */}
       <section
         id="final-section"
-        className="relative mt-24 bg-gradient-to-br from-amber-600/10 via-slate-900 to-black overflow-hidden py-24"
+        className="relative mt-32 bg-gradient-to-br from-amber-600/10 via-slate-900 to-black overflow-hidden py-24"
       >
         <div className="absolute inset-0 -skew-y-3 bg-gradient-to-r from-amber-400/10 via-transparent to-amber-600/10" />
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center space-y-6">
@@ -214,7 +175,7 @@ export default function MateriauxPage() {
           </p>
           <div className="flex justify-center gap-4 pt-6">
             <a
-              href="/materiaux-horlogers-suisse.html#hero"
+              href="#top"
               className="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-semibold shadow-lg shadow-amber-500/20 transition-all"
             >
               Explorer à nouveau
@@ -228,8 +189,6 @@ export default function MateriauxPage() {
           </div>
         </div>
       </section>
-
-      {zoom && <ZoomModal src={zoom.src} alt={zoom.alt} onClose={() => setZoom(null)} />}
     </main>
   )
 }
