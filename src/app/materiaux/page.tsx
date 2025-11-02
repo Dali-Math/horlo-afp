@@ -1,228 +1,187 @@
 'use client'
 
 import { useState } from 'react'
-import { Sparkles, Award, Layers } from 'lucide-react'
+import Link from 'next/link'
+import { 
+  ArrowLeft, 
+  ChevronRight, 
+  Gem, 
+  Layers, 
+  Sparkles, 
+  Award,
+  FileText 
+} from 'lucide-react'
 
-type Material = {
-  icon: string
-  title: string
-  colorClass: string
-  illustration: string
-  description: string
-  useCases: string[]
-  category: 'Classiques' | 'Innovation' | 'Décoratif'
-}
+export default function MateriauxHorlogersSuisse() {
+  const [isLoading, setIsLoading] = useState(true)
 
-const MATERIALS: Material[] = [
-  {
-    icon: '⬜',
-    title: 'Acier inoxydable',
-    colorClass: 'bg-gradient-to-br from-sky-400 to-sky-600',
-    illustration: '/images/materiaux/acier.jpg',
-    description:
-      "Le matériau le plus utilisé pour les boîtiers et bracelets modernes. L'acier 316L combine résistance à la corrosion, robustesse et finitions impeccables (polies ou brossées).",
-    useCases: ['Boîtiers & bracelets', 'Couronnes vissées', 'Boucles déployantes', 'Masses oscillantes'],
-    category: 'Classiques',
-  },
-  {
-    icon: '🟨',
-    title: 'Or',
-    colorClass: 'bg-gradient-to-br from-yellow-400 to-yellow-600',
-    illustration: '/images/materiaux/or.jpg',
-    description:
-      "Symbole ultime de luxe en horlogerie. L'or 18K (750/1000), disponible en jaune, rose ou blanc, est prisé pour sa noblesse et son éclat intemporel.",
-    useCases: ['Boîtiers de montres de prestige', 'Aiguilles et index', 'Ponts hautement décorés', 'Bracelets de luxe'],
-    category: 'Classiques',
-  },
-  {
-    icon: '🥇',
-    title: 'Laiton',
-    colorClass: 'bg-gradient-to-br from-yellow-600 to-yellow-800',
-    illustration: '/images/materiaux/laiton.jpg',
-    description:
-      "Alliage de cuivre et zinc, base de la majorité des platines, ponts et roues. Facile à usiner, il offre une belle teinte jaune dorée souvent protégée par traitement galvanique.",
-    useCases: ['Platines & ponts de mouvement', 'Roues de minuterie', 'Ébauches décoratives', 'Compteurs et modules'],
-    category: 'Classiques',
-  },
-  {
-    icon: '⚙️',
-    title: 'Titane',
-    colorClass: 'bg-gradient-to-br from-indigo-500 to-indigo-700',
-    illustration: '/images/materiaux/titane.jpg',
-    description:
-      "Matériau high-tech ultra-léger (40% plus léger que l'acier), hypoallergénique et non magnétique. Son aspect mat et sa résistance en font un favori des montres sportives et professionnelles.",
-    useCases: ['Boîtiers de montres techniques', 'Bracelets légers', 'Vis spéciales', 'Platines allégées'],
-    category: 'Innovation',
-  },
-  {
-    icon: '⬛',
-    title: 'Céramique',
-    colorClass: 'bg-gradient-to-br from-neutral-700 to-neutral-900',
-    illustration: '/images/materiaux/ceramique.jpg',
-    description:
-      "Matériau composite extrêmement dur, pratiquement inrayable et résistant à l'usure. Sa finition mate ou brillante apporte un style contemporain et élégant.",
-    useCases: ['Lunettes de montre (bezels)', 'Boîtiers haut de gamme', 'Composants décoratifs modernes'],
-    category: 'Innovation',
-  },
-  {
-    icon: '🔬',
-    title: 'Silicium',
-    colorClass: 'bg-gradient-to-br from-pink-500 to-pink-700',
-    illustration: '/images/materiaux/silicium.jpg',
-    description:
-      'Matériau révolutionnaire issu de la microtechnologie. Permet de fabriquer des composants de haute précision, amagnétiques et nécessitant peu ou pas de lubrification.',
-    useCases: ['Spiraux de balancier inamagnétiques', 'Ancre en silicium', "Roue d'échappement sans huile"],
-    category: 'Innovation',
-  },
-  {
-    icon: '💎',
-    title: 'Rubis synthétique',
-    colorClass: 'bg-gradient-to-br from-rose-500 to-rose-700',
-    illustration: '/images/materiaux/rubis.jpg',
-    description:
-      "Pierre précieuse synthétique utilisée comme palier antifriction. Les rubis réduisent considérablement l'usure des axes de roues et garantissent une longévité exceptionnelle au mouvement.",
-    useCases: ['Pierres de pivot (axes des roues)', 'Contrepoids de balancier', "Roulette d'ancre"],
-    category: 'Classiques',
-  },
-  {
-    icon: '🌲',
-    title: 'Bois',
-    colorClass: 'bg-gradient-to-br from-green-600 to-green-800',
-    illustration: '/images/materiaux/bois.jpg',
-    description:
-      'Matériau rare et artisanal, utilisé par quelques créateurs pour des cadrans exclusifs ou des éléments décoratifs. Apporte une touche naturelle et unique à chaque pièce.',
-    useCases: ['Cadrans exclusifs', 'Boîtiers ou maillons décoratifs', 'Maquettes pédagogiques'],
-    category: 'Décoratif',
-  },
-]
-
-const CATEGORIES = ['Tous', 'Classiques', 'Innovation', 'Décoratif'] as const
-type Category = (typeof CATEGORIES)[number]
-
-const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
-  Tous: <Layers className="w-4 h-4" />,
-  Classiques: <Award className="w-4 h-4" />,
-  Innovation: <Sparkles className="w-4 h-4" />,
-  Décoratif: <Sparkles className="w-4 h-4" />,
-}
-
-export default function MateriauxPage() {
-  const [filter, setFilter] = useState<Category>('Tous')
-  const filtered = filter === 'Tous' ? MATERIALS : MATERIALS.filter((m) => m.category === filter)
+  const infos = [
+    { icon: Gem, label: 'Matériaux d’Excellence', value: '9 Types' },
+    { icon: Layers, label: 'Catégories', value: '3 Principales' },
+    { icon: Sparkles, label: 'Innovations récentes', value: 'Silicium, Titane' },
+    { icon: Award, label: 'Origine', value: '100% Suisse' },
+  ]
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black text-white">
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <h1 className="text-5xl sm:text-6xl font-black text-center mb-12 text-amber-400 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]">
-          Matériaux d'Exception
-        </h1>
-
-        {/* Filtres */}
-        <div className="flex justify-center gap-3 mb-12 flex-wrap">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setFilter(cat)}
-              className={`px-6 py-2.5 rounded-2xl font-semibold text-sm transition-all ${
-                filter === cat
-                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md'
-                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-              }`}
-            >
-              <span className="flex items-center gap-2">{CATEGORY_ICONS[cat]} {cat}</span>
-            </button>
-          ))}
+    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
+      
+      {/* --- HERO SECTION --- */}
+      <section className="relative overflow-hidden border-b border-amber-500/10">
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-24 right-24 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-24 left-24 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-3xl" />
         </div>
 
-        {/* Grille des matériaux */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filtered.map((m, i) => (
-            <article
-              key={i}
-              className="bg-slate-900/60 border border-slate-700 rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300"
+        <div className="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-16 md:py-24">
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2 text-sm text-gray-400 mb-8">
+            <Link 
+              href="/horlogerie" 
+              className="hover:text-amber-400 transition-colors flex items-center gap-1"
             >
-              <img src={m.illustration} alt={m.title} className="w-full h-48 object-cover" />
-              <div className="p-5">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className={`${m.colorClass} p-2 rounded-lg text-lg`}>{m.icon}</div>
-                  <h3 className="font-semibold text-lg">{m.title}</h3>
-                </div>
-                <p className="text-slate-400 text-sm mb-3">{m.description}</p>
-                <ul className="text-sm text-slate-300 list-disc list-inside space-y-1">
-                  {m.useCases.map((u, j) => (
-                    <li key={j}>{u}</li>
-                  ))}
-                </ul>
+              <ArrowLeft className="w-4 h-4" />
+              Horlogerie Suisse
+            </Link>
+            <ChevronRight className="w-4 h-4" />
+            <span className="text-white font-medium">Matériaux Horlogers</span>
+          </div>
+
+          {/* Title */}
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full mb-6">
+                <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
+                <span className="text-sm font-semibold text-amber-400">
+                  Swiss Watch Materials
+                </span>
               </div>
-            </article>
-          ))}
-        </div>
-      </div>
 
-      {/* === SECTION FINALE === */}
-      <section
-        id="final-section"
-        className="relative mt-32 overflow-hidden py-28 border-t border-amber-500/30"
-        style={{
-          clipPath: 'polygon(0 12%, 100% 0, 100% 100%, 0 100%)',
-          background: 'linear-gradient(180deg, #111217 0%, #1a1302 50%, #000 100%)',
-        }}
-      >
-        {/* Halo animé */}
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 via-amber-600/10 to-amber-400/10 blur-2xl animate-glow-border" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.08)_0%,transparent_70%)]" />
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                <span className="text-white">Excellence et Innovation</span>
+                <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500">
+                  dans les Matériaux Horlogers
+                </span>
+              </h1>
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center space-y-6">
-          <h2 className="text-5xl sm:text-6xl font-extrabold text-amber-400 tracking-tight animate-pulse-slow drop-shadow-[0_0_25px_rgba(212,175,55,0.5)]">
-            Swiss Watch Materials
-          </h2>
+              <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+                L’union parfaite entre tradition, recherche et design suisse. 
+                Découvrez comment les matériaux d’exception façonnent l’avenir 
+                de la haute horlogerie.
+              </p>
 
-          <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-            Fusion entre innovation et héritage, les matériaux suisses incarnent l’excellence 
-            et la précision au cœur de l’horlogerie mondiale.
-          </p>
+              <div className="inline-flex items-center gap-2 px-5 py-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
+                <FileText className="w-5 h-5 text-amber-400" />
+                <span className="text-sm font-medium text-amber-300">
+                  Page de référence — HorloLearn.ch
+                </span>
+              </div>
+            </div>
 
-          <div className="flex justify-center gap-4 pt-6">
-            <a
-              href="#top"
-              className="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-semibold shadow-lg shadow-amber-500/30 transition-all"
-            >
-              Explorer à nouveau
-            </a>
-            <a
-              href="/"
-              className="px-6 py-3 rounded-xl border border-amber-400 text-amber-400 hover:bg-amber-400/10 transition-all"
-            >
-              Retour à l’accueil
-            </a>
+            {/* Statistiques */}
+            <div className="grid grid-cols-2 gap-4">
+              {infos.map((info, index) => (
+                <div
+                  key={index}
+                  className="p-6 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300 hover:scale-105"
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="p-2 bg-amber-500/10 rounded-lg">
+                      <info.icon className="w-5 h-5 text-amber-400" />
+                    </div>
+                  </div>
+                  <div className="text-2xl font-bold text-amber-400 mb-1">
+                    {info.value}
+                  </div>
+                  <div className="text-sm text-gray-400">
+                    {info.label}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Effets visuels */}
-      <style jsx global>{`
-        @keyframes pulse-slow {
-          0%, 100% {
-            text-shadow: 0 0 10px rgba(212,175,55,0.4), 0 0 20px rgba(212,175,55,0.3);
-          }
-          50% {
-            text-shadow: 0 0 25px rgba(212,175,55,0.8), 0 0 45px rgba(212,175,55,0.6);
-          }
-        }
+      {/* --- DOCUMENT VIEWER --- */}
+      <section className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12 md:py-16">
+        <div className="relative">
+          {isLoading && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm rounded-2xl">
+              <div className="text-center">
+                <div className="w-16 h-16 border-4 border-amber-500/30 border-t-amber-500 rounded-full animate-spin mx-auto mb-4" />
+                <p className="text-gray-400 font-medium">Chargement de la page...</p>
+              </div>
+            </div>
+          )}
 
-        @keyframes glow-border {
-          0% { box-shadow: inset 0 0 25px rgba(212,175,55,0.4); }
-          50% { box-shadow: inset 0 0 55px rgba(212,175,55,0.7); }
-          100% { box-shadow: inset 0 0 25px rgba(212,175,55,0.4); }
-        }
+          <div className="relative rounded-2xl overflow-hidden border border-amber-500/20 shadow-2xl bg-slate-900">
+            <div className="flex items-center justify-between px-6 py-4 bg-slate-800/50 backdrop-blur-sm border-b border-amber-500/10">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-amber-500/10 rounded-lg">
+                  <Layers className="w-5 h-5 text-amber-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-white">
+                    Matériaux Horlogers Suisses
+                  </h3>
+                  <p className="text-xs text-gray-400">
+                    Présentation officielle des matériaux utilisés dans la haute horlogerie
+                  </p>
+                </div>
+              </div>
+            </div>
 
-        .animate-pulse-slow {
-          animation: pulse-slow 5s ease-in-out infinite;
-        }
-        .animate-glow-border {
-          animation: glow-border 6s ease-in-out infinite;
-        }
-      `}</style>
+            {/* Intégration de la page HTML */}
+            <iframe
+              src="/materiaux-horlogers-suisse.html"
+              className="w-full h-[150vh] bg-white"
+              onLoad={() => setIsLoading(false)}
+              title="Matériaux Horlogers Suisses"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* --- INFO SECTION --- */}
+      <section className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-20">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/20 p-8 md:p-12">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl" />
+          
+          <div className="relative">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="p-3 bg-amber-500/20 rounded-xl">
+                <Sparkles className="w-6 h-6 text-amber-400" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-2">
+                  À propos de cette page
+                </h3>
+                <p className="text-gray-300 leading-relaxed max-w-3xl">
+                  Cette page met en avant les principaux matériaux utilisés en horlogerie suisse :
+                  acier inoxydable, or, laiton, titane, céramique, silicium, rubis et bois. 
+                  Chaque matériau représente un équilibre unique entre innovation, esthétique et tradition.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-3 gap-4 mt-8">
+              <div className="p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+                <div className="text-2xl font-bold text-amber-400 mb-1">9</div>
+                <div className="text-sm text-gray-400">Matériaux présentés</div>
+              </div>
+              <div className="p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+                <div className="text-2xl font-bold text-amber-400 mb-1">2025</div>
+                <div className="text-sm text-gray-400">Données mises à jour</div>
+              </div>
+              <div className="p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+                <div className="text-2xl font-bold text-amber-400 mb-1">🇨🇭</div>
+                <div className="text-sm text-gray-400">Swiss Made Excellence</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   )
 }
