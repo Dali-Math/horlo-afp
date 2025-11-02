@@ -25,6 +25,7 @@ interface Resource {
 }
 
 const RessourcesPage: React.FC = () => {
+  const isMobile = useIsMobile() 
   const [activeTab, setActiveTab] = useState('tous');
   const [searchTerm, setSearchTerm] = useState('');
   const [niveauFilter, setNiveauFilter] = useState('tous');
