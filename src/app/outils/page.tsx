@@ -12,12 +12,7 @@ export default function COSCCalculator() {
     posFH_1: 0, posFH_2: 0,
     posCH_1: 0, posCH_2: 0,
   })
-
-  const [thermal, setThermal] = useState({
-    temp8: 0,
-    temp38: 0,
-    temp23_15: 0,
-  })
+  const [thermal, setThermal] = useState({ temp8: 0, temp38: 0, temp23_15: 0 })
 
   // Calculs ISO 3159 - Formules exactes
   const results = useMemo(() => {
@@ -26,41 +21,20 @@ export default function COSCCalculator() {
       positions.pos3H_1, positions.pos3H_2,
       positions.pos9H_1, positions.pos9H_2,
       positions.posFH_1, positions.posFH_2,
-      positions.posCH_1, positions.posCH_2,
+      positions.posCH_1, positions.posCH_2
     ]
 
-    // M : Moyenne des marches journalières (jours 1–10)
+    // M: Moyenne des marches journalières (jours 1-10)
     const M = Mi.reduce((sum, val) => sum + val, 0) / 10
 
-    // V : Variation moyenne des marches
+    // V: Variation moyenne des marches
     const variations = [
       Math.abs(Mi[1] - Mi[0]),
       Math.abs(Mi[3] - Mi[2]),
       Math.abs(Mi[5] - Mi[4]),
       Math.abs(Mi[7] - Mi[6]),
-      Math.abs(Mi[9] - Mi[8]),
+      Math.abs(Mi[9] - Mi[8])
     ]
-
-    return { M, variations }
-  }, [positions])
-
-  // === Rendu principal centré ===
-  return (
-    <main className="min-h-screen bg-[#0b0e1a] text-white flex justify-center py-12 px-4">
-      <div className="w-full max-w-7xl">
-        {/* Ton calculateur complet va ici */}
-        <h1 className="text-3xl font-semibold mb-8 text-center">Calculateur COSC</h1>
-        {/* Exemple visuel : */}
-        <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
-          <p className="text-gray-300">
-            Ce bloc représente ton calculateur interactif, actuellement centré horizontalement.
-          </p>
-        </div>
-      </div>
-    </main>
-  )
-}
-
     const V = variations.reduce((sum, val) => sum + val, 0) / 5
 
     // Vmax: Variation maximale
