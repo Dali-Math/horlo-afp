@@ -259,7 +259,7 @@ const RessourcesPage: React.FC = () => {
         etudiants_micromecanique: '12/an',
         classes_production: '3'
       },
-      url: 'https://www.cfpt.ch/'
+      url: 'https://edu.ge.ch/secondaire2/cfpt/accueil'
     },
     {
       id: 'cosc',
