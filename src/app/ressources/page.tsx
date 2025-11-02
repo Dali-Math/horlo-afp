@@ -7,13 +7,11 @@ import {
   ChevronLeft,
   Search,
   FileText,
-  Download,
-  ExternalLink,
   BookOpen,
   Globe,
   Users,
-  Star,
-  Calendar
+  Calendar,
+  Filter
 } from 'lucide-react'
 
 // ==== Données des ressources ====
@@ -115,131 +113,177 @@ const resources: Resource[] = [
   }
 ]
 
-// ==== Composant principal ====
-export default function RessourcesPage() {
+// ==== Page principale ====
+export default function RessourcesV2Page() {
   const [search, setSearch] = useState('')
+  const [typeFilter, setTypeFilter] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState('')
+  const [languageFilter, setLanguageFilter] = useState('')
 
   const filtered = resources.filter(
     (r) =>
-      r.title.toLowerCase().includes(search.toLowerCase()) ||
-      r.description.toLowerCase().includes(search.toLowerCase())
+      (r.title.toLowerCase().includes(search.toLowerCase()) ||
+        r.description.toLowerCase().includes(search.toLowerCase())) &&
+      (typeFilter === '' || r.type === typeFilter) &&
+      (categoryFilter === '' || r.category === categoryFilter) &&
+      (languageFilter === '' || r.language === languageFilter)
   )
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900 text-slate-900 dark:text-white transition-colors duration-500">
-      {/* Header */}
-      <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <Link
-            href="/"
-            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5 mr-1" />
-            Retour à l&apos;accueil
-          </Link>
+    <main className="min-h-screen bg-gradient-to-b from-blue-100 via-sky-50 to-white text-slate-900">
+      {/* ===== HERO HEADER ===== */}
+      <section className="bg-gradient-to-b from-blue-700 to-sky-500 text-white text-center py-16 shadow-md">
+        <h1 className="text-5xl font-bold mb-3">Ressources Horlogerie Suisse</h1>
+        <p className="text-lg opacity-90 max-w-3xl mx-auto">
+          Collection complète pour collectionneurs amateurs et professionnels : marques légendaires, calibres techniques, complications, formation et finitions Swiss Made.
+        </p>
+        <div className="mt-10 flex justify-center gap-12 text-center text-sky-50">
+          <div>
+            <span className="text-4xl font-bold">15</span>
+            <p>Ressources</p>
+          </div>
+          <div>
+            <span className="text-4xl font-bold">7</span>
+            <p>Catégories</p>
+          </div>
+          <div>
+            <span className="text-4xl font-bold">50+</span>
+            <p>Documents</p>
+          </div>
         </div>
+      </section>
+
+      {/* ===== Barre de navigation ===== */}
+      <header className="max-w-7xl mx-auto px-6 py-4">
+        <Link href="/" className="inline-flex items-center text-blue-700 hover:text-blue-900 transition-colors">
+          <ChevronLeft className="w-5 h-5 mr-1" />
+          Retour à l&apos;accueil
+        </Link>
       </header>
 
-      {/* Contenu principal */}
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        {/* Titre principal */}
-        <div className="text-center mb-12">
-          <div className="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm font-semibold mb-4">
-            Bibliothèque de ressources
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-blue-600 dark:text-blue-400 mb-4">
-            Ressources Documentaires
-          </h1>
-          <p className="text-lg text-slate-700 dark:text-slate-300 max-w-3xl mx-auto">
-            Documents techniques, guides et sites de référence pour approfondir l&apos;art horloger suisse.
-          </p>
-        </div>
-
-        {/* Barre de recherche */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 mb-12">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-500" />
+      {/* ===== Barre de recherche + filtres ===== */}
+      <div className="max-w-7xl mx-auto px-6 py-8 bg-white border border-slate-200 rounded-3xl shadow-lg mb-10">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+          {/* Recherche */}
+          <div className="relative w-full lg:w-1/2">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <input
               type="text"
               placeholder="Rechercher une ressource..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             />
           </div>
+
+          {/* Filtres */}
+          <div className="flex flex-wrap gap-3">
+            <select
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+              className="p-3 bg-white border border-slate-300 rounded-xl text-slate-700"
+            >
+              <option value="">Type</option>
+              <option value="PDF">PDF</option>
+              <option value="Article">Article</option>
+              <option value="Site web">Site web</option>
+              <option value="Glossaire">Glossaire</option>
+            </select>
+
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="p-3 bg-white border border-slate-300 rounded-xl text-slate-700"
+            >
+              <option value="">Catégorie</option>
+              <option value="Documents techniques">Documents techniques</option>
+              <option value="Histoire">Histoire</option>
+              <option value="Sites de référence">Sites de référence</option>
+              <option value="Glossaires">Glossaires</option>
+            </select>
+
+            <select
+              value={languageFilter}
+              onChange={(e) => setLanguageFilter(e.target.value)}
+              className="p-3 bg-white border border-slate-300 rounded-xl text-slate-700"
+            >
+              <option value="">Langue</option>
+              <option value="FR">FR</option>
+              <option value="EN">EN</option>
+              <option value="Multilingue">Multilingue</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* ===== Section Ressources ===== */}
+      <div className="max-w-7xl mx-auto px-6 pb-24">
+        <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+          <BookOpen className="w-6 h-6 text-blue-600" />
+          Toutes les ressources ({filtered.length})
+        </h2>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filtered.map((r) => (
+            <a
+              key={r.id}
+              href={r.url}
+              target={r.url.startsWith('/') ? '_self' : '_blank'}
+              rel="noopener noreferrer"
+              className="group bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-500"
+            >
+              {r.image && (
+                <div className="relative w-full h-48">
+                  <Image
+                    src={r.image}
+                    alt={r.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              )}
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2 text-blue-600">
+                    <FileText className="w-5 h-5" />
+                    <span className="font-semibold text-sm">{r.type}</span>
+                  </div>
+                  {r.isNew && (
+                    <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-lg font-semibold">
+                      🆕 Nouveau
+                    </span>
+                  )}
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+                  {r.title}
+                </h3>
+                <p className="text-sm text-slate-600 mb-3">{r.description}</p>
+                <div className="flex justify-between text-xs text-slate-500 border-t border-slate-200 pt-3">
+                  <span className="flex items-center gap-1">
+                    <Globe className="w-3 h-3" /> {r.language}
+                  </span>
+                  {r.lastUpdate && (
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" /> {r.lastUpdate}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </a>
+          ))}
         </div>
 
-        {/* Ressources */}
-        <section>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-            <BookOpen className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            Toutes les ressources ({filtered.length})
-          </h2>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filtered.map((r) => (
-              <a
-                key={r.id}
-                href={r.url}
-                target={r.url.startsWith('/') ? '_self' : '_blank'}
-                rel="noopener noreferrer"
-                className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all"
-              >
-                {r.image && (
-                  <div className="relative w-full h-48">
-                    <Image
-                      src={r.image}
-                      alt={r.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                )}
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
-                      <FileText className="w-5 h-5" />
-                      <span className="font-semibold text-sm">{r.type}</span>
-                    </div>
-                    {r.isNew && (
-                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs rounded-lg font-semibold">
-                        🆕 Nouveau
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    {r.title}
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">
-                    {r.description}
-                  </p>
-                  <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-700 pt-3">
-                    <span className="flex items-center gap-1">
-                      <Globe className="w-3 h-3" /> {r.language}
-                    </span>
-                    {r.lastUpdate && (
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" /> {r.lastUpdate}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
-
         {/* CTA */}
-        <section className="mt-20 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30 rounded-3xl p-12 text-center border border-blue-200 dark:border-blue-700">
-          <h2 className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-4">
+        <section className="mt-20 bg-gradient-to-r from-blue-100 to-sky-100 rounded-3xl p-12 text-center border border-blue-200 shadow-inner">
+          <h2 className="text-3xl font-bold text-blue-700 mb-4">
             Une ressource manquante ?
           </h2>
-          <p className="text-lg text-slate-700 dark:text-slate-300 mb-8">
+          <p className="text-lg text-slate-700 mb-8">
             Partagez vos sources favorites avec la communauté HorloLearn.
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 bg-blue-600 dark:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-all shadow-lg"
+            className="inline-flex items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg"
           >
             <Users className="w-5 h-5" />
             Proposer une source
