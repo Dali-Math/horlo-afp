@@ -1,292 +1,201 @@
+// /src/app/materiaux/page.tsx
+
 'use client'
 
-import { useState } from 'react'
-import Link from 'next/link'
-import {
-  ArrowLeft,
-  ChevronRight,
-  Gem,
-  Layers,
-  Sparkles,
-  Award,
-  FileText,
-} from 'lucide-react'
-
-// Typage et données
-type Material = {
-  icon: string
-  title: string
-  colorClass: string
-  illustration: string
-  description: string
-  useCases: string[]
-  category: 'Classiques' | 'Innovation' | 'Décoratif'
-}
-
-const MATERIALS: Material[] = [
-  {
-    icon: '⬜',
-    title: 'Acier inoxydable',
-    colorClass: 'bg-gradient-to-br from-sky-400 to-sky-600',
-    illustration: '/images/materiaux/acier.jpg',
-    description:
-      "Le matériau le plus utilisé pour boîtiers et bracelets modernes. L'acier 316L combine résistance à la corrosion, robustesse et finitions impeccables.",
-    useCases: ['Boîtiers & bracelets', 'Couronnes vissées', 'Boucles déployantes', 'Masses oscillantes'],
-    category: 'Classiques',
-  },
-  {
-    icon: '🟨',
-    title: 'Or',
-    colorClass: 'bg-gradient-to-br from-yellow-400 to-yellow-600',
-    illustration: '/images/materiaux/or.jpg',
-    description:
-      "Symbole ultime de luxe. L'or 18K (750/1000), jaune, rose ou blanc, est prisé pour sa noblesse et son éclat intemporel.",
-    useCases: ['Boîtiers de prestige', 'Aiguilles & index', 'Ponts décorés', 'Bracelets luxe'],
-    category: 'Classiques',
-  },
-  {
-    icon: '🥇',
-    title: 'Laiton',
-    colorClass: 'bg-gradient-to-br from-yellow-600 to-yellow-800',
-    illustration: '/images/materiaux/laiton.jpg',
-    description:
-      'Alliage Cu-Zn, base de la majorité des platines, ponts et roues. Facile à usiner, souvent protégé par traitement galvanique.',
-    useCases: ['Platines & ponts', 'Roues de minuterie', 'Ébauches', 'Compteurs & modules'],
-    category: 'Classiques',
-  },
-  {
-    icon: '⚙️',
-    title: 'Titane',
-    colorClass: 'bg-gradient-to-br from-indigo-500 to-indigo-700',
-    illustration: '/images/materiaux/titane.jpg',
-    description:
-      "Matériau high-tech ultra-léger (≈40 % plus léger que l'acier), hypoallergénique et non magnétique. Aspect mat, très résistant.",
-    useCases: ['Boîtiers techniques', 'Bracelets légers', 'Vis spéciales', 'Platines allégées'],
-    category: 'Innovation',
-  },
-  {
-    icon: '⬛',
-    title: 'Céramique',
-    colorClass: 'bg-gradient-to-br from-neutral-700 to-neutral-900',
-    illustration: '/images/materiaux/ceramique.jpg',
-    description:
-      "Composite extrêmement dur, quasi inrayable et résistant à l'usure. Finition mate ou brillante, style contemporain.",
-    useCases: ['Lunettes (bezels)', 'Boîtiers haut de gamme', 'Éléments décoratifs'],
-    category: 'Innovation',
-  },
-  {
-    icon: '🔬',
-    title: 'Silicium',
-    colorClass: 'bg-gradient-to-br from-pink-500 to-pink-700',
-    illustration: '/images/materiaux/silicium.jpg',
-    description:
-      'Issu de la microtech. Composants de haute précision, amagnétiques, peu/pas de lubrification.',
-    useCases: ['Spiraux amagnétiques', 'Ancre en silicium', "Roue d’échappement sans huile"],
-    category: 'Innovation',
-  },
-  {
-    icon: '💎',
-    title: 'Rubis synthétique',
-    colorClass: 'bg-gradient-to-br from-rose-500 to-rose-700',
-    illustration: '/images/materiaux/rubis.jpg',
-    description:
-      "Palier antifriction. Réduit l'usure des axes et garantit une longévité exceptionnelle du mouvement.",
-    useCases: ['Pierres de pivot', 'Contrepoids de balancier', "Roulette d’ancre"],
-    category: 'Classiques',
-  },
-  {
-    icon: '🌲',
-    title: 'Bois',
-    colorClass: 'bg-gradient-to-br from-green-600 to-green-800',
-    illustration: '/images/materiaux/bois.jpg',
-    description:
-      'Matériau artisanal pour cadrans exclusifs et éléments décoratifs. Chaque pièce est unique.',
-    useCases: ['Cadrans exclusifs', 'Boîtiers/maillons décoratifs', 'Maquettes pédagogiques'],
-    category: 'Décoratif',
-  },
-]
-
-const CATEGORIES = ['Tous', 'Classiques', 'Innovation', 'Décoratif'] as const
-type Category = (typeof CATEGORIES)[number]
-
-function MaterialCard({
-  icon,
-  title,
-  colorClass,
-  description,
-  useCases,
-  illustration,
-}: Material) {
-  return (
-    <article className="group relative bg-white/90 dark:bg-slate-900/50 rounded-2xl overflow-hidden border border-slate-200/50 dark:border-slate-700/50 hover:shadow-xl transition-all duration-300">
-      <div className="w-full h-36 overflow-hidden">
-        <img
-          src={illustration}
-          alt={title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          loading="lazy"
-        />
-      </div>
-      <div className="p-4 space-y-2">
-        <div className="flex items-center gap-3">
-          <div className={`${colorClass} text-white rounded-xl px-2.5 py-1 text-base shadow`}>{icon}</div>
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{title}</h3>
-        </div>
-        <p className="text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed">{description}</p>
-        <ul className="pt-2 border-t border-slate-200 dark:border-slate-700/50 text-[13px] text-slate-700 dark:text-slate-200 space-y-1">
-          {useCases.map((u, i) => (
-            <li key={i} className="flex items-start gap-2">
-              <span className="text-amber-500 -mt-0.5">▸</span>
-              <span>{u}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </article>
-  )
-}
-
 export default function MateriauxHorlogersSuisse() {
-  const [filter, setFilter] = useState<Category>('Tous')
-  const filtered = filter === 'Tous' ? MATERIALS : MATERIALS.filter((m) => m.category === filter)
-
-  const infos = [
-    { icon: Gem, label: 'Matériaux d’Excellence', value: '9 Types' },
-    { icon: Layers, label: 'Catégories', value: '3 Principales' },
-    { icon: Sparkles, label: 'Innovations récentes', value: 'Silicium, Titane' },
-    { icon: Award, label: 'Origine', value: '100% Suisse' },
-  ]
-
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
+    <main className="max-w-7xl mx-auto px-6 py-10 text-white">
 
-      {/* HERO */}
-      <section className="relative overflow-hidden border-b border-amber-500/10">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-24 right-24 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-24 left-24 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-3xl" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-16 md:py-24">
-          <div className="flex items-center gap-2 text-sm text-gray-400 mb-8">
-            <Link
-              href="/horlogerie"
-              className="hover:text-amber-400 transition-colors flex items-center gap-1"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Horlogerie Suisse
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-white font-medium">Matériaux Horlogers</span>
-          </div>
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full mb-6">
-                <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
-                <span className="text-sm font-semibold text-amber-400">Swiss Watch Materials</span>
-              </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                <span className="text-white">Excellence et Innovation</span>
-                <br /> <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500">
-                  dans les Matériaux Horlogers
-                </span>
-              </h1>
-              <p className="text-lg sm:text-xl text-gray-300 mb-8 leading-relaxed">
-                L’union parfaite entre tradition, recherche et design suisse. Explorez les
-                matériaux d’exception qui façonnent la haute horlogerie.
-              </p>
-              <div className="inline-flex items-center gap-2 px-5 py-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
-                <FileText className="w-5 h-5 text-amber-400" />
-                <span className="text-sm font-medium text-amber-300">
-                  Page de référence — HorloLearn.ch
-                </span>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              {infos.map((info, index) => (
-                <div
-                  key={index}
-                  className="p-6 bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300 hover:scale-105"
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2 bg-amber-500/10 rounded-lg">
-                      <info.icon className="w-5 h-5 text-amber-400" />
-                    </div>
-                  </div>
-                  <div className="text-2xl font-bold text-amber-400 mb-1">{info.value}</div>
-                  <div className="text-sm text-gray-400">{info.label}</div>
-                </div>
-              ))}
-            </div>
+      {/* HERO AVEC IMAGE */}
+      <section id="hero" className="mb-12">
+        <div className="text-center">
+          <h1 className="text-4xl font-extrabold text-amber-400 mb-4">
+            Excellence et Innovation dans les Matériaux Horlogers Suisses
+          </h1>
+          <p className="text-xl text-gray-300 mb-4">
+            Une analyse complète de l'écosystème des matériaux horlogers suisses, démontrant pourquoi la Suisse demeure le leader mondial en innovation, qualité et savoir-faire.
+          </p>
+          <img
+            src="/images/materiaux/hero.jpg" // <-- adapte le bon chemin image
+            alt="Matériaux Horlogers Suisse"
+            className="mx-auto rounded-xl shadow-xl mb-8"
+          />
+          <div className="flex justify-center gap-4 mt-4">
+            <a href="#materials" className="bg-amber-400 px-6 py-2 rounded-lg text-slate-950 font-bold hover:bg-amber-300 transition">Découvrir les Matériaux</a>
+            <a href="#history" className="bg-slate-800 px-6 py-2 rounded-lg text-amber-400 font-bold hover:bg-slate-700 border border-amber-400 transition">Voir la Timeline</a>
           </div>
         </div>
       </section>
 
-      {/* Filtres et grille */}
-      <section className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-10">
-        <nav className="flex flex-wrap gap-3 mb-8">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setFilter(cat)}
-              className={`px-5 py-2 rounded-2xl text-sm font-semibold transition-all ${
-                filter === cat
-                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md'
-                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-white/10'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </nav>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((m, i) => (
-            <MaterialCard key={i} {...m} />
-          ))}
-        </div>
+      {/* EXECUTIVE SUMMARY */}
+      <section className="mb-12 bg-slate-900 p-8 rounded-2xl border border-amber-400/10 shadow">
+        <h2 className="text-2xl font-bold text-amber-400 mb-4">Executive Summary</h2>
+        <p className="mb-4 text-slate-200">
+          Ce rapport offre une analyse complète et approfondie de l'écosystème des matériaux horlogers suisses, démontrant pourquoi la Suisse demeure le leader mondial incontesté en matière d'innovation, de qualité et de savoir-faire. De l'or 18 carats et des aciers spéciaux comme le 316L, qui ont défini les standards, jusqu’aux alliages modernes et composites innovants, la Suisse repousse constamment les limites de la science des matériaux.
+        </p>
+        <ul className="list-inside list-disc text-amber-400 space-y-1">
+          <li>Maîtrise inégalée des matériaux de l'or au silicium</li>
+          <li>Écosystème industriel unique au monde</li>
+          <li>Formation de renommée mondiale (ETVJ, WOSTEP)</li>
+          <li>Innovation continue et R&D de pointe</li>
+          <li>Leadership face à la concurrence internationale</li>
+        </ul>
       </section>
 
-      {/* Présentation (autrefois dans l’iframe — maintenant “native” React) */}
-      <section className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12 md:py-16">
-        <div className="relative rounded-2xl overflow-hidden border border-amber-500/20 shadow-2xl bg-slate-900">
-          <div className="flex items-center justify-between px-6 py-4 bg-slate-800/50 backdrop-blur-sm border-b border-amber-500/10">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-amber-500/10 rounded-lg">
-                <Layers className="w-5 h-5 text-amber-400" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-white">Matériaux Horlogers Suisses — Présentation</h3>
-                <p className="text-xs text-gray-400">Section présentée en React pour interactivité maximale</p>
-              </div>
-            </div>
-          </div>
-          <div className="p-8 text-slate-200 leading-relaxed">
-            <h2 className="text-2xl font-bold mb-4">Excellence et Innovation dans les Matériaux Horlogers Suisses</h2>
-            <p>
-              L’horlogerie suisse se distingue par l’adoption de matériaux innovants et la préservation de traditions pluri-centenaires.
-              Ici sont réunis l’acier inoxydable, l’or, les alliages comme le laiton, ou encore des avancées pointues comme le silicium ou la céramique.
-              Chaque matériau répond à des exigences précises – résistance, esthétique, noblesse, innovation technologique – pour sublimer la montre.
-            </p>
-            <ul className="list-disc ml-6 my-6 space-y-1">
-              <li>
-                <b>Classiques :</b> acier inoxydable, or, laiton et rubis synthétique offrent robustesse, éclat ou anti-friction.
-              </li>
-              <li>
-                <b>Innovations :</b> titane (légèreté), céramique (dureté, design), silicium (amagnétisme, précision).
-              </li>
-              <li>
-                <b>Décoratif :</b> bois pour des pièces de cadrans exclusives, au rendu naturel et unique.
-              </li>
+      {/* HISTORIQUE DES MATÉRIAUX */}
+      <section id="history" className="mb-12">
+        <h2 className="text-xl font-bold text-amber-400 mb-2">Chronologie Historique</h2>
+        <p className="mb-2 text-slate-200">L'évolution des matériaux horlogers du XVIe siècle à aujourd'hui</p>
+        <div className="flex gap-4 mb-4 text-center">
+          <span className="bg-slate-800 px-4 py-2 rounded-xl text-amber-300 font-bold">XVIe-XVIIe</span>
+          <span className="bg-slate-800 px-4 py-2 rounded-xl text-amber-300 font-bold">XVIIIe-XIXe</span>
+          <span className="bg-slate-800 px-4 py-2 rounded-xl text-amber-300 font-bold">XXe siècle</span>
+          <span className="bg-slate-800 px-4 py-2 rounded-xl text-amber-300 font-bold">XXIe siècle</span>
+        </div>
+        <h3 className="mt-6 text-lg font-semibold text-white">Les Origines : Orfèvrerie et Métaux Précieux</h3>
+        <p className="mb-2 text-slate-200">
+          L'horlogerie suisse naît à Genève au XVIe siècle. Les premiers garde-temps sont fabriqués en or et argent.
+        </p>
+        <ul className="list-inside list-disc text-amber-400 mb-4">
+          <li>Or 18 carats</li>
+          <li>Argent sterling</li>
+          <li>Platine</li>
+        </ul>
+      </section>
+
+      {/* MATÉRIAUX TRADITIONNELS */}
+      <section id="materials" className="mb-12">
+        <h2 className="text-xl font-bold text-amber-400 mb-2">Matériaux Traditionnels</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Or 18k */}
+          <div className="bg-slate-800 p-5 rounded-xl border border-amber-400/10 shadow text-slate-200">
+            <h3 className="text-lg font-bold text-amber-400 mb-2">Or 18 Carats</h3>
+            <p>Composition: 75% Or + 25% alliages <br />Propriétés: Inoxydable, amagnétique</p>
+            <div className="mt-2 font-semibold">Applications:</div>
+            <ul className="list-inside list-disc mb-4">
+              <li>Boîtiers de luxe</li>
+              <li>Bracelets premium</li>
+              <li>Masses oscillantes</li>
+              <li>Aiguilles haut de gamme</li>
             </ul>
-            <p>
-              L’exploration et la maîtrise de ces matériaux font de l’horlogerie suisse un modèle d’excellence technique et artistique reconnu dans le monde entier.
-              <br/>
-              <span className="text-amber-400 font-medium">
-                Découvrez chaque matériau en détail dans la galerie interactive plus haut !
-              </span>
-            </p>
+          </div>
+          {/* Platine */}
+          <div className="bg-slate-800 p-5 rounded-xl border border-amber-400/10 shadow text-slate-200">
+            <h3 className="text-lg font-bold text-amber-400 mb-2">Platine 950</h3>
+            <p>Composition: 95% Platine + 5% autres <br />Propriétés: Noble, polissage miroir</p>
+            <div className="mt-2 font-semibold">Applications:</div>
+            <ul className="list-inside list-disc mb-4">
+              <li>Haute horlogerie exclusive</li>
+              <li>Grandes complications</li>
+              <li>Séries limitées</li>
+              <li>Polissage parfait</li>
+            </ul>
+          </div>
+          {/* Argent */}
+          <div className="bg-slate-800 p-5 rounded-xl border border-amber-400/10 shadow text-slate-200">
+            <h3 className="text-lg font-bold text-amber-400 mb-2">Argent 925</h3>
+            <p>Composition: 92.5% Argent + 7.5% cuivre <br />Propriétés: Blanc, ductile</p>
+            <div className="mt-2 font-semibold">Applications:</div>
+            <ul className="list-inside list-disc mb-4">
+              <li>Cadrans vintage</li>
+              <li>Boîtiers rétro</li>
+              <li>Ornementation</li>
+              <li>Protégé par rhodiage</li>
+            </ul>
           </div>
         </div>
+      </section>
+
+      {/* INNOVATION ET HIGH-TECH */}
+      <section id="innovation" className="mb-12">
+        <h2 className="text-xl font-bold text-amber-400 mb-2">Innovation et High-Tech</h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="bg-slate-800 p-5 rounded-xl border border-amber-400/10 shadow text-slate-200">
+            <h3 className="text-lg font-bold text-amber-400 mb-2">Céramique Technique</h3>
+            <ul className="list-inside list-disc mb-2">
+              <li>Dureté extrême (inrayable)</li>
+              <li>Légèreté supérieure à l'acier</li>
+              <li>Couleurs stables</li>
+            </ul>
+          </div>
+          <div className="bg-slate-800 p-5 rounded-xl border border-amber-400/10 shadow text-slate-200">
+            <h3 className="text-lg font-bold text-amber-400 mb-2">Titane Grade 5</h3>
+            <ul className="list-inside list-disc mb-2">
+              <li>40% plus léger que l'acier</li>
+              <li>Résistance à la corrosion exceptionnelle</li>
+              <li>Hypoallergénique</li>
+            </ul>
+          </div>
+          <div className="bg-slate-800 p-5 rounded-xl border border-amber-400/10 shadow text-slate-200">
+            <h3 className="text-lg font-bold text-amber-400 mb-2">Fibre de Carbone</h3>
+            <ul className="list-inside list-disc mb-2">
+              <li>Légèreté spectaculaire</li>
+              <li>Rigidité incomparable</li>
+              <li>Carbone forgé Carbon TPT®</li>
+            </ul>
+          </div>
+          <div className="bg-slate-800 p-5 rounded-xl border border-amber-400/10 shadow text-slate-200">
+            <h3 className="text-lg font-bold text-amber-400 mb-2">Silicium</h3>
+            <ul className="list-inside list-disc mb-2">
+              <li>Totalement amagnétique</li>
+              <li>Léger et basse inertie</li>
+              <li>Pas de lubrification</li>
+              <li>Précision micron</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* ENTREPRISES & FORMATION */}
+      <section id="ecosystem" className="mb-12">
+        <h2 className="text-xl font-bold text-amber-400 mb-4">Écosystème Industriel et Formation</h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div>
+            <h3 className="font-semibold text-white">Genève</h3>
+            <ul className="ml-4 list-disc text-amber-400">
+              <li>Patek Philippe</li>
+              <li>Rolex</li>
+              <li>Jaeger-LeCoultre</li>
+            </ul>
+            <p className="text-slate-200 mt-2">Finition et décoration, joaillerie, assemblage, Poinçon de Genève…</p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-white">Vallée de Joux, Neuchâtel, Bienne</h3>
+            <ul className="ml-4 list-disc text-amber-400">
+              <li>Haute horlogerie mécanique</li>
+              <li>Grandes complications</li>
+              <li>Fabrication de mouvements</li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-8 grid md:grid-cols-2 gap-6">
+          <div>
+            <h3 className="font-semibold text-white mb-1">CFPT Genève</h3>
+            <p className="text-slate-200">Horlogerie, micromécanique, finitions</p>
+            <h3 className="font-semibold text-white mb-1 mt-4">ETVJ Vallée de Joux</h3>
+            <p className="text-slate-200">Haute horlogerie, complications, artisanat</p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-white mb-1">CPNE Locle</h3>
+            <p className="text-slate-200">Formation duale, industrie, précision</p>
+            <h3 className="font-semibold text-white mb-1 mt-4">WOSTEP</h3>
+            <p className="text-slate-200">Formation internationale, standards globaux</p>
+          </div>
+        </div>
+      </section>
+
+      {/* VISION D'AVENIR */}
+      <section id="future" className="mb-12">
+        <h2 className="text-xl font-bold text-amber-400 mb-4">Vision d'Avenir & Durabilité</h2>
+        <ul className="list-disc ml-4 text-amber-400 space-y-1">
+          <li>Acier Lucent (Chopard) 80% recyclé</li>
+          <li>Or éthique certifié Fairmined</li>
+          <li>Titane recyclé</li>
+          <li>Bâtiments Minergie certifiés</li>
+          <li>Énergies 100% renouvelables</li>
+          <li>Droit à la réparation</li>
+          <li>Pièces garanties sur décennies</li>
+        </ul>
       </section>
     </main>
   )
