@@ -166,13 +166,6 @@ const MATERIALS: Material[] = [
 const CATEGORIES = ['Tous', 'Classiques', 'Innovation', 'Décoratif'] as const
 type Category = (typeof CATEGORIES)[number]
 
-const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
-  Tous: <Layers className="w-4 h-4" />,
-  Classiques: <Award className="w-4 h-4" />,
-  Innovation: <Sparkles className="w-4 h-4" />,
-  Décoratif: <Hammer className="w-4 h-4" />,
-}
-
 type HistoryPeriod = 'xvie' | 'xviiie' | 'xxe' | 'xxie'
 
 const HISTORY_TABS = [
@@ -223,94 +216,6 @@ const HISTORY_CONTENT: Record<HistoryPeriod, { title: string; content: string[];
     materials: ['Silicium monocristallin', 'Céramique ZrO2', 'Carbone forgé NTPT', 'Saphir coloré', 'Alliages or innovants', 'Graphène'],
     image: '/images/histoire/xxie.jpg'
   }
-}
-
-function MaterialCard({
-  icon,
-  title,
-  colorClass,
-  description,
-  useCases,
-  illustration,
-  historicalPeriod,
-  technicalDetails,
-  onImageClick,
-}: Material & { onImageClick: () => void }) {
-  const [isVisible, setIsVisible] = useState(false)
-  const [showDetails, setShowDetails] = useState(false)
-
-  useEffect(() => {
-    setIsVisible(true)
-  }, [])
-
-  return (
-    <article
-      className={`group relative bg-slate-900/80 rounded-xl overflow-hidden 
-        transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/20 
-        border border-slate-700/30 backdrop-blur-sm hover:-translate-y-0.5
-        ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-    >
-      {/* Header compact avec icône et titre */}
-      <div className="flex items-center gap-2 px-3 py-2 bg-slate-800/50 border-b border-slate-700/30">
-        <div className={`${colorClass} rounded-lg p-1.5 text-base flex-shrink-0`}>
-          {icon}
-        </div>
-        <h2 className="text-sm font-bold text-white flex-1 truncate">{title}</h2>
-        <div className="bg-slate-700/50 text-slate-400 px-1.5 py-0.5 rounded text-[9px] font-medium flex items-center gap-1">
-          <Clock className="w-2.5 h-2.5" />
-          <span className="hidden sm:inline">{historicalPeriod?.split(' ')[0]}</span>
-        </div>
-      </div>
-
-      {/* Image compacte */}
-      <button
-        type="button"
-        className="relative w-full h-24 overflow-hidden focus:outline-none border-0 p-0 bg-slate-800 cursor-pointer"
-        onClick={onImageClick}
-        aria-label={`Voir ${title}`}
-      >
-        <img
-          src={illustration}
-          alt={title}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          loading="lazy"
-        />
-      </button>
-
-      {/* Contenu ultra-compact */}
-      <div className="p-3 space-y-2">
-        <p className="text-slate-300 text-[11px] leading-snug line-clamp-2">{description}</p>
-
-        <div className="pt-2 border-t border-slate-700/30">
-          <span className="text-[9px] uppercase tracking-wide text-amber-400/90 font-bold">Applications</span>
-          <ul className="space-y-0.5 mt-1">
-            {useCases.slice(0, 3).map((useCase, i) => (
-              <li key={i} className="flex items-start gap-1 text-[10px] text-slate-400">
-                <span className="text-amber-500 mt-0.5">▸</span>
-                <span className="line-clamp-1">{useCase}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {technicalDetails && (
-          <button
-            onClick={() => setShowDetails(!showDetails)}
-            className="w-full flex items-center justify-center gap-1 text-[9px] uppercase tracking-wide text-amber-400/80 hover:text-amber-400 font-bold pt-2 border-t border-slate-700/30 transition-colors"
-          >
-            <Gem className="w-2.5 h-2.5" />
-            Détails techniques
-          </button>
-        )}
-        
-        {showDetails && technicalDetails && (
-          <div className="text-[9px] text-slate-400 leading-relaxed bg-slate-800/50 p-2 rounded border border-slate-700/30">
-            {technicalDetails}
-          </div>
-        )}
-      </div>
-    </article>
-  )
 }
 
 function ZoomModal({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
@@ -385,10 +290,47 @@ export default function MateriauxPage() {
           ))}
         </nav>
 
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
-          {filtered.map((material, i) => (
-            <MaterialCard key={i} {...material} onImageClick={() => setZoom({ src: material.illustration, alt: material.title })} />
-          ))}
+        {/* Section Grille des matériaux — version compacte */}
+        <section className="mb-20">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {filtered.map((mat, i) => (
+              <article
+                key={i}
+                className="group bg-slate-900/80 border border-slate-700/40 rounded-3xl overflow-hidden transition-all hover:-translate-y-1 hover:shadow-amber-500/20 shadow-md"
+              >
+                <button
+                  type="button"
+                  onClick={() => setZoom({ src: mat.illustration, alt: mat.title })}
+                  className="relative w-full h-32 overflow-hidden cursor-pointer border-0 p-0 bg-transparent"
+                >
+                  <img
+                    src={mat.illustration}
+                    alt={mat.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                </button>
+                <div className="p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className={`text-xl ${mat.colorClass} p-1 rounded-lg text-white`}>{mat.icon}</span>
+                    <h3 className="text-lg font-semibold text-amber-400">{mat.title}</h3>
+                  </div>
+                  <p className="text-slate-300 text-sm line-clamp-2 mb-3">{mat.description}</p>
+                  <ul className="text-xs text-slate-400 space-y-1 border-t border-slate-700/40 pt-2">
+                    {mat.useCases.slice(0, 3).map((use, j) => (
+                      <li key={j} className="flex items-center gap-2">
+                        <span className="text-amber-500">▸</span> {use}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="flex justify-between items-center px-4 py-3 border-t border-slate-700/40 bg-slate-800/40 text-[11px] text-slate-400">
+                  <span>{mat.historicalPeriod}</span>
+                  <span className="italic">{mat.category}</span>
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
 
         {/* Section Histoire COMPLÈTE et Interactive */}
