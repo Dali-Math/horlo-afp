@@ -24,7 +24,7 @@ export default function Navbar() {
     { href: "/evenements", label: "Événements" },
     { href: "/communaute", label: "Communauté" },
     { href: "/actualites", label: "Actualités" },
-    { href: "/materiaux-horlogers-suisse.html", label: "Matériaux Horlogers" },
+    
 
   ];
 
