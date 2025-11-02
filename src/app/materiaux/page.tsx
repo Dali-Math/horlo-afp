@@ -296,7 +296,7 @@ export default function MateriauxHorlogersSuisse() {
             </div>
 
             <iframe
-              src="/materiaux-horlogers-suisse.html"
+              src="materiaux-horlogers-suisse.html#hero"
               className="w-full h-[140vh] bg-white"
               onLoad={() => setIsLoading(false)}
               title="Matériaux Horlogers Suisses"
