@@ -69,62 +69,62 @@ export default function COSCCalculator() {
   return (
     <div className="flex h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       {/* Sidebar - FIXE */}
-      <aside className="w-[260px] bg-[#16203a] flex flex-col shadow-xl fixed h-screen left-0 top-0 z-30 border-r border-slate-700">
-        <div className="flex items-center gap-3 px-5 py-6 mb-6 border-b border-slate-700">
-          <span className="bg-blue-700 p-2 rounded-lg">
-            <Watch className="h-7 w-7 text-blue-300" />
+      <aside className="w-[200px] bg-[#16203a] flex flex-col shadow-xl fixed h-screen left-0 top-0 z-30 border-r border-slate-700 overflow-y-auto">
+        <div className="flex items-center gap-3 px-4 py-6 mb-4 border-b border-slate-700 flex-shrink-0">
+          <span className="bg-blue-700 p-2 rounded-lg flex-shrink-0">
+            <Watch className="h-6 w-6 text-blue-300" />
           </span>
-          <div>
-            <div className="font-bold text-lg tracking-wide text-white">HorloLearn Tools</div>
-            <div className="text-xs text-slate-400">Outils Professionnels d&apos;Horlogerie</div>
+          <div className="min-w-0">
+            <div className="font-bold text-base tracking-wide text-white truncate">HorloLearn Tools</div>
+            <div className="text-xs text-slate-400">Outils</div>
           </div>
         </div>
-        <nav className="flex-1 overflow-y-auto px-3">
-          <ul className="flex flex-col gap-1 text-sm">
-            <li className="text-slate-200 hover:bg-blue-700/20 px-4 py-2 rounded cursor-pointer transition">Bibliothèque de Ressources</li>
-            <li className="text-white bg-blue-700/70 hover:bg-blue-700/80 px-4 py-2 rounded cursor-pointer font-semibold transition">Calculateur Précision COSC</li>
-            <li className="text-slate-200 hover:bg-blue-700/20 px-4 py-2 rounded cursor-pointer transition">Simulateur de Complications</li>
-            <li className="text-slate-200 hover:bg-blue-700/20 px-4 py-2 rounded cursor-pointer transition">Réserve de Marche</li>
-            <li className="text-slate-200 hover:bg-blue-700/20 px-4 py-2 rounded cursor-pointer transition">Diagnostiqueur de Problèmes</li>
-            <li className="text-slate-200 hover:bg-blue-700/20 px-4 py-2 rounded cursor-pointer transition">Finitions Swiss Made</li>
-            <li className="text-slate-200 hover:bg-blue-700/20 px-4 py-2 rounded cursor-pointer transition">Convertisseur d'Unités</li>
-            <li className="text-slate-200 hover:bg-blue-700/20 px-4 py-2 rounded cursor-pointer transition">Fréquences & Oscillations</li>
-            <li className="text-slate-200 hover:bg-blue-700/20 px-4 py-2 rounded cursor-pointer transition">Chronographe Avancé</li>
-            <li className="text-slate-200 hover:bg-blue-700/20 px-4 py-2 rounded cursor-pointer transition">Rapport d'Engrenages</li>
-            <li className="text-slate-200 hover:bg-blue-700/20 px-4 py-2 rounded cursor-pointer transition">Longueur de Spiral</li>
-            <li className="text-slate-200 hover:bg-blue-700/20 px-4 py-2 rounded cursor-pointer transition">Tableau des Couples</li>
-            <li className="text-slate-200 hover:bg-blue-700/20 px-4 py-2 rounded cursor-pointer transition">Guide d'Amplitude</li>
-            <li className="text-slate-200 hover:bg-blue-700/20 px-4 py-2 rounded cursor-pointer transition">Simulateur d'Échappement</li>
-            <li className="text-slate-200 hover:bg-blue-700/20 px-4 py-2 rounded cursor-pointer transition">Base de Données des Pièces</li>
+        <nav className="flex-1 overflow-y-auto px-2">
+          <ul className="flex flex-col gap-0 text-xs">
+            <li className="text-slate-200 hover:bg-blue-700/20 px-3 py-2 rounded cursor-pointer transition">Bibliothèque</li>
+            <li className="text-white bg-blue-700/70 hover:bg-blue-700/80 px-3 py-2 rounded cursor-pointer font-semibold transition">Calculateur COSC</li>
+            <li className="text-slate-200 hover:bg-blue-700/20 px-3 py-2 rounded cursor-pointer transition">Simulateur</li>
+            <li className="text-slate-200 hover:bg-blue-700/20 px-3 py-2 rounded cursor-pointer transition">Réserve</li>
+            <li className="text-slate-200 hover:bg-blue-700/20 px-3 py-2 rounded cursor-pointer transition">Diagnostiqueur</li>
+            <li className="text-slate-200 hover:bg-blue-700/20 px-3 py-2 rounded cursor-pointer transition">Finitions</li>
+            <li className="text-slate-200 hover:bg-blue-700/20 px-3 py-2 rounded cursor-pointer transition">Convertisseur</li>
+            <li className="text-slate-200 hover:bg-blue-700/20 px-3 py-2 rounded cursor-pointer transition">Fréquences</li>
+            <li className="text-slate-200 hover:bg-blue-700/20 px-3 py-2 rounded cursor-pointer transition">Chronographe</li>
+            <li className="text-slate-200 hover:bg-blue-700/20 px-3 py-2 rounded cursor-pointer transition">Engrenages</li>
+            <li className="text-slate-200 hover:bg-blue-700/20 px-3 py-2 rounded cursor-pointer transition">Spiral</li>
+            <li className="text-slate-200 hover:bg-blue-700/20 px-3 py-2 rounded cursor-pointer transition">Couples</li>
+            <li className="text-slate-200 hover:bg-blue-700/20 px-3 py-2 rounded cursor-pointer transition">Amplitude</li>
+            <li className="text-slate-200 hover:bg-blue-700/20 px-3 py-2 rounded cursor-pointer transition">Échappement</li>
+            <li className="text-slate-200 hover:bg-blue-700/20 px-3 py-2 rounded cursor-pointer transition">Base Données</li>
           </ul>
         </nav>
       </aside>
 
-      {/* Main Content - SCROLL */}
-      <main className="ml-[260px] w-full overflow-y-auto">
-        <div className="p-8 max-w-[1200px] mx-auto space-y-12">
+      {/* Main Content - FULL WIDTH */}
+      <main className="ml-[200px] w-full overflow-y-auto">
+        <div className="p-6 space-y-8 w-full">
           {/* Header central */}
-          <div className="text-center mb-5">
+          <div className="text-center mb-3">
             <h1 className="text-4xl font-extrabold text-white mb-2">Calculateur COSC ISO 3159</h1>
-            <p className="text-slate-400 text-md">Certification des chronomètres mécaniques suisses</p>
+            <p className="text-slate-400 text-sm">Certification des chronomètres mécaniques suisses</p>
           </div>
 
           {/* Notice */}
-          <div className="bg-blue-900/20 border border-blue-700/30 rounded-xl p-5">
+          <div className="bg-blue-900/20 border border-blue-700/30 rounded-xl p-4 w-full">
             <div className="flex items-start gap-3">
-              <Info className="text-blue-400 mt-1 flex-shrink-0" size={22} />
+              <Info className="text-blue-400 mt-1 flex-shrink-0" size={20} />
               <div>
-                <h3 className="text-blue-300 font-semibold mb-1">Calculateur Interactif</h3>
-                <p className="text-slate-300 text-sm">
+                <h3 className="text-blue-300 font-semibold mb-1 text-sm">Calculateur Interactif</h3>
+                <p className="text-slate-300 text-xs">
                   Saisissez les valeurs de marche journalière pour chaque position et les variations thermiques. Les calculs ISO 3159 se mettent à jour automatiquement en temps réel.
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Résultats principaux */}
-          <div className="grid md:grid-cols-3 gap-5">
-            <div className={`p-6 rounded-xl border shadow ${
+          {/* Résultats principaux - 3 colonnes */}
+          <div className="grid grid-cols-3 gap-4 w-full">
+            <div className={`p-5 rounded-xl border shadow ${
               results.certificationProb >= 100
                 ? 'bg-green-700/10 border-green-600/40'
                 : results.certificationProb >= 80
@@ -132,106 +132,106 @@ export default function COSCCalculator() {
                   : 'bg-red-500/10 border-red-700/30'
             }`}>
               <div className="flex items-center gap-2 mb-2">
-                {results.certificationProb >= 100 ? <CheckCircle className="text-green-400" /> : <AlertCircle className="text-yellow-400" />}
-                <h3 className="text-sm font-medium text-slate-400">Probabilité de Certification</h3>
+                {results.certificationProb >= 100 ? <CheckCircle className="text-green-400" size={18} /> : <AlertCircle className="text-yellow-400" size={18} />}
+                <h3 className="text-xs font-medium text-slate-400">Probabilité de Certification</h3>
               </div>
-              <div className="text-4xl font-extrabold text-white">{results.certificationProb.toFixed(0)}%</div>
+              <div className="text-3xl font-extrabold text-white">{results.certificationProb.toFixed(0)}%</div>
               <div className="text-xs text-slate-500 mt-1">
                 {results.certificationProb >= 100 ? 'Conforme COSC Cat. 1' : results.certificationProb >= 80 ? 'Certification probable' : 'Non conforme'}
               </div>
             </div>
 
-            <div className="p-6 rounded-xl bg-slate-800/50 border border-slate-700 shadow">
+            <div className="p-5 rounded-xl bg-slate-800/50 border border-slate-700 shadow">
               <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="text-blue-400" size={20} />
-                <h3 className="text-sm font-medium text-slate-400">Moyenne des Marches (M)</h3>
+                <TrendingUp className="text-blue-400" size={18} />
+                <h3 className="text-xs font-medium text-slate-400">Moyenne des Marches (M)</h3>
               </div>
               <div className="text-3xl font-bold text-white">{results.M.toFixed(2)} s/j</div>
               <div className="text-xs text-slate-500 mt-1">Limite : -4 à +6 s/j</div>
             </div>
 
-            <div className="p-6 rounded-xl bg-slate-800/50 border border-slate-700 shadow">
+            <div className="p-5 rounded-xl bg-slate-800/50 border border-slate-700 shadow">
               <div className="flex items-center gap-2 mb-2">
-                <Clock className="text-indigo-400" size={20} />
-                <h3 className="text-sm font-medium text-slate-400">Variation Moyenne (V)</h3>
+                <Clock className="text-indigo-400" size={18} />
+                <h3 className="text-xs font-medium text-slate-400">Variation Moyenne (V)</h3>
               </div>
               <div className="text-3xl font-bold text-white">{results.V.toFixed(2)} s/j</div>
               <div className="text-xs text-slate-500 mt-1">Limite : ≤ 2 s/j</div>
             </div>
           </div>
 
-          {/* Grille saisies */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-[#1a233b] border border-blue-600/20 rounded-xl p-8 shadow-lg">
+          {/* Grille saisies - 2 colonnes */}
+          <div className="grid grid-cols-2 gap-6 w-full bg-[#1a233b] border border-blue-600/20 rounded-xl p-6 shadow-lg">
             {/* Positions */}
             <div>
-              <h3 className="text-xl font-semibold text-white mb-4">SAISIE DES DONNÉES</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">SAISIE DES DONNÉES</h3>
               
-              <div className="bg-slate-800/70 p-4 rounded-lg mb-3">
-                <div className="text-blue-300 font-semibold mb-2">Position 6H (Cadran Haut)</div>
-                <div className="grid grid-cols-2 gap-4">
+              <div className="bg-slate-800/70 p-3 rounded-lg mb-3">
+                <div className="text-blue-300 font-semibold mb-2 text-sm">Position 6H (Cadran Haut)</div>
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 1</label>
-                    <input type="number" step="0.1" placeholder="Ex: 2.5" value={pos6h1} onChange={(e) => setPos6h1(e.target.value)} className="w-full px-3 py-2 bg-slate-900 border-2 border-slate-700 rounded-lg text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input type="number" step="0.1" placeholder="Ex: 2.5" value={pos6h1} onChange={(e) => setPos6h1(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
                   </div>
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 2</label>
-                    <input type="number" step="0.1" placeholder="Ex: 2.8" value={pos6h2} onChange={(e) => setPos6h2(e.target.value)} className="w-full px-3 py-2 bg-slate-900 border-2 border-slate-700 rounded-lg text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input type="number" step="0.1" placeholder="Ex: 2.8" value={pos6h2} onChange={(e) => setPos6h2(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-slate-800/70 p-4 rounded-lg mb-3">
-                <div className="text-blue-300 font-semibold mb-2">Position 3H (Couronne Droite)</div>
-                <div className="grid grid-cols-2 gap-4">
+              <div className="bg-slate-800/70 p-3 rounded-lg mb-3">
+                <div className="text-blue-300 font-semibold mb-2 text-sm">Position 3H (Couronne Droite)</div>
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 1</label>
-                    <input type="number" step="0.1" placeholder="Ex: 1.5" value={pos3h1} onChange={(e) => setPos3h1(e.target.value)} className="w-full px-3 py-2 bg-slate-900 border-2 border-slate-700 rounded-lg text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input type="number" step="0.1" placeholder="Ex: 1.5" value={pos3h1} onChange={(e) => setPos3h1(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
                   </div>
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 2</label>
-                    <input type="number" step="0.1" placeholder="Ex: 1.8" value={pos3h2} onChange={(e) => setPos3h2(e.target.value)} className="w-full px-3 py-2 bg-slate-900 border-2 border-slate-700 rounded-lg text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input type="number" step="0.1" placeholder="Ex: 1.8" value={pos3h2} onChange={(e) => setPos3h2(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-slate-800/70 p-4 rounded-lg mb-3">
-                <div className="text-blue-300 font-semibold mb-2">Position 9H (Couronne Gauche)</div>
-                <div className="grid grid-cols-2 gap-4">
+              <div className="bg-slate-800/70 p-3 rounded-lg mb-3">
+                <div className="text-blue-300 font-semibold mb-2 text-sm">Position 9H (Couronne Gauche)</div>
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 1</label>
-                    <input type="number" step="0.1" placeholder="Ex: 3.0" value={pos9h1} onChange={(e) => setPos9h1(e.target.value)} className="w-full px-3 py-2 bg-slate-900 border-2 border-slate-700 rounded-lg text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input type="number" step="0.1" placeholder="Ex: 3.0" value={pos9h1} onChange={(e) => setPos9h1(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
                   </div>
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 2</label>
-                    <input type="number" step="0.1" placeholder="Ex: 3.2" value={pos9h2} onChange={(e) => setPos9h2(e.target.value)} className="w-full px-3 py-2 bg-slate-900 border-2 border-slate-700 rounded-lg text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input type="number" step="0.1" placeholder="Ex: 3.2" value={pos9h2} onChange={(e) => setPos9h2(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-slate-800/70 p-4 rounded-lg mb-3">
-                <div className="text-blue-300 font-semibold mb-2">Position FH (Cadran Face)</div>
-                <div className="grid grid-cols-2 gap-4">
+              <div className="bg-slate-800/70 p-3 rounded-lg mb-3">
+                <div className="text-blue-300 font-semibold mb-2 text-sm">Position FH (Cadran Face)</div>
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 1</label>
-                    <input type="number" step="0.1" placeholder="Ex: 2.0" value={posFH1} onChange={(e) => setPosFH1(e.target.value)} className="w-full px-3 py-2 bg-slate-900 border-2 border-slate-700 rounded-lg text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input type="number" step="0.1" placeholder="Ex: 2.0" value={posFH1} onChange={(e) => setPosFH1(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
                   </div>
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 2</label>
-                    <input type="number" step="0.1" placeholder="Ex: 2.3" value={posFH2} onChange={(e) => setPosFH2(e.target.value)} className="w-full px-3 py-2 bg-slate-900 border-2 border-slate-700 rounded-lg text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input type="number" step="0.1" placeholder="Ex: 2.3" value={posFH2} onChange={(e) => setPosFH2(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
                   </div>
                 </div>
               </div>
 
-              <div className="bg-slate-800/70 p-4 rounded-lg mb-3">
-                <div className="text-blue-300 font-semibold mb-2">Position CH (Cadran Bas)</div>
-                <div className="grid grid-cols-2 gap-4">
+              <div className="bg-slate-800/70 p-3 rounded-lg mb-3">
+                <div className="text-blue-300 font-semibold mb-2 text-sm">Position CH (Cadran Bas)</div>
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 1</label>
-                    <input type="number" step="0.1" placeholder="Ex: 1.0" value={posCH1} onChange={(e) => setPosCH1(e.target.value)} className="w-full px-3 py-2 bg-slate-900 border-2 border-slate-700 rounded-lg text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input type="number" step="0.1" placeholder="Ex: 1.0" value={posCH1} onChange={(e) => setPosCH1(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
                   </div>
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 2</label>
-                    <input type="number" step="0.1" placeholder="Ex: 1.2" value={posCH2} onChange={(e) => setPosCH2(e.target.value)} className="w-full px-3 py-2 bg-slate-900 border-2 border-slate-700 rounded-lg text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input type="number" step="0.1" placeholder="Ex: 1.2" value={posCH2} onChange={(e) => setPosCH2(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
                   </div>
                 </div>
               </div>
@@ -243,31 +243,31 @@ export default function COSCCalculator() {
               
               <div className="bg-slate-800/70 p-3 rounded-lg mb-3">
                 <label className="block text-sm font-medium text-blue-400 mb-2">M11 - Température 8°C</label>
-                <input type="number" step="0.1" placeholder="Ex: 2.0" value={temp8} onChange={(e) => setTemp8(e.target.value)} className="w-full px-3 py-2 bg-slate-900 border-2 border-slate-700 rounded-lg text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                <input type="number" step="0.1" placeholder="Ex: 2.0" value={temp8} onChange={(e) => setTemp8(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
                 <div className="text-xs text-slate-500 mt-1">Marche journalière à froid</div>
               </div>
 
               <div className="bg-slate-800/70 p-3 rounded-lg mb-3">
                 <label className="block text-sm font-medium text-orange-400 mb-2">M13 - Température 38°C</label>
-                <input type="number" step="0.1" placeholder="Ex: 2.0" value={temp38} onChange={(e) => setTemp38(e.target.value)} className="w-full px-3 py-2 bg-slate-900 border-2 border-slate-700 rounded-lg text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                <input type="number" step="0.1" placeholder="Ex: 2.0" value={temp38} onChange={(e) => setTemp38(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
                 <div className="text-xs text-slate-500 mt-1">Marche journalière à chaud</div>
               </div>
 
-              <div className="bg-slate-800/70 p-3 rounded-lg mb-6">
+              <div className="bg-slate-800/70 p-3 rounded-lg mb-4">
                 <label className="block text-sm font-medium text-blue-400 mb-2">M15 - Température 23°C (reprise)</label>
-                <input type="number" step="0.1" placeholder="Ex: 2.0" value={temp23_15} onChange={(e) => setTemp23_15(e.target.value)} className="w-full px-3 py-2 bg-slate-900 border-2 border-slate-700 rounded-lg text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                <input type="number" step="0.1" placeholder="Ex: 2.0" value={temp23_15} onChange={(e) => setTemp23_15(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
                 <div className="text-xs text-slate-500 mt-1">Marche après retour température ambiante</div>
               </div>
 
               {/* Critères */}
-              <div className="bg-slate-900/80 p-4 rounded-lg shadow">
-                <h4 className="text-slate-200 font-semibold mb-3">Critères ISO 3159 (Cat. 1)</h4>
-                <div className="space-y-2 text-sm">
+              <div className="bg-slate-900/80 p-3 rounded-lg shadow">
+                <h4 className="text-slate-200 font-semibold mb-2 text-sm">Critères ISO 3159 (Cat. 1)</h4>
+                <div className="space-y-1 text-xs">
                   {Object.entries(results.checks).map(([key, passed]) => (
-                    <div key={key} className="flex items-center justify-between border-b border-slate-800 py-2">
+                    <div key={key} className="flex items-center justify-between py-1">
                       <span className="text-slate-300 font-medium">{key}</span>
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${passed ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
-                        {passed ? 'Conforme' : 'Non conforme'}
+                      <span className={`px-2 py-0.5 rounded text-xs font-semibold ${passed ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                        {passed ? 'Conforme' : 'Non conf.'}
                       </span>
                     </div>
                   ))}
@@ -277,8 +277,8 @@ export default function COSCCalculator() {
           </div>
 
           {/* Graphique */}
-          <div className="p-6 rounded-xl bg-slate-800/50 border border-slate-700 shadow">
-            <h3 className="text-lg font-semibold text-white mb-4">Évolution des Marches Journalières</h3>
+          <div className="p-5 rounded-xl bg-slate-800/50 border border-slate-700 shadow w-full">
+            <h3 className="text-lg font-semibold text-white mb-3">Évolution des Marches Journalières</h3>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
@@ -293,34 +293,34 @@ export default function COSCCalculator() {
           </div>
 
           {/* Résultats détaillés */}
-          <div className="p-6 rounded-xl bg-slate-800/50 border border-slate-700 shadow">
-            <h3 className="text-lg font-semibold text-white mb-4">Résultats Détaillés</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="p-5 rounded-xl bg-slate-800/50 border border-slate-700 shadow w-full">
+            <h3 className="text-lg font-semibold text-white mb-3">Résultats Détaillés</h3>
+            <div className="grid grid-cols-4 gap-4">
               <div className="bg-slate-900/50 p-4 rounded-lg">
-                <div className="text-slate-400 text-sm mb-1">Vmax</div>
-                <div className="text-white font-semibold text-xl">{results.Vmax.toFixed(2)} s/j</div>
+                <div className="text-slate-400 text-xs mb-1">Vmax</div>
+                <div className="text-white font-semibold text-lg">{results.Vmax.toFixed(2)} s/j</div>
                 <div className="text-xs text-slate-500 mt-1">Limite: ≤ 5 s/j</div>
               </div>
               <div className="bg-slate-900/50 p-4 rounded-lg">
-                <div className="text-slate-400 text-sm mb-1">D (H-V)</div>
-                <div className="text-white font-semibold text-xl">{results.D.toFixed(2)} s/j</div>
+                <div className="text-slate-400 text-xs mb-1">D (H-V)</div>
+                <div className="text-white font-semibold text-lg">{results.D.toFixed(2)} s/j</div>
                 <div className="text-xs text-slate-500 mt-1">Limite: -6 à +8 s/j</div>
               </div>
               <div className="bg-slate-900/50 p-4 rounded-lg">
-                <div className="text-slate-400 text-sm mb-1">P (Écart max)</div>
-                <div className="text-white font-semibold text-xl">{results.P.toFixed(2)} s/j</div>
+                <div className="text-slate-400 text-xs mb-1">P (Écart max)</div>
+                <div className="text-white font-semibold text-lg">{results.P.toFixed(2)} s/j</div>
                 <div className="text-xs text-slate-500 mt-1">Limite: ≤ 10 s/j</div>
               </div>
               <div className="bg-slate-900/50 p-4 rounded-lg">
-                <div className="text-slate-400 text-sm mb-1">C (Thermique)</div>
-                <div className="text-white font-semibold text-xl">{results.C.toFixed(3)} s/(j·°C)</div>
+                <div className="text-slate-400 text-xs mb-1">C (Thermique)</div>
+                <div className="text-white font-semibold text-lg">{results.C.toFixed(3)} s/(j·°C)</div>
                 <div className="text-xs text-slate-500 mt-1">Limite: ≤ 0.6</div>
               </div>
             </div>
           </div>
           
-          {/* Padding bas pour scroll */}
-          <div className="h-10"></div>
+          {/* Padding bas */}
+          <div className="h-8"></div>
         </div>
       </main>
     </div>
