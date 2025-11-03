@@ -1,18 +1,18 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Navigation from './components/Navigation';
-import ProgressTracker from './components/ProgressTracker';
-import ParticlesBackground from './components/ParticlesBackground';
-import Hero from './components/Hero';
-import Timeline from './components/Timeline';
-import MarquesGallery from './components/MarquesGallery';
-import QuizHub from './components/QuizHub';
-import MecanismesSection from './components/MecanismesSection';
-import QuizInterface from './components/QuizInterface';
-import Footer from './components/Footer';
-import { QuizFinal, TOUS_LES_QUIZZES, SECTIONS_EDUCATIVES } from './data/quizData';
+import React, { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import Navigation from '@/components/Navigation'
+import ProgressTracker from '@/components/ProgressTracker'
+import ParticlesBackground from '@/components/ParticlesBackground'
+import Hero from '@/components/Hero'
+import Timeline from '@/components/Timeline'
+import MarquesGallery from '@/components/MarquesGallery'
+import QuizHub from '@/components/QuizHub'
+import MecanismesSection from '@/components/MecanismesSection'
+import QuizInterface from '@/components/QuizInterface'
+import Footer from '@/components/Footer'
+import { QuizFinal, TOUS_LES_QUIZZES, SECTIONS_EDUCATIVES } from '@/data/quizData'
 
 type AppState = 'home' | 'quiz';
 
