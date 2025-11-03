@@ -45,7 +45,7 @@ export default function UnitsConverter() {
   return (
     <div className="space-y-6 max-w-6xl">
       <div className="flex items-start gap-4">
-        <img src="/imgs/outils_units_converter.png" alt="Convertisseur" className="w-20 h-20 rounded-xl object-cover" />
+        <img src="/imgs/outils_units_converter.png" alt="Convertisseur d'Unités Horlogères" className="w-10 h-10" />
         <div>
           <h2 className="text-3xl font-bold text-white mb-2">Convertisseur d'Unités Horlogères</h2>
           <p className="text-slate-400">Conversions temps réel avec toutes les unités horlogères</p>
