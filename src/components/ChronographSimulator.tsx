@@ -316,7 +316,7 @@ export default function ChronographSimulator() {
                   Considérer embrayage vertical pour meilleure précision
                 </li>
               )}
-              {results.effectiveDrift > 0.05 && (
+              {parseFloat(results.effectiveDrift) > 0.05 && (
                 <li className="flex items-start gap-2">
                   <span className="text-amber-400">→</span>
                   Dérive élevée - vérifier alignement
