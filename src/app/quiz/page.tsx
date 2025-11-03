@@ -107,39 +107,41 @@ function App() {
       />
       <ProgressTracker progress={progress} />
       
-      <AnimatePresence mode="wait">
-        {appState === 'home' ? (
-          <motion.main
-            key="home"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Hero 
-              getQuizCount={getQuizCount}
-              getCompletedCount={getCompletedCount}
-            />
-            <Timeline />
-            <MarquesGallery />
-            <QuizHub 
-              quizzes={TOUS_LES_QUIZZES}
-              completedQuizzes={completedQuizzes}
-              onStartInteractiveQuiz={startInteractiveQuiz}
-              onStartPersonalizedQuiz={startPersonalizedQuiz}
-            />
-            <MecanismesSection />
-            <Footer />
-          </motion.main>
-        ) : (
-          <QuizInterface
-            key="quiz"
-            quiz={currentQuiz}
-            onExit={exitQuiz}
-            onComplete={completeQuiz}
-          />
-        )}
-      </AnimatePresence>
+      <main className="pt-20">
+  <AnimatePresence mode="wait">
+    {appState === 'home' ? (
+      <motion.div
+        key="home"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Hero 
+          getQuizCount={getQuizCount}
+          getCompletedCount={getCompletedCount}
+        />
+        <Timeline />
+        <MarquesGallery />
+        <QuizHub 
+          quizzes={TOUS_LES_QUIZZES}
+          completedQuizzes={completedQuizzes}
+          onStartInteractiveQuiz={startInteractiveQuiz}
+          onStartPersonalizedQuiz={startPersonalizedQuiz}
+        />
+        <MecanismesSection />
+        <Footer />
+      </motion.div>
+    ) : (
+      <QuizInterface
+        key="quiz"
+        quiz={currentQuiz}
+        onExit={exitQuiz}
+        onComplete={completeQuiz}
+      />
+    )}
+  </AnimatePresence>
+</main>
     </div>
   );
 }
