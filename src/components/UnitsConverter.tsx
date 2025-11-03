@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { useState } from 'react'
 import { ArrowRightLeft, Ruler, Gauge, Droplet } from 'lucide-react'
 
@@ -46,7 +45,7 @@ export default function UnitsConverter() {
   return (
     <div className="space-y-6 max-w-6xl">
       <div className="flex items-start gap-4">
-        import Image from 'next/image'  // ...  <Image   src="/imgs/outils_units_converter.png"   alt="Convertisseur d'Unités Horlogères"   width={48}   height={48}   priority   className="rounded-md" />
+        <img src="/imgs/outils_units_converter.png" alt="Convertisseur d'Unités Horlogères" className="w-10 h-10" />
         <div>
           <h2 className="text-3xl font-bold text-white mb-2">Convertisseur d'Unités Horlogères</h2>
           <p className="text-slate-400">Conversions temps réel avec toutes les unités horlogères</p>
