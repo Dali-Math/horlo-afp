@@ -356,7 +356,7 @@ export default function CalculateurFrequenceAvance() {
                   <div className="flex justify-between">
                     <span className="text-slate-400">Amplitude:</span>
                     <span className={`font-mono ${Math.abs(parseFloat(results.amplitudeError)) <= 5 ? 'text-green-400' : 'text-red-400'}`}>
-                      {results.amplitudeError > 0 ? '+' : ''}{results.amplitudeError}%
+                      {parseFloat(results.amplitudeError) > 0 ? '+' : ''}{results.amplitudeError}%
                     </span>
                   </div>
                   <div className="flex justify-between">
