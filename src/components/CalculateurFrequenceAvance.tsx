@@ -362,7 +362,7 @@ export default function CalculateurFrequenceAvance() {
                   <div className="flex justify-between">
                     <span className="text-slate-400">Température:</span>
                     <span className={`font-mono ${Math.abs(parseFloat(results.temperatureError)) <= 2 ? 'text-green-400' : 'text-red-400'}`}>
-                      {results.temperatureError > 0 ? '+' : ''}{results.temperatureError} sec
+                      {parseFloat(results.temperatureError) > 0 ? '+' : ''}{results.temperatureError} sec
                     </span>
                   </div>
                   <div className="flex justify-between">
