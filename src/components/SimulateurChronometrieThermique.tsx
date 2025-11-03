@@ -69,11 +69,9 @@ export default function SimulateurChronometrieThermique() {
       const finalDeviation = baseDeviation * magneticFactor
       
       magData.push({
-        temp,
-        withoutMagnetic: baseDeviation,
-        withMagnetic: finalDeviation,
-        improvement: ((finalDeviation - baseDeviation) / Math.abs(baseDeviation)) * 100
-      })
+  temperature: temp,
+  deviation: finalDeviation - baseDeviation
+})
     })
     
     return magData
