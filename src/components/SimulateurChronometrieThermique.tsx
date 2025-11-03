@@ -60,7 +60,7 @@ export default function SimulateurChronometrieThermique() {
   }, [temperatureRange, baseFrequency, thermalCoefficient, spiralType, testDuration])
 
   const magneticEffects = useMemo(() => {
-    const magData = []
+    const magData: { temperature: number; deviation: number }[] = []
     const magneticTemperatures = [20, 30, 40, 50]
     
     magneticTemperatures.forEach(temp => {
