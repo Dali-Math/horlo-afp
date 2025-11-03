@@ -5,31 +5,33 @@ import { Clock, TrendingUp, AlertCircle, CheckCircle, Info, Watch } from 'lucide
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 export default function COSCCalculator() {
-  const [pos6h1, setPos6h1] = useState('')
-  const [pos6h2, setPos6h2] = useState('')
-  const [pos3h1, setPos3h1] = useState('')
-  const [pos3h2, setPos3h2] = useState('')
-  const [pos9h1, setPos9h1] = useState('')
-  const [pos9h2, setPos9h2] = useState('')
-  const [posFH1, setPosFH1] = useState('')
-  const [posFH2, setPosFH2] = useState('')
-  const [posCH1, setPosCH1] = useState('')
-  const [posCH2, setPosCH2] = useState('')
+  const [positions, setPositions] = useState({
+    pos6h1: '', pos6h2: '',
+    pos3h1: '', pos3h2: '',
+    pos9h1: '', pos9h2: '',
+    posFH1: '', posFH2: '',
+    posCH1: '', posCH2: '',
+  })
   
-  const [temp8, setTemp8] = useState('')
-  const [temp38, setTemp38] = useState('')
-  const [temp23_15, setTemp23_15] = useState('')
+  const [thermal, setThermal] = useState({
+    temp8: '',
+    temp38: '',
+    temp23_15: ''
+  })
 
   const results = useMemo(() => {
     const Mi = [
-      parseFloat(pos6h1) || 0, parseFloat(pos6h2) || 0,
-      parseFloat(pos3h1) || 0, parseFloat(pos3h2) || 0,
-      parseFloat(pos9h1) || 0, parseFloat(pos9h2) || 0,
-      parseFloat(posFH1) || 0, parseFloat(posFH2) || 0,
-      parseFloat(posCH1) || 0, parseFloat(posCH2) || 0,
+      parseFloat(positions.pos6h1) || 0, parseFloat(positions.pos6h2) || 0,
+      parseFloat(positions.pos3h1) || 0, parseFloat(positions.pos3h2) || 0,
+      parseFloat(positions.pos9h1) || 0, parseFloat(positions.pos9h2) || 0,
+      parseFloat(positions.posFH1) || 0, parseFloat(positions.posFH2) || 0,
+      parseFloat(positions.posCH1) || 0, parseFloat(positions.posCH2) || 0,
     ]
 
+    // M: Moyenne des marches journalières
     const M = Mi.reduce((sum, val) => sum + val, 0) / 10
+
+    // V: Variation moyenne des marches
     const variations = [
       Math.abs(Mi[1] - Mi[0]),
       Math.abs(Mi[3] - Mi[2]),
@@ -38,12 +40,23 @@ export default function COSCCalculator() {
       Math.abs(Mi[9] - Mi[8]),
     ]
     const V = variations.reduce((sum, val) => sum + val, 0) / 5
-    const Vmax = Math.max(...variations, 0)
-    const D = (Mi[0] + Mi[1]) / 2 - (Mi[8] + Mi[9]) / 2
-    const P = Math.max(...Mi.map(mi => Math.abs(mi - M)), 0)
-    const C = (parseFloat(temp38) || 0 - (parseFloat(temp8) || 0)) / 30
-    const R = (parseFloat(temp23_15) || 0) - (Mi[0] + Mi[1]) / 2
 
+    // Vmax: Variation maximale
+    const Vmax = Math.max(...variations, 0)
+
+    // D: Différence H-V (6H vs CH)
+    const D = ((Mi[0] + Mi[1]) / 2) - ((Mi[8] + Mi[9]) / 2)
+
+    // P: Écart maximal
+    const P = Math.max(...Mi.map(mi => Math.abs(mi - M)), 0)
+
+    // C: Variation thermique (CORRECTION: parenthèses ajoutées)
+    const C = ((parseFloat(thermal.temp38) || 0) - (parseFloat(thermal.temp8) || 0)) / 30
+
+    // R: Reprise de marche
+    const R = (parseFloat(thermal.temp23_15) || 0) - ((Mi[0] + Mi[1]) / 2)
+
+    // Prédiction de certification (Cat. 1)
     const checks = {
       M: M >= -4 && M <= 6,
       V: V <= 2,
@@ -58,13 +71,21 @@ export default function COSCCalculator() {
     const certificationProb = (passed / 7) * 100
 
     return { M, V, Vmax, D, P, C, R, checks, certificationProb, Mi }
-  }, [pos6h1, pos6h2, pos3h1, pos3h2, pos9h1, pos9h2, posFH1, posFH2, posCH1, posCH2, temp8, temp38, temp23_15])
+  }, [positions, thermal])
 
   const chartData = results.Mi.map((value, index) => ({
     jour: index + 1,
     marche: value,
     moyenne: results.M,
   }))
+
+  const handlePositionChange = (field: string, value: string) => {
+    setPositions(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleThermalChange = (field: string, value: string) => {
+    setThermal(prev => ({ ...prev, [field]: value }))
+  }
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
@@ -171,11 +192,25 @@ export default function COSCCalculator() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 1</label>
-                    <input type="number" step="0.1" placeholder="Ex: 2.5" value={pos6h1} onChange={(e) => setPos6h1(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input 
+                      type="number" 
+                      step="0.1" 
+                      placeholder="Ex: 2.5" 
+                      value={positions.pos6h1} 
+                      onChange={(e) => handlePositionChange('pos6h1', e.target.value)} 
+                      className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" 
+                    />
                   </div>
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 2</label>
-                    <input type="number" step="0.1" placeholder="Ex: 2.8" value={pos6h2} onChange={(e) => setPos6h2(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input 
+                      type="number" 
+                      step="0.1" 
+                      placeholder="Ex: 2.8" 
+                      value={positions.pos6h2} 
+                      onChange={(e) => handlePositionChange('pos6h2', e.target.value)} 
+                      className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" 
+                    />
                   </div>
                 </div>
               </div>
@@ -185,11 +220,25 @@ export default function COSCCalculator() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 1</label>
-                    <input type="number" step="0.1" placeholder="Ex: 1.5" value={pos3h1} onChange={(e) => setPos3h1(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input 
+                      type="number" 
+                      step="0.1" 
+                      placeholder="Ex: 1.5" 
+                      value={positions.pos3h1} 
+                      onChange={(e) => handlePositionChange('pos3h1', e.target.value)} 
+                      className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" 
+                    />
                   </div>
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 2</label>
-                    <input type="number" step="0.1" placeholder="Ex: 1.8" value={pos3h2} onChange={(e) => setPos3h2(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input 
+                      type="number" 
+                      step="0.1" 
+                      placeholder="Ex: 1.8" 
+                      value={positions.pos3h2} 
+                      onChange={(e) => handlePositionChange('pos3h2', e.target.value)} 
+                      className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" 
+                    />
                   </div>
                 </div>
               </div>
@@ -199,11 +248,25 @@ export default function COSCCalculator() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 1</label>
-                    <input type="number" step="0.1" placeholder="Ex: 3.0" value={pos9h1} onChange={(e) => setPos9h1(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input 
+                      type="number" 
+                      step="0.1" 
+                      placeholder="Ex: 3.0" 
+                      value={positions.pos9h1} 
+                      onChange={(e) => handlePositionChange('pos9h1', e.target.value)} 
+                      className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" 
+                    />
                   </div>
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 2</label>
-                    <input type="number" step="0.1" placeholder="Ex: 3.2" value={pos9h2} onChange={(e) => setPos9h2(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input 
+                      type="number" 
+                      step="0.1" 
+                      placeholder="Ex: 3.2" 
+                      value={positions.pos9h2} 
+                      onChange={(e) => handlePositionChange('pos9h2', e.target.value)} 
+                      className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" 
+                    />
                   </div>
                 </div>
               </div>
@@ -213,11 +276,25 @@ export default function COSCCalculator() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 1</label>
-                    <input type="number" step="0.1" placeholder="Ex: 2.0" value={posFH1} onChange={(e) => setPosFH1(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input 
+                      type="number" 
+                      step="0.1" 
+                      placeholder="Ex: 2.0" 
+                      value={positions.posFH1} 
+                      onChange={(e) => handlePositionChange('posFH1', e.target.value)} 
+                      className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" 
+                    />
                   </div>
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 2</label>
-                    <input type="number" step="0.1" placeholder="Ex: 2.3" value={posFH2} onChange={(e) => setPosFH2(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input 
+                      type="number" 
+                      step="0.1" 
+                      placeholder="Ex: 2.3" 
+                      value={positions.posFH2} 
+                      onChange={(e) => handlePositionChange('posFH2', e.target.value)} 
+                      className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" 
+                    />
                   </div>
                 </div>
               </div>
@@ -227,11 +304,25 @@ export default function COSCCalculator() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 1</label>
-                    <input type="number" step="0.1" placeholder="Ex: 1.0" value={posCH1} onChange={(e) => setPosCH1(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input 
+                      type="number" 
+                      step="0.1" 
+                      placeholder="Ex: 1.0" 
+                      value={positions.posCH1} 
+                      onChange={(e) => handlePositionChange('posCH1', e.target.value)} 
+                      className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" 
+                    />
                   </div>
                   <div>
                     <label className="block text-xs text-slate-400 mb-1">Jour 2</label>
-                    <input type="number" step="0.1" placeholder="Ex: 1.2" value={posCH2} onChange={(e) => setPosCH2(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                    <input 
+                      type="number" 
+                      step="0.1" 
+                      placeholder="Ex: 1.2" 
+                      value={positions.posCH2} 
+                      onChange={(e) => handlePositionChange('posCH2', e.target.value)} 
+                      className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" 
+                    />
                   </div>
                 </div>
               </div>
@@ -243,19 +334,40 @@ export default function COSCCalculator() {
               
               <div className="bg-slate-800/70 p-3 rounded-lg mb-3">
                 <label className="block text-sm font-medium text-blue-400 mb-2">M11 - Température 8°C</label>
-                <input type="number" step="0.1" placeholder="Ex: 2.0" value={temp8} onChange={(e) => setTemp8(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                <input 
+                  type="number" 
+                  step="0.1" 
+                  placeholder="Ex: 2.0" 
+                  value={thermal.temp8} 
+                  onChange={(e) => handleThermalChange('temp8', e.target.value)} 
+                  className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" 
+                />
                 <div className="text-xs text-slate-500 mt-1">Marche journalière à froid</div>
               </div>
 
               <div className="bg-slate-800/70 p-3 rounded-lg mb-3">
                 <label className="block text-sm font-medium text-orange-400 mb-2">M13 - Température 38°C</label>
-                <input type="number" step="0.1" placeholder="Ex: 2.0" value={temp38} onChange={(e) => setTemp38(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                <input 
+                  type="number" 
+                  step="0.1" 
+                  placeholder="Ex: 2.0" 
+                  value={thermal.temp38} 
+                  onChange={(e) => handleThermalChange('temp38', e.target.value)} 
+                  className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" 
+                />
                 <div className="text-xs text-slate-500 mt-1">Marche journalière à chaud</div>
               </div>
 
               <div className="bg-slate-800/70 p-3 rounded-lg mb-4">
                 <label className="block text-sm font-medium text-blue-400 mb-2">M15 - Température 23°C (reprise)</label>
-                <input type="number" step="0.1" placeholder="Ex: 2.0" value={temp23_15} onChange={(e) => setTemp23_15(e.target.value)} className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" />
+                <input 
+                  type="number" 
+                  step="0.1" 
+                  placeholder="Ex: 2.0" 
+                  value={thermal.temp23_15} 
+                  onChange={(e) => handleThermalChange('temp23_15', e.target.value)} 
+                  className="w-full px-2 py-1.5 bg-slate-900 border-2 border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:border-blue-500 focus:outline-none transition" 
+                />
                 <div className="text-xs text-slate-500 mt-1">Marche après retour température ambiante</div>
               </div>
 
