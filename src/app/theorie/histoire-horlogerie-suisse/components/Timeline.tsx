@@ -11,17 +11,14 @@ export function Timeline({ periods }: TimelineProps) {
   return (
     <section
       id="chronologie"
-      className="relative py-24 bg-gradient-to-b from-slate-900 via-gray-900 to-slate-800 text-white overflow-hidden"
+      className="relative py-24 bg-gradient-to-b from-amber-50 via-white to-gray-50 text-gray-900 overflow-hidden"
     >
-      {/* Texture de fond légère */}
-      <div className="absolute inset-0 bg-[url('/imgs/horology_texture_dark.jpg')] bg-cover bg-center opacity-10" />
-
-      <div className="relative z-10 section-container max-w-6xl mx-auto px-6">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent drop-shadow-lg">
+      <div className="relative z-10 max-w-6xl mx-auto px-6">
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-gray-800 tracking-tight">
           Chronologie Historique
         </h2>
 
-        <div className="timeline-container space-y-20">
+        <div className="space-y-20">
           {periods.map((period, index) => (
             <article
               key={period.year}
@@ -30,25 +27,24 @@ export function Timeline({ periods }: TimelineProps) {
               }`}
             >
               {/* Image horlogère */}
-              <div className="relative w-full md:w-1/2 aspect-[4/3] overflow-hidden rounded-2xl shadow-lg border border-amber-500/30">
+              <div className="relative w-full md:w-1/2 aspect-[4/3] overflow-hidden rounded-2xl shadow-md">
                 <Image
                   src={period.image || '/imgs/default_watch.jpg'}
                   alt={period.title}
                   fill
-                  className="object-cover object-center brightness-90 hover:brightness-100 transition-all duration-500"
+                  className="object-cover object-center brightness-100 transition-all duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                <span className="absolute bottom-4 left-4 text-amber-400 text-lg font-semibold bg-black/40 px-3 py-1 rounded-md border border-amber-400/30">
+                <span className="absolute bottom-4 left-4 bg-white/80 text-gray-800 text-sm font-semibold px-3 py-1 rounded-md shadow">
                   {period.year}
                 </span>
               </div>
 
-              {/* Texte descriptif */}
+              {/* Contenu texte */}
               <div className="md:w-1/2 text-left">
-                <h3 className="text-2xl font-bold text-amber-400 mb-4 drop-shadow-md">
+                <h3 className="text-2xl font-semibold text-amber-700 mb-3">
                   {period.title}
                 </h3>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="text-gray-600 leading-relaxed">
                   {period.description}
                 </p>
               </div>
@@ -56,6 +52,9 @@ export function Timeline({ periods }: TimelineProps) {
           ))}
         </div>
       </div>
+
+      {/* Ligne décorative discrète */}
+      <div className="absolute left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-amber-200 via-amber-300 to-transparent opacity-70 hidden md:block" />
     </section>
   )
 }
