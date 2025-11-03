@@ -25,7 +25,7 @@ import {
   SimulateurChronometrieThermique,
   CalculateurDimensionsSpiral,
   SimulateurEchappementAncreAvance
-} from './components';
+} from '.';
 
 const allTools = [
   { id: 'bibliotheque-ressources', name: 'Bibliothèque de Ressources', component: RessourcesPage, icon: BookOpen },
