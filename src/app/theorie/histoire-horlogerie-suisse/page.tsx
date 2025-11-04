@@ -430,15 +430,7 @@ const styles = `
     box-shadow: 0 8px 30px var(--shadow-medium);
   }
 
-  .theme-toggle::before {
-    content: '☀️';
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-  }
-
-  [data-theme="dark"] .theme-toggle::before {
-    content: '🌙';
-  }
+ 
 
   /* Responsive */
   @media (max-width: 768px) {
@@ -856,7 +848,7 @@ const territories = [
     coords: "46.2° N, 6.1° E",
     altitude: "375m",
     desc: "Palais de la haute horlogerie, siège des plus grandes manufactures et de l'art de vivre helvétique.",
-    image: "/theorie/histoire-horlogerie-suisse/imgs/geneva_luxury_watchmaking_craftsman_at_work_0.jpg",
+    image: "/theorie/histoire-horlogerie-suisse/imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg",
     expertise: "Haute Horlogerie"
   },
   {
