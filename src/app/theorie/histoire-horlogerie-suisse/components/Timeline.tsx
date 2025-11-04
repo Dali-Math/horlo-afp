@@ -18,7 +18,6 @@ export function Timeline({ periods }: TimelineProps) {
               key={period.year}
               className={`timeline-card ${index % 2 === 1 ? 'reverse' : ''}`}
             >
-              <span className="timeline-date-badge">{period.year}</span>
               <div className="timeline-image">
                 <Image
                   src={period.image}
@@ -32,6 +31,7 @@ export function Timeline({ periods }: TimelineProps) {
               <div className="timeline-content">
                 <h3 className="headline-2 timeline-title">{period.title}</h3>
                 <p className="body timeline-description">{period.description}</p>
+                <span className="timeline-date-badge">{period.year}</span>
               </div>
             </article>
           ))}
