@@ -112,14 +112,13 @@ const Timeline: React.FC = () => {
                     className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl p-6 cursor-pointer hover:bg-white/20 transition-all duration-300 transform hover:scale-105"
                     onClick={() => setSelectedEvent(event)}
                   >
-                    <div className="flex items-center mb-4">
-                      <div className={`bg-gradient-to-r ${event.color} p-3 rounded-lg mr-4`}>
+                    {/* ------ Version corrigée : badge année SOUS le titre ------ */}
+                    <div className="flex flex-col items-start mb-4">
+                      <div className={`bg-gradient-to-r ${event.color} p-3 rounded-lg mb-2`}>
                         {getIcon(event.icon)}
                       </div>
-                      <div>
-                        <div className="text-3xl font-bold text-amber-400">{event.year}</div>
-                        <h3 className="text-xl font-semibold text-white">{event.title}</h3>
-                      </div>
+                      <h3 className="text-xl font-semibold text-white mb-2">{event.title}</h3>
+                      <div className="text-3xl font-bold text-amber-400">{event.year}</div>
                     </div>
                     <p className="text-white/80 mb-3">{event.description}</p>
                     <p className="text-amber-400 font-medium">{event.significance}</p>
@@ -132,8 +131,6 @@ const Timeline: React.FC = () => {
                     {getIcon(event.icon)}
                   </div>
                 </div>
-
-                {/* Empty space */}
                 <div className="w-5/12" />
               </motion.div>
             ))}
