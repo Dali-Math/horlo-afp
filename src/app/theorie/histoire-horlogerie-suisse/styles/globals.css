@@ -409,17 +409,19 @@ body {
 }
 
 .timeline-date-badge {
-  position: absolute;
-  top: var(--space-6);
-  left: var(--space-6);
+  display: block;
+  position: relative;
+  margin: 1rem auto 0 auto; /* centré horizontalement et un peu d'espace en haut */
   background: var(--primary-500);
   color: white;
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-sm);
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  width: fit-content;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .timeline-image {
