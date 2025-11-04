@@ -2,654 +2,956 @@
 
 import React, { useState, useEffect } from 'react';
 
-// CSS complet intégré avec le style doré élégant
-const styles = `
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@300;400;500&display=swap');
-
+// ================================
+// STYLES CSS INTÉGRÉS COMPLETS
+// ================================
+const globalStyles = `
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
 
-  :root {
-    --primary-500: #B8860B;
-    --primary-600: #9A7209;
-    --neutral-50: #FAFAF8;
-    --neutral-100: #F5F4F0;
-    --neutral-200: #E8E6E0;
-    --neutral-500: #9B9A94;
-    --neutral-700: #4A4A45;
-    --neutral-900: #1C1C19;
-    --bg-page: #FAFAF8;
-    --bg-surface: #F5F4F0;
-  }
-
-  [data-theme="dark"] {
-    --primary-500: #D4AF37;
-    --neutral-50: #0F0F0F;
-    --neutral-100: #1A1A1A;
-    --neutral-200: #262626;
-    --neutral-700: #A3A3A3;
-    --neutral-900: #F8F5F0;
-    --bg-page: #0F0F0F;
-    --bg-surface: #1A1A1A;
+  html {
+    scroll-behavior: smooth;
   }
 
   body {
-    font-family: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--bg-page);
-    color: var(--neutral-900);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
-    transition: background-color 0.4s ease, color 0.4s ease;
+    color: #333;
+    background-color: #f7f7f7;
   }
 
   .horlogerie-page {
     min-height: 100vh;
+    transition: all 0.3s ease;
   }
 
-  /* Navigation */
-  .nav-header {
-    position: fixed;
+  .horlogerie-page.dark {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+
+  .horlogerie-page.dark .header {
+    background-color: #2d2d2d;
+    color: #ffffff;
+  }
+
+  .horlogerie-page.dark .hero {
+    background: linear-gradient(135deg, #4c63d2 0%, #553c9a 100%);
+  }
+
+  .horlogerie-page.dark .key-stats,
+  .horlogerie-page.dark .regions-section {
+    background-color: #2d2d2d;
+  }
+
+  .horlogerie-page.dark .section-title {
+    color: #ffffff;
+  }
+
+  .horlogerie-page.dark .timeline-section,
+  .horlogerie-page.dark .manufactures-section {
+    background-color: #1a1a1a;
+  }
+
+  .horlogerie-page.dark .stat-card,
+  .horlogerie-page.dark .region-card,
+  .horlogerie-page.dark .manufacture-card {
+    background-color: #2d2d2d;
+    color: #ffffff;
+    border-color: #404040;
+  }
+
+  .horlogerie-page.dark .stat-card .stat-label,
+  .horlogerie-page.dark .region-card .region-description,
+  .horlogerie-page.dark .manufacture-card .manufacture-description {
+    color: #cccccc;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* Header Styles */
+  .header {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    height: 96px;
-    background: var(--bg-page);
-    backdrop-filter: blur(10px);
-    z-index: 1000;
-    border-bottom: 1px solid var(--neutral-200);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.4s ease;
+    z-index: 100;
+    transition: all 0.3s ease;
   }
 
-  .nav-container {
-    width: 100%;
-    max-width: 1400px;
-    padding: 0 32px;
+  .header-content {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
   }
 
-  .nav-logo {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 24px;
+  .logo {
+    font-size: 1.5rem;
     font-weight: 700;
-    color: var(--neutral-900);
+    color: #667eea;
     text-decoration: none;
+    transition: color 0.3s ease;
+    cursor: pointer;
+  }
+
+  .logo:hover {
+    color: #553c9a;
   }
 
   .nav-links {
     display: flex;
-    gap: 32px;
     list-style: none;
+    gap: 2rem;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    padding: 0.5rem 0;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .nav-links a:hover {
+    color: #667eea;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #667eea;
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+  .header-icons {
+    display: flex;
+    gap: 1rem;
     align-items: center;
   }
 
-  .nav-link {
-    font-size: 14px;
-    font-weight: 300;
-    color: var(--neutral-700);
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    transition: color 0.3s;
+  .header-icon {
+    width: 20px;
+    height: 20px;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.3s ease;
   }
 
-  .nav-link:hover {
-    color: var(--neutral-900);
+  .header-icon:hover {
+    color: #667eea;
   }
 
   .theme-toggle {
+    padding: 8px 12px;
     background: none;
-    border: none;
+    border: 2px solid #667eea;
+    border-radius: 20px;
     cursor: pointer;
-    padding: 8px;
-    font-size: 20px;
-    border-radius: 50%;
-    transition: background 0.3s;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    color: #667eea;
   }
 
   .theme-toggle:hover {
-    background: var(--neutral-200);
+    background: #667eea;
+    color: white;
+    transform: translateY(-1px);
   }
 
-  /* Hero */
-  .hero-section {
+  /* Hero Section */
+  .hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
     position: relative;
-    height: 750px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     overflow: hidden;
-    margin-top: 96px;
   }
 
-  .hero-background {
+  .hero::before {
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #1C1C19 0%, #4A4A45 100%);
-    background-size: cover;
-    background-position: center;
-  }
-
-  .hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, rgba(28, 28, 25, 0.4), rgba(28, 28, 25, 0.7));
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.05"><path d="M0,50 Q250,20 500,50 T1000,50 L1000,100 L0,100 Z"/></svg>');
+    z-index: 1;
   }
 
   .hero-content {
     position: relative;
-    z-index: 10;
-    max-width: 1200px;
-    padding: 0 32px;
-    text-align: center;
-    color: var(--neutral-50);
+    z-index: 2;
   }
 
-  .display-1 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 96px;
+  .hero h1 {
+    font-size: 3.5rem;
     font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: 16px;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    animation: fadeInUp 1s ease-out;
   }
 
-  .subhead {
-    font-size: 28px;
-    font-weight: 500;
-    margin-bottom: 64px;
+  .hero-subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
     opacity: 0.9;
+    animation: fadeInUp 1s ease-out 0.2s both;
+  }
+
+  .made-in-club {
+    background: white;
+    color: #667eea;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: fadeInUp 1s ease-out 0.4s both;
+  }
+
+  .made-in-club:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    background: #f8f9ff;
+  }
+
+  /* Key Stats */
+  .key-stats {
+    padding: 4rem 0;
+    background: white;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    text-align: center;
+    color: #333;
+    position: relative;
+  }
+
+  .section-title::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -10px;
+    width: 60px;
+    height: 4px;
+    background: #667eea;
+    border-radius: 2px;
   }
 
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 32px;
-    margin-top: 64px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
   }
 
-  .stat-item {
+  .stat-card {
+    background: white;
+    padding: 2.5rem 1.5rem;
+    border-radius: 15px;
     text-align: center;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
   }
 
-  .stat-value {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 48px;
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .stat-card:hover::before {
+    left: 100%;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border-color: #667eea;
+  }
+
+  .stat-number {
+    font-size: 2.8rem;
     font-weight: 700;
-    color: var(--primary-500);
+    color: #667eea;
+    margin-bottom: 0.5rem;
     display: block;
-    margin-bottom: 12px;
   }
 
   .stat-label {
-    color: var(--neutral-200);
-    font-size: 16px;
+    font-size: 0.95rem;
+    color: #666;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  /* Sections */
-  .section-timeline,
-  .section-geography,
-  .section-manufactures {
-    padding: 128px 0;
-  }
-
-  .section-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 32px;
-  }
-
-  .headline-1 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 56px;
+    letter-spacing: 0.5px;
     font-weight: 600;
-    text-align: center;
-    margin-bottom: 64px;
-    color: var(--neutral-900);
   }
 
   /* Timeline */
-  .timeline-container {
-    max-width: 1200px;
+  .timeline-section {
+    padding: 4rem 0;
+    background: #f7f7f7;
+  }
+
+  .timeline {
+    position: relative;
+    max-width: 900px;
     margin: 0 auto;
   }
 
-  .timeline-card {
-    display: flex;
-    gap: 32px;
-    background: var(--bg-surface);
-    border: 1px solid var(--neutral-200);
-    border-radius: 12px;
-    padding: 48px;
-    margin-bottom: 64px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: all 0.4s;
-    position: relative;
-  }
-
-  .timeline-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
-    border-color: var(--primary-500);
-  }
-
-  .timeline-card.reverse {
-    flex-direction: row-reverse;
-  }
-
-  .timeline-date-badge {
+  .timeline::before {
+    content: '';
     position: absolute;
-    top: 24px;
-    left: 24px;
-    background: var(--primary-500);
-    color: white;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    text-transform: uppercase;
-  }
-
-  .timeline-image {
-    flex: 0 0 40%;
-    border-radius: 16px;
-    overflow: hidden;
-    height: 300px;
-  }
-
-  .timeline-image img {
-    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
     height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s;
+    background: linear-gradient(to bottom, #667eea, #764ba2);
+    border-radius: 2px;
   }
 
-  .timeline-card:hover .timeline-image img {
-    transform: scale(1.05);
+  .timeline-item {
+    position: relative;
+    margin-bottom: 4rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .timeline-item:nth-child(odd) {
+    flex-direction: row;
+  }
+
+  .timeline-item:nth-child(even) {
+    flex-direction: row-reverse;
   }
 
   .timeline-content {
     flex: 1;
-    padding-top: 48px;
+    padding: 2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin: 0 2rem;
+    position: relative;
+    transition: all 0.3s ease;
   }
 
-  .headline-2 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 40px;
+  .timeline-content:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  }
+
+  .timeline-year {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #667eea;
+    margin-bottom: 1rem;
+  }
+
+  .timeline-title {
+    font-size: 1.3rem;
     font-weight: 600;
-    color: var(--neutral-900);
-    margin-bottom: 16px;
+    margin-bottom: 1rem;
+    color: #333;
+    line-height: 1.3;
   }
 
-  .body {
-    font-size: 18px;
-    color: var(--neutral-700);
-    line-height: 1.6;
+  .timeline-description {
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 1rem;
   }
 
-  /* Region Grid */
-  .region-grid {
+  .timeline-marker {
+    width: 20px;
+    height: 20px;
+    background: #667eea;
+    border: 4px solid white;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .timeline-marker:hover {
+    transform: translateX(-50%) scale(1.1);
+    box-shadow: 0 0 0 8px rgba(102, 126, 234, 0.3);
+  }
+
+  /* Regions */
+  .regions-section {
+    padding: 4rem 0;
+    background: white;
+  }
+
+  .regions-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-    margin-top: 64px;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
   }
 
   .region-card {
-    background: var(--bg-surface);
-    border-radius: 12px;
+    background: white;
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: all 0.4s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
   }
 
   .region-card:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.15);
   }
 
-  .region-card-image {
+  .region-image {
     width: 100%;
-    height: 240px;
-    overflow: hidden;
-  }
-
-  .region-card-image img {
-    width: 100%;
-    height: 100%;
+    height: 220px;
     object-fit: cover;
-    transition: transform 0.6s;
+    transition: transform 0.3s ease;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
   }
 
-  .region-card:hover .region-card-image img {
+  .region-card:hover .region-image {
     transform: scale(1.05);
   }
 
-  .region-card-content {
-    padding: 48px;
+  .region-content {
+    padding: 2rem;
   }
 
-  .region-card-content h3 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 28px;
-    color: var(--neutral-900);
-    margin-bottom: 12px;
+  .region-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
   }
 
-  .region-specialty {
-    color: var(--primary-600);
-    display: block;
-    margin-bottom: 16px;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  .region-subtitle {
+    color: #667eea;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
   }
 
-  /* Manufacture Grid */
-  .manufacture-grid {
+  .region-since {
+    color: #999;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .region-description {
+    color: #666;
+    line-height: 1.7;
+  }
+
+  /* Manufactures */
+  .manufactures-section {
+    padding: 4rem 0;
+    background: #f7f7f7;
+  }
+
+  .manufactures-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-    margin-top: 64px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
   }
 
   .manufacture-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--neutral-200);
-    border-radius: 12px;
+    background: white;
+    border-radius: 15px;
     overflow: hidden;
-    transition: all 0.4s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
   }
 
   .manufacture-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(184, 134, 11, 0.15);
-    border-color: var(--primary-500);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.15);
   }
 
   .manufacture-image {
     width: 100%;
-    height: 200px;
-    overflow: hidden;
-  }
-
-  .manufacture-image img {
-    width: 100%;
-    height: 100%;
+    height: 250px;
     object-fit: cover;
-    transition: transform 0.6s;
+    transition: transform 0.3s ease;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
   }
 
-  .manufacture-card:hover .manufacture-image img {
+  .manufacture-card:hover .manufacture-image {
     transform: scale(1.05);
   }
 
   .manufacture-content {
-    padding: 48px;
+    padding: 2rem;
   }
 
-  .manufacture-content h3 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 28px;
-    color: var(--neutral-900);
-    margin-bottom: 12px;
+  .manufacture-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
   }
 
-  .caption {
-    font-size: 14px;
-    font-weight: 300;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  .manufacture-year {
+    color: #667eea;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
   }
 
-  .manufacture-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
-  .manufacture-meta .caption:first-child {
-    color: var(--primary-600);
+  .manufacture-location {
+    color: #999;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
     font-weight: 500;
   }
 
-  .manufacture-specialty {
-    color: var(--neutral-500);
-  }
-
-  .manufacture-famous {
-    color: var(--primary-500);
-    font-style: italic;
-    margin-top: 16px;
+  .manufacture-description {
+    color: #666;
+    line-height: 1.7;
   }
 
   /* Footer */
   .footer {
-    background: var(--neutral-900);
-    color: var(--neutral-100);
-    padding: 64px 0;
-    text-align: center;
-  }
-
-  .footer-badge {
-    margin-top: 16px;
-    padding: 8px 16px;
-    background: var(--primary-500);
+    background: #333;
     color: white;
-    display: inline-block;
-    border-radius: 8px;
-    font-size: 12px;
-    text-transform: uppercase;
+    text-align: center;
+    padding: 3rem 0;
   }
 
-  /* Responsive */
-  @media (max-width: 1024px) {
-    .manufacture-grid {
-      grid-template-columns: repeat(2, 1fr);
+  .footer-content {
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-link {
+    color: #667eea;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .footer-link:hover {
+    color: #8b9de8;
+    text-decoration: underline;
+  }
+
+  .footer-attribution {
+    color: #999;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+    opacity: 0.8;
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
     }
-    .region-grid {
-      grid-template-columns: repeat(2, 1fr);
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  .pulse {
+    animation: pulse 2s infinite;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .container {
+      padding: 0 15px;
     }
   }
 
   @media (max-width: 768px) {
-    .display-1 {
-      font-size: 48px;
+    .hero h1 {
+      font-size: 2.5rem;
     }
-    .headline-1 {
-      font-size: 36px;
+
+    .hero-subtitle {
+      font-size: 1.1rem;
     }
-    .stats-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .timeline-card {
-      flex-direction: column !important;
-    }
-    .timeline-image {
-      height: 200px;
-    }
-    .region-grid,
-    .manufacture-grid {
-      grid-template-columns: 1fr;
-    }
+
     .nav-links {
       display: none;
+    }
+
+    .section-title {
+      font-size: 2rem;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .timeline::before {
+      left: 30px;
+    }
+
+    .timeline-item {
+      flex-direction: column !important;
+      align-items: flex-start;
+    }
+
+    .timeline-content {
+      margin: 0 0 0 60px;
+      padding: 1.5rem;
+    }
+
+    .timeline-marker {
+      left: 30px;
+    }
+
+    .regions-grid,
+    .manufactures-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .stat-number {
+      font-size: 2.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero {
+      padding: 3rem 0;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+    }
+
+    .key-stats,
+    .timeline-section,
+    .regions-section,
+    .manufactures-section {
+      padding: 3rem 0;
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+      padding: 2rem 1rem;
+    }
+
+    .timeline-content {
+      margin: 0 0 0 50px;
+      padding: 1.2rem;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
     }
   }
 `;
 
-// Données
-const stats = [
-  { value: '500 Ans', label: "D'Excellence" },
-  { value: '30 Millions', label: 'Montres/An' },
-  { value: '50%', label: 'Marché Luxe' },
-  { value: 'CHF 20Mds', label: 'Exportations' },
+// ================================
+// DONNÉES COMPLÈTES
+// ================================
+const timelineData = [
+  {
+    year: "1541",
+    title: "Les Origines : Jean Calvin et la Naissance à Genève",
+    description: "Jean Calvin bannit le port d'objets ornementaux à Genève, forçant orfèvres et joailliers à se reconvertir dans l'horlogerie, marquant la naissance de l'industrie horlogère suisse."
+  },
+  {
+    year: "1685",
+    title: "Les Réfugiés Huguenots : Expansion dans l'Arc Jurassien",
+    description: "La révocation de l'Édit de Nantes entraîne l'arrivée de réfugiés huguenots français apportant capitaux, savoir-faire et réseaux commerciaux. L'horlogerie se développe de Genève à Schaffhouse."
+  },
+  {
+    year: "1740",
+    title: "Vallée de Joux : Berceau de la Haute Horlogerie",
+    description: "Les agriculteurs combiers fabriquent des pièces horlogères pendant les longs hivers. Naissance des \"fermes horlogères\" avec fenêtres supplémentaires pour maximiser la lumière naturelle."
+  },
+  {
+    year: "XIXe Siècle",
+    title: "L'Âge d'Or : Innovations et Production en Série",
+    description: "Développement de nouvelles techniques de fabrication, production en série, exportations massives vers les États-Unis. Apparition des montres bracelet. Invention du tourbillon par Abraham-Louis Breguet (1801)."
+  },
+  {
+    year: "1929",
+    title: "Grande Dépression : Naissance des Grands Groupes",
+    description: "La crise économique force les petites maisons à se regrouper. Création de la SSIH (Omega + Tissot, 1930) et de l'ASUAG (Longines, Mido, Hamilton, 1931)."
+  },
+  {
+    year: "1970-1983",
+    title: "Crise du Quartz : La Swatch Sauve l'Industrie",
+    description: "Les montres à quartz japonaises réduisent les parts de marché suisses de 50% à 15%. Fusion SSIH + ASUAG = Swatch Group (1983). La montre Swatch relance l'industrie."
+  }
 ];
 
-const periods = [
+const regionsData = [
   {
-    year: '1541',
-    title: "L'Interdiction de Calvin",
-    description: "Jean Calvin interdit le port de bijoux à Genève, poussant les orfèvres vers l'horlogerie.",
-    image: '/imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg',
+    name: "Genève",
+    subtitle: "Berceau de l'horlogerie",
+    since: "1541",
+    description: "Capitale mondiale de l'horlogerie de luxe, siège de Patek Philippe, Rolex, Vacheron Constantin."
   },
   {
-    year: '1750',
-    title: 'Vallée de Joux',
-    description: "Développement de l'horlogerie dans les montagnes du Jura pendant les longs hivers.",
-    image: '/imgs/Vallee_de_Joux_Swiss_Alps_Landscape_Lake_Forest.jpg',
+    name: "Vallée de Joux",
+    subtitle: "Haute horlogerie",
+    since: "1740",
+    description: "Berceau des grandes complications horlogères. 26 fermes horlogères historiques."
   },
   {
-    year: '1839',
-    title: "L'Ère Patek Philippe",
-    description: 'Fondation de la manufacture la plus prestigieuse au monde.',
-    image: '/imgs/Patek_Philippe_Rose_Gold_Grand_Complications_Watch.jpg',
+    name: "Neuchâtel",
+    subtitle: "Innovation technique",
+    since: "XVIIe siècle",
+    description: "Centre d'innovation et de recherche horlogère."
   },
+  {
+    name: "Bienne/Biel",
+    subtitle: "Production industrielle",
+    since: "XXe siècle",
+    description: "Siège d'Omega, Swatch Group. Centre industriel majeur."
+  },
+  {
+    name: "La Chaux-de-Fonds",
+    subtitle: "Patrimoine UNESCO",
+    since: "XVIIIe siècle",
+    description: "Ville horlogère inscrite au patrimoine mondial UNESCO."
+  },
+  {
+    name: "Schaffhouse",
+    subtitle: "Horlogerie allemande-suisse",
+    since: "XIXe siècle",
+    description: "Siège d'IWC Schaffhausen, manufacture prestigieuse."
+  }
 ];
 
-const regions = [
+const manufacturesData = [
   {
-    name: 'Genève',
-    specialty: 'Haute horlogerie',
-    description: 'Berceau historique de la haute horlogerie suisse depuis le 16ème siècle.',
-    image: '/imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg',
+    name: "Vacheron Constantin",
+    year: "1755",
+    location: "Genève",
+    description: "La plus ancienne manufacture horlogère active au monde, 270 ans d'excellence continue."
   },
   {
-    name: 'Vallée de Joux',
-    specialty: 'Complications',
-    description: 'Cœur des grandes complications horlogères.',
-    image: '/imgs/Vallee_de_Joux_Audemars_Piguet_Museum_Swiss_Alps_Landscape.jpg',
+    name: "Jaeger-LeCoultre",
+    year: "1833",
+    location: "Le Sentier",
+    description: "Maître des complications, créateur du plus petit mouvement mécanique au monde."
   },
   {
-    name: 'Neuchâtel',
-    specialty: 'Précision',
-    description: "Centre académique et industriel de l'horlogerie.",
-    image: '/imgs/Neuchatel_Switzerland_historic_city_lake_architecture_watchmaking_clock_tower.jpg',
+    name: "Patek Philippe",
+    year: "1839",
+    location: "Genève",
+    description: "Synonyme de perfection horlogère, créateur des complications les plus complexes."
   },
   {
-    name: 'Bienne',
-    specialty: 'Production',
-    description: 'Capitale moderne avec Rolex, Omega et Swatch Group.',
-    image: '/imgs/Bienne_Switzerland_Old_Town_Square_Watchmaking_City.jpg',
+    name: "Omega",
+    year: "1848",
+    location: "Bienne",
+    description: "Marque officielle des Jeux Olympiques, symbole de précision et d'innovation."
   },
   {
-    name: 'La Chaux-de-Fonds',
-    specialty: 'UNESCO',
-    description: 'Ville horlogère inscrite au patrimoine mondial.',
-    image: '/imgs/la_chaux_de_fonds_swiss_watchmaking_cityscape_unesco_heritage.jpg',
+    name: "Audemars Piguet",
+    year: "1875",
+    location: "Le Brassus",
+    description: "Créateur de la première montre-bracelet à répétition minutes en 1892."
   },
   {
-    name: 'Schaffhausen',
-    specialty: 'Ingénierie',
-    description: "Siège d'IWC depuis 1868.",
-    image: '/imgs/Schaffhausen_Switzerland_Fronwagplatz_city_square.jpg',
+    name: "Rolex",
+    year: "1905",
+    location: "Genève",
+    description: "Pionnier de la montre-bracelet robuste et élégante, symbole de réussite."
   },
+  {
+    name: "Blancpain",
+    year: "1735",
+    location: "Villeret",
+    description: "Plus ancienne marque horlogère au monde, gardienne des traditions ancestrales."
+  },
+  {
+    name: "IWC Schaffhausen",
+    year: "1868",
+    location: "Schaffhouse",
+    description: "Ingénierie de précision, spécialisée dans les montres d'aviation et de dive."
+  }
 ];
 
-const manufactures = [
+const statsData = [
   {
-    name: 'Patek Philippe',
-    founded: '1839',
-    specialty: 'Grandes Complications',
-    description: 'La manufacture la plus prestigieuse au monde.',
-    image: '/imgs/Patek_Philippe_Rose_Gold_Grand_Complications_Watch.jpg',
-    famous: 'Nautilus, Calatrava',
+    number: "500+",
+    label: "Années d'Histoire"
   },
   {
-    name: 'Rolex',
-    founded: '1905',
-    specialty: 'Montres Sportives de Luxe',
-    description: 'Icône mondiale du succès et de la performance.',
-    image: '/imgs/Patek_Philippe_Nautilus_Luxury_Swiss_Watch_Blue_Dial.jpg',
-    famous: 'Submariner, Daytona',
+    number: "21,7 MdsCHF",
+    label: "CA (2019)"
   },
   {
-    name: 'Audemars Piguet',
-    founded: '1875',
-    specialty: 'Haute Horlogerie Sportive',
-    description: 'Pionnière du luxe sportif avec la Royal Oak.',
-    image: '/imgs/audemars_piguet_royal_oak_rose_gold_black_dial_luxury_swiss_watch.jpg',
-    famous: 'Royal Oak',
+    number: "N°1",
+    label: "Mondial Luxe"
   },
   {
-    name: 'Vacheron Constantin',
-    founded: '1755',
-    specialty: 'Plus Ancienne Manufacture',
-    description: 'Production ininterrompue depuis 1755.',
-    image: '/imgs/Vacheron_Constantin_Tourbillon_Green_Dial_Luxury_Swiss_Watch.jpg',
-    famous: 'Patrimony, Overseas',
-  },
+    number: "+2,4%",
+    label: "Croissance 2018-19"
+  }
 ];
 
-export default function HistoireHorlogeriePage() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const [mounted, setMounted] = useState(false);
+// ================================
+// COMPOSANT PRINCIPAL
+// ================================
+export default function HorlogeriePage() {
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    const saved = localStorage.getItem('theme') as 'light' | 'dark';
-    if (saved) setTheme(saved);
+    const savedTheme = localStorage.getItem('horlogerie-theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme) {
+      setIsDarkMode(savedTheme === 'dark');
+    } else {
+      setIsDarkMode(prefersDark);
+    }
   }, []);
 
   const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    const newTheme = !isDarkMode;
+    setIsDarkMode(newTheme);
+    localStorage.setItem('horlogerie-theme', newTheme ? 'dark' : 'light');
   };
 
-  if (!mounted) return null;
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleMadeInClub = () => {
+    alert('Made in Club! 🎉');
+  };
 
   return (
-    <div className="horlogerie-page" data-theme={theme}>
-      <style dangerouslySetInnerHTML={{ __html: styles }} />
+    <div className={`horlogerie-page ${isDarkMode ? 'dark' : ''}`}>
+      <style dangerouslySetInnerHTML={{ __html: globalStyles }} />
+      
+      {/* Header */}
+      <header className="header">
+        <div className="container">
+          <div className="header-content">
+            <div 
+              className="logo" 
+              onClick={() => scrollToSection('hero')}
+            >
+              HorloLearn
+            </div>
+            
+            <nav>
+              <ul className="nav-links">
+                <li><a onClick={() => scrollToSection('chronologie')}>Chronologie</a></li>
+                <li><a onClick={() => scrollToSection('regions')}>Régions</a></li>
+                <li><a onClick={() => scrollToSection('manufactures')}>Manufactures</a></li>
+              </ul>
+            </nav>
 
-      {/* Navigation */}
-      <header className="nav-header">
-        <div className="nav-container">
-          <a href="#hero" className="nav-logo">HorloLearn</a>
-          <nav>
-            <ul className="nav-links">
-              <li><a href="#chronologie" className="nav-link">Chronologie</a></li>
-              <li><a href="#geographie" className="nav-link">Géographie</a></li>
-              <li><a href="#manufactures" className="nav-link">Manufactures</a></li>
-              <li>
-                <button onClick={toggleTheme} className="theme-toggle">
-                  {theme === 'dark' ? '☀️' : '🌙'}
-                </button>
-              </li>
-            </ul>
-          </nav>
+            <div className="header-icons">
+              <button 
+                onClick={toggleTheme}
+                className="theme-toggle"
+                aria-label="Basculer le thème"
+                title={isDarkMode ? 'Mode clair' : 'Mode sombre'}
+              >
+                {isDarkMode ? '☀️' : '🌙'}
+              </button>
+              
+              <svg className="header-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" role="img" aria-label="Recherche">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="21 21l-4.35-4.35"></path>
+              </svg>
+              
+              <svg className="header-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" role="img" aria-label="Profil">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+          </div>
         </div>
       </header>
 
-      {/* Hero */}
-      <section id="hero" className="hero-section">
-        <div className="hero-background" style={{
-          backgroundImage: 'url(/imgs/Patek_Philippe_Rose_Gold_Grand_Complications_Watch.jpg)'
-        }} />
-        <div className="hero-overlay" />
-        <div className="hero-content">
-          <h1 className="display-1">L'Excellence Horlogère Suisse</h1>
-          <p className="subhead">500 Ans de Savoir-Faire</p>
+      {/* Hero Section */}
+      <section id="hero" className="hero">
+        <div className="container">
+          <div className="hero-content">
+            <h1>L'Excellence Horlogère Suisse</h1>
+            <p className="hero-subtitle">500+ Années d'Histoire</p>
+            <button className="made-in-club" onClick={handleMadeInClub}>Made in Club</button>
+          </div>
+        </div>
+      </section>
+
+      {/* Key Stats */}
+      <section className="key-stats">
+        <div className="container">
+          <h2 className="section-title">Chiffres Clés</h2>
           <div className="stats-grid">
-            {stats.map((stat, i) => (
-              <div key={i} className="stat-item">
-                <span className="stat-value">{stat.value}</span>
-                <span className="stat-label">{stat.label}</span>
+            {statsData.map((stat, index) => (
+              <div key={index} className="stat-card">
+                <div className="stat-number">{stat.number}</div>
+                <div className="stat-label">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -657,69 +959,63 @@ export default function HistoireHorlogeriePage() {
       </section>
 
       {/* Timeline */}
-      <section id="chronologie" className="section-timeline">
-        <div className="section-container">
-          <h2 className="headline-1">Chronologie Historique</h2>
-          <div className="timeline-container">
-            {periods.map((period, i) => (
-              <article key={i} className={`timeline-card ${i % 2 === 1 ? 'reverse' : ''}`}>
-                <span className="timeline-date-badge">{period.year}</span>
-                <div className="timeline-image">
-                  <img src={period.image} alt={period.title} />
-                </div>
+      <section id="chronologie" className="timeline-section">
+        <div className="container">
+          <h2 className="section-title">500 Ans d'Excellence</h2>
+          <div className="timeline">
+            {timelineData.map((item, index) => (
+              <div key={index} className="timeline-item">
                 <div className="timeline-content">
-                  <h3 className="headline-2">{period.title}</h3>
-                  <p className="body">{period.description}</p>
+                  <div className="timeline-year">{item.year}</div>
+                  <h3 className="timeline-title">{item.title}</h3>
+                  <p className="timeline-description">{item.description}</p>
                 </div>
-              </article>
+                <div className="timeline-marker"></div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Regions */}
-      <section id="geographie" className="section-geography">
-        <div className="section-container">
-          <h2 className="headline-1">Géographie Horlogère</h2>
-          <div className="region-grid">
-            {regions.map((region, i) => (
-              <article key={i} className="region-card">
-                <div className="region-card-image">
-                  <img src={region.image} alt={region.name} />
+      <section id="regions" className="regions-section">
+        <div className="container">
+          <h2 className="section-title">Géographie Horlogère</h2>
+          <div className="regions-grid">
+            {regionsData.map((region, index) => (
+              <div key={index} className="region-card">
+                <div className="region-image">
+                  {region.name}
                 </div>
-                <div className="region-card-content">
-                  <h3>{region.name}</h3>
-                  <span className="region-specialty caption">{region.specialty}</span>
-                  <p className="body">{region.description}</p>
+                <div className="region-content">
+                  <h3 className="region-name">{region.name}</h3>
+                  <div className="region-subtitle">{region.subtitle}</div>
+                  <div className="region-since">Depuis {region.since}</div>
+                  <p className="region-description">{region.description}</p>
                 </div>
-              </article>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Manufactures */}
-      <section id="manufactures" className="section-manufactures">
-        <div className="section-container">
-          <h2 className="headline-1">Maisons Légendaires</h2>
-          <div className="manufacture-grid">
-            {manufactures.map((mfr, i) => (
-              <article key={i} className="manufacture-card">
+      <section id="manufactures" className="manufactures-section">
+        <div className="container">
+          <h2 className="section-title">Maisons Légendaires</h2>
+          <div className="manufactures-grid">
+            {manufacturesData.map((manufacture, index) => (
+              <div key={index} className="manufacture-card">
                 <div className="manufacture-image">
-                  <img src={mfr.image} alt={mfr.name} />
+                  {manufacture.name}
                 </div>
                 <div className="manufacture-content">
-                  <h3>{mfr.name}</h3>
-                  <div className="manufacture-meta">
-                    <span className="caption">Fondée en {mfr.founded}</span>
-                    <span className="manufacture-specialty caption">{mfr.specialty}</span>
-                  </div>
-                  <p className="body">{mfr.description}</p>
-                  {mfr.famous && (
-                    <p className="manufacture-famous caption">Modèles : {mfr.famous}</p>
-                  )}
+                  <h3 className="manufacture-name">{manufacture.name}</h3>
+                  <div className="manufacture-year">Fondée en {manufacture.year}</div>
+                  <div className="manufacture-location">{manufacture.location}</div>
+                  <p className="manufacture-description">{manufacture.description}</p>
                 </div>
-              </article>
+              </div>
             ))}
           </div>
         </div>
@@ -727,9 +1023,17 @@ export default function HistoireHorlogeriePage() {
 
       {/* Footer */}
       <footer className="footer">
-        <div className="footer-container">
-          <p>© 2025 HorloLearn - L'Excellence Horlogère Suisse</p>
-          <div className="footer-badge">Created by MiniMax Agent</div>
+        <div className="container">
+          <div className="footer-content">
+            <p>© 2025 HorloLearn - Éducation Horlogère de Prestige</p>
+            <p>
+              Une célébration de 500 ans d'excellence horlogère suisse | 
+              <a href="https://www.horlolearn.ch" className="footer-link"> HorloLearn.ch</a>
+            </p>
+          </div>
+          <p className="footer-attribution">
+            Created by MiniMax Agent
+          </p>
         </div>
       </footer>
     </div>
