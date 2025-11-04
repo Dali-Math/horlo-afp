@@ -1193,34 +1193,7 @@ export default function HistoireHorlogerieSuisse() {
         </footer>
       </div>
 
-      {/* Theme Toggle */}
-      <button className="theme-toggle" onClick={toggleTheme} aria-label="Changer de thème" />
-
-      {/* Scroll to Top */}
-      <button 
-        onClick={scrollToTop}
-        style={{
-          position: 'fixed',
-          bottom: '2rem',
-          right: '2rem',
-          background: 'var(--gradient-premium)',
-          border: 'none',
-          borderRadius: '50%',
-          width: '50px',
-          height: '50px',
-          color: 'white',
-          fontSize: '1.2rem',
-          cursor: 'pointer',
-          transition: 'all 0.3s ease',
-          boxShadow: '0 4px 20px var(--shadow-medium)',
-          zIndex: 1000
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-        aria-label="Retour en haut"
-      >
-        ↑
-      </button>
+      
     </>
   );
 }
