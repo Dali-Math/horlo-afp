@@ -1,7 +1,6 @@
-// page.tsx
+// page.tsx (ou histoire-horlogerie.tsx)
 'use client';
 
-import './styles/globals.css';
 import React from 'react';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
@@ -12,28 +11,19 @@ import { Footer } from './components/Footer';
 import { useTheme } from './hooks/useTheme';
 import { useScrollAnimations } from './hooks/useScrollAnimations';
 import { stats, periods, regions, manufactures } from './data/content';
+import './styles/globals.css';
 
 export default function HistoireHorlogeriePage() {
   const { theme, toggleTheme, mounted } = useTheme();
   useScrollAnimations();
 
-  // Affichage pendant le chargement
+  // Éviter le flash de contenu non stylé
   if (!mounted) {
-    return (
-      <div style={{ 
-        minHeight: '100vh', 
-        background: '#FAFAF8',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
-        <p>Chargement...</p>
-      </div>
-    );
+    return null;
   }
 
   return (
-    <div className="horlogerie-page" data-theme={theme}>
+    <div className="horlogerie-page">
       <Navigation onThemeToggle={toggleTheme} theme={theme} />
       <main>
         <Hero stats={stats} />
