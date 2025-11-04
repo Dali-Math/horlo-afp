@@ -866,42 +866,42 @@ const collections = [
     name: "Patek Philippe Grand Complication",
     price: "À partir de 250 000 CHF",
     desc: "Collection prestige représentant l'apogée de l'horlogerie helvétique, mécanismes les plus complexes jamais conçus.",
-    img: "/theorie/histoire-horlogerie-suisse/patek_philippe_grand_complications_rose_gold.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/patek_philippe_grand_complications_rose_gold.jpg",
     uniqueness: "Uniques au monde"
   },
   {
     name: "Patek Philippe Diamond Jewelry",
     price: "À partir de 500 000 CHF",
     desc: "Horlogerie-bijouterie d'exception, alliance parfaite entre haute horlogerie et joaillerie helvétique.",
-    img: "/theorie/histoire-horlogerie-suisse/patek_philippe_diamond_jewelry_luxury.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/patek_philippe_diamond_jewelry_luxury.jpg",
     uniqueness: "Art Джоаиллерier"
   },
   {
     name: "Vacheron Constantin Tourbillon",
     price: "À partir de 200 000 CHF",
     desc: "Mécanismes d'exception créés par les meilleurs artisans, tourbillons à ouvrant automatique.",
-    img: "/theorie/histoire-horlogerie-suisse/vacheron_constantin_tourbillon_extraordinary.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/vacheron_constantin_tourbillon_extraordinary.jpg",
     uniqueness: "Art horloger pur"
   },
   {
     name: "Audemars Piguet Royal Oak Skeleton",
     price: "À partir de 150 000 CHF",
     desc: "Design iconique limité, art technique et esthétique fusionnés dans l'excellence absolue.",
-    img: "/theorie/histoire-horlogerie-suisse/audemars_piguet_royal_oak_skeleton_artistic.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/audemars_piguet_royal_oak_skeleton_artistic.jpg",
     uniqueness: "Design iconique"
   },
   {
     name: "Richard Mille Carbon Ultra Light",
     price: "À partir de 800 000 CHF",
     desc: "Innovation matériaux extreme, carbone et titane dans l'horlogerie la plus technique au monde.",
-    img: "/theorie/histoire-horlogerie-suisse/richard_mille_carbon_ultra_light.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/richard_mille_carbon_ultra_light.jpg",
     uniqueness: "Innovation extrême"
   },
   {
     name: "Patek Philippe Enamel Art",
     price: "À partir de 180 000 CHF",
     desc: "Céramique émaillée d'exception, artworks miniature créés par les derniers maîtres émailleurs au monde.",
-    img: "/theorie/histoire-horlogerie-suisse/patek_philippe_enamel_art_dial.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/patek_philippe_enamel_art_dial.jpg",
     uniqueness: "Art majeur"
   }
 ];
