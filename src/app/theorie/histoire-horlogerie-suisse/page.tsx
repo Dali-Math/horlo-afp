@@ -1418,20 +1418,17 @@ export default function HorlogeriePage() {
           <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>
             Chargement de l'Excellence Horlogère...
           </div>
-        </div>
-      </div>
-     
-    
+</div>
+</div>
+return (
+  <div>
+    <style dangerouslySetInnerHTML={{ __html: styles }} />
+    {/* Scroll Progress Indicator */}
+    <div
+      className="scroll-indicator"
+      style={{ transform: `scaleX(${scrollProgress / 100})` }}
+    />
 
-  return (
-    <div>
-      <style dangerouslySetInnerHTML={{ __html: styles }} />
-      
-      {/* Scroll Progress Indicator */}
-      <div 
-        className="scroll-indicator"
-        style={{ transform: `scaleX(${scrollProgress / 100})` }}
-      />
       
       {/* Header Ultra-Premium */}
       <header className="header" ref={headerRef}>
