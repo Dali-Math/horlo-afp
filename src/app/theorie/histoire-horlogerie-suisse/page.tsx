@@ -560,37 +560,37 @@ const timelineData = [
     year: "1541",
     title: "Les Origines : Jean Calvin et la Naissance à Genève",
     desc: "Jean Calvin bannit le port d'objets ornementaux à Genève, forçant orfèvres et joailliers à se reconvertir dans l'horlogerie. Cette décision fondatrice marque la naissance officielle de l'industrie horlogère suisse.",
-    img: "imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg"
   },
   {
     year: "1685",
     title: "Les Réfugiés Huguenots : Expansion dans l'Arc Jurassien",
     desc: "La révocation de l'Édit de Nantes entraîne l'arrivée massive de réfugiés huguenots français apportant capitaux, savoir-faire technique et réseaux commerciaux, démocratisant l'horlogerie.",
-    img: "imgs/la_chaux_de_fonds_swiss_watchmaking_cityscape_unesco_heritage.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/la_chaux_de_fonds_swiss_watchmaking_cityscape_unesco_heritage.jpg"
   },
   {
     year: "1740",
     title: "Vallée de Joux : Berceau de la Haute Horlogerie",
     desc: "Les agriculteurs combiers utilisent les longs hivers pour fabriquer des pièces horlogères. Naissance des 'fermes horlogères' avec fenêtres supplémentaires pour la lumière, origem des complications.",
-    img: "imgs/Vallee_de_Joux_Swiss_Alps_Landscape_Lake_Forest.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Vallee_de_Joux_Swiss_Alps_Landscape_Lake_Forest.jpg"
   },
   {
     year: "1801",
     title: "L'Innovation : Le Tourbillon de Breguet",
     desc: "Abraham-Louis Breguet révolutionne l'horlogerie avec le tourbillon, mécanisme compensant les effets gravitationnels. Cette invention aberration marquer à jamais la haute horlogerie.",
-    img: "imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg"
   },
   {
     year: "1848",
     title: "Industrialisation : Omega et l'Ère Moderne",
     desc: "Louis Brandt crée Omega à La Chaux-de-Fonds. L'industrialisation transforme l'horlogerie de l'artisanat vers la production en série, démocratisant l'accès aux montres suisses.",
-    img: "imgs/Omega_Seamaster_Chronograph_Luxury_Watch_White_Background.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Omega_Seamaster_Chronograph_Luxury_Watch_White_Background.jpg"
   },
   {
     year: "1886",
     title: "Genève : Centre de Haute Horlogerie",
     desc: "Création du Poinçon de Genève, qualité officielle garanté. Genève devient le sanctuaire de la haute horlogerie, avec ses manufactures prestigieuses et ses écoles d'artisans.",
-    img: "imgs/Biel-Bienne-Switzerland-Cite-du-Temps-Omega-Swatch-Headquarters.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Biel-Bienne-Switzerland-Cite-du-Temps-Omega-Swatch-Headquarters.jpg"
   }
 ];
 
@@ -598,32 +598,32 @@ const regions = [
   {
     name: "Genève",
     desc: "Palais de la Haute Horlogerie, siège de Patek Philippe, Vacheron Constantin, Rolex. Symbol de luxe et de perfection technique.",
-    img: "imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg"
   },
   {
     name: "Vallée de Joux",
     desc: "Berceau de la haute horlogerie, Audemars Piguet, Jaeger-LeCoultre. Terroir d'excellence et d'innovation technique.",
-    img: "imgs/Vallee_de_Joux_Audemars_Piguet_Museum_Swiss_Alps_Landscape.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Vallee_de_Joux_Audemars_Piguet_Museum_Swiss_Alps_Landscape.jpg"
   },
   {
     name: "Neuchâtel",
     desc: "Région des complications et de la recherche technique. IWC, Blancpain, Chopard. Expertise en chronographes et mécanismes complexes.",
-    img: "imgs/Neuchatel_Switzerland_historic_city_lake_architecture_watchmaking_clock_tower.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Neuchatel_Switzerland_historic_city_lake_architecture_watchmaking_clock_tower.jpg"
   },
   {
     name: "Bienne",
     desc: "Capitale de l'horlogerie moderne, Omega, Swatch. Alliance parfait entre tradition et innovation contemporaine.",
-    img: "imgs/Bienne_Switzerland_Old_Town_Square_Watchmaking_City.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Bienne_Switzerland_Old_Town_Square_Watchmaking_City.jpg"
   },
   {
     name: "La Chaux-de-Fonds",
     desc: "Première ville horlogère au monde, classé UNESCO. Omega, Tissot, Longines. Pionniers de l'industrialisation horlogère.",
-    img: "imgs/la_chaux_de_fonds_swiss_watchmaking_cityscape_unesco_heritage.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/la_chaux_de_fonds_swiss_watchmaking_cityscape_unesco_heritage.jpg"
   },
   {
     name: "Schaffhausen",
     desc: "Manufactures d'excellence, IWC, Breitling. Spialisés dans l'horlogerie technique et l'aviation. Innovations révolutionnaires.",
-    img: "imgs/Schaffhausen_Switzerland_Fronwagplatz_city_square.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Schaffhausen_Switzerland_Fronwagplatz_city_square.jpg"
   }
 ];
 
@@ -632,49 +632,49 @@ const manufactures = [
     name: "Patek Philippe",
     year: "1839",
     desc: "Une seule passion : l'excellence absolue. Considérée comme la Manufacture la plus prestigieuse au monde.",
-    img: "imgs/Patek_Philippe_Rose_Gold_Grand_Complications_Watch.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Patek_Philippe_Rose_Gold_Grand_Complications_Watch.jpg"
   },
   {
     name: "Audemars Piguet",
     year: "1875",
     desc: "Inventer le temps, innover sans cesse. Créateurs du Royal Oak, révolution du design horloger.",
-    img: "imgs/audemars_piguet_royal_oak_rose_gold_black_dial_luxury_swiss_watch.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/audemars_piguet_royal_oak_rose_gold_black_dial_luxury_swiss_watch.jpg"
   },
   {
     name: "Vacheron Constantin",
     year: "1755",
     desc: "La plus ancienne manufacture horlogère au monde. 'Toujours faire mieux que nécessaire'.",
-    img: "imgs/Vacheron_Constantin_Tourbillon_Green_Dial_Luxury_Swiss_Watch.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Vacheron_Constantin_Tourbillon_Green_Dial_Luxury_Swiss_Watch.jpg"
   },
   {
     name: "Jaeger-LeCoultre",
     year: "1833",
     desc: "Des complications dans l'âme. Reine des complications, inventrice de la Memovox.",
-    img: "imgs/jaeger_lecoultre_reverso_blue_dial_luxury_watch.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/jaeger_lecoultre_reverso_blue_dial_luxury_watch.jpg"
   },
   {
     name: "Omega",
     year: "1848",
     desc: "La quête de la précision absolue. Chronométreur officiel des Jeux Olympiques, première lune.",
-    img: "imgs/Omega_Seamaster_Chronograph_Luxury_Watch_White_Background.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Omega_Seamaster_Chronograph_Luxury_Watch_White_Background.jpg"
   },
   {
     name: "Rolex",
     year: "1905",
     desc: "LGMT - La Grande Montre. Symbole d'excellence, Chronomètre认证 et perfection technique.",
-    img: "imgs/rolex_submariner_gold_luxury_swiss_watch_product_photo.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/rolex_submariner_gold_luxury_swiss_watch_product_photo.jpg"
   },
   {
     name: "IWC Schaffhausen",
     year: "1868",
     desc: "L'horlogerie technique par excellence. Parfaite alliance entre tradition et innovation.",
-    img: "imgs/IWC_Schaffhausen_Headquarters_Historic_Building_Switzerland.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/IWC_Schaffhausen_Headquarters_Historic_Building_Switzerland.jpg"
   },
   {
     name: "Blancpain",
     year: "1735",
     desc: "La plus ancienne manufacture horlogère au monde. Inventrice de la première plongeuse moderne.",
-    img: "imgs/blancpain_fifty_fathoms_luxury_swiss_dive_watch_product_shot.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/blancpain_fifty_fathoms_luxury_swiss_dive_watch_product_shot.jpg"
   }
 ];
 
@@ -683,19 +683,19 @@ const premiumBrands = [
     name: "Bulgari",
     specialty: "Horlogerie Romaine",
     desc: "Symbole du luxe méditerranéen, Bulgari allie la richesse de l'artisanat italien à l'excellence horlogère suisse.",
-    img: "imgs/Biel-Bienne-Switzerland-Cite-du-Temps-Omega-Swatch-Headquarters.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Biel-Bienne-Switzerland-Cite-du-Temps-Omega-Swatch-Headquarters.jpg"
   },
   {
     name: "Richard Mille",
     specialty: "Innovation Technique",
     desc: "Pionnier de l'horlogerie technique moderne, Richard Mille révolutionne l'usage des matériaux high-tech.",
-    img: "imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg"
   },
   {
     name: "Ulysse Nardin",
     specialty: "Marine & Astronomie",
     desc: "Spécialiste de l'horlogerie marine et de l'astronomie, Ulysse Nardin excelle dans les complications astronomiques.",
-    img: "imgs/Vallee_de_Joux_Swiss_Alps_Landscape_Lake_Forest.jpg"
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Vallee_de_Joux_Swiss_Alps_Landscape_Lake_Forest.jpg"
   }
 ];
 
@@ -703,37 +703,37 @@ const mechanisms = [
   {
     name: "Tourbillon",
     desc: "Mécanisme compensant les effets gravitationnels, offrir une précision absolue en position verticale.",
-    img: "imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg",
     complexity: "Extrême"
   },
   {
     name: "Tourbillon Carrousel",
     desc: "Évolution du tourbillon traditionnel, variation cyclique de la cage pour une précision optimisée.",
-    img: "imgs/luxury_swiss_watch_tourbillon_carrousel_macro_mechanism.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_carrousel_macro_mechanism.jpg",
     complexity: "Extrême"
   },
   {
     name: "Grand Complication",
     desc: "Horlogerie la plus complexe au monde, combinant tourbillon, quantième perpétuel, chronographe et répétition minutes.",
-    img: "imgs/luxury_swiss_watch_tourbillon_complication_macro.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_complication_macro.jpg",
     complexity: "Légendaire"
   },
   {
     name: "Mouvement Rotor",
     desc: "Mécanisme de remontage automatique utilisant l'énergie du mouvement du porteur pour remonter la montre.",
-    img: "imgs/patek-philippe-swiss-luxury-watch-movement-gears-close-up.jpeg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/patek-philippe-swiss-luxury-watch-movement-gears-close-up.jpeg",
     complexity: "Avancé"
   },
   {
     name: "Complication Chronographe",
     desc: "Mécanisme de mesure du temps écoulé, particulièrement précis pour la chronométrage sportif et professionnel.",
-    img: "imgs/luxury_swiss_watch_tourbillon_complication_macro_mechanism.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_complication_macro_mechanism.jpg",
     complexity: "Avancé"
   },
   {
     name: "Calendrier Perpétuel",
     desc: "Mécanisme complexe se réglage automatiquement en tenant compte des années bissextiles et des mois de longueur variable.",
-    img: "imgs/luxury_swiss_watch_tourbillon_mechanism_render_macro_photograph.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_mechanism_render_macro_photograph.jpg",
     complexity: "Extrême"
   }
 ];
@@ -743,42 +743,42 @@ const heritageWatches = [
     name: "Patek Philippe Henry Graves Supercomplication",
     year: "1933",
     desc: "La montre la plus compliquée jamais fabriqué à la main, demeurant inégalée pendant 56 ans.",
-    img: "imgs/vintage_gold_pocket_watch_historical_timepiece_wooden_table.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/vintage_gold_pocket_watch_historical_timepiece_wooden_table.jpg",
     value: "Patrimoine Mondial"
   },
   {
     name: "Rolex 6062 'Yellow houses'",
     year: "1950",
     desc: "Les Rolex les plus rares au monde, avec seulement 3 exemplaires connus, véritable mythe horloger.",
-    img: "imgs/vintage_swiss_heritage_pocket_watch_gold_chain.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/vintage_swiss_heritage_pocket_watch_gold_chain.jpg",
     value: "Légende Vivante"
   },
   {
     name: "Patek Philippe Ref. 130",
     year: "1930s",
     desc: "La première montre-bracelet chronographe à paire de poussoirs, icône de l'horlogerie vintage.",
-    img: "imgs/vintage_swiss_hirt_chronometer_gold_pocket_watch_historical.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/vintage_swiss_hirt_chronometer_gold_pocket_watch_historical.jpg",
     value: "Monument Historique"
   },
   {
     name: "A. Lange & Söhne La Lange 1 Tourbillon",
     year: "1994",
     desc: "Renaissance de l'horlogerie allemande de luxe, premier modèle de la nouvelle era Lange.",
-    img: "imgs/luxury_swiss_watch_tourbillon_carrousel_macro_mechanism.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_carrousel_macro_mechanism.jpg",
     value: "Renaissance Moderne"
   },
   {
     name: "Breguet Marie-Antoinette",
     year: "1783",
     desc: "La montre la plus légende, 40 ans de construction pour la Reine de France, jamais terminée.",
-    img: "imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg",
     value: "Mythe Absolu"
   },
   {
     name: "Patek Philippe Henry Graves",
     year: "1928",
     desc: "Simple mais élégant, cette référence a définit les standards de l'horlogerie de luxe moderne.",
-    img: "imgs/luxury_swiss_watch_tourbillon_complication_macro.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_complication_macro.jpg",
     value: "Standard d'Excellence"
   }
 ];
@@ -789,7 +789,7 @@ const innovations = [
     brand: "Blancpain",
     year: "1953",
     desc: "La Fifty Fathoms, première plongeuse moderne, établit tous les standards de l'horlogerie submarine.",
-    img: "imgs/blancpain_fifty_fathoms_luxury_swiss_dive_watch_product_shot.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/blancpain_fifty_fathoms_luxury_swiss_dive_watch_product_shot.jpg",
     impact: "Révolutionnaire"
   },
   {
@@ -797,7 +797,7 @@ const innovations = [
     brand: "Beta 21",
     year: "1969",
     desc: "Premier mouvement quartz helvétique, révolutionnant la précision et l'efficacité énergétique.",
-    img: "imgs/Vallee_de_Joux_Swiss_Alps_Landscape_Lake_Forest.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Vallee_de_Joux_Swiss_Alps_Landscape_Lake_Forest.jpg",
     impact: "Disruptif"
   },
   {
@@ -805,7 +805,7 @@ const innovations = [
     brand: "Breguet",
     year: "1801",
     desc: "Invention du tourbillon, compensation des effets gravitationnels sur la précision horlogère.",
-    img: "imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg",
     impact: "Fondateur"
   },
   {
@@ -813,7 +813,7 @@ const innovations = [
     brand: "Patek Philippe",
     year: "2005",
     desc: "Introduction du silicium dans les mouvements, amélioration drastique de la précision et de la durabilité.",
-    img: "imgs/Patek_Philippe_luxury_Swiss_watch_elegant_design_product_photography.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Patek_Philippe_luxury_Swiss_watch_elegant_design_product_photography.jpg",
     impact: "Innovant"
   },
   {
@@ -821,7 +821,7 @@ const innovations = [
     brand: "Patek Philippe",
     year: "1868",
     desc: "Premier prototype de montre-bracelet féminin, révolution de la porter du temps sur le poignet.",
-    img: "imgs/vintage_gold_pocket_watch_historical_timepiece_wooden_table.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/vintage_gold_pocket_watch_historical_timepiece_wooden_table.jpg",
     impact: "Transformant"
   },
   {
@@ -829,7 +829,7 @@ const innovations = [
     brand: "Audemars Piguet",
     year: "2000",
     desc: "Innovation dans l'affichage des complications, transparence et esthétique révolutionnaire.",
-    img: "imgs/audemars_piguet_royal_oak_skeleton_artistic.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/audemars_piguet_royal_oak_skeleton_artistic.jpg",
     impact: "Artistique"
   }
 ];
@@ -874,42 +874,42 @@ const collections = [
     name: "Patek Philippe Grand Complication",
     price: "À partir de 250 000 CHF",
     desc: "Collection prestige représentant l'apogée de l'horlogerie helvétique, mécanismes les plus complexes jamais conçus.",
-    img: "imgs/patek_philippe_grand_complications_rose_gold.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/patek_philippe_grand_complications_rose_gold.jpg",
     uniqueness: "Uniques au monde"
   },
   {
     name: "Patek Philippe Diamond Jewelry",
     price: "À partir de 500 000 CHF",
     desc: "Horlogerie-bijouterie d'exception, alliance parfaite entre haute horlogerie et joaillerie helvétique.",
-    img: "imgs/patek_philippe_diamond_jewelry_luxury.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/patek_philippe_diamond_jewelry_luxury.jpg",
     uniqueness: "Art Джоаиллерier"
   },
   {
     name: "Vacheron Constantin Tourbillon",
     price: "À partir de 200 000 CHF",
     desc: "Mécanismes d'exception créés par les meilleurs artisans, tourbillons à ouvrant automatique.",
-    img: "imgs/vacheron_constantin_tourbillon_extraordinary.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/vacheron_constantin_tourbillon_extraordinary.jpg",
     uniqueness: "Art horloger pur"
   },
   {
     name: "Audemars Piguet Royal Oak Skeleton",
     price: "À partir de 150 000 CHF",
     desc: "Design iconique limité, art technique et esthétique fusionnés dans l'excellence absolue.",
-    img: "imgs/audemars_piguet_royal_oak_skeleton_artistic.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/audemars_piguet_royal_oak_skeleton_artistic.jpg",
     uniqueness: "Design iconique"
   },
   {
     name: "Richard Mille Carbon Ultra Light",
     price: "À partir de 800 000 CHF",
     desc: "Innovation matériaux extreme, carbone et titane dans l'horlogerie la plus technique au monde.",
-    img: "imgs/richard_mille_carbon_ultra_light.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/richard_mille_carbon_ultra_light.jpg",
     uniqueness: "Innovation extrême"
   },
   {
     name: "Patek Philippe Enamel Art",
     price: "À partir de 180 000 CHF",
     desc: "Céramique émaillée d'exception, artworks miniature créés par les derniers maîtres émailleurs au monde.",
-    img: "imgs/patek_philippe_enamel_art_dial.jpg",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/patek_philippe_enamel_art_dial.jpg",
     uniqueness: "Art majeur"
   }
 ];
