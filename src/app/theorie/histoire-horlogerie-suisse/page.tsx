@@ -1421,7 +1421,6 @@ export default function HorlogeriePage() {
         </div>
       </div>
     );
-  }
 
   return (
     <div>
