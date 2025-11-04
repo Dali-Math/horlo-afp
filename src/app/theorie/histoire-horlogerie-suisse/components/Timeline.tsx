@@ -31,6 +31,7 @@ export function Timeline({ periods }: TimelineProps) {
               <div className="timeline-content">
                 <h3 className="headline-2 timeline-title">{period.title}</h3>
                 <p className="body timeline-description">{period.description}</p>
+                {/* Le badge année est bien sous le texte */}
                 <span className="timeline-date-badge">{period.year}</span>
               </div>
             </article>
