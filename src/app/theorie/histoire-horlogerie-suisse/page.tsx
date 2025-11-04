@@ -11,6 +11,7 @@ import { Footer } from './components/Footer';
 import { useTheme } from './hooks/useTheme';
 import { useScrollAnimations } from './hooks/useScrollAnimations';
 import { stats, periods, regions, manufactures } from './data/content';
+import './styles/globals.css';
 
 export default function HistoireHorlogeriePage() {
   const { theme, toggleTheme, mounted } = useTheme();
