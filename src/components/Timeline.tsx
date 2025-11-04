@@ -84,8 +84,14 @@ const Timeline: React.FC = () => {
 
   return (
     <section id="timeline" className="py-20 relative">
-      {/* --- Bouton fixe retour à Théorie --- */}
-      <div className="fixed top-6 left-6 z-50">
+
+      {/* --- Bouton retour fixe --- */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+        className="fixed top-6 left-6 z-50"
+      >
         <Link
           href="/theorie"
           aria-label="Retour à la section Théorie"
@@ -94,7 +100,7 @@ const Timeline: React.FC = () => {
           <ChevronLeft className="h-4 w-4 transition group-hover:-translate-x-0.5" />
           <span>Retour à <span className="font-semibold">Théorie</span></span>
         </Link>
-      </div>
+      </motion.div>
 
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
