@@ -893,37 +893,37 @@ const data = {
       year: "1541",
       title: "Les Origines : Jean Calvin et la Naissance à Genève",
       desc: "Jean Calvin bannit le port d'objets ornementaux à Genève, forçant orfèvres et joailliers à se reconvertir dans l'horlogerie. Cette décision fondatrice marque la naissance officielle de l'industrie horlogère suisse.",
-      img: "/imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg"
+      img: "imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg"
     },
     {
       year: "1685",
       title: "Les Réfugiés Huguenots : Expansion dans l'Arc Jurassien",
       desc: "La révocation de l'Édit de Nantes entraîne l'arrivée massive de réfugiés huguenots français apportant capitaux, savoir-faire technique et réseaux commerciaux, démocratisant l'horlogerie.",
-      img: "/imgs/la_chaux_de_fonds_swiss_watchmaking_cityscape_unesco_heritage.jpg"
+      img: "imgs/la_chaux_de_fonds_swiss_watchmaking_cityscape_unesco_heritage.jpg"
     },
     {
       year: "1740",
       title: "Vallée de Joux : Berceau de la Haute Horlogerie",
       desc: "Les agriculteurs combiers utilisent les longs hivers pour fabriquer des pièces horlogères. Naissance des 'fermes horlogères' avec fenêtres supplémentaires pour la lumière, origem des complications.",
-      img: "/imgs/Vallee_de_Joux_Swiss_Alps_Landscape_Lake_Forest.jpg"
+      img: "imgs/Vallee_de_Joux_Swiss_Alps_Landscape_Lake_Forest.jpg"
     },
     {
       year: "1801",
       title: "L'Innovation : Le Tourbillon de Breguet",
       desc: "Abraham-Louis Breguet révolutionne l'horlogerie avec le tourbillon, mécanisme compensant les effets gravitationnels. Cette invention aberration marquer à jamais la haute horlogerie.",
-      img: "/imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg"
+      img: "imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg"
     },
     {
       year: "1848",
       title: "Industrialisation : Omega et l'Ère Moderne",
       desc: "Louis Brandt crée Omega à La Chaux-de-Fonds. L'industrialisation transforme l'horlogerie de l'artisanat vers la production en série, démocratisant l'accès aux montres suisses.",
-      img: "/imgs/Omega_Seamaster_Chronograph_Luxury_Watch_White_Background.jpg"
+      img: "imgs/Omega_Seamaster_Chronograph_Luxury_Watch_White_Background.jpg"
     },
     {
       year: "1983",
       title: "La Renaissance : Swatch Sauve l'Industrie",
       desc: "Nicolas Hayek fonde le Swatch Group suite à la crise du quartz. L'innovation horlogère et la gestion revolutionary sauvent l'industrie suisse d'un effondrement certain.",
-      img: "/imgs/Biel-Bienne-Switzerland-Cite-du-Temps-Omega-Swatch-Headquarters.jpg"
+      img: "imgs/Biel-Bienne-Switzerland-Cite-du-Temps-Omega-Swatch-Headquarters.jpg"
     }
   ],
   regions: [
@@ -932,42 +932,42 @@ const data = {
       subtitle: "Capitale de l'Excellence",
       since: "1541",
       desc: "Siège de Patek Philippe, Rolex, Vacheron Constantin. Genève concentre l'élite horlogère mondiale dans ses manufactures centenaires au cœur de la Vieille Ville.",
-      img: "/imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg"
+      img: "imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg"
     },
     {
       name: "Vallée de Joux",
       subtitle: "Berceau de la Haute Horlogerie",
       since: "1740",
       desc: "26 fermes horlogères historiques dans les Alpes suisses. Berceau d'Audemars Piguet, Jaeger-LeCoultre, où naissent les complications les plus complexes au monde.",
-      img: "/imgs/Vallee_de_Joux_Audemars_Piguet_Museum_Swiss_Alps_Landscape.jpg"
+      img: "imgs/Vallee_de_Joux_Audemars_Piguet_Museum_Swiss_Alps_Landscape.jpg"
     },
     {
       name: "Neuchâtel",
       subtitle: "Innovation Technique",
       since: "XVIIe siècle",
       desc: "Centre d'innovation avec l'École Polytechnique Fédérale. Pionnier des systèmes de chronométrage de précision, de l'ESG à l'atome.",
-      img: "/imgs/Neuchatel_Switzerland_historic_city_lake_architecture_watchmaking_clock_tower.jpg"
+      img: "imgs/Neuchatel_Switzerland_historic_city_lake_architecture_watchmaking_clock_tower.jpg"
     },
     {
       name: "Bienne/Biel",
       subtitle: "Épicentre Industriel",
       since: "XXe siècle",
       desc: "Swatch Group concentre plus de 70% des forces de production. Omega siège dans cette ville twin, symbole de l'horlogerie industrielle moderne.",
-      img: "/imgs/Bienne_Switzerland_Old_Town_Square_Watchmaking_City.jpg"
+      img: "imgs/Bienne_Switzerland_Old_Town_Square_Watchmaking_City.jpg"
     },
     {
       name: "La Chaux-de-Fonds",
       subtitle: "Patrimoine UNESCO",
       since: "XVIIIe siècle",
       desc: "Ville horlogère unique au monde, entièrement reconstruite après un incendie. Architecture en ligne droite pour maximiser la lumière, patrimoine mondial UNESCO.",
-      img: "/imgs/la_chaux_de_fonds_swiss_watchmaking_cityscape_unesco_heritage.jpg"
+      img: "imgs/la_chaux_de_fonds_swiss_watchmaking_cityscape_unesco_heritage.jpg"
     },
     {
       name: "Schaffhouse",
       subtitle: "Excellence Germanophone",
       since: "XIXe siècle",
       desc: "IWC Schaffhausen symboles de l'élégance germano-suisse. Manufacture centenaire prospérant au cœur du Rhin, entre tradition et innovation.",
-      img: "/imgs/Schaffhausen_Switzerland_Fronwagplatz_city_square.jpg"
+      img: "imgs/Schaffhausen_Switzerland_Fronwagplatz_city_square.jpg"
     }
   ],
   manufactures: [
@@ -976,56 +976,56 @@ const data = {
       year: "1755",
       location: "Genève",
       desc: "La plus ancienne manufacture horlogère active au monde. 270 ans d'excellence continue, symbole de l'art horloger genevois, manufacture majeure du Richemont Group.",
-      img: "/imgs/Vacheron_Constantin_Tourbillon_Green_Dial_Luxury_Swiss_Watch.jpg"
+      img: "imgs/Vacheron_Constantin_Tourbillon_Green_Dial_Luxury_Swiss_Watch.jpg"
     },
     {
       name: "Blancpain",
       year: "1735",
       location: "Le Brassus",
       desc: "Première manufacture horlogère au monde. Sixty Fathoms révolutionne la plongée sous-marine. Haute horlogerie dans la Vallée de Joux, savoir-faire ancestral.",
-      img: "/imgs/blancpain_fifty_fathoms_luxury_swiss_dive_watch_product_shot.jpg"
+      img: "imgs/blancpain_fifty_fathoms_luxury_swiss_dive_watch_product_shot.jpg"
     },
     {
       name: "Jaeger-LeCoultre",
       year: "1833",
       location: "Le Sentier",
       desc: "Reverso iconique, calibres manufacture complets. Inventé en 1931, le Reverso personnalisation epitomise l'élégance Art Déco. 2000 calibres développés en 190 ans.",
-      img: "/imgs/jaeger_lecoultre_reverso_blue_dial_luxury_watch.jpg"
+      img: "imgs/jaeger_lecoultre_reverso_blue_dial_luxury_watch.jpg"
     },
     {
       name: "Patek Philippe",
       year: "1839",
       location: "Genève",
       desc: "Grandes complications, transmission de génération en génération. Manufacture genevoise d'exception, symbole absolu de la haute horlogerie mondiale, often créée pour les rois.",
-      img: "/imgs/Patek_Philippe_Rose_Gold_Grand_Complications_Watch.jpg"
+      img: "imgs/Patek_Philippe_Rose_Gold_Grand_Complications_Watch.jpg"
     },
     {
       name: "Omega",
       year: "1848",
       location: "Bienne",
       desc: "Speedmaster, montres spatiales NASA. Chronographe officielles des Jeux Olympiques. Innovation Co-Axial, précision chronométrique exceptionnelle depuis 175 ans.",
-      img: "/imgs/Omega_Seamaster_Chronograph_Luxury_Watch_White_Background.jpg"
+      img: "imgs/Omega_Seamaster_Chronograph_Luxury_Watch_White_Background.jpg"
     },
     {
       name: "Audemars Piguet",
       year: "1875",
       location: "Le Brassus",
       desc: "Royal Oak révolutionne l'horlogerie en 1972. Bracelet intégré en acier, design révolutionnaire Gerald Genta. Haute horlogerie contemporaine dans la Vallée de Joux.",
-      img: "/imgs/audemars_piguet_royal_oak_rose_gold_black_dial_luxury_swiss_watch.jpg"
+      img: "imgs/audemars_piguet_royal_oak_rose_gold_black_dial_luxury_swiss_watch.jpg"
     },
     {
       name: "Rolex",
       year: "1905",
       location: "Genève",
       desc: "Oyster Perpetual, montres de sport robustes. Submariner, Daytona, Datejust icons intemporelles. 100% manufacture, précision et fiabilité absolues.",
-      img: "/imgs/rolex_submariner_gold_luxury_swiss_watch_product_photo.jpg"
+      img: "imgs/rolex_submariner_gold_luxury_swiss_watch_product_photo.jpg"
     },
     {
       name: "IWC Schaffhausen",
       year: "1868",
       location: "Schaffhouse",
       desc: "Portugaise, Pilots, élégance germano-suisse. Coffres de montre uniques en acajou. Tradition horlogère depuis 155 ans au cœur de la confédération helvétique.",
-      img: "/imgs/IWC_Schaffhausen_Headquarters_Historic_Building_Switzerland.jpg"
+      img: "imgs/IWC_Schaffhausen_Headquarters_Historic_Building_Switzerland.jpg"
     }
   ],
   premiumBrands: [
@@ -1035,7 +1035,7 @@ const data = {
       year: "1884",
       location: "Rome/Suisse",
       desc: "Collection Octo iconique, fusion de l'art italien et de l'horlogerie suisse. Innovation technique, design élégant, rayonnement international.",
-      img: "/imgs/bulgari_octo_luxury_watch.jpg"
+      img: "imgs/bulgari_octo_luxury_watch.jpg"
     },
     {
       name: "Richard Mille",
@@ -1043,7 +1043,7 @@ const data = {
       year: "2001",
       location: "Genève",
       desc: "Matériaux ultralégers, Carbon TPT, design futuriste. Montres de course extrêmes, innovation maximale, haute technologie.",
-      img: "/imgs/richard_mille_skeleton_watch.jpg"
+      img: "imgs/richard_mille_skeleton_watch.jpg"
     },
     {
       name: "Ulysse Nardin",
@@ -1051,7 +1051,7 @@ const data = {
       year: "1846",
       location: "Le Locle",
       desc: "Marine, Freak révolutionnaires, échappements haute performance. Innovation constante, précision marine, design submarine.",
-      img: "/imgs/ulysse_nardin_marine_chronograph.jpg"
+      img: "imgs/ulysse_nardin_marine_chronograph.jpg"
     },
     {
       name: "Breguet",
@@ -1059,7 +1059,7 @@ const data = {
       year: "1775",
       location: "Vallée de Joux",
       desc: "Tourbillon inventé par Breguet (1801). Classique, Tradition, Marine. Héritage exceptionnel, innovations fundamentales.",
-      img: "/imgs/breguet_tourbillon_classique.jpg"
+      img: "imgs/breguet_tourbillon_classique.jpg"
     },
     {
       name: "TAG Heuer",
@@ -1067,7 +1067,7 @@ const data = {
       year: "1860",
       location: "La Chaux-de-Fonds",
       desc: "Carrera, Monaco, Monaco Grand Prix. Chronographes sportifs, Formula 1, précision racing. Heritage automobile depuis 160 ans.",
-      img: "/imgs/tag_heuer_carrera_chronograph.jpg"
+      img: "imgs/tag_heuer_carrera_chronograph.jpg"
     },
     {
       name: "Breitling",
@@ -1075,7 +1075,7 @@ const data = {
       year: "1884",
       location: "Grenoble/Suisse",
       desc: "Navitimer, Aviator, instruments aviateurs. Chronographes aviation, design fonctionnel, précision extreme.",
-      img: "/imgs/breitling_navitimer_aviation.jpg"
+      img: "imgs/breitling_navitimer_aviation.jpg"
     },
     {
       name: "Chopard",
@@ -1083,7 +1083,7 @@ const data = {
       year: "1860",
       location: "Fleurier",
       desc: "Mille Miglia, Happy Sport, haute joaillerie. Fusion art, sport, haute technologie. Monte Carlo, excellence racing.",
-      img: "/imgs/chopard_mille_miglia_racing.jpg"
+      img: "imgs/chopard_mille_miglia_racing.jpg"
     },
     {
       name: "Hublot",
@@ -1091,7 +1091,7 @@ const data = {
       year: "1980",
       location: "Nyon",
       desc: "Big Bang, Spirit of Big Bang, fusion matériaux. Design révolutionnaire, diversification composants, innovation constante.",
-      img: "/imgs/hublot_big_bang_fusion.jpg"
+      img: "imgs/hublot_big_bang_fusion.jpg"
     },
     {
       name: "Zenith",
@@ -1099,7 +1099,7 @@ const data = {
       year: "1865",
       location: "Le Locle",
       desc: "El Primero, premier chronographe automatique. Pilot Type 20, Heritage. Précision exception, innovation historique.",
-      img: "/imgs/zenith_el_primero_chronograph.jpg"
+      img: "imgs/zenith_el_primero_chronograph.jpg"
     },
     {
       name: "Tissot",
@@ -1107,7 +1107,7 @@ const data = {
       year: "1853",
       location: "Le Locle",
       desc: "T-Touch,Quickster, innovation accessible. Tradition Suiss, précision qualité, democratisation horlogerie suisse.",
-      img: "/imgs/tissot_t_touch_smartwatch.jpg"
+      img: "imgs/tissot_t_touch_smartwatch.jpg"
     }
   ],
   mechanisms: [
@@ -1115,25 +1115,25 @@ const data = {
       name: "Tourbillon Carrousel",
       subtitle: "Complication Supreme",
       desc: "Mécanisme révolutionnaire compensant les effets gravitationnels sur la précision horlogère. Invention de Breguet (1801), símbolo absoluto de la haute horlogerie.",
-      img: "/imgs/luxury_swiss_watch_tourbillon_carrousel_macro_mechanism.jpg"
+      img: "imgs/luxury_swiss_watch_tourbillon_carrousel_macro_mechanism.jpg"
     },
     {
       name: "Grandes Complications",
       subtitle: "Art Horloger Suprême",
       desc: "Associations de plusieurs complications sophistiquées : calendrier perpétuel, répétitive minutes, phases de lune, réserve de marche étendue.",
-      img: "/imgs/luxury_swiss_watch_tourbillon_complication_macro_mechanism.jpg"
+      img: "imgs/luxury_swiss_watch_tourbillon_complication_macro_mechanism.jpg"
     },
     {
       name: "Mouvement Manufacture",
       subtitle: "Précision Mécanique",
       desc: "Calibres entièrement conçus et manufacturés en interne. Finitions d'exception, decorations du métier, ponts anglés et rodiés à la main.",
-      img: "/imgs/patek-philippe-swiss-luxury-watch-movement-gears-close-up.jpeg"
+      img: "imgs/patek-philippe-swiss-luxury-watch-movement-gears-close-up.jpeg"
     },
     {
       name: "Échappement Co-Axial",
       subtitle: "Innovation Omega",
       desc: "Géorges Daniels révolutionne l'échappement en 1974. Friction réduite, lubrification étendue, précision maximale. Innovation exclusive Omega depuis 1999.",
-      img: "/imgs/luxury_swiss_watch_tourbillon_mechanism_render_macro_photograph.jpg"
+      img: "imgs/luxury_swiss_watch_tourbillon_mechanism_render_macro_photograph.jpg"
     }
   ],
   heritage: [
@@ -1141,19 +1141,19 @@ const data = {
       name: "Pocket Watches Vintage",
       subtitle: "Pièces Historiques",
       desc: "Montres de poche transmettre de génération en génération. Artisanat horloger d'exception, témoins du savoir-faire séculaire, patrimoine vivante.",
-      img: "/imgs/vintage_gold_pocket_watch_historical_timepiece_wooden_table.jpg"
+      img: "imgs/vintage_gold_pocket_watch_historical_timepiece_wooden_table.jpg"
     },
     {
       name: "Heritage Horloger Suisse",
       subtitle: "Transmission Sécutaire",
       desc: "Savoir-faire ancestral transmis de maître à apprenti. Techniques traditionnelles préservées, métiers d'art unique au monde, heritage vivante.",
-      img: "/imgs/vintage_swiss_heritage_pocket_watch_gold_chain.jpg"
+      img: "imgs/vintage_swiss_heritage_pocket_watch_gold_chain.jpg"
     },
     {
       name: "Chronomètres Historiques",
       subtitle: "Précision d'Exception",
       desc: "Chronomètres de marine, observatoires, défis techniques. Maîtrise de la précision absolue, calculs astronomiques, navigation terrestre et maritime.",
-      img: "/imgs/vintage_swiss_hirt_chronometer_gold_pocket_watch_historical.jpg"
+      img: "imgs/vintage_swiss_hirt_chronometer_gold_pocket_watch_historical.jpg"
     }
   ],
   innovations: [
@@ -1161,25 +1161,25 @@ const data = {
       name: "Co-Axial Escapement",
       year: "1999",
       desc: "Géorges Daniels révolutionne l'échappement. Friction réduite de 50%, lubrification étendue, précision améliorée. Innovation exclusive Omega.",
-      img: "/imgs/luxury_swiss_watch_tourbillon_complication_macro.jpg"
+      img: "imgs/luxury_swiss_watch_tourbillon_complication_macro.jpg"
     },
     {
       name: "Silicium",
       year: "2008",
       desc: "Patek Philippe introduce le silicium. Anti-magnétisme, poids réduit, précision accrue. Révolution des matériaux horlogers.",
-      img: "/imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg"
+      img: "imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg"
     },
     {
       name: "Ceramic",
       year: "2000s",
       desc: "Rolex, Audemars Piguet adoptent la céramique. Résistance aux rayures, couleur stable, innovation matériaux.",
-      img: "/imgs/luxury_swiss_watch_tourbillon_carrousel_macro_mechanism.jpg"
+      img: "imgs/luxury_swiss_watch_tourbillon_carrousel_macro_mechanism.jpg"
     },
     {
       name: "Carbon Fiber",
       year: "2010s",
       desc: "Matériaux ultralégers pour la haute performance. Robustesse exception, poids minimal, technology aerospace.",
-      img: "/imgs/luxury_swiss_watch_tourbillon_mechanism_render_macro_photograph.jpg"
+      img: "imgs/luxury_swiss_watch_tourbillon_mechanism_render_macro_photograph.jpg"
     }
   ],
   territories: [
@@ -1187,25 +1187,25 @@ const data = {
       name: "Vallée de Joux",
       subtitle: "Alpes Suisses Pristine",
       desc: "Paysage alpin exception, berceau de la haute horlogerie. Lacs du Jura, forêts virgin, air pure pour la fabrication de mouvements de précision.",
-      img: "/imgs/vallee_de_joux_swiss_jura_lakes_landscape.jpg"
+      img: "imgs/vallee_de_joux_swiss_jura_lakes_landscape.jpg"
     },
     {
       name: "Région Neuchâtel",
       subtitle: "Vue Lacustre Historique",
       desc: "Région horlogère historique au bord du lac. Innovation technique, recherche appliquée, centre universitaire d'excellence horlogère.",
-      img: "/imgs/neuchatel-switzerland-city-lake-view-historic-watchmaking-region.jpg"
+      img: "imgs/neuchatel-switzerland-city-lake-view-historic-watchmaking-region.jpg"
     },
     {
       name: "Ateliers Horlogers",
       subtitle: "Artisans du Temps",
       desc: "Espaces de création où naissent les montres d'exception. Maîtres horlogers, apprentis, transmission des savoirs, precision absolue.",
-      img: "/imgs/swiss_luxury_watchmaking_atelier_craftsmen_watches.jpg"
+      img: "imgs/swiss_luxury_watchmaking_atelier_craftsmen_watches.jpg"
     },
     {
       name: "Outils de Précision",
       subtitle: "Instrumentation Haute",
       desc: "Instruments sophistiqués pour l'assemblage horloger. Micromètres, loupes, outils aux mesures infimes, technology de pointe.",
-      img: "/imgs/swiss_watchmaking_precision_tools_elegant_layout.jpg"
+      img: "imgs/swiss_watchmaking_precision_tools_elegant_layout.jpg"
     }
   ],
   collections: [
@@ -1213,19 +1213,19 @@ const data = {
       name: "Patek Philippe Collection",
       subtitle: "Excellence Genèveoise",
       desc: "Collection exclusive Patek Philippe, montres d'exception. Grandes complications, transmission de génération, savoir-faire d'artisan genevois.",
-      img: "/imgs/Patek_Philippe_luxury_Swiss_watch_elegant_design_product_photography.jpg"
+      img: "imgs/Patek_Philippe_luxury_Swiss_watch_elegant_design_product_photography.jpg"
     },
     {
       name: "Royal Oak Collection",
       subtitle: "Révolution Design",
       desc: "Royal Oak, bracelet intégré, acier inoxydable. Gerald Genta révolutionne le design horloger, symbole de la modernité Suisse.",
-      img: "/imgs/audemars_piguet_royal_oak_perpetual_calendar_blue_luxury_watch.jpg"
+      img: "imgs/audemars_piguet_royal_oak_perpetual_calendar_blue_luxury_watch.jpg"
     },
     {
       name: "Nautilus Heritage",
       subtitle: "Icône Sportive",
       desc: "Nautilus, design iconique, bracelet intégré, haute horlogerie sportive. Référence absolue des montres de sport luxueuses.",
-      img: "/imgs/Patek-Philippe-Nautilus-Luxury-Swiss-Watch-Blue-Dial.jpg"
+      img: "imgs/Patek-Philippe-Nautilus-Luxury-Swiss-Watch-Blue-Dial.jpg"
     }
   ],
   premiumFeatures: [
@@ -1233,37 +1233,37 @@ const data = {
       name: "Grandes Complications",
       subtitle: "Art Horloger Supreme",
       desc: "Réunion de plusieurs complications horlogères : calendrier perpétuel, répétition minutes, phases de lune, chronographe, perpétuel.",
-      img: "/imgs/patek_philippe_grand_complications_rose_gold.jpg"
+      img: "imgs/patek_philippe_grand_complications_rose_gold.jpg"
     },
     {
       name: "Haute Joaillerie",
       subtitle: "Éclat Exceptionnel",
       desc: "Sertissage de diamants, émeraudes, rubis. Techniques joaillières d'exception, design artistique, fusion art et horlogerie.",
-      img: "/imgs/patek_philippe_diamond_jewelry_luxury.jpg"
+      img: "imgs/patek_philippe_diamond_jewelry_luxury.jpg"
     },
     {
       name: "Tourbillon d'Exception",
       subtitle: "Mécanisme Prestige",
       desc: "Tourbillon haute complication, régulation gravitaire, précision exception. Summum de l'art horloger, beauté technique.",
-      img: "/imgs/vacheron_constantin_tourbillon_extraordinary.jpg"
+      img: "imgs/vacheron_constantin_tourbillon_extraordinary.jpg"
     },
     {
       name: "Squelette Artistique",
       subtitle: "Transparence Horlogère",
       desc: "Mouvements ajourés, transparence artistique. Finition decoration, art mécanique, beauté visible du mécanisme.",
-      img: "/imgs/audemars_piguet_royal_oak_skeleton_artistic.jpg"
+      img: "imgs/audemars_piguet_royal_oak_skeleton_artistic.jpg"
     },
     {
       name: "Matériaux Ultra-Légers",
       subtitle: "Innovation Matériaux",
       desc: "Carbon TPT, titane grade 5, aluminium aerospace. Innovation technique, performance maximale, resistance exception.",
-      img: "/imgs/richard_mille_carbon_ultra_light.jpg"
+      img: "imgs/richard_mille_carbon_ultra_light.jpg"
     },
     {
       name: "Émaux d'Art",
       subtitle: "Art Heritage",
       desc: "Émail cloisonné, miniature, exceptionnelles. Artisans d'art exceptionnels, techniques millénaires, précision artistique.",
-      img: "/imgs/patek_philippe_enamel_art_dial.jpg"
+      img: "imgs/patek_philippe_enamel_art_dial.jpg"
     }
   ]
 };
@@ -1698,220 +1698,4 @@ export default function HorlogeriePage() {
                 <h3>{manufacture.name}</h3>
                 <div className="subtitle">Fondée en {manufacture.year}</div>
                 <div className="since">📍 {manufacture.location}</div>
-                <p className="desc">{manufacture.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Marques Premium Spécialisées */}
-      <section id="premium-brands" className="section premium-section">
-        <div className="container">
-          <h2 className="loading luxury-title">💎 Marques Premium d'Excellence</h2>
-          <div className="grid premium-grid">
-            {data.premiumBrands.map((brand, index) => (
-              <div key={index} className="card elegant-card loading">
-                <img 
-                  src={brand.img} 
-                  alt={`Montre ${brand.name}`}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <h3>{brand.name}</h3>
-                <div className="subtitle">{brand.subtitle}</div>
-                <div className="since">Fondée en {brand.year} | 📍 {brand.location}</div>
-                <p className="desc">{brand.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Mécanismes d'Exception */}
-      <section id="mechanisms" className="section">
-        <div className="container">
-          <h2 className="loading">⚙️ Mécanismes d'Exception</h2>
-          <div className="grid cards-grid">
-            {data.mechanisms.map((mechanism, index) => (
-              <div key={index} className="card loading">
-                <img 
-                  src={mechanism.img} 
-                  alt={mechanism.name}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <h3>{mechanism.name}</h3>
-                <div className="subtitle">{mechanism.subtitle}</div>
-                <p className="desc">{mechanism.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Heritage Horloger */}
-      <section id="heritage" className="section">
-        <div className="container">
-          <h2 className="loading">🏺 Heritage Horloger</h2>
-          <div className="grid cards-grid">
-            {data.heritage.map((item, index) => (
-              <div key={index} className="card loading">
-                <img 
-                  src={item.img} 
-                  alt={item.name}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <h3>{item.name}</h3>
-                <div className="subtitle">{item.subtitle}</div>
-                <p className="desc">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Innovations Technologiques */}
-      <section id="innovations" className="section luxury-section">
-        <div className="container">
-          <div className="luxury-content">
-            <h2 className="loading luxury-title">🚀 Innovations Technologiques</h2>
-            <div className="grid cards-grid">
-              {data.innovations.map((innovation, index) => (
-                <div key={index} className="card elegant-card loading">
-                  <img 
-                    src={innovation.img} 
-                    alt={innovation.name}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <h3>{innovation.name}</h3>
-                  <div className="since">Année : {innovation.year}</div>
-                  <p className="desc">{innovation.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Territoires et Ateliers */}
-      <section id="territories" className="section">
-        <div className="container">
-          <h2 className="loading">🗺️ Territoires & Ateliers</h2>
-          <div className="grid cards-grid">
-            {data.territories.map((territory, index) => (
-              <div key={index} className="card loading">
-                <img 
-                  src={territory.img} 
-                  alt={territory.name}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <h3>{territory.name}</h3>
-                <div className="subtitle">{territory.subtitle}</div>
-                <p className="desc">{territory.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Collections d'Exception */}
-      <section id="collections" className="section premium-section">
-        <div className="container">
-          <h2 className="loading luxury-title">🎨 Collections d'Exception</h2>
-          <div className="grid premium-grid">
-            {data.collections.map((collection, index) => (
-              <div key={index} className="card elegant-card loading">
-                <img 
-                  src={collection.img} 
-                  alt={collection.name}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <h3>{collection.name}</h3>
-                <div className="subtitle">{collection.subtitle}</div>
-                <p className="desc">{collection.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Fonctionnalités Premium */}
-      <section id="premium-features" className="section">
-        <div className="container">
-          <h2 className="loading">🌟 Fonctionnalités Premium</h2>
-          <div className="grid luxury-grid">
-            {data.premiumFeatures.map((feature, index) => (
-              <div key={index} className="card loading">
-                <img 
-                  src={feature.img} 
-                  alt={feature.name}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <h3>{feature.name}</h3>
-                <div className="subtitle">{feature.subtitle}</div>
-                <p className="desc">{feature.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Footer Ultra-Premium */}
-      <footer className="footer">
-        <div className="container">
-          <div style={{ marginBottom: '3rem' }}>
-            <h3 style={{ 
-              fontSize: '2rem', 
-              marginBottom: '1rem',
-              background: 'var(--gradient-gold)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
-            }}>
-              🇨🇭 HorloLearn 2.0
-            </h3>
-            <p style={{ fontSize: '1.2rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>
-              L'Excellence Horlogère Suisse à son Apogée
-            </p>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'center', 
-              gap: '2rem', 
-              flexWrap: 'wrap',
-              marginBottom: '3rem'
-            }}>
-              <a href="#hero" onClick={() => scrollToSection('hero')}>Accueil</a>
-              <a href="#stats" onClick={() => scrollToSection('stats')}>Statistiques</a>
-              <a href="#timeline" onClick={() => scrollToSection('timeline')}>Chronologie</a>
-              <a href="#manufactures" onClick={() => scrollToSection('manufactures')}>Manufactures</a>
-              <a href="#premium-brands" onClick={() => scrollToSection('premium-brands')}>Marques Premium</a>
-              <a href="#innovations" onClick={() => scrollToSection('innovations')}>Innovations</a>
-            </div>
-          </div>
-          <div style={{ 
-            borderTop: '2px solid var(--border-color)', 
-            paddingTop: '2rem',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '1rem'
-          }}>
-            <p style={{ color: 'var(--text-muted)' }}>
-              © 2024 HorloLearn 2.0 - Excellence Horlogère Suisse
-            </p>
-            <p style={{ color: 'var(--text-muted)' }}>
-              Version 2.0 Finale Monumentale
-            </p>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-}
+                <p className="desc">{
