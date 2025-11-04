@@ -1698,4 +1698,192 @@ export default function HorlogeriePage() {
                 <h3>{manufacture.name}</h3>
                 <div className="subtitle">Fondée en {manufacture.year}</div>
                 <div className="since">📍 {manufacture.location}</div>
-                <p className="desc">{
+                <p className="desc">{manufacture.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Marques Premium */}
+      <section id="premium-brands" className="section premium-section">
+        <div className="container">
+          <div className="luxury-content">
+            <h2 className="loading luxury-title">💎 Marques Premium d'Exception</h2>
+            <div className="grid premium-grid">
+              {data.premiumBrands.map((brand, index) => (
+                <div key={index} className="card elegant-card loading">
+                  <img 
+                    src={brand.img} 
+                    alt={`Montre ${brand.name}`}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <h3>{brand.name}</h3>
+                  <div className="subtitle">{brand.subtitle}</div>
+                  <div className="since">Fondée en {brand.year}</div>
+                  <p className="desc">{brand.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Mécanismes & Innovations */}
+      <section id="mechanisms" className="section">
+        <div className="container">
+          <h2 className="loading">⚙️ Mécanismes & Complications</h2>
+          <div className="grid luxury-grid">
+            {data.mechanisms.map((mechanism, index) => (
+              <div key={index} className="card loading">
+                <img 
+                  src={mechanism.img} 
+                  alt={mechanism.name}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <h3>{mechanism.name}</h3>
+                <div className="subtitle">{mechanism.subtitle}</div>
+                <p className="desc">{mechanism.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Heritage & Traditions */}
+      <section id="heritage" className="section">
+        <div className="container">
+          <h2 className="loading">🏛️ Héritage & Traditions</h2>
+          <div className="grid cards-grid">
+            {data.heritage.map((item, index) => (
+              <div key={index} className="card loading">
+                <img 
+                  src={item.img} 
+                  alt={item.name}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <h3>{item.name}</h3>
+                <div className="subtitle">{item.subtitle}</div>
+                <p className="desc">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Innovations */}
+      <section id="innovations" className="section luxury-section">
+        <div className="container">
+          <div className="luxury-content">
+            <h2 className="loading luxury-title">🚀 Innovations Révolutionnaires</h2>
+            <div className="grid luxury-grid">
+              {data.innovations.map((innovation, index) => (
+                <div key={index} className="card elegant-card loading">
+                  <img 
+                    src={innovation.img} 
+                    alt={innovation.name}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <h3>{innovation.name}</h3>
+                  <div className="subtitle">Depuis {innovation.year}</div>
+                  <p className="desc">{innovation.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Territoires & Paysages */}
+      <section id="territories" className="section">
+        <div className="container">
+          <h2 className="loading">🏔️ Territoires Horlogers</h2>
+          <div className="grid cards-grid">
+            {data.territories.map((territory, index) => (
+              <div key={index} className="card loading">
+                <img 
+                  src={territory.img} 
+                  alt={territory.name}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <h3>{territory.name}</h3>
+                <div className="subtitle">{territory.subtitle}</div>
+                <p className="desc">{territory.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Collections Premium */}
+      <section id="collections" className="section premium-section">
+        <div className="container">
+          <div className="luxury-content">
+            <h2 className="loading luxury-title">👑 Collections Iconiques</h2>
+            <div className="grid luxury-grid">
+              {data.collections.map((collection, index) => (
+                <div key={index} className="card elegant-card loading">
+                  <img 
+                    src={collection.img} 
+                    alt={collection.name}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <h3>{collection.name}</h3>
+                  <div className="subtitle">{collection.subtitle}</div>
+                  <p className="desc">{collection.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Premium */}
+      <section id="premium-features" className="section luxury-section">
+        <div className="container">
+          <div className="luxury-content">
+            <h2 className="loading luxury-title">✨ Caractéristiques Premium</h2>
+            <div className="grid premium-grid">
+              {data.premiumFeatures.map((feature, index) => (
+                <div key={index} className="card elegant-card loading">
+                  <img 
+                    src={feature.img} 
+                    alt={feature.name}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <h3>{feature.name}</h3>
+                  <div className="subtitle">{feature.subtitle}</div>
+                  <p className="desc">{feature.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer Ultra-Premium */}
+      <footer className="footer">
+        <div className="container">
+          <h2 style={{ marginBottom: '2rem' }}>🇨🇭 HorloLearn Version 2.0 Finale</h2>
+          <p style={{ fontSize: '1.2rem', marginBottom: '2rem' }}>
+            L'Excellence Horlogère Suisse : 500+ Années d'Innovation Continue
+          </p>
+          <p>
+            Développé avec passion pour l'horlogerie suisse 🇨🇭 | 
+            <a href="https://horlolearn.ch" target="_blank" rel="noopener noreferrer"> HorloLearn.ch</a>
+          </p>
+          <p style={{ marginTop: '2rem', fontSize: '0.9rem', opacity: '0.8' }}>
+            © 2024 HorloLearn - Tous droits réservés | Made in Swiss Excellence
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+}
