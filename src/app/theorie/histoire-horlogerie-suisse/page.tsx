@@ -840,7 +840,7 @@ const territories = [
     coords: "46.6° N, 6.2° E",
     altitude: "1000m",
     desc: "Écrin de l'horlogerie d'exception, la Vallée de Joux allie l'excellence technique à la beauté naturelle des montagnes jurassiennes.",
-    image: "imgs/vallee_de_joux_swiss_jura_lakes_landscape.jpg",
+    image: "/theorie/histoire-horlogerie-suisse/imgs/vallee_de_joux_swiss_jura_lakes_landscape.jpg",
     expertise: "Tourbillons, Complications"
   },
   {
@@ -848,7 +848,7 @@ const territories = [
     coords: "47.0° N, 6.9° E",
     altitude: "487m",
     desc: "Région des complicationes et de l'innovation technique, berceau de l'horlogerie submarine et de l'aviation.",
-    image: "imgs/neuchatel-switzerland-city-lake-view-historic-watchmaking-region.jpg",
+    image: "/theorie/histoire-horlogerie-suisse/imgs/neuchatel-switzerland-city-lake-view-historic-watchmaking-region.jpg",
     expertise: "Chronographes, Plongée"
   },
   {
@@ -856,7 +856,7 @@ const territories = [
     coords: "46.2° N, 6.1° E",
     altitude: "375m",
     desc: "Palais de la haute horlogerie, siège des plus grandes manufactures et de l'art de vivre helvétique.",
-    image: "imgs/geneva_luxury_watchmaking_craftsman_at_work_0.jpg",
+    image: "/theorie/histoire-horlogerie-suisse/imgs/geneva_luxury_watchmaking_craftsman_at_work_0.jpg",
     expertise: "Haute Horlogerie"
   },
   {
@@ -864,7 +864,7 @@ const territories = [
     coords: "47.1° N, 6.8° E",
     altitude: "991m",
     desc: "Première ville horlogère du monde, classée UNESCO, symbole de l'industrialisation horlogère.",
-    image: "imgs/la_chaux_de_fonds_swiss_watchmaking_cityscape_unesco_heritage.jpg",
+    image: "/theorie/histoire-horlogerie-suisse/imgs/la_chaux_de_fonds_swiss_watchmaking_cityscape_unesco_heritage.jpg",
     expertise: "Production de masse"
   }
 ];
