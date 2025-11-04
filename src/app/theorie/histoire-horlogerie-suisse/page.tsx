@@ -196,13 +196,13 @@ img: ""
 year: "1740",
 title: "Vallée de Joux : Berceau de la Haute Horlogerie",
 desc: "Les agriculteurs combiers fabriquent des pièces horlogères pendant les longs hivers. Naissance des 'fermes horlogères' avec fenêtres supplémentaires.",
-img: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+img: "/imgs/Vallee_de_Joux_Swiss_Alps_Landscape_Lake_Forest.jpg"
 },
 {
 year: "XIXe Siècle",
 title: "L'Âge d'Or : Innovations et Production en Série",
 desc: "Développement de nouvelles techniques, production en série, exportations massives. Invention du tourbillon par Abraham-Louis Breguet (1801).",
-img: "https://images.unsplash.com/photo-1518544801976-3e1883cbd54a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+img: "/imgs/luxury_swiss_watch_tourbillon_complication_macro.jpg"
 },
 {
 year: "1929",
@@ -223,42 +223,42 @@ name: "Genève",
 subtitle: "Berceau de l'horlogerie",
 since: "1541",
 desc: "Capitale mondiale de l'horlogerie de luxe, siège de Patek Philippe, Rolex, Vacheron Constantin.",
-img: "https://images.unsplash.com/photo-1535696955211-1b2c9d8c9e13?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+img: "/imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg"
 },
 {
 name: "Vallée de Joux",
 subtitle: "Haute horlogerie",
 since: "1740",
 desc: "Berceau des grandes complications horlogères. 26 fermes horlogères historiques.",
-img: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+img: "/imgs/Vallee_de_Joux_Audemars_Piguet_Museum_Swiss_Alps_Landscape.jpg"
 },
 {
 name: "Neuchâtel",
 subtitle: "Innovation technique",
 since: "XVIIe siècle",
 desc: "Centre d'innovation et de recherche horlogère.",
-img: "https://images.unsplash.com/photo-1561214115-f2f134cc4912?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+img: "/imgs/Neuchatel_Switzerland_historic_city_lake_architecture_watchmaking_clock_tower.jpg"
 },
 {
 name: "Bienne/Biel",
 subtitle: "Production industrielle",
 since: "XXe siècle",
 desc: "Siège d'Omega, Swatch Group. Centre industriel majeur.",
-img: "https://images.unsplash.com/photo-1541888655519-e21b1f3f8d2e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+img: "/imgs/Bienne_Switzerland_Old_Town_Square_Watchmaking_City.jpg"
 },
 {
 name: "La Chaux-de-Fonds",
 subtitle: "Patrimoine UNESCO",
 since: "XVIIIe siècle",
 desc: "Ville horlogère inscrite au patrimoine mondial UNESCO.",
-img: "https://images.unsplash.com/photo-1504893524553-b8553f7f4c7d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+img: "/imgs/la_chaux_de_fonds_swiss_watchmaking_cityscape_unesco_heritage.jpg"
 },
 {
 name: "Schaffhouse",
 subtitle: "Horlogerie allemande-suisse",
 since: "XIXe siècle",
 desc: "Siège d'IWC Schaffhausen, manufacture prestigieuse.",
-img: "https://images.unsplash.com/photo-1518744392888-3de72aa78970?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+img: "/imgs/Schaffhausen_Switzerland_Fronwagplatz_city_square.jpg"
 }
 ],
 manufactures: [
@@ -267,56 +267,56 @@ name: "Vacheron Constantin",
 year: "1755",
 location: "Genève",
 desc: "La plus ancienne manufacture horlogère active au monde, 270 ans d'excellence continue.",
-img: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+img: "/imgs/Vacheron_Constantin_Tourbillon_Green_Dial_Luxury_Swiss_Watch.jpg"
 },
 {
 name: "Breguet",
 year: "1775",
 location: "Vallée de Joux",
 desc: "Tourbillon (inventeur)",
-img: "https://images.unsplash.com/photo-1509043759401-136742328bb3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+img: "/imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg"
 },
 {
 name: "Jaeger-LeCoultre",
 year: "1833",
 location: "Le Sentier",
 desc: "Reverso, calibres manufacture",
-img: "https://images.unsplash.com/photo-1594534475808-b18fc33b045e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+img: "/imgs/jaeger_lecoultre_reverso_blue_dial_luxury_watch.jpg"
 },
 {
 name: "Patek Philippe",
 year: "1839",
 location: "Genève",
 desc: "Grandes complications",
-img: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+img: "/imgs/Patek_Philippe_Rose_Gold_Grand_Complications_Watch.jpg"
 },
 {
 name: "Omega",
 year: "1848",
 location: "Bienne",
 desc: "Speedmaster, précision",
-img: "https://images.unsplash.com/photo-1509043759401-136742328bb3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+img: "/imgs/Omega_Seamaster_Chronograph_Luxury_Watch_White_Background.jpg"
 },
 {
 name: "Audemars Piguet",
 year: "1875",
 location: "Le Brassus",
 desc: "Royal Oak, complications",
-img: "https://images.unsplash.com/photo-1594534475808-b18fc33b045e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+img: "/imgs/audemars_piguet_royal_oak_rose_gold_black_dial_luxury_swiss_watch.jpg"
 },
 {
 name: "Rolex",
 year: "1905",
 location: "Genève",
 desc: "Montres de sport, robustesse",
-img: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+img: "/imgs/rolex_submariner_gold_luxury_swiss_watch_product_photo.jpg"
 },
 {
 name: "Blancpain",
 year: "1735",
 location: "Le Brassus",
 desc: "Fifty Fathoms, complications",
-img: "https://images.unsplash.com/photo-1509043759401-136742328bb3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+img: "/imgs/blancpain_fifty_fathoms_luxury_swiss_dive_watch_product_shot.jpg"
 }
 ]
 };
