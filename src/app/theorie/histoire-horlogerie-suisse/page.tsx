@@ -856,7 +856,7 @@ const territories = [
     coords: "46.2° N, 6.1° E",
     altitude: "375m",
     desc: "Palais de la haute horlogerie, siège des plus grandes manufactures et de l'art de vivre helvétique.",
-    image: "imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg",
+    image: "imgs/geneva_luxury_watchmaking_craftsman_at_work_0.jpg",
     expertise: "Haute Horlogerie"
   },
   {
