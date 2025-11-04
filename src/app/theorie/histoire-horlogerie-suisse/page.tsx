@@ -1420,7 +1420,7 @@ export default function HorlogeriePage() {
           </div>
         </div>
       </div>
-    );
+    
 
   return (
     <div>
