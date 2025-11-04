@@ -1227,7 +1227,8 @@ export default function HistoireHorlogerieSuisse() {
         onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
         aria-label="Retour en haut"
       >
-       
+        ↑
+      </button>
     </>
   );
 }
