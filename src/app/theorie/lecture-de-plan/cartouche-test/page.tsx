@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import Navigation from '@/components/cartouche/Navigation';
 import FieldsExplorer from '@/components/cartouche/FieldsExplorer';
-import InteractiveCartouche from '@/components/cartouche/InteractiveCartouche';
+import { InteractiveCartouche } from '@/components/cartouche/InteractiveCartouche'
 import TablesSection from '@/components/cartouche/TablesSection';
 import MemoSection from '@/components/cartouche/MemoSection';
 import FAQSection from '@/components/cartouche/FAQSection';
