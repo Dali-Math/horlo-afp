@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, CheckCircle, X, Lightbulb, BookOpen, Eye } from 'lucide-react';
-import { erreursFrequentes, bonnesPratiques } from '../data';
+import { erreursFrequentes, bonnesPratiques } from './data';
 
 interface MemoSectionProps {
   darkMode: boolean;
