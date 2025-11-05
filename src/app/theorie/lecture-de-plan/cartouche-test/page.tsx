@@ -2125,24 +2125,24 @@ export default function Page() {
       userProgress={userProgress}
       darkMode={darkMode}
     />
-  </div>
-)
 
-      <main className="relative">{renderSection()}</main>
+    <main className="relative">
+      {renderSection()}
+    </main>
 
-      {/* Floating Action Buttons */}
-      <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
-        {/* Dark Mode Toggle */}
-        <Tooltip content={darkMode ? "Mode clair" : "Mode sombre"}>
-          <motion.button
-            onClick={toggleDarkMode}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className={`w-14 h-14 rounded-full shadow-2xl transition-all duration-300 flex items-center justify-center
-              ${darkMode 
-                ? 'bg-gradient-to-br from-yellow-400 to-orange-500' 
-                : 'bg-gradient-to-br from-indigo-600 to-purple-700'
-              }`}
+    {/* Floating Action Buttons */}
+    <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
+      {/* Dark Mode Toggle */}
+      <Tooltip content={darkMode ? "Mode clair" : "Mode sombre"}>
+        <motion.button
+          onClick={toggleDarkMode}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className={`w-14 h-14 rounded-full shadow-2xl transition-all duration-300 flex items-center justify-center ${
+            darkMode
+              ? 'bg-gradient-to-br from-yellow-400 to-orange-500'
+              : 'bg-gradient-to-br from-indigo-600 to-purple-700'
+          }`}
           >
             {darkMode ? (
               <span className="text-2xl">☀️</span>
