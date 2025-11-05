@@ -476,3 +476,4 @@ export const InteractiveCartouche: React.FC<InteractiveCartoucheProps> = ({ dark
     </div>
   );
 };
+export default InteractiveCartouche;
