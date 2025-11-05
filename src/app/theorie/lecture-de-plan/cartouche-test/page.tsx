@@ -10,7 +10,7 @@ import { MemoSection } from '@/components/cartouche/MemoSection';
 import { FAQSection } from '@/components/cartouche/FAQSection';
 import { QuizSection } from '@/components/cartouche/QuizSection';
 import { NormesSection } from '@/components/cartouche/NormesSection';
-import { SectionType } from './types';
+import { SectionType } from '@/types'
 import { GraduationCap, Sparkles, Award } from 'lucide-react';
 
 function App() {
