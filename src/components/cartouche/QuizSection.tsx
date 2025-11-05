@@ -480,3 +480,4 @@ export const QuizSection: React.FC<QuizSectionProps> = ({ darkMode, onQuizComple
     </div>
   );
 };
+export default QuizSection;
