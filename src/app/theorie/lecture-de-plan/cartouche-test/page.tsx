@@ -60,7 +60,7 @@ export default function Page() {
                 style={{ gridColumn: `${f.pos.c} / span ${f.pos.cs}`, gridRow: `${f.pos.r} / span ${f.pos.rs}` }}
               >
                 {f.short}
-                {indicator(f.obligation)}
+                {indicator(f.obligation as 'O' | 'C')}
               </motion.div>
             ))}
           </div>
