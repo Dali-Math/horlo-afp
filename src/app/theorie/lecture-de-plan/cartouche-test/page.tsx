@@ -1056,17 +1056,17 @@ const QuizSection = ({ darkMode, onQuizComplete }: any) => {
   const progress = ((currentQuestion + 1) / quizData.length) * 100;
 
   useEffect(() => {
-    if (!quizStarted || isPaused || showResult) return;
-    
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          handleNextQuestion();
-          return 30;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+  if (!quizStarted || isPaused || showResult) return;
+
+  const timer = setInterval(() => {
+    setTimeLeft((prev) => {
+      if (prev <= 1) {
+        handleNextQuestion();
+        return 30;
+      }
+      return prev - 1; // ← ajoute ça pour éviter un retour vide
+    });
+  }, 1000);
 
     return () => clearInterval(timer);
   }, [quizStarted, isPaused, showResult, currentQuestion]);
