@@ -374,7 +374,7 @@ export const QuizSection: React.FC<QuizSectionProps> = ({ darkMode, onQuizComple
 
           {/* Options de réponse */}
           <div className="space-y-3">
-            {currentQ.options.map((option, index) => (
+            {currentQ.options.map((option: string, index: number) => (
               <motion.button
                 key={index}
                 onClick={() => selectAnswer(index)}
