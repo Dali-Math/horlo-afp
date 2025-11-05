@@ -54,6 +54,7 @@ export default function Page() {
     cartouche: <InteractiveCartouche darkMode={darkMode} />,
     champs: <FieldsExplorer darkMode={darkMode} />,
 
+    // ✅ Tableau remplacé par le nouveau cartouche
     tableaux: (
       <div className="flex flex-col items-center justify-center min-h-screen py-12 px-6">
         <div className="bg-slate-800 text-white rounded-2xl p-8 shadow-2xl w-full max-w-5xl">
@@ -139,7 +140,8 @@ export default function Page() {
       </div>
     ),
 
-    memo: <MemoSection />,
+    // ✅ darkMode remis ici (c’était le seul requis)
+    memo: <MemoSection darkMode={darkMode} />,
     faq: <FAQSection />,
     quiz: <QuizSection onQuizComplete={handleQuizComplete} />,
     normes: <NormesSection />,
