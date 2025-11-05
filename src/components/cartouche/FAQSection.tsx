@@ -366,3 +366,4 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ darkMode }) => {
     </div>
   );
 };
+export default FAQSection;
