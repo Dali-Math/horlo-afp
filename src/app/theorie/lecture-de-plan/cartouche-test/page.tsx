@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Navigation } from './components/Navigation';
-import { FieldsExplorer } from './components/FieldsExplorer';
-import { InteractiveCartouche } from './components/InteractiveCartouche';
-import { TablesSection } from './components/TablesSection';
-import { MemoSection } from './components/MemoSection';
-import { FAQSection } from './components/FAQSection';
-import { QuizSection } from './components/QuizSection';
-import { NormesSection } from './components/NormesSection';
+import { Navigation } from './components/cartouche/Navigation';
+import { FieldsExplorer } from './components/cartouche/FieldsExplorer';
+import { InteractiveCartouche } from './components/cartouche/InteractiveCartouche';
+import { TablesSection } from './components/cartouche/TablesSection';
+import { MemoSection } from './components/cartouche/MemoSection';
+import { FAQSection } from './components/cartouche/FAQSection';
+import { QuizSection } from './components/cartouche/QuizSection';
+import { NormesSection } from './components/cartouche/NormesSection';
 import { SectionType } from './types';
 import { GraduationCap, Sparkles, Award } from 'lucide-react';
 
