@@ -2,19 +2,19 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { GraduationCap, Award, CheckCircle, XCircle, Book, FileText } from 'lucide-react'
+import { GraduationCap, Award } from 'lucide-react'
 
-import FieldsExplorer from '@/components/cartouche/FieldsExplorer'
-import TablesSection from '@/components/cartouche/TablesSection'
-import FAQSection from '@/components/cartouche/FAQSection'
-import MemoSection from '@/components/cartouche/MemoSection'
+// IMPORTS composant (chemin selon capture repo)
 import Navigation from '@/components/cartouche/Navigation'
-import NormesSection from '@/components/cartouche/NormesSection'
+import FieldsExplorer from '@/components/cartouche/FieldsExplorer'
+import InteractiveCartouche from '@/components/cartouche/InteractiveCartouche'
+import TablesSection from '@/components/cartouche/TablesSection'
+import MemoSection from '@/components/cartouche/MemoSection'
+import FAQSection from '@/components/cartouche/FAQSection'
 import QuizSection from '@/components/cartouche/QuizSection'
+import NormesSection from '@/components/cartouche/NormesSection'
 
-// LE CARTOUCHE EST INTÉGRÉ DIRECTEMENT DANS CE CODE - pas d'import !
-// (Assure-toi que InteractiveCartouche est défini dans le fichier, ou importe si tu veux le séparer.)
-
+// Typage de sections
 type SectionType = 'champs' | 'cartouche' | 'quiz' | 'tableaux' | 'memo' | 'faq' | 'normes'
 
 export default function Page() {
@@ -59,34 +59,15 @@ export default function Page() {
     setUserProgress({ completedQuizzes: newCompleted, totalScore: newScore, achievements })
   }
 
-  const renderSection = () => {
-    const sections: Record<SectionType, JSX.Element> = {
-      champs: <FieldsExplorer darkMode={darkMode} setSelectedField={setSelectedField} />,
-      cartouche: (
-        // Le code JSX de InteractiveCartouche doit être collé ici ou bien importé, selon ta structure
-        // <InteractiveCartouche darkMode={darkMode} selectedField={selectedField} setSelectedField={setSelectedField} />
-        // --- Extrait intégré directement ---
-        <div>/* TON COMPOSANT INTERACTIF ici */</div>
-      ),
-      quiz: <QuizSection darkMode={darkMode} onQuizComplete={handleQuizComplete} />,
-      tableaux: <TablesSection darkMode={darkMode} />,
-      memo: <MemoSection darkMode={darkMode} />,
-      faq: <FAQSection darkMode={darkMode} />,
-      normes: <NormesSection darkMode={darkMode} />,
-    }
-    return (
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentSection}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-        >
-          {sections[currentSection]}
-        </motion.div>
-      </AnimatePresence>
-    )
+  // mapping des sections avec les bons props
+  const sections: Record<SectionType, JSX.Element> = {
+    champs: <FieldsExplorer darkMode={darkMode} setSelectedField={setSelectedField} />,
+    cartouche: <InteractiveCartouche darkMode={darkMode} selectedField={selectedField} setSelectedField={setSelectedField} />,
+    quiz: <QuizSection darkMode={darkMode} onQuizComplete={handleQuizComplete} />,
+    tableaux: <TablesSection darkMode={darkMode} />,
+    memo: <MemoSection darkMode={darkMode} />,
+    faq: <FAQSection darkMode={darkMode} />,
+    normes: <NormesSection darkMode={darkMode} />,
   }
 
   return (
@@ -98,9 +79,20 @@ export default function Page() {
         darkMode={darkMode}
       />
 
-      <main className="relative">{renderSection()}</main>
+      <main className="relative">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentSection}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {sections[currentSection]}
+          </motion.div>
+        </AnimatePresence>
+      </main>
 
-      {/* Bouton mode sombre */}
       <motion.button
         onClick={toggleDarkMode}
         className={`fixed bottom-6 right-6 w-12 h-12 rounded-full shadow-lg transition-all duration-300 z-50 ${
@@ -114,7 +106,6 @@ export default function Page() {
         </div>
       </motion.button>
 
-      {/* Badge progression */}
       {(currentSection === 'champs' || currentSection === 'cartouche') && (
         <motion.div
           initial={{ opacity: 0, x: 100 }}
@@ -138,7 +129,6 @@ export default function Page() {
         </motion.div>
       )}
 
-      {/* Succès */}
       <AnimatePresence>
         {userProgress.achievements.length > 0 && (
           <motion.div
