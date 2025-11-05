@@ -1,5 +1,5 @@
 'use client'
-
+import Layout from '@/components/Layout'
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Layout from '@/components/Layout'
