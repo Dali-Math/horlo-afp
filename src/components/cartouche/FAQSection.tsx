@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HelpCircle, ChevronDown, ChevronUp, Search, Filter } from 'lucide-react';
-import { faqData } from '../data';
+import { faqData } from './data/faqData';
 
 interface FAQSectionProps {
   darkMode: boolean;
