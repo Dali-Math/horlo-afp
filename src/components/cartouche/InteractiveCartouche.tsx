@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Info, CheckCircle, AlertCircle } from 'lucide-react';
-import { CartoucheField } from '@/types';
+import { CartoucheField } from '../types';
 
 interface InteractiveCartoucheProps {
   darkMode: boolean;
@@ -477,4 +476,3 @@ export const InteractiveCartouche: React.FC<InteractiveCartoucheProps> = ({ dark
     </div>
   );
 };
-export default InteractiveCartouche;
