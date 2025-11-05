@@ -1,25 +1,27 @@
-'use client'
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Navigation } from '@/components/cartouche/Navigation';
-import { FieldsExplorer } from '@/components/cartouche/FieldsExplorer';
-import { InteractiveCartouche } from '@/components/cartouche/InteractiveCartouche';
-import { TablesSection } from '@/components/cartouche/TablesSection';
-import { MemoSection } from '@/components/cartouche/MemoSection';
-import { FAQSection } from '@/components/cartouche/FAQSection';
-import { QuizSection } from '@/components/cartouche/QuizSection';
-import { NormesSection } from '@/components/cartouche/NormesSection';
-import { SectionType } from '@/types'
+
+import Navigation from '@/components/cartouche/Navigation';
+import FieldsExplorer from '@/components/cartouche/FieldsExplorer';
+import InteractiveCartouche from '@/components/cartouche/InteractiveCartouche';
+import TablesSection from '@/components/cartouche/TablesSection';
+import MemoSection from '@/components/cartouche/MemoSection';
+import FAQSection from '@/components/cartouche/FAQSection';
+import QuizSection from '@/components/cartouche/QuizSection';
+import NormesSection from '@/components/cartouche/NormesSection';
+
+import { SectionType } from '@/types';
 import { GraduationCap, Sparkles, Award } from 'lucide-react';
 
-function App() {
+export default function Page() {
   const [currentSection, setCurrentSection] = useState<SectionType>('champs');
   const [darkMode, setDarkMode] = useState(false);
   const [userProgress, setUserProgress] = useState({
     completedQuizzes: 0,
     totalScore: 0,
-    achievements: [] as string[]
+    achievements: [] as string[],
   });
 
   // Détection du thème système
