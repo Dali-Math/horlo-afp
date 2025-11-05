@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, Layers, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
 import { TableData } from '../types';
-import { formatsISOData, materiauxData, traitementsData } from '../data';
+import { formatsISOdata, materiauxData, traitementsData } from './data';
 
 interface TablesSectionProps {
   darkMode: boolean;
