@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { FileText } from "lucide-react";
 
-// Data structure pour chaque champ (reprends les mêmes champs que ta grille d'origine)
+// Ajoute la prop darkMode optionnelle pour le support UI
+interface CartoucheSchemaInteractiveProps {
+  darkMode?: boolean;
+}
+
 const cartoucheFieldsData = [
   {
     id: "entreprise",
@@ -131,54 +135,69 @@ const cartoucheFieldsData = [
   }
 ];
 
-// Fonctions de couleurs (same as source)
-const getCategoryColor = (category) => {
+const getCategoryColor = (category: string) => {
   switch (category) {
-    case "Descriptif":          return "bg-blue-100 text-blue-600 border-blue-200";
-    case "Identification":      return "bg-purple-100 text-purple-600 border-purple-200";
-    case "Technique":           return "bg-green-100 text-green-600 border-green-200";
-    case "Représentation":      return "bg-orange-100 text-orange-600 border-orange-200";
-    case "Document":            return "bg-cyan-100 text-cyan-600 border-cyan-200";
-    case "Administratif":       return "bg-pink-100 text-pink-600 border-pink-200";
-    case "Gestion":             return "bg-amber-100 text-amber-600 border-amber-200";
-    default:                    return "bg-slate-100 text-slate-600 border-slate-200";
+    case "Descriptif":      return "bg-blue-100 text-blue-600 border-blue-200";
+    case "Identification":  return "bg-purple-100 text-purple-600 border-purple-200";
+    case "Technique":       return "bg-green-100 text-green-600 border-green-200";
+    case "Représentation":  return "bg-orange-100 text-orange-600 border-orange-200";
+    case "Document":        return "bg-cyan-100 text-cyan-600 border-cyan-200";
+    case "Administratif":   return "bg-pink-100 text-pink-600 border-pink-200";
+    case "Gestion":         return "bg-amber-100 text-amber-600 border-amber-200";
+    default:                return "bg-slate-100 text-slate-600 border-slate-200";
   }
 };
-const getObligationColor = (obligation) =>
+const getObligationColor = (obligation: string) =>
   obligation === "Obligatoire" ? "text-red-600 font-bold" : "text-blue-600 font-bold";
 
-// Sous-composant interactif, design premium
-export default function CartoucheSchemaInteractive() {
-  const [selectedField, setSelectedField] = useState(null);
 
+const CartoucheSchemaInteractive: React.FC<CartoucheSchemaInteractiveProps> = ({ darkMode }) => {
+  const [selectedField, setSelectedField] = useState<string | null>(null);
   const selectedFieldData = cartoucheFieldsData.find(f => f.id === selectedField);
 
-  // Grille structurée (rows adaptables, tu peux customiser/layout via tailwind+grid)
+  // Ajoute les classes darkMode si besoin
+  const baseSectionClass = darkMode
+    ? "bg-gray-900 text-gray-100"
+    : "";
+
   return (
-    <section className="mb-16">
-      <h2 className="text-3xl font-bold text-slate-900 mb-6">Schéma Interactif du Cartouche</h2>
-      <p className="text-slate-600 mb-8">
+    <section className={`mb-16 ${baseSectionClass}`}>
+      <h2 className={`text-3xl font-bold mb-6 ${darkMode ? "text-gray-100" : "text-slate-900"}`}>
+        Schéma Interactif du Cartouche
+      </h2>
+      <p className={`mb-8 ${darkMode ? "text-gray-400" : "text-slate-600"}`}>
         Cliquez sur un champ dans le schéma ou dans la liste ci-dessous pour voir ses détails.
       </p>
-      <div className="bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl p-8 mb-6 shadow-2xl">
+      <div className={`rounded-2xl p-8 mb-6 shadow-2xl ${darkMode ? "bg-gradient-to-br from-gray-900 to-gray-800" : "bg-gradient-to-br from-slate-700 to-slate-800"}`}>
         <div className="mb-6 text-center">
-          <span className="text-sm font-medium text-slate-300 bg-slate-900/50 px-4 py-2 rounded-full">
+          <span className={`text-sm font-medium px-4 py-2 rounded-full ${darkMode ? "text-gray-200 bg-gray-900/60" : "text-slate-300 bg-slate-900/50"}`}>
             Position : Coin inférieur droit du plan (ISO 5457)
           </span>
         </div>
-        <div className="bg-slate-800 rounded-xl p-6 border-2 border-slate-600">
+        <div className={`rounded-xl p-6 border-2 ${darkMode ? "bg-gray-800 border-gray-700" : "bg-slate-800 border-slate-600"}`}>
+          {/* Grilles Interactive */}
           <div className="grid grid-cols-3 gap-3 mb-3">
             {cartoucheFieldsData.slice(0, 3).map(field => (
               <button
                 key={field.id}
                 onClick={() => setSelectedField(field.id)}
-                className={`p-4 rounded-lg border-2 transition-all text-left ${selectedField === field.id ? "bg-blue-500 border-blue-400 shadow-lg shadow-blue-500/50" : "bg-slate-700 border-slate-600 hover:border-slate-500"}`}
+                className={`p-4 rounded-lg border-2 transition-all text-left ${
+                  selectedField === field.id
+                    ? `${darkMode ? "bg-blue-800 border-blue-500" : "bg-blue-500 border-blue-400"} shadow-lg shadow-blue-500/50`
+                    : `${darkMode ? "bg-gray-900 border-gray-700 hover:border-gray-500" : "bg-slate-700 border-slate-600 hover:border-slate-500"}`
+                }`}
               >
                 <div className="flex justify-between items-start mb-2">
-                  <span className={`text-xs font-semibold ${selectedField === field.id ? "text-white" : "text-slate-400"}`}>{field.name.length > 13 ? field.name.slice(0, 13) + "…" : field.name}</span>
-                  <span className={`w-5 h-5 rounded-full ${field.obligation === "Obligatoire" ? "bg-red-500" : "bg-blue-500"} flex items-center justify-center text-white text-xs font-bold`}>{field.obligation === "Obligatoire" ? "O" : "C"}</span>
+                  <span className={`text-xs font-semibold ${selectedField === field.id ? "text-white" : darkMode ? "text-gray-400" : "text-slate-400"}`}>
+                    {field.name.length > 15 ? field.name.slice(0, 13) + "…" : field.name}
+                  </span>
+                  <span className={`w-5 h-5 rounded-full ${field.obligation === "Obligatoire" ? "bg-red-500" : "bg-blue-500"} flex items-center justify-center text-white text-xs font-bold`}>
+                    {field.obligation === "Obligatoire" ? "O" : "C"}
+                  </span>
                 </div>
-                <div className={`text-xs ${selectedField === field.id ? "text-blue-100" : "text-slate-500"}`}>{field.example}</div>
+                <div className={`text-xs ${selectedField === field.id ? (darkMode ? "text-blue-300" : "text-blue-100") : (darkMode ? "text-gray-600" : "text-slate-500")}`}>
+                  {field.example}
+                </div>
               </button>
             ))}
           </div>
@@ -187,11 +206,19 @@ export default function CartoucheSchemaInteractive() {
               <button
                 key={field.id}
                 onClick={() => setSelectedField(field.id)}
-                className={`p-3 rounded-lg border-2 transition-all text-left ${selectedField === field.id ? "bg-blue-500 border-blue-400 shadow-lg shadow-blue-500/50" : "bg-slate-700 border-slate-600 hover:border-slate-500"}`}
+                className={`p-3 rounded-lg border-2 transition-all text-left ${
+                  selectedField === field.id
+                    ? `${darkMode ? "bg-blue-800 border-blue-500" : "bg-blue-500 border-blue-400"} shadow-lg shadow-blue-500/50`
+                    : `${darkMode ? "bg-gray-900 border-gray-700 hover:border-gray-500" : "bg-slate-700 border-slate-600 hover:border-slate-500"}`
+                }`}
               >
                 <div className="flex justify-between items-start mb-2">
-                  <span className={`text-xs font-semibold ${selectedField === field.id ? "text-white" : "text-slate-300"}`}>{field.name.length > 15 ? field.name.slice(0, 12) + "…" : field.name}</span>
-                  <span className={`w-4 h-4 rounded-full ${field.obligation === "Obligatoire" ? "bg-red-500" : "bg-blue-500"} flex items-center justify-center text-white text-10px font-bold`}>{field.obligation === "Obligatoire" ? "O" : "C"}</span>
+                  <span className={`text-xs font-semibold ${selectedField === field.id ? "text-white" : darkMode ? "text-gray-400" : "text-slate-300"}`}>
+                    {field.name.length > 15 ? field.name.slice(0, 12) + "…" : field.name}
+                  </span>
+                  <span className={`w-4 h-4 rounded-full ${field.obligation === "Obligatoire" ? "bg-red-500" : "bg-blue-500"} flex items-center justify-center text-white text-10px font-bold`}>
+                    {field.obligation === "Obligatoire" ? "O" : "C"}
+                  </span>
                 </div>
               </button>
             ))}
@@ -201,11 +228,19 @@ export default function CartoucheSchemaInteractive() {
               <button
                 key={field.id}
                 onClick={() => setSelectedField(field.id)}
-                className={`p-3 rounded-lg border-2 transition-all text-left ${selectedField === field.id ? "bg-blue-500 border-blue-400 shadow-lg shadow-blue-500/50" : "bg-slate-700 border-slate-600 hover:border-slate-500"}`}
+                className={`p-3 rounded-lg border-2 transition-all text-left ${
+                  selectedField === field.id
+                    ? `${darkMode ? "bg-blue-800 border-blue-500" : "bg-blue-500 border-blue-400"} shadow-lg shadow-blue-500/50`
+                    : `${darkMode ? "bg-gray-900 border-gray-700 hover:border-gray-500" : "bg-slate-700 border-slate-600 hover:border-slate-500"}`
+                }`}
               >
                 <div className="flex justify-between items-start mb-2">
-                  <span className={`text-xs font-semibold ${selectedField === field.id ? "text-white" : "text-slate-300"}`}>{field.name.length > 15 ? field.name.slice(0, 12) + "…" : field.name}</span>
-                  <span className={`w-4 h-4 rounded-full ${field.obligation === "Obligatoire" ? "bg-red-500" : "bg-blue-500"} flex items-center justify-center text-white text-10px font-bold`}>{field.obligation === "Obligatoire" ? "O" : "C"}</span>
+                  <span className={`text-xs font-semibold ${selectedField === field.id ? "text-white" : darkMode ? "text-gray-400" : "text-slate-300"}`}>
+                    {field.name.length > 15 ? field.name.slice(0, 12) + "…" : field.name}
+                  </span>
+                  <span className={`w-4 h-4 rounded-full ${field.obligation === "Obligatoire" ? "bg-red-500" : "bg-blue-500"} flex items-center justify-center text-white text-10px font-bold`}>
+                    {field.obligation === "Obligatoire" ? "O" : "C"}
+                  </span>
                 </div>
               </button>
             ))}
@@ -215,11 +250,19 @@ export default function CartoucheSchemaInteractive() {
               <button
                 key={field.id}
                 onClick={() => setSelectedField(field.id)}
-                className={`p-3 rounded-lg border-2 transition-all text-left ${selectedField === field.id ? "bg-blue-500 border-blue-400 shadow-lg shadow-blue-500/50" : "bg-slate-700 border-slate-600 hover:border-slate-500"}`}
+                className={`p-3 rounded-lg border-2 transition-all text-left ${
+                  selectedField === field.id
+                    ? `${darkMode ? "bg-blue-800 border-blue-500" : "bg-blue-500 border-blue-400"} shadow-lg shadow-blue-500/50`
+                    : `${darkMode ? "bg-gray-900 border-gray-700 hover:border-gray-500" : "bg-slate-700 border-slate-600 hover:border-slate-500"}`
+                }`}
               >
                 <div className="flex justify-between items-start mb-2">
-                  <span className={`text-xs font-semibold ${selectedField === field.id ? "text-white" : "text-slate-300"}`}>{field.name.length > 15 ? field.name.slice(0, 12) + "…" : field.name}</span>
-                  <span className={`w-4 h-4 rounded-full ${field.obligation === "Obligatoire" ? "bg-red-500" : "bg-blue-500"} flex items-center justify-center text-white text-10px font-bold`}>{field.obligation === "Obligatoire" ? "O" : "C"}</span>
+                  <span className={`text-xs font-semibold ${selectedField === field.id ? "text-white" : darkMode ? "text-gray-400" : "text-slate-300"}`}>
+                    {field.name.length > 15 ? field.name.slice(0, 12) + "…" : field.name}
+                  </span>
+                  <span className={`w-4 h-4 rounded-full ${field.obligation === "Obligatoire" ? "bg-red-500" : "bg-blue-500"} flex items-center justify-center text-white text-10px font-bold`}>
+                    {field.obligation === "Obligatoire" ? "O" : "C"}
+                  </span>
                 </div>
               </button>
             ))}
@@ -228,37 +271,45 @@ export default function CartoucheSchemaInteractive() {
           <div className="flex items-center gap-6 mt-6 justify-center">
             <div className="flex items-center gap-2">
               <span className="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center text-white text-xs font-bold">O</span>
-              <span className="text-sm text-slate-300">Obligatoire (O)</span>
+              <span className={`text-sm ${darkMode ? "text-gray-300" : "text-slate-300"}`}>Obligatoire (O)</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold">C</span>
-              <span className="text-sm text-slate-300">Conditionnel (C)</span>
+              <span className={`text-sm ${darkMode ? "text-gray-300" : "text-slate-300"}`}>Conditionnel (C)</span>
             </div>
           </div>
         </div>
-        {/* Détail affiché pour le champ sélectionné */}
+        {/* Champ sélectionné affiché */}
         {selectedFieldData && (
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border-l-4 border-blue-600 animate-fadeIn mt-6">
+          <div className={`rounded-xl p-6 border-l-4 mt-6 animate-fadeIn ${darkMode ? "bg-gray-900 border-blue-800" : "bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-600"}`}>
             <div className="flex items-center mb-4">
               <FileText className="w-6 h-6 text-blue-600 mr-3" />
               <div>
-                <h3 className="text-2xl font-bold text-slate-900">{selectedFieldData.name}</h3>
+                <h3 className={`text-2xl font-bold ${darkMode ? "text-gray-100" : "text-slate-900"}`}>
+                  {selectedFieldData.name}
+                </h3>
                 <div className="flex items-center gap-3 mt-2">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getCategoryColor(selectedFieldData.category)}`}>{selectedFieldData.category}</span>
-                  <span className={`text-sm font-bold ${getObligationColor(selectedFieldData.obligation)}`}>{selectedFieldData.obligation}</span>
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getCategoryColor(selectedFieldData.category)}`}>
+                    {selectedFieldData.category}
+                  </span>
+                  <span className={`text-sm font-bold ${getObligationColor(selectedFieldData.obligation)}`}>
+                    {selectedFieldData.obligation}
+                  </span>
                 </div>
               </div>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <p className="text-sm font-bold text-slate-700 mb-1">Description</p>
-                <p className="text-slate-700 mb-3">{selectedFieldData.description}</p>
-                <p className="text-sm font-bold text-slate-700 mb-1">Nombre de caractères</p>
-                <p className="text-slate-700">{selectedFieldData.characters}</p>
+                <p className="text-sm font-bold mb-1">Description</p>
+                <p className={`${darkMode ? "text-gray-300" : "text-slate-700"} mb-3`}>
+                  {selectedFieldData.description}
+                </p>
+                <p className="text-sm font-bold mb-1">Nombre de caractères</p>
+                <p className={`${darkMode ? "text-gray-300" : "text-slate-700"}`}>{selectedFieldData.characters}</p>
               </div>
               <div>
-                <p className="text-sm font-bold text-slate-700 mb-1">Exemple horlogerie</p>
-                <p className="text-slate-700 bg-white px-4 py-3 rounded-lg border border-blue-200 font-mono text-sm">
+                <p className="text-sm font-bold mb-1">Exemple horlogerie</p>
+                <p className={`${darkMode ? "text-gray-300 bg-gray-800 border-gray-700" : "text-slate-700 bg-white border-blue-200"} px-4 py-3 rounded-lg border font-mono text-sm`}>
                   {selectedFieldData.example}
                 </p>
               </div>
@@ -269,3 +320,5 @@ export default function CartoucheSchemaInteractive() {
     </section>
   );
 }
+
+export default CartoucheSchemaInteractive;
