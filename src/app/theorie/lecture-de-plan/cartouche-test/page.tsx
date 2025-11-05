@@ -142,7 +142,7 @@ export default function Page() {
     memo: <MemoSection darkMode={darkMode} />,
     faq: <FAQSection darkMode={darkMode} />,
     quiz: <QuizSection darkMode={darkMode} onQuizComplete={handleQuizComplete} />,
-    normes: <NormesSection />,
+    normes: <NormesSection darkMode={darkMode} />,
   }
 
   return (
