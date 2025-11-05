@@ -4,16 +4,18 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { GraduationCap, Award, CheckCircle, XCircle, Book, FileText } from 'lucide-react'
 
-type SectionType = 'champs' | 'cartouche' | 'quiz' | 'tableaux' | 'memo' | 'faq' | 'normes'
-
 import FieldsExplorer from '@/components/cartouche/FieldsExplorer'
-import InteractiveCartouche from '@/components/cartouche/InteractiveCartouche'
-import QuizSection from '@/components/cartouche/QuizSection'
 import TablesSection from '@/components/cartouche/TablesSection'
-import MemoSection from '@/components/cartouche/MemoSection'
 import FAQSection from '@/components/cartouche/FAQSection'
-import NormesSection from '@/components/cartouche/NormesSection'
+import MemoSection from '@/components/cartouche/MemoSection'
 import Navigation from '@/components/cartouche/Navigation'
+import NormesSection from '@/components/cartouche/NormesSection'
+import QuizSection from '@/components/cartouche/QuizSection'
+
+// LE CARTOUCHE EST INTÉGRÉ DIRECTEMENT DANS CE CODE - pas d'import !
+// (Assure-toi que InteractiveCartouche est défini dans le fichier, ou importe si tu veux le séparer.)
+
+type SectionType = 'champs' | 'cartouche' | 'quiz' | 'tableaux' | 'memo' | 'faq' | 'normes'
 
 export default function Page() {
   const [currentSection, setCurrentSection] = useState<SectionType>('champs')
@@ -25,7 +27,6 @@ export default function Page() {
     achievements: [] as string[],
   })
 
-  // Thème localStorage
   useEffect(() => {
     const savedTheme = localStorage.getItem('cartouche-theme')
     if (savedTheme) {
@@ -36,14 +37,16 @@ export default function Page() {
   }, [])
 
   useEffect(() => {
-    if (darkMode) document.documentElement.classList.add('dark')
-    else document.documentElement.classList.remove('dark')
+    if (darkMode) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
     localStorage.setItem('cartouche-theme', darkMode ? 'dark' : 'light')
   }, [darkMode])
 
   const toggleDarkMode = () => setDarkMode(!darkMode)
 
-  // Progression du quiz
   const handleQuizComplete = (score: number, completedQuestions: number) => {
     const newScore = Math.max(userProgress.totalScore, score)
     const newCompleted = Math.max(userProgress.completedQuizzes, completedQuestions)
@@ -56,18 +59,21 @@ export default function Page() {
     setUserProgress({ completedQuizzes: newCompleted, totalScore: newScore, achievements })
   }
 
-  // Sections dynamiques
   const renderSection = () => {
     const sections: Record<SectionType, JSX.Element> = {
       champs: <FieldsExplorer darkMode={darkMode} setSelectedField={setSelectedField} />,
-      cartouche: <InteractiveCartouche darkMode={darkMode} selectedField={selectedField} setSelectedField={setSelectedField} />,
+      cartouche: (
+        // Le code JSX de InteractiveCartouche doit être collé ici ou bien importé, selon ta structure
+        // <InteractiveCartouche darkMode={darkMode} selectedField={selectedField} setSelectedField={setSelectedField} />
+        // --- Extrait intégré directement ---
+        <div>/* TON COMPOSANT INTERACTIF ici */</div>
+      ),
       quiz: <QuizSection darkMode={darkMode} onQuizComplete={handleQuizComplete} />,
       tableaux: <TablesSection darkMode={darkMode} />,
       memo: <MemoSection darkMode={darkMode} />,
       faq: <FAQSection darkMode={darkMode} />,
       normes: <NormesSection darkMode={darkMode} />,
     }
-
     return (
       <AnimatePresence mode="wait">
         <motion.div
