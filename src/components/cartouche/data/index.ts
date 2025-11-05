@@ -1,4 +1,4 @@
-import { CartoucheField, QuizQuestion, TableData, FAQItem } from '../../types';
+import { CartoucheField, QuizQuestion, TableData, FAQItem } from '../../../types';
 
 // 14 Champs de cartouches horlogers selon ISO 7200
 export const cartoucheFieldsData: CartoucheField[] = [
