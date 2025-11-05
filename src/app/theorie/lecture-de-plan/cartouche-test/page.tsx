@@ -2118,13 +2118,15 @@ export default function Page() {
   }
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
-      <Navigation
-        currentSection={currentSection}
-        onSectionChange={setCurrentSection}
-        userProgress={userProgress}
-        darkMode={darkMode}
-      />
+  <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <Navigation
+      currentSection={currentSection}
+      onSectionChange={setCurrentSection}
+      userProgress={userProgress}
+      darkMode={darkMode}
+    />
+  </div>
+)
 
       <main className="relative">{renderSection()}</main>
 
