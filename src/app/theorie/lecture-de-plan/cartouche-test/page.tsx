@@ -1,5 +1,12 @@
 'use client'
 
+import Navigation from '@/components/cartouche/Navigation'
+import MemoSection from '@/components/cartouche/MemoSection'
+import FAQSection from '@/components/cartouche/FAQSection'
+import QuizSection from '@/components/cartouche/QuizSection'
+import NormesSection from '@/components/cartouche/NormesSection'
+import { GraduationCap, Award } from 'lucide-react'
+import { SectionType } from '@/types'
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { GraduationCap, Award, CheckCircle, XCircle, Book, FileText } from 'lucide-react'
