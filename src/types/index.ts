@@ -52,4 +52,3 @@ export type SectionType =
   | 'faq' 
   | 'normes'
   | 'cartouche';
-export default {}
