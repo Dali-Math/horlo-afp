@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Navigation from '@/components/cartouche/Navigation'
 import FieldsExplorer from '@/components/cartouche/FieldsExplorer'
 import InteractiveCartouche from '@/components/cartouche/InteractiveCartouche'
-import TablesSection from '@/components/cartouche/TablesSection'
 import MemoSection from '@/components/cartouche/MemoSection'
 import FAQSection from '@/components/cartouche/FAQSection'
 import QuizSection from '@/components/cartouche/QuizSection'
@@ -54,11 +53,96 @@ export default function Page() {
   const sections: Record<string, JSX.Element> = {
     cartouche: <InteractiveCartouche darkMode={darkMode} />,
     champs: <FieldsExplorer darkMode={darkMode} />,
-    tableaux: <TablesSection darkMode={darkMode} />,
-    memo: <MemoSection darkMode={darkMode} />,
-    faq: <FAQSection darkMode={darkMode} />,
-    quiz: <QuizSection darkMode={darkMode} onQuizComplete={handleQuizComplete} />,
-    normes: <NormesSection darkMode={darkMode} />,
+
+    tableaux: (
+      <div className="flex flex-col items-center justify-center min-h-screen py-12 px-6">
+        <div className="bg-slate-800 text-white rounded-2xl p-8 shadow-2xl w-full max-w-5xl">
+          <div className="text-center mb-6 text-slate-300 text-sm">
+            Position : Coin inférieur droit du plan (ISO 5457)
+          </div>
+
+          <div className="bg-slate-700 rounded-xl p-6">
+            <div className="grid grid-cols-3 gap-3 mb-3">
+              <div className="p-3 rounded-lg bg-slate-600 text-sm font-medium flex justify-between">
+                <span>Nom de l'entr...</span>
+                <span className="bg-red-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">O</span>
+              </div>
+              <div className="p-3 rounded-lg bg-slate-600 text-sm font-medium flex justify-between">
+                <span>Titre</span>
+                <span className="bg-red-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">O</span>
+              </div>
+              <div className="p-3 rounded-lg bg-slate-600 text-sm font-medium flex justify-between">
+                <span>Numéro de pièce</span>
+                <span className="bg-red-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">O</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-4 gap-3 mb-3">
+              <div className="p-3 rounded-lg bg-slate-600 text-sm font-medium flex justify-between">
+                <span>Dessinateur</span>
+                <span className="bg-red-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">O</span>
+              </div>
+              <div className="p-3 rounded-lg bg-slate-600 text-sm font-medium flex justify-between">
+                <span>Matériau</span>
+                <span className="bg-red-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">O</span>
+              </div>
+              <div className="p-3 rounded-lg bg-slate-600 text-sm font-medium flex justify-between">
+                <span>Traitement de...</span>
+                <span className="bg-blue-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">C</span>
+              </div>
+              <div className="p-3 rounded-lg bg-slate-600 text-sm font-medium flex justify-between">
+                <span>Masse</span>
+                <span className="bg-blue-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">C</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-6 gap-3">
+              {[
+                'Échelle',
+                'Vérificateur',
+                'Tolérance gén...',
+                "Méthode d'ap...",
+                'Format',
+                'Indice de...',
+                'Date',
+              ].map((label, i) => (
+                <div
+                  key={i}
+                  className="p-3 rounded-lg bg-slate-600 text-sm font-medium flex justify-between"
+                >
+                  <span>{label}</span>
+                  <span
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
+                      ['Tolérance gén...', "Méthode d'ap..."].includes(label)
+                        ? 'bg-blue-500'
+                        : 'bg-red-500'
+                    }`}
+                  >
+                    {['Tolérance gén...', "Méthode d'ap..."].includes(label) ? 'C' : 'O'}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-center items-center gap-6 mt-6 text-slate-300 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="bg-red-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">O</span>
+                Obligatoire (O)
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="bg-blue-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">C</span>
+                Conditionnel (C)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+
+    memo: <MemoSection />,
+    faq: <FAQSection />,
+    quiz: <QuizSection onQuizComplete={handleQuizComplete} />,
+    normes: <NormesSection />,
   }
 
   return (
@@ -83,71 +167,6 @@ export default function Page() {
           </motion.div>
         </AnimatePresence>
       </main>
-
-      <motion.button
-        onClick={toggleDarkMode}
-        className={`fixed bottom-6 right-6 w-12 h-12 rounded-full shadow-lg transition-all duration-300 ${
-          darkMode ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-gray-800 hover:bg-gray-900'
-        }`}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <div className="flex items-center justify-center">
-          {darkMode ? <span className="text-white text-xl">☀️</span> : <span className="text-white text-xl">🌙</span>}
-        </div>
-      </motion.button>
-
-      {(currentSection === 'cartouche' || currentSection === 'champs') && (
-        <motion.div
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1 }}
-          className={`fixed bottom-6 left-6 p-4 rounded-xl shadow-lg ${
-            darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'
-          }`}
-        >
-          <div className="flex items-center space-x-3">
-            <GraduationCap className={`w-6 h-6 ${darkMode ? 'text-blue-400' : 'text-blue-500'}`} />
-            <div>
-              <div className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                Formation Cartouches Horlogers
-              </div>
-              <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                7 sections • 15 questions • Normes ISO
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-      <AnimatePresence>
-        {userProgress.achievements.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 100 }}
-            className="fixed top-1/2 right-6 transform -translate-y-1/2 space-y-3"
-          >
-            {userProgress.achievements.map((ach, i) => (
-              <motion.div
-                key={ach}
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ delay: i * 0.2, type: 'spring' }}
-                className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                  ach === 'parfait'
-                    ? 'bg-gradient-to-r from-yellow-400 to-yellow-600'
-                    : ach === 'expert'
-                    ? 'bg-gradient-to-r from-blue-400 to-blue-600'
-                    : 'bg-gradient-to-r from-green-400 to-green-600'
-                } shadow-lg`}
-              >
-                <Award className="w-6 h-6 text-white" />
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   )
 }
