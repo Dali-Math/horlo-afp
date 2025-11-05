@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, Layers, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
-import { TableData } from '../types';
+import { TableData } from '@/types';
 import { formatsISOdata, materiauxData, traitementsData } from './data';
 
 interface TablesSectionProps {
