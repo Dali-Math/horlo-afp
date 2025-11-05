@@ -88,10 +88,13 @@ export default function Page() {
             onClick={() => setSelected(f.id)}
             className="p-6 bg-white border-2 border-gray-200 rounded-xl cursor-pointer hover:scale-105 hover:shadow-lg transition-all"
           >
-            <div className="flex items-start justify-between mb-3">
-              <span className="text-xs font-medium px-2 py-1 rounded-full bg-gray-100 text-gray-700">{f.category}</span>
-              {icon(f.obligation)}
-            </div>
+           <div className="flex items-start justify-between mb-3">
+  <span className="text-xs font-medium px-2 py-1 rounded-full bg-gray-100 text-gray-700">
+    {f.category}
+  </span>
+  {icon(f.obligation as 'O' | 'C')}
+</div>
+
             <h3 className="text-lg font-bold text-gray-900 mb-2">{f.name}</h3>
             <p className="text-sm text-gray-600 mb-3">{f.description}</p>
             <div className="p-3 rounded-lg bg-gray-50">
