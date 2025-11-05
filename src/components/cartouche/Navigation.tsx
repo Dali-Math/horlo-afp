@@ -176,3 +176,4 @@ export const Navigation: React.FC<NavigationProps> = ({
     </nav>
   );
 };
+export default Navigation;
