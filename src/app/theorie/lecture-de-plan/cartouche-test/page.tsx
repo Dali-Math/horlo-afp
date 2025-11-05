@@ -6,7 +6,7 @@ import { InteractiveCartouche } from '@/components/cartouche/InteractiveCartouch
 export default function Page() {
   return (
     <main className="min-h-screen bg-gray-50">
-      <InteractiveCartouche />
+      <InteractiveCartouche darkMode={false} />
     </main>
   )
 }
