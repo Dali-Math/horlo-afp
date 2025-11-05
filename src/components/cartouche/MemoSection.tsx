@@ -385,3 +385,4 @@ export const MemoSection: React.FC<MemoSectionProps> = ({ darkMode }) => {
     </div>
   );
 };
+export default MemoSection;
