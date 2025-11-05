@@ -536,3 +536,4 @@ La norme s'applique particulièrement bien à l'horlogerie en规定ant des forma
     </div>
   );
 };
+export default NormesSection;
