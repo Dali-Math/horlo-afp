@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, Eye, Info, CheckCircle, AlertCircle, Star } from 'lucide-react';
-import { CartoucheField } from '../types';
+import { CartoucheField } from '@/types';
 import { cartoucheFieldsData, categoryColors } from './data';
 
 interface FieldsExplorerProps {
