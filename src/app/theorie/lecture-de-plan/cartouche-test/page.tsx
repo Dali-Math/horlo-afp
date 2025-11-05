@@ -13,7 +13,8 @@ import NormesSection from '@/components/cartouche/NormesSection'
 import { GraduationCap, Sparkles, Award } from 'lucide-react'
 
 export default function Page() {
-  const [currentSection, setCurrentSection] = useState('champs')
+  const [currentSection, setCurrentSection] = useState<SectionType>('champs')
+  import { SectionType } from '@/types'
   const [darkMode, setDarkMode] = useState(false)
   const [userProgress, setUserProgress] = useState({
     completedQuizzes: 0,
