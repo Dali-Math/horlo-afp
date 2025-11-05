@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { GraduationCap, Award } from 'lucide-react'
 
-// IMPORTS composant (chemin selon capture repo)
+// IMPORTS composants selon ta structure
 import Navigation from '@/components/cartouche/Navigation'
 import FieldsExplorer from '@/components/cartouche/FieldsExplorer'
 import InteractiveCartouche from '@/components/cartouche/InteractiveCartouche'
@@ -14,7 +14,7 @@ import FAQSection from '@/components/cartouche/FAQSection'
 import QuizSection from '@/components/cartouche/QuizSection'
 import NormesSection from '@/components/cartouche/NormesSection'
 
-// Typage de sections
+// Typage de section
 type SectionType = 'champs' | 'cartouche' | 'quiz' | 'tableaux' | 'memo' | 'faq' | 'normes'
 
 export default function Page() {
@@ -59,9 +59,9 @@ export default function Page() {
     setUserProgress({ completedQuizzes: newCompleted, totalScore: newScore, achievements })
   }
 
-  // mapping des sections avec les bons props
+  // mapping des sections avec props appropriés
   const sections: Record<SectionType, JSX.Element> = {
-    champs: <FieldsExplorer darkMode={darkMode} setSelectedField={setSelectedField} />,
+    champs: <FieldsExplorer darkMode={darkMode} setSelectedField={setSelectedField} />, // setSelectedField OBLIGATOIRE
     cartouche: <InteractiveCartouche darkMode={darkMode} selectedField={selectedField} setSelectedField={setSelectedField} />,
     quiz: <QuizSection darkMode={darkMode} onQuizComplete={handleQuizComplete} />,
     tableaux: <TablesSection darkMode={darkMode} />,
