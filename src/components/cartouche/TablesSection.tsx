@@ -396,3 +396,4 @@ export const TablesSection: React.FC<TablesSectionProps> = ({ darkMode }) => {
     </div>
   );
 };
+export default TablesSection;
