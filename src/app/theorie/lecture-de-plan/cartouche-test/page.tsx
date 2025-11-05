@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import InteractiveCartouche from '@/components/cartouche/InteractiveCartouche'
+import { InteractiveCartouche } from '@/components/cartouche/InteractiveCartouche'
 
 export default function Page() {
   return (
