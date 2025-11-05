@@ -7,7 +7,6 @@ import { GraduationCap, Award } from 'lucide-react'
 // IMPORTS composants selon ta structure
 import Navigation from '@/components/cartouche/Navigation'
 import FieldsExplorer from '@/components/cartouche/FieldsExplorer'
-import InteractiveCartouche from '@/components/cartouche/InteractiveCartouche'
 import TablesSection from '@/components/cartouche/TablesSection'
 import MemoSection from '@/components/cartouche/MemoSection'
 import FAQSection from '@/components/cartouche/FAQSection'
