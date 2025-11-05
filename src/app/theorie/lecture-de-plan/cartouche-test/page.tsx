@@ -11,10 +11,10 @@ import FAQSection from '@/components/cartouche/FAQSection'
 import QuizSection from '@/components/cartouche/QuizSection'
 import NormesSection from '@/components/cartouche/NormesSection'
 import { GraduationCap, Sparkles, Award } from 'lucide-react'
+import { SectionType } from '@/types' // ✅ <-- ici, à l’extérieur de la fonction !
 
 export default function Page() {
   const [currentSection, setCurrentSection] = useState<SectionType>('champs')
-  import { SectionType } from '@/types'
   const [darkMode, setDarkMode] = useState(false)
   const [userProgress, setUserProgress] = useState({
     completedQuizzes: 0,
