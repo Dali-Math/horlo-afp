@@ -139,10 +139,9 @@ export default function Page() {
       </div>
     ),
 
-    // ✅ Correction : ces deux nécessitent darkMode
     memo: <MemoSection darkMode={darkMode} />,
     faq: <FAQSection darkMode={darkMode} />,
-    quiz: <QuizSection onQuizComplete={handleQuizComplete} />,
+    quiz: <QuizSection darkMode={darkMode} onQuizComplete={handleQuizComplete} />,
     normes: <NormesSection />,
   }
 
