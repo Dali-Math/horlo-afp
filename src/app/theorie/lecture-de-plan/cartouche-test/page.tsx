@@ -1,153 +1,192 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import Navigation from '@/components/cartouche/Navigation'
-import FieldsExplorer from '@/components/cartouche/FieldsExplorer'
-import InteractiveCartouche from '@/components/cartouche/InteractiveCartouche'
-import TablesSection from '@/components/cartouche/TablesSection'
-import MemoSection from '@/components/cartouche/MemoSection'
-import FAQSection from '@/components/cartouche/FAQSection'
-import QuizSection from '@/components/cartouche/QuizSection'
-import NormesSection from '@/components/cartouche/NormesSection'
-import { GraduationCap, Award } from 'lucide-react'
-import { SectionType } from '@/types'
+import React, { useState } from 'react'
+import { ChevronLeft, CheckCircle, XCircle, Book, FileText } from 'lucide-react'
 
 export default function Page() {
-  const [currentSection, setCurrentSection] = useState<SectionType>('cartouche')
-  const [darkMode, setDarkMode] = useState(false)
-  const [userProgress, setUserProgress] = useState({
-    completedQuizzes: 0,
-    totalScore: 0,
-    achievements: [] as string[],
-  })
+  const [selectedField, setSelectedField] = useState<string | null>(null)
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('cartouche-theme')
-    if (savedTheme) {
-      setDarkMode(savedTheme === 'dark')
-    } else {
-      setDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (darkMode) document.documentElement.classList.add('dark')
-    else document.documentElement.classList.remove('dark')
-    localStorage.setItem('cartouche-theme', darkMode ? 'dark' : 'light')
-  }, [darkMode])
-
-  const toggleDarkMode = () => setDarkMode(!darkMode)
-
-  const handleQuizComplete = (score: number, completedQuestions: number) => {
-    const newScore = Math.max(userProgress.totalScore, score)
-    const newCompleted = Math.max(userProgress.completedQuizzes, completedQuestions)
-    const achievements = [...userProgress.achievements]
-
-    if (score >= 80 && !achievements.includes('expert')) achievements.push('expert')
-    if (score === 100 && !achievements.includes('parfait')) achievements.push('parfait')
-    if (completedQuestions >= 15 && !achievements.includes('complet')) achievements.push('complet')
-
-    setUserProgress({ completedQuizzes: newCompleted, totalScore: newScore, achievements })
+  const handleFieldClick = (fieldId: string) => {
+    setSelectedField(fieldId)
   }
 
-  const sections: Record<string, JSX.Element> = {
-    cartouche: <InteractiveCartouche darkMode={darkMode} />,
-    champs: <FieldsExplorer darkMode={darkMode} />,
-    tableaux: <TablesSection darkMode={darkMode} />,
-    memo: <MemoSection darkMode={darkMode} />,
-    faq: <FAQSection darkMode={darkMode} />,
-    quiz: <QuizSection darkMode={darkMode} onQuizComplete={handleQuizComplete} />,
-    normes: <NormesSection darkMode={darkMode} />,
-  }
+  const cartoucheFields = [
+    { id: 'entreprise', name: "Nom de l'entreprise", type: 'O' },
+    { id: 'titre', name: 'Titre', type: 'O' },
+    { id: 'numero', name: 'Numéro de pièce', type: 'O' },
+    { id: 'dessinateur', name: 'Dessinateur', type: 'O' },
+    { id: 'materiau', name: 'Matériau', type: 'O' },
+    { id: 'traitement', name: 'Traitement de surface', type: 'C' },
+    { id: 'masse', name: 'Masse', type: 'C' },
+    { id: 'echelle', name: 'Échelle', type: 'O' },
+    { id: 'verificateur', name: 'Vérificateur', type: 'O' },
+    { id: 'tolerance', name: 'Tolérance générale', type: 'C' },
+    { id: 'projection', name: "Méthode d'application", type: 'O' },
+    { id: 'format', name: 'Format', type: 'O' },
+    { id: 'indice', name: 'Indice de révision', type: 'O' },
+    { id: 'date', name: 'Date', type: 'O' }
+  ]
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
-      <Navigation
-        currentSection={currentSection}
-        onSectionChange={setCurrentSection}
-        userProgress={userProgress}
-        darkMode={darkMode}
-      />
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-slate-100">
+      <header className="py-6 border-b border-gray-200 text-center">
+        <h1 className="text-3xl font-bold text-gray-800">Schéma Interactif du Cartouche</h1>
+        <p className="text-gray-500 text-sm mt-1">
+          Cliquez sur un champ pour découvrir sa fonction selon la norme ISO 7200
+        </p>
+      </header>
 
-      <main className="relative">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentSection}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            {sections[currentSection]}
-          </motion.div>
-        </AnimatePresence>
-      </main>
+      <main className="max-w-6xl mx-auto px-6 py-12">
+        <div className="bg-slate-800 text-white rounded-2xl p-8 shadow-2xl">
+          <div className="text-center mb-6 text-slate-300 text-sm">
+            Position : Coin inférieur droit du plan (ISO 5457)
+          </div>
 
-      <motion.button
-        onClick={toggleDarkMode}
-        className={`fixed bottom-6 right-6 w-12 h-12 rounded-full shadow-lg transition-all duration-300 ${
-          darkMode ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-gray-800 hover:bg-gray-900'
-        }`}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-      >
-        <div className="flex items-center justify-center">
-          {darkMode ? <span className="text-white text-xl">☀️</span> : <span className="text-white text-xl">🌙</span>}
-        </div>
-      </motion.button>
+          <div className="bg-slate-700 rounded-xl p-6">
+            {/* --- Ligne 1 --- */}
+            <div className="grid grid-cols-3 gap-3 mb-3">
+              <button
+                onClick={() => handleFieldClick('entreprise')}
+                className={`p-3 rounded-lg border-2 transition ${
+                  selectedField === 'entreprise'
+                    ? 'border-blue-400 bg-blue-500/20'
+                    : 'border-slate-500 hover:border-slate-300'
+                }`}
+              >
+                <div className="flex justify-between text-sm font-medium">
+                  <span>Nom de l'entr...</span>
+                  <span className="bg-red-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">O</span>
+                </div>
+              </button>
 
-      {(currentSection === 'cartouche' || currentSection === 'champs') && (
-        <motion.div
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1 }}
-          className={`fixed bottom-6 left-6 p-4 rounded-xl shadow-lg ${
-            darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'
-          }`}
-        >
-          <div className="flex items-center space-x-3">
-            <GraduationCap className={`w-6 h-6 ${darkMode ? 'text-blue-400' : 'text-blue-500'}`} />
-            <div>
-              <div className={`text-sm font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                Formation Cartouches Horlogers
+              <button
+                onClick={() => handleFieldClick('titre')}
+                className={`p-3 rounded-lg border-2 transition ${
+                  selectedField === 'titre'
+                    ? 'border-blue-400 bg-blue-500/20'
+                    : 'border-slate-500 hover:border-slate-300'
+                }`}
+              >
+                <div className="flex justify-between text-sm font-medium">
+                  <span>Titre</span>
+                  <span className="bg-red-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">O</span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleFieldClick('numero')}
+                className={`p-3 rounded-lg border-2 transition ${
+                  selectedField === 'numero'
+                    ? 'border-blue-400 bg-blue-500/20'
+                    : 'border-slate-500 hover:border-slate-300'
+                }`}
+              >
+                <div className="flex justify-between text-sm font-medium">
+                  <span>Numéro de pièce</span>
+                  <span className="bg-red-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">O</span>
+                </div>
+              </button>
+            </div>
+
+            {/* --- Ligne 2 --- */}
+            <div className="grid grid-cols-4 gap-3 mb-3">
+              <button
+                onClick={() => handleFieldClick('dessinateur')}
+                className={`p-3 rounded-lg border-2 transition ${
+                  selectedField === 'dessinateur'
+                    ? 'border-blue-400 bg-blue-500/20'
+                    : 'border-slate-500 hover:border-slate-300'
+                }`}
+              >
+                <div className="flex justify-between text-sm font-medium">
+                  <span>Dessinateur</span>
+                  <span className="bg-red-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">O</span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleFieldClick('materiau')}
+                className={`p-3 rounded-lg border-2 transition ${
+                  selectedField === 'materiau'
+                    ? 'border-blue-400 bg-blue-500/20'
+                    : 'border-slate-500 hover:border-slate-300'
+                }`}
+              >
+                <div className="flex justify-between text-sm font-medium">
+                  <span>Matériau</span>
+                  <span className="bg-red-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">O</span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleFieldClick('traitement')}
+                className={`p-3 rounded-lg border-2 transition ${
+                  selectedField === 'traitement'
+                    ? 'border-blue-400 bg-blue-500/20'
+                    : 'border-slate-500 hover:border-slate-300'
+                }`}
+              >
+                <div className="flex justify-between text-sm font-medium">
+                  <span>Traitement de...</span>
+                  <span className="bg-blue-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">C</span>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleFieldClick('masse')}
+                className={`p-3 rounded-lg border-2 transition ${
+                  selectedField === 'masse'
+                    ? 'border-blue-400 bg-blue-500/20'
+                    : 'border-slate-500 hover:border-slate-300'
+                }`}
+              >
+                <div className="flex justify-between text-sm font-medium">
+                  <span>Masse</span>
+                  <span className="bg-blue-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">C</span>
+                </div>
+              </button>
+            </div>
+
+            {/* --- Ligne 3 --- */}
+            <div className="grid grid-cols-6 gap-3">
+              {cartoucheFields.slice(8).map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => handleFieldClick(f.id)}
+                  className={`p-3 rounded-lg border-2 transition ${
+                    selectedField === f.id
+                      ? 'border-blue-400 bg-blue-500/20'
+                      : 'border-slate-500 hover:border-slate-300'
+                  }`}
+                >
+                  <div className="flex justify-between text-sm font-medium">
+                    <span>{f.name.length > 12 ? f.name.slice(0, 10) + '...' : f.name}</span>
+                    <span
+                      className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
+                        f.type === 'O' ? 'bg-red-500' : 'bg-blue-500'
+                      }`}
+                    >
+                      {f.type}
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {/* Légende */}
+            <div className="flex justify-center items-center gap-6 mt-6 text-slate-300 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="bg-red-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">O</span>
+                Obligatoire
               </div>
-              <div className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                7 sections • 15 questions • Normes ISO
+              <div className="flex items-center gap-2">
+                <span className="bg-blue-500 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">C</span>
+                Conditionnel
               </div>
             </div>
           </div>
-        </motion.div>
-      )}
-
-      <AnimatePresence>
-        {userProgress.achievements.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 100 }}
-            className="fixed top-1/2 right-6 transform -translate-y-1/2 space-y-3"
-          >
-            {userProgress.achievements.map((ach, i) => (
-              <motion.div
-                key={ach}
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ delay: i * 0.2, type: 'spring' }}
-                className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                  ach === 'parfait'
-                    ? 'bg-gradient-to-r from-yellow-400 to-yellow-600'
-                    : ach === 'expert'
-                    ? 'bg-gradient-to-r from-blue-400 to-blue-600'
-                    : 'bg-gradient-to-r from-green-400 to-green-600'
-                } shadow-lg`}
-              >
-                <Award className="w-6 h-6 text-white" />
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+        </div>
+      </main>
     </div>
   )
 }
