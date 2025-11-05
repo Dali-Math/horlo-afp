@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, Trophy, Brain, FileText, HelpCircle, Scale, Target } from 'lucide-react';
-import { SectionType } from '../types';
+import { SectionType } from '@/types';
 
 interface NavigationProps {
   currentSection: SectionType;
