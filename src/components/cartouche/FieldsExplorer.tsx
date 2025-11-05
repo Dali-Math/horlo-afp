@@ -342,3 +342,4 @@ export const FieldsExplorer: React.FC<FieldsExplorerProps> = ({ darkMode }) => {
     </div>
   );
 };
+export default FieldsExplorer;
