@@ -10,7 +10,7 @@ import {
   Target, X, Moon, Sun, Building, Tag, Settings, User, Calendar, 
   Percent, Cpu, Hash, Beaker, Layers, Printer, Sparkles
 } from 'lucide-react'
-import { NormesSection } from '@/components/NormesSection';
+import { NormesSection as NormesISO } from '@/components/NormesSection';
 
 // Style pour le scroll horizontal sur mobile
 const styles = `
@@ -1836,7 +1836,7 @@ function App() {
       case 'faq':
         return <FAQSection darkMode={darkMode} />;
       case 'normes':
-        return <NormesSection darkMode={darkMode} />;
+        return <NormesISO darkMode={darkMode} />;
       default:
         return <FieldsExplorer darkMode={darkMode} />;
     }
