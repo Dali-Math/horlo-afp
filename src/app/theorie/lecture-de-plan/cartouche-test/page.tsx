@@ -2299,8 +2299,7 @@ const Page: React.FC<PageProps> = () => {
     });
   };
 
-  const handleFieldSelect = (fieldId: string) => {
-    setSelectedField(fieldId);
+  const handleFieldSelect = (fieldId: string | null) => setSelectedField(fieldId);
     setUserProgress(prev => {
       if (prev.fieldsLearned.includes(fieldId)) {
         return prev;
