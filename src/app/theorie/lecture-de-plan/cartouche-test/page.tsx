@@ -609,7 +609,7 @@ const Navigation = ({ currentSection, onSectionChange, darkMode, userProgress }:
 
           <div className="flex items-center space-x-3">
             <Trophy className="w-4 h-4 text-yellow-500" />
-            <span className={darkMode ? 'text-gray-300' : 'text-gray-700'}>{userProgress.totalScore}%</span>
+            <span className={darkMode ? 'text-gray-300' : 'text-gray-700'}>{userProgress?.totalScore ?? 0}%</span>
           </div>
         </div>
 
