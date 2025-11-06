@@ -1,6 +1,5 @@
 'use client'
 import Navigation from '@/components/cartouche/Navigation';
-import { InteractiveCartouche } from '@/components/cartouche/InteractiveCartouche';
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
