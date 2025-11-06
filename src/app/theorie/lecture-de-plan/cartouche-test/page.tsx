@@ -2101,8 +2101,16 @@ export default function Page() {
       faq: <FAQSection darkMode={darkMode} />,
       normes: <NormesSection darkMode={darkMode} />,
     }
+      return (
+  <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <Navigation
+      currentSection={currentSection}
+      onSectionChange={setCurrentSection}
+      userProgress={userProgress}
+      darkMode={darkMode}
+    />
 
-    return (
+    <main className="relative">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSection}
@@ -2114,24 +2122,16 @@ export default function Page() {
           {sections[currentSection]}
         </motion.div>
       </AnimatePresence>
-    )
-  
 
-  return (
-  <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
-    <Navigation
-      currentSection={currentSection}
-      onSectionChange={setCurrentSection}
-      userProgress={userProgress}
-      darkMode={darkMode}
-    />
-
-    <main className="relative">
       {renderSection()}
     </main>
 
     {/* Floating Action Buttons */}
     <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
+      {/* ici tu peux mettre tes boutons */}
+    </div>
+  </div>
+);
       {/* Dark Mode Toggle */}
       <Tooltip content={darkMode ? "Mode clair" : "Mode sombre"}>
         <motion.button
