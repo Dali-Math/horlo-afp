@@ -1,5 +1,6 @@
 'use client'
-
+import Navigation from '@/components/cartouche/Navigation';
+import { InteractiveCartouche } from '@/components/cartouche/InteractiveCartouche';
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
@@ -363,9 +364,16 @@ const FAQSection = ({ darkMode }: any) => {
 };
 const Page = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-3xl font-bold text-blue-500">Page test du cartouche</h1>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <Navigation
+        currentSection="cartouche"
+        onSectionChange={() => {}}
+        userProgress={{ totalScore: 0 }}
+        darkMode={true}
+      />
+      <InteractiveCartouche darkMode={true} />
     </div>
   );
 };
+
 export default Page;
