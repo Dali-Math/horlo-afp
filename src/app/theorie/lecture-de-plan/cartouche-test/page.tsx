@@ -2197,25 +2197,25 @@ function App() {
       }
 
   return (
-    <>
-      <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
-        {/* Navigation */}
-        <Navigation currentSection={currentSection} />
+  <>
+    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+      {/* Navigation */}
+      <Navigation currentSection={currentSection} />
 
-        {/* Contenu principal */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentSection}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            {renderCurrentSection()}
-          </motion.div>
-        </AnimatePresence>
-      </div>
-    </>
-  );
-}
+      {/* Contenu principal */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentSection}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          {renderCurrentSection()}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  </>
+);
+
 export default App;
