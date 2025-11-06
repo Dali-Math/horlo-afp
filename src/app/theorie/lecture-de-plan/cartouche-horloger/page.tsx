@@ -1,3 +1,4 @@
+
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -10,6 +11,11 @@ import {
   Target, X, Moon, Sun, Building, Tag, Settings, User, Calendar, 
   Percent, Cpu, Hash, Beaker, Layers, Printer, Sparkles
 } from 'lucide-react'
+import { NormesSection as NormesISO } from '@/components/NormesSection';
+// import { FAQSection } from '@/components/cartouche/FAQSection';
+// import { MemoSection } from '@/components/cartouche/MemoSection';
+// import { QuizSection } from '@/components/cartouche/QuizSection';
+// import { TablesSection } from '@/components/cartouche/TablesSection';
 
 // Style pour le scroll horizontal sur mobile
 const styles = `
@@ -1835,7 +1841,7 @@ function App() {
       case 'faq':
         return <FAQSection darkMode={darkMode} />;
       case 'normes':
-        return <NormesSection darkMode={darkMode} />;
+        return <NormesISO darkMode={darkMode} />;
       default:
         return <FieldsExplorer darkMode={darkMode} />;
     }
