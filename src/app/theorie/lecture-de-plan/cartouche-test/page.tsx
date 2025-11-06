@@ -10,6 +10,7 @@ import {
   Target, X, Moon, Sun, Building, Tag, Settings, User, Calendar, 
   Percent, Cpu, Hash, Beaker, Layers, Printer, Sparkles
 } from 'lucide-react'
+import Navbar from '@/components/Navbar'
 
 // Données pour la section Memo intégrées directement
 const erreursFrequentes = [
@@ -2177,6 +2178,8 @@ function App() {
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+            {/* Navbar principale du site */}
+            <Navbar />
       {/* Navigation */}
       <Navigation 
         currentSection={currentSection}
