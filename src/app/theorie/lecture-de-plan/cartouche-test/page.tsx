@@ -8,7 +8,7 @@ import {
   Scale, BookOpen, ChevronDown, ChevronUp, Download, ExternalLink,
   AlertTriangle, Lightbulb, Eye, Info, Search, Filter, HelpCircle,
   Target, X, Moon, Sun, Building, Tag, Settings, User, Calendar, 
-  Percent, Cpu, Hash, Beaker, Weight, Layers, Printer, Sparkles
+  Percent, Cpu, Hash, Beaker, Layers, Printer, Sparkles
 } from 'lucide-react'
 
 // Données pour la section Memo intégrées directement
