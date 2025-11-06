@@ -367,3 +367,4 @@ const FAQSection = ({ darkMode }: any) => {
     </div>
   );
 };
+export default Page;
