@@ -1,4 +1,3 @@
-
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -11,7 +10,22 @@ import {
   Target, X, Moon, Sun, Building, Tag, Settings, User, Calendar, 
   Percent, Cpu, Hash, Beaker, Layers, Printer, Sparkles
 } from 'lucide-react'
-import Navbar from '@/components/Navbar'
+
+// Style pour le scroll horizontal sur mobile
+const styles = `
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  @media (max-width: 640px) {
+    .touch-pan-x {
+      touch-action: pan-x;
+    }
+  }
+`;
 
 // Données pour la section Memo intégrées directement
 const erreursFrequentes = [
@@ -136,7 +150,7 @@ const traitementsData = [
   }
 ];
 
-// Types et Data (simplifié pour la taille)
+// Types et Data
 type SectionType = 'champs' | 'cartouche' | 'quiz' | 'tableaux' | 'memo' | 'faq' | 'normes';
 
 interface CartoucheField {
@@ -172,20 +186,20 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-6">
+    <div className="min-h-screen pt-24 pb-12 px-3 sm:px-6">
       <div className="max-w-6xl mx-auto">
         {/* En-tête */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h1 className={`text-4xl md:text-5xl font-bold mb-4 ${
+          <h1 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 ${
             darkMode ? 'text-white' : 'text-gray-900'
           }`}>
             Mémo Technique
           </h1>
-          <p className={`text-xl max-w-3xl mx-auto mb-6 ${
+          <p className={`text-base sm:text-xl max-w-3xl mx-auto mb-6 ${
             darkMode ? 'text-gray-300' : 'text-gray-600'
           }`}>
             Les erreurs à éviter et les bonnes pratiques essentielles pour vos cartouches horlogers
@@ -194,7 +208,7 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
           {/* Bouton de checklist interactive */}
           <motion.button
             onClick={toggleChecklist}
-            className={`inline-flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+            className={`inline-flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base rounded-xl font-semibold transition-all duration-300 ${
               showChecklist
                 ? 'bg-green-500 text-white'
                 : darkMode
@@ -204,8 +218,9 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <CheckCircle className="w-5 h-5" />
-            <span>{showChecklist ? 'Masquer la checklist' : 'Mode checklist interactif'}</span>
+            <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">{showChecklist ? 'Masquer la checklist' : 'Mode checklist interactif'}</span>
+            <span className="sm:hidden">{showChecklist ? 'Masquer' : 'Checklist'}</span>
           </motion.button>
 
           {/* Barre de progression */}
@@ -215,7 +230,7 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
               animate={{ opacity: 1, height: 'auto' }}
               className="mt-6 max-w-md mx-auto"
             >
-              <div className={`flex items-center justify-between text-sm mb-2 ${
+              <div className={`flex items-center justify-between text-xs sm:text-sm mb-2 ${
                 darkMode ? 'text-gray-300' : 'text-gray-600'
               }`}>
                 <span>Progression</span>
@@ -231,7 +246,7 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
                   transition={{ duration: 0.5 }}
                 />
               </div>
-              <p className={`text-center mt-2 text-sm ${
+              <p className={`text-center mt-2 text-xs sm:text-sm ${
                 darkMode ? 'text-gray-400' : 'text-gray-500'
               }`}>
                 {Math.round(getProgress())}% complété
@@ -245,23 +260,23 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
-          className="mb-12"
+          className="mb-8 sm:mb-12"
         >
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center">
-              <X className="w-6 h-6 text-white" />
+          <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-500 rounded-xl flex items-center justify-center">
+              <X className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
-              <h2 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-2xl sm:text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                 6 Erreurs Fréquentes
               </h2>
-              <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-sm sm:text-base ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Évitez ces pièges courants qui peuvent compromettre vos plans
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {erreursFrequentes.map((erreur, index) => (
               <motion.div
                 key={index}
@@ -269,7 +284,7 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={() => setSelectedCard(selectedCard === index ? null : index)}
-                className={`p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:scale-105 ${
+                className={`p-4 sm:p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:scale-105 ${
                   selectedCard === index
                     ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
                     : darkMode
@@ -279,18 +294,18 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
                 whileHover={{ y: -5 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <span className="text-white font-bold text-sm">{index + 1}</span>
+                <div className="flex items-start space-x-3 sm:space-x-4">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-bold text-xs sm:text-sm">{index + 1}</span>
                   </div>
                   <div className="flex-1">
-                    <p className={`text-sm leading-relaxed ${
+                    <p className={`text-xs sm:text-sm leading-relaxed ${
                       darkMode ? 'text-gray-300' : 'text-gray-700'
                     }`}>
                       {erreur}
                     </p>
                   </div>
-                  <AlertTriangle className={`w-5 h-5 ${
+                  <AlertTriangle className={`w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 ${
                     darkMode ? 'text-red-400' : 'text-red-500'
                   }`} />
                 </div>
@@ -304,30 +319,30 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="mb-12"
+          className="mb-8 sm:mb-12"
         >
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
-              <Lightbulb className="w-6 h-6 text-white" />
+          <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-500 rounded-xl flex items-center justify-center">
+              <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
-              <h2 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h2 className={`text-2xl sm:text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                 6 Bonnes Pratiques
               </h2>
-              <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-sm sm:text-base ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Adoptez ces habitudes pour des cartouches professionnels
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {bonnesPratiques.map((pratique, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
-                className={`relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
+                className={`relative p-4 sm:p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
                   showChecklist
                     ? checkedItems.has(index)
                       ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
@@ -340,13 +355,13 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
               >
                 {/* Checkbox pour le mode checklist */}
                 {showChecklist && (
-                  <div className="absolute top-4 right-4">
+                  <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleCheckItem(index);
                       }}
-                      className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${
+                      className={`w-5 h-5 sm:w-6 sm:h-6 rounded border-2 flex items-center justify-center transition-all ${
                         checkedItems.has(index)
                           ? 'bg-green-500 border-green-500'
                           : darkMode
@@ -355,22 +370,22 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
                       }`}
                     >
                       {checkedItems.has(index) && (
-                        <CheckCircle className="w-4 h-4 text-white" />
+                        <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                       )}
                     </button>
                   </div>
                 )}
 
-                <div className="flex items-start space-x-4">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                <div className="flex items-start space-x-3 sm:space-x-4">
+                  <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
                     showChecklist && checkedItems.has(index)
                       ? 'bg-green-500'
                       : 'bg-green-500'
                   }`}>
-                    <span className="text-white font-bold text-sm">{index + 1}</span>
+                    <span className="text-white font-bold text-xs sm:text-sm">{index + 1}</span>
                   </div>
                   <div className="flex-1">
-                    <p className={`text-sm leading-relaxed ${
+                    <p className={`text-xs sm:text-sm leading-relaxed ${
                       showChecklist && checkedItems.has(index)
                         ? 'text-green-700 dark:text-green-300 line-through'
                         : darkMode
@@ -381,9 +396,9 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
                     </p>
                   </div>
                   {checkedItems.has(index) ? (
-                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-green-500" />
                   ) : (
-                    <Eye className={`w-5 h-5 ${
+                    <Eye className={`w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 ${
                       darkMode ? 'text-gray-400' : 'text-gray-500'
                     }`} />
                   )}
@@ -398,29 +413,29 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className={`p-8 rounded-2xl ${
+          className={`p-6 sm:p-8 rounded-2xl ${
             darkMode ? 'bg-blue-900/20 border border-blue-800' : 'bg-blue-50 border border-blue-200'
           }`}
         >
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
-              <BookOpen className="w-5 h-5 text-white" />
+          <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-500 rounded-xl flex items-center justify-center">
+              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
-            <h3 className={`text-2xl font-bold ${
+            <h3 className={`text-xl sm:text-2xl font-bold ${
               darkMode ? 'text-blue-300' : 'text-blue-800'
             }`}>
               Conseils d'Expert
             </h3>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <h4 className={`font-semibold mb-3 ${
+              <h4 className={`font-semibold mb-2 sm:mb-3 text-sm sm:text-base ${
                 darkMode ? 'text-blue-200' : 'text-blue-700'
               }`}>
                 🎯 Avant de dessiner :
               </h4>
-              <ul className={`space-y-2 text-sm ${
+              <ul className={`space-y-1 sm:space-y-2 text-xs sm:text-sm ${
                 darkMode ? 'text-blue-100' : 'text-blue-600'
               }`}>
                 <li>• Préparez tous les champs du cartouche</li>
@@ -431,12 +446,12 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
             </div>
             
             <div>
-              <h4 className={`font-semibold mb-3 ${
+              <h4 className={`font-semibold mb-2 sm:mb-3 text-sm sm:text-base ${
                 darkMode ? 'text-blue-200' : 'text-blue-700'
               }`}>
                 ✅ Avant de finaliser :
               </h4>
-              <ul className={`space-y-2 text-sm ${
+              <ul className={`space-y-1 sm:space-y-2 text-xs sm:text-sm ${
                 darkMode ? 'text-blue-100' : 'text-blue-600'
               }`}>
                 <li>• Contrôlez tous les champs obligatoires</li>
@@ -463,16 +478,16 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className={`max-w-lg w-full rounded-2xl p-8 ${
+                className={`max-w-lg w-full rounded-2xl p-6 sm:p-8 ${
                   darkMode ? 'bg-gray-800' : 'bg-white'
                 }`}
               >
-                <div className="flex items-start justify-between mb-6">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center">
-                      <AlertTriangle className="w-5 h-5 text-white" />
+                <div className="flex items-start justify-between mb-4 sm:mb-6">
+                  <div className="flex items-center space-x-2 sm:space-x-3">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 rounded-xl flex items-center justify-center">
+                      <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
-                    <h3 className={`text-xl font-bold ${
+                    <h3 className={`text-lg sm:text-xl font-bold ${
                       darkMode ? 'text-white' : 'text-gray-900'
                     }`}>
                       Erreur #{selectedCard + 1}
@@ -489,7 +504,7 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
                 </div>
 
                 <div className="space-y-4">
-                  <p className={`text-lg ${
+                  <p className={`text-base sm:text-lg ${
                     darkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     {erreursFrequentes[selectedCard]}
@@ -498,12 +513,12 @@ const MemoSection: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
                   <div className={`p-4 rounded-lg ${
                     darkMode ? 'bg-red-900/20 border border-red-800' : 'bg-red-50 border border-red-200'
                   }`}>
-                    <h4 className={`font-semibold mb-2 ${
+                    <h4 className={`font-semibold mb-2 text-sm sm:text-base ${
                       darkMode ? 'text-red-300' : 'text-red-700'
                     }`}>
                       💡 Comment l'éviter :
                     </h4>
-                    <p className={`text-sm ${
+                    <p className={`text-xs sm:text-sm ${
                       darkMode ? 'text-red-100' : 'text-red-600'
                     }`}>
                       {selectedCard === 0 && "Utilisez une checklist ISO 7200 et vérifiez chaque champ obligatoire avant la finalisation."}
@@ -580,14 +595,14 @@ const Navigation = ({ currentSection, onSectionChange, darkMode, userProgress }:
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-lg border-b ${darkMode ? 'bg-gray-900/80 border-gray-800' : 'bg-white/80 border-gray-200'}`}>
-      <div className="container mx-auto px-6 py-3">
+    <nav className={`fixed top-0 left-0 right-0 z-40 backdrop-blur-lg border-b ${darkMode ? 'bg-gray-900/95 border-gray-800' : 'bg-white/95 border-gray-200'}`}>
+      <div className="container mx-auto px-3 sm:px-6 py-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-white" />
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+              <BookOpen className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
             </div>
-            <h1 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Cartouche ISO</h1>
+            <h1 className={`text-base sm:text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>Cartouche ISO</h1>
           </div>
 
           <div className="hidden lg:flex items-center space-x-2">
@@ -607,22 +622,22 @@ const Navigation = ({ currentSection, onSectionChange, darkMode, userProgress }:
             })}
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="hidden sm:flex items-center space-x-2 sm:space-x-3">
             <Trophy className="w-4 h-4 text-yellow-500" />
-            <span className={darkMode ? 'text-gray-300' : 'text-gray-700'}>{userProgress.totalScore}%</span>
+            <span className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{userProgress.totalScore}%</span>
           </div>
         </div>
 
-        <div className="lg:hidden mt-3 flex space-x-1 overflow-x-auto">
+        <div className="lg:hidden mt-3 flex space-x-1 overflow-x-auto pb-2 scrollbar-hide touch-pan-x">
           {sections.map((item) => {
             const Icon = item.icon;
             return (
               <button key={item.id} onClick={() => onSectionChange(item.id)}
-                className={`flex-shrink-0 px-3 py-2 rounded-lg text-sm ${
+                className={`flex-shrink-0 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm ${
                   currentSection === item.id ? 'bg-blue-500 text-white' : darkMode ? 'text-gray-400' : 'text-gray-600'
                 }`}>
                 <Icon className="w-4 h-4 mx-auto mb-1" />
-                <div>{item.label}</div>
+                <div className="whitespace-nowrap">{item.label}</div>
               </button>
             );
           })}
@@ -637,89 +652,89 @@ const InteractiveCartouche = ({ darkMode, selectedField, setSelectedField }: any
   const selectedFieldData = cartoucheFieldsData.find(f => f.id === selectedField);
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-6">
+    <div className="min-h-screen pt-24 pb-12 px-3 sm:px-6">
       <div className="max-w-6xl mx-auto">
-        <h1 className={`text-4xl font-bold mb-8 text-center ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+        <h1 className={`text-3xl sm:text-4xl font-bold mb-6 sm:mb-8 text-center ${darkMode ? 'text-white' : 'text-gray-900'}`}>
           Schéma Interactif du Cartouche
         </h1>
 
-        <div className="bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl p-8 mb-6 shadow-2xl">
+        <div className="bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl p-4 sm:p-8 mb-6 shadow-2xl">
           <div className="mb-6 text-center">
-            <span className="text-sm text-slate-300 bg-slate-900/50 px-4 py-2 rounded-full">
+            <span className="text-xs sm:text-sm text-slate-300 bg-slate-900/50 px-3 sm:px-4 py-2 rounded-full inline-block">
               Position : Coin inférieur droit (ISO 5457)
             </span>
           </div>
           
-          <div className="bg-slate-700 rounded-xl p-6 border-2 border-slate-600">
-            <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(6, 1fr)', gridTemplateRows: 'repeat(3, auto)' }}>
-              <button onClick={() => setSelectedField('entreprise')} className={`p-4 rounded-lg transition-all text-left ${selectedField === 'entreprise' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '1 / 3', gridRow: '1 / 3' }}>
+          <div className="bg-slate-700 rounded-xl p-3 sm:p-6 border-2 border-slate-600 overflow-x-auto">
+            <div className="grid gap-2 sm:gap-3 min-w-[600px]" style={{ gridTemplateColumns: 'repeat(6, 1fr)', gridTemplateRows: 'repeat(3, auto)' }}>
+              <button onClick={() => setSelectedField('entreprise')} className={`p-3 sm:p-4 rounded-lg transition-all text-left ${selectedField === 'entreprise' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '1 / 3', gridRow: '1 / 3' }}>
                 <div className="flex justify-between mb-2">
-                  <span className={`text-sm font-semibold ${selectedField === 'entreprise' ? 'text-white' : 'text-slate-200'}`}>Nom de l'entr...</span>
-                  <span className="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center text-white text-xs font-bold">O</span>
+                  <span className={`text-xs sm:text-sm font-semibold ${selectedField === 'entreprise' ? 'text-white' : 'text-slate-200'}`}>Nom de l'entr...</span>
+                  <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-red-500 flex items-center justify-center text-white text-[10px] sm:text-xs font-bold">O</span>
                 </div>
-                <div className={`text-xs mt-8 ${selectedField === 'entreprise' ? 'text-blue-100' : 'text-slate-400'}`}>Dessinateur</div>
+                <div className={`text-[10px] sm:text-xs mt-4 sm:mt-8 ${selectedField === 'entreprise' ? 'text-blue-100' : 'text-slate-400'}`}>Dessinateur</div>
               </button>
               
-              <button onClick={() => setSelectedField('titre')} className={`p-4 rounded-lg ${selectedField === 'titre' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '3 / 6' }}>
-                <div className="flex justify-between"><span className={`text-sm font-semibold ${selectedField === 'titre' ? 'text-white' : 'text-slate-200'}`}>Titre</span><span className="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center text-white text-xs font-bold">O</span></div>
+              <button onClick={() => setSelectedField('titre')} className={`p-3 sm:p-4 rounded-lg ${selectedField === 'titre' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '3 / 6' }}>
+                <div className="flex justify-between"><span className={`text-xs sm:text-sm font-semibold ${selectedField === 'titre' ? 'text-white' : 'text-slate-200'}`}>Titre</span><span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-red-500 flex items-center justify-center text-white text-[10px] sm:text-xs font-bold">O</span></div>
               </button>
               
-              <button onClick={() => setSelectedField('numero-piece')} className={`p-4 rounded-lg ${selectedField === 'numero-piece' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '6' }}>
-                <div className="flex justify-between"><span className={`text-xs font-semibold ${selectedField === 'numero-piece' ? 'text-white' : 'text-slate-200'}`}>N° pièce</span><span className="w-4 h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[10px] font-bold">O</span></div>
+              <button onClick={() => setSelectedField('numero-piece')} className={`p-3 sm:p-4 rounded-lg ${selectedField === 'numero-piece' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '6' }}>
+                <div className="flex justify-between"><span className={`text-[10px] sm:text-xs font-semibold ${selectedField === 'numero-piece' ? 'text-white' : 'text-slate-200'}`}>N° pièce</span><span className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[8px] sm:text-[10px] font-bold">O</span></div>
               </button>
 
-              <button onClick={() => setSelectedField('materiau')} className={`p-3 rounded-lg ${selectedField === 'materiau' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '3', gridRow: '2' }}>
-                <div className="flex justify-between"><span className={`text-xs font-semibold ${selectedField === 'materiau' ? 'text-white' : 'text-slate-200'}`}>Matériau</span><span className="w-4 h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[10px] font-bold">O</span></div>
+              <button onClick={() => setSelectedField('materiau')} className={`p-2 sm:p-3 rounded-lg ${selectedField === 'materiau' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '3', gridRow: '2' }}>
+                <div className="flex justify-between"><span className={`text-[10px] sm:text-xs font-semibold ${selectedField === 'materiau' ? 'text-white' : 'text-slate-200'}`}>Matériau</span><span className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[8px] sm:text-[10px] font-bold">O</span></div>
               </button>
-              <button onClick={() => setSelectedField('traitement')} className={`p-3 rounded-lg ${selectedField === 'traitement' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '4', gridRow: '2' }}>
-                <div className="flex justify-between"><span className={`text-xs font-semibold ${selectedField === 'traitement' ? 'text-white' : 'text-slate-200'}`}>Traitement</span><span className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center text-white text-[10px] font-bold">C</span></div>
+              <button onClick={() => setSelectedField('traitement')} className={`p-2 sm:p-3 rounded-lg ${selectedField === 'traitement' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '4', gridRow: '2' }}>
+                <div className="flex justify-between"><span className={`text-[10px] sm:text-xs font-semibold ${selectedField === 'traitement' ? 'text-white' : 'text-slate-200'}`}>Traitement</span><span className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-blue-500 flex items-center justify-center text-white text-[8px] sm:text-[10px] font-bold">C</span></div>
               </button>
-              <button onClick={() => setSelectedField('masse')} className={`p-3 rounded-lg ${selectedField === 'masse' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '5', gridRow: '2' }}>
-                <div className="flex justify-between"><span className={`text-xs font-semibold ${selectedField === 'masse' ? 'text-white' : 'text-slate-200'}`}>Masse</span><span className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center text-white text-[10px] font-bold">C</span></div>
+              <button onClick={() => setSelectedField('masse')} className={`p-2 sm:p-3 rounded-lg ${selectedField === 'masse' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '5', gridRow: '2' }}>
+                <div className="flex justify-between"><span className={`text-[10px] sm:text-xs font-semibold ${selectedField === 'masse' ? 'text-white' : 'text-slate-200'}`}>Masse</span><span className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-blue-500 flex items-center justify-center text-white text-[8px] sm:text-[10px] font-bold">C</span></div>
               </button>
-              <button onClick={() => setSelectedField('echelle')} className={`p-3 rounded-lg ${selectedField === 'echelle' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '6', gridRow: '2' }}>
-                <div className="flex justify-between"><span className={`text-xs font-semibold ${selectedField === 'echelle' ? 'text-white' : 'text-slate-200'}`}>Échelle</span><span className="w-4 h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[10px] font-bold">O</span></div>
+              <button onClick={() => setSelectedField('echelle')} className={`p-2 sm:p-3 rounded-lg ${selectedField === 'echelle' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '6', gridRow: '2' }}>
+                <div className="flex justify-between"><span className={`text-[10px] sm:text-xs font-semibold ${selectedField === 'echelle' ? 'text-white' : 'text-slate-200'}`}>Échelle</span><span className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[8px] sm:text-[10px] font-bold">O</span></div>
               </button>
 
-              <button onClick={() => setSelectedField('verificateur')} className={`p-3 rounded-lg ${selectedField === 'verificateur' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '1', gridRow: '3' }}>
-                <div className="flex justify-between"><span className={`text-xs font-semibold ${selectedField === 'verificateur' ? 'text-white' : 'text-slate-200'}`}>Vérif.</span><span className="w-4 h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[10px] font-bold">O</span></div>
+              <button onClick={() => setSelectedField('verificateur')} className={`p-2 sm:p-3 rounded-lg ${selectedField === 'verificateur' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '1', gridRow: '3' }}>
+                <div className="flex justify-between"><span className={`text-[10px] sm:text-xs font-semibold ${selectedField === 'verificateur' ? 'text-white' : 'text-slate-200'}`}>Vérif.</span><span className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[8px] sm:text-[10px] font-bold">O</span></div>
               </button>
-              <button onClick={() => setSelectedField('tolerance-generale')} className={`p-3 rounded-lg ${selectedField === 'tolerance-generale' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '2', gridRow: '3' }}>
-                <div className="flex justify-between"><span className={`text-xs font-semibold ${selectedField === 'tolerance-generale' ? 'text-white' : 'text-slate-200'}`}>Tolér.</span><span className="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center text-white text-[10px] font-bold">C</span></div>
+              <button onClick={() => setSelectedField('tolerance-generale')} className={`p-2 sm:p-3 rounded-lg ${selectedField === 'tolerance-generale' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '2', gridRow: '3' }}>
+                <div className="flex justify-between"><span className={`text-[10px] sm:text-xs font-semibold ${selectedField === 'tolerance-generale' ? 'text-white' : 'text-slate-200'}`}>Tolér.</span><span className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-blue-500 flex items-center justify-center text-white text-[8px] sm:text-[10px] font-bold">C</span></div>
               </button>
-              <button onClick={() => setSelectedField('projection')} className={`p-3 rounded-lg ${selectedField === 'projection' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '3', gridRow: '3' }}>
-                <div className="flex justify-between"><span className={`text-xs font-semibold ${selectedField === 'projection' ? 'text-white' : 'text-slate-200'}`}>Méthode</span><span className="w-4 h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[10px] font-bold">O</span></div>
+              <button onClick={() => setSelectedField('projection')} className={`p-2 sm:p-3 rounded-lg ${selectedField === 'projection' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '3', gridRow: '3' }}>
+                <div className="flex justify-between"><span className={`text-[10px] sm:text-xs font-semibold ${selectedField === 'projection' ? 'text-white' : 'text-slate-200'}`}>Méthode</span><span className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[8px] sm:text-[10px] font-bold">O</span></div>
               </button>
-              <button onClick={() => setSelectedField('format')} className={`p-3 rounded-lg ${selectedField === 'format' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '4', gridRow: '3' }}>
-                <div className="flex justify-between"><span className={`text-xs font-semibold ${selectedField === 'format' ? 'text-white' : 'text-slate-200'}`}>Format</span><span className="w-4 h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[10px] font-bold">O</span></div>
+              <button onClick={() => setSelectedField('format')} className={`p-2 sm:p-3 rounded-lg ${selectedField === 'format' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '4', gridRow: '3' }}>
+                <div className="flex justify-between"><span className={`text-[10px] sm:text-xs font-semibold ${selectedField === 'format' ? 'text-white' : 'text-slate-200'}`}>Format</span><span className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[8px] sm:text-[10px] font-bold">O</span></div>
               </button>
-              <button onClick={() => setSelectedField('indice')} className={`p-3 rounded-lg ${selectedField === 'indice' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '5', gridRow: '3' }}>
-                <div className="flex justify-between"><span className={`text-xs font-semibold ${selectedField === 'indice' ? 'text-white' : 'text-slate-200'}`}>Indice</span><span className="w-4 h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[10px] font-bold">O</span></div>
+              <button onClick={() => setSelectedField('indice')} className={`p-2 sm:p-3 rounded-lg ${selectedField === 'indice' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '5', gridRow: '3' }}>
+                <div className="flex justify-between"><span className={`text-[10px] sm:text-xs font-semibold ${selectedField === 'indice' ? 'text-white' : 'text-slate-200'}`}>Indice</span><span className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[8px] sm:text-[10px] font-bold">O</span></div>
               </button>
-              <button onClick={() => setSelectedField('date')} className={`p-3 rounded-lg ${selectedField === 'date' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '6', gridRow: '3' }}>
-                <div className="flex justify-between"><span className={`text-xs font-semibold ${selectedField === 'date' ? 'text-white' : 'text-slate-200'}`}>Date</span><span className="w-4 h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[10px] font-bold">O</span></div>
+              <button onClick={() => setSelectedField('date')} className={`p-2 sm:p-3 rounded-lg ${selectedField === 'date' ? 'bg-blue-500' : 'bg-slate-600 hover:bg-slate-500'}`} style={{ gridColumn: '6', gridRow: '3' }}>
+                <div className="flex justify-between"><span className={`text-[10px] sm:text-xs font-semibold ${selectedField === 'date' ? 'text-white' : 'text-slate-200'}`}>Date</span><span className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-red-500 flex items-center justify-center text-white text-[8px] sm:text-[10px] font-bold">O</span></div>
               </button>
             </div>
 
-            <div className="flex items-center gap-6 mt-6 justify-center">
+            <div className="flex items-center gap-4 sm:gap-6 mt-4 sm:mt-6 justify-center flex-wrap">
               <div className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center text-white text-xs font-bold">O</span>
-                <span className="text-sm text-slate-300">Obligatoire</span>
+                <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-red-500 flex items-center justify-center text-white text-[10px] sm:text-xs font-bold">O</span>
+                <span className="text-xs sm:text-sm text-slate-300">Obligatoire</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold">C</span>
-                <span className="text-sm text-slate-300">Conditionnel</span>
+                <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-[10px] sm:text-xs font-bold">C</span>
+                <span className="text-xs sm:text-sm text-slate-300">Conditionnel</span>
               </div>
             </div>
           </div>
         </div>
 
         {selectedFieldData && (
-          <div className={`rounded-xl p-6 border-l-4 border-blue-600 ${darkMode ? 'bg-blue-950/30' : 'bg-blue-50'}`}>
-            <h3 className={`text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-slate-900'}`}>{selectedFieldData.name}</h3>
-            <p className={`mb-2 ${darkMode ? 'text-slate-300' : 'text-slate-700'}`}><strong>Description:</strong> {selectedFieldData.description}</p>
-            <p className={`mb-2 ${darkMode ? 'text-slate-300' : 'text-slate-700'}`}><strong>Exemple:</strong> {selectedFieldData.example}</p>
-            <p className={darkMode ? 'text-slate-300' : 'text-slate-700'}><strong>Caractères:</strong> {selectedFieldData.characters}</p>
+          <div className={`rounded-xl p-4 sm:p-6 border-l-4 border-blue-600 ${darkMode ? 'bg-blue-950/30' : 'bg-blue-50'}`}>
+            <h3 className={`text-xl sm:text-2xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-slate-900'}`}>{selectedFieldData.name}</h3>
+            <p className={`mb-2 text-sm sm:text-base ${darkMode ? 'text-slate-300' : 'text-slate-700'}`}><strong>Description:</strong> {selectedFieldData.description}</p>
+            <p className={`mb-2 text-sm sm:text-base ${darkMode ? 'text-slate-300' : 'text-slate-700'}`}><strong>Exemple:</strong> {selectedFieldData.example}</p>
+            <p className={`text-sm sm:text-base ${darkMode ? 'text-slate-300' : 'text-slate-700'}`}><strong>Caractères:</strong> {selectedFieldData.characters}</p>
           </div>
         )}
       </div>
@@ -727,7 +742,7 @@ const InteractiveCartouche = ({ darkMode, selectedField, setSelectedField }: any
   );
 };
 
-// Sections simplifiées
+// FieldsExplorer Component
 const FieldsExplorer = ({ darkMode }: any) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('Tous');
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -773,20 +788,20 @@ const FieldsExplorer = ({ darkMode }: any) => {
   });
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-6">
+    <div className="min-h-screen pt-24 pb-12 px-3 sm:px-6">
       <div className="max-w-7xl mx-auto">
         {/* En-tête */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h1 className={`text-4xl md:text-5xl font-bold mb-4 ${
+          <h1 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 ${
             darkMode ? 'text-white' : 'text-gray-900'
           }`}>
             14 Champs du Cartouche
           </h1>
-          <p className={`text-xl max-w-3xl mx-auto ${
+          <p className={`text-base sm:text-xl max-w-3xl mx-auto ${
             darkMode ? 'text-gray-300' : 'text-gray-600'
           }`}>
             Découvrez tous les champs définis par la norme ISO 7200 pour vos documents horlogers
@@ -798,11 +813,11 @@ const FieldsExplorer = ({ darkMode }: any) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
           {/* Barre de recherche */}
-          <div className="relative mb-6">
-            <Search className={`absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
+          <div className="relative mb-4 sm:mb-6">
+            <Search className={`absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 ${
               darkMode ? 'text-gray-400' : 'text-gray-500'
             }`} />
             <input
@@ -810,7 +825,7 @@ const FieldsExplorer = ({ darkMode }: any) => {
               placeholder="Rechercher un champ..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={`w-full pl-12 pr-4 py-3 rounded-xl border ${
+              className={`w-full pl-10 sm:pl-12 pr-4 py-2 sm:py-3 text-sm sm:text-base rounded-xl border ${
                 darkMode 
                   ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400' 
                   : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
@@ -828,7 +843,7 @@ const FieldsExplorer = ({ darkMode }: any) => {
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg font-medium transition-all ${
                     isActive
                       ? `bg-${color}-500 text-white shadow-lg`
                       : darkMode
@@ -848,7 +863,7 @@ const FieldsExplorer = ({ darkMode }: any) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8"
         >
           {filteredFields.map((field, index) => {
             const CategoryIcon = getCategoryIcon(field.category);
@@ -861,7 +876,7 @@ const FieldsExplorer = ({ darkMode }: any) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
                 onClick={() => setSelectedField(field)}
-                className={`p-6 rounded-2xl border cursor-pointer transition-all hover:scale-105 ${
+                className={`p-4 sm:p-6 rounded-2xl border cursor-pointer transition-all hover:scale-105 ${
                   darkMode 
                     ? 'bg-gray-800 border-gray-700 hover:border-gray-600' 
                     : 'bg-white border-gray-200 hover:border-gray-300'
@@ -870,10 +885,10 @@ const FieldsExplorer = ({ darkMode }: any) => {
               >
                 {/* En-tête de la carte */}
                 <div className="flex items-center justify-between mb-4">
-                  <div className={`w-12 h-12 bg-${getCategoryColor(field.category)}-500 rounded-xl flex items-center justify-center`}>
-                    <CategoryIcon className="w-6 h-6 text-white" />
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-${getCategoryColor(field.category)}-500 rounded-xl flex items-center justify-center`}>
+                    <CategoryIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
-                  <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                  <div className={`px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold ${
                     obligationColor === 'red' 
                       ? 'bg-red-100 text-red-800'
                       : 'bg-yellow-100 text-yellow-800'
@@ -883,26 +898,26 @@ const FieldsExplorer = ({ darkMode }: any) => {
                 </div>
 
                 {/* Contenu de la carte */}
-                <h3 className={`text-lg font-bold mb-2 ${
+                <h3 className={`text-base sm:text-lg font-bold mb-2 ${
                   darkMode ? 'text-white' : 'text-gray-900'
                 }`}>
                   {field.name}
                 </h3>
                 
-                <div className={`text-sm font-medium mb-2 ${
+                <div className={`text-xs sm:text-sm font-medium mb-2 ${
                   darkMode ? 'text-gray-400' : 'text-gray-600'
                 }`}>
                   {field.category}
                 </div>
 
-                <p className={`text-sm leading-relaxed mb-3 ${
+                <p className={`text-xs sm:text-sm leading-relaxed mb-3 ${
                   darkMode ? 'text-gray-300' : 'text-gray-700'
                 }`}>
                   {field.description}
                 </p>
 
                 {/* Exemple */}
-                <div className={`p-3 rounded-lg text-sm ${
+                <div className={`p-2 sm:p-3 rounded-lg text-xs sm:text-sm ${
                   darkMode ? 'bg-gray-700' : 'bg-gray-50'
                 }`}>
                   <div className={`font-medium mb-1 ${
@@ -936,12 +951,12 @@ const FieldsExplorer = ({ darkMode }: any) => {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className={`max-w-2xl w-full rounded-2xl p-8 ${
+                className={`max-w-2xl w-full rounded-2xl p-6 sm:p-8 ${
                   darkMode ? 'bg-gray-800' : 'bg-white'
                 }`}
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className={`text-3xl font-bold ${
+                  <h2 className={`text-2xl sm:text-3xl font-bold ${
                     darkMode ? 'text-white' : 'text-gray-900'
                   }`}>
                     {selectedField.name}
@@ -1029,54 +1044,54 @@ const FieldsExplorer = ({ darkMode }: any) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className={`p-6 rounded-2xl ${
+          className={`p-4 sm:p-6 rounded-2xl ${
             darkMode ? 'bg-purple-900/20 border border-purple-800' : 'bg-purple-50 border border-purple-200'
           }`}
         >
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div>
-              <div className={`text-2xl font-bold ${
+              <div className={`text-xl sm:text-2xl font-bold ${
                 darkMode ? 'text-purple-300' : 'text-purple-600'
               }`}>
                 {cartoucheFieldsData.length}
               </div>
-              <div className={`text-sm ${
+              <div className={`text-xs sm:text-sm ${
                 darkMode ? 'text-purple-200' : 'text-purple-700'
               }`}>
                 Champs total
               </div>
             </div>
             <div>
-              <div className={`text-2xl font-bold ${
+              <div className={`text-xl sm:text-2xl font-bold ${
                 darkMode ? 'text-purple-300' : 'text-purple-600'
               }`}>
                 {cartoucheFieldsData.filter(f => f.obligation === 'Obligatoire').length}
               </div>
-              <div className={`text-sm ${
+              <div className={`text-xs sm:text-sm ${
                 darkMode ? 'text-purple-200' : 'text-purple-700'
               }`}>
                 Obligatoires
               </div>
             </div>
             <div>
-              <div className={`text-2xl font-bold ${
+              <div className={`text-xl sm:text-2xl font-bold ${
                 darkMode ? 'text-purple-300' : 'text-purple-600'
               }`}>
                 {cartoucheFieldsData.filter(f => f.obligation === 'Conditionnel').length}
               </div>
-              <div className={`text-sm ${
+              <div className={`text-xs sm:text-sm ${
                 darkMode ? 'text-purple-200' : 'text-purple-700'
               }`}>
                 Conditionnels
               </div>
             </div>
             <div>
-              <div className={`text-2xl font-bold ${
+              <div className={`text-xl sm:text-2xl font-bold ${
                 darkMode ? 'text-purple-300' : 'text-purple-600'
               }`}>
                 {categories.length - 1}
               </div>
-              <div className={`text-sm ${
+              <div className={`text-xs sm:text-sm ${
                 darkMode ? 'text-purple-200' : 'text-purple-700'
               }`}>
                 Catégories
@@ -1089,6 +1104,7 @@ const FieldsExplorer = ({ darkMode }: any) => {
   );
 };
 
+// QuizSection Component
 const QuizSection = ({ darkMode, onQuizComplete }: any) => {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -1102,29 +1118,29 @@ const QuizSection = ({ darkMode, onQuizComplete }: any) => {
   };
 
   if (done) return (
-    <div className="min-h-screen pt-24 pb-12 px-6">
+    <div className="min-h-screen pt-24 pb-12 px-3 sm:px-6">
       <div className="max-w-4xl mx-auto text-center">
-        <Trophy className="w-16 h-16 mx-auto mb-4 text-yellow-500" />
-        <h1 className={`text-4xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Quiz Terminé!</h1>
-        <p className="text-6xl font-bold text-blue-500 mb-4">{Math.round((score / quizData.length) * 100)}%</p>
-        <p className={darkMode ? 'text-gray-300' : 'text-gray-700'}>{score}/{quizData.length} bonnes réponses</p>
+        <Trophy className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-yellow-500" />
+        <h1 className={`text-3xl sm:text-4xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Quiz Terminé!</h1>
+        <p className="text-4xl sm:text-6xl font-bold text-blue-500 mb-4">{Math.round((score / quizData.length) * 100)}%</p>
+        <p className={`text-base sm:text-lg ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{score}/{quizData.length} bonnes réponses</p>
         <button onClick={() => { setCurrent(0); setSelected(null); setScore(0); setDone(false); }}
-          className="mt-6 px-6 py-3 bg-blue-500 text-white rounded-xl">Recommencer</button>
+          className="mt-6 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors">Recommencer</button>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-6">
+    <div className="min-h-screen pt-24 pb-12 px-3 sm:px-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className={`text-3xl font-bold mb-8 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Quiz</h1>
-        <div className={`p-8 rounded-2xl mb-8 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <h2 className={`text-xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>{quizData[current].question}</h2>
+        <h1 className={`text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Quiz</h1>
+        <div className={`p-6 sm:p-8 rounded-2xl mb-6 sm:mb-8 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <h2 className={`text-lg sm:text-xl font-bold mb-4 sm:mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>{quizData[current].question}</h2>
           <div className="space-y-3">
             {quizData[current].options.map((opt, i) => (
               <button key={i} onClick={() => setSelected(i)}
-                className={`w-full p-4 text-left rounded-xl border-2 ${
-                  selected === i ? 'border-blue-500 bg-blue-50' : darkMode ? 'border-gray-600' : 'border-gray-200'
+                className={`w-full p-3 sm:p-4 text-left text-sm sm:text-base rounded-xl border-2 transition-all ${
+                  selected === i ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : darkMode ? 'border-gray-600 hover:border-gray-500' : 'border-gray-200 hover:border-gray-300'
                 }`}>
                 {opt}
               </button>
@@ -1132,7 +1148,7 @@ const QuizSection = ({ darkMode, onQuizComplete }: any) => {
           </div>
         </div>
         <button onClick={next} disabled={selected === null}
-          className="px-6 py-3 bg-blue-500 text-white rounded-xl disabled:opacity-50">
+          className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-blue-500 text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors">
           {current < quizData.length - 1 ? 'Suivant' : 'Terminer'}
         </button>
       </div>
@@ -1140,6 +1156,7 @@ const QuizSection = ({ darkMode, onQuizComplete }: any) => {
   );
 };
 
+// TablesSection Component
 const TablesSection = ({ darkMode }: any) => {
   const [activeTab, setActiveTab] = useState<'formats' | 'materiaux' | 'traitements'>('formats');
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
@@ -1205,19 +1222,19 @@ const TablesSection = ({ darkMode }: any) => {
       case 'formats':
         return (
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[600px]">
               <thead>
                 <tr className={`${colorClasses.light} ${darkMode ? 'bg-gray-700' : ''}`}>
-                  <th className={`px-6 py-4 text-left font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <th className={`px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     Format
                   </th>
-                  <th className={`px-6 py-4 text-left font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <th className={`px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     Dimensions
                   </th>
-                  <th className={`px-6 py-4 text-left font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <th className={`px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     Marge
                   </th>
-                  <th className={`px-6 py-4 text-left font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <th className={`px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     Usage Horlogerie
                   </th>
                 </tr>
@@ -1233,16 +1250,16 @@ const TablesSection = ({ darkMode }: any) => {
                       darkMode ? 'bg-gray-800' : 'bg-gray-50'
                     }`}
                   >
-                    <td className={`px-6 py-4 font-mono font-bold ${colorClasses.text}`}>
+                    <td className={`px-4 sm:px-6 py-3 sm:py-4 font-mono text-sm sm:text-base font-bold ${colorClasses.text}`}>
                       {item.format}
                     </td>
-                    <td className={`px-6 py-4 font-mono ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <td className={`px-4 sm:px-6 py-3 sm:py-4 font-mono text-xs sm:text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                       {item.dimensions}
                     </td>
-                    <td className={`px-6 py-4 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <td className={`px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                       {item.marge}
                     </td>
-                    <td className={`px-6 py-4 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <td className={`px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                       {item.usage}
                     </td>
                   </motion.tr>
@@ -1254,42 +1271,42 @@ const TablesSection = ({ darkMode }: any) => {
 
       case 'materiaux':
         return (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {data.map((item, index) => (
               <motion.div
                 key={item.designation}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`p-6 rounded-xl border-2 cursor-pointer transition-all hover:scale-[1.02] ${
+                className={`p-4 sm:p-6 rounded-xl border-2 cursor-pointer transition-all hover:scale-[1.02] ${
                   darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-white border-gray-200 hover:border-blue-500'
                 }`}
                 onClick={() => setExpandedRow(expandedRow === index ? null : index)}
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className={`w-12 h-12 ${colorClasses.bg} rounded-xl flex items-center justify-center`}>
-                      <Layers className="w-6 h-6 text-white" />
+                  <div className="flex items-center space-x-3 sm:space-x-4">
+                    <div className={`w-10 h-10 sm:w-12 sm:h-12 ${colorClasses.bg} rounded-xl flex items-center justify-center flex-shrink-0`}>
+                      <Layers className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <h3 className={`text-base sm:text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                         {item.nom}
                       </h3>
-                      <p className={`font-mono text-sm ${colorClasses.text}`}>
+                      <p className={`font-mono text-xs sm:text-sm ${colorClasses.text}`}>
                         {item.designation}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  <div className="flex items-center space-x-2 sm:space-x-3">
+                    <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
                       darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
                     }`}>
                       {item.composition}
                     </span>
                     {expandedRow === index ? (
-                      <ChevronUp className={`w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                      <ChevronUp className={`w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
                     ) : (
-                      <ChevronDown className={`w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                      <ChevronDown className={`w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
                     )}
                   </div>
                 </div>
@@ -1302,7 +1319,7 @@ const TablesSection = ({ darkMode }: any) => {
                       exit={{ height: 0, opacity: 0 }}
                       className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"
                     >
-                      <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      <p className={`text-xs sm:text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                         <strong>Usage principal :</strong> {item.usage}
                       </p>
                     </motion.div>
@@ -1315,42 +1332,42 @@ const TablesSection = ({ darkMode }: any) => {
 
       case 'traitements':
         return (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {data.map((item, index) => (
               <motion.div
                 key={item.traitement}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`p-6 rounded-xl border-2 cursor-pointer transition-all hover:scale-[1.02] ${
+                className={`p-4 sm:p-6 rounded-xl border-2 cursor-pointer transition-all hover:scale-[1.02] ${
                   darkMode ? 'bg-gray-800 border-gray-700 hover:border-purple-500' : 'bg-white border-gray-200 hover:border-purple-500'
                 }`}
                 onClick={() => setExpandedRow(expandedRow === index ? null : index)}
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className={`w-12 h-12 ${colorClasses.bg} rounded-xl flex items-center justify-center`}>
-                      <Sparkles className="w-6 h-6 text-white" />
+                  <div className="flex items-center space-x-3 sm:space-x-4">
+                    <div className={`w-10 h-10 sm:w-12 sm:h-12 ${colorClasses.bg} rounded-xl flex items-center justify-center flex-shrink-0`}>
+                      <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                     </div>
-                    <div>
-                      <h3 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <div className="flex-1 min-w-0">
+                      <h3 className={`text-base sm:text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                         {item.traitement}
                       </h3>
-                      <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      <p className={`text-xs sm:text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'} truncate`}>
                         {item.description}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+                    <span className={`hidden sm:inline px-3 py-1 rounded-full text-sm font-medium ${
                       darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
                     }`}>
                       {item.objectif}
                     </span>
                     {expandedRow === index ? (
-                      <ChevronUp className={`w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                      <ChevronUp className={`w-4 h-4 sm:w-5 sm:h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
                     ) : (
-                      <ChevronDown className={`w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                      <ChevronDown className={`w-4 h-4 sm:w-5 sm:h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
                     )}
                   </div>
                 </div>
@@ -1363,7 +1380,10 @@ const TablesSection = ({ darkMode }: any) => {
                       exit={{ height: 0, opacity: 0 }}
                       className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"
                     >
-                      <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      <p className={`text-xs sm:text-sm mb-2 sm:hidden ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                        <strong>Objectif :</strong> {item.objectif}
+                      </p>
+                      <p className={`text-xs sm:text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                         <strong>Application typique :</strong> {item.application}
                       </p>
                     </motion.div>
@@ -1382,20 +1402,20 @@ const TablesSection = ({ darkMode }: any) => {
   const activeTabData = tabs.find(tab => tab.id === activeTab);
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-6">
+    <div className="min-h-screen pt-24 pb-12 px-3 sm:px-6">
       <div className="max-w-6xl mx-auto">
         {/* En-tête */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h1 className={`text-4xl md:text-5xl font-bold mb-4 ${
+          <h1 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 ${
             darkMode ? 'text-white' : 'text-gray-900'
           }`}>
             Tableaux Techniques
           </h1>
-          <p className={`text-xl max-w-3xl mx-auto ${
+          <p className={`text-base sm:text-xl max-w-3xl mx-auto ${
             darkMode ? 'text-gray-300' : 'text-gray-600'
           }`}>
             Références complètes des formats, matériaux et traitements utilisés en horlogerie
@@ -1407,7 +1427,7 @@ const TablesSection = ({ darkMode }: any) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="flex flex-wrap justify-center gap-4 mb-8"
+          className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4 mb-6 sm:mb-8"
         >
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -1418,7 +1438,7 @@ const TablesSection = ({ darkMode }: any) => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center space-x-3 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
+                className={`flex items-center space-x-2 sm:space-x-3 px-4 sm:px-6 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 ${
                   isActive
                     ? `${colorClasses.bg} text-white shadow-lg scale-105`
                     : darkMode
@@ -1426,10 +1446,10 @@ const TablesSection = ({ darkMode }: any) => {
                     : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
                 }`}
               >
-                <Icon className="w-5 h-5" />
+                <Icon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                 <div className="text-left">
-                  <div className="font-semibold">{tab.label}</div>
-                  <div className={`text-xs ${isActive ? 'text-white/80' : 'opacity-70'}`}>
+                  <div className="text-sm sm:text-base font-semibold">{tab.label}</div>
+                  <div className={`text-[10px] sm:text-xs ${isActive ? 'text-white/80' : 'opacity-70'} hidden sm:block`}>
                     {tab.description}
                   </div>
                 </div>
@@ -1449,18 +1469,18 @@ const TablesSection = ({ darkMode }: any) => {
           }`}
         >
           {/* En-tête du tableau actif */}
-          <div className={`p-6 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-            <div className="flex items-center space-x-4">
+          <div className={`p-4 sm:p-6 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+            <div className="flex items-center space-x-3 sm:space-x-4">
               {activeTabData && (
                 <>
-                  <div className={`w-12 h-12 ${getColorClasses(activeTabData.color).bg} rounded-xl flex items-center justify-center`}>
-                    <activeTabData.icon className="w-6 h-6 text-white" />
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 ${getColorClasses(activeTabData.color).bg} rounded-xl flex items-center justify-center flex-shrink-0`}>
+                    <activeTabData.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
                   <div>
-                    <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <h2 className={`text-xl sm:text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
                       {activeTabData.label}
                     </h2>
-                    <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <p className={`text-xs sm:text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                       {activeTabData.description}
                     </p>
                   </div>
@@ -1470,7 +1490,7 @@ const TablesSection = ({ darkMode }: any) => {
           </div>
 
           {/* Tableau */}
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {activeTabData && renderTableData(activeTabData.data, activeTabData.id)}
           </div>
         </motion.div>
@@ -1480,45 +1500,45 @@ const TablesSection = ({ darkMode }: any) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className={`mt-8 p-6 rounded-xl ${
+          className={`mt-6 sm:mt-8 p-4 sm:p-6 rounded-xl ${
             darkMode ? 'bg-blue-900/20 border border-blue-800' : 'bg-blue-50 border border-blue-200'
           }`}
         >
-          <h3 className={`text-lg font-semibold mb-3 ${
+          <h3 className={`text-base sm:text-lg font-semibold mb-3 ${
             darkMode ? 'text-blue-300' : 'text-blue-800'
           }`}>
             💡 Conseils pratiques
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
-              <h4 className={`font-medium mb-2 ${darkMode ? 'text-blue-200' : 'text-blue-700'}`}>
+              <h4 className={`font-medium mb-2 text-sm sm:text-base ${darkMode ? 'text-blue-200' : 'text-blue-700'}`}>
                 Formats recommandés :
               </h4>
-              <p className={`text-sm ${darkMode ? 'text-blue-100' : 'text-blue-600'}`}>
+              <p className={`text-xs sm:text-sm ${darkMode ? 'text-blue-100' : 'text-blue-600'}`}>
                 A3 pour les platines complètes, A4 pour les pièces unitaires
               </p>
             </div>
             <div>
-              <h4 className={`font-medium mb-2 ${darkMode ? 'text-blue-200' : 'text-blue-700'}`}>
+              <h4 className={`font-medium mb-2 text-sm sm:text-base ${darkMode ? 'text-blue-200' : 'text-blue-700'}`}>
                 Matériaux standards :
               </h4>
-              <p className={`text-sm ${darkMode ? 'text-blue-100' : 'text-blue-600'}`}>
+              <p className={`text-xs sm:text-sm ${darkMode ? 'text-blue-100' : 'text-blue-600'}`}>
                 Maillechort pour les composants mécaniques, Glucydur pour les balanciers
               </p>
             </div>
             <div>
-              <h4 className={`font-medium mb-2 ${darkMode ? 'text-blue-200' : 'text-blue-700'}`}>
+              <h4 className={`font-medium mb-2 text-sm sm:text-base ${darkMode ? 'text-blue-200' : 'text-blue-700'}`}>
                 Finitions haut de gamme :
               </h4>
-              <p className={`text-sm ${darkMode ? 'text-blue-100' : 'text-blue-600'}`}>
+              <p className={`text-xs sm:text-sm ${darkMode ? 'text-blue-100' : 'text-blue-600'}`}>
                 Rhodiage pour la protection, Côtes de Genève pour l'esthétique
               </p>
             </div>
             <div>
-              <h4 className={`font-medium mb-2 ${darkMode ? 'text-blue-200' : 'text-blue-700'}`}>
+              <h4 className={`font-medium mb-2 text-sm sm:text-base ${darkMode ? 'text-blue-200' : 'text-blue-700'}`}>
                 Tolérances critiques :
               </h4>
-              <p className={`text-sm ${darkMode ? 'text-blue-100' : 'text-blue-600'}`}>
+              <p className={`text-xs sm:text-sm ${darkMode ? 'text-blue-100' : 'text-blue-600'}`}>
                 Indiquer les tolérances spécifiques pour les pivots et paliers
               </p>
             </div>
@@ -1529,8 +1549,7 @@ const TablesSection = ({ darkMode }: any) => {
   );
 };
 
-
-
+// FAQSection Component
 const FAQSection = ({ darkMode }: any) => {
   const [open, setOpen] = useState<Set<string>>(new Set());
   
@@ -1543,11 +1562,11 @@ const FAQSection = ({ darkMode }: any) => {
   ];
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-6">
+    <div className="min-h-screen pt-24 pb-12 px-3 sm:px-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className={`text-3xl font-bold mb-8 ${darkMode ? 'text-white' : 'text-gray-900'}`}>FAQ</h1>
+        <h1 className={`text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 ${darkMode ? 'text-white' : 'text-gray-900'}`}>FAQ</h1>
         {faqs.map((faq, index) => (
-          <div key={index} className={`mb-4 rounded-xl border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+          <div key={index} className={`mb-3 sm:mb-4 rounded-xl border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
             <button
               onClick={() => {
                 const newOpen = new Set(open);
@@ -1555,10 +1574,10 @@ const FAQSection = ({ darkMode }: any) => {
                 else newOpen.add(faq.q);
                 setOpen(newOpen);
               }}
-              className={`w-full p-6 text-left flex items-center justify-between ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'}`}
+              className={`w-full p-4 sm:p-6 text-left flex items-center justify-between ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'} transition-colors`}
             >
-              <span className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{faq.q}</span>
-              {open.has(faq.q) ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+              <span className={`font-semibold text-sm sm:text-base ${darkMode ? 'text-white' : 'text-gray-900'}`}>{faq.q}</span>
+              {open.has(faq.q) ? <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" /> : <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />}
             </button>
             <AnimatePresence>
               {open.has(faq.q) && (
@@ -1569,7 +1588,7 @@ const FAQSection = ({ darkMode }: any) => {
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden"
                 >
-                  <div className={`px-6 pb-6 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <div className={`px-4 sm:px-6 pb-4 sm:pb-6 text-sm sm:text-base ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {faq.a}
                   </div>
                 </motion.div>
@@ -1582,6 +1601,7 @@ const FAQSection = ({ darkMode }: any) => {
   );
 };
 
+// NormesSection Component (simplifié pour l'espace)
 const NormesSection = ({ darkMode }: any) => {
   const [activeStandard, setActiveStandard] = useState<'7200' | '5457'>('7200');
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['presentation']));
@@ -1596,331 +1616,62 @@ const NormesSection = ({ darkMode }: any) => {
     setExpandedSections(newExpanded);
   };
 
-  const toggleAll = (expand: boolean) => {
-    if (expand) {
-      setExpandedSections(new Set(['presentation', 'champs', 'applications', 'bonnes-pratiques', 'exemples']));
-    } else {
-      setExpandedSections(new Set([]));
-    }
-  };
-
   const standards = {
     '7200': {
       title: 'ISO 7200:2004',
       subtitle: 'Cartouches d\'inscription',
-      description: 'Spécification des champs de données pour les cartouches et têtes de documents techniques',
       icon: FileText,
       color: 'blue',
       sections: [
         {
           id: 'presentation',
           title: 'Présentation générale',
-          content: `La norme ISO 7200:2004 définit les éléments d'information qui doivent figurer dans les cartouches d'inscription et les têtes de documents techniques. Elle s'applique à tous les types de documents techniques, y compris les plans horlogers.
-
-Cette norme internationale garantit l'harmonisation et la standardisation des informations techniques, facilitant ainsi la compréhension et l'interprétation des documents quelle que soit leur provenance.
-
-En horlogerie, ISO 7200 est particulièrement important car les pièces sont complexes et miniatures, nécessitant une documentation précise et normalisée pour la fabrication et la maintenance.`
-        },
-        {
-          id: 'champs',
-          title: 'Structure des champs',
-          content: `Le cartouche selon ISO 7200 est organisé en zones fonctionnelles :
-
-**Zone d'identification (obligatoire) :**
-- Longueur maximale : 170 mm
-- Position : coin inférieur droit
-- Contient les informations d'identification du document
-
-**Champ titre (obligatoire) :**
-- Longueur recommandée : 25-30 caractères
-- Doit être clair et descriptif
-- Format normalisé pour assurer la lisibilité
-
-**Zone d'administration :**
-- Auteur, vérificateur, date
-- Indice de révision
-- Méthode de projection
-
-**Champs techniques :**
-- Matériau, traitement de surface, masse
-- Tolérances générales, échelle
-- Dimensions de référence selon l'application
-
-**Zone libre :**
-- Réservée aux informations spécifiques à l'entreprise
-- Logo, références internes, numérotation propriétaire`
-        },
-        {
-          id: 'applications',
-          title: 'Applications en horlogerie',
-          content: `En horlogerie, ISO 7200 s'adapte aux spécificités du secteur :
-
-**Composants critiques :**
-- Platines et ponts de mouvement
-- Roues et pignons
-- Axes et pivots (précision micrométrique)
-- Rouages de complications
-
-**Informations spécifiques :**
-- Désignation normalisée des matériaux (CuNi18Zn20 pour maillechort)
-- Tolérances ISO 2768-m ou f selon la précision
-- Traitements de surface horlogers (rhodiage, anglage)
-- Indices de révision pour les modifications
-
-**Documentations techniques :**
-- Plans de fabrication
-- Fiches techniques de pièces
-- Notices de montage
-- Documents de contrôle qualité
-
-**Gestion documentaire :**
-- Archivage numérique et physique
-- Traçabilité des modifications
-- Conformité réglementaire`
-        },
-        {
-          id: 'bonnes-pratiques',
-          title: 'Bonnes pratiques',
-          content: `Pour une application efficace d'ISO 7200 en horlogerie :
-
-**Conception du cartouche :**
-- Utiliser des champs de hauteur uniforme (8-10 mm)
-- Respecter les espacements minimaux
-- Maintenir une lisibilité optimale
-- Prévoir l'évolution future du document
-
-**Choix des informations :**
-- Renseigner tous les champs obligatoires
-- Évaluer la pertinence des champs conditionnels
-- Éviter les redondances avec les annotations du dessin
-- Harmoniser les désignations normalisées
-
-**Maintenance documentaire :**
-- Mettre à jour systématiquement l'indice de révision
-- Documenter les modifications dans le tableau de révision
-- Maintenir la cohérence entre versions
-- Assurer la diffusion aux utilisateurs concernés
-
-**Contrôle qualité :**
-- Vérifier la conformité lors de la création
-- Contrôler les mises à jour
-- Valider les informations techniques`
-        },
-        {
-          id: 'exemples',
-          title: 'Exemples pratiques',
-          content: `Exemples d'application d'ISO 7200 en horlogerie :
-
-**Exemple 1 - Platine de mouvement :**
-- Titre : "Platine calibre 2824-2"
-- Matériau : "CuNi18Zn20"
-- Échelle : "2:1" (agrandissement nécessaire)
-- Tolérance : "ISO 2768-m"
-- Méthode : "E" (projection européenne)
-
-**Exemple 2 - Roue de complications :**
-- Titre : "Roue calendrier АП2"
-- Matériau : "CuZn40" (laiton)
-- Masse : "0.15g" (précision critique)
-- Traitement : "Rhodiage"
-- Indice : "C" (troisième révision)
-
-**Exemple 3 - Pivots de balancier :**
-- Titre : "Pivots balancier 453"
-- Matériau : "X5CrNi18-10"
-- Tolérance : "ISO 2768-f" (fine)
-- Échelle : "10:1" (agrandissement important)
-- Format : "A4" (pièce unitaire)`
+          content: 'La norme ISO 7200:2004 définit les éléments d\'information qui doivent figurer dans les cartouches d\'inscription et les têtes de documents techniques.'
         }
       ]
     },
     '5457': {
       title: 'ISO 5457:1999',
       subtitle: 'Formats de dessin',
-      description: 'Spécification des formats, marges et éléments d\'annotation des documents de dessin technique',
       icon: Scale,
       color: 'green',
       sections: [
         {
           id: 'presentation',
           title: 'Présentation générale',
-          content: `La norme ISO 5457:1999 définit les formats standards pour les documents de dessin technique. Cette norme garantit l'interchangeabilité et l'archivage optimal des documents techniques.
-
-En horlogerie, le choix du format est crucial car les pièces sont de taille réduite mais nécessitent une précision extrême. ISO 5457 définit non seulement les dimensions mais aussi les marges, zones de pliage et emplacements reserved pour les annotations.
-
-La norme s'applique particulièrement bien à l'horlogerie en规定ant des formats adaptés aux pièces de précision tout en permettant une lecture confortable des cotes et annotations.`
-        },
-        {
-          id: 'champs',
-          title: 'Formats et caractéristiques',
-          content: `Formats standardisés selon ISO 5457 :
-
-**Série A (recommandée pour l'horlogerie) :**
-- A0 : 841 × 1189 mm (rarement utilisé)
-- A1 : 594 × 841 mm (plans complexes)
-- A2 : 420 × 594 mm (ensembles cohérents)
-- A3 : 297 × 420 mm (platines complètes)
-- A4 : 210 × 297 mm (pièces unitaires)
-
-**Marges obligatoires :**
-- Formats A0, A1 : Marge 20 mm
-- Formats A2, A3, A4 : Marge 10 mm
-- Marge de pliage : 5 mm supplémentaire
-- Zone de classement : 20 mm sur le côté
-
-**Zone du cartouche :**
-- Position : Coin inférieur droit
-- Largeur : Maximum 170 mm
-- Hauteur : Variable selon le contenu
-- Alignement : Selon les dimensions normalisées
-
-**Éléments supplémentaires :**
-- Zone de pliage (facultative)
-- Indication de modification
-- Symboles de projection`
-        },
-        {
-          id: 'applications',
-          title: 'Choix du format en horlogerie',
-          content: `Recommandations spécifiques au secteur horloger :
-
-**Format A4 (210×297mm) :**
-- Usage : Pièces unitaires, composants simples
-- Avantages : Coût réduit, archivage facile
-- Exemples : Pivots, axes, vis spécialisées
-- Échelle recommandée : 2:1 à 10:1
-
-**Format A3 (297×420mm) :**
-- Usage : Platines, ponts, ensembles cohérents
-- Avantages : Plus d'espace pour détails
-- Exemples : Platine de mouvement, ponts de complications
-- Échelle recommandée : 1:1 à 5:1
-
-**Format A2 (420×594mm) :**
-- Usage : Mouvements complets, éclatés complexes
-- Avantages : Vue d'ensemble possible
-- Exemples : Assemblages complets, plans d'ensemble
-- Échelle recommandée : 1:2 à 1:1
-
-**Facteurs de choix :**
-- Complexité de la pièce
-- Densité de cotation nécessaire
-- Exigences de traçabilité
-- Contraintes d'archivage`
-        },
-        {
-          id: 'bonnes-pratiques',
-          title: 'Optimisation et archivage',
-          content: `Optimisation de l'utilisation d'ISO 5457 en horlogerie :
-
-**Optimisation de l'espace :**
-- Utiliser l'ensemble de la zone utile
-- Éviter les zones vides importantes
-- Équilibrer densité de'information et lisibilité
-- Prévoir l'évolution future du document
-
-**Contraintes d'impression :**
-- Vérifier la qualité d'impression à l'échelle chosen
-- Assurer la lisibilité des cotes critiques
-- Tester la reproduction photomécanique
-- Prévoir les variations d'échelle
-
-**Archivage physique :**
-- Respecter les pliages selon la norme
-- Protéger les bords par marge de sécurité
-- Utiliser des pochettes normalisées
-- Maintenir l'identification claire
-
-**Archivage numérique :**
-- Conservation des formats vectoriels
-- Métadonnées normalisées
-- Liens vers versions successives
-- Sauvegarde multi-sites`
-        },
-        {
-          id: 'exemples',
-          title: 'Applications spécifiques',
-          content: `Cas d'application d'ISO 5457 dans différents contextes horlogers :
-
-**Mouvements de montre :**
-- Format : A3 pour platines complètes
-- Échelle : 2:1 à 5:1 selon la complexité
-- Cartouche : Position standard en bas à droite
-- Zone libre : Pour références internes
-
-**Composants de complications :**
-- Format : A4 pour pièces unitaires
-- Échelle : 5:1 à 10:1 pour détails critiques
-- Tolérances : Indication dans cartouche
-- Traitements : Spécifiés dans zone technique
-
-**Plans d'ensemble :**
-- Format : A2 pour vue complète
-- Échelle : 1:1 ou 1:2 pour repérage
-- Références : Liens vers plans de détail
-- Documentation : Nomenclature complète
-
-**Fiches techniques :**
-- Format : A4 pour documentation
-- Échelle : Variable selon le contenu
-- Cartouche : Adapté à la fonction documentaire
-- Sécurité : Classification si nécessaire
-
-**Contrôle qualité :**
-- Format : A4 pour fiches de contrôle
-- Échelle : Agrandie pour zones critiques
-- Tolérances : Spécification détaillée
-- Traçabilité : Références complètes`
+          content: 'La norme ISO 5457:1999 définit les formats standards pour les documents de dessin technique.'
         }
       ]
     }
   };
 
   const activeNorm = standards[activeStandard];
-  const colorClasses = {
-    blue: {
-      bg: 'bg-blue-500',
-      border: 'border-blue-500',
-      light: 'bg-blue-50',
-      dark: 'bg-blue-900/20'
-    },
-    green: {
-      bg: 'bg-green-500',
-      border: 'border-green-500',
-      light: 'bg-green-50',
-      dark: 'bg-green-900/20'
-    }
-  };
-
-  const currentColors = colorClasses[activeNorm.color as keyof typeof colorClasses];
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-6">
+    <div className="min-h-screen pt-24 pb-12 px-3 sm:px-6">
       <div className="max-w-5xl mx-auto">
-        {/* En-tête */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h1 className={`text-4xl md:text-5xl font-bold mb-4 ${
+          <h1 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 ${
             darkMode ? 'text-white' : 'text-gray-900'
           }`}>
             Normes ISO
           </h1>
-          <p className={`text-xl max-w-3xl mx-auto ${
+          <p className={`text-base sm:text-xl max-w-3xl mx-auto ${
             darkMode ? 'text-gray-300' : 'text-gray-600'
           }`}>
             Comprendre et appliquer les normes ISO 7200 et ISO 5457 dans vos documents horlogers
           </p>
         </motion.div>
 
-        {/* Sélection des normes */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="flex justify-center gap-4 mb-8"
+          className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-6 sm:mb-8"
         >
           {Object.entries(standards).map(([key, norm]) => {
             const Icon = norm.icon;
@@ -1930,18 +1681,18 @@ La norme s'applique particulièrement bien à l'horlogerie en规定ant des forma
               <button
                 key={key}
                 onClick={() => setActiveStandard(key as '7200' | '5457')}
-                className={`flex items-center space-x-3 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
+                className={`flex items-center space-x-2 sm:space-x-3 px-4 sm:px-6 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 ${
                   isActive
-                    ? `${colorClasses[norm.color as keyof typeof colorClasses].bg} text-white shadow-lg scale-105`
+                    ? `${norm.color === 'blue' ? 'bg-blue-500' : 'bg-green-500'} text-white shadow-lg scale-105`
                     : darkMode
                     ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                     : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
                 }`}
               >
-                <Icon className="w-6 h-6" />
+                <Icon className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
                 <div className="text-left">
-                  <div className="font-bold">{norm.title}</div>
-                  <div className={`text-xs ${isActive ? 'text-white/80' : 'opacity-70'}`}>
+                  <div className="text-sm sm:text-base font-bold">{norm.title}</div>
+                  <div className={`text-[10px] sm:text-xs ${isActive ? 'text-white/80' : 'opacity-70'}`}>
                     {norm.subtitle}
                   </div>
                 </div>
@@ -1950,163 +1701,67 @@ La norme s'applique particulièrement bien à l'horlogerie en规定ant des forma
           })}
         </motion.div>
 
-        {/* Contenu de la norme active */}
         <motion.div
           key={activeStandard}
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className={`rounded-2xl border-2 ${
+          className={`rounded-2xl border-2 p-4 sm:p-8 ${
             darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
           }`}
         >
-          {/* En-tête de la norme */}
-          <div className={`p-8 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-            <div className="flex items-center space-x-4 mb-4">
-              <div className={`w-16 h-16 ${currentColors.bg} rounded-2xl flex items-center justify-center`}>
-                <activeNorm.icon className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h2 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {activeNorm.title}
-                </h2>
-                <p className={`text-lg ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {activeNorm.subtitle}
-                </p>
-              </div>
+          <div className="flex items-center space-x-3 sm:space-x-4 mb-6">
+            <div className={`w-12 h-12 sm:w-16 sm:h-16 ${activeNorm.color === 'blue' ? 'bg-blue-500' : 'bg-green-500'} rounded-2xl flex items-center justify-center`}>
+              <activeNorm.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </div>
-            <p className={`text-lg ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              {activeNorm.description}
-            </p>
-          </div>
-
-          {/* Contrôles */}
-          <div className={`p-6 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-            <div className="flex justify-between items-center">
-              <h3 className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                Sections détaillées
-              </h3>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => toggleAll(true)}
-                  className="px-3 py-1 text-sm rounded-lg bg-green-500 text-white hover:bg-green-600 transition-colors"
-                >
-                  Tout déployer
-                </button>
-                <button
-                  onClick={() => toggleAll(false)}
-                  className="px-3 py-1 text-sm rounded-lg bg-gray-500 text-white hover:bg-gray-600 transition-colors"
-                >
-                  Tout replier
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Sections */}
-          <div className="p-6 space-y-4">
-            {activeNorm.sections.map((section, index) => (
-              <div key={section.id} className="rounded-xl overflow-hidden">
-                <button
-                  onClick={() => toggleSection(section.id)}
-                  className={`w-full p-4 text-left flex items-center justify-between transition-colors hover:${
-                    darkMode ? 'bg-gray-700' : 'bg-gray-50'
-                  }`}
-                >
-                  <h4 className={`text-lg font-semibold ${
-                    darkMode ? 'text-white' : 'text-gray-900'
-                  }`}>
-                    {section.title}
-                  </h4>
-                  {expandedSections.has(section.id) ? (
-                    <ChevronUp className={`w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
-                  ) : (
-                    <ChevronDown className={`w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
-                  )}
-                </button>
-
-                <AnimatePresence>
-                  {expandedSections.has(section.id) && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <div className={`p-6 pt-0 ${
-                        darkMode ? 'bg-gray-750' : 'bg-gray-50'
-                      }`}>
-                        <div className="prose prose-sm max-w-none">
-                          {section.content.split('\n').map((paragraph, idx) => (
-                            <p key={idx} className={`mb-3 leading-relaxed ${
-                              darkMode ? 'text-gray-300' : 'text-gray-700'
-                            }`}>
-                              {paragraph}
-                            </p>
-                          ))}
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Ressources et liens */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className={`mt-12 p-8 rounded-2xl ${
-            darkMode ? 'bg-purple-900/20 border border-purple-800' : 'bg-purple-50 border border-purple-200'
-          }`}
-        >
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center">
-              <BookOpen className="w-5 h-5 text-white" />
-            </div>
-            <h3 className={`text-2xl font-bold ${
-              darkMode ? 'text-purple-300' : 'text-purple-800'
-            }`}>
-              Ressources Complémentaires
-            </h3>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className={`font-semibold mb-3 ${
-                darkMode ? 'text-purple-200' : 'text-purple-700'
-              }`}>
-                📚 Documentation officielle :
-              </h4>
-              <ul className={`space-y-2 text-sm ${
-                darkMode ? 'text-purple-100' : 'text-purple-600'
-              }`}>
-                <li>• Texte officiel ISO 7200:2004 (boutique ISO)</li>
-                <li>• Guide d'application ISO 5457:1999</li>
-                <li>• Normes horlogères Swiss (FH)</li>
-                <li>• Documentation technique horlogère</li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className={`font-semibold mb-3 ${
-                darkMode ? 'text-purple-200' : 'text-purple-700'
-              }`}>
-                🔗 Liens utiles :
-              </h4>
-              <ul className={`space-y-2 text-sm ${
-                darkMode ? 'text-purple-100' : 'text-purple-600'
-              }`}>
-                <li>• Site officiel ISO (www.iso.org)</li>
-                <li>• Association Suisse des Horlogers</li>
-                <li>• Cours spécialisés DAO horloger</li>
-                <li>• Modèles de cartouches normalisés</li>
-              </ul>
+              <h2 className={`text-2xl sm:text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                {activeNorm.title}
+              </h2>
+              <p className={`text-sm sm:text-lg ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                {activeNorm.subtitle}
+              </p>
             </div>
           </div>
+
+          {activeNorm.sections.map((section) => (
+            <div key={section.id} className="mb-4">
+              <button
+                onClick={() => toggleSection(section.id)}
+                className={`w-full p-3 sm:p-4 text-left flex items-center justify-between transition-colors ${
+                  darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
+                } rounded-lg`}
+              >
+                <h4 className={`text-base sm:text-lg font-semibold ${
+                  darkMode ? 'text-white' : 'text-gray-900'
+                }`}>
+                  {section.title}
+                </h4>
+                {expandedSections.has(section.id) ? (
+                  <ChevronUp className={`w-4 h-4 sm:w-5 sm:h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                ) : (
+                  <ChevronDown className={`w-4 h-4 sm:w-5 sm:h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                )}
+              </button>
+
+              <AnimatePresence>
+                {expandedSections.has(section.id) && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className={`p-4 sm:p-6 text-sm sm:text-base ${
+                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                    }`}>
+                      {section.content}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
         </motion.div>
       </div>
     </div>
@@ -2124,12 +1779,21 @@ function App() {
   });
 
   useEffect(() => {
+    // Injecter les styles
+    const styleElement = document.createElement('style');
+    styleElement.innerHTML = styles;
+    document.head.appendChild(styleElement);
+    
     // Charger les préférences depuis localStorage
     const savedDarkMode = localStorage.getItem('darkMode');
     const savedProgress = localStorage.getItem('userProgress');
     
     if (savedDarkMode) setDarkMode(JSON.parse(savedDarkMode));
     if (savedProgress) setUserProgress(JSON.parse(savedProgress));
+
+    return () => {
+      document.head.removeChild(styleElement);
+    };
   }, []);
 
   useEffect(() => {
@@ -2151,37 +1815,34 @@ function App() {
   };
 
   const renderCurrentSection = () => {
-  switch (currentSection) {
-    case 'champs':
-      return <FieldsExplorer darkMode={darkMode} />;
-    case 'cartouche':
-      return (
-        <InteractiveCartouche
-          darkMode={darkMode}
-          selectedField={selectedField}
-          setSelectedField={setSelectedField}
-        />
-      );
-    case 'quiz':
-      return <QuizSection darkMode={darkMode} onQuizComplete={handleQuizComplete} />;
-    case 'tableaux':
-      return <TablesSection darkMode={darkMode} />;
-    case 'memo':
-      return <MemoSection darkMode={darkMode} />;
-    case 'faq':
-      return <FAQSection darkMode={darkMode} />;
-    case 'normes':
-      return <NormesSection darkMode={darkMode} />;
-    default:
-      return <FieldsExplorer darkMode={darkMode} />;
-  }
-}; // ← garde uniquement celle-ci ici (et pas de `}` supplémentaire ensuite)
+    switch (currentSection) {
+      case 'champs':
+        return <FieldsExplorer darkMode={darkMode} />;
+      case 'cartouche':
+        return (
+          <InteractiveCartouche 
+            darkMode={darkMode} 
+            selectedField={selectedField} 
+            setSelectedField={setSelectedField}
+          />
+        );
+      case 'quiz':
+        return <QuizSection darkMode={darkMode} onQuizComplete={handleQuizComplete} />;
+      case 'tableaux':
+        return <TablesSection darkMode={darkMode} />;
+      case 'memo':
+        return <MemoSection darkMode={darkMode} />;
+      case 'faq':
+        return <FAQSection darkMode={darkMode} />;
+      case 'normes':
+        return <NormesSection darkMode={darkMode} />;
+      default:
+        return <FieldsExplorer darkMode={darkMode} />;
+    }
+  };
 
-return (
-  <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
-    {/* Navbar principale du site */}
-    <Navbar />
-    {/* Navigation */}
+  return (
+    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       {/* Navigation */}
       <Navigation 
         currentSection={currentSection}
@@ -2193,11 +1854,11 @@ return (
       {/* Bouton Retour vers Lecture de Plan */}
       <a
         href="https://www.horlolearn.ch/theorie/lecture-de-plan"
-        className={`fixed top-20 left-4 z-50 flex items-center space-x-2 px-4 py-3 rounded-xl font-semibold transition-all ${
+        className={`fixed top-20 left-2 sm:left-4 z-50 flex items-center space-x-2 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm rounded-xl font-semibold transition-all ${
           darkMode ? 'bg-green-600 hover:bg-green-700' : 'bg-green-500 hover:bg-green-600'
         } text-white shadow-lg hover:shadow-xl hover:scale-105`}
       >
-        <ArrowLeft className="w-5 h-5" />
+        <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
         <span className="hidden sm:inline">Retour Lecture de Plan</span>
         <span className="sm:hidden">Retour</span>
       </a>
@@ -2205,39 +1866,27 @@ return (
       {/* Toggle Mode */}
       <button
         onClick={toggleDarkMode}
-        className={`fixed top-4 right-4 z-50 p-3 rounded-full transition-all ${
+        className={`fixed top-4 right-2 sm:right-4 z-50 p-2 sm:p-3 rounded-full transition-all ${
           darkMode ? 'bg-gray-800 text-yellow-400' : 'bg-white text-gray-600'
         } shadow-lg hover:shadow-xl`}
       >
-        {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-      </button>
-       </div>
-);
-
-      {/* Toggle Mode */}
-      <button
-        onClick={toggleDarkMode}
-        className={`fixed top-4 right-4 z-50 p-3 rounded-full transition-all ${
-          darkMode ? 'bg-gray-800 text-yellow-400' : 'bg-white text-gray-600'
-        } shadow-lg hover:shadow-xl`}
-      >
-        {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+        {darkMode ? <Sun className="w-4 h-4 sm:w-5 sm:h-5" /> : <Moon className="w-4 h-4 sm:w-5 sm:h-5" />}
       </button>
 
       {/* Contenu principal */}
-<div>
-  <AnimatePresence mode="wait">
-    <motion.div
-      key={currentSection}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.3 }}
-    >
-      {renderCurrentSection()}
-    </motion.div>
-  </AnimatePresence>
-</div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentSection}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          {renderCurrentSection()}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
 }
 
 export default App;
