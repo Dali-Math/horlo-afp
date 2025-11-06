@@ -1,5 +1,5 @@
 'use client'
-
+import Navigation from '@/components/Navigation'
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
@@ -2194,6 +2194,11 @@ function App() {
       >
         {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
       </button>
+      return (
+  <>
+    <Navigation />
+
+    <div>
 
       {/* Contenu principal */}
       <AnimatePresence mode="wait">
