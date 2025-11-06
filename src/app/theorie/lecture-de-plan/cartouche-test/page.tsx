@@ -340,10 +340,30 @@ const MemoSection = ({ darkMode }: any) => (
 
 const FAQSection = ({ darkMode }: any) => {
   const [open, setOpen] = useState<Set<string>>(new Set());
+
+  const questions = [
+    { q: "Différence entre O et C ?", a: "O = obligatoire, C = conditionnel" },
+    { q: "Gérer les révisions ?", a: "Tableau de révision avec indice, date, etc." },
+  ];
+
   return (
     <div className="min-h-screen pt-24 pb-12 px-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className={`text-3xl font-bold mb-8 ${darkMode ? 'text-white' : 'text-gray-900'}`}>FAQ</h1>
-        {[
-          { q: "Différence entre O et C ?", a: "O = obligatoire, C = conditionnel" },
-          { q: "Gérer les révisions ?", a: "Tableau de révision avec indice, date,
+        <h1 className={`text-3xl font-bold mb-8 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+          FAQ
+        </h1>
+
+        {questions.map((item, i) => (
+          <div key={i} className="mb-4">
+            <p className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+              {item.q}
+            </p>
+            <p className={`ml-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              {item.a}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
