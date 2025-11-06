@@ -2187,7 +2187,7 @@ function App() {
         onSectionChange={setCurrentSection}
               />
               {/* Bouton retour vers Lecture de plan */}
-      <div className="fixed top-4 left-4 md:top-20 md:left-4 z-50">
+      <div className="fixed top-8 left-4 md:top-24 md:left-4 z-50">
                       <Link
                                   href="/theorie/lecture-de-plan"
                                   className=""flex items-center gap-1 md:gap-2 px-2 py-1.5 md:px-4 md:py-2 text-sm md:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-lg"
