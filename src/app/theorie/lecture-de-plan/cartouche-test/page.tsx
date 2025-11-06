@@ -2194,26 +2194,28 @@ function App() {
       >
         {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
       </button>
-      return (
-  <>
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
-      {/* Navigation */}
-      <Navigation currentSection={currentSection} />
+      }
 
-      {/* Contenu principal */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentSection}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-        >
-          {renderCurrentSection()}
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  </>
-);
+  return (
+    <>
+      <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+        {/* Navigation */}
+        <Navigation currentSection={currentSection} />
 
+        {/* Contenu principal */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentSection}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {renderCurrentSection()}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </>
+  );
+}
 export default App;
