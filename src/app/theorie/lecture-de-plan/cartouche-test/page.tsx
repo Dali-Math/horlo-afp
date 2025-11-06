@@ -1069,8 +1069,8 @@ const QuizSection = ({ darkMode, onQuizComplete }: any) => {
   }, 1000);
 
     return () => clearInterval(timer);
-  }, [quizStarted, isPaused, showResult, currentQuestion]);
-
+}, [quizStarted, isPaused, showResult, currentQuestion]);
+ 
   const handleAnswerSelect = (index: number) => {
     if (selectedAnswer !== null) return;
     setSelectedAnswer(index);
