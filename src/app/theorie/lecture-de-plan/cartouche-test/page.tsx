@@ -2196,9 +2196,9 @@ function App() {
       </button>
       return (
   <>
-    <Navigation />
-
-    <div>
+    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+      {/* Navigation */}
+      <Navigation currentSection={currentSection} />
 
       {/* Contenu principal */}
       <AnimatePresence mode="wait">
@@ -2213,7 +2213,7 @@ function App() {
         </motion.div>
       </AnimatePresence>
     </div>
-  );
-}
+  </>
+);
 
 export default App;
