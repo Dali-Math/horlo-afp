@@ -11,7 +11,7 @@ import {
   Percent, Cpu, Hash, Beaker, Layers, Printer, Sparkles
 } from 'lucide-react'
 import { NormesSection as NormesISO } from '@/components/NormesSection';
-// import { FAQSection } from '@/components/cartouche/FAQSection';
+import { FAQSection } from '@/components/cartouche/FAQSection';
 // import { MemoSection } from '@/components/cartouche/MemoSection';
 // import { QuizSection } from '@/components/cartouche/QuizSection';
 // import { TablesSection } from '@/components/cartouche/TablesSection';
@@ -1554,7 +1554,7 @@ const TablesSection = ({ darkMode }: any) => {
   );
 };
 
-// FAQSection Component
+/*// FAQSection Component
 const FAQSection = ({ darkMode }: any) => {
   const [open, setOpen] = useState<Set<string>>(new Set());
   
@@ -1610,6 +1610,7 @@ const FAQSection = ({ darkMode }: any) => {
 const NormesSection = ({ darkMode }: any) => {
   const [activeStandard, setActiveStandard] = useState<'7200' | '5457'>('7200');
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['presentation']));
+*/
 
   const toggleSection = (sectionId: string) => {
     const newExpanded = new Set(expandedSections);
