@@ -2178,9 +2178,9 @@ function App() {
 }; // 
    
  return (
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
-            {/* Navbar principale du site */}
-            <Navbar />
+  <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    {/* Navbar principale du site */}
+    <Navbar />
       {/* Navigation */}
       <Navigation 
         currentSection={currentSection}
