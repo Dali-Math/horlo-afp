@@ -2175,9 +2175,7 @@ function App() {
       default:
         return <FieldsExplorer darkMode={darkMode} />;
     };
-  
-
-  return (
+ return (
     <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
             {/* Navbar principale du site */}
             <Navbar />
