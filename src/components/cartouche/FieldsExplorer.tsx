@@ -39,9 +39,17 @@ export const FieldsExplorer: React.FC<FieldsExplorerProps> = ({ darkMode }) => {
     }
   };
 
-  const getCategoryColor = (category: string) => {
-    return categoryColors[category as keyof typeof categoryColors] || 'gray';
-  };
+  const categoryColors = {
+  Général: 'text-blue-500',
+  Technique: 'text-green-500',
+  Norme: 'text-yellow-500',
+  Mémo: 'text-purple-500',
+  Quiz: 'text-pink-500',
+};
+
+const getCategoryColor = (category: string) => {
+  return categoryColors[category as keyof typeof categoryColors] || 'gray';
+};
 
   return (
     <div className="min-h-screen pt-24 pb-12 px-6">
