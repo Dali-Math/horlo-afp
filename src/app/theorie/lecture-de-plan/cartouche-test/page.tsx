@@ -2198,7 +2198,6 @@ function App() {
                                   Retour
                                 </Link>
                     </div>
-      />
 
       {/* Toggle Mode */}
       <button
