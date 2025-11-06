@@ -2100,7 +2100,7 @@ export default function Page() {
       memo: <MemoSection darkMode={darkMode} />,
       faq: <FAQSection darkMode={darkMode} />,
       normes: <NormesSection darkMode={darkMode} />,
-    }
+    };
       return (
   <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
     <Navigation
