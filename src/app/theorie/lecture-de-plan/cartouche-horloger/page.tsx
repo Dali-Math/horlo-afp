@@ -2189,6 +2189,30 @@ function App() {
         userProgress={userProgress}
       />
 
+      {/* Bouton Retour vers Lecture de Plan */}
+      <a
+        href="https://www.horlolearn.ch/theorie/lecture-de-plan"
+        className={`fixed top-20 left-4 z-50 flex items-center space-x-2 px-4 py-3 rounded-xl font-semibold transition-all ${
+          darkMode ? 'bg-green-600 hover:bg-green-700' : 'bg-green-500 hover:bg-green-600'
+        } text-white shadow-lg hover:shadow-xl hover:scale-105`}
+      >
+        <ArrowLeft className="w-5 h-5" />
+        <span className="hidden sm:inline">Retour Lecture de Plan</span>
+        <span className="sm:hidden">Retour</span>
+      </a>
+
+      {/* Toggle Mode */}
+      <button
+        onClick={toggleDarkMode}
+        className={`fixed top-4 right-4 z-50 p-3 rounded-full transition-all ${
+          darkMode ? 'bg-gray-800 text-yellow-400' : 'bg-white text-gray-600'
+        } shadow-lg hover:shadow-xl`}
+      >
+        {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+      </button>
+       </div>
+);
+
       {/* Toggle Mode */}
       <button
         onClick={toggleDarkMode}
