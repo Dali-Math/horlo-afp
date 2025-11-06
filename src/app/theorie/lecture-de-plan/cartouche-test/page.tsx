@@ -2092,15 +2092,15 @@ export default function Page() {
   };
 
   const renderSection = () => {
-    const sections: Record<SectionType, JSX.Element> = {
-      champs: <FieldsExplorer darkMode={darkMode} setSelectedField={setSelectedField} onSectionChange={setCurrentSection} />,
-      cartouche: <InteractiveCartouche darkMode={darkMode} selectedField={selectedField} setSelectedField={setSelectedField} />,
-      quiz: <QuizSection darkMode={darkMode} onQuizComplete={handleQuizComplete} />,
-      tableaux: <TablesSection darkMode={darkMode} />,
-      memo: <MemoSection darkMode={darkMode} />,
-      faq: <FAQSection darkMode={darkMode} />,
-      normes: <NormesSection darkMode={darkMode} />,
-    };
+  const sections: Record<SectionType, JSX.Element> = {
+    champs: <FieldsExplorer darkMode={darkMode} setSelectedField={setSelectedField} onSectionChange={setCurrentSection} />,
+    cartouche: <InteractiveCartouche darkMode={darkMode} selectedField={selectedField} setSelectedField={setSelectedField} />,
+    quiz: <QuizSection darkMode={darkMode} onQuizComplete={handleQuizComplete} />,
+    tableaux: <TablesSection darkMode={darkMode} />,
+    memo: <MemoSection darkMode={darkMode} />,
+    faq: <FAQSection darkMode={darkMode} />,
+    normes: <NormesSection darkMode={darkMode} />,
+  }; // ✅
       return (
   <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
     <Navigation
