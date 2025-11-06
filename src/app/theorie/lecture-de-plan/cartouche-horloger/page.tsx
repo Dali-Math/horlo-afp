@@ -2177,11 +2177,11 @@ function App() {
   }
 }; // ← garde uniquement celle-ci ici (et pas de `}` supplémentaire ensuite)
 
-// et maintenant ton JSX principal :
 return (
   <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
     {/* Navbar principale du site */}
     <Navbar />
+    {/* Navigation */}
       {/* Navigation */}
       <Navigation 
         currentSection={currentSection}
@@ -2225,19 +2225,19 @@ return (
       </button>
 
       {/* Contenu principal */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentSection}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-        >
-          {renderCurrentSection()}
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  );
+<div>
+  <AnimatePresence mode="wait">
+    <motion.div
+      key={currentSection}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3 }}
+    >
+      {renderCurrentSection()}
+    </motion.div>
+  </AnimatePresence>
+</div>
 }
 
 export default App;
