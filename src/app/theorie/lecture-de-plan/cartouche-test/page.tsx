@@ -2185,6 +2185,7 @@ function App() {
       <Navigation 
         currentSection={currentSection}
         onSectionChange={setCurrentSection}
+              />
               {/* Bouton retour vers Lecture de plan */}
             <div className="fixed top-20 left-4 z-50">
                       <Link
