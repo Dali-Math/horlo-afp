@@ -2151,33 +2151,34 @@ function App() {
   };
 
   const renderCurrentSection = () => {
-    switch (currentSection) {
-      case 'champs':
-        return <FieldsExplorer darkMode={darkMode} />;
-      case 'cartouche':
-        return (
-          <InteractiveCartouche 
-            darkMode={darkMode} 
-            selectedField={selectedField} 
-            setSelectedField={setSelectedField}
-          />
-        );
-      case 'quiz':
-        return <QuizSection darkMode={darkMode} onQuizComplete={handleQuizComplete} />;
-      case 'tableaux':
-        return <TablesSection darkMode={darkMode} />;
-      case 'memo':
-        return <MemoSection darkMode={darkMode} />;
-      case 'faq':
-        return <FAQSection darkMode={darkMode} />;
-      case 'normes':
-        return <NormesSection darkMode={darkMode} />;
-      default:
-        return <FieldsExplorer darkMode={darkMode} />;
-        } //
-}; // 
-   
- return (
+  switch (currentSection) {
+    case 'champs':
+      return <FieldsExplorer darkMode={darkMode} />;
+    case 'cartouche':
+      return (
+        <InteractiveCartouche
+          darkMode={darkMode}
+          selectedField={selectedField}
+          setSelectedField={setSelectedField}
+        />
+      );
+    case 'quiz':
+      return <QuizSection darkMode={darkMode} onQuizComplete={handleQuizComplete} />;
+    case 'tableaux':
+      return <TablesSection darkMode={darkMode} />;
+    case 'memo':
+      return <MemoSection darkMode={darkMode} />;
+    case 'faq':
+      return <FAQSection darkMode={darkMode} />;
+    case 'normes':
+      return <NormesSection darkMode={darkMode} />;
+    default:
+      return <FieldsExplorer darkMode={darkMode} />;
+  }
+}; // ← garde uniquement celle-ci ici (et pas de `}` supplémentaire ensuite)
+
+// et maintenant ton JSX principal :
+return (
   <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
     {/* Navbar principale du site */}
     <Navbar />
