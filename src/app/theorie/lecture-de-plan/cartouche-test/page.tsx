@@ -1,5 +1,5 @@
 'use client'
-import Navigation from '@/components/Navigation'
+
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
@@ -2173,6 +2173,7 @@ function App() {
       default:
         return <FieldsExplorer darkMode={darkMode} />;
     }
+  };
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
@@ -2193,13 +2194,6 @@ function App() {
       >
         {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
       </button>
-      })
-
-  return (
-  <>
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
-      {/* Navigation */}
-      <Navigation currentSection={currentSection} />
 
       {/* Contenu principal */}
       <AnimatePresence mode="wait">
@@ -2214,7 +2208,7 @@ function App() {
         </motion.div>
       </AnimatePresence>
     </div>
-  </>
-);
+  );
+}
 
 export default App;
