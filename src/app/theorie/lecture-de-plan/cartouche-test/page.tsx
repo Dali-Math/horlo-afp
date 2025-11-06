@@ -10,6 +10,7 @@ import {
   Target, X, Moon, Sun, Building, Tag, Settings, User, Calendar, 
   Percent, Cpu, Hash, Beaker, Layers, Printer, Sparkles
 } from 'lucide-react'
+import { NormesSection } from '@/components/NormesSection';
 
 // Style pour le scroll horizontal sur mobile
 const styles = `
