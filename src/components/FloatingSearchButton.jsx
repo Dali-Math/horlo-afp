@@ -1,17 +1,12 @@
 'use client';
-import React, { useState } from "react";
+import { useState } from "react";
 
-type FloatingSearchButtonProps = {
-  onSearch: (query: string) => void;
-};
-
-export default function FloatingSearchButton({ onSearch }: FloatingSearchButtonProps) {
+export default function FloatingSearchButton({ onSearch }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
 
   return (
     <>
-      {/* Bouton flottant */}
       {!open && (
         <button
           onClick={() => setOpen(true)}
@@ -39,8 +34,6 @@ export default function FloatingSearchButton({ onSearch }: FloatingSearchButtonP
           </svg>
         </button>
       )}
-
-      {/* Popover de recherche */}
       {open && (
         <div
           style={{
