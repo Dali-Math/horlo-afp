@@ -159,14 +159,26 @@ export default function RouageUltimatePage() {
       {/* Navigation flottante */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between max-w-7xl">
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <Settings className="w-8 h-8 text-orange-400 animate-spin-slow" />
-              <div className="absolute inset-0 bg-orange-400/20 blur-xl rounded-full" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold">Le Rouage Horloger</h1>
-              <p className="text-xs text-slate-400">Guide de Référence Complet</p>
+          <div className="flex items-center gap-4">
+            <a
+              href="/theorie"
+              className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors group"
+            >
+              <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span className="text-sm font-medium">Retour</span>
+            </a>
+            <div className="h-6 w-px bg-slate-700"></div>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <Settings className="w-8 h-8 text-orange-400 animate-spin-slow" />
+                <div className="absolute inset-0 bg-orange-400/20 blur-xl rounded-full" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold">Le Rouage Horloger</h1>
+                <p className="text-xs text-slate-400">Guide de Référence Complet</p>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-4">
