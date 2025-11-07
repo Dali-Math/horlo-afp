@@ -6,7 +6,7 @@ import { Clock, Zap, Gauge, Settings, ChevronRight, PlayCircle, PauseCircle, Rot
 export default function RouageUltimatePage() {
   const [activeSection, setActiveSection] = useState('intro');
   const [isAnimating, setIsAnimating] = useState(true);
-  const [selectedMobile, setSelectedMobile] = useState<string | null>(null);
+  const [selectedMobile, setSelectedMobile] = useState(null);
   const [animationSpeed, setAnimationSpeed] = useState(1);
   const [showCalculator, setShowCalculator] = useState(false);
 
@@ -374,7 +374,7 @@ export default function RouageUltimatePage() {
 }
 
 // Composants auxiliaires
-function StatCard({ icon, value, label, color }) {
+function StatCard({ icon, value, label, color }: { icon: React.ReactNode; value: string; label: string; color: 'blue' | 'green' | 'purple' | 'orange' }) {
   const colors = {
     blue: 'from-blue-500/20 to-blue-600/20 border-blue-500/30 text-blue-400',
     green: 'from-green-500/20 to-green-600/20 border-green-500/30 text-green-400',
@@ -393,7 +393,11 @@ function StatCard({ icon, value, label, color }) {
   );
 }
 
-function MobileCard({ mobile, isSelected, onClick }) {
+function MobileCard({ mobile, isSelected, onClick }: { 
+  mobile: any; 
+  isSelected: boolean; 
+  onClick: () => void;
+}) {
   const colors = {
     red: 'from-red-500/20 to-red-600/20 border-red-500/30',
     blue: 'from-blue-500/20 to-blue-600/20 border-blue-500/30',
@@ -448,7 +452,7 @@ function MobileCard({ mobile, isSelected, onClick }) {
   );
 }
 
-function DetailItem({ label, value }) {
+function DetailItem({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <div className="text-xs text-slate-400">{label}</div>
@@ -457,7 +461,7 @@ function DetailItem({ label, value }) {
   );
 }
 
-function ConceptCard({ concept }) {
+function ConceptCard({ concept }: { concept: any }) {
   const colors = {
     blue: 'from-blue-500/10 to-blue-600/10 border-blue-500/20',
     green: 'from-green-500/10 to-green-600/10 border-green-500/20',
@@ -528,7 +532,12 @@ function TransmissionCalculator() {
   );
 }
 
-function GearWheel({ radius, teeth, rotation, color }) {
+function GearWheel({ radius, teeth, rotation, color }: { 
+  radius: number; 
+  teeth: number; 
+  rotation: number; 
+  color: string;
+}) {
   const points = [];
   for (let i = 0; i < teeth; i++) {
     const angle = (i / teeth) * Math.PI * 2 - Math.PI / 2;
@@ -558,7 +567,7 @@ function GearWheel({ radius, teeth, rotation, color }) {
   );
 }
 
-function ArrowPath({ from, to }) {
+function ArrowPath({ from, to }: { from: [number, number]; to: [number, number] }) {
   return (
     <g>
       <line
