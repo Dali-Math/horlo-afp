@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Clock, Zap, Gauge, Settings, ChevronRight, PlayCircle, PauseCircle, RotateCw, Info, ChevronDown } from 'lucide-react';
 
