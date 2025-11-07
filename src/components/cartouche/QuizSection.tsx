@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, Clock, Trophy, Star, RefreshCw, CheckCircle, X, ArrowRight, ArrowLeft, Zap, Target } from 'lucide-react';
-import { quizData } from '../data';
+import { quizData } from '@/components/data';
 
 interface QuizSectionProps {
   darkMode: boolean;
