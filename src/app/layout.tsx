@@ -1,16 +1,15 @@
-
 import "./globals.css";
 import type { Metadata } from "next";
 import { SITE } from "@/lib/seo";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import dynamic from "next/dynamic"; const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: false });
+import dynamic from "next/dynamic";
+const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: false });
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
 import ThemeProvider from "@/components/ThemeProvider";
 import FloatingSearchButton from '../components/FloatingSearchButton';
 import 'swiper/css';
-
 
 export const metadata: Metadata = {
   title: "HorloLearn – Passion & Découverte Horlogère Suisse",
@@ -97,6 +96,11 @@ export default function RootLayout({
     },
   };
 
+  // Fonction exécutée lors de la recherche
+  function handleSearch(query) {
+    window.location.href = `/recherche?q=${encodeURIComponent(query)}`;
+  }
+
   return (
     <html lang="fr" suppressHydrationWarning>
       <body className="bg-light-100 text-slate-900 dark:bg-dark-900 dark:text-light-100 transition-colors duration-300">
@@ -104,6 +108,8 @@ export default function RootLayout({
           <Navbar />
           <main className="min-h-screen overflow-visible relative">{children}</main>
           <Footer />
+          {/* Ajout du bouton de recherche juste avant la fin du body */}
+          <FloatingSearchButton onSearch={handleSearch} />
           <ScrollToTop />
           <Analytics />
           <JsonLd data={org} />
