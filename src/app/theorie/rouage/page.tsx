@@ -10,7 +10,15 @@ export default function RouageUltimatePage() {
   const [selectedMobile, setSelectedMobile] = useState<string | null>(null);
   const [animationSpeed, setAnimationSpeed] = useState(1);
   const [showCalculator, setShowCalculator] = useState(false);
-
+  return (
+    <>
+      <Navbar /> {/* ✅ Barre de tâche du site */}
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
+        {/* tout ton contenu actuel ici */}
+      </div>
+    </>
+  );
+}
   // Animation des roues
   const [rotation, setRotation] = useState({
     barillet: 0,
