@@ -51,7 +51,6 @@ export const QuizSection: React.FC<QuizSectionProps> = ({ darkMode, onQuizComple
   };
 
   const nextQuestion = () => {
-    if (selectedAnswer === null) return;
 
     const timeSpentOnQuestion = (Date.now() - questionStartTime) / 1000;
     const isCorrect = selectedAnswer === currentQ.correctAnswer;
