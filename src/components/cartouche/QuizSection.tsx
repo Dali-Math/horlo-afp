@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Brain, CheckCircle, X, Trophy } from 'lucide-react'
 
-export const QuizSection: React.FC = () => {
+export const QuizSection = () => {
   const quizData = [
     {
       question: "Quelle norme définit les cartouches horlogers ?",
@@ -29,6 +29,11 @@ export const QuizSection: React.FC = () => {
         "Un agrandissement",
         "Une vue en coupe"
       ],
+      correctAnswer: 0
+    },
+    {
+      question: "Quel document définit la présentation des cartouches normalisés ?",
+      options: ["ISO 7200", "ISO 5457", "ISO 216", "ISO 9001"],
       correctAnswer: 0
     }
   ]
@@ -57,7 +62,7 @@ export const QuizSection: React.FC = () => {
       } else {
         setCompleted(true)
       }
-    }, 1200)
+    }, 1000)
   }
 
   const restartQuiz = () => {
