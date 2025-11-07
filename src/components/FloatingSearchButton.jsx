@@ -1,14 +1,17 @@
-
 'use client';
-import { useState } from "react";
+import React, { useState } from "react";
 
-export default function FloatingSearchButton({ onSearch }) {
+type FloatingSearchButtonProps = {
+  onSearch: (query: string) => void;
+};
+
+export default function FloatingSearchButton({ onSearch }: FloatingSearchButtonProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
 
   return (
     <>
-      {/* Bouton flottant loupe */}
+      {/* Bouton flottant */}
       {!open && (
         <button
           onClick={() => setOpen(true)}
@@ -37,7 +40,7 @@ export default function FloatingSearchButton({ onSearch }) {
         </button>
       )}
 
-      {/* Formulaire de recherche flottant */}
+      {/* Popover de recherche */}
       {open && (
         <div
           style={{
@@ -109,7 +112,6 @@ export default function FloatingSearchButton({ onSearch }) {
               }}
               aria-label="Rechercher"
             >
-              {/* Icône loupe */}
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <circle cx="11" cy="11" r="8" stroke="#222" strokeWidth="2" />
                 <line x1="17" y1="17" x2="22" y2="22" stroke="#222" strokeWidth="2" />
