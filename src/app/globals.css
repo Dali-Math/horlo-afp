@@ -481,10 +481,8 @@ html, body {
 }
 
 section {
-  display: block !important;
-  height: auto !important;
-  overflow: visible !important;
-  position: relative !important;
+  position: relative;
+  overflow: visible;
 }
 /* Correction - restaure la grille matériaux */
 .materials-section {
