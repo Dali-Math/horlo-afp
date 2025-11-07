@@ -8,6 +8,7 @@ import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
 import ThemeProvider from "@/components/ThemeProvider";
 import 'swiper/css';
+import BackToTopButton from '@/components/BackToTopButton'
 
 
 export const metadata: Metadata = {
