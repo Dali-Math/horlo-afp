@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import ScrollToTop from '@/components/ScrollToTop'
 import 'swiper/css';
 
 
@@ -105,7 +105,6 @@ export default function RootLayout({
 
         {/* Bouton retour haut de page */}
         <ScrollToTop />
-
         <Analytics />
         <JsonLd data={org} />
         <JsonLd data={siteSearch} />
