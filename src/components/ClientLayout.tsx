@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // ✅ Import du router Next.js
+import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import dynamic from "next/dynamic";
@@ -15,7 +15,7 @@ interface ClientLayoutProps {
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const router = useRouter(); // ✅ Initialisation du router
+  const router = useRouter();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -29,21 +29,14 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const handleSearch = (query: string) => {
-    setIsSearchOpen(false);
-    // ✅ Navigation côté client (plus de 404)
-    router.push(`/recherche?q=${encodeURIComponent(query)}`);
-  };
-
   return (
     <>
       <Navbar onSearchClick={() => setIsSearchOpen(true)} />
       {children}
       <Footer />
-      <SearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-        onSearch={handleSearch}
+      <SearchModal 
+        isOpen={isSearchOpen} 
+        onClose={() => setIsSearchOpen(false)} 
       />
       <FloatingSearchButton onClick={() => setIsSearchOpen(true)} />
     </>
