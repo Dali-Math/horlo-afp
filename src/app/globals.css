@@ -513,4 +513,5 @@ img, video {
   right: 2rem;
   z-index: 50;
 }
+button[aria-label="Remonter en haut"] { z-index: 9999 !important; position: fixed !important; }
 
