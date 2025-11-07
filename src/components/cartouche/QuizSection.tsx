@@ -1,11 +1,38 @@
 'use client'
 
 import React, { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Brain, CheckCircle, X, Trophy } from 'lucide-react'
-import { quizData } from './data'
 
 export const QuizSection: React.FC = () => {
+  const quizData = [
+    {
+      question: "Quelle norme définit les cartouches horlogers ?",
+      options: ["ISO 5457", "ISO 7200", "ISO 9001", "ISO 2768"],
+      correctAnswer: 1
+    },
+    {
+      question: "Quel est le rôle du balancier dans une montre mécanique ?",
+      options: [
+        "Réguler le mouvement",
+        "Afficher l’heure",
+        "Donner l’énergie",
+        "Lubrifier les engrenages"
+      ],
+      correctAnswer: 0
+    },
+    {
+      question: "Que représente l'échelle 1:1 sur un plan horloger ?",
+      options: [
+        "La taille réelle",
+        "Une réduction de moitié",
+        "Un agrandissement",
+        "Une vue en coupe"
+      ],
+      correctAnswer: 0
+    }
+  ]
+
   const [current, setCurrent] = useState(0)
   const [selected, setSelected] = useState<number | null>(null)
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null)
@@ -30,7 +57,7 @@ export const QuizSection: React.FC = () => {
       } else {
         setCompleted(true)
       }
-    }, 1000)
+    }, 1200)
   }
 
   const restartQuiz = () => {
@@ -69,69 +96,67 @@ export const QuizSection: React.FC = () => {
           <div className="text-white text-lg font-bold">Score : {score}</div>
         </div>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current}
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.4 }}
-            className="p-6 rounded-2xl bg-gray-900 border border-gray-700 shadow-lg"
-          >
-            <div className="flex items-center space-x-3 mb-5">
-              <Brain className="text-blue-400 w-6 h-6" />
-              <h3 className="text-2xl font-bold text-white">{question.question}</h3>
-            </div>
+        <motion.div
+          key={current}
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -50 }}
+          transition={{ duration: 0.4 }}
+          className="p-6 rounded-2xl bg-gray-900 border border-gray-700 shadow-lg"
+        >
+          <div className="flex items-center space-x-3 mb-5">
+            <Brain className="text-blue-400 w-6 h-6" />
+            <h3 className="text-2xl font-bold text-white">{question.question}</h3>
+          </div>
 
-            <div className="space-y-3">
-              {question.options.map((opt, i) => {
-                const isSelected = selected === i
-                const correct = feedback === 'correct' && i === question.correctAnswer
-                const wrong = feedback === 'wrong' && isSelected
+          <div className="space-y-3">
+            {question.options.map((opt, i) => {
+              const isSelected = selected === i
+              const correct = feedback === 'correct' && i === question.correctAnswer
+              const wrong = feedback === 'wrong' && isSelected
 
-                return (
-                  <button
-                    key={i}
-                    onClick={() => handleAnswer(i)}
-                    disabled={feedback !== null}
-                    className={`w-full p-4 rounded-xl border text-left transition-all ${
-                      correct
-                        ? 'bg-green-600/30 border-green-500 text-green-200'
-                        : wrong
-                        ? 'bg-red-600/30 border-red-500 text-red-200'
-                        : isSelected
-                        ? 'bg-blue-600/20 border-blue-500 text-blue-300'
-                        : 'border-gray-600 text-gray-200 hover:bg-gray-800'
-                    }`}
-                  >
-                    {opt}
-                  </button>
-                )
-              })}
-            </div>
+              return (
+                <button
+                  key={i}
+                  onClick={() => handleAnswer(i)}
+                  disabled={feedback !== null}
+                  className={`w-full p-4 rounded-xl border text-left transition-all ${
+                    correct
+                      ? 'bg-green-600/30 border-green-500 text-green-200'
+                      : wrong
+                      ? 'bg-red-600/30 border-red-500 text-red-200'
+                      : isSelected
+                      ? 'bg-blue-600/20 border-blue-500 text-blue-300'
+                      : 'border-gray-600 text-gray-200 hover:bg-gray-800'
+                  }`}
+                >
+                  {opt}
+                </button>
+              )
+            })}
+          </div>
 
-            {feedback && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="mt-6 flex items-center space-x-2 text-lg"
-              >
-                {feedback === 'correct' ? (
-                  <>
-                    <CheckCircle className="text-green-400 w-5 h-5" />
-                    <span className="text-green-300 font-semibold">Bonne réponse !</span>
-                  </>
-                ) : (
-                  <>
-                    <X className="text-red-400 w-5 h-5" />
-                    <span className="text-red-300 font-semibold">Mauvaise réponse.</span>
-                  </>
-                )}
-              </motion.div>
-            )}
-          </motion.div>
-        </AnimatePresence>
+          {feedback && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="mt-6 flex items-center space-x-2 text-lg"
+            >
+              {feedback === 'correct' ? (
+                <>
+                  <CheckCircle className="text-green-400 w-5 h-5" />
+                  <span className="text-green-300 font-semibold">Bonne réponse !</span>
+                </>
+              ) : (
+                <>
+                  <X className="text-red-400 w-5 h-5" />
+                  <span className="text-red-300 font-semibold">Mauvaise réponse.</span>
+                </>
+              )}
+            </motion.div>
+          )}
+        </motion.div>
       </div>
     </div>
   )
