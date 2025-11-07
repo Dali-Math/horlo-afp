@@ -211,11 +211,6 @@ export const QuizSection: React.FC<QuizSectionProps> = ({ darkMode, onQuizComple
       <div className="min-h-screen pt-24 pb-12 px-6">
         <div className="max-w-5xl mx-auto">
           {/* Célébration animée */}
-<motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center mb-12"
-          >
             <div className="relative inline-block">
               <motion.div
                 animate={{ 
