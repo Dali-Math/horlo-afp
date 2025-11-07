@@ -4,7 +4,15 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Brain, CheckCircle, X, Trophy } from 'lucide-react'
 
-export const QuizSection = () => {
+interface QuizSectionProps {
+  darkMode?: boolean
+  onQuizComplete?: (score: number, total: number) => void
+}
+
+export const QuizSection: React.FC<QuizSectionProps> = ({
+  darkMode = false,
+  onQuizComplete
+}) => {
   const quizData = [
     {
       question: "Quelle norme définit les cartouches horlogers ?",
@@ -61,6 +69,7 @@ export const QuizSection = () => {
         setCurrent(prev => prev + 1)
       } else {
         setCompleted(true)
+        if (onQuizComplete) onQuizComplete(score + (isCorrect ? 1 : 0), total)
       }
     }, 1000)
   }
@@ -92,13 +101,21 @@ export const QuizSection = () => {
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-6">
+    <div
+      className={`min-h-screen pt-24 pb-12 px-6 ${
+        darkMode ? 'bg-gray-950 text-white' : 'bg-gray-100 text-gray-900'
+      }`}
+    >
       <div className="max-w-3xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-blue-400">
+          <h2
+            className={`text-xl font-semibold ${
+              darkMode ? 'text-blue-400' : 'text-blue-700'
+            }`}
+          >
             Question {current + 1} / {total}
           </h2>
-          <div className="text-white text-lg font-bold">Score : {score}</div>
+          <div className="text-lg font-bold">Score : {score}</div>
         </div>
 
         <motion.div
@@ -107,11 +124,15 @@ export const QuizSection = () => {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -50 }}
           transition={{ duration: 0.4 }}
-          className="p-6 rounded-2xl bg-gray-900 border border-gray-700 shadow-lg"
+          className={`p-6 rounded-2xl border shadow-lg ${
+            darkMode
+              ? 'bg-gray-900 border-gray-700'
+              : 'bg-white border-gray-200'
+          }`}
         >
           <div className="flex items-center space-x-3 mb-5">
             <Brain className="text-blue-400 w-6 h-6" />
-            <h3 className="text-2xl font-bold text-white">{question.question}</h3>
+            <h3 className="text-2xl font-bold">{question.question}</h3>
           </div>
 
           <div className="space-y-3">
@@ -132,7 +153,9 @@ export const QuizSection = () => {
                       ? 'bg-red-600/30 border-red-500 text-red-200'
                       : isSelected
                       ? 'bg-blue-600/20 border-blue-500 text-blue-300'
-                      : 'border-gray-600 text-gray-200 hover:bg-gray-800'
+                      : darkMode
+                      ? 'border-gray-600 text-gray-200 hover:bg-gray-800'
+                      : 'border-gray-300 text-gray-800 hover:bg-gray-100'
                   }`}
                 >
                   {opt}
