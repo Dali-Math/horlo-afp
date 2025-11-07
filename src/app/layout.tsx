@@ -96,8 +96,8 @@ export default function RootLayout({
     },
   };
 
-  // Fonction exécutée lors de la recherche
-  function handleSearch(query) {
+  // Fonction exécutée lors de la recherche avec typage
+  function handleSearch(query: string) {
     window.location.href = `/recherche?q=${encodeURIComponent(query)}`;
   }
 
@@ -108,7 +108,7 @@ export default function RootLayout({
           <Navbar />
           <main className="min-h-screen overflow-visible relative">{children}</main>
           <Footer />
-          {/* Ajout du bouton de recherche juste avant la fin du body */}
+          {/* Ajout du bouton de recherche */}
           <FloatingSearchButton onSearch={handleSearch} />
           <ScrollToTop />
           <Analytics />
