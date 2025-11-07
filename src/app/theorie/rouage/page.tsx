@@ -375,7 +375,7 @@ export default function RouageUltimatePage() {
 
 // Composants auxiliaires
 function StatCard({ icon, value, label, color }: { icon: React.ReactNode; value: string; label: string; color: 'blue' | 'green' | 'purple' | 'orange' }) {
-  const colors = {
+  const colors: Record<string, string> = {
     blue: 'from-blue-500/20 to-blue-600/20 border-blue-500/30 text-blue-400',
     green: 'from-green-500/20 to-green-600/20 border-green-500/30 text-green-400',
     purple: 'from-purple-500/20 to-purple-600/20 border-purple-500/30 text-purple-400',
@@ -408,7 +408,7 @@ function MobileCard({ mobile, isSelected, onClick }: {
 
   return (
     <div
-      className={`bg-gradient-to-br ${colors[mobile.color]} backdrop-blur-xl rounded-2xl p-6 border cursor-pointer transition-all hover:scale-105 ${
+      className={`bg-gradient-to-br ${colors[mobile.color as keyof typeof colors] || colors.blue} backdrop-blur-xl rounded-2xl p-6 border cursor-pointer transition-all hover:scale-105 ${
         isSelected ? 'ring-2 ring-white' : ''
       }`}
       onClick={onClick}
@@ -438,7 +438,7 @@ function MobileCard({ mobile, isSelected, onClick }: {
           <div>
             <div className="text-xs text-slate-400 mb-1">Caractéristiques:</div>
             <ul className="text-sm space-y-1">
-              {mobile.details.caracteristiques.map((car, idx) => (
+              {mobile.details.caracteristiques.map((car: string, idx: number) => (
                 <li key={idx} className="flex items-start gap-2">
                   <span className="text-orange-400">•</span>
                   <span>{car}</span>
@@ -462,7 +462,7 @@ function DetailItem({ label, value }: { label: string; value: string }) {
 }
 
 function ConceptCard({ concept }: { concept: any }) {
-  const colors = {
+  const colors: Record<string, string> = {
     blue: 'from-blue-500/10 to-blue-600/10 border-blue-500/20',
     green: 'from-green-500/10 to-green-600/10 border-green-500/20',
     purple: 'from-purple-500/10 to-purple-600/10 border-purple-500/20',
@@ -470,7 +470,7 @@ function ConceptCard({ concept }: { concept: any }) {
   };
 
   return (
-    <div className={`bg-gradient-to-br ${colors[concept.color]} backdrop-blur-xl rounded-2xl p-6 border`}>
+    <div className={`bg-gradient-to-br ${colors[concept.color as keyof typeof colors] || colors.blue} backdrop-blur-xl rounded-2xl p-6 border`}>
       <h3 className="text-xl font-bold mb-3">{concept.title}</h3>
       <div className="bg-slate-900/50 rounded-lg p-4 mb-4 font-mono text-2xl text-center text-orange-400">
         {concept.formula}
