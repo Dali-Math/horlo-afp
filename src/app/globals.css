@@ -513,5 +513,14 @@ img, video {
   right: 2rem;
   z-index: 50;
 }
-button[aria-label="Remonter en haut"] { z-index: 9999 !important; position: fixed !important; }
+
+html, body {
+  position: relative !important;
+  height: auto !important;
+  min-height: 100vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  scroll-behavior: smooth;
+}
+
 
