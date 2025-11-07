@@ -6,7 +6,7 @@ import { Clock, Zap, Gauge, Settings, ChevronRight, PlayCircle, PauseCircle, Rot
 export default function RouageUltimatePage() {
   const [activeSection, setActiveSection] = useState('intro');
   const [isAnimating, setIsAnimating] = useState(true);
-  const [selectedMobile, setSelectedMobile] = useState(null);
+  const [selectedMobile, setSelectedMobile] = useState<string | null>(null);
   const [animationSpeed, setAnimationSpeed] = useState(1);
   const [showCalculator, setShowCalculator] = useState(false);
 
