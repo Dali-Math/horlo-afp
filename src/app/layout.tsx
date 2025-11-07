@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { SITE } from "@/lib/seo";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ScrollToTop from "@/components/ScrollToTop";
+import dynamic from "next/dynamic"; const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: false });
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
 import ThemeProvider from "@/components/ThemeProvider";
