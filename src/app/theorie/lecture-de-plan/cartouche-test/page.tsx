@@ -12,7 +12,7 @@ import {
   Percent, Cpu, Hash, Beaker, Layers, Printer, Sparkles
 } from 'lucide-react'
 import { NormesSection as NormesISO } from '@/components/NormesSection';
-// import { FAQSection } from '@/components/cartouche/FAQSection';
+import { FAQSection } from '@/components/cartouche/FAQSection';
 // import { MemoSection } from '@/components/cartouche/MemoSection';
 // import { QuizSection } from '@/components/cartouche/QuizSection';
 // import { TablesSection } from '@/components/cartouche/TablesSection';
