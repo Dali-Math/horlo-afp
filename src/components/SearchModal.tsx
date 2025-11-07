@@ -1,94 +1,28 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation"; // ✅ Import du router Next.js
+import { useRouter } from "next/navigation";
 import { Search, X, Clock, FileText, Video, BookOpen } from "lucide-react";
-
-interface SearchResult {
-  id: number;
-  title: string;
-  description: string;
-  type: "fiche" | "article" | "video" | "quiz";
-  url: string;
-  icon: React.ComponentType<any>;
-}
+import { searchData } from "@/lib/searchData";
 
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSearch?: (query: string) => void;
 }
 
 export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
-  const router = useRouter(); // ✅ Initialisation du router Next.js
+  const router = useRouter();
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [results, setResults] = useState<typeof searchData>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const searchableContent: SearchResult[] = [
-    {
-      id: 1,
-      title: "ETA 6497 - Fiche Technique",
-      description:
-        "Calibre mécanique à remontage manuel, mouvement emblématique de l'horlogerie suisse",
-      type: "fiche",
-      url: "/fiches/eta-6497",
-      icon: Clock,
-    },
-    {
-      id: 2,
-      title: "Les Complications Horlogères",
-      description:
-        "Découvrez les différentes complications : chronographe, quantième, phases de lune",
-      type: "article",
-      url: "/articles/complications",
-      icon: BookOpen,
-    },
-    {
-      id: 3,
-      title: "Démontage d'un Mouvement ETA",
-      description:
-        "Tutoriel vidéo complet sur le démontage et remontage d'un calibre ETA",
-      type: "video",
-      url: "/videos/demontage-eta",
-      icon: Video,
-    },
-    {
-      id: 4,
-      title: "Quiz: Les Bases de l'Horlogerie",
-      description:
-        "Testez vos connaissances sur les mécanismes horlogers fondamentaux",
-      type: "quiz",
-      url: "/quiz/bases-horlogerie",
-      icon: FileText,
-    },
-    {
-      id: 5,
-      title: "Le Spiral: Cœur du Mouvement",
-      description:
-        "Comprendre le rôle et la fabrication du spiral dans un mouvement mécanique",
-      type: "article",
-      url: "/articles/spiral",
-      icon: BookOpen,
-    },
-    {
-      id: 6,
-      title: "ETA 2824-2 - Fiche Technique",
-      description:
-        "Mouvement automatique de référence, base de nombreuses montres suisses",
-      type: "fiche",
-      url: "/fiches/eta-2824-2",
-      icon: Clock,
-    },
-  ];
-
+  // ✅ focus automatique quand on ouvre le modal
   useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus();
-    }
+    if (isOpen && inputRef.current) inputRef.current.focus();
   }, [isOpen]);
 
+  // ✅ recherche dans searchData global
   useEffect(() => {
     if (query.length < 2) {
       setResults([]);
@@ -98,9 +32,9 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     setIsSearching(true);
 
     const timer = setTimeout(() => {
-      const filtered = searchableContent.filter((item) => {
-        const searchText = `${item.title} ${item.description}`.toLowerCase();
-        return searchText.includes(query.toLowerCase());
+      const filtered = searchData.filter((item) => {
+        const text = `${item.title} ${item.description} ${item.keywords?.join(" ")}`.toLowerCase();
+        return text.includes(query.toLowerCase());
       });
 
       setResults(filtered);
@@ -110,19 +44,25 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     return () => clearTimeout(timer);
   }, [query]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
-      onClose();
-    }
-  };
-
-  // ✅ Navigation interne sans 404
   const handleResultClick = (url: string) => {
     onClose();
-    router.push(url);
+    router.push(url); // ✅ navigation interne
   };
 
-  if (!isOpen) return null;
+  const getIcon = (type: string) => {
+    switch (type) {
+      case "fiche":
+        return Clock;
+      case "article":
+        return BookOpen;
+      case "video":
+        return Video;
+      case "quiz":
+        return FileText;
+      default:
+        return Search;
+    }
+  };
 
   const getTypeLabel = (type: string) => {
     const labels: Record<string, string> = {
@@ -134,19 +74,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     return labels[type] || type;
   };
 
-  const getTypeBadgeColor = (type: string) => {
-    const colors: Record<string, string> = {
-      fiche:
-        "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
-      article:
-        "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
-      video:
-        "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300",
-      quiz:
-        "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300",
-    };
-    return colors[type] || "bg-gray-100 text-gray-700";
-  };
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4">
@@ -158,7 +86,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
       {/* Modal */}
       <div className="relative w-full max-w-2xl bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
-        {/* Header avec barre de recherche */}
+        {/* Barre de recherche */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
             <Search className="w-5 h-5 text-gray-400" />
@@ -167,7 +95,6 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={handleKeyDown}
               placeholder="Rechercher sur HorloLearn..."
               className="flex-1 bg-transparent border-none outline-none text-gray-900 dark:text-gray-100 placeholder-gray-400"
             />
@@ -180,18 +107,17 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
           </div>
         </div>
 
-        {/* Résultats */}
+        {/* Contenu */}
         <div className="max-h-96 overflow-y-auto">
+          {/* Vide */}
           {query.length === 0 && (
             <div className="p-8 text-center text-gray-500">
               <Search className="w-12 h-12 mx-auto mb-3 opacity-50" />
               <p>Commencez à taper pour rechercher...</p>
-              <p className="text-sm mt-2">
-                Essayez "ETA", "complications", "quiz"...
-              </p>
             </div>
           )}
 
+          {/* Chargement */}
           {query.length > 0 && isSearching && (
             <div className="p-8 text-center text-gray-500">
               <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-3" />
@@ -199,21 +125,22 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
             </div>
           )}
 
+          {/* Aucune correspondance */}
           {query.length > 0 && !isSearching && results.length === 0 && (
             <div className="p-8 text-center text-gray-500">
               <p>Aucun résultat trouvé pour "{query}"</p>
-              <p className="text-sm mt-2">Essayez avec d'autres mots-clés</p>
             </div>
           )}
 
+          {/* Résultats */}
           {results.length > 0 && (
             <div className="py-2">
               {results.map((result) => {
-                const Icon = result.icon;
+                const Icon = getIcon(result.type);
                 return (
                   <button
                     key={result.id}
-                    onClick={() => handleResultClick(result.url)} // ✅ navigation interne
+                    onClick={() => handleResultClick(result.url)}
                     className="w-full flex items-start gap-4 p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors text-left"
                   >
                     <div className="flex-shrink-0 w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
@@ -224,11 +151,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">
                           {result.title}
                         </h3>
-                        <span
-                          className={`text-xs px-2 py-0.5 rounded-full ${getTypeBadgeColor(
-                            result.type
-                          )}`}
-                        >
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                           {getTypeLabel(result.type)}
                         </span>
                       </div>
@@ -244,14 +167,8 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
         </div>
 
         {/* Footer */}
-        <div className="p-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <div className="flex items-center gap-4">
-              <span>↵ Ouvrir</span>
-              <span>ESC Fermer</span>
-            </div>
-            <span>{results.length} résultat(s)</span>
-          </div>
+        <div className="p-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-xs text-gray-500 text-center">
+          {results.length} résultat(s)
         </div>
       </div>
     </div>
