@@ -5,230 +5,113 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronLeft, Clock, Cog, Gauge, Settings, Eye, Watch, 
-  RotateCw, Trophy, BookOpen, Zap, TrendingUp, Award, 
-  ZoomIn, Info, Loader2, X, Layers
+  RotateCw, Trophy, BookOpen, Zap, TrendingUp, Award
 } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
 
-// Composant Schéma avec VRAIES images des organes
-const SchemaMecanismeAvecImages = () => {
+// Composant Schéma Interactif
+const SchemaMecanisme = () => {
   const [organeSelectionne, setOrganeSelectionne] = useState<string | null>(null);
-  // CORRECTION : Type modifié pour accepter boolean ou string
-  const [imageChargee, setImageChargee] = useState<Record<string, boolean | string>>({});
   
   const organes = useMemo(() => [
     { 
       id: 'barillet', 
       nom: 'Barillet', 
       desc: 'Stocke l\'énergie du ressort moteur. Contient le ressort qui libère progressivement son énergie.', 
-      specs: 'Diamètre: 16mm • Matière: Laiton • Tours: 7-8 rotations',
-      x: 15, y: 50, 
-      image: '/images/organe-barillet.png',
-      alt: 'Barillet de montre mécanique avec ressort moteur visible'
+      x: 15, y: 50, couleur: '#3B82F6', 
+      lien: '/theorie/le-barillet'
     },
     { 
       id: 'rouage', 
-      nom: 'Train de Rouages', 
-      desc: 'Ensemble de roues dentées et pignons qui démultiplient la vitesse de rotation.', 
-      specs: 'Rapport: 1:60 • Matériaux: Laiton, acier • Lubrification: Huile synthétique',
-      x: 38, y: 50, 
-      image: '/images/organe-rouage.png',
-      alt: 'Train de rouages d\'une montre mécanique'
+      nom: 'Rouage', 
+      desc: 'Transmet et démultiplie l\'énergie du barillet vers l\'échappement.', 
+      x: 38, y: 50, couleur: '#10B981', 
+      lien: '/theorie/le-rouage'
     },
     { 
       id: 'echappement', 
       nom: 'Échappement', 
-      desc: 'Transforme l\'énergie continue en impulsions régulières (le "tic-tac" caractéristique).', 
-      specs: 'Type: Ancre suisse • Alternances: 8/sec • Matière: Acier trempé',
-      x: 61, y: 50, 
-      image: '/images/organe-echappement.png',
-      alt: 'Échappement à ancre suisse avec roue de fuite'
+      desc: 'Transforme l\'énergie continue en impulsions régulières (le "tic-tac").', 
+      x: 61, y: 50, couleur: '#8B5CF6', 
+      lien: '/theorie/echappement-ancre'
     },
     { 
       id: 'balancier', 
       nom: 'Balancier-Spiral', 
-      desc: 'Organe réglant qui oscille à fréquence constante pour mesurer le temps avec précision.', 
-      specs: 'Fréquence: 28\'800 A/h • Spiral: Flat • Amplitude: 270-320°',
-      x: 84, y: 50, 
-      image: '/images/organe-balancier.png',
-      alt: 'Balancier avec spiral de Breguet et col de cygne'
+      desc: 'Organe réglant qui oscille à fréquence constante pour mesurer le temps.', 
+      x: 84, y: 50, couleur: '#F59E0B', 
+      lien: '/theorie/balancier-spiral'
     },
   ], []);
 
-  const handleImageLoad = (id: string) => {
-    setImageChargee(prev => ({ ...prev, [id]: true }));
-  };
-
-  const handleImageError = (id: string) => {
-    // CORRECTION : 'error' est maintenant autorisé par le type boolean | string
-    setImageChargee(prev => ({ ...prev, [id]: 'error' }));
-  };
-
   return (
-    <div className="relative w-full h-[500px] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 rounded-xl border-2 border-slate-300 dark:border-slate-600 overflow-hidden shadow-inner">
-      
-      {/* Fond technique avec vis */}
-      <div className="absolute inset-0 opacity-5">
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={`vis-${i}`}
-            className="absolute w-1 h-1 bg-slate-600 dark:bg-slate-300 rounded-full"
-            style={{
-              left: `${10 + (i * 15)}%`,
-              top: `${i % 2 === 0 ? '5%' : '92%'}`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Flèches de flux avec animation */}
-      <svg className="w-full h-full absolute inset-0 pointer-events-none">
+    <div className="relative w-full h-96 bg-slate-50 dark:bg-slate-900 rounded-xl p-8 border-2 border-slate-200 dark:border-slate-700">
+      <svg className="w-full h-full">
         <defs>
-          <marker id="arrowhead" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
-            <polygon points="0 0, 12 4, 0 8" className="fill-blue-600 dark:fill-blue-400" />
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" className="fill-blue-500" />
           </marker>
         </defs>
         
+        {/* Flèches de flux */}
         {organes.map((o, i) => i < organes.length - 1 && (
-          <motion.g key={`flux-${i}`}>
-            <motion.line
-              x1={`${o.x + 8}%`} y1={`${o.y}%`}
-              x2={`${organes[i + 1].x - 8}%`} y2={`${organes[i + 1].y}%`}
-              stroke="#3B82F6" strokeWidth="4" markerEnd="url(#arrowhead)"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 1 }}
-              transition={{ delay: i * 0.4, duration: 1, ease: "easeInOut" }}
-            />
-            {/* Points de connexion */}
-            <circle cx={`${o.x + 8}%`} cy={`${o.y}%`} r="2" className="fill-blue-600 dark:fill-blue-400" />
-            <circle cx={`${organes[i + 1].x - 8}%`} cy={`${organes[i + 1].y}%`} r="2" className="fill-blue-600 dark:fill-blue-400" />
+          <motion.line
+            key={`fleche-${i}`}
+            x1={`${o.x + 5}%`} y1={`${o.y}%`}
+            x2={`${organes[i + 1].x - 5}%`} y2={`${organes[i + 1].y}%`}
+            stroke="#60A5FA" strokeWidth="3" markerEnd="url(#arrowhead)"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ delay: i * 0.3, duration: 0.8 }}
+          />
+        ))}
+
+        {/* Cercles des organes */}
+        {organes.map((o, i) => (
+          <motion.g
+            key={o.id}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: i * 0.2, type: "spring", stiffness: 260, damping: 20 }}
+            className="cursor-pointer"
+            onClick={() => setOrganeSelectionne(o.id)}
+          >
+            <circle cx={`${o.x}%`} cy={`${o.y}%`} r="40" fill={o.couleur} stroke="#fff" strokeWidth="3" />
+            <text x={`${o.x}%`} y={`${o.y}%`} textAnchor="middle" fill="white" fontSize="12" fontWeight="bold" dy=".3em">
+              {o.nom}
+            </text>
           </motion.g>
         ))}
       </svg>
 
-      {/* Composants avec images réelles */}
-      {organes.map((o, i) => (
-        <motion.div
-          key={o.id}
-          className="absolute cursor-pointer group"
-          style={{ left: `${o.x}%`, top: `${o.y}%`, x: '-50%', y: '-50%' }}
-          initial={{ scale: 0, rotate: -90, opacity: 0, filter: "blur(4px)" }}
-          animate={{ scale: 1, rotate: 0, opacity: 1, filter: "blur(0px)" }}
-          transition={{ delay: i * 0.3, type: "spring", stiffness: 200, damping: 20 }}
-          whileHover={{ scale: 1.08, rotate: 2, zIndex: 10, y: '-52%' }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setOrganeSelectionne(o.id)}
-        >
-          {/* Conteneur avec effet de profondeur */}
-          <div className="relative w-36 h-36 bg-white dark:bg-slate-800 rounded-full shadow-2xl border-4 border-slate-300 dark:border-slate-600 overflow-hidden">
-            
-            {/* Effet de brillance métallique au hover */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 to-transparent opacity-0 group-hover:opacity-100"
-              transition={{ duration: 0.4 }}
-            />
-            
-            {/* Image ou fallback */}
-            {!imageChargee[o.id] ? (
-              // Loader pendant le chargement
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-700">
-                <Loader2 className="w-10 h-10 text-blue-600 animate-spin mb-2" />
-                <span className="text-xs text-slate-500">Chargement...</span>
-              </div>
-            ) : imageChargee[o.id] === 'error' ? (
-              // Fallback si erreur de chargement
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 to-blue-200 dark:from-slate-600 dark:to-slate-700">
-                <Cog className="w-16 h-16 text-blue-600 dark:text-blue-400" />
-                <span className="text-xs text-slate-600 dark:text-slate-300 mt-2">Image non disponible</span>
-              </div>
-            ) : null}
-
-            {/* Image réelle */}
-            <div className="absolute inset-0">
-              <Image
-                src={o.image}
-                alt={o.alt}
-                fill
-                className="object-contain p-2 transition-transform duration-300 group-hover:scale-110"
-                sizes="(max-width: 768px) 100px, 144px"
-                onLoad={() => handleImageLoad(o.id)}
-                onError={() => handleImageError(o.id)}
-              />
-            </div>
-          </div>
-
-          {/* Label avec animation */}
-          <motion.p 
-            className="text-center mt-4 font-bold text-slate-900 dark:text-white text-sm bg-white/90 dark:bg-slate-800/90 px-4 py-2 rounded-full shadow-lg backdrop-blur-sm"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.3 + 0.5 }}
-          >
-            {o.nom}
-          </motion.p>
-        </motion.div>
-      ))}
-
-      {/* Zone d'informations détaillées */}
+      {/* Zone d'information */}
       <AnimatePresence>
         {organeSelectionne && (
           <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 30, scale: 0.95 }}
-            className="absolute bottom-4 left-4 right-4 bg-white/95 dark:bg-slate-800/95 rounded-xl p-6 shadow-2xl border-2 border-blue-600 z-20 backdrop-blur-md"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="absolute bottom-4 left-4 right-4 bg-white dark:bg-slate-800 rounded-lg p-4 shadow-xl border border-slate-200 dark:border-slate-700"
           >
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1">
-                <h4 className="font-bold text-xl text-slate-900 dark:text-white mb-1 flex items-center">
-                  <Info className="w-5 h-5 mr-2 text-blue-600 flex-shrink-0" />
+            <div className="flex items-start justify-between">
+              <div>
+                <h4 className="font-bold text-slate-900 dark:text-white mb-2">
                   {organes.find(o => o.id === organeSelectionne)?.nom}
                 </h4>
-                <p className="text-xs text-slate-600 dark:text-slate-400 mb-3">
-                  {organes.find(o => o.id === organeSelectionne)?.specs}
-                </p>
-                <p className="text-slate-700 dark:text-slate-300">
+                <p className="text-sm text-slate-700 dark:text-slate-300">
                   {organes.find(o => o.id === organeSelectionne)?.desc}
                 </p>
               </div>
-              <motion.button
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
+              <button
                 onClick={() => setOrganeSelectionne(null)}
-                className="ml-4 text-slate-400 hover:text-slate-600 flex-shrink-0"
+                className="ml-4 text-slate-400 hover:text-slate-600"
               >
-                <X className="w-6 h-6" />
-              </motion.button>
-            </div>
-            
-            <div className="mt-4 flex flex-wrap gap-3">
-              <Link 
-                href={`/theorie/${organeSelectionne}`}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
-              >
-                <Layers className="w-4 h-4 mr-2" />
-                Voir le détail
-              </Link>
-              <button className="border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex items-center">
-                <ZoomIn className="w-4 h-4 mr-2" />
-                Visualiser en 3D
+                ×
               </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Instructions au hover */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 0.5 }}
-        className="absolute top-3 right-3 bg-blue-600 text-white px-3 py-1 rounded-full text-xs shadow-lg flex items-center gap-1"
-      >
-        <ZoomIn className="w-3 h-3" />
-        Cliquez sur les composants
-      </motion.div>
     </div>
   );
 };
@@ -398,20 +281,43 @@ export default function IntroductionMontreMecanique() {
         >
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center">
             <Cog className="w-8 h-8 mr-3 text-blue-600" />
-            Les 6 organes principaux - Vue technique
+            Les 6 organes principaux
           </h2>
 
           <p className="text-slate-700 dark:text-slate-300 mb-6">
-            Une montre mécanique simple se compose de <strong className="text-slate-900 dark:text-white">six organes essentiels</strong> qui travaillent ensemble pour mesurer le temps avec précision. Cliquez sur chaque composant pour voir les détails techniques.
+            Une montre mécanique simple se compose de <strong className="text-slate-900 dark:text-white">six organes essentiels</strong> qui travaillent ensemble pour mesurer le temps avec précision :
           </p>
 
-          {/* Schéma interactif avec vraies images */}
-          <SchemaMecanismeAvecImages />
-          
-          <p className="text-sm text-slate-500 text-center mt-6 flex items-center justify-center gap-2">
-            <Info className="w-4 h-4" />
-            Les images sont des représentations techniques réelles. Les couleurs et finitions varient selon les calibres.
+          {/* Schéma interactif */}
+          <SchemaMecanisme />
+          <p className="text-sm text-slate-500 text-center mt-4">
+            Cliquez sur un organe pour plus d'informations • <Link href="/theorie/anatomie-detaillee" className="text-blue-600 hover:underline">Voir l'anatomie détaillée</Link>
           </p>
+
+          <div className="grid md:grid-cols-2 gap-6 mt-8">
+            {[
+              { Icon: Clock, couleur: 'from-blue-50 to-indigo-50', bordure: 'border-blue-200', titre: '1. Le Moteur (Barillet)', desc: 'Le barillet contient le ressort moteur qui stocke l\'énergie mécanique. C\'est la source d\'énergie de la montre.', lien: '/theorie/le-barillet' },
+              { Icon: RotateCw, couleur: 'from-green-50 to-emerald-50', bordure: 'border-green-200', titre: '2. Le Rouage', desc: 'Ensemble de roues dentées et pignons qui transmettent l\'énergie du barillet vers l\'échappement en démultipliant la vitesse.', lien: '/theorie/le-rouage' },
+              { Icon: Gauge, couleur: 'from-purple-50 to-violet-50', bordure: 'border-purple-200', titre: '3. L\'Échappement', desc: 'Transforme l\'énergie continue en impulsions régulières. C\'est le "cœur battant" de la montre (tic-tac).', lien: '/theorie/echappement-ancre' },
+              { Icon: Settings, couleur: 'from-orange-50 to-amber-50', bordure: 'border-orange-200', titre: '4. L\'Organe Réglant', desc: 'Le balancier-spiral oscille à fréquence constante et régule la vitesse du mouvement. C\'est lui qui garantit la précision.', lien: '/theorie/balancier-spiral' },
+              { Icon: Eye, couleur: 'from-red-50 to-rose-50', bordure: 'border-red-200', titre: '5. Le Remontoir', desc: 'Mécanisme permettant d\'armer le ressort (manuellement via la couronne, ou automatiquement via une masse oscillante).', lien: '/theorie/remontage' },
+              { Icon: Watch, couleur: 'from-cyan-50 to-sky-50', bordure: 'border-cyan-200', titre: '6. L\'Affichage', desc: 'Les aiguilles et cadran qui permettent de lire l\'heure. Actionnés par le rouage via la chaussée et la minuterie.', lien: '/theorie/affichage' },
+            ].map((item, i) => (
+              <div 
+                key={i}
+                className={`bg-gradient-to-br ${item.couleur} dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border ${item.bordure} dark:border-slate-600 transition-transform hover:scale-105`}
+              >
+                <div className="flex items-center mb-3">
+                  <item.Icon className="w-8 h-8 text-blue-600 dark:text-blue-400 mr-3 flex-shrink-0" />
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">{item.titre}</h3>
+                </div>
+                <p className="text-slate-700 dark:text-slate-300 mb-3">{item.desc}</p>
+                <Link href={item.lien} className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
+                  En savoir plus →
+                </Link>
+              </div>
+            ))}
+          </div>
         </motion.section>
 
         {/* Section 3: Fonctionnement général */}
