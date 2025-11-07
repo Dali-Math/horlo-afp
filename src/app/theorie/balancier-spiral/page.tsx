@@ -5,7 +5,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { 
   ChevronLeft, Gauge, Zap, Settings, TrendingUp, Clock, Play, Pause, RotateCw, 
-  Thermometer, Magnet, CheckCircle, XCircle, Award, BookOpen, Layers, Activity,
+  Thermometer, Magnet, CheckCircle, XCircle, Award, Trophy, BookOpen, Layers, Activity,
   Calendar, Users, Microscope, Target, Sliders, Info, RotateCcw, Loader2
 } from 'lucide-react';
 import Link from 'next/link';
@@ -16,6 +16,17 @@ const Anatomie3DBalancier = () => {
   const [partieActive, setPartieActive] = useState<string | null>(null);
   const controles = useAnimation();
   
+  // Définition de l'animation pour éviter la duplication
+  const animationOscillation = {
+    rotate: [0, 15, 0, -15, 0],
+    transition: {
+      duration: 0.125,
+      repeat: Infinity,
+      ease: "linear",
+      repeatDelay: 0
+    }
+  };
+
   const composants = useMemo(() => [
     {
       id: 'serge',
@@ -49,16 +60,8 @@ const Anatomie3DBalancier = () => {
 
   // Animation d'oscillation du balancier
   useEffect(() => {
-    controles.start({
-      rotate: [0, 15, 0, -15, 0],
-      transition: {
-        duration: 0.125,
-        repeat: Infinity,
-        ease: "linear",
-        repeatDelay: 0
-      }
-    });
-  }, [controles]);
+    controles.start(animationOscillation);
+  }, [controles, animationOscillation]);
 
   return (
     <div className="relative bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl h-96 overflow-hidden border border-slate-700">
@@ -162,7 +165,7 @@ const Anatomie3DBalancier = () => {
       {/* Contrôles */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-slate-900/90 backdrop-blur-md rounded-full p-2 border border-slate-600">
         <button
-          onClick={() => controles.start()}
+          onClick={() => controles.start(animationOscillation)} // CORRIGÉ : ajout de l'argument
           className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-sm font-medium transition-colors flex items-center gap-2"
         >
           <Play className="w-4 h-4" /> Osciller
@@ -515,7 +518,7 @@ const ComparateurMateriaux = () => {
             <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-1">{mat.nom}</h3>
             <p className="text-xs text-slate-500 mb-3">{mat.periode}</p>
             <div className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{mat.precision}%</div>
-            <div className="text-xs text-slate-600">Précision</div>
+            <div className="text-xs text-slate-400">Précision</div>
           </motion.button>
         ))}
       </div>
@@ -1121,7 +1124,7 @@ export default function BalancierSpiral() {
                     >
                       {currentQuestion < quizData.length - 1 ? 
                         <>Question suivante <Trophy className="w-5 h-5" /></> : 
-                        <>Voir les résults <Award className="w-5 h-5" /></>
+                        <>Voir les résultats <Award className="w-5 h-5" /></>
                       }
                     </motion.button>
                   </motion.div>
