@@ -1728,7 +1728,7 @@ function App() {
           />
         );
       case 'quiz':
-        return <QuizSection />;
+        return <QuizSection darkMode={darkMode} onQuizComplete={handleQuizComplete} />;
       case 'tableaux':
         return <TablesSection darkMode={darkMode} />;
       case 'memo':
