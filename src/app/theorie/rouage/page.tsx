@@ -601,4 +601,3 @@ function ArrowPath({ from, to }: { from: [number, number]; to: [number, number] 
     </g>
   );
 }
-}
