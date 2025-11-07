@@ -10,7 +10,7 @@ export default function RouageUltimatePage() {
   const [selectedMobile, setSelectedMobile] = useState<string | null>(null);
   const [animationSpeed, setAnimationSpeed] = useState(1);
   const [showCalculator, setShowCalculator] = useState(false);
-  
+
   // Animation des roues
   const [rotation, setRotation] = useState({
     barillet: 0,
@@ -19,15 +19,7 @@ export default function RouageUltimatePage() {
     seconde: 0,
     echappement: 0
   });
-  return (
-  <>
-      <Navbar /> {/* ✅ Barre de tâche du site */}
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
-        {/* tout ton contenu actuel ici */}
-      </div>
-    </>
-  );
-}
+
   useEffect(() => {
     if (!isAnimating) return;
     
@@ -162,6 +154,13 @@ export default function RouageUltimatePage() {
       color: 'orange'
     }
   ];
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
+      {/* ...tout ton JSX comme fourni précédemment... */}
+      {/* Place ici tout le contenu, nav, sections, call to action */}
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
