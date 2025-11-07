@@ -96,18 +96,21 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="fr" suppressHydrationWarning>
-      <body className="bg-light-100 text-slate-900 dark:bg-dark-900 dark:text-light-100 transition-colors duration-300">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <Navbar />
-          <main className="min-h-screen overflow-visible relative">{children}</main>
-          <Footer />
-          <ScrollToTop />
-          <Analytics />
-          <JsonLd data={org} />
-          <JsonLd data={siteSearch} />
-        </ThemeProvider>
-      </body>
-    </html>
+  <html lang="fr" suppressHydrationWarning>
+    <body className="bg-light-100 text-slate-900 dark:bg-dark-900 dark:text-light-100 transition-colors duration-300">
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        <Navbar />
+        <main className="min-h-screen overflow-visible relative">{children}</main>
+        <Footer />
+
+        {/* Bouton retour haut de page */}
+        <BackToTopButton />
+
+        <Analytics />
+        <JsonLd data={org} />
+        <JsonLd data={siteSearch} />
+      </ThemeProvider>
+    </body>
+  </html>
   );
 }
