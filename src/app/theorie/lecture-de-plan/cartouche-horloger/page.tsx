@@ -15,7 +15,7 @@ import {
 import { NormesSection as NormesISO } from '@/components/NormesSection';
 import { FAQSection } from '@/components/cartouche/FAQSection';
 // import { MemoSection } from '@/components/cartouche/MemoSection';
-// import { QuizSection } from '@/components/cartouche/QuizSection';
+import { QuizSection } from '@/components/cartouche/QuizSection';
 // import { TablesSection } from '@/components/cartouche/TablesSection';
 
 // Style pour le scroll horizontal sur mobile
@@ -1110,59 +1110,6 @@ const FieldsExplorer = ({ darkMode }: any) => {
     </div>
   );
 };
-
-// QuizSection Component
-const QuizSection = ({ darkMode, onQuizComplete }: any) => {
-  const [current, setCurrent] = useState(0);
-  const [selected, setSelected] = useState<number | null>(null);
-  const [score, setScore] = useState(0);
-  const [done, setDone] = useState(false);
-
-  const next = () => {
-    if (selected === quizData[current].correctAnswer) setScore(score + 1);
-    if (current < quizData.length - 1) { setCurrent(current + 1); setSelected(null); }
-    else { setDone(true); onQuizComplete?.(Math.round((score / quizData.length) * 100), quizData.length); }
-  };
-
-  if (done) return (
-    <div className="min-h-screen pt-24 pb-12 px-3 sm:px-6">
-      <div className="max-w-4xl mx-auto text-center">
-        <Trophy className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-yellow-500" />
-        <h1 className={`text-3xl sm:text-4xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Quiz Terminé!</h1>
-        <p className="text-4xl sm:text-6xl font-bold text-blue-500 mb-4">{Math.round((score / quizData.length) * 100)}%</p>
-        <p className={`text-base sm:text-lg ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{score}/{quizData.length} bonnes réponses</p>
-        <button onClick={() => { setCurrent(0); setSelected(null); setScore(0); setDone(false); }}
-          className="mt-6 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors">Recommencer</button>
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="min-h-screen pt-24 pb-12 px-3 sm:px-6">
-      <div className="max-w-4xl mx-auto">
-        <h1 className={`text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Quiz</h1>
-        <div className={`p-6 sm:p-8 rounded-2xl mb-6 sm:mb-8 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <h2 className={`text-lg sm:text-xl font-bold mb-4 sm:mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>{quizData[current].question}</h2>
-          <div className="space-y-3">
-            {quizData[current].options.map((opt, i) => (
-              <button key={i} onClick={() => setSelected(i)}
-                className={`w-full p-3 sm:p-4 text-left text-sm sm:text-base rounded-xl border-2 transition-all ${
-                  selected === i ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : darkMode ? 'border-gray-600 hover:border-gray-500' : 'border-gray-200 hover:border-gray-300'
-                }`}>
-                {opt}
-              </button>
-            ))}
-          </div>
-        </div>
-        <button onClick={next} disabled={selected === null}
-          className="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-blue-500 text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors">
-          {current < quizData.length - 1 ? 'Suivant' : 'Terminer'}
-        </button>
-      </div>
-    </div>
-  );
-};
-
 // TablesSection Component
 const TablesSection = ({ darkMode }: any) => {
   const [activeTab, setActiveTab] = useState<'formats' | 'materiaux' | 'traitements'>('formats');
