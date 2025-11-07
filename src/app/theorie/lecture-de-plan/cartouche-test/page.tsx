@@ -1554,59 +1554,6 @@ const TablesSection = ({ darkMode }: any) => {
     </div>
   );
 };
-
-// FAQSection Component
-const FAQSection = ({ darkMode }: any) => {
-  const [open, setOpen] = useState<Set<string>>(new Set());
-  
-  const faqs = [
-    { q: "Différence entre O et C ?", a: "O = obligatoire, C = conditionnel" },
-    { q: "Gérer les révisions ?", a: "Tableau de révision avec indice, date, description des modifications" },
-    { q: "Formats autorisés ?", a: "A4 à A0 selon ISO 5457" },
-    { q: "Position du cartouche ?", a: "Coin inférieur droit, aligné sur les marges" },
-    { q: "Taille maximale ?", a: "170 mm de largeur selon ISO 7200" }
-  ];
-
-  return (
-    <div className="min-h-screen pt-24 pb-12 px-3 sm:px-6">
-      <div className="max-w-4xl mx-auto">
-        <h1 className={`text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 ${darkMode ? 'text-white' : 'text-gray-900'}`}>FAQ</h1>
-        {faqs.map((faq, index) => (
-          <div key={index} className={`mb-3 sm:mb-4 rounded-xl border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-            <button
-              onClick={() => {
-                const newOpen = new Set(open);
-                if (open.has(faq.q)) newOpen.delete(faq.q);
-                else newOpen.add(faq.q);
-                setOpen(newOpen);
-              }}
-              className={`w-full p-4 sm:p-6 text-left flex items-center justify-between ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'} transition-colors`}
-            >
-              <span className={`font-semibold text-sm sm:text-base ${darkMode ? 'text-white' : 'text-gray-900'}`}>{faq.q}</span>
-              {open.has(faq.q) ? <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" /> : <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />}
-            </button>
-            <AnimatePresence>
-              {open.has(faq.q) && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden"
-                >
-                  <div className={`px-4 sm:px-6 pb-4 sm:pb-6 text-sm sm:text-base ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    {faq.a}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
 // NormesSection Component (simplifié pour l'espace)
 const NormesSection = ({ darkMode }: any) => {
   const [activeStandard, setActiveStandard] = useState<'7200' | '5457'>('7200');
