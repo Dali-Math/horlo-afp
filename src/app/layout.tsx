@@ -8,6 +8,7 @@ import dynamic from "next/dynamic"; const ScrollToTop = dynamic(() => import("@/
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
 import ThemeProvider from "@/components/ThemeProvider";
+import FloatingSearchButton from '../components/FloatingSearchButton';
 import 'swiper/css';
 
 
