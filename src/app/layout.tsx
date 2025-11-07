@@ -8,7 +8,7 @@ const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: fal
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
 import ThemeProvider from "@/components/ThemeProvider";
-import FloatingSearchButton from '../components/FloatingSearchButton';
+import dynamic from "next/dynamic"; const FloatingSearchButton = dynamic(() => import('../components/FloatingSearchButton'), { ssr: false });
 import 'swiper/css';
 
 export const metadata: Metadata = {
