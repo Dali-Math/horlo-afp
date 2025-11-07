@@ -1,6 +1,6 @@
 
 'use client';
-
+import Navbar from '@/components/Navbar';
 import React, { useState, useEffect, useRef } from 'react';
 import { Clock, Zap, Gauge, Settings, ChevronRight, PlayCircle, PauseCircle, RotateCw, Info, ChevronDown } from 'lucide-react';
 
