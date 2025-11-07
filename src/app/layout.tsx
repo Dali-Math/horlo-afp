@@ -5,10 +5,10 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import dynamic from "next/dynamic";
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: false });
+const FloatingSearchButton = dynamic(() => import('../components/FloatingSearchButton'), { ssr: false });
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
 import ThemeProvider from "@/components/ThemeProvider";
-import dynamic from "next/dynamic"; const FloatingSearchButton = dynamic(() => import('../components/FloatingSearchButton'), { ssr: false });
 import 'swiper/css';
 
 export const metadata: Metadata = {
@@ -108,7 +108,6 @@ export default function RootLayout({
           <Navbar />
           <main className="min-h-screen overflow-visible relative">{children}</main>
           <Footer />
-          {/* Ajout du bouton de recherche */}
           <FloatingSearchButton onSearch={handleSearch} />
           <ScrollToTop />
           <Analytics />
