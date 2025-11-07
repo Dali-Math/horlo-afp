@@ -1,11 +1,13 @@
+
 import "./globals.css";
 import type { Metadata } from "next";
 import { SITE } from "@/lib/seo";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
-import ScrollToTop from '@/components/ScrollToTop'
+import ThemeProvider from "@/components/ThemeProvider";
 import 'swiper/css';
 
 
@@ -95,20 +97,18 @@ export default function RootLayout({
   };
 
   return (
-  <html lang="fr" suppressHydrationWarning>
-    <body className="bg-light-100 text-slate-900 dark:bg-dark-900 dark:text-light-100 transition-colors duration-300">
-      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-        <Navbar />
-        <main className="min-h-screen overflow-visible relative">{children}</main>
-        <Footer />
-
-        {/* Bouton retour haut de page */}
-        <ScrollToTop />
-        <Analytics />
-        <JsonLd data={org} />
-        <JsonLd data={siteSearch} />
-      </ThemeProvider>
-    </body>
-  </html>
+    <html lang="fr" suppressHydrationWarning>
+      <body className="bg-light-100 text-slate-900 dark:bg-dark-900 dark:text-light-100 transition-colors duration-300">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <Navbar />
+          <main className="min-h-screen overflow-visible relative">{children}</main>
+          <Footer />
+          <ScrollToTop />
+          <Analytics />
+          <JsonLd data={org} />
+          <JsonLd data={siteSearch} />
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
