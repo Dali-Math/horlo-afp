@@ -506,4 +506,11 @@ img, video {
   height: auto;
   display: block;
 }
+/* Correction bouton "remonter en haut" */
+.back-to-top {
+  position: fixed !important;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 50;
+}
 
