@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Brain, CheckCircle, X, ArrowRight, Trophy } from 'lucide-react'
+import { Brain, CheckCircle, X, Trophy } from 'lucide-react'
 import { quizData } from './data'
 
-export default function QuizSection() {
+export const QuizSection: React.FC = () => {
   const [current, setCurrent] = useState(0)
   const [selected, setSelected] = useState<number | null>(null)
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null)
@@ -16,12 +16,12 @@ export default function QuizSection() {
   const question = quizData[current]
 
   const handleAnswer = (index: number) => {
+    if (feedback) return
     setSelected(index)
     const isCorrect = index === question.correctAnswer
     setFeedback(isCorrect ? 'correct' : 'wrong')
     if (isCorrect) setScore(prev => prev + 1)
 
-    // Passe automatiquement à la question suivante après 1.2s
     setTimeout(() => {
       setFeedback(null)
       setSelected(null)
@@ -30,7 +30,15 @@ export default function QuizSection() {
       } else {
         setCompleted(true)
       }
-    }, 1200)
+    }, 1000)
+  }
+
+  const restartQuiz = () => {
+    setCurrent(0)
+    setSelected(null)
+    setFeedback(null)
+    setScore(0)
+    setCompleted(false)
   }
 
   if (completed) {
@@ -42,12 +50,8 @@ export default function QuizSection() {
           Score : {score} / {total}
         </p>
         <button
-          onClick={() => {
-            setCurrent(0)
-            setScore(0)
-            setCompleted(false)
-          }}
-          className="px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700"
+          onClick={restartQuiz}
+          className="px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
         >
           Recommencer
         </button>
@@ -56,58 +60,56 @@ export default function QuizSection() {
   }
 
   return (
-    <div className="min-h-screen pt-24 px-6">
+    <div className="min-h-screen pt-24 pb-12 px-6">
       <div className="max-w-3xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold text-blue-400">
             Question {current + 1} / {total}
           </h2>
-          <div className="text-white text-lg font-bold">
-            Score : {score}
-          </div>
+          <div className="text-white text-lg font-bold">Score : {score}</div>
         </div>
 
-        <motion.div
-          key={current}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -50 }}
-          transition={{ duration: 0.4 }}
-          className="p-6 rounded-2xl bg-gray-900 border border-gray-700 shadow-lg"
-        >
-          <div className="flex items-center space-x-3 mb-5">
-            <Brain className="text-blue-400 w-6 h-6" />
-            <h3 className="text-2xl font-bold text-white">{question.question}</h3>
-          </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current}
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.4 }}
+            className="p-6 rounded-2xl bg-gray-900 border border-gray-700 shadow-lg"
+          >
+            <div className="flex items-center space-x-3 mb-5">
+              <Brain className="text-blue-400 w-6 h-6" />
+              <h3 className="text-2xl font-bold text-white">{question.question}</h3>
+            </div>
 
-          <div className="space-y-3">
-            {question.options.map((opt, i) => {
-              const isSelected = selected === i
-              const correct = feedback === 'correct' && i === question.correctAnswer
-              const wrong = feedback === 'wrong' && isSelected
+            <div className="space-y-3">
+              {question.options.map((opt, i) => {
+                const isSelected = selected === i
+                const correct = feedback === 'correct' && i === question.correctAnswer
+                const wrong = feedback === 'wrong' && isSelected
 
-              return (
-                <button
-                  key={i}
-                  onClick={() => handleAnswer(i)}
-                  disabled={feedback !== null}
-                  className={`w-full p-4 rounded-xl border text-left transition-all ${
-                    correct
-                      ? 'bg-green-600/30 border-green-500 text-green-200'
-                      : wrong
-                      ? 'bg-red-600/30 border-red-500 text-red-200'
-                      : isSelected
-                      ? 'bg-blue-600/20 border-blue-500 text-blue-300'
-                      : 'border-gray-600 text-gray-200 hover:bg-gray-800'
-                  }`}
-                >
-                  {opt}
-                </button>
-              )
-            })}
-          </div>
+                return (
+                  <button
+                    key={i}
+                    onClick={() => handleAnswer(i)}
+                    disabled={feedback !== null}
+                    className={`w-full p-4 rounded-xl border text-left transition-all ${
+                      correct
+                        ? 'bg-green-600/30 border-green-500 text-green-200'
+                        : wrong
+                        ? 'bg-red-600/30 border-red-500 text-red-200'
+                        : isSelected
+                        ? 'bg-blue-600/20 border-blue-500 text-blue-300'
+                        : 'border-gray-600 text-gray-200 hover:bg-gray-800'
+                    }`}
+                  >
+                    {opt}
+                  </button>
+                )
+              })}
+            </div>
 
-          <AnimatePresence>
             {feedback && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -118,22 +120,18 @@ export default function QuizSection() {
                 {feedback === 'correct' ? (
                   <>
                     <CheckCircle className="text-green-400 w-5 h-5" />
-                    <span className="text-green-300 font-semibold">
-                      Bonne réponse !
-                    </span>
+                    <span className="text-green-300 font-semibold">Bonne réponse !</span>
                   </>
                 ) : (
                   <>
                     <X className="text-red-400 w-5 h-5" />
-                    <span className="text-red-300 font-semibold">
-                      Mauvaise réponse.
-                    </span>
+                    <span className="text-red-300 font-semibold">Mauvaise réponse.</span>
                   </>
                 )}
               </motion.div>
             )}
-          </AnimatePresence>
-        </motion.div>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   )
