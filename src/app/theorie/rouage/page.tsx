@@ -1,4 +1,3 @@
-
 'use client';
 import Navbar from '@/components/Navbar';
 import React, { useState, useEffect, useRef } from 'react';
@@ -156,233 +155,237 @@ export default function RouageUltimatePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
-      {/* Navigation flottante */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between max-w-7xl">
-          <div className="flex items-center gap-4">
-            <a
-              href="/theorie"
-              className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors group"
-            >
-              <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              <span className="text-sm font-medium">Retour</span>
-            </a>
-            <div className="h-6 w-px bg-slate-700"></div>
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <Settings className="w-8 h-8 text-orange-400 animate-spin-slow" />
-                <div className="absolute inset-0 bg-orange-400/20 blur-xl rounded-full" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold">Le Rouage Horloger</h1>
-                <p className="text-xs text-slate-400">Guide de Référence Complet</p>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setIsAnimating(!isAnimating)}
-              className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors"
-            >
-              {isAnimating ? <PauseCircle className="w-5 h-5" /> : <PlayCircle className="w-5 h-5" />}
-            </button>
-            <button
-              onClick={() => setShowCalculator(!showCalculator)}
-              className="px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 transition-colors text-sm font-semibold"
-            >
-              Calculateur
-            </button>
-          </div>
-        </div>
-      </nav>
+    <>
+      <Navbar /> {/* ✅ Barre de navigation principale du site */}
 
-      <div className="pt-24 pb-16">
-        {/* Hero Section avec Animation Interactive */}
-        <section className="container mx-auto px-4 max-w-7xl mb-16">
-          <div className="text-center mb-12">
-            <span className="inline-block px-4 py-2 bg-orange-500/20 text-orange-400 rounded-full text-sm font-semibold mb-6 border border-orange-500/30">
-              Théorie Fondamentale
-            </span>
-            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-orange-400 via-orange-300 to-yellow-400 bg-clip-text text-transparent">
-              La Transmission Cinématique
-            </h2>
-            <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-              Le cœur mécanique d'une montre : un système de roues dentées qui transforme l'énergie du barillet en un mouvement précis et régulé
-            </p>
-          </div>
-
-          {/* Stats Clés */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-            <StatCard icon={<Clock />} value="4-5" label="Mobiles" color="blue" />
-            <StatCard icon={<Gauge />} value="95-98%" label="Rendement" color="green" />
-            <StatCard icon={<Zap />} value="28.8K" label="Alt/heure" color="purple" />
-            <StatCard icon={<Settings />} value="1µm" label="Tolérance" color="orange" />
-          </div>
-
-          {/* Visualisation Interactive du Train */}
-          <div className="bg-slate-800/50 backdrop-blur-xl rounded-3xl p-8 border border-slate-700 shadow-2xl">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold">Train de Rouage Interactif</h3>
-              <div className="flex items-center gap-4">
-                <label className="text-sm text-slate-400">Vitesse:</label>
-                <input
-                  type="range"
-                  min="0.1"
-                  max="3"
-                  step="0.1"
-                  value={animationSpeed}
-                  onChange={(e) => setAnimationSpeed(parseFloat(e.target.value))}
-                  className="w-32"
-                />
-                <span className="text-sm font-mono">{animationSpeed.toFixed(1)}x</span>
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
+        {/* Navigation flottante propre à la page Rouage */}
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800">
+          <div className="container mx-auto px-4 py-4 flex items-center justify-between max-w-7xl">
+            <div className="flex items-center gap-4">
+              <a
+                href="/theorie"
+                className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors group"
+              >
+                <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                <span className="text-sm font-medium">Retour</span>
+              </a>
+              <div className="h-6 w-px bg-slate-700"></div>
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <Settings className="w-8 h-8 text-orange-400 animate-spin-slow" />
+                  <div className="absolute inset-0 bg-orange-400/20 blur-xl rounded-full" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold">Le Rouage Horloger</h1>
+                  <p className="text-xs text-slate-400">Guide de Référence Complet</p>
+                </div>
               </div>
             </div>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setIsAnimating(!isAnimating)}
+                className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors"
+              >
+                {isAnimating ? <PauseCircle className="w-5 h-5" /> : <PlayCircle className="w-5 h-5" />}
+              </button>
+              <button
+                onClick={() => setShowCalculator(!showCalculator)}
+                className="px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 transition-colors text-sm font-semibold"
+              >
+                Calculateur
+              </button>
+            </div>
+          </div>
+        </nav>
 
-            <div className="relative h-64 bg-slate-900/50 rounded-2xl overflow-hidden mb-6">
-              {/* Visualisation simplifiée du train */}
-              <svg className="w-full h-full" viewBox="0 0 1000 300">
-                {/* Barillet */}
-                <g transform="translate(100, 150)">
-                  <circle
-                    r="40"
-                    fill="none"
-                    stroke="#ef4444"
-                    strokeWidth="3"
-                    opacity="0.3"
-                  />
-                  <GearWheel
-                    radius={35}
-                    teeth={12}
-                    rotation={rotation.barillet}
-                    color="#ef4444"
-                  />
-                  <text y="70" textAnchor="middle" fill="#ef4444" fontSize="12" fontWeight="bold">
-                    Barillet
-                  </text>
-                </g>
-
-                {/* Roue de Centre */}
-                <g transform="translate(250, 150)">
-                  <circle r="50" fill="none" stroke="#3b82f6" strokeWidth="2" opacity="0.2" />
-                  <GearWheel
-                    radius={45}
-                    teeth={16}
-                    rotation={rotation.centre}
-                    color="#3b82f6"
-                  />
-                  <text y="75" textAnchor="middle" fill="#3b82f6" fontSize="12" fontWeight="bold">
-                    Centre (1 tr/h)
-                  </text>
-                </g>
-
-                {/* Roue Moyenne */}
-                <g transform="translate(450, 150)">
-                  <circle r="45" fill="none" stroke="#10b981" strokeWidth="2" opacity="0.2" />
-                  <GearWheel
-                    radius={40}
-                    teeth={14}
-                    rotation={rotation.moyenne}
-                    color="#10b981"
-                  />
-                  <text y="70" textAnchor="middle" fill="#10b981" fontSize="12" fontWeight="bold">
-                    Moyenne
-                  </text>
-                </g>
-
-                {/* Roue de Seconde */}
-                <g transform="translate(650, 150)">
-                  <circle r="40" fill="none" stroke="#a855f7" strokeWidth="2" opacity="0.2" />
-                  <GearWheel
-                    radius={35}
-                    teeth={12}
-                    rotation={rotation.seconde}
-                    color="#a855f7"
-                  />
-                  <text y="65" textAnchor="middle" fill="#a855f7" fontSize="12" fontWeight="bold">
-                    Seconde (1 tr/min)
-                  </text>
-                </g>
-
-                {/* Roue d'Échappement */}
-                <g transform="translate(850, 150)">
-                  <circle r="30" fill="none" stroke="#f97316" strokeWidth="2" opacity="0.2" />
-                  <GearWheel
-                    radius={25}
-                    teeth={8}
-                    rotation={rotation.echappement}
-                    color="#f97316"
-                  />
-                  <text y="55" textAnchor="middle" fill="#f97316" fontSize="12" fontWeight="bold">
-                    Échappement
-                  </text>
-                </g>
-
-                {/* Flèches de transmission */}
-                <ArrowPath from={[140, 150]} to={[205, 150]} />
-                <ArrowPath from={[295, 150]} to={[405, 150]} />
-                <ArrowPath from={[495, 150]} to={[610, 150]} />
-                <ArrowPath from={[690, 150]} to={[820, 150]} />
-              </svg>
+        <div className="pt-24 pb-16">
+          {/* Hero Section avec Animation Interactive */}
+          <section className="container mx-auto px-4 max-w-7xl mb-16">
+            <div className="text-center mb-12">
+              <span className="inline-block px-4 py-2 bg-orange-500/20 text-orange-400 rounded-full text-sm font-semibold mb-6 border border-orange-500/30">
+                Théorie Fondamentale
+              </span>
+              <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-orange-400 via-orange-300 to-yellow-400 bg-clip-text text-transparent">
+                La Transmission Cinématique
+              </h2>
+              <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+                Le cœur mécanique d'une montre : un système de roues dentées qui transforme l'énergie du barillet en un mouvement précis et régulé
+              </p>
             </div>
 
-            <p className="text-sm text-slate-400 text-center">
-              Cliquez sur pause/play pour contrôler l'animation • Ajustez la vitesse avec le curseur
-            </p>
-          </div>
-        </section>
+            {/* Stats Clés */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+              <StatCard icon={<Clock />} value="4-5" label="Mobiles" color="blue" />
+              <StatCard icon={<Gauge />} value="95-98%" label="Rendement" color="green" />
+              <StatCard icon={<Zap />} value="28.8K" label="Alt/heure" color="purple" />
+              <StatCard icon={<Settings />} value="1µm" label="Tolérance" color="orange" />
+            </div>
 
-        {/* Section Mobiles Détaillés */}
-        <section className="container mx-auto px-4 max-w-7xl mb-16">
-          <h2 className="text-4xl font-bold mb-8 text-center">Les 5 Mobiles du Train</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mobiles.map((mobile) => (
-              <MobileCard
-                key={mobile.id}
-                mobile={mobile}
-                isSelected={selectedMobile === mobile.id}
-                onClick={() => setSelectedMobile(selectedMobile === mobile.id ? null : mobile.id)}
-              />
-            ))}
-          </div>
-        </section>
+            {/* Visualisation Interactive du Train */}
+            <div className="bg-slate-800/50 backdrop-blur-xl rounded-3xl p-8 border border-slate-700 shadow-2xl">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold">Train de Rouage Interactif</h3>
+                <div className="flex items-center gap-4">
+                  <label className="text-sm text-slate-400">Vitesse:</label>
+                  <input
+                    type="range"
+                    min="0.1"
+                    max="3"
+                    step="0.1"
+                    value={animationSpeed}
+                    onChange={(e) => setAnimationSpeed(parseFloat(e.target.value))}
+                    className="w-32"
+                  />
+                  <span className="text-sm font-mono">{animationSpeed.toFixed(1)}x</span>
+                </div>
+              </div>
 
-        {/* Concepts Mathématiques */}
-        <section className="container mx-auto px-4 max-w-7xl mb-16">
-          <h2 className="text-4xl font-bold mb-8 text-center">Concepts Mathématiques Clés</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {concepts.map((concept, idx) => (
-              <ConceptCard key={idx} concept={concept} />
-            ))}
-          </div>
-        </section>
+              <div className="relative h-64 bg-slate-900/50 rounded-2xl overflow-hidden mb-6">
+                {/* Visualisation simplifiée du train */}
+                <svg className="w-full h-full" viewBox="0 0 1000 300">
+                  {/* Barillet */}
+                  <g transform="translate(100, 150)">
+                    <circle
+                      r="40"
+                      fill="none"
+                      stroke="#ef4444"
+                      strokeWidth="3"
+                      opacity="0.3"
+                    />
+                    <GearWheel
+                      radius={35}
+                      teeth={12}
+                      rotation={rotation.barillet}
+                      color="#ef4444"
+                    />
+                    <text y="70" textAnchor="middle" fill="#ef4444" fontSize="12" fontWeight="bold">
+                      Barillet
+                    </text>
+                  </g>
 
-        {/* Calculateur */}
-        {showCalculator && (
-          <section className="container mx-auto px-4 max-w-4xl mb-16">
-            <div className="bg-slate-800/50 backdrop-blur-xl rounded-3xl p-8 border border-slate-700">
-              <TransmissionCalculator />
+                  {/* Roue de Centre */}
+                  <g transform="translate(250, 150)">
+                    <circle r="50" fill="none" stroke="#3b82f6" strokeWidth="2" opacity="0.2" />
+                    <GearWheel
+                      radius={45}
+                      teeth={16}
+                      rotation={rotation.centre}
+                      color="#3b82f6"
+                    />
+                    <text y="75" textAnchor="middle" fill="#3b82f6" fontSize="12" fontWeight="bold">
+                      Centre (1 tr/h)
+                    </text>
+                  </g>
+
+                  {/* Roue Moyenne */}
+                  <g transform="translate(450, 150)">
+                    <circle r="45" fill="none" stroke="#10b981" strokeWidth="2" opacity="0.2" />
+                    <GearWheel
+                      radius={40}
+                      teeth={14}
+                      rotation={rotation.moyenne}
+                      color="#10b981"
+                    />
+                    <text y="70" textAnchor="middle" fill="#10b981" fontSize="12" fontWeight="bold">
+                      Moyenne
+                    </text>
+                  </g>
+
+                  {/* Roue de Seconde */}
+                  <g transform="translate(650, 150)">
+                    <circle r="40" fill="none" stroke="#a855f7" strokeWidth="2" opacity="0.2" />
+                    <GearWheel
+                      radius={35}
+                      teeth={12}
+                      rotation={rotation.seconde}
+                      color="#a855f7"
+                    />
+                    <text y="65" textAnchor="middle" fill="#a855f7" fontSize="12" fontWeight="bold">
+                      Seconde (1 tr/min)
+                    </text>
+                  </g>
+
+                  {/* Roue d'Échappement */}
+                  <g transform="translate(850, 150)">
+                    <circle r="30" fill="none" stroke="#f97316" strokeWidth="2" opacity="0.2" />
+                    <GearWheel
+                      radius={25}
+                      teeth={8}
+                      rotation={rotation.echappement}
+                      color="#f97316"
+                    />
+                    <text y="55" textAnchor="middle" fill="#f97316" fontSize="12" fontWeight="bold">
+                      Échappement
+                    </text>
+                  </g>
+
+                  {/* Flèches de transmission */}
+                  <ArrowPath from={[140, 150]} to={[205, 150]} />
+                  <ArrowPath from={[295, 150]} to={[405, 150]} />
+                  <ArrowPath from={[495, 150]} to={[610, 150]} />
+                  <ArrowPath from={[690, 150]} to={[820, 150]} />
+                </svg>
+              </div>
+
+              <p className="text-sm text-slate-400 text-center">
+                Cliquez sur pause/play pour contrôler l'animation • Ajustez la vitesse avec le curseur
+              </p>
             </div>
           </section>
-        )}
 
-        {/* Call to Action */}
-        <section className="container mx-auto px-4 max-w-4xl">
-          <div className="bg-gradient-to-br from-orange-600 to-orange-700 rounded-3xl p-12 text-center shadow-2xl">
-            <h2 className="text-4xl font-bold mb-4">📝 Testez vos connaissances</h2>
-            <p className="text-xl text-orange-100 mb-8">
-              Maîtrisez-vous les secrets de la transmission cinématique ?
-            </p>
-            <button className="px-8 py-4 bg-white text-orange-600 font-bold rounded-xl hover:bg-orange-50 transition-all transform hover:scale-105 shadow-lg inline-flex items-center gap-2">
-              Commencer le quiz
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
-        </section>
+          {/* Section Mobiles Détaillés */}
+          <section className="container mx-auto px-4 max-w-7xl mb-16">
+            <h2 className="text-4xl font-bold mb-8 text-center">Les 5 Mobiles du Train</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {mobiles.map((mobile) => (
+                <MobileCard
+                  key={mobile.id}
+                  mobile={mobile}
+                  isSelected={selectedMobile === mobile.id}
+                  onClick={() => setSelectedMobile(selectedMobile === mobile.id ? null : mobile.id)}
+                />
+              ))}
+            </div>
+          </section>
+
+          {/* Concepts Mathématiques */}
+          <section className="container mx-auto px-4 max-w-7xl mb-16">
+            <h2 className="text-4xl font-bold mb-8 text-center">Concepts Mathématiques Clés</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              {concepts.map((concept, idx) => (
+                <ConceptCard key={idx} concept={concept} />
+              ))}
+            </div>
+          </section>
+
+          {/* Calculateur */}
+          {showCalculator && (
+            <section className="container mx-auto px-4 max-w-4xl mb-16">
+              <div className="bg-slate-800/50 backdrop-blur-xl rounded-3xl p-8 border border-slate-700">
+                <TransmissionCalculator />
+              </div>
+            </section>
+          )}
+
+          {/* Call to Action */}
+          <section className="container mx-auto px-4 max-w-4xl">
+            <div className="bg-gradient-to-br from-orange-600 to-orange-700 rounded-3xl p-12 text-center shadow-2xl">
+              <h2 className="text-4xl font-bold mb-4">📝 Testez vos connaissances</h2>
+              <p className="text-xl text-orange-100 mb-8">
+                Maîtrisez-vous les secrets de la transmission cinématique ?
+              </p>
+              <button className="px-8 py-4 bg-white text-orange-600 font-bold rounded-xl hover:bg-orange-50 transition-all transform hover:scale-105 shadow-lg inline-flex items-center gap-2">
+                Commencer le quiz
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          </section>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
