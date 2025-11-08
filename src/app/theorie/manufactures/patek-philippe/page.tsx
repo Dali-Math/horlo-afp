@@ -157,16 +157,17 @@ export default function PatekPhilippeUltimate() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
       {/* HEADER CINÉMATIQUE */}
       <header className="relative h-screen overflow-hidden">
-        <ReactPlayer
-          url="/videos/patek-hero.mp4"
-          playing={isPlaying}
-          loop
-          muted
-          width="100%"
-          height="100%"
-          className="absolute inset-0"
-          style={{ objectFit: 'cover' }}
-        />
+  <ReactPlayer
+    url="/videos/patek-hero.mp4"
+    playing={isPlaying}
+    loop
+    muted
+    width="100%"
+    height="100%"
+    className="absolute inset-0"
+    style={{ objectFit: 'cover' }}
+  />
+</header>
         
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end">
           <div className="max-w-7xl mx-auto px-8 pb-20">
