@@ -4,6 +4,18 @@
 
 import React from "react";
 import Link from "next/link";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+} from "recharts";
 
 export default function ManufacturesPage() {
   // Fonction pour le scrolling smooth
@@ -463,6 +475,102 @@ export default function ManufacturesPage() {
           </div>
         </div>
       </section>
+      {/* Excellence en Chiffres */}
+<section id="excellence" className="py-20 precision-grid">
+  <div className="container mx-auto px-6">
+    <div className="text-center mb-16">
+      <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4 text-[#fafafa]">
+        L'Excellence en Chiffres
+      </h2>
+      <p className="text-xl text-[#c0c0c0]/70 max-w-3xl mx-auto">
+        Analyse comparative des manufactures suisses à travers les âges.
+      </p>
+    </div>
+
+    <div className="grid md:grid-cols-2 gap-8">
+      {/* Diagramme circulaire */}
+      <div className="bg-[#0a0a0a]/60 border border-[#c0c0c0]/20 rounded-2xl p-6 shadow-lg">
+        <h3 className="text-center text-2xl font-bold mb-6 text-[#fafafa]">
+          Âge des Manufactures
+        </h3>
+        <div className="w-full h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={[
+                  { name: "Vacheron Constantin (1755)", value: 1755 },
+                  { name: "Patek Philippe (1839)", value: 1839 },
+                  { name: "Omega (1848)", value: 1848 },
+                  { name: "Audemars Piguet (1875)", value: 1875 },
+                  { name: "Rolex (1905)", value: 1905 },
+                ]}
+                dataKey="value"
+                cx="50%"
+                cy="50%"
+                outerRadius={100}
+                innerRadius={60}
+                fill="#d4af37"
+                labelLine={false}
+              >
+                <Cell fill="#d4af37" />
+                <Cell fill="#e5e5e5" />
+                <Cell fill="#8b7355" />
+                <Cell fill="#444" />
+                <Cell fill="#222" />
+              </Pie>
+              <Tooltip
+                contentStyle={{
+                  background: "#0a0a0a",
+                  border: "1px solid #c0c0c0",
+                  color: "#fafafa",
+                }}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Ligne d'évolution */}
+      <div className="bg-[#0a0a0a]/60 border border-[#c0c0c0]/20 rounded-2xl p-6 shadow-lg">
+        <h3 className="text-center text-2xl font-bold mb-6 text-[#fafafa]">
+          Innovations par Décennie
+        </h3>
+        <div className="w-full h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={[
+                { decade: "1920s", innovations: 2 },
+                { decade: "1940s", innovations: 3 },
+                { decade: "1960s", innovations: 5 },
+                { decade: "1980s", innovations: 4 },
+                { decade: "2000s", innovations: 6 },
+                { decade: "2020s", innovations: 8 },
+              ]}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+              <XAxis dataKey="decade" stroke="#c0c0c0" />
+              <YAxis stroke="#c0c0c0" />
+              <Tooltip
+                contentStyle={{
+                  background: "#0a0a0a",
+                  border: "1px solid #c0c0c0",
+                  color: "#fafafa",
+                }}
+              />
+              <Line
+                type="monotone"
+                dataKey="innovations"
+                stroke="#d4af37"
+                strokeWidth={3}
+                dot={{ fill: "#d4af37" }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* Footer */}
       <footer className="bg-[#0a0a0a] border-t border-[#c0c0c0]/20 py-12">
