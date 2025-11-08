@@ -12,7 +12,6 @@ import Link from 'next/link';
 // CONFIGURATION SANS DÉPENDANCES EXTERNES
 // =================================================
 
-// Traductions intégrées
 const TRANSLATIONS = {
   fr: {
     back: 'Retour à la théorie',
@@ -163,11 +162,8 @@ const TRANSLATIONS = {
 // =================================================
 
 const SectionCard = ({ title, children, icon: Icon }: any) => (
-  <motion.div
-    initial={{ opacity: 0, x: -50 }}
-    whileInView={{ opacity: 1, x: 0 }}
-    viewport={{ once: true }}
-    className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 lg:p-8 mb-6"
+  <div
+    className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 lg:p-8 mb-6 transition-transform hover:scale-[1.01]"
   >
     <div className="flex items-center justify-between mb-6">
       <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
@@ -177,11 +173,11 @@ const SectionCard = ({ title, children, icon: Icon }: any) => (
       <Info className="w-5 h-5 text-slate-500" />
     </div>
     {children}
-  </motion.div>
+  </div>
 );
 
 const MetricCard = ({ value, label }: any) => (
-  <div className="bg-white/60 dark:bg-slate-900/50 p-3 rounded-lg text-center">
+  <div className="bg-white/60 dark:bg-slate-900/50 p-3 rounded-lg text-center transition-transform hover:scale-105">
     <div className="font-mono font-bold text-purple-600 dark:text-purple-400 text-lg">{value}</div>
     <div className="text-slate-600 dark:text-slate-400 text-xs mt-1">{label}</div>
   </div>
@@ -261,11 +257,7 @@ export default function EchappementAncre() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-12">
         {/* Hero */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12 lg:mb-16"
-        >
+        <div className="text-center mb-12 lg:mb-16 transition-transform hover:scale-[1.01]">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium mb-4">
             <Award className="w-4 h-4" />
             {t.metadata.category}
@@ -282,46 +274,39 @@ export default function EchappementAncre() {
             <span className="flex items-center gap-1"><Clock className="w-4 h-4" />{t.metadata.lastUpdated}</span>
             <span className="flex items-center gap-1"><Award className="w-4 h-4" />{t.metadata.standard}</span>
           </div>
-        </motion.div>
+        </div>
 
         {/* Table des matières */}
-        <AnimatePresence>
-          {showTOC && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-xl p-6 mb-8 border border-slate-200 dark:border-slate-700 shadow-lg"
-            >
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                <SlidersHorizontal className="w-5 h-4" />
-                {t.toc}
-              </h3>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-2">
-                {['principe', 'elements', 'fonctionnement', 'evolution'].map((id) => (
-                  <button
-                    key={id}
-                    onClick={() => {
-                      setActiveSection(id);
-                      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    className={`flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
-                      activeSection === id
-                        ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
-                        : 'hover:bg-slate-100 dark:hover:bg-slate-900/50'
-                    }`}
-                  >
-                    {id === 'principe' && <Activity className="w-4 h-4" />}
-                    {id === 'elements' && <Settings2 className="w-4 h-4" />}
-                    {id === 'fonctionnement' && <Clock className="w-4 h-4" />}
-                    {id === 'evolution' && <Zap className="w-4 h-4" />}
-                    {t[id]?.title || id}
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {showTOC && (
+          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-xl p-6 mb-8 border border-slate-200 dark:border-slate-700 shadow-lg">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+              <SlidersHorizontal className="w-5 h-4" />
+              {t.toc}
+            </h3>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-2">
+              {['principe', 'elements', 'fonctionnement', 'evolution'].map((id) => (
+                <button
+                  key={id}
+                  onClick={() => {
+                    setActiveSection(id);
+                    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className={`flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
+                    activeSection === id
+                      ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
+                      : 'hover:bg-slate-100 dark:hover:bg-slate-900/50'
+                  }`}
+                >
+                  {id === 'principe' && <Activity className="w-4 h-4" />}
+                  {id === 'elements' && <Settings2 className="w-4 h-4" />}
+                  {id === 'fonctionnement' && <Clock className="w-4 h-4" />}
+                  {id === 'evolution' && <Zap className="w-4 h-4" />}
+                  {t[id]?.title || id}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Contenu */}
         <div className="space-y-6 lg:space-y-8">
@@ -333,7 +318,7 @@ export default function EchappementAncre() {
             </p>
             
             <div className="grid md:grid-cols-2 gap-6 mb-6">
-              <motion.div whileHover={{ scale: 1.02 }} className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-blue-200 dark:border-slate-600">
+              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-blue-200 dark:border-slate-600 transition-transform hover:scale-[1.02]">
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-3">
                   <Activity className="w-7 h-7 text-blue-600 dark:text-blue-400" />
                   {t.principle.function1.title}
@@ -346,9 +331,9 @@ export default function EchappementAncre() {
                     </p>
                   </div>
                 )}
-              </motion.div>
+              </div>
 
-              <motion.div whileHover={{ scale: 1.02 }} className="bg-gradient-to-br from-purple-50 to-violet-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-purple-200 dark:border-slate-600">
+              <div className="bg-gradient-to-br from-purple-50 to-violet-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-purple-200 dark:border-slate-600 transition-transform hover:scale-[1.02]">
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-3">
                   <Clock className="w-7 h-7 text-purple-600 dark:text-purple-400" />
                   {t.principle.function2.title}
@@ -361,7 +346,7 @@ export default function EchappementAncre() {
                     </p>
                   </div>
                 )}
-              </motion.div>
+              </div>
             </div>
 
             <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border-l-4 border-purple-600">
@@ -391,7 +376,7 @@ export default function EchappementAncre() {
             </p>
 
             {/* Roue d'échappement */}
-            <motion.div whileHover={{ scale: 1.01 }} className="bg-gradient-to-br from-orange-50 to-amber-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-orange-200 dark:border-slate-600 mb-4">
+            <div className="bg-gradient-to-br from-orange-50 to-amber-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-orange-200 dark:border-slate-600 mb-4 transition-transform hover:scale-[1.01]">
               <div className="flex items-start justify-between mb-4">
                 <h3 className="text-2xl font-bold text-slate-900 dark:text-white">1. {t.elements.wheel.title}</h3>
                 <ZoomIn className="w-5 h-5 text-orange-600 dark:text-orange-400" />
@@ -404,10 +389,10 @@ export default function EchappementAncre() {
                   <MetricCard key={i} value={spec.split(' ')[0]} label={spec.split(' ')[1]} />
                 ))}
               </div>
-            </motion.div>
+            </div>
 
             {/* Ancre */}
-            <motion.div whileHover={{ scale: 1.01 }} className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-green-200 dark:border-slate-600 mb-4">
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-green-200 dark:border-slate-600 mb-4 transition-transform hover:scale-[1.01]">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">2. {t.elements.anchor.title}</h3>
               <p className="text-slate-700 dark:text-slate-300 mb-4">
                 {expertMode ? t.elements.anchor.expert : t.elements.anchor.beginner}
@@ -417,10 +402,10 @@ export default function EchappementAncre() {
                   <MetricCard key={i} value={spec.split(' ')[0]} label={spec.split(' ')[1] || spec.split(' ')[2]} />
                 ))}
               </div>
-            </motion.div>
+            </div>
 
             {/* Plateau */}
-            <motion.div whileHover={{ scale: 1.01 }} className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-blue-200 dark:border-slate-600">
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-blue-200 dark:border-slate-600 transition-transform hover:scale-[1.01]">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">3. {t.elements.balance.title}</h3>
               <p className="text-slate-700 dark:text-slate-300 mb-4">
                 {expertMode ? t.elements.balance.expert : t.elements.balance.beginner}
@@ -430,7 +415,7 @@ export default function EchappementAncre() {
                   <MetricCard key={i} value={spec.split(' ')[0]} label={spec.split(' ')[1]} />
                 ))}
               </div>
-            </motion.div>
+            </div>
           </SectionCard>
 
           {/* Section 3 : Fonctionnement */}
@@ -448,10 +433,9 @@ export default function EchappementAncre() {
 
             <div className="space-y-4">
               {t.operation.phases.map((phase: any, i: number) => (
-                <motion.div
+                <div
                   key={i}
-                  whileHover={{ x: 8 }}
-                  className={`bg-slate-50 dark:bg-slate-900 p-6 rounded-xl border-l-4 ${
+                  className={`bg-slate-50 dark:bg-slate-900 p-6 rounded-xl border-l-4 transition-transform hover:translate-x-2 ${
                     i === 0 ? 'border-blue-600' : i === 1 ? 'border-green-600' : i === 2 ? 'border-purple-600' : 'border-orange-600'
                   }`}
                 >
@@ -469,7 +453,7 @@ export default function EchappementAncre() {
                       )}
                     </div>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
 
@@ -505,29 +489,23 @@ export default function EchappementAncre() {
               <div className="relative">
                 <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-blue-600" />
                 {t.evolution.timeline.map((item: any, i: number) => (
-                  <motion.div
+                  <div
                     key={i}
-                    whileHover={{ x: 8 }}
-                    className="relative pl-10 pb-6"
+                    className="relative pl-10 pb-6 transition-transform hover:translate-x-2"
                   >
                     <div className="absolute left-3 w-3 h-3 bg-blue-600 rounded-full ring-4 ring-white dark:ring-slate-900" />
                     <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg">
                       <div className="font-bold text-blue-600 dark:text-blue-400">{item.year}</div>
                       <p className="text-slate-700 dark:text-slate-300">{item.event}</p>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
           </SectionCard>
 
           {/* Section 5 : Quiz */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 lg:p-8"
-          >
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 lg:p-8">
             <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
               <Award className="w-7 h-7 text-blue-600 dark:text-blue-400" />
               {t.quiz.title}
@@ -536,15 +514,10 @@ export default function EchappementAncre() {
               {expertMode ? t.quiz.expert : t.quiz.beginner}
             </p>
             <QuizComponent questions={t.quiz.questions} expertMode={expertMode} />
-          </motion.div>
+          </div>
 
           {/* Section 6 : Ressources */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 lg:p-8"
-          >
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 lg:p-8">
             <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
               <BookOpen className="w-7 h-7 text-blue-600 dark:text-blue-400" />
               Ressources et références
@@ -553,14 +526,14 @@ export default function EchappementAncre() {
               <div>
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Ouvrages de référence</h3>
                 <div className="space-y-3 text-slate-700 dark:text-slate-300">
-                  <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                  <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg transition-transform hover:scale-[1.02]">
                     <BookOpen className="w-4 h-4 mt-1 flex-shrink-0" />
                     <div>
                       <p className="font-medium">"The Theory of Horology"</p>
                       <p className="text-sm text-slate-500">Swiss Federation of Watchmaking Schools</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                  <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg transition-transform hover:scale-[1.02]">
                     <BookOpen className="w-4 h-4 mt-1 flex-shrink-0" />
                     <div>
                       <p className="font-medium">"Watchmaking"</p>
@@ -572,14 +545,14 @@ export default function EchappementAncre() {
               <div>
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Normes techniques</h3>
                 <div className="space-y-3 text-slate-700 dark:text-slate-300">
-                  <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                  <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg transition-transform hover:scale-[1.02]">
                     <Award className="w-4 h-4 mt-1 flex-shrink-0" />
                     <div>
                       <p className="font-medium">ISO 3159</p>
                       <p className="text-sm text-slate-500">Chronomètres de montre-bracelet</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
+                  <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg transition-transform hover:scale-[1.02]">
                     <Award className="w-4 h-4 mt-1 flex-shrink-0" />
                     <div>
                       <p className="font-medium">NIHS 95-10</p>
@@ -600,7 +573,7 @@ export default function EchappementAncre() {
                 <Download className="w-4 h-4" /> Normes ISO (ZIP)
               </button>
             </div>
-          </motion.div>
+          </div>
 
           {/* Footer */}
           <div className="text-center text-sm text-slate-500 dark:text-slate-400 pt-6 border-t border-slate-200 dark:border-slate-700">
@@ -679,60 +652,52 @@ function EscapementComparison({ expertMode }: { expertMode: boolean }) {
           </button>
         ))}
       </div>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={selected}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="bg-white/60 dark:bg-slate-800/60 rounded-xl p-6"
-        >
-          <h4 className="font-bold text-slate-900 dark:text-white mb-3">{types[selected].name}</h4>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-slate-600 dark:text-slate-400">Précision</span>
-                <span className="font-mono text-slate-900 dark:text-white">{types[selected].precision}</span>
+      <div className="bg-white/60 dark:bg-slate-800/60 rounded-xl p-6 transition-opacity">
+        <h4 className="font-bold text-slate-900 dark:text-white mb-3">{types[selected].name}</h4>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-slate-600 dark:text-slate-400">Précision</span>
+              <span className="font-mono text-slate-900 dark:text-white">{types[selected].precision}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-600 dark:text-slate-400">Maintenance</span>
+              <span className="text-slate-900 dark:text-white">{types[selected].maintenance}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-600 dark:text-slate-400">Coût</span>
+              <span className="text-slate-900 dark:text-white">{types[selected].cost}</span>
+            </div>
+          </div>
+          <div className="space-y-3">
+            <div>
+              <div className="flex justify-between mb-1">
+                <span className="text-slate-600 dark:text-slate-400 text-sm">Fiabilité</span>
+                <span className="font-mono text-slate-900 dark:text-white text-sm">{types[selected].reliability}%</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-slate-600 dark:text-slate-400">Maintenance</span>
-                <span className="text-slate-900 dark:text-white">{types[selected].maintenance}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-600 dark:text-slate-400">Coût</span>
-                <span className="text-slate-900 dark:text-white">{types[selected].cost}</span>
+              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                <div className="bg-green-600 h-2 rounded-full" style={{ width: `${types[selected].reliability}%` }} />
               </div>
             </div>
-            <div className="space-y-3">
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-slate-600 dark:text-slate-400 text-sm">Fiabilité</span>
-                  <span className="font-mono text-slate-900 dark:text-white text-sm">{types[selected].reliability}%</span>
-                </div>
-                <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-                  <div className="bg-green-600 h-2 rounded-full" style={{ width: `${types[selected].reliability}%` }} />
-                </div>
+            <div>
+              <div className="flex justify-between mb-1">
+                <span className="text-slate-600 dark:text-slate-400 text-sm">Complexité</span>
+                <span className="font-mono text-slate-900 dark:text-white text-sm">{types[selected].complexity}/10</span>
               </div>
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-slate-600 dark:text-slate-400 text-sm">Complexité</span>
-                  <span className="font-mono text-slate-900 dark:text-white text-sm">{types[selected].complexity}/10</span>
-                </div>
-                <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-                  <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${types[selected].complexity * 10}%` }} />
-                </div>
+              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${types[selected].complexity * 10}%` }} />
               </div>
             </div>
           </div>
-          {expertMode && (
-            <div className="mt-4 p-3 bg-blue-100/50 dark:bg-blue-900/30 rounded-lg">
-              <p className="text-sm text-blue-800 dark:text-blue-200">
-                <strong>Rendement énergétique :</strong> {types[selected].reliability < 80 ? '35-40%' : '40-45%'}
-              </p>
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
+        </div>
+        {expertMode && (
+          <div className="mt-4 p-3 bg-blue-100/50 dark:bg-blue-900/30 rounded-lg">
+            <p className="text-sm text-blue-800 dark:text-blue-200">
+              <strong>Rendement énergétique :</strong> {types[selected].reliability < 80 ? '35-40%' : '40-45%'}
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -767,27 +732,20 @@ function QuizComponent({ questions, expertMode }: { questions: any[]; expertMode
     return (
       <div className="text-center p-8 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-700 dark:to-slate-800 rounded-xl">
         <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Quiz terminé !</h3>
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="w-32 h-32 mx-auto mb-6 relative"
-        >
+        <div className="w-32 h-32 mx-auto mb-6 relative">
           <svg className="w-32 h-32 transform -rotate-90">
             <circle cx="64" cy="64" r="56" stroke="currentColor" strokeWidth="12" fill="none" className="text-slate-200 dark:text-slate-700" />
-            <motion.circle
+            <circle
               cx="64" cy="64" r="56" stroke="currentColor" strokeWidth="12" fill="none"
               strokeDasharray={`${2 * Math.PI * 56}`}
               strokeDashoffset={`${2 * Math.PI * 56 * (1 - percentage / 100)}`}
               strokeLinecap="round" className="text-blue-600"
-              initial={{ strokeDashoffset: `${2 * Math.PI * 56}` }}
-              animate={{ strokeDashoffset: `${2 * Math.PI * 56 * (1 - percentage / 100)}` }}
-              transition={{ duration: 1, ease: "easeOut" }}
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="text-2xl font-bold text-slate-900 dark:text-white">{percentage}%</span>
           </div>
-        </motion.div>
+        </div>
         <p className="text-xl text-slate-700 dark:text-slate-300 mb-6">
           Score : {score}/{questions.length} ({percentage}%) | Temps : {timeSpent}s
         </p>
@@ -838,9 +796,9 @@ function QuizComponent({ questions, expertMode }: { questions: any[]; expertMode
         <div className="text-right text-xs text-slate-500 mt-1">{t.quiz.time} : {timeSpent}s</div>
       </div>
 
-      <motion.h3 key={current} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="text-xl font-bold text-slate-900 dark:text-white mb-6">
+      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
         {question.question}
-      </motion.h3>
+      </h3>
 
       <div className="space-y-3 mb-6">
         {question.options.map((option: string, index: number) => {
@@ -849,11 +807,8 @@ function QuizComponent({ questions, expertMode }: { questions: any[]; expertMode
           const isCorrect = index === question.correct;
           
           return (
-            <motion.button
+            <button
               key={index}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
               onClick={() => handleAnswer(index)}
               disabled={isAnswered}
               className={`w-full text-left p-4 rounded-lg border-2 transition-all relative ${
@@ -870,17 +825,17 @@ function QuizComponent({ questions, expertMode }: { questions: any[]; expertMode
               <span className="text-slate-800 dark:text-slate-100">{option}</span>
               {isAnswered && isCorrect && <CheckCircle className="absolute right-4 top-4 w-5 h-5 text-green-600" />}
               {isAnswered && isSelected && !isCorrect && <XCircle className="absolute right-4 top-4 w-5 h-5 text-red-600" />}
-            </motion.button>
+            </button>
           );
         })}
       </div>
 
       {answers[current] !== undefined && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-600 p-4 rounded">
+        <div className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-600 p-4 rounded">
           <p className="text-slate-700 dark:text-slate-300">
             {expertMode ? question.explanation.expert : question.explanation.beginner}
           </p>
-        </motion.div>
+        </div>
       )}
     </div>
   );
