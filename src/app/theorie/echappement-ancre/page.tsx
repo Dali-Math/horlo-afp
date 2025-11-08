@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  ChevronLeft, Activity, Zap, Clock, Heart, Settings2, Globe, Share2, Print, Download,
+  ChevronLeft, Activity, Zap, Clock, Heart, Settings2, Globe, Share2, Printer, Download,
   Microscope, Gauge, BookOpen, Award, Info, Play, Pause, RotateCw, SlidersHorizontal,
   ZoomIn, CheckCircle, XCircle
 } from 'lucide-react';
@@ -12,7 +12,7 @@ import Link from 'next/link';
 // CONFIGURATION SANS DÉPENDANCES EXTERNES
 // =================================================
 
-// Traductions intégrées (pas de i18next)
+// Traductions intégrées
 const TRANSLATIONS = {
   fr: {
     back: 'Retour à la théorie',
@@ -197,7 +197,6 @@ export default function EchappementAncre() {
   const [showTOC, setShowTOC] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  // Suivi de progression de lecture
   useEffect(() => {
     const handleScroll = () => {
       const scrolled = window.scrollY;
@@ -249,7 +248,7 @@ export default function EchappementAncre() {
                   <Share2 className="w-5 h-5" />
                 </button>
                 <button className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" title={t.print}>
-                  <Print className="w-5 h-5" />
+                  <Printer className="w-5 h-5" />
                 </button>
                 <button className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" title={t.download}>
                   <Download className="w-5 h-5" />
@@ -440,7 +439,7 @@ export default function EchappementAncre() {
               {expertMode ? t.operation.expert : t.operation.beginner}
             </p>
 
-            {/* Simulateur 2D (remplacement du 3D) */}
+            {/* Simulateur 2D */}
             <EscapementSimulator2D />
 
             <p className="text-slate-700 dark:text-slate-300 mt-6 mb-4">
@@ -619,23 +618,19 @@ export default function EchappementAncre() {
 }
 
 // =================================================
-// COMPOSANTS SECONDAIRES (dans le même fichier)
+// COMPOSANTS SECONDAIRES
 // =================================================
 
-// Simulateur 2D (remplacement du 3D)
 function EscapementSimulator2D() {
   const [isRunning, setIsRunning] = useState(false);
   const [phase, setPhase] = useState(0);
 
   useEffect(() => {
     if (!isRunning) return;
-    const timer = setInterval(() => {
-      setPhase((p) => (p + 1) % 4);
-    }, 125);
+    const timer = setInterval(() => setPhase((p) => (p + 1) % 4), 125);
     return () => clearInterval(timer);
   }, [isRunning]);
 
-  const phases = ['Repos', 'Dégagement', 'Impulsion', 'Chute'];
   const phaseColors = ['bg-blue-600', 'bg-green-600', 'bg-purple-600', 'bg-orange-600'];
 
   return (
@@ -644,7 +639,7 @@ function EscapementSimulator2D() {
         <div className={`w-24 h-24 mx-auto mb-4 rounded-full ${phaseColors[phase]} flex items-center justify-center shadow-lg shadow-current/50 transition-all`}>
           <span className="text-2xl font-bold">{phase + 1}</span>
         </div>
-        <div className="text-lg font-medium mb-2">{phases[phase]}</div>
+        <div className="text-lg font-medium mb-2">{['Repos', 'Dégagement', 'Impulsion', 'Chute'][phase]}</div>
         <div className="text-sm text-slate-400 mb-4">Phase du cycle d'échappement</div>
         <button
           onClick={() => setIsRunning(!isRunning)}
@@ -663,7 +658,6 @@ function EscapementSimulator2D() {
   );
 }
 
-// Comparaison d'échappements
 function EscapementComparison({ expertMode }: { expertMode: boolean }) {
   const [selected, setSelected] = useState(0);
   const types = TRANSLATIONS.fr.evolution.types;
@@ -743,7 +737,6 @@ function EscapementComparison({ expertMode }: { expertMode: boolean }) {
   );
 }
 
-// Composant Quiz
 function QuizComponent({ questions, expertMode }: { questions: any[]; expertMode: boolean }) {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
