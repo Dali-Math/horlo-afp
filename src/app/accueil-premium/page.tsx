@@ -36,7 +36,6 @@ import {
 
   return (
   <>
-    <Navbar />
     <main>...</main>
     <Footer />
   </>
