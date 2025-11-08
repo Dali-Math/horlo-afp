@@ -358,9 +358,13 @@ export default function ManufacturesPage() {
             {/* Rolex */}
             <div className="manufacture-card bg-[#0a0a0a] border border-[#c0c0c0]/20 rounded-2xl p-8 cursor-pointer">
               <div className="text-center mb-6">
-                <div className="w-full h-48 bg-gray-700 rounded-xl mb-4 flex items-center justify-center">
-                  <span className="text-gray-400">Rolex</span>
-                </div>
+                <div className="w-full h-48 rounded-xl mb-4 overflow-hidden">
+  <img
+    src="/images/manufactures/rolex-hero.jpg"
+    alt="Rolex"
+    className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
+  />
+</div>
                 <div className="text-4xl mb-2">⚡</div>
                 <h3 className="font-playfair text-2xl font-bold mb-2 text-[#fafafa]">Rolex</h3>
                 <p className="text-[#c0c0c0]/60 text-sm">Depuis 1905</p>
@@ -393,9 +397,13 @@ export default function ManufacturesPage() {
             ].map((m) => (
               <div key={m.name} className="manufacture-card bg-[#0a0a0a] border border-[#c0c0c0]/20 rounded-2xl p-8 cursor-pointer">
                 <div className="text-center mb-6">
-                  <div className="w-full h-48 bg-gray-700 rounded-xl mb-4 flex items-center justify-center">
-                    <span className="text-gray-400">{m.name}</span>
-                  </div>
+                  <div className="w-full h-48 rounded-xl mb-4 overflow-hidden">
+  <img
+    src={`/images/manufactures/${m.name.toLowerCase().replace(' ', '-')}-hero.jpg`}
+    alt={m.name}
+    className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-105"
+  />
+</div>
                   <div className="text-4xl mb-2">{m.icon}</div>
                   <h3 className="font-playfair text-2xl font-bold mb-2 text-[#fafafa]">{m.name}</h3>
                   <p className="text-[#c0c0c0]/60 text-sm">{m.year}</p>
