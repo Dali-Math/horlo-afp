@@ -145,7 +145,7 @@ const complicationsDatabase: Complication[] = [
     components: 800,
   },
   {
-    id: "reveil",
+    id: "reveil-mecanique",
     name: "Réveil Mécanique",
     nameEn: "Mechanical Alarm",
     category: "haute",
@@ -160,7 +160,7 @@ const complicationsDatabase: Complication[] = [
     components: 350,
   },
   {
-    id: "gmt",
+    id: "gmt-heure-multiple",
     name: "GMT / Heure Multiple",
     nameEn: "GMT / Dual Time",
     category: "classique",
