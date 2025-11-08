@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef } from "react";
+import PageTaskbar from '@/components/PageTaskbar'
 import * as echarts from "echarts";
 import React from "react";
 import Link from "next/link";
@@ -323,6 +324,7 @@ export default function ManufacturesPage() {
           </div>
         </div>
       </nav>
+      <PageTaskbar />
 
       {/* Hero Section */}
       <section id="hero" className="hero-bg min-h-screen flex items-center justify-center pt-20">
