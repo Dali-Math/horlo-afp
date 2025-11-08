@@ -405,9 +405,14 @@ export default function ComplicationsPage(): JSX.Element {
               <div className="flex flex-wrap gap-2">
                 <FilterBadge active={filters.difficulty === "all"} onClick={() => setFilters({ ...filters, difficulty: "all" })}>Toutes</FilterBadge>
                 {[1, 2, 3, 4, 5].map((level) => (
-                  <FilterBadge key={level} active={filters.difficulty === level} onClick={() => setFilters({ ...filters, difficulty: level })}>
-                    {level} ★
-                  </FilterBadge>
+                  <FilterBadge
+  key={level}
+  active={filters.difficulty !== "all" && Number(filters.difficulty) === level}
+  onClick={() => setFilters({ ...filters, difficulty: level })}
+>
+  {level} ★
+</FilterBadge>
+
                 ))}
               </div>
             </div>
