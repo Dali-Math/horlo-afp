@@ -33,6 +33,7 @@ interface Complication {
   priceRange: string;
   rarity: Rarity;
   components: number;
+   technicalSpecs?: string[];
 }
 
 // Données complètes
