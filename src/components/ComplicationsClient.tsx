@@ -262,17 +262,19 @@ const ComplicationCard: React.FC<{ complication: Complication; index: number }> 
           {complication.description}
         </p>
 
-        <div className="grid grid-cols-2 gap-3 text-xs mb-4">
-          <div className="bg-white/50 dark:bg-black/30 rounded-lg p-2">
-            <p className="text-gray-500 dark:text-gray-400">Invention</p>
-            <p className="font-semibold text-gray-900 dark:text-gray-100">{complication.invention}</p>
-            <p className="text-gray-600 dark:text-gray-300">{complication.inventor}</p>
-          </div>
-          <div className="bg-white/50 dark:bg-black/30 rounded-lg p-2">
-            <p className="text-gray-500 dark:text-gray-400">Prix</p>
-            <p className="font-semibold text-gray-900 dark:text-gray-100">{complication.priceRange}</p>
-            <p className="text-gray-600 dark:text-gray-300">{complication.components} composants</p>
-          </div>
+        <div className="bg-white/50 dark:bg-black/30 rounded-lg p-2">
+  <p className="text-gray-500 dark:text-gray-400">Prix</p>
+  <p className="font-semibold text-gray-900 dark:text-gray-100">
+    {complication.priceRange}
+  </p>
+  <p className="text-gray-600 dark:text-gray-300">
+    {complication.components} composants
+  </p>
+  <p className="text-[11px] text-gray-500 dark:text-gray-400 italic mt-1">
+    Valeurs indicatives à titre informatif.
+  </p>
+</div>
+
         </div>
 
         <div className="flex flex-wrap gap-1 mt-auto">
