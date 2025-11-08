@@ -485,7 +485,7 @@ export default function RolexPage() {
         {/* NAVIGATION */}
         <div className="mt-16 pt-8 border-t border-slate-200 dark:border-slate-700">
           <Link 
-           <Link href="/histoire">
+           href="/manufactures"
             className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium text-lg"
           >
             <ChevronLeft className="w-5 h-5 mr-1" />
