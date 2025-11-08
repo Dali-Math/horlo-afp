@@ -65,7 +65,8 @@ export default function BarilletRessortPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-amber-950 to-slate-950">
       
       {/* Header fixe avec indicateur d'énergie */}
-      <header className="fixed top-[72px] left-0 right-0 z-40 bg-slate-950/80 backdrop-blur-xl border-b border-amber-500/20">
+      <header className="fixed left-0 right-0 z-40 bg-slate-950/80 backdrop-blur-xl border-b border-amber-500/20 
+top-[64px] sm:top-[68px] md:top-[72px] lg:top-[76px] xl:top-[80px]">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <a href="/theorie" className="flex items-center gap-2 text-amber-400 hover:text-amber-300 transition-colors">
