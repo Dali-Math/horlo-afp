@@ -1,5 +1,5 @@
 'use client';
-
+import { Activity } from "lucide-react";
 import React, { useState, useEffect } from 'react';
 import {
   ChevronLeft, Battery, Zap, Wind, Sparkles, PlayCircle, PauseCircle, 
