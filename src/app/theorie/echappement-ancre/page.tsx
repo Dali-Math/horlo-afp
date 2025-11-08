@@ -428,7 +428,7 @@ export default function EchappementAncre() {
             <EscapementSimulator2D />
 
             <p className="text-slate-700 dark:text-slate-300 mt-6 mb-4">
-              {t.fonctionnement.phases.title}
+              {t.fonctionnement.title}
             </p>
 
             <div className="space-y-4">
@@ -513,7 +513,8 @@ export default function EchappementAncre() {
             <p className="text-slate-700 dark:text-slate-300 mb-6">
               {expertMode ? t.quiz.expert : t.quiz.beginner}
             </p>
-            <QuizComponent questions={t.quiz.questions} expertMode={expertMode} />
+            {/* Correction ici : passage de la prop 't' */}
+            <QuizComponent questions={t.quiz.questions} expertMode={expertMode} t={t} />
           </div>
 
           {/* Section 6 : Ressources */}
@@ -702,7 +703,8 @@ function EscapementComparison({ expertMode }: { expertMode: boolean }) {
   );
 }
 
-function QuizComponent({ questions, expertMode }: { questions: any[]; expertMode: boolean }) {
+// Correction ici : ajout de la prop 't' dans la signature
+function QuizComponent({ questions, expertMode, t }: { questions: any[]; expertMode: boolean; t: any }) {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [showResults, setShowResults] = useState(false);
