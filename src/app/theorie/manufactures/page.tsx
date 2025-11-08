@@ -148,6 +148,15 @@ export default function ManufacturesPage() {
           color: #fafafa;
           font-family: 'Inter', sans-serif;
         }
+        nav {
+  position: relative;
+  z-index: 50;
+}
+
+.page-toolbar {
+  position: relative;
+  z-index: 10;
+}
 
         .hero-bg {
           background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
