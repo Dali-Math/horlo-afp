@@ -299,13 +299,19 @@ const ComplicationCard: React.FC<{ complication: Complication; index: number }> 
 };
 
 export default function ComplicationsPage(): JSX.Element {
-  const [filters, setFilters] = useState({
-    category: "all",
-    difficulty: "all",
-    rarity: "all",
-    manufacturer: "all",
-    search: "",
-  });
+  const [filters, setFilters] = useState<{
+  category: string;
+  difficulty: number | "all";
+  rarity: string;
+  manufacturer: string;
+  search: string;
+}>({
+  category: "all",
+  difficulty: "all",
+  rarity: "all",
+  manufacturer: "all",
+  search: "",
+});
 
   const filteredComplications = useMemo(() => {
     return complicationsDatabase.filter((c) => {
