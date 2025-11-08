@@ -1,5 +1,6 @@
 'use client';
-
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import React, { useState, useEffect } from 'react';
 import {
   Activity,
@@ -27,6 +28,17 @@ import {
   Timer,
   Brain,
 } from 'lucide-react'
+export default function AccueilPremiumPage() {
+  return (
+    <>
+      <Navbar />
+      <main className="min-h-screen bg-slate-950 text-white">
+        {/* ton contenu actuel ici */}
+      </main>
+      <Footer />
+    </>
+  );
+}
 
 // =================================================
 // COMPOSANT PRINCIPAL - VOYAGE NARRATIF
