@@ -477,6 +477,11 @@ export default function ComplicationsPage(): JSX.Element {
           </div>
         )}
       </section>
+      {/* Mention légale globale */}
+<section className="max-w-4xl mx-auto mt-12 mb-16 text-center text-sm text-gray-500 dark:text-gray-400 italic">
+  Les informations techniques, historiques et les fourchettes de prix présentées sur cette page sont fournies 
+  à titre indicatif et peuvent varier selon les manufactures, les modèles et les périodes de production.
+</section>
 
       {/* FOOTER CTA */}
       <footer className="max-w-4xl mx-auto bg-white/70 dark:bg-slate-800/70 rounded-2xl p-8 border border-gray-200 dark:border-gray-700 shadow-lg text-center">
