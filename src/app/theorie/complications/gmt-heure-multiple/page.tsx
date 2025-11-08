@@ -7,7 +7,7 @@ import { Globe, ChevronRight, ArrowLeft, Plane, Clock, MapPin, Compass } from 'l
 const GMTHeureMultiplePage = () => {
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
-  const [selectedTimezone, setSelectedTimezone] = useState(null);
+  const [selectedTimezone, setSelectedTimezone] = useState<string | null>(null);
 
   useEffect(() => {
     setIsVisible(true);
