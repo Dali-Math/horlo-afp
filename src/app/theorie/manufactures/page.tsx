@@ -1,7 +1,8 @@
 // app/[locale]/theorie/manufactures/page.tsx
 
 'use client';
-
+import { useEffect } from "react";
+import * as echarts from "echarts";
 import React from "react";
 import Link from "next/link";
 import {
@@ -25,6 +26,80 @@ export default function ManufacturesPage() {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
+    useEffect(() => {
+    const ageChart = echarts.init(document.getElementById("ageChart"));
+    const innovationChart = echarts.init(document.getElementById("innovationChart"));
+
+    const ageOption = {
+      tooltip: {
+        trigger: "item",
+        backgroundColor: "#0a0a0a",
+        borderColor: "#c0c0c0",
+        textStyle: { color: "#fafafa" },
+      },
+      series: [
+        {
+          type: "pie",
+          radius: ["40%", "70%"],
+          data: [
+            { value: 269, name: "Vacheron Constantin (1755)", itemStyle: { color: "#d4af37" } },
+            { value: 185, name: "Patek Philippe (1839)", itemStyle: { color: "#c0c0c0" } },
+            { value: 176, name: "Omega (1848)", itemStyle: { color: "#8b7355" } },
+            { value: 149, name: "Audemars Piguet (1875)", itemStyle: { color: "#4a4a4a" } },
+            { value: 119, name: "Rolex (1905)", itemStyle: { color: "#2d2d2d" } },
+          ],
+          label: { color: "#fafafa", fontSize: 12 },
+        },
+      ],
+    };
+
+    const innovationOption = {
+      tooltip: {
+        trigger: "axis",
+        backgroundColor: "#0a0a0a",
+        borderColor: "#c0c0c0",
+        textStyle: { color: "#fafafa" },
+      },
+      xAxis: {
+        type: "category",
+        data: ["1920s", "1940s", "1960s", "1980s", "2000s", "2020s"],
+        axisLine: { lineStyle: { color: "#c0c0c0" } },
+        axisLabel: { color: "#fafafa" },
+      },
+      yAxis: {
+        type: "value",
+        axisLine: { lineStyle: { color: "#c0c0c0" } },
+        axisLabel: { color: "#fafafa" },
+        splitLine: { lineStyle: { color: "#2d2d2d" } },
+      },
+      series: [
+        {
+          data: [2, 3, 5, 4, 6, 8],
+          type: "line",
+          smooth: true,
+          lineStyle: { color: "#d4af37", width: 3 },
+          itemStyle: { color: "#d4af37" },
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: "rgba(212, 175, 55, 0.3)" },
+              { offset: 1, color: "rgba(212, 175, 55, 0.1)" },
+            ]),
+          },
+        },
+      ],
+    };
+
+    ageChart.setOption(ageOption);
+    innovationChart.setOption(innovationOption);
+
+    const handleResize = () => {
+      ageChart.resize();
+      innovationChart.resize();
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <>
@@ -530,43 +605,31 @@ export default function ManufacturesPage() {
         </div>
       </div>
 
-      {/* Ligne d'évolution */}
-      <div className="bg-[#0a0a0a]/60 border border-[#c0c0c0]/20 rounded-2xl p-6 shadow-lg">
-        <h3 className="text-center text-2xl font-bold mb-6 text-[#fafafa]">
+      {/* Excellence en Chiffres */}
+<section id="excellence" className="py-20 precision-grid">
+  <div className="container mx-auto px-6">
+    <div className="text-center mb-16">
+      <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-[#fafafa]">
+        L'Excellence en Chiffres
+      </h2>
+      <p className="text-xl text-[#c0c0c0]/70 max-w-3xl mx-auto">
+        Analyse comparative des manufactures suisses à travers les âges.
+      </p>
+    </div>
+
+    <div className="grid lg:grid-cols-2 gap-12">
+      <div className="bg-[#0a0a0a]/60 border border-[#c0c0c0]/20 rounded-2xl p-8">
+        <h3 className="font-playfair text-2xl font-bold mb-6 text-center text-[#fafafa]">
+          Âge des Manufactures
+        </h3>
+        <div id="ageChart" className="h-80"></div>
+      </div>
+
+      <div className="bg-[#0a0a0a]/60 border border-[#c0c0c0]/20 rounded-2xl p-8">
+        <h3 className="font-playfair text-2xl font-bold mb-6 text-center text-[#fafafa]">
           Innovations par Décennie
         </h3>
-        <div className="w-full h-80">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={[
-                { decade: "1920s", innovations: 2 },
-                { decade: "1940s", innovations: 3 },
-                { decade: "1960s", innovations: 5 },
-                { decade: "1980s", innovations: 4 },
-                { decade: "2000s", innovations: 6 },
-                { decade: "2020s", innovations: 8 },
-              ]}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-              <XAxis dataKey="decade" stroke="#c0c0c0" />
-              <YAxis stroke="#c0c0c0" />
-              <Tooltip
-                contentStyle={{
-                  background: "#0a0a0a",
-                  border: "1px solid #c0c0c0",
-                  color: "#fafafa",
-                }}
-              />
-              <Line
-                type="monotone"
-                dataKey="innovations"
-                stroke="#d4af37"
-                strokeWidth={3}
-                dot={{ fill: "#d4af37" }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+        <div id="innovationChart" className="h-80"></div>
       </div>
     </div>
   </div>
