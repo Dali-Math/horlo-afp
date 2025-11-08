@@ -1,3 +1,6 @@
+"use client";
+
+
 import React, { useState, useEffect } from 'react';
 import { Calendar, ChevronRight, ArrowLeft, Clock, Moon, Sparkles } from 'lucide-react';
 
