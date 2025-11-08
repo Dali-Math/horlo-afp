@@ -35,13 +35,12 @@ import {
   const [isAnimating, setIsAnimating] = useState(false);
 
   return (
-    <>
-      <Navbar />
-
-      <Footer />
-    </>
-  );
-}
+  <>
+    <Navbar />
+    <main>...</main>
+    <Footer />
+  </>
+);
   // Simulation de décharge énergétique
   useEffect(() => {
     if (!isAnimating) return;
