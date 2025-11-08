@@ -4,7 +4,7 @@ import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   title: "Les Grandes Manufactures Horlogères Suisses | HorloLearn",
   description: "Découvrez les manufactures horlogères suisses de légende : Patek Philippe, Rolex, Audemars Piguet, Vacheron Constantin et Omega. Histoire, innovations et savoir-faire d'exception.",
   keywords: "manufactures suisses, Patek Philippe, Rolex, Audemars Piguet, Vacheron Constantin, Omega, horlogerie de luxe",
