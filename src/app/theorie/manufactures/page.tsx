@@ -167,6 +167,21 @@ export default function ManufacturesPage() {
           filter: brightness(0.6);
           z-index: 1;
         }
+        .excellence-badge::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 30%, rgba(212, 175, 55, 0.1) 50%, transparent 70%);
+  animation: shine 4s infinite linear;
+}
+
+@keyframes shine {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
         
         .hero-content {
           position: relative;
