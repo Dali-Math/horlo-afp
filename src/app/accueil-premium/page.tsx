@@ -65,7 +65,7 @@ import {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-amber-950 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-amber-950 to-slate-950 mt-24">
       
       {/* Header fixe avec indicateur d'énergie */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-amber-500/20">
