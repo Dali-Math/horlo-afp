@@ -1,4 +1,4 @@
-"use client";
+// app/[locale]/theorie/manufactures/page.tsx
 
 import React from "react";
 import { Metadata } from "next";
@@ -47,7 +47,7 @@ export default function ManufacturesPage() {
           </div>
 
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-4xl mb-8">
-            La Suisse abrite les manufactures horlogères les plus prestigieuses au monde. Découvrez l'histoire, les innovations et le savoir-faire exceptionnel des maisons qui ont façonné l'horlogerie de luxe[web:5][web:12].
+            La Suisse abrite les manufactures horlogères les plus prestigieuses au monde. Découvrez l'histoire, les innovations et le savoir-faire exceptionnel des maisons qui ont façonné l'horlogerie de luxe.
           </p>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -68,13 +68,13 @@ export default function ManufacturesPage() {
 
           <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-xl p-8 mb-8">
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-              Depuis le <span className="font-semibold text-gray-900 dark:text-gray-100">16ᵉ siècle</span>, la Suisse s'est imposée comme le berceau de l'horlogerie de précision. Les manufactures suisses incarnent l'excellence technique, l'innovation constante et un savoir-faire transmis de génération en génération[web:3][web:4].
+              Depuis le <span className="font-semibold text-gray-900 dark:text-gray-100">16ᵉ siècle</span>, la Suisse s'est imposée comme le berceau de l'horlogerie de précision. Les manufactures suisses incarnent l'excellence technique, l'innovation constante et un savoir-faire transmis de génération en génération.
             </p>
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-              Ces maisons ont traversé les crises (Grande Dépression de 1929, crise du quartz des années 1970-1980) et ont su se réinventer tout en préservant leur identité et leur indépendance[web:16][web:2].
+              Ces maisons ont traversé les crises (Grande Dépression de 1929, crise du quartz des années 1970-1980) et ont su se réinventer tout en préservant leur identité et leur indépendance.
             </p>
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-              Aujourd'hui, elles représentent le <span className="font-semibold text-gray-900 dark:text-gray-100">summum de l'horlogerie de luxe</span>, alliant tradition artisanale et technologies de pointe[web:12].
+              Aujourd'hui, elles représentent le <span className="font-semibold text-gray-900 dark:text-gray-100">summum de l'horlogerie de luxe</span>, alliant tradition artisanale et technologies de pointe.
             </p>
           </div>
 
@@ -84,7 +84,7 @@ export default function ManufacturesPage() {
               <div>
                 <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Qu'est-ce qu'une Manufacture ?</h4>
                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  Une <span className="font-semibold text-gray-900 dark:text-gray-100">manufacture</span> est une maison horlogère qui conçoit, développe et fabrique ses propres mouvements en interne, maîtrisant toute la chaîne de production. C'est le gage ultime de qualité et d'indépendance[web:127].
+                  Une <span className="font-semibold text-gray-900 dark:text-gray-100">manufacture</span> est une maison horlogère qui conçoit, développe et fabrique ses propres mouvements en interne, maîtrisant toute la chaîne de production. C'est le gage ultime de qualité et d'indépendance.
                 </p>
               </div>
             </div>
