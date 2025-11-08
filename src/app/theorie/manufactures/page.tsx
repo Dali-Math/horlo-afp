@@ -1,153 +1,686 @@
+// app/[locale]/theorie/manufactures/page.tsx
+
 import React from "react";
+import { Metadata } from "next";
 import Link from "next/link";
 
+export const metadata: Metadata = {
+  title: "Les Grandes Manufactures Horlogères Suisses - Référence Mondiale | HorloLearn",
+  description: "Découvrez les manufactures horlogères suisses de légende : Patek Philippe, Rolex, Audemars Piguet, Vacheron Constantin et Omega. Histoire, innovations et savoir-faire d'exception depuis 1755.",
+  keywords: "manufactures suisses, Patek Philippe, Rolex, Audemars Piguet, Vacheron Constantin, Omega, horlogerie de luxe",
+};
+
 export default function ManufacturesPage() {
-  const manufactures = [
-    {
-      icon: "👑",
-      name: "Patek Philippe",
-      since: "Depuis 1839",
-      slug: "patek-philippe",
-      img: "/images/manufactures/patek-philippe-hero.jpg",
-      tagline: "Manufacture de prestige absolu",
-      specialties: ["Quantièmes perpétuels", "Calatrava", "Nautilus", "Grandes complications"]
-    },
-    {
-      icon: "⚡",
-      name: "Rolex",
-      since: "Depuis 1905",
-      slug: "rolex",
-      img: "/images/manufactures/rolex-hero.jpg",
-      tagline: "L’icône intemporelle",
-      specialties: ["Oyster Perpetual", "Submariner", "Daytona", "GMT-Master"]
-    },
-    {
-      icon: "🔷",
-      name: "Audemars Piguet",
-      since: "Depuis 1875",
-      slug: "audemars-piguet",
-      img: "/images/manufactures/audemars-piguet-hero.jpg",
-      tagline: "L’avant-garde de l’horlogerie",
-      specialties: ["Royal Oak", "Tourbillons", "Grandes complications", "Royal Oak Offshore"]
-    },
-    {
-      icon: "⭐",
-      name: "Vacheron Constantin",
-      since: "Depuis 1755",
-      slug: "vacheron-constantin",
-      img: "/images/manufactures/vacheron-constantin-hero.jpg",
-      tagline: "La plus ancienne manufacture",
-      specialties: ["Patrimony", "Overseas", "Métiers d’Art", "Grandes complications"]
-    },
-    {
-      icon: "🌙",
-      name: "Omega",
-      since: "Depuis 1848",
-      slug: "omega",
-      img: "/images/manufactures/omega-hero.jpg",
-      tagline: "Précision et conquête spatiale",
-      specialties: ["Speedmaster", "Seamaster", "Constellation", "Master Chronometer"]
-    }
-  ];
-
-  const timeline = [
-    { date: "1755", title: "Naissance de Vacheron Constantin", text: "Jean-Marc Vacheron fonde ce qui deviendra la plus ancienne manufacture horlogère suisse." },
-    { date: "1839", title: "Fondation de Patek Philippe", text: "Antoine Norbert de Patek et Adrien Philippe créent la manufacture de prestige absolu." },
-    { date: "1848", title: "Naissance d’Omega", text: "Louis Brandt fonde Omega, référence de précision et d’aventure." },
-    { date: "1875", title: "Création d’Audemars Piguet", text: "Jules-Louis Audemars et Edward-Auguste Piguet fondent leur manufacture d’avant-garde." },
-    { date: "1905", title: "Naissance de Rolex", text: "Hans Wilsdorf fonde celle qui révolutionne l’horlogerie de sport et de luxe." },
-  ];
-
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-[#0d1423]">
-      {/* HERO */}
-      <section 
-        className="bg-gradient-to-br from-[#101e38] to-[#18152a] text-center py-16 px-2"
-      >
-        <div className="max-w-3xl mx-auto">
-          <span className="inline-block bg-blue-700 text-white font-semibold px-6 py-2 rounded-full mb-8 tracking-tight shadow-md">
-            Culture Horlogère Suisse
-          </span>
-          <h1 className="mb-7 text-5xl md:text-6xl font-extrabold text-white leading-tight">
-            Les Grandes Manufactures<br/>Horlogères Suisses
-          </h1>
-          <p className="text-xl md:text-2xl text-blue-200 font-light mb-12">
-            Découvrez l'excellence horlogère suisse à travers ses cinq manufactures légendaires : Patek Philippe, Rolex, Audemars Piguet, Vacheron Constantin et Omega.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-8 mt-6 mb-10">
-            <div className="bg-[#16244e] rounded-2xl px-10 py-7 shadow-lg border border-blue-800 flex-1 mx-auto min-w-[160px]">
-              <span className="text-4xl font-extrabold text-white">175+</span>
-              <div className="text-xs text-blue-200 mt-2 tracking-wide">ANS D’EXCELLENCE</div>
+    <>
+      <style jsx global>{`
+        /* Custom Styles */
+        .hero-bg {
+          background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .hero-bg::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: url('/api/placeholder/1920/1080') center/cover;
+          opacity: 0.3;
+          z-index: 1;
+        }
+        
+        .hero-content {
+          position: relative;
+          z-index: 2;
+        }
+        
+        .gold-gradient {
+          background: linear-gradient(135deg, #d4af37 0%, #ffd700 50%, #d4af37 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        
+        .manufacture-card {
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          transform-style: preserve-3d;
+        }
+        
+        .manufacture-card:hover {
+          transform: translateY(-8px) rotateX(5deg);
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .floating-element {
+          animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-20px); }
+        }
+        
+        .timeline-item {
+          opacity: 0;
+          transform: translateX(-50px);
+          transition: all 0.6s ease-out;
+        }
+        
+        .timeline-item.animate {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        
+        .watch-movement {
+          background: radial-gradient(circle at center, #2d2d2d 0%, #0a0a0a 100%);
+          border: 2px solid #c0c0c0;
+        }
+        
+        .precision-grid {
+          background-image: 
+            linear-gradient(rgba(192, 192, 192, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(192, 192, 192, 0.1) 1px, transparent 1px);
+          background-size: 20px 20px;
+        }
+        
+        .luxury-button {
+          background: linear-gradient(135deg, #c0c0c0 0%, #e5e5e5 50%, #c0c0c0 100%);
+          border: 1px solid #a0a0a0;
+          transition: all 0.3s ease;
+        }
+        
+        .luxury-button:hover {
+          background: linear-gradient(135deg, #d4af37 0%, #ffd700 50%, #d4af37 100%);
+          transform: translateY(-2px);
+          box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        .typewriter {
+          overflow: hidden;
+          border-right: 2px solid #d4af37;
+          white-space: nowrap;
+          margin: 0 auto;
+          animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+          from { width: 0; }
+          to { width: 100%; }
+        }
+        
+        @keyframes blink-caret {
+          from, to { border-color: transparent; }
+          50% { border-color: #d4af37; }
+        }
+        
+        .parallax-bg {
+          background-attachment: fixed;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
+        
+        .innovation-visual {
+          background: linear-gradient(45deg, #0a0a0a 25%, transparent 25%), 
+                      linear-gradient(-45deg, #0a0a0a 25%, transparent 25%), 
+                      linear-gradient(45deg, transparent 75%, #0a0a0a 75%), 
+                      linear-gradient(-45deg, transparent 75%, #0a0a0a 75%);
+          background-size: 20px 20px;
+          background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        
+        .excellence-badge {
+          background: linear-gradient(135deg, #0a0a0a 0%, #2d2d2d 100%);
+          border: 2px solid #c0c0c0;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .excellence-badge::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: linear-gradient(45deg, transparent 30%, rgba(212, 175, 55, 0.1) 50%, transparent 70%);
+          animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        /* Tailwind custom colors */
+        :root {
+          --swiss-black: #0a0a0a;
+          --swiss-white: #fafafa;
+          --swiss-silver: #c0c0c0;
+          --swiss-charcoal: #2d2d2d;
+        }
+      `}</style>
+
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a] backdrop-blur-md border-b border-[#c0c0c0]/20">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#c0c0c0] to-[#fafafa] rounded-full flex items-center justify-center">
+                <span className="text-[#0a0a0a] font-bold text-sm">SW</span>
+              </div>
+              <span className="font-playfair text-xl font-bold text-[#fafafa]">SwissWatch Excellence</span>
             </div>
-            <div className="bg-[#16244e] rounded-2xl px-10 py-7 shadow-lg border border-blue-800 flex-1 mx-auto min-w-[160px]">
-              <span className="text-4xl font-extrabold text-white">5</span>
-              <div className="text-xs text-blue-200 mt-2 tracking-wide">MANUFACTURES LÉGENDAIRES</div>
+            
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#hero" className="text-[#c0c0c0] hover:text-[#fafafa] transition-colors">Accueil</a>
+              <a href="#timeline" className="text-[#c0c0c0] hover:text-[#fafafa] transition-colors">Histoire</a>
+              <a href="#manufactures" className="text-[#c0c0c0] hover:text-[#fafafa] transition-colors">Manufactures</a>
+              <a href="#innovations" className="text-[#c0c0c0] hover:text-[#fafafa] transition-colors">Innovations</a>
             </div>
-            <div className="bg-[#16244e] rounded-2xl px-10 py-7 shadow-lg border border-blue-800 flex-1 mx-auto min-w-[160px]">
-              <span className="text-4xl font-extrabold text-white">269</span>
-              <div className="text-xs text-blue-200 mt-2 tracking-wide">ANNÉES D’HISTOIRE</div>
+            
+            <button className="luxury-button px-6 py-2 rounded-full text-[#2d2d2d] font-semibold">
+              Explorer
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section id="hero" className="hero-bg min-h-screen flex items-center justify-center pt-20">
+        <div className="hero-content container mx-auto px-6 text-center">
+          <div className="mb-8">
+            <div className="inline-flex items-center space-x-2 bg-[#c0c0c0]/10 border border-[#c0c0c0]/30 rounded-full px-6 py-3 mb-6">
+              <span className="text-[#c0c0c0] text-sm font-medium">Culture Horlogère Suisse</span>
+              <span className="w-2 h-2 bg-[#c0c0c0] rounded-full"></span>
             </div>
-            <div className="bg-[#16244e] rounded-2xl px-10 py-7 shadow-lg border border-blue-800 flex-1 mx-auto min-w-[160px]">
-              <span className="text-4xl font-extrabold text-white">CH</span>
-              <div className="text-xs text-blue-200 mt-2 tracking-wide">EXCELLENCE SUISSE</div>
+            
+            <h1 className="font-playfair text-5xl md:text-7xl font-bold mb-6 leading-tight">
+              <span className="gold-gradient typewriter">Les Grandes Manufactures</span><br>
+              <span className="text-[#fafafa]">Horlogères Suisses</span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-[#c0c0c0]/80 max-w-4xl mx-auto mb-8 leading-relaxed">
+              Découvrez l'excellence horlogère suisse à travers ses cinq manufactures légendaires : 
+              Patek Philippe, Rolex, Audemars Piguet, Vacheron Constantin et Omega.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+            <div className="excellence-badge rounded-xl p-6 text-center">
+              <div className="text-3xl font-bold text-[#c0c0c0] mb-2">175+</div>
+              <div className="text-sm text-[#c0c0c0]/70">Ans d'excellence</div>
+            </div>
+            <div className="excellence-badge rounded-xl p-6 text-center">
+              <div className="text-3xl font-bold text-[#c0c0c0] mb-2">5</div>
+              <div className="text-sm text-[#c0c0c0]/70">Manufactures légendaires</div>
+            </div>
+            <div className="excellence-badge rounded-xl p-6 text-center">
+              <div className="text-3xl font-bold text-[#c0c0c0] mb-2">269</div>
+              <div className="text-sm text-[#c0c0c0]/70">Années d'histoire</div>
+            </div>
+            <div className="excellence-badge rounded-xl p-6 text-center">
+              <div className="text-3xl font-bold text-[#c0c0c0] mb-2">🇨🇭</div>
+              <div className="text-sm text-[#c0c0c0]/70">Excellence suisse</div>
             </div>
           </div>
-          <button className="mt-2 px-8 py-4 bg-blue-700 text-white rounded-2xl font-bold shadow-lg hover:bg-blue-800 transition">Explorer l’Excellence</button>
+          
+          <button onClick={() => scrollToSection('manufactures')} className="luxury-button px-12 py-4 rounded-full text-[#2d2d2d] font-bold text-lg">
+            Explorer l'Excellence
+          </button>
         </div>
       </section>
 
-      {/* TIMELINE */}
-      <section className="bg-[#181d29] py-16 px-2">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white text-center mb-14">L’Évolution de l’Excellence</h2>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-0 md:gap-6">
-            {timeline.map((item, idx) => (
-              <div key={idx} className="flex flex-col items-center relative px-2 md:px-0 max-w-[230px]">
-                <div className="bg-blue-900 text-white text-lg font-bold rounded-full w-14 h-14 flex items-center justify-center z-10 mb-3 shadow-lg border-2 border-blue-700">
-                  {item.date}
-                </div>
-                <div className="text-center mb-1 text-lg text-white font-bold">{item.title}</div>
-                <div className="text-center text-blue-100 text-sm pb-8">{item.text}</div>
-                {idx < timeline.length-1 && (
-                  <div className="hidden md:block absolute top-6 right-[-35px] h-1 w-14 bg-gradient-to-r from-blue-800 via-blue-400 to-blue-800" />
-                )}
-              </div>
-            ))}
+      {/* Timeline Section */}
+      <section id="timeline" className="py-20 precision-grid">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-[#fafafa]">L'Évolution de l'Excellence</h2>
+            <p className="text-xl text-[#c0c0c0]/70 max-w-3xl mx-auto">
+              Parcourez plus de 250 ans d'histoire horlogère suisse, marquée par l'innovation, 
+              le savoir-faire et l'excellence technique.
+            </p>
           </div>
-        </div>
-      </section>
-      
-      {/* MANUFACTURES GRID */}
-      <section className="bg-[#10182b] py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white text-center mb-14">Les Cinq Légendes</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {manufactures.map((m) => (
-              <div key={m.slug} className="bg-[#16244e] rounded-2xl overflow-hidden shadow-2xl border-2 border-blue-900 hover:-translate-y-1 transition-transform h-full flex flex-col">
-                <img src={m.img} alt={`Photo manufacture ${m.name}`} className="w-full h-48 object-cover" />
-                <div className="p-7 flex flex-col flex-1">
-                  <div className="flex items-center mb-3">
-                    <div className="text-3xl mr-3">{m.icon}</div>
-                    <span className="ml-auto bg-blue-700 text-white text-xs font-bold px-3 py-1 rounded-full">{m.since}</span>
+          
+          <div className="relative">
+            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-[#c0c0c0]/30 h-full"></div>
+            
+            <div className="space-y-12">
+              <div className="timeline-item flex items-center">
+                <div className="w-1/2 pr-8 text-right">
+                  <div className="bg-[#2d2d2d]/50 rounded-xl p-6 border border-[#c0c0c0]/20">
+                    <h3 className="font-playfair text-2xl font-bold mb-2 text-[#c0c0c0]">1755</h3>
+                    <h4 className="text-xl font-semibold mb-3 text-[#fafafa]">Naissance de Vacheron Constantin</h4>
+                    <p className="text-[#c0c0c0]/70">Jean-Marc Vacheron fonde ce qui deviendra la plus ancienne manufacture horlogère suisse.</p>
                   </div>
-                  <h3 className="text-2xl text-white font-extrabold mb-1">{m.name}</h3>
-                  <div className="text-blue-200 text-sm italic mb-4">{m.tagline}</div>
-                  <ul className="mb-4">
-                    {m.specialties.map((sp, i) => (
-                      <li key={i} className="flex items-center text-blue-100 text-sm mb-1">
-                        <span className="text-blue-400 mr-2">•</span> {sp}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link href={`/theorie/manufactures/${m.slug}`}>
-                    <span className="inline-block mt-auto pt-3 text-blue-400 hover:text-blue-200 font-semibold underline transition">Découvrir l’histoire →</span>
-                  </Link>
+                </div>
+                <div className="w-8 h-8 bg-[#c0c0c0] rounded-full border-4 border-[#0a0a0a] flex-shrink-0 z-10"></div>
+                <div className="w-1/2 pl-8"></div>
+              </div>
+              
+              <div className="timeline-item flex items-center">
+                <div className="w-1/2 pr-8"></div>
+                <div className="w-8 h-8 bg-[#c0c0c0] rounded-full border-4 border-[#0a0a0a] flex-shrink-0 z-10"></div>
+                <div className="w-1/2 pl-8">
+                  <div className="bg-[#2d2d2d]/50 rounded-xl p-6 border border-[#c0c0c0]/20">
+                    <h3 className="font-playfair text-2xl font-bold mb-2 text-[#c0c0c0]">1839</h3>
+                    <h4 className="text-xl font-semibold mb-3 text-[#fafafa]">Fondation de Patek Philippe</h4>
+                    <p className="text-[#c0c0c0]/70">Antoine Norbert de Patek et Adrien Philippe créent la manufacture de prestige absolu.</p>
+                  </div>
                 </div>
               </div>
-            ))}
+              
+              <div className="timeline-item flex items-center">
+                <div className="w-1/2 pr-8 text-right">
+                  <div className="bg-[#2d2d2d]/50 rounded-xl p-6 border border-[#c0c0c0]/20">
+                    <h3 className="font-playfair text-2xl font-bold mb-2 text-[#c0c0c0]">1848</h3>
+                    <h4 className="text-xl font-semibold mb-3 text-[#fafafa]">Naissance d'Omega</h4>
+                    <p className="text-[#c0c0c0]/70">Louis Brandt fonde Omega, qui deviendra la référence de précision et d'aventure.</p>
+                  </div>
+                </div>
+                <div className="w-8 h-8 bg-[#c0c0c0] rounded-full border-4 border-[#0a0a0a] flex-shrink-0 z-10"></div>
+                <div className="w-1/2 pl-8"></div>
+              </div>
+              
+              <div className="timeline-item flex items-center">
+                <div className="w-1/2 pr-8"></div>
+                <div className="w-8 h-8 bg-[#c0c0c0] rounded-full border-4 border-[#0a0a0a] flex-shrink-0 z-10"></div>
+                <div className="w-1/2 pl-8">
+                  <div className="bg-[#2d2d2d]/50 rounded-xl p-6 border border-[#c0c0c0]/20">
+                    <h3 className="font-playfair text-2xl font-bold mb-2 text-[#c0c0c0]">1875</h3>
+                    <h4 className="text-xl font-semibold mb-3 text-[#fafafa]">Création d'Audemars Piguet</h4>
+                    <p className="text-[#c0c0c0]/70">Jules-Louis Audemars et Edward-Auguste Piguet fondent leur manufacture d'avant-garde.</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="timeline-item flex items-center">
+                <div className="w-1/2 pr-8 text-right">
+                  <div className="bg-[#2d2d2d]/50 rounded-xl p-6 border border-[#c0c0c0]/20">
+                    <h3 className="font-playfair text-2xl font-bold mb-2 text-[#c0c0c0]">1905</h3>
+                    <h4 className="text-xl font-semibold mb-3 text-[#fafafa]">Naissance de Rolex</h4>
+                    <p className="text-[#c0c0c0]/70">Hans Wilsdorf fonde la marque qui révolutionnera l'horlogerie de sport et de luxe.</p>
+                  </div>
+                </div>
+                <div className="w-8 h-8 bg-[#c0c0c0] rounded-full border-4 border-[#0a0a0a] flex-shrink-0 z-10"></div>
+                <div className="w-1/2 pl-8"></div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
-    </main>
+
+      {/* Manufactures Section */}
+      <section id="manufactures" className="py-20 bg-[#2d2d2d]/30">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-[#fafafa]">Les Cinq Légendes</h2>
+            <p className="text-xl text-[#c0c0c0]/70 max-w-3xl mx-auto">
+              Chaque manufacture incarne une philosophie unique, un savoir-faire distinctif 
+              et une contribution exceptionnelle à l'horlogerie de luxe.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Patek Philippe */}
+            <div className="manufacture-card bg-[#0a0a0a] border border-[#c0c0c0]/20 rounded-2xl p-8 cursor-pointer">
+              <div className="text-center mb-6">
+                <img src="/api/placeholder/400/300" alt="Patek Philippe" 
+                     className="w-full h-48 object-cover rounded-xl mb-4" />
+                <div className="text-4xl mb-2">👑</div>
+                <h3 className="font-playfair text-2xl font-bold mb-2 text-[#fafafa]">Patek Philippe</h3>
+                <p className="text-[#c0c0c0]/60 text-sm">Depuis 1839</p>
+              </div>
+              
+              <div className="mb-6">
+                <h4 className="font-semibold mb-3 text-[#c0c0c0]">Spécialités</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Quantièmes perpétuels</span>
+                  </div>
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Calatrava</span>
+                  </div>
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Nautilus</span>
+                  </div>
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Grandes complications</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <span className="text-[#c0c0c0]/70 text-sm group-hover:text-[#c0c0c0] transition-colors">
+                  Découvrir l'histoire →
+                </span>
+              </div>
+            </div>
+            
+            {/* Rolex */}
+            <div className="manufacture-card bg-[#0a0a0a] border border-[#c0c0c0]/20 rounded-2xl p-8 cursor-pointer">
+              <div className="text-center mb-6">
+                <img src="/api/placeholder/400/300" alt="Rolex" 
+                     className="w-full h-48 object-cover rounded-xl mb-4" />
+                <div className="text-4xl mb-2">⚡</div>
+                <h3 className="font-playfair text-2xl font-bold mb-2 text-[#fafafa]">Rolex</h3>
+                <p className="text-[#c0c0c0]/60 text-sm">Depuis 1905</p>
+              </div>
+              
+              <div className="mb-6">
+                <h4 className="font-semibold mb-3 text-[#c0c0c0]">Spécialités</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Oyster Perpetual</span>
+                  </div>
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Submariner</span>
+                  </div>
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Daytona</span>
+                  </div>
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>GMT-Master</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <span className="text-[#c0c0c0]/70 text-sm group-hover:text-[#c0c0c0] transition-colors">
+                  Découvrir l'histoire →
+                </span>
+              </div>
+            </div>
+            
+            {/* Audemars Piguet */}
+            <div className="manufacture-card bg-[#0a0a0a] border border-[#c0c0c0]/20 rounded-2xl p-8 cursor-pointer">
+              <div className="text-center mb-6">
+                <img src="/api/placeholder/400/300" alt="Audemars Piguet" 
+                     className="w-full h-48 object-cover rounded-xl mb-4" />
+                <div className="text-4xl mb-2">🔷</div>
+                <h3 className="font-playfair text-2xl font-bold mb-2 text-[#fafafa]">Audemars Piguet</h3>
+                <p className="text-[#c0c0c0]/60 text-sm">Depuis 1875</p>
+              </div>
+              
+              <div className="mb-6">
+                <h4 className="font-semibold mb-3 text-[#c0c0c0]">Spécialités</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Royal Oak</span>
+                  </div>
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Royal Oak Offshore</span>
+                  </div>
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Tourbillons</span>
+                  </div>
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Grandes complications</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <span className="text-[#c0c0c0]/70 text-sm group-hover:text-[#c0c0c0] transition-colors">
+                  Découvrir l'histoire →
+                </span>
+              </div>
+            </div>
+            
+            {/* Vacheron Constantin */}
+            <div className="manufacture-card bg-[#0a0a0a] border border-[#c0c0c0]/20 rounded-2xl p-8 cursor-pointer">
+              <div className="text-center mb-6">
+                <img src="/api/placeholder/400/300" alt="Vacheron Constantin" 
+                     className="w-full h-48 object-cover rounded-xl mb-4" />
+                <div className="text-4xl mb-2">⭐</div>
+                <h3 className="font-playfair text-2xl font-bold mb-2 text-[#fafafa]">Vacheron Constantin</h3>
+                <p className="text-[#c0c0c0]/60 text-sm">Depuis 1755</p>
+              </div>
+              
+              <div className="mb-6">
+                <h4 className="font-semibold mb-3 text-[#c0c0c0]">Spécialités</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Patrimony</span>
+                  </div>
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Overseas</span>
+                  </div>
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Métiers d'Art</span>
+                  </div>
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Grandes complications</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <span className="text-[#c0c0c0]/70 text-sm group-hover:text-[#c0c0c0] transition-colors">
+                  Découvrir l'histoire →
+                </span>
+              </div>
+            </div>
+            
+            {/* Omega */}
+            <div className="manufacture-card bg-[#0a0a0a] border border-[#c0c0c0]/20 rounded-2xl p-8 cursor-pointer">
+              <div className="text-center mb-6">
+                <img src="/api/placeholder/400/300" alt="Omega" 
+                     className="w-full h-48 object-cover rounded-xl mb-4" />
+                <div className="text-4xl mb-2">🌙</div>
+                <h3 className="font-playfair text-2xl font-bold mb-2 text-[#fafafa]">Omega</h3>
+                <p className="text-[#c0c0c0]/60 text-sm">Depuis 1848</p>
+              </div>
+              
+              <div className="mb-6">
+                <h4 className="font-semibold mb-3 text-[#c0c0c0]">Spécialités</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Speedmaster</span>
+                  </div>
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Seamaster</span>
+                  </div>
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Constellation</span>
+                  </div>
+                  <div className="flex items-center text-sm text-[#fafafa]">
+                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                    <span>Master Chronometer</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <span className="text-[#c0c0c0]/70 text-sm group-hover:text-[#c0c0c0] transition-colors">
+                  Découvrir l'histoire →
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Innovations Section */}
+      <section id="innovations" className="py-20 innovation-visual">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-[#fafafa]">Innovations Révolutionnaires</h2>
+            <p className="text-xl text-[#c0c0c0]/70 max-w-3xl mx-auto">
+              Les manufactures suisses ont révolutionné l'horlogerie avec des innovations 
+              techniques et des designs iconiques qui ont marqué l'histoire.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-[#0a0a0a]/50 border border-[#c0c0c0]/20 rounded-xl p-6">
+              <div className="text-4xl mb-4">⚙️</div>
+              <h3 className="font-playfair text-xl font-bold mb-3 text-[#fafafa]">Quantième Perpétuel</h3>
+              <p className="text-[#c0c0c0]/70 text-sm mb-4">
+                Patek Philippe révolutionne l'horlogerie avec le premier quantième perpétuel 
+                automatique en 1962.
+              </p>
+              <div className="text-xs text-[#c0c0c0]/50">Innovation majeure</div>
+            </div>
+            
+            <div className="bg-[#0a0a0a]/50 border border-[#c0c0c0]/20 rounded-xl p-6">
+              <div className="text-4xl mb-4">🌊</div>
+              <h3 className="font-playfair text-xl font-bold mb-3 text-[#fafafa]">Étanchéité Oyster</h3>
+              <p className="text-[#c0c0c0]/70 text-sm mb-4">
+                Rolex introduit la première montre étanche au monde en 1926, 
+                révolutionnant l'horlogerie sportive.
+              </p>
+              <div className="text-xs text-[#c0c0c0]/50">1926</div>
+            </div>
+            
+            <div className="bg-[#0a0a0a]/50 border border-[#c0c0c0]/20 rounded-xl p-6">
+              <div className="text-4xl mb-4">🚀</div>
+              <h3 className="font-playfair text-xl font-bold mb-3 text-[#fafafa]">Moonwatch</h3>
+              <p className="text-[#c0c0c0]/70 text-sm mb-4">
+                Omega Speedmaster devient la première montre sur la Lune en 1969, 
+                choisie par la NASA.
+              </p>
+              <div className="text-xs text-[#c0c0c0]/50">1969</div>
+            </div>
+            
+            <div className="bg-[#0a0a0a]/50 border border-[#c0c0c0]/20 rounded-xl p-6">
+              <div className="text-4xl mb-4">💎</div>
+              <h3 className="font-playfair text-xl font-bold mb-3 text-[#fafafa]">Royal Oak</h3>
+              <p className="text-[#c0c0c0]/70 text-sm mb-4">
+                Audemars Piguet crée le premier luxury sport watch en acier inoxydable 
+                en 1972.
+              </p>
+              <div className="text-xs text-[#c0c0c0]/50">1972</div>
+            </div>
+            
+            <div className="bg-[#0a0a0a]/50 border border-[#c0c0c0]/20 rounded-xl p-6">
+              <div className="text-4xl mb-4">🎨</div>
+              <h3 className="font-playfair text-xl font-bold mb-3 text-[#fafafa]">Métiers d'Art</h3>
+              <p className="text-[#c0c0c0]/70 text-sm mb-4">
+                Vacheron Constantin perpétue les techniques traditionnelles de 
+                décoration horlogère.
+              </p>
+              <div className="text-xs text-[#c0c0c0]/50">Tradition</div>
+            </div>
+            
+            <div className="bg-[#0a0a0a]/50 border border-[#c0c0c0]/20 rounded-xl p-6">
+              <div className="text-4xl mb-4">⚡</div>
+              <h3 className="font-playfair text-xl font-bold mb-3 text-[#fafafa]">Master Chronometer</h3>
+              <p className="text-[#c0c0c0]/70 text-sm mb-4">
+                Omega développe la certification Master Chronometer, 
+                dépassant les normes industrielles.
+              </p>
+              <div className="text-xs text-[#c0c0c0]/50">2015</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Data Visualization Section */}
+      <section className="py-20 precision-grid">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-[#fafafa]">L'Excellence en Chiffres</h2>
+            <p className="text-xl text-[#c0c0c0]/70 max-w-3xl mx-auto">
+              Analyse comparative des manufactures suisses à travers les âges.
+            </p>
+          </div>
+          
+          <div className="grid lg:grid-cols-2 gap-12">
+            <div className="bg-[#2d2d2d]/30 border border-[#c0c0c0]/20 rounded-xl p-8">
+              <h3 className="font-playfair text-2xl font-bold mb-6 text-center text-[#fafafa]">Âge des Manufactures</h3>
+              <div className="h-80 flex items-center justify-center text-[#c0c0c0]">
+                <p>Graphique d'âge des manufactures</p>
+              </div>
+            </div>
+            
+            <div className="bg-[#2d2d2d]/30 border border-[#c0c0c0]/20 rounded-xl p-8">
+              <h3 className="font-playfair text-2xl font-bold mb-6 text-center text-[#fafafa]">Innovations par Décennie</h3>
+              <div className="h-80 flex items-center justify-center text-[#c0c0c0]">
+                <p>Graphique d'innovations par décennie</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-[#0a0a0a] border-t border-[#c0c0c0]/20 py-12">
+        <div className="container mx-auto px-6 text-center">
+          <div className="flex items-center justify-center space-x-3 mb-6">
+            <div className="w-8 h-8 bg-gradient-to-br from-[#c0c0c0] to-[#fafafa] rounded-full flex items-center justify-center">
+              <span className="text-[#0a0a0a] font-bold text-sm">SW</span>
+            </div>
+            <span className="font-playfair text-xl font-bold text-[#fafafa]">SwissWatch Excellence</span>
+          </div>
+          
+          <p className="text-[#c0c0c0]/60 text-sm mb-6">
+            L'excellence horlogère suisse depuis 1755
+          </p>
+          
+          <div className="text-xs text-[#c0c0c0]/40">
+            © 2024 SwissWatch Excellence. Tous droits réservés.
+          </div>
+        </div>
+      </footer>
+
+      <script dangerouslySetInnerHTML={{
+        __html: `
+          // Smooth scrolling function
+          function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({
+              behavior: 'smooth'
+            });
+          }
+
+          // Initialize animations on scroll
+          function initScrollAnimations() {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const manufactureCards = document.querySelectorAll('.manufacture-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  if (entry.target.classList.contains('timeline-item')) {
+                    entry.target.classList.add('animate');
+                  }
+                }
+              });
+            }, { threshold: 0.1 });
+            
+            timelineItems.forEach(item => observer.observe(item));
+            manufactureCards.forEach(card => observer.observe(card));
+          }
+
+          // Initialize everything when DOM is loaded
+          document.addEventListener('DOMContentLoaded', function() {
+            initScrollAnimations();
+          });
+        `
+      }} />
+    </>
   );
 }
