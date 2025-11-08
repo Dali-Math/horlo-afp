@@ -247,9 +247,7 @@ export default function ManufacturesPage() {
           100% { transform: rotate(360deg); }
         }
       `}</style>
-    </>
-);
-
+    
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a] backdrop-blur-md border-b border-[#c0c0c0]/20">
         <div className="container mx-auto px-6 py-4">
