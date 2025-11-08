@@ -104,7 +104,7 @@ export default function ManufacturesPage() {
   return (
     <>
       {/* Styles globaux */}
-      <style jsx global>{`
+     <style jsx global>{`
         .hero-bg {
           background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
           position: relative;
