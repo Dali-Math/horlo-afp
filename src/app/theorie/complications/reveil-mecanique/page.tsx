@@ -60,8 +60,7 @@ const ReveilMecaniquePage = () => {
     { time: '12:00', use: 'Rappel de rendez-vous important', icon: '📅' },
     { time: '18:00', use: 'Fin de journée de travail', icon: '🏢' },
     { time: '22:00', use: 'Rappel de prise de médicament', icon: '💊' }
-    ];
-  };
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-red-50 to-orange-50 dark:from-slate-950 dark:via-red-950 dark:to-slate-900">
@@ -321,14 +320,15 @@ const ReveilMecaniquePage = () => {
         </section>
 
         {/* CTA */}
-<div className="text-center mt-12">
-  <Link href="/theorie/complications">
-    <button className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl hover:from-blue-700 hover:to-indigo-800 transition-all shadow-xl hover:shadow-2xl">
-      <ArrowLeft size={24} />
-      Retour aux complications
-    </button>
-  </Link>
-</div>
+        <div className="text-center mt-12">
+          <Link href="/theorie/complications">
+            <button className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl hover:from-blue-700 hover:to-indigo-800 transition-all shadow-xl hover:shadow-2xl">
+              <ArrowLeft size={24} />
+              Retour aux complications
+            </button>
+          </Link>
+        </div>
+      </main>
 
       {/* Footer */}
       <footer className="py-8 border-t border-gray-200 dark:border-slate-800 text-center text-gray-600 dark:text-gray-400">
