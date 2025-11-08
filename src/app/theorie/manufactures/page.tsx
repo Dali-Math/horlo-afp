@@ -162,8 +162,9 @@ export default function ManufacturesPage() {
           left: 0;
           right: 0;
           bottom: 0;
-          background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
-          opacity: 0.3;
+          background: url('/images/manufactures/swiss-horology-hero.jpg') center/cover no-repeat;
+          opacity: 0.15;
+          filter: brightness(0.6);
           z-index: 1;
         }
         
@@ -407,16 +408,24 @@ export default function ManufacturesPage() {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              {name: "Patek Philippe", icon: "👑", year: "Depuis 1839", specialties: ["Quantièmes perpétuels", "Calatrava", "Nautilus", "Grandes complications"]},
-              {name: "Rolex", icon: "⚡", year: "Depuis 1905", specialties: ["Oyster Perpetual", "Submariner", "Daytona", "GMT-Master"]},
-              {name: "Audemars Piguet", icon: "🔷", year: "Depuis 1875", specialties: ["Royal Oak", "Royal Oak Offshore", "Tourbillons", "Grandes complications"]},
-              {name: "Vacheron Constantin", icon: "⭐", year: "Depuis 1755", specialties: ["Patrimony", "Overseas", "Métiers d'Art", "Grandes complications"]},
-              {name: "Omega", icon: "🌙", year: "Depuis 1848", specialties: ["Speedmaster", "Seamaster", "Constellation", "Master Chronometer"]}
+              {name: "Patek Philippe", icon: "👑", year: "Depuis 1839", specialties: ["Quantièmes perpétuels", "Calatrava", "Nautilus", "Grandes complications"], img: "/images/manufactures/patek-philippe-hero.jpg"},
+              {name: "Rolex", icon: "⚡", year: "Depuis 1905", specialties: ["Oyster Perpetual", "Submariner", "Daytona", "GMT-Master"], img: "/images/manufactures/rolex-hero.jpg"},
+              {name: "Audemars Piguet", icon: "🔷", year: "Depuis 1875", specialties: ["Royal Oak", "Royal Oak Offshore", "Tourbillons", "Grandes complications"], img: "/images/manufactures/audemars-piguet-hero.jpg"},
+              {name: "Vacheron Constantin", icon: "⭐", year: "Depuis 1755", specialties: ["Patrimony", "Overseas", "Métiers d'Art", "Grandes complications"], img: "/images/manufactures/vacheron-constantin-hero.jpg"},
+              {name: "Omega", icon: "🌙", year: "Depuis 1848", specialties: ["Speedmaster", "Seamaster", "Constellation", "Master Chronometer"], img: "/images/manufactures/omega-hero.jpg"}
             ].map((m, i) => (
               <div key={i} className="manufacture-card bg-[#0a0a0a] border border-[#c0c0c0]/20 rounded-2xl p-8">
                 <div className="text-center mb-6">
-                  <div className="w-full h-48 bg-gradient-to-br from-[#2d2d2d] to-[#0a0a0a] rounded-xl mb-4 flex items-center justify-center">
-                    <span className="text-6xl">{m.icon}</span>
+                  <div className="w-full h-48 rounded-xl mb-4 overflow-hidden bg-[#2d2d2d]/50">
+                    <img 
+                      src={m.img} 
+                      alt={m.name}
+                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.parentElement.innerHTML = `<div class="w-full h-full flex items-center justify-center"><span class="text-6xl">${m.icon}</span></div>`;
+                      }}
+                    />
                   </div>
                   <div className="text-4xl mb-2">{m.icon}</div>
                   <h3 className="text-2xl font-bold mb-2 text-[#fafafa]" style={{fontFamily: 'Playfair Display, serif'}}>{m.name}</h3>
