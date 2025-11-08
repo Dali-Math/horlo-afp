@@ -7,7 +7,7 @@ import { ChevronLeft, Activity, Zap, Clock, Heart, Settings2, Trophy, Award, Rot
 import Link from 'next/link';
 import Image from 'next/image';
 
-// Définition des types
+// Types
 type QuizQuestion = {
   question: string;
   options: string[];
@@ -16,7 +16,7 @@ type QuizQuestion = {
   image?: string;
 };
 
-// Données du quiz enrichies
+// Données du quiz
 const quizData: QuizQuestion[] = [
   {
     question: "Quelle est la fonction principale de l'échappement dans une montre mécanique ?",
@@ -66,25 +66,18 @@ const quizData: QuizQuestion[] = [
 ];
 
 // Composant réutilisable pour les cartes d'information
-const InfoCard = ({ icon: Icon, title, children, delay = 0 }: {
+const InfoCard = ({ icon: Icon, title, children }: {
   icon: React.ElementType;
   title: string;
   children: React.ReactNode;
-  delay?: number;
 }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay, duration: 0.5 }}
-    className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-blue-200 dark:border-blue-700 transition-all hover:shadow-lg"
-  >
+  <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-blue-200 dark:border-blue-700 transition-all hover:shadow-lg">
     <div className="flex items-center mb-3">
       <Icon className="w-8 h-8 text-blue-600 dark:text-blue-400 mr-3" />
       <h3 className="text-xl font-bold text-slate-900 dark:text-white">{title}</h3>
     </div>
     <div className="text-slate-700 dark:text-slate-300">{children}</div>
-  </motion.div>
+  </div>
 );
 
 // Composant principal
@@ -94,12 +87,10 @@ export default function EchappementAncre() {
   const [score, setScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
 
-  // Optimisation avec useMemo pour éviter les recalculs
   const pourcentageScore = useMemo(() => {
     return Math.round((score / quizData.length) * 100);
   }, [score]);
 
-  // useCallback pour éviter les re-rendus inutiles
   const handleAnswerClick = useCallback((index: number) => {
     if (selectedAnswer === null) {
       setSelectedAnswer(index);
@@ -125,6 +116,7 @@ export default function EchappementAncre() {
     setQuizCompleted(false);
   }, []);
 
+  // RENDER - C'est ICI que le problème était probablement causé par du code fantôme avant le return
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
       {/* Header */}
@@ -176,11 +168,11 @@ export default function EchappementAncre() {
             </p>
 
             <div className="grid md:grid-cols-2 gap-8 my-10">
-              <InfoCard icon={Zap} title="1. Entretien" delay={0.1}>
+              <InfoCard icon={Zap} title="1. Entretien">
                 L'échappement <strong>entretient les oscillations</strong> du balancier en lui donnant une impulsion à chaque alternance pour compenser les pertes d'énergie dues aux frottements.
               </InfoCard>
 
-              <InfoCard icon={Clock} title="2. Comptage" delay={0.2}>
+              <InfoCard icon={Clock} title="2. Comptage">
                 À chaque alternance, il laisse <strong>"échapper une dent"</strong> de la roue d'échappement, permettant au rouage d'avancer par saccades au rythme imposé par le balancier.
               </InfoCard>
             </div>
@@ -297,73 +289,8 @@ export default function EchappementAncre() {
           </div>
         </section>
 
-        {/* Fonctionnement en 4 phases */}
-        <section className="mb-16">
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-8 flex items-center">
-            <Clock className="w-8 h-8 mr-3 text-purple-600" />
-            Fonctionnement en 4 phases
-          </h2>
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 md:p-12 border border-slate-200 dark:border-slate-700">
-            <p className="text-lg text-slate-700 dark:text-slate-300 mb-10">
-              Le cycle de l'échappement se déroule en <strong>quatre phases successives</strong> à chaque alternance du balancier :
-            </p>
-
-            <div className="space-y-6">
-              {[
-                { phase: '1. Repos', color: 'blue', description: 'Une palette de l\'ancre bloque la roue d\'échappement. L\'ancre est maintenue en position par le tirage (pression de la dent sur la palette). Le balancier oscille librement pendant son arc supplémentaire (~270-300°).' },
-                { phase: '2. Dégagement (Comptage)', color: 'green', description: 'La cheville du plateau pousse la fourchette, qui fait pivoter l\'ancre. La palette libère la roue d\'échappement : une dent "échappe". Le rouage avance d\'un cran. C\'est le "tic".' },
-                { phase: '3. Impulsion', color: 'purple', description: 'Immédiatement après le dégagement, la dent de la roue pousse sur le plan incliné de la palette et transmet une impulsion au balancier via l\'ancre et la fourchette. C\'est cette énergie qui compense les frottements et maintient l\'amplitude.' },
-                { phase: '4. Chute', color: 'orange', description: 'L\'ancre bascule complètement : la palette opposée vient bloquer la dent suivante de la roue d\'échappement. C\'est le "tac". L\'ancre est de nouveau maintenue par le tirage jusqu\'à la prochaine alternance.' }
-              ].map((item, i) => (
-                <motion.div
-                  key={item.phase}
-                  initial={{ x: -30, opacity: 0 }}
-                  whileInView={{ x: 0, opacity: 1 }}
-                  transition={{ delay: i * 0.1 }}
-                  className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 rounded-xl p-6 border-l-4 border-blue-600 hover:shadow-lg transition-all"
-                >
-                  <div className="flex items-start">
-                    <div className="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold mr-6 flex-shrink-0">
-                      {i + 1}
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-slate-900 dark:text-white mb-2 text-xl">{item.phase}</h4>
-                      <p className="text-slate-700 dark:text-slate-300">{item.description}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="mt-10 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border-l-4 border-amber-600 p-6 rounded-r-xl">
-              <h4 className="font-bold text-slate-900 dark:text-white mb-3 text-lg flex items-center">
-                <Zap className="w-5 h-5 mr-2 text-amber-600" />
-                ⚡ Données chiffrées
-              </h4>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                <div className="bg-white dark:bg-slate-700 rounded-lg p-3 text-center">
-                  <div className="font-bold text-amber-600 dark:text-amber-400">0.125s</div>
-                  <div className="text-slate-600 dark:text-slate-400">Durée d'une alternance</div>
-                </div>
-                <div className="bg-white dark:bg-slate-700 rounded-lg p-3 text-center">
-                  <div className="font-bold text-amber-600 dark:text-amber-400">50-55°</div>
-                  <div className="text-slate-600 dark:text-slate-400">Angle d'impulsion</div>
-                </div>
-                <div className="bg-white dark:bg-slate-700 rounded-lg p-3 text-center">
-                  <div className="font-bold text-amber-600 dark:text-amber-400">270-300°</div>
-                  <div className="text-slate-600 dark:text-slate-400">Arc supplémentaire</div>
-                </div>
-                <div className="bg-white dark:bg-slate-700 rounded-lg p-3 text-center">
-                  <div className="font-bold text-amber-600 dark:text-amber-400">320-330°</div>
-                  <div className="text-slate-600 dark:text-slate-400">Amplitude totale</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Quiz Premium */}
-        <section className="mb-16">
+        <section>
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl shadow-xl p-8 md:p-12 border border-slate-700">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-4xl font-bold text-white flex items-center">
