@@ -9,8 +9,10 @@ import {
 import Link from 'next/link';
 
 // =================================================
-// CONFIGURATION SANS DÉPENDANCES EXTERNES
+// TYPES ET CONFIGURATION
 // =================================================
+
+type SectionKey = 'principe' | 'elements' | 'fonctionnement' | 'evolution';
 
 const TRANSLATIONS = {
   fr: {
@@ -30,7 +32,7 @@ const TRANSLATIONS = {
       lastUpdated: '2024-11',
       standard: 'ISO 3159'
     },
-    principle: {
+    principe: {
       title: 'Principe et fonction',
       beginner: "L'échappement transforme l'énergie continue du barillet en impulsions régulières. Il remplit une double fonction essentielle : entretien des oscillations et comptage du temps.",
       expert: "L'échappement à ancre suisse convertit le couple continu du barillet (E = ½Cθ²) en impulsions discrètes. Son rendement énergétique est de 35-40%, avec une dissipation thermique de ~0.1μW par alternance.",
@@ -65,7 +67,7 @@ const TRANSLATIONS = {
         specs: ['Ø0.15mm', 'Encoche 90°', '28\'800 A/h']
       }
     },
-    operation: {
+    fonctionnement: {
       title: 'Fonctionnement en 4 phases',
       beginner: 'Chaque alternance du balancier déclenche un cycle complet de 4 phases.',
       expert: 'Cycle thermodynamique : repos (isochore), dégagement (adiabatic), impulsion (isobare), chute (adiabatic). Rendement : 38%.',
@@ -162,9 +164,7 @@ const TRANSLATIONS = {
 // =================================================
 
 const SectionCard = ({ title, children, icon: Icon }: any) => (
-  <div
-    className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 lg:p-8 mb-6 transition-transform hover:scale-[1.01]"
-  >
+  <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 lg:p-8 mb-6 transition-transform hover:scale-[1.01]">
     <div className="flex items-center justify-between mb-6">
       <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
         {Icon && <Icon className="w-7 h-7 text-blue-600 dark:text-blue-400" />}
@@ -284,7 +284,7 @@ export default function EchappementAncre() {
               {t.toc}
             </h3>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-2">
-              {['principe', 'elements', 'fonctionnement', 'evolution'].map((id) => (
+              {(['principe', 'elements', 'fonctionnement', 'evolution'] as const).map((id) => (
                 <button
                   key={id}
                   onClick={() => {
@@ -301,7 +301,7 @@ export default function EchappementAncre() {
                   {id === 'elements' && <Settings2 className="w-4 h-4" />}
                   {id === 'fonctionnement' && <Clock className="w-4 h-4" />}
                   {id === 'evolution' && <Zap className="w-4 h-4" />}
-                  {t[id]?.title || id}
+                  {t[id].title || id}
                 </button>
               ))}
             </div>
@@ -312,18 +312,18 @@ export default function EchappementAncre() {
         <div className="space-y-6 lg:space-y-8">
 
           {/* Section 1 : Principe */}
-          <SectionCard title={t.principle.title} icon={Activity}>
+          <SectionCard title={t.principe.title} icon={Activity}>
             <p className="text-slate-700 dark:text-slate-300 mb-6">
-              {expertMode ? t.principle.expert : t.principle.beginner}
+              {expertMode ? t.principe.expert : t.principe.beginner}
             </p>
             
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-blue-200 dark:border-slate-600 transition-transform hover:scale-[1.02]">
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-3">
                   <Activity className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-                  {t.principle.function1.title}
+                  {t.principe.function1.title}
                 </h3>
-                <p className="text-slate-700 dark:text-slate-300">{t.principle.function1.desc}</p>
+                <p className="text-slate-700 dark:text-slate-300">{t.principe.function1.desc}</p>
                 {expertMode && (
                   <div className="mt-3 p-3 bg-blue-100/50 dark:bg-blue-900/30 rounded-lg">
                     <p className="text-sm text-blue-800 dark:text-blue-200">
@@ -336,9 +336,9 @@ export default function EchappementAncre() {
               <div className="bg-gradient-to-br from-purple-50 to-violet-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-purple-200 dark:border-slate-600 transition-transform hover:scale-[1.02]">
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-3">
                   <Clock className="w-7 h-7 text-purple-600 dark:text-purple-400" />
-                  {t.principle.function2.title}
+                  {t.principe.function2.title}
                 </h3>
-                <p className="text-slate-700 dark:text-slate-300">{t.principle.function2.desc}</p>
+                <p className="text-slate-700 dark:text-slate-300">{t.principe.function2.desc}</p>
                 {expertMode && (
                   <div className="mt-3 p-3 bg-purple-100/50 dark:bg-purple-900/30 rounded-lg">
                     <p className="text-sm text-purple-800 dark:text-purple-200">
@@ -354,13 +354,13 @@ export default function EchappementAncre() {
                 <Heart className="w-8 h-8 text-purple-600 dark:text-purple-400 mt-1" />
                 <div className="flex-1">
                   <h4 className="font-bold text-slate-900 dark:text-white mb-2">
-                    {t.principle.funFact.title}
+                    {t.principe.funFact.title}
                   </h4>
                   <p className="text-slate-700 dark:text-slate-300 mb-4">
-                    {t.principle.funFact.desc}
+                    {t.principe.funFact.desc}
                   </p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {t.principle.funFact.metrics.map((metric: string, i: number) => (
+                    {t.principe.funFact.metrics.map((metric: string, i: number) => (
                       <MetricCard key={i} value={metric.split(' ')[0]} label={metric.split(' ')[1]} />
                     ))}
                   </div>
@@ -419,20 +419,20 @@ export default function EchappementAncre() {
           </SectionCard>
 
           {/* Section 3 : Fonctionnement */}
-          <SectionCard title={t.operation.title} icon={Clock}>
+          <SectionCard title={t.fonctionnement.title} icon={Clock}>
             <p className="text-slate-700 dark:text-slate-300 mb-6">
-              {expertMode ? t.operation.expert : t.operation.beginner}
+              {expertMode ? t.fonctionnement.expert : t.fonctionnement.beginner}
             </p>
 
             {/* Simulateur 2D */}
             <EscapementSimulator2D />
 
             <p className="text-slate-700 dark:text-slate-300 mt-6 mb-4">
-              {t.operation.phases.title}
+              {t.fonctionnement.phases.title}
             </p>
 
             <div className="space-y-4">
-              {t.operation.phases.map((phase: any, i: number) => (
+              {t.fonctionnement.phases.map((phase: any, i: number) => (
                 <div
                   key={i}
                   className={`bg-slate-50 dark:bg-slate-900 p-6 rounded-xl border-l-4 transition-transform hover:translate-x-2 ${
@@ -461,10 +461,10 @@ export default function EchappementAncre() {
             <div className="mt-6 bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-600 p-6 rounded-r-lg">
               <h4 className="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                 <Gauge className="w-5 h-5" />
-                {t.operation.data.title}
+                {t.fonctionnement.data.title}
               </h4>
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {t.operation.data.items.map((item: string, i: number) => (
+                {t.fonctionnement.data.items.map((item: string, i: number) => (
                   <div key={i} className="flex justify-between items-center">
                     <span className="text-slate-600 dark:text-slate-400 text-sm">{item.split(':')[0]}</span>
                     <span className="font-mono text-slate-900 dark:text-white font-bold">{item.split(':')[1]}</span>
