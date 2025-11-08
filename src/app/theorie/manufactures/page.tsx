@@ -1,20 +1,23 @@
 // app/[locale]/theorie/manufactures/page.tsx
 
+'use client';
+
 import React from "react";
-import { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Les Grandes Manufactures Horlogères Suisses - Référence Mondiale | HorloLearn",
-  description: "Découvrez les manufactures horlogères suisses de légende : Patek Philippe, Rolex, Audemars Piguet, Vacheron Constantin et Omega. Histoire, innovations et savoir-faire d'exception depuis 1755.",
-  keywords: "manufactures suisses, Patek Philippe, Rolex, Audemars Piguet, Vacheron Constantin, Omega, horlogerie de luxe",
-};
-
 export default function ManufacturesPage() {
+  // Fonction pour le scrolling smooth
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <>
+      {/* Styles globaux */}
       <style jsx global>{`
-        /* Custom Styles */
         .hero-bg {
           background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
           position: relative;
@@ -155,14 +158,6 @@ export default function ManufacturesPage() {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
         }
-
-        /* Tailwind custom colors */
-        :root {
-          --swiss-black: #0a0a0a;
-          --swiss-white: #fafafa;
-          --swiss-silver: #c0c0c0;
-          --swiss-charcoal: #2d2d2d;
-        }
       `}</style>
 
       {/* Navigation */}
@@ -183,7 +178,7 @@ export default function ManufacturesPage() {
               <a href="#innovations" className="text-[#c0c0c0] hover:text-[#fafafa] transition-colors">Innovations</a>
             </div>
             
-            <button className="luxury-button px-6 py-2 rounded-full text-[#2d2d2d] font-semibold">
+            <button className="luxury-button px-6 py-2 rounded-full text-[#2d2d2d] font-semibold" onClick={() => scrollToSection('manufactures')}>
               Explorer
             </button>
           </div>
@@ -200,7 +195,7 @@ export default function ManufacturesPage() {
             </div>
             
             <h1 className="font-playfair text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              <span className="gold-gradient typewriter">Les Grandes Manufactures</span><br>
+              <span className="gold-gradient typewriter">Les Grandes Manufactures</span><br/>
               <span className="text-[#fafafa]">Horlogères Suisses</span>
             </h1>
             
@@ -315,7 +310,7 @@ export default function ManufacturesPage() {
       </section>
 
       {/* Manufactures Section */}
-      <section id="manufactures" className="py-20 bg-[#2d2d2d]/30">
+      <section id="manufactures" className="py-20 innovation-visual">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-[#fafafa]">Les Cinq Légendes</h2>
@@ -329,8 +324,9 @@ export default function ManufacturesPage() {
             {/* Patek Philippe */}
             <div className="manufacture-card bg-[#0a0a0a] border border-[#c0c0c0]/20 rounded-2xl p-8 cursor-pointer">
               <div className="text-center mb-6">
-                <img src="/api/placeholder/400/300" alt="Patek Philippe" 
-                     className="w-full h-48 object-cover rounded-xl mb-4" />
+                <div className="w-full h-48 bg-gray-700 rounded-xl mb-4 flex items-center justify-center">
+                  <span className="text-gray-400">Patek Philippe</span>
+                </div>
                 <div className="text-4xl mb-2">👑</div>
                 <h3 className="font-playfair text-2xl font-bold mb-2 text-[#fafafa]">Patek Philippe</h3>
                 <p className="text-[#c0c0c0]/60 text-sm">Depuis 1839</p>
@@ -339,37 +335,28 @@ export default function ManufacturesPage() {
               <div className="mb-6">
                 <h4 className="font-semibold mb-3 text-[#c0c0c0]">Spécialités</h4>
                 <div className="space-y-2">
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Quantièmes perpétuels</span>
-                  </div>
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Calatrava</span>
-                  </div>
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Nautilus</span>
-                  </div>
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Grandes complications</span>
-                  </div>
+                  {["Quantièmes perpétuels", "Calatrava", "Nautilus", "Grandes complications"].map((item) => (
+                    <div key={item} className="flex items-center text-sm text-[#fafafa]">
+                      <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                      <span>{item}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
               
               <div className="text-center">
-                <span className="text-[#c0c0c0]/70 text-sm group-hover:text-[#c0c0c0] transition-colors">
+                <Link href="/manufactures/patek-philippe" className="text-[#c0c0c0]/70 text-sm hover:text-[#c0c0c0] transition-colors">
                   Découvrir l'histoire →
-                </span>
+                </Link>
               </div>
             </div>
             
             {/* Rolex */}
             <div className="manufacture-card bg-[#0a0a0a] border border-[#c0c0c0]/20 rounded-2xl p-8 cursor-pointer">
               <div className="text-center mb-6">
-                <img src="/api/placeholder/400/300" alt="Rolex" 
-                     className="w-full h-48 object-cover rounded-xl mb-4" />
+                <div className="w-full h-48 bg-gray-700 rounded-xl mb-4 flex items-center justify-center">
+                  <span className="text-gray-400">Rolex</span>
+                </div>
                 <div className="text-4xl mb-2">⚡</div>
                 <h3 className="font-playfair text-2xl font-bold mb-2 text-[#fafafa]">Rolex</h3>
                 <p className="text-[#c0c0c0]/60 text-sm">Depuis 1905</p>
@@ -378,154 +365,63 @@ export default function ManufacturesPage() {
               <div className="mb-6">
                 <h4 className="font-semibold mb-3 text-[#c0c0c0]">Spécialités</h4>
                 <div className="space-y-2">
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Oyster Perpetual</span>
-                  </div>
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Submariner</span>
-                  </div>
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Daytona</span>
-                  </div>
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>GMT-Master</span>
-                  </div>
+                  {["Oyster Perpetual", "Submariner", "Daytona", "GMT-Master"].map((item) => (
+                    <div key={item} className="flex items-center text-sm text-[#fafafa]">
+                      <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                      <span>{item}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
               
               <div className="text-center">
-                <span className="text-[#c0c0c0]/70 text-sm group-hover:text-[#c0c0c0] transition-colors">
+                <Link href="/manufactures/rolex" className="text-[#c0c0c0]/70 text-sm hover:text-[#c0c0c0] transition-colors">
                   Découvrir l'histoire →
-                </span>
+                </Link>
               </div>
             </div>
             
-            {/* Audemars Piguet */}
-            <div className="manufacture-card bg-[#0a0a0a] border border-[#c0c0c0]/20 rounded-2xl p-8 cursor-pointer">
-              <div className="text-center mb-6">
-                <img src="/api/placeholder/400/300" alt="Audemars Piguet" 
-                     className="w-full h-48 object-cover rounded-xl mb-4" />
-                <div className="text-4xl mb-2">🔷</div>
-                <h3 className="font-playfair text-2xl font-bold mb-2 text-[#fafafa]">Audemars Piguet</h3>
-                <p className="text-[#c0c0c0]/60 text-sm">Depuis 1875</p>
-              </div>
-              
-              <div className="mb-6">
-                <h4 className="font-semibold mb-3 text-[#c0c0c0]">Spécialités</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Royal Oak</span>
+            {/* Les autres manufactures */}
+            {[
+              { name: "Audemars Piguet", icon: "🔷", year: "Depuis 1875", specialties: ["Royal Oak", "Royal Oak Offshore", "Tourbillons", "Grandes complications"], href: "/manufactures/audemars-piguet" },
+              { name: "Vacheron Constantin", icon: "⭐", year: "Depuis 1755", specialties: ["Patrimony", "Overseas", "Métiers d'Art", "Grandes complications"], href: "/manufactures/vacheron-constantin" },
+              { name: "Omega", icon: "🌙", year: "Depuis 1848", specialties: ["Speedmaster", "Seamaster", "Constellation", "Master Chronometer"], href: "/manufactures/omega" },
+            ].map((m) => (
+              <div key={m.name} className="manufacture-card bg-[#0a0a0a] border border-[#c0c0c0]/20 rounded-2xl p-8 cursor-pointer">
+                <div className="text-center mb-6">
+                  <div className="w-full h-48 bg-gray-700 rounded-xl mb-4 flex items-center justify-center">
+                    <span className="text-gray-400">{m.name}</span>
                   </div>
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Royal Oak Offshore</span>
-                  </div>
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Tourbillons</span>
-                  </div>
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Grandes complications</span>
+                  <div className="text-4xl mb-2">{m.icon}</div>
+                  <h3 className="font-playfair text-2xl font-bold mb-2 text-[#fafafa]">{m.name}</h3>
+                  <p className="text-[#c0c0c0]/60 text-sm">{m.year}</p>
+                </div>
+                
+                <div className="mb-6">
+                  <h4 className="font-semibold mb-3 text-[#c0c0c0]">Spécialités</h4>
+                  <div className="space-y-2">
+                    {m.specialties.map((item) => (
+                      <div key={item} className="flex items-center text-sm text-[#fafafa]">
+                        <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
+                        <span>{item}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </div>
-              
-              <div className="text-center">
-                <span className="text-[#c0c0c0]/70 text-sm group-hover:text-[#c0c0c0] transition-colors">
-                  Découvrir l'histoire →
-                </span>
-              </div>
-            </div>
-            
-            {/* Vacheron Constantin */}
-            <div className="manufacture-card bg-[#0a0a0a] border border-[#c0c0c0]/20 rounded-2xl p-8 cursor-pointer">
-              <div className="text-center mb-6">
-                <img src="/api/placeholder/400/300" alt="Vacheron Constantin" 
-                     className="w-full h-48 object-cover rounded-xl mb-4" />
-                <div className="text-4xl mb-2">⭐</div>
-                <h3 className="font-playfair text-2xl font-bold mb-2 text-[#fafafa]">Vacheron Constantin</h3>
-                <p className="text-[#c0c0c0]/60 text-sm">Depuis 1755</p>
-              </div>
-              
-              <div className="mb-6">
-                <h4 className="font-semibold mb-3 text-[#c0c0c0]">Spécialités</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Patrimony</span>
-                  </div>
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Overseas</span>
-                  </div>
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Métiers d'Art</span>
-                  </div>
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Grandes complications</span>
-                  </div>
+                
+                <div className="text-center">
+                  <Link href={m.href} className="text-[#c0c0c0]/70 text-sm hover:text-[#c0c0c0] transition-colors">
+                    Découvrir l'histoire →
+                  </Link>
                 </div>
               </div>
-              
-              <div className="text-center">
-                <span className="text-[#c0c0c0]/70 text-sm group-hover:text-[#c0c0c0] transition-colors">
-                  Découvrir l'histoire →
-                </span>
-              </div>
-            </div>
-            
-            {/* Omega */}
-            <div className="manufacture-card bg-[#0a0a0a] border border-[#c0c0c0]/20 rounded-2xl p-8 cursor-pointer">
-              <div className="text-center mb-6">
-                <img src="/api/placeholder/400/300" alt="Omega" 
-                     className="w-full h-48 object-cover rounded-xl mb-4" />
-                <div className="text-4xl mb-2">🌙</div>
-                <h3 className="font-playfair text-2xl font-bold mb-2 text-[#fafafa]">Omega</h3>
-                <p className="text-[#c0c0c0]/60 text-sm">Depuis 1848</p>
-              </div>
-              
-              <div className="mb-6">
-                <h4 className="font-semibold mb-3 text-[#c0c0c0]">Spécialités</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Speedmaster</span>
-                  </div>
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Seamaster</span>
-                  </div>
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Constellation</span>
-                  </div>
-                  <div className="flex items-center text-sm text-[#fafafa]">
-                    <span className="w-2 h-2 bg-[#c0c0c0] rounded-full mr-3"></span>
-                    <span>Master Chronometer</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="text-center">
-                <span className="text-[#c0c0c0]/70 text-sm group-hover:text-[#c0c0c0] transition-colors">
-                  Découvrir l'histoire →
-                </span>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Innovations Section */}
-      <section id="innovations" className="py-20 innovation-visual">
+      <section id="innovations" className="py-20 precision-grid">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-[#fafafa]">Innovations Révolutionnaires</h2>
@@ -536,93 +432,21 @@ export default function ManufacturesPage() {
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-[#0a0a0a]/50 border border-[#c0c0c0]/20 rounded-xl p-6">
-              <div className="text-4xl mb-4">⚙️</div>
-              <h3 className="font-playfair text-xl font-bold mb-3 text-[#fafafa]">Quantième Perpétuel</h3>
-              <p className="text-[#c0c0c0]/70 text-sm mb-4">
-                Patek Philippe révolutionne l'horlogerie avec le premier quantième perpétuel 
-                automatique en 1962.
-              </p>
-              <div className="text-xs text-[#c0c0c0]/50">Innovation majeure</div>
-            </div>
-            
-            <div className="bg-[#0a0a0a]/50 border border-[#c0c0c0]/20 rounded-xl p-6">
-              <div className="text-4xl mb-4">🌊</div>
-              <h3 className="font-playfair text-xl font-bold mb-3 text-[#fafafa]">Étanchéité Oyster</h3>
-              <p className="text-[#c0c0c0]/70 text-sm mb-4">
-                Rolex introduit la première montre étanche au monde en 1926, 
-                révolutionnant l'horlogerie sportive.
-              </p>
-              <div className="text-xs text-[#c0c0c0]/50">1926</div>
-            </div>
-            
-            <div className="bg-[#0a0a0a]/50 border border-[#c0c0c0]/20 rounded-xl p-6">
-              <div className="text-4xl mb-4">🚀</div>
-              <h3 className="font-playfair text-xl font-bold mb-3 text-[#fafafa]">Moonwatch</h3>
-              <p className="text-[#c0c0c0]/70 text-sm mb-4">
-                Omega Speedmaster devient la première montre sur la Lune en 1969, 
-                choisie par la NASA.
-              </p>
-              <div className="text-xs text-[#c0c0c0]/50">1969</div>
-            </div>
-            
-            <div className="bg-[#0a0a0a]/50 border border-[#c0c0c0]/20 rounded-xl p-6">
-              <div className="text-4xl mb-4">💎</div>
-              <h3 className="font-playfair text-xl font-bold mb-3 text-[#fafafa]">Royal Oak</h3>
-              <p className="text-[#c0c0c0]/70 text-sm mb-4">
-                Audemars Piguet crée le premier luxury sport watch en acier inoxydable 
-                en 1972.
-              </p>
-              <div className="text-xs text-[#c0c0c0]/50">1972</div>
-            </div>
-            
-            <div className="bg-[#0a0a0a]/50 border border-[#c0c0c0]/20 rounded-xl p-6">
-              <div className="text-4xl mb-4">🎨</div>
-              <h3 className="font-playfair text-xl font-bold mb-3 text-[#fafafa]">Métiers d'Art</h3>
-              <p className="text-[#c0c0c0]/70 text-sm mb-4">
-                Vacheron Constantin perpétue les techniques traditionnelles de 
-                décoration horlogère.
-              </p>
-              <div className="text-xs text-[#c0c0c0]/50">Tradition</div>
-            </div>
-            
-            <div className="bg-[#0a0a0a]/50 border border-[#c0c0c0]/20 rounded-xl p-6">
-              <div className="text-4xl mb-4">⚡</div>
-              <h3 className="font-playfair text-xl font-bold mb-3 text-[#fafafa]">Master Chronometer</h3>
-              <p className="text-[#c0c0c0]/70 text-sm mb-4">
-                Omega développe la certification Master Chronometer, 
-                dépassant les normes industrielles.
-              </p>
-              <div className="text-xs text-[#c0c0c0]/50">2015</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Data Visualization Section */}
-      <section className="py-20 precision-grid">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-6 text-[#fafafa]">L'Excellence en Chiffres</h2>
-            <p className="text-xl text-[#c0c0c0]/70 max-w-3xl mx-auto">
-              Analyse comparative des manufactures suisses à travers les âges.
-            </p>
-          </div>
-          
-          <div className="grid lg:grid-cols-2 gap-12">
-            <div className="bg-[#2d2d2d]/30 border border-[#c0c0c0]/20 rounded-xl p-8">
-              <h3 className="font-playfair text-2xl font-bold mb-6 text-center text-[#fafafa]">Âge des Manufactures</h3>
-              <div className="h-80 flex items-center justify-center text-[#c0c0c0]">
-                <p>Graphique d'âge des manufactures</p>
+            {[
+              { icon: "⚙️", title: "Quantième Perpétuel", desc: "Patek Philippe révolutionne l'horlogerie avec le premier quantième perpétuel automatique en 1962.", year: "1962" },
+              { icon: "🌊", title: "Étanchéité Oyster", desc: "Rolex introduit la première montre étanche au monde en 1926, révolutionnant l'horlogerie sportive.", year: "1926" },
+              { icon: "🚀", title: "Moonwatch", desc: "Omega Speedmaster devient la première montre sur la Lune en 1969, choisie par la NASA.", year: "1969" },
+              { icon: "💎", title: "Royal Oak", desc: "Audemars Piguet crée le premier luxury sport watch en acier inoxydable en 1972.", year: "1972" },
+              { icon: "🎨", title: "Métiers d'Art", desc: "Vacheron Constantin perpétue les techniques traditionnelles de décoration horlogère.", year: "Tradition" },
+              { icon: "⚡", title: "Master Chronometer", desc: "Omega développe la certification Master Chronometer, dépassant les normes industrielles.", year: "2015" },
+            ].map((item) => (
+              <div key={item.title} className="bg-[#0a0a0a]/50 border border-[#c0c0c0]/20 rounded-xl p-6">
+                <div className="text-4xl mb-4">{item.icon}</div>
+                <h3 className="font-playfair text-xl font-bold mb-3 text-[#fafafa]">{item.title}</h3>
+                <p className="text-[#c0c0c0]/70 text-sm mb-4">{item.desc}</p>
+                <div className="text-xs text-[#c0c0c0]/50">{item.year}</div>
               </div>
-            </div>
-            
-            <div className="bg-[#2d2d2d]/30 border border-[#c0c0c0]/20 rounded-xl p-8">
-              <h3 className="font-playfair text-2xl font-bold mb-6 text-center text-[#fafafa]">Innovations par Décennie</h3>
-              <div className="h-80 flex items-center justify-center text-[#c0c0c0]">
-                <p>Graphique d'innovations par décennie</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -646,41 +470,6 @@ export default function ManufacturesPage() {
           </div>
         </div>
       </footer>
-
-      <script dangerouslySetInnerHTML={{
-        __html: `
-          // Smooth scrolling function
-          function scrollToSection(sectionId) {
-            document.getElementById(sectionId).scrollIntoView({
-              behavior: 'smooth'
-            });
-          }
-
-          // Initialize animations on scroll
-          function initScrollAnimations() {
-            const timelineItems = document.querySelectorAll('.timeline-item');
-            const manufactureCards = document.querySelectorAll('.manufacture-card');
-            
-            const observer = new IntersectionObserver((entries) => {
-              entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                  if (entry.target.classList.contains('timeline-item')) {
-                    entry.target.classList.add('animate');
-                  }
-                }
-              });
-            }, { threshold: 0.1 });
-            
-            timelineItems.forEach(item => observer.observe(item));
-            manufactureCards.forEach(card => observer.observe(card));
-          }
-
-          // Initialize everything when DOM is loaded
-          document.addEventListener('DOMContentLoaded', function() {
-            initScrollAnimations();
-          });
-        `
-      }} />
     </>
   );
 }
