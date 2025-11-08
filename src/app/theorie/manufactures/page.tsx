@@ -345,7 +345,7 @@ export default function ManufacturesPage() {
               </div>
               
               <div className="text-center">
-                <Link href="/manufactures/patek-philippe" className="text-[#c0c0c0]/70 text-sm hover:text-[#c0c0c0] transition-colors">
+                <Link href="/theorie/manufactures/patek-philippe" className="text-[#c0c0c0]/70 text-sm hover:text-[#c0c0c0] transition-colors">
                   Découvrir l'histoire →
                 </Link>
               </div>
@@ -375,7 +375,7 @@ export default function ManufacturesPage() {
               </div>
               
               <div className="text-center">
-                <Link href=""/theorie/manufactures/rolex" className="text-[#c0c0c0]/70 text-sm hover:text-[#c0c0c0] transition-colors">
+                <Link href="/theorie/manufactures/rolex" className="text-[#c0c0c0]/70 text-sm hover:text-[#c0c0c0] transition-colors">
                   Découvrir l'histoire →
                 </Link>
               </div>
@@ -383,9 +383,9 @@ export default function ManufacturesPage() {
             
             {/* Les autres manufactures */}
             {[
-              { name: "Audemars Piguet", icon: "🔷", year: "Depuis 1875", specialties: ["Royal Oak", "Royal Oak Offshore", "Tourbillons", "Grandes complications"], href: "/manufactures/audemars-piguet" },
-              { name: "Vacheron Constantin", icon: "⭐", year: "Depuis 1755", specialties: ["Patrimony", "Overseas", "Métiers d'Art", "Grandes complications"], href: "/manufactures/vacheron-constantin" },
-              { name: "Omega", icon: "🌙", year: "Depuis 1848", specialties: ["Speedmaster", "Seamaster", "Constellation", "Master Chronometer"], href: "/manufactures/omega" },
+              { name: "Audemars Piguet", icon: "🔷", year: "Depuis 1875", specialties: ["Royal Oak", "Royal Oak Offshore", "Tourbillons", "Grandes complications"], href: "/theorie/manufactures/audemars-piguet" },
+              { name: "Vacheron Constantin", icon: "⭐", year: "Depuis 1755", specialties: ["Patrimony", "Overseas", "Métiers d'Art", "Grandes complications"], href: "/theorie/manufactures/vacheron-constantin" },
+              { name: "Omega", icon: "🌙", year: "Depuis 1848", specialties: ["Speedmaster", "Seamaster", "Constellation", "Master Chronometer"], href: "/theorie/manufactures/omega" },
             ].map((m) => (
               <div key={m.name} className="manufacture-card bg-[#0a0a0a] border border-[#c0c0c0]/20 rounded-2xl p-8 cursor-pointer">
                 <div className="text-center mb-6">
