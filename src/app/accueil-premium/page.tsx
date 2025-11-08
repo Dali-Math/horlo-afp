@@ -1,8 +1,7 @@
 // app/[locale]/theorie/complications/page.tsx
 
 import React, { useState, useMemo } from "react";
-import { Metadata } from "next";
-import Link from "next/link";
+
 
 // ============================================================================
 // METADATA & SEO
