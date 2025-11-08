@@ -475,10 +475,13 @@ export default function ManufacturesPage() {
                 </div>
                 
                 <div className="text-center">
-                  <span className="text-[#c0c0c0]/70 text-sm hover:text-[#c0c0c0] transition-colors cursor-pointer">
-                    Découvrir l'histoire →
-                  </span>
-                </div>
+  <Link 
+    href={`/manufactures/${m.name.toLowerCase().replace(/ /g, "-")}`} 
+    className="text-[#c0c0c0]/70 text-sm hover:text-[#d4af37] transition-colors"
+  >
+    Découvrir l'histoire →
+  </Link>
+</div>
               </div>
             ))}
           </div>
