@@ -163,8 +163,8 @@ export default function ManufacturesPage() {
           right: 0;
           bottom: 0;
           background: url('/images/manufactures/swiss-horology-hero.jpg') center/cover no-repeat;
-          opacity: 0.15;
-          filter: brightness(0.6);
+          opacity: 0.25;
+          filter: brightness(1);
           z-index: 1;
         }
         .excellence-badge::before {
