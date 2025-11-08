@@ -28,7 +28,6 @@ import {
   Timer,
   Brain,
 } from 'lucide-react'
-export default function AccueilPremiumPage() {
   return (
     <>
       <Navbar />
