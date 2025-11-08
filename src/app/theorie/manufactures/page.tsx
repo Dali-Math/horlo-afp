@@ -422,8 +422,12 @@ export default function ManufacturesPage() {
                       alt={m.name}
                       className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                       onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.parentElement.innerHTML = `<div class="w-full h-full flex items-center justify-center"><span class="text-6xl">${m.icon}</span></div>`;
+                        const target = e.currentTarget;
+                        const parent = target.parentElement;
+                        if (parent) {
+                          target.style.display = 'none';
+                          parent.innerHTML = `<div class="w-full h-full flex items-center justify-center"><span class="text-6xl">${m.icon}</span></div>`;
+                        }
                       }}
                     />
                   </div>
