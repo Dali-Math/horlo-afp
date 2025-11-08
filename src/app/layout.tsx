@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { SITE } from "@/lib/seo";
 import dynamic from "next/dynamic";
+import { Playfair_Display, Inter } from 'next/font/google'
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
 import ThemeProvider from "@/components/ThemeProvider";
@@ -10,6 +11,8 @@ import ClientLayout from "@/components/ClientLayout";
 import 'swiper/css';
 
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: false });
+const playfair = Playfair_Display({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: "HorloLearn – Passion & Découverte Horlogère Suisse",
