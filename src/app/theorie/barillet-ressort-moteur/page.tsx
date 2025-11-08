@@ -351,7 +351,7 @@ export default function BarilletRessortMoteur() {
               {/* Composants */}
               <div className="space-y-6">
                 {[
-                  { title: "1. Le Tambour", desc: "Cylindre métallique (laiton CuZn39Pb3) avec denture extérieur (module 0.12-0.16).", specs: "Diamètre: 8-12 mm, Hauteur: 1.5-2.5 mm", color: "from-blue-50 to-cyan-50 dark:from-slate-800 dark:to-slate-700", border: "border-blue-200" },
+                  { title: "1. Le Tambour", desc: "Cylindre métallique (laiton CuZn39Pb3) avec denture extérieure (module 0.12-0.16).", specs: "Diamètre: 8-12 mm, Hauteur: 1.5-2.5 mm", color: "from-blue-50 to-cyan-50 dark:from-slate-800 dark:to-slate-700", border: "border-blue-200" },
                   { title: "2. L'Arbre de barillet", desc: "Axe central en acier trempé (60 HRC) avec crochet d'ancrage du ressort.", specs: "Diamètre: 3-4 mm, Matériau: Acier 20AP", color: "from-green-50 to-emerald-50 dark:from-slate-800 dark:to-slate-700", border: "border-green-200" },
                   { title: "3. Le Ressort moteur", desc: "Bande d'acier au carbone (C 0.9%) ou Nivaflex®, traitée thermiquement.", specs: "Longueur: 300-500 mm, Épaisseur: 0.10-0.15 mm", color: "from-orange-50 to-amber-50 dark:from-slate-800 dark:to-slate-700", border: "border-orange-200" },
                   { title: "4. Le Couvercle", desc: "Ferme le tambour, maintenu par 3 vis ou chassage. Étanchéité assurée par graisse Moebius 8200.", specs: "Matériau: Laiton ou Acier 316L", color: "from-purple-50 to-violet-50 dark:from-slate-800 dark:to-slate-700", border: "border-purple-200" }
