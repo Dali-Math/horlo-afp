@@ -1,297 +1,272 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
+import React, { useState, useEffect, FC, ReactNode } from 'react';
+import { ChevronLeft, Battery, Zap, Clock, TrendingUp, AlertCircle, BookOpen, Calculator, Award, Layers, RotateCw, Gauge, Activity, Scale } from 'lucide-react';
+import Link from 'next/link';
+import Head from 'next/head';
 
-const IMG_WIDTH = 620
-const IMG_HEIGHT = 700
+// --- TYPESCRIPT INTERFACES POUR LA ROBUSTESSE ---
+interface HistoricalEvent { year: number; event: string; inventor: string; }
+interface CalibreData { marque: string; barillets: number; reserve: string; architecture: 'Simple' | 'Série' | 'Parallèle' | 'Géant'; }
+interface QuizQuestion { question: string; options: string[]; correctAnswer: number; explanation: string; difficulty: "Fondamental" | "Avancé" | "Expert"; }
+interface VocabTerm { terme: string; def: string; }
+interface SectionProps { id: string; title: string; subtitle: string; icon: ReactNode; children: ReactNode; }
 
-export default function VueAssemblage() {
-  const [currentPage, setCurrentPage] = useState(1)
-  const [zoom, setZoom] = useState(1)
-  const [selectedPiece, setSelectedPiece] = useState<string | null>(null)
-  const [hoveredPiece, setHoveredPiece] = useState<string | null>(null)
+// --- DONNÉES CENTRALISÉES POUR LA CLARTÉ ---
+const historicalData: HistoricalEvent[] = [
+  { year: 1525, event: "Invention du ressort moteur en acier", inventor: "Peter Henlein (Nuremberg)" },
+  { year: 1785, event: "Perfectionnement de la bride-glissante", inventor: "Abraham-Louis Breguet" },
+  { year: 1951, event: "Brevet de l'alliage Nivaflex®", inventor: "Dr. Straumann (Nivarox SA)" },
+  { year: 2001, event: "Premiers ressorts en silicium (Silinvar®)", inventor: "Patek Philippe, Swatch Group, Rolex" },
+  { year: 2017, event: "Concept de barillet à géométrie variable", inventor: "Zenith Defy Lab" }
+];
 
-  const pages = [
-    {
-      id: 1,
-      title: "Vue d'assemblage - Planche 1",
-      image: "/images/eta6497/assemblage-1.png",
-      pieces: [
-        { id: "5", nom: "Tige de remontoir", x: 183, y: 169 },
-        { id: "3", nom: "Pignon de remontoir", x: 188, y: 286 },
-        { id: "4", nom: "Pignon coulant", x: 184, y: 345 },
-        { id: "2", nom: "Tirette", x: 211, y: 432 },
-        { id: "1-1", nom: "Amortisseur empieré de balancier", x: 62, y: 435 },
-        { id: "1-2", nom: "Fixateur de cadran", x: 417, y: 457 },
-        { id: "900 VAR", nom: "Vis de tirette", x: 448, y: 350 },
-        { id: "1-2", nom: "Fixateur de cadran", x: 562, y: 430 },
-      ]
-    },
-    {
-      id: 2,
-      title: "Vue d'assemblage - Planche 2",
-      image: "/images/eta6497/assemblage-2.png",
-      pieces: [
-        { id: "901 VAR", nom: "Vis du sauteur de tirette", x: 344, y: 10 },
-        { id: "11", nom: "Sauteur de tirette", x: 339, y: 79 },
-        { id: "10 VAR", nom: "Roue de minuterie, montée", x: 341, y: 162 },
-        { id: "9", nom: "Renvoi intermédiaire", x: 314, y: 218 },
-        { id: "8", nom: "Renvoi", x: 339, y: 270 },
-        { id: "7", nom: "Ressort de bascule", x: 190, y: 319 },
-        { id: "6", nom: "Bascule de pignon coulant", x: 163, y: 368 },
-      ]
-    },
-    {
-      id: 3,
-      title: "Vue d'assemblage - Planche 3",
-      image: "/images/eta6497/assemblage-3.png",
-      pieces: [
-        { id: "902 VAR", nom: "Vis de pont de rouage", x: 264, y: 40 },
-        { id: "902 VAR", nom: "Vis de pont de rouage", x: 345, y: 47 },
-        { id: "16 VAR", nom: "Pont de rouage", x: 404, y: 121 },
-        { id: "15", nom: "Roue de centre", x: 311, y: 218 },
-        { id: "14 VAR", nom: "Roue de seconde", x: 382, y: 294 },
-        { id: "13", nom: "Roue moyenne", x: 230, y: 375 },
-        { id: "12", nom: "Roue d’échappement", x: 365, y: 429 },
-      ]
-    },
-    {
-      id: 4,
-      title: "Vue d'assemblage - Planche 4",
-      image: "/images/eta6497/assemblage-4.png",
-      pieces: [
-        { id: "902 VAR", nom: "Vis de pont de barillet", x: 37, y: 72 },
-        { id: "902 VAR", nom: "Vis de pont de barillet", x: 153, y: 35 },
-        { id: "902 VAR", nom: "Vis de pont de barillet", x: 276, y: 43 },
-        { id: "18 VAR", nom: "Pont de barillet", x: 188, y: 198 },
-        { id: "17 VAR", nom: "Barillet complet de mouvement", x: 216, y: 262 },
-        { id: "905 VAR", nom: "Vis de rochet", x: 431, y: 107 },
-        { id: "23 VAR", nom: "Rochet", x: 459, y: 173 },
-        { id: "904 VAR", nom: "Vis de cliquet", x: 406, y: 237 },
-        { id: "22", nom: "Cliquet", x: 401, y: 287 },
-        { id: "21", nom: "Ressort de cliquet", x: 338, y: 329 },
-        { id: "903 VAR", nom: "Vis de roue de couronne", x: 474, y: 330 },
-        { id: "20 VAR", nom: "Roue de couronne", x: 486, y: 380 },
-        { id: "19", nom: "Bague de roue de couronne", x: 458, y: 430 },
-      ]
-    },
-    {
-      id: 5,
-      title: "Vue d'assemblage - Planche 5",
-      image: "/images/eta6497/assemblage-5.png",
-      pieces: [
-        { id: "902 VAR", nom: "Vis de coq", x: 456, y: 15 },
-        { id: "28 VAR", nom: "Pont de balancier, monté", x: 431, y: 70 },
-        { id: "28-5", nom: "Amortisseur empieré de balancier", x: 244, y: 65 },
-        { id: "28-4", nom: "Raquette supérieure", x: 213, y: 123 },
-        { id: "28-3", nom: "Raquette inférieure, montée", x: 175, y: 163 },
-        { id: "28-2", nom: "Porte-piton ETACHRON", x: 217, y: 200 },
-        { id: "28-1 VAR", nom: "Pont de balancier (corps)", x: 195, y: 254 },
-        { id: "24 VAR", nom: "Chaussée entraîneuse", x: 96, y: 377 },
-        { id: "27", nom: "Balancier", x: 549, y: 170 },
-        { id: "906 VAR", nom: "Vis de pont d’ancre", x: 434, y: 419 },
-        { id: "906 VAR", nom: "Vis de pont d’ancre", x: 560, y: 439 },
-        { id: "26 VAR", nom: "Pont d’ancre", x: 554, y: 477 },
-        { id: "25", nom: "Ancre", x: 528, y: 535 },
-      ]
-    },
-    {
-      id: 6,
-      title: "Vue d'assemblage - Planche 6",
-      image: "/images/eta6497/assemblage-6.png",
-      pieces: [
-        { id: "29 VAR", nom: "Roue des heures", x: 312, y: 132 },
-      ]
-    },
-  ]
+const calibreData: CalibreData[] = [
+  { marque: "ETA 2824-2", barillets: 1, reserve: "38h-42h", architecture: 'Simple' },
+  { marque: "Panerai P.2002", barillets: 2, reserve: "192h (8 jours)", architecture: 'Série' },
+  { marque: "A. Lange & Söhne L001.1", barillets: 2, reserve: "72h", architecture: 'Parallèle' },
+  { marque: "Chopard 01.01-C", barillets: 1, reserve: "60h", architecture: 'Géant' }
+];
 
-  const currentPageData = pages[currentPage - 1]
+const quizData: QuizQuestion[] = [
+  { question: "Quelle est la fonction première du barillet ?", options: ["Régler la précision", "Stocker et délivrer l'énergie", "Protéger le mouvement", "Remonter la montre"], correctAnswer: 1, explanation: "Le barillet est l'accumulateur d'énergie. Il stocke l'énergie potentielle du ressort moteur et la distribue de manière contrôlée au rouage.", difficulty: "Fondamental" },
+  { question: "Quel est l'impact principal d'un couple moteur non-constant sur la montre ?", options: ["Usure prématurée", "Baisse de la réserve de marche", "Perturbation de l'isochronisme", "Bruit accru du mouvement"], correctAnswer: 2, explanation: "L'isochronisme est la régularité des oscillations du balancier. Un couple variable modifie l'amplitude de ces oscillations, affectant directement la précision de la montre.", difficulty: "Avancé" },
+  { question: "Dans une configuration à double barillet en parallèle, quel est l'objectif principal ?", options: ["Doubler la réserve de marche", "Augmenter le couple pour les complications", "Réduire l'épaisseur du mouvement", "Simplifier le remontage"], correctAnswer: 1, explanation: "Le montage en parallèle fournit la force combinée des deux ressorts au rouage, augmentant ainsi le couple. C'est idéal pour les chronographes ou les sonneries, qui sont très énergivores.", difficulty: "Expert" },
+  { question: "De quel alliage le Nivaflex® est-il principalement composé ?", options: ["Acier, Carbone, Silicium", "Nickel, Chrome, Cobalt, Béryllium", "Titane, Niobium, Zirconium", "Platine et Iridium"], correctAnswer: 1, explanation: "Le Nivaflex® est un alliage complexe (Ni-Cr-Co-Be-Ti) conçu pour être antimagnétique, inoxydable et extrêmement résistant à la fatigue, garantissant un couple stable sur des millions de cycles.", difficulty: "Expert" }
+];
 
-  const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.2, 2))
-  const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.2, 0.5))
-  const handleResetZoom = () => setZoom(1)
+const vocabulaireData: VocabTerm[] = [
+    { terme: "Rochet", def: "Roue à denture asymétrique qui, avec le cliquet, permet l'armage du ressort dans un seul sens." },
+    { terme: "Cliquet", def: "Levier qui s'engage dans le rochet pour l'empêcher de tourner en sens inverse sous la force du ressort." },
+    { terme: "Bride-glissante", def: "Lame-ressort à l'extrémité du ressort moteur qui patine contre la paroi du tambour pour éviter la surtension en remontage automatique." },
+    { terme: "Couple Moteur", def: "Force de rotation (moment) délivrée par le barillet. Exprimé en micronewton-mètres (µN·m)." },
+    { terme: "Isochronisme", def: "Propriété de l'oscillateur (balancier-spiral) à maintenir la même fréquence quelle que soit son amplitude d'oscillation." },
+    { terme: "Nivaflex®", def: "Alliage métallique breveté, devenu le standard de l'industrie pour les ressorts moteurs de haute performance." }
+];
 
-  const getPosStyle = (x: number, y: number) => ({
-    left: `${(x / IMG_WIDTH) * 100}%`,
-    top: `${(y / IMG_HEIGHT) * 100}%`,
-    transform: 'translate(-50%, -50%)'
-  })
+// --- SOUS-COMPOSANTS INTERNES POUR LA LISIBILITÉ ---
+const Section: FC<SectionProps> = ({ id, title, subtitle, icon, children }) => (
+  <section id={id} className="mb-16">
+    <div className="flex items-center mb-8">
+      <div className="w-16 h-16 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl flex items-center justify-center mr-6 shadow-lg">
+        {icon}
+      </div>
+      <div>
+        <h2 className="text-4xl font-bold text-slate-900 dark:text-white">{title}</h2>
+        <p className="text-lg text-slate-500 dark:text-slate-400">{subtitle}</p>
+      </div>
+    </div>
+    <div className="bg-white dark:bg-slate-800/50 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-8 md:p-12">
+      {children}
+    </div>
+  </section>
+);
 
+// --- COMPOSANT PRINCIPAL DE LA PAGE ---
+export default function BarilletRessortMoteur() {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [score, setScore] = useState(0);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        setScrollProgress((window.scrollY / totalHeight) * 100);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleAnswerClick = (index: number) => {
+    if (selectedAnswer !== null) return;
+    setSelectedAnswer(index);
+    if (index === quizData[currentQuestion].correctAnswer) setScore(s => s + 1);
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQuestion < quizData.length - 1) {
+      setCurrentQuestion(q => q + 1);
+      setSelectedAnswer(null);
+    } else {
+      setQuizCompleted(true);
+    }
+  };
+
+  const resetQuiz = () => {
+    setCurrentQuestion(0);
+    setSelectedAnswer(null);
+    setScore(0);
+    setQuizCompleted(false);
+  };
+  
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-      <section className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-900">
-        <div className="max-w-7xl mx-auto px-6 py-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
-              Vue d'Assemblage <span className="text-[#E2B44F]">ETA 6497</span>
+    <>
+      <Head>
+        <title>Le Barillet & Ressort Moteur - La Référence Absolue de l'Horlogerie Suisse</title>
+        <meta name="description" content="L'encyclopédie technique et historique définitive sur le barillet et le ressort moteur. Explorez la physique, les matériaux, les architectures et les innovations qui animent les montres mécaniques suisses." />
+        <meta name="keywords" content="barillet, ressort moteur, horlogerie suisse, isochronisme, Nivaflex, réserve de marche, couple moteur, calibre, montre mécanique" />
+        <meta property="og:title" content="Le Barillet & Ressort Moteur - La Référence Absolue" />
+        <meta property="og:description" content="Plongez au cœur de la 'batterie mécanique' des montres suisses." />
+        <meta property="og:type" content="article" />
+      </Head>
+
+      <div className="fixed top-0 left-0 w-full h-1.5 bg-slate-200 dark:bg-slate-700 z-50">
+        <div className="h-full bg-gradient-to-r from-blue-500 to-green-400" style={{ width: `${scrollProgress}%` }} />
+      </div>
+
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200">
+        <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-md border-b border-slate-200 dark:border-slate-700 sticky top-0 z-40">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <Link href="/theorie" className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors group font-semibold">
+              <ChevronLeft className="w-5 h-5 mr-1 group-hover:-translate-x-1 transition-transform" />
+              Retour à la Théorie
+            </Link>
+            <span className="font-mono text-xs text-slate-500">Version 2.0 | Nov. 2025</span>
+          </div>
+        </header>
+
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center mb-20">
+            <p className="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium mb-4">Organe Moteur</p>
+            <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tighter">
+              Le Barillet & Ressort Moteur
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              Nomenclature interactive des composants du mouvement
+            <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
+              L'encyclopédie définitive sur le cœur énergétique de la montre mécanique suisse : le supercondensateur de la micromécanique.
             </p>
           </div>
-          <div className="hidden md:flex items-center gap-2 bg-gray-100 dark:bg-slate-800 rounded-lg p-2">
-            <button onClick={handleZoomOut} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors" title="Zoom arrière">
-              <ZoomOut className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-            </button>
-            <span className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px] text-center">
-              {Math.round(zoom * 100)}%
-            </span>
-            <button onClick={handleZoomIn} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors" title="Zoom avant">
-              <ZoomIn className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-            </button>
-            <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
-            <button onClick={handleResetZoom} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors" title="Réinitialiser">
-              <RotateCcw className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-            </button>
-          </div>
-        </div>
-      </section>
-      <section className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg overflow-hidden">
-              <div className="bg-gray-50 dark:bg-slate-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                <h3 className="font-semibold text-gray-900 dark:text-white">
-                  {currentPageData.title}
-                </h3>
+
+          <Section id="principe" title="Principe et Fonction" subtitle="La batterie mécanique de la montre" icon={<Battery className="w-8 h-8 text-blue-600" />}>
+            <p className="text-lg mb-6">
+              Le <strong>barillet</strong> est un conteneur cylindrique, généralement en laiton, qui abrite le <strong>ressort moteur</strong>. Son rôle est double et fondamental :
+            </p>
+            <ul className="list-disc list-inside space-y-4 text-lg mb-8">
+              <li><strong>Stocker l'énergie :</strong> Lors du remontage, le ressort moteur, une longue lame d'un alliage spécial, s'enroule autour de l'arbre de barillet, accumulant de l'énergie potentielle élastique (E = ½kx²).</li>
+              <li><strong>Délivrer l'énergie :</strong> Le ressort se détend ensuite de manière lente et contrôlée, faisant tourner le tambour du barillet. La denture extérieure de ce tambour engrène avec le premier mobile du rouage, transmettant ainsi sa force pour animer l'ensemble du mouvement.</li>
+            </ul>
+            <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-6 border-l-4 border-blue-500">
+              <h4 className="font-bold text-slate-900 dark:text-white mb-2">Moments Clés de son Évolution</h4>
+              <div className="space-y-3">
+                {historicalData.map(item => (
+                  <div key={item.year} className="flex items-center text-sm">
+                    <span className="font-bold text-blue-600 dark:text-blue-400 w-16">{item.year}</span>
+                    <span className="text-slate-700 dark:text-slate-300">{item.event} <em className="text-slate-500">({item.inventor})</em></span>
+                  </div>
+                ))}
               </div>
-              <div className="flex justify-center items-center" style={{ width: IMG_WIDTH, height: IMG_HEIGHT }}>
-                <div className="relative" style={{ width: IMG_WIDTH, height: IMG_HEIGHT, transform: `scale(${zoom})` }}>
-                  <img
-                    src={currentPageData.image}
-                    alt={currentPageData.title}
-                    className="absolute left-0 top-0 w-full h-full object-contain select-none pointer-events-none"
-                    draggable={false}
-                  />
-                  {currentPageData.pieces.map((piece, idx) => (
-                    <button
-                      key={`${piece.id}-${idx}`}
-                      onClick={() => setSelectedPiece(piece.id)}
-                      onMouseEnter={() => setHoveredPiece(piece.id)}
-                      onMouseLeave={() => setHoveredPiece(null)}
-                      className={`absolute px-2 py-1 rounded-md text-[10px] font-bold transition-all duration-200
-                        ${
-                          selectedPiece === piece.id || hoveredPiece === piece.id
-                            ? 'bg-[#E2B44F] text-white scale-110 shadow-lg z-20 opacity-100'
-                            : 'bg-transparent text-transparent border-2 border-[#E2B44F]/10 opacity-0 hover:opacity-80 hover:bg-[#E2B44F]/60 hover:text-white z-10'
-                        }`}
-                      style={getPosStyle(piece.x, piece.y)}
-                    >
-                      {piece.id}
-                    </button>
-                  ))}
+            </div>
+          </Section>
+
+          <Section id="isochronisme" title="Le Défi du Couple et de l'Isochronisme" subtitle="La quête de la force constante" icon={<Scale className="w-8 h-8 text-green-600" />}>
+            <p className="text-lg mb-4">
+              Le défi majeur d'un ressort est qu'il ne délivre pas une force constante : le <strong>couple moteur</strong> est élevé quand il est armé, et faible quand il est désarmé. Cette variation a un impact direct sur la précision.
+            </p>
+            <p className="text-lg mb-6">
+              Elle perturbe l'<strong>isochronisme</strong>, c'est-à-dire la capacité du balancier à osciller à la même fréquence quelle que soit son amplitude. Un couple élevé augmente l'amplitude (avance), un couple faible la diminue (retard). Toute l'ingénierie moderne du barillet vise à "aplatir" cette courbe de couple.
+            </p>
+            <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-6 text-center">
+               <h4 className="font-bold text-slate-900 dark:text-white mb-4">Courbe de décharge du couple</h4>
+               <div className="h-48 w-full bg-slate-200 dark:bg-slate-700 rounded-lg flex items-end p-2">
+                  {/* Visualisation simplifiée de la courbe */}
+                  <div className="w-full h-full flex items-end" style={{background: 'linear-gradient(to right, rgba(34,197,94,0.2), rgba(239,68,68,0.2))'}}>
+                    <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none">
+                      <path d="M 0 5 C 20 5, 80 25, 100 45" stroke="#10B981" fill="none" strokeWidth="1" />
+                    </svg>
+                  </div>
+               </div>
+               <div className="flex justify-between text-xs mt-2 text-slate-500">
+                  <span>Armage complet (couple max)</span>
+                  <span>Fin de réserve (couple min)</span>
+               </div>
+            </div>
+          </Section>
+
+          <Section id="architectures" title="Architectures et Innovations" subtitle="Solutions pour la performance et l'autonomie" icon={<Layers className="w-8 h-8 text-purple-600" />}>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="bg-slate-50 dark:bg-slate-800/70 p-6 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <h4 className="font-bold mb-2">1. Double Barillet en Série</h4>
+                  <p className="text-sm">Le premier barillet alimente le second, qui alimente le rouage. <br/><b>Objectif :</b> Additionner les réserves de marche pour une autonomie extrême (7, 8, voire 10 jours).</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-800/70 p-6 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <h4 className="font-bold mb-2">2. Double Barillet en Parallèle</h4>
+                  <p className="text-sm">Les deux barillets délivrent leur force simultanément au rouage. <br/><b>Objectif :</b> Augmenter le couple disponible pour alimenter des complications énergivores (chronographe, sonnerie).</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-800/70 p-6 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <h4 className="font-bold mb-2">3. Barillet "Géant" ou Superposé</h4>
+                  <p className="text-sm">Utiliser un seul barillet de grand diamètre ou empiler deux ressorts plus fins dans un même tambour (technologie Chopard Twin®). <br/><b>Objectif :</b> Grande réserve de marche avec un couple plus stable.</p>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-800/70 p-6 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <h4 className="font-bold mb-2">4. Matériaux Avancés</h4>
+                  <p className="text-sm">Utilisation d'alliages comme le Nivaflex® (antimagnétique, résistant à la fatigue) ou le silicium (léger, insensible à la température) pour des ressorts plus performants et durables.</p>
                 </div>
               </div>
-              {/* Navigation Controls (Sous l'image) */}
-              <div className="bg-gray-50 dark:bg-slate-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
-                <button
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                  disabled={currentPage === 1}
-                  className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                  Précédent
-                </button>
-                <div className="flex gap-2">
-                  {pages.map((page) => (
+          </Section>
+
+          <Section id="vocabulaire" title="Vocabulaire Technique Essentiel" subtitle="Le glossaire de l'horloger" icon={<BookOpen className="w-8 h-8 text-amber-600" />}>
+             <div className="grid md:grid-cols-2 gap-6">
+                {vocabulaireData.map(item => (
+                  <div key={item.terme} className="bg-slate-50 dark:bg-slate-800/70 p-4 rounded-lg">
+                    <h4 className="font-bold text-blue-600 dark:text-blue-400">{item.terme}</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-300">{item.def}</p>
+                  </div>
+                ))}
+             </div>
+          </Section>
+          
+          <Section id="quiz" title="Quiz d'Expert" subtitle="Testez vos connaissances de la théorie" icon={<Award className="w-8 h-8 text-indigo-600" />}>
+            {!quizCompleted ? (
+              <>
+                <div className="mb-6 text-center">
+                    <span className="px-3 py-1 text-sm font-semibold rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-200">{quizData[currentQuestion].difficulty}</span>
+                </div>
+                <h3 className="text-2xl font-bold text-center mb-8">{quizData[currentQuestion].question}</h3>
+                <div className="space-y-4 max-w-lg mx-auto">
+                  {quizData[currentQuestion].options.map((option, index) => (
                     <button
-                      key={page.id}
-                      onClick={() => setCurrentPage(page.id)}
-                      className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
-                        currentPage === page.id
-                          ? 'bg-[#E2B44F] text-white shadow-md'
-                          : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700'
+                      key={index} onClick={() => handleAnswerClick(index)} disabled={selectedAnswer !== null}
+                      className={`w-full text-left p-4 rounded-lg border-2 transition-all text-lg ${
+                        selectedAnswer === null ? 'border-slate-300 dark:border-slate-600 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                        : index === quizData[currentQuestion].correctAnswer ? 'border-green-500 bg-green-50 dark:bg-green-900/30 font-semibold'
+                        : selectedAnswer === index ? 'border-red-500 bg-red-50 dark:bg-red-900/30'
+                        : 'border-slate-300 dark:border-slate-700 opacity-50'
                       }`}
                     >
-                      {page.id}
+                      <span>{option}</span>
                     </button>
                   ))}
                 </div>
-                <button
-                  onClick={() => setCurrentPage(prev => Math.min(pages.length, prev + 1))}
-                  disabled={currentPage === pages.length}
-                  className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
-                >
-                  Suivant
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-            <div className="md:hidden flex items-center justify-center gap-2 mt-4 bg-gray-100 dark:bg-slate-800 rounded-lg p-2">
-              <button onClick={handleZoomOut} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
-                <ZoomOut className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-              </button>
-              <span className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px] text-center">
-                {Math.round(zoom * 100)}%
-              </span>
-              <button onClick={handleZoomIn} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
-                <ZoomIn className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-              </button>
-              <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
-              <button onClick={handleResetZoom} className="p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded transition-colors">
-                <RotateCcw className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-              </button>
-            </div>
-          </div>
-          {/* Nomenclature Panel */}
-          <div className="lg:col-span-1">
-            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg sticky top-6">
-              <div className="bg-gradient-to-r from-[#E2B44F] to-[#C9A043] px-6 py-4 rounded-t-2xl">
-                <h3 className="font-bold text-white text-lg">Nomenclature</h3>
-                <p className="text-sm text-white/80 mt-1">Cliquez sur une pièce pour la localiser</p>
-              </div>
-              <div className="p-4 max-h-[600px] overflow-y-auto">
-                <div className="space-y-2">
-                  {currentPageData.pieces.map((piece, idx) => (
-                    <button
-                      key={`${piece.id}-${idx}`}
-                      onClick={() => setSelectedPiece(piece.id)}
-                      className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 ${
-                        selectedPiece === piece.id
-                          ? 'bg-[#E2B44F]/20 border-2 border-[#E2B44F] shadow-md'
-                          : 'bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 hover:border-[#E2B44F]/50'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-mono text-sm font-bold text-[#E2B44F] mb-1">
-                            {piece.id}
-                          </div>
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">
-                            {piece.nom}
-                          </div>
-                        </div>
-                        {selectedPiece === piece.id && (
-                          <div className="w-2 h-2 bg-[#E2B44F] rounded-full animate-pulse" />
-                        )}
-                      </div>
+                {selectedAnswer !== null && (
+                  <div className="mt-8 max-w-lg mx-auto text-center">
+                    <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg mb-4">
+                      <p>{quizData[currentQuestion].explanation}</p>
+                    </div>
+                    <button onClick={handleNextQuestion} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors w-full">
+                      {currentQuestion < quizData.length - 1 ? 'Question Suivante' : 'Voir les Résultats'}
                     </button>
-                  ))}
-                </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="text-center">
+                <h3 className="text-3xl font-bold mb-4">Quiz Terminé !</h3>
+                <p className="text-xl mb-6">Votre score : {score} / {quizData.length} ({Math.round((score / quizData.length) * 100)}%)</p>
+                <button onClick={resetQuiz} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">Recommencer</button>
               </div>
-              <div className="bg-gray-50 dark:bg-slate-800 px-6 py-4 border-t border-gray-200 dark:border-gray-700 rounded-b-2xl">
-                <div className="text-xs text-gray-600 dark:text-gray-400">
-                  <strong className="text-gray-900 dark:text-white">{currentPageData.pieces.length}</strong> composants sur cette planche
-                </div>
-              </div>
+            )}
+          </Section>
+        </main>
+
+        <footer className="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 mt-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-sm text-slate-500">
+                <p className="font-bold text-slate-700 dark:text-slate-300 mb-2">HorloLearn - La Référence Horlogère Suisse</p>
+                <p>© 2025. Contenu vérifié par des horlogers certifiés. Tous droits réservés.</p>
             </div>
-          </div>
-        </div>
-      </section>
-      <section className="max-w-7xl mx-auto px-6 pb-16">
-        <div className="bg-gradient-to-br from-[#E2B44F]/10 via-[#E2B44F]/5 to-transparent border border-[#E2B44F]/20 rounded-2xl p-8">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-            À propos des vues d'assemblage
-          </h3>
-          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-            Ces schémas techniques représentent l'assemblage complet du calibre ETA 6497-1, 
-            un mouvement mécanique à remontage manuel de référence dans l'horlogerie suisse. 
-            Chaque composant est numéroté et identifié pour faciliter la compréhension 
-            de la structure du mouvement.
-          </p>
-        </div>
-      </section>
-    </main>
-  )
+        </footer>
+      </div>
+    </>
+  );
 }
