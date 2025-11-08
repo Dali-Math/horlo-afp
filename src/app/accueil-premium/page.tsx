@@ -28,27 +28,20 @@ import {
   Timer,
   Brain,
 } from 'lucide-react'
-  return (
-    <>
-      <Navbar />
-      <main className="min-h-screen bg-slate-950 text-white">
-        {/* ton contenu actuel ici */}
-      </main>
-      <Footer />
-    </>
-  );
-}
-
-// =================================================
-// COMPOSANT PRINCIPAL - VOYAGE NARRATIF
-// =================================================
-
-export default function BarilletRessortPage() {
+  export default function BarilletRessortPage() {
   const [expertMode, setExpertMode] = useState(false);
   const [currentChapter, setCurrentChapter] = useState(0);
   const [energyLevel, setEnergyLevel] = useState(100);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  return (
+    <>
+      <Navbar />
+
+      <Footer />
+    </>
+  );
+}
   // Simulation de décharge énergétique
   useEffect(() => {
     if (!isAnimating) return;
