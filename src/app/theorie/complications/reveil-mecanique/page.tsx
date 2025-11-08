@@ -60,6 +60,7 @@ const ReveilMecaniquePage = () => {
     { time: '12:00', use: 'Rappel de rendez-vous important', icon: '📅' },
     { time: '18:00', use: 'Fin de journée de travail', icon: '🏢' },
     { time: '22:00', use: 'Rappel de prise de médicament', icon: '💊' }
+    ];
   
 
   return (
