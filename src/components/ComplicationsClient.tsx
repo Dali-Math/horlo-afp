@@ -310,7 +310,7 @@ export default function ComplicationsPage(): JSX.Element {
   const filteredComplications = useMemo(() => {
     return complicationsDatabase.filter((c) => {
       const matchCategory = filters.category === "all" || c.category === filters.category;
-      const matchDifficulty = filters.difficulty === "all" || c.difficulty === filters.difficulty;
+      const matchDifficulty =   filters.difficulty === "all" ||   c.difficulty === Number(filters.difficulty);
       const matchRarity = filters.rarity === "all" || c.rarity === filters.rarity;
       const matchManufacturer = filters.manufacturer === "all" || c.swissManufacturers.includes(filters.manufacturer);
       const matchSearch = filters.search === "" || 
