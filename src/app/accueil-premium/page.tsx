@@ -37,7 +37,6 @@ import {
   return (
   <>
     <main>...</main>
-    <Footer />
   </>
 );
   // Simulation de décharge énergétique
