@@ -375,7 +375,7 @@ export default function ManufacturesPage() {
               </div>
               
               <div className="text-center">
-                <Link href="/manufactures/rolex" className="text-[#c0c0c0]/70 text-sm hover:text-[#c0c0c0] transition-colors">
+                <Link href=""/theorie/manufactures/rolex" className="text-[#c0c0c0]/70 text-sm hover:text-[#c0c0c0] transition-colors">
                   Découvrir l'histoire →
                 </Link>
               </div>
