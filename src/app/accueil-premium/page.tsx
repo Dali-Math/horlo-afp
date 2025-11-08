@@ -1,11 +1,32 @@
 'use client';
-import { Activity } from "lucide-react";
+
 import React, { useState, useEffect } from 'react';
 import {
-  ChevronLeft, Battery, Zap, Wind, Sparkles, PlayCircle, PauseCircle, 
-  RotateCcw, Info, Share2, BookOpen, Award, TrendingUp, Layers, 
-  Target, Eye, Lightbulb, ArrowRight, CheckCircle2, XCircle, Timer, Brain
-} from 'lucide-react';
+  Activity,
+  Wrench,
+  ChevronLeft,
+  Battery,
+  Zap,
+  Wind,
+  Sparkles,
+  PlayCircle,
+  PauseCircle,
+  RotateCcw,
+  Info,
+  Share2,
+  BookOpen,
+  Award,
+  TrendingUp,
+  Layers,
+  Target,
+  Eye,
+  Lightbulb,
+  ArrowRight,
+  CheckCircle2,
+  XCircle,
+  Timer,
+  Brain,
+} from 'lucide-react'
 
 // =================================================
 // COMPOSANT PRINCIPAL - VOYAGE NARRATIF
