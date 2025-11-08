@@ -25,16 +25,17 @@ export default function ManufacturesPage() {
         }
         
         .hero-bg::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: url('/api/placeholder/1920/1080') center/cover;
-          opacity: 0.3;
-          z-index: 1;
-        }
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('/images/manufactures/swiss-horology-hero.jpg') center/cover no-repeat;
+  opacity: 0.45;
+  filter: brightness(0.85);
+  z-index: 1;
+}
         
         .hero-content {
           position: relative;
