@@ -2,6 +2,7 @@
 
 
 import React, { useState, useEffect } from 'react';
+import Link from "next/link";
 import { Calendar, ChevronRight, ArrowLeft, Clock, Moon, Sparkles } from 'lucide-react';
 
 const CalendrierPerpetuelPage = () => {
@@ -243,13 +244,15 @@ const CalendrierPerpetuelPage = () => {
         </section>
 
         {/* CTA */}
-        <div className="text-center">
-          <button className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl hover:from-blue-700 hover:to-indigo-800 transition-all shadow-xl hover:shadow-2xl hover:scale-105 text-lg font-semibold">
-            <ArrowLeft size={24} />
-            Retour aux complications
-          </button>
-        </div>
-      </main>
+<div className="text-center">
+  <Link href="/theorie/complications">
+    <button className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl hover:from-blue-700 hover:to-indigo-800 transition-all shadow-xl hover:shadow-2xl hover:scale-105 text-lg font-semibold">
+      <ArrowLeft size={24} />
+      Retour aux complications
+    </button>
+  </Link>
+</div>
+</main>
 
       {/* Footer */}
       <footer className="py-8 border-t border-gray-200 dark:border-slate-800 text-center text-gray-600 dark:text-gray-400">
