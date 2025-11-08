@@ -1,4 +1,4 @@
-// app/[locale]/theorie/complications/page.tsx
+"use client";
 
 import React, { useState, useMemo } from "react";
 import { Metadata } from "next";
