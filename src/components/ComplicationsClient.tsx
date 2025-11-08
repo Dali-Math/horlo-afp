@@ -276,7 +276,7 @@ const ComplicationCard: React.FC<{ complication: Complication; index: number }> 
         </div>
 
         <div className="flex flex-wrap gap-1 mt-auto">
-          {complication.technicalSpecs.slice(0, 3).map((spec) => (
+          {complication.technicalSpecs?.slice(0, 3).map((spec) => (
             <span key={spec} className="text-xs px-2 py-1 bg-white/30 dark:bg-black/20 rounded-md text-gray-700 dark:text-gray-300">
               {spec}
             </span>
