@@ -2,7 +2,11 @@
 
 import React, { useEffect } from 'react';
 import Head from 'next/head';
-
+declare global {
+  interface Window {
+    VANTA: any;
+  }
+}
 const timeline = [
   {
     year: "1839",
