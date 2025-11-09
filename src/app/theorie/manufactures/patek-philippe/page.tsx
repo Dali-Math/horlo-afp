@@ -1323,6 +1323,7 @@ const toggleCompare = (id: number | string) => {
   </div>
 )}
 
+          
       {/* COMPLICATIONS SECTION */}
       <section id="complications" className="py-32 bg-gradient-to-b from-black to-purple-900/30 relative">
         <div className="max-w-7xl mx-auto px-8">
