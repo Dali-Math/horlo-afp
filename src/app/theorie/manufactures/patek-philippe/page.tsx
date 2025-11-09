@@ -7,7 +7,7 @@ import {
   Activity, Moon, Sun, RotateCcw, Target, Eye, Share2, Star, Play, 
   Pause, Volume2, X, ChevronDown, ChevronLeft, ChevronRight, Search,
   Filter, Download, Bookmark, MessageCircle, ArrowUpRight, Info,
-  Layers, Box, Hammer, Microscope, Calculator, LineChart, PieChart
+  Layers, BarChart3, Box, Hammer, Microscope, Calculator, LineChart, PieChart
 } from 'lucide-react';
 
 const KONAMI_CODE = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
