@@ -1,43 +1,73 @@
-// Appt.tsx
+
+'use client';
 import React, { useEffect, useRef, useState } from 'react';
 
 declare global {
   interface Window {
     VANTA?: any;
+    THREE?: any;
   }
 }
 
-const Appt: React.FC = () => {
+export default function Appt(): JSX.Element {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const vantaRef = useRef<HTMLDivElement>(null);
+  const vantaInstance = useRef<any>(null);
 
   useEffect(() => {
-    // Initialize Vanta.js background
-    if (vantaRef.current && window.VANTA) {
-      window.VANTA.BIRDS({
-        el: vantaRef.current,
-        mouseControls: true,
-        touchControls: true,
-        gyroControls: false,
-        minHeight: 200.00,
-        minWidth: 200.00,
-        scale: 1.00,
-        scaleMobile: 1.00,
-        backgroundColor: 0xf8f6f0,
-        color1: 0xd4af37,
-        color2: 0x1a2332,
-        birdSize: 1.20,
-        wingSpan: 25.00,
-        speedLimit: 3.00,
-        separation: 20.00,
-        alignment: 20.00,
-        cohesion: 20.00,
-        quantity: 3.00
+    // Chargement dynamique des scripts externes si nécessaire
+    const loadScript = (src: string) => {
+      return new Promise<void>((resolve, reject) => {
+        if (document.querySelector(`script[src="${src}"]`)) {
+          resolve();
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = () => reject();
+        document.body.appendChild(script);
       });
-    }
+    };
+
+    // Initialisation de Vanta.js
+    const initVanta = async () => {
+      try {
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js');
+
+        if (vantaRef.current && window.VANTA && window.VANTA.BIRDS) {
+          vantaInstance.current = window.VANTA.BIRDS({
+            el: vantaRef.current,
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            backgroundColor: 0xf8f6f0,
+            color1: 0xd4af37,
+            color2: 0x1a2332,
+            birdSize: 1.20,
+            wingSpan: 25.00,
+            speedLimit: 3.00,
+            separation: 20.00,
+            alignment: 20.00,
+            cohesion: 20.00,
+            quantity: 3.00
+          });
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement de Vanta.js:', error);
+      }
+    };
+
+    initVanta();
 
     // Scroll reveal animation
-    const observerOptions = {
+    const observerOptions: IntersectionObserverInit = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
     };
@@ -66,10 +96,11 @@ const Appt: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll);
 
+    // Nettoyage
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (window.VANTA && window.VANTA.BIRDS) {
-        window.VANTA.BIRDS.destroy();
+      if (vantaInstance.current) {
+        vantaInstance.current.destroy();
       }
     };
   }, []);
@@ -80,17 +111,24 @@ const Appt: React.FC = () => {
       const target = document.querySelector(href);
       if (target) {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        setMobileMenuOpen(false);
       }
+      setMobileMenuOpen(false);
     } else {
       window.location.href = href;
+    }
+  };
+
+  const scrollToId = (id: string) => {
+    const target = document.querySelector(id);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
   return (
     <div className="text-gray-800" style={{ 
       fontFamily: 'Inter, sans-serif', 
-      background: 'var(--cream)',
+      backgroundColor: '#f8f6f0',
       overflowX: 'hidden'
     }}>
       <style jsx global>{`
@@ -98,8 +136,6 @@ const Appt: React.FC = () => {
           --gold: #D4AF37;
           --deep-blue: #1a2332;
           --cream: #f8f6f0;
-          --charcoal: #2c2c2c;
-          --silver: #e8e8e8;
         }
         
         .hero-title {
@@ -203,7 +239,7 @@ const Appt: React.FC = () => {
         }
       `}</style>
 
-      {/* Google Fonts */}
+      {/* Polices Google */}
       <link 
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" 
         rel="stylesheet" 
@@ -221,11 +257,41 @@ const Appt: React.FC = () => {
               <span className="text-yellow-600">Patek</span> Philippe
             </div>
             <div className="hidden md:flex space-x-8">
-              <a href="#home" className="nav-link text-gray-700 hover:text-yellow-600" onClick={(e) => handleNavClick(e, '#home')}>Accueil</a>
-              <a href="collections.html" className="nav-link text-gray-700 hover:text-yellow-600" onClick={(e) => handleNavClick(e, 'collections.html')}>Collections</a>
-              <a href="heritage.html" className="nav-link text-gray-700 hover:text-yellow-600" onClick={(e) => handleNavClick(e, 'heritage.html')}>Patrimoine</a>
-              <a href="craftsmanship.html" className="nav-link text-gray-700 hover:text-yellow-600" onClick={(e) => handleNavClick(e, 'craftsmanship.html')}>Savoir-faire</a>
-              <a href="innovation.html" className="nav-link text-gray-700 hover:text-yellow-600" onClick={(e) => handleNavClick(e, 'innovation.html')}>Innovation</a>
+              <a 
+                href="#home" 
+                className="nav-link text-gray-700 hover:text-yellow-600" 
+                onClick={(e) => handleNavClick(e, '#home')}
+              >
+                Accueil
+              </a>
+              <a 
+                href="collections.html" 
+                className="nav-link text-gray-700 hover:text-yellow-600" 
+                onClick={(e) => handleNavClick(e, 'collections.html')}
+              >
+                Collections
+              </a>
+              <a 
+                href="heritage.html" 
+                className="nav-link text-gray-700 hover:text-yellow-600" 
+                onClick={(e) => handleNavClick(e, 'heritage.html')}
+              >
+                Patrimoine
+              </a>
+              <a 
+                href="craftsmanship.html" 
+                className="nav-link text-gray-700 hover:text-yellow-600" 
+                onClick={(e) => handleNavClick(e, 'craftsmanship.html')}
+              >
+                Savoir-faire
+              </a>
+              <a 
+                href="innovation.html" 
+                className="nav-link text-gray-700 hover:text-yellow-600" 
+                onClick={(e) => handleNavClick(e, 'innovation.html')}
+              >
+                Innovation
+              </a>
             </div>
             <div className="md:hidden">
               <button 
@@ -239,7 +305,7 @@ const Appt: React.FC = () => {
         </div>
         
         {/* Mobile Menu */}
-        {!mobileMenuOpen ? null : (
+        {mobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-gray-200">
             <div className="px-6 py-4 space-y-4">
               <a href="#home" className="block text-gray-700 hover:text-yellow-600" onClick={(e) => handleNavClick(e, '#home')}>Accueil</a>
@@ -532,13 +598,6 @@ const Appt: React.FC = () => {
           </div>
         </div>
       </footer>
-
-      {/* External Scripts */}
-      <script src="https://cdn.tailwindcss.com"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js"></script>
     </div>
   );
-};
-
-export default Appt;
+}
