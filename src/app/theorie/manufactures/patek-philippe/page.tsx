@@ -13,16 +13,12 @@ export default function Page() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    // Inject VANTA
+    // Vanta birds animated background (client only)
     let vantaEffect: any;
     (async () => {
-      // Only once in browser
-      // Load three.js and vanta dynamically
       if (typeof window !== 'undefined') {
-        if (!window.THREE) {
-          await import('https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js');
-        }
-        await import('https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js');
+        await import('three');
+        await import('vanta/dist/vanta.birds.min');
         if (window.VANTA && window.VANTA.BIRDS && document.getElementById('vanta-bg')) {
           vantaEffect = window.VANTA.BIRDS({
             el: "#vanta-bg",
@@ -48,7 +44,6 @@ export default function Page() {
       }
     })();
 
-    // Scroll reveal
     const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -59,7 +54,7 @@ export default function Page() {
 
     document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
 
-    // Parallax effet
+    // Parallax effet sur le background
     const parallax = () => {
       const scrolled = window.scrollY;
       const target = document.getElementById('vanta-bg');
@@ -187,7 +182,7 @@ export default function Page() {
             </div>
             <div>
               <div className="relative">
-                <img src="/image.jpg" alt="Montre Patek Philippe classique" className="rounded-lg shadow-2xl w-full scroll-reveal" />
+                <img src="" alt="Montre Patek Philippe classique" className="rounded-lg shadow-2xl w-full scroll-reveal" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
               </div>
             </div>
@@ -204,8 +199,8 @@ export default function Page() {
           </div>
           <div className="grid md:grid-cols-3 gap-8">
               <div className="watch-card rounded-xl p-6 scroll-reveal">
-                <div className="aspect-square mb-6 overflow-hidden rounded-lg">
-                  <img src="/image.jpg" alt="Nautilus" className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"/>
+                <div className="aspect-square mb-6 overflow-hidden rounded-lg flex items-center justify-center bg-gray-100">
+                  <img src="" alt="Nautilus" className="w-full h-full object-cover" />
                 </div>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-3">Nautilus</h3>
                 <p className="text-gray-600 mb-4">Le symbole du luxe sportif, alliant robustesse et élégance dans un design iconique</p>
@@ -214,8 +209,8 @@ export default function Page() {
                 </a>
               </div>
               <div className="watch-card rounded-xl p-6 scroll-reveal">
-                <div className="aspect-square mb-6 overflow-hidden rounded-lg">
-                  <img src="/image.jpg" alt="Calatrava" className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"/>
+                <div className="aspect-square mb-6 overflow-hidden rounded-lg flex items-center justify-center bg-gray-100">
+                  <img src="" alt="Calatrava" className="w-full h-full object-cover" />
                 </div>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-3">Calatrava</h3>
                 <p className="text-gray-600 mb-4">L'essence de l'élégance classique, incarnant la pureté du design horloger</p>
@@ -224,8 +219,8 @@ export default function Page() {
                 </a>
               </div>
               <div className="watch-card rounded-xl p-6 scroll-reveal">
-                <div className="aspect-square mb-6 overflow-hidden rounded-lg">
-                  <img src="/image.jpg" alt="Grandes Complications" className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"/>
+                <div className="aspect-square mb-6 overflow-hidden rounded-lg flex items-center justify-center bg-gray-100">
+                  <img src="" alt="Grandes Complications" className="w-full h-full object-cover" />
                 </div>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-3">Grandes Complications</h3>
                 <p className="text-gray-600 mb-4">Le sommet de l'ingénierie horlogère, où l'art rencontre la complexité technique</p>
@@ -309,6 +304,7 @@ export default function Page() {
           </div>
         </div>
       </footer>
+
       {/* Global/section styles */}
       <style jsx global>{`
         :root {
