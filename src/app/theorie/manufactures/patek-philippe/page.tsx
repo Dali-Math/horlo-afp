@@ -7,7 +7,7 @@ import {
   Activity, Moon, Sun, RotateCcw, Target, Eye, Share2, Star, Play, 
   Pause, Volume2, X, ChevronDown, ChevronLeft, ChevronRight, Search,
   Filter, Download, Bookmark, MessageCircle, ArrowUpRight, Info,
-  Layers, BarChart3, Box, Hammer, Microscope, Calculator, LineChart, PieChart
+  Layers, Box, Hammer, Microscope, Calculator, LineChart, PieChart
 } from 'lucide-react';
 
 const KONAMI_CODE = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
@@ -17,8 +17,8 @@ export default function PatekPhilippeUltimate() {
   const [activeSection, setActiveSection] = useState('overview');
   const [selectedEra, setSelectedEra] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [favorites, setFavorites] = useState<(number | string)[]>([]);
-  const [compareList, setCompareList] = useState<(number | string)[]>([]);
+  const [favorites, setFavorites] = useState([]);
+  const [compareList, setCompareList] = useState([]);
   const [showComparator, setShowComparator] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [konamiProgress, setKonamiProgress] = useState(0);
@@ -815,14 +815,14 @@ export default function PatekPhilippeUltimate() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [konamiProgress]);
 
-   // ============ HANDLERS ============
-  const toggleFavorite = (id: number | string) => {
+  // ============ HANDLERS ============
+  const toggleFavorite = (id) => {
     setFavorites(prev => 
       prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
     );
   };
 
-  const toggleCompare = (id: number | string) => {
+  const toggleCompare = (id) => {
     if (compareList.includes(id)) {
       setCompareList(prev => prev.filter(c => c !== id));
     } else if (compareList.length < 3) {
@@ -830,7 +830,7 @@ export default function PatekPhilippeUltimate() {
     }
   };
 
-  const filteredCollections = encyclopedicData.collections.filter((c: any) => {
+  const filteredCollections = encyclopedicData.collections.filter(c => {
     if (activeFilter === 'all') return true;
     if (activeFilter === 'sport') return ['nautilus', 'aquanaut'].includes(c.id);
     if (activeFilter === 'classic') return c.id === 'calatrava';
@@ -838,7 +838,7 @@ export default function PatekPhilippeUltimate() {
     return true;
   });
 
-  const filteredMilestones = encyclopedicData.historicalMilestones.filter((m: any) => 
+  const filteredMilestones = encyclopedicData.historicalMilestones.filter(m => 
     selectedEra === 'all' || m.era === selectedEra
   );
 
@@ -852,7 +852,6 @@ export default function PatekPhilippeUltimate() {
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
-      {/* Reste de votre JSX... */}
 
       {/* Expert Mode Badge */}
       {expertMode && (
@@ -903,17 +902,17 @@ export default function PatekPhilippeUltimate() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
-  onClick={() => document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' })}
-  className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 rounded-full font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-105 shadow-2xl flex items-center gap-3 justify-center"
->
-  <BookOpen className="w-6 h-6" />
-  Explorer l'Histoire
-</button>
-<button 
-  onClick={() => document.getElementById('collections')?.scrollIntoView({ behavior: 'smooth' })}
-  className="bg-white/10 backdrop-blur-xl px-8 py-4 rounded-full font-bold text-lg border-2 border-white/20 hover:bg-white/20 transition-all hover:scale-105 shadow-2xl flex items-center justify-center gap-3"
->
-  <Watch className="w-6 h-6" />
+              onClick={() => document.getElementById('timeline').scrollIntoView({ behavior: 'smooth' })}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 rounded-full font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-105 shadow-2xl flex items-center gap-3 justify-center"
+            >
+              <BookOpen className="w-6 h-6" />
+              Explorer l'Histoire
+            </button>
+            <button 
+              onClick={() => document.getElementById('collections').scrollIntoView({ behavior: 'smooth' })}
+              className="bg-white/10 backdrop-blur-xl px-8 py-4 rounded-full font-bold text-lg border-2 border-white/20 hover:bg-white/20 transition-all hover:scale-105 shadow-2xl flex items-center gap-3 justify-center"
+            >
+              <Watch className="w-6 h-6" />
               Voir les Collections
             </button>
           </div>
@@ -1268,63 +1267,54 @@ export default function PatekPhilippeUltimate() {
           </div>
 
           {/* Comparator Panel */}
-{compareList.length > 0 && (
-  <div className="bg-gradient-to-r from-purple-900/50 to-blue-900/50 border border-purple-500/30 rounded-3xl p-8 backdrop-blur-xl">
-    <div className="flex items-center justify-between mb-6">
-      <h3 className="text-2xl font-bold text-white flex items-center gap-3">
-        <BarChart3 className="w-6 h-6 text-purple-400" />
-        Comparateur ({compareList.length}/3)
-      </h3>
-      <button 
-        onClick={() => setCompareList([])}
-        className="text-slate-400 hover:text-white transition-colors"
-      >
-        <X className="w-6 h-6" />
-      </button>
-    </div>
-
-    <div className="grid md:grid-cols-3 gap-6">
-      {compareList.map(id => {
-        const collection = encyclopedicData.collections.find(c => c.id === id);
-        return (
-          <div key={id} className="bg-white/5 rounded-xl p-6">
-            <h4 className="text-xl font-bold text-white mb-4">
-              {collection?.name || 'Collection non trouvée'}
-            </h4>
-            {collection && (
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Prix entrée</span>
-                  <span className="text-yellow-400 font-bold">
-                    CHF {(collection.marketData.entryPrice / 1000).toFixed(0)}K
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Attente</span>
-                  <span className="text-slate-200">{collection.marketData.waitingTime}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">ROI</span>
-                  <span className="text-green-400 font-bold">
-                    {collection.marketData.investmentPotential}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Liquidité</span>
-                  <span className="text-blue-400 font-bold">
-                    {collection.marketData.liquidityScore}/10
-                  </span>
-                </div>
+          {compareList.length > 0 && (
+            <div className="bg-gradient-to-r from-purple-900/50 to-blue-900/50 border border-purple-500/30 rounded-3xl p-8 backdrop-blur-xl">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+                  <BarChart3 className="w-6 h-6 text-purple-400" />
+                  Comparateur ({compareList.length}/3)
+                </h3>
+                <button 
+                  onClick={() => setCompareList([])}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
               </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  </div>
-)}
 
-          
+              <div className="grid md:grid-cols-3 gap-6">
+                {compareList.map(id => {
+                  const collection = encyclopedicData.collections.find(c => c.id === id);
+                  return (
+                    <div key={id} className="bg-white/5 rounded-xl p-6">
+                      <h4 className="text-xl font-bold text-white mb-4">{collection.name}</h4>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Prix entrée</span>
+                          <span className="text-yellow-400 font-bold">CHF {(collection.marketData.entryPrice / 1000).toFixed(0)}K</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Attente</span>
+                          <span className="text-slate-200">{collection.marketData.waitingTime}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">ROI</span>
+                          <span className="text-green-400 font-bold">{collection.marketData.investmentPotential}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Liquidité</span>
+                          <span className="text-blue-400 font-bold">{collection.marketData.liquidityScore}/10</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* COMPLICATIONS SECTION */}
       <section id="complications" className="py-32 bg-gradient-to-b from-black to-purple-900/30 relative">
         <div className="max-w-7xl mx-auto px-8">
