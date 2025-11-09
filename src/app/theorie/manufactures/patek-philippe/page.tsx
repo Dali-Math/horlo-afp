@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import Script from 'next/script';
 
 declare global {
@@ -131,7 +131,7 @@ const PatekPhilippePage: React.FC = () => {
       }
       elements.forEach(el => observer.unobserve(el));
     };
-  }, []);
+  }, [vantaEffect]);
 
   return (
     <>
@@ -143,6 +143,7 @@ const PatekPhilippePage: React.FC = () => {
 
       <Script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" strategy="beforeInteractive" />
       <Script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js" strategy="beforeInteractive" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
@@ -284,7 +285,7 @@ const PatekPhilippePage: React.FC = () => {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {collections.slice(0, 3).map((collection) => (
+            {collections.map((collection) => (
               <div key={collection.id} className="watch-card rounded-xl p-6 scroll-reveal">
                 <div className="aspect-square mb-6 overflow-hidden rounded-lg">
                   <img
@@ -354,22 +355,22 @@ const PatekPhilippePage: React.FC = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-20 bg-gray-900 text-white">
+      <section className="py-20 bg-gradient-to-r from-yellow-600 to-yellow-700">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">Devenez Gardien du Temps</h2>
-          <p className="text-xl text-gray-300 mb-8">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">Devenez Gardien du Temps</h2>
+          <p className="text-xl text-white/90 mb-8">
             Rejoignez la longue lignée de collectionneurs qui perpétuent l&apos;héritage Patek Philippe
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => router.push('/collections')}
-              className="bg-yellow-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-yellow-700 transition-all duration-300 transform hover:scale-105"
+              className="bg-white text-yellow-600 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105"
             >
               Explorer les collections
             </button>
             <button
               onClick={() => router.push('/heritage')}
-              className="border-2 border-yellow-600 text-yellow-600 px-8 py-4 rounded-full font-semibold hover:bg-yellow-600 hover:text-white transition-all duration-300"
+              className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-yellow-600 transition-all duration-300"
             >
               Découvrir l&apos;héritage
             </button>
@@ -409,12 +410,20 @@ const PatekPhilippePage: React.FC = () => {
       </footer>
 
       <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+        
         :root {
           --gold: #D4AF37;
           --deep-blue: #1a2332;
           --cream: #f8f6f0;
           --charcoal: #2c2c2c;
           --silver: #e8e8e8;
+        }
+        
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
         }
         
         body {
@@ -430,6 +439,18 @@ const PatekPhilippePage: React.FC = () => {
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+          animation: fadeInUp 1s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
         
         .vanta-bg {
@@ -438,7 +459,7 @@ const PatekPhilippePage: React.FC = () => {
           left: 0;
           width: 100%;
           height: 100%;
-          z-index: -1;
+          z-index: 0;
         }
         
         .nav-link {
@@ -473,15 +494,14 @@ const PatekPhilippePage: React.FC = () => {
         }
         
         .watch-card {
-          backdrop-filter: blur(10px);
-          background: rgba(255, 255, 255, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          background: white;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
           transition: all 0.4s ease;
         }
         
         .watch-card:hover {
           transform: translateY(-10px);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
       `}</style>
     </>
