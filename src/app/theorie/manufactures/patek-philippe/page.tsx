@@ -863,67 +863,72 @@ export default function PatekPhilippeUltimate() {
 );
 
       {/* HERO SECTION */}
-      <header className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/50 via-purple-900/50 to-slate-900/50" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-30" />
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-8 text-center">
-          <div className="flex justify-center mb-8">
-            <Crown className="w-24 h-24 text-yellow-400 animate-pulse" />
-          </div>
-          
-          <h1 className="text-7xl md:text-9xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-yellow-300 to-white">
-            Patek Philippe
-          </h1>
-          
-          <p className="text-2xl md:text-3xl text-blue-200 mb-4 italic max-w-4xl mx-auto leading-relaxed">
-            "Vous ne possédez jamais complètement une Patek Philippe.<br/>
-            <span className="text-yellow-300">Vous en êtes le gardien pour les générations futures."</span>
-          </p>
-          
-          <p className="text-lg text-slate-300 mb-12 max-w-3xl mx-auto">
-            Guide encyclopédique complet • 185 ans d'histoire • 60,000+ montres produites • Excellence absolue
-          </p>
-
-          {/* Stats Hero */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto mb-12">
-            {[
-              { label: 'Fondation', value: '1839', icon: Calendar },
-              { label: 'Brevets', value: '70+', icon: Award },
-              { label: 'Indépendance', value: '100%', icon: Shield },
-              { label: 'Croissance/an', value: '+15%', icon: TrendingUp }
-            ].map((stat, i) => (
-              <div key={i} className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-all hover:scale-105">
-                <stat.icon className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
-                <div className="text-4xl font-bold text-yellow-400 mb-2">{stat.value}</div>
-                <div className="text-sm text-slate-300">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button 
-              onClick={() => document.getElementById('timeline').scrollIntoView({ behavior: 'smooth' })}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 rounded-full font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-105 shadow-2xl flex items-center gap-3 justify-center"
-            >
-              <BookOpen className="w-6 h-6" />
-              Explorer l'Histoire
-            </button>
-            <button 
-              onClick={() => document.getElementById('collections').scrollIntoView({ behavior: 'smooth' })}
-              className="bg-white/10 backdrop-blur-xl px-8 py-4 rounded-full font-bold text-lg border-2 border-white/20 hover:bg-white/20 transition-all hover:scale-105 shadow-2xl flex items-center gap-3 justify-center"
-            >
-              <Watch className="w-6 h-6" />
-              Voir les Collections
-            </button>
-          </div>
-
-          <div className="mt-12 animate-bounce">
-            <ChevronDown className="w-8 h-8 text-yellow-400 mx-auto" />
-          </div>
+<header className="relative min-h-screen flex items-center justify-center overflow-hidden">
+  {/* Background effects */}
+  <div className="absolute inset-0 bg-gradient-to-br from-blue-900/50 via-purple-900/50 to-slate-900/50"></div>
+  <div className="absolute inset-0 bg-[url(data:image/svg+xml;base64,...)] opacity-30"></div>
+  
+  {/* Content */}
+  <div className="relative z-10 max-w-7xl mx-auto px-8 text-center">
+    {/* Crown icon */}
+    <div className="flex justify-center mb-8">
+      <Crown className="w-24 h-24 text-yellow-400 animate-pulse" />
+    </div>
+    
+    {/* Title and tagline */}
+    <h1 className="text-7xl md:text-9xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-yellow-300 to-white">
+      Patek Philippe
+    </h1>
+    
+    <p className="text-2xl md:text-3xl text-blue-200 mb-4 italic max-w-4xl mx-auto leading-relaxed">
+      Vous ne possédez jamais complètement une Patek Philippe.<br />
+      <span className="text-yellow-300">Vous en êtes le gardien pour les générations futures.</span>
+    </p>
+    
+    <p className="text-lg text-slate-300 mb-12 max-w-3xl mx-auto">
+      Guide encyclopédique complet • 185 ans d'histoire • 60,000 montres produites • Excellence absolue
+    </p>
+    
+    {/* Stats Hero Grid */}
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto mb-12">
+      {[
+        { label: "Fondation", value: "1839", icon: Calendar },
+        { label: "Brevets", value: "70+", icon: Award },
+        { label: "Indépendance", value: "100%", icon: Shield },
+        { label: "Croissance/an", value: "+15%", icon: TrendingUp }
+      ].map((stat, i) => (
+        <div key={i} className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-all hover:scale-105">
+          <stat.icon className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
+          <div className="text-4xl font-bold text-yellow-400 mb-2">{stat.value}</div>
+          <div className="text-sm text-slate-300">{stat.label}</div>
         </div>
-      </header>
+      ))}
+    </div>
+    
+    {/* CTA Buttons */}
+    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <button 
+        onClick={() => document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' })}
+        className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 rounded-full font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-105 shadow-2xl flex items-center gap-3 justify-center"
+      >
+        <BookOpen className="w-6 h-6" />
+        Explorer l'Histoire
+      </button>
+      
+      <button 
+        onClick={() => document.getElementById('collections')?.scrollIntoView({ behavior: 'smooth' })}
+        className="bg-white/10 backdrop-blur-xl px-8 py-4 rounded-full font-bold text-lg border-2 border-white/20 hover:bg-white/20 transition-all hover:scale-105 shadow-2xl flex items-center gap-3 justify-center"
+      >
+        <Watch className="w-6 h-6" />
+        Voir les Collections
+      </button>
+    </div>
+    
+    <div className="mt-12 animate-bounce">
+      <ChevronDown className="w-8 h-8 text-yellow-400 mx-auto" />
+    </div>
+  </div>
+</header>
 
       {/* NAVIGATION STICKY */}
       <nav className="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-xl border-b border-white/10">
