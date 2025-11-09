@@ -1,7 +1,6 @@
 // app/theorie/manufactures/rolex/page.tsx
 import { Metadata } from 'next'
-import rolexImages from '@/public/data/rolex_images.json';
-
+import rolexImages from '@/../public/data/rolex_images.json';
 // ==================== DONNÉES INTÉGRALES (850+ LIGNES) ====================
 const ROLEX_DATA = {
   meta: {
