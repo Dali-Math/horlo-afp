@@ -5,21 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patek Philippe - Référence Mondiale Complète | HorloLearn</title>
     
-    <!-- Métadonnées pour votre site -->
     <meta name="description" content="Guide encyclopédique complet sur Patek Philippe - 185 ans d'histoire, collections, complications et excellence horlogère suisse">
-    <meta name="keywords" content="Patek Philippe, horlogerie suisse, montres de luxe, complications, collections">
     
-    <!-- Favicon de votre site -->
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    
-    <!-- Styles principaux -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Styles pour s'intégrer à votre design -->
     <style>
         :root {
             --gold: #D4AF37;
@@ -37,9 +30,8 @@
             padding: 0;
         }
         
-        /* Adaptation pour votre header */
         .page-wrapper {
-            padding-top: 80px; /* Ajustez selon votre header */
+            padding-top: 80px;
         }
         
         .hero-title {
@@ -60,10 +52,9 @@
             z-index: -1;
         }
         
-        /* Styles pour la navigation interne */
         .internal-nav {
             position: sticky;
-            top: 80px; /* Ajustez selon votre header */
+            top: 0;
             z-index: 40;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -100,7 +91,6 @@
             transform: translateY(0);
         }
         
-        /* Reste des styles de la référence mondiale */
         .watch-card {
             backdrop-filter: blur(10px);
             background: rgba(255, 255, 255, 0.1);
@@ -113,7 +103,6 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
         
-        /* Bouton de retour à votre site */
         .back-to-site {
             position: fixed;
             bottom: 2rem;
@@ -132,25 +121,20 @@
             box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
         }
         
-        /* Responsive */
         @media (max-width: 768px) {
             .page-wrapper {
                 padding-top: 60px;
-            }
-            
-            .internal-nav {
-                top: 60px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Bouton de retour à votre site -->
+    <!-- Bouton de retour -->
     <a href="/theorie/manufactures/patek-philippe" class="back-to-site" title="Retour à HorloLearn">
         <i class="fas fa-arrow-left"></i>
     </a>
 
-    <!-- Navigation interne de la page -->
+    <!-- Navigation -->
     <nav class="internal-nav">
         <div class="max-w-7xl mx-auto px-6 py-4">
             <div class="flex items-center justify-center space-x-8 overflow-x-auto">
@@ -163,7 +147,7 @@
         </div>
     </nav>
 
-    <!-- Contenu principal -->
+    <!-- Contenu -->
     <div class="page-wrapper">
         <!-- Hero Section -->
         <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -194,7 +178,6 @@
                     <p class="text-xl text-gray-600 max-w-3xl mx-auto">Chaque garde-temps Patek Philippe est le fruit de siècles de savoir-faire transmis de génération en génération</p>
                 </div>
                 
-                <!-- Timeline avec les 185 ans d'histoire -->
                 <div class="grid md:grid-cols-2 gap-12 items-center">
                     <div class="scroll-reveal">
                         <div class="space-y-8">
@@ -228,7 +211,7 @@
             </div>
         </section>
 
-        <!-- Featured Collections -->
+        <!-- Collections Section -->
         <section id="collections" class="py-20 bg-gray-50">
             <div class="max-w-7xl mx-auto px-6">
                 <div class="text-center mb-16 scroll-reveal">
@@ -237,7 +220,6 @@
                 </div>
                 
                 <div class="grid md:grid-cols-3 gap-8">
-                    <!-- Nautilus -->
                     <div class="watch-card rounded-xl p-6 scroll-reveal">
                         <div class="aspect-square mb-6 overflow-hidden rounded-lg">
                             <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400&h=400&fit=crop" 
@@ -254,7 +236,6 @@
                         </div>
                     </div>
                     
-                    <!-- Calatrava -->
                     <div class="watch-card rounded-xl p-6 scroll-reveal">
                         <div class="aspect-square mb-6 overflow-hidden rounded-lg">
                             <img src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=400&h=400&fit=crop" 
@@ -271,7 +252,6 @@
                         </div>
                     </div>
                     
-                    <!-- Grandes Complications -->
                     <div class="watch-card rounded-xl p-6 scroll-reveal">
                         <div class="aspect-square mb-6 overflow-hidden rounded-lg">
                             <img src="https://images.unsplash.com/photo-1612817159949-195b619eb547?w=400&h=400&fit=crop" 
@@ -394,7 +374,6 @@
         </section>
     </div>
 
-    <!-- Scripts -->
     <script>
         // Initialisation Vanta.js
         VANTA.BIRDS({
