@@ -1283,36 +1283,43 @@ const toggleCompare = (id: number | string) => {
               </div>
 
               <div className="grid md:grid-cols-3 gap-6">
-                {compareList.map(id => {
-                  const collection = encyclopedicData.collections.find(c => c.id === id);
-                  return (
-                    <div key={id} className="bg-white/5 rounded-xl p-6">
-                      <h4 className="text-xl font-bold text-white mb-4">{collection.name}</h4>
-                      <div className="space-y-3 text-sm">
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">Prix entrée</span>
-                          <span className="text-yellow-400 font-bold">CHF {(collection.marketData.entryPrice / 1000).toFixed(0)}K</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">Attente</span>
-                          <span className="text-slate-200">{collection.marketData.waitingTime}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">ROI</span>
-                          <span className="text-green-400 font-bold">{collection.marketData.investmentPotential}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">Liquidité</span>
-                          <span className="text-blue-400 font-bold">{collection.marketData.liquidityScore}/10</span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+  {compareList.map(id => {
+    const collection = encyclopedicData.collections.find(c => c.id === id);
+    return (
+      <div key={id} className="bg-white/5 rounded-xl p-6">
+        <h4 className="text-xl font-bold text-white mb-4">
+          {collection?.name || 'Collection non trouvée'}
+        </h4>
+        {collection && (
+          <div className="space-y-3 text-sm">
+            <div className="flex justify-between">
+              <span className="text-slate-400">Prix entrée</span>
+              <span className="text-yellow-400 font-bold">
+                CHF {(collection.marketData.entryPrice / 1000).toFixed(0)}K
+              </span>
             </div>
-          )}
-        </div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">Attente</span>
+              <span className="text-slate-200">{collection.marketData.waitingTime}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">ROI</span>
+              <span className="text-green-400 font-bold">
+                {collection.marketData.investmentPotential}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">Liquidité</span>
+              <span className="text-blue-400 font-bold">
+                {collection.marketData.liquidityScore}/10
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  })}
+</div>
       </section>
 
       {/* COMPLICATIONS SECTION */}
