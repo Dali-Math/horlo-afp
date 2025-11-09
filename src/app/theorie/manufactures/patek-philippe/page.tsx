@@ -1707,11 +1707,14 @@ export default function PatekPhilippeUltimate() {
       </div>
 
       {/* Styles additionnels */}
-      <style jsx global>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
+<>
+  <style jsx global>{`
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+  `}</style>
+</>
         
         @keyframes gradient {
           0%, 100% { background-position: 0% 50%; }
