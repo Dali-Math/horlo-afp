@@ -816,7 +816,7 @@ export default function PatekPhilippeUltimate() {
   }, [konamiProgress]);
 
   // ============ HANDLERS ============
-  const toggleFavorite = (id) => {
+  const toggleFavorite = (id: string) => {
     setFavorites(prev => 
       prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
     );
