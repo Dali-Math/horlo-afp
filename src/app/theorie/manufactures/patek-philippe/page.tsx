@@ -1729,7 +1729,7 @@ export default function PatekPhilippeUltimate() {
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
-      `}</style>
+      </style>
     </div>
   );
 }
