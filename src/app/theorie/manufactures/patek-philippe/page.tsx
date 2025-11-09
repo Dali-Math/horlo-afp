@@ -194,11 +194,11 @@ export default function PatekPhilippeUltimatePage() {
         <meta name="description" content="Guide complet ultime sur Patek Philippe 2024 : histoire, collections, complications, records. Devenez expert en 15 minutes." />
         <script type="application/ld+json">
           {JSON.stringify({
-            "@context": "https://schema.org",
+            "@context": "https://schema.org ",
             "@type": "Organization",
             "name": "Patek Philippe",
             "foundingDate": "1839",
-            "url": "https://horlolearn.com/manufactures/patek-philippe"
+            "url": "https://horlolearn.com/manufactures/patek-philippe "
           })}
         </script>
       </Head>
@@ -356,8 +356,8 @@ export default function PatekPhilippeUltimatePage() {
                     className="group relative cursor-pointer transition-all duration-300 flex-shrink-0"
                     style={{ minWidth: '350px' }}
                   >
-                    {/* Glow effect on hover */}
-                    <div className={`absolute -inset-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500 ${eras[item.type].glow}`} />
+                    {/* Glow effect on hover - CORRECTED LINE */}
+                    <div className={`absolute -inset-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500 ${eras[item.type as keyof typeof eras].glow}`} />
                     
                     <div className="relative bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-2xl p-8 border border-slate-700/50 backdrop-blur-sm hover:border-blue-500/50 transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-2 shadow-2xl">
                       {/* Rarity badge */}
