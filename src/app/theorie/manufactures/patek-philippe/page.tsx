@@ -7,7 +7,7 @@ import {
   Activity, Moon, Sun, RotateCcw, Target, Eye, Share2, Star, Play, 
   Pause, Volume2, X, ChevronDown, ChevronLeft, ChevronRight, Search,
   Filter, Download, Bookmark, MessageCircle, ArrowUpRight, Info,
-  Layers, Box, Hammer, Microscope, Calculator, LineChart, PieChart
+  Layers, Box, Hammer, Microscope, Calculator, LineChart, PieChart, BarChart3
 } from 'lucide-react';
 
 const KONAMI_CODE = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
@@ -17,8 +17,8 @@ export default function PatekPhilippeUltimate() {
   const [activeSection, setActiveSection] = useState('overview');
   const [selectedEra, setSelectedEra] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [favorites, setFavorites] = useState([]);
-  const [compareList, setCompareList] = useState([]);
+  const [favorites, setFavorites] = useState<(number | string)[]>([]);
+  const [compareList, setCompareList] = useState<string[]>([]);
   const [showComparator, setShowComparator] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [konamiProgress, setKonamiProgress] = useState(0);
@@ -816,13 +816,13 @@ export default function PatekPhilippeUltimate() {
   }, [konamiProgress]);
 
   // ============ HANDLERS ============
-  const toggleFavorite = (id) => {
+  const toggleFavorite = (id: number | string) => {
     setFavorites(prev => 
       prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
     );
   };
 
-  const toggleCompare = (id) => {
+  const toggleCompare = (id: string) => {
     if (compareList.includes(id)) {
       setCompareList(prev => prev.filter(c => c !== id));
     } else if (compareList.length < 3) {
@@ -863,7 +863,7 @@ export default function PatekPhilippeUltimate() {
       {/* HERO SECTION */}
       <header className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/50 via-purple-900/50 to-slate-900/50" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-30" />
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRo[...]
         
         <div className="relative z-10 max-w-7xl mx-auto px-8 text-center">
           <div className="flex justify-center mb-8">
@@ -902,15 +902,15 @@ export default function PatekPhilippeUltimate() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
-              onClick={() => document.getElementById('timeline').scrollIntoView({ behavior: 'smooth' })}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 rounded-full font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-105 shadow-2xl flex items-center gap-3 justify-center"
+              onClick={() => document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 rounded-full font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-105 shadow-2xl flex items-center gap-3"
             >
               <BookOpen className="w-6 h-6" />
               Explorer l'Histoire
             </button>
             <button 
-              onClick={() => document.getElementById('collections').scrollIntoView({ behavior: 'smooth' })}
-              className="bg-white/10 backdrop-blur-xl px-8 py-4 rounded-full font-bold text-lg border-2 border-white/20 hover:bg-white/20 transition-all hover:scale-105 shadow-2xl flex items-center gap-3 justify-center"
+              onClick={() => document.getElementById('collections')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-white/10 backdrop-blur-xl px-8 py-4 rounded-full font-bold text-lg border-2 border-white/20 hover:bg-white/20 transition-all hover:scale-105 shadow-2xl flex items-center gap-3"
             >
               <Watch className="w-6 h-6" />
               Voir les Collections
@@ -1015,7 +1015,7 @@ export default function PatekPhilippeUltimate() {
               >
                 <div className="absolute left-0 top-1/2 w-full h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
                 
-                <div className="relative bg-gradient-to-br from-slate-800/60 to-slate-900/80 rounded-3xl p-8 border border-slate-700/50 backdrop-blur-sm hover:border-blue-500/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/20">
+                <div className="relative bg-gradient-to-br from-slate-800/60 to-slate-900/80 rounded-3xl p-8 border border-slate-700/50 backdrop-blur-sm hover:border-blue-500/50 transition-all duration-150">
                   {/* Year Badge */}
                   <div className="absolute -top-6 left-8 bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 rounded-full font-bold text-2xl shadow-lg">
                     {milestone.year}
@@ -1146,7 +1146,7 @@ export default function PatekPhilippeUltimate() {
             {filteredCollections.map((collection) => (
               <div 
                 key={collection.id}
-                className="group relative bg-gradient-to-br from-slate-800/60 to-slate-900/80 rounded-3xl overflow-hidden border border-slate-700/50 hover:border-blue-500/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/20"
+                className="group relative bg-gradient-to-br from-slate-800/60 to-slate-900/80 rounded-3xl overflow-hidden border border-slate-700/50 hover:border-blue-500/50 transition-all duration-150"
               >
                 {/* Visual Area */}
                 <div className="relative h-80 bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center overflow-hidden">
@@ -1257,7 +1257,7 @@ export default function PatekPhilippeUltimate() {
                   )}
 
                   {/* CTA */}
-                  <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-4 rounded-xl font-bold hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 group">
+                  <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-4 rounded-xl font-bold hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-3">
                     Explorer la Collection
                     <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                   </button>
