@@ -1,12 +1,11 @@
 // app/theorie/manufactures/rolex/page.tsx
 import { Metadata } from 'next'
-import Image from 'next/image'
 
-// ==================== DONNÉES COMPLÈTES INTÉGRÉES ====================
+// ==================== DONNÉES COMPLÈTES ====================
 const ROLEX_DATA = {
-  heritage: {
-    title: "ROLEX SA",
-    subtitle: "Manufacture Horlogère Suisse",
+  meta: {
+    title: "Rolex SA - Manufacture Horlogère Suisse",
+    description: "Guide complet 2025 de Rolex : histoire depuis 1905, collections iconiques (Submariner, Daytona, GMT-Master), mouvements manufacture, certification Superlative Chronometer.",
     tagline: "Une Couronne pour chaque Succès",
     founded: "1905 à Londres",
     headquarters: "Genève, Suisse",
@@ -15,26 +14,26 @@ const ROLEX_DATA = {
     signature: "La Couronne de la Réussite"
   },
   
-  // TIMELINE DÉTAILLÉE - 15 ÉVÉNEMENTS CLÉS AVEC IMAGES WIKIMEDIA OFFICIELLES
+  // TIMELINE DÉTAILLÉE - 15 ÉVÉNEMENTS AVEC IMAGES WIKIMEDIA
   timeline: [
-    { year: 1905, title: "Fondation", desc: "Hans Wilsdorf (24 ans) crée Wilsdorf & Davis à Londres. Importe mouvements suisses et les monte dans des boîtiers anglais.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Hans_Wilsdorf.jpg/600px-Hans_Wilsdorf.jpg", category: "fondation" },
-    { year: 1908, title: "Nom de la marque", desc: "Enregistrement de 'ROLEX' - nom court, facile à prononcer dans toutes les langues, qui sonne comme une remontée mécanique.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Rolex_logo.svg/400px-Rolex_logo.svg.png", category: "identité" },
-    { year: 1910, title: "Première certification", desc: "Première montre au monde certifiée chronomètre par l'Observatoire de Bienne. Rolex devient synonyme de précision.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Swiss_official_chronometer_testing.jpg/400px-Swiss_official_chronometer_testing.jpg", category: "innovation" },
-    { year: 1926, title: "La Oyster", desc: "Première montre étanche au monde avec boîtier hermétique, couronne vissée et fond vissé. Mercedes Gleitze la traverse la Manche.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Rolex_Oyster_case_1926.jpg/500px-Rolex_Oyster_case_1926.jpg", category: "innovation" },
-    { year: 1931, title: "Perpetual Rotor", desc: "Invention du rotor à 360°, première masse oscillante libre. Révolutionne l'horlogerie automatique, brevet mondial.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Rolex_perpetual_rotor.jpg/500px-Rolex_perpetual_rotor.jpg", category: "mouvement" },
-    { year: 1945, title: "Datejust", desc: "Première montre avec date qui change instantanément à minuit. Fenêtre à 3h, bracelet Jubilee créé pour l'occasion.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Rolex_Datejust_sl.jpg/400px-Rolex_Datejust_sl.jpg", category: "collection" },
-    { year: 1953, title: "Explorer & Submariner", desc: "Sir Edmund Hillary porte une Oyster Perpetual sur l'Everest. Submariner première plongée étanche à 100m (puis 300m).", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Rolex_Submariner_Date_16610.jpg/400px-Rolex_Submariner_Date_16610.jpg", category: "collection" },
-    { year: 1954, title: "GMT-Master", desc: "Créée pour les pilotes de Pan Am Airways. Lunette rotative bicolore bleu/rouge pour jour/nuit, deux fuseaux horaires.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Rolex_GMT_Master_II.jpg/400px-Rolex_GMT_Master_II.jpg", category: "collection" },
-    { year: 1956, title: "Day-Date", desc: "Première montre affichant le jour en 26 langues. Devenue la 'montre des Présidents' avec bracelet President.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Rolex_Day-Date_1803.jpg/400px-Rolex_Day-Date_1803.jpg", category: "collection" },
-    { year: 1960, title: "Deep Sea Challenge", desc: "Bathyscaphe Trieste descend à 10'916m dans la fosse des Mariannes avec une Deep Sea Special au point le plus bas.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Trieste_bathyscaphe_problem.jpg/500px-Trieste_bathyscaphe_problem.jpg", category: "exploit" },
-    { year: 1963, title: "Cosmograph Daytona", desc: "Chronographe pour pilotes de course. Échelle tachymétrique sur lunette, compteurs 3-6-9. Légende des circuits.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Rolex_Daytona_116520.jpg/400px-Rolex_Daytona_116520.jpg", category: "collection" },
-    { year: 2008, title: "Deepsea", desc: "Étanche à 3'900m. Boîtier Ringlock, lunette Cerachrom, bracelet Glidelock. Record de profondeur pour une montre de série.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Rolex_Deepsea.jpg/400px-Rolex_Deepsea.jpg", category: "collection" },
-    { year: 2012, title: "Sky-Dweller", desc: "La plus complexe des Rolex : double fuseau, calendrier annuel Saros, commande Ring Command. Pour globe-trotters.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Rolex_Sky-Dweller.jpg/400px-Rolex_Sky-Dweller.jpg", category: "collection" },
-    { year: 2015, title: "Calibre 3255", desc: "Nouvelle génération de mouvements : 14 brevets, 70h de réserve, Chronergy, précision -2/+2 sec/jour. Nouveau standard Rolex.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Rolex_calibre_3255.jpg/500px-Rolex_calibre_3255.jpg", category: "mouvement" },
-    { year: 2023, title: "Deepsea Challenge", desc: "Commercialisation de la montre étanche à 11'000m. Boîtier Grade 5, certifiée pour la pleine mer. Record Guinness.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Rolex_Deepsea_Challenge.jpg/500px-Rolex_Deepsea_Challenge.jpg", category: "collection" }
+    { year: 1905, title: "Fondation", desc: "Hans Wilsdorf (24 ans) crée Wilsdorf & Davis à Londres. Importe mouvements suisses.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Hans_Wilsdorf.jpg/600px-Hans_Wilsdorf.jpg", category: "fondation" },
+    { year: 1908, title: "Nom de la marque", desc: "Enregistrement de 'ROLEX' - nom court, facile à prononcer dans toutes les langues.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Rolex_logo.svg/400px-Rolex_logo.svg.png", category: "identité" },
+    { year: 1910, title: "Première certification", desc: "Première montre au monde certifiée chronomètre par l'Observatoire de Bienne.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Swiss_official_chronometer_testing.jpg/400px-Swiss_official_chronometer_testing.jpg", category: "innovation" },
+    { year: 1926, title: "La Oyster", desc: "Première montre étanche au monde avec boîtier hermétique et couronne vissée.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Rolex_Oyster_case_1926.jpg/500px-Rolex_Oyster_case_1926.jpg", category: "innovation" },
+    { year: 1931, title: "Perpetual Rotor", desc: "Invention du rotor à 360°, première masse oscillante libre. Révolutionne l'automatique.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Rolex_perpetual_rotor.jpg/500px-Rolex_perpetual_rotor.jpg", category: "mouvement" },
+    { year: 1945, title: "Datejust", desc: "Première montre avec date qui change instantanément à minuit. Création du bracelet Jubilee.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Rolex_Datejust_sl.jpg/500px-Rolex_Datejust_sl.jpg", category: "collection" },
+    { year: 1953, title: "Explorer & Submariner", desc: "Sir Edmund Hillary sur l'Everest. Submariner première plongée étanche à 100m.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Rolex_Submariner_Date_16610.jpg/500px-Rolex_Submariner_Date_16610.jpg", category: "collection" },
+    { year: 1954, title: "GMT-Master", desc: "Créée pour les pilotes de Pan Am. Lunette rotative bicolore pour deux fuseaux horaires.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Rolex_GMT_Master_II.jpg/500px-Rolex_GMT_Master_II.jpg", category: "collection" },
+    { year: 1956, title: "Day-Date", desc: "Première montre affichant le jour en 26 langues. Devenue la 'montre des Présidents'.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Rolex_Day-Date_1803.jpg/500px-Rolex_Day-Date_1803.jpg", category: "collection" },
+    { year: 1960, title: "Deep Sea Challenge", desc: "Bathyscaphe Trieste descend à 10'916m avec une Deep Sea Special au point le plus bas.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Trieste_bathyscaphe_problem.jpg/500px-Trieste_bathyscaphe_problem.jpg", category: "exploit" },
+    { year: 1963, title: "Cosmograph Daytona", desc: "Chronographe pour pilotes de course. Échelle tachymétrique sur lunette, compteurs 3-6-9.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Rolex_Daytona_116520.jpg/500px-Rolex_Daytona_116520.jpg", category: "collection" },
+    { year: 2008, title: "Deepsea", desc: "Étanche à 3'900m. Boîtier Ringlock, lunette Cerachrom, bracelet Glidelock.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Rolex_Deepsea.jpg/500px-Rolex_Deepsea.jpg", category: "collection" },
+    { year: 2012, title: "Sky-Dweller", desc: "La plus complexe des Rolex : double fuseau, calendrier annuel Saros, commande Ring Command.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Rolex_Sky-Dweller.jpg/500px-Rolex_Sky-Dweller.jpg", category: "collection" },
+    { year: 2015, title: "Calibre 3255", desc: "Nouvelle génération de mouvements : 14 brevets, 70h de réserve, Chronergy, précision -2/+2 sec/jour.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Rolex_calibre_3255.jpg/500px-Rolex_calibre_3255.jpg", category: "mouvement" },
+    { year: 2023, title: "Deepsea Challenge", desc: "Commercialisation de la montre étanche à 11'000m. Boîtier Grade 5, certifiée Guinness.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Rolex_Deepsea_Challenge.jpg/500px-Rolex_Deepsea_Challenge.jpg", category: "collection" }
   ],
 
-  // COLLECTIONS DÉTAILLÉES - 12 MODÈLES AVEC SPECS TECHNIQUES
+  // COLLECTIONS DÉTAILLÉES - 12 MODÈLES
   collections: [
     {
       id: "submariner",
@@ -218,7 +217,7 @@ const ROLEX_DATA = {
     }
   ],
 
-  // MOUVEMENTS MANUFACTURE DÉTAILLÉS
+  // MOUVEMENTS MANUFACTURE
   movements: [
     {
       name: "Calibre 3230",
@@ -228,13 +227,12 @@ const ROLEX_DATA = {
       specs: {
         "Réserve de marche": "70 heures",
         "Précision": "-2/+2 sec/jour",
-        "Fréquence": "28'800 alt/h (4 Hz)",
+        "Fréquence": "28'800 alt/h",
         "Rubis": "31",
         "Spiral": "Parachrom Bleu",
-        "Oscillateur": "Chronergy",
-        "Certification": "Superlative Chronometer"
+        "Oscillateur": "Chronergy"
       },
-      innovations: ["14 brevets", "Echappement Chronergy", "Rotor Perpetual", "70h vs 48h avant"],
+      innovations: ["14 brevets", "Echappement Chronergy", "Rotor Perpetual"],
       used: ["Submariner sans date", "Explorer", "Oyster Perpetual"]
     },
     {
@@ -248,8 +246,7 @@ const ROLEX_DATA = {
         "Fréquence": "28'800 alt/h",
         "Rubis": "31",
         "Spiral": "Parachrom Bleu",
-        "Oscillateur": "Chronergy",
-        "Date": "Changement instantané à minuit"
+        "Oscillateur": "Chronergy"
       },
       innovations: ["Date instantanée", "Correction rapide", "70h de réserve"],
       used: ["Submariner Date", "Datejust", "Sea-Dweller"]
@@ -340,22 +337,22 @@ const ROLEX_DATA = {
     }
   ],
 
-  // CERTIFICATION SUPERLATIVE CHRONOMETER
+  // CERTIFICATION
   certification: {
     title: "Superlative Chronometer",
     description: "Chaque Rolex est certifiée selon des critères bien plus strictes que le COSC. Le sceau vert n'est pas juste une certification, c'est une promesse.",
     tests: [
       { name: "Précision", value: "-2/+2 sec/jour", detail: "2 fois plus strict que le COSC (-4/+6). Testée sur 24 jours." },
-      { name: "Étanchéité", value: "25% supérieure", detail: "Toutes les montres testées à 25% au-dessus de leur limite annoncée." },
-      { name: "Réserve", value: "Test 70h", detail: "Vérification de la réserve de marche réelle sur 70 heures complètes." },
-      { name: "Montée en température", value: "8°C à 38°C", detail: "Tests entre 8°C et 38°C, plus extrême que le COSC." },
-      { name: "Chocs", value: "Simulateur", detail: "Tests de chocs simulant la vie quotidienne et sportive." },
+      { name: "Étanchéité", value: "25% supérieure", detail: "Testée à 25% au-dessus de la limite annoncée." },
+      { name: "Réserve", value: "70h testées", detail: "Vérification complète de la réserve de marche." },
+      { name: "Température", value: "8°C à 38°C", detail: "Tests entre 8°C et 38°C, plus extrême que le COSC." },
+      { name: "Chocs", value: "Simulateur", detail: "Tests de chocs simulant la vie quotidienne." },
       { name: "Autonomie", value: "Fin du ressort", detail: "Précision vérifiée jusqu'à la fin complète du ressort." }
     ],
     guarantee: "Garantie internationale de 5 ans. Toutes les réparations faites par Rolex certifiées."
   },
 
-  // PRIX & VALEUR
+  // PRIX 2025
   pricing: {
     title: "Valeur & Investissement",
     intro: "Rolex ne communique pas les prix officiels sur son site. Voici les fourchettes 2025 observées en boutique.",
@@ -372,16 +369,16 @@ const ROLEX_DATA = {
 
   // FAQ
   faq: [
-    { q: "Pourquoi une liste d'attente ?", a: "Production limitée, demande mondiale explosive, stratégie de marché. Certains modèles ont 5+ ans d'attente." },
-    { q: "Rolex produit-elle vraiment 1 million de montres ?", a: "C'est la rumeur, Rolex ne communique pas les chiffres officiels. Analystes estiment entre 800'000 et 1'050'000 unités/an." },
-    { q: "Quelle est la différence entre calibre 3135 et 3235 ?", a: "3135 (1988-2020) : 48h réserve. 3235 (2015+) : 70h, Chronergy, Parachrom, -2/+2 sec/jour vs -4/+6." },
-    { q: "Pourquoi les prix augmentent chaque année ?", a: "Inflation, matières premières, main d'œuvre suisse, investissement R&D, stratégie de marque de luxe." },
-    { q: "Est-ce un bon investissement ?", a: "Certaines références oui, mais pas toutes. Day-Date en or plein se déprécie. Acier sportives s'apprécient." },
+    { q: "Pourquoi une liste d'attente ?", a: "Production limitée, demande mondiale explosive, stratégie de marque. Certains modèles ont 5+ ans d'attente." },
+    { q: "Rolex produit-elle vraiment 1 million de montres ?", a: "C'est la rumeur, Rolex ne communique pas les chiffres. Analystes estiment entre 800'000 et 1'050'000 unités/an." },
+    { q: "Quelle est la différence entre calibre 3135 et 3235 ?", a: "3135 (1988-2020) : 48h réserve. 3235 (2015+) : 70h, Chronergy, Parachrom, -2/+2 sec/jour." },
+    { q: "Pourquoi les prix augmentent chaque année ?", a: "Inflation, matières premières, main d'œuvre suisse, investissement R&D, stratégie de luxe." },
+    { q: "Est-ce un bon investissement ?", a: "Certaines références oui, mais pas toutes. Acier sportives s'apprécient, or plein se déprécie." },
     { q: "Où sont fabriquées les Rolex ?", a: "Entièrement en Suisse dans 4 manufactures : Plan-les-Ouates, Bienne, Chêne-Bourg, Genève." }
   ]
 };
 
-// ==================== METADATA POUR SEO ====================
+// ==================== METADATA CORRECT ====================
 export const metadata: Metadata = {
   title: "Rolex - Guide Complet 2025 | HorloLearn",
   description: ROLEX_DATA.meta.description,
@@ -402,87 +399,66 @@ export const metadata: Metadata = {
   }
 };
 
-// ==================== COMPOSANTS RÉUTILISABLES ====================
-const Section = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-  <section className={`py-16 md:py-24 ${className}`}>{children}</section>
-);
-
-const Container = ({ children }: { children: React.ReactNode }) => (
-  <div className="max-w-7xl mx-auto px-4 md:px-6">{children}</div>
-);
-
-const Title = ({ children, subtitle }: { children: React.ReactNode; subtitle?: string }) => (
-  <div className="mb-12 md:mb-16">
-    <h2 className="text-3xl md:text-5xl font-bold text-center text-slate-900 dark:text-white font-serif">{children}</h2>
-    {subtitle && <p className="text-center text-slate-600 dark:text-slate-400 mt-4 max-w-3xl mx-auto">{subtitle}</p>}
-  </div>
-);
-
-const Card = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-  <div className={`bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden ${className}`}>{children}</div>
-);
-
-const ImageWithFallback = ({ src, alt, className }: { src: string; alt: string; className?: string }) => {
-  const [error, setError] = useState(false);
-  if (error) {
-    return <div className={`${className} bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-4xl`}>⌚</div>;
-  }
-  return <img src={src} alt={alt} className={className} onError={() => setError(true)} loading="lazy" />;
-};
-
-// ==================== COMPOSANTS PRINCIPAUX ====================
+// ==================== COMPOSANTS ====================
+// Hero
 const Hero = () => (
-  <Section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-slate-900 via-green-900 to-slate-900">
-    <div className="absolute inset-0 opacity-20">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Rolex_Submariner_Date_16610.jpg/1920px-Rolex_Submariner_Date_16610.jpg" alt="Rolex Background" className="w-full h-full object-cover" />
-    </div>
-    <Container>
-      <div className="relative z-10 text-center text-white max-w-5xl mx-auto">
-        <p className="text-green-400 uppercase tracking-widest text-sm mb-4">Manufacture Horlogère Suisse Depuis 1905</p>
-        <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold mb-6 font-serif bg-gradient-to-r from-white via-green-100 to-white bg-clip-text text-transparent">
-          ROLEX SA
-        </h1>
-        <p className="text-xl md:text-2xl mb-4 opacity-90">{ROLEX_DATA.heritage.tagline}</p>
-        <p className="text-lg md:text-xl mb-8 opacity-80 max-w-3xl mx-auto">
-          {ROLEX_DATA.meta.description}
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button className="px-8 py-4 bg-green-600 hover:bg-green-500 rounded-full font-semibold transition-all transform hover:scale-105">
-            Explorer l'Histoire
+  <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 text-white">
+    <div className="max-w-5xl mx-auto px-6 text-center">
+      <p className="text-green-400 uppercase tracking-widest mb-4">Manufacture Horlogère Suisse Depuis 1905</p>
+      <h1 className="text-6xl md:text-9xl font-bold mb-6 font-serif bg-gradient-to-r from-white to-green-200 bg-clip-text text-transparent">
+        ROLEX SA
+      </h1>
+      <p className="text-xl md:text-2xl mb-8">{ROLEX_DATA.meta.tagline}</p>
+      <p className="text-lg mb-8 opacity-80 max-w-3xl mx-auto">{ROLEX_DATA.meta.description}</p>
+      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        {['Explorer l\'Histoire', 'Collections 2025'].map((btn, i) => (
+          <button 
+            key={i}
+            className={`px-8 py-4 rounded-full font-semibold transition-all ${
+              i === 0 
+                ? 'bg-green-600 hover:bg-green-500' 
+                : 'border-2 border-white/50 hover:bg-white hover:text-slate-900'
+            }`}
+          >
+            {btn}
           </button>
-          <button className="px-8 py-4 border-2 border-white/50 hover:bg-white hover:text-slate-900 rounded-full font-semibold transition-all">
-            Collections 2025
-          </button>
-        </div>
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div><div className="text-3xl font-bold">1905</div><div className="text-sm opacity-80">Fondation</div></div>
-          <div><div className="text-3xl font-bold">4</div><div className="text-sm opacity-80">Manufactures</div></div>
-          <div><div className="text-3xl font-bold">30k+</div><div className="text-sm opacity-80">Employés</div></div>
-          <div><div className="text-3xl font-bold">-2/+2s</div><div className="text-sm opacity-80">Précision/jour</div></div>
-        </div>
+        ))}
       </div>
-    </Container>
-  </Section>
+      <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        {[
+          { value: '1905', label: 'Fondation' },
+          { value: '4', label: 'Manufactures' },
+          { value: '30k+', label: 'Employés' },
+          { value: '-2/+2s', label: 'Précision/jour' }
+        ].map((stat, i) => (
+          <div key={i}>
+            <div className="text-3xl font-bold">{stat.value}</div>
+            <div className="text-sm opacity-80">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
 );
 
+// Timeline
 const Timeline = () => (
-  <Section className="bg-white dark:bg-slate-900">
-    <Container>
-      <Title subtitle="15 dates qui ont façonné la légende">Histoire & Patrimoine</Title>
+  <section className="py-20 bg-white dark:bg-slate-900">
+    <div className="max-w-7xl mx-auto px-6">
+      <h2 className="text-4xl font-bold text-center mb-4 dark:text-white">Histoire & Patrimoine</h2>
+      <p className="text-center text-slate-600 dark:text-slate-400 mb-12">15 dates qui ont façonné la légende</p>
       <div className="relative">
         <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-green-500 to-transparent" />
         <div className="space-y-12">
           {ROLEX_DATA.timeline.map((item, i) => (
             <div key={i} className={`flex ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
               <div className="w-full md:w-5/12 md:px-8 ml-16 md:ml-0">
-                <Card>
-                  <ImageWithFallback src={item.image} alt={item.title} className="w-full h-64 object-cover" />
-                  <div className="p-6">
-                    <span className="text-3xl font-bold text-green-600 font-mono">{item.year}</span>
-                    <h3 className="text-2xl font-bold mt-2 mb-2 dark:text-white">{item.title}</h3>
-                    <p className="text-slate-600 dark:text-slate-400">{item.desc}</p>
-                  </div>
-                </Card>
+                <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all">
+                  <img src={item.image} alt={item.title} className="w-full h-64 object-cover rounded-lg mb-4" loading="lazy" />
+                  <span className="text-3xl font-bold text-green-600 font-mono">{item.year}</span>
+                  <h3 className="text-2xl font-bold mt-2 mb-2 dark:text-white">{item.title}</h3>
+                  <p className="text-slate-600 dark:text-slate-400">{item.desc}</p>
+                </div>
               </div>
               <div className="hidden md:block w-2/12 relative">
                 <div className="absolute left-1/2 top-6 transform -translate-x-1/2 w-6 h-6 bg-green-600 rounded-full border-4 border-white dark:border-slate-900 ring-4 ring-green-600" />
@@ -491,92 +467,91 @@ const Timeline = () => (
             </div>
           ))}
         </div>
-        <div className="mt-16 text-center">
-          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-            Rolex a marqué l'histoire horlogère avec des innovations majeures : l'étanchéité (1926), l'automatique (1931), la date (1945), et la précision moderne (-2/+2s/jour depuis 2015).
-          </p>
-        </div>
       </div>
-    </Container>
-  </Section>
+    </div>
+  </section>
 );
 
+// Collections
 const Collections = () => (
-  <Section className="bg-slate-50 dark:bg-slate-800">
-    <Container>
-      <Title subtitle="12 collections emblématiques, des centaines de références">Collections 2025</Title>
+  <section className="py-20 bg-slate-50 dark:bg-slate-800">
+    <div className="max-w-7xl mx-auto px-6">
+      <h2 className="text-4xl font-bold text-center mb-4 dark:text-white">Collections 2025</h2>
+      <p className="text-center text-slate-600 dark:text-slate-400 mb-12">12 collections emblématiques, des centaines de références</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {ROLEX_DATA.collections.map((collection) => (
-          <Card key={collection.id} className="h-full flex flex-col">
+        {ROLEX_DATA.collections.map((col) => (
+          <div key={col.id} className="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all h-full flex flex-col">
             <div className="relative">
-              <ImageWithFallback src={collection.image} alt={collection.name} className="w-full h-64 object-cover" />
-              <div className="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                {collection.category}
+              <img src={col.image} alt={col.name} className="w-full h-64 object-cover transition-transform group-hover:scale-105" loading="lazy" />
+              <div className="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                {col.category}
               </div>
             </div>
             <div className="p-6 flex-1 flex flex-col">
-              <div className="mb-4">
-                <h3 className="text-2xl font-bold dark:text-white">{collection.name}</h3>
-                <p className="text-green-600 font-medium">{collection.nickname}</p>
+              <div className="mb-3">
+                <h3 className="text-2xl font-bold dark:text-white">{col.name}</h3>
+                <p className="text-green-600 font-medium">{col.nickname}</p>
               </div>
-              <p className="text-slate-600 dark:text-slate-400 mb-4 flex-1">{collection.description}</p>
+              <p className="text-slate-600 dark:text-slate-400 mb-4 flex-1">{col.description}</p>
               
-              <div className="space-y-3 mb-4">
+              <div className="space-y-2 mb-4 text-sm">
                 <div className="flex justify-between border-b border-slate-200 dark:border-slate-700 pb-1">
-                  <span className="text-sm text-slate-500">Mouvement</span>
-                  <span className="font-semibold dark:text-white">{collection.movement}</span>
+                  <span className="text-slate-500">Mouvement</span>
+                  <span className="font-semibold dark:text-white">{col.movement}</span>
                 </div>
                 <div className="flex justify-between border-b border-slate-200 dark:border-slate-700 pb-1">
-                  <span className="text-sm text-slate-500">Boîtier</span>
-                  <span className="font-semibold dark:text-white">{collection.case}</span>
+                  <span className="text-slate-500">Boîtier</span>
+                  <span className="font-semibold dark:text-white">{col.case}</span>
                 </div>
                 <div className="flex justify-between border-b border-slate-200 dark:border-slate-700 pb-1">
-                  <span className="text-sm text-slate-500">Étanchéité</span>
-                  <span className="font-semibold dark:text-white">{collection.water}</span>
+                  <span className="text-slate-500">Étanchéité</span>
+                  <span className="font-semibold dark:text-white">{col.water}</span>
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-2 mb-4">
-                {collection.features.map((feature, i) => (
-                  <span key={i} className="text-xs px-3 py-1 bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 rounded-full">
+                {col.features.map((feature, i) => (
+                  <span key={i} className="text-xs px-2 py-1 bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 rounded-full">
                     {feature}
                   </span>
                 ))}
               </div>
 
               <div className="mt-auto pt-4 border-t border-slate-200 dark:border-slate-700">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-2xl font-bold text-green-600">{collection.price}</span>
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-xl font-bold text-green-600">{col.price}</span>
                   <span className={`px-3 py-1 rounded-full text-xs ${
-                    collection.availability.includes("Disponible") 
+                    col.availability.includes("Disponible") 
                       ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300" 
                       : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300"
                   }`}>
-                    {collection.availability}
+                    {col.availability}
                   </span>
                 </div>
-                <button className="w-full mt-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors">
+                <button className="w-full px-4 py-2 bg-slate-900 hover:bg-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors">
                   Voir les références
                 </button>
               </div>
             </div>
-          </Card>
+          </div>
         ))}
       </div>
-    </Container>
-  </Section>
+    </div>
+  </section>
 );
 
+// Movements
 const Movements = () => (
-  <Section className="bg-white dark:bg-slate-900">
-    <Container>
-      <Title subtitle="5 mouvements manufacture, tous certifiés Superlative Chronometer">Mouvements & Technologie</Title>
+  <section className="py-20 bg-white dark:bg-slate-900">
+    <div className="max-w-7xl mx-auto px-6">
+      <h2 className="text-4xl font-bold text-center mb-4 dark:text-white">Mouvements & Technologie</h2>
+      <p className="text-center text-slate-600 dark:text-slate-400 mb-12">5 mouvements manufacture, tous certifiés Superlative Chronometer</p>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
         <div className="space-y-8">
           {ROLEX_DATA.movements.map((movement, i) => (
-            <Card key={i} className="p-6">
+            <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
               <div className="flex items-start gap-4">
-                <ImageWithFallback src={movement.image} alt={movement.name} className="w-24 h-24 object-contain" />
+                <img src={movement.image} alt={movement.name} className="w-24 h-24 object-contain" loading="lazy" />
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold dark:text-white">{movement.name}</h3>
                   <p className="text-green-600 font-medium">{movement.type}</p>
@@ -601,57 +576,45 @@ const Movements = () => (
               <div className="mt-4 text-sm text-slate-600 dark:text-slate-400">
                 <strong>Utilisé dans :</strong> {movement.used.join(", ")}
               </div>
-            </Card>
+            </div>
           ))}
         </div>
         <div className="sticky top-8">
-          <Card className="p-6">
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
             <h3 className="text-2xl font-bold mb-4 dark:text-white">Innovations Clés Rolex</h3>
             <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <span className="text-2xl">🌀</span>
-                <div>
-                  <strong>Chronergy</strong>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">Echappement optimisé +15% d'efficacité</p>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-2xl">🔵</span>
-                <div>
-                  <strong>Parachrom Bleu</strong>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">Spiral anti-magnétique, 10x plus précis</p>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-2xl">💎</span>
-                <div>
-                  <strong>Cerachrom</strong>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">Céramique quasi indestructible, jamais ne s'oxyle</p>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-2xl">🏛️</span>
-                <div>
-                  <strong>Oyster</strong>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">Boîtier hermétique inventé 1926, toujours utilisé</p>
-                </div>
-              </li>
+              {[
+                { icon: "🌀", name: "Chronergy", desc: "Echappement optimisé +15% d'efficacité" },
+                { icon: "🔵", name: "Parachrom Bleu", desc: "Spiral anti-magnétique, 10x plus précis" },
+                { icon: "💎", name: "Cerachrom", desc: "Céramique quasi indestructible" },
+                { icon: "🏛️", name: "Oyster", desc: "Boîtier hermétique inventé 1926" }
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="text-2xl">{item.icon}</span>
+                  <div>
+                    <strong>{item.name}</strong>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">{item.desc}</p>
+                  </div>
+                </li>
+              ))}
             </ul>
-          </Card>
+          </div>
         </div>
       </div>
-    </Container>
-  </Section>
+    </div>
+  </section>
 );
 
+// Manufactures
 const Manufactures = () => (
-  <Section className="bg-slate-50 dark:bg-slate-800">
-    <Container>
-      <Title subtitle="4 manufactures, 100% production interne">La Production Rolex</Title>
+  <section className="py-20 bg-slate-50 dark:bg-slate-800">
+    <div className="max-w-7xl mx-auto px-6">
+      <h2 className="text-4xl font-bold text-center mb-4 dark:text-white">La Production Rolex</h2>
+      <p className="text-center text-slate-600 dark:text-slate-400 mb-12">4 manufactures, 100% production interne</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {ROLEX_DATA.manufactures.map((mfg, i) => (
-          <Card key={i} className="h-full flex flex-col">
-            <ImageWithFallback src={mfg.image} alt={mfg.name} className="w-full h-48 object-cover" />
+          <div key={i} className="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all h-full flex flex-col">
+            <img src={mfg.image} alt={mfg.name} className="w-full h-48 object-cover" loading="lazy" />
             <div className="p-4 flex-1 flex flex-col">
               <h3 className="text-xl font-bold dark:text-white">{mfg.name}</h3>
               <p className="text-green-600">{mfg.location}</p>
@@ -670,30 +633,28 @@ const Manufactures = () => (
                 </div>
               </div>
             </div>
-          </Card>
+          </div>
         ))}
       </div>
       <div className="mt-12 text-center">
         <p className="text-lg text-slate-600 dark:text-slate-400 max-w-4xl mx-auto">
-          Rolex est l'une des rares manufactures à produire **100% de ses composants en interne** : boîtiers, mouvements, cadrans, bracelets. Même les alliages d'or sont créés dans sa propre fonderie.
+          Rolex est l'une des rares manufactures à produire <strong>100% de ses composants en interne</strong> : boîtiers, mouvements, cadrans, bracelets. Même les alliages d'or sont créés dans sa propre fonderie.
         </p>
       </div>
-    </Container>
-  </Section>
+    </div>
+  </section>
 );
 
+// Certification
 const Certification = () => (
-  <Section className="bg-white dark:bg-slate-900">
-    <Container>
-      <Title subtitle="Bien plus strict que le COSC">Certification Superlative Chronometer</Title>
+  <section className="py-20 bg-white dark:bg-slate-900">
+    <div className="max-w-7xl mx-auto px-6">
+      <h2 className="text-4xl font-bold text-center mb-4 dark:text-white">Certification Superlative Chronometer</h2>
+      <p className="text-center text-slate-600 dark:text-slate-400 mb-12">Bien plus strict que le COSC</p>
       <div className="max-w-5xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-12">
           <div>
-            <ImageWithFallback 
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Rolex_Superlative_Chronometer.jpg/600px-Rolex_Superlative_Chronometer.jpg" 
-              alt="Certificat Superlative Chronometer" 
-              className="w-full rounded-xl shadow-lg"
-            />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Rolex_Superlative_Chronometer.jpg/600px-Rolex_Superlative_Chronometer.jpg" alt="Certificat" className="w-full rounded-xl shadow-lg" loading="lazy" />
           </div>
           <div>
             <h3 className="text-3xl font-bold mb-4 dark:text-white">{ROLEX_DATA.certification.title}</h3>
@@ -701,17 +662,15 @@ const Certification = () => (
             <p className="text-green-600 font-semibold">🛡️ Garantie de 5 ans incluse</p>
           </div>
         </div>
-        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {ROLEX_DATA.certification.tests.map((test, i) => (
-            <Card key={i} className="p-6 text-center">
+            <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg text-center">
               <div className="text-3xl font-bold text-green-600 mb-2">{test.value}</div>
               <h4 className="text-lg font-bold mb-2 dark:text-white">{test.name}</h4>
               <p className="text-sm text-slate-600 dark:text-slate-400">{test.detail}</p>
-            </Card>
+            </div>
           ))}
         </div>
-        
         <div className="mt-12 text-center p-8 bg-green-50 dark:bg-green-900/20 rounded-xl">
           <p className="text-lg text-slate-900 dark:text-white max-w-3xl mx-auto">
             <strong>Ce qui fait la différence :</strong> Le COSC teste les mouvements seuls. Rolex teste la montre 
@@ -720,14 +679,16 @@ const Certification = () => (
           </p>
         </div>
       </div>
-    </Container>
-  </Section>
+    </div>
+  </section>
 );
 
+// Pricing
 const Pricing = () => (
-  <Section className="bg-slate-50 dark:bg-slate-800">
-    <Container>
-      <Title subtitle="Prix officiels et disponibilités 2025">Valeur & Investissement</Title>
+  <section className="py-20 bg-slate-50 dark:bg-slate-800">
+    <div className="max-w-7xl mx-auto px-6">
+      <h2 className="text-4xl font-bold text-center mb-4 dark:text-white">Valeur & Investissement</h2>
+      <p className="text-center text-slate-600 dark:text-slate-400 mb-12">Prix officiels et disponibilités 2025</p>
       <div className="overflow-x-auto">
         <table className="w-full bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-lg">
           <thead className="bg-slate-900 dark:bg-slate-700 text-white">
@@ -775,7 +736,7 @@ const Pricing = () => (
             <h4 className="font-bold text-red-600 mb-2">❌ Qui se déprécie</h4>
             <ul className="text-sm space-y-1 text-slate-600 dark:text-slate-400">
               <li>• Or plein massif (Day-Date 36mm)</li>
-              <li>• Diamants sur boîtier (sauf rares)</li>
+              <li>• Diamants sur boîtier</li>
               <li>• Milgauss modernes</li>
             </ul>
           </div>
@@ -790,14 +751,16 @@ const Pricing = () => (
         </div>
         <p className="mt-6 text-sm text-slate-500">{ROLEX_DATA.pricing.investment}</p>
       </div>
-    </Container>
-  </Section>
+    </div>
+  </section>
 );
 
+// FAQ
 const FAQ = () => (
-  <Section className="bg-white dark:bg-slate-900">
-    <Container>
-      <Title subtitle="Ce que tout le monde demande sur Rolex">FAQ Rolex 2025</Title>
+  <section className="py-20 bg-white dark:bg-slate-900">
+    <div className="max-w-7xl mx-auto px-6">
+      <h2 className="text-4xl font-bold text-center mb-4 dark:text-white">FAQ Rolex 2025</h2>
+      <p className="text-center text-slate-600 dark:text-slate-400 mb-12">Ce que tout le monde demande sur Rolex</p>
       <div className="max-w-4xl mx-auto space-y-4">
         {ROLEX_DATA.faq.map((item, i) => (
           <details key={i} className="group bg-slate-50 dark:bg-slate-800 rounded-lg shadow hover:shadow-lg transition-all">
@@ -811,32 +774,29 @@ const FAQ = () => (
           </details>
         ))}
       </div>
-    </Container>
-  </Section>
+    </div>
+  </section>
 );
 
+// CTA
 const CTA = () => (
-  <Section className="bg-gradient-to-r from-slate-900 to-green-900 text-white">
-    <Container>
+  <section className="py-20 bg-gradient-to-r from-slate-900 to-green-900 text-white">
+    <div className="max-w-7xl mx-auto px-6">
       <div className="text-center max-w-4xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold mb-6 font-serif">Vous voulez en savoir plus ?</h2>
         <p className="text-xl mb-8 opacity-90">
           Rejoignez la communauté HorloLearn et recevez le guide exclusif "Rolex 2025 - Tout ce qu'il faut savoir"
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-          <input 
-            type="email" 
-            placeholder="Votre email" 
-            className="px-6 py-4 rounded-full text-slate-900 w-full sm:w-80 focus:outline-none focus:ring-4 focus:ring-green-400"
-          />
+          <input type="email" placeholder="Votre email" className="px-6 py-4 rounded-full text-slate-900 w-full sm:w-80 focus:outline-none focus:ring-4 focus:ring-green-400" />
           <button className="px-8 py-4 bg-green-600 hover:bg-green-500 rounded-full font-bold transition-all transform hover:scale-105">
             Télécharger le Guide
           </button>
         </div>
         <p className="text-sm opacity-70">+ Accès aux archives complètes, analyses des nouveautés, sélection des meilleures références</p>
       </div>
-    </Container>
-  </Section>
+    </div>
+  </section>
 );
 
 // ==================== PAGE PRINCIPALE ====================
@@ -854,18 +814,12 @@ export default function RolexPage() {
       <CTA />
       
       <footer className="py-12 bg-slate-950 text-white text-center">
-        <Container>
+        <div className="max-w-7xl mx-auto px-6">
           <p className="mb-4">© 2025 HorloLearn - La référence horlogère suisse</p>
           <p className="text-sm text-slate-400">Toutes les images provenant de <a href="https://commons.wikimedia.org" className="text-green-400 hover:underline">Wikimedia Commons</a> (sources libres)</p>
           <p className="text-xs text-slate-500 mt-2">ROLEX SA est une marque déposée. Ce contenu est éducatif et non affilié à Rolex.</p>
-        </Container>
+        </div>
       </footer>
     </main>
   );
 }
-
-// ==================== TYPE DEFINITIONS ====================
-type TimelineItem = typeof ROLEX_DATA.timeline[0];
-type Collection = typeof ROLEX_DATA.collections[0];
-type Movement = typeof ROLEX_DATA.movements[0];
-type Manufacture = typeof ROLEX_DATA.manufactures[0];
