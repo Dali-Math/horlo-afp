@@ -902,17 +902,17 @@ const toggleCompare = (id: number | string) => {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
-              onClick={() => document.getElementById('timeline').scrollIntoView({ behavior: 'smooth' })}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 rounded-full font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-105 shadow-2xl flex items-center gap-3 justify-center"
-            >
-              <BookOpen className="w-6 h-6" />
-              Explorer l'Histoire
-            </button>
-            <button 
-              onClick={() => document.getElementById('collections').scrollIntoView({ behavior: 'smooth' })}
-              className="bg-white/10 backdrop-blur-xl px-8 py-4 rounded-full font-bold text-lg border-2 border-white/20 hover:bg-white/20 transition-all hover:scale-105 shadow-2xl flex items-center gap-3 justify-center"
-            >
-              <Watch className="w-6 h-6" />
+  onClick={() => document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' })}
+  className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 rounded-full font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-105 shadow-2xl flex items-center gap-3 justify-center"
+>
+  <BookOpen className="w-6 h-6" />
+  Explorer l'Histoire
+</button>
+<button 
+  onClick={() => document.getElementById('collections')?.scrollIntoView({ behavior: 'smooth' })}
+  className="bg-white/10 backdrop-blur-xl px-8 py-4 rounded-full font-bold text-lg border-2 border-white/20 hover:bg-white/20 transition-all hover:scale-105 shadow-2xl flex items-center justify-center gap-3"
+>
+  <Watch className="w-6 h-6" />
               Voir les Collections
             </button>
           </div>
