@@ -1,20 +1,19 @@
 'use client';
-import { BookOpen } from 'lucide-react'
-import { Target } from 'lucide-react'
+
 import React, { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { 
   ChevronLeft, Crown, Award, Calendar, Zap, Shield, 
   Trophy, Heart, TrendingUp, Globe, Users, 
-  Watch, Settings, Diamond, Sparkles, Clock 
+  Watch, Settings, Diamond, Sparkles, Clock, BookOpen 
 } from 'lucide-react';
 
 export default function PatekPhilippeUltimatePage() {
   const [selectedEra, setSelectedEra] = useState<string>('all');
   const [isPlaying, setIsPlaying] = useState(false);
   const [hoveredWatch, setHoveredWatch] = useState<string | null>(null);
-  const [selectedComplication, setSelectedComplication] = useState<string>('');
+  const [openComplications, setOpenComplications] = useState<Record<string, boolean>>({});
 
   // Données enrichies
   const eras = {
@@ -26,7 +25,7 @@ export default function PatekPhilippeUltimatePage() {
   };
 
   const timelineData = [
-    { id: '1839', year: 1839, title: 'Fondation de Patek, Czapek & Cie', description: 'Antoine Norbert de Patek s\'associe avec François Czapek à Genève.', type: 'foundation' },
+    { id: '1839', year: 1839, title: 'Fondation', description: 'Patek, Czapek & Cie créée à Genève par Antoine Norbert de Patek.', type: 'foundation' },
     { id: '1845', year: 1845, title: 'Jean-Adrien Philippe', description: 'Invention du remontoir à couronne révolutionnaire.', type: 'foundation' },
     { id: '1851', year: 1851, title: 'Premier Client Royal', description: 'Reine Victoria achète une Patek à l\'Exposition de Londres.', type: 'golden' },
     { id: '1868', year: 1868, title: 'Première Montre-Bracelet', description: 'Pour la comtesse Koscowicz, 50 ans avant l\'ère du bracelet.', type: 'golden' },
@@ -44,7 +43,7 @@ export default function PatekPhilippeUltimatePage() {
       name: 'Calatrava',
       year: 1932,
       description: 'L\'essence de l\'élégance horlogère. Design Bauhaus intemporel, lignes pures et raffinées.',
-      characteristics: ['Cadran émail grand feu', 'Boîtier ultra-fin 7mm', 'Mouvement automatique 30-255 PS', 'Finissage manuel'],
+      characteristics: ['Cadran émail grand feu', 'Boîtier ultra-fin 7mm', 'Mouvement automatique 30-255 PS'],
       price: '25 000 - 150 000 €',
       models: ['Ref. 6119', 'Ref. 5227', 'Ref. 6007G']
     },
@@ -52,7 +51,7 @@ export default function PatekPhilippeUltimatePage() {
       name: 'Nautilus',
       year: 1976,
       description: 'L\'icône du sport-luxe. Boîtier octogonal inspiré des hublots de paquebots, design révolutionnaire.',
-      characteristics: ['Boîtier en acier inoxydable', 'Lunette octogonale', 'Étanchéité 120m', 'Bracelet intégré'],
+      characteristics: ['Boîtier en acier inoxydable', 'Lunette octogonale', 'Étanchéité 120m'],
       price: '35 000 - 500 000 €',
       models: ['Ref. 5711/1A', 'Ref. 5811/1G', 'Ref. 5990/1A']
     },
@@ -60,7 +59,7 @@ export default function PatekPhilippeUltimatePage() {
       name: 'Aquanaut',
       year: 1997,
       description: 'Sportivité moderne. Bracelet "Tropical" composite résistant, design jeune et audacieux.',
-      characteristics: ['Bracelet composite "Tropical"', 'Étanchéité 120m', 'Mouvement automatique', 'Cadran gaufré'],
+      characteristics: ['Bracelet composite "Tropical"', 'Étanchéité 120m', 'Mouvement automatique'],
       price: '20 000 - 250 000 €',
       models: ['Ref. 5167A', 'Ref. 5168G', 'Ref. 5968A']
     },
@@ -68,19 +67,19 @@ export default function PatekPhilippeUltimatePage() {
       name: 'Grandes Complications',
       year: 'Multiples',
       description: 'Le sommet de l\'art horlogère. Quantièmes perpétuels, répétitions minutes, tourbillons.',
-      characteristics: ['20+ complications possibles', '1 300+ heures de fabrication', 'Mouvements uniques', 'Pièces uniques'],
+      characteristics: ['20+ complications possibles', '1 300+ heures de fabrication', 'Mouvements uniques'],
       price: '100 000 - 2 500 000 €',
       models: ['Ref. 5303R', 'Ref. 6301P', 'Ref. 5175']
     }
   ];
 
   const complications = [
-    { name: 'Quantième Perpétuel', description: 'Affiche automatiquement la date correcte jusqu\'en 2100' },
-    { name: 'Répétition Minutes', description: 'Sonne les heures, quarts et minutes sur demande' },
-    { name: 'Tourbillon', description: 'Compense la gravité pour une précision optimale' },
-    { name: 'Chronographe Rattrapante', description: 'Chronomètre des intervalles simultanés' },
-    { name: 'Équation du Temps', description: 'Différence entre temps solaire et temps moyen' },
-    { name: 'Heure Universelle', description: '24 fuseaux horaires sur un cadran' }
+    { name: 'Quantième Perpétuel', description: 'Affiche automatiquement la date correcte jusqu\'en 2100 sans réglage manuel.' },
+    { name: 'Répétition Minutes', description: 'Sonne les heures, les quarts et les minutes sur demande par activation d\'un poussoir.' },
+    { name: 'Tourbillon', description: 'Compense les effets de la gravité sur le mouvement pour une précision optimale.' },
+    { name: 'Chronographe Rattrapante', description: 'Permet de chronométrer des intervalles de temps simultanés avec plusieurs aiguilles.' },
+    { name: 'Équation du Temps', description: 'Affiche la différence entre le temps solaire vrai et le temps moyen civil.' },
+    { name: 'Heure Universelle', description: 'Affiche 24 fuseaux horaires simultanément sur un cadran rotatif.' }
   ];
 
   return (
@@ -102,7 +101,7 @@ export default function PatekPhilippeUltimatePage() {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
         {/* HEADER CINEMATIQUE */}
         <header className="relative h-screen overflow-hidden">
-          {/* Video Hero */}
+          {/* Hero Visual */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-slate-900">
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center text-white">
@@ -301,42 +300,50 @@ export default function PatekPhilippeUltimatePage() {
               {collections.map((collection) => (
                 <div 
                   key={collection.name}
-                  className="group relative rounded-2xl overflow-hidden cursor-pointer bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:shadow-2xl transition-all"
-                  onMouseEnter={() => setHoveredWatch(collection.name)}
-                  onMouseLeave={() => setHoveredWatch(null)}
+                  className="group relative rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:shadow-2xl transition-all"
                 >
-                  <div className="h-80 bg-gradient-to-br from-blue-50 to-white dark:from-blue-950/30 dark:to-slate-800 
-                               flex items-center justify-center relative">
-                    <Watch className="w-32 h-32 text-blue-600 dark:text-blue-400 transition-transform group-hover:scale-110" />
-                    {hoveredWatch === collection.name && (
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
-                        <div className="text-white">
-                          <div className="text-lg font-bold mb-1">{collection.name}</div>
-                          <div className="text-sm opacity-90">{collection.year}</div>
-                        </div>
+                  <div className="relative h-80">
+                    {/* Visualisation */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-white dark:from-blue-950/30 dark:to-slate-800 
+                                 flex items-center justify-center">
+                      <Watch className="w-32 h-32 text-blue-600 dark:text-blue-400 transition-transform group-hover:scale-110" />
+                    </div>
+                    
+                    {/* Overlay au hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent opacity-0 
+                                   group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-6">
+                      <div className="text-white text-center">
+                        <div className="text-lg font-bold mb-1">{collection.name}</div>
+                        <div className="text-sm opacity-90">{collection.year} • {collection.models.length} modèles</div>
                       </div>
-                    )}
+                    </div>
+
+                    {/* Badge prix */}
+                    <div className="absolute top-4 right-4 bg-white/90 dark:bg-slate-800/90 px-3 py-1 rounded-full">
+                      <span className="text-xs font-bold text-slate-900 dark:text-white">
+                        {collection.price}
+                      </span>
+                    </div>
                   </div>
                   
                   <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white">{collection.name}</h3>
-                      <span className="text-xs font-bold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-full">
-                        {collection.year}
-                      </span>
-                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{collection.name}</h3>
                     <p className="text-slate-600 dark:text-slate-400 mb-4 text-sm leading-relaxed">
                       {collection.description}
                     </p>
-                    <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
-                      <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
-                        {collection.price}
-                      </div>
-                      <button className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 
-                                       font-medium text-sm flex items-center gap-1 transition-all">
-                        Détails →
-                      </button>
+                    
+                    <div className="space-y-2 mb-4">
+                      {collection.characteristics.slice(0, 2).map((char, i) => (
+                        <div key={i} className="flex items-center gap-2 text-xs">
+                          <Sparkles className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                          <span className="text-slate-700 dark:text-slate-300">{char}</span>
+                        </div>
+                      ))}
                     </div>
+
+                    <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium text-sm transition-all">
+                      Voir la collection →
+                    </button>
                   </div>
                 </div>
               ))}
@@ -344,7 +351,7 @@ export default function PatekPhilippeUltimatePage() {
           </div>
         </section>
 
-        {/* SIMULATEUR COMPLICATIONS */}
+        {/* SIMULATEUR COMPLICATIONS CORRIGÉ */}
         <section className="py-20 bg-slate-50 dark:bg-slate-800">
           <div className="max-w-7xl mx-auto px-8">
             <h2 className="text-5xl font-bold text-center mb-4 text-slate-900 dark:text-white">
@@ -356,6 +363,7 @@ export default function PatekPhilippeUltimatePage() {
 
             <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 border border-slate-200 dark:border-slate-700">
               <div className="grid md:grid-cols-2 gap-12 items-center">
+                {/* Visualisation 3D */}
                 <div className="bg-gradient-to-br from-blue-50 to-white dark:from-blue-950/30 dark:to-slate-800 
                              rounded-xl p-8 h-96 flex items-center justify-center border-2 border-dashed border-blue-300 dark:border-blue-700">
                   <div className="text-center">
@@ -365,19 +373,36 @@ export default function PatekPhilippeUltimatePage() {
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  {complications.map((comp, index) => (
-                    <div 
-                      key={comp.name}
-                      className="bg-white dark:bg-slate-800 rounded-xl p-4 border-2 border-slate-200 dark:border-slate-700 hover:border-blue-400 transition-all cursor-pointer"
-                      onClick={() => setSelectedComplication(selectedComplication === comp.name ? '' : comp.name)}
-                    >
-                      <div className="flex items-center justify-between">
-                        <h4 className="text-lg font-bold text-slate-900 dark:text-white">{comp.name}</h4>
-                        <ChevronLeft className={`w-5 h-5 text-slate-400 transition-transform ${selectedComplication === comp.name ? '-rotate-90' : 'rotate-180'}`} />
-                      </div>
-                      {selectedComplication === comp.name && (
-                        <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">{comp.description}</p>
+                {/* Liste complications avec état individuel */}
+                <div className="space-y-3">
+                  {complications.map((comp) => (
+                    <div key={comp.name} className="border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                      <button
+                        type="button"
+                        onClick={() => setOpenComplications(prev => ({
+                          ...prev,
+                          [comp.name]: !prev[comp.name]
+                        }))}
+                        className="w-full p-4 flex items-center justify-between bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                            <span className="text-blue-600 dark:text-blue-400 text-lg">⚙️</span>
+                          </div>
+                          <h4 className="text-lg font-bold text-slate-900 dark:text-white">{comp.name}</h4>
+                        </div>
+                        <ChevronLeft className={`w-5 h-5 text-slate-400 transition-transform ${
+                          openComplications[comp.name] ? '-rotate-90' : 'rotate-180'
+                        }`} />
+                      </button>
+                      
+                      {openComplications[comp.name] && (
+                        <div className="px-4 pb-4 bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700">
+                          <p className="text-slate-600 dark:text-slate-400 text-sm pt-4">{comp.description}</p>
+                          <button className="mt-3 text-blue-600 dark:text-blue-400 text-xs font-medium hover:underline">
+                            Voir les modèles équipés →
+                          </button>
+                        </div>
                       )}
                     </div>
                   ))}
