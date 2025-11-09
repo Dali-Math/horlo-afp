@@ -17,8 +17,8 @@ export default function PatekPhilippeUltimate() {
   const [activeSection, setActiveSection] = useState('overview');
   const [selectedEra, setSelectedEra] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [favorites, setFavorites] = useState([]);
-  const [compareList, setCompareList] = useState([]);
+  const [favorites, setFavorites] = useState<(number | string)[]>([]);
+  const [compareList, setCompareList] = useState<(number | string)[]>([]);
   const [showComparator, setShowComparator] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [konamiProgress, setKonamiProgress] = useState(0);
@@ -816,19 +816,19 @@ export default function PatekPhilippeUltimate() {
   }, [konamiProgress]);
 
   // ============ HANDLERS ============
-  const toggleFavorite = (id) => {
-    setFavorites(prev => 
-      prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
-    );
-  };
+  const toggleFavorite = (id: number | string) => {
+  setFavorites(prev => 
+    prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
+  );
+};
 
-  const toggleCompare = (id) => {
-    if (compareList.includes(id)) {
-      setCompareList(prev => prev.filter(c => c !== id));
-    } else if (compareList.length < 3) {
-      setCompareList(prev => [...prev, id]);
-    }
-  };
+const toggleCompare = (id: number | string) => {
+  if (compareList.includes(id)) {
+    setCompareList(prev => prev.filter(c => c !== id));
+  } else if (compareList.length < 3) {
+    setCompareList(prev => [...prev, id]);
+  }
+};
 
   const filteredCollections = encyclopedicData.collections.filter(c => {
     if (activeFilter === 'all') return true;
