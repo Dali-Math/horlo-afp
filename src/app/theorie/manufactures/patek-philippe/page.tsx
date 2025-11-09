@@ -109,7 +109,6 @@ const PatekPhilippePage: React.FC = () => {
       setVantaEffect(effect);
     }
 
-    // Scroll reveal animation
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
@@ -141,6 +140,9 @@ const PatekPhilippePage: React.FC = () => {
         <meta name="description" content="Depuis 1839, Patek Philippe perpétue la tradition horlogère suisse avec une passion inébranlable pour la perfection" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <Script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" strategy="beforeInteractive" />
+      <Script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js" strategy="beforeInteractive" />
 
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
@@ -209,7 +211,7 @@ const PatekPhilippePage: React.FC = () => {
         <div id="vanta-bg" className="vanta-bg"></div>
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
           <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">
-            L'Excellence<br>Horlogère
+            L&apos;Excellence<br/>Horlogère
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
             Depuis 1839, Patek Philippe perpétue la tradition horlogère suisse avec une passion inébranlable pour la perfection
@@ -242,7 +244,7 @@ const PatekPhilippePage: React.FC = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Un Siècle d'Excellence</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Un Siècle d&apos;Excellence</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Chaque garde-temps Patek Philippe est le fruit de siècles de savoir-faire transmis de génération en génération
             </p>
@@ -278,7 +280,7 @@ const PatekPhilippePage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Collections Iconiques</h2>
-            <p className="text-xl text-gray-600">Découvrez les garde-temps qui ont marqué l'histoire de l'horlogerie</p>
+            <p className="text-xl text-gray-600">Découvrez les garde-temps qui ont marqué l&apos;histoire de l&apos;horlogerie</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -311,7 +313,7 @@ const PatekPhilippePage: React.FC = () => {
           <div className="text-center mb-16 scroll-reveal">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">Innovation Constante</h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Patek Philippe continue de repousser les limites de l'horlogerie avec des innovations révolutionnaires
+              Patek Philippe continue de repousser les limites de l&apos;horlogerie avec des innovations révolutionnaires
             </p>
           </div>
           
@@ -328,7 +330,7 @@ const PatekPhilippePage: React.FC = () => {
               <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i className="fas fa-award text-2xl text-white"></i>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Brevets d'invention</h3>
+              <h3 className="text-xl font-semibold mb-2">Brevets d&apos;invention</h3>
               <p className="text-gray-400">Plus de 100 brevets déposés au fil des décennies</p>
             </div>
             
@@ -344,8 +346,8 @@ const PatekPhilippePage: React.FC = () => {
               <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i className="fas fa-rocket text-2xl text-white"></i>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Technologie d'avenir</h3>
-              <p className="text-gray-400">Des innovations qui façonneront l'horlogerie de demain</p>
+              <h3 className="text-xl font-semibold mb-2">Technologie d&apos;avenir</h3>
+              <p className="text-gray-400">Des innovations qui façonneront l&apos;horlogerie de demain</p>
             </div>
           </div>
         </div>
@@ -356,7 +358,7 @@ const PatekPhilippePage: React.FC = () => {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">Devenez Gardien du Temps</h2>
           <p className="text-xl text-gray-300 mb-8">
-            Rejoignez la longue lignée de collectionneurs qui perpétuent l'héritage Patek Philippe
+            Rejoignez la longue lignée de collectionneurs qui perpétuent l&apos;héritage Patek Philippe
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
@@ -369,7 +371,7 @@ const PatekPhilippePage: React.FC = () => {
               onClick={() => router.push('/heritage')}
               className="border-2 border-yellow-600 text-yellow-600 px-8 py-4 rounded-full font-semibold hover:bg-yellow-600 hover:text-white transition-all duration-300"
             >
-              Découvrir l'héritage
+              Découvrir l&apos;héritage
             </button>
           </div>
         </div>
@@ -481,31 +483,9 @@ const PatekPhilippePage: React.FC = () => {
           transform: translateY(-10px);
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
-        
-        .timeline-item {
-          position: relative;
-          margin-bottom: 4rem;
-          opacity: 0;
-          transform: translateY(50px);
-          transition: all 0.8s ease;
-        }
-        
-        .timeline-item.revealed {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        
-        .timeline-item:nth-child(odd) .timeline-content {
-          margin-right: 55%;
-          text-align: right;
-        }
-        
-        .timeline-item:nth-child(even) .timeline-content {
-          margin-left: 55%;
-          text-align: left;
-        }
-        
-        .timeline-marker {
-          position: absolute;
-          left: 50%;
-          top:
+      `}</style>
+    </>
+  );
+};
+
+export default PatekPhilippePage;
