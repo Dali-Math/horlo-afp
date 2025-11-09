@@ -885,6 +885,110 @@ const CTA = () => (
   </section>
 );
 
+// Nouvelle section Philosophie plus impactante
+const Philosophy = () => (
+  <section className="py-20 bg-white dark:bg-slate-900">
+    <div className="max-w-7xl mx-auto px-6">
+      <h2 className="text-4xl font-bold text-center mb-12 dark:text-white">Pourquoi Rolex est unique</h2>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        <div>
+          <h3 className="text-3xl font-bold mb-6 dark:text-white">La Vision originelle</h3>
+          <blockquote className="border-l-4 border-green-600 pl-6 mb-6 text-lg italic text-slate-700 dark:text-slate-300">
+            "Je pense que la montre-bracelet est destinée à un brillant avenir, notamment si on parvient à la rendre précise, étanche et robuste." 
+            <footer className="text-sm mt-2 text-green-600 font-semibold">— Hans Wilsdorf, 1905</footer>
+          </blockquote>
+          <p className="text-slate-600 dark:text-slate-400 mb-4">
+            Cette vision a guidé chaque décision Rolex depuis 1905. Lorsque la plupart des montres étaient des objets fragiles, 
+            Wilsdorf a créé un outil précis et indestructible pour la vie moderne.
+          </p>
+          <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl">
+            <h4 className="font-bold text-green-700 dark:text-green-400 mb-3">Les 3 piliers fondateurs</h4>
+            <ul className="space-y-2 text-slate-600 dark:text-slate-400">
+              <li className="flex items-start gap-3"><span className="text-green-600 mt-1">✓</span> <span><strong>Précision absolue</strong> : aller au-delà des standards officiels</span></li>
+              <li className="flex items-start gap-3"><span className="text-green-600 mt-1">✓</span> <span><strong>Étanchéité totale</strong> : l'Oyster, boîtier hermétique iconique</span></li>
+              <li className="flex items-start gap-3"><span className="text-green-600 mt-1">✓</span> <span><strong>Fiabilité légendaire</strong> : une montre pour la vie, transmissible</span></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-2 gap-6">
+          {[
+            { icon: "🏆", title: "100% Manufacture", desc: "Seule marque à produire totalement en interne : alliages d'or, mouvements, cadrans, bracelets" },
+            { icon: "🧪", title: "Recherche d'avant-garde", desc: "Laboratoires internes en nanotechnologie, tribologie, matériaux composites" },
+            { icon: "⏱️", title: "2 fois plus exigeante", desc: "Certification Superlative Chronometer : 2x plus stricte que le COSC officiel" },
+            { icon: "🌍", title: "Testée dans le monde réel", desc: "Chaque montre testée sur simulateur avant livraison : chocs, pression, climats extrêmes" }
+          ].map((item, i) => (
+            <div key={i} className="bg-slate-50 dark:bg-slate-800 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all text-center">
+              <div className="text-4xl mb-3">{item.icon}</div>
+              <h4 className="font-bold mb-2 dark:text-white">{item.title}</h4>
+              <p className="text-sm text-slate-600 dark:text-slate-400">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Section Impact historique */}
+      <div className="bg-gradient-to-r from-slate-900 to-green-900 text-white rounded-2xl p-12 mb-16">
+        <h3 className="text-3xl font-bold mb-8 text-center">L'impact sur l'horlogerie mondiale</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h4 className="text-xl font-bold mb-4 text-green-300">1926 : L'étanchéité</h4>
+            <p className="text-slate-200">Rolex invente la première montre hermétique. Aujourd'hui, TOUTES les montres de sport sont étanches grâce à cette innovation.</p>
+          </div>
+          <div>
+            <h4 className="text-xl font-bold mb-4 text-green-300">1931 : L'automatique moderne</h4>
+            <p className="text-slate-200">Le rotor Perpetual à 360° devient le standard de l'industrie. 90% des montres automatiques utilisent ce principe aujourd'hui.</p>
+          </div>
+          <div>
+            <h4 className="text-xl font-bold mb-4 text-green-300">1950s : Les tool watches</h4>
+            <p className="text-slate-200">Rolex crée le concept de montre-outil : Submariner, GMT-Master, Daytona. Une montre pour chaque profession.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Section Philosophie actuelle */}
+      <div className="text-center max-w-4xl mx-auto">
+        <h3 className="text-3xl font-bold mb-6 dark:text-white">Une philosophie inchangée depuis 120 ans</h3>
+        <p className="text-xl text-slate-600 dark:text-slate-400 mb-8">
+          Rolex ne suit pas les tendances. Elle les crée. Chaque nouvelle montre doit répondre à une question simple : 
+          <span className="block mt-4 text-2xl font-bold text-green-600 font-serif">"Est-ce le meilleur outil pour cette mission ?"</span>
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left mt-12">
+          <div className="bg-slate-50 dark:bg-slate-800 p-8 rounded-xl shadow-lg">
+            <h4 className="text-xl font-bold mb-4 dark:text-white">🎯 La quête de l'excellence</h4>
+            <ul className="space-y-3 text-slate-600 dark:text-slate-400">
+              <li>Une seule qualité de production : la meilleure possible</li>
+              <li>Aucun compromis sur les matériaux (acier 904L, or 18ct maison)</li>
+              <li>14 brevets pour un seul mouvement (calibre 3235)</li>
+              <li>Testée 7 fois, vérifiée 70 heures, garantie 5 ans</li>
+            </ul>
+          </div>
+          <div className="bg-slate-50 dark:bg-slate-800 p-8 rounded-xl shadow-lg">
+            <h4 className="text-xl font-bold mb-4 dark:text-white">💎 Le luxe par la performance</h4>
+            <ul className="space-y-3 text-slate-600 dark:text-slate-400">
+              <li>Pas de marketing agressif : le produit parle de lui-même</li>
+              <li>Une couronne sur le boîtier, pas de logos criards</li>
+              <li>Des ambassadeurs qui utilisent vraiment la montre (explorateurs, athlètes)</li>
+              <li>Valeur de revente : le marché reconnaît la qualité</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Citation finale */}
+      <div className="mt-16 p-8 bg-green-50 dark:bg-green-900/20 rounded-xl border-l-4 border-green-600">
+        <blockquote className="text-2xl font-serif text-center text-slate-800 dark:text-white italic">
+          "Rolex n'est pas une montre de luxe. C'est une montre de précision qui est devenue un luxe par sa qualité."
+        </blockquote>
+        <p className="text-center mt-4 text-sm text-green-600 font-semibold">
+          — Philosophes de l'horlogerie indépendante
+        </p>
+      </div>
+    </div>
+  </section>
+);
+
 // ==================== PAGE PRINCIPALE ====================
 export default function RolexPage() {
   return (
@@ -895,7 +999,7 @@ export default function RolexPage() {
       <Movements />
       <Manufactures />
       <Certification />
-      <Pricing />
+      <Philosophy />
       <FAQ />
       <CTA />
       
