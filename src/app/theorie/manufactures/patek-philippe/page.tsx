@@ -800,7 +800,7 @@ export default function PatekPhilippeUltimate() {
   }, []);
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (KONAMI_CODE[konamiProgress] === e.key) {
         const newProgress = konamiProgress + 1;
         setKonamiProgress(newProgress);
