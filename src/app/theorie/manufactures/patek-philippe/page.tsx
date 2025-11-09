@@ -12,7 +12,7 @@ import {
 
 const KONAMI_CODE = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
 
-export default function PatekPhilippePage() {   return (     <div>       <h1>Patek Philippe</h1>       <p>Bienvenue dans la section dédiée à Patek Philippe.</p>     </div>   ); }
+export default function PatekPhilippeUltimate() {
   // ============ STATES AVANCÉS ============
   const [activeSection, setActiveSection] = useState('overview');
   const [selectedEra, setSelectedEra] = useState('all');
