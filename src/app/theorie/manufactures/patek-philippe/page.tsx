@@ -13,6 +13,8 @@ import {
 
 const KONAMI_CODE = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
 
+const KONAMI_CODE = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
 export default function PatekPhilippeUltimate() {
   // ============ STATES AVANCÉS ============
   const [activeSection, setActiveSection] = useState<string>('overview');
@@ -22,7 +24,7 @@ export default function PatekPhilippeUltimate() {
   const [compareList, setCompareList] = useState<string[]>([]);
   const [showComparator, setShowComparator] = useState<boolean>(false);
   const [scrollProgress, setScrollProgress] = useState<number>(0);
-  const [konamiProgress, setKonamiProgress] = useState<number>(0);
+  const [crownClickCount, setCrownClickCount] = useState<number>(0);
   const [expertMode, setExpertMode] = useState<boolean>(false);
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [userPreferences, setUserPreferences] = useState({
@@ -800,21 +802,21 @@ export default function PatekPhilippeUltimate() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (KONAMI_CODE[konamiProgress] === e.key) {
-        const newProgress = konamiProgress + 1;
-        setKonamiProgress(newProgress);
-        if (newProgress === KONAMI_CODE.length) {
-          setExpertMode(true);
-        }
-      } else {
-        setKonamiProgress(0);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [konamiProgress]);
+  // Handler pour activer le mode expert en cliquant 5× sur la Crown
+  const handleCrownClick = () => {
+    const newCount = crownClickCount + 1;
+    setCrownClickCount(newCount);
+    
+    if (newCount === 5) {
+      setExpertMode(true);
+      setCrownClickCount(0); // Reset counter
+    }
+    
+    // Reset counter après 2 secondes d'inactivité
+    setTimeout(() => {
+      setCrownClickCount(0);
+    }, 2000);
+  };
 
   // ============ HANDLERS ============
   const toggleFavorite = (id: string) => {
@@ -882,8 +884,19 @@ export default function PatekPhilippeUltimate() {
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-30" />
         
         <div className="relative z-10 max-w-7xl mx-auto px-8 text-center">
-          <div className="flex justify-center mb-8">
-            <Crown className="w-24 h-24 text-yellow-400 animate-pulse" />
+          <div 
+            className="flex justify-center mb-8 cursor-pointer relative"
+            onClick={handleCrownClick}
+            title={crownClickCount > 0 ? `${crownClickCount}/5 clics...` : "Cliquez 5× pour le Mode Expert"}
+          >
+            <Crown className={`w-24 h-24 text-yellow-400 transition-all ${
+              crownClickCount > 0 ? 'animate-bounce scale-110' : 'animate-pulse'
+            }`} />
+            {crownClickCount > 0 && crownClickCount < 5 && (
+              <div className="absolute -bottom-2 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full">
+                {crownClickCount}/5
+              </div>
+            )}
           </div>
           
           <h1 className="text-7xl md:text-9xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-yellow-300 to-white">
@@ -1626,10 +1639,9 @@ export default function PatekPhilippeUltimate() {
 
           {!expertMode && (
             <div className="mt-12 bg-yellow-500/20 border-2 border-yellow-400/50 rounded-2xl p-6 max-w-2xl mx-auto">
-              <p className="text-yellow-300 font-bold mb-2">🎮 Easter Egg Caché</p>
+              <p className="text-yellow-300 font-bold mb-2">🎮 Mode Expert Caché</p>
               <p className="text-sm text-white/80">
-                Tapez le code Konami pour débloquer le Mode Expert avec données exclusives :<br/>
-                <span className="font-mono text-yellow-300">↑ ↑ ↓ ↓ ← → ← → B A</span>
+                Cliquez 5 fois rapidement sur la couronne 👑 en haut de la page pour débloquer les données exclusives !
               </p>
             </div>
           )}
