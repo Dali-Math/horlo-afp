@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -9,10 +11,78 @@ declare global {
   }
 }
 
-const HomePage: React.FC = () => {
+const PatekPhilippePage: React.FC = () => {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [vantaEffect, setVantaEffect] = useState<any>(null);
+
+  const collections = [
+    {
+      id: 'nautilus',
+      name: 'Nautilus',
+      price: '€35,000',
+      description: 'Le symbole du luxe sportif, alliant robustesse et élégance dans un design iconique',
+      image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400&h=400&fit=crop',
+      category: 'sport',
+      specs: {
+        'Boîtier': 'Acier inoxydable 5711/1A',
+        'Mouvement': 'Calibre 26-330 S C',
+        'Étanchéité': '120m',
+        'Diamètre': '40mm'
+      }
+    },
+    {
+      id: 'calatrava',
+      name: 'Calatrava',
+      price: '€28,500',
+      description: "L'essence de l'élégance classique, incarnant la pureté du design horloger",
+      image: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=400&h=400&fit=crop',
+      category: 'classic',
+      specs: {
+        'Boîtier': 'Or blanc 18k 5227G-010',
+        'Mouvement': 'Calibre 324 S C',
+        'Réserve de marche': '45 heures',
+        'Diamètre': '39mm'
+      }
+    },
+    {
+      id: 'complications',
+      name: 'Grandes Complications',
+      price: '€1,200,000',
+      description: "Le sommet de l'ingénierie horlogère, où l'art rencontre la complexité technique",
+      image: 'https://images.unsplash.com/photo-1612817159949-195b619eb547?w=400&h=400&fit=crop',
+      category: 'complication',
+      specs: {
+        'Modèle': 'Sky Moon Tourbillon 6002G-001',
+        'Complications': '13 fonctions',
+        'Boîtier': 'Or blanc 18k',
+        'Diamètre': '44mm'
+      }
+    }
+  ];
+
+  const timelineItems = [
+    {
+      year: '1839',
+      title: 'Fondation',
+      description: 'Antoine Norbert de Patek et François Czapek fondent Patek, Czapek & Cie à Genève'
+    },
+    {
+      year: '1845',
+      title: 'Innovation',
+      description: 'Jean Adrien Philippe rejoint l\'entreprise et apporte son invention du remontoir à couronne'
+    },
+    {
+      year: '1851',
+      title: 'Renommée',
+      description: 'Patek Philippe & Cie est officiellement créée, marquant le début d\'une légende'
+    },
+    {
+      year: 'Aujourd\'hui',
+      title: 'Excellence',
+      description: 'Plus de 180 ans d\'innovation continue dans l\'art horloger suisse'
+    }
+  ];
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.VANTA) {
@@ -56,56 +126,19 @@ const HomePage: React.FC = () => {
     const elements = document.querySelectorAll('.scroll-reveal');
     elements.forEach(el => observer.observe(el));
 
-    // Parallax effect
-    const handleScroll = () => {
-      const scrolled = window.pageYOffset;
-      const parallax = document.querySelector('#vanta-bg');
-      if (parallax) {
-        const speed = scrolled * 0.5;
-        (parallax as HTMLElement).style.transform = `translateY(${speed}px)`;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
     return () => {
       if (vantaEffect) {
         vantaEffect.destroy();
       }
-      window.removeEventListener('scroll', handleScroll);
       elements.forEach(el => observer.unobserve(el));
     };
   }, []);
-
-  const timelineItems = [
-    {
-      year: '1839',
-      title: 'Fondation',
-      description: 'Antoine Norbert de Patek et François Czapek fondent Patek, Czapek & Cie à Genève'
-    },
-    {
-      year: '1845',
-      title: 'Innovation',
-      description: 'Jean Adrien Philippe rejoint l\'entreprise et apporte son invention du remontoir à couronne'
-    },
-    {
-      year: '1851',
-      title: 'Renommée',
-      description: 'Patek Philippe & Cie est officiellement créée, marquant le début d\'une légende'
-    },
-    {
-      year: 'Aujourd\'hui',
-      title: 'Excellence',
-      description: 'Plus de 180 ans d\'innovation continue dans l\'art horloger suisse'
-    }
-  ];
 
   return (
     <>
       <Head>
         <title>Patek Philippe - Référence Mondiale en Horlogerie Suisse</title>
         <meta name="description" content="Depuis 1839, Patek Philippe perpétue la tradition horlogère suisse avec une passion inébranlable pour la perfection" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -153,7 +186,7 @@ const HomePage: React.FC = () => {
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="text-gray-700"
               >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {mobileMenuOpen ? '✕' : '☰'}
               </button>
             </div>
           </div>
@@ -272,54 +305,6 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Craftsmanship Preview */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="scroll-reveal">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Le Savoir-Faire<br>Suisse</h2>
-              <p className="text-xl text-gray-600 mb-8">
-                Chaque composant est fabriqué et assemblé à la main par des maîtres horlogers, 
-                garantissant une qualité exceptionnelle qui dure des générations.
-              </p>
-              <div className="space-y-4 mb-8">
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                  <span className="text-gray-700">Assemblage manuel par des maîtres horlogers</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                  <span className="text-gray-700">Contrôle qualité rigoureux à chaque étape</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                  <span className="text-gray-700">Matériaux nobles sélectionnés avec soin</span>
-                </div>
-              </div>
-              <button
-                onClick={() => router.push('/craftsmanship')}
-                className="bg-yellow-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-yellow-700 transition-all duration-300"
-              >
-                Découvrir le savoir-faire
-              </button>
-            </div>
-            <div className="scroll-reveal">
-              <div className="relative">
-                <img
-                  src="https://images.unsplash.com/photo-1495856452204-15f959c2b5b1?w=800&h=600&fit=crop"
-                  alt="Horloger au travail"
-                  className="rounded-lg shadow-2xl w-full"
-                />
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-4">
-                  <div className="text-3xl font-bold text-yellow-600">180+</div>
-                  <div className="text-sm text-gray-600">Ans d'excellence</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Innovation Section */}
       <section className="py-20 bg-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-6">
@@ -420,8 +405,107 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </footer>
-    </>
-  );
-};
 
-export default HomePage;
+      <style jsx global>{`
+        :root {
+          --gold: #D4AF37;
+          --deep-blue: #1a2332;
+          --cream: #f8f6f0;
+          --charcoal: #2c2c2c;
+          --silver: #e8e8e8;
+        }
+        
+        body {
+          font-family: 'Inter', sans-serif;
+          background: var(--cream);
+          overflow-x: hidden;
+        }
+        
+        .hero-title {
+          font-family: 'Playfair Display', serif;
+          font-weight: 600;
+          background: linear-gradient(135deg, var(--gold), #f4d03f);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        
+        .vanta-bg {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+        }
+        
+        .nav-link {
+          position: relative;
+          transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background: var(--gold);
+          transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+          width: 100%;
+        }
+        
+        .scroll-reveal {
+          opacity: 0;
+          transform: translateY(30px);
+          transition: all 0.6s ease;
+        }
+        
+        .scroll-reveal.revealed {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        .watch-card {
+          backdrop-filter: blur(10px);
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          transition: all 0.4s ease;
+        }
+        
+        .watch-card:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timeline-item {
+          position: relative;
+          margin-bottom: 4rem;
+          opacity: 0;
+          transform: translateY(50px);
+          transition: all 0.8s ease;
+        }
+        
+        .timeline-item.revealed {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+          margin-right: 55%;
+          text-align: right;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+          margin-left: 55%;
+          text-align: left;
+        }
+        
+        .timeline-marker {
+          position: absolute;
+          left: 50%;
+          top:
