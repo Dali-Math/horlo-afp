@@ -844,14 +844,16 @@ export default function PatekPhilippeUltimate() {
 
   // ============ RENDER ============
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white">
-      {/* Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-slate-800 z-50">
-        <div 
-          className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
-          style={{ width: `${scrollProgress}%` }}
-        />
-      </div>
+  <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white">
+    {/* Progress Bar */}
+    <div className="fixed top-0 left-0 w-full h-1 bg-slate-800 z-50">
+      <div
+        className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
+        style={{ width: `${scrollProgress}%` }}
+      />
+    </div>
+  </div>
+)
 
       {/* Expert Mode Badge */}
       {expertMode && (
