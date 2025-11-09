@@ -1710,16 +1710,6 @@ export default function PatekPhilippeUltimate() {
           <ChevronDown className="w-6 h-6 text-white rotate-180" />
         </button>
       </div>
-
-      {/* Styles additionnels */}
-<>
-  <style jsx global>{`
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-20px); }
-    }
-  `}</style>
-</>
         
         @keyframes gradient {
           0%, 100% { background-position: 0% 50%; }
