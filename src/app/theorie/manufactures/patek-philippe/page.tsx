@@ -1,4 +1,4 @@
-// app/page.tsx (ou app/theorie/manufactures/patek-philippe/page.tsx)
+// app/page.tsx
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -10,13 +10,13 @@ declare global {
   }
 }
 
-export default function Page(): JSX.Element {
+export default function Home(): JSX.Element {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const vantaRef = useRef<HTMLDivElement>(null);
   const vantaInstance = useRef<any>(null);
 
   useEffect(() => {
-    // Chargement des scripts CDN de manière fiable
+    // Chargement dynamique des scripts CDN
     const loadScript = (src: string) => {
       return new Promise<void>((resolve, reject) => {
         if (document.querySelector(`script[src="${src}"]`)) {
@@ -32,7 +32,7 @@ export default function Page(): JSX.Element {
       });
     };
 
-    // Initialisation de l'effet Vanta.js
+    // Initialisation Vanta.js
     const initVanta = async () => {
       try {
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
@@ -67,7 +67,7 @@ export default function Page(): JSX.Element {
 
     initVanta();
 
-    // Animations au scroll
+    // Scroll reveal animation
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
@@ -307,7 +307,7 @@ export default function Page(): JSX.Element {
             </div>
             <div className="scroll-reveal">
               <div className="relative">
-                <img src="https://images.unsplash.com/photo-1587836374828-4dbafa94cfbe?w=800&h=600&fit=crop" alt="Montre Patek Philippe classique" className="rounded-lg shadow-2xl w-full"/>
+                <img src="https://images.unsplash.com/photo-1587836374828-4dbafa94cfbe?w=800&h=600&fit=crop" alt="Montre Patek Philippe classique" className="rounded-lg shadow-2xl w-full" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
               </div>
             </div>
@@ -315,7 +315,7 @@ export default function Page(): JSX.Element {
         </div>
       </section>
 
-      {/* Collections */}
+      {/* Featured Collections */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
@@ -325,7 +325,7 @@ export default function Page(): JSX.Element {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="watch-card bg-white rounded-xl p-6 scroll-reveal">
               <div className="aspect-square mb-6 overflow-hidden rounded-lg">
-                <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400&h=400&fit=crop" alt="Nautilus" className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"/>
+                <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400&h=400&fit=crop" alt="Nautilus" className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
               </div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-3">Nautilus</h3>
               <p className="text-gray-600 mb-4">Le symbole du luxe sportif, alliant robustesse et élégance dans un design iconique</p>
@@ -335,7 +335,7 @@ export default function Page(): JSX.Element {
             </div>
             <div className="watch-card bg-white rounded-xl p-6 scroll-reveal">
               <div className="aspect-square mb-6 overflow-hidden rounded-lg">
-                <img src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=400&h=400&fit=crop" alt="Calatrava" className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"/>
+                <img src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=400&h=400&fit=crop" alt="Calatrava" className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
               </div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-3">Calatrava</h3>
               <p className="text-gray-600 mb-4">L'essence de l'élégance classique, incarnant la pureté du design horloger</p>
@@ -345,7 +345,7 @@ export default function Page(): JSX.Element {
             </div>
             <div className="watch-card bg-white rounded-xl p-6 scroll-reveal">
               <div className="aspect-square mb-6 overflow-hidden rounded-lg">
-                <img src="https://images.unsplash.com/photo-1612817159949-195b619eb547?w=400&h=400&fit=crop" alt="Grandes Complications" className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"/>
+                <img src="https://images.unsplash.com/photo-1612817159949-195b619eb547?w=400&h=400&fit=crop" alt="Grandes Complications" className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
               </div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-3">Grandes Complications</h3>
               <p className="text-gray-600 mb-4">Le sommet de l'ingénierie horlogère, où l'art rencontre la complexité technique</p>
@@ -357,7 +357,7 @@ export default function Page(): JSX.Element {
         </div>
       </section>
 
-      {/* Craftsmanship */}
+      {/* Craftsmanship Preview */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -387,7 +387,7 @@ export default function Page(): JSX.Element {
             </div>
             <div className="scroll-reveal">
               <div className="relative">
-                <img src="https://images.unsplash.com/photo-1495856452204-15f959c2b5b1?w=800&h=600&fit=crop" alt="Horloger au travail" className="rounded-lg shadow-2xl w-full"/>
+                <img src="https://images.unsplash.com/photo-1495856452204-15f959c2b5b1?w=800&h=600&fit=crop" alt="Horloger au travail" className="rounded-lg shadow-2xl w-full" />
                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-4">
                   <div className="text-3xl font-bold text-yellow-600">180+</div>
                   <div className="text-sm text-gray-600">Ans d'excellence</div>
@@ -398,7 +398,7 @@ export default function Page(): JSX.Element {
         </div>
       </section>
 
-      {/* Innovation */}
+      {/* Innovation Section */}
       <section className="py-20 bg-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
