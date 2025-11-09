@@ -815,22 +815,22 @@ export default function PatekPhilippeUltimate() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [konamiProgress]);
 
-  // ============ HANDLERS ============
+   // ============ HANDLERS ============
   const toggleFavorite = (id: number | string) => {
-  setFavorites(prev => 
-    prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
-  );
-};
+    setFavorites(prev => 
+      prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
+    );
+  };
 
-const toggleCompare = (id: number | string) => {
-  if (compareList.includes(id)) {
-    setCompareList(prev => prev.filter(c => c !== id));
-  } else if (compareList.length < 3) {
-    setCompareList(prev => [...prev, id]);
-  }
-};
+  const toggleCompare = (id: number | string) => {
+    if (compareList.includes(id)) {
+      setCompareList(prev => prev.filter(c => c !== id));
+    } else if (compareList.length < 3) {
+      setCompareList(prev => [...prev, id]);
+    }
+  };
 
-  const filteredCollections = encyclopedicData.collections.filter(c => {
+  const filteredCollections = encyclopedicData.collections.filter((c: any) => {
     if (activeFilter === 'all') return true;
     if (activeFilter === 'sport') return ['nautilus', 'aquanaut'].includes(c.id);
     if (activeFilter === 'classic') return c.id === 'calatrava';
@@ -838,7 +838,7 @@ const toggleCompare = (id: number | string) => {
     return true;
   });
 
-  const filteredMilestones = encyclopedicData.historicalMilestones.filter(m => 
+  const filteredMilestones = encyclopedicData.historicalMilestones.filter((m: any) => 
     selectedEra === 'all' || m.era === selectedEra
   );
 
@@ -852,6 +852,7 @@ const toggleCompare = (id: number | string) => {
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
+      {/* Reste de votre JSX... */}
 
       {/* Expert Mode Badge */}
       {expertMode && (
