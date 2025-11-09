@@ -216,7 +216,7 @@ export default function PatekPhilippeUltimate() {
             year: 2004,
             description: 'Réinterprétation moderne du 96',
             production: '2004-présent',
-            price: '€20,000-25,000',
+            price: 'CHF 21,000-26,000',
             rarity: 2,
             significance: 'Best-seller entrée de gamme'
           },
@@ -225,7 +225,7 @@ export default function PatekPhilippeUltimate() {
             year: 2017,
             description: 'Cadran officier, fond transparent',
             production: '2017-présent',
-            price: '€30,000-35,000',
+            price: 'CHF 31,000-37,000',
             rarity: 3,
             significance: 'Mix classique-moderne parfait'
           },
@@ -234,7 +234,7 @@ export default function PatekPhilippeUltimate() {
             year: 2021,
             description: 'Cadran camaïeu bleu, automatique',
             production: '2021-présent',
-            price: '€28,000-33,000',
+            price: 'CHF 29,000-35,000',
             rarity: 2,
             significance: 'Couleur tendance contemporaine'
           }
@@ -248,9 +248,9 @@ export default function PatekPhilippeUltimate() {
           components: '164-213 pièces selon calibre'
         },
         marketData: {
-          entryPrice: 20000,
-          averagePrice: 35000,
-          topPrice: 150000,
+          entryPrice: 21000,
+          averagePrice: 37000,
+          topPrice: 160000,
           waitingTime: 'Disponible sur demande',
           investmentPotential: 'Stable +5%/an',
           liquidityScore: 8
@@ -271,7 +271,7 @@ export default function PatekPhilippeUltimate() {
             year: 1976,
             description: 'Jumbo original 42mm, acier',
             production: '1976-1990',
-            price: '€200,000-500,000 (vintage)',
+            price: 'CHF 210,000-530,000 (vintage)',
             rarity: 5,
             significance: 'Fondateur du sport-luxe'
           },
@@ -280,7 +280,7 @@ export default function PatekPhilippeUltimate() {
             year: 2006,
             description: 'Réédition moderne 40mm',
             production: '2006-2021',
-            price: '€150,000-300,000 (marché secondaire)',
+            price: 'CHF 160,000-320,000 (marché secondaire)',
             rarity: 5,
             significance: 'Montre la plus désirée au monde'
           },
@@ -289,7 +289,7 @@ export default function PatekPhilippeUltimate() {
             year: 2021,
             description: 'Remplaçant du 5711, or gris',
             production: '2021-présent',
-            price: '€80,000 (liste) / €150,000+ (marché)',
+            price: 'CHF 85,000 (liste) / CHF 160,000+ (marché)',
             rarity: 5,
             significance: 'Succession controversée'
           },
@@ -298,7 +298,7 @@ export default function PatekPhilippeUltimate() {
             year: 2014,
             description: 'Chronographe Travel Time',
             production: '2014-présent',
-            price: '€90,000 (liste) / €180,000+ (marché)',
+            price: 'CHF 95,000 (liste) / CHF 190,000+ (marché)',
             rarity: 5,
             significance: 'Complication sport la plus désirée'
           }
@@ -312,9 +312,9 @@ export default function PatekPhilippeUltimate() {
           finishing: 'Poinçon Patek Philippe'
         },
         marketData: {
-          entryPrice: 35000,
-          averagePrice: 150000,
-          topPrice: 500000,
+          entryPrice: 37000,
+          averagePrice: 160000,
+          topPrice: 530000,
           waitingTime: '10-15 ans en boutique (liste fermée)',
           investmentPotential: 'Exceptionnel +20%/an',
           liquidityScore: 10
@@ -340,7 +340,7 @@ export default function PatekPhilippeUltimate() {
             year: 2007,
             description: 'Modèle emblématique 40mm',
             production: '2007-présent',
-            price: '€22,000 (liste) / €50,000+ (marché)',
+            price: 'CHF 23,000 (liste) / CHF 53,000+ (marché)',
             rarity: 4,
             significance: 'Entrée de gamme sport Patek'
           },
@@ -349,7 +349,7 @@ export default function PatekPhilippeUltimate() {
             year: 2017,
             description: 'Jumbo 42mm or gris',
             production: '2017-présent',
-            price: '€55,000 (liste) / €90,000+ (marché)',
+            price: 'CHF 58,000 (liste) / CHF 95,000+ (marché)',
             rarity: 4,
             significance: 'Version luxe de l\'Aquanaut'
           },
@@ -358,7 +358,7 @@ export default function PatekPhilippeUltimate() {
             year: 2018,
             description: 'Chronographe flyback',
             production: '2018-présent',
-            price: '€45,000 (liste) / €100,000+ (marché)',
+            price: 'CHF 48,000 (liste) / CHF 106,000+ (marché)',
             rarity: 5,
             significance: 'Première complication Aquanaut'
           }
@@ -372,9 +372,9 @@ export default function PatekPhilippeUltimate() {
           finishing: 'Poinçon Patek Philippe'
         },
         marketData: {
-          entryPrice: 22000,
-          averagePrice: 60000,
-          topPrice: 250000,
+          entryPrice: 23000,
+          averagePrice: 64000,
+          topPrice: 265000,
           waitingTime: '3-7 ans',
           investmentPotential: 'Fort +15%/an',
           liquidityScore: 9
@@ -395,7 +395,7 @@ export default function PatekPhilippeUltimate() {
             year: 2017,
             description: 'Quantième perpétuel chronographe',
             production: '2017-présent',
-            price: '€120,000-150,000',
+            price: 'CHF 127,000-160,000',
             rarity: 4,
             significance: 'QP accessible en or gris'
           },
@@ -404,7 +404,7 @@ export default function PatekPhilippeUltimate() {
             year: 2019,
             description: 'Répétition minutes tourbillon',
             production: '2019-présent',
-            price: '€550,000-650,000',
+            price: 'CHF 585,000-690,000',
             rarity: 5,
             significance: 'Sonnerie + tourbillon'
           },
@@ -413,7 +413,7 @@ export default function PatekPhilippeUltimate() {
             year: 2021,
             description: 'Grande sonnerie jump hour',
             production: '2021-présent',
-            price: '€900,000-1,200,000',
+            price: 'CHF 955,000-1,270,000',
             rarity: 5,
             significance: 'Une des montres les plus complexes'
           },
@@ -422,7 +422,7 @@ export default function PatekPhilippeUltimate() {
             year: 2014,
             description: 'Grandmaster Chime',
             production: '2014-présent (sur commande)',
-            price: '€2,500,000+ (si disponible)',
+            price: 'CHF 2,650,000+ (si disponible)',
             rarity: 5,
             significance: 'Montre la plus compliquée de Patek'
           }
@@ -436,9 +436,9 @@ export default function PatekPhilippeUltimate() {
           finishing: 'Terminaison main absolue'
         },
         marketData: {
-          entryPrice: 120000,
-          averagePrice: 500000,
-          topPrice: 2500000,
+          entryPrice: 127000,
+          averagePrice: 530000,
+          topPrice: 2650000,
           waitingTime: 'Sur invitation uniquement',
           investmentPotential: 'Exceptionnel +25%/an',
           liquidityScore: 7
@@ -460,11 +460,11 @@ export default function PatekPhilippeUltimate() {
         description: 'Affiche automatiquement la date correcte en tenant compte des mois de 28, 29, 30 et 31 jours, ainsi que des années bissextiles, jusqu\'en 2100.',
         technicalExplanation: 'Mécanisme à roues avec came de 48 mois qui encode le cycle des années bissextiles. Nécessite environ 150 composants supplémentaires.',
         history: 'Inventé au 18e siècle, miniaturisé en montre-bracelet par Patek en 1925',
-        patek First: '1925 - Première montre-bracelet QP au monde',
+        patekFirst: '1925 - Première montre-bracelet QP au monde',
         componentsCount: 150,
         adjustmentNeeded: '2100 (année non bissextile séculaire)',
         iconicModels: ['Ref. 3940', 'Ref. 5320G', 'Ref. 5236P'],
-        priceImpact: '+€50,000 à €150,000',
+        priceImpact: '+CHF 53,000 à CHF 160,000',
         manufacturingTime: '200-300 heures',
         rarity: 'Environ 500 pièces/an toutes marques confondues',
         funFact: 'Si réglé correctement, ne nécessitera aucun ajustement avant l\'an 2100'
@@ -482,7 +482,7 @@ export default function PatekPhilippeUltimate() {
         componentsCount: 200,
         acousticChallenge: 'Optimiser la résonance dans un boîtier de 40mm',
         iconicModels: ['Ref. 5303R', 'Ref. 6301P', 'Ref. 5078G'],
-        priceImpact: '+€200,000 à €500,000',
+        priceImpact: '+CHF 212,000 à CHF 530,000',
         manufacturingTime: '400-600 heures (réglage acoustique)',
         rarity: 'Moins de 50 pièces/an chez Patek',
         funFact: 'Le réglage sonore prend jusqu\'à 100 heures à lui seul'
@@ -500,7 +500,7 @@ export default function PatekPhilippeUltimate() {
         componentsCount: 72,
         weight: 'Cage : 0.3 grammes (avec balancier)',
         iconicModels: ['Ref. 5303R', 'Ref. 5316/50P'],
-        priceImpact: '+€150,000 à €300,000',
+        priceImpact: '+CHF 160,000 à CHF 318,000',
         manufacturingTime: '150-250 heures',
         rarity: 'Moins de 100 pièces/an chez Patek',
         funFact: 'Patek ne l\'utilise que dans des grandes complications, jamais seul'
@@ -518,7 +518,7 @@ export default function PatekPhilippeUltimate() {
         componentsCount: 100,
         mechanicalChallenge: 'Synchronisation parfaite des 2 aiguilles au démarrage',
         iconicModels: ['Ref. 5372P', 'Ref. 5204G', 'Ref. 5370P'],
-        priceImpact: '+€80,000 à €200,000',
+        priceImpact: '+CHF 85,000 à CHF 212,000',
         manufacturingTime: '180-280 heures',
         rarity: 'Environ 80 pièces/an chez Patek',
         funFact: 'Utilisé historiquement pour chronométrer des courses de chevaux'
@@ -536,7 +536,7 @@ export default function PatekPhilippeUltimate() {
         componentsCount: 80,
         cities: '24 villes représentant chaque fuseau',
         iconicModels: ['Ref. 2523', 'Ref. 5231J', 'Ref. 5330G'],
-        priceImpact: '+€40,000 à €120,000',
+        priceImpact: '+CHF 42,000 à CHF 127,000',
         manufacturingTime: '120-200 heures',
         rarity: 'Environ 300 pièces/an',
         funFact: 'Le Ref. 2523 avec cloisonné est le Patek le plus cher vendu : $11.1M'
@@ -554,7 +554,7 @@ export default function PatekPhilippeUltimate() {
         componentsCount: 50,
         precision: 'Écart encodé au jour près sur l\'année',
         iconicModels: ['Ref. 5208P', 'Ref. 5236P'],
-        priceImpact: '+€100,000 à €300,000',
+        priceImpact: '+CHF 106,000 à CHF 318,000',
         manufacturingTime: '200-350 heures',
         rarity: 'Moins de 20 pièces/an',
         funFact: 'Complication totalement inutile mais fascinante intellectuellement'
@@ -572,7 +572,7 @@ export default function PatekPhilippeUltimate() {
         componentsCount: 400,
         energyConsumption: 'Nécessite ressorts supplémentaires puissants',
         iconicModels: ['Ref. 6300G Grandmaster Chime', 'Ref. 6301P'],
-        priceImpact: '+€500,000 à €1,500,000',
+        priceImpact: '+CHF 530,000 à CHF 1,590,000',
         manufacturingTime: '800-1200 heures',
         rarity: 'Moins de 5 pièces/an toutes marques',
         funFact: 'La complication la plus prestigieuse de l\'horlogerie, plus rare qu\'un tourbillon'
@@ -582,10 +582,10 @@ export default function PatekPhilippeUltimate() {
     // Données de marché et investissement
     marketInsights: {
       priceEvolution: [
-        { year: 2010, nautilus5711: 25000, calatrava: 18000, indexPP: 100 },
-        { year: 2015, nautilus5711: 35000, calatrava: 22000, indexPP: 140 },
-        { year: 2020, nautilus5711: 80000, calatrava: 28000, indexPP: 220 },
-        { year: 2024, nautilus5711: 200000, calatrava: 35000, indexPP: 380 }
+        { year: 2010, nautilus5711: 26500, calatrava: 19000, indexPP: 100 },
+        { year: 2015, nautilus5711: 37000, calatrava: 23000, indexPP: 140 },
+        { year: 2020, nautilus5711: 85000, calatrava: 30000, indexPP: 220 },
+        { year: 2024, nautilus5711: 212000, calatrava: 37000, indexPP: 380 }
       ],
       auctionRecords: [
         {
@@ -622,7 +622,8 @@ export default function PatekPhilippeUltimate() {
         'Complications rares : QP, Répétition Minutes, World Time vintage sont des valeurs sûres',
         'Discontinués : Une référence arrêtée prend +50% en 2 ans (ex: 5711)',
         'État : Une montre NOS (New Old Stock) vaut 2-3x une montre portée',
-        'Provenance : Papers + box obligatoires, provenance célèbre ajoute 20-50%'
+        'Provenance : Papers + box obligatoires, provenance célèbre ajoute 20-50%',
+        'Marché suisse : Les prix en CHF sont généralement 5-8% plus favorables qu\'en EUR'
       ],
       waitingLists: [
         { model: 'Nautilus 5711 (arrêté)', wait: 'Liste fermée', reality: 'Impossible' },
@@ -638,7 +639,7 @@ export default function PatekPhilippeUltimate() {
       headquarters: 'Plan-les-Ouates, Genève, Suisse',
       employees: 2000,
       production: '60,000 montres/an (estimation)',
-      manufacturing Steps: [
+      manufacturingSteps: [
         {
           step: 1,
           name: 'Design & R&D',
@@ -1194,7 +1195,7 @@ export default function PatekPhilippeUltimate() {
                     </div>
                     <div className="text-right">
                       <div className="text-2xl font-bold text-yellow-400">
-                        €{(collection.marketData.entryPrice / 1000).toFixed(0)}K+
+                        CHF {(collection.marketData.entryPrice / 1000).toFixed(0)}K+
                       </div>
                       <div className="text-xs text-slate-400">Prix d'entrée</div>
                     </div>
@@ -1249,7 +1250,7 @@ export default function PatekPhilippeUltimate() {
                         </div>
                         <div>
                           <div className="text-slate-400">Prix Moyen</div>
-                          <div className="text-blue-400 font-bold">€{(collection.marketData.averagePrice / 1000).toFixed(0)}K</div>
+                          <div className="text-blue-400 font-bold">CHF {(collection.marketData.averagePrice / 1000).toFixed(0)}K</div>
                         </div>
                       </div>
                     </div>
@@ -1290,7 +1291,7 @@ export default function PatekPhilippeUltimate() {
                       <div className="space-y-3 text-sm">
                         <div className="flex justify-between">
                           <span className="text-slate-400">Prix entrée</span>
-                          <span className="text-yellow-400 font-bold">€{(collection.marketData.entryPrice / 1000).toFixed(0)}K</span>
+                          <span className="text-yellow-400 font-bold">CHF {(collection.marketData.entryPrice / 1000).toFixed(0)}K</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-slate-400">Attente</span>
@@ -1443,11 +1444,11 @@ export default function PatekPhilippeUltimate() {
                   <div className="space-y-2 text-sm">
                     <div>
                       <span className="text-slate-400">Nautilus 5711: </span>
-                      <span className="text-green-400 font-bold">€{(data.nautilus5711 / 1000).toFixed(0)}K</span>
+                      <span className="text-green-400 font-bold">CHF {(data.nautilus5711 / 1000).toFixed(0)}K</span>
                     </div>
                     <div>
                       <span className="text-slate-400">Calatrava: </span>
-                      <span className="text-blue-400 font-bold">€{(data.calatrava / 1000).toFixed(0)}K</span>
+                      <span className="text-blue-400 font-bold">CHF {(data.calatrava / 1000).toFixed(0)}K</span>
                     </div>
                     <div>
                       <span className="text-slate-400">Index PP: </span>
@@ -1555,27 +1556,70 @@ export default function PatekPhilippeUltimate() {
         <div className="max-w-5xl mx-auto px-8 text-center relative z-10">
           <Crown className="w-20 h-20 text-yellow-400 mx-auto mb-8 animate-pulse" />
           <h2 className="text-6xl font-bold text-white mb-6">
-            Devenez Expert Patek Philippe
+            La Référence Absolue Patek Philippe
           </h2>
           <p className="text-2xl text-white/90 mb-12 max-w-3xl mx-auto">
-            Téléchargez le guide complet 200 pages • Accès archives • Newsletter exclusive
+            Guide encyclopédique complet • 185 ans d'histoire • Données marché exclusives • Mode Expert
           </p>
           
+          <div className="grid md:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto">
+            <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
+              <BookOpen className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
+              <div className="text-4xl font-bold text-white mb-2">12</div>
+              <div className="text-white/80">Étapes Historiques</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
+              <Watch className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
+              <div className="text-4xl font-bold text-white mb-2">20+</div>
+              <div className="text-white/80">Modèles Analysés</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
+              <TrendingUp className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
+              <div className="text-4xl font-bold text-white mb-2">CHF 31M</div>
+              <div className="text-white/80">Record Mondial</div>
+            </div>
+          </div>
+
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <button className="bg-white text-purple-600 px-10 py-5 rounded-full font-bold text-lg hover:scale-105 transition-all shadow-2xl flex items-center gap-3 justify-center">
-              <Download className="w-6 h-6" />
-              Télécharger le Guide (PDF)
+            <button 
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="bg-white text-purple-600 px-10 py-5 rounded-full font-bold text-lg hover:scale-105 transition-all shadow-2xl flex items-center gap-3 justify-center"
+            >
+              <RotateCcw className="w-6 h-6" />
+              Relire depuis le début
             </button>
-            <button className="bg-white/10 backdrop-blur-xl text-white px-10 py-5 rounded-full font-bold text-lg border-2 border-white hover:bg-white hover:text-purple-600 transition-all shadow-2xl flex items-center gap-3 justify-center">
-              <MessageCircle className="w-6 h-6" />
-              Rejoindre la Communauté
+            <button 
+              onClick={() => {
+                const favSection = document.getElementById('collections');
+                favSection?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="bg-white/10 backdrop-blur-xl text-white px-10 py-5 rounded-full font-bold text-lg border-2 border-white hover:bg-white hover:text-purple-600 transition-all shadow-2xl flex items-center gap-3 justify-center"
+            >
+              <Bookmark className="w-6 h-6" />
+              Comparer les Collections
             </button>
           </div>
 
           {!expertMode && (
-            <p className="mt-12 text-sm text-white/60">
-              Psst... Essayez: ↑ ↑ ↓ ↓ ← → ← → B A pour débloquer le mode expert 🏆
-            </p>
+            <div className="mt-12 bg-yellow-500/20 border-2 border-yellow-400/50 rounded-2xl p-6 max-w-2xl mx-auto">
+              <p className="text-yellow-300 font-bold mb-2">🎮 Easter Egg Caché</p>
+              <p className="text-sm text-white/80">
+                Tapez le code Konami pour débloquer le Mode Expert avec données exclusives :<br/>
+                <span className="font-mono text-yellow-300">↑ ↑ ↓ ↓ ← → ← → B A</span>
+              </p>
+            </div>
+          )}
+
+          {expertMode && (
+            <div className="mt-12 bg-gradient-to-r from-yellow-500/30 to-orange-500/30 border-2 border-yellow-400 rounded-2xl p-6 max-w-2xl mx-auto">
+              <p className="text-yellow-300 font-bold mb-2 flex items-center justify-center gap-2">
+                <Trophy className="w-6 h-6" />
+                Mode Expert Activé !
+              </p>
+              <p className="text-sm text-white">
+                Vous avez accès aux données techniques exclusives, processus de fabrication détaillés et insights marché avancés. Scrollez pour découvrir les secrets de manufacture.
+              </p>
+            </div>
           )}
         </div>
       </section>
