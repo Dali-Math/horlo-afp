@@ -852,15 +852,15 @@ export default function PatekPhilippeUltimate() {
         style={{ width: `${scrollProgress}%` }}
       />
     </div>
-  </div>
-)
 
-      {/* Expert Mode Badge */}
-      {expertMode && (
-        <div className="fixed top-4 right-4 z-50 bg-gradient-to-r from-yellow-500 to-orange-500 px-4 py-2 rounded-full text-sm font-bold animate-pulse shadow-lg">
-          🏆 Mode Expert Débloqué
-        </div>
-      )}
+    {/* Expert Mode Badge */}
+    {expertMode && (
+      <div className="fixed top-4 right-4 z-50 bg-gradient-to-r from-yellow-500 to-orange-500 px-4 py-2 rounded-full text-sm font-bold animate-pulse shadow-lg">
+        Mode Expert Débloqué 🏆
+      </div>
+    )}
+  </div>
+);
 
       {/* HERO SECTION */}
       <header className="relative min-h-screen flex items-center justify-center overflow-hidden">
