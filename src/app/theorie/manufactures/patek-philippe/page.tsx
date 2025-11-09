@@ -35,7 +35,7 @@ export default function PatekPhilippeUltimate() {
     // Timeline ultra-détaillée
     historicalMilestones: [
       {
-        id: 1,
+        id: '1839',
         year: 1839,
         era: 'foundation',
         title: 'Fondation par Antoine Norbert de Patek',
@@ -49,7 +49,7 @@ export default function PatekPhilippeUltimate() {
         funFact: 'Patek avait initialement voulu être soldat, pas horloger'
       },
       {
-        id: 2,
+        id: '1844',
         year: 1844,
         era: 'foundation',
         title: 'Rencontre Historique à Paris',
@@ -62,7 +62,7 @@ export default function PatekPhilippeUltimate() {
         funFact: 'Leur stand était à côté de celui de Breguet'
       },
       {
-        id: 3,
+        id: '1851',
         year: 1851,
         era: 'golden',
         title: 'Consécration Royale',
@@ -75,7 +75,7 @@ export default function PatekPhilippeUltimate() {
         funFact: 'Victoria portait sa Patek tous les jours jusqu\'à sa mort'
       },
       {
-        id: 4,
+        id: '1868',
         year: 1868,
         era: 'golden',
         title: 'Première Montre-Bracelet Suisse',
@@ -88,7 +88,7 @@ export default function PatekPhilippeUltimate() {
         funFact: 'Elle pensait que c\'était une "absurdité" au début'
       },
       {
-        id: 5,
+        id: '1889',
         year: 1889,
         era: 'golden',
         title: 'Le Calibre le Plus Compliqué du Monde',
@@ -101,7 +101,7 @@ export default function PatekPhilippeUltimate() {
         funFact: '5 ans de développement, 3 horlogers à temps plein'
       },
       {
-        id: 6,
+        id: '1925',
         year: 1925,
         era: 'complications',
         title: 'Révolution du Quantième Perpétuel',
@@ -114,7 +114,7 @@ export default function PatekPhilippeUltimate() {
         funFact: 'Seulement 7 exemplaires produits entre 1925 et 1940'
       },
       {
-        id: 7,
+        id: '1932-calatrava',
         year: 1932,
         era: 'complications',
         title: 'Naissance du Calatrava',
@@ -127,7 +127,7 @@ export default function PatekPhilippeUltimate() {
         funFact: 'Le nom vient de l\'ordre militaire espagnol Calatrava'
       },
       {
-        id: 8,
+        id: '1932-stern',
         year: 1932,
         era: 'complications',
         title: 'Sauvetage par la Famille Stern',
@@ -140,7 +140,7 @@ export default function PatekPhilippeUltimate() {
         funFact: 'Transaction conclue autour d\'un café au Café du Centre à Genève'
       },
       {
-        id: 9,
+        id: '1962',
         year: 1962,
         era: 'complications',
         title: 'Référence 2499 : La Légende',
@@ -153,7 +153,7 @@ export default function PatekPhilippeUltimate() {
         funFact: 'Un exemplaire appartenait à Eric Clapton'
       },
       {
-        id: 10,
+        id: '1976',
         year: 1976,
         era: 'modern',
         title: 'Le Nautilus de Gérald Genta',
@@ -166,7 +166,7 @@ export default function PatekPhilippeUltimate() {
         funFact: 'Échec commercial initial, devenu graal 40 ans plus tard'
       },
       {
-        id: 11,
+        id: '1989',
         year: 1989,
         era: 'modern',
         title: 'Calibre 89 : Le Sommet',
@@ -179,7 +179,7 @@ export default function PatekPhilippeUltimate() {
         funFact: 'Le livret d\'utilisation fait 200 pages'
       },
       {
-        id: 12,
+        id: '2014',
         year: 2014,
         era: 'modern',
         title: 'Grandmaster Chime 6300 : L\'Olympe',
