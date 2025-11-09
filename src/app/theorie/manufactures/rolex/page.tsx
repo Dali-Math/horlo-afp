@@ -1,6 +1,8 @@
 // app/theorie/manufactures/rolex/page.tsx
-import { Metadata } from 'next'
-import rolexImages from '@/data/rolex_images.json';
+'use client';
+
+import { useEffect, useState } from 'react';
+
 // ==================== DONNÉES INTÉGRALES (850+ LIGNES) ====================
 const ROLEX_DATA = {
   meta: {
@@ -406,7 +408,6 @@ const ROLEX_DATA = {
 }; // <--- IMPORTANT : FERMETURE DE L'OBJET
 
 // ==================== COMPOSANTS DÉTAILLÉS ====================
-// Maintenant les composants sont déclarés HORS de l'objet ROLEX_DATA
 
 const Hero = () => (
   <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 text-white">
@@ -448,7 +449,7 @@ const Hero = () => (
   </section>
 );
 
-const Timeline = () => (
+const Timeline = ({ images }: { images: any }) => (
   <section className="py-20 bg-white dark:bg-slate-900">
     <div className="max-w-7xl mx-auto px-6">
       <h2 className="text-4xl font-bold text-center mb-12 dark:text-white">Histoire & Patrimoine</h2>
@@ -459,7 +460,13 @@ const Timeline = () => (
             <div key={i} className={`flex ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
               <div className="w-full md:w-5/12 md:px-8 ml-16 md:ml-0">
                 <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all">
-                  <img src={item.image} alt={item.title} className="w-full h-64 object-cover rounded-lg mb-4" loading="lazy" />
+                  {/* ✅ CHARGEMENT DYNAMIQUE : images.timeline[i] */}
+                  <img 
+                    src={images.timeline[i]} 
+                    alt={item.title} 
+                    className="w-full h-64 object-cover rounded-lg mb-4" 
+                    loading="lazy" 
+                  />
                   <span className="text-3xl font-bold text-green-600 font-mono">{item.year}</span>
                   <h3 className="text-2xl font-bold mt-2 mb-2 dark:text-white">{item.title}</h3>
                   <p className="text-slate-600 dark:text-slate-400">{item.desc}</p>
@@ -478,8 +485,7 @@ const Timeline = () => (
   </section>
 );
 
-// VERSION LUXURY SANS PRIX
-const Collections = () => (
+const Collections = ({ images }: { images: any }) => (
   <section className="py-20 bg-slate-50 dark:bg-slate-900">
     <div className="max-w-7xl mx-auto px-6">
       <h2 className="text-4xl font-bold text-center mb-4 dark:text-white">Collections 2025</h2>
@@ -489,12 +495,12 @@ const Collections = () => (
       </p>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {ROLEX_DATA.collections.map((col) => (
+        {ROLEX_DATA.collections.map((col, i) => (
           <div key={col.id} className="group bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
-            {/* Image avec overlay au hover */}
             <div className="relative overflow-hidden">
+              {/* ✅ CHARGEMENT DYNAMIQUE : images.collections[i] */}
               <img 
-                src={col.image} 
+                src={images.collections[i]} 
                 alt={col.name} 
                 className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110" 
                 loading="lazy" 
@@ -508,18 +514,13 @@ const Collections = () => (
             </div>
             
             <div className="p-8 flex-1 flex flex-col">
-              {/* Header */}
               <div className="mb-6">
                 <h3 className="text-3xl font-bold mb-2 dark:text-white font-serif">{col.name}</h3>
                 <p className="text-green-600 font-medium text-lg">{col.nickname}</p>
               </div>
-
-              {/* Description */}
               <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed flex-1 italic">
                 {col.description}
               </p>
-
-              {/* Legacy & Iconic Moment */}
               <div className="mb-6 p-5 bg-green-50 dark:bg-green-900/20 rounded-xl border-l-4 border-green-600">
                 <div className="mb-3">
                   <h4 className="font-bold text-green-700 dark:text-green-400 text-sm uppercase tracking-widest">Héritage</h4>
@@ -530,26 +531,22 @@ const Collections = () => (
                   <p className="text-slate-600 dark:text-slate-400 text-sm">{col.iconic_moment}</p>
                 </div>
               </div>
-
-              {/* Ambassadeurs */}
               <div className="mb-6">
                 <h4 className="font-bold text-slate-800 dark:text-slate-200 text-sm uppercase tracking-widest mb-3">Portée par des légendes</h4>
                 <div className="flex flex-wrap gap-2">
-                  {col.ambassadors.map((amb, i) => (
-                    <span key={i} className="text-xs px-3 py-1 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-300 rounded-full">
+                  {col.ambassadors.map((amb, j) => (
+                    <span key={j} className="text-xs px-3 py-1 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-300 rounded-full">
                       {amb}
                     </span>
                   ))}
                 </div>
               </div>
-
-              {/* Design & Innovations */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
                   <h4 className="font-bold text-slate-800 dark:text-slate-200 text-sm uppercase tracking-widest mb-2">Détails de design</h4>
                   <ul className="space-y-1">
-                    {col.design_highlights.map((detail, i) => (
-                      <li key={i} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-400">
+                    {col.design_highlights.map((detail, j) => (
+                      <li key={j} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-400">
                         <span className="text-green-500 mt-0.5">•</span>
                         <span>{detail}</span>
                       </li>
@@ -559,8 +556,8 @@ const Collections = () => (
                 <div>
                   <h4 className="font-bold text-slate-800 dark:text-slate-200 text-sm uppercase tracking-widest mb-2">Innovations</h4>
                   <ul className="space-y-1">
-                    {col.innovations.map((innov, i) => (
-                      <li key={i} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-400">
+                    {col.innovations.map((innov, j) => (
+                      <li key={j} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-400">
                         <span className="text-green-500 mt-0.5">✓</span>
                         <span>{innov}</span>
                       </li>
@@ -568,8 +565,6 @@ const Collections = () => (
                   </ul>
                 </div>
               </div>
-
-              {/* Footer avec catégorie */}
               <div className="mt-auto pt-4 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center">
                 <span className={`px-4 py-2 rounded-full text-xs font-bold ${
                   col.category === "sport" ? "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300" :
@@ -592,7 +587,7 @@ const Collections = () => (
   </section>
 );
 
-const Movements = () => (
+const Movements = ({ images }: { images: any }) => (
   <section className="py-20 bg-white dark:bg-slate-900">
     <div className="max-w-7xl mx-auto px-6">
       <h2 className="text-4xl font-bold text-center mb-12 dark:text-white">Mouvements & Technologie</h2>
@@ -601,7 +596,13 @@ const Movements = () => (
           {ROLEX_DATA.movements.map((movement, i) => (
             <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all">
               <div className="flex items-start gap-4">
-                <img src={movement.image} alt={movement.name} className="w-24 h-24 object-contain" loading="lazy" />
+                {/* ✅ CHARGEMENT DYNAMIQUE : images.movements[i] */}
+                <img 
+                  src={images.movements[i]} 
+                  alt={movement.name} 
+                  className="w-24 h-24 object-contain" 
+                  loading="lazy" 
+                />
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold dark:text-white">{movement.name}</h3>
                   <p className="text-green-600 font-medium">{movement.type}</p>
@@ -658,14 +659,20 @@ const Movements = () => (
   </section>
 );
 
-const Manufactures = () => (
+const Manufactures = ({ images }: { images: any }) => (
   <section className="py-20 bg-slate-50 dark:bg-slate-800">
     <div className="max-w-7xl mx-auto px-6">
       <h2 className="text-4xl font-bold text-center mb-12 dark:text-white">Les 4 Manufactures Rolex</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {ROLEX_DATA.manufactures.map((mfg, i) => (
           <div key={i} className="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all h-full flex flex-col">
-            <img src={mfg.image} alt={mfg.name} className="w-full h-48 object-cover" loading="lazy" />
+            {/* ✅ CHARGEMENT DYNAMIQUE : images.manufactures[i] */}
+            <img 
+              src={images.manufactures[i]} 
+              alt={mfg.name} 
+              className="w-full h-48 object-cover" 
+              loading="lazy" 
+            />
             <div className="p-4 flex-1 flex flex-col">
               <h3 className="text-xl font-bold dark:text-white">{mfg.name}</h3>
               <p className="text-green-600 text-sm">{mfg.location}</p>
@@ -697,14 +704,20 @@ const Manufactures = () => (
   </section>
 );
 
-const Certification = () => (
+const Certification = ({ images }: { images: any }) => (
   <section className="py-20 bg-white dark:bg-slate-900">
     <div className="max-w-7xl mx-auto px-6">
       <h2 className="text-4xl font-bold text-center mb-12 dark:text-white">Certification Superlative Chronometer</h2>
       <div className="max-w-5xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-12">
           <div>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Rolex_Superlative_Chronometer.jpg/600px-Rolex_Superlative_Chronometer.jpg" alt="Certificat" className="w-full rounded-xl shadow-lg" loading="lazy" />
+            {/* ✅ CHARGEMENT DYNAMIQUE : images.certification[0] */}
+            <img 
+              src={images.certification[0]} 
+              alt="Certificat" 
+              className="w-full rounded-xl shadow-lg" 
+              loading="lazy" 
+            />
           </div>
           <div>
             <h3 className="text-3xl font-bold mb-4 dark:text-white">{ROLEX_DATA.certification.title}</h3>
@@ -775,7 +788,6 @@ const CTA = () => (
   </section>
 );
 
-// Nouvelle section Philosophie plus impactante
 const Philosophy = () => (
   <section className="py-20 bg-white dark:bg-slate-900">
     <div className="max-w-7xl mx-auto px-6">
@@ -881,14 +893,25 @@ const Philosophy = () => (
 
 // ==================== PAGE PRINCIPALE ====================
 export default function RolexPage() {
+  const [images, setImages] = useState<any>(null);
+
+  useEffect(() => {
+    fetch('/data/rolex_images.json')
+      .then((res) => res.json())
+      .then(setImages)
+      .catch(console.error)
+  }, []);
+
+  if (!images) return <p className="text-center py-20">Chargement des images Rolex...</p>;
+
   return (
     <main className="min-h-screen bg-white dark:bg-slate-900">
       <Hero />
-      <Timeline />
-      <Collections />
-      <Movements />
-      <Manufactures />
-      <Certification />
+      <Timeline images={images} />
+      <Collections images={images} />
+      <Movements images={images} />
+      <Manufactures images={images} />
+      <Certification images={images} />
       <Philosophy />
       <FAQ />
       <CTA />
