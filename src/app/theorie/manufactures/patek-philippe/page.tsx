@@ -1267,60 +1267,61 @@ const toggleCompare = (id: number | string) => {
           </div>
 
           {/* Comparator Panel */}
-          {compareList.length > 0 && (
-            <div className="bg-gradient-to-r from-purple-900/50 to-blue-900/50 border border-purple-500/30 rounded-3xl p-8 backdrop-blur-xl">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-white flex items-center gap-3">
-                  <BarChart3 className="w-6 h-6 text-purple-400" />
-                  Comparateur ({compareList.length}/3)
-                </h3>
-                <button 
-                  onClick={() => setCompareList([])}
-                  className="text-slate-400 hover:text-white transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
+{compareList.length > 0 && (
+  <div className="bg-gradient-to-r from-purple-900/50 to-blue-900/50 border border-purple-500/30 rounded-3xl p-8 backdrop-blur-xl">
+    <div className="flex items-center justify-between mb-6">
+      <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+        <BarChart3 className="w-6 h-6 text-purple-400" />
+        Comparateur ({compareList.length}/3)
+      </h3>
+      <button 
+        onClick={() => setCompareList([])}
+        className="text-slate-400 hover:text-white transition-colors"
+      >
+        <X className="w-6 h-6" />
+      </button>
+    </div>
 
-              <div className="grid md:grid-cols-3 gap-6">
-  {compareList.map(id => {
-    const collection = encyclopedicData.collections.find(c => c.id === id);
-    return (
-      <div key={id} className="bg-white/5 rounded-xl p-6">
-        <h4 className="text-xl font-bold text-white mb-4">
-          {collection?.name || 'Collection non trouvée'}
-        </h4>
-        {collection && (
-          <div className="space-y-3 text-sm">
-            <div className="flex justify-between">
-              <span className="text-slate-400">Prix entrée</span>
-              <span className="text-yellow-400 font-bold">
-                CHF {(collection.marketData.entryPrice / 1000).toFixed(0)}K
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Attente</span>
-              <span className="text-slate-200">{collection.marketData.waitingTime}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">ROI</span>
-              <span className="text-green-400 font-bold">
-                {collection.marketData.investmentPotential}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Liquidité</span>
-              <span className="text-blue-400 font-bold">
-                {collection.marketData.liquidityScore}/10
-              </span>
-            </div>
+    <div className="grid md:grid-cols-3 gap-6">
+      {compareList.map(id => {
+        const collection = encyclopedicData.collections.find(c => c.id === id);
+        return (
+          <div key={id} className="bg-white/5 rounded-xl p-6">
+            <h4 className="text-xl font-bold text-white mb-4">
+              {collection?.name || 'Collection non trouvée'}
+            </h4>
+            {collection && (
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Prix entrée</span>
+                  <span className="text-yellow-400 font-bold">
+                    CHF {(collection.marketData.entryPrice / 1000).toFixed(0)}K
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Attente</span>
+                  <span className="text-slate-200">{collection.marketData.waitingTime}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">ROI</span>
+                  <span className="text-green-400 font-bold">
+                    {collection.marketData.investmentPotential}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Liquidité</span>
+                  <span className="text-blue-400 font-bold">
+                    {collection.marketData.liquidityScore}/10
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-    );
-  })}
-</div>
-      </section>
+        );
+      })}
+    </div>
+  </div>
+)}
 
       {/* COMPLICATIONS SECTION */}
       <section id="complications" className="py-32 bg-gradient-to-b from-black to-purple-900/30 relative">
