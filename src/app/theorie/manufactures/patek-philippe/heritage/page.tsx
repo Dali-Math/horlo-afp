@@ -498,7 +498,7 @@ export default function HeritagePage() {
               <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <i className="fas fa-dna text-2xl text-white"></i>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Héritage</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Heritage</h3>
               <p className="text-gray-600">
                 La transmission du savoir-faire de génération en génération, 
                 perpétuant les traditions horlogères suisses les plus authentiques.
