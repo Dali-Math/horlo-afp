@@ -205,7 +205,7 @@ export default function PatekPhilippePage() {
       card.addEventListener('mouseenter', function() {
         if (window.anime) {
           window.anime({
-            targets: this,
+            targets: this as any,
             scale: 1.02,
             duration: 300,
             easing: 'easeOutQuart'
@@ -216,7 +216,7 @@ export default function PatekPhilippePage() {
       card.addEventListener('mouseleave', function() {
         if (window.anime) {
           window.anime({
-            targets: this,
+            targets: this as any,
             scale: 1,
             duration: 300,
             easing: 'easeOutQuart'
