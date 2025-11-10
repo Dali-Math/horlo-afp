@@ -6,51 +6,29 @@ import Link from 'next/link';
 export default function Heritage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const vantaBgRef = useRef<HTMLDivElement>(null);
-  const vantaEffectRef = useRef<any>(null);
 
   useEffect(() => {
-    // Load Three.js and Vanta.js scripts
-    const loadScript = (src: string) => {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = src;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-      });
-    };
-
-    const initVanta = async () => {
-      try {
-        if (!(window as any).THREE) {
-          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
-        }
-        if (!(window as any).VANTA) {
-          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.waves.min.js');
-        }
-        if (vantaBgRef.current && (window as any).VANTA) {
-          vantaEffectRef.current = (window as any).VANTA.WAVES({
-            el: vantaBgRef.current,
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            scale: 1.00,
-            scaleMobile: 1.00,
-            color: 0x1a2332,
-            shininess: 30.00,
-            waveHeight: 15.00,
-            waveSpeed: 0.75,
-            zoom: 0.65
-          });
-        }
-      } catch (error) {
-        console.error('Error loading Vanta:', error);
+    // Initialize Vanta.js background
+    if (typeof window !== 'undefined' && vantaBgRef.current) {
+      const VANTA = (window as any).VANTA;
+      if (VANTA && VANTA.WAVES) {
+        VANTA.WAVES({
+          el: vantaBgRef.current,
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.00,
+          scaleMobile: 1.00,
+          color: 0x1a2332,
+          shininess: 30.00,
+          waveHeight: 15.00,
+          waveSpeed: 0.75,
+          zoom: 0.65
+        });
       }
-    };
-
-    initVanta();
+    }
 
     // Timeline animation
     const timelineObserver = new IntersectionObserver((entries) => {
