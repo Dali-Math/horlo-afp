@@ -126,7 +126,6 @@ export default function HeritagePage() {
           font-family: 'Inter', sans-serif;
           background: var(--cream);
           overflow-x: hidden;
-          padding-top: 80px; /* Compense la barre de navigation fixe */
         }
         
         .hero-title {
@@ -286,23 +285,7 @@ export default function HeritagePage() {
           z-index: 2;
         }
         
-        /* Barre de navigation fixe - CORRIGÉ */
-        .main-nav {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          z-index: 1000;
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(12px);
-          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        
         @media (max-width: 768px) {
-          body {
-            padding-top: 70px; /* Ajusté pour mobile */
-          }
-          
           .timeline::before {
             left: 2rem;
           }
@@ -328,8 +311,8 @@ export default function HeritagePage() {
         }
       `}</style>
 
-      {/* Navigation - CORRIGÉ */}
-      <nav className="main-nav">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="text-2xl font-bold text-gray-900">
@@ -363,7 +346,7 @@ export default function HeritagePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <div ref={vantaBgRef} className="vanta-bg"></div>
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
           <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">
@@ -500,39 +483,39 @@ export default function HeritagePage() {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-  {/* Excellence */}
-  <div className="heritage-card rounded-xl p-8 text-center scroll-reveal bg-white">
-    <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
-      <i className="fas fa-crown text-2xl text-white"></i>
-    </div>
-    <h3 className="text-2xl font-bold text-gray-900 mb-4">Excellence</h3>
-    <p className="text-gray-600">
-      L’engagement inébranlable envers la qualité supérieure dans chaque aspect de la fabrication horlogère, depuis les matériaux jusqu’à la finition.
-    </p>
-  </div>
-
-  {/* Héritage */}
-  <div className="heritage-card rounded-xl p-8 text-center scroll-reveal bg-white">
-    <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
-      <i className="fas fa-hourglass-half text-2xl text-white"></i>
-    </div>
-    <h3 className="text-2xl font-bold text-gray-900 mb-4">Héritage</h3>
-    <p className="text-gray-600">
-      La transmission du savoir-faire de génération en génération, représentant les traditions horlogères suisses les plus authentiques.
-    </p>
-  </div>
-
-  {/* Innovation */}
-  <div className="heritage-card rounded-xl p-8 text-center scroll-reveal bg-white">
-    <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
-      <i className="fas fa-lightbulb text-2xl text-white"></i>
-    </div>
-    <h3 className="text-2xl font-bold text-gray-900 mb-4">Innovation</h3>
-    <p className="text-gray-600">
-      La capacité à relever les défis et proposer des solutions techniques et esthétiques pour repousser les limites de l’art horloger.
-    </p>
-  </div>
-</div>
+            <div className="heritage-card rounded-xl p-8 text-center scroll-reveal bg-white">
+              <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i className="fas fa-crown text-2xl text-white"></i>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Excellence</h3>
+              <p className="text-gray-600">
+                L'engagement inébranlable envers la qualité supérieure dans chaque aspect 
+                de la fabrication horlogère, depuis les matériaux jusqu'à la finition.
+              </p>
+            </div>
+            
+            <div className="heritage-card rounded-xl p-8 text-center scroll-reveal bg-white">
+              <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i className="fas fa-dna text-2xl text-white"></i>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Héritage</h3>
+              <p className="text-gray-600">
+                La transmission du savoir-faire de génération en génération, 
+                perpétuant les traditions horlogères suisses les plus authentiques.
+              </p>
+            </div>
+            
+            <div className="heritage-card rounded-xl p-8 text-center scroll-reveal bg-white">
+              <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i className="fas fa-lightbulb text-2xl text-white"></i>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Innovation</h3>
+              <p className="text-gray-600">
+                La recherche constante de nouvelles solutions techniques et esthétiques 
+                pour repousser les limites de l'art horloger.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
