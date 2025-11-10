@@ -2,20 +2,20 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+// ✅ Déclaration TypeScript globale - AU TOP LEVEL du fichier
+declare global {
+  interface Window {
+    THREE?: any;
+    VANTA?: any;
+  }
+}
+
 export default function HeritagePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const vantaBgRef = useRef<HTMLDivElement>(null);
   const vantaEffectRef = useRef<any>(null);
 
   useEffect(() => {
-    // --- Patch TypeScript pour window ---
-    declare global {
-      interface Window {
-        THREE?: any;
-        VANTA?: any;
-      }
-    }
-
     // Chargement dynamique de Three.js puis VANTA.WAVES
     const loadScript = (src: string) => {
       return new Promise<void>((resolve, reject) => {
@@ -60,7 +60,6 @@ export default function HeritagePage() {
 
     initVanta();
 
-    // --- Le reste du useEffect (timeline, scroll reveal, parallax...) ---
     // Timeline animation
     const timelineObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -423,6 +422,7 @@ export default function HeritagePage() {
               </div>
             </div>
 
+            {/* Add all other timeline items similarly... */}
             <div className="timeline-item">
               <div className="timeline-year">1851</div>
               <div className="timeline-marker"></div>
@@ -578,7 +578,6 @@ export default function HeritagePage() {
         </div>
       </section>
 
-      {/* Rest of the sections... */}
       {/* Quote Section */}
       <section className="quote-section py-20 text-white relative">
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
