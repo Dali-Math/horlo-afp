@@ -117,7 +117,6 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning className={`${playfair.variable} ${inter.variable}`}>
       <head>
-        {/* Google Fonts - déjà chargées via next/font/google */}
         {/* Font Awesome */}
         <link 
           rel="stylesheet" 
@@ -126,6 +125,18 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-[#f8f6f0] text-slate-900 transition-colors duration-300">
+        {/* Three.js - Chargé en premier, avant tout */}
+        <Script 
+          src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
+          strategy="beforeInteractive"
+        />
+        
+        {/* Vanta.js Birds - Chargé après Three.js */}
+        <Script 
+          src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js"
+          strategy="afterInteractive"
+        />
+
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <ClientLayout>
             <main className="min-h-screen overflow-visible relative">{children}</main>
@@ -136,17 +147,7 @@ export default function RootLayout({
           <JsonLd data={siteSearch} />
         </ThemeProvider>
 
-        {/* Three.js - Requis pour Vanta.js */}
-        <Script 
-          src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
-          strategy="beforeInteractive"
-        />
-        
-        {/* Vanta.js Effects */}
-        <Script 
-          src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js"
-          strategy="lazyOnload"
-        />
+        {/* Autres effets Vanta.js (optionnels) */}
         <Script 
           src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js"
           strategy="lazyOnload"
