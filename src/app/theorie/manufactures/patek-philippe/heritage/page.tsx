@@ -2,7 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-
+declare global {
+  interface Window {
+    THREE?: any;
+    VANTA?: any;
+  }
+}
 export default function Heritage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const vantaBgRef = useRef<HTMLDivElement>(null);
