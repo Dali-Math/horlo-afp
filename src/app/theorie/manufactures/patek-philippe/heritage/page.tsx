@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Award, Hourglass, Lightbulb } from 'lucide-react';
+
 declare global {
   interface Window {
     VANTA: any;
@@ -126,7 +126,6 @@ export default function HeritagePage() {
           font-family: 'Inter', sans-serif;
           background: var(--cream);
           overflow-x: hidden;
-          padding-top: 80px; /* Compense la barre de navigation fixe */
         }
         
         .hero-title {
@@ -147,7 +146,16 @@ export default function HeritagePage() {
           z-index: 0;
           will-change: transform;
         }
-        
+        .nav-bar {
+  position: fixed;
+  top: 72px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(250, 248, 245, 0.95);
+  border-bottom: 1px solid #efe8d6;
+}
+
         .nav-link {
           position: relative;
           transition: all 0.3s ease;
@@ -286,23 +294,7 @@ export default function HeritagePage() {
           z-index: 2;
         }
         
-        /* Barre de navigation fixe - CORRIGÉ */
-        .main-nav {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          z-index: 1000;
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(12px);
-          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        
         @media (max-width: 768px) {
-          body {
-            padding-top: 70px; /* Ajusté pour mobile */
-          }
-          
           .timeline::before {
             left: 2rem;
           }
@@ -328,8 +320,8 @@ export default function HeritagePage() {
         }
       `}</style>
 
-      {/* Navigation - CORRIGÉ */}
-      <nav className="main-nav">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="text-2xl font-bold text-gray-900">
@@ -363,7 +355,7 @@ export default function HeritagePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <div ref={vantaBgRef} className="vanta-bg"></div>
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
           <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">
@@ -376,7 +368,7 @@ export default function HeritagePage() {
       </section>
 
       {/* Timeline Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white content-offset">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Chronologie d'Excellence</h2>
@@ -492,58 +484,49 @@ export default function HeritagePage() {
       </section>
 
       {/* Heritage Values */}
-<section className="py-20 bg-gray-50">
-  <div className="max-w-7xl mx-auto px-6">
-    <div className="text-center mb-16 scroll-reveal">
-      <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-        Les Valeurs du Patrimoine
-      </h2>
-      <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-        Les principes fondamentaux qui ont guidé Patek Philippe depuis 1839
-      </p>
-    </div>
-
-    <div className="grid md:grid-cols-3 gap-10">
-      {/* Excellence */}
-      <div className="heritage-card rounded-xl p-8 text-center bg-white shadow-lg hover:shadow-xl transition scroll-reveal">
-        <div className="w-16 h-16 bg-yellow-600/10 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
-          <Award className="w-8 h-8" strokeWidth={2} />
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16 scroll-reveal">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Les Valeurs du Patrimoine</h2>
+            <p className="text-xl text-gray-600">Les principes fondamentaux qui ont guidé Patek Philippe depuis 1839</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="heritage-card rounded-xl p-8 text-center scroll-reveal bg-white">
+              <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i className="fas fa-crown text-2xl text-white"></i>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Excellence</h3>
+              <p className="text-gray-600">
+                L'engagement inébranlable envers la qualité supérieure dans chaque aspect 
+                de la fabrication horlogère, depuis les matériaux jusqu'à la finition.
+              </p>
+            </div>
+            
+            <div className="heritage-card rounded-xl p-8 text-center scroll-reveal bg-white">
+              <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i className="fas fa-dna text-2xl text-white"></i>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Héritage</h3>
+              <p className="text-gray-600">
+                La transmission du savoir-faire de génération en génération, 
+                perpétuant les traditions horlogères suisses les plus authentiques.
+              </p>
+            </div>
+            
+            <div className="heritage-card rounded-xl p-8 text-center scroll-reveal bg-white">
+              <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i className="fas fa-lightbulb text-2xl text-white"></i>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Innovation</h3>
+              <p className="text-gray-600">
+                La recherche constante de nouvelles solutions techniques et esthétiques 
+                pour repousser les limites de l'art horloger.
+              </p>
+            </div>
+          </div>
         </div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-4">Excellence</h3>
-        <p className="text-gray-600 leading-relaxed">
-          L&apos;engagement inébranlable envers la qualité supérieure dans chaque
-          aspect de la fabrication horlogère, depuis les matériaux jusqu&apos;à la
-          finition.
-        </p>
-      </div>
-
-      {/* Héritage */}
-      <div className="heritage-card rounded-xl p-8 text-center bg-white shadow-lg hover:shadow-xl transition scroll-reveal">
-        <div className="w-16 h-16 bg-yellow-600/10 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
-          <Hourglass className="w-8 h-8" strokeWidth={2} />
-        </div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-4">Héritage</h3>
-        <p className="text-gray-600 leading-relaxed">
-          La transmission du savoir-faire de génération en génération,
-          perpétuant les traditions horlogères suisses les plus authentiques.
-        </p>
-      </div>
-
-      {/* Innovation */}
-      <div className="heritage-card rounded-xl p-8 text-center bg-white shadow-lg hover:shadow-xl transition scroll-reveal">
-        <div className="w-16 h-16 bg-yellow-600/10 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
-          <Lightbulb className="w-8 h-8" strokeWidth={2} />
-        </div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-4">Innovation</h3>
-        <p className="text-gray-600 leading-relaxed">
-          La recherche constante de nouvelles solutions techniques et
-          esthétiques pour repousser les limites de l&apos;art horloger.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
+      </section>
 
       {/* Family Legacy */}
       <section className="py-20 bg-white">
@@ -587,19 +570,17 @@ export default function HeritagePage() {
               </div>
             </div>
             <div className="scroll-reveal">
-  <div className="relative">
-    <img
-      src="/images/patek-atelier.jpg"
-      alt="Atelier Patek Philippe"
-      className="rounded-lg shadow-2xl w-full h-[420px] object-cover transition-transform duration-500 group-hover:scale-105"
-    />
-    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
-    <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-lg">
-      <div className="text-2xl font-bold text-yellow-600">5</div>
-      <div className="text-sm text-gray-600">Générations de maîtres horlogers</div>
-    </div>
-  </div>
-</di
+              <div className="relative">
+                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a62d?w=800&h=600&fit=crop" 
+                     alt="Atelier Patek Philippe" 
+                     className="rounded-lg shadow-2xl w-full"/>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
+                <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-2xl font-bold text-yellow-600">5</div>
+                  <div className="text-sm text-gray-600">Générations de maîtres horlogers</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
