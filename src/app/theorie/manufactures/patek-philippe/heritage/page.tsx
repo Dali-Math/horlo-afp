@@ -126,6 +126,7 @@ export default function HeritagePage() {
           font-family: 'Inter', sans-serif;
           background: var(--cream);
           overflow-x: hidden;
+          padding-top: 80px; /* Compense la barre de navigation fixe */
         }
         
         .hero-title {
@@ -146,16 +147,7 @@ export default function HeritagePage() {
           z-index: 0;
           will-change: transform;
         }
-        .nav-bar {
-  position: fixed;
-  top: 72px;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background: rgba(250, 248, 245, 0.95);
-  border-bottom: 1px solid #efe8d6;
-}
-
+        
         .nav-link {
           position: relative;
           transition: all 0.3s ease;
@@ -294,7 +286,23 @@ export default function HeritagePage() {
           z-index: 2;
         }
         
+        /* Barre de navigation fixe - CORRIGÉ */
+        .main-nav {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 1000;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(12px);
+          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
         @media (max-width: 768px) {
+          body {
+            padding-top: 70px; /* Ajusté pour mobile */
+          }
+          
           .timeline::before {
             left: 2rem;
           }
@@ -320,8 +328,8 @@ export default function HeritagePage() {
         }
       `}</style>
 
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
+      {/* Navigation - CORRIGÉ */}
+      <nav className="main-nav">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="text-2xl font-bold text-gray-900">
@@ -355,7 +363,7 @@ export default function HeritagePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div ref={vantaBgRef} className="vanta-bg"></div>
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
           <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">
@@ -368,7 +376,7 @@ export default function HeritagePage() {
       </section>
 
       {/* Timeline Section */}
-      <section className="py-20 bg-white content-offset">
+      <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Chronologie d'Excellence</h2>
