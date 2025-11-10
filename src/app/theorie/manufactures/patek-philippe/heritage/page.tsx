@@ -1,29 +1,13 @@
-// pages/heritage.tsx
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
-import Script from 'next/script';
+import { useEffect, useRef } from 'react';
 
-// Déclaration TypeScript pour Vanta
-declare global {
-  interface Window {
-    VANTA: {
-      WAVES: (options: any) => {
-        destroy: () => void;
-      };
-    };
-    THREE: any;
-  }
-}
-
-export default function Heritage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+export default function Page() {
   const vantaBgRef = useRef<HTMLDivElement>(null);
-  const vantaEffectRef = useRef<ReturnType<typeof window.VANTA.WAVES> | null>(null);
-  const requestRef = useRef<number>();
+  const vantaEffectRef = useRef<any>(null);
 
   useEffect(() => {
+    // Load Three.js and Vanta.js scripts
     const loadScript = (src: string) => {
       return new Promise((resolve, reject) => {
         const script = document.createElement('script');
@@ -34,104 +18,56 @@ export default function Heritage() {
       });
     };
 
-    const initializeVanta = async () => {
+    const initVanta = async () => {
       try {
         if (!(window as any).THREE) {
           await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
         }
         if (!(window as any).VANTA) {
-          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.waves.min.js');
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js');
         }
-        if (vantaBgRef.current && (window as any).VANTA && !vantaEffectRef.current) {
-          vantaEffectRef.current = (window as any).VANTA.WAVES({
+        if (vantaBgRef.current && (window as any).VANTA) {
+          vantaEffectRef.current = (window as any).VANTA.BIRDS({
             el: vantaBgRef.current,
             mouseControls: true,
             touchControls: true,
             gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            scale: 1.00,
-            scaleMobile: 1.00,
-            color: 0x1a2332,
-            shininess: 30.00,
-            waveHeight: 15.00,
-            waveSpeed: 0.75,
-            zoom: 0.65
+            minHeight: 300.00,
+            minWidth: 300.00,
+            scale: 1.0,
+            scaleMobile: 1.0,
+            backgroundColor: 0xf8f6f0,
+            color1: 0xd4af37,
+            color2: 0x1a2332,
+            birdSize: 1.2,
+            wingSpan: 25,
+            quantity: 3,
           });
         }
       } catch (error) {
-        console.error('Erreur de chargement de Vanta.js :', error);
+        console.error('Error loading Vanta:', error);
       }
     };
 
-    // Animation de la timeline
-    const timelineObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-        }
-      });
-    }, {
-      threshold: 0.3,
-      rootMargin: '0px 0px -100px 0px'
-    });
+    initVanta();
 
-    document.querySelectorAll('.timeline-item').forEach(item => {
-      timelineObserver.observe(item);
-    });
-
-    // Scroll reveal animation
-    const scrollObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-        }
-      });
-    }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    });
-
-    document.querySelectorAll('.scroll-reveal').forEach(el => {
-      scrollObserver.observe(el);
-    });
-
-    // Effet parallaxe optimisé avec requestAnimationFrame
-    let ticking = false;
+    // Parallax effect on VANTA bg
     const handleScroll = () => {
-      if (!ticking) {
-        requestRef.current = requestAnimationFrame(() => {
-          const scrolled = window.pageYOffset;
-          const parallax = vantaBgRef.current;
-          if (parallax) {
-            const speed = scrolled * 0.3;
-            parallax.style.transform = `translateY(${speed}px)`;
-          }
-          ticking = false;
-        });
-        ticking = true;
+      const scrolled = window.pageYOffset;
+      const parallax = vantaBgRef.current;
+      if (parallax) {
+        const speed = scrolled * 0.3; // 0.3 for subtle parallax, adjust as needed
+        parallax.style.transform = `translateY(${speed}px)`;
       }
     };
 
     window.addEventListener('scroll', handleScroll);
 
-    // Initialisation après le chargement
-    if (typeof window !== 'undefined') {
-      initializeVanta();
-    }
-
     return () => {
-      // Nettoyage
-      window.removeEventListener('scroll', handleScroll);
-      if (requestRef.current) {
-        cancelAnimationFrame(requestRef.current);
-      }
       if (vantaEffectRef.current) {
         vantaEffectRef.current.destroy();
-        vantaEffectRef.current = null;
       }
-      timelineObserver.disconnect();
-      scrollObserver.disconnect();
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
