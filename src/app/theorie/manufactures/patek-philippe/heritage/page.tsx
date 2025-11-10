@@ -572,7 +572,7 @@ export default function HeritagePage() {
             <div className="scroll-reveal">
   <div className="relative h-[400px] rounded-lg overflow-hidden group">
     <img
-      src="/images/atelier-patek.jpg"
+      src="/images/patek-atelier.jpg"
       alt="Atelier Patek Philippe"
       className="w-full h-full object-cover rounded-lg shadow-2xl transition-transform duration-700 group-hover:scale-105"
     />
