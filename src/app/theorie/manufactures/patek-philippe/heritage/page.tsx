@@ -126,6 +126,7 @@ export default function HeritagePage() {
           font-family: 'Inter', sans-serif;
           background: var(--cream);
           overflow-x: hidden;
+          padding-top: 80px; /* Compense la barre de navigation fixe */
         }
         
         .hero-title {
@@ -285,7 +286,23 @@ export default function HeritagePage() {
           z-index: 2;
         }
         
+        /* Barre de navigation fixe - CORRIGÉ */
+        .main-nav {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 1000;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(12px);
+          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
         @media (max-width: 768px) {
+          body {
+            padding-top: 70px; /* Ajusté pour mobile */
+          }
+          
           .timeline::before {
             left: 2rem;
           }
@@ -311,8 +328,8 @@ export default function HeritagePage() {
         }
       `}</style>
 
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
+      {/* Navigation - CORRIGÉ */}
+      <nav className="main-nav">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="text-2xl font-bold text-gray-900">
@@ -346,7 +363,7 @@ export default function HeritagePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div ref={vantaBgRef} className="vanta-bg"></div>
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
           <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">
@@ -498,7 +515,7 @@ export default function HeritagePage() {
               <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <i className="fas fa-dna text-2xl text-white"></i>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Heritage</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Héritage</h3>
               <p className="text-gray-600">
                 La transmission du savoir-faire de génération en génération, 
                 perpétuant les traditions horlogères suisses les plus authentiques.
