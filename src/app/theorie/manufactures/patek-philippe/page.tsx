@@ -1,3 +1,5 @@
+"use client";
+
 import Head from "next/head";
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
@@ -7,32 +9,26 @@ const collections = [
   {
     title: "Calatrava",
     description: "L'essence même de l'élégance horlogère. Symbole intemporel du style Patek Philippe avec son design pur et ses lignes classiques.",
-    img: "/images/calatrava.jpg",
   },
   {
     title: "Nautilus",
     description: "L'icône du sport de luxe. Conçu par Gérald Genta, le Nautilus combine robustesse et élégance dans un design emblématique.",
-    img: "/images/nautilus.jpg",
   },
   {
     title: "Aquanaut",
     description: "L'aventure moderne. Design contemporain avec bracelet Tropical innovant, parfait pour l'homme actif et élégant.",
-    img: "/images/aquanaut.jpg",
   },
   {
     title: "Complications",
     description: "L'art de la complexité. Montres avec fonctions avancées alliant innovation technique et beauté esthétique.",
-    img: "/images/complications.jpg",
   },
   {
     title: "Grandes Complications",
     description: "Le sommet de l'horlogerie. Créations exceptionnelles avec plusieurs complications, représentant l'excellence absolue.",
-    img: "/images/grandes-complications.jpg",
   },
   {
     title: "Twenty~4",
     description: "L'art déco revisité. Collection inspirée des années 1920 avec des formes géométriques audacieuses et un style raffiné.",
-    img: "/images/twenty4.jpg",
   },
 ];
 
@@ -74,15 +70,14 @@ const fadeIn = {
 export default function PatekPhilippePage() {
   const vantaRef = useRef<HTMLDivElement>(null);
 
-  // Background Vanta birds
   useEffect(() => {
     let effect: any = null;
     if (typeof window !== "undefined" && (window as any).VANTA && (window as any).VANTA.BIRDS) {
       effect = (window as any).VANTA.BIRDS({
         el: vantaRef.current,
-        backgroundColor: 0xf8f6f0, // cream
-        color1: 0xd4af37, // gold
-        color2: 0x1a2332, // deep-blue
+        backgroundColor: 0xf8f6f0,
+        color1: 0xd4af37,
+        color2: 0x1a2332,
         birdSize: 1.3,
         wingSpan: 25,
       });
@@ -171,7 +166,10 @@ export default function PatekPhilippePage() {
                 transition={{ duration: 0.6, delay: idx * 0.13 }}
                 className="rounded-lg overflow-hidden shadow-lg bg-gray-50 hover:scale-105 hover:shadow-2xl transition-transform duration-300"
               >
-                <img src={col.img} alt={col.title} className="w-full h-40 object-cover bg-gray-200" />
+                {/* Dummy image 100% compatible, jamais bloquant */}
+                <div className="w-full h-40 flex items-center justify-center bg-gray-200 text-gray-500">
+                  <i className="fa-solid fa-image text-4xl"/>
+                </div>
                 <div className="p-6">
                   <h3 className="text-lg font-bold mb-2">{col.title}</h3>
                   <p className="text-base">{col.description}</p>
