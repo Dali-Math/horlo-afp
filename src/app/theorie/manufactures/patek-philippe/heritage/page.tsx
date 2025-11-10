@@ -3,41 +3,54 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
-// Déclaration TypeScript pour window.VANTA
-declare global {
-  interface Window {
-    VANTA: {
-      WAVES: (options: any) => void;
-    };
-  }
-}
-
 export default function Heritage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const vantaBgRef = useRef<HTMLDivElement>(null);
+  const vantaEffectRef = useRef<any>(null);
 
   useEffect(() => {
-    // Initialize Vanta.js background
-    if (typeof window !== 'undefined' && vantaBgRef.current) {
-      const VANTA = window.VANTA;
-      if (VANTA && VANTA.WAVES) {
-        VANTA.WAVES({
-          el: vantaBgRef.current,
-          mouseControls: true,
-          touchControls: true,
-          gyroControls: false,
-          minHeight: 200.00,
-          minWidth: 200.00,
-          scale: 1.00,
-          scaleMobile: 1.00,
-          color: 0x1a2332,
-          shininess: 30.00,
-          waveHeight: 15.00,
-          waveSpeed: 0.75,
-          zoom: 0.65
-        });
+    // Load Three.js and Vanta.js scripts
+    const loadScript = (src: string) => {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    };
+
+    const initVanta = async () => {
+      try {
+        if (!(window as any).THREE) {
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
+        }
+        if (!(window as any).VANTA) {
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.waves.min.js');
+        }
+        if (vantaBgRef.current && (window as any).VANTA) {
+          vantaEffectRef.current = (window as any).VANTA.WAVES({
+            el: vantaBgRef.current,
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x1a2332,
+            shininess: 30.00,
+            waveHeight: 15.00,
+            waveSpeed: 0.75,
+            zoom: 0.65
+          });
+        }
+      } catch (error) {
+        console.error('Error loading Vanta:', error);
       }
-    }
+    };
+
+    initVanta();
 
     // Timeline animation
     const timelineObserver = new IntersectionObserver((entries) => {
@@ -641,7 +654,7 @@ export default function Heritage() {
             </div>
             <div className="scroll-reveal">
               <div className="relative">
-                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a62d?w=800&h=600&fit=crop " 
+                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a62d?w=800&h=600&fit=crop" 
                      alt="Atelier Patek Philippe" 
                      className="rounded-lg shadow-2xl w-full"/>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
