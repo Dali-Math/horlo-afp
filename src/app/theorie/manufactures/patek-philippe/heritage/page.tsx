@@ -4,9 +4,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
-const vantaBgRef = useRef<HTMLDivElement>(null);
-const vantaEffectRef = useRef<any>(null);
-
 
 // Déclaration TypeScript pour Vanta
 declare global {
@@ -16,6 +13,7 @@ declare global {
         destroy: () => void;
       };
     };
+    THREE: any;
   }
 }
 
@@ -26,52 +24,45 @@ export default function Heritage() {
   const requestRef = useRef<number>();
 
   useEffect(() => {
-  const loadScript = (src: string) => {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = src;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  };
+    const loadScript = (src: string) => {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    };
 
-  const initializeVanta = async () => {
-    try {
-      if (!(window as any).THREE) {
-        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
+    const initializeVanta = async () => {
+      try {
+        if (!(window as any).THREE) {
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
+        }
+        if (!(window as any).VANTA) {
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.waves.min.js');
+        }
+        if (vantaBgRef.current && (window as any).VANTA && !vantaEffectRef.current) {
+          vantaEffectRef.current = (window as any).VANTA.WAVES({
+            el: vantaBgRef.current,
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x1a2332,
+            shininess: 30.00,
+            waveHeight: 15.00,
+            waveSpeed: 0.75,
+            zoom: 0.65
+          });
+        }
+      } catch (error) {
+        console.error('Erreur de chargement de Vanta.js :', error);
       }
-      if (!(window as any).VANTA) {
-        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.waves.min.js');
-      }
-      if (vantaBgRef.current && (window as any).VANTA) {
-        vantaEffectRef.current = (window as any).VANTA.WAVES({
-          el: vantaBgRef.current,
-          mouseControls: true,
-          touchControls: true,
-          gyroControls: false,
-          minHeight: 200.00,
-          minWidth: 200.00,
-          scale: 1.00,
-          scaleMobile: 1.00,
-          color: 0x1a2332,
-          shininess: 30.00,
-          waveHeight: 15.00,
-          waveSpeed: 0.75,
-          zoom: 0.65
-        });
-      }
-    } catch (error) {
-      console.error('Erreur de chargement de Vanta.js :', error);
-    }
-  };
-
-  initializeVanta();
-
-  return () => {
-    if (vantaEffectRef.current) vantaEffectRef.current.destroy();
-  };
-}, []);
+    };
 
     // Animation de la timeline
     const timelineObserver = new IntersectionObserver((entries) => {
@@ -124,20 +115,14 @@ export default function Heritage() {
 
     window.addEventListener('scroll', handleScroll);
 
-    // Initialisation après le chargement des scripts
+    // Initialisation après le chargement
     if (typeof window !== 'undefined') {
-      if (window.VANTA) {
-        initializeVanta();
-      } else {
-        // Attendre que Vanta soit chargé
-        window.addEventListener('load', initializeVanta);
-      }
+      initializeVanta();
     }
 
     return () => {
       // Nettoyage
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('load', initializeVanta);
       if (requestRef.current) {
         cancelAnimationFrame(requestRef.current);
       }
@@ -154,11 +139,11 @@ export default function Heritage() {
     <>
       {/* Scripts externes */}
       <Script 
-        src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" 
+        src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" 
         strategy="beforeInteractive" 
       />
       <Script 
-        src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"
+        src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.waves.min.js"
         strategy="lazyOnload"
       />
 
