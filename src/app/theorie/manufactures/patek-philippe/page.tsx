@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import * as THREE from 'three';
 import { Inter, Playfair_Display } from 'next/font/google';
 import { 
   FaBars, FaArrowRight, FaCog, FaAward, FaGlobe, FaRocket,
