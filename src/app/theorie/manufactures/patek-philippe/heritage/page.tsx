@@ -77,7 +77,7 @@ export default function HeritagePage() {
         }
         .nav-bar {
           position: fixed;
-          top: 0;
+          top: 72px;
           left: 0; right: 0;
           z-index: 1000;
           background: rgba(250, 248, 245, 0.95);
