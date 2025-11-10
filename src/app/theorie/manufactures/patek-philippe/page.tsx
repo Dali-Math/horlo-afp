@@ -10,6 +10,13 @@ export default function Page() {
     // Load Three.js and Vanta.js scripts
     const loadScript = (src: string) => {
       return new Promise((resolve, reject) => {
+        // Check if script already exists
+        const existing = document.querySelector(`script[src="${src}"]`);
+        if (existing) {
+          resolve(true);
+          return;
+        }
+
         const script = document.createElement('script');
         script.src = src;
         script.onload = resolve;
@@ -21,17 +28,19 @@ export default function Page() {
     const initVanta = async () => {
       try {
         // Load Three.js first
-        if (!(window as any).THREE) {
-          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
-        }
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
+        
+        // Wait a bit for Three.js to be fully available
+        await new Promise(resolve => setTimeout(resolve, 100));
         
         // Then load Vanta
-        if (!(window as any).VANTA) {
-          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js');
-        }
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js');
+        
+        // Wait a bit for Vanta to be fully available
+        await new Promise(resolve => setTimeout(resolve, 100));
 
         // Initialize Vanta effect
-        if (vantaBgRef.current && (window as any).VANTA) {
+        if (vantaBgRef.current && (window as any).VANTA && (window as any).VANTA.BIRDS) {
           vantaEffectRef.current = (window as any).VANTA.BIRDS({
             el: vantaBgRef.current,
             mouseControls: true,
@@ -52,6 +61,8 @@ export default function Page() {
             cohesion: 20.00,
             quantity: 3.00
           });
+        } else {
+          console.error('Vanta.js not loaded properly');
         }
       } catch (error) {
         console.error('Error loading Vanta:', error);
