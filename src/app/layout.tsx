@@ -8,60 +8,50 @@ import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
 import ThemeProvider from "@/components/ThemeProvider";
 import ClientLayout from "@/components/ClientLayout";
-import Script from 'next/script';
 import 'swiper/css';
 
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: false });
-const playfair = Playfair_Display({ 
-  subsets: ['latin'],
-  variable: '--font-playfair'
-})
-const inter = Inter({ 
-  subsets: ['latin'],
-  variable: '--font-inter'
-})
+const playfair = Playfair_Display({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: "Patek Philippe – Référence Mondiale en Horlogerie Suisse",
+  title: "HorloLearn – Passion & Découverte Horlogère Suisse",
   description:
-    "Patek Philippe perpétue la tradition horlogère suisse depuis 1839 avec une passion inébranlable pour la perfection. Découvrez nos collections iconiques et notre savoir-faire d'exception.",
+    "HorloLearn partage la passion de l'horlogerie suisse à travers des fiches techniques, quiz, vidéos et ressources destinées aux amateurs et curieux du monde horloger.",
   keywords: [
-    "Patek Philippe",
     "horlogerie suisse",
-    "montres de luxe",
-    "Nautilus",
-    "Calatrava",
-    "Grandes Complications",
-    "manufacture horlogère",
-    "Genève",
-    "savoir-faire horloger",
+    "ETA 6497",
+    "apprentissage horloger",
+    "passion horlogerie",
+    "culture horlogère",
+    "HorloLearn",
   ],
   metadataBase: new URL(SITE.domain),
   openGraph: {
-    title: "Patek Philippe – Référence Mondiale en Horlogerie Suisse",
+    title: "HorloLearn – Passion & Découverte Horlogère Suisse",
     description:
-      "Plus de 180 ans d'excellence horlogère. Patek Philippe crée des garde-temps d'exception qui se transmettent de génération en génération.",
+      "Plateforme indépendante dédiée aux passionnés d'horlogerie suisse. Découvrez les mécanismes, les gestes et les savoir-faire horlogers à travers des ressources pédagogiques accessibles à tous.",
     url: SITE.domain,
-    siteName: "Patek Philippe",
+    siteName: SITE.name,
     images: [
       {
         url: SITE.logo,
         width: 1200,
         height: 630,
-        alt: "Patek Philippe – Référence Mondiale",
+        alt: "HorloLearn – Passion Horlogère Suisse",
       },
     ],
-    locale: "fr_CH",
+    locale: SITE.locale,
     type: "website",
   },
   alternates: { canonical: SITE.domain },
   other: {
     "ai:summary":
-      "Patek Philippe est la référence mondiale en horlogerie de luxe suisse, perpétuant depuis 1839 une tradition d'excellence et d'innovation.",
+      "HorloLearn partage la culture et les savoir-faire de l'horlogerie suisse, à travers des ressources accessibles aux passionnés et curieux.",
     "ai:topic":
-      "Horlogerie de luxe, Patek Philippe, montres suisses, savoir-faire horloger, complications horlogères",
-    "ai:author": "Patek Philippe",
-    "color-scheme": "light",
+      "Horlogerie suisse, mécanique de précision, culture horlogère, ETA 6497",
+    "ai:author": "Équipe HorloLearn",
+    "color-scheme": "dark light",
   },
 };
 
@@ -73,71 +63,46 @@ export default function RootLayout({
   const org = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Patek Philippe",
-    url: "https://www.patek-philippe.com",
-    logo: "https://www.patek-philippe.com/logo.png",
+    name: "HorloLearn",
+    url: "https://www.horlolearn.ch",
+    logo: "https://www.horlolearn.ch/og-image.jpg",
     description:
-      "Patek Philippe est une manufacture horlogère suisse de prestige fondée en 1839 à Genève. Reconnue mondialement pour ses montres de haute horlogerie et ses complications exceptionnelles.",
+      "HorloLearn est une organisation suisse indépendante dédiée aux passionnés d'horlogerie. Elle propose des fiches techniques, quiz, vidéos et ressources pour découvrir et comprendre les savoir-faire horlogers, sans offrir de formation officielle.",
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Genève",
       addressCountry: "CH",
     },
     contactPoint: [
       {
         "@type": "ContactPoint",
-        email: "info@patek.ch",
-        contactType: "customer service",
-        availableLanguage: ["fr-CH", "fr", "en", "de", "it"],
+        email: "contact.horlogeries@gmail.com",
+        contactType: "information",
+        availableLanguage: ["fr-CH", "fr", "en"],
       },
     ],
-    foundingDate: "1839",
-    foundingLocation: {
-      "@type": "Place",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Genève",
-        addressCountry: "CH",
-      },
-    },
+    sameAs: [
+      "https://github.com/Dali-Math",
+      "https://www.youtube.com/@HorloLearn",
+      "https://www.linkedin.com/in/...",
+    ],
   };
 
   const siteSearch = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    url: "https://www.patek-philippe.com",
-    name: "Patek Philippe",
+    url: "https://www.horlolearn.ch",
+    name: "HorloLearn",
     potentialAction: {
       "@type": "SearchAction",
-      target: "https://www.patek-philippe.com/recherche?q={search_term_string}",
+      target: "https://www.horlolearn.ch/recherche?q={search_term_string}",
       "query-input": "required name=search_term_string",
     },
   };
 
   return (
-    <html lang="fr" suppressHydrationWarning className={`${playfair.variable} ${inter.variable}`}>
-      <head>
-        {/* Font Awesome */}
-        <link 
-          rel="stylesheet" 
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-          crossOrigin="anonymous"
-        />
-      </head>
-      <body className="bg-[#f8f6f0] text-slate-900 transition-colors duration-300">
-        {/* Three.js - Chargé en premier, avant tout */}
-        <Script 
-          src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
-          strategy="beforeInteractive"
-        />
-        
-        {/* Vanta.js Birds - Chargé après Three.js */}
-        <Script 
-          src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js"
-          strategy="afterInteractive"
-        />
-
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+    <html lang="fr" suppressHydrationWarning>
+      <body className="bg-light-100 text-slate-900 dark:bg-dark-900 dark:text-light-100 transition-colors duration-300">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <ClientLayout>
             <main className="min-h-screen overflow-visible relative">{children}</main>
           </ClientLayout>
@@ -146,24 +111,6 @@ export default function RootLayout({
           <JsonLd data={org} />
           <JsonLd data={siteSearch} />
         </ThemeProvider>
-
-        {/* Autres effets Vanta.js (optionnels) */}
-        <Script 
-          src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js"
-          strategy="lazyOnload"
-        />
-        <Script 
-          src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.waves.min.js"
-          strategy="lazyOnload"
-        />
-        <Script 
-          src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.topology.min.js"
-          strategy="lazyOnload"
-        />
-        <Script 
-          src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.halo.min.js"
-          strategy="lazyOnload"
-        />
       </body>
     </html>
   );
