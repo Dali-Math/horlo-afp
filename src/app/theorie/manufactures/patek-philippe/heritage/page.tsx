@@ -368,7 +368,7 @@ export default function HeritagePage() {
       </section>
 
       {/* Timeline Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white content-offset">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Chronologie d'Excellence</h2>
