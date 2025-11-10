@@ -146,7 +146,16 @@ export default function HeritagePage() {
           z-index: 0;
           will-change: transform;
         }
-        
+        .nav-bar {
+  position: fixed;
+  top: 72px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(250, 248, 245, 0.95);
+  border-bottom: 1px solid #efe8d6;
+}
+
         .nav-link {
           position: relative;
           transition: all 0.3s ease;
