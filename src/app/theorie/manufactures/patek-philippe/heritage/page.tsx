@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-
+import { Award, Hourglass, Lightbulb } from 'lucide-react';
 declare global {
   interface Window {
     VANTA: any;
@@ -492,49 +492,58 @@ export default function HeritagePage() {
       </section>
 
       {/* Heritage Values */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16 scroll-reveal">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Les Valeurs du Patrimoine</h2>
-            <p className="text-xl text-gray-600">Les principes fondamentaux qui ont guidé Patek Philippe depuis 1839</p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="heritage-card rounded-xl p-8 text-center scroll-reveal bg-white">
-              <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i className="fas fa-crown text-2xl text-white"></i>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Excellence</h3>
-              <p className="text-gray-600">
-                L'engagement inébranlable envers la qualité supérieure dans chaque aspect 
-                de la fabrication horlogère, depuis les matériaux jusqu'à la finition.
-              </p>
-            </div>
-            
-            <div className="heritage-card rounded-xl p-8 text-center scroll-reveal bg-white">
-              <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i className="fas fa-dna text-2xl text-white"></i>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Héritage</h3>
-              <p className="text-gray-600">
-                La transmission du savoir-faire de génération en génération, 
-                perpétuant les traditions horlogères suisses les plus authentiques.
-              </p>
-            </div>
-            
-            <div className="heritage-card rounded-xl p-8 text-center scroll-reveal bg-white">
-              <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i className="fas fa-lightbulb text-2xl text-white"></i>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Innovation</h3>
-              <p className="text-gray-600">
-                La recherche constante de nouvelles solutions techniques et esthétiques 
-                pour repousser les limites de l'art horloger.
-              </p>
-            </div>
-          </div>
+<section className="py-20 bg-gray-50">
+  <div className="max-w-7xl mx-auto px-6">
+    <div className="text-center mb-16 scroll-reveal">
+      <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+        Les Valeurs du Patrimoine
+      </h2>
+      <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        Les principes fondamentaux qui ont guidé Patek Philippe depuis 1839
+      </p>
+    </div>
+
+    <div className="grid md:grid-cols-3 gap-10">
+      {/* Excellence */}
+      <div className="heritage-card rounded-xl p-8 text-center bg-white shadow-lg hover:shadow-xl transition scroll-reveal">
+        <div className="w-16 h-16 bg-yellow-600/10 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Award className="w-8 h-8" strokeWidth={2} />
         </div>
-      </section>
+        <h3 className="text-2xl font-bold text-gray-900 mb-4">Excellence</h3>
+        <p className="text-gray-600 leading-relaxed">
+          L&apos;engagement inébranlable envers la qualité supérieure dans chaque
+          aspect de la fabrication horlogère, depuis les matériaux jusqu&apos;à la
+          finition.
+        </p>
+      </div>
+
+      {/* Héritage */}
+      <div className="heritage-card rounded-xl p-8 text-center bg-white shadow-lg hover:shadow-xl transition scroll-reveal">
+        <div className="w-16 h-16 bg-yellow-600/10 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Hourglass className="w-8 h-8" strokeWidth={2} />
+        </div>
+        <h3 className="text-2xl font-bold text-gray-900 mb-4">Héritage</h3>
+        <p className="text-gray-600 leading-relaxed">
+          La transmission du savoir-faire de génération en génération,
+          perpétuant les traditions horlogères suisses les plus authentiques.
+        </p>
+      </div>
+
+      {/* Innovation */}
+      <div className="heritage-card rounded-xl p-8 text-center bg-white shadow-lg hover:shadow-xl transition scroll-reveal">
+        <div className="w-16 h-16 bg-yellow-600/10 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Lightbulb className="w-8 h-8" strokeWidth={2} />
+        </div>
+        <h3 className="text-2xl font-bold text-gray-900 mb-4">Innovation</h3>
+        <p className="text-gray-600 leading-relaxed">
+          La recherche constante de nouvelles solutions techniques et
+          esthétiques pour repousser les limites de l&apos;art horloger.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
 
       {/* Family Legacy */}
       <section className="py-20 bg-white">
