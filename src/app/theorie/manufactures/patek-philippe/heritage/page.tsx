@@ -321,7 +321,7 @@ export default function HeritagePage() {
       `}</style>
 
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
+      <nav   className="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200"   style={{ top: 72 }}
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="text-2xl font-bold text-gray-900">
