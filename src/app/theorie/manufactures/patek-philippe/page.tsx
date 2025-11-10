@@ -732,11 +732,9 @@ export default function Page() {
           font-size: 0.9rem;
         }
         
-        @media(max-width: 900px) {
-          .nav-content {padding:16px 10px;}
-          .hero-title {font-size: 3rem;}
-          .hero-content {max-width:98vw;}
-          .hero-section {padding-top:62px;}
+        @media (max-width: 768px) {
+          .nav-links {
+            display: none;
           }
           
           .timeline-item:nth-child(odd),
