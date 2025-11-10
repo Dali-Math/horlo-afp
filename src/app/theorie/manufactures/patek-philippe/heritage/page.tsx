@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import Script from 'next/script';
 
 export default function Page() {
   const vantaBgRef = useRef<HTMLDivElement>(null);
