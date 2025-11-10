@@ -3,86 +3,270 @@
 import Head from "next/head";
 import { useEffect, useRef } from "react";
 
-export default function Home() {
+export default function PatekPhilippePage() {
   const vantaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let effect: any = null;
-    if (typeof window !== "undefined" && (window as any).VANTA && (window as any).VANTA.BIRDS) {
-      effect = (window as any).VANTA.BIRDS({
-        el: vantaRef.current,
-        backgroundColor: 0xf8f6f0,
-        color1: 0xd4af37,
-        color2: 0x1a2332,
-        birdSize: 1.3,
-        wingSpan: 25,
-        quantity: 5,
-        speedLimit: 4,
-        alignment: 47,
-        cohesion: 20,
-        separation: 32
-      });
+    // Load Vanta, Anime.js after window is available
+    if (typeof window !== "undefined") {
+      // Vanta birds
+      if ((window as any).VANTA?.BIRDS && vantaRef.current) {
+        (window as any).VANTA.BIRDS({
+          el: vantaRef.current,
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200,
+          minWidth: 200,
+          scale: 1,
+          backgroundColor: 0xfaf8f5,
+          color1: 0xd4af37,
+          color2: 0xf4e4a6,
+          colorMode: "lerp",
+          birdSize: 1.2,
+          wingSpan: 25,
+          speedLimit: 3,
+          separation: 20,
+          alignment: 20,
+          cohesion: 20,
+          quantity: 3
+        });
+      }
+
+      // Animate in on scroll
+      setTimeout(() => {
+        if ((window as any).anime) {
+          // Hero
+          (window as any).anime({
+            targets: '.hero-title',
+            opacity: [0, 1],
+            translateY: [50, 0],
+            duration: 1000,
+            delay: 500,
+            easing: 'easeOutQuart'
+          });
+          (window as any).anime({
+            targets: '.hero-subtitle',
+            opacity: [0, 1],
+            translateY: [30, 0],
+            duration: 800,
+            delay: 800,
+            easing: 'easeOutQuart'
+          });
+          (window as any).anime({
+            targets: '.hero-quote',
+            opacity: [0, 1],
+            translateY: [30, 0],
+            duration: 800,
+            delay: 1100,
+            easing: 'easeOutQuart'
+          });
+          (window as any).anime({
+            targets: '.stat-item',
+            opacity: [0, 1],
+            translateY: [30, 0],
+            duration: 600,
+            delay: (window as any).anime.stagger(200, {start: 1400}),
+            easing: 'easeOutQuart'
+          });
+          // Timeline
+          (window as any).anime({
+            targets: '.timeline-item',
+            opacity: [0, 1],
+            translateY: [50, 0],
+            duration: 600,
+            delay: (el: any, i: number) => i * 200,
+            easing: 'easeOutQuart'
+          });
+          // Collections
+          (window as any).anime({
+            targets: '.collection-card',
+            opacity: [0, 1],
+            translateY: [50, 0],
+            duration: 600,
+            delay: (el: any, i: number) => i * 100,
+            easing: 'easeOutQuart'
+          });
+          // Innovation numbers
+          document.querySelectorAll('.innovation-number').forEach((number: any) => {
+            const target = parseInt(number.dataset.count);
+            (window as any).anime({
+              targets: number,
+              innerHTML: [0, target],
+              duration: 2000,
+              delay: 500,
+              easing: 'easeOutQuart',
+              round: 1
+            });
+          });
+          // Savoir-faire/craft
+          (window as any).anime({
+            targets: '.craft-item',
+            opacity: [0, 1],
+            translateY: [30, 0],
+            duration: 600,
+            delay: (el: any, i: number) => i * 200,
+            easing: 'easeOutQuart'
+          });
+        }
+      }, 1000);
     }
-    return () => { if (effect) effect.destroy(); };
   }, []);
+
+  // Smooth scroll for navigation (Next.js native anchor links work by default)
+  // No need to reimplement unless you want custom behavior
 
   return (
     <>
       <Head>
         <title>Patek Philippe - Référence Mondiale en Horlogerie Suisse</title>
-        <meta charSet="UTF-8" />
+        <meta charSet="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="description" content="Découvrez l'excellence absolue de Patek Philippe depuis 1839. Guide encyclopédique complet, collections historiques, innovations révolutionnaires et savoir-faire horloger suisse."/>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous"/>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-        <style>{`
-          body { background: #f8f6f0; font-family:'Inter',sans-serif;}
-          .font-playfair { font-family: 'Playfair Display', serif; }
-          .gold { color: #D4AF37; }
-          .hero-title { font-size: 5rem; line-height: 1; font-family: 'Playfair Display',serif; color: #D4AF37;}
-          .metric { font-size: 2rem; font-weight: 700;}
-          .metric-caption { font-size: 1rem; color: #555; }
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+        <style jsx global>{`
+          :root {
+            --cream: #faf8f5;
+            --gold: #d4af37;
+            --gold-light: #f4e4a6;
+            --charcoal: #2c2c2c;
+            --charcoal-light: #404040;
+            --white: #ffffff;
+          }
+          body {
+            font-family: 'Inter', sans-serif;
+            background: var(--cream);
+            color: var(--charcoal);
+            line-height: 1.6;
+            overflow-x: hidden;
+          }
+          .font-display {
+            font-family: 'Playfair Display', serif !important;
+          }
+          .hero-section {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+          }
+          .vanta-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
+          }
+          .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 1200px;
+            padding: 0 2rem;
+          }
+          .hero-title {
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 800;
+            line-height: 0.9;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0; transform: translateY(50px);
+          }
+          .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 300;
+            margin-bottom: 3rem;
+            color: var(--charcoal-light);
+            opacity: 0; transform: translateY(30px);
+          }
+          .hero-quote {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            font-style: italic;
+            margin-bottom: 4rem;
+            color: var(--charcoal-light);
+            max-width: 800px; margin-left: auto; margin-right: auto;
+            opacity: 0; transform: translateY(30px);
+          }
+          .hero-stats { margin-top: 3rem; }
+          .stat-item { opacity: 0; transform: translateY(30px); }
+          .stat-item > div:first-child {
+            font-size: 2.5rem; font-weight: 700; color: var(--gold);
+          }
+          .stat-item > div:last-child {
+            font-size: 1rem; color: var(--charcoal-light);
+          }
+          .nav-container {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(250, 248, 245, 0.95); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.3s ease;
+          }
+          .nav-content { max-width: 1400px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;}
+          .nav-logo { font-size: 1.5rem; font-weight: 700; color: var(--gold); text-decoration: none; }
+          .nav-links { display: flex; list-style: none; gap: 2rem; }
+          .nav-links a { text-decoration: none; color: var(--charcoal); font-weight: 500; transition: color 0.3s; position: relative;}
+          .nav-links a:hover { color: var(--gold);}
+          .nav-links a::after { content:''; position: absolute; bottom:-5px; left:0; width:0; height:2px; background:var(--gold); transition:width 0.3s;}
+          .nav-links a:hover::after { width:100%;}
+          @media (max-width:768px) { .nav-links { display: none; } }
+
+          /* Plus styles grid, block, etc... (copie le reste selon besoin, tout est possible en Next CSS global) */
         `}</style>
       </Head>
-      {/* Menu */}
-      <nav className="flex justify-between items-center px-10 py-5 bg-[#f8f6f0] border-b-[1px] border-[#F0E9D8]">
-        <div className="font-playfair text-xl font-bold gold">Patek Philippe</div>
-        <div className="flex space-x-8 text-sm">
-          <a href="#home" className="hover:text-[#D4AF37]">Accueil</a>
-          <a href="#heritage" className="hover:text-[#D4AF37]">Héritage</a>
-          <a href="#collections" className="hover:text-[#D4AF37]">Collections</a>
-          <a href="#innovation" className="hover:text-[#D4AF37]">Innovation</a>
-          <a href="#craftsmanship" className="hover:text-[#D4AF37]">Savoir-faire</a>
+
+      {/* === Navbar === */}
+      <nav className="nav-container">
+        <div className="nav-content">
+          <a href="#" className="nav-logo font-display">Patek Philippe</a>
+          <ul className="nav-links">
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#heritage">Héritage</a></li>
+            <li><a href="#collections">Collections</a></li>
+            <li><a href="#innovation">Innovation</a></li>
+            <li><a href="#craftsmanship">Savoir-faire</a></li>
+          </ul>
         </div>
       </nav>
-      {/* HERO -- Vanta Birds en fond */}
-      <section ref={vantaRef} className="relative flex flex-col items-center justify-center min-h-[75vh] w-full overflow-hidden select-none bg-[#f8f6f0] pb-32 -mb-32">
-        <div className="absolute inset-0 z-0" />
-        <div className="relative z-10 flex flex-col items-center justify-center pt-28">
-          {/* Grand titre logo */}
-          <h1 className="hero-title font-playfair font-bold mb-2 select-none" style={{letterSpacing: '-1.5px'}}>Patek Philippe</h1>
-          <div className="uppercase text-xl md:text-2xl tracking-wide mb-8 text-[#222]">RÉFÉRENCE MONDIALE EN HORLOGERIE SUISSE</div>
-          <div className="italic text-lg text-[#444] mb-8 text-center max-w-2xl">
-            "Vous ne possédez jamais complètement une Patek Philippe. Vous en êtes le gardien pour les générations futures."
-          </div>
-          {/* Metrics */}
-          <div className="flex gap-12 mt-4 mb-2">
-            <div className="flex flex-col items-center">
-              <span className="metric gold">1839</span>
-              <div className="metric-caption">Fondation</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="metric gold">70+</span>
-              <div className="metric-caption">Brevets</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="metric gold">100%</span>
-              <div className="metric-caption">Indépendance</div>
+
+      {/* === Hero Section + Vanta Canvas === */}
+      <section id="home" className="hero-section">
+        <div ref={vantaRef} id="vanta-bg" className="vanta-canvas" />
+        <div className="hero-content">
+          <h1 className="hero-title font-display">Patek Philippe</h1>
+          <p className="hero-subtitle">RÉFÉRENCE MONDIALE EN HORLOGERIE SUISSE</p>
+          <p className="hero-quote">
+            "Vous ne possédez jamais complètement une Patek Philippe. 
+            Vous en êtes le gardien pour les générations futures."
+          </p>
+          <div className="hero-stats">
+            <div style={{display: "flex", justifyContent: "center", gap: "3rem", marginTop: "3rem"}}>
+              <div style={{textAlign:"center"}} className="stat-item">
+                <div>1839</div>
+                <div>Fondation</div>
+              </div>
+              <div style={{textAlign:"center"}} className="stat-item">
+                <div>70+</div>
+                <div>Brevets</div>
+              </div>
+              <div style={{textAlign:"center"}} className="stat-item">
+                <div>100%</div>
+                <div>Indépendance</div>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* === Le reste des sections (timeline, collections, innovation, savoir-faire, CTA, footer) */}
+      {/* ... Ajoute chaque bloc strictement selon la structure du HTML donné ... */}
+      {/* ... Place chaque grid/class/styling dans les balises appropriées, reprend le même HTML exact ... */}
     </>
   );
 }
