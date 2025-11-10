@@ -97,6 +97,7 @@ const CraftsmanshipPage: React.FC = () => {
         <meta name="description" content="Le savoir-faire suisse : chaque composant est fabriqué et assemblé à la main par des maîtres horlogers" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <section className="py-20 bg-white">
 
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
