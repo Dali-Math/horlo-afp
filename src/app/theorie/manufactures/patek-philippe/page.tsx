@@ -1,100 +1,98 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import Head from 'next/head';
 
-// Déclaration des types pour les bibliothèques externes
-declare global {
-  interface Window {
-    VANTA: any;
-    anime: any;
-    Typed: any;
-  }
-}
-
-export default function PatekPhilippePage() {
-  const vantaRef = useRef<HTMLDivElement>(null);
-  const navRef = useRef<HTMLElement>(null);
+export default function Page() {
+  const vantaBgRef = useRef<HTMLDivElement>(null);
+  const vantaEffectRef = useRef<any>(null);
 
   useEffect(() => {
-    // Chargement des scripts externes
-    const loadScripts = async () => {
-      // Vanta.js
-      const vantaScript = document.createElement('script');
-      vantaScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js';
-      document.body.appendChild(vantaScript);
-
-      // Anime.js
-      const animeScript = document.createElement('script');
-      animeScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js';
-      document.body.appendChild(animeScript);
-
-      // Typed.js
-      const typedScript = document.createElement('script');
-      typedScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js';
-      document.body.appendChild(typedScript);
-
-      // Three.js (dépendance de Vanta)
-      const threeScript = document.createElement('script');
-      threeScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-      document.body.appendChild(threeScript);
-
-      // Splitting.js
-      const splittingScript = document.createElement('script');
-      splittingScript.src = 'https://unpkg.com/splitting@1.0.6/dist/splitting.js';
-      document.body.appendChild(splittingScript);
-
-      // CSS Splitting
-      const splittingCSS = document.createElement('link');
-      splittingCSS.rel = 'stylesheet';
-      splittingCSS.href = 'https://unpkg.com/splitting@1.0.6/dist/splitting.css';
-      document.head.appendChild(splittingCSS);
-
-      // Attendre le chargement des scripts
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Initialiser Vanta.js
-      if (window.VANTA && vantaRef.current) {
-        window.VANTA.BIRDS({
-          el: vantaRef.current,
-          mouseControls: true,
-          touchControls: true,
-          gyroControls: false,
-          minHeight: 200.00,
-          minWidth: 200.00,
-          scale: 1.00,
-          scaleMobile: 1.00,
-          backgroundColor: 0xfaf8f5,
-          color1: 0xd4af37,
-          color2: 0xf4e4a6,
-          colorMode: "lerp",
-          birdSize: 1.20,
-          wingSpan: 25.00,
-          speedLimit: 3.00,
-          separation: 20.00,
-          alignment: 20.00,
-          cohesion: 20.00,
-          quantity: 3.00
-        });
-      }
-
-      // Initialiser les animations
-      initializeAnimations();
+    // Load Three.js and Vanta.js scripts
+    const loadScript = (src: string) => {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
     };
 
-    loadScripts();
+    const initVanta = async () => {
+      try {
+        if (!(window as any).THREE) {
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
+        }
+        if (!(window as any).VANTA) {
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js');
+        }
+        if (vantaBgRef.current && (window as any).VANTA) {
+          vantaEffectRef.current = (window as any).VANTA.BIRDS({
+            el: vantaBgRef.current,
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 300.00,
+            minWidth: 300.00,
+            scale: 1.0,
+            scaleMobile: 1.0,
+            backgroundColor: 0xf8f6f0,
+            color1: 0xd4af37,
+            color2: 0x1a2332,
+            birdSize: 1.2,
+            wingSpan: 25,
+            quantity: 3,
+          });
+        }
+      } catch (error) {
+        console.error('Error loading Vanta:', error);
+      }
+    };
+
+    initVanta();
+
+    // Parallax effect on VANTA bg
+    const handleScroll = () => {
+      const scrolled = window.pageYOffset;
+      const parallax = vantaBgRef.current;
+      if (parallax) {
+        const speed = scrolled * 0.3;
+        parallax.style.transform = `translateY(${speed}px)`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      // Nettoyer les scripts
-      const scripts = document.querySelectorAll('script[src*="cdnjs.cloudflare.com"], script[src*="unpkg.com"]');
-      scripts.forEach(script => script.remove());
+      if (vantaEffectRef.current) {
+        vantaEffectRef.current.destroy();
+      }
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
-  const initializeAnimations = () => {
-    if (window.anime) {
+  // Hero animations and scroll effects
+  useEffect(() => {
+    const loadAnime = async () => {
+      if (!(window as any).anime) {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js';
+        script.async = true;
+        document.head.appendChild(script);
+        
+        script.onload = () => {
+          initAnimations();
+        };
+      } else {
+        initAnimations();
+      }
+    };
+
+    const initAnimations = () => {
+      const anime = (window as any).anime;
+      
       // Hero animations
-      window.anime({
+      anime({
         targets: '.hero-title',
         opacity: [0, 1],
         translateY: [50, 0],
@@ -103,7 +101,7 @@ export default function PatekPhilippePage() {
         easing: 'easeOutQuart'
       });
 
-      window.anime({
+      anime({
         targets: '.hero-subtitle',
         opacity: [0, 1],
         translateY: [30, 0],
@@ -112,7 +110,7 @@ export default function PatekPhilippePage() {
         easing: 'easeOutQuart'
       });
 
-      window.anime({
+      anime({
         targets: '.hero-quote',
         opacity: [0, 1],
         translateY: [30, 0],
@@ -121,19 +119,19 @@ export default function PatekPhilippePage() {
         easing: 'easeOutQuart'
       });
 
-      window.anime({
+      anime({
         targets: '.stat-item',
         opacity: [0, 1],
         translateY: [30, 0],
         duration: 600,
-        delay: window.anime.stagger(200, {start: 1400}),
+        delay: anime?.stagger?.(200, {start: 1400}) || 1400,
         easing: 'easeOutQuart'
       });
 
       // Timeline animations
       const timelineItems = document.querySelectorAll('.timeline-item');
       timelineItems.forEach((item: Element, index: number) => {
-        window.anime({
+        anime({
           targets: item,
           opacity: [0, 1],
           translateY: [50, 0],
@@ -146,7 +144,7 @@ export default function PatekPhilippePage() {
       // Collection cards animations
       const collectionCards = document.querySelectorAll('.collection-card');
       collectionCards.forEach((card: Element, index: number) => {
-        window.anime({
+        anime({
           targets: card,
           opacity: [0, 1],
           translateY: [50, 0],
@@ -159,8 +157,8 @@ export default function PatekPhilippePage() {
       // Innovation counters
       const innovationNumbers = document.querySelectorAll('.innovation-number');
       innovationNumbers.forEach((number: Element) => {
-        const target = parseInt((number as HTMLElement).dataset.count || '0');
-        window.anime({
+        const target = parseInt(number.getAttribute('data-count') || '0');
+        anime({
           targets: number,
           innerHTML: [0, target],
           duration: 2000,
@@ -173,7 +171,7 @@ export default function PatekPhilippePage() {
       // Craft items animations
       const craftItems = document.querySelectorAll('.craft-item');
       craftItems.forEach((item: Element, index: number) => {
-        window.anime({
+        anime({
           targets: item,
           opacity: [0, 1],
           translateY: [30, 0],
@@ -182,80 +180,120 @@ export default function PatekPhilippePage() {
           easing: 'easeOutQuart'
         });
       });
-    }
-  };
+    };
 
+    loadAnime();
+  }, []);
+
+  // Scroll animations for sections
   useEffect(() => {
-    // Smooth scrolling for navigation links
-    const handleScroll = () => {
-      if (navRef.current) {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const target = entry.target as HTMLElement;
+          target.style.opacity = '1';
+          target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observe section titles and other elements
+    const sectionTitles = document.querySelectorAll('.section-title');
+    sectionTitles.forEach(title => observer.observe(title));
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Navigation scroll effect
+  useEffect(() => {
+    const handleNavScroll = () => {
+      const nav = document.querySelector('.nav-container') as HTMLElement;
+      if (nav) {
         if (window.scrollY > 100) {
-          navRef.current.style.background = 'rgba(250, 248, 245, 0.98)';
+          nav.style.background = 'rgba(250, 248, 245, 0.98)';
         } else {
-          navRef.current.style.background = 'rgba(250, 248, 245, 0.95)';
+          nav.style.background = 'rgba(250, 248, 245, 0.95)';
         }
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleNavScroll);
+    return () => window.removeEventListener('scroll', handleNavScroll);
+  }, []);
 
-    // Collection card hover effects
-    const collectionCards = document.querySelectorAll('.collection-card');
-    collectionCards.forEach((card: Element) => {
-      card.addEventListener('mouseenter', function() {
-        if (window.anime) {
-          window.anime({
-            targets: this,
-            scale: 1.02,
-            duration: 300,
-            easing: 'easeOutQuart'
+  // Smooth scrolling for navigation links
+  useEffect(() => {
+    const handleAnchorClick = (e: Event) => {
+      const anchor = e.currentTarget as HTMLAnchorElement;
+      const href = anchor.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
           });
         }
-      });
+      }
+    };
 
-      card.addEventListener('mouseleave', function() {
-        if (window.anime) {
-          window.anime({
-            targets: this,
-            scale: 1,
-            duration: 300,
-            easing: 'easeOutQuart'
-          });
-        }
-      });
+    const anchors = document.querySelectorAll('a[href^="#"]');
+    anchors.forEach(anchor => {
+      anchor.addEventListener('click', handleAnchorClick);
     });
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      anchors.forEach(anchor => {
+        anchor.removeEventListener('click', handleAnchorClick);
+      });
     };
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
+  // Collection card hover effects
+  useEffect(() => {
+    const anime = (window as any).anime;
+    if (!anime) return;
+
+    const handleMouseEnter = function(this: HTMLElement) {
+      anime({
+        targets: this,
+        scale: 1.02,
+        duration: 300,
+        easing: 'easeOutQuart'
       });
-    }
-  };
+    };
+
+    const handleMouseLeave = function(this: HTMLElement) {
+      anime({
+        targets: this,
+        scale: 1,
+        duration: 300,
+        easing: 'easeOutQuart'
+      });
+    };
+
+    const cards = document.querySelectorAll('.collection-card');
+    cards.forEach(card => {
+      card.addEventListener('mouseenter', handleMouseEnter);
+      card.addEventListener('mouseleave', handleMouseLeave);
+    });
+
+    return () => {
+      cards.forEach(card => {
+        card.removeEventListener('mouseenter', handleMouseEnter);
+        card.removeEventListener('mouseleave', handleMouseLeave);
+      });
+    };
+  }, []);
 
   return (
     <>
-      <Head>
-        <title>Patek Philippe - Référence Mondiale en Horlogerie Suisse</title>
-        <meta name="description" content="Découvrez l'excellence absolue de Patek Philippe depuis 1839. Guide encyclopédique complet, collections historiques, innovations révolutionnaires et savoir-faire horloger suisse." />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        
-        {/* Fonts */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-        
-        {/* Tailwind CSS */}
-        <script src="https://cdn.tailwindcss.com"></script>
-      </Head>
-
       <style jsx global>{`
         :root {
           --cream: #faf8f5;
@@ -296,13 +334,14 @@ export default function PatekPhilippePage() {
           overflow: hidden;
         }
         
-        .vanta-canvas {
+        .vanta-bg {
           position: absolute;
           top: 0;
           left: 0;
           width: 100%;
           height: 100%;
-          z-index: 1;
+          z-index: 0;
+          will-change: transform;
         }
         
         .hero-content {
@@ -387,7 +426,6 @@ export default function PatekPhilippePage() {
           font-weight: 500;
           transition: color 0.3s ease;
           position: relative;
-          cursor: pointer;
         }
         
         .nav-links a:hover {
@@ -635,6 +673,8 @@ export default function PatekPhilippePage() {
           font-weight: 600;
           transition: all 0.3s ease;
           display: inline-block;
+          cursor: pointer;
+          border: none;
         }
         
         .btn-primary {
@@ -725,337 +765,325 @@ export default function PatekPhilippePage() {
             align-items: center;
           }
         }
-        
-        .mobile-menu {
-          display: none;
-        }
-        
-        @media (max-width: 768px) {
-          .mobile-menu {
-            display: block;
-          }
-        }
       `}</style>
+      
+      {/* Navigation */}
+      <nav className="nav-container">
+        <div className="nav-content">
+          <a href="#home" className="nav-logo font-display">Patek Philippe</a>
+          <ul className="nav-links">
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#heritage">Héritage</a></li>
+            <li><a href="#collections">Collections</a></li>
+            <li><a href="#innovation">Innovation</a></li>
+            <li><a href="#craftsmanship">Savoir-faire</a></li>
+          </ul>
+        </div>
+      </nav>
 
-      <div>
-        {/* Navigation */}
-        <nav ref={navRef} className="nav-container">
-          <div className="nav-content">
-            <a href="#" className="nav-logo font-display">Patek Philippe</a>
-            <ul className="nav-links">
-              <li><a onClick={() => scrollToSection('home')}>Accueil</a></li>
-              <li><a onClick={() => scrollToSection('heritage')}>Héritage</a></li>
-              <li><a onClick={() => scrollToSection('collections')}>Collections</a></li>
-              <li><a onClick={() => scrollToSection('innovation')}>Innovation</a></li>
-              <li><a onClick={() => scrollToSection('craftsmanship')}>Savoir-faire</a></li>
-            </ul>
+      {/* Hero Section */}
+      <section id="home" className="hero-section">
+        <div ref={vantaBgRef} className="vanta-bg"></div>
+        <div className="hero-content">
+          <h1 className="hero-title font-display">Patek Philippe</h1>
+          <p className="hero-subtitle">RÉFÉRENCE MONDIALE EN HORLOGERIE SUISSE</p>
+          <p className="hero-quote">
+            "Vous ne possédez jamais complètement une Patek Philippe. 
+            Vous en êtes le gardien pour les générations futures."
+          </p>
+          <div className="hero-stats">
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '3rem', marginTop: '3rem' }}>
+              <div className="stat-item">
+                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--gold)' }}>1839</div>
+                <div style={{ fontSize: '1rem', color: 'var(--charcoal-light)' }}>Fondation</div>
+              </div>
+              <div className="stat-item">
+                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--gold)' }}>70+</div>
+                <div style={{ fontSize: '1rem', color: 'var(--charcoal-light)' }}>Brevets</div>
+              </div>
+              <div className="stat-item">
+                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--gold)' }}>100%</div>
+                <div style={{ fontSize: '1rem', color: 'var(--charcoal-light)' }}>Indépendance</div>
+              </div>
+            </div>
           </div>
-        </nav>
+        </div>
+      </section>
 
-        {/* Hero Section */}
-        <section id="home" className="hero-section">
-          <div ref={vantaRef} className="vanta-canvas"></div>
-          <div className="hero-content">
-            <h1 className="hero-title font-display">Patek Philippe</h1>
-            <p className="hero-subtitle">RÉFÉRENCE MONDIALE EN HORLOGERIE SUISSE</p>
-            <p className="hero-quote">
-              "Vous ne possédez jamais complètement une Patek Philippe. 
-              Vous en êtes le gardien pour les générations futures."
+      {/* Heritage Section */}
+      <section id="heritage" className="section">
+        <h2 className="section-title font-display">185 Ans d'Excellence</h2>
+        <div className="timeline-container">
+          <div className="timeline-line"></div>
+          
+          <div className="timeline-item">
+            <div className="timeline-marker"></div>
+            <div className="timeline-date">1839</div>
+            <h3 className="timeline-title">Fondation de la Manufacture</h3>
+            <p className="timeline-description">
+              Antoine Norbert de Patek, aristocrate polonais exilé, fonde Patek, Czapek &amp; Cie à Genève avec François Czapek. 
+              Début d'une aventure qui révolutionnera l'horlogerie mondiale.
             </p>
-            <div className="hero-stats">
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '3rem', marginTop: '3rem' }}>
-                <div style={{ textAlign: 'center', opacity: 0, transform: 'translateY(30px)' }} className="stat-item">
-                  <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--gold)' }}>1839</div>
-                  <div style={{ fontSize: '1rem', color: 'var(--charcoal-light)' }}>Fondation</div>
-                </div>
-                <div style={{ textAlign: 'center', opacity: 0, transform: 'translateY(30px)' }} className="stat-item">
-                  <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--gold)' }}>70+</div>
-                  <div style={{ fontSize: '1rem', color: 'var(--charcoal-light)' }}>Brevets</div>
-                </div>
-                <div style={{ textAlign: 'center', opacity: 0, transform: 'translateY(30px)' }} className="stat-item">
-                  <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--gold)' }}>100%</div>
-                  <div style={{ fontSize: '1rem', color: 'var(--charcoal-light)' }}>Indépendance</div>
-                </div>
+          </div>
+          
+          <div className="timeline-item">
+            <div className="timeline-marker"></div>
+            <div className="timeline-date">1844</div>
+            <h3 className="timeline-title">Rencontre Historique à Paris</h3>
+            <p className="timeline-description">
+              Patek rencontre Jean Adrien Philippe lors de l'Exposition Industrielle de Paris. 
+              Philippe présente son système de remontoir à couronne qui rendra obsolète les clés.
+            </p>
+          </div>
+          
+          <div className="timeline-item">
+            <div className="timeline-marker"></div>
+            <div className="timeline-date">1851</div>
+            <h3 className="timeline-title">Consécration Royale</h3>
+            <p className="timeline-description">
+              La Reine Victoria et le Prince Albert achètent des montres Patek Philippe lors de la 
+              Grande Exposition de Londres. Début de la reconnaissance internationale.
+            </p>
+          </div>
+          
+          <div className="timeline-item">
+            <div className="timeline-marker"></div>
+            <div className="timeline-date">1868</div>
+            <h3 className="timeline-title">Première Montre-bracelet</h3>
+            <p className="timeline-description">
+              Création de la première montre-bracelet avec remontoir à couronne par Patek Philippe. 
+              Innovation qui transformera l'industrie horlogère.
+            </p>
+          </div>
+          
+          <div className="timeline-item">
+            <div className="timeline-marker"></div>
+            <div className="timeline-date">1889</div>
+            <h3 className="timeline-title">Brevet du Calendrier Perpétuel</h3>
+            <p className="timeline-description">
+              Patek Philippe dépose le brevet pour son mécanisme de calendrier perpétuel, 
+              l'une des complications les plus complexes de l'horlogerie.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Collections Section */}
+      <section id="collections" className="section">
+        <h2 className="section-title font-display">Collections Légendaires</h2>
+        <div className="collections-grid">
+          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
+            <div className="collection-image">⌚</div>
+            <div className="collection-content">
+              <h3 className="collection-title">Calatrava</h3>
+              <p className="collection-description">
+                L'essence même de l'élégance horlogère. Symbole intemporel du style Patek Philippe 
+                avec son design pur et ses lignes classiques.
+              </p>
+              <div className="collection-price">À partir de €25,000</div>
+              <div className="collection-specs">
+                <span className="spec-tag">Mouvement automatique</span>
+                <span className="spec-tag">Cadran émail</span>
+                <span className="spec-tag">Boîtier or</span>
               </div>
             </div>
           </div>
-        </section>
-
-        {/* Heritage Section */}
-        <section id="heritage" className="section">
-          <h2 className="section-title font-display">185 Ans d'Excellence</h2>
-          <div className="timeline-container">
-            <div className="timeline-line"></div>
-            
-            <div className="timeline-item">
-              <div className="timeline-marker"></div>
-              <div className="timeline-date">1839</div>
-              <h3 className="timeline-title">Fondation de la Manufacture</h3>
-              <p className="timeline-description">
-                Antoine Norbert de Patek, aristocrate polonais exilé, fonde Patek, Czapek & Cie à Genève avec François Czapek. 
-                Début d'une aventure qui révolutionnera l'horlogerie mondiale.
+          
+          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
+            <div className="collection-image">🏆</div>
+            <div className="collection-content">
+              <h3 className="collection-title">Nautilus</h3>
+              <p className="collection-description">
+                L'icône du sport de luxe. Conçu par Gérald Genta, le Nautilus combine robustesse 
+                et élégance dans un design emblématique.
               </p>
-            </div>
-            
-            <div className="timeline-item">
-              <div className="timeline-marker"></div>
-              <div className="timeline-date">1844</div>
-              <h3 className="timeline-title">Rencontre Historique à Paris</h3>
-              <p className="timeline-description">
-                Patek rencontre Jean Adrien Philippe lors de l'Exposition Industrielle de Paris. 
-                Philippe présente son système de remontoir à couronne qui rendra obsolète les clés.
-              </p>
-            </div>
-            
-            <div className="timeline-item">
-              <div className="timeline-marker"></div>
-              <div className="timeline-date">1851</div>
-              <h3 className="timeline-title">Consécration Royale</h3>
-              <p className="timeline-description">
-                La Reine Victoria et le Prince Albert achètent des montres Patek Philippe lors de la 
-                Grande Exposition de Londres. Début de la reconnaissance internationale.
-              </p>
-            </div>
-            
-            <div className="timeline-item">
-              <div className="timeline-marker"></div>
-              <div className="timeline-date">1868</div>
-              <h3 className="timeline-title">Première Montre-bracelet</h3>
-              <p className="timeline-description">
-                Création de la première montre-bracelet avec remontoir à couronne par Patek Philippe. 
-                Innovation qui transformera l'industrie horlogère.
-              </p>
-            </div>
-            
-            <div className="timeline-item">
-              <div className="timeline-marker"></div>
-              <div className="timeline-date">1889</div>
-              <h3 className="timeline-title">Brevet du Calendrier Perpétuel</h3>
-              <p className="timeline-description">
-                Patek Philippe dépose le brevet pour son mécanisme de calendrier perpétuel, 
-                l'une des complications les plus complexes de l'horlogerie.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Collections Section */}
-        <section id="collections" className="section">
-          <h2 className="section-title font-display">Collections Légendaires</h2>
-          <div className="collections-grid">
-            <div className="collection-card" onClick={() => window.location.href='collections.html'}>
-              <div className="collection-image">⌚</div>
-              <div className="collection-content">
-                <h3 className="collection-title">Calatrava</h3>
-                <p className="collection-description">
-                  L'essence même de l'élégance horlogère. Symbole intemporel du style Patek Philippe 
-                  avec son design pur et ses lignes classiques.
-                </p>
-                <div className="collection-price">À partir de €25,000</div>
-                <div className="collection-specs">
-                  <span className="spec-tag">Mouvement automatique</span>
-                  <span className="spec-tag">Cadran émail</span>
-                  <span className="spec-tag">Boîtier or</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="collection-card" onClick={() => window.location.href='collections.html'}>
-              <div className="collection-image">🏆</div>
-              <div className="collection-content">
-                <h3 className="collection-title">Nautilus</h3>
-                <p className="collection-description">
-                  L'icône du sport de luxe. Conçu par Gérald Genta, le Nautilus combine robustesse 
-                  et élégance dans un design emblématique.
-                </p>
-                <div className="collection-price">À partir de €35,000</div>
-                <div className="collection-specs">
-                  <span className="spec-tag">Étanche 120m</span>
-                  <span className="spec-tag">Boîtier acier</span>
-                  <span className="spec-tag">Bracelet intégré</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="collection-card" onClick={() => window.location.href='collections.html'}>
-              <div className="collection-image">💎</div>
-              <div className="collection-content">
-                <h3 className="collection-title">Aquanaut</h3>
-                <p className="collection-description">
-                  L'aventure moderne. Design contemporain avec bracelet Tropical innovant, 
-                  parfait pour l'homme actif et élégant.
-                </p>
-                <div className="collection-price">À partir de €28,000</div>
-                <div className="collection-specs">
-                  <span className="spec-tag">Bracelet caoutchouc</span>
-                  <span className="spec-tag">Étanche 120m</span>
-                  <span className="spec-tag">Design sportif</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="collection-card" onClick={() => window.location.href='collections.html'}>
-              <div className="collection-image">⚙️</div>
-              <div className="collection-content">
-                <h3 className="collection-title">Complications</h3>
-                <p className="collection-description">
-                  L'art de la complexité. Montres avec fonctions avancées alliant 
-                  innovation technique et beauté esthétique.
-                </p>
-                <div className="collection-price">À partir de €45,000</div>
-                <div className="collection-specs">
-                  <span className="spec-tag">Chronographe</span>
-                  <span className="spec-tag">Calendrier</span>
-                  <span className="spec-tag">Phase lune</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="collection-card" onClick={() => window.location.href='collections.html'}>
-              <div className="collection-image">👑</div>
-              <div className="collection-content">
-                <h3 className="collection-title">Grandes Complications</h3>
-                <p className="collection-description">
-                  Le sommet de l'horlogerie. Créations exceptionnelles avec plusieurs 
-                  complications, représentant l'excellence absolue.
-                </p>
-                <div className="collection-price">À partir de €150,000</div>
-                <div className="collection-specs">
-                  <span className="spec-tag">Sonnerie</span>
-                  <span className="spec-tag">Répétition minutes</span>
-                  <span className="spec-tag">Tourbillon</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="collection-card" onClick={() => window.location.href='collections.html'}>
-              <div className="collection-image">🎨</div>
-              <div className="collection-content">
-                <h3 className="collection-title">Gondolo</h3>
-                <p className="collection-description">
-                  L'art déco revisité. Collection inspirée des années 1920 avec des 
-                  formes géométriques audacieuses et un style raffiné.
-                </p>
-                <div className="collection-price">À partir de €30,000</div>
-                <div className="collection-specs">
-                  <span className="spec-tag">Forme tonneau</span>
-                  <span className="spec-tag">Design rétro</span>
-                  <span className="spec-tag">Cadran guilloché</span>
-                </div>
+              <div className="collection-price">À partir de €35,000</div>
+              <div className="collection-specs">
+                <span className="spec-tag">Étanche 120m</span>
+                <span className="spec-tag">Boîtier acier</span>
+                <span className="spec-tag">Bracelet intégré</span>
               </div>
             </div>
           </div>
-        </section>
+          
+          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
+            <div className="collection-image">💎</div>
+            <div className="collection-content">
+              <h3 className="collection-title">Aquanaut</h3>
+              <p className="collection-description">
+                L'aventure moderne. Design contemporain avec bracelet Tropical innovant, 
+                parfait pour l'homme actif et élégant.
+              </p>
+              <div className="collection-price">À partir de €28,000</div>
+              <div className="collection-specs">
+                <span className="spec-tag">Bracelet caoutchouc</span>
+                <span className="spec-tag">Étanche 120m</span>
+                <span className="spec-tag">Design sportif</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
+            <div className="collection-image">⚙️</div>
+            <div className="collection-content">
+              <h3 className="collection-title">Complications</h3>
+              <p className="collection-description">
+                L'art de la complexité. Montres avec fonctions avancées alliant 
+                innovation technique et beauté esthétique.
+              </p>
+              <div className="collection-price">À partir de €45,000</div>
+              <div className="collection-specs">
+                <span className="spec-tag">Chronographe</span>
+                <span className="spec-tag">Calendrier</span>
+                <span className="spec-tag">Phase lune</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
+            <div className="collection-image">👑</div>
+            <div className="collection-content">
+              <h3 className="collection-title">Grandes Complications</h3>
+              <p className="collection-description">
+                Le sommet de l'horlogerie. Créations exceptionnelles avec plusieurs 
+                complications, représentant l'excellence absolue.
+              </p>
+              <div className="collection-price">À partir de €150,000</div>
+              <div className="collection-specs">
+                <span className="spec-tag">Sonnerie</span>
+                <span className="spec-tag">Répétition minutes</span>
+                <span className="spec-tag">Tourbillon</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
+            <div className="collection-image">🎨</div>
+            <div className="collection-content">
+              <h3 className="collection-title">Gondolo</h3>
+              <p className="collection-description">
+                L'art déco revisité. Collection inspirée des années 1920 avec des 
+                formes géométriques audacieuses et un style raffiné.
+              </p>
+              <div className="collection-price">À partir de €30,000</div>
+              <div className="collection-specs">
+                <span className="spec-tag">Forme tonneau</span>
+                <span className="spec-tag">Design rétro</span>
+                <span className="spec-tag">Cadran guilloché</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        {/* Innovation Section */}
-        <section id="innovation" className="innovation-section">
-          <h2 className="section-title font-display" style={{ color: 'var(--white)', marginBottom: '2rem' }}>Innovations Révolutionnaires</h2>
-          <p style={{ fontSize: '1.2rem', marginBottom: '4rem', opacity: 0.9 }}>
-            Patek Philippe a révolutionné l'horlogerie avec plus de 70 brevets déposés depuis 1839
+      {/* Innovation Section */}
+      <section id="innovation" className="innovation-section">
+        <h2 className="section-title font-display" style={{ color: 'var(--white)', marginBottom: '2rem' }}>Innovations Révolutionnaires</h2>
+        <p style={{ fontSize: '1.2rem', marginBottom: '4rem', opacity: 0.9 }}>
+          Patek Philippe a révolutionné l'horlogerie avec plus de 70 brevets déposés depuis 1839
+        </p>
+        
+        <div className="innovation-grid">
+          <div className="innovation-item">
+            <div className="innovation-number" data-count="70">0</div>
+            <h3 className="innovation-title">Brevets Déposés</h3>
+            <p className="innovation-description">
+              Innovations révolutionnaires qui ont façonné l'horlogerie moderne
+            </p>
+          </div>
+          
+          <div className="innovation-item">
+            <div className="innovation-number" data-count="100">0</div>
+            <h3 className="innovation-title">% Indépendance</h3>
+            <p className="innovation-description">
+              Fabrication intégrée contrôlant chaque étape de la production
+            </p>
+          </div>
+          
+          <div className="innovation-item">
+            <div className="innovation-number" data-count="185">0</div>
+            <h3 className="innovation-title">Ans d'Excellence</h3>
+            <p className="innovation-description">
+              D'expérience ininterrompue dans l'art horloger suisse
+            </p>
+          </div>
+          
+          <div className="innovation-item">
+            <div className="innovation-number" data-count="60000">0</div>
+            <h3 className="innovation-title">Montres/An</h3>
+            <p className="innovation-description">
+              Production artisanale limitée garantissant l'exclusivité
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Craftsmanship Section */}
+      <section id="craftsmanship" className="section">
+        <h2 className="section-title font-display">Savoir-faire Exceptionnel</h2>
+        <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center' }}>
+          <p style={{ fontSize: '1.3rem', lineHeight: 1.8, marginBottom: '4rem', color: 'var(--charcoal-light)' }}>
+            Chaque Patek Philippe est le fruit de centaines d'heures de travail artisanal, 
+            alliant tradition séculaire et innovation constante. Nos maîtres horlogers transmettent 
+            leur savoir-faire de génération en génération.
           </p>
           
-          <div className="innovation-grid">
-            <div className="innovation-item">
-              <div className="innovation-number" data-count="70">0</div>
-              <h3 className="innovation-title">Brevets Déposés</h3>
-              <p className="innovation-description">
-                Innovations révolutionnaires qui ont façonné l'horlogerie moderne
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem', marginTop: '4rem' }}>
+            <div className="craft-item">
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚙️</div>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1rem' }}>Mécanique Fine</h3>
+              <p style={{ color: 'var(--charcoal-light)', lineHeight: 1.6 }}>
+                Mouvements développés et assemblés à la main avec une précision extrême, 
+                chaque composant est poli et décoré selon les plus hauts standards.
               </p>
             </div>
             
-            <div className="innovation-item">
-              <div className="innovation-number" data-count="100">0</div>
-              <h3 className="innovation-title">% Indépendance</h3>
-              <p className="innovation-description">
-                Fabrication intégrée contrôlant chaque étape de la production
+            <div className="craft-item">
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>💎</div>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1rem' }}>Joaillerie</h3>
+              <p style={{ color: 'var(--charcoal-light)', lineHeight: 1.6 }}>
+                Sertissage artisanal de diamants et pierres précieuses selon les techniques 
+                traditionnelles suisses les plus exigeantes.
               </p>
             </div>
             
-            <div className="innovation-item">
-              <div className="innovation-number" data-count="185">0</div>
-              <h3 className="innovation-title">Ans d'Excellence</h3>
-              <p className="innovation-description">
-                D'expérience ininterrompue dans l'art horloger suisse
-              </p>
-            </div>
-            
-            <div className="innovation-item">
-              <div className="innovation-number" data-count="60000">0</div>
-              <h3 className="innovation-title">Montres/An</h3>
-              <p className="innovation-description">
-                Production artisanale limitée garantissant l'exclusivité
+            <div className="craft-item">
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎨</div>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1rem' }}>Arts Décoratifs</h3>
+              <p style={{ color: 'var(--charcoal-light)', lineHeight: 1.6 }}>
+                Émaux, gravures et guillochages réalisés par des artistes spécialisés 
+                utilisant des techniques ancestrales préservées.
               </p>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Craftsmanship Section */}
-        <section id="craftsmanship" className="section">
-          <h2 className="section-title font-display">Savoir-faire Exceptionnel</h2>
-          <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
-            <p style={{ fontSize: '1.3rem', lineHeight: 1.8, marginBottom: '4rem', color: 'var(--charcoal-light)' }}>
-              Chaque Patek Philippe est le fruit de centaines d'heures de travail artisanal, 
-              alliant tradition séculaire et innovation constante. Nos maîtres horlogers transmettent 
-              leur savoir-faire de génération en génération.
-            </p>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem', marginTop: '4rem' }}>
-              <div style={{ textAlign: 'center', opacity: 0, transform: 'translateY(30px)' }} className="craft-item">
-                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚙️</div>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1rem' }}>Mécanique Fine</h3>
-                <p style={{ color: 'var(--charcoal-light)', lineHeight: 1.6 }}>
-                  Mouvements développés et assemblés à la main avec une précision extrême, 
-                  chaque composant est poli et décoré selon les plus hauts standards.
-                </p>
-              </div>
-              
-              <div style={{ textAlign: 'center', opacity: 0, transform: 'translateY(30px)' }} className="craft-item">
-                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>💎</div>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1rem' }}>Joaillerie</h3>
-                <p style={{ color: 'var(--charcoal-light)', lineHeight: 1.6 }}>
-                  Sertissage artisanal de diamants et pierres précieuses selon les techniques 
-                  traditionnelles suisses les plus exigeantes.
-                </p>
-              </div>
-              
-              <div style={{ textAlign: 'center', opacity: 0, transform: 'translateY(30px)' }} className="craft-item">
-                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎨</div>
-                <h3 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1rem' }}>Arts Décoratifs</h3>
-                <p style={{ color: 'var(--charcoal-light)', lineHeight: 1.6 }}>
-                  Émaux, gravures et guillochages réalisés par des artistes spécialisés 
-                  utilisant des techniques ancestrales préservées.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+      {/* CTA Section */}
+      <section className="cta-section">
+        <h2 className="cta-title font-display">Découvrez l'Univers Patek Philippe</h2>
+        <p style={{ fontSize: '1.2rem', marginBottom: '3rem', color: 'var(--charcoal)' }}>
+          Plongez dans l'histoire, les collections et l'excellence horlogère suisse
+        </p>
+        <div className="cta-buttons">
+          <a href="heritage.html" className="btn btn-primary">Explorer l'Héritage</a>
+          <a href="collections.html" className="btn btn-secondary">Voir les Collections</a>
+        </div>
+      </section>
 
-        {/* CTA Section */}
-        <section className="cta-section">
-          <h2 className="cta-title font-display">Découvrez l'Univers Patek Philippe</h2>
-          <p style={{ fontSize: '1.2rem', marginBottom: '3rem', color: 'var(--charcoal)' }}>
-            Plongez dans l'histoire, les collections et l'excellence horlogère suisse
+      {/* Footer */}
+      <footer className="footer">
+        <div className="footer-content">
+          <div className="footer-logo font-display">Patek Philippe</div>
+          <p className="footer-text">
+            Vous ne possédez jamais complètement une Patek Philippe. 
+            Vous en êtes le gardien pour les générations futures.
           </p>
-          <div className="cta-buttons">
-            <a href="heritage.html" className="btn btn-primary">Explorer l'Héritage</a>
-            <a href="collections.html" className="btn btn-secondary">Voir les Collections</a>
+          <div className="footer-bottom">
+            <p>© 2024 Patek Philippe SA. Tous droits réservés. Référence mondiale en horlogerie suisse.</p>
           </div>
-        </section>
-
-        {/* Footer */}
-        <footer className="footer">
-          <div className="footer-content">
-            <div className="footer-logo font-display">Patek Philippe</div>
-            <p className="footer-text">
-              Vous ne possédez jamais complètement une Patek Philippe. 
-              Vous en êtes le gardien pour les générations futures.
-            </p>
-            <div className="footer-bottom">
-              <p>© 2024 Patek Philippe SA. Tous droits réservés. Référence mondiale en horlogerie suisse.</p>
-            </div>
-          </div>
-        </footer>
-      </div>
+        </div>
+      </footer>
     </>
   );
 }
