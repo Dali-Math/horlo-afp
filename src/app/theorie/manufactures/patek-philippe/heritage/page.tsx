@@ -9,10 +9,27 @@ export default function Heritage() {
 
   useEffect(() => {
     // Initialize Vanta.js background
-    if (typeof window !== 'undefined' && vantaBgRef.current) {
-      const VANTA = (window as any).VANTA;
-      if (VANTA && VANTA.WAVES) {
-        VANTA.WAVES({
+    const loadScript = (src) => {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.async = true;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  };
+
+  const initVanta = async () => {
+    try {
+      if (!(window).THREE) {
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
+      }
+      if (!(window).VANTA || !(window).VANTA.WAVES) {
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.waves.min.js');
+      }
+      if ((window).VANTA && (window).VANTA.WAVES && vantaBgRef.current) {
+        (window).VANTA.WAVES({
           el: vantaBgRef.current,
           mouseControls: true,
           touchControls: true,
@@ -25,10 +42,13 @@ export default function Heritage() {
           shininess: 30.00,
           waveHeight: 15.00,
           waveSpeed: 0.75,
-          zoom: 0.65
+          zoom: 0.65,
         });
       }
+    } catch (error) {
+      console.error('Erreur chargement Vanta:', error);
     }
+  };
 
     // Timeline animation
     const timelineObserver = new IntersectionObserver((entries) => {
