@@ -1,539 +1,221 @@
-'use client';
+import Head from "next/head";
+import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 
-import { useEffect, useRef } from 'react';
+// Données collections, timeline, savoir-faire
+const collections = [
+  {
+    title: "Calatrava",
+    description: "L'essence même de l'élégance horlogère. Symbole intemporel du style Patek Philippe avec son design pur et ses lignes classiques.",
+    img: "/images/calatrava.jpg",
+  },
+  {
+    title: "Nautilus",
+    description: "L'icône du sport de luxe. Conçu par Gérald Genta, le Nautilus combine robustesse et élégance dans un design emblématique.",
+    img: "/images/nautilus.jpg",
+  },
+  {
+    title: "Aquanaut",
+    description: "L'aventure moderne. Design contemporain avec bracelet Tropical innovant, parfait pour l'homme actif et élégant.",
+    img: "/images/aquanaut.jpg",
+  },
+  {
+    title: "Complications",
+    description: "L'art de la complexité. Montres avec fonctions avancées alliant innovation technique et beauté esthétique.",
+    img: "/images/complications.jpg",
+  },
+  {
+    title: "Grandes Complications",
+    description: "Le sommet de l'horlogerie. Créations exceptionnelles avec plusieurs complications, représentant l'excellence absolue.",
+    img: "/images/grandes-complications.jpg",
+  },
+  {
+    title: "Twenty~4",
+    description: "L'art déco revisité. Collection inspirée des années 1920 avec des formes géométriques audacieuses et un style raffiné.",
+    img: "/images/twenty4.jpg",
+  },
+];
 
-export default function Page() {
-  const vantaBgRef = useRef<HTMLDivElement>(null);
-  const vantaEffectRef = useRef<any>(null);
+const timeline = [
+  {
+    year: "1839",
+    text: "Antoine Norbert de Patek, aristocrate polonais exilé, fonde Patek, Czapek & Cie à Genève avec François Czapek. Début d'une aventure qui révolutionnera l'horlogerie mondiale.",
+  },
+  {
+    year: "1844",
+    text: "Patek rencontre Jean Adrien Philippe lors de l'Exposition Industrielle de Paris. Philippe présente son système de remontoir à couronne qui rendra obsolète les clés.",
+  },
+  {
+    year: "1851",
+    text: "La Reine Victoria et le Prince Albert achètent des montres Patek Philippe lors de la Grande Exposition de Londres. Début de la reconnaissance internationale.",
+  },
+  {
+    year: "1868",
+    text: "Création de la première montre-bracelet avec remontoir à couronne par Patek Philippe. Innovation qui transformera l'industrie horlogère.",
+  },
+  {
+    year: "1889",
+    text: "Patek Philippe dépose le brevet pour son mécanisme de calendrier perpétuel, l'une des complications les plus complexes de l'horlogerie.",
+  },
+];
 
+const savoirFaire = [
+  "Chaque Patek Philippe est le fruit de centaines d'heures de travail artisanal, alliant tradition séculaire et innovation constante. Nos maîtres horlogers transmettent leur savoir-faire de génération en génération.",
+  "Mouvements développés et assemblés à la main avec une précision extrême, chaque composant est poli et décoré selon les plus hauts standards.",
+  "Sertissage artisanal de diamants et pierres précieuses selon les techniques traditionnelles suisses les plus exigeantes.",
+  "Émaux, gravures et guillochages réalisés par des artistes spécialisés utilisant des techniques ancestrales préservées.",
+];
+
+const fadeIn = {
+  hidden: { opacity: 0, y: 40 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7 } },
+};
+
+export default function PatekPhilippePage() {
+  const vantaRef = useRef<HTMLDivElement>(null);
+
+  // Background Vanta birds
   useEffect(() => {
-    // Load Three.js and Vanta.js scripts
-    const loadScript = (src: string) => {
-      return new Promise((resolve, reject) => {
-        // Check if script already exists
-        const existing = document.querySelector(`script[src="${src}"]`);
-        if (existing) {
-          resolve(true);
-          return;
-        }
-
-        const script = document.createElement('script');
-        script.src = src;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
+    let effect: any = null;
+    if (typeof window !== "undefined" && (window as any).VANTA && (window as any).VANTA.BIRDS) {
+      effect = (window as any).VANTA.BIRDS({
+        el: vantaRef.current,
+        backgroundColor: 0xf8f6f0, // cream
+        color1: 0xd4af37, // gold
+        color2: 0x1a2332, // deep-blue
+        birdSize: 1.3,
+        wingSpan: 25,
       });
-    };
-
-    const initVanta = async () => {
-      try {
-        // Load Three.js first
-        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
-        
-        // Wait a bit for Three.js to be fully available
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        // Then load Vanta
-        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js');
-        
-        // Wait a bit for Vanta to be fully available
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        // Initialize Vanta effect
-        if (vantaBgRef.current && (window as any).VANTA && (window as any).VANTA.BIRDS) {
-          vantaEffectRef.current = (window as any).VANTA.BIRDS({
-            el: vantaBgRef.current,
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            scale: 1.00,
-            scaleMobile: 1.00,
-            backgroundColor: 0xf8f6f0,
-            color1: 0xd4af37,
-            color2: 0x1a2332,
-            birdSize: 1.20,
-            wingSpan: 25.00,
-            speedLimit: 3.00,
-            separation: 20.00,
-            alignment: 20.00,
-            cohesion: 20.00,
-            quantity: 3.00
-          });
-        } else {
-          console.error('Vanta.js not loaded properly');
-        }
-      } catch (error) {
-        console.error('Error loading Vanta:', error);
-      }
-    };
-
-    initVanta();
-
-    // Scroll reveal animation
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-        }
-      });
-    }, observerOptions);
-
-    document.querySelectorAll('.scroll-reveal').forEach(el => {
-      observer.observe(el);
-    });
-
-    // Parallax effect for hero section
-    const handleScroll = () => {
-      const scrolled = window.pageYOffset;
-      const parallax = vantaBgRef.current;
-      if (parallax) {
-        const speed = scrolled * 0.5;
-        parallax.style.transform = `translateY(${speed}px)`;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
+    }
     return () => {
-      if (vantaEffectRef.current) {
-        vantaEffectRef.current.destroy();
-      }
-      observer.disconnect();
-      window.removeEventListener('scroll', handleScroll);
+      if (effect) effect.destroy();
     };
   }, []);
 
-  const toggleMobileMenu = () => {
-    const menu = document.getElementById('mobile-menu');
-    if (menu) {
-      menu.classList.toggle('hidden');
-    }
-  };
-
-  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href.startsWith('#')) {
-      e.preventDefault();
-      const target = document.querySelector(href);
-      if (target) {
-        target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
-    }
-  };
-
   return (
     <>
-      <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+      <Head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Patek Philippe - Référence Mondiale en Horlogerie Suisse</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+        <style>{`
+          :root {
+            --gold: #D4AF37;
+            --deep-blue: #1a2332;
+            --cream: #f8f6f0;
+            --charcoal: #2c2c2c;
+            --silver: #e8e8e8;
+          }
+          body {
+            font-family: 'Inter', 'Playfair Display', serif;
+            background: var(--cream);
+          }
+        `}</style>
+      </Head>
+      <div ref={vantaRef} className="fixed top-0 left-0 w-full h-full -z-10"/>
 
-        :root {
-          --gold: #D4AF37;
-          --deep-blue: #1a2332;
-          --cream: #f8f6f0;
-          --charcoal: #2c2c2c;
-          --silver: #e8e8e8;
-        }
-        
-        body {
-          font-family: 'Inter', sans-serif;
-          background: var(--cream);
-          overflow-x: hidden;
-        }
-        
-        .hero-title {
-          font-family: 'Playfair Display', serif;
-          font-weight: 600;
-          background: linear-gradient(135deg, var(--gold), #f4d03f);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-        
-        .vanta-bg {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: -1;
-        }
-        
-        .watch-card {
-          backdrop-filter: blur(10px);
-          background: rgba(255, 255, 255, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          transition: all 0.4s ease;
-        }
-        
-        .watch-card:hover {
-          transform: translateY(-10px);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-        
-        .nav-link {
-          position: relative;
-          transition: all 0.3s ease;
-        }
-        
-        .nav-link::after {
-          content: '';
-          position: absolute;
-          bottom: -2px;
-          left: 0;
-          width: 0;
-          height: 2px;
-          background: var(--gold);
-          transition: width 0.3s ease;
-        }
-        
-        .nav-link:hover::after {
-          width: 100%;
-        }
-        
-        .floating-element {
-          animation: float 6s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
-        
-        .scroll-reveal {
-          opacity: 0;
-          transform: translateY(30px);
-          transition: all 0.6s ease;
-        }
-        
-        .scroll-reveal.revealed {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        
-        .timeline-item {
-          position: relative;
-          padding-left: 2rem;
-        }
-        
-        .timeline-item::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          top: 0.5rem;
-          width: 12px;
-          height: 12px;
-          background: var(--gold);
-          border-radius: 50%;
-        }
-        
-        .timeline-item::after {
-          content: '';
-          position: absolute;
-          left: 5px;
-          top: 1.5rem;
-          width: 2px;
-          height: calc(100% - 1rem);
-          background: linear-gradient(to bottom, var(--gold), transparent);
-        }
-        
-        .timeline-item:last-child::after {
-          display: none;
-        }
-      `}</style>
+      <main className="relative z-10">
+        {/* HERO & ACCROCHE */}
+        <motion.section initial="hidden" animate="show" variants={fadeIn} className="text-center py-16 px-4">
+          <h1 className="text-3xl md:text-5xl font-bold uppercase tracking-wider mb-6 text-[var(--deep-blue)]">RÉFÉRENCE MONDIALE EN HORLOGERIE SUISSE</h1>
+          <motion.blockquote
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.7 }}
+            className="text-xl italic my-4 text-[var(--gold)]"
+          >
+            <i className="fa-solid fa-quote-left mr-2 text-[var(--gold)] opacity-60"/>Vous ne possédez jamais complètement une Patek Philippe. Vous en êtes le gardien pour les générations futures.<i className="fa-solid fa-quote-right ml-2 text-[var(--gold)] opacity-60"/>
+          </motion.blockquote>
+        </motion.section>
 
-      <div className="text-gray-800">
-        {/* Navigation */}
-        <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="text-2xl font-bold text-gray-900">
-                <span className="text-yellow-600">Patek</span> Philippe
-              </div>
-              <div className="hidden md:flex space-x-8">
-                <a href="#home" className="nav-link text-gray-700 hover:text-yellow-600" onClick={(e) => handleSmoothScroll(e, '#home')}>Accueil</a>
-                <a href="collections.html" className="nav-link text-gray-700 hover:text-yellow-600">Collections</a>
-                <a href="heritage.html" className="nav-link text-gray-700 hover:text-yellow-600">Patrimoine</a>
-                <a href="craftsmanship.html" className="nav-link text-gray-700 hover:text-yellow-600">Savoir-faire</a>
-                <a href="innovation.html" className="nav-link text-gray-700 hover:text-yellow-600">Innovation</a>
-              </div>
-              <div className="md:hidden">
-                <button id="mobile-menu-btn" className="text-gray-700" onClick={toggleMobileMenu}>
-                  <i className="fas fa-bars text-xl"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-          {/* Mobile Menu */}
-          <div id="mobile-menu" className="hidden md:hidden bg-white border-t border-gray-200">
-            <div className="px-6 py-4 space-y-4">
-              <a href="#home" className="block text-gray-700 hover:text-yellow-600" onClick={(e) => handleSmoothScroll(e, '#home')}>Accueil</a>
-              <a href="collections.html" className="block text-gray-700 hover:text-yellow-600">Collections</a>
-              <a href="heritage.html" className="block text-gray-700 hover:text-yellow-600">Patrimoine</a>
-              <a href="craftsmanship.html" className="block text-gray-700 hover:text-yellow-600">Savoir-faire</a>
-              <a href="innovation.html" className="block text-gray-700 hover:text-yellow-600">Innovation</a>
-            </div>
-          </div>
-        </nav>
-
-        {/* Hero Section */}
-        <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-          <div ref={vantaBgRef} className="vanta-bg"></div>
-          <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
-            <div className="floating-element">
-              <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">
-                L'Excellence<br/>Horlogère
-              </h1>
-              <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-                Depuis 1839, Patek Philippe perpétue la tradition horlogère suisse avec une passion inébranlable pour la perfection
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button onClick={() => window.location.href='collections.html'} className="bg-yellow-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-yellow-700 transition-all duration-300 transform hover:scale-105">
-                  Découvrir les Collections
-                </button>
-                <button onClick={() => window.location.href='heritage.html'} className="border-2 border-yellow-600 text-yellow-600 px-8 py-4 rounded-full font-semibold hover:bg-yellow-600 hover:text-white transition-all duration-300">
-                  Notre Héritage
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          {/* Scroll Indicator */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
-              <div className="w-1 h-3 bg-gray-400 rounded-full mt-2 animate-pulse"></div>
+        {/* TIMELINE */}
+        <section className="bg-gray-100 py-12 px-4">
+          <div className="max-w-4xl mx-auto">
+            <motion.h2 initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeIn} className="text-2xl font-semibold text-center mb-8">Timeline historique</motion.h2>
+            <div className="space-y-8">
+              {timeline.map((event, idx) => (
+                <motion.div
+                  key={idx}
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={{ once: true }}
+                  variants={{
+                    hidden: { opacity: 0, x: idx % 2 === 0 ? -50 : 50 },
+                    show: { opacity: 1, x: 0, transition: { duration: 0.6, delay: idx * 0.16 } },
+                  }}
+                  className="flex flex-col md:flex-row items-start md:items-center mb-4"
+                >
+                  <div className="font-bold text-lg text-[var(--deep-blue)] md:w-32 shrink-0">{event.year}</div>
+                  <div className="bg-white p-4 rounded shadow md:ml-4">{event.text}</div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* Legacy Section */}
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-16 scroll-reveal">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Un Siècle d'Excellence</h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Chaque garde-temps Patek Philippe est le fruit de siècles de savoir-faire transmis de génération en génération
-              </p>
-            </div>
-            
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div className="scroll-reveal">
-                <div className="space-y-8">
-                  <div className="timeline-item">
-                    <h3 className="text-2xl font-semibold text-gray-900 mb-2">1839 - Fondation</h3>
-                    <p className="text-gray-600">Antoine Norbert de Patek et François Czapek fondent Patek, Czapek & Cie à Genève</p>
-                  </div>
-                  <div className="timeline-item">
-                    <h3 className="text-2xl font-semibold text-gray-900 mb-2">1845 - Innovation</h3>
-                    <p className="text-gray-600">Jean Adrien Philippe rejoint l'entreprise et apporte son invention du remontoir à couronne</p>
-                  </div>
-                  <div className="timeline-item">
-                    <h3 className="text-2xl font-semibold text-gray-900 mb-2">1851 - Renommée</h3>
-                    <p className="text-gray-600">Patek Philippe & Cie est officiellement créée, marquant le début d'une légende</p>
-                  </div>
-                  <div className="timeline-item">
-                    <h3 className="text-2xl font-semibold text-gray-900 mb-2">Aujourd'hui - Excellence</h3>
-                    <p className="text-gray-600">Plus de 180 ans d'innovation continue dans l'art horloger suisse</p>
-                  </div>
+        {/* COLLECTIONS */}
+        <section className="py-16 px-4">
+          <motion.h2 initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeIn} className="text-center text-2xl font-semibold mb-8">Collections emblématiques</motion.h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {collections.map((col, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: idx * 0.13 }}
+                className="rounded-lg overflow-hidden shadow-lg bg-gray-50 hover:scale-105 hover:shadow-2xl transition-transform duration-300"
+              >
+                <img src={col.img} alt={col.title} className="w-full h-40 object-cover bg-gray-200" />
+                <div className="p-6">
+                  <h3 className="text-lg font-bold mb-2">{col.title}</h3>
+                  <p className="text-base">{col.description}</p>
                 </div>
-              </div>
-              <div className="scroll-reveal">
-                <div className="relative">
-                  <img src="https://images.unsplash.com/photo-1587836374828-4dbafa94cfbe?w=800&h=600&fit=crop" 
-                       alt="Montre Patek Philippe classique" 
-                       className="rounded-lg shadow-2xl w-full"/>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
-                </div>
-              </div>
-            </div>
+              </motion.div>
+            ))}
           </div>
         </section>
 
-        {/* Featured Collections */}
-        <section className="py-20 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-16 scroll-reveal">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Collections Iconiques</h2>
-              <p className="text-xl text-gray-600">Découvrez les garde-temps qui ont marqué l'histoire de l'horlogerie</p>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="watch-card rounded-xl p-6 scroll-reveal">
-                <div className="aspect-square mb-6 overflow-hidden rounded-lg">
-                  <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400&h=400&fit=crop" 
-                       alt="Nautilus" 
-                       className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"/>
-                </div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-3">Nautilus</h3>
-                <p className="text-gray-600 mb-4">Le symbole du luxe sportif, alliant robustesse et élégance dans un design iconique</p>
-                <button onClick={() => window.location.href='collections.html#nautilus'} className="text-yellow-600 font-semibold hover:text-yellow-700 transition-colors">
-                  Explorer la collection <i className="fas fa-arrow-right ml-1"></i>
-                </button>
-              </div>
-              
-              <div className="watch-card rounded-xl p-6 scroll-reveal">
-                <div className="aspect-square mb-6 overflow-hidden rounded-lg">
-                  <img src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=400&h=400&fit=crop" 
-                       alt="Calatrava" 
-                       className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"/>
-                </div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-3">Calatrava</h3>
-                <p className="text-gray-600 mb-4">L'essence de l'élégance classique, incarnant la pureté du design horloger</p>
-                <button onClick={() => window.location.href='collections.html#calatrava'} className="text-yellow-600 font-semibold hover:text-yellow-700 transition-colors">
-                  Explorer la collection <i className="fas fa-arrow-right ml-1"></i>
-                </button>
-              </div>
-              
-              <div className="watch-card rounded-xl p-6 scroll-reveal">
-                <div className="aspect-square mb-6 overflow-hidden rounded-lg">
-                  <img src="https://images.unsplash.com/photo-1612817159949-195b619eb547?w=400&h=400&fit=crop" 
-                       alt="Grandes Complications" 
-                       className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"/>
-                </div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-3">Grandes Complications</h3>
-                <p className="text-gray-600 mb-4">Le sommet de l'ingénierie horlogère, où l'art rencontre la complexité technique</p>
-                <button onClick={() => window.location.href='collections.html#complications'} className="text-yellow-600 font-semibold hover:text-yellow-700 transition-colors">
-                  Explorer la collection <i className="fas fa-arrow-right ml-1"></i>
-                </button>
-              </div>
-            </div>
+        {/* INNOVATIONS */}
+        <section className="bg-gray-50 py-16 px-4">
+          <div className="max-w-3xl mx-auto">
+            <motion.h2 initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeIn} className="text-2xl font-semibold mb-6 text-center">Innovations & expertise</motion.h2>
+            <motion.ul initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeIn} className="list-disc ml-10 text-lg space-y-2">
+              <li>Patek Philippe a révolutionné l'horlogerie avec plus de 70 brevets déposés depuis 1839</li>
+              <li>Innovations révolutionnaires qui ont façonné l'horlogerie moderne</li>
+              <li>Fabrication intégrée contrôlant chaque étape de la production</li>
+              <li>D'expérience ininterrompue dans l'art horloger suisse</li>
+              <li>Production artisanale limitée garantissant l'exclusivité</li>
+            </motion.ul>
           </div>
         </section>
 
-        {/* Craftsmanship Preview */}
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div className="scroll-reveal">
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Le Savoir-Faire<br/>Suisse</h2>
-                <p className="text-xl text-gray-600 mb-8">
-                  Chaque composant est fabriqué et assemblé à la main par des maîtres horlogers, 
-                  garantissant une qualité exceptionnelle qui dure des générations.
-                </p>
-                <div className="space-y-4 mb-8">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                    <span className="text-gray-700">Assemblage manuel par des maîtres horlogers</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                    <span className="text-gray-700">Contrôle qualité rigoureux à chaque étape</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                    <span className="text-gray-700">Matériaux nobles sélectionnés avec soin</span>
-                  </div>
-                </div>
-                <button onClick={() => window.location.href='craftsmanship.html'} className="bg-yellow-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-yellow-700 transition-all duration-300">
-                  Découvrir le savoir-faire
-                </button>
-              </div>
-              <div className="scroll-reveal">
-                <div className="relative">
-                  <img src="https://images.unsplash.com/photo-1495856452204-15f959c2b5b1?w=800&h=600&fit=crop" 
-                       alt="Horloger au travail" 
-                       className="rounded-lg shadow-2xl w-full"/>
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-4">
-                    <div className="text-3xl font-bold text-yellow-600">180+</div>
-                    <div className="text-sm text-gray-600">Ans d'excellence</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        {/* SAVOIR-FAIRE */}
+        <section className="py-16 px-4">
+          <div className="max-w-4xl mx-auto mb-8">
+            <motion.h2 initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeIn} className="text-2xl font-semibold mb-6 text-center">Le savoir-faire d’exception</motion.h2>
+            <motion.ul initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeIn} className="list-disc ml-10 space-y-2 text-lg">
+              {savoirFaire.map((item, idx) => (
+                <li key={idx}>{item}</li>
+              ))}
+            </motion.ul>
           </div>
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={fadeIn} className="text-center mt-8">
+            <motion.button
+              whileHover={{ scale: 1.06, backgroundColor: "#3b4866" }}
+              transition={{ type: "spring", stiffness: 300 }}
+              className="px-8 py-3 bg-[var(--deep-blue)] text-[var(--gold)] rounded-lg font-bold shadow hover:bg-blue-700 transition text-lg"
+            >
+              Plongez dans l'histoire, les collections et l'excellence horlogère suisse
+            </motion.button>
+          </motion.div>
         </section>
-
-        {/* Innovation Section */}
-        <section className="py-20 bg-gray-900 text-white">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-16 scroll-reveal">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">Innovation Constante</h2>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                Patek Philippe continue de repousser les limites de l'horlogerie avec des innovations révolutionnaires
-              </p>
-            </div>
-            
-            <div className="grid md:grid-cols-4 gap-8">
-              <div className="text-center scroll-reveal">
-                <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <i className="fas fa-cog text-2xl text-white"></i>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Mécanismes complexes</h3>
-                <p className="text-gray-400">Des complications horlogères parmi les plus sophistiquées au monde</p>
-              </div>
-              
-              <div className="text-center scroll-reveal">
-                <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <i className="fas fa-award text-2xl text-white"></i>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Brevets d'invention</h3>
-                <p className="text-gray-400">Plus de 100 brevets déposés au fil des décennies</p>
-              </div>
-              
-              <div className="text-center scroll-reveal">
-                <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <i className="fas fa-globe text-2xl text-white"></i>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Reconnaissance mondiale</h3>
-                <p className="text-gray-400">Les montres les plus convoitées par les collectionneurs</p>
-              </div>
-              
-              <div className="text-center scroll-reveal">
-                <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <i className="fas fa-rocket text-2xl text-white"></i>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Technologie d'avenir</h3>
-                <p className="text-gray-400">Des innovations qui façonnent l'horlogerie de demain</p>
-              </div>
-            </div>
-            
-            <div className="text-center mt-12 scroll-reveal">
-              <button onClick={() => window.location.href='innovation.html'} className="bg-yellow-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-yellow-700 transition-all duration-300">
-                Explorer l'innovation
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* Footer */}
-        <footer className="bg-gray-900 text-white py-12">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center">
-              <div className="text-3xl font-bold mb-4">
-                <span className="text-yellow-600">Patek</span> Philippe
-              </div>
-              <p className="text-gray-400 mb-6">La référence mondiale en horlogerie suisse</p>
-              <div className="flex justify-center space-x-6 mb-8">
-                <a href="#" className="text-gray-400 hover:text-yellow-600 transition-colors">
-                  <i className="fab fa-instagram text-xl"></i>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-yellow-600 transition-colors">
-                  <i className="fab fa-facebook text-xl"></i>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-yellow-600 transition-colors">
-                  <i className="fab fa-twitter text-xl"></i>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-yellow-600 transition-colors">
-                  <i className="fab fa-youtube text-xl"></i>
-                </a>
-              </div>
-              <div className="border-t border-gray-800 pt-6">
-                <p className="text-gray-500 text-sm">
-                  © 2024 Patek Philippe. Tous droits réservés. | Référence Mondiale en Horlogerie Suisse
-                </p>
-              </div>
-            </div>
-          </div>
-        </footer>
-      </div>
+      </main>
     </>
   );
 }
