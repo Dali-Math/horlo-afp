@@ -1,59 +1,66 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Script from 'next/script';
 
 export default function HeritagePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const vantaBgRef = useRef<HTMLDivElement>(null);
   const vantaEffectRef = useRef<any>(null);
 
-  // Initialize Vanta.js after scripts load
   useEffect(() => {
-    const initVanta = () => {
-      if (vantaBgRef.current && (window as any).VANTA) {
-        vantaEffectRef.current = (window as any).VANTA.WAVES({
-          el: vantaBgRef.current,
-          mouseControls: true,
-          touchControls: true,
-          gyroControls: false,
-          minHeight: 200.00,
-          minWidth: 200.00,
-          scale: 1.00,
-          scaleMobile: 1.00,
-          color: 0x1a2332,
-          shininess: 30.00,
-          waveHeight: 15.00,
-          waveSpeed: 0.75,
-          zoom: 0.65
-        });
+    // --- Patch TypeScript pour window ---
+    declare global {
+      interface Window {
+        THREE?: any;
+        VANTA?: any;
+      }
+    }
+
+    // Chargement dynamique de Three.js puis VANTA.WAVES
+    const loadScript = (src: string) => {
+      return new Promise<void>((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = () => reject();
+        document.head.appendChild(script);
+      });
+    };
+
+    const initVanta = async () => {
+      try {
+        if (!window.THREE) {
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
+        }
+        if (!window.VANTA || !window.VANTA.WAVES) {
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.waves.min.js');
+        }
+        if (window.VANTA && window.VANTA.WAVES && vantaBgRef.current) {
+          vantaEffectRef.current = window.VANTA.WAVES({
+            el: vantaBgRef.current,
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x1a2332,
+            shininess: 30.00,
+            waveHeight: 15.00,
+            waveSpeed: 0.75,
+            zoom: 0.65
+          });
+        }
+      } catch (e) {
+        console.error('Erreur chargement VANTA WAVES:', e);
       }
     };
 
-    // Check if Three.js is loaded
-    const checkThreeJS = setInterval(() => {
-      if ((window as any).THREE) {
-        clearInterval(checkThreeJS);
-        initVanta();
-      }
-    }, 100);
+    initVanta();
 
-    return () => {
-      if (vantaEffectRef.current) {
-        vantaEffectRef.current.destroy();
-      }
-      clearInterval(checkThreeJS);
-    };
-  }, []);
-
-  // Load external scripts
-  useEffect(() => {
-    // Three.js is loaded via Script component
-    // Vanta.js is loaded via Script component
-  }, []);
-
-  // Initialize animations
-  useEffect(() => {
+    // --- Le reste du useEffect (timeline, scroll reveal, parallax...) ---
     // Timeline animation
     const timelineObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -100,42 +107,19 @@ export default function HeritagePage() {
 
     window.addEventListener('scroll', handleScroll);
 
-    // Mobile menu toggle
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    const handleMobileMenu = () => {
-      if (mobileMenu) {
-        mobileMenu.classList.toggle('hidden');
-      }
-    };
-
-    if (mobileMenuBtn) {
-      mobileMenuBtn.addEventListener('click', handleMobileMenu);
-    }
-
+    // Cleanup
     return () => {
       window.removeEventListener('scroll', handleScroll);
       timelineObserver.disconnect();
       observer.disconnect();
-      if (mobileMenuBtn) {
-        mobileMenuBtn.removeEventListener('click', handleMobileMenu);
+      if (vantaEffectRef.current) {
+        vantaEffectRef.current.destroy();
       }
     };
   }, []);
 
   return (
     <>
-      {/* Load external scripts */}
-      <Script 
-        src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
-        strategy="afterInteractive"
-      />
-      <Script 
-        src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.waves.min.js"
-        strategy="afterInteractive"
-      />
-      
       {/* Google Fonts */}
       <link 
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" 
@@ -360,14 +344,14 @@ export default function HeritagePage() {
               <a href="/innovation" className="nav-link text-gray-700 hover:text-yellow-600">Innovation</a>
             </div>
             <div className="md:hidden">
-              <button id="mobile-menu-btn" className="text-gray-700">
+              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-gray-700">
                 <i className="fas fa-bars text-xl"></i>
               </button>
             </div>
           </div>
         </div>
         {/* Mobile Menu */}
-        <div id="mobile-menu" className="hidden md:hidden bg-white border-t border-gray-200">
+        <div className={`${mobileMenuOpen ? '' : 'hidden'} md:hidden bg-white border-t border-gray-200`}>
           <div className="px-6 py-4 space-y-4">
             <a href="/" className="block text-gray-700 hover:text-yellow-600">Accueil</a>
             <a href="/collections" className="block text-gray-700 hover:text-yellow-600">Collections</a>
@@ -439,7 +423,6 @@ export default function HeritagePage() {
               </div>
             </div>
 
-            {/* Add all other timeline items similarly */}
             <div className="timeline-item">
               <div className="timeline-year">1851</div>
               <div className="timeline-marker"></div>
@@ -595,6 +578,7 @@ export default function HeritagePage() {
         </div>
       </section>
 
+      {/* Rest of the sections... */}
       {/* Quote Section */}
       <section className="quote-section py-20 text-white relative">
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
