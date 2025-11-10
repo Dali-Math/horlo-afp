@@ -387,8 +387,8 @@ export default function Page() {
         }
         
         .nav-container {
-          position: fixed;
-          top: 0;
+          position: sticky;
+          top: 64px;
           left: 0;
           right: 0;
           z-index: 1000;
