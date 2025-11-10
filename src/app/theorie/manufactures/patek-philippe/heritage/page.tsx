@@ -587,17 +587,19 @@ export default function HeritagePage() {
               </div>
             </div>
             <div className="scroll-reveal">
-              <div className="relative">
-                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a62d?w=800&h=600&fit=crop" 
-                     alt="Atelier Patek Philippe" 
-                     className="rounded-lg shadow-2xl w-full"/>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
-                <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm rounded-lg p-4">
-                  <div className="text-2xl font-bold text-yellow-600">5</div>
-                  <div className="text-sm text-gray-600">Générations de maîtres horlogers</div>
-                </div>
-              </div>
-            </div>
+  <div className="relative">
+    <img
+      src="/images/patek-atelier.jpg"
+      alt="Atelier Patek Philippe"
+      className="rounded-lg shadow-2xl w-full h-[420px] object-cover transition-transform duration-500 group-hover:scale-105"
+    />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
+    <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-lg">
+      <div className="text-2xl font-bold text-yellow-600">5</div>
+      <div className="text-sm text-gray-600">Générations de maîtres horlogers</div>
+    </div>
+  </div>
+</di
           </div>
         </div>
       </section>
