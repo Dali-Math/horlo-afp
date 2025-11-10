@@ -571,7 +571,7 @@ export default function HeritagePage() {
             </div>
             <div className="scroll-reveal">
               <div className="relative">
-                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a62d?w=800&h=600&fit=crop" 
+                <img src="/images/patek-atelier.jpg" 
                      alt="Atelier Patek Philippe" 
                      className="rounded-lg shadow-2xl w-full"/>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
