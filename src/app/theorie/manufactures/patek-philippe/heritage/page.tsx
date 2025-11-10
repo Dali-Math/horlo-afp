@@ -126,6 +126,7 @@ export default function HeritagePage() {
           font-family: 'Inter', sans-serif;
           background: var(--cream);
           overflow-x: hidden;
+          padding-top: 140px; /* Compense la barre de navigation du site (72px) + la barre de la page */
         }
         
         .hero-title {
@@ -146,16 +147,7 @@ export default function HeritagePage() {
           z-index: 0;
           will-change: transform;
         }
-        .nav-bar {
-  position: fixed;
-  top: 72px;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background: rgba(250, 248, 245, 0.95);
-  border-bottom: 1px solid #efe8d6;
-}
-
+        
         .nav-link {
           position: relative;
           transition: all 0.3s ease;
@@ -355,7 +347,7 @@ export default function HeritagePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 mt-24">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <div ref={vantaBgRef} className="vanta-bg"></div>
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
           <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">
@@ -368,7 +360,7 @@ export default function HeritagePage() {
       </section>
 
       {/* Timeline Section */}
-      <section className="py-20 bg-white content-offset">
+      <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Chronologie d'Excellence</h2>
@@ -569,7 +561,7 @@ export default function HeritagePage() {
                 </div>
               </div>
             </div>
-            <div className="relative mt-20">
+            <div className="scroll-reveal">
   <div className="relative h-[400px] rounded-lg overflow-hidden group">
     <img
       src="/images/atelier-patek.jpg"
