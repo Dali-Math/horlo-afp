@@ -4,6 +4,9 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
+const vantaBgRef = useRef<HTMLDivElement>(null);
+const vantaEffectRef = useRef<any>(null);
+
 
 // Déclaration TypeScript pour Vanta
 declare global {
@@ -23,10 +26,26 @@ export default function Heritage() {
   const requestRef = useRef<number>();
 
   useEffect(() => {
-    // Initialisation de Vanta.js
-    const initializeVanta = () => {
-      if (vantaBgRef.current && window.VANTA && window.VANTA.WAVES) {
-        vantaEffectRef.current = window.VANTA.WAVES({
+  const loadScript = (src: string) => {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  };
+
+  const initializeVanta = async () => {
+    try {
+      if (!(window as any).THREE) {
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
+      }
+      if (!(window as any).VANTA) {
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.waves.min.js');
+      }
+      if (vantaBgRef.current && (window as any).VANTA) {
+        vantaEffectRef.current = (window as any).VANTA.WAVES({
           el: vantaBgRef.current,
           mouseControls: true,
           touchControls: true,
@@ -42,7 +61,17 @@ export default function Heritage() {
           zoom: 0.65
         });
       }
-    };
+    } catch (error) {
+      console.error('Erreur de chargement de Vanta.js :', error);
+    }
+  };
+
+  initializeVanta();
+
+  return () => {
+    if (vantaEffectRef.current) vantaEffectRef.current.destroy();
+  };
+}, []);
 
     // Animation de la timeline
     const timelineObserver = new IntersectionObserver((entries) => {
