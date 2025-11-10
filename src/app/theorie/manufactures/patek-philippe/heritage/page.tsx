@@ -569,7 +569,7 @@ export default function HeritagePage() {
                 </div>
               </div>
             </div>
-            <div className="scroll-reveal">
+            <div className="relative mt-20">
   <div className="relative h-[400px] rounded-lg overflow-hidden group">
     <img
       src="/images/atelier-patek.jpg"
