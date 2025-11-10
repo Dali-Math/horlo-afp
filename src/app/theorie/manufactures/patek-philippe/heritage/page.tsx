@@ -355,7 +355,7 @@ export default function HeritagePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 mt-24">
         <div ref={vantaBgRef} className="vanta-bg"></div>
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
           <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">
