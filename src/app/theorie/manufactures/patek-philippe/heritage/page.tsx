@@ -7,12 +7,8 @@ export default function HeritagePage() {
   const vantaEffectRef = useRef<any>(null);
 
   useEffect(() => {
-    // Typage pour TypeScript
-    // (Tu peux déplacer ce bloc tout en haut du fichier si tu préfères !)
     (window as any).THREE;
     (window as any).VANTA;
-
-    // Chargement dynamique scripts
     const loadScript = (src: string) => {
       return new Promise<void>((resolve, reject) => {
         const script = document.createElement('script');
@@ -56,7 +52,6 @@ export default function HeritagePage() {
 
     initVanta();
 
-    // Parallax effet
     const handleScroll = () => {
       const scrolled = window.pageYOffset;
       if (vantaBgRef.current) {
@@ -79,6 +74,38 @@ export default function HeritagePage() {
         body {
           font-family: 'Inter', sans-serif;
           background: #f8f6f0;
+        }
+        .nav-bar {
+          position: fixed;
+          top: 0;
+          left: 0; right: 0;
+          z-index: 1000;
+          background: rgba(250, 248, 245, 0.95);
+          border-bottom: 1px solid #efe8d6;
+        }
+        .nav-content {
+          max-width: 1400px; margin: 0 auto;
+          display: flex; justify-content: space-between; align-items: center;
+          padding: 24px 32px;
+        }
+        .nav-logo {
+          font-family: 'Playfair Display', serif;
+          font-size: 2rem;
+          color: #D4AF37;
+          font-weight: 700;
+          text-decoration: none;
+        }
+        .nav-links {
+          display: flex; gap: 2.2rem; font-weight: 500;
+          font-size: 1.08rem;
+        }
+        .nav-links a {
+          color: #2c2c2c;
+          text-decoration: none;
+          position: relative;
+        }
+        .nav-links a:hover {
+          color: #D4AF37;
         }
         .hero-section {
           min-height: 100vh;
@@ -115,7 +142,22 @@ export default function HeritagePage() {
           color: #f4e4a6;
         }
       `}</style>
-      <section id="heritage" className="hero-section">
+      {/* === BARRE DE NAVIGATION === */}
+      <nav className="nav-bar">
+        <div className="nav-content">
+          <a href="#" className="nav-logo">Patek Philippe</a>
+          <div className="nav-links">
+            <a href="/theorie/manufactures/patek-philippe">Accueil</a>
+            <a href="/theorie/manufactures/patek-philippe/heritage">Héritage</a>
+            <a href="/theorie/manufactures/patek-philippe/collections">Collections</a>
+            <a href="/theorie/manufactures/patek-philippe/innovation">Innovation</a>
+            <a href="/theorie/manufactures/patek-philippe/savoir-faire">Savoir-faire</a>
+          </div>
+        </div>
+      </nav>
+
+      {/* === SECTION HERO + VANTA WAVES === */}
+      <section id="heritage" className="hero-section" style={{paddingTop: 110}}>
         <div ref={vantaBgRef} className="vanta-bg"></div>
         <div className="hero-content">
           <h1 className="hero-title mb-4">Notre Héritage</h1>
