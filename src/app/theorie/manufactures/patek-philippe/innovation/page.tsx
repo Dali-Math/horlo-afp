@@ -46,7 +46,7 @@ const inventions = [
     complexity: 95,
     title: 'Calibre 89',
     description:
-      "La montre la plus compliquée du monde en 1989 avec 33 complications, célébrant 150 ans d’excellence horlogère.",
+      "La montre la plus compliquée du monde en 1989 avec 33 complications, célébrant 150 ans d'excellence horlogère.",
     specs: [
       { label: 'Complications', value: '33 fonctions' },
       { label: 'Développement', value: '9 ans' },
@@ -55,7 +55,7 @@ const inventions = [
 ];
 
 const timelineData = [
-  { year: '1845', category: 'FONDATION', complexity: 85, title: 'Remontoir à Couronne', description: "Jean Adrien Philippe révolutionne l'horlogerie avec son invention du remontoir à couronne, permettant le remontage et le réglage des montres d'une manière jamais vue auparavant." },
+  { year: '1845', category: 'FONDATION', complexity: 90, title: 'Remontoir à Couronne', description: "Jean Adrien Philippe révolutionne l'horlogerie avec son invention du remontoir à couronne, permettant le remontage et le réglage des montres d'une manière jamais vue auparavant." },
   { year: '1889', category: 'ACOUSTIQUE', complexity: 90, title: 'Sonnerie à Répetition', description: "Développement d'un mécanisme de sonnerie breveté qui sonne les heures, les quarts et les minutes à la demande." },
   { year: '1925', category: 'CHRONOGRAPHE', complexity: 88, title: 'Calibre à Rattrapante', description: "Introduction du chronographe à rattrapante, permettant la mesure de temps intermédiaires sans arrêter le chronographe principal." },
   { year: '1962', category: 'MATÉRIAUX', complexity: 92, title: 'Spiral Silicium', description: "Patek Philippe pionnier dans l'utilisation du silicium pour les composants horlogers." },
@@ -68,6 +68,14 @@ const futureTechs = [
   { icon: 'leaf', title: 'Matériaux Durables', status: 'ECO', color: 'green', description: 'Développement de matériaux composites 100% recyclables et biodégradables.', specLabel: 'Réduction CO₂', specValue: '-78%', progress: 92 },
   { icon: 'microchip', title: 'Nano-Mécatronique', status: 'PROTOTYPE', color: 'red', description: 'Intégration de systèmes nano-mécatroniques pour des complications intelligentes.', specLabel: 'Taille des composants', specValue: 'Nanométrique', progress: 96 }
 ];
+
+// Mapping des classes Tailwind pour les couleurs (évite les classes dynamiques)
+const techColorClasses: Record<string, string> = {
+  blue: 'from-blue-600 to-blue-700',
+  purple: 'from-purple-600 to-purple-700',
+  green: 'from-green-600 to-green-700',
+  red: 'from-red-600 to-red-700',
+};
 
 const getCategoryColor = (category: string): string => {
   switch (category) {
@@ -110,7 +118,7 @@ export default function InnovationPage() {
         }
 
         const script1 = document.createElement('script');
-        script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js ';
+        script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js';
         script1.async = true;
         
         script1.onload = () => {
@@ -163,7 +171,7 @@ export default function InnovationPage() {
     };
 
     const script2 = document.createElement('script');
-    script2.src = 'https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.halo.min.js ';
+    script2.src = 'https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.halo.min.js';
     script2.async = true;
     
     script2.onload = () => {
@@ -478,6 +486,7 @@ export default function InnovationPage() {
         .quantum-indicator { background: linear-gradient(45deg, #8b5cf6, #7c3aed); }
       `}</style>
 
+      {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div id="vanta-bg" className="vanta-bg"></div>
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
@@ -496,6 +505,7 @@ export default function InnovationPage() {
         </div>
       </section>
 
+      {/* Inventions Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
@@ -532,6 +542,7 @@ export default function InnovationPage() {
         </div>
       </section>
 
+      {/* Timeline Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
@@ -561,6 +572,7 @@ export default function InnovationPage() {
         </div>
       </section>
 
+      {/* Research Lab Section */}
       <section className="research-lab py-20 text-white relative">
         <div className="floating-icon"><i className="fas fa-atom text-6xl"></i></div>
         <div className="floating-icon"><i className="fas fa-dna text-5xl"></i></div>
@@ -601,48 +613,53 @@ export default function InnovationPage() {
         </div>
       </section>
 
+      {/* Future Tech Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
-            <h2 className={`text-4xl md:text-5xl font-bold text-gray-900 mb-6 ${playfair.className}`}>Technologies d&apos;Avenir</h2>
-            <p className="text-xl text-gray-600">Les innovations qui façonneront l&apos;horlogerie de demain</p>
+            <h2 className={`text-4xl md:text-5xl font-bold text-gray-900 mb-6 ${playfair.className}`}>Technologies d'Avenir</h2>
+            <p className="text-xl text-gray-600">Les innovations qui façonneront l'horlogerie de demain</p>
           </div>
           
           <div className="grid md:grid-cols-2 gap-8">
-            {futureTechs.map((tech, idx) => (
-              <div key={idx} className="future-tech rounded-xl p-8 scroll-reveal">
-                <div className="flex items-center mb-6">
-                  <div className={`w-16 h-16 bg-gradient-to-br from-${tech.color}-600 to-${tech.color}-700 rounded-full flex items-center justify-center mr-4`}>
-                    <i className={`fas fa-${tech.icon} text-2xl text-white`}></i>
+            {futureTechs.map((tech, idx) => {
+              const colorClasses = techColorClasses[tech.color];
+              return (
+                <div key={idx} className="future-tech rounded-xl p-8 scroll-reveal">
+                  <div className="flex items-center mb-6">
+                    <div className={`w-16 h-16 bg-gradient-to-br ${colorClasses} rounded-full flex items-center justify-center mr-4`}>
+                      <i className={`fas fa-${tech.icon} text-2xl text-white`}></i>
+                    </div>
+                    <div className="flex items-center">
+                      <h3 className={`text-2xl font-bold text-white ${playfair.className}`}>{tech.title}</h3>
+                      <span className={`${tech.status === 'BÊTA' ? 'ai-indicator' : tech.status === 'R&D' ? 'quantum-indicator' : ''} bg-${tech.color}-600 text-white px-2 py-1 rounded text-xs font-semibold ml-2`}>
+                        {tech.status}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center">
-                    <h3 className={`text-2xl font-bold text-white ${playfair.className}`}>{tech.title}</h3>
-                    <span className={`${tech.status === 'BÊTA' ? 'ai-indicator' : tech.status === 'R&D' ? 'quantum-indicator' : ''} bg-${tech.color}-600 text-white px-2 py-1 rounded text-xs font-semibold ml-2`}>
-                      {tech.status}
-                    </span>
+                  <p className="text-gray-300 mb-6">{tech.description}</p>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-400">{tech.specLabel}</span>
+                      <span className="text-sm font-semibold text-white">{tech.specValue}</span>
+                    </div>
+                    <div className="complexity-meter">
+                      <div className="complexity-fill" style={{width: `${tech.progress}%`}}></div>
+                    </div>
                   </div>
                 </div>
-                <p className="text-gray-300 mb-6">{tech.description}</p>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-400">{tech.specLabel}</span>
-                    <span className="text-sm font-semibold text-white">{tech.specValue}</span>
-                  </div>
-                  <div className="complexity-meter">
-                    <div className="complexity-fill" style={{width: `${tech.progress}%`}}></div>
-                  </div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
+      {/* Impact Section */}
       <section className="py-20 bg-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
-            <h2 className={`text-4xl md:text-5xl font-bold mb-6 ${playfair.className}`}>Impact de l&apos;Innovation</h2>
-            <p className="text-xl text-gray-300">Les chiffres qui témoignent de notre engagement envers l&apos;excellence</p>
+            <h2 className={`text-4xl md:text-5xl font-bold mb-6 ${playfair.className}`}>Impact de l'Innovation</h2>
+            <p className="text-xl text-gray-300">Les chiffres qui témoignent de notre engagement envers l'excellence</p>
           </div>
           
           <div className="grid md:grid-cols-4 gap-8">
@@ -662,9 +679,10 @@ export default function InnovationPage() {
         </div>
       </section>
 
+      {/* CTA Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className={`text-4xl md:text-5xl font-bold mb-6 ${playfair.className}`}>L&apos;Avenir de l&apos;Horlogerie</h2>
+          <h2 className={`text-4xl md:text-5xl font-bold mb-6 ${playfair.className}`}>L'Avenir de l'Horlogerie</h2>
           <p className="text-xl text-gray-600 mb-8">
             Rejoignez-nous dans notre quête constante d'innovation et de perfection horlogère
           </p>
@@ -679,12 +697,13 @@ export default function InnovationPage() {
               onClick={() => router.push('/heritage')}
               className="border-2 border-yellow-600 text-yellow-600 px-8 py-4 rounded-full font-semibold hover:bg-yellow-600 hover:text-white transition-all duration-300"
             >
-              Explorer l&apos;héritage
+              Explorer l'héritage
             </button>
           </div>
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center">
