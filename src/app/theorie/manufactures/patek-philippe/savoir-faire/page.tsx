@@ -855,227 +855,83 @@ export default function CraftsmanshipPage() {
         </div>
       </section>
 
-            {/* Interactive 3D Watch Assembly - VERSION ULTRA LUXE */}
-<section className="relative py-32 overflow-hidden">
-  {/* Fond élégant multi-couches */}
-  <div className="absolute inset-0 bg-gradient-to-b from-zinc-950 via-black to-zinc-950"></div>
-  
-  {/* Effet de particules dorées animées */}
-  <div className="absolute inset-0 opacity-30">
-    <div className="absolute top-0 left-1/4 w-96 h-96 bg-yellow-600/20 rounded-full blur-[120px] animate-pulse"></div>
-    <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+            <section className="relative py-28 bg-gradient-to-br from-black via-zinc-900 to-yellow-950 overflow-hidden rounded-3xl shadow-2xl border border-yellow-700/20">
+  {/* Fond doré subtil */}
+  <div className="pointer-events-none absolute inset-0">
+    <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[110vw] h-48 bg-gradient-to-r from-yellow-500/20 via-yellow-200/30 to-transparent blur-3xl opacity-50"></div>
+    <div className="absolute right-8 bottom-8 w-40 h-40 bg-amber-400/10 rounded-full blur-2xl opacity-20"></div>
   </div>
-  
-  {/* Grille subtile style blueprint */}
-  <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '50px 50px' }}></div>
-  
-  <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-    {/* En-tête prestigieux */}
-    <div className="text-center mb-20 scroll-reveal">
-      <div className="inline-block mb-6">
-        <div className="flex items-center gap-3 px-6 py-2 rounded-full bg-gradient-to-r from-yellow-600/10 via-amber-600/10 to-yellow-600/10 border border-yellow-600/20 backdrop-blur-sm">
-          <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></div>
-          <span className="text-xs font-light tracking-[0.3em] text-yellow-600 uppercase">Manufacture Genève</span>
-          <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></div>
-        </div>
-      </div>
-      
-      <h2 className="text-6xl md:text-7xl lg:text-8xl font-light mb-8 tracking-tight">
-        <span className="block font-serif italic text-white/90 mb-2">L'Art de</span>
-        <span className="block bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-600 bg-clip-text text-transparent font-normal">
-          l'Horlogerie
-        </span>
+
+  <div className="relative z-10 max-w-5xl mx-auto px-5">
+    {/* Hero */}
+    <div className="text-center mb-20">
+      <span className="inline-block px-7 py-2 rounded-full border border-yellow-500/20 bg-yellow-100/5 text-xs uppercase tracking-widest text-yellow-600 mb-4 font-semibold">
+        Savoir-Faire d’Exception
+      </span>
+      <h2 className="text-4xl md:text-5xl font-serif font-bold mb-7 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-600">
+        L’Excellence Patek Philippe
       </h2>
-      
-      <div className="h-px w-24 mx-auto bg-gradient-to-r from-transparent via-yellow-600/50 to-transparent mb-8"></div>
-      
-      <p className="text-lg md:text-xl text-gray-400 max-w-4xl mx-auto leading-relaxed font-light">
-        Une symphonie mécanique où chaque composant, minutieusement ajusté par des mains expertes,
-        <br className="hidden md:block" />
-        s'harmonise pour donner naissance à une œuvre d'exception intemporelle
+      <p className="text-lg md:text-xl text-gray-300 font-light max-w-2xl mx-auto">
+        Chaque montre <span className="text-yellow-400 font-semibold">Patek Philippe</span> incarne des siècles de tradition horlogère — façonnée par des artisans d’élite, révèlant la beauté du temps avec une précision inégalée.
       </p>
+      <blockquote className="italic text-yellow-100 text-base md:text-lg mt-6 px-2 max-w-xl mx-auto border-l-4 border-yellow-500/30 pl-6">
+        « Vous ne possédez jamais complètement une montre Patek Philippe. Vous en êtes juste le gardien pour les générations futures. »
+      </blockquote>
     </div>
-    
-    {/* Zone interactive principale */}
-    <div className="relative group scroll-reveal">
-      {/* Cadre extérieur premium */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-yellow-600/20 via-amber-600/20 to-yellow-600/20 rounded-[2rem] blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
-      
-      <div className="relative bg-gradient-to-br from-zinc-900/90 via-black/95 to-zinc-900/90 backdrop-blur-2xl rounded-[2rem] overflow-hidden border border-white/5 shadow-2xl" style={{ height: '700px' }}>
-        {/* Canvas 3D */}
-        <canvas id="watchCanvas" className="w-full h-full"></canvas>
-        
-        {/* Overlay gradient subtil */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30 pointer-events-none"></div>
-        
-        {/* Badge compteur - Design ultra-raffiné */}
-        <div className="absolute top-8 left-8 group/badge">
-          <div className="relative bg-black/40 backdrop-blur-2xl rounded-2xl border border-white/10 overflow-hidden transition-all duration-500 hover:border-yellow-600/30">
-            {/* Effet de brillance au survol */}
-            <div className="absolute inset-0 bg-gradient-to-br from-yellow-600/0 via-yellow-600/5 to-transparent opacity-0 group-hover/badge:opacity-100 transition-opacity duration-500"></div>
-            
-            <div className="relative px-7 py-5">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse shadow-lg shadow-yellow-500/50"></div>
-                <span className="text-[10px] font-light tracking-[0.25em] text-gray-400 uppercase">Assemblage</span>
-              </div>
-              
-              <div className="flex items-baseline gap-2">
-                <span className="text-4xl font-light text-white" id="componentCount">0</span>
-                <span className="text-2xl font-thin text-gray-500">/</span>
-                <span className="text-2xl font-light text-gray-400">250</span>
-              </div>
-              
-              <div className="mt-2 text-xs font-light text-gray-500">Composants</div>
-              
-              {/* Barre de progression élégante */}
-              <div className="mt-4 h-0.5 bg-white/5 rounded-full overflow-hidden">
-                <div id="progressBar" className="h-full bg-gradient-to-r from-yellow-600 to-amber-500 rounded-full transition-all duration-300" style={{ width: '0%' }}></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Contrôles - Design minimaliste luxe */}
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2">
-          <div className="relative bg-black/40 backdrop-blur-2xl rounded-full px-8 py-4 border border-white/10 shadow-2xl">
-            {/* Indicateur de glissement */}
-            <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-60 hover:opacity-100 transition-opacity">
-              <div className="flex flex-col items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                  <i className="fas fa-mouse text-xs text-gray-400"></i>
-                </div>
-                <span className="text-[10px] font-light tracking-widest text-gray-500 uppercase">Glissez</span>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              {/* Bouton Rotation */}
-              <div className="flex flex-col items-center gap-2 group/btn">
-                <button id="rotateBtn" className="relative w-16 h-16 rounded-full bg-gradient-to-br from-yellow-600 to-amber-600 flex items-center justify-center transition-all duration-500 shadow-lg shadow-yellow-600/20 hover:shadow-yellow-600/40 hover:scale-110 overflow-hidden group">
-                  <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-300"></div>
-                  <i className="fas fa-sync-alt text-white text-lg relative z-10 group-hover:rotate-180 transition-transform duration-500"></i>
-                </button>
-                <span className="text-[9px] font-light tracking-wider text-gray-500 uppercase opacity-0 group-hover/btn:opacity-100 transition-opacity">Rotation</span>
-              </div>
-              
-              {/* Séparateur */}
-              <div className="w-px h-12 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
-              
-              {/* Bouton Éclaté */}
-              <div className="flex flex-col items-center gap-2 group/btn">
-                <button id="explodeBtn" className="relative w-16 h-16 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all duration-500 border border-white/10 hover:border-yellow-600/30 hover:scale-110 group">
-                  <i className="fas fa-expand-arrows-alt text-white/80 group-hover:text-white text-lg group-hover:scale-125 transition-all duration-300"></i>
-                </button>
-                <span className="text-[9px] font-light tracking-wider text-gray-500 uppercase opacity-0 group-hover/btn:opacity-100 transition-opacity">Éclaté</span>
-              </div>
-              
-              {/* Séparateur */}
-              <div className="w-px h-12 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
-              
-              {/* Bouton Reset */}
-              <div className="flex flex-col items-center gap-2 group/btn">
-                <button id="resetBtn" className="relative w-16 h-16 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all duration-500 border border-white/10 hover:border-yellow-600/30 hover:scale-110 group">
-                  <i className="fas fa-redo text-white/80 group-hover:text-white text-lg group-hover:rotate-180 transition-all duration-500"></i>
-                </button>
-                <span className="text-[9px] font-light tracking-wider text-gray-500 uppercase opacity-0 group-hover/btn:opacity-100 transition-opacity">Reset</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Signature Swiss Made - Premium */}
-        <div className="absolute top-8 right-8 group/sign">
-          <div className="relative bg-black/40 backdrop-blur-2xl rounded-2xl border border-white/10 overflow-hidden transition-all duration-500 hover:border-yellow-600/30">
-            <div className="absolute inset-0 bg-gradient-to-br from-yellow-600/0 via-yellow-600/5 to-transparent opacity-0 group-hover/sign:opacity-100 transition-opacity duration-500"></div>
-            
-            <div className="relative px-6 py-5">
-              <div className="text-[10px] font-light tracking-[0.3em] text-gray-500 uppercase mb-2">Manufacture</div>
-              <div className="text-2xl font-serif italic text-white mb-1">Genève</div>
-              <div className="flex items-center gap-2">
-                <div className="w-1 h-1 rounded-full bg-red-600"></div>
-                <span className="text-xs font-medium tracking-wider text-red-600">SWISS MADE</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Points d'intérêt animés */}
-        <div className="absolute top-1/2 left-1/4 w-3 h-3 animate-ping">
-          <div className="absolute inset-0 rounded-full bg-yellow-500/30"></div>
-          <div className="absolute inset-1 rounded-full bg-yellow-500"></div>
-        </div>
-        
-        <div className="absolute top-1/3 right-1/3 w-2 h-2 animate-pulse" style={{ animationDelay: '1s' }}>
-          <div className="absolute inset-0 rounded-full bg-amber-500/30"></div>
-          <div className="absolute inset-0.5 rounded-full bg-amber-500"></div>
-        </div>
+
+    {/* Cards savoir-faire */}
+    <div className="grid md:grid-cols-3 gap-10 mb-16">
+      {/* Maître horloger */}
+      <div className="group bg-gradient-to-b from-yellow-100/10 to-black/70 p-8 rounded-2xl border border-yellow-700/20 hover:border-yellow-600/50 shadow-xl hover:scale-105 transition-transform">
+        <i className="fas fa-user-graduate text-4xl text-yellow-400 mb-4"></i>
+        <h3 className="font-serif text-xl text-white mb-2 font-bold">Maîtres Horlogers</h3>
+        <p className="text-gray-300 text-sm font-light mb-1">10 à 15 ans de formation auprès de maîtres confirmés, savoir-faire transmis de génération en génération.</p>
+        <span className="inline-block text-[11px] uppercase tracking-wide text-yellow-300 mt-2">Excellence</span>
+      </div>
+      {/* Processus */}
+      <div className="group bg-gradient-to-b from-yellow-100/10 to-black/70 p-8 rounded-2xl border border-yellow-700/20 hover:border-yellow-600/50 shadow-xl hover:scale-105 transition-transform">
+        <i className="fas fa-drafting-compass text-4xl text-yellow-400 mb-4"></i>
+        <h3 className="font-serif text-xl text-white mb-2 font-bold">Processus Millimétré</h3>
+        <ul className="text-gray-300 text-sm font-light space-y-1 mb-1">
+          <li>• Conception détaillée</li>
+          <li>• Fabrication ultra précise</li>
+          <li>• Assemblage manuel parfait</li>
+          <li>• Contrôle qualité strict</li>
+        </ul>
+        <span className="inline-block text-[11px] uppercase tracking-wide text-yellow-300 mt-2">Rigueur</span>
+      </div>
+      {/* Domaines d’expertise */}
+      <div className="group bg-gradient-to-b from-yellow-100/10 to-black/70 p-8 rounded-2xl border border-yellow-700/20 hover:border-yellow-600/50 shadow-xl hover:scale-105 transition-transform">
+        <i className="fas fa-gem text-4xl text-yellow-400 mb-4"></i>
+        <h3 className="font-serif text-xl text-white mb-2 font-bold">Domaines d’Excellence</h3>
+        <ul className="text-gray-300 text-sm font-light space-y-1">
+          <li><span className="text-yellow-200">Mécanique fine</span> — précision 99.99%</li>
+          <li><span className="text-yellow-200">Joaillerie</span> — pierres IF/VVS</li>
+          <li><span className="text-yellow-200">Arts décoratifs</span> — savoir-faire Master</li>
+        </ul>
+        <span className="inline-block text-[11px] uppercase tracking-wide text-yellow-300 mt-2">Créativité</span>
       </div>
     </div>
-    
-    {/* Statistiques redesignées - Ultra premium */}
-    <div className="grid md:grid-cols-3 gap-8 mt-24">
-      {[
-        { number: '250+', label: 'Composants', desc: 'Ajustés au micron', icon: 'fa-cog', delay: '0' },
-        { number: '9', label: 'Mois', desc: 'De savoir-faire artisanal', icon: 'fa-clock', delay: '100' },
-        { number: '50+', label: 'Maîtres', desc: 'Héritage depuis 1839', icon: 'fa-crown', delay: '200' }
-      ].map((stat, index) => (
-        <div key={index} className="scroll-reveal group/stat relative" style={{ transitionDelay: `${stat.delay}ms` }}>
-          <div className="relative bg-gradient-to-br from-zinc-900/50 via-black/50 to-zinc-900/50 backdrop-blur-xl rounded-3xl border border-white/5 overflow-hidden transition-all duration-700 hover:border-yellow-600/20 hover:bg-black/60">
-            {/* Effet de brillance au survol */}
-            <div className="absolute inset-0 bg-gradient-to-br from-yellow-600/0 via-yellow-600/10 to-transparent opacity-0 group-hover/stat:opacity-100 transition-opacity duration-700"></div>
-            
-            {/* Icône décorative en fond */}
-            <div className="absolute top-4 right-4 opacity-5 group-hover/stat:opacity-10 transition-opacity duration-500">
-              <i className={`fas ${stat.icon} text-8xl text-yellow-500`}></i>
-            </div>
-            
-            <div className="relative p-10 text-center">
-              {/* Ligne décorative supérieure */}
-              <div className="h-px w-16 mx-auto mb-8 bg-gradient-to-r from-transparent via-yellow-600/30 to-transparent"></div>
-              
-              <div className="text-6xl lg:text-7xl font-light text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 via-amber-400 to-yellow-600 mb-4 group-hover/stat:scale-110 transition-transform duration-500">
-                {stat.number}
-              </div>
-              
-              <div className="text-sm font-light tracking-[0.2em] text-gray-400 uppercase mb-3">
-                {stat.label}
-              </div>
-              
-              <div className="text-xs font-light text-gray-600 leading-relaxed">
-                {stat.desc}
-              </div>
-              
-              {/* Ligne décorative inférieure */}
-              <div className="h-px w-12 mx-auto mt-8 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-            </div>
-          </div>
+
+    {/* Label qualité */}
+    <div className="rounded-xl bg-gradient-to-r from-yellow-200/10 via-black/40 to-yellow-950/10 border border-yellow-700/30 py-8 px-6 flex flex-col md:flex-row items-center md:justify-between gap-6 shadow-xl mb-4">
+      <div className="flex items-center gap-4">
+        <i className="fas fa-certificate text-3xl text-yellow-400"></i>
+        <div>
+          <h4 className="font-serif text-base text-yellow-300 font-bold">Standards d’Excellence</h4>
+          <ul className="text-sm text-gray-200 font-light leading-relaxed mt-1">
+            <li>• Précision testée 24 jours</li>
+            <li>• Contrôle esthétique et d’étanchéité</li>
+            <li>• Certification Patek Philippe</li>
+          </ul>
         </div>
-      ))}
-    </div>
-    
-    {/* Citation inspirante */}
-    <div className="mt-24 text-center scroll-reveal">
-      <div className="max-w-3xl mx-auto relative">
-        <div className="absolute -top-6 left-0 text-6xl text-yellow-600/20 font-serif">"</div>
-        <p className="text-xl md:text-2xl font-light text-gray-400 italic leading-relaxed px-12">
-          Vous ne possédez jamais complètement une montre Patek Philippe.
-          <br className="hidden md:block" />
-          Vous en êtes juste le gardien pour les générations futures.
-        </p>
-        <div className="absolute -bottom-6 right-0 text-6xl text-yellow-600/20 font-serif rotate-180">"</div>
-        
-        <div className="mt-12 flex items-center justify-center gap-4">
-          <div className="h-px w-16 bg-gradient-to-r from-transparent to-yellow-600/30"></div>
-          <span className="text-xs font-light tracking-[0.3em] text-gray-600 uppercase">Depuis 1839</span>
-          <div className="h-px w-16 bg-gradient-to-l from-transparent to-yellow-600/30"></div>
-        </div>
+      </div>
+      <div className="text-right text-xs text-gray-400 italic">
+        Depuis 1839 – Genève<br />
+        <span className="font-semibold text-yellow-200">Swiss Made</span>
       </div>
     </div>
   </div>
-  
-  {/* Effet de lumière au scroll */}
-  <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-600/30 to-transparent"></div>
 </section>
 
       {/* Quality Standards */}
