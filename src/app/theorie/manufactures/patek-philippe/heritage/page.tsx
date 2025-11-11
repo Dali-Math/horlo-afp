@@ -122,11 +122,10 @@ export default function HeritagePage() {
           --charcoal: #2c2c2c;
         }
         
-        body {
+         body {
           font-family: 'Inter', sans-serif;
           background: var(--cream);
           overflow-x: hidden;
-          padding-top: 160px; /* Compense la barre de navigation du site (72px) + la barre de la page */
         }
         
         .hero-title {
