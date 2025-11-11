@@ -132,45 +132,6 @@ const InnovationPage: React.FC = () => {
         strategy="afterInteractive" 
       />
 
-      {/* Navigation */}
-      <nav className={`fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 ${inter.className}`}>
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="text-2xl font-bold text-gray-900">
-              <button
-                onClick={() => router.push('/')}
-                className="nav-link"
-              >
-                <span className="text-yellow-600">Patek</span> Philippe
-              </button>
-            </div>
-            <div className="hidden md:flex space-x-8">
-              <button onClick={() => router.push('/')} className="nav-link text-gray-700 hover:text-yellow-600">Accueil</button>
-              <button onClick={() => router.push('/collections')} className="nav-link text-gray-700 hover:text-yellow-600">Héritage</button>
-              <button onClick={() => router.push('/heritage')} className="nav-link text-gray-700 hover:text-yellow-600">Collections</button>
-              <button onClick={() => router.push('/craftsmanship')} className="nav-link text-gray-700 hover:text-yellow-600">Innovation</button>
-              <button onClick={() => router.push('/innovation')} className="nav-link text-yellow-600 font-semibold">Savoir-faire</button>
-            </div>
-            <div className="md:hidden">
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-gray-700">
-                {mobileMenuOpen ? '✕' : '☰'}
-              </button>
-            </div>
-          </div>
-        </div>
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-200">
-            <div className="px-6 py-4 space-y-4">
-              <button onClick={() => router.push('/')} className="block text-gray-700 hover:text-yellow-600">Accueil</button>
-              <button onClick={() => router.push('/collections')} className="block text-gray-700 hover:text-yellow-600">Héritage</button>
-              <button onClick={() => router.push('/heritage')} className="block text-gray-700 hover:text-yellow-600">Collections</button>
-              <button onClick={() => router.push('/craftsmanship')} className="block text-gray-700 hover:text-yellow-600">Innovation</button>
-              <button onClick={() => router.push('/innovation')} className="block text-yellow-600 font-semibold">Savoir-faire</button>
-            </div>
-          </div>
-        )}
-      </nav>
-
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div id="vanta-bg" className="vanta-bg"></div>
