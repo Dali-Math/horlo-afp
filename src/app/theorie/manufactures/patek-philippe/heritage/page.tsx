@@ -311,28 +311,6 @@ export default function HeritagePage() {
           }
         }
       `}</style>
-
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="text-2xl font-bold text-gray-900">
-              <Link href="/theorie/manufactures/patek-philippe"><span className="text-yellow-600">Patek</span> Philippe</Link>
-            </div>
-            <div className="hidden md:flex space-x-8">
-              <Link href="/theorie/manufactures/patek-philippe" className="nav-link text-gray-700 hover:text-yellow-600">Accueil</Link>
-              <Link href="/theorie/manufactures/patek-philippe/collections" className="nav-link text-gray-700 hover:text-yellow-600">Collections</Link>
-              <Link href="/theorie/manufactures/patek-philippe/heritage" className="nav-link text-yellow-600 font-semibold">Patrimoine</Link>
-              <Link href="/theorie/manufactures/patek-philippe/savoir-faire" className="nav-link text-gray-700 hover:text-yellow-600">Savoir-faire</Link>
-              <Link href="/theorie/manufactures/patek-philippe/innovation" className="nav-link text-gray-700 hover:text-yellow-600">Innovation</Link>
-            </div>
-            <div className="md:hidden">
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-gray-700">
-                <i className="fas fa-bars text-xl"></i>
-              </button>
-            </div>
-          </div>
-        </div>
         
         {/* Mobile Menu */}
         <div className={`${mobileMenuOpen ? 'block' : 'hidden'} md:hidden bg-white border-t border-gray-200`}>
