@@ -9,7 +9,7 @@ export default function ManufacturesPage() {
   const ageChartRef = useRef(null);
   const innovationChartRef = useRef(null);
 
-  // Fonction pour le scrolling smooth
+  // Fonction pour le scrolling fluide
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -150,14 +150,14 @@ export default function ManufacturesPage() {
           font-family: 'Inter', sans-serif;
         }
         nav {
-  position: relative;
-  z-index: 50;
-}
+          position: relative;
+          z-index: 50;
+        }
 
-.page-toolbar {
-  position: relative;
-  z-index: 10;
-}
+        .page-toolbar {
+          position: relative;
+          z-index: 10;
+        }
 
         .hero-bg {
           background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
@@ -177,21 +177,6 @@ export default function ManufacturesPage() {
           filter: brightness(1);
           z-index: 1;
         }
-        .excellence-badge::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(45deg, transparent 30%, rgba(212, 175, 55, 0.1) 50%, transparent 70%);
-  animation: shine 4s infinite linear;
-}
-
-@keyframes shine {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
         
         .hero-content {
           position: relative;
@@ -434,7 +419,14 @@ export default function ManufacturesPage() {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              {name: "Patek Philippe", icon: "👑", year: "Depuis 1839", specialties: ["Quantièmes perpétuels", "Calatrava", "Nautilus", "Grandes complications"], img: "/images/manufactures/patek-philippe-hero.jpg"},
+              {
+                name: "Patek Philippe", 
+                icon: "👑", 
+                year: "Depuis 1839", 
+                specialties: ["Quantièmes perpétuels", "Calatrava", "Nautilus", "Grandes complications"], 
+                img: "/images/manufactures/patek-philippe-hero.jpg",
+                href: "/theorie/manufactures/patek-philippe"  // Lien spécifique ajouté ici
+              },
               {name: "Rolex", icon: "⚡", year: "Depuis 1905", specialties: ["Oyster Perpetual", "Submariner", "Daytona", "GMT-Master"], img: "/images/manufactures/rolex-hero.jpg"},
               {name: "Audemars Piguet", icon: "🔷", year: "Depuis 1875", specialties: ["Royal Oak", "Royal Oak Offshore", "Tourbillons", "Grandes complications"], img: "/images/manufactures/audemars-piguet-hero.jpg"},
               {name: "Vacheron Constantin", icon: "⭐", year: "Depuis 1755", specialties: ["Patrimony", "Overseas", "Métiers d'Art", "Grandes complications"], img: "/images/manufactures/vacheron-constantin-hero.jpg"},
@@ -475,13 +467,14 @@ export default function ManufacturesPage() {
                 </div>
                 
                 <div className="text-center">
-  <Link 
-    href={`/manufactures/${m.name.toLowerCase().replace(/ /g, "-")}`} 
-    className="text-[#c0c0c0]/70 text-sm hover:text-[#d4af37] transition-colors"
-  >
-    Découvrir l'histoire →
-  </Link>
-</div>
+                  {/* Lien modifié avec accès direct à la page Patek Philippe */}
+                  <Link 
+                    href={m.href || `/manufactures/${m.name.toLowerCase().replace(/ /g, "-")}`} 
+                    className="text-[#c0c0c0]/70 text-sm hover:text-[#d4af37] transition-colors"
+                  >
+                    Découvrir l'histoire →
+                  </Link>
+                </div>
               </div>
             ))}
           </div>
