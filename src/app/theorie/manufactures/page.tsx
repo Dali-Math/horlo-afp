@@ -9,7 +9,6 @@ export default function ManufacturesPage() {
   const ageChartRef = useRef(null);
   const innovationChartRef = useRef(null);
 
-  // Fonction pour le scrolling fluide
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -208,6 +207,22 @@ export default function ManufacturesPage() {
           100% { transform: rotate(360deg); }
         }
         .chart-container { width: 100%; height: 320px; }
+        
+        /* ===== SOLUTIONS RADICALES POUR LISIBILITÉ ===== */
+        .text-ultra-readable {
+          color: #fafafa !important; /* Blanc pur pour maximum contraste */
+          text-shadow: 0 0 8px rgba(0,0,0,0.9), 0 0 16px rgba(0,0,0,0.7); /* Ombre portée forte */
+          font-weight: 500 !important; /* Poids médium minimum */
+          line-height: 1.6 !important; /* Interlignage augmenté */
+          letter-spacing: 0.01em; /* Espacement des lettres légèrement augmenté */
+        }
+        
+        .text-year-badge {
+          background: rgba(212, 175, 55, 0.15); /* Fond doré semi-transparent */
+          color: #d4af37 !important; /* Texte doré */
+          padding: 4px 12px; border-radius: 12px;
+          font-weight: 600; display: inline-block;
+        }
       `}</style>
     
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-[#c0c0c0]/20">
@@ -274,12 +289,12 @@ export default function ManufacturesPage() {
         </div>
       </section>
 
-      {/* SECTION TIMELINE CORRIGÉE - Textes plus lisibles */}
+      {/* ===== SECTION TIMELINE AVEC TEXTES ULTRA-LISIBLES ===== */}
       <section id="timeline" className="py-20 precision-grid">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-[#fafafa]" style={{fontFamily: 'Playfair Display, serif'}}>L'Évolution de l'Excellence</h2>
-            <p className="text-xl text-[#c0c0c0]/90 max-w-3xl mx-auto">
+            <p className="text-xl text-ultra-readable max-w-3xl mx-auto">
               Parcourez plus de 250 ans d'histoire horlogère suisse, marquée par l'innovation, 
               le savoir-faire et l'excellence technique.
             </p>
@@ -301,10 +316,11 @@ export default function ManufacturesPage() {
                     <>
                       <div className="w-1/2 pr-8 text-right">
                         <div className="bg-[#2d2d2d]/50 rounded-xl p-6 border border-[#c0c0c0]/20">
-                          <h3 className="text-2xl font-bold mb-2 text-[#c0c0c0]" style={{fontFamily: 'Playfair Display, serif'}}>{item.year}</h3>
-                          <h4 className="text-xl font-semibold mb-3 text-[#fafafa]">{item.title}</h4>
-                          {/* TEXTE PLUS LISIBLE : opacité de /70 à /90 */}
-                          <p className="text-[#c0c0c0]/90 leading-relaxed">{item.desc}</p>
+                          {/* ANNÉE EN BADGE DORÉ POUR MEILLEURE VISIBILITÉ */}
+                          <div className="text-year-badge mb-3" style={{fontFamily: 'Playfair Display, serif'}}>{item.year}</div>
+                          <h4 className="text-xl font-bold mb-3 text-[#fafafa]">{item.title}</h4>
+                          {/* DESCRIPTION EN BLANC PUR POUR MAXIMUM CONTRASTE */}
+                          <p className="text-ultra-readable text-base">{item.desc}</p>
                         </div>
                       </div>
                       <div className="w-8 h-8 bg-[#c0c0c0] rounded-full border-4 border-[#0a0a0a] flex-shrink-0 z-10"></div>
@@ -316,10 +332,11 @@ export default function ManufacturesPage() {
                       <div className="w-8 h-8 bg-[#c0c0c0] rounded-full border-4 border-[#0a0a0a] flex-shrink-0 z-10"></div>
                       <div className="w-1/2 pl-8">
                         <div className="bg-[#2d2d2d]/50 rounded-xl p-6 border border-[#c0c0c0]/20">
-                          <h3 className="text-2xl font-bold mb-2 text-[#c0c0c0]" style={{fontFamily: 'Playfair Display, serif'}}>{item.year}</h3>
-                          <h4 className="text-xl font-semibold mb-3 text-[#fafafa]">{item.title}</h4>
-                          {/* TEXTE PLUS LISIBLE : opacité de /70 à /90 */}
-                          <p className="text-[#c0c0c0]/90 leading-relaxed">{item.desc}</p>
+                          {/* ANNÉE EN BADGE DORÉ POUR MEILLEURE VISIBILITÉ */}
+                          <div className="text-year-badge mb-3" style={{fontFamily: 'Playfair Display, serif'}}>{item.year}</div>
+                          <h4 className="text-xl font-bold mb-3 text-[#fafafa]">{item.title}</h4>
+                          {/* DESCRIPTION EN BLANC PUR POUR MAXIMUM CONTRASTE */}
+                          <p className="text-ultra-readable text-base">{item.desc}</p>
                         </div>
                       </div>
                     </>
@@ -404,12 +421,12 @@ export default function ManufacturesPage() {
         </div>
       </section>
 
-      {/* SECTION INNOVATIONS CORRIGÉE - Textes plus lisibles */}
+      {/* ===== SECTION INNOVATIONS AVEC TEXTES ULTRA-LISIBLES ===== */}
       <section id="innovations" className="py-20 precision-grid">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-[#fafafa]" style={{fontFamily: 'Playfair Display, serif'}}>Innovations Révolutionnaires</h2>
-            <p className="text-xl text-[#c0c0c0]/90 max-w-3xl mx-auto">
+            <p className="text-xl text-ultra-readable max-w-3xl mx-auto">
               Les manufactures suisses ont révolutionné l'horlogerie avec des innovations techniques 
               et des designs iconiques qui ont marqué l'histoire.
             </p>
@@ -427,10 +444,10 @@ export default function ManufacturesPage() {
               <div key={i} className="bg-[#0a0a0a]/50 border border-[#c0c0c0]/20 rounded-xl p-6 hover:border-[#d4af37]/50 transition-colors">
                 <div className="text-4xl mb-4">{item.icon}</div>
                 <h3 className="text-xl font-bold mb-3 text-[#fafafa]" style={{fontFamily: 'Playfair Display, serif'}}>{item.title}</h3>
-                {/* TEXTE PRINCIPAL PLUS LISIBLE : opacité de /70 à /90 */}
-                <p className="text-[#c0c0c0]/90 text-sm mb-4 leading-relaxed">{item.desc}</p>
-                {/* ANNÉE PLUS LISIBLE : opacité de /50 à /80 */}
-                <div className="text-xs text-[#c0c0c0]/80 font-medium">{item.year}</div>
+                {/* DESCRIPTION EN BLANC PUR AVEC OMBRE PORTÉE */}
+                <p className="text-ultra-readable text-base mb-4">{item.desc}</p>
+                {/* ANNÉE EN BADGE DORÉ PLUS VISIBLE */}
+                <div className="text-year-badge text-sm">{item.year}</div>
               </div>
             ))}
           </div>
