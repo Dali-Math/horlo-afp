@@ -58,7 +58,7 @@ export default function PatekLayout({ children }: { children: React.ReactNode })
         </div>
       </nav>
 
-      <main className="pt-6">{children}</main>
+      <main className="pt-32">{children}</main>
     </div>
   )
 }
