@@ -23,9 +23,17 @@ export default function PatekLayout({ children }: { children: React.ReactNode })
         <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
           <Link 
   href="/theorie/manufactures/patek-philippe" 
-  className="text-2xl font-display font-bold tracking-tight text-gray-900"
+  className="text-2xl font-display font-bold"
 >
-  <span className="text-[#d4af37]">Patek</span> Philippe
+  <span
+    style={{
+      background: 'linear-gradient(90deg, #d9b74f, #d4af37)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent'
+    }}
+  >
+    Patek Philippe
+  </span>
 </Link>
 
           <div className="hidden md:flex space-x-8 text-sm font-medium">
