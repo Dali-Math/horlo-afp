@@ -25,9 +25,9 @@ export default function ManufacturesPage() {
     const ageOption = {
       tooltip: {
         trigger: "item",
-        backgroundColor: "#2b2b2b",
-        borderColor: "#888888",
-        textStyle: { color: "#ffffff" },
+        backgroundColor: "#1f1f1f",
+        borderColor: "#555555",
+        textStyle: { color: "#f0f0f0" },
         formatter: '{b}: {c} ans'
       },
       series: [
@@ -42,7 +42,7 @@ export default function ManufacturesPage() {
             { value: 119, name: "Rolex (1905)", itemStyle: { color: "#2d2d2d" } },
           ],
           label: { 
-            color: "#ffffff", 
+            color: "#f0f0f0", 
             fontSize: 12,
             formatter: '{b}\n{c} ans'
           },
@@ -53,9 +53,9 @@ export default function ManufacturesPage() {
     const innovationOption = {
       tooltip: {
         trigger: "axis",
-        backgroundColor: "#2b2b2b",
-        borderColor: "#888888",
-        textStyle: { color: "#ffffff" },
+        backgroundColor: "#1f1f1f",
+        borderColor: "#555555",
+        textStyle: { color: "#f0f0f0" },
       },
       grid: {
         left: '3%',
@@ -66,13 +66,13 @@ export default function ManufacturesPage() {
       xAxis: {
         type: "category",
         data: ["1920s", "1940s", "1960s", "1980s", "2000s", "2020s"],
-        axisLine: { lineStyle: { color: "#888888" } },
-        axisLabel: { color: "#ffffff" },
+        axisLine: { lineStyle: { color: "#555555" } },
+        axisLabel: { color: "#f0f0f0" },
       },
       yAxis: {
         type: "value",
-        axisLine: { lineStyle: { color: "#888888" } },
-        axisLabel: { color: "#ffffff" },
+        axisLine: { lineStyle: { color: "#555555" } },
+        axisLabel: { color: "#f0f0f0" },
         splitLine: { lineStyle: { color: "#444444" } },
       },
       series: [
@@ -116,49 +116,186 @@ export default function ManufacturesPage() {
 
   return (
     <>
-      {/* ⚡ STYLES INLINE pour éviter tout conflit externe */}
+      {/* ✅ PALETTE DE COULEURS EXACTE DE LA RÉFÉRENCE */}
       <style jsx global>{`
-        /* FOND GÉNÉRAL PLUS CLAIR */
-        body {
-          background-color: #2b2b2b !important;
-          color: #ffffff !important;
+        :root {
+          --bg-primary: #1f1f1f;      /* Gris très foncé (fond principal) */
+          --bg-secondary: #252525;    /* Gris légèrement plus clair (sections) */
+          --bg-card: #2a2a2a;         /* Gris pour les cartes */
+          --text-white: #f0f0f0;      /* Blanc cassé (texte principal) */
+          --text-gray: #bbbbbb;       /* Gris clair (texte secondaire) */
+          --text-muted: #888888;      /* Gris discret (métadonnées) */
+          --gold: #d4af37;            /* Or classique */
+          --border: #3a3a3a;          /* Bordure subtile */
+          --shadow: rgba(212, 175, 55, 0.15); /* Ombre dorée subtile */
         }
         
-        /* SECTIONS ALTERNÉES pour différencier visuellement */
-        .section-dark { background-color: #2b2b2b !important; }
-        .section-medium { background-color: #303030 !important; }
-        .section-light { background-color: #353535 !important; }
+        /* RESET & BASE */
+        body {
+          background: var(--bg-primary) !important;
+          color: var(--text-white) !important;
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          line-height: 1.6;
+          margin: 0;
+          padding: 0;
+        }
         
-        /* TEXTES */
-        .text-main { color: #ffffff !important; }
-        .text-secondary { color: #dddddd !important; }
-        .text-muted { color: #aaaaaa !important; }
+        .font-serif { font-family: 'Playfair Display', serif; }
         
-        /* BORDURES */
-        .border-subtle { border-color: #444444 !important; }
+        /* NAVIGATION - Épurée */
+        .nav-bar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 50;
+          background: var(--bg-primary);
+          border-bottom: 1px solid var(--border);
+          backdrop-filter: blur(8px);
+        }
         
-        /* OR */
-        .accent-gold { color: #d4af37 !important; }
+        /* HÉRO - Premium */
+        .hero-section {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding-top: 5rem;
+          background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .hero-bg {
+          position: absolute;
+          inset: 0;
+          background: url('/images/manufactures/swiss-horology-hero.jpg') center/cover no-repeat;
+          opacity: 0.08;
+          z-index: 1;
+        }
+        
+        .hero-content {
+          position: relative;
+          z-index: 2;
+          max-width: 72rem;
+          margin: 0 auto;
+          padding: 0 1.5rem;
+          text-align: center;
+        }
+        
+        .gold-gradient {
+          background: linear-gradient(135deg, var(--gold) 0%, #e6c78a 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        
+        /* TIMELINE - Structure parfaite */
+        .timeline-container {
+          position: relative;
+          max-width: 6xl;
+          margin: 0 auto;
+          padding: 0 1.5rem;
+        }
+        
+        .timeline-line {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 2px;
+          height: 100%;
+          background: var(--border);
+        }
+        
+        .timeline-item {
+          opacity: 0;
+          transform: translateX(-30px);
+          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          margin-bottom: 3rem;
+        }
+        
+        .timeline-item.animate {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        
+        .timeline-dot {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 12px;
+          height: 12px;
+          background: var(--gold);
+          border-radius: 50%;
+          border: 4px solid var(--bg-primary);
+        }
+        
+        /* CARTES LUXE */
+        .luxury-card {
+          background: var(--bg-card);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 1.5rem;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .luxury-card:hover {
+          transform: translateY(-4px);
+          border-color: var(--gold);
+          box-shadow: 0 20px 40px -12px var(--shadow);
+        }
+        
+        /* BOUTONS */
+        .btn-primary {
+          background: linear-gradient(135deg, var(--gold) 0%, #e6c78a 100%);
+          color: var(--bg-primary);
+          font-weight: 500;
+          padding: 0.75rem 2rem;
+          border-radius: 9999px;
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-size: 0.875rem;
+        }
+        
+        .btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 25px var(--shadow);
+        }
+        
+        /* GRAPHIQUES */
+        .chart-wrapper {
+          width: 100%;
+          height: 320px;
+        }
+        
+        /* GRILLE discrète */
+        .precision-grid {
+          background-image: 
+            radial-gradient(circle at 1px 1px, rgba(255,255,255,0.01) 1px, transparent 0);
+          background-size: 24px 24px;
+        }
       `}</style>
     
-      <nav className="section-dark fixed top-0 left-0 right-0 z-50 border-b border-subtle">
-        <div className="container mx-auto px-6 py-4">
+      {/* ✅ NAVIGATION */}
+      <nav className="nav-bar">
+        <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#aaaaaa] to-[#ffffff] rounded-full flex items-center justify-center">
-                <span className="text-[#2b2b2b] font-bold text-sm">SW</span>
+              <div className="w-8 h-8 bg-[var(--gold)] rounded-full flex items-center justify-center shadow-sm">
+                <span className="text-[var(--bg-primary)] font-bold text-sm">SW</span>
               </div>
-              <span className="text-xl font-bold text-main" style={{fontFamily: 'Playfair Display, serif'}}>SwissWatch Excellence</span>
+              <span className="text-lg font-medium font-serif text-[var(--text-white)]">SwissWatch Excellence</span>
             </div>
             
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#hero" className="text-secondary hover:accent-gold transition-colors">Accueil</a>
-              <a href="#timeline" className="text-secondary hover:accent-gold transition-colors">Histoire</a>
-              <a href="#manufactures" className="text-secondary hover:accent-gold transition-colors">Manufactures</a>
-              <a href="#innovations" className="text-secondary hover:accent-gold transition-colors">Innovations</a>
+            <div className="hidden md:flex items-center space-x-7">
+              <a href="#hero" className="text-[var(--text-gray)] hover:text-[var(--gold)] transition-colors text-sm font-medium">Accueil</a>
+              <a href="#timeline" className="text-[var(--text-gray)] hover:text-[var(--gold)] transition-colors text-sm font-medium">Histoire</a>
+              <a href="#manufactures" className="text-[var(--text-gray)] hover:text-[var(--gold)] transition-colors text-sm font-medium">Manufactures</a>
+              <a href="#innovations" className="text-[var(--text-gray)] hover:text-[var(--gold)] transition-colors text-sm font-medium">Innovations</a>
             </div>
             
-            <button className="bg-gradient-to-r from-[#aaaaaa] to-[#cccccc] text-[#2b2b2b] px-6 py-2 rounded-full font-semibold hover:from-[#d4af37] hover:to-[#f0d878] transition-all" onClick={() => scrollToSection('manufactures')}>
+            <button className="btn-primary text-sm" onClick={() => scrollToSection('manufactures')}>
               Explorer
             </button>
           </div>
@@ -166,110 +303,115 @@ export default function ManufacturesPage() {
       </nav>
       <PageTaskbar />
 
-      <section id="hero" className="section-dark min-h-screen flex items-center justify-center pt-20">
-        <div className="container mx-auto px-6 text-center">
-          <div className="mb-8">
-            <div className="inline-flex items-center space-x-2 bg-[#444444]/20 border border-subtle rounded-full px-6 py-3 mb-6">
-              <span className="text-secondary text-sm font-medium">Culture Horlogère Suisse</span>
-              <span className="w-2 h-2 accent-gold rounded-full"></span>
+      {/* ✅ HÉRO */}
+      <section id="hero" className="hero-section">
+        <div className="hero-bg"></div>
+        <div className="hero-content">
+          <div className="mb-8 space-y-5">
+            <div className="inline-flex items-center space-x-2 bg-[var(--border)]/40 border border-[var(--border)] rounded-full px-4 py-1.5">
+              <span className="text-[var(--text-gray)] text-xs font-medium uppercase tracking-wider">Culture Horlogère Suisse</span>
+              <span className="w-1.5 h-1.5 bg-[var(--gold)] rounded-full"></span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight" style={{fontFamily: 'Playfair Display, serif'}}>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d4af37] to-[#f0d878] block">Les Grandes Manufactures</span>
-              <span className="text-main">Horlogères Suisses</span>
+            <h1 className="text-5xl md:text-6xl font-normal font-serif leading-tight">
+              <span className="gold-gradient block mb-1">Les Grandes Manufactures</span>
+              <span className="text-[var(--text-white)]">Horlogères Suisses</span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-secondary max-w-4xl mx-auto mb-8 leading-relaxed">
-              Découvrez l'excellence horlogère suisse à travers ses cinq manufactures légendaires : 
-              Patek Philippe, Rolex, Audemars Piguet, Vacheron Constantin et Omega.
+            <p className="text-base md:text-lg text-[var(--text-gray)] max-w-3xl mx-auto leading-relaxed">
+              Découvrez l'excellence horlogère suisse à travers ses cinq manufactures légendaires
             </p>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             {[
               {value: "175+", label: "Ans d'excellence"},
-              {value: "5", label: "Manufactures légendaires"},
+              {value: "5", label: "Manufactures"},
               {value: "269", label: "Années d'histoire"},
-              {value: "🇨🇭", label: "Excellence suisse"}
+              {value: "🇨🇭", label: "Suisse"}
             ].map((stat, i) => (
-              <div key={i} className="section-light rounded-xl p-6 text-center border border-subtle">
-                <div className="text-3xl font-bold accent-gold mb-2">{stat.value}</div>
-                <div className="text-sm text-secondary">{stat.label}</div>
+              <div key={i} className="luxury-card p-4 text-center">
+                <div className="text-2xl font-medium text-[var(--gold)] mb-0.5">{stat.value}</div>
+                <div className="text-xs text-[var(--text-gray)] uppercase tracking-wide">{stat.label}</div>
               </div>
             ))}
           </div>
           
-          <button onClick={() => scrollToSection('manufactures')} className="bg-gradient-to-r from-[#aaaaaa] to-[#cccccc] text-[#2b2b2b] px-12 py-4 rounded-full font-bold text-lg hover:from-[#d4af37] hover:to-[#f0d878] transition-all">
-            Explorer l'Excellence
-          </button>
-        </div>
-      </section>
-
-      <section id="timeline" className="section-medium py-20">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-main" style={{fontFamily: 'Playfair Display, serif'}}>L'Évolution de l'Excellence</h2>
-            <p className="text-xl text-secondary max-w-3xl mx-auto">
-              Parcourez plus de 250 ans d'histoire horlogère suisse, marquée par l'innovation, 
-              le savoir-faire et l'excellence technique.
-            </p>
-          </div>
-          
-          <div className="relative">
-            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-[#444444] h-full"></div>
-            
-            <div className="space-y-12">
-              {[
-                {year: "1755", title: "Naissance de Vacheron Constantin", desc: "Jean-Marc Vacheron fonde ce qui deviendra la plus ancienne manufacture horlogère suisse.", side: "left"},
-                {year: "1839", title: "Fondation de Patek Philippe", desc: "Antoine Norbert de Patek et Adrien Philippe créent la manufacture de prestige absolu.", side: "right"},
-                {year: "1848", title: "Naissance d'Omega", desc: "Louis Brandt fonde Omega, qui deviendra la référence de précision et d'aventure.", side: "left"},
-                {year: "1875", title: "Création d'Audemars Piguet", desc: "Jules-Louis Audemars et Edward-Auguste Piguet fondent leur manufacture d'avant-garde.", side: "right"},
-                {year: "1905", title: "Naissance de Rolex", desc: "Hans Wilsdorf fonde la marque qui révolutionnera l'horlogerie de sport et de luxe.", side: "left"}
-              ].map((item, i) => (
-                <div key={i} className="timeline-item flex items-center">
-                  {item.side === "left" ? (
-                    <>
-                      <div className="w-1/2 pr-8 text-right">
-                        <div className="section-light rounded-xl p-6 border border-subtle">
-                          <h3 className="text-2xl font-bold mb-2 accent-gold" style={{fontFamily: 'Playfair Display, serif'}}>{item.year}</h3>
-                          <h4 className="text-xl font-semibold mb-3 text-main">{item.title}</h4>
-                          <p className="text-secondary text-base">{item.desc}</p>
-                        </div>
-                      </div>
-                      <div className="w-8 h-8 accent-gold rounded-full border-4 border-[#2b2b2b] flex-shrink-0 z-10"></div>
-                      <div className="w-1/2 pl-8"></div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="w-1/2 pr-8"></div>
-                      <div className="w-8 h-8 accent-gold rounded-full border-4 border-[#2b2b2b] flex-shrink-0 z-10"></div>
-                      <div className="w-1/2 pl-8">
-                        <div className="section-light rounded-xl p-6 border border-subtle">
-                          <h3 className="text-2xl font-bold mb-2 accent-gold" style={{fontFamily: 'Playfair Display, serif'}}>{item.year}</h3>
-                          <h4 className="text-xl font-semibold mb-3 text-main">{item.title}</h4>
-                          <p className="text-secondary text-base">{item.desc}</p>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
+          <div className="text-center">
+            <button onClick={() => scrollToSection('manufactures')} className="btn-primary">
+              Explorer l'Excellence
+            </button>
           </div>
         </div>
       </section>
 
-      <section id="manufactures" className="section-dark py-20">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-main" style={{fontFamily: 'Playfair Display, serif'}}>Les Cinq Légendes</h2>
-            <p className="text-xl text-secondary max-w-3xl mx-auto">
-              Chaque manufacture incarne une philosophie unique, un savoir-faire distinctif 
-              et une contribution exceptionnelle à l'horlogerie de luxe.
+      {/* ✅ TIMELINE */}
+      <section id="timeline" className="precision-grid py-20" style={{background: 'var(--bg-secondary)'}}>
+        <div className="timeline-container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-normal font-serif mb-3 text-[var(--text-white)]">L'Évolution de l'Excellence</h2>
+            <p className="text-[var(--text-gray)] max-w-2xl mx-auto">
+              Parcourez plus de 250 ans d'histoire horlogère suisse
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="timeline-line"></div>
+          
+          <div className="space-y-8">
+            {[
+              {year: "1755", title: "Naissance de Vacheron Constantin", desc: "Jean-Marc Vacheron fonde ce qui deviendra la plus ancienne manufacture horlogère suisse.", side: "left"},
+              {year: "1839", title: "Fondation de Patek Philippe", desc: "Antoine Norbert de Patek et Adrien Philippe créent la manufacture de prestige absolu.", side: "right"},
+              {year: "1848", title: "Naissance d'Omega", desc: "Louis Brandt fonde Omega, référence de précision et d'aventure.", side: "left"},
+              {year: "1875", title: "Création d'Audemars Piguet", desc: "Jules-Louis Audemars et Edward-Auguste Piguet fondent leur manufacture d'avant-garde.", side: "right"},
+              {year: "1905", title: "Naissance de Rolex", desc: "Hans Wilsdorf fonde la marque qui révolutionnera l'horlogerie de sport.", side: "left"}
+            ].map((item, i) => (
+              <div key={i} className="timeline-item relative">
+                {item.side === "left" ? (
+                  <>
+                    <div className="flex">
+                      <div className="w-1/2 pr-6">
+                        <div className="luxury-card p-5 text-right">
+                          <div className="text-lg font-medium font-serif text-[var(--gold)] mb-1">{item.year}</div>
+                          <h3 className="text-base font-medium text-[var(--text-white)] mb-2">{item.title}</h3>
+                          <p className="text-xs text-[var(--text-gray)] leading-relaxed">{item.desc}</p>
+                        </div>
+                      </div>
+                      <div className="w-1/2"></div>
+                    </div>
+                    <div className="timeline-dot"></div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex">
+                      <div className="w-1/2"></div>
+                      <div className="w-1/2 pl-6">
+                        <div className="luxury-card p-5">
+                          <div className="text-lg font-medium font-serif text-[var(--gold)] mb-1">{item.year}</div>
+                          <h3 className="text-base font-medium text-[var(--text-white)] mb-2">{item.title}</h3>
+                          <p className="text-xs text-[var(--text-gray)] leading-relaxed">{item.desc}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="timeline-dot"></div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ✅ MANUFACTURES */}
+      <section id="manufactures" className="precision-grid py-20" style={{background: 'var(--bg-primary)'}}>
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-normal font-serif mb-3 text-[var(--text-white)]">Les Cinq Légendes</h2>
+            <p className="text-[var(--text-gray)] max-w-2xl mx-auto">
+              Chaque manufacture incarne une philosophie unique et un savoir-faire distinctif
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
                 name: "Patek Philippe", 
@@ -284,47 +426,48 @@ export default function ManufacturesPage() {
               {name: "Vacheron Constantin", icon: "⭐", year: "Depuis 1755", specialties: ["Patrimony", "Overseas", "Métiers d'Art", "Grandes complications"], img: "/images/manufactures/vacheron-constantin-hero.jpg"},
               {name: "Omega", icon: "🌙", year: "Depuis 1848", specialties: ["Speedmaster", "Seamaster", "Constellation", "Master Chronometer"], img: "/images/manufactures/omega-hero.jpg"}
             ].map((m, i) => (
-              <div key={i} className="section-light rounded-2xl p-8 border border-subtle">
-                <div className="text-center mb-6">
-                  <div className="w-full h-48 rounded-xl mb-4 overflow-hidden bg-[#2d2d2d]/50">
+              <div key={i} className="luxury-card">
+                <div className="p-5">
+                  <div className="w-full h-40 rounded-lg mb-3 overflow-hidden bg-[var(--bg-primary)]">
                     <img 
                       src={m.img} 
                       alt={m.name}
-                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                       onError={(e) => {
                         const target = e.currentTarget;
                         const parent = target.parentElement;
                         if (parent) {
                           target.style.display = 'none';
-                          parent.innerHTML = `<div class="w-full h-full flex items-center justify-center"><span class="text-6xl">${m.icon}</span></div>`;
+                          parent.innerHTML = `<div class="w-full h-full flex items-center justify-center text-5xl">${m.icon}</div>`;
                         }
                       }}
                     />
                   </div>
-                  <div className="text-4xl mb-2">{m.icon}</div>
-                  <h3 className="text-2xl font-bold mb-2 text-main" style={{fontFamily: 'Playfair Display, serif'}}>{m.name}</h3>
-                  <p className="text-secondary text-sm">{m.year}</p>
-                </div>
-                
-                <div className="mb-6">
-                  <h4 className="font-semibold mb-3 accent-gold">Spécialités</h4>
-                  <div className="space-y-2">
-                    {m.specialties.map((item, j) => (
-                      <div key={j} className="flex items-center text-sm text-main">
-                        <span className="w-2 h-2 accent-gold rounded-full mr-3"></span>
-                        <span>{item}</span>
-                      </div>
-                    ))}
+                  <div className="text-center mb-3">
+                    <h3 className="text-base font-medium text-[var(--text-white)] font-serif mb-1">{m.name}</h3>
+                    <p className="text-xs text-[var(--text-gray)]">{m.year}</p>
                   </div>
-                </div>
-                
-                <div className="text-center">
-                  <Link 
-                    href={m.href || `/manufactures/${m.name.toLowerCase().replace(/ /g, "-")}`} 
-                    className="text-secondary hover:accent-gold transition-colors"
-                  >
-                    Découvrir l'histoire →
-                  </Link>
+                  
+                  <div className="mb-3">
+                    <h4 className="text-xs font-medium text-[var(--gold)] mb-2 uppercase tracking-wide">Spécialités</h4>
+                    <div className="space-y-1">
+                      {m.specialties.map((item, j) => (
+                        <div key={j} className="flex items-center text-xs text-[var(--text-white)]">
+                          <span className="w-1 h-1 bg-[var(--gold)] rounded-full mr-2"></span>
+                          <span>{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="text-center pt-2 border-t border-[var(--border)]">
+                    <Link 
+                      href={m.href || `/manufactures/${m.name.toLowerCase().replace(/ /g, "-")}`} 
+                      className="text-xs text-[var(--text-gray)] hover:text-[var(--gold)] transition-colors font-medium"
+                    >
+                      Découvrir →
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}
@@ -332,17 +475,17 @@ export default function ManufacturesPage() {
         </div>
       </section>
 
-      <section id="innovations" className="section-medium py-20">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-main" style={{fontFamily: 'Playfair Display, serif'}}>Innovations Révolutionnaires</h2>
-            <p className="text-xl text-secondary max-w-3xl mx-auto">
-              Les manufactures suisses ont révolutionné l'horlogerie avec des innovations techniques 
-              et des designs iconiques qui ont marqué l'histoire.
+      {/* ✅ INNOVATIONS */}
+      <section id="innovations" className="precision-grid py-20" style={{background: 'var(--bg-secondary)'}}>
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-normal font-serif mb-3 text-[var(--text-white)]">Innovations Révolutionnaires</h2>
+            <p className="text-[var(--text-gray)] max-w-2xl mx-auto">
+              Les manufactures suisses ont révolutionné l'horlogerie avec des innovations techniques
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
               {icon: "⚙️", title: "Quantième Perpétuel", desc: "Patek Philippe révolutionne l'horlogerie avec le premier quantième perpétuel automatique en 1962.", year: "1962"},
               {icon: "🌊", title: "Étanchéité Oyster", desc: "Rolex introduit la première montre étanche au monde en 1926, révolutionnant l'horlogerie sportive.", year: "1926"},
@@ -351,61 +494,55 @@ export default function ManufacturesPage() {
               {icon: "🎨", title: "Métiers d'Art", desc: "Vacheron Constantin perpétue les techniques traditionnelles de décoration horlogère.", year: "Tradition"},
               {icon: "⚡", title: "Master Chronometer", desc: "Omega développe la certification Master Chronometer, dépassant les normes industrielles.", year: "2015"}
             ].map((item, i) => (
-              <div key={i} className="section-light rounded-xl p-6 border border-subtle">
-                <div className="text-4xl mb-4">{item.icon}</div>
-                <h3 className="text-xl font-bold mb-3 text-main" style={{fontFamily: 'Playfair Display, serif'}}>{item.title}</h3>
-                <p className="text-secondary text-base mb-4">{item.desc}</p>
-                <div className="text-sm text-muted font-medium">{item.year}</div>
+              <div key={i} className="luxury-card p-5 text-center">
+                <div className="text-3xl mb-3">{item.icon}</div>
+                <h3 className="text-base font-medium text-[var(--text-white)] font-serif mb-2">{item.title}</h3>
+                <p className="text-xs text-[var(--text-gray)] leading-relaxed mb-3">{item.desc}</p>
+                <div className="text-[10px] text-[var(--gold)] font-medium uppercase tracking-wider">{item.year}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="excellence" className="section-dark py-20">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-main" style={{fontFamily: 'Playfair Display, serif'}}>
-              L'Excellence en Chiffres
-            </h2>
-            <p className="text-xl text-secondary max-w-3xl mx-auto">
-              Analyse comparative des manufactures suisses à travers les âges.
+      {/* ✅ GRAPHIQUES */}
+      <section id="excellence" className="precision-grid py-20" style={{background: 'var(--bg-primary)'}}>
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-normal font-serif mb-3 text-[var(--text-white)]">L'Excellence en Chiffres</h2>
+            <p className="text-[var(--text-gray)] max-w-2xl mx-auto">
+              Analyse comparative des manufactures suisses
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12">
-            <div className="section-light rounded-2xl p-8 border border-subtle">
-              <h3 className="text-2xl font-bold mb-6 text-center text-main" style={{fontFamily: 'Playfair Display, serif'}}>
-                Âge des Manufactures
-              </h3>
-              <div ref={ageChartRef} className="w-full h-80"></div>
+          <div className="grid lg:grid-cols-2 gap-6">
+            <div className="luxury-card p-5">
+              <h3 className="text-lg font-medium text-[var(--text-white)] font-serif mb-4 text-center">Âge des Manufactures</h3>
+              <div ref={ageChartRef} className="chart-wrapper"></div>
             </div>
 
-            <div className="section-light rounded-2xl p-8 border border-subtle">
-              <h3 className="text-2xl font-bold mb-6 text-center text-main" style={{fontFamily: 'Playfair Display, serif'}}>
-                Innovations par Décennie
-              </h3>
-              <div ref={innovationChartRef} className="w-full h-80"></div>
+            <div className="luxury-card p-5">
+              <h3 className="text-lg font-medium text-[var(--text-white)] font-serif mb-4 text-center">Innovations par Décennie</h3>
+              <div ref={innovationChartRef} className="chart-wrapper"></div>
             </div>
           </div>
         </div>
       </section>
 
-      <footer className="section-dark border-t border-[#444444]/40 py-12">
-        <div className="container mx-auto px-6 text-center">
-          <div className="flex items-center justify-center space-x-3 mb-6">
-            <div className="w-8 h-8 bg-gradient-to-br from-[#aaaaaa] to-[#ffffff] rounded-full flex items-center justify-center">
-              <span className="text-[#2b2b2b] font-bold text-sm">SW</span>
+      {/* ✅ FOOTER */}
+      <footer className="bg-[var(--bg-primary)] border-t border-[var(--border)] py-10">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <div className="flex items-center justify-center space-x-3 mb-3">
+            <div className="w-7 h-7 bg-[var(--gold)] rounded-full flex items-center justify-center">
+              <span className="text-[var(--bg-primary)] font-bold text-xs">SW</span>
             </div>
-            <span className="text-xl font-bold text-main" style={{fontFamily: 'Playfair Display, serif'}}>SwissWatch Excellence</span>
+            <span className="text-base font-medium text-[var(--text-white)] font-serif">SwissWatch Excellence</span>
           </div>
-          
-          <p className="text-secondary text-sm mb-6">
+          <p className="text-[var(--text-gray)] text-xs">
             L'excellence horlogère suisse depuis 1755
           </p>
-          
-          <div className="text-xs text-muted">
-            © 2024 SwissWatch Excellence. Tous droits réservés.
+          <div className="text-[10px] text-[var(--text-muted)] mt-4">
+            © 2024 SwissWatch Excellence
           </div>
         </div>
       </footer>
