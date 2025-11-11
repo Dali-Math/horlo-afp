@@ -1,23 +1,67 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+
+// Déclaration des types globaux pour TypeScript
+declare global {
+  interface Window {
+    THREE: any;
+    VANTA: any;
+  }
+}
 
 export default function CraftsmanshipPage() {
-  useEffect(() => {
-    // Load external scripts
-    const script1 = document.createElement('script');
-    script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-    script1.async = true;
-    
-    const script2 = document.createElement('script');
-    script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.topology.min.js';
-    script2.async = true;
-    
-    let vantaInstance: any;
+  // Utilisation de refs pour stocker les références des scripts et instances
+  const script1Ref = useRef<HTMLScriptElement | null>(null);
+  const script2Ref = useRef<HTMLScriptElement | null>(null);
+  const vantaInstanceRef = useRef<any>(null);
+  const threeReadyRef = useRef(false);
 
-    script2.onload = () => {
-      if (typeof window !== 'undefined' && (window as any).VANTA) {
-        vantaInstance = (window as any).VANTA.TOPOLOGY({
+  useEffect(() => {
+    // 1. Chargement séquentiel des scripts avec gestion de dépendances
+    const loadScripts = async () => {
+      return new Promise<void>((resolve) => {
+        // Vérifier si THREE est déjà présent (évite double chargement)
+        if (window.THREE) {
+          threeReadyRef.current = true;
+          resolve();
+          return;
+        }
+
+        const script1 = document.createElement('script');
+        script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+        script1.async = true;
+        
+        script1.onload = () => {
+          threeReadyRef.current = true;
+          resolve();
+        };
+
+        script1.onerror = () => {
+          console.error('Erreur: Impossible de charger THREE.js');
+          resolve(); // Continue quand même pour éviter le blocage total
+        };
+
+        document.body.appendChild(script1);
+        script1Ref.current = script1;
+      });
+    };
+
+    // 2. Initialisation de VANTA après confirmation du DOM
+    const initVanta = () => {
+      if (!window.VANTA || !threeReadyRef.current) {
+        console.warn('VANTA ou THREE non disponibles');
+        return;
+      }
+
+      const vantaElement = document.getElementById('vanta-bg');
+      if (!vantaElement) {
+        console.warn('Élément #vanta-bg non trouvé');
+        return;
+      }
+
+      try {
+        vantaInstanceRef.current = window.VANTA.TOPOLOGY({
           el: "#vanta-bg",
           mouseControls: true,
           touchControls: true,
@@ -29,13 +73,318 @@ export default function CraftsmanshipPage() {
           color: 0xd4af37,
           backgroundColor: 0xf8f6f0
         });
+      } catch (error) {
+        console.error('Erreur initialisation VANTA:', error);
       }
     };
 
-    document.body.appendChild(script1);
-    document.body.appendChild(script2);
+    // 3. Chargement de VANTA (dépend de THREE)
+    const script2 = document.createElement('script');
+    script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.topology.min.js';
+    script2.async = true;
+    
+    script2.onload = () => {
+      // Petit délai pour s'assurer que le DOM est complètement prêt
+      setTimeout(initVanta, 150);
+    };
 
-    // Mobile menu toggle
+    script2.onerror = () => {
+      console.error('Erreur: Impossible de charger VANTA');
+    };
+
+    document.body.appendChild(script2);
+    script2Ref.current = script2;
+
+    // 4. Initialisation du canvas 3D avec vérifications de sécurité
+    const initThreeJS = () => {
+      const canvas = document.getElementById('watchCanvas') as HTMLCanvasElement;
+      if (!canvas) {
+        console.warn('Canvas watchCanvas non trouvé');
+        return;
+      }
+
+      if (!window.THREE) {
+        console.error('THREE.js non chargé pour le canvas 3D');
+        return;
+      }
+
+      try {
+        // --- Code Three.js identique mais encapsulé dans try/catch ---
+        const scene = new window.THREE.Scene();
+        scene.background = new window.THREE.Color(0x1f2937);
+        
+        const camera = new window.THREE.PerspectiveCamera(
+          45,
+          canvas.clientWidth / canvas.clientHeight,
+          0.1,
+          1000
+        );
+        camera.position.set(0, 0, 10);
+        
+        const renderer = new window.THREE.WebGLRenderer({ 
+          canvas,
+          antialias: true,
+          alpha: true 
+        });
+        renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+        renderer.shadowMap.enabled = true;
+        
+        // Lighting
+        const ambientLight = new window.THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        
+        const mainLight = new window.THREE.DirectionalLight(0xffffff, 0.8);
+        mainLight.position.set(5, 10, 7);
+        mainLight.castShadow = true;
+        scene.add(mainLight);
+        
+        const rimLight = new window.THREE.PointLight(0xd4af37, 1, 100);
+        rimLight.position.set(-5, 5, 5);
+        scene.add(rimLight);
+        
+        // Create watch components (tout votre code ici...)
+        const watchGroup = new window.THREE.Group();
+        
+        // Base/Case
+        const caseGeometry = new window.THREE.CylinderGeometry(2, 2, 0.5, 32);
+        const caseMaterial = new window.THREE.MeshStandardMaterial({ 
+          color: 0xc0c0c0,
+          metalness: 0.9,
+          roughness: 0.1
+        });
+        const watchCase = new window.THREE.Mesh(caseGeometry, caseMaterial);
+        watchCase.castShadow = true;
+        watchCase.userData = { explodeOffset: new window.THREE.Vector3(0, -2, 0) };
+        watchGroup.add(watchCase);
+        
+        // Movement/Mechanism
+        const movementGeometry = new window.THREE.CylinderGeometry(1.8, 1.8, 0.3, 32);
+        const movementMaterial = new window.THREE.MeshStandardMaterial({ 
+          color: 0xd4af37,
+          metalness: 0.8,
+          roughness: 0.2
+        });
+        const movement = new window.THREE.Mesh(movementGeometry, movementMaterial);
+        movement.position.y = 0.4;
+        movement.castShadow = true;
+        movement.userData = { explodeOffset: new window.THREE.Vector3(0, 2, 0) };
+        watchGroup.add(movement);
+        
+        // Gears
+        const gearGeometry = new window.THREE.CylinderGeometry(0.3, 0.3, 0.1, 8);
+        const gearMaterial = new window.THREE.MeshStandardMaterial({ 
+          color: 0xffd700,
+          metalness: 0.9,
+          roughness: 0.1
+        });
+        
+        const gearPositions = [
+          { x: -0.8, y: 0.5, z: 0.5 },
+          { x: 0.8, y: 0.5, z: 0.5 },
+          { x: 0, y: 0.5, z: -0.8 },
+          { x: -0.5, y: 0.5, z: -0.3 },
+          { x: 0.5, y: 0.5, z: 0.3 }
+        ];
+        
+        gearPositions.forEach((pos, index) => {
+          const gear = new window.THREE.Mesh(gearGeometry, gearMaterial);
+          gear.position.set(pos.x, pos.y, pos.z);
+          gear.rotation.x = Math.PI / 2;
+          gear.castShadow = true;
+          gear.userData = { 
+            explodeOffset: new window.THREE.Vector3(pos.x * 2, 3, pos.z * 2),
+            rotationSpeed: 0.02 * (index % 2 === 0 ? 1 : -1)
+          };
+          watchGroup.add(gear);
+        });
+        
+        // Dial
+        const dialGeometry = new window.THREE.CylinderGeometry(1.9, 1.9, 0.05, 32);
+        const dialMaterial = new window.THREE.MeshStandardMaterial({ 
+          color: 0xf8f6f0,
+          metalness: 0.1,
+          roughness: 0.8
+        });
+        const dial = new window.THREE.Mesh(dialGeometry, dialMaterial);
+        dial.position.y = 0.75;
+        dial.castShadow = true;
+        dial.userData = { explodeOffset: new window.THREE.Vector3(0, 4, 0) };
+        watchGroup.add(dial);
+        
+        // Hour markers
+        for (let i = 0; i < 12; i++) {
+          const markerGeometry = new window.THREE.BoxGeometry(0.1, 0.2, 0.02);
+          const markerMaterial = new window.THREE.MeshStandardMaterial({ 
+            color: 0xd4af37,
+            metalness: 0.8
+          });
+          const marker = new window.THREE.Mesh(markerGeometry, markerMaterial);
+          const angle = (i / 12) * Math.PI * 2;
+          marker.position.set(
+            Math.sin(angle) * 1.5,
+            0.8,
+            Math.cos(angle) * 1.5
+          );
+          marker.rotation.y = -angle;
+          marker.userData = { explodeOffset: new window.THREE.Vector3(0, 4, 0) };
+          watchGroup.add(marker);
+        }
+        
+        // Watch hands
+        const hourHandGeometry = new window.THREE.BoxGeometry(0.08, 0.8, 0.03);
+        const minuteHandGeometry = new window.THREE.BoxGeometry(0.06, 1.2, 0.03);
+        const handMaterial = new window.THREE.MeshStandardMaterial({ 
+          color: 0x2c2c2c,
+          metalness: 0.5
+        });
+        
+        const hourHand = new window.THREE.Mesh(hourHandGeometry, handMaterial);
+        hourHand.position.set(0, 0.85, 0.4);
+        hourHand.rotation.z = Math.PI / 6;
+        hourHand.userData = { explodeOffset: new window.THREE.Vector3(0, 5, 0) };
+        watchGroup.add(hourHand);
+        
+        const minuteHand = new window.THREE.Mesh(minuteHandGeometry, handMaterial);
+        minuteHand.position.set(0, 0.85, 0.6);
+        minuteHand.rotation.z = Math.PI / 3;
+        minuteHand.userData = { explodeOffset: new window.THREE.Vector3(0, 5.5, 0) };
+        watchGroup.add(minuteHand);
+        
+        // Crystal/Glass
+        const crystalGeometry = new window.THREE.CylinderGeometry(2.05, 2.05, 0.1, 32);
+        const crystalMaterial = new window.THREE.MeshPhysicalMaterial({ 
+          color: 0xffffff,
+          metalness: 0,
+          roughness: 0,
+          transmission: 0.9,
+          thickness: 0.5,
+          transparent: true,
+          opacity: 0.3
+        });
+        const crystal = new window.THREE.Mesh(crystalGeometry, crystalMaterial);
+        crystal.position.y = 1;
+        crystal.userData = { explodeOffset: new window.THREE.Vector3(0, 6, 0) };
+        watchGroup.add(crystal);
+        
+        scene.add(watchGroup);
+        
+        // Animation state
+        let isRotating = true;
+        let isExploded = false;
+        let componentCount = 0;
+        let targetCount = 250;
+        
+        // Mouse controls
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        
+        canvas.addEventListener('mousedown', (e) => {
+          isDragging = true;
+          previousMousePosition = { x: e.clientX, y: e.clientY };
+        });
+        
+        canvas.addEventListener('mousemove', (e) => {
+          if (isDragging) {
+            const deltaX = e.clientX - previousMousePosition.x;
+            const deltaY = e.clientY - previousMousePosition.y;
+            
+            watchGroup.rotation.y += deltaX * 0.01;
+            watchGroup.rotation.x += deltaY * 0.01;
+            
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+          }
+        });
+        
+        canvas.addEventListener('mouseup', () => {
+          isDragging = false;
+        });
+        
+        canvas.addEventListener('mouseleave', () => {
+          isDragging = false;
+        });
+        
+        // Button controls
+        const rotateBtn = document.getElementById('rotateBtn');
+        const explodeBtn = document.getElementById('explodeBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        rotateBtn?.addEventListener('click', () => {
+          isRotating = !isRotating;
+          if (rotateBtn) {
+            rotateBtn.classList.toggle('bg-yellow-600');
+            rotateBtn.classList.toggle('bg-gray-700');
+          }
+        });
+        
+        explodeBtn?.addEventListener('click', () => {
+          isExploded = !isExploded;
+        });
+        
+        resetBtn?.addEventListener('click', () => {
+          watchGroup.rotation.set(0, 0, 0);
+          isExploded = false;
+          isRotating = true;
+          if (rotateBtn) {
+            rotateBtn.classList.add('bg-yellow-600');
+            rotateBtn.classList.remove('bg-gray-700');
+          }
+        });
+        
+        // Animation loop
+        const animate = () => {
+          requestAnimationFrame(animate);
+          
+          if (isRotating && !isDragging) {
+            watchGroup.rotation.y += 0.005;
+          }
+          
+          watchGroup.children.forEach((child: any) => {
+            if (child.userData.rotationSpeed) {
+              child.rotation.z += child.userData.rotationSpeed;
+            }
+            
+            if (child.userData.explodeOffset) {
+              const targetPos = isExploded ? child.userData.explodeOffset : new window.THREE.Vector3(0, child.position.y > 0.9 ? child.position.y : 0, 0);
+              if (child.position.y < 0.9 || isExploded) {
+                child.position.x += (targetPos.x - child.position.x) * 0.05;
+                child.position.z += (targetPos.z - child.position.z) * 0.05;
+              }
+              if (isExploded) {
+                child.position.y += (targetPos.y - child.position.y) * 0.05;
+              }
+            }
+          });
+          
+          if (componentCount < targetCount) {
+            componentCount += 2;
+            const countEl = document.getElementById('componentCount');
+            if (countEl) {
+              countEl.textContent = `${Math.min(componentCount, targetCount)}/250`;
+            }
+          }
+          
+          renderer.render(scene, camera);
+        };
+        
+        animate();
+        
+        // Gestion du redimensionnement
+        const handleResize = () => {
+          if (canvas) {
+            camera.aspect = canvas.clientWidth / canvas.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+          }
+        };
+        
+        window.addEventListener('resize', handleResize);
+
+      } catch (error) {
+        console.error('Erreur dans initThreeJS:', error);
+      }
+    };
+
+    // 5. Menu mobile (corrigé)
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     
@@ -45,289 +394,13 @@ export default function CraftsmanshipPage() {
     
     mobileMenuBtn?.addEventListener('click', handleMobileMenu);
 
-    // 3D Watch Assembly Animation
-    const canvas = document.getElementById('watchCanvas') as HTMLCanvasElement;
-    if (canvas) {
-      const scene = new (window as any).THREE.Scene();
-      scene.background = new (window as any).THREE.Color(0x1f2937);
-      
-      const camera = new (window as any).THREE.PerspectiveCamera(
-        45,
-        canvas.clientWidth / canvas.clientHeight,
-        0.1,
-        1000
-      );
-      camera.position.set(0, 0, 10);
-      
-      const renderer = new (window as any).THREE.WebGLRenderer({ 
-        canvas,
-        antialias: true,
-        alpha: true 
-      });
-      renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-      renderer.shadowMap.enabled = true;
-      
-      // Lighting
-      const ambientLight = new (window as any).THREE.AmbientLight(0xffffff, 0.6);
-      scene.add(ambientLight);
-      
-      const mainLight = new (window as any).THREE.DirectionalLight(0xffffff, 0.8);
-      mainLight.position.set(5, 10, 7);
-      mainLight.castShadow = true;
-      scene.add(mainLight);
-      
-      const rimLight = new (window as any).THREE.PointLight(0xd4af37, 1, 100);
-      rimLight.position.set(-5, 5, 5);
-      scene.add(rimLight);
-      
-      // Create watch components
-      const watchGroup = new (window as any).THREE.Group();
-      
-      // Base/Case
-      const caseGeometry = new (window as any).THREE.CylinderGeometry(2, 2, 0.5, 32);
-      const caseMaterial = new (window as any).THREE.MeshStandardMaterial({ 
-        color: 0xc0c0c0,
-        metalness: 0.9,
-        roughness: 0.1
-      });
-      const watchCase = new (window as any).THREE.Mesh(caseGeometry, caseMaterial);
-      watchCase.castShadow = true;
-      watchCase.userData = { explodeOffset: new (window as any).THREE.Vector3(0, -2, 0) };
-      watchGroup.add(watchCase);
-      
-      // Movement/Mechanism
-      const movementGeometry = new (window as any).THREE.CylinderGeometry(1.8, 1.8, 0.3, 32);
-      const movementMaterial = new (window as any).THREE.MeshStandardMaterial({ 
-        color: 0xd4af37,
-        metalness: 0.8,
-        roughness: 0.2
-      });
-      const movement = new (window as any).THREE.Mesh(movementGeometry, movementMaterial);
-      movement.position.y = 0.4;
-      movement.castShadow = true;
-      movement.userData = { explodeOffset: new (window as any).THREE.Vector3(0, 2, 0) };
-      watchGroup.add(movement);
-      
-      // Gears (multiple small gears)
-      const gearGeometry = new (window as any).THREE.CylinderGeometry(0.3, 0.3, 0.1, 8);
-      const gearMaterial = new (window as any).THREE.MeshStandardMaterial({ 
-        color: 0xffd700,
-        metalness: 0.9,
-        roughness: 0.1
-      });
-      
-      const gearPositions = [
-        { x: -0.8, y: 0.5, z: 0.5 },
-        { x: 0.8, y: 0.5, z: 0.5 },
-        { x: 0, y: 0.5, z: -0.8 },
-        { x: -0.5, y: 0.5, z: -0.3 },
-        { x: 0.5, y: 0.5, z: 0.3 }
-      ];
-      
-      gearPositions.forEach((pos, index) => {
-        const gear = new (window as any).THREE.Mesh(gearGeometry, gearMaterial);
-        gear.position.set(pos.x, pos.y, pos.z);
-        gear.rotation.x = Math.PI / 2;
-        gear.castShadow = true;
-        gear.userData = { 
-          explodeOffset: new (window as any).THREE.Vector3(pos.x * 2, 3, pos.z * 2),
-          rotationSpeed: 0.02 * (index % 2 === 0 ? 1 : -1)
-        };
-        watchGroup.add(gear);
-      });
-      
-      // Dial
-      const dialGeometry = new (window as any).THREE.CylinderGeometry(1.9, 1.9, 0.05, 32);
-      const dialMaterial = new (window as any).THREE.MeshStandardMaterial({ 
-        color: 0xf8f6f0,
-        metalness: 0.1,
-        roughness: 0.8
-      });
-      const dial = new (window as any).THREE.Mesh(dialGeometry, dialMaterial);
-      dial.position.y = 0.75;
-      dial.castShadow = true;
-      dial.userData = { explodeOffset: new (window as any).THREE.Vector3(0, 4, 0) };
-      watchGroup.add(dial);
-      
-      // Hour markers
-      for (let i = 0; i < 12; i++) {
-        const markerGeometry = new (window as any).THREE.BoxGeometry(0.1, 0.2, 0.02);
-        const markerMaterial = new (window as any).THREE.MeshStandardMaterial({ 
-          color: 0xd4af37,
-          metalness: 0.8
-        });
-        const marker = new (window as any).THREE.Mesh(markerGeometry, markerMaterial);
-        const angle = (i / 12) * Math.PI * 2;
-        marker.position.set(
-          Math.sin(angle) * 1.5,
-          0.8,
-          Math.cos(angle) * 1.5
-        );
-        marker.rotation.y = -angle;
-        marker.userData = { explodeOffset: new (window as any).THREE.Vector3(0, 4, 0) };
-        watchGroup.add(marker);
-      }
-      
-      // Watch hands
-      const hourHandGeometry = new (window as any).THREE.BoxGeometry(0.08, 0.8, 0.03);
-      const minuteHandGeometry = new (window as any).THREE.BoxGeometry(0.06, 1.2, 0.03);
-      const handMaterial = new (window as any).THREE.MeshStandardMaterial({ 
-        color: 0x2c2c2c,
-        metalness: 0.5
-      });
-      
-      const hourHand = new (window as any).THREE.Mesh(hourHandGeometry, handMaterial);
-      hourHand.position.set(0, 0.85, 0.4);
-      hourHand.rotation.z = Math.PI / 6;
-      hourHand.userData = { explodeOffset: new (window as any).THREE.Vector3(0, 5, 0) };
-      watchGroup.add(hourHand);
-      
-      const minuteHand = new (window as any).THREE.Mesh(minuteHandGeometry, handMaterial);
-      minuteHand.position.set(0, 0.85, 0.6);
-      minuteHand.rotation.z = Math.PI / 3;
-      minuteHand.userData = { explodeOffset: new (window as any).THREE.Vector3(0, 5.5, 0) };
-      watchGroup.add(minuteHand);
-      
-      // Crystal/Glass
-      const crystalGeometry = new (window as any).THREE.CylinderGeometry(2.05, 2.05, 0.1, 32);
-      const crystalMaterial = new (window as any).THREE.MeshPhysicalMaterial({ 
-        color: 0xffffff,
-        metalness: 0,
-        roughness: 0,
-        transmission: 0.9,
-        thickness: 0.5,
-        transparent: true,
-        opacity: 0.3
-      });
-      const crystal = new (window as any).THREE.Mesh(crystalGeometry, crystalMaterial);
-      crystal.position.y = 1;
-      crystal.userData = { explodeOffset: new (window as any).THREE.Vector3(0, 6, 0) };
-      watchGroup.add(crystal);
-      
-      scene.add(watchGroup);
-      
-      // Animation state
-      let isRotating = true;
-      let isExploded = false;
-      let componentCount = 0;
-      let targetCount = 250;
-      
-      // Mouse controls
-      let isDragging = false;
-      let previousMousePosition = { x: 0, y: 0 };
-      
-      canvas.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        previousMousePosition = { x: e.clientX, y: e.clientY };
-      });
-      
-      canvas.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-          const deltaX = e.clientX - previousMousePosition.x;
-          const deltaY = e.clientY - previousMousePosition.y;
-          
-          watchGroup.rotation.y += deltaX * 0.01;
-          watchGroup.rotation.x += deltaY * 0.01;
-          
-          previousMousePosition = { x: e.clientX, y: e.clientY };
-        }
-      });
-      
-      canvas.addEventListener('mouseup', () => {
-        isDragging = false;
-      });
-      
-      canvas.addEventListener('mouseleave', () => {
-        isDragging = false;
-      });
-      
-      // Button controls
-      const rotateBtn = document.getElementById('rotateBtn');
-      const explodeBtn = document.getElementById('explodeBtn');
-      const resetBtn = document.getElementById('resetBtn');
-      
-      rotateBtn?.addEventListener('click', () => {
-        isRotating = !isRotating;
-        if (rotateBtn) {
-          rotateBtn.classList.toggle('bg-yellow-600');
-          rotateBtn.classList.toggle('bg-gray-700');
-        }
-      });
-      
-      explodeBtn?.addEventListener('click', () => {
-        isExploded = !isExploded;
-      });
-      
-      resetBtn?.addEventListener('click', () => {
-        watchGroup.rotation.set(0, 0, 0);
-        isExploded = false;
-        isRotating = true;
-        if (rotateBtn) {
-          rotateBtn.classList.add('bg-yellow-600');
-          rotateBtn.classList.remove('bg-gray-700');
-        }
-      });
-      
-      // Animation loop
-      const animate = () => {
-        requestAnimationFrame(animate);
-        
-        if (isRotating && !isDragging) {
-          watchGroup.rotation.y += 0.005;
-        }
-        
-        // Animate gears
-        watchGroup.children.forEach((child: any) => {
-          if (child.userData.rotationSpeed) {
-            child.rotation.z += child.userData.rotationSpeed;
-          }
-          
-          // Explode/implode animation
-          if (child.userData.explodeOffset) {
-            const targetPos = isExploded ? child.userData.explodeOffset : new (window as any).THREE.Vector3(0, child.position.y > 0.9 ? child.position.y : 0, 0);
-            if (child.position.y < 0.9 || isExploded) {
-              child.position.x += (targetPos.x - child.position.x) * 0.05;
-              child.position.z += (targetPos.z - child.position.z) * 0.05;
-            }
-            if (isExploded) {
-              child.position.y += (targetPos.y - child.position.y) * 0.05;
-            }
-          }
-        });
-        
-        // Update component count
-        if (componentCount < targetCount) {
-          componentCount += 2;
-          const countEl = document.getElementById('componentCount');
-          if (countEl) {
-            countEl.textContent = `${Math.min(componentCount, targetCount)}/250`;
-          }
-        }
-        
-        renderer.render(scene, camera);
-      };
-      
-      animate();
-      
-      // Handle window resize
-      const handleResize = () => {
-        if (canvas) {
-          camera.aspect = canvas.clientWidth / canvas.clientHeight;
-          camera.updateProjectionMatrix();
-          renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-        }
-      };
-      
-      window.addEventListener('resize', handleResize);
-    }
-
-    // Scroll reveal animation
+    // 6. Intersection Observer pour animations au scroll
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
     };
 
-    const observer = new IntersectionObserver(function(entries) {
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('revealed');
@@ -339,14 +412,13 @@ export default function CraftsmanshipPage() {
       observer.observe(el);
     });
 
-    // Animate mastery indicators when they come into view
-    const masteryObserver = new IntersectionObserver(function(entries) {
+    const masteryObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const progress = (entry.target as HTMLElement).querySelector('.mastery-progress');
+          const progress = entry.target.querySelector('.mastery-progress') as HTMLElement;
           if (progress) {
             setTimeout(() => {
-              (progress as HTMLElement).style.width = (progress as HTMLElement).style.width || '100%';
+              progress.style.width = progress.style.width || '100%';
             }, 500);
           }
         }
@@ -357,32 +429,39 @@ export default function CraftsmanshipPage() {
       masteryObserver.observe(el);
     });
 
-    // Parallax effect for hero section
+    // 7. Effet parallax
     const handleScroll = () => {
       const scrolled = window.pageYOffset;
-      const parallax = document.querySelector('#vanta-bg');
+      const parallax = document.querySelector('#vanta-bg') as HTMLElement;
       if (parallax) {
         const speed = scrolled * 0.2;
-        (parallax as HTMLElement).style.transform = `translateY(${speed}px)`;
+        parallax.style.transform = `translateY(${speed}px)`;
       }
     };
 
     window.addEventListener('scroll', handleScroll);
 
-    // Cleanup
+    // 8. Démarrage du processus de chargement
+    loadScripts().then(() => {
+      setTimeout(() => {
+        initThreeJS();
+      }, 300);
+    });
+
+    // 9. Cleanup sécurisé
     return () => {
       window.removeEventListener('scroll', handleScroll);
       mobileMenuBtn?.removeEventListener('click', handleMobileMenu);
-      if (vantaInstance) {
-        vantaInstance.destroy();
+      
+      if (vantaInstanceRef.current) {
+        vantaInstanceRef.current.destroy();
       }
-      document.body.removeChild(script1);
-      document.body.removeChild(script2);
     };
-  }, []);
+  }, []); // Le useEffect ne s'exécute qu'une fois
 
   return (
     <div className="font-sans bg-cream overflow-x-hidden" style={{ background: 'var(--cream)' }}>
+      {/* Votre JSX inchangé */}
       <style jsx global>{`
         :root {
           --gold: #D4AF37;
