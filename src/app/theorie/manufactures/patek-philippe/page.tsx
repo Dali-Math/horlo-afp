@@ -2,83 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 
-export const legendaryCollections = [
-  {
-    name: "Calatrava",
-    since: "1932",
-    illustration: "/vectors/calatrava.svg", // à remplacer par une icône/illustration réelle
-    description: "Symbole de l’élégance classique, la Calatrava incarne l'apogée du design épuré Art Déco et demeure un archétype des montres habillées suisses.",
-    fact: "La Calatrava a établi le standard du minimalisme horloger.",
-    context: "Pensée pour l’élite culturelle, elle a séduit artistes et architectes.",
-    timeline: [
-      { year: 1932, event: "Première Calatrava, réf. 96 : synthèse du style Bauhaus et précision suisse" },
-      { year: 1955, event: "Introduction du cadran Clous de Paris, devenu un classique" },
-      { year: 2022, event: "90 ans - Série anniversaire, redécouverte internationale" }
-    ]
-  },
-  {
-    name: "Nautilus",
-    since: "1976",
-    illustration: "/vectors/nautilus.svg",
-    description: "Premier icône du sport-chic. Sa boîte en forme de hublot (Gérald Genta) illustre la transition de l’horlogerie traditionnelle vers la modernité.",
-    fact: "Première montre de luxe en acier conçue pour l’aventure nautique.",
-    context: "Populaire chez les explorateurs urbains et sportifs raffinés.",
-    timeline: [
-      { year: 1976, event: "Lancement de la Nautilus réf. 3700" },
-      { year: 1981, event: "Ajout d’un modèle féminin" },
-      { year: 2006, event: "Nautilus fête ses 30 ans avec de nouveaux calibres" }
-    ]
-  },
-  {
-    name: "Aquanaut",
-    since: "1997",
-    illustration: "/vectors/aquanaut.svg",
-    description: "Montre contemporaine. Bracelet tropical novateur, lignes modernes, conçue pour accompagner un mode de vie actif.",
-    fact: "Première montre à bracelet composite anti-UV et anti-sel.",
-    context: "Cible les jeunes passionnés de voyages et de sports.",
-    timeline: [
-      { year: 1997, event: "Aquanaut introduite comme alternative urbaine" },
-      { year: 2007, event: "Premier modèle chronographe" }
-    ]
-  },
-  {
-    name: "Complications",
-    since: "Années 1940",
-    illustration: "/vectors/complications.svg",
-    description: "Regroupe les garde-temps à fonctions avancées. Les chronographes, quantièmes, phases de lune… témoignent de la virtuosité technique suisse.",
-    fact: "Toutes les grandes complications ont été expérimentées ici.",
-    context: "Collection laboratoire de l’innovation Patek Philippe.",
-    timeline: [
-      { year: 1941, event: "Premier quantième perpétuel série" },
-      { year: 1985, event: "Complication Travel Time (double fuseau)" }
-    ]
-  },
-  {
-    name: "Grandes Complications",
-    since: "Depuis 1989",
-    illustration: "/vectors/grandes-complications.svg",
-    description: "Regroupe les pièces réunissant plusieurs complications majeures (sonnerie, quantième, chronographe rattrapante…). Vitrine du savoir-faire total.",
-    fact: "La Calibre 89 détenait 33 complications, record mondial en 1989.",
-    context: "Icône des expositions universelles et des ventes record.",
-    timeline: [
-      { year: 1989, event: "Calibre 89, montre la plus complexe au monde à l'époque" },
-      { year: 2014, event: "Grandmaster Chime, double cadran réversible" }
-    ]
-  },
-  {
-    name: "Gondolo",
-    since: "Depuis 1993",
-    illustration: "/vectors/gondolo.svg",
-    description: "Inspirée du style Art Déco et née d’une commande spéciale du club brésilien Gondolo & Labouriau, elle met à l’honneur la forme tonneau et le travail du cadran.",
-    fact: "Collection inspirée de la forme “banane” très Art Déco.",
-    context: "Reflète la diversité créative de l’horlogerie genevoise.",
-    timeline: [
-      { year: 1993, event: "Lancement officiel gamme Gondolo moderne" },
-      { year: 2003, event: "Grand élargissement (rectangulaires, tonneau, etc.)" }
-    ]
-  }
-];
-
 export default function Page() {
   const vantaBgRef = useRef<HTMLDivElement>(null);
   const vantaEffectRef = useRef<any>(null);
@@ -368,19 +291,6 @@ export default function Page() {
       });
     };
   }, []);
-
-  // Helper function to map collection names to icons
-  const getCollectionIcon = (name: string) => {
-    const icons: { [key: string]: string } = {
-      'Calatrava': '⌚',
-      'Nautilus': '🏆',
-      'Aquanaut': '💎',
-      'Complications': '⚙️',
-      'Grandes Complications': '👑',
-      'Gondolo': '🎨'
-    };
-    return icons[name] || '⌚';
-  };
 
   return (
     <>
@@ -673,12 +583,11 @@ export default function Page() {
           margin-bottom: 1.5rem;
         }
         
-        .collection-since {
-          font-size: 1rem;
-          font-weight: 500;
-          color: var(--gold-dark);
+        .collection-price {
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: var(--gold);
           margin-bottom: 1rem;
-          font-style: italic;
         }
         
         .collection-specs {
@@ -949,26 +858,107 @@ export default function Page() {
       <section id="collections" className="section">
         <h2 className="section-title font-display">Collections Légendaires</h2>
         <div className="collections-grid">
-          {legendaryCollections.map((collection, index) => (
-            <div 
-              className="collection-card" 
-              onClick={() => window.location.href = 'collections.html'}
-              key={collection.name}
-            >
-              <div className="collection-image">
-                {getCollectionIcon(collection.name)}
-              </div>
-              <div className="collection-content">
-                <h3 className="collection-title">{collection.name}</h3>
-                <p className="collection-description">{collection.description}</p>
-                <div className="collection-since">Collection depuis {collection.since}</div>
-                <div className="collection-specs">
-                  <span className="spec-tag">{collection.fact}</span>
-                  <span className="spec-tag">{collection.context}</span>
-                </div>
+          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
+            <div className="collection-image">⌚</div>
+            <div className="collection-content">
+              <h3 className="collection-title">Calatrava</h3>
+              <p className="collection-description">
+                L'essence même de l'élégance horlogère. Symbole intemporel du style Patek Philippe 
+                avec son design pur et ses lignes classiques.
+              </p>
+              <div className="collection-price">À partir de €25,000</div>
+              <div className="collection-specs">
+                <span className="spec-tag">Mouvement automatique</span>
+                <span className="spec-tag">Cadran émail</span>
+                <span className="spec-tag">Boîtier or</span>
               </div>
             </div>
-          ))}
+          </div>
+          
+          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
+            <div className="collection-image">🏆</div>
+            <div className="collection-content">
+              <h3 className="collection-title">Nautilus</h3>
+              <p className="collection-description">
+                L'icône du sport de luxe. Conçu par Gérald Genta, le Nautilus combine robustesse 
+                et élégance dans un design emblématique.
+              </p>
+              <div className="collection-price">À partir de €35,000</div>
+              <div className="collection-specs">
+                <span className="spec-tag">Étanche 120m</span>
+                <span className="spec-tag">Boîtier acier</span>
+                <span className="spec-tag">Bracelet intégré</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
+            <div className="collection-image">💎</div>
+            <div className="collection-content">
+              <h3 className="collection-title">Aquanaut</h3>
+              <p className="collection-description">
+                L'aventure moderne. Design contemporain avec bracelet Tropical innovant, 
+                parfait pour l'homme actif et élégant.
+              </p>
+              <div className="collection-price">À partir de €28,000</div>
+              <div className="collection-specs">
+                <span className="spec-tag">Bracelet caoutchouc</span>
+                <span className="spec-tag">Étanche 120m</span>
+                <span className="spec-tag">Design sportif</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
+            <div className="collection-image">⚙️</div>
+            <div className="collection-content">
+              <h3 className="collection-title">Complications</h3>
+              <p className="collection-description">
+                L'art de la complexité. Montres avec fonctions avancées alliant 
+                innovation technique et beauté esthétique.
+              </p>
+              <div className="collection-price">À partir de €45,000</div>
+              <div className="collection-specs">
+                <span className="spec-tag">Chronographe</span>
+                <span className="spec-tag">Calendrier</span>
+                <span className="spec-tag">Phase lune</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
+            <div className="collection-image">👑</div>
+            <div className="collection-content">
+              <h3 className="collection-title">Grandes Complications</h3>
+              <p className="collection-description">
+                Le sommet de l'horlogerie. Créations exceptionnelles avec plusieurs 
+                complications, représentant l'excellence absolue.
+              </p>
+              <div className="collection-price">À partir de €150,000</div>
+              <div className="collection-specs">
+                <span className="spec-tag">Sonnerie</span>
+                <span className="spec-tag">Répétition minutes</span>
+                <span className="spec-tag">Tourbillon</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
+            <div className="collection-image">🎨</div>
+            <div className="collection-content">
+              <h3 className="collection-title">Gondolo</h3>
+              <p className="collection-description">
+                L'art déco revisité. Collection inspirée des années 1920 avec des 
+                formes géométriques audacieuses et un style raffiné.
+              </p>
+              <div className="collection-price">À partir de €30,000</div>
+              <div className="collection-specs">
+                <span className="spec-tag">Forme tonneau</span>
+                <span className="spec-tag">Design rétro</span>
+                <span className="spec-tag">Cadran guilloché</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
