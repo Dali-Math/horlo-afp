@@ -1,9 +1,14 @@
-'use client';
+// Corrige le build App Router Next.js 14
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import Script from 'next/script';
+import { Inter, Playfair_Display } from 'next/font/google';
+
+const inter = Inter({ subsets: ['latin'] });
+const playfair = Playfair_Display({ subsets: ['latin'], weight: ['400', '600', '700'] });
 
 declare global {
   interface Window {
@@ -101,7 +106,7 @@ const InnovationPage: React.FC = () => {
       window.removeEventListener('scroll', handleScroll);
       elements.forEach(el => observer.unobserve(el));
     };
-  }, []);
+  }, [vantaEffect]);
 
   return (
     <>
@@ -109,10 +114,26 @@ const InnovationPage: React.FC = () => {
         <title>Innovation - Patek Philippe Référence Mondiale</title>
         <meta name="description" content="Repousser les limites de l'impossible depuis 1839 avec des avancées technologiques révolutionnaires" />
         <link rel="icon" href="/favicon.ico" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+          rel="stylesheet" 
+        />
       </Head>
 
+      {/* Scripts Vanta.js */}
+      <Script 
+        src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" 
+        strategy="beforeInteractive" 
+      />
+      <Script 
+        src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.halo.min.js" 
+        strategy="afterInteractive" 
+      />
+
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
+      <nav className={`fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 ${inter.className}`}>
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="text-2xl font-bold text-gray-900">
@@ -154,10 +175,10 @@ const InnovationPage: React.FC = () => {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div id="vanta-bg" className="vanta-bg"></div>
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
-          <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">
-            Innovation<br>Horlogère
+          <h1 className={`hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight ${playfair.className}`}>
+            Innovation<br />Horlogère
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+          <p className={`text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed ${inter.className}`}>
             Repousser les limites de l'impossible depuis 1839 avec des avancées technologiques révolutionnaires
           </p>
         </div>
@@ -167,8 +188,8 @@ const InnovationPage: React.FC = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Inventions Révolutionnaires</h2>
-            <p className="text-xl text-gray-600">Les innovations qui ont transformé l'industrie horlogère</p>
+            <h2 className={`text-4xl md:text-5xl font-bold text-gray-900 mb-6 ${playfair.className}`}>Inventions Révolutionnaires</h2>
+            <p className={`text-xl text-gray-600 ${inter.className}`}>Les innovations qui ont transformé l'industrie horlogère</p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -178,8 +199,8 @@ const InnovationPage: React.FC = () => {
                 <div className="patent-badge">BREVET 1845</div>
               </div>
               <div className="p-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">Remontoir à Couronne</h3>
-                <p className="text-gray-600 mb-4">
+                <h3 className={`text-2xl font-bold text-gray-900 mb-3 ${playfair.className}`}>Remontoir à Couronne</h3>
+                <p className={`text-gray-600 mb-4 ${inter.className}`}>
                   L'invention de Jean Adrien Philippe qui a révolutionné l'industrie horlogère 
                   en permettant le remontage et le réglage par la couronne.
                 </p>
@@ -202,8 +223,8 @@ const InnovationPage: React.FC = () => {
                 <div className="patent-badge">INNOVATION 1868</div>
               </div>
               <div className="p-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">Montre-Bracelet</h3>
-                <p className="text-gray-600 mb-4">
+                <h3 className={`text-2xl font-bold text-gray-900 mb-3 ${playfair.className}`}>Montre-Bracelet</h3>
+                <p className={`text-gray-600 mb-4 ${inter.className}`}>
                   La première montre-bracelet avec remontoir à couronne, créée pour la Comtesse 
                   Koscowicz, marquant le début d'une nouvelle ère horlogère.
                 </p>
@@ -226,8 +247,8 @@ const InnovationPage: React.FC = () => {
                 <div className="patent-badge">MASTERPIECE 1989</div>
               </div>
               <div className="p-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">Calibre 89</h3>
-                <p className="text-gray-600 mb-4">
+                <h3 className={`text-2xl font-bold text-gray-900 mb-3 ${playfair.className}`}>Calibre 89</h3>
+                <p className={`text-gray-600 mb-4 ${inter.className}`}>
                   La montre la plus compliquée du monde en 1989 avec 33 complications, 
                   célébrant 150 ans d'excellence horlogère.
                 </p>
@@ -251,8 +272,8 @@ const InnovationPage: React.FC = () => {
       <section className="py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Chronologie d'Innovation</h2>
-            <p className="text-xl text-gray-600">Les jalons technologiques qui ont façonné l'avenir horloger</p>
+            <h2 className={`text-4xl md:text-5xl font-bold text-gray-900 mb-6 ${playfair.className}`}>Chronologie d'Innovation</h2>
+            <p className={`text-xl text-gray-600 ${inter.className}`}>Les jalons technologiques qui ont façonné l'avenir horloger</p>
           </div>
           
           <div className="innovation-timeline">
@@ -297,12 +318,18 @@ const InnovationPage: React.FC = () => {
                 <div className="timeline-marker"></div>
                 <div className="bg-white p-6 rounded-lg shadow-lg">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-2xl font-bold text-gray-900">{item.year} - {item.title}</h3>
-                    <span className={`bg-${item.category === 'FONDATION' ? 'yellow' : item.category === 'ACOUSTIQUE' ? 'blue' : item.category === 'CHRONOGRAPHE' ? 'green' : item.category === 'MATÉRIAUX' ? 'purple' : item.category === 'PRÉCISION' ? 'red' : 'gray'}-600 text-white px-3 py-1 rounded-full text-sm font-semibold`}>
+                    <h3 className={`text-2xl font-bold text-gray-900 ${playfair.className}`}>{item.year} - {item.title}</h3>
+                    <span className={`bg-${
+                      item.category === 'FONDATION' ? 'yellow' : 
+                      item.category === 'ACOUSTIQUE' ? 'blue' : 
+                      item.category === 'CHRONOGRAPHE' ? 'green' : 
+                      item.category === 'MATÉRIAUX' ? 'purple' : 
+                      item.category === 'PRÉCISION' ? 'red' : 'gray'
+                    }-600 text-white px-3 py-1 rounded-full text-sm font-semibold`}>
                       {item.category}
                     </span>
                   </div>
-                  <p className="text-gray-600 mb-4">{item.description}</p>
+                  <p className={`text-gray-600 mb-4 ${inter.className}`}>{item.description}</p>
                   <div className="complexity-meter">
                     <div className="complexity-fill" style={{width: `${item.complexity}%`}}></div>
                   </div>
@@ -330,8 +357,8 @@ const InnovationPage: React.FC = () => {
         
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="text-center mb-16 scroll-reveal">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Recherche & Développement</h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <h2 className={`text-4xl md:text-5xl font-bold mb-6 ${playfair.className}`}>Recherche & Développement</h2>
+            <p className={`text-xl text-gray-300 max-w-3xl mx-auto ${inter.className}`}>
               Notre centre de R&D repousse constamment les frontières de l'horlogerie avec des technologies 
               de pointe et des partenariats avec les institutions scientifiques les plus prestigieuses.
             </p>
@@ -342,14 +369,14 @@ const InnovationPage: React.FC = () => {
               <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <i className="fas fa-flask text-2xl text-white"></i>
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-center">Laboratoires d'Excellence</h3>
-              <p className="text-gray-300 text-center mb-6">
+              <h3 className={`text-2xl font-bold mb-4 text-center ${playfair.className}`}>Laboratoires d'Excellence</h3>
+              <p className={`text-gray-300 text-center mb-6 ${inter.className}`}>
                 Des laboratoires équipés des technologies les plus avancées pour tester 
                 et développer de nouveaux matériaux et mécanismes.
               </p>
               <div className="text-center">
                 <div className="text-3xl font-bold text-yellow-600 mb-2">15</div>
-                <div className="text-sm text-gray-400">Laboratoires spécialisés</div>
+                <div className={`text-sm text-gray-400 ${inter.className}`}>Laboratoires spécialisés</div>
               </div>
             </div>
             
@@ -357,14 +384,14 @@ const InnovationPage: React.FC = () => {
               <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <i className="fas fa-users text-2xl text-white"></i>
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-center">Équipe de Recherche</h3>
-              <p className="text-gray-300 text-center mb-6">
+              <h3 className={`text-2xl font-bold mb-4 text-center ${playfair.className}`}>Équipe de Recherche</h3>
+              <p className={`text-gray-300 text-center mb-6 ${inter.className}`}>
                 Une équipe d'ingénieurs, physiciens et horlogers dédiée à l'innovation 
                 et au développement de technologies révolutionnaires.
               </p>
               <div className="text-center">
                 <div className="text-3xl font-bold text-yellow-600 mb-2">200+</div>
-                <div className="text-sm text-gray-400">Chercheurs et ingénieurs</div>
+                <div className={`text-sm text-gray-400 ${inter.className}`}>Chercheurs et ingénieurs</div>
               </div>
             </div>
             
@@ -372,14 +399,14 @@ const InnovationPage: React.FC = () => {
               <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <i className="fas fa-award text-2xl text-white"></i>
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-center">Brevets d'Invention</h3>
-              <p className="text-gray-300 text-center mb-6">
+              <h3 className={`text-2xl font-bold mb-4 text-center ${playfair.className}`}>Brevets d'Invention</h3>
+              <p className={`text-gray-300 text-center mb-6 ${inter.className}`}>
                 Plus de 100 brevets déposés au fil des décennies, 
                 témoignant de notre engagement constant envers l'innovation.
               </p>
               <div className="text-center">
                 <div className="text-3xl font-bold text-yellow-600 mb-2">100+</div>
-                <div className="text-sm text-gray-400">Brevets déposés</div>
+                <div className={`text-sm text-gray-400 ${inter.className}`}>Brevets déposés</div>
               </div>
             </div>
           </div>
@@ -390,8 +417,8 @@ const InnovationPage: React.FC = () => {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Technologies d'Avenir</h2>
-            <p className="text-xl text-gray-600">Les innovations qui façonneront l'horlogerie de demain</p>
+            <h2 className={`text-4xl md:text-5xl font-bold text-gray-900 mb-6 ${playfair.className}`}>Technologies d'Avenir</h2>
+            <p className={`text-xl text-gray-600 ${inter.className}`}>Les innovations qui façonneront l'horlogerie de demain</p>
           </div>
           
           <div className="grid md:grid-cols-2 gap-8">
@@ -401,11 +428,11 @@ const InnovationPage: React.FC = () => {
                   <i className="fas fa-brain text-2xl text-white"></i>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-white">IA Horlogère</h3>
+                  <h3 className={`text-2xl font-bold text-white ${playfair.className}`}>IA Horlogère</h3>
                   <div className="ai-indicator">BÊTA</div>
                 </div>
               </div>
-              <p className="text-gray-300 mb-6">
+              <p className={`text-gray-300 mb-6 ${inter.className}`}>
                 L'intelligence artificielle révolutionne l'ajustage des mouvements avec une précision 
                 inégalée, analysant des milliers de paramètres pour optimiser la performance chronométrique.
               </p>
@@ -426,11 +453,11 @@ const InnovationPage: React.FC = () => {
                   <i className="fas fa-atom text-2xl text-white"></i>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-white">Horlogerie Quantique</h3>
+                  <h3 className={`text-2xl font-bold text-white ${playfair.className}`}>Horlogerie Quantique</h3>
                   <div className="quantum-indicator">R&D</div>
                 </div>
               </div>
-              <p className="text-gray-300 mb-6">
+              <p className={`text-gray-300 mb-6 ${inter.className}`}>
                 L'exploration des oscillateurs quantiques pour atteindre une stabilité 
                 temporelle jusque-là inégalée, ouvrant la voie à une nouvelle ère de précision absolue.
               </p>
@@ -451,11 +478,11 @@ const InnovationPage: React.FC = () => {
                   <i className="fas fa-leaf text-2xl text-white"></i>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-white">Matériaux Durables</h3>
+                  <h3 className={`text-2xl font-bold text-white ${playfair.className}`}>Matériaux Durables</h3>
                   <span className="inline-block bg-green-600 text-white px-2 py-1 rounded text-xs font-semibold ml-2">ECO</span>
                 </div>
               </div>
-              <p className="text-gray-300 mb-6">
+              <p className={`text-gray-300 mb-6 ${inter.className}`}>
                 Développement de matériaux composites 100% recyclables et biodégradables 
                 pour une horlogerie respectueuse de l'environnement sans compromis sur la qualité.
               </p>
@@ -476,11 +503,11 @@ const InnovationPage: React.FC = () => {
                   <i className="fas fa-microchip text-2xl text-white"></i>
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-white">Nano-Mécatronique</h3>
+                  <h3 className={`text-2xl font-bold text-white ${playfair.className}`}>Nano-Mécatronique</h3>
                   <span className="inline-block bg-red-600 text-white px-2 py-1 rounded text-xs font-semibold ml-2">PROTOTYPE</span>
                 </div>
               </div>
-              <p className="text-gray-300 mb-6">
+              <p className={`text-gray-300 mb-6 ${inter.className}`}>
                 Intégration de systèmes nano-mécatroniques pour des complications 
                 intelligentes qui s'adaptent au comportement et aux préférences du porteur.
               </p>
@@ -502,33 +529,33 @@ const InnovationPage: React.FC = () => {
       <section className="py-20 bg-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16 scroll-reveal">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Impact de l'Innovation</h2>
-            <p className="text-xl text-gray-300">Les chiffres qui témoignent de notre engagement envers l'excellence</p>
+            <h2 className={`text-4xl md:text-5xl font-bold mb-6 ${playfair.className}`}>Impact de l'Innovation</h2>
+            <p className={`text-xl text-gray-300 ${inter.className}`}>Les chiffres qui témoignent de notre engagement envers l'excellence</p>
           </div>
           
           <div className="grid md:grid-cols-4 gap-8">
             <div className="text-center scroll-reveal">
               <div className="text-5xl font-bold text-yellow-600 mb-4" data-count="100">0</div>
-              <h3 className="text-xl font-semibold mb-2">Brevets Déposés</h3>
-              <p className="text-gray-400">Inventions protégées</p>
+              <h3 className={`text-xl font-semibold mb-2 ${playfair.className}`}>Brevets Déposés</h3>
+              <p className={`text-gray-400 ${inter.className}`}>Inventions protégées</p>
             </div>
             
             <div className="text-center scroll-reveal">
               <div className="text-5xl font-bold text-yellow-600 mb-4" data-count="33">0</div>
-              <h3 className="text-xl font-semibold mb-2">Complications Record</h3>
-              <p className="text-gray-400">Sur le Calibre 89</p>
+              <h3 className={`text-xl font-semibold mb-2 ${playfair.className}`}>Complications Record</h3>
+              <p className={`text-gray-400 ${inter.className}`}>Sur le Calibre 89</p>
             </div>
             
             <div className="text-center scroll-reveal">
               <div className="text-5xl font-bold text-yellow-600 mb-4" data-count="200">0</div>
-              <h3 className="text-xl font-semibold mb-2">Chercheurs</h3>
-              <p className="text-gray-400">Dédiés à l'innovation</p>
+              <h3 className={`text-xl font-semibold mb-2 ${playfair.className}`}>Chercheurs</h3>
+              <p className={`text-gray-400 ${inter.className}`}>Dédiés à l'innovation</p>
             </div>
             
             <div className="text-center scroll-reveal">
               <div className="text-5xl font-bold text-yellow-600 mb-4" data-count="99">0</div>
-              <h3 className="text-xl font-semibold mb-2">% Précision</h3>
-              <p className="text-gray-400">Standards qualité</p>
+              <h3 className={`text-xl font-semibold mb-2 ${playfair.className}`}>% Précision</h3>
+              <p className={`text-gray-400 ${inter.className}`}>Standards qualité</p>
             </div>
           </div>
         </div>
@@ -537,8 +564,8 @@ const InnovationPage: React.FC = () => {
       {/* Call to Action */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">L'Avenir de l'Horlogerie</h2>
-          <p className="text-xl text-gray-600 mb-8">
+          <h2 className={`text-4xl md:text-5xl font-bold mb-6 ${playfair.className}`}>L'Avenir de l'Horlogerie</h2>
+          <p className={`text-xl text-gray-600 mb-8 ${inter.className}`}>
             Rejoignez-nous dans notre quête constante d'innovation et de perfection horlogère
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -562,10 +589,10 @@ const InnovationPage: React.FC = () => {
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center">
-            <div className="text-3xl font-bold mb-4">
+            <div className={`text-3xl font-bold mb-4 ${playfair.className}`}>
               <span className="text-yellow-600">Patek</span> Philippe
             </div>
-            <p className="text-gray-400 mb-6">La référence mondiale en horlogerie suisse</p>
+            <p className={`text-gray-400 mb-6 ${inter.className}`}>La référence mondiale en horlogerie suisse</p>
             <div className="flex justify-center space-x-6 mb-8">
               <a href="#" className="text-gray-400 hover:text-yellow-600 transition-colors">
                 <i className="fab fa-instagram text-xl"></i>
@@ -581,7 +608,7 @@ const InnovationPage: React.FC = () => {
               </a>
             </div>
             <div className="border-t border-gray-800 pt-6">
-              <p className="text-gray-500 text-sm">
+              <p className={`text-gray-500 text-sm ${inter.className}`}>
                 © 2024 Patek Philippe. Tous droits réservés. | Référence Mondiale en Horlogerie Suisse
               </p>
             </div>
