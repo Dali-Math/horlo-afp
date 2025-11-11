@@ -1,10 +1,10 @@
-'use client';
-
-import React, { useState, useEffect, useRef } from 'react';
+'use client'
+import React, { useState, useEffect, useRef } from 'react'
 
 declare global {
   interface Window {
-    VANTA: any;
+    VANTA: any
+    THREE: any
   }
 }
 
@@ -99,28 +99,27 @@ const collections = [
       'Diamètre': '36mm'
     }
   }
-];
+]
 
 export default function CollectionsPage() {
-  const [filter, setFilter] = useState('all');
-  const vantaRef = useRef<HTMLDivElement>(null);
-  const vantaEffect = useRef<any>(null);
+  const [filter, setFilter] = useState('all')
+  const vantaRef = useRef<HTMLDivElement>(null)
+  const vantaEffect = useRef<any>(null)
 
-  const filteredCollections = filter === 'all' 
-    ? collections 
-    : collections.filter(col => col.category === filter);
+  const filteredCollections =
+    filter === 'all' ? collections : collections.filter(col => col.category === filter)
 
   useEffect(() => {
     const loadScript = (src: string) => {
       return new Promise<void>((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = src;
-        script.async = true;
-        script.onload = () => resolve();
-        script.onerror = reject;
-        document.body.appendChild(script);
-      });
-    };
+        const script = document.createElement('script')
+        script.src = src
+        script.async = true
+        script.onload = () => resolve()
+        script.onerror = reject
+        document.body.appendChild(script)
+      })
+    }
 
     Promise.all([
       loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js'),
@@ -132,52 +131,41 @@ export default function CollectionsPage() {
           mouseControls: true,
           touchControls: true,
           gyroControls: false,
-          minHeight: 200.00,
-          minWidth: 200.00,
-          scale: 1.00,
-          scaleMobile: 1.00,
+          minHeight: 200,
+          minWidth: 200,
+          scale: 1,
+          scaleMobile: 1,
           color: 0xd4af37,
           backgroundColor: 0xf8f6f0,
-          points: 8.00,
-          maxDistance: 25.00,
-          spacing: 18.00,
-        });
+          points: 8,
+          maxDistance: 25,
+          spacing: 18,
+        })
       }
-    });
+    })
 
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
+    // Scroll reveal
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-        }
-      });
-    }, observerOptions);
-
-    const elements = document.querySelectorAll('.scroll-reveal');
-    elements.forEach(el => observer.observe(el));
+        if (entry.isIntersecting) entry.target.classList.add('revealed')
+      })
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' })
+    const elements = document.querySelectorAll('.scroll-reveal')
+    elements.forEach(el => observer.observe(el))
 
     return () => {
-      if (vantaEffect.current) {
-        vantaEffect.current.destroy();
-      }
-      elements.forEach(el => observer.unobserve(el));
-    };
-  }, []);
+      if (vantaEffect.current) vantaEffect.current.destroy()
+      elements.forEach(el => observer.unobserve(el))
+    }
+  }, [])
 
   return (
     <>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ minHeight: '100vh' }}>
-        <div ref={vantaRef} className="absolute top-0 left-0 w-full h-full vanta-bg" style={{ zIndex: 0 }}></div>
+        <div ref={vantaRef} className="absolute top-0 left-0 w-full h-full vanta-bg" style={{ zIndex: 0 }} />
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
-          <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">
-            Collections<br />Iconiques
-          </h1>
+          <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">Collections<br />Iconiques</h1>
           <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
             Découvrez les garde-temps qui ont marqué l&apos;histoire de l&apos;horlogerie suisse
           </p>
@@ -248,10 +236,7 @@ export default function CollectionsPage() {
                 </div>
                 <div className="p-6">
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">{collection.name}</h3>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
-                    {collection.description}
-                  </p>
-                  
+                  <p className="text-gray-600 mb-6 leading-relaxed">{collection.description}</p>
                   <div className="bg-gray-900 text-white p-4 rounded-lg">
                     <h4 className="text-lg font-semibold mb-3">Caractéristiques techniques</h4>
                     <div className="space-y-2">
@@ -273,7 +258,7 @@ export default function CollectionsPage() {
       {/* Call to Action */}
       <section className="py-20 bg-gray-900 text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">Prêt à trouver votre Patek Philippe ?</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">Prêt à trouver votre Patek Philippe ?</h2>
           <p className="text-xl text-gray-300 mb-8">
             Visitez notre boutique officielle pour découvrir l&apos;ensemble de nos collections
           </p>
@@ -292,9 +277,7 @@ export default function CollectionsPage() {
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center">
-            <div className="text-3xl font-bold mb-4">
-              <span className="text-yellow-600">Patek</span> Philippe
-            </div>
+            <div className="text-3xl font-bold mb-4"><span className="text-yellow-600">Patek</span> Philippe</div>
             <p className="text-gray-400 mb-6">La référence mondiale en horlogerie suisse</p>
             <div className="flex justify-center space-x-6 mb-8">
               <a href="#" className="text-gray-400 hover:text-yellow-600 transition-colors duration-300">
@@ -311,9 +294,7 @@ export default function CollectionsPage() {
               </a>
             </div>
             <div className="border-t border-gray-800 pt-6">
-              <p className="text-gray-500 text-sm">
-                © 2024 Patek Philippe. Tous droits réservés. | Référence Mondiale en Horlogerie Suisse
-              </p>
+              <p className="text-gray-500 text-sm">© 2024 Patek Philippe. Tous droits réservés.</p>
             </div>
           </div>
         </div>
@@ -327,19 +308,11 @@ export default function CollectionsPage() {
           --charcoal: #2c2c2c;
           --silver: #e8e8e8;
         }
-        
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-        
         body {
           font-family: system-ui, -apple-system, sans-serif;
           background: var(--cream);
           overflow-x: hidden;
         }
-        
         .hero-title {
           font-family: 'Georgia', serif;
           font-weight: 600;
@@ -349,18 +322,10 @@ export default function CollectionsPage() {
           background-clip: text;
           animation: fadeInUp 1s ease-out;
         }
-        
         @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
         }
-        
         .vanta-bg {
           position: absolute;
           top: 0;
@@ -369,18 +334,15 @@ export default function CollectionsPage() {
           height: 100%;
           z-index: 0;
         }
-        
         .scroll-reveal {
           opacity: 0;
           transform: translateY(30px);
           transition: all 0.6s ease;
         }
-        
         .scroll-reveal.revealed {
           opacity: 1;
           transform: translateY(0);
         }
-        
         .collection-card {
           backdrop-filter: blur(10px);
           background: white;
@@ -389,7 +351,6 @@ export default function CollectionsPage() {
           position: relative;
           overflow: hidden;
         }
-        
         .collection-card::before {
           content: '';
           position: absolute;
@@ -402,17 +363,14 @@ export default function CollectionsPage() {
           z-index: 1;
           pointer-events: none;
         }
-        
         .collection-card:hover::before {
           left: 100%;
         }
-        
         .collection-card:hover {
           transform: translateY(-10px);
           box-shadow: 0 20px 40px rgba(212, 175, 55, 0.2);
           border-color: rgba(212, 175, 55, 0.3);
         }
-        
         .spec-item {
           display: flex;
           justify-content: space-between;
@@ -421,39 +379,24 @@ export default function CollectionsPage() {
           border-bottom: 1px solid rgba(255, 255, 255, 0.1);
           transition: all 0.3s ease;
         }
-        
         .spec-item:hover {
           padding-left: 0.5rem;
           border-bottom-color: rgba(212, 175, 55, 0.3);
         }
-        
         .spec-item:last-child {
           border-bottom: none;
         }
-        
         .filter-btn {
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
         }
-        
         .filter-btn:hover {
           transform: translateY(-2px);
         }
-        
-        button {
-          cursor: pointer;
-        }
-        
-        img {
-          display: block;
-          max-width: 100%;
-        }
-        
-        a {
-          text-decoration: none;
-          color: inherit;
-        }
+        button { cursor: pointer; }
+        img { display: block; max-width: 100%; }
+        a { text-decoration: none; color: inherit; }
       `}</style>
     </>
-  );
+  )
 }
