@@ -855,58 +855,94 @@ export default function CraftsmanshipPage() {
         </div>
       </section>
 
-      {/* Interactive 3D Watch Assembly */}
-      <section className="py-20 bg-gray-900 text-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12 scroll-reveal">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">L'Artisanat en Action</h2>
-            <p className="text-xl text-gray-300">
-              Explorez l'assemblage d'une montre Patek Philippe en 3D interactif
+            {/* Interactive 3D Watch Assembly - VERSION LUXE */}
+      <section className="py-20 bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute top-0 left-0 w-full h-full opacity-20">
+          <div className="w-full h-full bg-gradient-to-br from-yellow-600/10 via-transparent to-yellow-600/5"></div>
+        </div>
+        
+        <div className="max-w-6xl mx-auto px-6 relative z-20">
+          <div className="text-center mb-16 scroll-reveal">
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 font-serif tracking-tight">
+              <span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
+                La Naissance d'une Légende
+              </span>
+            </h2>
+            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed font-light">
+              Plongez au cœur de la manufacture où chaque geste d'artisan donne vie à une œuvre d'exception, 
+              là où le temps se sculpte et la passion s'incarne en mécanique fine
             </p>
           </div>
           
-          <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl overflow-hidden shadow-2xl scroll-reveal" style={{ height: '600px' }}>
-            <canvas id="watchCanvas" className="w-full h-full"></canvas>
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-yellow-600/10 scroll-reveal" style={{ height: '650px' }}>
+            <canvas id="watchCanvas" className="w-full h-full bg-gradient-to-br from-gray-900 to-black"></canvas>
             
-            <div className="absolute top-6 left-6 bg-black/60 backdrop-blur-md rounded-xl p-4 text-left">
-              <div className="text-sm text-gray-300 mb-1">Composants assemblés</div>
-              <div className="text-3xl font-bold text-yellow-600" id="componentCount">0/250</div>
+            {/* Badge exclusif */}
+            <div className="absolute top-8 left-8 bg-yellow-600/90 backdrop-blur-md rounded-2xl px-6 py-4 border border-yellow-500/30 shadow-xl">
+              <div className="text-xs text-yellow-100 uppercase tracking-widest mb-1">Atelier d'Assemblage</div>
+              <div className="text-2xl font-bold text-white" id="componentCount">0/250</div>
+              <div className="text-xs text-yellow-200 mt-1">Composants réunis</div>
             </div>
             
-            <div className="absolute top-6 right-6 bg-black/60 backdrop-blur-md rounded-xl p-4">
-              <div className="text-sm text-gray-300 mb-2">Contrôles</div>
-              <div className="flex gap-2">
-                <button id="rotateBtn" className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg text-sm transition-all">
-                  <i className="fas fa-sync-alt mr-2"></i>Rotation
-                </button>
-                <button id="explodeBtn" className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm transition-all">
-                  <i className="fas fa-expand-arrows-alt mr-2"></i>Exploser
-                </button>
-                <button id="resetBtn" className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm transition-all">
-                  <i className="fas fa-redo mr-2"></i>Reset
-                </button>
+            {/* Contrôles redesignés */}
+            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black/70 backdrop-blur-xl rounded-2xl px-8 py-5 border border-white/10 shadow-2xl">
+              <div className="flex items-center gap-4">
+                <div className="flex flex-col items-center">
+                  <button id="rotateBtn" className="bg-yellow-600 hover:bg-yellow-500 text-white w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-yellow-600/30 group">
+                    <i className="fas fa-sync-alt text-lg group-hover:animate-spin"></i>
+                  </button>
+                  <span className="text-xs text-gray-400 mt-2">Rotation</span>
+                </div>
+                
+                <div className="flex flex-col items-center">
+                  <button id="explodeBtn" className="bg-gray-800 hover:bg-gray-700 text-white w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 border border-white/10 hover:border-yellow-600/50 shadow-lg group">
+                    <i className="fas fa-expand-arrows-alt text-lg group-hover:scale-110 transition-transform"></i>
+                  </button>
+                  <span className="text-xs text-gray-400 mt-2">Décomposer</span>
+                </div>
+                
+                <div className="flex flex-col items-center">
+                  <button id="resetBtn" className="bg-gray-800 hover:bg-gray-700 text-white w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 border border-white/10 hover:border-yellow-600/50 shadow-lg group">
+                    <i className="fas fa-redo text-lg group-hover:rotate-180 transition-transform"></i>
+                  </button>
+                  <span className="text-xs text-gray-400 mt-2">Réinitialiser</span>
+                </div>
+              </div>
+              
+              <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
+                <p className="text-sm text-gray-400 whitespace-nowrap">
+                  <i className="fas fa-mouse mr-2"></i>Glissez pour explorer
+                </p>
               </div>
             </div>
             
-            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur-md rounded-full px-6 py-3">
-              <p className="text-sm text-gray-300">
-                <i className="fas fa-mouse mr-2"></i>Faites glisser pour explorer en 3D
-              </p>
+            {/* Signature Patek */}
+            <div className="absolute top-8 right-8 bg-black/70 backdrop-blur-md rounded-2xl px-5 py-4 border border-yellow-600/20">
+              <div className="text-xs text-gray-400 uppercase tracking-widest mb-1">Manufacture</div>
+              <div className="text-lg font-serif text-white">Genève</div>
+              <div className="text-xs text-yellow-600 mt-1">Swiss Made</div>
             </div>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6 mt-12">
-            <div className="bg-gray-800 rounded-xl p-6 text-center scroll-reveal">
-              <div className="text-4xl font-bold text-yellow-600 mb-2">250+</div>
-              <p className="text-gray-300">Composants individuels</p>
+          {/* Statistiques redesignées */}
+          <div className="grid md:grid-cols-3 gap-8 mt-16">
+            <div className="text-center scroll-reveal bg-gradient-to-b from-black/50 to-transparent rounded-2xl p-8 border border-yellow-600/10 hover:border-yellow-600/30 transition-all duration-300 group">
+              <div className="text-5xl font-bold text-yellow-500 mb-3 group-hover:text-yellow-400 transition-colors">250+</div>
+              <div className="text-sm text-gray-400 uppercase tracking-widest">Composants d'exception</div>
+              <div className="text-xs text-gray-500 mt-2">Chacune minutieusement ajustée</div>
             </div>
-            <div className="bg-gray-800 rounded-xl p-6 text-center scroll-reveal">
-              <div className="text-4xl font-bold text-yellow-600 mb-2">9</div>
-              <p className="text-gray-300">Mois de fabrication</p>
+            
+            <div className="text-center scroll-reveal bg-gradient-to-b from-black/50 to-transparent rounded-2xl p-8 border border-yellow-600/10 hover:border-yellow-600/30 transition-all duration-300 group">
+              <div className="text-5xl font-bold text-yellow-500 mb-3 group-hover:text-yellow-400 transition-colors">9</div>
+              <div className="text-sm text-gray-400 uppercase tracking-widest">Mois de savoir-faire</div>
+              <div className="text-xs text-gray-500 mt-2">De la conception à la naissance</div>
             </div>
-            <div className="bg-gray-800 rounded-xl p-6 text-center scroll-reveal">
-              <div className="text-4xl font-bold text-yellow-600 mb-2">50</div>
-              <p className="text-gray-300">Artisans spécialisés</p>
+            
+            <div className="text-center scroll-reveal bg-gradient-to-b from-black/50 to-transparent rounded-2xl p-8 border border-yellow-600/10 hover:border-yellow-600/30 transition-all duration-300 group">
+              <div className="text-5xl font-bold text-yellow-500 mb-3 group-hover:text-yellow-400 transition-colors">50+</div>
+              <div className="text-sm text-gray-400 uppercase tracking-widest">Maîtres artisans</div>
+              <div className="text-xs text-gray-500 mt-2">Une expertise transmise depuis 1839</div>
             </div>
           </div>
         </div>
