@@ -12,10 +12,11 @@ const collections = [
   {
     id: 'nautilus',
     name: 'Nautilus',
-    price: '€35,000',
-    description: 'Le symbole du luxe sportif, alliant robustesse et élégance dans un design iconique',
-    image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400&h=400&fit=crop',
+    description: "Conçu par Gérald Genta en 1976, le Nautilus est devenu l'icône du luxe sportif. Sa forme distinctive en forme de hublot de porthole et son intégration parfaite du bracelet en font un symbole intemporel de l'élégance sportive.",
+    image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=800&h=600&fit=crop',
     category: 'sport',
+    badge: 'Sport',
+    badgeColor: 'bg-yellow-600',
     specs: {
       'Boîtier': 'Acier inoxydable 5711/1A',
       'Mouvement': 'Calibre 26-330 S C',
@@ -26,10 +27,11 @@ const collections = [
   {
     id: 'calatrava',
     name: 'Calatrava',
-    price: '€28,500',
-    description: "L'essence de l'élégance classique, incarnant la pureté du design horloger",
-    image: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=400&h=400&fit=crop',
+    description: "La Calatrava incarne l'essence de l'élégance classique depuis 1932. Avec ses lignes pures et son design intemporel, elle représente la quintessence de l'horlogerie de dressage selon Patek Philippe.",
+    image: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=800&h=600&fit=crop',
     category: 'classic',
+    badge: 'Classique',
+    badgeColor: 'bg-gray-600',
     specs: {
       'Boîtier': 'Or blanc 18k 5227G-010',
       'Mouvement': 'Calibre 324 S C',
@@ -40,15 +42,61 @@ const collections = [
   {
     id: 'complications',
     name: 'Grandes Complications',
-    price: '€1,200,000',
-    description: "Le sommet de l'ingénierie horlogère, où l'art rencontre la complexité technique",
-    image: 'https://images.unsplash.com/photo-1612817159949-195b619eb547?w=400&h=400&fit=crop',
+    description: "Le sommet de l'ingénierie horlogère Patek Philippe. Ces garde-temps exceptionnels combinent plusieurs complications dans un seul mouvement, représentant l'apogée de l'art horloger suisse.",
+    image: 'https://images.unsplash.com/photo-1612817159949-195b619eb547?w=800&h=600&fit=crop',
     category: 'complication',
+    badge: 'Complications',
+    badgeColor: 'bg-red-600',
     specs: {
       'Modèle': 'Sky Moon Tourbillon 6002G-001',
       'Complications': '13 fonctions',
       'Boîtier': 'Or blanc 18k',
       'Diamètre': '44mm'
+    }
+  },
+  {
+    id: 'aquanaut',
+    name: 'Aquanaut',
+    description: "Lancée en 1997, l'Aquanaut apporte une touche moderne et dynamique à l'univers sportif Patek Philippe. Son bracelet en caoutchouc tropical et sa lunette octogonale en font un compagnon parfait pour l'aventure.",
+    image: 'https://images.unsplash.com/photo-1533139502658-0198f920d8e8?w=800&h=600&fit=crop',
+    category: 'sport',
+    badge: 'Sport',
+    badgeColor: 'bg-yellow-600',
+    specs: {
+      'Modèle': 'Travel Time 5164A-001',
+      'Fonction': 'Heure double fuseau',
+      'Étanchéité': '120m',
+      'Diamètre': '40.8mm'
+    }
+  },
+  {
+    id: 'gondolo',
+    name: 'Gondolo',
+    description: "La collection Gondolo rend hommage à l'héritage Art Déco de Patek Philippe. Avec ses formes géométriques audacieuses et son esthétique rétro-futuriste, elle capture l'esprit des années 1920.",
+    image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=800&h=600&fit=crop',
+    category: 'classic',
+    badge: 'Classique',
+    badgeColor: 'bg-gray-600',
+    specs: {
+      'Modèle': 'Gondolo 8 Days 5200G-010',
+      'Réserve de marche': '8 jours',
+      'Boîtier': 'Or blanc 18k',
+      'Forme': 'Rectangulaire tonneau'
+    }
+  },
+  {
+    id: 'twenty4',
+    name: 'Twenty~4',
+    description: "Créée en 1999 pour la femme moderne, la Twenty~4 combine élégance quotidienne et sophistication horlogère. Sa forme rectangulaire distinctive et ses détails raffinés en font le choix parfait pour toutes les occasions.",
+    image: 'https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?w=800&h=600&fit=crop',
+    category: 'classic',
+    badge: 'Classique',
+    badgeColor: 'bg-gray-600',
+    specs: {
+      'Modèle': 'Twenty~4 Automatic 7300/1200A-001',
+      'Mouvement': 'Calibre 324 S C',
+      'Boîtier': 'Acier inoxydable',
+      'Diamètre': '36mm'
     }
   }
 ];
@@ -142,32 +190,32 @@ export default function CollectionsPage() {
           <div className="flex flex-wrap justify-center gap-4 mb-12">
             <button
               onClick={() => setFilter('all')}
-              className={`filter-btn ${filter === 'all' ? 'active' : ''} px-6 py-3 rounded-full border-2 transition-all duration-300 font-semibold ${
-                filter === 'all' ? 'border-yellow-600 bg-yellow-600 text-white' : 'border-gray-300 text-gray-600 hover:border-yellow-600 hover:text-yellow-600'
+              className={`filter-btn px-6 py-3 rounded-full border-2 transition-all duration-300 font-semibold ${
+                filter === 'all' ? 'border-yellow-600 bg-yellow-600 text-white scale-105 shadow-lg' : 'border-gray-300 text-gray-600 hover:border-yellow-600 hover:text-yellow-600'
               }`}
             >
               Toutes les collections
             </button>
             <button
               onClick={() => setFilter('sport')}
-              className={`filter-btn ${filter === 'sport' ? 'active' : ''} px-6 py-3 rounded-full border-2 transition-all duration-300 font-semibold ${
-                filter === 'sport' ? 'border-yellow-600 bg-yellow-600 text-white' : 'border-gray-300 text-gray-600 hover:border-yellow-600 hover:text-yellow-600'
+              className={`filter-btn px-6 py-3 rounded-full border-2 transition-all duration-300 font-semibold ${
+                filter === 'sport' ? 'border-yellow-600 bg-yellow-600 text-white scale-105 shadow-lg' : 'border-gray-300 text-gray-600 hover:border-yellow-600 hover:text-yellow-600'
               }`}
             >
               Sport
             </button>
             <button
               onClick={() => setFilter('classic')}
-              className={`filter-btn ${filter === 'classic' ? 'active' : ''} px-6 py-3 rounded-full border-2 transition-all duration-300 font-semibold ${
-                filter === 'classic' ? 'border-yellow-600 bg-yellow-600 text-white' : 'border-gray-300 text-gray-600 hover:border-yellow-600 hover:text-yellow-600'
+              className={`filter-btn px-6 py-3 rounded-full border-2 transition-all duration-300 font-semibold ${
+                filter === 'classic' ? 'border-yellow-600 bg-yellow-600 text-white scale-105 shadow-lg' : 'border-gray-300 text-gray-600 hover:border-yellow-600 hover:text-yellow-600'
               }`}
             >
               Classique
             </button>
             <button
               onClick={() => setFilter('complication')}
-              className={`filter-btn ${filter === 'complication' ? 'active' : ''} px-6 py-3 rounded-full border-2 transition-all duration-300 font-semibold ${
-                filter === 'complication' ? 'border-yellow-600 bg-yellow-600 text-white' : 'border-gray-300 text-gray-600 hover:border-yellow-600 hover:text-yellow-600'
+              className={`filter-btn px-6 py-3 rounded-full border-2 transition-all duration-300 font-semibold ${
+                filter === 'complication' ? 'border-yellow-600 bg-yellow-600 text-white scale-105 shadow-lg' : 'border-gray-300 text-gray-600 hover:border-yellow-600 hover:text-yellow-600'
               }`}
             >
               Complications
@@ -188,41 +236,32 @@ export default function CollectionsPage() {
                 data-category={collection.category}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="relative overflow-hidden">
+                <div className="relative overflow-hidden group">
                   <img
                     src={collection.image}
                     alt={`${collection.name} Collection`}
-                    className="w-full h-64 object-cover transition-transform duration-500 hover:scale-110"
+                    className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className={`absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-semibold ${
-                    collection.category === 'sport' ? 'bg-yellow-600 text-white' :
-                    collection.category === 'classic' ? 'bg-gray-600 text-white' :
-                    'bg-red-600 text-white'
-                  }`}>
-                    {collection.category === 'sport' ? 'Sport' : collection.category === 'classic' ? 'Classique' : 'Complications'}
+                  <div className={`absolute top-4 left-4 ${collection.badgeColor} text-white px-3 py-1 rounded-full text-sm font-semibold`}>
+                    {collection.badge}
                   </div>
                 </div>
                 <div className="p-6">
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">{collection.name}</h3>
-                  <p className="text-gray-600 mb-6">{collection.description}</p>
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    {collection.description}
+                  </p>
                   
-                  <div className="bg-gray-900 text-white p-4 rounded-lg mb-6">
+                  <div className="bg-gray-900 text-white p-4 rounded-lg">
                     <h4 className="text-lg font-semibold mb-3">Caractéristiques techniques</h4>
                     <div className="space-y-2">
                       {Object.entries(collection.specs).map(([key, value]) => (
                         <div key={key} className="spec-item flex justify-between">
                           <span className="text-gray-300">{key}</span>
-                          <span className="text-yellow-400">{value}</span>
+                          <span className="text-yellow-400 font-medium">{value}</span>
                         </div>
                       ))}
                     </div>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <div className="text-2xl font-bold text-gray-900">{collection.price}</div>
-                    <button className="bg-yellow-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-yellow-700 transition-all duration-300 hover:scale-105">
-                      Découvrir
-                    </button>
                   </div>
                 </div>
               </div>
@@ -346,7 +385,7 @@ export default function CollectionsPage() {
           backdrop-filter: blur(10px);
           background: white;
           border: 1px solid rgba(212, 175, 55, 0.1);
-          transition: all 0.4s ease;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
           overflow: hidden;
         }
@@ -393,13 +432,8 @@ export default function CollectionsPage() {
         }
         
         .filter-btn {
-          transition: all 0.3s ease;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
-        }
-        
-        .filter-btn.active {
-          transform: scale(1.05);
-          box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
         }
         
         .filter-btn:hover {
