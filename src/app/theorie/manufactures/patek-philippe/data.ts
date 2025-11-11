@@ -1,6 +1,6 @@
 export const legendaryCollections = [
   {
-    name: "Calatrava",
+    name: "Calatrava-test",
     since: "1932",
     illustration: "/vectors/calatrava.svg",
     description: "Symbole de l’élégance classique, la Calatrava incarne l'apogée du design épuré Art Déco et demeure un archétype des montres habillées suisses.",
