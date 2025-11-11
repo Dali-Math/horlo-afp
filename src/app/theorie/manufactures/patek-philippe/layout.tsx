@@ -21,9 +21,12 @@ export default function PatekLayout({ children }: { children: React.ReactNode })
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-          <Link href="/theorie/manufactures/patek-philippe" className="text-xl font-bold">
-            <span className="text-yellow-600">Patek</span> Philippe
-          </Link>
+          <Link 
+  href="/theorie/manufactures/patek-philippe" 
+  className="text-2xl font-display font-bold tracking-tight text-gray-900"
+>
+  <span className="text-[#d4af37]">Patek</span> Philippe
+</Link>
 
           <div className="hidden md:flex space-x-8 text-sm font-medium">
             <Link href="/theorie/manufactures/patek-philippe" className="hover:text-yellow-600 transition-colors">
