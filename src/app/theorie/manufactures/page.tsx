@@ -18,14 +18,11 @@ export default function ManufacturesPage() {
   };
 
   useEffect(() => {
-    // Attendre que les refs soient disponibles
     if (!ageChartRef.current || !innovationChartRef.current) return;
 
-    // Initialiser les graphiques
     const ageChart = echarts.init(ageChartRef.current);
     const innovationChart = echarts.init(innovationChartRef.current);
 
-    // Configuration du graphique d'âge
     const ageOption = {
       tooltip: {
         trigger: "item",
@@ -61,7 +58,6 @@ export default function ManufacturesPage() {
       ],
     };
 
-    // Configuration du graphique d'innovation
     const innovationOption = {
       tooltip: {
         trigger: "axis",
@@ -107,7 +103,6 @@ export default function ManufacturesPage() {
     ageChart.setOption(ageOption);
     innovationChart.setOption(innovationOption);
 
-    // Gestion du redimensionnement
     const handleResize = () => {
       ageChart.resize();
       innovationChart.resize();
@@ -115,7 +110,6 @@ export default function ManufacturesPage() {
 
     window.addEventListener("resize", handleResize);
 
-    // Animation au défilement
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -136,156 +130,86 @@ export default function ManufacturesPage() {
 
   return (
     <>
-      {/* Styles globaux */}
       <style jsx global>{`
-        * {
-          box-sizing: border-box;
-        }
-        
+        * { box-sizing: border-box; }
         body {
-          margin: 0;
-          padding: 0;
+          margin: 0; padding: 0;
           background: #0a0a0a;
           color: #fafafa;
           font-family: 'Inter', sans-serif;
         }
-        nav {
-          position: relative;
-          z-index: 50;
-        }
-
-        .page-toolbar {
-          position: relative;
-          z-index: 10;
-        }
-
         .hero-bg {
           background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
-          position: relative;
-          overflow: hidden;
+          position: relative; overflow: hidden;
         }
-        
         .hero-bg::before {
           content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
+          position: absolute; top: 0; left: 0; right: 0; bottom: 0;
           background: url('/images/manufactures/swiss-horology-hero.jpg') center/cover no-repeat;
-          opacity: 0.25;
-          filter: brightness(1);
-          z-index: 1;
+          opacity: 0.25; filter: brightness(1); z-index: 1;
         }
-        
-        .hero-content {
-          position: relative;
-          z-index: 2;
-        }
-        
+        .hero-content { position: relative; z-index: 2; }
         .gold-gradient {
           background: linear-gradient(135deg, #d4af37 0%, #ffd700 50%, #d4af37 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
           animation: shimmer 3s ease-in-out infinite;
         }
-
         @keyframes shimmer {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.8; }
         }
-        
         .manufacture-card {
           transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
           transform-style: preserve-3d;
         }
-        
         .manufacture-card:hover {
           transform: translateY(-8px);
           box-shadow: 0 25px 50px -12px rgba(212, 175, 55, 0.3);
         }
-        
         .timeline-item {
-          opacity: 0;
-          transform: translateX(-50px);
+          opacity: 0; transform: translateX(-50px);
           transition: all 0.6s ease-out;
         }
-        
         .timeline-item.animate {
-          opacity: 1;
-          transform: translateX(0);
+          opacity: 1; transform: translateX(0);
         }
-        
         .precision-grid {
           background-image: 
             linear-gradient(rgba(192, 192, 192, 0.05) 1px, transparent 1px),
             linear-gradient(90deg, rgba(192, 192, 192, 0.05) 1px, transparent 1px);
           background-size: 30px 30px;
         }
-        
         .luxury-button {
           background: linear-gradient(135deg, #c0c0c0 0%, #e5e5e5 50%, #c0c0c0 100%);
-          border: 1px solid #a0a0a0;
-          transition: all 0.3s ease;
-          cursor: pointer;
+          border: 1px solid #a0a0a0; transition: all 0.3s ease; cursor: pointer;
         }
-        
         .luxury-button:hover {
           background: linear-gradient(135deg, #d4af37 0%, #ffd700 50%, #d4af37 100%);
-          transform: translateY(-2px);
-          box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+          transform: translateY(-2px); box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
         }
-        
         .innovation-visual {
-          background: #0a0a0a;
-          position: relative;
+          background: #0a0a0a; position: relative;
         }
-        
         .innovation-visual::before {
-          content: '';
-          position: absolute;
-          inset: 0;
+          content: ''; position: absolute; inset: 0;
           background: 
             linear-gradient(45deg, #0a0a0a 25%, transparent 25%), 
             linear-gradient(-45deg, #0a0a0a 25%, transparent 25%), 
             linear-gradient(45deg, transparent 75%, #0a0a0a 75%), 
             linear-gradient(-45deg, transparent 75%, #0a0a0a 75%);
-          background-size: 20px 20px;
-          background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-          opacity: 0.1;
+          background-size: 20px 20px; opacity: 0.1;
         }
-        
         .excellence-badge {
           background: linear-gradient(135deg, #0a0a0a 0%, #2d2d2d 100%);
-          border: 2px solid #c0c0c0;
-          position: relative;
-          overflow: hidden;
+          border: 2px solid #c0c0c0; position: relative; overflow: hidden;
         }
-        
-        .excellence-badge::before {
-          content: '';
-          position: absolute;
-          top: -50%;
-          left: -50%;
-          width: 200%;
-          height: 200%;
-          background: linear-gradient(45deg, transparent 30%, rgba(212, 175, 55, 0.1) 50%, transparent 70%);
-          animation: shine 4s infinite linear;
-        }
-        
         @keyframes shine {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
         }
-
-        .chart-container {
-          width: 100%;
-          height: 320px;
-        }
+        .chart-container { width: 100%; height: 320px; }
       `}</style>
     
-      {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-[#c0c0c0]/20">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
@@ -311,7 +235,6 @@ export default function ManufacturesPage() {
       </nav>
       <PageTaskbar />
 
-      {/* Hero Section */}
       <section id="hero" className="hero-bg min-h-screen flex items-center justify-center pt-20">
         <div className="hero-content container mx-auto px-6 text-center">
           <div className="mb-8">
@@ -351,12 +274,12 @@ export default function ManufacturesPage() {
         </div>
       </section>
 
-      {/* Timeline Section */}
+      {/* SECTION TIMELINE CORRIGÉE - Textes plus lisibles */}
       <section id="timeline" className="py-20 precision-grid">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-[#fafafa]" style={{fontFamily: 'Playfair Display, serif'}}>L'Évolution de l'Excellence</h2>
-            <p className="text-xl text-[#c0c0c0]/70 max-w-3xl mx-auto">
+            <p className="text-xl text-[#c0c0c0]/90 max-w-3xl mx-auto">
               Parcourez plus de 250 ans d'histoire horlogère suisse, marquée par l'innovation, 
               le savoir-faire et l'excellence technique.
             </p>
@@ -380,7 +303,8 @@ export default function ManufacturesPage() {
                         <div className="bg-[#2d2d2d]/50 rounded-xl p-6 border border-[#c0c0c0]/20">
                           <h3 className="text-2xl font-bold mb-2 text-[#c0c0c0]" style={{fontFamily: 'Playfair Display, serif'}}>{item.year}</h3>
                           <h4 className="text-xl font-semibold mb-3 text-[#fafafa]">{item.title}</h4>
-                          <p className="text-[#c0c0c0]/70">{item.desc}</p>
+                          {/* TEXTE PLUS LISIBLE : opacité de /70 à /90 */}
+                          <p className="text-[#c0c0c0]/90 leading-relaxed">{item.desc}</p>
                         </div>
                       </div>
                       <div className="w-8 h-8 bg-[#c0c0c0] rounded-full border-4 border-[#0a0a0a] flex-shrink-0 z-10"></div>
@@ -394,7 +318,8 @@ export default function ManufacturesPage() {
                         <div className="bg-[#2d2d2d]/50 rounded-xl p-6 border border-[#c0c0c0]/20">
                           <h3 className="text-2xl font-bold mb-2 text-[#c0c0c0]" style={{fontFamily: 'Playfair Display, serif'}}>{item.year}</h3>
                           <h4 className="text-xl font-semibold mb-3 text-[#fafafa]">{item.title}</h4>
-                          <p className="text-[#c0c0c0]/70">{item.desc}</p>
+                          {/* TEXTE PLUS LISIBLE : opacité de /70 à /90 */}
+                          <p className="text-[#c0c0c0]/90 leading-relaxed">{item.desc}</p>
                         </div>
                       </div>
                     </>
@@ -406,7 +331,6 @@ export default function ManufacturesPage() {
         </div>
       </section>
 
-      {/* Manufactures Section */}
       <section id="manufactures" className="py-20 innovation-visual">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
@@ -425,7 +349,7 @@ export default function ManufacturesPage() {
                 year: "Depuis 1839", 
                 specialties: ["Quantièmes perpétuels", "Calatrava", "Nautilus", "Grandes complications"], 
                 img: "/images/manufactures/patek-philippe-hero.jpg",
-                href: "/theorie/manufactures/patek-philippe"  // Lien spécifique ajouté ici
+                href: "/theorie/manufactures/patek-philippe"
               },
               {name: "Rolex", icon: "⚡", year: "Depuis 1905", specialties: ["Oyster Perpetual", "Submariner", "Daytona", "GMT-Master"], img: "/images/manufactures/rolex-hero.jpg"},
               {name: "Audemars Piguet", icon: "🔷", year: "Depuis 1875", specialties: ["Royal Oak", "Royal Oak Offshore", "Tourbillons", "Grandes complications"], img: "/images/manufactures/audemars-piguet-hero.jpg"},
@@ -467,7 +391,6 @@ export default function ManufacturesPage() {
                 </div>
                 
                 <div className="text-center">
-                  {/* Lien modifié avec accès direct à la page Patek Philippe */}
                   <Link 
                     href={m.href || `/manufactures/${m.name.toLowerCase().replace(/ /g, "-")}`} 
                     className="text-[#c0c0c0]/70 text-sm hover:text-[#d4af37] transition-colors"
@@ -481,14 +404,14 @@ export default function ManufacturesPage() {
         </div>
       </section>
 
-      {/* Innovations Section */}
+      {/* SECTION INNOVATIONS CORRIGÉE - Textes plus lisibles */}
       <section id="innovations" className="py-20 precision-grid">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-[#fafafa]" style={{fontFamily: 'Playfair Display, serif'}}>Innovations Révolutionnaires</h2>
-            <p className="text-xl text-[#c0c0c0]/70 max-w-3xl mx-auto">
-              Les manufactures suisses ont révolutionné l'horlogerie avec des innovations 
-              techniques et des designs iconiques qui ont marqué l'histoire.
+            <p className="text-xl text-[#c0c0c0]/90 max-w-3xl mx-auto">
+              Les manufactures suisses ont révolutionné l'horlogerie avec des innovations techniques 
+              et des designs iconiques qui ont marqué l'histoire.
             </p>
           </div>
           
@@ -504,15 +427,16 @@ export default function ManufacturesPage() {
               <div key={i} className="bg-[#0a0a0a]/50 border border-[#c0c0c0]/20 rounded-xl p-6 hover:border-[#d4af37]/50 transition-colors">
                 <div className="text-4xl mb-4">{item.icon}</div>
                 <h3 className="text-xl font-bold mb-3 text-[#fafafa]" style={{fontFamily: 'Playfair Display, serif'}}>{item.title}</h3>
-                <p className="text-[#c0c0c0]/70 text-sm mb-4">{item.desc}</p>
-                <div className="text-xs text-[#c0c0c0]/50">{item.year}</div>
+                {/* TEXTE PRINCIPAL PLUS LISIBLE : opacité de /70 à /90 */}
+                <p className="text-[#c0c0c0]/90 text-sm mb-4 leading-relaxed">{item.desc}</p>
+                {/* ANNÉE PLUS LISIBLE : opacité de /50 à /80 */}
+                <div className="text-xs text-[#c0c0c0]/80 font-medium">{item.year}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Excellence en Chiffres */}
       <section id="excellence" className="py-20 precision-grid">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
@@ -542,7 +466,6 @@ export default function ManufacturesPage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-[#0a0a0a] border-t border-[#c0c0c0]/20 py-12">
         <div className="container mx-auto px-6 text-center">
           <div className="flex items-center justify-center space-x-3 mb-6">
