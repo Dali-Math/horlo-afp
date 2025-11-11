@@ -766,20 +766,6 @@ export default function Page() {
           }
         }
       `}</style>
-      
-      {/* Navigation */}
-      <nav className="nav-container">
-        <div className="nav-content">
-          <a href="#home" className="nav-logo font-display">Patek Philippe</a>
-          <ul className="nav-links">
-            <li><a href="#home">Accueil</a></li>
-            <li><a href="#heritage">Héritage</a></li>
-            <li><a href="#collections">Collections</a></li>
-            <li><a href="#innovation">Innovation</a></li>
-            <li><a href="#craftsmanship">Savoir-faire</a></li>
-          </ul>
-        </div>
-      </nav>
 
       {/* Hero Section */}
       <section id="home" className="hero-section">
