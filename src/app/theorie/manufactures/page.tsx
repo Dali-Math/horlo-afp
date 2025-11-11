@@ -116,21 +116,20 @@ export default function ManufacturesPage() {
 
   return (
     <>
-      {/* ✅ PALETTE DE COULEURS EXACTE DE LA RÉFÉRENCE */}
+      {/* ✅ PALETTE DE COULEURS EXACTE */}
       <style jsx global>{`
         :root {
-          --bg-primary: #1f1f1f;      /* Gris très foncé (fond principal) */
-          --bg-secondary: #252525;    /* Gris légèrement plus clair (sections) */
-          --bg-card: #2a2a2a;         /* Gris pour les cartes */
-          --text-white: #f0f0f0;      /* Blanc cassé (texte principal) */
-          --text-gray: #bbbbbb;       /* Gris clair (texte secondaire) */
-          --text-muted: #888888;      /* Gris discret (métadonnées) */
-          --gold: #d4af37;            /* Or classique */
-          --border: #3a3a3a;          /* Bordure subtile */
-          --shadow: rgba(212, 175, 55, 0.15); /* Ombre dorée subtile */
+          --bg-primary: #1f1f1f;
+          --bg-secondary: #252525;
+          --bg-card: #2a2a2a;
+          --text-white: #f0f0f0;
+          --text-gray: #bbbbbb;
+          --text-muted: #888888;
+          --gold: #d4af37;
+          --border: #3a3a3a;
+          --shadow: rgba(212, 175, 55, 0.15);
         }
         
-        /* RESET & BASE */
         body {
           background: var(--bg-primary) !important;
           color: var(--text-white) !important;
@@ -141,9 +140,10 @@ export default function ManufacturesPage() {
         }
         
         .font-serif { font-family: 'Playfair Display', serif; }
+        .font-medium { font-weight: 500; }
         
-        /* NAVIGATION - Épurée */
-        .nav-bar {
+        /* NAVIGATION - Minimaliste avec espace */
+        .navbar {
           position: fixed;
           top: 0;
           left: 0;
@@ -154,13 +154,13 @@ export default function ManufacturesPage() {
           backdrop-filter: blur(8px);
         }
         
-        /* HÉRO - Premium */
+        /* HÉRO - Titre géant */
         .hero-section {
           min-height: 100vh;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding-top: 5rem;
+          padding-top: 6rem;
           background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
           position: relative;
           overflow: hidden;
@@ -179,7 +179,7 @@ export default function ManufacturesPage() {
           z-index: 2;
           max-width: 72rem;
           margin: 0 auto;
-          padding: 0 1.5rem;
+          padding: 0 2rem;
           text-align: center;
         }
         
@@ -192,31 +192,19 @@ export default function ManufacturesPage() {
         
         /* TIMELINE - Structure parfaite */
         .timeline-container {
-          position: relative;
           max-width: 6xl;
           margin: 0 auto;
-          padding: 0 1.5rem;
+          padding: 0 2rem;
+          position: relative;
         }
         
         .timeline-line {
           position: absolute;
           left: 50%;
           transform: translateX(-50%);
-          width: 2px;
+          width: 1px;
           height: 100%;
           background: var(--border);
-        }
-        
-        .timeline-item {
-          opacity: 0;
-          transform: translateX(-30px);
-          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-          margin-bottom: 3rem;
-        }
-        
-        .timeline-item.animate {
-          opacity: 1;
-          transform: translateX(0);
         }
         
         .timeline-dot {
@@ -230,13 +218,13 @@ export default function ManufacturesPage() {
           border: 4px solid var(--bg-primary);
         }
         
-        /* CARTES LUXE */
+        /* CARTES LUXE - Bordures fines et ombre DOUCE */
         .luxury-card {
           background: var(--bg-card);
           border: 1px solid var(--border);
           border-radius: 12px;
           padding: 1.5rem;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.3s ease;
         }
         
         .luxury-card:hover {
@@ -245,8 +233,8 @@ export default function ManufacturesPage() {
           box-shadow: 0 20px 40px -12px var(--shadow);
         }
         
-        /* BOUTONS */
-        .btn-primary {
+        /* BOUTONS - Parfaitement arrondis */
+        .btn-luxe {
           background: linear-gradient(135deg, var(--gold) 0%, #e6c78a 100%);
           color: var(--bg-primary);
           font-weight: 500;
@@ -258,13 +246,13 @@ export default function ManufacturesPage() {
           font-size: 0.875rem;
         }
         
-        .btn-primary:hover {
+        .btn-luxe:hover {
           transform: translateY(-2px);
           box-shadow: 0 10px 25px var(--shadow);
         }
         
         /* GRAPHIQUES */
-        .chart-wrapper {
+        .chart-container {
           width: 100%;
           height: 320px;
         }
@@ -277,25 +265,25 @@ export default function ManufacturesPage() {
         }
       `}</style>
     
-      {/* ✅ NAVIGATION */}
-      <nav className="nav-bar">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+      {/* ✅ NAVIGATION - Espace parfait */}
+      <nav className="navbar">
+        <div className="max-w-7xl mx-auto px-8 py-5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-4">
               <div className="w-8 h-8 bg-[var(--gold)] rounded-full flex items-center justify-center shadow-sm">
                 <span className="text-[var(--bg-primary)] font-bold text-sm">SW</span>
               </div>
               <span className="text-lg font-medium font-serif text-[var(--text-white)]">SwissWatch Excellence</span>
             </div>
             
-            <div className="hidden md:flex items-center space-x-7">
+            <div className="hidden md:flex items-center space-x-8">
               <a href="#hero" className="text-[var(--text-gray)] hover:text-[var(--gold)] transition-colors text-sm font-medium">Accueil</a>
               <a href="#timeline" className="text-[var(--text-gray)] hover:text-[var(--gold)] transition-colors text-sm font-medium">Histoire</a>
               <a href="#manufactures" className="text-[var(--text-gray)] hover:text-[var(--gold)] transition-colors text-sm font-medium">Manufactures</a>
               <a href="#innovations" className="text-[var(--text-gray)] hover:text-[var(--gold)] transition-colors text-sm font-medium">Innovations</a>
             </div>
             
-            <button className="btn-primary text-sm" onClick={() => scrollToSection('manufactures')}>
+            <button className="btn-luxe text-sm" onClick={() => scrollToSection('manufactures')}>
               Explorer
             </button>
           </div>
@@ -307,13 +295,13 @@ export default function ManufacturesPage() {
       <section id="hero" className="hero-section">
         <div className="hero-bg"></div>
         <div className="hero-content">
-          <div className="mb-8 space-y-5">
-            <div className="inline-flex items-center space-x-2 bg-[var(--border)]/40 border border-[var(--border)] rounded-full px-4 py-1.5">
+          <div className="mb-6 space-y-4">
+            <div className="inline-flex items-center space-x-2 bg-[var(--border)]/30 border border-[var(--border)] rounded-full px-4 py-1.5">
               <span className="text-[var(--text-gray)] text-xs font-medium uppercase tracking-wider">Culture Horlogère Suisse</span>
               <span className="w-1.5 h-1.5 bg-[var(--gold)] rounded-full"></span>
             </div>
             
-            <h1 className="text-5xl md:text-6xl font-normal font-serif leading-tight">
+            <h1 className="text-6xl md:text-7xl font-normal font-serif leading-tight">
               <span className="gold-gradient block mb-1">Les Grandes Manufactures</span>
               <span className="text-[var(--text-white)]">Horlogères Suisses</span>
             </h1>
@@ -323,7 +311,7 @@ export default function ManufacturesPage() {
             </p>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-6">
             {[
               {value: "175+", label: "Ans d'excellence"},
               {value: "5", label: "Manufactures"},
@@ -331,25 +319,23 @@ export default function ManufacturesPage() {
               {value: "🇨🇭", label: "Suisse"}
             ].map((stat, i) => (
               <div key={i} className="luxury-card p-4 text-center">
-                <div className="text-2xl font-medium text-[var(--gold)] mb-0.5">{stat.value}</div>
+                <div className="text-2xl font-medium text-[var(--gold)] mb-1">{stat.value}</div>
                 <div className="text-xs text-[var(--text-gray)] uppercase tracking-wide">{stat.label}</div>
               </div>
             ))}
           </div>
           
-          <div className="text-center">
-            <button onClick={() => scrollToSection('manufactures')} className="btn-primary">
-              Explorer l'Excellence
-            </button>
-          </div>
+          <button onClick={() => scrollToSection('manufactures')} className="btn-luxe">
+            Explorer l'Excellence
+          </button>
         </div>
       </section>
 
-      {/* ✅ TIMELINE */}
+      {/* ✅ TIMELINE - Parfaite */}
       <section id="timeline" className="precision-grid py-20" style={{background: 'var(--bg-secondary)'}}>
         <div className="timeline-container">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-normal font-serif mb-3 text-[var(--text-white)]">L'Évolution de l'Excellence</h2>
+            <h2 className="text-4xl font-normal font-serif mb-2 text-[var(--text-white)]">L'Évolution de l'Excellence</h2>
             <p className="text-[var(--text-gray)] max-w-2xl mx-auto">
               Parcourez plus de 250 ans d'histoire horlogère suisse
             </p>
@@ -357,7 +343,7 @@ export default function ManufacturesPage() {
           
           <div className="timeline-line"></div>
           
-          <div className="space-y-8">
+          <div className="space-y-6">
             {[
               {year: "1755", title: "Naissance de Vacheron Constantin", desc: "Jean-Marc Vacheron fonde ce qui deviendra la plus ancienne manufacture horlogère suisse.", side: "left"},
               {year: "1839", title: "Fondation de Patek Philippe", desc: "Antoine Norbert de Patek et Adrien Philippe créent la manufacture de prestige absolu.", side: "right"},
@@ -369,7 +355,7 @@ export default function ManufacturesPage() {
                 {item.side === "left" ? (
                   <>
                     <div className="flex">
-                      <div className="w-1/2 pr-6">
+                      <div className="w-1/2 pr-7">
                         <div className="luxury-card p-5 text-right">
                           <div className="text-lg font-medium font-serif text-[var(--gold)] mb-1">{item.year}</div>
                           <h3 className="text-base font-medium text-[var(--text-white)] mb-2">{item.title}</h3>
@@ -384,7 +370,7 @@ export default function ManufacturesPage() {
                   <>
                     <div className="flex">
                       <div className="w-1/2"></div>
-                      <div className="w-1/2 pl-6">
+                      <div className="w-1/2 pl-7">
                         <div className="luxury-card p-5">
                           <div className="text-lg font-medium font-serif text-[var(--gold)] mb-1">{item.year}</div>
                           <h3 className="text-base font-medium text-[var(--text-white)] mb-2">{item.title}</h3>
@@ -405,7 +391,7 @@ export default function ManufacturesPage() {
       <section id="manufactures" className="precision-grid py-20" style={{background: 'var(--bg-primary)'}}>
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-normal font-serif mb-3 text-[var(--text-white)]">Les Cinq Légendes</h2>
+            <h2 className="text-4xl font-normal font-serif mb-2 text-[var(--text-white)]">Les Cinq Légendes</h2>
             <p className="text-[var(--text-gray)] max-w-2xl mx-auto">
               Chaque manufacture incarne une philosophie unique et un savoir-faire distinctif
             </p>
@@ -444,7 +430,7 @@ export default function ManufacturesPage() {
                     />
                   </div>
                   <div className="text-center mb-3">
-                    <h3 className="text-base font-medium text-[var(--text-white)] font-serif mb-1">{m.name}</h3>
+                    <h3 className="text-base font-medium font-serif text-[var(--text-white)] mb-1">{m.name}</h3>
                     <p className="text-xs text-[var(--text-gray)]">{m.year}</p>
                   </div>
                   
@@ -479,7 +465,7 @@ export default function ManufacturesPage() {
       <section id="innovations" className="precision-grid py-20" style={{background: 'var(--bg-secondary)'}}>
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-normal font-serif mb-3 text-[var(--text-white)]">Innovations Révolutionnaires</h2>
+            <h2 className="text-4xl font-normal font-serif mb-2 text-[var(--text-white)]">Innovations Révolutionnaires</h2>
             <p className="text-[var(--text-gray)] max-w-2xl mx-auto">
               Les manufactures suisses ont révolutionné l'horlogerie avec des innovations techniques
             </p>
@@ -496,7 +482,7 @@ export default function ManufacturesPage() {
             ].map((item, i) => (
               <div key={i} className="luxury-card p-5 text-center">
                 <div className="text-3xl mb-3">{item.icon}</div>
-                <h3 className="text-base font-medium text-[var(--text-white)] font-serif mb-2">{item.title}</h3>
+                <h3 className="text-base font-medium font-serif text-[var(--text-white)] mb-2">{item.title}</h3>
                 <p className="text-xs text-[var(--text-gray)] leading-relaxed mb-3">{item.desc}</p>
                 <div className="text-[10px] text-[var(--gold)] font-medium uppercase tracking-wider">{item.year}</div>
               </div>
@@ -509,7 +495,7 @@ export default function ManufacturesPage() {
       <section id="excellence" className="precision-grid py-20" style={{background: 'var(--bg-primary)'}}>
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-normal font-serif mb-3 text-[var(--text-white)]">L'Excellence en Chiffres</h2>
+            <h2 className="text-4xl font-normal font-serif mb-2 text-[var(--text-white)]">L'Excellence en Chiffres</h2>
             <p className="text-[var(--text-gray)] max-w-2xl mx-auto">
               Analyse comparative des manufactures suisses
             </p>
@@ -517,26 +503,26 @@ export default function ManufacturesPage() {
 
           <div className="grid lg:grid-cols-2 gap-6">
             <div className="luxury-card p-5">
-              <h3 className="text-lg font-medium text-[var(--text-white)] font-serif mb-4 text-center">Âge des Manufactures</h3>
-              <div ref={ageChartRef} className="chart-wrapper"></div>
+              <h3 className="text-lg font-medium font-serif text-[var(--text-white)] mb-4 text-center">Âge des Manufactures</h3>
+              <div ref={ageChartRef} className="chart-container"></div>
             </div>
 
             <div className="luxury-card p-5">
-              <h3 className="text-lg font-medium text-[var(--text-white)] font-serif mb-4 text-center">Innovations par Décennie</h3>
-              <div ref={innovationChartRef} className="chart-wrapper"></div>
+              <h3 className="text-lg font-medium font-serif text-[var(--text-white)] mb-4 text-center">Innovations par Décennie</h3>
+              <div ref={innovationChartRef} className="chart-container"></div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ✅ FOOTER */}
+      {/* ✅ FOOTER - Minimal */}
       <footer className="bg-[var(--bg-primary)] border-t border-[var(--border)] py-10">
         <div className="max-w-5xl mx-auto px-6 text-center">
           <div className="flex items-center justify-center space-x-3 mb-3">
             <div className="w-7 h-7 bg-[var(--gold)] rounded-full flex items-center justify-center">
               <span className="text-[var(--bg-primary)] font-bold text-xs">SW</span>
             </div>
-            <span className="text-base font-medium text-[var(--text-white)] font-serif">SwissWatch Excellence</span>
+            <span className="text-base font-medium font-serif text-[var(--text-white)]">SwissWatch Excellence</span>
           </div>
           <p className="text-[var(--text-gray)] text-xs">
             L'excellence horlogère suisse depuis 1755
