@@ -1,343 +1,703 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
-export default function InnovationPage() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('materials');
-  const [currentInnovation, setCurrentInnovation] = useState(0);
-
-  const innovations = [
-    {
-      year: "2014",
-      title: "Spiromax®",
-      description: "Le ressort spiral en Silinvar® améliore l'isochronisme et la résistance aux chocs",
-      type: "materials"
-    },
-    {
-      year: "2011",
-      title: "Pulsomètre",
-      description: "Première montre avec un mécanisme de remontage entièrement intégré",
-      type: "mechanisms"
-    },
-    {
-      year: "2005",
-      title: "Gyromax®",
-      description: "Balance avec masses d'équilibrage réglables dans tous les sens",
-      type: "mechanisms"
-    },
-    {
-      year: "2006",
-      title: "Silinvar®",
-      description: "Alliage breveté de silicium, oxyde de silicium et oxyde de fer",
-      type: "materials"
-    }
-  ];
-
-  const materials = [
-    {
-      name: "Silinvar®",
-      description: "Alliage révolutionnaire de silicium offrant une résistance magnétique totale",
-      benefits: ["Anti-magnétique", "Léger", "Résistant à la corrosion"]
-    },
-    {
-      name: "Or gris",
-      description: "Alliage exclusif Patek Philippe pour une durabilité exceptionnelle",
-      benefits: ["Haute résistance", "Couleur unique", "Hypoallergénique"]
-    },
-    {
-      name: "Acier inoxydable",
-      description: "Qualité 316L pour une résistance optimale à la corrosion",
-      benefits: ["Rugosité maximale", "Facile d'entretien", "Brillance durable"]
-    }
-  ];
-
-  const futureInnovations = [
-    {
-      title: "Intelligence Artificielle",
-      description: "Optimisation des performances mécaniques par l'IA",
-      timeline: "2025-2027"
-    },
-    {
-      title: "Matériaux Quantiques",
-      description: "Exploration des propriétés quantiques pour l'horlogerie",
-      timeline: "2028-2030"
-    },
-    {
-      title: "Énergie Solaire Avancée",
-      description: "Systèmes de recharge photovoltaïque intégrés",
-      timeline: "2026-2028"
-    }
-  ];
-
+export default function CraftsmanshipPage() {
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentInnovation((prev) => (prev + 1) % innovations.length);
-    }, 4000);
-    return () => clearInterval(interval);
+    // Load external scripts
+    const script1 = document.createElement('script');
+    script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    script1.async = true;
+    
+    const script2 = document.createElement('script');
+    script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.topology.min.js';
+    script2.async = true;
+    
+    let vantaInstance: any;
+
+    script2.onload = () => {
+      if (typeof window !== 'undefined' && (window as any).VANTA) {
+        vantaInstance = (window as any).VANTA.TOPOLOGY({
+          el: "#vanta-bg",
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.00,
+          scaleMobile: 1.00,
+          color: 0xd4af37,
+          backgroundColor: 0xf8f6f0
+        });
+      }
+    };
+
+    document.body.appendChild(script1);
+    document.body.appendChild(script2);
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    const handleMobileMenu = () => {
+      mobileMenu?.classList.toggle('hidden');
+    };
+    
+    mobileMenuBtn?.addEventListener('click', handleMobileMenu);
+
+    // Video play function
+    const playVideo = () => {
+      const videoContainer = document.querySelector('.video-container');
+      const placeholder = document.querySelector('.video-placeholder');
+      
+      if (placeholder && videoContainer) {
+        // Create iframe for YouTube video
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1';
+        iframe.width = '100%';
+        iframe.height = '100%';
+        iframe.frameBorder = '0';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        iframe.style.position = 'absolute';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
+        iframe.style.borderRadius = '1rem';
+        
+        // Replace placeholder with video
+        (placeholder as HTMLElement).style.display = 'none';
+        videoContainer.appendChild(iframe);
+      }
+    };
+
+    // Attach video play to placeholder
+    const videoPlaceholder = document.querySelector('.video-placeholder');
+    videoPlaceholder?.addEventListener('click', playVideo);
+
+    // Scroll reveal animation
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.scroll-reveal').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Animate mastery indicators when they come into view
+    const masteryObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const progress = (entry.target as HTMLElement).querySelector('.mastery-progress');
+          if (progress) {
+            setTimeout(() => {
+              (progress as HTMLElement).style.width = (progress as HTMLElement).style.width || '100%';
+            }, 500);
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.mastery-indicator').forEach(el => {
+      masteryObserver.observe(el);
+    });
+
+    // Parallax effect for hero section
+    const handleScroll = () => {
+      const scrolled = window.pageYOffset;
+      const parallax = document.querySelector('#vanta-bg');
+      if (parallax) {
+        const speed = scrolled * 0.2;
+        (parallax as HTMLElement).style.transform = `translateY(${speed}px)`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      mobileMenuBtn?.removeEventListener('click', handleMobileMenu);
+      videoPlaceholder?.removeEventListener('click', playVideo);
+      if (vantaInstance) {
+        vantaInstance.destroy();
+      }
+      document.body.removeChild(script1);
+      document.body.removeChild(script2);
+    };
   }, []);
 
   return (
-    <div className="text-gray-800">
+    <div className="font-sans bg-cream overflow-x-hidden" style={{ background: 'var(--cream)' }}>
+      <style jsx global>{`
+        :root {
+          --gold: #D4AF37;
+          --deep-blue: #1a2332;
+          --cream: #f8f6f0;
+          --charcoal: #2c2c2c;
+          --silver: #e8e8e8;
+        }
+        
+        body {
+          font-family: 'Inter', sans-serif;
+          background: var(--cream);
+          overflow-x: hidden;
+        }
+        
+        .hero-title {
+          font-family: 'Playfair Display', serif;
+          font-weight: 600;
+          background: linear-gradient(135deg, var(--gold), #f4d03f);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        
+        .vanta-bg {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+        }
+        
+        .nav-link {
+          position: relative;
+          transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background: var(--gold);
+          transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+          width: 100%;
+        }
+        
+        .scroll-reveal {
+          opacity: 0;
+          transform: translateY(30px);
+          transition: all 0.6s ease;
+        }
+        
+        .scroll-reveal.revealed {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        .craft-card {
+          backdrop-filter: blur(10px);
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          transition: all 0.4s ease;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .craft-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+          transition: left 0.6s ease;
+        }
+        
+        .craft-card:hover::before {
+          left: 100%;
+        }
+        
+        .craft-card:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .process-step {
+          position: relative;
+          padding: 2rem;
+          background: white;
+          border-radius: 1rem;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+          transition: all 0.4s ease;
+        }
+        
+        .process-step:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .process-step::before {
+          content: '';
+          position: absolute;
+          top: -10px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 0;
+          border-left: 10px solid transparent;
+          border-right: 10px solid transparent;
+          border-bottom: 10px solid white;
+        }
+        
+        .process-line {
+          position: absolute;
+          top: 50%;
+          right: -2rem;
+          width: 4rem;
+          height: 2px;
+          background: var(--gold);
+          transform: translateY(-50%);
+        }
+        
+        .process-line::after {
+          content: '';
+          position: absolute;
+          right: -5px;
+          top: -4px;
+          width: 0;
+          height: 0;
+          border-left: 8px solid var(--gold);
+          border-top: 5px solid transparent;
+          border-bottom: 5px solid transparent;
+        }
+        
+        .process-step:last-child .process-line {
+          display: none;
+        }
+        
+        .mastery-indicator {
+          width: 100%;
+          height: 8px;
+          background: #e5e7eb;
+          border-radius: 4px;
+          overflow: hidden;
+          position: relative;
+        }
+        
+        .mastery-progress {
+          height: 100%;
+          background: linear-gradient(90deg, var(--gold), #f4d03f);
+          border-radius: 4px;
+          transition: width 2s ease;
+          position: relative;
+        }
+        
+        .mastery-progress::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+          animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        
+        .video-container {
+          position: relative;
+          width: 100%;
+          height: 0;
+          padding-bottom: 56.25%;
+          background: #000;
+          border-radius: 1rem;
+          overflow: hidden;
+        }
+        
+        .video-placeholder {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, var(--deep-blue), var(--charcoal));
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+        
+        .video-placeholder:hover {
+          background: linear-gradient(135deg, var(--charcoal), var(--deep-blue));
+        }
+        
+        .play-button {
+          width: 80px;
+          height: 80px;
+          background: var(--gold);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+          transition: all 0.3s ease;
+        }
+        
+        .play-button:hover {
+          transform: scale(1.1);
+          box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
+        }
+        
+        .play-button i {
+          color: white;
+          font-size: 2rem;
+          margin-left: 4px;
+        }
+        
+        @media (max-width: 768px) {
+          .process-line {
+            display: none;
+          }
+          
+          .process-step {
+            margin-bottom: 2rem;
+          }
+        }
+      `}</style>
+
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="text-2xl font-bold text-gray-900">
-              <a href="/"><span className="text-yellow-600">Patek</span> Philippe</a>
+              <a href="index.html"><span className="text-yellow-600">Patek</span> Philippe</a>
             </div>
             <div className="hidden md:flex space-x-8">
-              <a href="/" className="nav-link text-gray-700 hover:text-yellow-600">Accueil</a>
-              <a href="/collections" className="nav-link text-gray-700 hover:text-yellow-600">Collections</a>
-              <a href="/heritage" className="nav-link text-gray-700 hover:text-yellow-600">Patrimoine</a>
-              <a href="/craftsmanship" className="nav-link text-gray-700 hover:text-yellow-600">Savoir-faire</a>
-              <a href="/innovation" className="nav-link text-yellow-600 font-semibold">Innovation</a>
+              <a href="index.html" className="nav-link text-gray-700 hover:text-yellow-600">Accueil</a>
+              <a href="collections.html" className="nav-link text-gray-700 hover:text-yellow-600">Collections</a>
+              <a href="heritage.html" className="nav-link text-gray-700 hover:text-yellow-600">Patrimoine</a>
+              <a href="craftsmanship.html" className="nav-link text-yellow-600 font-semibold">Savoir-faire</a>
+              <a href="innovation.html" className="nav-link text-gray-700 hover:text-yellow-600">Innovation</a>
             </div>
             <div className="md:hidden">
-              <button 
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-gray-700"
-              >
+              <button id="mobile-menu-btn" className="text-gray-700">
                 <i className="fas fa-bars text-xl"></i>
               </button>
             </div>
           </div>
         </div>
         {/* Mobile Menu */}
-        <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:hidden bg-white border-t border-gray-200`}>
+        <div id="mobile-menu" className="hidden md:hidden bg-white border-t border-gray-200">
           <div className="px-6 py-4 space-y-4">
-            <a href="/" className="block text-gray-700 hover:text-yellow-600">Accueil</a>
-            <a href="/collections" className="block text-gray-700 hover:text-yellow-600">Collections</a>
-            <a href="/heritage" className="block text-gray-700 hover:text-yellow-600">Patrimoine</a>
-            <a href="/craftsmanship" className="block text-gray-700 hover:text-yellow-600">Savoir-faire</a>
-            <a href="/innovation" className="block text-yellow-600 font-semibold">Innovation</a>
+            <a href="index.html" className="block text-gray-700 hover:text-yellow-600">Accueil</a>
+            <a href="collections.html" className="block text-gray-700 hover:text-yellow-600">Collections</a>
+            <a href="heritage.html" className="block text-gray-700 hover:text-yellow-600">Patrimoine</a>
+            <a href="craftsmanship.html" className="block text-yellow-600 font-semibold">Savoir-faire</a>
+            <a href="innovation.html" className="block text-gray-700 hover:text-yellow-600">Innovation</a>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-white"></div>
-        <div className="relative z-10 text-center max-w-6xl mx-auto px-6">
-          <h1 className="text-6xl md:text-8xl font-bold text-gray-900 mb-6 leading-tight">
-            <span className="text-yellow-600">Innovation</span><br />Révolutionnaire
+        <div id="vanta-bg" className="vanta-bg"></div>
+        <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
+          <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">
+            Le Savoir-Faire<br />Suisse
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Repousser les limites de l'impossible depuis 1839 avec des avancées technologiques révolutionnaires
+          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+            Chaque montre Patek Philippe est le fruit de siècles de tradition horlogère et d'un artisanat d'exception
           </p>
         </div>
       </section>
 
-      {/* Innovation Timeline */}
+      {/* Master Craftsmen */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Chronologie d'Innovations</h2>
-            <p className="text-xl text-gray-600">Des percées technologiques qui ont révolutionné l'horlogerie</p>
+          <div className="text-center mb-16 scroll-reveal">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Maîtres Horlogers</h2>
+            <p className="text-xl text-gray-600">Des artisans dévoués dont l'expertise se transmet de génération en génération</p>
           </div>
-
-          <div className="relative">
-            {/* Timeline line */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-yellow-600"></div>
-            
-            {innovations.map((innovation, index) => (
-              <div key={index} className={`relative flex items-center mb-12 ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
-                <div className={`w-5/12 ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'}`}>
-                  <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <div className="text-2xl font-bold text-yellow-600 mb-2">{innovation.year}</div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">{innovation.title}</h3>
-                    <p className="text-gray-600">{innovation.description}</p>
-                  </div>
+          
+          <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
+            <div className="scroll-reveal">
+              <div className="relative">
+                <img src="https://images.unsplash.com/photo-1556741533-6e6a62bd8b49?w=800&h=600&fit=crop" 
+                     alt="Maître horloger au travail" 
+                     className="rounded-lg shadow-2xl w-full" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
+                <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-2xl font-bold text-yellow-600">10+</div>
+                  <div className="text-sm text-gray-600">Années de formation</div>
                 </div>
-                <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-yellow-600 rounded-full border-4 border-white shadow-lg"></div>
               </div>
-            ))}
+            </div>
+            <div className="scroll-reveal">
+              <h3 className="text-3xl font-bold text-gray-900 mb-6">L'Art de la Perfection</h3>
+              <p className="text-xl text-gray-600 mb-8">
+                Chaque maître horloger Patek Philippe passe par une formation rigoureuse de plus de dix ans. 
+                Cette expertise approfondie garantit que chaque composant, chaque ajustement, 
+                chaque finition atteigne la perfection absolue.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
+                  <span className="text-gray-700">Formation de 10 à 15 ans minimum</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
+                  <span className="text-gray-700">Apprentissage auprès de maîtres confirmés</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
+                  <span className="text-gray-700">Certification interne Patek Philippe</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
+                  <span className="text-gray-700">Formation continue tout au long de la carrière</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Materials & Technology */}
+      {/* Manufacturing Process */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Matériaux & Technologies</h2>
-            <p className="text-xl text-gray-600">Des matériaux révolutionnaires pour des performances exceptionnelles</p>
+          <div className="text-center mb-16 scroll-reveal">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Le Processus de Fabrication</h2>
+            <p className="text-xl text-gray-600">Chaque étape du processus est réalisée avec une précision millimétrée</p>
           </div>
-
-          {/* Tabs */}
-          <div className="flex justify-center mb-12">
-            <div className="bg-white rounded-full p-2 shadow-lg">
-              <button
-                onClick={() => setActiveTab('materials')}
-                className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
-                  activeTab === 'materials'
-                    ? 'bg-yellow-600 text-white'
-                    : 'text-gray-600 hover:text-yellow-600'
-                }`}
-              >
-                Matériaux
-              </button>
-              <button
-                onClick={() => setActiveTab('mechanisms')}
-                className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
-                  activeTab === 'mechanisms'
-                    ? 'bg-yellow-600 text-white'
-                    : 'text-gray-600 hover:text-yellow-600'
-                }`}
-              >
-                Mécanismes
-              </button>
+          
+          <div className="grid md:grid-cols-4 gap-8">
+            <div className="process-step scroll-reveal">
+              <div className="text-center mb-4">
+                <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white font-bold text-xl">1</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Conception</h3>
+              </div>
+              <p className="text-gray-600 text-center">
+                Les ingénieurs et designers créent des plans détaillés pour chaque composant, 
+                optimisant à la fois la fonctionnalité et l'esthétique.
+              </p>
+              <div className="process-line"></div>
+            </div>
+            
+            <div className="process-step scroll-reveal">
+              <div className="text-center mb-4">
+                <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white font-bold text-xl">2</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Fabrication</h3>
+              </div>
+              <p className="text-gray-600 text-center">
+                Chaque composant est fabriqué à la main ou avec des machines spécialisées 
+                selon des tolérances extrêmement strictes.
+              </p>
+              <div className="process-line"></div>
+            </div>
+            
+            <div className="process-step scroll-reveal">
+              <div className="text-center mb-4">
+                <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white font-bold text-xl">3</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Assemblage</h3>
+              </div>
+              <p className="text-gray-600 text-center">
+                Les maîtres horlogers assemblent chaque mouvement avec une précision chirurgicale, 
+                ajustant chaque pièce à la perfection.
+              </p>
+              <div className="process-line"></div>
+            </div>
+            
+            <div className="process-step scroll-reveal">
+              <div className="text-center mb-4">
+                <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white font-bold text-xl">4</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Contrôle Qualité</h3>
+              </div>
+              <p className="text-gray-600 text-center">
+                Des tests rigoureux garantissent que chaque montre répond aux standards 
+                d'excellence Patek Philippe avant d'être certifiée.
+              </p>
             </div>
           </div>
-
-          {/* Materials Tab */}
-          {activeTab === 'materials' && (
-            <div className="grid md:grid-cols-3 gap-8">
-              {materials.map((material, index) => (
-                <div key={index} className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i className="fas fa-atom text-2xl text-white"></i>
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">{material.name}</h3>
-                  <p className="text-gray-600 mb-6 text-center">{material.description}</p>
-                  <div className="space-y-2">
-                    {material.benefits.map((benefit, idx) => (
-                      <div key={idx} className="flex items-center space-x-3">
-                        <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                        <span className="text-gray-700">{benefit}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Mechanisms Tab */}
-          {activeTab === 'mechanisms' && (
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-white rounded-xl p-8 shadow-lg">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">Mouvement Calibre 324 S C</h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Fréquence</span>
-                    <span className="font-semibold">28,800 alternances/heure</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Réserve de marche</span>
-                    <span className="font-semibold">45 heures</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Rubis</span>
-                    <span className="font-semibold">29</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Diamètre</span>
-                    <span className="font-semibold">27 mm</span>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-white rounded-xl p-8 shadow-lg">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">Technologie Chronometrique</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                    <span className="text-gray-700">Certification Patek Philippe Seal</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                    <span className="text-gray-700">Tolérance de -3/+2 secondes par jour</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                    <span className="text-gray-700">Tests rigoureux sur 24 jours</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                    <span className="text-gray-700">Résistance magnétique maximale</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </section>
 
-      {/* Future Innovation */}
+      {/* Craftsmanship Areas */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">L'Avenir de l'Innovation</h2>
-            <p className="text-xl text-gray-600">Les prochaines révolutions horlogères</p>
+          <div className="text-center mb-16 scroll-reveal">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Domaines d'Expertise</h2>
+            <p className="text-xl text-gray-600">Les spécialités qui définissent l'excellence Patek Philippe</p>
           </div>
-
+          
           <div className="grid md:grid-cols-3 gap-8">
-            {futureInnovations.map((innovation, index) => (
-              <div key={index} className="bg-gradient-to-br from-yellow-50 to-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <i className="fas fa-rocket text-2xl text-white"></i>
+            <div className="craft-card rounded-xl p-8 scroll-reveal">
+              <div className="w-20 h-20 bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i className="fas fa-cogs text-3xl text-white"></i>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Mécanique Fine</h3>
+              <p className="text-gray-600 text-center mb-6">
+                La création de mouvements mécaniques complexes avec des complications 
+                sophistiquées qui repoussent les limites de l'ingénierie horlogère.
+              </p>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Précision</span>
+                  <span className="text-sm font-semibold text-gray-900">99.99%</span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">{innovation.title}</h3>
-                <p className="text-gray-600 mb-6">{innovation.description}</p>
-                <div className="text-sm font-semibold text-yellow-600 bg-yellow-100 px-4 py-2 rounded-full inline-block">
-                  {innovation.timeline}
+                <div className="mastery-indicator">
+                  <div className="mastery-progress" style={{ width: '100%' }}></div>
                 </div>
               </div>
-            ))}
+            </div>
+            
+            <div className="craft-card rounded-xl p-8 scroll-reveal">
+              <div className="w-20 h-20 bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i className="fas fa-gem text-3xl text-white"></i>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Joaillerie</h3>
+              <p className="text-gray-600 text-center mb-6">
+                Le sertissage de diamants et pierres précieuses avec une précision 
+                exceptionnelle, transformant chaque montre en une œuvre d'art précieuse.
+              </p>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Qualité</span>
+                  <span className="text-sm font-semibold text-gray-900">IF/VVS</span>
+                </div>
+                <div className="mastery-indicator">
+                  <div className="mastery-progress" style={{ width: '95%' }}></div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="craft-card rounded-xl p-8 scroll-reveal">
+              <div className="w-20 h-20 bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i className="fas fa-palette text-3xl text-white"></i>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Arts Décoratifs</h3>
+              <p className="text-gray-600 text-center mb-6">
+                Les techniques traditionnelles de décoration comme le guillochage, 
+                l'émail et la gravure qui donnent à chaque montre son caractère unique.
+              </p>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Complexité</span>
+                  <span className="text-sm font-semibold text-gray-900">Master</span>
+                </div>
+                <div className="mastery-indicator">
+                  <div className="mastery-progress" style={{ width: '90%' }}></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Research & Development */}
+      {/* Video Section */}
       <section className="py-20 bg-gray-900 text-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-12 scroll-reveal">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">L'Artisanat en Action</h2>
+            <p className="text-xl text-gray-300">
+              Découvrez l'intérieur de l'atelier Patek Philippe et observez nos maîtres horlogers à l'œuvre
+            </p>
+          </div>
+          
+          <div className="video-container scroll-reveal">
+            <div className="video-placeholder">
+              <div className="play-button">
+                <i className="fas fa-play"></i>
+              </div>
+            </div>
+          </div>
+          
+          <div className="text-center mt-8 scroll-reveal">
+            <p className="text-gray-400">
+              Chaque montre nécessite en moyenne 9 mois de fabrication et l'intervention de 50 artisans spécialisés
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Quality Standards */}
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">Recherche & Développement</h2>
-              <p className="text-xl text-gray-300 mb-8">
-                Un département dédié repoussant les limites de l'horlogerie avec des technologies de pointe
+            <div className="scroll-reveal">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Standards de Qualité</h2>
+              <p className="text-xl text-gray-600 mb-8">
+                Chaque montre Patek Philippe doit répondre à des critères de qualité exceptionnels 
+                avant d'être certifiée et livrée à nos clients.
               </p>
               
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <i className="fas fa-flask text-white text-sm"></i>
+                    <i className="fas fa-check text-white text-sm"></i>
                   </div>
                   <div>
-                    <h4 className="text-lg font-semibold mb-2">Laboratoires d'Innovation</h4>
-                    <p className="text-gray-400">Équipements de pointe pour tester de nouveaux matériaux</p>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Tests de Précision</h4>
+                    <p className="text-gray-600">24 jours de tests chronométriques rigoureux</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <i className="fas fa-users text-white text-sm"></i>
+                    <i className="fas fa-check text-white text-sm"></i>
                   </div>
                   <div>
-                    <h4 className="text-lg font-semibold mb-2">Équipe d'Experts</h4>
-                    <p className="text-gray-400">Ingénieurs et chercheurs spécialisés en horlogerie</p>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Contrôle Esthétique</h4>
+                    <p className="text-gray-600">Inspection minutieuse de chaque détail visuel</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <i className="fas fa-chart-line text-white text-sm"></i>
+                    <i className="fas fa-check text-white text-sm"></i>
                   </div>
                   <div>
-                    <h4 className="text-lg font-semibold mb-2">Innovation Continue</h4>
-                    <p className="text-gray-400">Plus de 100 brevets déposés au cours des 20 dernières années</p>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Tests d'Étanchéité</h4>
+                    <p className="text-gray-600">Vérification de la résistance à l'eau et à l'humidité</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <i className="fas fa-check text-white text-sm"></i>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Certification Finale</h4>
+                    <p className="text-gray-600">Poinçon Patek Philippe et certificat d'authenticité</p>
                   </div>
                 </div>
               </div>
             </div>
-            <div>
+            <div className="scroll-reveal">
               <div className="relative">
-                <img 
-                  src="https://images.unsplash.com/photo-1581093458791-9d15482442f5?w=800&h=600&fit=crop" 
-                  alt="Laboratoire de recherche" 
-                  className="rounded-lg shadow-2xl w-full"
-                />
+                <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&h=600&fit=crop" 
+                     alt="Contrôle qualité" 
+                     className="rounded-lg shadow-2xl w-full" />
                 <div className="absolute top-4 right-4 bg-yellow-600 text-white px-4 py-2 rounded-lg">
-                  <div className="text-sm font-semibold">R&D</div>
-                  <div className="text-xs">Avancée</div>
+                  <div className="text-sm font-semibold">Certifié</div>
+                  <div className="text-xs">Patek Philippe</div>
                 </div>
               </div>
             </div>
@@ -346,21 +706,18 @@ export default function InnovationPage() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-900 text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">L'Innovation Continue</h2>
-          <p className="text-xl text-gray-600 mb-8">
-            Rejoignez-nous dans notre quête de l'excellence horlogère et découvrez l'avenir du temps
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">Vivez l'Expérience du Savoir-Faire</h2>
+          <p className="text-xl text-gray-300 mb-8">
+            Visitez notre manufacture à Genève et découvrez l'artisanat exceptionnel qui donne vie à chaque montre
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="bg-yellow-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-yellow-700 transition-all duration-300 transform hover:scale-105">
-              Explorer les collections
+              Réserver une visite
             </button>
-            <button 
-              onClick={() => window.location.href = '/craftsmanship'}
-              className="border-2 border-yellow-600 text-yellow-600 px-8 py-4 rounded-full font-semibold hover:bg-yellow-600 hover:text-white transition-all duration-300"
-            >
-              Découvrir le savoir-faire
+            <button onClick={() => window.location.href = 'innovation.html'} className="border-2 border-yellow-600 text-yellow-600 px-8 py-4 rounded-full font-semibold hover:bg-yellow-600 hover:text-white transition-all duration-300">
+              Découvrir l'innovation
             </button>
           </div>
         </div>
