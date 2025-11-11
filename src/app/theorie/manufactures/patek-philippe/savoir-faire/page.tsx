@@ -585,51 +585,93 @@ export default function SavoirFairePage() {
           </div>
         </div>
       </section>
+      <section className="relative py-32 overflow-hidden bg-gradient-to-b from-zinc-950 via-black to-zinc-950 min-h-[900px]">
+  {/* Éclats dorés subtils */}
+  <div className="pointer-events-none absolute inset-0">
+    <div className="absolute top-20 left-32 w-72 h-72 rounded-full bg-yellow-500/10 blur-[90px] animate-pulse"></div>
+    <div className="absolute bottom-8 right-56 w-80 h-80 rounded-full bg-amber-400/10 blur-[120px] animate-pulse" style={{animationDelay:'2s'}}></div>
+  </div>
 
-      {/* 3D Interactive Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16 scroll-reveal">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Visualisation 3D Interactive</h2>
-            <p className="text-xl text-gray-600">Explorez les mécanismes complexes de nos montres</p>
-          </div>
-          
-          <div className="flex justify-center mb-8">
-            <canvas 
-              id="watchCanvas" 
-              width="800" 
-              height="600" 
-              className="rounded-lg shadow-2xl border border-gray-200"
-            ></canvas>
-          </div>
-          
-          <div className="flex justify-center gap-4">
-            <button 
-              id="rotateBtn" 
-              className="bg-yellow-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-yellow-700 transition-colors"
-            >
-              Rotation Auto
-            </button>
-            <button 
-              id="explodeBtn" 
-              className="bg-gray-800 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-700 transition-colors"
-            >
-              Vue Éclatée
-            </button>
-            <button 
-              id="resetBtn" 
-              className="bg-gray-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-500 transition-colors"
-            >
-              Réinitialiser
-            </button>
-          </div>
-          
-          <div className="text-center mt-6">
-            <span className="text-sm text-gray-600">Composants assemblés: </span>
-            <span id="componentCount" className="text-sm font-semibold text-yellow-600">0/250</span>
-          </div>
+  {/* Overlay glassmorphism */}
+  <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-white/0 to-yellow-600/5 pointer-events-none"></div>
+
+  <div className="relative max-w-7xl mx-auto z-10 px-6">
+    {/* En-tête */}
+    <div className="text-center mb-20 select-none">
+      <div className="inline-flex items-center gap-3 px-7 py-3 rounded-full bg-gradient-to-r from-yellow-600/20 to-yellow-100/5 border border-yellow-600/30 backdrop-blur-md shadow-lg">
+        <i className="fas fa-gem text-yellow-400 text-xl"></i>
+        <span className="text-xs font-semibold text-yellow-600 uppercase tracking-widest">Atelier Horloger</span>
+        <i className="fas fa-gem text-yellow-400 text-xl"></i>
+      </div>
+      <h2 className="text-6xl md:text-7xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-700 font-extrabold italic mt-8 mb-6 tracking-tight drop-shadow-xl">La Naissance d’une Légende</h2>
+      <p className="text-xl md:text-2xl text-gray-200 font-light max-w-2xl mx-auto leading-relaxed">
+        Une expérience immersive inspirée des ateliers suisses, <span className="text-yellow-400 font-semibold">où l’exception rencontre la précision</span>.
+      </p>
+    </div>
+
+    {/* Zone 3D & UI */}
+    <div className="relative rounded-[2.2rem] overflow-visible shadow-2xl border border-yellow-700/15 bg-gradient-to-b from-gray-950 via-gray-900 to-black" style={{height:'700px'}}>
+      {/* Canvas 3D */}
+      <canvas id="watchCanvas" className="w-full h-full rounded-[2rem] bg-gradient-to-br from-gray-900 via-zinc-900 to-black"></canvas>
+      {/* Badge composant */}
+      <div className="absolute top-9 left-8 bg-black/40 border border-yellow-600/25 backdrop-blur-xl rounded-2xl px-8 py-5 shadow-lg flex flex-col items-baseline gap-0">
+        <span className="flex items-center gap-2 text-[10px] font-bold tracking-widest text-yellow-500 uppercase mb-1">
+          <span className="w-2 h-2 rounded-full bg-yellow-400 mr-2 animate-pulse"></span>
+          Assemblage
+        </span>
+        <span className="text-3xl font-bold text-white">
+          <span id="componentCount">250</span>
+          <span className="text-xl text-gray-400">/250</span>
+        </span>
+        <span className="text-xs text-yellow-100 mt-1">Composants</span>
+      </div>
+      {/* Signature manufacture */}
+      <div className="absolute top-9 right-8 bg-black/60 border border-yellow-600/15 backdrop-blur-2xl rounded-2xl px-7 py-5 shadow-md text-right">
+        <span className="text-[10px] text-gray-400 uppercase">Manufacture</span>
+        <div className="text-2xl font-serif italic text-white leading-none mt-1">Genève</div>
+        <span className="block mt-1 text-xs text-red-400 font-semibold tracking-widest">• SWISS MADE</span>
+      </div>
+      {/* Contrôles */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 bg-black/50 border border-yellow-100/10 backdrop-blur-2xl rounded-full px-10 py-5 shadow-2xl flex items-center gap-10">
+        {[
+          {icon:"fa-sync-alt", label:"Faire tourner", id:"rotateBtn"},
+          {icon:"fa-expand-arrows-alt", label:"Décomposer", id:"explodeBtn"},
+          {icon:"fa-redo", label:"Réinitialiser", id:"resetBtn"}
+        ].map(btn => (
+          <button key={btn.id} id={btn.id} className="flex flex-col items-center group">
+            <span className="w-14 h-14 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center mb-2 shadow-lg transition-transform duration-300 group-hover:scale-110 border-2 border-yellow-200/5">
+              <i className={`fas ${btn.icon} text-white text-xl group-hover:rotate-12 transition-all`}></i>
+            </span>
+            <span className="text-xs text-yellow-100 font-light tracking-wider drop-shadow">{btn.label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* Statistiques */}
+    <div className="grid md:grid-cols-3 gap-12 mt-20">
+      {[
+        {icon:'fa-cogs',value:'250+',label:'Composants',desc:'Tous ajustés au micron'},
+        {icon:'fa-crown',value:'50',label:'Maîtres artisans',desc:'Fiers héritiers du savoir-faire'},
+        {icon:'fa-hourglass',value:'9',label:'Mois',desc:'Pour chaque chef d’œuvre'}
+      ].map(stat=>(
+        <div key={stat.label} className="text-center p-10 rounded-2xl bg-gradient-to-b from-yellow-100/5 via-black/60 to-yellow-200/0 border border-yellow-600/10 hover:border-yellow-400/30 shadow-lg group transition-all duration-500">
+          <i className={`fas ${stat.icon} text-yellow-400 text-5xl mb-6 shadow-inner`}></i>
+          <div className="text-4xl font-extrabold text-yellow-300 mb-2 tracking-tight group-hover:text-yellow-400 transition-colors">{stat.value}</div>
+          <div className="text-base font-semibold text-gray-100 uppercase tracking-widest mb-2">{stat.label}</div>
+          <div className="text-xs font-light text-gray-400">{stat.desc}</div>
         </div>
-      </section>
+      ))}
+    </div>
+    {/* Bandeau citation */}
+    <div className="mt-20 text-center">
+      <p className="italic text-lg md:text-xl text-yellow-100 max-w-2xl mx-auto drop-shadow">
+        « La véritable excellence se révèle dans l’attention portée à chaque détail. »
+      </p>
+    </div>
+  </div>
+</section>
+
 
       {/* Manufacturing Process */}
       <section className="py-20 bg-gray-50">
