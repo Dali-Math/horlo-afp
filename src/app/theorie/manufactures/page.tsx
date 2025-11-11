@@ -136,8 +136,20 @@ export default function ManufacturesPage() {
 
   return (
     <>
-      {/* Styles globaux */}
+      {/* Styles globaux - FORCAGE MODE SOMBRE PERMANENT */}
       <style jsx global>{`
+        /* FORCAGE TOTAL DU MODE SOMBRE - empêche tout changement */
+        html, body, #__next {
+          background: #0a0a0a !important;
+          color: #fafafa !important;
+          color-scheme: dark !important;
+        }
+        
+        * {
+          color-scheme: dark !important;
+        }
+
+        /* Styles originaux inchangés */
         * {
           box-sizing: border-box;
         }
@@ -425,7 +437,7 @@ export default function ManufacturesPage() {
                 year: "Depuis 1839", 
                 specialties: ["Quantièmes perpétuels", "Calatrava", "Nautilus", "Grandes complications"], 
                 img: "/images/manufactures/patek-philippe-hero.jpg",
-                href: "/theorie/manufactures/patek-philippe"  // Lien spécifique ajouté ici
+                href: "/theorie/manufactures/patek-philippe"
               },
               {name: "Rolex", icon: "⚡", year: "Depuis 1905", specialties: ["Oyster Perpetual", "Submariner", "Daytona", "GMT-Master"], img: "/images/manufactures/rolex-hero.jpg"},
               {name: "Audemars Piguet", icon: "🔷", year: "Depuis 1875", specialties: ["Royal Oak", "Royal Oak Offshore", "Tourbillons", "Grandes complications"], img: "/images/manufactures/audemars-piguet-hero.jpg"},
@@ -436,7 +448,7 @@ export default function ManufacturesPage() {
                 <div className="text-center mb-6">
                   <div className="w-full h-48 rounded-xl mb-4 overflow-hidden bg-[#2d2d2d]/50">
                     <img 
-                      src={m.img} 
+                      src={`https://i44loxxykine2.ok.kimi.link/resources/${m.name.toLowerCase().replace(/ /g, "-")}-hero.jpg`}
                       alt={m.name}
                       className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                       onError={(e) => {
@@ -467,7 +479,6 @@ export default function ManufacturesPage() {
                 </div>
                 
                 <div className="text-center">
-                  {/* Lien modifié avec accès direct à la page Patek Philippe */}
                   <Link 
                     href={m.href || `/manufactures/${m.name.toLowerCase().replace(/ /g, "-")}`} 
                     className="text-[#c0c0c0]/70 text-sm hover:text-[#d4af37] transition-colors"
