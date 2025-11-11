@@ -29,7 +29,7 @@ export default function SavoirFairePage() {
         }
 
         const script1 = document.createElement('script');
-        script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+        script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js ';
         script1.async = true;
         
         script1.onload = () => {
@@ -74,7 +74,7 @@ export default function SavoirFairePage() {
 
     // 3. Chargement du script Vanta
     const script2 = document.createElement('script');
-    script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.topology.min.js';
+    script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.topology.min.js ';
     script2.async = true;
     
     script2.onload = () => setTimeout(initVanta, 150);
@@ -551,7 +551,7 @@ export default function SavoirFairePage() {
           <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
             <div className="scroll-reveal">
               <div className="relative">
-                <img src="https://images.unsplash.com/photo-1556741533-6e6a62bd8b49?w=800&h=600&fit=crop" 
+                <img src="https://images.unsplash.com/photo-1556741533-6e6a62bd8b49?w=800&h=600&fit=crop " 
                      alt="Maître horloger au travail" 
                      className="rounded-lg shadow-2xl w-full" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-lg"></div>
@@ -585,86 +585,86 @@ export default function SavoirFairePage() {
           </div>
         </div>
       </section>
+
       {/* Section Savoir-Faire d'Exception - Version Premium Compacte */}
-<section className="relative py-16 bg-gradient-to-br from-slate-900 via-neutral-900 to-amber-950 overflow-hidden rounded-b-3xl shadow-2xl border-b border-yellow-700/20">
-  {/* Halo doré subtil */}
-  <div className="pointer-events-none absolute inset-0">
-    <div className="absolute left-1/2 -translate-x-1/2 top-0 w-full h-24 bg-gradient-to-r from-yellow-500/10 via-yellow-300/15 to-transparent blur-2xl opacity-30"></div>
-    <div className="absolute right-12 bottom-12 w-24 h-24 bg-amber-400/10 rounded-full blur-2xl"></div>
-  </div>
+      <section className="relative py-16 bg-gradient-to-br from-slate-900 via-neutral-900 to-amber-950 overflow-hidden rounded-b-3xl shadow-2xl border-b border-yellow-700/20">
+        {/* Halo doré subtil */}
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute left-1/2 -translate-x-1/2 top-0 w-full h-24 bg-gradient-to-r from-yellow-500/10 via-yellow-300/15 to-transparent blur-2xl opacity-30"></div>
+          <div className="absolute right-12 bottom-12 w-24 h-24 bg-amber-400/10 rounded-full blur-2xl"></div>
+        </div>
 
-  <div className="relative z-10 max-w-6xl mx-auto px-6">
-    {/* Header */}
-    <div className="text-center mb-12">
-      <span className="inline-block px-5 py-2 rounded-full border border-yellow-500/20 bg-yellow-100/5 text-xs uppercase tracking-widest text-yellow-400 mb-4 font-semibold">
-        Savoir-Faire d'Exception
-      </span>
-      <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-200 text-transparent bg-clip-text">
-        L'Excellence Patek Philippe
-      </h2>
-      <p className="text-base md:text-lg text-gray-300 font-light max-w-2xl mx-auto mb-5">
-        Chaque montre <span className="text-yellow-400 font-medium">Patek Philippe</span> incarne des siècles de tradition horlogère — façonnée par des artisans d'élite, révélant la beauté du temps avec une précision inégalée.
-      </p>
-      <blockquote className="italic text-yellow-100/90 text-sm md:text-base border-l-4 border-yellow-500/30 pl-4 max-w-xl mx-auto">
-        « Vous ne possédez jamais complètement une montre Patek Philippe. Vous en êtes juste le gardien pour les générations futures. »
-      </blockquote>
-    </div>
-
-    <!-- Cards Grid -->
-    <div class="grid md:grid-cols-3 gap-6 mb-10">
-      {[
-        {
-          icon: 'fa-user-graduate',
-          title: 'Maîtres Horlogers',
-          desc: '10 à 15 ans de formation auprès de maîtres confirmés, savoir-faire transmis de génération en génération.'
-        },
-        {
-          icon: 'fa-drafting-compass',
-          title: 'Processus Millimétré',
-          desc: 'Conception détaillée, fabrication ultra-précise, assemblage manuel parfait, contrôle qualité strict.'
-        },
-        {
-          icon: 'fa-gem',
-          title: 'Domaines d\'Excellence',
-          desc: 'Mécanique fine (99.99%), Joaillerie (pierres IF/VVS), Arts décoratifs (savoir-faire Master).'
-        }
-      ].map((card, idx) => (
-        <div
-          key={idx}
-          className="group bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-yellow-600/20 hover:border-yellow-500/40 shadow-lg hover:shadow-yellow-500/10 transition-all duration-500 hover:-translate-y-2"
-        >
-          <div className="flex items-center mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center mr-4 shadow-lg group-hover:shadow-yellow-500/30 transition-shadow">
-              <i className={`fas ${card.icon} text-white text-xl`}></i>
-            </div>
-            <h3 className="font-serif text-xl text-white font-semibold">{card.title}</h3>
+        <div className="relative z-10 max-w-6xl mx-auto px-6">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <span className="inline-block px-5 py-2 rounded-full border border-yellow-500/20 bg-yellow-100/5 text-xs uppercase tracking-widest text-yellow-400 mb-4 font-semibold">
+              Savoir-Faire d'Exception
+            </span>
+            <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-200 text-transparent bg-clip-text">
+              L'Excellence Patek Philippe
+            </h2>
+            <p className="text-base md:text-lg text-gray-300 font-light max-w-2xl mx-auto mb-5">
+              Chaque montre <span className="text-yellow-400 font-medium">Patek Philippe</span> incarne des siècles de tradition horlogère — façonnée par des artisans d'élite, révélant la beauté du temps avec une précision inégalée.
+            </p>
+            <blockquote className="italic text-yellow-100/90 text-sm md:text-base border-l-4 border-yellow-500/30 pl-4 max-w-xl mx-auto">
+              « Vous ne possédez jamais complètement une montre Patek Philippe. Vous en êtes juste le gardien pour les générations futures. »
+            </blockquote>
           </div>
-          <p className="text-gray-300 text-sm leading-relaxed font-light">{card.desc}</p>
-        </div>
-      ))}
-    </div>
 
-    <!-- Quality Seal -->
-    <div className="rounded-xl bg-gradient-to-r from-yellow-200/10 via-black/30 to-yellow-950/10 border border-yellow-600/30 p-6 flex flex-col md:flex-row items-center md:justify-between gap-4 shadow-inner">
-      <div className="flex items-center gap-4">
-        <div className="w-14 h-14 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center shadow-lg">
-          <i className="fas fa-certificate text-white text-2xl"></i>
-        </div>
-        <div>
-          <h4 className="font-serif text-lg text-yellow-300 font-bold mb-1">Standards d'Excellence</h4>
-          <ul className="text-sm text-gray-200 font-light space-y-0.5">
-            <li>• Précision testée 24 jours • Contrôle esthétique et d'étanchéité • Certification Patek Philippe</li>
-          </ul>
-        </div>
-      </div>
-      <div className="text-right text-xs text-gray-400 italic leading-relaxed">
-        Depuis 1839 – Genève<br />
-        <span className="font-semibold text-yellow-200 tracking-wider">SWISS MADE</span>
-      </div>
-    </div>
-  </div>
-</section>
+          {/* Cards Grid */}
+          <div className="grid md:grid-cols-3 gap-6 mb-10">
+            {[
+              {
+                icon: 'fa-user-graduate',
+                title: 'Maîtres Horlogers',
+                desc: '10 à 15 ans de formation auprès de maîtres confirmés, savoir-faire transmis de génération en génération.'
+              },
+              {
+                icon: 'fa-drafting-compass',
+                title: 'Processus Millimétré',
+                desc: 'Conception détaillée, fabrication ultra-précise, assemblage manuel parfait, contrôle qualité strict.'
+              },
+              {
+                icon: 'fa-gem',
+                title: 'Domaines d\'Excellence',
+                desc: 'Mécanique fine (99.99%), Joaillerie (pierres IF/VVS), Arts décoratifs (savoir-faire Master).'
+              }
+            ].map((card, idx) => (
+              <div
+                key={idx}
+                className="group bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-yellow-600/20 hover:border-yellow-500/40 shadow-lg hover:shadow-yellow-500/10 transition-all duration-500 hover:-translate-y-2"
+              >
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center mr-4 shadow-lg group-hover:shadow-yellow-500/30 transition-shadow">
+                    <i className={`fas ${card.icon} text-white text-xl`}></i>
+                  </div>
+                  <h3 className="font-serif text-xl text-white font-semibold">{card.title}</h3>
+                </div>
+                <p className="text-gray-300 text-sm leading-relaxed font-light">{card.desc}</p>
+              </div>
+            ))}
+          </div>
 
+          {/* Quality Seal */}
+          <div className="rounded-xl bg-gradient-to-r from-yellow-200/10 via-black/30 to-yellow-950/10 border border-yellow-600/30 p-6 flex flex-col md:flex-row items-center md:justify-between gap-4 shadow-inner">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center shadow-lg">
+                <i className="fas fa-certificate text-white text-2xl"></i>
+              </div>
+              <div>
+                <h4 className="font-serif text-lg text-yellow-300 font-bold mb-1">Standards d'Excellence</h4>
+                <ul className="text-sm text-gray-200 font-light space-y-0.5">
+                  <li>• Précision testée 24 jours • Contrôle esthétique et d'étanchéité • Certification Patek Philippe</li>
+                </ul>
+              </div>
+            </div>
+            <div className="text-right text-xs text-gray-400 italic leading-relaxed">
+              Depuis 1839 – Genève<br />
+              <span className="font-semibold text-yellow-200 tracking-wider">SWISS MADE</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Manufacturing Process */}
       <section className="py-20 bg-gray-50">
@@ -763,7 +763,7 @@ export default function SavoirFairePage() {
             </div>
             <div className="scroll-reveal">
               <div className="relative">
-                <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&h=600&fit=crop" 
+                <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&h=600&fit=crop " 
                      alt="Contrôle qualité" 
                      className="rounded-lg shadow-2xl w-full" />
                 <div className="absolute top-4 right-4 bg-yellow-600 text-white px-4 py-2 rounded-lg">
