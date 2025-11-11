@@ -15,7 +15,61 @@ declare global {
     VANTA: any;
   }
 }
-
+// Données des sections d'innovation
+const inventions = [
+  {
+    year: '1845',
+    category: 'FONDATION',
+    complexity: 85,
+    title: 'Remontoir à Couronne',
+    description:
+      "L'invention de Jean Adrien Philippe qui a révolutionné l'industrie horlogère en permettant le remontage et le réglage des montres de manière inédite.",
+    specs: [
+      { label: 'Impact', value: 'Révolutionnaire' },
+      { label: 'Adoption', value: 'Mondiale' },
+    ],
+  },
+  {
+    year: '1868',
+    category: 'INNOVATION',
+    complexity: 88,
+    title: 'Montre-Bracelet',
+    description:
+      "La première montre-bracelet avec remontoir à couronne, créée pour la Comtesse Koscowicz, marquant le début d'une nouvelle ère horlogère.",
+    specs: [
+      { label: 'Précédent', value: 'Montres de poche' },
+      { label: 'Innovation', value: 'Portable' },
+    ],
+  },
+  {
+    year: '1989',
+    category: 'MASTERPIECE',
+    complexity: 95,
+    title: 'Calibre 89',
+    description:
+      "La montre la plus compliquée du monde en 1989 avec 33 complications, célébrant 150 ans d’excellence horlogère.",
+    specs: [
+      { label: 'Complications', value: '33 fonctions' },
+      { label: 'Développement', value: '9 ans' },
+    ],
+  },
+];
+const getCategoryColor = (category) => {
+  switch (category) {
+    case 'FONDATION':
+      return 'bg-yellow-500';
+    case 'INNOVATION':
+      return 'bg-blue-500';
+    case 'MASTERPIECE':
+      return 'bg-purple-500';
+    case 'PRÉCISION':
+      return 'bg-red-500';
+    case 'CHRONOGRAPHIE':
+      return 'bg-green-500';
+    default:
+      return 'bg-gray-500';
+  }
+};
 export default function InnovationPage() {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
