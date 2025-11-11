@@ -1,8 +1,9 @@
+// app/savoir-faire/page.tsx
 'use client';
 
 import { useEffect, useRef } from 'react';
 
-// Déclaration des types globaux pour TypeScript
+// Typings globaux pour les scripts CDN
 declare global {
   interface Window {
     THREE: any;
@@ -10,18 +11,17 @@ declare global {
   }
 }
 
-export default function CraftsmanshipPage() {
-  // Utilisation de refs pour stocker les références des scripts et instances
+export default function SavoirFairePage() {
+  // Références pour le cleanup
   const script1Ref = useRef<HTMLScriptElement | null>(null);
   const script2Ref = useRef<HTMLScriptElement | null>(null);
   const vantaInstanceRef = useRef<any>(null);
   const threeReadyRef = useRef(false);
 
   useEffect(() => {
-    // 1. Chargement séquentiel des scripts avec gestion de dépendances
+    // 1. Chargement sécurisé de Three.js
     const loadScripts = async () => {
       return new Promise<void>((resolve) => {
-        // Vérifier si THREE est déjà présent (évite double chargement)
         if (window.THREE) {
           threeReadyRef.current = true;
           resolve();
@@ -39,7 +39,7 @@ export default function CraftsmanshipPage() {
 
         script1.onerror = () => {
           console.error('Erreur: Impossible de charger THREE.js');
-          resolve(); // Continue quand même pour éviter le blocage total
+          resolve();
         };
 
         document.body.appendChild(script1);
@@ -47,18 +47,12 @@ export default function CraftsmanshipPage() {
       });
     };
 
-    // 2. Initialisation de VANTA après confirmation du DOM
+    // 2. Initialisation de Vanta.js
     const initVanta = () => {
-      if (!window.VANTA || !threeReadyRef.current) {
-        console.warn('VANTA ou THREE non disponibles');
-        return;
-      }
+      if (!window.VANTA || !threeReadyRef.current) return;
 
       const vantaElement = document.getElementById('vanta-bg');
-      if (!vantaElement) {
-        console.warn('Élément #vanta-bg non trouvé');
-        return;
-      }
+      if (!vantaElement) return;
 
       try {
         vantaInstanceRef.current = window.VANTA.TOPOLOGY({
@@ -78,38 +72,23 @@ export default function CraftsmanshipPage() {
       }
     };
 
-    // 3. Chargement de VANTA (dépend de THREE)
+    // 3. Chargement du script Vanta
     const script2 = document.createElement('script');
     script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.topology.min.js';
     script2.async = true;
     
-    script2.onload = () => {
-      // Petit délai pour s'assurer que le DOM est complètement prêt
-      setTimeout(initVanta, 150);
-    };
-
-    script2.onerror = () => {
-      console.error('Erreur: Impossible de charger VANTA');
-    };
+    script2.onload = () => setTimeout(initVanta, 150);
+    script2.onerror = () => console.error('Erreur: Impossible de charger VANTA');
 
     document.body.appendChild(script2);
     script2Ref.current = script2;
 
-    // 4. Initialisation du canvas 3D avec vérifications de sécurité
+    // 4. Initialisation de la scène 3D
     const initThreeJS = () => {
       const canvas = document.getElementById('watchCanvas') as HTMLCanvasElement;
-      if (!canvas) {
-        console.warn('Canvas watchCanvas non trouvé');
-        return;
-      }
-
-      if (!window.THREE) {
-        console.error('THREE.js non chargé pour le canvas 3D');
-        return;
-      }
+      if (!canvas || !window.THREE) return;
 
       try {
-        // --- Code Three.js identique mais encapsulé dans try/catch ---
         const scene = new window.THREE.Scene();
         scene.background = new window.THREE.Color(0x1f2937);
         
@@ -142,10 +121,10 @@ export default function CraftsmanshipPage() {
         rimLight.position.set(-5, 5, 5);
         scene.add(rimLight);
         
-        // Create watch components (tout votre code ici...)
+        // Montre 3D complète
         const watchGroup = new window.THREE.Group();
         
-        // Base/Case
+        // Boîtier
         const caseGeometry = new window.THREE.CylinderGeometry(2, 2, 0.5, 32);
         const caseMaterial = new window.THREE.MeshStandardMaterial({ 
           color: 0xc0c0c0,
@@ -157,7 +136,7 @@ export default function CraftsmanshipPage() {
         watchCase.userData = { explodeOffset: new window.THREE.Vector3(0, -2, 0) };
         watchGroup.add(watchCase);
         
-        // Movement/Mechanism
+        // Mouvement
         const movementGeometry = new window.THREE.CylinderGeometry(1.8, 1.8, 0.3, 32);
         const movementMaterial = new window.THREE.MeshStandardMaterial({ 
           color: 0xd4af37,
@@ -170,7 +149,7 @@ export default function CraftsmanshipPage() {
         movement.userData = { explodeOffset: new window.THREE.Vector3(0, 2, 0) };
         watchGroup.add(movement);
         
-        // Gears
+        // Engrenages
         const gearGeometry = new window.THREE.CylinderGeometry(0.3, 0.3, 0.1, 8);
         const gearMaterial = new window.THREE.MeshStandardMaterial({ 
           color: 0xffd700,
@@ -198,7 +177,7 @@ export default function CraftsmanshipPage() {
           watchGroup.add(gear);
         });
         
-        // Dial
+        // Cadran
         const dialGeometry = new window.THREE.CylinderGeometry(1.9, 1.9, 0.05, 32);
         const dialMaterial = new window.THREE.MeshStandardMaterial({ 
           color: 0xf8f6f0,
@@ -211,7 +190,7 @@ export default function CraftsmanshipPage() {
         dial.userData = { explodeOffset: new window.THREE.Vector3(0, 4, 0) };
         watchGroup.add(dial);
         
-        // Hour markers
+        // Index heures
         for (let i = 0; i < 12; i++) {
           const markerGeometry = new window.THREE.BoxGeometry(0.1, 0.2, 0.02);
           const markerMaterial = new window.THREE.MeshStandardMaterial({ 
@@ -230,7 +209,7 @@ export default function CraftsmanshipPage() {
           watchGroup.add(marker);
         }
         
-        // Watch hands
+        // Aiguilles
         const hourHandGeometry = new window.THREE.BoxGeometry(0.08, 0.8, 0.03);
         const minuteHandGeometry = new window.THREE.BoxGeometry(0.06, 1.2, 0.03);
         const handMaterial = new window.THREE.MeshStandardMaterial({ 
@@ -250,7 +229,7 @@ export default function CraftsmanshipPage() {
         minuteHand.userData = { explodeOffset: new window.THREE.Vector3(0, 5.5, 0) };
         watchGroup.add(minuteHand);
         
-        // Crystal/Glass
+        // Verre saphir
         const crystalGeometry = new window.THREE.CylinderGeometry(2.05, 2.05, 0.1, 32);
         const crystalMaterial = new window.THREE.MeshPhysicalMaterial({ 
           color: 0xffffff,
@@ -268,52 +247,19 @@ export default function CraftsmanshipPage() {
         
         scene.add(watchGroup);
         
-        // Animation state
+        // Contrôles et animation
         let isRotating = true;
         let isExploded = false;
-        let componentCount = 0;
-        let targetCount = 250;
         
-        // Mouse controls
-        let isDragging = false;
-        let previousMousePosition = { x: 0, y: 0 };
-        
-        canvas.addEventListener('mousedown', (e) => {
-          isDragging = true;
-          previousMousePosition = { x: e.clientX, y: e.clientY };
-        });
-        
-        canvas.addEventListener('mousemove', (e) => {
-          if (isDragging) {
-            const deltaX = e.clientX - previousMousePosition.x;
-            const deltaY = e.clientY - previousMousePosition.y;
-            
-            watchGroup.rotation.y += deltaX * 0.01;
-            watchGroup.rotation.x += deltaY * 0.01;
-            
-            previousMousePosition = { x: e.clientX, y: e.clientY };
-          }
-        });
-        
-        canvas.addEventListener('mouseup', () => {
-          isDragging = false;
-        });
-        
-        canvas.addEventListener('mouseleave', () => {
-          isDragging = false;
-        });
-        
-        // Button controls
+        // Boutons
         const rotateBtn = document.getElementById('rotateBtn');
         const explodeBtn = document.getElementById('explodeBtn');
         const resetBtn = document.getElementById('resetBtn');
         
         rotateBtn?.addEventListener('click', () => {
           isRotating = !isRotating;
-          if (rotateBtn) {
-            rotateBtn.classList.toggle('bg-yellow-600');
-            rotateBtn.classList.toggle('bg-gray-700');
-          }
+          rotateBtn.classList.toggle('bg-gray-700');
+          rotateBtn?.classList.toggle('bg-yellow-600');
         });
         
         explodeBtn?.addEventListener('click', () => {
@@ -324,17 +270,15 @@ export default function CraftsmanshipPage() {
           watchGroup.rotation.set(0, 0, 0);
           isExploded = false;
           isRotating = true;
-          if (rotateBtn) {
-            rotateBtn.classList.add('bg-yellow-600');
-            rotateBtn.classList.remove('bg-gray-700');
-          }
+          rotateBtn?.classList.remove('bg-gray-700');
+          rotateBtn?.classList.add('bg-yellow-600');
         });
         
         // Animation loop
         const animate = () => {
           requestAnimationFrame(animate);
           
-          if (isRotating && !isDragging) {
+          if (isRotating) {
             watchGroup.rotation.y += 0.005;
           }
           
@@ -355,52 +299,33 @@ export default function CraftsmanshipPage() {
             }
           });
           
-          if (componentCount < targetCount) {
-            componentCount += 2;
-            const countEl = document.getElementById('componentCount');
-            if (countEl) {
-              countEl.textContent = `${Math.min(componentCount, targetCount)}/250`;
-            }
-          }
-          
           renderer.render(scene, camera);
         };
         
         animate();
         
-        // Gestion du redimensionnement
+        // Redimensionnement
         const handleResize = () => {
-          if (canvas) {
-            camera.aspect = canvas.clientWidth / canvas.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-          }
+          if (!canvas) return;
+          camera.aspect = canvas.clientWidth / canvas.clientHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(canvas.clientWidth, canvas.clientHeight);
         };
         
         window.addEventListener('resize', handleResize);
-
+        
       } catch (error) {
         console.error('Erreur dans initThreeJS:', error);
       }
     };
 
-    // 5. Menu mobile (corrigé)
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    const handleMobileMenu = () => {
-      mobileMenu?.classList.toggle('hidden');
-    };
-    
-    mobileMenuBtn?.addEventListener('click', handleMobileMenu);
-
-    // 6. Intersection Observer pour animations au scroll
+    // 5. Animations au scroll
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
     };
 
-    const observer = new IntersectionObserver((entries) => {
+    const scrollObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('revealed');
@@ -409,59 +334,29 @@ export default function CraftsmanshipPage() {
     }, observerOptions);
 
     document.querySelectorAll('.scroll-reveal').forEach(el => {
-      observer.observe(el);
+      scrollObserver.observe(el);
     });
 
-    const masteryObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const progress = entry.target.querySelector('.mastery-progress') as HTMLElement;
-          if (progress) {
-            setTimeout(() => {
-              progress.style.width = progress.style.width || '100%';
-            }, 500);
-          }
-        }
-      });
-    }, { threshold: 0.5 });
-
-    document.querySelectorAll('.mastery-indicator').forEach(el => {
-      masteryObserver.observe(el);
-    });
-
-    // 7. Effet parallax
-    const handleScroll = () => {
-      const scrolled = window.pageYOffset;
-      const parallax = document.querySelector('#vanta-bg') as HTMLElement;
-      if (parallax) {
-        const speed = scrolled * 0.2;
-        parallax.style.transform = `translateY(${speed}px)`;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    // 8. Démarrage du processus de chargement
+    // 6. Lancement
     loadScripts().then(() => {
       setTimeout(() => {
         initThreeJS();
       }, 300);
     });
 
-    // 9. Cleanup sécurisé
+    // 7. Cleanup
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      mobileMenuBtn?.removeEventListener('click', handleMobileMenu);
-      
       if (vantaInstanceRef.current) {
         vantaInstanceRef.current.destroy();
       }
+      script1Ref.current?.remove();
+      script2Ref.current?.remove();
+      window.removeEventListener('resize', () => {});
     };
-  }, []); // Le useEffect ne s'exécute qu'une fois
+  }, []);
 
   return (
     <div className="font-sans bg-cream overflow-x-hidden" style={{ background: 'var(--cream)' }}>
-      {/* Votre JSX inchangé */}
       <style jsx global>{`
         :root {
           --gold: #D4AF37;
@@ -493,26 +388,6 @@ export default function CraftsmanshipPage() {
           width: 100%;
           height: 100%;
           z-index: -1;
-        }
-        
-        .nav-link {
-          position: relative;
-          transition: all 0.3s ease;
-        }
-        
-        .nav-link::after {
-          content: '';
-          position: absolute;
-          bottom: -2px;
-          left: 0;
-          width: 0;
-          height: 2px;
-          background: var(--gold);
-          transition: width 0.3s ease;
-        }
-        
-        .nav-link:hover::after {
-          width: 100%;
         }
         
         .scroll-reveal {
@@ -694,24 +569,64 @@ export default function CraftsmanshipPage() {
                 chaque finition atteigne la perfection absolue.
               </p>
               <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                  <span className="text-gray-700">Formation de 10 à 15 ans minimum</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                  <span className="text-gray-700">Apprentissage auprès de maîtres confirmés</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                  <span className="text-gray-700">Certification interne Patek Philippe</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                  <span className="text-gray-700">Formation continue tout au long de la carrière</span>
-                </div>
+                {[
+                  'Formation de 10 à 15 ans minimum',
+                  'Apprentissage auprès de maîtres confirmés',
+                  'Certification interne Patek Philippe',
+                  'Formation continue tout au long de la carrière'
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
+                    <span className="text-gray-700">{item}</span>
+                  </div>
+                ))}
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3D Interactive Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16 scroll-reveal">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Visualisation 3D Interactive</h2>
+            <p className="text-xl text-gray-600">Explorez les mécanismes complexes de nos montres</p>
+          </div>
+          
+          <div className="flex justify-center mb-8">
+            <canvas 
+              id="watchCanvas" 
+              width="800" 
+              height="600" 
+              className="rounded-lg shadow-2xl border border-gray-200"
+            ></canvas>
+          </div>
+          
+          <div className="flex justify-center gap-4">
+            <button 
+              id="rotateBtn" 
+              className="bg-yellow-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-yellow-700 transition-colors"
+            >
+              Rotation Auto
+            </button>
+            <button 
+              id="explodeBtn" 
+              className="bg-gray-800 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-700 transition-colors"
+            >
+              Vue Éclatée
+            </button>
+            <button 
+              id="resetBtn" 
+              className="bg-gray-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-500 transition-colors"
+            >
+              Réinitialiser
+            </button>
+          </div>
+          
+          <div className="text-center mt-6">
+            <span className="text-sm text-gray-600">Composants assemblés: </span>
+            <span id="componentCount" className="text-sm font-semibold text-yellow-600">0/250</span>
           </div>
         </div>
       </section>
@@ -725,60 +640,23 @@ export default function CraftsmanshipPage() {
           </div>
           
           <div className="grid md:grid-cols-4 gap-8">
-            <div className="process-step scroll-reveal">
-              <div className="text-center mb-4">
-                <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-xl">1</span>
+            {[
+              { num: 1, title: 'Conception', desc: 'Les ingénieurs et designers créent des plans détaillés pour chaque composant, optimisant à la fois la fonctionnalité et l\'esthétique.' },
+              { num: 2, title: 'Fabrication', desc: 'Chaque composant est fabriqué à la main ou avec des machines spécialisées selon des tolérances extrêmement strictes.' },
+              { num: 3, title: 'Assemblage', desc: 'Les maîtres horlogers assemblent chaque mouvement avec une précision chirurgicale, ajustant chaque pièce à la perfection.' },
+              { num: 4, title: 'Contrôle Qualité', desc: 'Des tests rigoureux garantissent que chaque montre répond aux standards d\'excellence Patek Philippe avant d\'être certifiée.' }
+            ].map((step, idx) => (
+              <div key={idx} className="process-step scroll-reveal">
+                <div className="text-center mb-4">
+                  <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-white font-bold text-xl">{step.num}</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Conception</h3>
+                <p className="text-gray-600 text-center">{step.desc}</p>
+                <div className="process-line"></div>
               </div>
-              <p className="text-gray-600 text-center">
-                Les ingénieurs et designers créent des plans détaillés pour chaque composant, 
-                optimisant à la fois la fonctionnalité et l'esthétique.
-              </p>
-              <div className="process-line"></div>
-            </div>
-            
-            <div className="process-step scroll-reveal">
-              <div className="text-center mb-4">
-                <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-xl">2</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Fabrication</h3>
-              </div>
-              <p className="text-gray-600 text-center">
-                Chaque composant est fabriqué à la main ou avec des machines spécialisées 
-                selon des tolérances extrêmement strictes.
-              </p>
-              <div className="process-line"></div>
-            </div>
-            
-            <div className="process-step scroll-reveal">
-              <div className="text-center mb-4">
-                <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-xl">3</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Assemblage</h3>
-              </div>
-              <p className="text-gray-600 text-center">
-                Les maîtres horlogers assemblent chaque mouvement avec une précision chirurgicale, 
-                ajustant chaque pièce à la perfection.
-              </p>
-              <div className="process-line"></div>
-            </div>
-            
-            <div className="process-step scroll-reveal">
-              <div className="text-center mb-4">
-                <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-xl">4</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Contrôle Qualité</h3>
-              </div>
-              <p className="text-gray-600 text-center">
-                Des tests rigoureux garantissent que chaque montre répond aux standards 
-                d'excellence Patek Philippe avant d'être certifiée.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -792,147 +670,31 @@ export default function CraftsmanshipPage() {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="craft-card rounded-xl p-8 scroll-reveal">
-              <div className="w-20 h-20 bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i className="fas fa-cogs text-3xl text-white"></i>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Mécanique Fine</h3>
-              <p className="text-gray-600 text-center mb-6">
-                La création de mouvements mécaniques complexes avec des complications 
-                sophistiquées qui repoussent les limites de l'ingénierie horlogère.
-              </p>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Précision</span>
-                  <span className="text-sm font-semibold text-gray-900">99.99%</span>
+            {[
+              { icon: 'cogs', title: 'Mécanique Fine', desc: 'La création de mouvements mécaniques complexes avec des complications sophistiquées qui repoussent les limites de l\'ingénierie horlogère.', level: 'Précision', value: '99.99%', progress: '100%' },
+              { icon: 'gem', title: 'Joaillerie', desc: 'Le sertissage de diamants et pierres précieuses avec une précision exceptionnelle, transformant chaque montre en une œuvre d\'art précieuse.', level: 'Qualité', value: 'IF/VVS', progress: '95%' },
+              { icon: 'palette', title: 'Arts Décoratifs', desc: 'Les techniques traditionnelles de décoration comme le guillochage, l\'émail et la gravure qui donnent à chaque montre son caractère unique.', level: 'Complexité', value: 'Master', progress: '90%' }
+            ].map((area, idx) => (
+              <div key={idx} className="craft-card rounded-xl p-8 scroll-reveal">
+                <div className="w-20 h-20 bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <i className={`fas fa-${area.icon} text-3xl text-white`}></i>
                 </div>
-                <div className="mastery-indicator">
-                  <div className="mastery-progress" style={{ width: '100%' }}></div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="craft-card rounded-xl p-8 scroll-reveal">
-              <div className="w-20 h-20 bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i className="fas fa-gem text-3xl text-white"></i>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Joaillerie</h3>
-              <p className="text-gray-600 text-center mb-6">
-                Le sertissage de diamants et pierres précieuses avec une précision 
-                exceptionnelle, transformant chaque montre en une œuvre d'art précieuse.
-              </p>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Qualité</span>
-                  <span className="text-sm font-semibold text-gray-900">IF/VVS</span>
-                </div>
-                <div className="mastery-indicator">
-                  <div className="mastery-progress" style={{ width: '95%' }}></div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">{area.title}</h3>
+                <p className="text-gray-600 text-center mb-6">{area.desc}</p>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">{area.level}</span>
+                    <span className="text-sm font-semibold text-gray-900">{area.value}</span>
+                  </div>
+                  <div className="mastery-indicator">
+                    <div className="mastery-progress" style={{ width: area.progress }}></div>
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <div className="craft-card rounded-xl p-8 scroll-reveal">
-              <div className="w-20 h-20 bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i className="fas fa-palette text-3xl text-white"></i>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Arts Décoratifs</h3>
-              <p className="text-gray-600 text-center mb-6">
-                Les techniques traditionnelles de décoration comme le guillochage, 
-                l'émail et la gravure qui donnent à chaque montre son caractère unique.
-              </p>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Complexité</span>
-                  <span className="text-sm font-semibold text-gray-900">Master</span>
-                </div>
-                <div className="mastery-indicator">
-                  <div className="mastery-progress" style={{ width: '90%' }}></div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
-
-            <section className="relative py-28 bg-gradient-to-br from-black via-zinc-900 to-yellow-950 overflow-hidden rounded-3xl shadow-2xl border border-yellow-700/20">
-  {/* Fond doré subtil */}
-  <div className="pointer-events-none absolute inset-0">
-    <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[110vw] h-48 bg-gradient-to-r from-yellow-500/20 via-yellow-200/30 to-transparent blur-3xl opacity-50"></div>
-    <div className="absolute right-8 bottom-8 w-40 h-40 bg-amber-400/10 rounded-full blur-2xl opacity-20"></div>
-  </div>
-
-  <div className="relative z-10 max-w-5xl mx-auto px-5">
-    {/* Hero */}
-    <div className="text-center mb-20">
-      <span className="inline-block px-7 py-2 rounded-full border border-yellow-500/20 bg-yellow-100/5 text-xs uppercase tracking-widest text-yellow-600 mb-4 font-semibold">
-        Savoir-Faire d’Exception
-      </span>
-      <h2 className="text-4xl md:text-5xl font-serif font-bold mb-7 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-600">
-        L’Excellence Patek Philippe
-      </h2>
-      <p className="text-lg md:text-xl text-gray-300 font-light max-w-2xl mx-auto">
-        Chaque montre <span className="text-yellow-400 font-semibold">Patek Philippe</span> incarne des siècles de tradition horlogère — façonnée par des artisans d’élite, révèlant la beauté du temps avec une précision inégalée.
-      </p>
-      <blockquote className="italic text-yellow-100 text-base md:text-lg mt-6 px-2 max-w-xl mx-auto border-l-4 border-yellow-500/30 pl-6">
-        « Vous ne possédez jamais complètement une montre Patek Philippe. Vous en êtes juste le gardien pour les générations futures. »
-      </blockquote>
-    </div>
-
-    {/* Cards savoir-faire */}
-    <div className="grid md:grid-cols-3 gap-10 mb-16">
-      {/* Maître horloger */}
-      <div className="group bg-gradient-to-b from-yellow-100/10 to-black/70 p-8 rounded-2xl border border-yellow-700/20 hover:border-yellow-600/50 shadow-xl hover:scale-105 transition-transform">
-        <i className="fas fa-user-graduate text-4xl text-yellow-400 mb-4"></i>
-        <h3 className="font-serif text-xl text-white mb-2 font-bold">Maîtres Horlogers</h3>
-        <p className="text-gray-300 text-sm font-light mb-1">10 à 15 ans de formation auprès de maîtres confirmés, savoir-faire transmis de génération en génération.</p>
-        <span className="inline-block text-[11px] uppercase tracking-wide text-yellow-300 mt-2">Excellence</span>
-      </div>
-      {/* Processus */}
-      <div className="group bg-gradient-to-b from-yellow-100/10 to-black/70 p-8 rounded-2xl border border-yellow-700/20 hover:border-yellow-600/50 shadow-xl hover:scale-105 transition-transform">
-        <i className="fas fa-drafting-compass text-4xl text-yellow-400 mb-4"></i>
-        <h3 className="font-serif text-xl text-white mb-2 font-bold">Processus Millimétré</h3>
-        <ul className="text-gray-300 text-sm font-light space-y-1 mb-1">
-          <li>• Conception détaillée</li>
-          <li>• Fabrication ultra précise</li>
-          <li>• Assemblage manuel parfait</li>
-          <li>• Contrôle qualité strict</li>
-        </ul>
-        <span className="inline-block text-[11px] uppercase tracking-wide text-yellow-300 mt-2">Rigueur</span>
-      </div>
-      {/* Domaines d’expertise */}
-      <div className="group bg-gradient-to-b from-yellow-100/10 to-black/70 p-8 rounded-2xl border border-yellow-700/20 hover:border-yellow-600/50 shadow-xl hover:scale-105 transition-transform">
-        <i className="fas fa-gem text-4xl text-yellow-400 mb-4"></i>
-        <h3 className="font-serif text-xl text-white mb-2 font-bold">Domaines d’Excellence</h3>
-        <ul className="text-gray-300 text-sm font-light space-y-1">
-          <li><span className="text-yellow-200">Mécanique fine</span> — précision 99.99%</li>
-          <li><span className="text-yellow-200">Joaillerie</span> — pierres IF/VVS</li>
-          <li><span className="text-yellow-200">Arts décoratifs</span> — savoir-faire Master</li>
-        </ul>
-        <span className="inline-block text-[11px] uppercase tracking-wide text-yellow-300 mt-2">Créativité</span>
-      </div>
-    </div>
-
-    {/* Label qualité */}
-    <div className="rounded-xl bg-gradient-to-r from-yellow-200/10 via-black/40 to-yellow-950/10 border border-yellow-700/30 py-8 px-6 flex flex-col md:flex-row items-center md:justify-between gap-6 shadow-xl mb-4">
-      <div className="flex items-center gap-4">
-        <i className="fas fa-certificate text-3xl text-yellow-400"></i>
-        <div>
-          <h4 className="font-serif text-base text-yellow-300 font-bold">Standards d’Excellence</h4>
-          <ul className="text-sm text-gray-200 font-light leading-relaxed mt-1">
-            <li>• Précision testée 24 jours</li>
-            <li>• Contrôle esthétique et d’étanchéité</li>
-            <li>• Certification Patek Philippe</li>
-          </ul>
-        </div>
-      </div>
-      <div className="text-right text-xs text-gray-400 italic">
-        Depuis 1839 – Genève<br />
-        <span className="font-semibold text-yellow-200">Swiss Made</span>
-      </div>
-    </div>
-  </div>
-</section>
 
       {/* Quality Standards */}
       <section className="py-20 bg-white">
@@ -946,42 +708,22 @@ export default function CraftsmanshipPage() {
               </p>
               
               <div className="space-y-6">
-                <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <i className="fas fa-check text-white text-sm"></i>
+                {[
+                  { title: 'Tests de Précision', desc: '24 jours de tests chronométriques rigoureux' },
+                  { title: 'Contrôle Esthétique', desc: 'Inspection minutieuse de chaque détail visuel' },
+                  { title: 'Tests d\'Étanchéité', desc: 'Vérification de la résistance à l\'eau et à l\'humidité' },
+                  { title: 'Certification Finale', desc: 'Poinçon Patek Philippe et certificat d\'authenticité' }
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-start space-x-4">
+                    <div className="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <i className="fas fa-check text-white text-sm"></i>
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h4>
+                      <p className="text-gray-600">{item.desc}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Tests de Précision</h4>
-                    <p className="text-gray-600">24 jours de tests chronométriques rigoureux</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <i className="fas fa-check text-white text-sm"></i>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Contrôle Esthétique</h4>
-                    <p className="text-gray-600">Inspection minutieuse de chaque détail visuel</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <i className="fas fa-check text-white text-sm"></i>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Tests d'Étanchéité</h4>
-                    <p className="text-gray-600">Vérification de la résistance à l'eau et à l'humidité</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <i className="fas fa-check text-white text-sm"></i>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Certification Finale</h4>
-                    <p className="text-gray-600">Poinçon Patek Philippe et certificat d'authenticité</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
             <div className="scroll-reveal">
@@ -1010,7 +752,7 @@ export default function CraftsmanshipPage() {
             <button className="bg-yellow-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-yellow-700 transition-all duration-300 transform hover:scale-105">
               Réserver une visite
             </button>
-            <button onClick={() => window.location.href = 'innovation.html'} className="border-2 border-yellow-600 text-yellow-600 px-8 py-4 rounded-full font-semibold hover:bg-yellow-600 hover:text-white transition-all duration-300">
+            <button onClick={() => window.location.href = '/innovation'} className="border-2 border-yellow-600 text-yellow-600 px-8 py-4 rounded-full font-semibold hover:bg-yellow-600 hover:text-white transition-all duration-300">
               Découvrir l'innovation
             </button>
           </div>
@@ -1026,18 +768,11 @@ export default function CraftsmanshipPage() {
             </div>
             <p className="text-gray-400 mb-6">La référence mondiale en horlogerie suisse</p>
             <div className="flex justify-center space-x-6 mb-8">
-              <a href="#" className="text-gray-400 hover:text-yellow-600 transition-colors">
-                <i className="fab fa-instagram text-xl"></i>
-              </a>
-              <a href="#" className="text-gray-400 hover:text-yellow-600 transition-colors">
-                <i className="fab fa-facebook text-xl"></i>
-              </a>
-              <a href="#" className="text-gray-400 hover:text-yellow-600 transition-colors">
-                <i className="fab fa-twitter text-xl"></i>
-              </a>
-              <a href="#" className="text-gray-400 hover:text-yellow-600 transition-colors">
-                <i className="fab fa-youtube text-xl"></i>
-              </a>
+              {['instagram', 'facebook', 'twitter', 'youtube'].map(social => (
+                <a key={social} href="#" className="text-gray-400 hover:text-yellow-600 transition-colors">
+                  <i className={`fab fa-${social} text-xl`}></i>
+                </a>
+              ))}
             </div>
             <div className="border-t border-gray-800 pt-6">
               <p className="text-gray-500 text-sm">
