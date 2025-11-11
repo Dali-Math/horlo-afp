@@ -1,14 +1,65 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import React, { useEffect, useRef } from 'react';
 
-declare global {
-  interface Window {
-    VANTA: any;
-  }
+export default function Page() {
+  const vantaRef = useRef<HTMLDivElement>(null);
+  const vantaEffect = useRef<any>(null);
+
+  useEffect(() => {
+    const loadScript = (src: string) => {
+      return new Promise<void>((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = reject;
+        document.body.appendChild(script);
+      });
+    };
+
+    Promise.all([
+      loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js'),
+      loadScript('https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js'),
+    ]).then(() => {
+      if (window.VANTA && vantaRef.current) {
+        vantaEffect.current = window.VANTA.NET({
+          el: vantaRef.current,
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.00,
+          scaleMobile: 1.00,
+          color: 0xd4af37,
+          backgroundColor: 0xf8f6f0,
+          points: 8.00,
+          maxDistance: 25.00,
+          spacing: 18.00,
+        });
+      }
+    });
+
+    return () => {
+      if (vantaEffect.current) vantaEffect.current.destroy();
+    };
+  }, []);
+
+  return (
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ minHeight: '100vh' }}>
+      <div ref={vantaRef} className="absolute top-0 left-0 w-full h-full vanta-bg" style={{ zIndex: 0 }}></div>
+      <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
+        <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">
+          Collections<br />Iconiques
+        </h1>
+        <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+          Découvrez les garde-temps qui ont marqué l'histoire de l'horlogerie suisse
+        </p>
+      </div>
+    </section>
+  );
 }
-
 const collections = [
   {
     id: 'nautilus',
