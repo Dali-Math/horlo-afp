@@ -1,4 +1,6 @@
 'use client'
+import VANTA from 'vanta'
+import WAVES from 'vanta/src/vanta.waves'
 import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
