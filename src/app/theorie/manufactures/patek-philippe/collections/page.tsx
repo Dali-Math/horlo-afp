@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Metadata } from 'next';
 
 declare global {
   interface Window {
@@ -10,68 +9,61 @@ declare global {
   }
 }
 
-// Export des métadonnées pour Next.js App Router
-export const metadata: Metadata = {
-  title: 'Collections - Patek Philippe Référence Mondiale',
-  description: "Découvrez les garde-temps qui ont marqué l'histoire de l'horlogerie",
-};
+const collections = [
+  {
+    id: 'nautilus',
+    name: 'Nautilus',
+    price: '€35,000',
+    description: 'Le symbole du luxe sportif, alliant robustesse et élégance dans un design iconique',
+    image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400&h=400&fit=crop',
+    category: 'sport',
+    specs: {
+      'Boîtier': 'Acier inoxydable 5711/1A',
+      'Mouvement': 'Calibre 26-330 S C',
+      'Étanchéité': '120m',
+      'Diamètre': '40mm'
+    }
+  },
+  {
+    id: 'calatrava',
+    name: 'Calatrava',
+    price: '€28,500',
+    description: "L'essence de l'élégance classique, incarnant la pureté du design horloger",
+    image: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=400&h=400&fit=crop',
+    category: 'classic',
+    specs: {
+      'Boîtier': 'Or blanc 18k 5227G-010',
+      'Mouvement': 'Calibre 324 S C',
+      'Réserve de marche': '45 heures',
+      'Diamètre': '39mm'
+    }
+  },
+  {
+    id: 'complications',
+    name: 'Grandes Complications',
+    price: '€1,200,000',
+    description: "Le sommet de l'ingénierie horlogère, où l'art rencontre la complexité technique",
+    image: 'https://images.unsplash.com/photo-1612817159949-195b619eb547?w=400&h=400&fit=crop',
+    category: 'complication',
+    specs: {
+      'Modèle': 'Sky Moon Tourbillon 6002G-001',
+      'Complications': '13 fonctions',
+      'Boîtier': 'Or blanc 18k',
+      'Diamètre': '44mm'
+    }
+  }
+];
 
-const CollectionsPage: React.FC = () => {
+export default function CollectionsPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [filter, setFilter] = useState('all');
   const [vantaEffect, setVantaEffect] = useState<any>(null);
-
-  const collections = [
-    {
-      id: 'nautilus',
-      name: 'Nautilus',
-      price: '€35,000',
-      description: 'Le symbole du luxe sportif, alliant robustesse et élégance dans un design iconique',
-      image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=400&h=400&fit=crop',
-      category: 'sport',
-      specs: {
-        'Boîtier': 'Acier inoxydable 5711/1A',
-        'Mouvement': 'Calibre 26-330 S C',
-        'Étanchéité': '120m',
-        'Diamètre': '40mm'
-      }
-    },
-    {
-      id: 'calatrava',
-      name: 'Calatrava',
-      price: '€28,500',
-      description: "L'essence de l'élégance classique, incarnant la pureté du design horloger",
-      image: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?w=400&h=400&fit=crop',
-      category: 'classic',
-      specs: {
-        'Boîtier': 'Or blanc 18k 5227G-010',
-        'Mouvement': 'Calibre 324 S C',
-        'Réserve de marche': '45 heures',
-        'Diamètre': '39mm'
-      }
-    },
-    {
-      id: 'complications',
-      name: 'Grandes Complications',
-      price: '€1,200,000',
-      description: "Le sommet de l'ingénierie horlogère, où l'art rencontre la complexité technique",
-      image: 'https://images.unsplash.com/photo-1612817159949-195b619eb547?w=400&h=400&fit=crop',
-      category: 'complication',
-      specs: {
-        'Modèle': 'Sky Moon Tourbillon 6002G-001',
-        'Complications': '13 fonctions',
-        'Boîtier': 'Or blanc 18k',
-        'Diamètre': '44mm'
-      }
-    }
-  ];
 
   const filteredCollections = filter === 'all' 
     ? collections 
     : collections.filter(col => col.category === filter);
 
   useEffect(() => {
-    // Chargement de Vanta.js via CDN pour le App Router
     const loadVanta = () => {
       if (window.VANTA) {
         const effect = window.VANTA.NET({
@@ -93,7 +85,6 @@ const CollectionsPage: React.FC = () => {
       }
     };
 
-    // Si VANTA n'est pas chargé, on charge le script
     if (!window.VANTA) {
       const script = document.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js';
@@ -103,7 +94,6 @@ const CollectionsPage: React.FC = () => {
       loadVanta();
     }
 
-    // Scroll reveal animation
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
@@ -126,7 +116,7 @@ const CollectionsPage: React.FC = () => {
       }
       elements.forEach(el => observer.unobserve(el));
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -141,7 +131,7 @@ const CollectionsPage: React.FC = () => {
             </div>
             <div className="hidden md:flex space-x-8">
               <Link href="/" className="nav-link text-gray-700 hover:text-yellow-600">Accueil</Link>
-              <Link href="/theorie/manufactures/patek-philippe/collections" className="nav-link text-yellow-600 font-semibold">Collections</Link>
+              <Link href="#" className="nav-link text-yellow-600 font-semibold">Collections</Link>
               <Link href="/heritage" className="nav-link text-gray-700 hover:text-yellow-600">Patrimoine</Link>
               <Link href="/craftsmanship" className="nav-link text-gray-700 hover:text-yellow-600">Savoir-faire</Link>
               <Link href="/innovation" className="nav-link text-gray-700 hover:text-yellow-600">Innovation</Link>
@@ -157,7 +147,7 @@ const CollectionsPage: React.FC = () => {
           <div className="md:hidden bg-white border-t border-gray-200">
             <div className="px-6 py-4 space-y-4">
               <Link href="/" className="block text-gray-700 hover:text-yellow-600">Accueil</Link>
-              <Link href="/theorie/manufactures/patek-philippe/collections" className="block text-yellow-600 font-semibold">Collections</Link>
+              <Link href="#" className="block text-yellow-600 font-semibold">Collections</Link>
               <Link href="/heritage" className="block text-gray-700 hover:text-yellow-600">Patrimoine</Link>
               <Link href="/craftsmanship" className="block text-gray-700 hover:text-yellow-600">Savoir-faire</Link>
               <Link href="/innovation" className="block text-gray-700 hover:text-yellow-600">Innovation</Link>
@@ -167,8 +157,8 @@ const CollectionsPage: React.FC = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div id="vanta-bg" className="vanta-bg"></div>
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ minHeight: '100vh' }}>
+        <div id="vanta-bg" className="vanta-bg" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}></div>
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
           <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">
             Collections<br />Iconiques
@@ -292,7 +282,6 @@ const CollectionsPage: React.FC = () => {
             </div>
             <p className="text-gray-400 mb-6">La référence mondiale en horlogerie suisse</p>
             <div className="flex justify-center space-x-6 mb-8">
-              {/* Remplacer les icônes Font Awesome par des SVG ou des émojis si nécessaire */}
               <a href="#" className="text-gray-400 hover:text-yellow-600 transition-colors">
                 <span className="text-xl">📷</span>
               </a>
@@ -437,6 +426,4 @@ const CollectionsPage: React.FC = () => {
       <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
     </>
   );
-};
-
-export default CollectionsPage;
+}
