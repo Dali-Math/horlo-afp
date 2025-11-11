@@ -378,39 +378,6 @@ export default function CraftsmanshipPage() {
         }
       `}</style>
 
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="text-2xl font-bold text-gray-900">
-              <a href="index.html"><span className="text-yellow-600">Patek</span> Philippe</a>
-            </div>
-            <div className="hidden md:flex space-x-8">
-              <a href="index.html" className="nav-link text-gray-700 hover:text-yellow-600">Accueil</a>
-              <a href="collections.html" className="nav-link text-gray-700 hover:text-yellow-600">Collections</a>
-              <a href="heritage.html" className="nav-link text-gray-700 hover:text-yellow-600">Patrimoine</a>
-              <a href="craftsmanship.html" className="nav-link text-yellow-600 font-semibold">Savoir-faire</a>
-              <a href="innovation.html" className="nav-link text-gray-700 hover:text-yellow-600">Innovation</a>
-            </div>
-            <div className="md:hidden">
-              <button id="mobile-menu-btn" className="text-gray-700">
-                <i className="fas fa-bars text-xl"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-        {/* Mobile Menu */}
-        <div id="mobile-menu" className="hidden md:hidden bg-white border-t border-gray-200">
-          <div className="px-6 py-4 space-y-4">
-            <a href="index.html" className="block text-gray-700 hover:text-yellow-600">Accueil</a>
-            <a href="collections.html" className="block text-gray-700 hover:text-yellow-600">Collections</a>
-            <a href="heritage.html" className="block text-gray-700 hover:text-yellow-600">Patrimoine</a>
-            <a href="craftsmanship.html" className="block text-yellow-600 font-semibold">Savoir-faire</a>
-            <a href="innovation.html" className="block text-gray-700 hover:text-yellow-600">Innovation</a>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <div id="vanta-bg" className="vanta-bg"></div>
