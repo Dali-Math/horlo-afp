@@ -585,71 +585,69 @@ export default function SavoirFairePage() {
           </div>
         </div>
       </section>
-     <section className="relative py-28 bg-gradient-to-br from-black via-zinc-900 to-yellow-950 overflow-hidden rounded-3xl shadow-2xl border border-yellow-700/20">
-  {/* Fond doré subtil */}
+      <section className="relative py-16 bg-gradient-to-br from-black via-zinc-900 to-yellow-950 overflow-hidden rounded-2xl shadow-xl border border-yellow-700/20">
+  {/* Fond doré subtil réduit */}
   <div className="pointer-events-none absolute inset-0">
-    <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[110vw] h-48 bg-gradient-to-r from-yellow-500/20 via-yellow-200/30 to-transparent blur-3xl opacity-50"></div>
-    <div className="absolute right-8 bottom-8 w-40 h-40 bg-amber-400/10 rounded-full blur-2xl opacity-20"></div>
+    <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[100vw] h-32 bg-gradient-to-r from-yellow-500/10 via-yellow-300/20 to-transparent blur-2xl opacity-40"></div>
+    <div className="absolute right-8 bottom-8 w-32 h-32 bg-amber-400/10 rounded-full blur-xl opacity-20"></div>
   </div>
 
   <div className="relative z-10 max-w-5xl mx-auto px-5">
     {/* Hero */}
-    <div className="text-center mb-20">
-      <span className="inline-block px-7 py-2 rounded-full border border-yellow-500/20 bg-yellow-100/5 text-xs uppercase tracking-widest text-yellow-600 mb-4 font-semibold">
+    <div className="text-center mb-12">
+      <span className="inline-block px-6 py-2 rounded-full border border-yellow-500/20 bg-yellow-100/5 text-xs uppercase tracking-widest text-yellow-500 mb-3 font-semibold">
         Savoir-Faire d’Exception
       </span>
-      <h2 className="text-4xl md:text-5xl font-serif font-bold mb-7 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-600">
+      <h2 className="text-3xl md:text-4xl font-serif font-bold mb-5 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-600">
         L’Excellence Patek Philippe
       </h2>
-      <p className="text-lg md:text-xl text-gray-300 font-light max-w-2xl mx-auto">
-        Chaque montre <span className="text-yellow-400 font-semibold">Patek Philippe</span> incarne des siècles de tradition horlogère — façonnée par des artisans d’élite, révèlant la beauté du temps avec une précision inégalée.
+      <p className="text-base md:text-lg text-gray-300 font-light max-w-2xl mx-auto">
+        Chaque montre <span className="text-yellow-400 font-semibold">Patek Philippe</span> incarne des siècles de tradition horlogère — 
+        façonnée par des artisans d’élite, révélant la beauté du temps avec une précision inégalée.
       </p>
-      <blockquote className="italic text-yellow-100 text-base md:text-lg mt-6 px-2 max-w-xl mx-auto border-l-4 border-yellow-500/30 pl-6">
-        « Vous ne possédez jamais complètement une montre Patek Philippe. Vous en êtes juste le gardien pour les générations futures. »
+      <blockquote className="italic text-yellow-100 text-sm md:text-base mt-5 px-2 max-w-xl mx-auto border-l-4 border-yellow-500/30 pl-5">
+        « Vous ne possédez jamais complètement une montre Patek Philippe. Vous en êtes juste le gardien pour les générations futures. »
       </blockquote>
     </div>
 
     {/* Cards savoir-faire */}
-    <div className="grid md:grid-cols-3 gap-10 mb-16">
+    <div className="grid md:grid-cols-3 gap-8 mb-10">
       {/* Maître horloger */}
-      <div className="group bg-gradient-to-b from-yellow-100/10 to-black/70 p-8 rounded-2xl border border-yellow-700/20 hover:border-yellow-600/50 shadow-xl hover:scale-105 transition-transform">
-        <i className="fas fa-user-graduate text-4xl text-yellow-400 mb-4"></i>
-        <h3 className="font-serif text-xl text-white mb-2 font-bold">Maîtres Horlogers</h3>
-        <p className="text-gray-300 text-sm font-light mb-1">10 à 15 ans de formation auprès de maîtres confirmés, savoir-faire transmis de génération en génération.</p>
-        <span className="inline-block text-[11px] uppercase tracking-wide text-yellow-300 mt-2">Excellence</span>
+      <div className="group bg-gradient-to-b from-yellow-100/10 to-black/70 p-6 rounded-2xl border border-yellow-700/20 hover:border-yellow-600/40 shadow-lg hover:scale-105 transition-transform">
+        <i className="fas fa-user-graduate text-3xl text-yellow-400 mb-3"></i>
+        <h3 className="font-serif text-lg text-white mb-2 font-bold">Maîtres Horlogers</h3>
+        <p className="text-gray-300 text-sm font-light">10 à 15 ans de formation auprès de maîtres confirmés, savoir-faire transmis de génération en génération.</p>
       </div>
       {/* Processus */}
-      <div className="group bg-gradient-to-b from-yellow-100/10 to-black/70 p-8 rounded-2xl border border-yellow-700/20 hover:border-yellow-600/50 shadow-xl hover:scale-105 transition-transform">
-        <i className="fas fa-drafting-compass text-4xl text-yellow-400 mb-4"></i>
-        <h3 className="font-serif text-xl text-white mb-2 font-bold">Processus Millimétré</h3>
-        <ul className="text-gray-300 text-sm font-light space-y-1 mb-1">
+      <div className="group bg-gradient-to-b from-yellow-100/10 to-black/70 p-6 rounded-2xl border border-yellow-700/20 hover:border-yellow-600/40 shadow-lg hover:scale-105 transition-transform">
+        <i className="fas fa-drafting-compass text-3xl text-yellow-400 mb-3"></i>
+        <h3 className="font-serif text-lg text-white mb-2 font-bold">Processus Millimétré</h3>
+        <ul className="text-gray-300 text-sm font-light space-y-1">
           <li>• Conception détaillée</li>
           <li>• Fabrication ultra précise</li>
           <li>• Assemblage manuel parfait</li>
           <li>• Contrôle qualité strict</li>
         </ul>
-        <span className="inline-block text-[11px] uppercase tracking-wide text-yellow-300 mt-2">Rigueur</span>
       </div>
       {/* Domaines d’expertise */}
-      <div className="group bg-gradient-to-b from-yellow-100/10 to-black/70 p-8 rounded-2xl border border-yellow-700/20 hover:border-yellow-600/50 shadow-xl hover:scale-105 transition-transform">
-        <i className="fas fa-gem text-4xl text-yellow-400 mb-4"></i>
-        <h3 className="font-serif text-xl text-white mb-2 font-bold">Domaines d’Excellence</h3>
+      <div className="group bg-gradient-to-b from-yellow-100/10 to-black/70 p-6 rounded-2xl border border-yellow-700/20 hover:border-yellow-600/40 shadow-lg hover:scale-105 transition-transform">
+        <i className="fas fa-gem text-3xl text-yellow-400 mb-3"></i>
+        <h3 className="font-serif text-lg text-white mb-2 font-bold">Domaines d’Excellence</h3>
         <ul className="text-gray-300 text-sm font-light space-y-1">
           <li><span className="text-yellow-200">Mécanique fine</span> — précision 99.99%</li>
           <li><span className="text-yellow-200">Joaillerie</span> — pierres IF/VVS</li>
           <li><span className="text-yellow-200">Arts décoratifs</span> — savoir-faire Master</li>
         </ul>
-        <span className="inline-block text-[11px] uppercase tracking-wide text-yellow-300 mt-2">Créativité</span>
       </div>
     </div>
 
     {/* Label qualité */}
-    <div className="rounded-xl bg-gradient-to-r from-yellow-200/10 via-black/40 to-yellow-950/10 border border-yellow-700/30 py-8 px-6 flex flex-col md:flex-row items-center md:justify-between gap-6 shadow-xl mb-4">
+    <div className="rounded-xl bg-gradient-to-r from-yellow-200/10 via-black/40 to-yellow-950/10 border border-yellow-700/30 py-6 px-5 flex flex-col md:flex-row items-center md:justify-between gap-6 shadow-lg">
       <div className="flex items-center gap-4">
-        <i className="fas fa-certificate text-3xl text-yellow-400"></i>
+        <i className="fas fa-certificate text-2xl text-yellow-400"></i>
         <div>
-          <h4 className="font-serif text-base text-yellow-300 font-bold">Standards d’Excellence</h4>
-          <ul className="text-sm text-gray-200 font-light leading-relaxed mt-1">
+          <h4 className="font-serif text-sm text-yellow-300 font-bold">Standards d’Excellence</h4>
+          <ul className="text-xs text-gray-200 font-light leading-relaxed">
             <li>• Précision testée 24 jours</li>
             <li>• Contrôle esthétique et d’étanchéité</li>
             <li>• Certification Patek Philippe</li>
@@ -663,6 +661,7 @@ export default function SavoirFairePage() {
     </div>
   </div>
 </section>
+     
 
 
       {/* Manufacturing Process */}
