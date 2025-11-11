@@ -16,10 +16,12 @@ export default function PatekLayout({ children }: { children: React.ReactNode })
     <div className="bg-white text-gray-900">
       {/* Sous-barre Patek Philippe (sous la navbar HorloLearn) */}
       <nav
-        className={`sticky top-[90px] w-full z-30 backdrop-blur-md border-b border-gray-200 transition-all duration-300 ${
-          isScrolled ? 'bg-white/95 shadow-sm' : 'bg-white/80'
-        }`}
-      >
+  className={`fixed top-[90px] w-full z-40 border-b border-gray-200 transition-all duration-300 ${
+    isScrolled
+      ? 'bg-white/70 backdrop-blur-xl shadow-md'
+      : 'bg-white/40 backdrop-blur-md'
+  }`}
+>
         <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
           <Link 
   href="/theorie/manufactures/patek-philippe" 
