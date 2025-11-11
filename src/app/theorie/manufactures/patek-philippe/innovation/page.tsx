@@ -69,12 +69,20 @@ const futureTechs = [
   { icon: 'microchip', title: 'Nano-Mécatronique', status: 'PROTOTYPE', color: 'red', description: 'Intégration de systèmes nano-mécatroniques pour des complications intelligentes.', specLabel: 'Taille des composants', specValue: 'Nanométrique', progress: 96 }
 ];
 
-// Mapping des classes Tailwind pour les couleurs (évite les classes dynamiques)
+// ✅ CORRECTION #1 : Mapping statique pour les couleurs (Tailwind)
 const techColorClasses: Record<string, string> = {
   blue: 'from-blue-600 to-blue-700',
   purple: 'from-purple-600 to-purple-700',
   green: 'from-green-600 to-green-700',
   red: 'from-red-600 to-red-700',
+};
+
+// ✅ CORRECTION #2 : Mapping pour les badges de statut
+const statusBadgeClasses: Record<string, string> = {
+  'BÊTA': 'ai-indicator',
+  'R&D': 'quantum-indicator',
+  'ECO': 'bg-green-600',
+  'PROTOTYPE': 'bg-red-600',
 };
 
 const getCategoryColor = (category: string): string => {
@@ -624,6 +632,11 @@ export default function InnovationPage() {
           <div className="grid md:grid-cols-2 gap-8">
             {futureTechs.map((tech, idx) => {
               const colorClasses = techColorClasses[tech.color];
+              // Correction pour le badge de statut
+              const statusClass = tech.status === 'BÊTA' ? 'ai-indicator' : 
+                                 tech.status === 'R&D' ? 'quantum-indicator' :
+                                 tech.status === 'ECO' ? 'bg-green-600' : 'bg-red-600';
+              
               return (
                 <div key={idx} className="future-tech rounded-xl p-8 scroll-reveal">
                   <div className="flex items-center mb-6">
@@ -632,7 +645,7 @@ export default function InnovationPage() {
                     </div>
                     <div className="flex items-center">
                       <h3 className={`text-2xl font-bold text-white ${playfair.className}`}>{tech.title}</h3>
-                      <span className={`${tech.status === 'BÊTA' ? 'ai-indicator' : tech.status === 'R&D' ? 'quantum-indicator' : ''} bg-${tech.color}-600 text-white px-2 py-1 rounded text-xs font-semibold ml-2`}>
+                      <span className={`${statusClass} text-white px-2 py-1 rounded text-xs font-semibold ml-2`}>
                         {tech.status}
                       </span>
                     </div>
