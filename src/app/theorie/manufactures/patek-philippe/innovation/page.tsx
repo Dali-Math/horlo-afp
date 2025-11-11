@@ -54,7 +54,7 @@ const inventions = [
     ],
   },
 ];
-const getCategoryColor = (category) => {
+const getCategoryColor = (category: string): string => {
   switch (category) {
     case 'FONDATION':
       return 'bg-yellow-500';
