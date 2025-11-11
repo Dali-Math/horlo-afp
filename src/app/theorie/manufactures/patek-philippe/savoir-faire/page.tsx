@@ -587,7 +587,7 @@ export default function SavoirFairePage() {
       </section>
 
       {/* Section Savoir-Faire d'Exception - Version Premium Compacte */}
-      <span className="text-red-500 text-6xl font-bold">TEST</span>
+      <section className="relative py-16 bg-gradient-to-br from-slate-900 via-neutral-900 to-amber-950 overflow-hidden rounded-b-3xl shadow-2xl border-b border-yellow-700/20">
         {/* Halo doré subtil */}
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute left-1/2 -translate-x-1/2 top-0 w-full h-24 bg-gradient-to-r from-yellow-500/10 via-yellow-300/15 to-transparent blur-2xl opacity-30"></div>
