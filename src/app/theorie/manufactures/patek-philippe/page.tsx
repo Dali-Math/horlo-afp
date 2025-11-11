@@ -936,7 +936,7 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Collections Section - ACCORDÉON MODIFIÉE */}
+      {/* Collections Section - ACCORDÉON AVEC VRAIES IMAGES */}
       <section id="collections" className="section">
         <h2 className="section-title font-display">Collections Légendaires</h2>
         <div className="collections-grid">
