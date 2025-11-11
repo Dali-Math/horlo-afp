@@ -1,14 +1,14 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { legendaryCollections } from './data';
 
 export default function Page() {
   const vantaBgRef = useRef<HTMLDivElement>(null);
   const vantaEffectRef = useRef<any>(null);
+  const [expandedCollection, setExpandedCollection] = useState<string | null>(null);
 
   useEffect(() => {
-    // Load Three.js and Vanta.js scripts
     const loadScript = (src: string) => {
       return new Promise((resolve, reject) => {
         const script = document.createElement('script');
@@ -52,7 +52,6 @@ export default function Page() {
 
     initVanta();
 
-    // Parallax effect on VANTA bg
     const handleScroll = () => {
       const scrolled = window.pageYOffset;
       const parallax = vantaBgRef.current;
@@ -72,7 +71,6 @@ export default function Page() {
     };
   }, []);
 
-  // Hero animations and scroll effects
   useEffect(() => {
     const loadAnime = async () => {
       if (!(window as any).anime) {
@@ -92,7 +90,6 @@ export default function Page() {
     const initAnimations = () => {
       const anime = (window as any).anime;
       
-      // Hero animations
       anime({
         targets: '.hero-title',
         opacity: [0, 1],
@@ -129,7 +126,6 @@ export default function Page() {
         easing: 'easeOutQuart'
       });
 
-      // Timeline animations
       const timelineItems = document.querySelectorAll('.timeline-item');
       timelineItems.forEach((item: Element, index: number) => {
         anime({
@@ -142,7 +138,6 @@ export default function Page() {
         });
       });
 
-      // Collection cards animations
       const collectionCards = document.querySelectorAll('.collection-card');
       collectionCards.forEach((card: Element, index: number) => {
         anime({
@@ -155,7 +150,6 @@ export default function Page() {
         });
       });
 
-      // Innovation counters
       const innovationNumbers = document.querySelectorAll('.innovation-number');
       innovationNumbers.forEach((number: Element) => {
         const target = parseInt(number.getAttribute('data-count') || '0');
@@ -169,7 +163,6 @@ export default function Page() {
         });
       });
 
-      // Craft items animations
       const craftItems = document.querySelectorAll('.craft-item');
       craftItems.forEach((item: Element, index: number) => {
         anime({
@@ -186,7 +179,6 @@ export default function Page() {
     loadAnime();
   }, []);
 
-  // Scroll animations for sections
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
@@ -203,14 +195,12 @@ export default function Page() {
       });
     }, observerOptions);
 
-    // Observe section titles and other elements
     const sectionTitles = document.querySelectorAll('.section-title');
     sectionTitles.forEach(title => observer.observe(title));
 
     return () => observer.disconnect();
   }, []);
 
-  // Navigation scroll effect
   useEffect(() => {
     const handleNavScroll = () => {
       const nav = document.querySelector('.nav-container') as HTMLElement;
@@ -227,7 +217,6 @@ export default function Page() {
     return () => window.removeEventListener('scroll', handleNavScroll);
   }, []);
 
-  // Smooth scrolling for navigation links
   useEffect(() => {
     const handleAnchorClick = (e: Event) => {
       const anchor = e.currentTarget as HTMLAnchorElement;
@@ -256,7 +245,6 @@ export default function Page() {
     };
   }, []);
 
-  // Collection card hover effects
   useEffect(() => {
     const anime = (window as any).anime;
     if (!anime) return;
@@ -293,17 +281,8 @@ export default function Page() {
     };
   }, []);
 
-  // Helper function to map collection names to icons
-  const getCollectionIcon = (name: string) => {
-    const icons: { [key: string]: string } = {
-      'Calatrava': '⌚',
-      'Nautilus': '🏆',
-      'Aquanaut': '💎',
-      'Complications': '⚙️',
-      'Grandes Complications': '👑',
-      'Gondolo': '🎨'
-    };
-    return icons[name] || '⌚';
+  const toggleCollection = (name: string) => {
+    setExpandedCollection(expandedCollection === name ? null : name);
   };
 
   return (
@@ -568,6 +547,17 @@ export default function Page() {
           box-shadow: 0 30px 60px var(--shadow-dark);
         }
         
+        .collection-card.expanded {
+          grid-column: 1 / -1;
+          transform: none;
+          box-shadow: 0 30px 60px var(--shadow-dark);
+        }
+        
+        .collection-header {
+          cursor: pointer;
+          position: relative;
+        }
+        
         .collection-image {
           width: 100%;
           height: 250px;
@@ -575,12 +565,19 @@ export default function Page() {
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 3rem;
-          color: var(--white);
+          overflow: hidden;
+        }
+        
+        .collection-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          padding: 1.5rem;
         }
         
         .collection-content {
           padding: 2rem;
+          position: relative;
         }
         
         .collection-title {
@@ -618,6 +615,76 @@ export default function Page() {
           border-radius: 15px;
           font-size: 0.8rem;
           font-weight: 500;
+        }
+        
+        .expand-indicator {
+          position: absolute;
+          top: 2rem;
+          right: 2rem;
+          width: 32px;
+          height: 32px;
+          background: var(--gold);
+          color: var(--white);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          font-size: 1.2rem;
+          transition: all 0.3s ease;
+        }
+        
+        .collection-card:hover .expand-indicator {
+          background: var(--gold-dark);
+          transform: scale(1.1);
+        }
+        
+        .expanded-timeline {
+          padding: 0 2rem 2rem;
+          border-top: 1px solid rgba(212, 175, 55, 0.2);
+          margin-top: 1.5rem;
+          animation: slideDown 0.4s ease;
+        }
+        
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            max-height: 0;
+          }
+          to {
+            opacity: 1;
+            max-height: 500px;
+          }
+        }
+        
+        .timeline-title {
+          font-size: 1.3rem;
+          font-weight: 600;
+          color: var(--gold);
+          margin-bottom: 1.5rem;
+          margin-top: 1.5rem;
+        }
+        
+        .timeline-event {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 1rem;
+          padding: 1rem;
+          background: var(--cream);
+          border-radius: 12px;
+          border-left: 4px solid var(--gold);
+        }
+        
+        .timeline-year {
+          font-weight: 700;
+          color: var(--gold);
+          min-width: 80px;
+        }
+        
+        .timeline-description {
+          flex: 1;
+          color: var(--charcoal-light);
+          line-height: 1.6;
         }
         
         .innovation-section {
@@ -869,28 +936,53 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Collections Section */}
+      {/* Collections Section - ACCORDÉON MODIFIÉE */}
       <section id="collections" className="section">
         <h2 className="section-title font-display">Collections Légendaires</h2>
         <div className="collections-grid">
-          {legendaryCollections.map((collection, index) => (
+          {legendaryCollections.map((collection) => (
             <div 
-              className="collection-card" 
-              onClick={() => window.location.href = 'collections.html'}
+              className={`collection-card ${expandedCollection === collection.name ? 'expanded' : ''}`}
               key={collection.name}
             >
-              <div className="collection-image">
-                {getCollectionIcon(collection.name)}
-              </div>
-              <div className="collection-content">
-                <h3 className="collection-title">{collection.name}</h3>
-                <p className="collection-description">{collection.description}</p>
-                <div className="collection-since">Collection depuis {collection.since}</div>
-                <div className="collection-specs">
-                  <span className="spec-tag">{collection.fact}</span>
-                  <span className="spec-tag">{collection.context}</span>
+              <div className="collection-header" onClick={() => toggleCollection(collection.name)}>
+                <div className="collection-image">
+                  <img 
+                    src={collection.illustration} 
+                    alt={collection.name}
+                    style={{ 
+                      width: '100%', 
+                      height: '100%', 
+                      objectFit: 'contain',
+                      padding: '1.5rem'
+                    }}
+                  />
+                </div>
+                <div className="collection-content">
+                  <h3 className="collection-title">{collection.name}</h3>
+                  <p className="collection-description">{collection.description}</p>
+                  <div className="collection-since">Depuis {collection.since}</div>
+                  <div className="collection-specs">
+                    <span className="spec-tag">{collection.fact}</span>
+                    <span className="spec-tag">{collection.context}</span>
+                  </div>
+                  <div className="expand-indicator">
+                    {expandedCollection === collection.name ? '−' : '+'}
+                  </div>
                 </div>
               </div>
+
+              {expandedCollection === collection.name && (
+                <div className="expanded-timeline">
+                  <h4 className="timeline-title">Événements Historiques</h4>
+                  {collection.timeline.map((item, index) => (
+                    <div className="timeline-event" key={index}>
+                      <div className="timeline-year">{item.year}</div>
+                      <div className="timeline-description">{item.event}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>
