@@ -313,17 +313,25 @@ export default function HeritagePage() {
       `}</style>
         
         {/* Mobile Menu */}
-        <div className={`${mobileMenuOpen ? 'block' : 'hidden'} md:hidden bg-white border-t border-gray-200`}>
-          <div className="px-6 py-4 space-y-4">
-            <Link href="/theorie/manufactures/patek-philippe" className="block text-gray-700 hover:text-yellow-600">Accueil</Link>
-            <Link href="/theorie/manufactures/patek-philippe/collections" className="block text-gray-700 hover:text-yellow-600">Collections</Link>
-            <Link href="/theorie/manufactures/patek-philippe/heritage" className="block text-yellow-600 font-semibold">Patrimoine</Link>
-            <Link href="/theorie/manufactures/patek-philippe/savoir-faire" className="block text-gray-700 hover:text-yellow-600">Savoir-faire</Link>
-            <Link href="/theorie/manufactures/patek-philippe/innovation" className="block text-gray-700 hover:text-yellow-600">Innovation</Link>
-          </div>
-        </div>
-      </nav>
-
+<div className={`${mobileMenuOpen ? 'block' : 'hidden'} md:hidden bg-white border-t border-gray-200`}>
+  <div className="px-6 py-4 space-y-4">
+    <Link href="/theorie/manufactures/patek-philippe">
+      <span className="block text-gray-700 hover:text-yellow-600">Accueil</span>
+    </Link>
+    <Link href="/theorie/manufactures/patek-philippe/collections">
+      <span className="block text-gray-700 hover:text-yellow-600">Collections</span>
+    </Link>
+    <Link href="/theorie/manufactures/patek-philippe/heritage">
+      <span className="block text-yellow-600 font-semibold">Patrimoine</span>
+    </Link>
+    <Link href="/theorie/manufactures/patek-philippe/savoir-faire">
+      <span className="block text-gray-700 hover:text-yellow-600">Savoir-faire</span>
+    </Link>
+    <Link href="/theorie/manufactures/patek-philippe/innovation">
+      <span className="block text-gray-700 hover:text-yellow-600">Innovation</span>
+    </Link>
+  </div>
+</div>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <div ref={vantaBgRef} className="vanta-bg"></div>
