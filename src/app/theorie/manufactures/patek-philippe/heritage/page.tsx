@@ -1,54 +1,19 @@
 'use client'
-import VANTA from 'vanta'
-import WAVES from 'vanta/src/vanta.waves'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import Image from 'next/image'
 
-// Vanta/Three en npm, lazy-load via dynamic import
-const VantaWavesBG = dynamic(
-  async () => {
-    const THREE = await import('three')
-    const WAVES = (await import('vanta/dist/vanta.waves.min')).default
-    return function BG() {
-      const vantaRef = useRef<HTMLDivElement>(null)
-      const vantaEffect = useRef<any>(null)
-      useEffect(() => {
-        if (!vantaRef.current) return
-        vantaEffect.current = WAVES({
-          el: vantaRef.current,
-          THREE: THREE,
-          mouseControls: true,
-          touchControls: true,
-          minHeight: 200,
-          minWidth: 200,
-          color: 0x1a2332,
-          shininess: 30,
-          waveHeight: 15,
-          waveSpeed: 0.75,
-          zoom: 0.65,
-        })
-        return () => vantaEffect.current?.destroy()
-      }, [])
-      return <div ref={vantaRef} className="vanta-bg absolute inset-0 w-full h-full z-0" />
-    }
-  },
-  { ssr: false }
-)
+const VantaWavesBG = dynamic(() => import('../../../../../components/VantaWavesBackground'), { ssr: false })
 
 export default function HeritagePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    // Scroll reveal + timeline animation (simplifié!)
+    // Scroll reveal pour timeline et cards (animation simple)
     const revealEls = document.querySelectorAll('.scroll-reveal, .timeline-item')
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) entry.target.classList.add('revealed')
-        })
-      },
+      (entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('revealed') }) },
       { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
     )
     revealEls.forEach(el => observer.observe(el))
@@ -110,7 +75,7 @@ export default function HeritagePage() {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <VantaWavesBG />
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
-          <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">Notre<br/>Héritage</h1>
+          <h1 className="hero-title text-6xl md:text-8xl font-bold mb-6 leading-tight">Notre<br />Héritage</h1>
           <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
             Plus de 180 ans d'excellence horlogère, façonnés par la passion, l'innovation et le savoir-faire suisse
           </p>
@@ -125,11 +90,7 @@ export default function HeritagePage() {
           </div>
           <div className="timeline">
             {[
-              {
-                year: "1839", title: "Fondation de la Manufacture",
-                desc: "Antoine Norbert de Patek, officier polonais en exil, et François Czapek, horloger tchèque, fondent Patek, Czapek & Cie à Genève. Leur vision : créer des montres d'exception pour une clientèle d'élite.",
-                icon: "fa-map-marker-alt", tag: "Genève, Suisse"
-              },
+              { year: "1839", title: "Fondation de la Manufacture", desc: "Antoine Norbert de Patek, officier polonais en exil, et François Czapek, horloger tchèque, fondent Patek, Czapek & Cie à Genève.", icon: "fa-map-marker-alt", tag: "Genève, Suisse" },
               { year: "1845", title: "L'Invention Révolutionnaire", desc: "Jean Adrien Philippe apporte le remontoir à couronne.", icon: "fa-cog", tag: "Brevet du remontoir à couronne" },
               { year: "1851", title: "Naissance de Patek Philippe", desc: "Exposition à Londres, reconnaissance internationale.", icon: "fa-crown", tag: "Reconnaissance royale" },
               { year: "1868", title: "La Première Montre-bracelet", desc: "Première montre-bracelet pour la Comtesse Koscowicz.", icon: "fa-gem", tag: "Première montre-bracelet de luxe" },
@@ -138,7 +99,7 @@ export default function HeritagePage() {
               { year: "1976", title: "L'Ère du Sport de Luxe", desc: "Lancement du Nautilus, luxe sportif.", icon: "fa-anchor", tag: "Révolution du luxe sportif" },
               { year: "1989", title: "150 Ans d'Excellence", desc: "Calibre 89, montre la plus compliquée du monde.", icon: "fa-trophy", tag: "Record mondial" },
               { year: "1999", title: "La Twenty~4 pour Elle", desc: "Collection féminine Twenty~4.", icon: "fa-female", tag: "Horlogerie féminine" },
-              { year: "2014", title: "Innovation Perpétuelle", desc: "Calibre 1755, ultra-mince, répétition minutes.", icon: "fa-microchip", tag: "Technologie d'avant-garde"}
+              { year: "2014", title: "Innovation Perpétuelle", desc: "Calibre 1755, ultra-mince, répétition minutes.", icon: "fa-microchip", tag: "Technologie d'avant-garde" }
             ].map((item, idx) => (
               <div key={idx} className="timeline-item">
                 <div className="timeline-year">{item.year}</div>
@@ -153,9 +114,8 @@ export default function HeritagePage() {
           </div>
         </div>
       </section>
-      {/* Citation */}
-      <section className="quote-section py-20 text-white relative"
-        style={{ background: "linear-gradient(135deg,var(--deep-blue),var(--charcoal))" }}>
+      {/* Quote Section */}
+      <section className="quote-section py-20 text-white relative" style={{ background: "linear-gradient(135deg,var(--deep-blue),var(--charcoal))" }}>
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
           <div className="mb-8"><i className="fas fa-quote-left text-6xl text-yellow-600 opacity-50"></i></div>
           <blockquote className="quote-text mb-8">
@@ -188,7 +148,7 @@ export default function HeritagePage() {
           </div>
         </div>
       </section>
-      {/* Famille */}
+      {/* Family Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
