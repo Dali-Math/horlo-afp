@@ -21,10 +21,10 @@ export default function Page() {
     const initVanta = async () => {
       try {
         if (!(window as any).THREE) {
-          loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js ');
         }
         if (!(window as any).VANTA) {
-          loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js');
+          loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js ');
         }
         if (vantaBgRef.current && (window as any).VANTA) {
           vantaEffectRef.current = (window as any).VANTA.BIRDS({
