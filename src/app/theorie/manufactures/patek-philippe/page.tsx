@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+
 export const legendaryCollections = [
   {
     name: "Calatrava",
@@ -76,8 +77,7 @@ export const legendaryCollections = [
       { year: 2003, event: "Grand élargissement (rectangulaires, tonneau, etc.)" }
     ]
   }
-]
-
+];
 
 export default function Page() {
   const vantaBgRef = useRef<HTMLDivElement>(null);
@@ -368,6 +368,19 @@ export default function Page() {
       });
     };
   }, []);
+
+  // Helper function to map collection names to icons
+  const getCollectionIcon = (name: string) => {
+    const icons: { [key: string]: string } = {
+      'Calatrava': '⌚',
+      'Nautilus': '🏆',
+      'Aquanaut': '💎',
+      'Complications': '⚙️',
+      'Grandes Complications': '👑',
+      'Gondolo': '🎨'
+    };
+    return icons[name] || '⌚';
+  };
 
   return (
     <>
@@ -660,11 +673,12 @@ export default function Page() {
           margin-bottom: 1.5rem;
         }
         
-        .collection-price {
-          font-size: 1.2rem;
-          font-weight: 600;
-          color: var(--gold);
+        .collection-since {
+          font-size: 1rem;
+          font-weight: 500;
+          color: var(--gold-dark);
           margin-bottom: 1rem;
+          font-style: italic;
         }
         
         .collection-specs {
@@ -935,107 +949,26 @@ export default function Page() {
       <section id="collections" className="section">
         <h2 className="section-title font-display">Collections Légendaires</h2>
         <div className="collections-grid">
-          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
-            <div className="collection-image">⌚</div>
-            <div className="collection-content">
-              <h3 className="collection-title">Calatrava</h3>
-              <p className="collection-description">
-                L'essence même de l'élégance horlogère. Symbole intemporel du style Patek Philippe 
-                avec son design pur et ses lignes classiques.
-              </p>
-              <div className="collection-price">À partir de €25,000</div>
-              <div className="collection-specs">
-                <span className="spec-tag">Mouvement automatique</span>
-                <span className="spec-tag">Cadran émail</span>
-                <span className="spec-tag">Boîtier or</span>
+          {legendaryCollections.map((collection, index) => (
+            <div 
+              className="collection-card" 
+              onClick={() => window.location.href = 'collections.html'}
+              key={collection.name}
+            >
+              <div className="collection-image">
+                {getCollectionIcon(collection.name)}
+              </div>
+              <div className="collection-content">
+                <h3 className="collection-title">{collection.name}</h3>
+                <p className="collection-description">{collection.description}</p>
+                <div className="collection-since">Collection depuis {collection.since}</div>
+                <div className="collection-specs">
+                  <span className="spec-tag">{collection.fact}</span>
+                  <span className="spec-tag">{collection.context}</span>
+                </div>
               </div>
             </div>
-          </div>
-          
-          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
-            <div className="collection-image">🏆</div>
-            <div className="collection-content">
-              <h3 className="collection-title">Nautilus</h3>
-              <p className="collection-description">
-                L'icône du sport de luxe. Conçu par Gérald Genta, le Nautilus combine robustesse 
-                et élégance dans un design emblématique.
-              </p>
-              <div className="collection-price">À partir de €35,000</div>
-              <div className="collection-specs">
-                <span className="spec-tag">Étanche 120m</span>
-                <span className="spec-tag">Boîtier acier</span>
-                <span className="spec-tag">Bracelet intégré</span>
-              </div>
-            </div>
-          </div>
-          
-          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
-            <div className="collection-image">💎</div>
-            <div className="collection-content">
-              <h3 className="collection-title">Aquanaut</h3>
-              <p className="collection-description">
-                L'aventure moderne. Design contemporain avec bracelet Tropical innovant, 
-                parfait pour l'homme actif et élégant.
-              </p>
-              <div className="collection-price">À partir de €28,000</div>
-              <div className="collection-specs">
-                <span className="spec-tag">Bracelet caoutchouc</span>
-                <span className="spec-tag">Étanche 120m</span>
-                <span className="spec-tag">Design sportif</span>
-              </div>
-            </div>
-          </div>
-          
-          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
-            <div className="collection-image">⚙️</div>
-            <div className="collection-content">
-              <h3 className="collection-title">Complications</h3>
-              <p className="collection-description">
-                L'art de la complexité. Montres avec fonctions avancées alliant 
-                innovation technique et beauté esthétique.
-              </p>
-              <div className="collection-price">À partir de €45,000</div>
-              <div className="collection-specs">
-                <span className="spec-tag">Chronographe</span>
-                <span className="spec-tag">Calendrier</span>
-                <span className="spec-tag">Phase lune</span>
-              </div>
-            </div>
-          </div>
-          
-          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
-            <div className="collection-image">👑</div>
-            <div className="collection-content">
-              <h3 className="collection-title">Grandes Complications</h3>
-              <p className="collection-description">
-                Le sommet de l'horlogerie. Créations exceptionnelles avec plusieurs 
-                complications, représentant l'excellence absolue.
-              </p>
-              <div className="collection-price">À partir de €150,000</div>
-              <div className="collection-specs">
-                <span className="spec-tag">Sonnerie</span>
-                <span className="spec-tag">Répétition minutes</span>
-                <span className="spec-tag">Tourbillon</span>
-              </div>
-            </div>
-          </div>
-          
-          <div className="collection-card" onClick={() => window.location.href = 'collections.html'}>
-            <div className="collection-image">🎨</div>
-            <div className="collection-content">
-              <h3 className="collection-title">Gondolo</h3>
-              <p className="collection-description">
-                L'art déco revisité. Collection inspirée des années 1920 avec des 
-                formes géométriques audacieuses et un style raffiné.
-              </p>
-              <div className="collection-price">À partir de €30,000</div>
-              <div className="collection-specs">
-                <span className="spec-tag">Forme tonneau</span>
-                <span className="spec-tag">Design rétro</span>
-                <span className="spec-tag">Cadran guilloché</span>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
