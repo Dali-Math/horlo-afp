@@ -120,41 +120,6 @@ export default function CollectionsPage() {
 
   return (
     <>
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="text-2xl font-bold text-gray-900">
-              <Link href="/" className="nav-link">
-                <span className="text-yellow-600">Patek</span> Philippe
-              </Link>
-            </div>
-            <div className="hidden md:flex space-x-8">
-              <Link href="/" className="nav-link text-gray-700 hover:text-yellow-600">Accueil</Link>
-              <Link href="#" className="nav-link text-yellow-600 font-semibold">Collections</Link>
-              <Link href="/heritage" className="nav-link text-gray-700 hover:text-yellow-600">Patrimoine</Link>
-              <Link href="/craftsmanship" className="nav-link text-gray-700 hover:text-yellow-600">Savoir-faire</Link>
-              <Link href="/innovation" className="nav-link text-gray-700 hover:text-yellow-600">Innovation</Link>
-            </div>
-            <div className="md:hidden">
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-gray-700">
-                {mobileMenuOpen ? '✕' : '☰'}
-              </button>
-            </div>
-          </div>
-        </div>
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-200">
-            <div className="px-6 py-4 space-y-4">
-              <Link href="/" className="block text-gray-700 hover:text-yellow-600">Accueil</Link>
-              <Link href="#" className="block text-yellow-600 font-semibold">Collections</Link>
-              <Link href="/heritage" className="block text-gray-700 hover:text-yellow-600">Patrimoine</Link>
-              <Link href="/craftsmanship" className="block text-gray-700 hover:text-yellow-600">Savoir-faire</Link>
-              <Link href="/innovation" className="block text-gray-700 hover:text-yellow-600">Innovation</Link>
-            </div>
-          </div>
-        )}
-      </nav>
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ minHeight: '100vh' }}>
