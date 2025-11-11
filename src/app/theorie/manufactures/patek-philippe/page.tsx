@@ -76,7 +76,7 @@ export const legendaryCollections = [
       { year: 2003, event: "Grand élargissement (rectangulaires, tonneau, etc.)" }
     ]
   }
-];
+]
 
 
 export default function Page() {
