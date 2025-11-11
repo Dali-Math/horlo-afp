@@ -1,4 +1,5 @@
 'use client';
+
 import { useEffect, useRef } from "react";
 import React from "react";
 
@@ -12,7 +13,6 @@ export default function ManufacturesPage() {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
-
   useEffect(() => {
     // Chargement des scripts ECharts
     const loadScript = (src: string) => {
