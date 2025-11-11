@@ -4,21 +4,146 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import Image from 'next/image'
 
+// Composant dynamique Vanta Waves pour le background Hero
 const VantaWavesBG = dynamic(() => import('../../../../../components/VantaWavesBackground'), { ssr: false })
+
+// Timeline premium verticale alternée façon haute horlogerie
+function Timeline() {
+  const events = [
+    {
+      year: '1839',
+      title: 'Fondation de la Manufacture',
+      desc: "Antoine Norbert de Patek, officier polonais en exil, et François Czapek, horloger tchèque, fondent Patek, Czapek & Cie à Genève. Leur vision : créer des montres d'exception pour une clientèle d'élite.",
+      tag: 'Genève, Suisse',
+    },
+    {
+      year: '1845',
+      title: "L'Invention Révolutionnaire",
+      desc: "Jean Adrien Philippe rejoint l'entreprise et apporte son invention révolutionnaire : le remontoir à couronne. Cette innovation transforme l'industrie horlogère : base de la montre moderne.",
+      tag: 'Brevet du remontoir à couronne',
+    },
+    {
+      year: '1851',
+      title: 'Naissance de Patek Philippe',
+      desc: "Patek Philippe & Cie est officiellement créée. La même année, la manufacture expose à la Grande Exposition de Londres : reconnaissance internationale pour son excellence horlogère.",
+      tag: 'Reconnaissance royale',
+    },
+    {
+      year: '1868',
+      title: 'La Première Montre-bracelet',
+      desc: "Patek Philippe crée la première montre-bracelet avec remontoir à couronne pour la Comtesse Koscowicz de Hongrie. Début des montres-bracelets de luxe.",
+      tag: 'Première montre-bracelet de luxe',
+    },
+    {
+      year: '1889',
+      title: 'Le Calibre à Répétition',
+      desc: "La manufacture développe un calibre à répétition minutes avec mécanisme breveté. Devenue une spécialité emblématique.",
+      tag: 'Brevet de la sonnerie',
+    },
+    {
+      year: '1932',
+      title: 'La Calatrava est Née',
+      desc: "Introduction de la célèbre Calatrava, au design pur devenu étendard de l'élégance classique horlogère et référence du style intemporel.",
+      tag: 'Design iconique',
+    },
+    {
+      year: '1976',
+      title: "L'Ère du Sport de Luxe",
+      desc: "Lancement du Nautilus, conçu par Gérald Genta. Cette montre sportive en acier révolutionne le luxe sportif.",
+      tag: 'Révolution du luxe sportif',
+    },
+    {
+      year: '1989',
+      title: "150 Ans d'Excellence",
+      desc: "Pour les 150 ans, création du Calibre 89 : 33 complications, alors la montre la plus complexe au monde.",
+      tag: 'Record mondial',
+    },
+    {
+      year: '1999',
+      title: 'La Twenty~4 pour Elle',
+      desc: "Lancement de la collection Twenty~4 pour femmes. Allie élégance moderne et mécanique de haute précision.",
+      tag: "Horlogerie féminine",
+    },
+    {
+      year: '2014',
+      title: 'Innovation Perpétuelle',
+      desc: "Présentation du calibre 1755, l’un des mouvements les plus minces jamais créés pour répétition minutes.",
+      tag: "Technologie d'avant-garde",
+    },
+  ]
+
+  useEffect(() => {
+    // Reveal animation only for timeline
+    const els = document.querySelectorAll('.timeline-fancy-item')
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('revealed')
+        })
+      },
+      { threshold: 0.2 }
+    )
+    els.forEach(el => observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <section className="py-20 bg-white">
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-3 tracking-tight">Chronologie d'Excellence</h2>
+          <p className="text-xl text-gray-600">Les moments qui ont défini l'histoire de Patek Philippe</p>
+        </div>
+        <div className="relative">
+          {/* Ligne centrale */}
+          <div className="hidden md:block absolute left-1/2 top-0 h-full w-2 -translate-x-1/2 z-0 rounded bg-gradient-to-b from-yellow-500 via-yellow-200 to-yellow-500/0" />
+          <ol className="relative">
+            {events.map((event, i) => (
+              <li
+                key={event.year}
+                className={`timeline-fancy-item mb-20 md:mb-0 grid md:grid-cols-2 items-center 
+                  ${i % 2 === 0 ? 'md:pr-10' : 'md:pl-10'} 
+                  ${i === events.length - 1 ? '' : ''}`}
+                style={{ position: 'relative' }}
+              >
+                {/* Année + marqueur */}
+                <div className={`md:absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 z-10 flex flex-col items-center ${i % 2 === 0 ? 'md:col-start-2' : 'md:col-start-1'} `}>
+                  <span className="block h-12 w-12 rounded-full shadow-lg ring-2 ring-yellow-500 bg-white flex items-center justify-center font-bold text-yellow-600 text-xl border-4 border-yellow-400">
+                    {event.year}
+                  </span>
+                  <span className="block w-0.5 h-24 bg-gradient-to-b from-yellow-400 to-transparent hidden md:block" />
+                </div>
+                {/* Carte à gauche/droite */}
+                <div className={`relative md:w-[85%] mx-auto ${i % 2 === 0 ? 'md:col-start-1 text-right' : 'md:col-start-2 text-left'}`}>
+                  <div className="bg-white shadow-xl border-l-8 border-yellow-400 rounded-xl px-7 py-5 my-7 max-w-xl mx-auto
+                    transition-all duration-300 hover:scale-[1.025] hover:shadow-2xl">
+                    <h3 className="text-2xl font-extrabold mb-2 text-gray-900 tracking-tight">{event.title}</h3>
+                    <p className="text-gray-600 mb-2">{event.desc}</p>
+                    <div className="text-yellow-600 font-semibold">{event.tag}</div>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+      <style jsx>{`
+        .timeline-fancy-item {
+          opacity: 0;
+          transform: translateY(45px);
+          transition: all .75s cubic-bezier(.23,1.02,.26,.98);
+        }
+        .timeline-fancy-item.revealed {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      `}</style>
+    </section>
+  )
+}
 
 export default function HeritagePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-  useEffect(() => {
-    // Scroll reveal pour timeline et cards (animation simple)
-    const revealEls = document.querySelectorAll('.scroll-reveal, .timeline-item')
-    const observer = new IntersectionObserver(
-      (entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('revealed') }) },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-    )
-    revealEls.forEach(el => observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
 
   return (
     <>
@@ -36,29 +161,6 @@ export default function HeritagePage() {
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
-        }
-        .vanta-bg { will-change: transform; }
-        .scroll-reveal, .timeline-item {
-          opacity: 0; transform: translateY(30px); transition: all .6s;
-        }
-        .scroll-reveal.revealed, .timeline-item.revealed {
-          opacity: 1; transform: translateY(0);
-        }
-        .timeline { position: relative; }
-        .timeline::before {
-          content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 3px;
-          background: linear-gradient(to bottom, var(--gold), rgba(212,175,55,0.3));
-          transform: translateX(-50%);
-        }
-        .timeline-marker {
-          position: absolute; left: 50%; top: 2rem; width: 20px; height: 20px;
-          background: var(--gold); border: 4px solid white; border-radius: 50%;
-          transform: translateX(-50%); z-index: 10; box-shadow: 0 0 0 4px rgba(212,175,55,0.2);
-        }
-        .timeline-year {
-          position: absolute; left: 50%; top: 0; background: var(--gold); color: white;
-          padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold;
-          transform: translateX(-50%); z-index: 5;
         }
       `}</style>
       {/* Menu mobile */}
@@ -81,39 +183,10 @@ export default function HeritagePage() {
           </p>
         </div>
       </section>
-      {/* Timeline */}
-      <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-16 scroll-reveal">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Chronologie d'Excellence</h2>
-            <p className="text-xl text-gray-600">Les moments qui ont défini l'histoire de Patek Philippe</p>
-          </div>
-          <div className="timeline">
-            {[
-              { year: "1839", title: "Fondation de la Manufacture", desc: "Antoine Norbert de Patek, officier polonais en exil, et François Czapek, horloger tchèque, fondent Patek, Czapek & Cie à Genève.", icon: "fa-map-marker-alt", tag: "Genève, Suisse" },
-              { year: "1845", title: "L'Invention Révolutionnaire", desc: "Jean Adrien Philippe apporte le remontoir à couronne.", icon: "fa-cog", tag: "Brevet du remontoir à couronne" },
-              { year: "1851", title: "Naissance de Patek Philippe", desc: "Exposition à Londres, reconnaissance internationale.", icon: "fa-crown", tag: "Reconnaissance royale" },
-              { year: "1868", title: "La Première Montre-bracelet", desc: "Première montre-bracelet pour la Comtesse Koscowicz.", icon: "fa-gem", tag: "Première montre-bracelet de luxe" },
-              { year: "1889", title: "Le Calibre à Répétition", desc: "Calibre de répétition minutes breveté.", icon: "fa-music", tag: "Brevet de la sonnerie" },
-              { year: "1932", title: "La Calatrava est Née", desc: "Naissance du design intemporel Calatrava.", icon: "fa-star", tag: "Design iconique" },
-              { year: "1976", title: "L'Ère du Sport de Luxe", desc: "Lancement du Nautilus, luxe sportif.", icon: "fa-anchor", tag: "Révolution du luxe sportif" },
-              { year: "1989", title: "150 Ans d'Excellence", desc: "Calibre 89, montre la plus compliquée du monde.", icon: "fa-trophy", tag: "Record mondial" },
-              { year: "1999", title: "La Twenty~4 pour Elle", desc: "Collection féminine Twenty~4.", icon: "fa-female", tag: "Horlogerie féminine" },
-              { year: "2014", title: "Innovation Perpétuelle", desc: "Calibre 1755, ultra-mince, répétition minutes.", icon: "fa-microchip", tag: "Technologie d'avant-garde" }
-            ].map((item, idx) => (
-              <div key={idx} className="timeline-item">
-                <div className="timeline-year">{item.year}</div>
-                <div className="timeline-marker"></div>
-                <div className="timeline-content"><div className="bg-white p-6 rounded-lg shadow-lg">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">{item.title}</h3>
-                  <p className="text-gray-600 mb-4">{item.desc}</p>
-                  <div className="flex items-center text-yellow-600"><i className={`fas ${item.icon} mr-2`}></i><span>{item.tag}</span></div>
-                </div></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
+      {/* Timeline luxe */}
+      <Timeline />
+
       {/* Quote Section */}
       <section className="quote-section py-20 text-white relative" style={{ background: "linear-gradient(135deg,var(--deep-blue),var(--charcoal))" }}>
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
