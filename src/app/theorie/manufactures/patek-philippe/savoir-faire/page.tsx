@@ -45,34 +45,281 @@ export default function CraftsmanshipPage() {
     
     mobileMenuBtn?.addEventListener('click', handleMobileMenu);
 
-    // Video play function
-    const playVideo = () => {
-      const videoContainer = document.querySelector('.video-container');
-      const placeholder = document.querySelector('.video-placeholder');
+    // 3D Watch Assembly Animation
+    const canvas = document.getElementById('watchCanvas') as HTMLCanvasElement;
+    if (canvas) {
+      const scene = new (window as any).THREE.Scene();
+      scene.background = new (window as any).THREE.Color(0x1f2937);
       
-      if (placeholder && videoContainer) {
-        // Create iframe for YouTube video
-        const iframe = document.createElement('iframe');
-        iframe.src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1';
-        iframe.width = '100%';
-        iframe.height = '100%';
-        iframe.frameBorder = '0';
-        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-        iframe.allowFullscreen = true;
-        iframe.style.position = 'absolute';
-        iframe.style.top = '0';
-        iframe.style.left = '0';
-        iframe.style.borderRadius = '1rem';
-        
-        // Replace placeholder with video
-        (placeholder as HTMLElement).style.display = 'none';
-        videoContainer.appendChild(iframe);
+      const camera = new (window as any).THREE.PerspectiveCamera(
+        45,
+        canvas.clientWidth / canvas.clientHeight,
+        0.1,
+        1000
+      );
+      camera.position.set(0, 0, 10);
+      
+      const renderer = new (window as any).THREE.WebGLRenderer({ 
+        canvas,
+        antialias: true,
+        alpha: true 
+      });
+      renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+      renderer.shadowMap.enabled = true;
+      
+      // Lighting
+      const ambientLight = new (window as any).THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
+      
+      const mainLight = new (window as any).THREE.DirectionalLight(0xffffff, 0.8);
+      mainLight.position.set(5, 10, 7);
+      mainLight.castShadow = true;
+      scene.add(mainLight);
+      
+      const rimLight = new (window as any).THREE.PointLight(0xd4af37, 1, 100);
+      rimLight.position.set(-5, 5, 5);
+      scene.add(rimLight);
+      
+      // Create watch components
+      const watchGroup = new (window as any).THREE.Group();
+      
+      // Base/Case
+      const caseGeometry = new (window as any).THREE.CylinderGeometry(2, 2, 0.5, 32);
+      const caseMaterial = new (window as any).THREE.MeshStandardMaterial({ 
+        color: 0xc0c0c0,
+        metalness: 0.9,
+        roughness: 0.1
+      });
+      const watchCase = new (window as any).THREE.Mesh(caseGeometry, caseMaterial);
+      watchCase.castShadow = true;
+      watchCase.userData = { explodeOffset: new (window as any).THREE.Vector3(0, -2, 0) };
+      watchGroup.add(watchCase);
+      
+      // Movement/Mechanism
+      const movementGeometry = new (window as any).THREE.CylinderGeometry(1.8, 1.8, 0.3, 32);
+      const movementMaterial = new (window as any).THREE.MeshStandardMaterial({ 
+        color: 0xd4af37,
+        metalness: 0.8,
+        roughness: 0.2
+      });
+      const movement = new (window as any).THREE.Mesh(movementGeometry, movementMaterial);
+      movement.position.y = 0.4;
+      movement.castShadow = true;
+      movement.userData = { explodeOffset: new (window as any).THREE.Vector3(0, 2, 0) };
+      watchGroup.add(movement);
+      
+      // Gears (multiple small gears)
+      const gearGeometry = new (window as any).THREE.CylinderGeometry(0.3, 0.3, 0.1, 8);
+      const gearMaterial = new (window as any).THREE.MeshStandardMaterial({ 
+        color: 0xffd700,
+        metalness: 0.9,
+        roughness: 0.1
+      });
+      
+      const gearPositions = [
+        { x: -0.8, y: 0.5, z: 0.5 },
+        { x: 0.8, y: 0.5, z: 0.5 },
+        { x: 0, y: 0.5, z: -0.8 },
+        { x: -0.5, y: 0.5, z: -0.3 },
+        { x: 0.5, y: 0.5, z: 0.3 }
+      ];
+      
+      gearPositions.forEach((pos, index) => {
+        const gear = new (window as any).THREE.Mesh(gearGeometry, gearMaterial);
+        gear.position.set(pos.x, pos.y, pos.z);
+        gear.rotation.x = Math.PI / 2;
+        gear.castShadow = true;
+        gear.userData = { 
+          explodeOffset: new (window as any).THREE.Vector3(pos.x * 2, 3, pos.z * 2),
+          rotationSpeed: 0.02 * (index % 2 === 0 ? 1 : -1)
+        };
+        watchGroup.add(gear);
+      });
+      
+      // Dial
+      const dialGeometry = new (window as any).THREE.CylinderGeometry(1.9, 1.9, 0.05, 32);
+      const dialMaterial = new (window as any).THREE.MeshStandardMaterial({ 
+        color: 0xf8f6f0,
+        metalness: 0.1,
+        roughness: 0.8
+      });
+      const dial = new (window as any).THREE.Mesh(dialGeometry, dialMaterial);
+      dial.position.y = 0.75;
+      dial.castShadow = true;
+      dial.userData = { explodeOffset: new (window as any).THREE.Vector3(0, 4, 0) };
+      watchGroup.add(dial);
+      
+      // Hour markers
+      for (let i = 0; i < 12; i++) {
+        const markerGeometry = new (window as any).THREE.BoxGeometry(0.1, 0.2, 0.02);
+        const markerMaterial = new (window as any).THREE.MeshStandardMaterial({ 
+          color: 0xd4af37,
+          metalness: 0.8
+        });
+        const marker = new (window as any).THREE.Mesh(markerGeometry, markerMaterial);
+        const angle = (i / 12) * Math.PI * 2;
+        marker.position.set(
+          Math.sin(angle) * 1.5,
+          0.8,
+          Math.cos(angle) * 1.5
+        );
+        marker.rotation.y = -angle;
+        marker.userData = { explodeOffset: new (window as any).THREE.Vector3(0, 4, 0) };
+        watchGroup.add(marker);
       }
-    };
-
-    // Attach video play to placeholder
-    const videoPlaceholder = document.querySelector('.video-placeholder');
-    videoPlaceholder?.addEventListener('click', playVideo);
+      
+      // Watch hands
+      const hourHandGeometry = new (window as any).THREE.BoxGeometry(0.08, 0.8, 0.03);
+      const minuteHandGeometry = new (window as any).THREE.BoxGeometry(0.06, 1.2, 0.03);
+      const handMaterial = new (window as any).THREE.MeshStandardMaterial({ 
+        color: 0x2c2c2c,
+        metalness: 0.5
+      });
+      
+      const hourHand = new (window as any).THREE.Mesh(hourHandGeometry, handMaterial);
+      hourHand.position.set(0, 0.85, 0.4);
+      hourHand.rotation.z = Math.PI / 6;
+      hourHand.userData = { explodeOffset: new (window as any).THREE.Vector3(0, 5, 0) };
+      watchGroup.add(hourHand);
+      
+      const minuteHand = new (window as any).THREE.Mesh(minuteHandGeometry, handMaterial);
+      minuteHand.position.set(0, 0.85, 0.6);
+      minuteHand.rotation.z = Math.PI / 3;
+      minuteHand.userData = { explodeOffset: new (window as any).THREE.Vector3(0, 5.5, 0) };
+      watchGroup.add(minuteHand);
+      
+      // Crystal/Glass
+      const crystalGeometry = new (window as any).THREE.CylinderGeometry(2.05, 2.05, 0.1, 32);
+      const crystalMaterial = new (window as any).THREE.MeshPhysicalMaterial({ 
+        color: 0xffffff,
+        metalness: 0,
+        roughness: 0,
+        transmission: 0.9,
+        thickness: 0.5,
+        transparent: true,
+        opacity: 0.3
+      });
+      const crystal = new (window as any).THREE.Mesh(crystalGeometry, crystalMaterial);
+      crystal.position.y = 1;
+      crystal.userData = { explodeOffset: new (window as any).THREE.Vector3(0, 6, 0) };
+      watchGroup.add(crystal);
+      
+      scene.add(watchGroup);
+      
+      // Animation state
+      let isRotating = true;
+      let isExploded = false;
+      let componentCount = 0;
+      let targetCount = 250;
+      
+      // Mouse controls
+      let isDragging = false;
+      let previousMousePosition = { x: 0, y: 0 };
+      
+      canvas.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      });
+      
+      canvas.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+          const deltaX = e.clientX - previousMousePosition.x;
+          const deltaY = e.clientY - previousMousePosition.y;
+          
+          watchGroup.rotation.y += deltaX * 0.01;
+          watchGroup.rotation.x += deltaY * 0.01;
+          
+          previousMousePosition = { x: e.clientX, y: e.clientY };
+        }
+      });
+      
+      canvas.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+      
+      canvas.addEventListener('mouseleave', () => {
+        isDragging = false;
+      });
+      
+      // Button controls
+      const rotateBtn = document.getElementById('rotateBtn');
+      const explodeBtn = document.getElementById('explodeBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      
+      rotateBtn?.addEventListener('click', () => {
+        isRotating = !isRotating;
+        if (rotateBtn) {
+          rotateBtn.classList.toggle('bg-yellow-600');
+          rotateBtn.classList.toggle('bg-gray-700');
+        }
+      });
+      
+      explodeBtn?.addEventListener('click', () => {
+        isExploded = !isExploded;
+      });
+      
+      resetBtn?.addEventListener('click', () => {
+        watchGroup.rotation.set(0, 0, 0);
+        isExploded = false;
+        isRotating = true;
+        if (rotateBtn) {
+          rotateBtn.classList.add('bg-yellow-600');
+          rotateBtn.classList.remove('bg-gray-700');
+        }
+      });
+      
+      // Animation loop
+      const animate = () => {
+        requestAnimationFrame(animate);
+        
+        if (isRotating && !isDragging) {
+          watchGroup.rotation.y += 0.005;
+        }
+        
+        // Animate gears
+        watchGroup.children.forEach((child: any) => {
+          if (child.userData.rotationSpeed) {
+            child.rotation.z += child.userData.rotationSpeed;
+          }
+          
+          // Explode/implode animation
+          if (child.userData.explodeOffset) {
+            const targetPos = isExploded ? child.userData.explodeOffset : new (window as any).THREE.Vector3(0, child.position.y > 0.9 ? child.position.y : 0, 0);
+            if (child.position.y < 0.9 || isExploded) {
+              child.position.x += (targetPos.x - child.position.x) * 0.05;
+              child.position.z += (targetPos.z - child.position.z) * 0.05;
+            }
+            if (isExploded) {
+              child.position.y += (targetPos.y - child.position.y) * 0.05;
+            }
+          }
+        });
+        
+        // Update component count
+        if (componentCount < targetCount) {
+          componentCount += 2;
+          const countEl = document.getElementById('componentCount');
+          if (countEl) {
+            countEl.textContent = `${Math.min(componentCount, targetCount)}/250`;
+          }
+        }
+        
+        renderer.render(scene, camera);
+      };
+      
+      animate();
+      
+      // Handle window resize
+      const handleResize = () => {
+        if (canvas) {
+          camera.aspect = canvas.clientWidth / canvas.clientHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+        }
+      };
+      
+      window.addEventListener('resize', handleResize);
+    }
 
     // Scroll reveal animation
     const observerOptions = {
@@ -126,7 +373,6 @@ export default function CraftsmanshipPage() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
       mobileMenuBtn?.removeEventListener('click', handleMobileMenu);
-      videoPlaceholder?.removeEventListener('click', playVideo);
       if (vantaInstance) {
         vantaInstance.destroy();
       }
@@ -316,57 +562,6 @@ export default function CraftsmanshipPage() {
           100% { transform: translateX(100%); }
         }
         
-        .video-container {
-          position: relative;
-          width: 100%;
-          height: 0;
-          padding-bottom: 56.25%;
-          background: #000;
-          border-radius: 1rem;
-          overflow: hidden;
-        }
-        
-        .video-placeholder {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(135deg, var(--deep-blue), var(--charcoal));
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-        
-        .video-placeholder:hover {
-          background: linear-gradient(135deg, var(--charcoal), var(--deep-blue));
-        }
-        
-        .play-button {
-          width: 80px;
-          height: 80px;
-          background: var(--gold);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
-          transition: all 0.3s ease;
-        }
-        
-        .play-button:hover {
-          transform: scale(1.1);
-          box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
-        }
-        
-        .play-button i {
-          color: white;
-          font-size: 2rem;
-          margin-left: 4px;
-        }
-        
         @media (max-width: 768px) {
           .process-line {
             display: none;
@@ -519,207 +714,4 @@ export default function CraftsmanshipPage() {
           
           <div className="grid md:grid-cols-3 gap-8">
             <div className="craft-card rounded-xl p-8 scroll-reveal">
-              <div className="w-20 h-20 bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i className="fas fa-cogs text-3xl text-white"></i>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Mécanique Fine</h3>
-              <p className="text-gray-600 text-center mb-6">
-                La création de mouvements mécaniques complexes avec des complications 
-                sophistiquées qui repoussent les limites de l'ingénierie horlogère.
-              </p>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Précision</span>
-                  <span className="text-sm font-semibold text-gray-900">99.99%</span>
-                </div>
-                <div className="mastery-indicator">
-                  <div className="mastery-progress" style={{ width: '100%' }}></div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="craft-card rounded-xl p-8 scroll-reveal">
-              <div className="w-20 h-20 bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i className="fas fa-gem text-3xl text-white"></i>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Joaillerie</h3>
-              <p className="text-gray-600 text-center mb-6">
-                Le sertissage de diamants et pierres précieuses avec une précision 
-                exceptionnelle, transformant chaque montre en une œuvre d'art précieuse.
-              </p>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Qualité</span>
-                  <span className="text-sm font-semibold text-gray-900">IF/VVS</span>
-                </div>
-                <div className="mastery-indicator">
-                  <div className="mastery-progress" style={{ width: '95%' }}></div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="craft-card rounded-xl p-8 scroll-reveal">
-              <div className="w-20 h-20 bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i className="fas fa-palette text-3xl text-white"></i>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Arts Décoratifs</h3>
-              <p className="text-gray-600 text-center mb-6">
-                Les techniques traditionnelles de décoration comme le guillochage, 
-                l'émail et la gravure qui donnent à chaque montre son caractère unique.
-              </p>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Complexité</span>
-                  <span className="text-sm font-semibold text-gray-900">Master</span>
-                </div>
-                <div className="mastery-indicator">
-                  <div className="mastery-progress" style={{ width: '90%' }}></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Video Section */}
-      <section className="py-20 bg-gray-900 text-white">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="text-center mb-12 scroll-reveal">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">L'Artisanat en Action</h2>
-            <p className="text-xl text-gray-300">
-              Découvrez l'intérieur de l'atelier Patek Philippe et observez nos maîtres horlogers à l'œuvre
-            </p>
-          </div>
-          
-          <div className="video-container scroll-reveal">
-            <div className="video-placeholder">
-              <div className="play-button">
-                <i className="fas fa-play"></i>
-              </div>
-            </div>
-          </div>
-          
-          <div className="text-center mt-8 scroll-reveal">
-            <p className="text-gray-400">
-              Chaque montre nécessite en moyenne 9 mois de fabrication et l'intervention de 50 artisans spécialisés
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Quality Standards */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="scroll-reveal">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Standards de Qualité</h2>
-              <p className="text-xl text-gray-600 mb-8">
-                Chaque montre Patek Philippe doit répondre à des critères de qualité exceptionnels 
-                avant d'être certifiée et livrée à nos clients.
-              </p>
-              
-              <div className="space-y-6">
-                <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <i className="fas fa-check text-white text-sm"></i>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Tests de Précision</h4>
-                    <p className="text-gray-600">24 jours de tests chronométriques rigoureux</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <i className="fas fa-check text-white text-sm"></i>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Contrôle Esthétique</h4>
-                    <p className="text-gray-600">Inspection minutieuse de chaque détail visuel</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <i className="fas fa-check text-white text-sm"></i>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Tests d'Étanchéité</h4>
-                    <p className="text-gray-600">Vérification de la résistance à l'eau et à l'humidité</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <i className="fas fa-check text-white text-sm"></i>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Certification Finale</h4>
-                    <p className="text-gray-600">Poinçon Patek Philippe et certificat d'authenticité</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="scroll-reveal">
-              <div className="relative">
-                <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&h=600&fit=crop" 
-                     alt="Contrôle qualité" 
-                     className="rounded-lg shadow-2xl w-full" />
-                <div className="absolute top-4 right-4 bg-yellow-600 text-white px-4 py-2 rounded-lg">
-                  <div className="text-sm font-semibold">Certifié</div>
-                  <div className="text-xs">Patek Philippe</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="py-20 bg-gray-900 text-white">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">Vivez l'Expérience du Savoir-Faire</h2>
-          <p className="text-xl text-gray-300 mb-8">
-            Visitez notre manufacture à Genève et découvrez l'artisanat exceptionnel qui donne vie à chaque montre
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-yellow-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-yellow-700 transition-all duration-300 transform hover:scale-105">
-              Réserver une visite
-            </button>
-            <button onClick={() => window.location.href = 'innovation.html'} className="border-2 border-yellow-600 text-yellow-600 px-8 py-4 rounded-full font-semibold hover:bg-yellow-600 hover:text-white transition-all duration-300">
-              Découvrir l'innovation
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center">
-            <div className="text-3xl font-bold mb-4">
-              <span className="text-yellow-600">Patek</span> Philippe
-            </div>
-            <p className="text-gray-400 mb-6">La référence mondiale en horlogerie suisse</p>
-            <div className="flex justify-center space-x-6 mb-8">
-              <a href="#" className="text-gray-400 hover:text-yellow-600 transition-colors">
-                <i className="fab fa-instagram text-xl"></i>
-              </a>
-              <a href="#" className="text-gray-400 hover:text-yellow-600 transition-colors">
-                <i className="fab fa-facebook text-xl"></i>
-              </a>
-              <a href="#" className="text-gray-400 hover:text-yellow-600 transition-colors">
-                <i className="fab fa-twitter text-xl"></i>
-              </a>
-              <a href="#" className="text-gray-400 hover:text-yellow-600 transition-colors">
-                <i className="fab fa-youtube text-xl"></i>
-              </a>
-            </div>
-            <div className="border-t border-gray-800 pt-6">
-              <p className="text-gray-500 text-sm">
-                © 2024 Patek Philippe. Tous droits réservés. | Référence Mondiale en Horlogerie Suisse
-              </p>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-}
+              <div className="w-20 h-20 bg-gradient-to-br from-yellow-600
