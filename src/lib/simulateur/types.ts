@@ -1,24 +1,41 @@
-
-
-export interface MouvementSpecs {
+export interface TechnicalSpecs {
   name: string;
-  frequency: number;
-  ampNorm: number;
-  powerReserve: number;
-  positions: number[];
-  tempCoef: number;
-  hairspring: string;
-  regulator: string;
-  beatRate: 18000 | 21600 | 25200 | 28800 | 36000;
-  jewels: number;
-  diameter: number;
-  height: number;
-  dateAdded: string;
-  category: 'automatic' | 'manual' | 'chronograph' | 'perpetual' | 'tourbillon';
+  frequency: number; // Hz
+  ampNorm: number; // Degrés
+  powerReserve: number; // Heures
+  positions: number[]; // Déviations par position (s/j)
+  tempCoef: number; // s/j par °C
+  beatRate: number; // A/h
+  category: 'automatic' | 'manual' | 'chronograph' | 'tourbillon';
+  jewels?: number;
+  diameter?: number;
+  height?: number;
 }
 
-export interface SimulationInputs {
-  specs: MouvementSpecs;
+export interface MagnetismResult {
+  level: number;
+  amplitudeLoss: number;
+  beatRateDeviation: number;
+  recommendedAction: 'none' | 'warning' | 'critical';
+  diagnostic: string;
+}
+
+export interface ImpactResult {
+  amplitudeDrop: number; // %
+  pivotDeformation: number; // mm
+  jewelDamage: 'none' | 'warning' | 'critical';
+  escapementShift: number; // microns
+  recommendedAction: string;
+}
+
+export interface AcousticAnalysis {
+  rotorNoise: number; // dB
+  beatIrregularity: number; // CV
+  tickingAmplitude: number; // dB
+  anomalies: string[];
+}
+
+export interface SimulationData {
   amplitude: number;
   beatError: number;
   gain: number;
@@ -27,37 +44,12 @@ export interface SimulationInputs {
   age: number;
   pivotWear: number;
   mainspringWear: number;
+  magnetismLevel: number;
+  magneticField: number;
 }
 
-export interface SimulationResults {
-  isochronismError: number;
-  isochronismStatus: 'status-ok' | 'status-warning' | 'status-critical';
-  amplitudeLoss: number;
-  positionDeviation: number;
-  huygensScore: number;
-  huygensStatus: 'status-ok' | 'status-warning' | 'status-critical';
-  beatImpact: number;
-  tempImpact: number;
-  dynamicError: number;
-  totalDeviation: number;
-  deviationStatus: 'status-ok' | 'status-warning' | 'status-critical';
-  powerLoss: number;
-  effectiveReserve: number;
-}
-
+export type DiagnosticLevel = 'ok' | 'warning' | 'critical';
 export interface Diagnostic {
-  level: 'critical' | 'warning' | 'ok';
+  level: DiagnosticLevel;
   text: string;
-}
-
-export interface SimulationData {
-  amplitude: number;
-  amplitudeLoss: number;
-  beatError: number;
-  pivotWear: number;
-  msWear: number;
-  age: number;
-  totalDeviation: number;
-  isochronismError: number;
-  huygensScore: number;
 }
