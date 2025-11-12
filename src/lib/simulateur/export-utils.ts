@@ -1,7 +1,7 @@
 import type { TechnicalSpecs, SimulationResults, Diagnostic } from './types';
 
 interface ExportData {
-  specs: MouvementSpecs;
+  specs: TechnicalSpecs;
   inputs: {
     amplitude: number;
     beatError: number;
