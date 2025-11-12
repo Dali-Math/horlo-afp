@@ -7,7 +7,7 @@ import MOUVEMENTS_DB, { MouvementSpecs } from '@/lib/simulateur/database';
 type Diagnostic = { level: 'ok' | 'warning' | 'critical'; text: string };
 
 export default function SimulateurResonance3D() {
-  // États
+  // États React (identiques)
   const [calibre, setCalibre] = useState<keyof typeof MOUVEMENTS_DB>('eta2824');
   const [amplitude, setAmplitude] = useState(310);
   const [beatError, setBeatError] = useState(0.2);
@@ -44,7 +44,7 @@ export default function SimulateurResonance3D() {
   const [animationRunning, setAnimationRunning] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Initialisation Three.js
+  // ✅ **Initialisation Three.js - CORRIGÉE**
   useEffect(() => {
     if (!canvasRef.current || !containerRef.current) return;
     const container = containerRef.current;
@@ -67,8 +67,7 @@ export default function SimulateurResonance3D() {
     scene.add(dirLight);
 
     create3DModels(scene);
-    animate();
-    setIsLoaded(true);
+    setIsLoaded(true); // ✅ Masquer le chargement
 
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
@@ -116,7 +115,8 @@ export default function SimulateurResonance3D() {
     scene.add(pivotTop, pivotBottom);
   };
 
-  const animate = () => {
+  // ✅ **Animation Loop Dédiée - CORRIGÉE**
+  const animate = useCallback(() => {
     animationRef.current = requestAnimationFrame(animate);
     if (balanceRef.current && springRef.current && animationRunning) {
       const wearFactor = 1 - (pivotWear / 100) * 0.3;
@@ -128,7 +128,11 @@ export default function SimulateurResonance3D() {
     if (rendererRef.current && sceneRef.current && cameraRef.current) {
       rendererRef.current.render(sceneRef.current, cameraRef.current);
     }
-  };
+  }, [amplitude, calibre, pivotWear, animationRunning]);
+
+  useEffect(() => {
+    animate();
+  }, [animate]);
 
   // Simulation
   const runSimulation = useCallback(() => {
@@ -138,7 +142,6 @@ export default function SimulateurResonance3D() {
     const isoError = Math.max(0, (specs.ampNorm - amplitude) * 0.03);
     const posDev = specs.positions[position];
     const tempDev = (temperature - 23) * specs.tempCoef;
-    // ✅ AJOUT DE LA LIGNE MANQUANTE
     const totalDev = posDev + gain + tempDev - isoError;
     const powerLoss = age * 1.2 + pivotWear * 0.5 + mainspringWear * 0.8;
     const powerReserve = specs.powerReserve - powerLoss;
@@ -207,7 +210,7 @@ export default function SimulateurResonance3D() {
     alert('✅ Lien de partage copié !');
   };
 
-  // Responsive
+  // ✅ Responsive avec redimensionnement
   useEffect(() => {
     const handleResize = () => {
       if (!containerRef.current || !cameraRef.current || !rendererRef.current) return;
@@ -220,7 +223,7 @@ export default function SimulateurResonance3D() {
       renderer.setSize(container.clientWidth, container.clientHeight);
     };
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeAnimationFrame(handleResize);
   }, []);
 
   return (
@@ -283,10 +286,9 @@ export default function SimulateurResonance3D() {
           </div>
         </aside>
 
-        {/* 3D View - Centré ✨ */}
+        {/* ✅ 3D View - Centré et Fonctionnel */}
         <main className="relative bg-[#0a0e27] flex items-center justify-center" ref={containerRef}>
           <canvas ref={canvasRef} className="w-full h-full block" />
-          {/* ✅ Message de chargement masqué après initialisation */}
           {!isLoaded && (
             <div className="absolute inset-0 flex items-center justify-center text-[#00d4ff] z-10">
               ⏳ Chargement moteur physique...
