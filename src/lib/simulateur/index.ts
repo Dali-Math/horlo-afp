@@ -1,6 +1,6 @@
 export * from './types'
-export * from './specs/technical'
+export * from './database'
 export * from './simulation-engine'
 export * from './diagnostics'
 export * from './export-utils'
-export { MOUVEMENTS_DB as default } from './specs/technical'
+export { MOUVEMENTS_DB as default } from './database'
