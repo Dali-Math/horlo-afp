@@ -10,6 +10,8 @@ export interface TechnicalSpecs {
   jewels?: number;
   diameter?: number;
   height?: number;
+  hairspring: string;
+  regulator: string;
 }
 export interface SimulationResults {
   isochronismError: number;
