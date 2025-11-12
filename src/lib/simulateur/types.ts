@@ -11,7 +11,21 @@ export interface TechnicalSpecs {
   diameter?: number;
   height?: number;
 }
-
+export interface SimulationResults {
+  isochronismError: number;
+  amplitudeLoss: number;
+  positionDeviation: number;
+  huygensScore: number;
+  beatImpact: number;
+  tempImpact: number;
+  dynamicError: number;
+  totalDeviation: number;
+  powerLoss: number;
+  effectiveReserve: number;
+  isochronismStatus: string;
+  huygensStatus: string;
+  deviationStatus: string;
+}
 export interface MagnetismResult {
   level: number;
   amplitudeLoss: number;
