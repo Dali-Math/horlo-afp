@@ -5,7 +5,6 @@ import * as THREE from 'three';
 import jsPDF from 'jspdf';
 import { TECHNICAL_SPECS } from '@/lib/simulateur/database';
 import { MagnetismResult, ImpactResult, AcousticAnalysis, Diagnostic } from '@/lib/simulateur/types';
-import type { TechnicalSpecs, SimulationResults, Diagnostic } from './types';
 import { calculateMagnetism } from '@/lib/simulateur/modules/magnetism';
 import { simulateDrop } from '@/lib/simulateur/modules/impact';
 import { calculateAmplitudeLoss, calculateTimingDeviation, calculatePowerReserve } from '@/lib/simulateur/physics-engine';
