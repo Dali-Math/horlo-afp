@@ -1,13 +1,20 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 export default function PatekLayout({ children }: { children: React.ReactNode }) {
+  const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
-  const BASE = '/theorie/manufactures/patek-philippe'
 
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 10)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const BASE = '/theorie/manufactures/patek-philippe'
   const linkClass = (href: string) => {
     const isActive =
       href === BASE ? pathname === BASE : pathname.startsWith(href)
@@ -15,23 +22,18 @@ export default function PatekLayout({ children }: { children: React.ReactNode })
     return [
       'relative transition-colors',
       isActive ? 'text-yellow-600' : 'text-gray-700 hover:text-yellow-600',
+      // soulignement doré uniquement si actif
       'after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-yellow-600',
       isActive ? 'after:w-full' : 'after:w-0'
     ].join(' ')
   }
 
   return (
-    <>
-      {/* ✅ Barre totalement fixe sous la navbar principale */}
+    <div className="bg-white text-gray-900">
       <nav
-        className="fixed top-[90px] left-0 w-full z-[60] bg-white border-b border-gray-200 shadow-md"
-        style={{
-          position: 'fixed',
-          top: '90px',
-          left: 0,
-          right: 0,
-          zIndex: 60,
-        }}
+        className={`fixed top-[90px] w-full z-40 border-b border-gray-200 transition-all duration-300 ${
+          isScrolled ? 'bg-white/70 backdrop-blur-xl shadow-md' : 'bg-white/40 backdrop-blur-md'
+        }`}
       >
         <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
           <Link href={BASE} className="text-2xl font-display font-bold">
@@ -56,10 +58,7 @@ export default function PatekLayout({ children }: { children: React.ReactNode })
         </div>
       </nav>
 
-      {/* ✅ Décalage pour ne pas masquer le contenu */}
-      <div className="h-[90px]" />
-
-      <main className="relative z-[10]">{children}</main>
-    </>
+      <main className="pt-32">{children}</main>
+    </div>
   )
 }
