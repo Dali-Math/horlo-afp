@@ -7,7 +7,7 @@ import MOUVEMENTS_DB, { MouvementSpecs } from '@/lib/simulateur/database';
 type Diagnostic = { level: 'ok' | 'warning' | 'critical'; text: string };
 
 export default function SimulateurResonance3D() {
-  // États React
+  // États
   const [calibre, setCalibre] = useState<keyof typeof MOUVEMENTS_DB>('eta2824');
   const [amplitude, setAmplitude] = useState(310);
   const [beatError, setBeatError] = useState(0.2);
@@ -42,7 +42,7 @@ export default function SimulateurResonance3D() {
   const springRef = useRef<THREE.Line | null>(null);
   const animationRef = useRef<number | null>(null);
   const [animationRunning, setAnimationRunning] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false); // ✅ État pour masquer le chargement
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Initialisation Three.js
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function SimulateurResonance3D() {
 
     create3DModels(scene);
     animate();
-    setIsLoaded(true); // ✅ Masquer le message après initialisation
+    setIsLoaded(true);
 
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
@@ -138,6 +138,8 @@ export default function SimulateurResonance3D() {
     const isoError = Math.max(0, (specs.ampNorm - amplitude) * 0.03);
     const posDev = specs.positions[position];
     const tempDev = (temperature - 23) * specs.tempCoef;
+    // ✅ AJOUT DE LA LIGNE MANQUANTE
+    const totalDev = posDev + gain + tempDev - isoError;
     const powerLoss = age * 1.2 + pivotWear * 0.5 + mainspringWear * 0.8;
     const powerReserve = specs.powerReserve - powerLoss;
 
@@ -152,12 +154,23 @@ export default function SimulateurResonance3D() {
     setPowerStatus(powerReserve > 30 ? 'status-ok' : powerReserve > 20 ? 'status-warning' : 'status-critical');
 
     const newDiagnostics: Diagnostic[] = [];
-    if (amplitude < 220) newDiagnostics.push({ level: 'critical', text: `Amplitude critique (${amplitude}°) : risque de décrochage` });
-    else if (amplitude < 260) newDiagnostics.push({ level: 'warning', text: `Amplitude basse : vérifier lubrification` });
-    if (pivotWear > 70) newDiagnostics.push({ level: 'critical', text: `Usure pivots >70% : remplacement nécessaire` });
-    if (mainspringWear > 80) newDiagnostics.push({ level: 'warning', text: `Ressort moteur fatigué : perte de réserve significative` });
-    if (beatError > 0.5) newDiagnostics.push({ level: 'warning', text: `Battement élevé : collerette d'ancre désaxée` });
-    if (Math.abs(totalDev) > 10) newDiagnostics.push({ level: 'critical', text: `Déviation importante : régulation complexe requise` });
+    if (amplitude < 220) {
+      newDiagnostics.push({ level: 'critical', text: `Amplitude critique (${amplitude}°) : risque de décrochage` });
+    } else if (amplitude < 260) {
+      newDiagnostics.push({ level: 'warning', text: `Amplitude basse : vérifier lubrification` });
+    }
+    if (pivotWear > 70) {
+      newDiagnostics.push({ level: 'critical', text: `Usure pivots >70% : remplacement nécessaire` });
+    }
+    if (mainspringWear > 80) {
+      newDiagnostics.push({ level: 'warning', text: `Ressort moteur fatigué : perte de réserve significative` });
+    }
+    if (beatError > 0.5) {
+      newDiagnostics.push({ level: 'warning', text: `Battement élevé : collerette d'ancre désaxée` });
+    }
+    if (Math.abs(totalDev) > 10) {
+      newDiagnostics.push({ level: 'critical', text: `Déviation importante : régulation complexe requise` });
+    }
     
     setDiagnostics(newDiagnostics);
     setDiagnosticVisible(true);
@@ -194,20 +207,33 @@ export default function SimulateurResonance3D() {
     alert('✅ Lien de partage copié !');
   };
 
+  // Responsive
+  useEffect(() => {
+    const handleResize = () => {
+      if (!containerRef.current || !cameraRef.current || !rendererRef.current) return;
+      const container = containerRef.current;
+      const camera = cameraRef.current;
+      const renderer = rendererRef.current;
+      
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#0a0e27] font-mono">
+    <div className="min-h-screen bg-[#0a0e27] text-white font-mono">
       <style jsx global>{`.font-mono { font-family: 'JetBrains Mono', 'Courier New', monospace; }`}</style>
 
-      {/* Header */}
       <header className="fixed top-0 left-0 right-0 h-16 bg-[#1c2237] flex items-center px-8 border-b-2 border-[#00d4ff] z-50">
         <div className="text-xl font-extrabold text-[#00d4ff] tracking-tight">HORLOLEARN</div>
         <div className="ml-5 text-sm text-gray-400">Simulateur de Résonance 3D – Outil Pro #23</div>
       </header>
 
-      {/* Main Container */}
       <div className="grid grid-cols-[340px_1fr_420px] h-screen pt-16">
-        
-        {/* Controls Panel */}
+        {/* CONTROLS */}
         <aside className="bg-[#1c2237] p-5 overflow-y-auto border-r border-[#00d4ff]">
           <div className="space-y-6">
             <ControlSection title="Configuration Mouvement">
@@ -260,7 +286,7 @@ export default function SimulateurResonance3D() {
         {/* 3D View - Centré ✨ */}
         <main className="relative bg-[#0a0e27] flex items-center justify-center" ref={containerRef}>
           <canvas ref={canvasRef} className="w-full h-full block" />
-          {/* Message de chargement - masqué après initialisation */}
+          {/* ✅ Message de chargement masqué après initialisation */}
           {!isLoaded && (
             <div className="absolute inset-0 flex items-center justify-center text-[#00d4ff] z-10">
               ⏳ Chargement moteur physique...
@@ -268,7 +294,7 @@ export default function SimulateurResonance3D() {
           )}
         </main>
 
-        {/* Results Panel */}
+        {/* RESULTS */}
         <aside className="bg-[#1c2237] p-5 overflow-y-auto border-l border-[#00d4ff]">
           <div className="space-y-4">
             <MetricCard title="Isochronisme" value={isoValue} status={isoStatus} />
