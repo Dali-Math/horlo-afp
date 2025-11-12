@@ -8,9 +8,9 @@ import { MagnetismResult, ImpactResult, AcousticAnalysis, Diagnostic } from '@/l
 import { calculateMagnetism } from '@/lib/simulateur/modules/magnetism';
 import { simulateDrop } from '@/lib/simulateur/modules/impact';
 import { calculateAmplitudeLoss, calculateTimingDeviation, calculatePowerReserve } from '@/lib/simulateur/physics-engine';
-import DiagnosticsPanel from '@/lib/simulateur/DiagnosticsPanel';
-import ImpactSimulator from '@/lib/simulateur/ImpactSimulator';
-import MicrophoneAnalyzer from '@/lib/simulateur/MicrophoneAnalyzer';
+import DiagnosticsPanel from '@/components/simulateur/DiagnosticsPanel';
+import ImpactSimulator from '@/components/simulateur/ImpactSimulator';
+import MicrophoneAnalyzer from '@/components/simulateur/MicrophoneAnalyzer';
 
 export default function SimulateurResonance3D() {
   const [calibre, setCalibre] = useState<string>('eta2824');
@@ -138,8 +138,7 @@ export default function SimulateurResonance3D() {
     const beatImpact = beatError * 2;
     const tempImpact = (temperature - 23) * specs.tempCoef;
     const totalDeviation = positionDeviation + gain + tempImpact - isochronismError;
-    const effectiveReserve = calculatePowerReserve(specs.powerReserve ?? mouvement?.powerReserve ?? 0, mainspringWear, age)
-    
+    const effectiveReserve = calculatePowerReserve(specs.powerReserve, mainspringWear, age);
 
     // Diagnostics
     const newDiagnostics: Diagnostic[] = [];
