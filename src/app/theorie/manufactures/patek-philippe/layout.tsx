@@ -29,9 +29,9 @@ export default function PatekLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="bg-white text-gray-900">
-      {/* Barre fixée tout en haut */}
+      {/* ✅ Barre fixée juste sous la navbar principale */}
       <nav
-        className={`fixed top-0 left-0 w-full z-50 border-b border-gray-200 transition-all duration-300 ${
+        className={`fixed top-[90px] left-0 w-full z-40 border-b border-gray-200 transition-all duration-300 ${
           isScrolled
             ? 'bg-white/80 backdrop-blur-xl shadow-md'
             : 'bg-white/60 backdrop-blur-md'
@@ -60,8 +60,8 @@ export default function PatekLayout({ children }: { children: React.ReactNode })
         </div>
       </nav>
 
-      {/* Compensation pour la barre fixée */}
-      <div className="h-[72px]" />
+      {/* ✅ Compensation pour éviter que le contenu passe sous la barre */}
+      <div className="h-[90px]" />
 
       <main>{children}</main>
     </div>
