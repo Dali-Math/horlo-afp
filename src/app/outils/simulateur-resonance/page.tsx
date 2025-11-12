@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
-import MOUVEMENTS_DB, { MouvementSpecs } from '@/lib/simulateur/database';
+import MOUVEMENTS_DB from '@/lib/simulateur/database';
+import type { MouvementSpecs } from '@/lib/simulateur/types';
 
 type Diagnostic = { level: 'ok' | 'warning' | 'critical'; text: string };
 
@@ -44,7 +45,7 @@ export default function SimulateurResonance3D() {
   const [animationRunning, setAnimationRunning] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // ✅ Ref pour éviter les problèmes de closure dans la boucle d'animation
+  // Ref pour éviter les problèmes de closure dans la boucle d'animation
   const animationParamsRef = useRef({
     amplitude,
     calibre,
@@ -58,31 +59,25 @@ export default function SimulateurResonance3D() {
     animationParamsRef.current = { amplitude, calibre, pivotWear, animationRunning, isLoaded };
   }, [amplitude, calibre, pivotWear, animationRunning, isLoaded]);
 
-  // ✅ **Initialisation Three.js - CORRIGÉE**
+  // Initialisation Three.js
   useEffect(() => {
     if (!canvasRef.current || !containerRef.current) return;
     const container = containerRef.current;
-    
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x0a0e27);
     sceneRef.current = scene;
-
     const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
     camera.position.set(0, 2, 10);
     cameraRef.current = camera;
-
     const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, antialias: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
     rendererRef.current = renderer;
-
     scene.add(new THREE.AmbientLight(0x404080, 0.4));
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
     dirLight.position.set(5, 10, 5);
     scene.add(dirLight);
-
     create3DModels(scene);
-    setIsLoaded(true); // ✅ Masquer le chargement
-
+    setIsLoaded(true);
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
       renderer.dispose();
@@ -96,7 +91,6 @@ export default function SimulateurResonance3D() {
     balance.castShadow = true;
     scene.add(balance);
     balanceRef.current = balance;
-
     for (let i = 0; i < 4; i++) {
       const weightGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.3);
       const weightMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 1 });
@@ -106,7 +100,6 @@ export default function SimulateurResonance3D() {
       weight.rotation.z = angle;
       balance.add(weight);
     }
-
     const points: THREE.Vector3[] = [];
     for (let i = 0; i < 200; i++) {
       const t = i / 200;
@@ -119,7 +112,6 @@ export default function SimulateurResonance3D() {
     const spring = new THREE.Line(springGeo, springMat);
     scene.add(spring);
     springRef.current = spring;
-
     const pivotGeo = new THREE.CylinderGeometry(0.03, 0.03, 0.8);
     const pivotMat = new THREE.MeshStandardMaterial({ color: 0x666666 });
     const pivotTop = new THREE.Mesh(pivotGeo, pivotMat);
@@ -129,63 +121,51 @@ export default function SimulateurResonance3D() {
     scene.add(pivotTop, pivotBottom);
   };
 
-  // ✅ **Animation Loop CORRIGÉE - Tourne en continu**
+  // Animation Loop
   useEffect(() => {
     if (!isLoaded) return;
-
     const animate = () => {
       animationRef.current = requestAnimationFrame(animate);
-      
-      // Toujours rendre la scène
       if (rendererRef.current && sceneRef.current && cameraRef.current) {
         rendererRef.current.render(sceneRef.current, cameraRef.current);
       }
-      
-      // Mettre à jour les positions si l'animation est active
       const params = animationParamsRef.current;
       if (balanceRef.current && springRef.current && params.animationRunning) {
         const wearFactor = 1 - (params.pivotWear / 100) * 0.3;
         const time = Date.now() * 0.001;
-        const angle = (params.amplitude * Math.PI / 180) * 
-                     Math.sin(time * MOUVEMENTS_DB[params.calibre].frequency * 2 * Math.PI) * 
-                     wearFactor;
+        const angle = (params.amplitude * Math.PI / 180) *
+          Math.sin(time * MOUVEMENTS_DB[params.calibre].frequency * 2 * Math.PI) *
+          wearFactor;
         balanceRef.current.rotation.z = angle;
         springRef.current.rotation.z = angle * 0.5;
       }
     };
-
-    // Démarrer la boucle d'animation
     animationRef.current = requestAnimationFrame(animate);
-
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isLoaded]); // Ne dépend que de isLoaded
+  }, [isLoaded]);
 
   // Simulation
   const runSimulation = useCallback(() => {
     setAnimationRunning(true);
     const specs = MOUVEMENTS_DB[calibre];
-    
     const isoError = Math.max(0, (specs.ampNorm - amplitude) * 0.03);
     const posDev = specs.positions[position];
     const tempDev = (temperature - 23) * specs.tempCoef;
     const totalDev = posDev + gain + tempDev - isoError;
     const powerLoss = age * 1.2 + pivotWear * 0.5 + mainspringWear * 0.8;
     const powerReserve = specs.powerReserve - powerLoss;
-
     setIsoValue(`${isoError.toFixed(2)} s/j`);
     setPosValue(`${posDev} s/j`);
     setTempValueRes(`${tempDev.toFixed(1)} s/j`);
     setPowerValue(`${powerReserve.toFixed(0)}h`);
-
     setIsoStatus(isoError < 3 ? 'status-ok' : isoError < 8 ? 'status-warning' : 'status-critical');
     setPosStatus(Math.abs(posDev) < 6 ? 'status-ok' : 'status-warning');
     setTempStatus(Math.abs(tempDev) < 3 ? 'status-ok' : 'status-warning');
     setPowerStatus(powerReserve > 30 ? 'status-ok' : powerReserve > 20 ? 'status-warning' : 'status-critical');
-
     const newDiagnostics: Diagnostic[] = [];
     if (amplitude < 220) {
       newDiagnostics.push({ level: 'critical', text: `Amplitude critique (${amplitude}°) : risque de décrochage` });
@@ -204,7 +184,6 @@ export default function SimulateurResonance3D() {
     if (Math.abs(totalDev) > 10) {
       newDiagnostics.push({ level: 'critical', text: `Déviation importante : régulation complexe requise` });
     }
-    
     setDiagnostics(newDiagnostics);
     setDiagnosticVisible(true);
   }, [calibre, amplitude, beatError, gain, position, temperature, age, pivotWear, mainspringWear]);
@@ -240,71 +219,64 @@ export default function SimulateurResonance3D() {
     alert('✅ Lien de partage copié !');
   };
 
-  // ✅ Responsive avec redimensionnement - CORRIGÉ
+  // Responsive
   useEffect(() => {
     const handleResize = () => {
       if (!containerRef.current || !cameraRef.current || !rendererRef.current) return;
       const container = containerRef.current;
       const camera = cameraRef.current;
       const renderer = rendererRef.current;
-      
       camera.aspect = container.clientWidth / container.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(container.clientWidth, container.clientHeight);
     };
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize); // CORRIGÉ
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return (
     <div className="min-h-screen bg-[#0a0e27] text-white font-mono">
       <style jsx global>{`.font-mono { font-family: 'JetBrains Mono', 'Courier New', monospace; }`}</style>
-
       <header className="fixed top-0 left-0 right-0 h-16 bg-[#1c2237] flex items-center px-8 border-b-2 border-[#00d4ff] z-50">
         <div className="text-xl font-extrabold text-[#00d4ff] tracking-tight">HORLOLEARN</div>
         <div className="ml-5 text-sm text-gray-400">Simulateur de Résonance 3D – Outil Pro #23</div>
       </header>
-
       <div className="grid grid-cols-[340px_1fr_420px] h-screen pt-16">
         {/* CONTROLS */}
         <aside className="bg-[#1c2237] p-5 overflow-y-auto border-r border-[#00d4ff]">
           <div className="space-y-6">
             <ControlSection title="Configuration Mouvement">
               <ParamRow 
-                label="Calibre" 
-                type="select" 
-                options={Object.entries(MOUVEMENTS_DB).map(([k, v]) => ({ value: k, label: v.name }))} 
-                value={calibre} 
-                onChange={setCalibre} 
+                label="Calibre"
+                type="select"
+                options={Object.entries(MOUVEMENTS_DB).map(([k, v]) => ({ value: k, label: v.name }))}
+                value={calibre}
+                onChange={setCalibre}
               />
             </ControlSection>
-
             <ControlSection title="Paramètres Mesurés">
               <ParamRow label="Amplitude" type="range" min={180} max={360} value={amplitude} suffix="°" onChange={setAmplitude} />
               <ParamRow label="Battement" type="range" min={0} max={3} step={0.1} value={beatError} suffix="ms" onChange={setBeatError} />
               <ParamRow label="Gain/Perte" type="range" min={-30} max={30} value={gain} suffix=" s/j" onChange={setGain} />
             </ControlSection>
-
             <ControlSection title="Conditions Test">
               <ParamRow 
-                label="Position" 
-                type="select" 
+                label="Position"
+                type="select"
                 options={[
                   { value: 3, label: '3H (Couronne Haut)' },
                   { value: 0, label: 'CH' }, { value: 1, label: '6H' },
                   { value: 2, label: '9H' }, { value: 4, label: '12H' }, { value: 5, label: 'CU' },
-                ]} 
-                value={position} 
-                onChange={setPosition} 
+                ]}
+                value={position}
+                onChange={setPosition}
               />
               <ParamRow label="Température" type="range" min={-10} max={50} value={temperature} suffix="°C" onChange={setTemperature} />
             </ControlSection>
-
             <ControlSection title="Usure Simulée">
               <ParamRow label="Pivots" type="range" min={0} max={100} value={pivotWear} suffix="%" onChange={setPivotWear} />
               <ParamRow label="Ressort Moteur" type="range" min={0} max={100} value={mainspringWear} suffix="%" onChange={setMainspringWear} />
             </ControlSection>
-
             <div className="space-y-3 pt-4">
               <button onClick={runSimulation} className="w-full py-3 bg-[#00d4ff] text-[#0a0e27] font-extrabold rounded uppercase hover:scale-105 transition">
                 ▶️ Lancer Simulation
@@ -315,8 +287,7 @@ export default function SimulateurResonance3D() {
             </div>
           </div>
         </aside>
-
-        {/* ✅ 3D View - Centré et Fonctionnel */}
+        {/* 3D View */}
         <main className="relative bg-[#0a0e27] flex items-center justify-center" ref={containerRef}>
           <canvas ref={canvasRef} className="w-full h-full block" />
           {!isLoaded && (
@@ -325,7 +296,6 @@ export default function SimulateurResonance3D() {
             </div>
           )}
         </main>
-
         {/* RESULTS */}
         <aside className="bg-[#1c2237] p-5 overflow-y-auto border-l border-[#00d4ff]">
           <div className="space-y-4">
@@ -333,7 +303,6 @@ export default function SimulateurResonance3D() {
             <MetricCard title="Stabilité Position" value={posValue} status={posStatus} />
             <MetricCard title="Déviation Thermique" value={tempValueRes} status={tempStatus} />
             <MetricCard title="Réserve de Marche" value={powerValue} status={powerStatus} />
-            
             {diagnosticVisible && (
               <div className="bg-red-950/30 border border-red-500 rounded p-4">
                 <h4 className="text-red-500 font-extrabold mb-3">🔍 Diagnostic Technique</h4>
@@ -350,7 +319,6 @@ export default function SimulateurResonance3D() {
                 </div>
               </div>
             )}
-
             <div className="space-y-3 pt-4">
               <button onClick={exportReport} className="w-full py-3 bg-[#00d4ff] text-[#0a0e27] font-extrabold rounded uppercase">📄 Exporter PDF</button>
               <button onClick={shareResults} className="w-full py-3 border-2 border-[#00d4ff] text-[#00d4ff] font-extrabold rounded uppercase">🔗 Partager</button>
@@ -410,7 +378,6 @@ function MetricCard({ title, value, status }: any) {
     'status-warning': 'bg-yellow-500/20 text-yellow-400',
     'status-critical': 'bg-red-500/20 text-red-500',
   };
-
   return (
     <div className="bg-[#2a2f45] p-4 rounded border-l-4 border-[#00d4ff]">
       <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">{title}</div>
