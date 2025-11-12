@@ -22,7 +22,6 @@ export default function PatekLayout({ children }: { children: React.ReactNode })
     return [
       'relative transition-colors',
       isActive ? 'text-yellow-600' : 'text-gray-700 hover:text-yellow-600',
-      // soulignement doré uniquement si actif
       'after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:bg-yellow-600',
       isActive ? 'after:w-full' : 'after:w-0'
     ].join(' ')
@@ -30,9 +29,12 @@ export default function PatekLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="bg-white text-gray-900">
+      {/* Barre fixée tout en haut */}
       <nav
-        className={`fixed top-[90px] w-full z-40 border-b border-gray-200 transition-all duration-300 ${
-          isScrolled ? 'bg-white/70 backdrop-blur-xl shadow-md' : 'bg-white/40 backdrop-blur-md'
+        className={`fixed top-0 left-0 w-full z-50 border-b border-gray-200 transition-all duration-300 ${
+          isScrolled
+            ? 'bg-white/80 backdrop-blur-xl shadow-md'
+            : 'bg-white/60 backdrop-blur-md'
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
@@ -58,7 +60,10 @@ export default function PatekLayout({ children }: { children: React.ReactNode })
         </div>
       </nav>
 
-      <main className="pt-32">{children}</main>
+      {/* Compensation pour la barre fixée */}
+      <div className="h-[72px]" />
+
+      <main>{children}</main>
     </div>
   )
 }
