@@ -139,7 +139,7 @@ export default function SimulateurResonance3D() {
     const tempImpact = (temperature - 23) * specs.tempCoef;
     const totalDeviation = positionDeviation + gain + tempImpact - isochronismError;
     const effectiveReserve = calculatePowerReserve(specs.powerReserve ?? mouvement?.powerReserve ?? 0, mainspringWear, age)
-    const effectiveReserve = calculatePowerReserve(specs.powerReserve, mainspringWear, age);
+    
 
     // Diagnostics
     const newDiagnostics: Diagnostic[] = [];
