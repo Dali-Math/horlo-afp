@@ -1,4 +1,5 @@
 'use client';
+
 import { Diagnostic } from '@/lib/simulateur/types';
 
 interface Props {
@@ -12,7 +13,7 @@ export default function DiagnosticsPanel({ diagnostics }: Props) {
       <ul className="diagnostic-list">
         {diagnostics.map((d, i) => (
           <li 
-            key={i} 
+            key={i}
             className={d.level === 'critical' ? 'text-red-500' : 
                        d.level === 'warning' ? 'text-yellow-400' : 
                        'text-green-400'}
