@@ -21,9 +21,18 @@ export default function PatekLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="bg-white text-gray-900">
-      {/* ✅ Barre fixée en permanence juste sous la navbar principale */}
-      <nav className="fixed top-[90px] left-0 w-full z-40 bg-white border-b border-gray-200 shadow-sm">
+    <>
+      {/* ✅ Barre totalement fixe sous la navbar principale */}
+      <nav
+        className="fixed top-[90px] left-0 w-full z-[60] bg-white border-b border-gray-200 shadow-md"
+        style={{
+          position: 'fixed',
+          top: '90px',
+          left: 0,
+          right: 0,
+          zIndex: 60,
+        }}
+      >
         <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
           <Link href={BASE} className="text-2xl font-display font-bold">
             <span
@@ -47,10 +56,10 @@ export default function PatekLayout({ children }: { children: React.ReactNode })
         </div>
       </nav>
 
-      {/* ✅ Compensation verticale (hauteur exacte de la barre) */}
+      {/* ✅ Décalage pour ne pas masquer le contenu */}
       <div className="h-[90px]" />
 
-      <main>{children}</main>
-    </div>
+      <main className="relative z-[10]">{children}</main>
+    </>
   )
 }
