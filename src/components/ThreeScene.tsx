@@ -89,8 +89,10 @@ export default function ThreeScene({ isDark }: ThreeSceneProps) {
     }
     window.addEventListener('mousemove', handleMouseMove)
 
+    let reqId: number | null = null
+
     const animate = () => {
-      requestAnimationFrame(animate)
+      reqId = requestAnimationFrame(animate)
 
       gear1.rotation.z += 0.005
       gear2.rotation.z -= 0.008
@@ -114,7 +116,36 @@ export default function ThreeScene({ isDark }: ThreeSceneProps) {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('resize', handleResize)
-      renderer.dispose()
+
+      // Annuler l'animation
+      if (reqId !== null) cancelAnimationFrame(reqId)
+
+      // Supprimer et disposer proprement des géométries et matériaux pour éviter les fuites mémoire
+      scene.traverse((object) => {
+        // @ts-ignore
+        if (object.isMesh) {
+          const mesh = object as THREE.Mesh
+          if (mesh.geometry) mesh.geometry.dispose()
+          // @ts-ignore
+          if (mesh.material) {
+            // material peut être un tableau
+            const mat: any = mesh.material
+            if (Array.isArray(mat)) {
+              mat.forEach((m) => m.dispose && m.dispose())
+            } else if (mat.dispose) {
+              mat.dispose()
+            }
+          }
+        }
+      })
+
+      try {
+        renderer.dispose()
+        // retire le canvas WebGL du DOM si nécessaire
+        if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas)
+      } catch (e) {
+        // ignore
+      }
     }
   }, [])
 
