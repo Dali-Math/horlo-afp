@@ -1,3 +1,6 @@
+import { MOUVEMENTS_DB } from '@/lib/simulateur/database';
+import type { MouvementSpecs } from '@/lib/simulateur/types';
+
 export interface MouvementSpecs {
   name: string;
   frequency: number;
