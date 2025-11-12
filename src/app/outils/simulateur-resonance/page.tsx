@@ -26,6 +26,9 @@ export default function SimulateurResonance3D() {
   const [impactResult, setImpactResult] = useState<ImpactResult | null>(null);
   const [magnetismResult, setMagnetismResult] = useState<MagnetismResult | null>(null);
   const [diagnostics, setDiagnostics] = useState<Diagnostic[]>([]);
+  // ⬇️ AJOUT DE CES DEUX ÉTATS ⬇️
+  const [effectiveReserve, setEffectiveReserve] = useState<number>(0);
+  const [totalDeviation, setTotalDeviation] = useState<number>(0);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -139,6 +142,10 @@ export default function SimulateurResonance3D() {
     const tempImpact = (temperature - 23) * specs.tempCoef;
     const totalDeviation = positionDeviation + gain + tempImpact - isochronismError;
     const effectiveReserve = calculatePowerReserve(specs.powerReserve, mainspringWear, age);
+
+    // ⬇️ METTRE À JOUR L'ÉTAT ⬇️
+    setEffectiveReserve(effectiveReserve);
+    setTotalDeviation(totalDeviation);
 
     // Diagnostics
     const newDiagnostics: Diagnostic[] = [];
