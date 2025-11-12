@@ -78,3 +78,31 @@ export interface MouvementSpecs {
   tempCoef: number;
   positions: number[];
 }
+export interface SimulationInputs {
+  specs: TechnicalSpecs;
+  amplitude: number;
+  beatError: number;
+  gain: number;
+  position: number;
+  temperature: number;
+  age: number;
+  pivotWear: number;
+  mainspringWear: number;
+  magneticField: number;
+}
+
+export interface SimulationResults {
+  isochronismError: number;
+  isochronismStatus: 'status-ok' | 'status-warning' | 'status-critical';
+  amplitudeLoss: number;
+  positionDeviation: number;
+  huygensScore: number;
+  huygensStatus: 'status-ok' | 'status-warning' | 'status-critical';
+  beatImpact: number;
+  tempImpact: number;
+  dynamicError: number;
+  totalDeviation: number;
+  deviationStatus: 'status-ok' | 'status-warning' | 'status-critical';
+  powerLoss: number;
+  effectiveReserve: number;
+}
