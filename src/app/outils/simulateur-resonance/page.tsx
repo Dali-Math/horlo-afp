@@ -218,11 +218,15 @@ export default function SimulateurPage() {
   }, [magneticField, amplitude]);
 
   // ==========================================
-  // MODULE IMPACT
+  // MODULE IMPACT - CORRIGÉ
   // ==========================================
   const simulateDrop = () => {
     const impactEnergy = 9.81 * dropHeight / 100 * 0.5;
-    const surfaceFactor = { wood: 0.3, tile: 0.7, concrete: 1.0 }[surface as keyof typeof surfaceFactor] as number;
+    
+    // CORRECTION: définir le mapping avant de l'utiliser
+    const surfaceFactors = { wood: 0.3, tile: 0.7, concrete: 1.0 };
+    const surfaceFactor = surfaceFactors[surface as keyof typeof surfaceFactors] || 0.7;
+    
     const absorbedEnergy = impactEnergy * surfaceFactor;
     
     const amplitudeDrop = Math.min(100, absorbedEnergy * 15);
@@ -704,7 +708,7 @@ export default function SimulateurPage() {
                                d.level === 'warning' ? 'text-yellow-400' : 
                                'text-green-400'}
                   >
-                    → {d.text}
+                    {d.text}
                   </li>
                 ))}
               </ul>
