@@ -1,13 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import MOUVEMENTS_DB from '@/lib/simulateur/database';
-import type { MouvementSpecs } from '@/lib/simulateur/types';
 
-type Diagnostic = { level: 'ok' | 'warning' | 'critical'; text: string };
-
-export default function SimulateurResonance3D() {
 // Base de données technique (comme dans le HTML)
 const TECHNICAL_SPECS: Record<string, any> = {
   eta2824: {
@@ -509,4 +504,3 @@ export default function SimulateurResonance3D() {
     </div>
   );
 }
-  
