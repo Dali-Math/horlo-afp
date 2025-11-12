@@ -1,3 +1,8 @@
+// =====================================
+// TYPES DU SIMULATEUR HORLOGER PRO
+// =====================================
+
+// Spécifications techniques d'un mouvement
 export interface TechnicalSpecs {
   name: string;
   frequency: number; // Hz
@@ -10,24 +15,11 @@ export interface TechnicalSpecs {
   jewels?: number;
   diameter?: number;
   height?: number;
-  hairspring: string;
-  regulator: string;
+  hairspring: string; // Type de spiral
+  regulator: string; // Type de régulateur
 }
-export interface SimulationResults {
-  isochronismError: number;
-  amplitudeLoss: number;
-  positionDeviation: number;
-  huygensScore: number;
-  beatImpact: number;
-  tempImpact: number;
-  dynamicError: number;
-  totalDeviation: number;
-  powerLoss: number;
-  effectiveReserve: number;
-  isochronismStatus: string;
-  huygensStatus: string;
-  deviationStatus: string;
-}
+
+// Résultats de simulation magnétisme
 export interface MagnetismResult {
   level: number;
   amplitudeLoss: number;
@@ -36,6 +28,7 @@ export interface MagnetismResult {
   diagnostic: string;
 }
 
+// Résultats de simulation impact/chute
 export interface ImpactResult {
   amplitudeDrop: number; // %
   pivotDeformation: number; // mm
@@ -44,6 +37,7 @@ export interface ImpactResult {
   recommendedAction: string;
 }
 
+// Analyse acoustique du mouvement
 export interface AcousticAnalysis {
   rotorNoise: number; // dB
   beatIrregularity: number; // CV
@@ -51,6 +45,7 @@ export interface AcousticAnalysis {
   anomalies: string[];
 }
 
+// Données brutes de simulation
 export interface SimulationData {
   amplitude: number;
   beatError: number;
@@ -64,20 +59,16 @@ export interface SimulationData {
   magneticField: number;
 }
 
+// Niveau de diagnostic
 export type DiagnosticLevel = 'ok' | 'warning' | 'critical';
+
+// Diagnostic individuel
 export interface Diagnostic {
   level: DiagnosticLevel;
   text: string;
 }
-export interface MouvementSpecs {
-  name: string;
-  beatRate: number;
-  frequency: number;
-  ampNorm: number;
-  powerReserve: number;
-  tempCoef: number;
-  positions: number[];
-}
+
+// Entrées du moteur de simulation
 export interface SimulationInputs {
   specs: TechnicalSpecs;
   amplitude: number;
@@ -91,6 +82,7 @@ export interface SimulationInputs {
   magneticField: number;
 }
 
+// Résultats complets du moteur de simulation
 export interface SimulationResults {
   isochronismError: number;
   isochronismStatus: 'status-ok' | 'status-warning' | 'status-critical';
