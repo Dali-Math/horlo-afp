@@ -1,20 +1,13 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 export default function PatekLayout({ children }: { children: React.ReactNode }) {
-  const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 10)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
   const BASE = '/theorie/manufactures/patek-philippe'
+
   const linkClass = (href: string) => {
     const isActive =
       href === BASE ? pathname === BASE : pathname.startsWith(href)
@@ -29,14 +22,8 @@ export default function PatekLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="bg-white text-gray-900">
-      {/* ✅ Barre fixée juste sous la navbar principale */}
-      <nav
-        className={`fixed top-[90px] left-0 w-full z-40 border-b border-gray-200 transition-all duration-300 ${
-          isScrolled
-            ? 'bg-white/80 backdrop-blur-xl shadow-md'
-            : 'bg-white/60 backdrop-blur-md'
-        }`}
-      >
+      {/* ✅ Barre fixée en permanence juste sous la navbar principale */}
+      <nav className="fixed top-[90px] left-0 w-full z-40 bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
           <Link href={BASE} className="text-2xl font-display font-bold">
             <span
@@ -60,7 +47,7 @@ export default function PatekLayout({ children }: { children: React.ReactNode })
         </div>
       </nav>
 
-      {/* ✅ Compensation pour éviter que le contenu passe sous la barre */}
+      {/* ✅ Compensation verticale (hauteur exacte de la barre) */}
       <div className="h-[90px]" />
 
       <main>{children}</main>
