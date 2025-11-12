@@ -119,7 +119,8 @@ export default function SimulateurResonance3D() {
     if (balanceRef.current && springRef.current && animationRunning) {
       const wearFactor = 1 - (pivotWear / 100) * 0.3;
       const time = Date.now() * 0.001;
-      const angle = (amplitude * Math.PI / 180) * Math.sin(time * MOUVEMENTS_DB[calibre].freq * 2 * Math.PI) * wearFactor;
+      // ✅ CORRECTION : utiliser `frequency` au lieu de `freq`
+      const angle = (amplitude * Math.PI / 180) * Math.sin(time * MOUVEMENTS_DB[calibre].frequency * 2 * Math.PI) * wearFactor;
       balanceRef.current.rotation.z = angle;
       springRef.current.rotation.z = angle * 0.5;
     }
@@ -134,9 +135,12 @@ export default function SimulateurResonance3D() {
     const specs = MOUVEMENTS_DB[calibre];
     
     const isoError = Math.max(0, (specs.ampNorm - amplitude) * 0.03);
-    const posDev = specs.pos[position];
+    // ✅ CORRECTION : utiliser `positions` au lieu de `pos`
+    const posDev = specs.positions[position];
     const tempDev = (temperature - 23) * specs.tempCoef;
-    const powerLoss = age * 1.2 + (pivotWear * 0.5) + (mainspringWear * 0.8);
+    const totalDev = posDev + gain + tempDev - isoError;
+    const powerLoss = age * 1.2 + pivotWear * 0.5 + mainspringWear * 0.8;
+    // ✅ CORRECTION : utiliser `powerReserve` au lieu de `power`
     const powerReserve = specs.powerReserve - powerLoss;
 
     setIsoValue(`${isoError.toFixed(2)} s/j`);
@@ -150,12 +154,23 @@ export default function SimulateurResonance3D() {
     setPowerStatus(powerReserve > 30 ? 'status-ok' : powerReserve > 20 ? 'status-warning' : 'status-critical');
 
     const newDiagnostics: Diagnostic[] = [];
-    if (amplitude < 220) newDiagnostics.push({ level: 'critical', text: `Amplitude critique (${amplitude}°) : risque de décrochage` });
-    else if (amplitude < 260) newDiagnostics.push({ level: 'warning', text: `Amplitude basse : vérifier lubrification` });
-    if (pivotWear > 70) newDiagnostics.push({ level: 'critical', text: `Usure pivots >70% : remplacement nécessaire` });
-    if (mainspringWear > 80) newDiagnostics.push({ level: 'warning', text: `Ressort moteur fatigué : perte de réserve significative` });
-    if (beatError > 0.5) newDiagnostics.push({ level: 'warning', text: `Battement élevé : collerette d'ancre désaxée` });
-    if (Math.abs(totalDev) > 10) newDiagnostics.push({ level: 'critical', text: `Déviation importante : régulation complexe requise` });
+    if (amplitude < 220) {
+      newDiagnostics.push({ level: 'critical', text: `Amplitude critique (${amplitude}°) : risque de décrochage` });
+    } else if (amplitude < 260) {
+      newDiagnostics.push({ level: 'warning', text: `Amplitude basse : vérifier lubrification` });
+    }
+    if (pivotWear > 70) {
+      newDiagnostics.push({ level: 'critical', text: `Usure pivots >70% : remplacement nécessaire` });
+    }
+    if (mainspringWear > 80) {
+      newDiagnostics.push({ level: 'warning', text: `Ressort moteur fatigué : perte de réserve significative` });
+    }
+    if (beatError > 0.5) {
+      newDiagnostics.push({ level: 'warning', text: `Battement élevé : collerette d'ancre désaxée` });
+    }
+    if (Math.abs(totalDev) > 10) {
+      newDiagnostics.push({ level: 'critical', text: `Déviation importante : régulation complexe requise` });
+    }
     
     setDiagnostics(newDiagnostics);
     setDiagnosticVisible(true);
@@ -191,6 +206,22 @@ export default function SimulateurResonance3D() {
     navigator.clipboard.writeText(url);
     alert('✅ Lien de partage copié !');
   };
+
+  // Responsive
+  useEffect(() => {
+    const handleResize = () => {
+      if (!containerRef.current || !cameraRef.current || !rendererRef.current) return;
+      const container = containerRef.current;
+      const camera = cameraRef.current;
+      const renderer = rendererRef.current;
+      
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#0a0e27] text-white font-mono">
@@ -238,7 +269,7 @@ export default function SimulateurResonance3D() {
 
             <ControlSection title="Usure Simulée">
               <ParamRow label="Pivots" type="range" min={0} max={100} value={pivotWear} suffix="%" onChange={setPivotWear} />
-              <ParamRow label="Ressort Moteur" type="range" min={0} max={100} value={mainspringWear} suffix="%" onChange={setMainspringWear} /> {/* ✅ CORRECT */}
+              <ParamRow label="Ressort Moteur" type="range" min={0} max={100} value={mainspringWear} suffix="%" onChange={setMainspringWear} />
             </ControlSection>
 
             <div className="space-y-3 pt-4">
@@ -289,6 +320,66 @@ export default function SimulateurResonance3D() {
             </div>
           </div>
         </aside>
+      </div>
+    </div>
+  );
+}
+
+// Composants réutilisables
+function ControlSection({ title, children }: any) {
+  return (
+    <div>
+      <h3 className="text-[#00d4ff] text-xs font-extrabold uppercase tracking-wider mb-4">{title}</h3>
+      <div className="space-y-3">{children}</div>
+    </div>
+  );
+}
+
+function ParamRow({ label, type = 'select', options, value, onChange, min, max, step, suffix }: any) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-sm text-gray-400">{label}</span>
+      {type === 'select' ? (
+        <select
+          className="flex-1 px-2 py-1 bg-[#2a2f45] border border-gray-600 rounded text-white text-sm"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        >
+          {options.map((opt: any) => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      ) : (
+        <input
+          type="range"
+          className="flex-1"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => onChange(parseFloat(e.target.value))}
+        />
+      )}
+      <span className="min-w-[70px] text-right font-extrabold text-[#00d4ff] text-sm">
+        {value}{suffix}
+      </span>
+    </div>
+  );
+}
+
+function MetricCard({ title, value, status }: any) {
+  const statusColors = {
+    'status-ok': 'bg-green-500/20 text-green-400',
+    'status-warning': 'bg-yellow-500/20 text-yellow-400',
+    'status-critical': 'bg-red-500/20 text-red-500',
+  };
+
+  return (
+    <div className="bg-[#2a2f45] p-4 rounded border-l-4 border-[#00d4ff]">
+      <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">{title}</div>
+      <div className="text-lg font-extrabold mb-1">{value}</div>
+      <div className={`text-xs px-2 py-1 rounded inline-block ${statusColors[status as keyof typeof statusColors] || ''}`}>
+        {status ? status.replace('status-', '') : '-'}
       </div>
     </div>
   );
