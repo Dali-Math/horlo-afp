@@ -2,380 +2,32 @@
 
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import jsPDF from 'jspdf'; // ← Nouvelle importation
 
 // Base de données complète (50+ mouvements)
 const TECHNICAL_SPECS: Record<string, any> = {
-  // ===== ETA / Unitas =====
-  "eta2824": {
-    name: "ETA 2824-2",
-    frequency: 4,
-    ampNorm: 310,
-    powerReserve: 38,
-    positions: [0, 4, 6, 8, 12, 14],
-    tempCoef: 0.6,
-    hairspring: "Nivarox II",
-    regulator: "ETAChron",
-    beatRate: 28800,
-    jewels: 25,
-    diameter: 25.6,
-    height: 4.6,
-    dateAdded: "2024-01-15",
-    category: "automatic",
-  },
-  "eta2892": {
-    name: "ETA 2892-A2",
-    frequency: 4,
-    ampNorm: 310,
-    powerReserve: 42,
-    positions: [0, 3, 5, 7, 10, 12],
-    tempCoef: 0.5,
-    hairspring: "Nivarox",
-    regulator: "ETAChron",
-    beatRate: 28800,
-    jewels: 21,
-    diameter: 25.6,
-    height: 3.6,
-    dateAdded: "2024-01-15",
-    category: "automatic",
-  },
-  "eta6497": {
-    name: "ETA/Unitas 6497-1",
-    frequency: 2.5,
-    ampNorm: 260,
-    powerReserve: 46,
-    positions: [2, 6, 8, 10, 14, 16],
-    tempCoef: 0.7,
-    hairspring: "Nivarox",
-    regulator: "Swan-neck",
-    beatRate: 18000,
-    jewels: 17,
-    diameter: 36.6,
-    height: 4.5,
-    dateAdded: "2024-01-15",
-    category: "manual",
-  },
-  "eta7760": {
-    name: "Valjoux 7760",
-    frequency: 3,
-    ampNorm: 300,
-    powerReserve: 40,
-    positions: [0, 5, 7, 9, 13, 16],
-    tempCoef: 0.8,
-    hairspring: "Nivarox",
-    regulator: "Cam-switching",
-    beatRate: 21600,
-    jewels: 17,
-    diameter: 30,
-    height: 7.9,
-    dateAdded: "2024-01-15",
-    category: "chronograph",
-  },
-  "eta7750": {
-    name: "Valjoux 7750",
-    frequency: 3,
-    ampNorm: 300,
-    powerReserve: 42,
-    positions: [0, 5, 7, 9, 13, 16],
-    tempCoef: 0.8,
-    hairspring: "Nivarox H",
-    regulator: "Cam-switching",
-    beatRate: 21600,
-    jewels: 25,
-    diameter: 30,
-    height: 7.9,
-    dateAdded: "2024-01-15",
-    category: "chronograph",
-  },
-
-  // ===== ROLEX =====
-  "rolex3135": {
-    name: "Rolex 3135",
-    frequency: 4,
-    ampNorm: 320,
-    powerReserve: 48,
-    positions: [0, 2, 3, 4, 6, 8],
-    tempCoef: 0.4,
-    hairspring: "Parachrom Bleu",
-    regulator: "Microstella",
-    beatRate: 28800,
-    jewels: 31,
-    diameter: 28.5,
-    height: 6,
-    dateAdded: "2024-01-20",
-    category: "automatic",
-  },
-  "rolex3130": {
-    name: "Rolex 3130",
-    frequency: 4,
-    ampNorm: 320,
-    powerReserve: 48,
-    positions: [0, 2, 3, 4, 6, 8],
-    tempCoef: 0.4,
-    hairspring: "Parachrom Bleu",
-    regulator: "Microstella",
-    beatRate: 28800,
-    jewels: 31,
-    diameter: 28.5,
-    height: 6,
-    dateAdded: "2024-01-20",
-    category: "automatic",
-  },
-  "rolex3235": {
-    name: "Rolex 3235",
-    frequency: 4,
-    ampNorm: 315,
-    powerReserve: 70,
-    positions: [0, 1, 2, 3, 4, 5],
-    tempCoef: 0.3,
-    hairspring: "Chronergy (Parachrom)",
-    regulator: "Microstella",
-    beatRate: 28800,
-    jewels: 31,
-    diameter: 28.5,
-    height: 6.5,
-    dateAdded: "2024-01-20",
-    category: "automatic",
-  },
-
-  // ===== PATEK PHILIPPE =====
-  "patek240": {
-    name: "Patek Philippe 240",
-    frequency: 3,
-    ampNorm: 315,
-    powerReserve: 48,
-    positions: [0, 1, 2, 3, 4, 5],
-    tempCoef: 0.3,
-    hairspring: "Spiromax",
-    regulator: "Gyromax",
-    beatRate: 21600,
-    jewels: 27,
-    diameter: 27.5,
-    height: 2.53,
-    dateAdded: "2024-01-25",
-    category: "automatic",
-  },
-  "patek324": {
-    name: "Patek Philippe 324 SC",
-    frequency: 4,
-    ampNorm: 310,
-    powerReserve: 45,
-    positions: [0, 1, 2, 3, 4, 5],
-    tempCoef: 0.35,
-    hairspring: "Spiromax",
-    regulator: "Gyromax",
-    beatRate: 28800,
-    jewels: 29,
-    diameter: 27,
-    height: 3.3,
-    dateAdded: "2024-01-25",
-    category: "automatic",
-  },
-  "patek215": {
-    name: "Patek Philippe 215",
-    frequency: 3,
-    ampNorm: 300,
-    powerReserve: 44,
-    positions: [1, 2, 3, 4, 5, 6],
-    tempCoef: 0.4,
-    hairspring: "Breguet overcoil",
-    regulator: "Swan-neck",
-    beatRate: 21600,
-    jewels: 18,
-    diameter: 21.9,
-    height: 2.55,
-    dateAdded: "2024-01-25",
-    category: "manual",
-  },
-
-  // ===== OMEGA =====
-  "omega8900": {
-    name: "Omega Co-Axial 8900",
-    frequency: 3.5,
-    ampNorm: 315,
-    powerReserve: 60,
-    positions: [0, 1, 2, 3, 4, 5],
-    tempCoef: 0.5,
-    hairspring: "Silicium Si14",
-    regulator: "Free sprung",
-    beatRate: 25200,
-    jewels: 39,
-    diameter: 33,
-    height: 5,
-    dateAdded: "2024-02-01",
-    category: "automatic",
-  },
-  "omega3861": {
-    name: "Omega 3861 (Speedmaster)",
-    frequency: 3,
-    ampNorm: 300,
-    powerReserve: 50,
-    positions: [0, 3, 5, 7, 10, 12],
-    tempCoef: 0.6,
-    hairspring: "Si14",
-    regulator: "Free sprung",
-    beatRate: 21600,
-    jewels: 26,
-    diameter: 27,
-    height: 6.2,
-    dateAdded: "2024-02-01",
-    category: "manual",
-  },
-
-  // ===== SEIKO =====
-  "seiko4r36": {
-    name: "Seiko 4R36",
-    frequency: 3,
-    ampNorm: 280,
-    powerReserve: 41,
-    positions: [2, 4, 6, 8, 10, 12],
-    tempCoef: 0.7,
-    hairspring: "Spron 510",
-    regulator: "Etachron",
-    beatRate: 21600,
-    jewels: 24,
-    diameter: 27.4,
-    height: 5.3,
-    dateAdded: "2024-02-05",
-    category: "automatic",
-  },
-  "seiko6r35": {
-    name: "Seiko 6R35",
-    frequency: 3,
-    ampNorm: 285,
-    powerReserve: 70,
-    positions: [1, 3, 5, 7, 9, 11],
-    tempCoef: 0.65,
-    hairspring: "Spron 610",
-    regulator: "Etachron",
-    beatRate: 21600,
-    jewels: 24,
-    diameter: 27.4,
-    height: 5.3,
-    dateAdded: "2024-02-05",
-    category: "automatic",
-  },
-  "seiko8r48": {
-    name: "Seiko 8R48 (Chronographe)",
-    frequency: 3.5,
-    ampNorm: 290,
-    powerReserve: 45,
-    positions: [0, 4, 6, 8, 12, 14],
-    tempCoef: 0.75,
-    hairspring: "Spron 610",
-    regulator: "Column wheel",
-    beatRate: 25200,
-    jewels: 34,
-    diameter: 28,
-    height: 7.6,
-    dateAdded: "2024-02-05",
-    category: "chronograph",
-  },
-
-  // ===== BREITLING =====
-  "breitling01": {
-    name: "Breitling B01",
-    frequency: 4,
-    ampNorm: 310,
-    powerReserve: 70,
-    positions: [0, 2, 4, 6, 8, 10],
-    tempCoef: 0.55,
-    hairspring: "Nivarox",
-    regulator: "Free sprung",
-    beatRate: 28800,
-    jewels: 47,
-    diameter: 30,
-    height: 7.2,
-    dateAdded: "2024-02-10",
-    category: "chronograph",
-  },
-
-  // ===== JAEGER-LECOULTRE =====
-  "jlc889": {
-    name: "JLC Calibre 889",
-    frequency: 4,
-    ampNorm: 300,
-    powerReserve: 38,
-    positions: [0, 2, 4, 6, 8, 10],
-    tempCoef: 0.5,
-    hairspring: "Nivarox",
-    regulator: "Swan-neck",
-    beatRate: 28800,
-    jewels: 32,
-    diameter: 26,
-    height: 3.25,
-    dateAdded: "2024-02-15",
-    category: "automatic",
-  },
-  "jlc978": {
-    name: "JLC Calibre 978 (Tourbillon)",
-    frequency: 4,
-    ampNorm: 280,
-    powerReserve: 48,
-    positions: [0, 0, 0, 0, 0, 0],
-    tempCoef: 0.3,
-    hairspring: "Nivarox",
-    regulator: "Tourbillon",
-    beatRate: 28800,
-    jewels: 33,
-    diameter: 26,
-    height: 5.5,
-    dateAdded: "2024-02-15",
-    category: "tourbillon",
-  },
-
-  // ===== TAG HEUER =====
-  "tagheuer01": {
-    name: "TAG Heuer Calibre 01",
-    frequency: 4,
-    ampNorm: 300,
-    powerReserve: 50,
-    positions: [0, 4, 6, 8, 10, 12],
-    tempCoef: 0.65,
-    hairspring: "Nivarox",
-    regulator: "Free sprung",
-    beatRate: 28800,
-    jewels: 39,
-    diameter: 30,
-    height: 7.75,
-    dateAdded: "2024-02-20",
-    category: "chronograph",
-  },
-
-  // ===== CARTIER =====
-  "cartier1904mc": {
-    name: "Cartier 1904-MC",
-    frequency: 4,
-    ampNorm: 300,
-    powerReserve: 48,
-    positions: [0, 3, 5, 7, 9, 11],
-    tempCoef: 0.6,
-    hairspring: "Nivarox",
-    regulator: "Etachron",
-    beatRate: 28800,
-    jewels: 27,
-    diameter: 25.6,
-    height: 4,
-    dateAdded: "2024-02-25",
-    category: "automatic",
-  },
-
-  // ===== IWC =====
-  "iwc52010": {
-    name: "IWC 52010 (Portugeiser)",
-    frequency: 3.5,
-    ampNorm: 300,
-    powerReserve: 168,
-    positions: [0, 2, 3, 4, 5, 6],
-    tempCoef: 0.45,
-    hairspring: "Nivarox",
-    regulator: "Breguet",
-    beatRate: 25200,
-    jewels: 31,
-    diameter: 30,
-    height: 5,
-    dateAdded: "2024-03-01",
-    category: "automatic",
-  },
+  "eta2824": { name: "ETA 2824-2", frequency: 4, ampNorm: 310, powerReserve: 38, positions: [0, 4, 6, 8, 12, 14], tempCoef: 0.6 },
+  "eta2892": { name: "ETA 2892-A2", frequency: 4, ampNorm: 310, powerReserve: 42, positions: [0, 3, 5, 7, 10, 12], tempCoef: 0.5 },
+  "eta6497": { name: "ETA/Unitas 6497-1", frequency: 2.5, ampNorm: 260, powerReserve: 46, positions: [2, 6, 8, 10, 14, 16], tempCoef: 0.7 },
+  "eta7760": { name: "Valjoux 7760", frequency: 3, ampNorm: 300, powerReserve: 40, positions: [0, 5, 7, 9, 13, 16], tempCoef: 0.8 },
+  "eta7750": { name: "Valjoux 7750", frequency: 3, ampNorm: 300, powerReserve: 42, positions: [0, 5, 7, 9, 13, 16], tempCoef: 0.8 },
+  "rolex3135": { name: "Rolex 3135", frequency: 4, ampNorm: 320, powerReserve: 48, positions: [0, 2, 3, 4, 6, 8], tempCoef: 0.4 },
+  "rolex3130": { name: "Rolex 3130", frequency: 4, ampNorm: 320, powerReserve: 48, positions: [0, 2, 3, 4, 6, 8], tempCoef: 0.4 },
+  "rolex3235": { name: "Rolex 3235", frequency: 4, ampNorm: 315, powerReserve: 70, positions: [0, 1, 2, 3, 4, 5], tempCoef: 0.3 },
+  "patek240": { name: "Patek Philippe 240", frequency: 3, ampNorm: 315, powerReserve: 48, positions: [0, 1, 2, 3, 4, 5], tempCoef: 0.3 },
+  "patek324": { name: "Patek Philippe 324 SC", frequency: 4, ampNorm: 310, powerReserve: 45, positions: [0, 1, 2, 3, 4, 5], tempCoef: 0.35 },
+  "patek215": { name: "Patek Philippe 215", frequency: 3, ampNorm: 300, powerReserve: 44, positions: [1, 2, 3, 4, 5, 6], tempCoef: 0.4 },
+  "omega8900": { name: "Omega Co-Axial 8900", frequency: 3.5, ampNorm: 315, powerReserve: 60, positions: [0, 1, 2, 3, 4, 5], tempCoef: 0.5 },
+  "omega3861": { name: "Omega 3861 (Speedmaster)", frequency: 3, ampNorm: 300, powerReserve: 50, positions: [0, 3, 5, 7, 10, 12], tempCoef: 0.6 },
+  "seiko4r36": { name: "Seiko 4R36", frequency: 3, ampNorm: 280, powerReserve: 41, positions: [2, 4, 6, 8, 10, 12], tempCoef: 0.7 },
+  "seiko6r35": { name: "Seiko 6R35", frequency: 3, ampNorm: 285, powerReserve: 70, positions: [1, 3, 5, 7, 9, 11], tempCoef: 0.65 },
+  "seiko8r48": { name: "Seiko 8R48 (Chronographe)", frequency: 3.5, ampNorm: 290, powerReserve: 45, positions: [0, 4, 6, 8, 12, 14], tempCoef: 0.75 },
+  "breitling01": { name: "Breitling B01", frequency: 4, ampNorm: 310, powerReserve: 70, positions: [0, 2, 4, 6, 8, 10], tempCoef: 0.55 },
+  "jlc889": { name: "JLC Calibre 889", frequency: 4, ampNorm: 300, powerReserve: 38, positions: [0, 2, 4, 6, 8, 10], tempCoef: 0.5 },
+  "jlc978": { name: "JLC Calibre 978 (Tourbillon)", frequency: 4, ampNorm: 280, powerReserve: 48, positions: [0, 0, 0, 0, 0, 0], tempCoef: 0.3 },
+  "tagheuer01": { name: "TAG Heuer Calibre 01", frequency: 4, ampNorm: 300, powerReserve: 50, positions: [0, 4, 6, 8, 10, 12], tempCoef: 0.65 },
+  "cartier1904mc": { name: "Cartier 1904-MC", frequency: 4, ampNorm: 300, powerReserve: 48, positions: [0, 3, 5, 7, 9, 11], tempCoef: 0.6 },
+  "iwc52010": { name: "IWC 52010 (Portugeiser)", frequency: 3.5, ampNorm: 300, powerReserve: 168, positions: [0, 2, 3, 4, 5, 6], tempCoef: 0.45 },
 };
 
 export default function SimulateurResonance3D() {
@@ -425,7 +77,7 @@ export default function SimulateurResonance3D() {
     const ambientLight = new THREE.AmbientLight(0x404080, 0.3);
     scene.add(ambientLight);
 
-    // Modèles 3D
+    // Création modèles 3D
     const balanceGeo = new THREE.TorusGeometry(1.5, 0.08, 12, 48);
     const balanceMat = new THREE.MeshStandardMaterial({
       color: 0xc9a961, metalness: 0.95, roughness: 0.05
@@ -584,35 +236,88 @@ export default function SimulateurResonance3D() {
     document.getElementById('diagnostic')!.style.display = 'block';
   };
 
+  // ✅ NOUVELLE FONCTION PDF avec jsPDF
   const exportReport = () => {
     const specs = TECHNICAL_SPECS[calibre];
-    const report = {
-      titre: `Rapport Technique - ${specs.name}`,
-      date: new Date().toLocaleString('fr-CH'),
-      configuration: {
-        calibre: specs.name,
-        amplitude: `${amplitude}°`,
-        battement: `${beatError}ms`,
-        position: document.getElementById('position')?.textContent || '',
-        temperature: `${temperature}°C`,
-        usure: `${pivotWear}%`
-      },
-      mesures: {
-        isochronisme: document.getElementById('isochronism-status')?.textContent || '',
-        stabilitePosition: document.getElementById('huygens-status')?.textContent || '',
-        deviationTotale: document.getElementById('deviation-status')?.textContent || '',
-        reserveMarche: document.getElementById('power-reserve-status')?.textContent || ''
-      },
-      diagnostics: []
-    };
-
-    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Rapport-Tech-${specs.name.replace(/ /g, '-')}-${Date.now()}.json`;
-    a.click();
-    alert("✅ Rapport technique exporté (format JSON - PDF en dev)");
+    const doc = new jsPDF();
+    
+    // En-tête
+    doc.setFont("courier", "bold");
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(16);
+    doc.text("RAPPORT TECHNIQUE HORLOLEARN", 12, 15);
+    doc.setFontSize(10);
+    doc.text(`Généré le : ${new Date().toLocaleString('fr-CH')}`, 12, 23);
+    
+    // Informations mouvement
+    doc.setFontSize(12);
+    doc.setFont("courier", "bold");
+    doc.text(`📌 Mouvement : ${specs.name}`, 12, 35);
+    
+    doc.setFontSize(10);
+    doc.setFont("courier", "normal");
+    const config = [
+      `• Amplitude mesurée : ${amplitude}°`,
+      `• Battement : ${beatError} ms`,
+      `• Position testée : ${['CH', '6H', '9H', '3H', '12H', 'CU'][position]}`,
+      `• Température : ${temperature}°C`,
+      `• Âge mouvement : ${age} ans`,
+      `• Usure pivots : ${pivotWear}%`,
+      `• Usure ressort : ${mainspringWear}%`,
+      ``,
+      `RÉSULTATS DE SIMULATION :`,
+    ];
+    
+    doc.text(config, 12, 45);
+    
+    // Résultats avec couleurs
+    const yStart = 85;
+    const metrics = [
+      { label: "Isochronisme", id: "isochronism-status", detail: "isochronism-detail" },
+      { label: "Stabilité Huygens", id: "huygens-status", detail: "huygens-detail" },
+      { label: "Déviation totale", id: "deviation-status", detail: "deviation-detail" },
+      { label: "Réserve de marche", id: "power-reserve-status", detail: "power-reserve-detail" }
+    ];
+    
+    let yPos = yStart;
+    doc.setFont("courier", "bold");
+    doc.text("🎯 METRIQUES CLÉS :", 12, yPos);
+    yPos += 8;
+    
+    doc.setFont("courier", "normal");
+    metrics.forEach(metric => {
+      const value = document.getElementById(metric.id)?.textContent || '-';
+      const detail = document.getElementById(metric.detail)?.textContent || '';
+      const text = `• ${metric.label}: ${value} (${detail})`;
+      doc.text(text, 12, yPos);
+      yPos += 6;
+    });
+    
+    // Diagnostic
+    yPos += 4;
+    doc.setFont("courier", "bold");
+    doc.text("🔍 DIAGNOSTIC :", 12, yPos);
+    yPos += 8;
+    
+    doc.setFont("courier", "normal");
+    const diagList = document.getElementById('diagnostic-list');
+    if (diagList) {
+      const items = diagList.getElementsByTagName('li');
+      for (let i = 0; i < Math.min(items.length, 5); i++) {
+        doc.text(`→ ${items[i].textContent}`, 12, yPos);
+        yPos += 6;
+        if (yPos > 280) break; // Éviter de dépasser la page
+      }
+    }
+    
+    // Pied de page
+    doc.setFont("courier", "italic");
+    doc.setFontSize(8);
+    doc.text("HORLOLEARN PRO - Outil de simulation avancé", 12, 290);
+    
+    // Sauvegarde
+    doc.save(`Rapport-${specs.name.replace(/[^a-zA-Z0-9]/g, '-')}-${Date.now()}.pdf`);
+    alert("✅ Rapport PDF exporté avec succès !");
   };
 
   const exportJSON = () => {
