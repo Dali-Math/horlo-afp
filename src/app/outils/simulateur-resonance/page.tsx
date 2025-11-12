@@ -223,7 +223,7 @@ export default function SimulateurResonance3D() {
       renderer.setSize(container.clientWidth, container.clientHeight);
     };
     window.addEventListener('resize', handleResize);
-    return () => window.removeAnimationFrame(handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return (
