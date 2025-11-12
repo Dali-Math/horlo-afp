@@ -8,9 +8,9 @@ import { MagnetismResult, ImpactResult, AcousticAnalysis, Diagnostic } from '@/l
 import { calculateMagnetism } from '@/lib/simulateur/modules/magnetism';
 import { simulateDrop } from '@/lib/simulateur/modules/impact';
 import { calculateAmplitudeLoss, calculateTimingDeviation, calculatePowerReserve } from '@/lib/simulateur/physics-engine';
-import DiagnosticsPanel from '@/components/simulateur/DiagnosticsPanel';
-import ImpactSimulator from '@/components/simulateur/ImpactSimulator';
-import MicrophoneAnalyzer from '@/components/simulateur/MicrophoneAnalyzer';
+import DiagnosticsPanel from '@/lib/simulateur/DiagnosticsPanel';
+import ImpactSimulator from '@/lib/simulateur/ImpactSimulator';
+import MicrophoneAnalyzer from '@/lib/simulateur/MicrophoneAnalyzer';
 
 export default function SimulateurResonance3D() {
   const [calibre, setCalibre] = useState<string>('eta2824');
