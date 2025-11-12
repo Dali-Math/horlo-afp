@@ -1,4 +1,4 @@
-import type { MouvementSpecs, SimulationResults, Diagnostic } from './types';
+import type { TechnicalSpecs, SimulationResults, Diagnostic } from './types';
 
 interface ExportData {
   specs: MouvementSpecs;
