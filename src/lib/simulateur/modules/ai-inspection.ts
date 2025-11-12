@@ -1,4 +1,3 @@
-// STUB VERSION - Temporaire
 export interface AIInspection {
   confidence: number;
   defect: 'spiral_fracture' | 'pivot_scratch' | 'jewel_crack' | 'none';
@@ -10,5 +9,9 @@ export async function loadAIModel() {
 }
 
 export async function analyzeImage(imageData: any): Promise<AIInspection> {
-  return { confidence: 0, defect: 'none', severity: 'minor' };
+  return {
+    confidence: 0,
+    defect: 'none',
+    severity: 'minor'
+  };
 }
