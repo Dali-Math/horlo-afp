@@ -53,3 +53,12 @@ export interface Diagnostic {
   level: DiagnosticLevel;
   text: string;
 }
+export interface MouvementSpecs {
+  name: string;
+  beatRate: number;
+  frequency: number;
+  ampNorm: number;
+  powerReserve: number;
+  tempCoef: number;
+  positions: number[];
+}
