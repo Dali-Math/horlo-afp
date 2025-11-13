@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Timer, Activity, TrendingUp, Download, Settings, 
-  Box, Rotate3D, AlertTriangle, CheckCircle,
+  Box, Rotate3d, AlertTriangle, CheckCircle,
   Play, Square, RotateCw
 } from 'lucide-react';
 
