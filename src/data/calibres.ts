@@ -1,7 +1,7 @@
 
 
 
-export const CALIBRE_DB: Calibre[] = [
+export const CALIBRE_DB = [
   // ============================================================
   // ETA / VALJOUX (Swatch Group) - Les standards de l'industrie
   // ============================================================
