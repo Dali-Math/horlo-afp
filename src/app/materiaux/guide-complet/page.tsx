@@ -1,7 +1,5 @@
 'use client';
-
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function GuideCompletPage() {
   const [progress, setProgress] = useState(0);
@@ -36,13 +34,7 @@ export default function GuideCompletPage() {
   }, []);
 
   return (
-    <div className={`page-container ${isDarkMode ? 'dark-mode' : ''}`} style={{
-      display: 'flex',
-      minHeight: '100vh',
-      background: isDarkMode ? '#1a1a1a' : '#f9f7f4',
-      color: isDarkMode ? '#f9f7f4' : '#1a1a1a'
-    }}>
-      
+    <>
       {/* SIDEBAR - DESIGN HORLOLEARN */}
       <aside className="sidebar" style={{
         position: 'fixed',
@@ -853,7 +845,7 @@ export default function GuideCompletPage() {
         }}>
           {isDarkMode ? '☀️' : '🌙'}
         </button>
-      </div>
+      </main>
 
       {/* BARRE DE PROGRESSION FIXÉE */}
       <div style={{
@@ -872,6 +864,14 @@ export default function GuideCompletPage() {
           transition: 'width 0.3s ease'
         }}></div>
       </div>
+
+      {/* CONTENU PRINCIPAL AVEC STYLES INLINE */}
+      <div className={`page-container ${isDarkMode ? 'dark-mode' : ''}`} style={{
+        display: 'flex',
+        minHeight: '100vh',
+        background: isDarkMode ? '#1a1a1a' : '#f9f7f4',
+        color: isDarkMode ? '#f9f7f4' : '#1a1a1a'
+      }}></div>
 
       {/* STYLES GLOBAUX */}
       <style jsx global>{`
