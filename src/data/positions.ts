@@ -1,6 +1,4 @@
-import { Position } from '../types';
-
-export const POSITIONS: Position[] = [
+export const POSITIONS = [
   // POSITIONS COSC OFFICIELLES
   { id: 'DU', name: 'Dial Up', rotation: 'FACE UP', icon: '↑' },
   { id: 'DD', name: 'Dial Down', rotation: 'FACE DOWN', icon: '↓' },
