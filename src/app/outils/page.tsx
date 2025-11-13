@@ -26,7 +26,9 @@ import {
   CalculateurDimensionsSpiral,
   SimulateurEchappementAncreAvance,
 } from '../../components';
-import SimulateurResonance3D from '../../components/SimulateurResonance3D'; 
+import SimulateurResonance3D from '../../components/SimulateurResonance3D';
+import ChronographeBancProPage from './chronographe-banc-pro/page';
+import { Gauge } from "lucide-react";
 const allTools = [
   { id: 'bibliotheque-ressources', name: 'Bibliothèque de Ressources', component: RessourcesPage, icon: BookOpen },
   { id: 'cosc-calculator', name: 'Calculateur Précision COSC', component: COSCCalculator, icon: Calculator },
@@ -51,6 +53,7 @@ const allTools = [
   { id: 'calculateur-dimensions-spiral', name: 'Calculateur de Dimensions du Spiral', component: CalculateurDimensionsSpiral, icon: Compass },
   { id: 'simulateur-echappement-avance', name: 'Simulateur d\'Échappement Ancre Avancé', component: SimulateurEchappementAncreAvance, icon: Settings },
   { id: 'simulateur-resonance-3d', name: 'Simulateur Résonance 3D', component: SimulateurResonance3D, icon: Cog },
+  { id: 'chronographe-banc-pro', name: 'Chronographe Banc Pro', component: ChronographeBancProPage, icon: Gauge },
 ];
 
 export default function HorloLearnToolsPage() {
