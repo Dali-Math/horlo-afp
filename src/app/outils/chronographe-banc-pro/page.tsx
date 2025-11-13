@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   Timer, Activity, BarChart2, Download, Info, Play, Square, RotateCw, Volume2,
-  CheckCircle, AlertTriangle, Cpu, Zap, Gauge, Target, FileText, TrendingUp
+  CheckCircle, AlertTriangle, Cpu, FileText
 } from 'lucide-react';
 
 interface TimingData {
@@ -99,7 +99,7 @@ export default function ChronographeBancPro() {
     const periodError = (Math.random() - 0.5) * 0.0001;
     const rate = periodError * 86400 * 1000;
     const jitter = Math.random() * 0.5;
-    const qFactor = amplitude / (jitter + 0.1); // Estimation Q factor
+    const qFactor = amplitude / (jitter + 0.1);
     
     return {
       timestamp: time,
@@ -263,6 +263,31 @@ export default function ChronographeBancPro() {
     a.click();
   };
 
+  // Export CSV (CORRIGÉ - ajouté ici)
+  const exportCSV = () => {
+    const csv = [
+      ['Position', 'Amplitude Moy (°)', 'Ecart-type Amp', 'Beat Error (ms)', 'Rate (s/j)', 'Jitter (ms)', 'Q Factor', 'Isochronisme (%)', 'COSC'],
+      ...Object.entries(averages).map(([pos, stats]: [string, any]) => [
+        POSITIONS.find(p => p.id === pos)?.name || pos, 
+        stats.amplitude.avg.toFixed(1),
+        stats.amplitude.std.toFixed(2),
+        stats.beatError.avg.toFixed(1),
+        stats.rate.avg.toFixed(1),
+        stats.jitter.avg.toFixed(2),
+        stats.qFactor.avg.toFixed(0),
+        stats.isochronism.toFixed(2),
+        stats.isCOSC ? 'OUI' : 'NON'
+      ])
+    ].map(row => row.join(',')).join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `chronographe_${new Date().toISOString().split('T')[0]}_${Date.now()}.csv`;
+    a.click();
+  };
+
   const showTooltip = (text: string) => (e: React.MouseEvent) => {
     setTooltip({ show: true, text, x: e.clientX, y: e.clientY - 30 });
   };
@@ -278,7 +303,6 @@ export default function ChronographeBancPro() {
         </div>
       )}
 
-      {/* HEADER */}
       <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 mb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -293,9 +317,8 @@ export default function ChronographeBancPro() {
         </div>
       </div>
 
-      {/* CONTROLS */}
       <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 mb-4">
-        {/* Sélection calibre (NOUVEAU) */}
+        {/* Sélection calibre */}
         <div className="mb-4">
           <label className="block text-slate-400 text-xs mb-1 flex items-center gap-1">
             CALIBRE (Base de données) <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Sélection auto-configure lift angle et beat rate")} onMouseLeave={hideTooltip} />
@@ -460,17 +483,6 @@ export default function ChronographeBancPro() {
             <p className="text-xs mt-2 text-slate-700">Conseil: mesurez chaque position 30s minimum</p>
           </div>
         )}
-      </div>
-
-      {/* GRAPHIQUE TEMPS RÉEL (À IMPLÉMENTER) */}
-      <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 mt-4">
-        <h3 className="text-lg font-bold mb-2 flex items-center gap-2"><TrendingUp className="w-5 h-5" />Graphique temps réel (À venir)</h3>
-        <div className="h-64 bg-black rounded border border-slate-800 flex items-center justify-center text-slate-600">
-          <div className="text-center">
-            <BarChart2 className="w-12 h-12 mx-auto mb-2 opacity-30" />
-            <p className="text-sm">Intégration d'un graphique avec Recharts ou Chart.js recommandée</p>
-          </div>
-        </div>
       </div>
 
       <div className="mt-4 text-xs text-slate-600 flex justify-between items-center">
