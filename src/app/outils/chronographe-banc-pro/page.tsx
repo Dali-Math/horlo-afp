@@ -43,6 +43,8 @@ export default function ChronographeBancPro() {
   const startTimeRef = useRef<number | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
+  const beatPeriod = 3600000 / selectedRate;
+
   useEffect(() => {
     if (audioFeedback && !audioContextRef.current) {
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -64,7 +66,6 @@ export default function ChronographeBancPro() {
   }, [audioFeedback]);
 
   const generateSignal = useCallback((time: number): TimingData => {
-    const beatPeriod = 3600000 / selectedRate;
     const baseAmplitude = 290;
     const amplitudeDrift = Math.sin(time * 0.001) * 15;
     const thermalNoise = (Math.random() - 0.5) * 8;
@@ -85,7 +86,7 @@ export default function ChronographeBancPro() {
       liftAngle: liftAngle,
       position: currentPosition
     };
-  }, [selectedRate, liftAngle, currentPosition]);
+  }, [beatPeriod, liftAngle, currentPosition]);
 
   useEffect(() => {
     if (isRunning) {
@@ -299,7 +300,7 @@ export default function ChronographeBancPro() {
             
             <div className="bg-black p-3 rounded border border-slate-800">
               <div className="text-slate-500 text-xs flex items-center gap-1">ISOCHRONISME <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Variation d'amplitude entre positions")} onMouseLeave={hideTooltip} /></div>
-              <div className="text-2xl font-bold text-blue-400">{Math.max(...data.map(d => d.amplitude)) - Math.min(...data.map(d => d.amplitude)) / Math.max(...data.map(d => d.amplitude)) * 100}%</div>
+              <div className="text-2xl font-bold text-blue-400">{data.length > 1 ? ((Math.max(...data.map(d => d.amplitude)) - Math.min(...data.map(d => d.amplitude))) / Math.max(...data.map(d => d.amplitude)) * 100).toFixed(1) : '0.0'}%</div>
             </div>
             
             <div className="bg-black p-3 rounded border border-slate-800">
