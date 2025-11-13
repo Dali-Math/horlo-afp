@@ -1,54 +1,35 @@
-export interface CartoucheField {
+export interface TimingData {
+  timestamp: number;
+  amplitude: number;
+  beatError: number;
+  rate: number;
+  period: number;
+  jitter: number;
+  liftAngle: number;
+  position: string;
+  qFactor: number;
+  temperature: number;
+  profileId?: string;
+}
+
+export interface MeasurementRecord {
+  id: string;
+  timestamp: number;
+  sessionResults: Record<string, TimingData[]>;
+  averages: Record<string, any>;
+  calibre: string;
+  duration: number;
+  notes?: string;
+}
+
+export interface SignatureProfile {
   id: string;
   name: string;
-  category: string;
-  obligation: string;
+  beatRate: number;
+  liftAngle: number;
+  baseAmplitude: number;
+  jitterPattern: 'stable' | 'sporadic' | 'choppy' | 'drifting';
+  driftRate: number;
   description: string;
-  example: string;
-  characters: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+  typicalIssues?: string[];
 }
-
-export interface QuizQuestion {
-  id: number;
-  question: string;
-  options: string[];
-  correctAnswer: number;
-  explanation: string;
-}
-
-export interface TableData {
-  [key: string]: string;
-}
-
-export interface FAQItem {
-  id: string;
-  question: string;
-  answer: string;
-}
-
-export interface MemoItem {
-  text: string;
-}
-
-export interface UserProgress {
-  currentSection: string;
-  completedQuizzes: number;
-  totalScore: number;
-  achievements: string[];
-  currentQuizIndex: number;
-  quizAnswers: (number | null)[];
-  quizScore: number;
-}
-
-export type SectionType = 
-  | 'champs' 
-  | 'quiz' 
-  | 'memo' 
-  | 'tableaux' 
-  | 'faq' 
-  | 'normes'
-  | 'cartouche';
