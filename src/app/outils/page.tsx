@@ -28,7 +28,6 @@ import {
 } from '../../components';
 import SimulateurResonance3D from '../../components/SimulateurResonance3D';
 import ChronographeBancProPage from './chronographe-banc-pro/page';
-import { Gauge } from "lucide-react";
 const allTools = [
   { id: 'bibliotheque-ressources', name: 'Bibliothèque de Ressources', component: RessourcesPage, icon: BookOpen },
   { id: 'cosc-calculator', name: 'Calculateur Précision COSC', component: COSCCalculator, icon: Calculator },
