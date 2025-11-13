@@ -1,4 +1,5 @@
 'use client';
+
 import { CALIBRE_DB } from '@/app/data/calibres';
 import { POSITIONS } from '@/app/data/positions';
 import { TimingData } from '@/app/types';
@@ -27,11 +28,31 @@ export default function ChronographeBancPro() {
   // Moyenne glissante (20 dernières mesures)
   const [movingAvg, setMovingAvg] = useState({ amplitude: 0, rate: 0 });
   
+  // Pour le graphique
+  const graphRef = useRef<HTMLDivElement>(null);
+  const [graphSize, setGraphSize] = useState({ width: 0, height: 0 });
+  
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
   const beatPeriod = 3600000 / selectedRate;
+
+  // Mesure des dimensions du conteneur
+  useEffect(() => {
+    const updateSize = () => {
+      if (graphRef.current) {
+        setGraphSize({
+          width: graphRef.current.clientWidth,
+          height: graphRef.current.clientHeight
+        });
+      }
+    };
+    
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
 
   // Auto-configuration du calibre
   useEffect(() => {
@@ -105,7 +126,6 @@ export default function ChronographeBancPro() {
         const currentElapsed = (now - (startTimeRef.current || now)) / 1000;
         setElapsed(currentElapsed);
         
-        // ARRÊT AUTOMATIQUE CORRIGÉ
         if (currentElapsed >= measurementDuration) {
           handleStop();
           return;
@@ -485,30 +505,61 @@ export default function ChronographeBancPro() {
         )}
       </div>
 
-      {/* GRAPHIQUE TEMPS RÉEL (STATIQUE POUR L'INSTANT) */}
-      {showGraph && isRunning && (
+      {/* GRAPHIQUE TEMPS RÉEL CORRIGÉ */}
+      {showGraph && isRunning && data.length > 0 && (
         <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 mt-4">
-          <h3 className="text-lg font-bold mb-2 flex items-center gap-2"><TrendingUp className="w-5 h-5" />Graphique temps réel</h3>
-          <div className="h-64 bg-black rounded border border-slate-800 p-2 overflow-hidden">
+          <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5" /> Graphique temps réel
+          </h3>
+          <div ref={graphRef} className="h-64 bg-black rounded border border-slate-800 p-2 overflow-hidden">
             <svg className="w-full h-full">
-              {/* Grille */}
+              {/* Grille horizontale */}
               {[...Array(5)].map((_, i) => (
-                <line key={`h-${i}`} x1="0" y1={`${i * 25}%`} x2="100%" y2={`${i * 25}%`} stroke="#1f2937" strokeWidth="1" />
-              ))}
-              {/* Courbe d'amplitude (simulée) */}
-              {data.length > 1 && (
-                <polyline
-                  fill="none"
-                  stroke="#10b981"
-                  strokeWidth="2"
-                  points={data.slice(-50).map((d, i) => `${(i / Math.min(49, data.length - 1)) * 100}%,${80 - (d.amplitude / 360) * 60}%`).join(' ')}
+                <line 
+                  key={`h-${i}`} 
+                  x1="0" 
+                  y1={`${i * 25}%`} 
+                  x2="100%" 
+                  y2={`${i * 25}%`} 
+                  stroke="#1f2937" 
+                  strokeWidth="1" 
                 />
-              )}
+              ))}
+              
+              {/* Courbe Amplitude - Ligne verte */}
+              <polyline
+                fill="none"
+                stroke="#10b981"
+                strokeWidth="2"
+                points={data.slice(-50).map((d, i) => {
+                  const x = (i / Math.min(49, data.length - 1)) * 100;
+                  // Normalise amplitude 180-320° sur 0-100% de hauteur
+                  const y = 100 - ((d.amplitude - 180) / 140) * 100;
+                  return `${x}%,${y}%`;
+                }).join(' ')}
+              />
+              
+              {/* Courbe Rate - Ligne bleue */}
+              <polyline
+                fill="none"
+                stroke="#3b82f6"
+                strokeWidth="2"
+                points={data.slice(-50).map((d, i) => {
+                  const x = (i / Math.min(49, data.length - 1)) * 100;
+                  // Normalise rate -30 à +30 s/j sur 0-100% de hauteur
+                  const y = 100 - ((d.rate + 30) / 60) * 100;
+                  return `${x}%,${y}%`;
+                }).join(' ')}
+              />
             </svg>
           </div>
-          <div className="flex gap-4 mt-2 text-xs text-slate-500">
-            <div className="flex items-center gap-1"><div className="w-3 h-1 bg-green-500 rounded"></div> Amplitude</div>
-            <div className="flex items-center gap-1"><div className="w-3 h-1 bg-blue-500 rounded"></div> Rate (échelle ÷10)</div>
+          <div className="flex gap-4 mt-2 text-xs text-slate-400">
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-1 bg-green-500 rounded"></div> Amplitude (180-320°)
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-1 bg-blue-500 rounded"></div> Rate (-30/+30 s/j)
+            </div>
           </div>
         </div>
       )}
