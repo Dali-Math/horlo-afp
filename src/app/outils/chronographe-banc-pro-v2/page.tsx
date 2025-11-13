@@ -7,7 +7,6 @@ import { initDB, saveMeasurement, loadMeasurements } from '@/lib/db';
 import { SIGNATURE_PROFILES, SignatureProfile } from '@/data/signatures';
 import { CALIBRE_DB } from '@/data/calibres';
 import { POSITIONS } from '@/data/positions';
-import type { SignatureProfile } from '@/app/data/signatures';
 import { 
   Timer, Activity, BarChart2, Download, Info, Play, Square, RotateCw, Volume2,
   CheckCircle, AlertTriangle, Cpu, FileText, TrendingUp, Thermometer, History, Split,
