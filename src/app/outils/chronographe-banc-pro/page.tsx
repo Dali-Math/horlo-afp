@@ -439,74 +439,77 @@ export default function ChronographeBancPro() {
         </div>
       )}
 
-      {/* TABLEAU RÉSULTATS + DIAGNOSTIC */}
-      <div className="bg-slate-900 border border-slate-700 rounded-lg p-4">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold flex items-center gap-2"><BarChart2 className="w-5 h-5" />RÉSULTATS PAR POSITION</h2>
-          {Object.values(averages).some((a: any) => a?.isCOSC) && <div className="bg-green-900 text-green-400 px-3 py-1 rounded text-sm flex items-center gap-1 font-bold"><CheckCircle className="w-4 h-4" />COSC COMPLIANT</div>}
-        </div>
-        
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs">
-            <thead>
-              <tr className="border-b border-slate-700">
-                <th className="text-left py-2 text-slate-400">POSITION</th>
-                <th className="text-right py-2 text-slate-400">AMPL. MOY (°)</th>
-                <th className="text-right py-2 text-slate-400">ÉCART-TYPE</th>
-                <th className="text-right py-2 text-slate-400">BEAT ERR (ms)</th>
-                <th className="text-right py-2 text-slate-400">RATE (s/j)</th>
-                <th className="text-right py-2 text-slate-400">Q FACTOR</th>
-                <th className="text-right py-2 text-slate-400">JITTER (ms)</th>
-                <th className="text-right py-2 text-slate-400">ISOCHR (%)</th>
-                <th className="text-center py-2 text-slate-400">STATUT</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(averages).map(([pos, stats]: [string, any]) => (
-                <tr key={pos} className="border-b border-slate-800 hover:bg-slate-800/30">
-                  <td className="py-2 font-semibold">{POSITIONS.find(p => p.id === pos)?.name} {POSITIONS.find(p => p.id === pos)?.icon}</td>
-                  <td className="text-right py-2">{stats.amplitude.avg.toFixed(1)}</td>
-                  <td className={`text-right py-2 ${stats.amplitude.std > 15 ? 'text-yellow-400' : 'text-slate-500'}`}>{stats.amplitude.std.toFixed(1)}</td>
-                  <td className={`text-right py-2 ${stats.beatError.abs > 0.5 ? 'text-red-400' : 'text-green-400'}`}>{stats.beatError.avg.toFixed(1)}</td>
-                  <td className={`text-right py-2 font-semibold ${Math.abs(stats.rate.avg) > 10 ? 'text-red-400' : Math.abs(stats.rate.avg) > 5 ? 'text-yellow-400' : 'text-green-400'}`}>{stats.rate.avg > 0 ? '+' : ''}{stats.rate.avg.toFixed(1)}</td>
-                  <td className={`text-right py-2 ${stats.qFactor.avg > 2000 ? 'text-green-400' : 'text-yellow-400'}`}>{stats.qFactor.avg.toFixed(0)}</td>
-                  <td className={`text-right py-2 ${stats.jitter.avg > 0.4 ? 'text-red-400' : 'text-slate-400'}`}>{stats.jitter.avg.toFixed(2)}</td>
-                  <td className={`text-right py-2 ${stats.isochronism > 10 ? 'text-yellow-400' : 'text-green-400'}`}>{stats.isochronism.toFixed(1)}%</td>
-                  <td className="text-center py-2">{stats.isCOSC ? <CheckCircle className="w-4 h-4 text-green-400 inline" /> : <AlertTriangle className="w-4 h-4 text-yellow-400 inline" />}</td>
+      {/* TABLEAU RÉSULTATS UNIQUEMENT SI DES MOYENNES EXISTENT */}
+      {Object.keys(averages).length > 0 && (
+        <div className="bg-slate-900 border border-slate-700 rounded-lg p-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold flex items-center gap-2"><BarChart2 className="w-5 h-5" />RÉSULTATS PAR POSITION</h2>
+            {Object.values(averages).some((a: any) => a?.isCOSC) && <div className="bg-green-900 text-green-400 px-3 py-1 rounded text-sm flex items-center gap-1 font-bold"><CheckCircle className="w-4 h-4" />COSC COMPLIANT</div>}
+          </div>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b border-slate-700">
+                  <th className="text-left py-2 text-slate-400">POSITION</th>
+                  <th className="text-right py-2 text-slate-400">AMPL. MOY (°)</th>
+                  <th className="text-right py-2 text-slate-400">ÉCART-TYPE</th>
+                  <th className="text-right py-2 text-slate-400">BEAT ERR (ms)</th>
+                  <th className="text-right py-2 text-slate-400">RATE (s/j)</th>
+                  <th className="text-right py-2 text-slate-400">Q FACTOR</th>
+                  <th className="text-right py-2 text-slate-400">JITTER (ms)</th>
+                  <th className="text-right py-2 text-slate-400">ISOCHR (%)</th>
+                  <th className="text-center py-2 text-slate-400">STATUT</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {Object.entries(averages).map(([pos, stats]: [string, any]) => (
+                  <tr key={pos} className="border-b border-slate-800 hover:bg-slate-800/30">
+                    <td className="py-2 font-semibold">{POSITIONS.find(p => p.id === pos)?.name} {POSITIONS.find(p => p.id === pos)?.icon}</td>
+                    <td className="text-right py-2">{stats.amplitude.avg.toFixed(1)}</td>
+                    <td className={`text-right py-2 ${stats.amplitude.std > 15 ? 'text-yellow-400' : 'text-slate-500'}`}>{stats.amplitude.std.toFixed(1)}</td>
+                    <td className={`text-right py-2 ${stats.beatError.abs > 0.5 ? 'text-red-400' : 'text-green-400'}`}>{stats.beatError.avg.toFixed(1)}</td>
+                    <td className={`text-right py-2 font-semibold ${Math.abs(stats.rate.avg) > 10 ? 'text-red-400' : Math.abs(stats.rate.avg) > 5 ? 'text-yellow-400' : 'text-green-400'}`}>{stats.rate.avg > 0 ? '+' : ''}{stats.rate.avg.toFixed(1)}</td>
+                    <td className={`text-right py-2 ${stats.qFactor.avg > 2000 ? 'text-green-400' : 'text-yellow-400'}`}>{stats.qFactor.avg.toFixed(0)}</td>
+                    <td className={`text-right py-2 ${stats.jitter.avg > 0.4 ? 'text-red-400' : 'text-slate-400'}`}>{stats.jitter.avg.toFixed(2)}</td>
+                    <td className={`text-right py-2 ${stats.isochronism > 10 ? 'text-yellow-400' : 'text-green-400'}`}>{stats.isochronism.toFixed(1)}%</td>
+                    <td className="text-center py-2">{stats.isCOSC ? <CheckCircle className="w-4 h-4 text-green-400 inline" /> : <AlertTriangle className="w-4 h-4 text-yellow-400 inline" />}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-        {/* DIAGNOSTIC IA */}
-        {Object.values(averages).map((stats: any, idx) => 
-          stats.diagnostics && stats.diagnostics.length > 0 && (
-            <div key={idx} className="mt-4 bg-red-900/20 border border-red-700 rounded p-3">
-              <div className="flex items-start gap-2">
-                <AlertTriangle className="w-5 h-5 text-red-400 mt-1" />
-                <div>
-                  <h3 className="text-red-400 font-bold text-sm">DIAGNOSTIC IA</h3>
-                  <ul className="text-red-300 text-xs mt-1 list-disc list-inside">
-                    {stats.diagnostics.map((issue: string, i: number) => <li key={i}>{issue}</li>)}
-                  </ul>
+          {/* DIAGNOSTIC IA */}
+          {Object.values(averages).map((stats: any, idx) => 
+            stats.diagnostics && stats.diagnostics.length > 0 && (
+              <div key={idx} className="mt-4 bg-red-900/20 border border-red-700 rounded p-3">
+                <div className="flex items-start gap-2">
+                  <AlertTriangle className="w-5 h-5 text-red-400 mt-1" />
+                  <div>
+                    <h3 className="text-red-400 font-bold text-sm">DIAGNOSTIC IA</h3>
+                    <ul className="text-red-300 text-xs mt-1 list-disc list-inside">
+                      {stats.diagnostics.map((issue: string, i: number) => <li key={i}>{issue}</li>)}
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </div>
-          )
-        )}
+            )
+          )}
+        </div>
+      )}
 
-        {Object.keys(averages).length === 0 && (
-          <div className="text-center py-16 text-slate-600">
-            <Activity className="w-16 h-16 mx-auto mb-4 opacity-30" />
-            <p className="text-sm">Aucune mesure effectuée. Configurez les paramètres et lancez une acquisition.</p>
-            <p className="text-xs mt-2 text-slate-700">Conseil: mesurez chaque position 30s minimum</p>
-          </div>
-        )}
-      </div>
+      {/* MESSAGE UNIQUEMENT SI AUCUNE ACQUISITION N'A ÉTÉ LANCÉE */}
+      {!isRunning && Object.keys(averages).length === 0 && (
+        <div className="text-center py-16 text-slate-600">
+          <Activity className="w-16 h-16 mx-auto mb-4 opacity-30" />
+          <p className="text-sm">Aucune mesure effectuée. Configurez les paramètres et lancez une acquisition.</p>
+          <p className="text-xs mt-2 text-slate-700">Conseil: mesurez chaque position 30s minimum</p>
+        </div>
+      )}
 
-      {/* GRAPHIQUE TEMPS RÉEL CORRIGÉ */}
-      {showGraph && isRunning && data.length > 0 && (
+      {/* GRAPHIQUE TEMPS RÉEL - AFFICHÉ DÈS QUE L'ACQUISITION DÉMARRE */}
+      {showGraph && isRunning && (
         <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 mt-4">
           <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
             <TrendingUp className="w-5 h-5" /> Graphique temps réel
@@ -540,17 +543,19 @@ export default function ChronographeBancPro() {
               />
               
               {/* Courbe Rate - Ligne bleue */}
-              <polyline
-                fill="none"
-                stroke="#3b82f6"
-                strokeWidth="2"
-                points={data.slice(-50).map((d, i) => {
-                  const x = (i / Math.min(49, data.length - 1)) * 100;
-                  // Normalise rate -30 à +30 s/j sur 0-100% de hauteur
-                  const y = 100 - ((d.rate + 30) / 60) * 100;
-                  return `${x}%,${y}%`;
-                }).join(' ')}
-              />
+              {data.length > 0 && (
+                <polyline
+                  fill="none"
+                  stroke="#3b82f6"
+                  strokeWidth="2"
+                  points={data.slice(-50).map((d, i) => {
+                    const x = (i / Math.min(49, data.length - 1)) * 100;
+                    // Normalise rate -30 à +30 s/j sur 0-100% de hauteur
+                    const y = 100 - ((d.rate + 30) / 60) * 100;
+                    return `${x}%,${y}%`;
+                  }).join(' ')}
+                />
+              )}
             </svg>
           </div>
           <div className="flex gap-4 mt-2 text-xs text-slate-400">
