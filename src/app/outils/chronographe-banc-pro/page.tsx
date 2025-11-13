@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   Timer, Activity, TrendingUp, Download, Settings, Box, AlertTriangle, CheckCircle,
-  Play, Square, RotateCw, Volume2, Sliders, Info, FileText, BarChart2, Cpu
+  Play, Square, RotateCw, Volume2, Info, Cpu, Zap, Gauge, Target
 } from 'lucide-react';
 
 interface TimingData {
@@ -27,7 +27,7 @@ const POSITIONS = [
   { id: 'CLD', name: 'Crown Down', rotation: '180° lat.', icon: '↓' },
 ];
 
-// Outils de validation professionnels
+// VALIDATION PROFESSIONNELLE
 const ValidationUtils = {
   isValidLiftAngle: (value: number) => value >= 48 && value <= 58,
   isValidAmplitude: (value: number) => value >= 180 && value <= 360,
@@ -38,7 +38,8 @@ const ValidationUtils = {
     if (positions.length < 2) return 0;
     const amplitudes = positions.map(p => p.amplitude);
     return (Math.max(...amplitudes) - Math.min(...amplitudes)) / Math.max(...amplitudes) * 100;
-  }
+  },
+  getSignalQuality: (jitter: number) => jitter < 0.3 ? 'EXCELLENT' : jitter < 0.5 ? 'ACCEPTABLE' : 'CRITICAL'
 };
 
 export default function ChronographeBancPro() {
@@ -59,6 +60,7 @@ export default function ChronographeBancPro() {
   const [sessionResults, setSessionResults] = useState<Record<string, TimingData[]>>({});
   const [averages, setAverages] = useState<Record<string, any>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [elapsed, setElapsed] = useState(0);
   
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number | null>(null);
@@ -66,32 +68,28 @@ export default function ChronographeBancPro() {
 
   const beatPeriod = 3600000 / selectedRate;
 
-  // Initialiser l'AudioContext
+  // AUDIO FEEDBACK PRO
   useEffect(() => {
     if (audioFeedback && !audioContextRef.current) {
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
     }
   }, [audioFeedback]);
 
-  // Jouer un son pour chaque battement
   const playBeatSound = useCallback(() => {
     if (!audioFeedback || !audioContextRef.current) return;
-    
     const ctx = audioContextRef.current;
     const oscillator = ctx.createOscillator();
     const gainNode = ctx.createGain();
-    
     oscillator.connect(gainNode);
     gainNode.connect(ctx.destination);
-    
     oscillator.frequency.value = 800;
-    gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
-    
+    gainNode.gain.setValueAtTime(0.08, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.03);
     oscillator.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + 0.05);
+    oscillator.stop(ctx.currentTime + 0.03);
   }, [audioFeedback]);
 
+  // GÉNÉRATION DE SIGNAL PRO
   const generateSignal = useCallback((time: number): TimingData => {
     const baseAmplitude = 290;
     const amplitudeDrift = Math.sin(time * 0.001) * 15;
@@ -115,34 +113,28 @@ export default function ChronographeBancPro() {
     };
   }, [beatPeriod, liftAngle, currentPosition]);
 
+  // VALIDATION PRO
   const validateInputs = () => {
     const newErrors: Record<string, string> = {};
-    
     if (!ValidationUtils.isValidLiftAngle(liftAngle)) {
-      newErrors.liftAngle = "Lift angle doit être entre 48° et 58°";
+      newErrors.liftAngle = "Lift angle invalide (48-58°)";
     }
-    
-    if (measurementDuration < 10 || measurementDuration > 120) {
-      newErrors.duration = "Durée doit être entre 10s et 120s";
+    if (measurementDuration < 10 || measurementDuration > 180) {
+      newErrors.duration = "Durée invalide (10-180s)";
     }
-    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const calculateStats = useCallback((positionData: TimingData[]) => {
     if (!positionData.length) return null;
-    
     const n = positionData.length;
     const avgAmplitude = positionData.reduce((sum, d) => sum + d.amplitude, 0) / n;
     const avgBeatError = positionData.reduce((sum, d) => sum + d.beatError, 0) / n;
     const avgRate = positionData.reduce((sum, d) => sum + d.rate, 0) / n;
     const avgJitter = positionData.reduce((sum, d) => sum + d.jitter, 0) / n;
     const isochronism = ValidationUtils.calculateIsochronism(positionData);
-    
-    const stdAmplitude = Math.sqrt(
-      positionData.reduce((sum, d) => sum + Math.pow(d.amplitude - avgAmplitude, 2), 0) / n
-    );
+    const stdAmplitude = Math.sqrt(positionData.reduce((sum, d) => sum + Math.pow(d.amplitude - avgAmplitude, 2), 0) / n);
     
     return {
       amplitude: { avg: avgAmplitude, std: stdAmplitude },
@@ -155,16 +147,18 @@ export default function ChronographeBancPro() {
     };
   }, []);
 
+  // BOUCLE D'ACQUISITION
   useEffect(() => {
     if (isRunning) {
       if (!validateInputs()) {
         setIsRunning(false);
         return;
       }
+      startTimeRef.current = Date.now();
       
       intervalRef.current = setInterval(() => {
         const now = Date.now();
-        const elapsed = (now - (startTimeRef.current || now)) / 1000;
+        setElapsed((now - (startTimeRef.current || now)) / 1000);
         
         if (elapsed >= measurementDuration) {
           handleStop();
@@ -173,29 +167,23 @@ export default function ChronographeBancPro() {
 
         const newData = generateSignal(now);
         setData(prev => [...prev, newData]);
-        
         setSessionResults(prev => ({
           ...prev,
           [currentPosition]: [...(prev[currentPosition] || []), newData]
         }));
 
-        // Jouer le son du battement
-        if (audioFeedback && elapsed % (3600 / selectedRate) < 0.5) {
-          playBeatSound();
-        }
+        if (audioFeedback && Math.random() > 0.7) playBeatSound();
       }, 500);
     } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
     }
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isRunning, measurementDuration, generateSignal, selectedRate, audioFeedback, playBeatSound]);
+  }, [isRunning, elapsed, measurementDuration, generateSignal, currentPosition, audioFeedback, playBeatSound]);
 
-  // Keyboard shortcuts
+  // RACCOURCIS CLAVIER PRO
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
@@ -206,14 +194,12 @@ export default function ChronographeBancPro() {
         handleReset();
       }
     };
-    
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isRunning]);
 
   const handleStart = () => {
     if (!validateInputs()) return;
-    
     setIsRunning(true);
     startTimeRef.current = Date.now();
   };
@@ -221,6 +207,7 @@ export default function ChronographeBancPro() {
   const handleStop = () => {
     setIsRunning(false);
     startTimeRef.current = null;
+    setElapsed(0);
     
     const newAverages: Record<string, any> = {};
     Object.entries(sessionResults).forEach(([pos, posData]) => {
@@ -234,6 +221,7 @@ export default function ChronographeBancPro() {
     setData([]);
     setSessionResults({});
     setAverages({});
+    setElapsed(0);
     startTimeRef.current = null;
   };
 
@@ -241,7 +229,7 @@ export default function ChronographeBancPro() {
     const csv = [
       ['Position', 'Amplitude Moy (°)', 'Ecart-type Amp', 'Beat Error (ms)', 'Rate (s/j)', 'Jitter (ms)', 'Isochronisme (%)', 'COSC'],
       ...Object.entries(averages).map(([pos, stats]: [string, any]) => [
-        pos, 
+        POSITIONS.find(p => p.id === pos)?.name || pos, 
         stats.amplitude.avg.toFixed(1),
         stats.amplitude.std.toFixed(2),
         stats.beatError.avg.toFixed(1),
@@ -261,49 +249,42 @@ export default function ChronographeBancPro() {
   };
 
   const showTooltip = (text: string) => (e: React.MouseEvent) => {
-    setTooltip({
-      show: true,
-      text,
-      x: e.clientX,
-      y: e.clientY - 30
-    });
+    setTooltip({ show: true, text, x: e.clientX, y: e.clientY - 30 });
   };
 
   const hideTooltip = () => setTooltip({ ...tooltip, show: false });
-
   const latest = data[data.length - 1];
 
   return (
-    <div className="min-h-screen bg-black text-green-400 p-4 font-mono">
-      {/* Tooltip */}
+    <div className="min-h-screen bg-black text-green-400 p-4 font-mono select-none">
+      {/* TOOLTIP */}
       {tooltip.show && (
-        <div 
-          className="fixed bg-slate-800 border border-green-500 text-green-300 px-2 py-1 rounded text-xs z-50 pointer-events-none"
-          style={{ left: tooltip.x, top: tooltip.y }}
-        >
+        <div className="fixed bg-slate-800 border border-green-500 text-green-300 px-3 py-2 rounded text-xs z-50 shadow-lg pointer-events-none">
           {tooltip.text}
         </div>
       )}
 
-      {/* Header */}
+      {/* HEADER PRO */}
       <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 mb-4">
-        <h1 className="text-xl font-bold flex items-center gap-2">
-          <Timer className="w-6 h-6" />
-          CHRONOGRAPHE DE BANC PRO v3.0
-          <span className="text-xs bg-green-900 px-2 py-1 rounded ml-2">LIVE</span>
-        </h1>
-        <p className="text-slate-500 text-sm mt-1">
-          Analyse temporelle du balancier-spiral | Mode: {isRunning ? 'ACQUISITION' : 'VEILLE'}
-        </p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Timer className="w-6 h-6 text-green-400" />
+            <h1 className="text-xl font-bold">CHRONOGRAPHE DE BANC PRO v3.0</h1>
+            <span className="text-xs bg-green-900 px-2 py-1 rounded">LIVE</span>
+          </div>
+          <div className="text-xs text-slate-500">
+            Mode: <span className="font-bold">{isRunning ? 'ACQUISITION' : 'VEILLE'}</span>
+            {isRunning && <span className="ml-2">[{elapsed.toFixed(0)}s/{measurementDuration}s]</span>}
+          </div>
+        </div>
       </div>
 
-      {/* Controls */}
+      {/* CONTROLS */}
       <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 mb-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label className="block text-slate-400 text-xs mb-1 flex items-center gap-1">
-              POSITION
-              <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Positions COSC standard")} onMouseLeave={hideTooltip} />
+              POSITION <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Positions COSC standard")} onMouseLeave={hideTooltip} />
             </label>
             <select 
               value={currentPosition} 
@@ -319,8 +300,7 @@ export default function ChronographeBancPro() {
           
           <div>
             <label className="block text-slate-400 text-xs mb-1 flex items-center gap-1">
-              BEAT RATE (A/h)
-              <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Fréquence du mouvement (A/h = alternances/heure)")} onMouseLeave={hideTooltip} />
+              BEAT RATE <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Fréquence du mouvement (A/h = alternances/heure)")} onMouseLeave={hideTooltip} />
             </label>
             <select 
               value={selectedRate} 
@@ -338,8 +318,7 @@ export default function ChronographeBancPro() {
 
           <div>
             <label className="block text-slate-400 text-xs mb-1 flex items-center gap-1">
-              LIFT ANGLE (°)
-              <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Angle de levage spécifique au calibre (48-58°)")} onMouseLeave={hideTooltip} />
+              LIFT ANGLE <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Angle de levage spécifique au calibre (48-58°)")} onMouseLeave={hideTooltip} />
             </label>
             <input 
               type="number" 
@@ -356,8 +335,7 @@ export default function ChronographeBancPro() {
 
           <div>
             <label className="block text-slate-400 text-xs mb-1 flex items-center gap-1">
-              DURÉE (s)
-              <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Durée minimale pour une mesure stable: 20-30s")} onMouseLeave={hideTooltip} />
+              DURÉE (s) <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Durée minimale pour une mesure stable: 20-30s")} onMouseLeave={hideTooltip} />
             </label>
             <input 
               type="number" 
@@ -367,85 +345,58 @@ export default function ChronographeBancPro() {
               className={`w-full bg-black border p-2 text-green-400 focus:outline-none ${
                 errors.duration ? 'border-red-500' : 'border-slate-700 focus:border-green-500'
               }`}
-              min="10" max="120"
+              min="10" max="180"
             />
             {errors.duration && <div className="text-red-500 text-xs mt-1">{errors.duration}</div>}
           </div>
         </div>
 
         <div className="flex gap-2 mt-4 flex-wrap">
-          <button 
-            onClick={handleStart}
-            disabled={isRunning}
-            className="bg-green-900 hover:bg-green-800 disabled:bg-slate-800 px-4 py-2 border border-green-700 flex items-center gap-2 transition-colors"
-          >
+          <button onClick={handleStart} disabled={isRunning} className="bg-green-900 hover:bg-green-800 disabled:bg-slate-800 px-4 py-2 border border-green-700 flex items-center gap-2 transition-colors">
             <Play className="w-4 h-4" /> START [Space]
           </button>
-          <button 
-            onClick={handleStop}
-            disabled={!isRunning}
-            className="bg-red-900 hover:bg-red-800 disabled:bg-slate-800 px-4 py-2 border border-red-700 flex items-center gap-2 transition-colors"
-          >
+          <button onClick={handleStop} disabled={!isRunning} className="bg-red-900 hover:bg-red-800 disabled:bg-slate-800 px-4 py-2 border border-red-700 flex items-center gap-2 transition-colors">
             <Square className="w-4 h-4" /> STOP [Space]
           </button>
-          <button 
-            onClick={handleReset}
-            className="bg-slate-700 hover:bg-slate-600 px-4 py-2 border border-slate-600 flex items-center gap-2 transition-colors"
-          >
+          <button onClick={handleReset} className="bg-slate-700 hover:bg-slate-600 px-4 py-2 border border-slate-600 flex items-center gap-2 transition-colors">
             <RotateCw className="w-4 h-4" /> RESET [Ctrl+R]
           </button>
-          <button 
-            onClick={() => setAudioFeedback(!audioFeedback)}
-            className={`px-4 py-2 border flex items-center gap-2 transition-colors ${
-              audioFeedback 
-                ? 'bg-blue-900 hover:bg-blue-800 border-blue-700' 
-                : 'bg-slate-700 hover:bg-slate-600 border-slate-600'
-            }`}
-          >
+          <button onClick={() => setAudioFeedback(!audioFeedback)} className={`px-4 py-2 border flex items-center gap-2 transition-colors ${
+              audioFeedback ? 'bg-blue-900 hover:bg-blue-800 border-blue-700' : 'bg-slate-700 hover:bg-slate-600 border-slate-600'
+            )}`>
             <Volume2 className="w-4 h-4" /> AUDIO {audioFeedback ? 'ON' : 'OFF'}
           </button>
-          <button 
-            onClick={exportCSV}
-            disabled={Object.keys(averages).length === 0}
-            className="bg-blue-900 hover:bg-blue-800 disabled:bg-slate-800 ml-auto md:ml-0 px-4 py-2 border border-blue-700 flex items-center gap-2 transition-colors"
-          >
+          <button onClick={exportCSV} disabled={Object.keys(averages).length === 0} className="bg-blue-900 hover:bg-blue-800 disabled:bg-slate-800 ml-auto md:ml-0 px-4 py-2 border border-blue-700 flex items-center gap-2 transition-colors">
             <Download className="w-4 h-4" /> EXPORT CSV
           </button>
         </div>
       </div>
 
-      {/* Live Measurements */}
+      {/* LIVE MEASUREMENTS */}
       {isRunning && latest && (
         <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 mb-4">
           <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
             <div className="bg-black p-3 rounded border border-slate-800">
               <div className="text-slate-500 text-xs flex items-center gap-1">
-                AMPLITUDE
-                <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Amplitude idéale: 270-310°")} onMouseLeave={hideTooltip} />
+                AMPLITUDE <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Amplitude idéale: 270-310°")} onMouseLeave={hideTooltip} />
               </div>
-              <div className={`text-2xl font-bold ${
-                ValidationUtils.isValidAmplitude(latest.amplitude) ? 'text-green-400' : 'text-yellow-400'
-              }`}>
+              <div className={`text-2xl font-bold ${ValidationUtils.isValidAmplitude(latest.amplitude) ? 'text-green-400' : 'text-yellow-400'}`}>
                 {latest.amplitude}°
               </div>
             </div>
             
             <div className="bg-black p-3 rounded border border-slate-800">
               <div className="text-slate-500 text-xs flex items-center gap-1">
-                BEAT ERROR
-                <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Décalage entre tic et tac. Objectif: < 0.3ms")} onMouseLeave={hideTooltip} />
+                BEAT ERROR <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Décalage tic/tac. Objectif: < 0.3ms")} onMouseLeave={hideTooltip} />
               </div>
-              <div className={`text-2xl font-bold ${
-                ValidationUtils.isValidBeatError(latest.beatError) ? 'text-green-400' : 'text-red-400'
-              }`}>
+              <div className={`text-2xl font-bold ${ValidationUtils.isValidBeatError(latest.beatError) ? 'text-green-400' : 'text-red-400'}`}>
                 {Math.abs(latest.beatError).toFixed(1)} ms
               </div>
             </div>
             
             <div className="bg-black p-3 rounded border border-slate-800">
               <div className="text-slate-500 text-xs flex items-center gap-1">
-                RATE
-                <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Variation journalière. COSC: ±5 s/j")} onMouseLeave={hideTooltip} />
+                RATE <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Variation journalière. COSC: ±5 s/j")} onMouseLeave={hideTooltip} />
               </div>
               <div className={`text-2xl font-bold ${
                 Math.abs(latest.rate) <= 5 ? 'text-green-400' : Math.abs(latest.rate) <= 10 ? 'text-yellow-400' : 'text-red-400'
@@ -456,20 +407,16 @@ export default function ChronographeBancPro() {
             
             <div className="bg-black p-3 rounded border border-slate-800">
               <div className="text-slate-500 text-xs flex items-center gap-1">
-                JITTER
-                <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Stabilité du signal. Objectif: < 0.3ms")} onMouseLeave={hideTooltip} />
+                JITTER <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Stabilité du signal. Objectif: < 0.3ms")} onMouseLeave={hideTooltip} />
               </div>
-              <div className={`text-2xl font-bold ${
-                latest.jitter < 0.3 ? 'text-green-400' : 'text-yellow-400'
-              }`}>
+              <div className={`text-2xl font-bold ${latest.jitter < 0.3 ? 'text-green-400' : 'text-yellow-400'}`}>
                 {latest.jitter.toFixed(2)} ms
               </div>
             </div>
             
             <div className="bg-black p-3 rounded border border-slate-800">
               <div className="text-slate-500 text-xs flex items-center gap-1">
-                ISOCHRONISME
-                <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Variation d'amplitude entre positions")} onMouseLeave={hideTooltip} />
+                ISOCHRONISME <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Variation d'amplitude entre positions")} onMouseLeave={hideTooltip} />
               </div>
               <div className="text-2xl font-bold text-blue-400">
                 {ValidationUtils.calculateIsochronism(data).toFixed(1)}%
@@ -482,22 +429,22 @@ export default function ChronographeBancPro() {
                 latest.jitter < 0.3 ? 'text-green-400' : 'text-yellow-400'
               }`}>
                 {latest.jitter < 0.3 ? <CheckCircle className="w-5 h-5" /> : <AlertTriangle className="w-5 h-5" />}
-                {latest.jitter < 0.3 ? 'STABLE' : 'IRRÉGULIER'}
+                {ValidationUtils.getSignalQuality(latest.jitter)}
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Results Table */}
+      {/* RESULTS TABLE */}
       <div className="bg-slate-900 border border-slate-700 rounded-lg p-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold flex items-center gap-2">
-            <TrendingUp className="w-5 h-5" />
+            <BarChart2 className="w-5 h-5" />
             RÉSULTATS PAR POSITION
           </h2>
           {Object.values(averages).some((a: any) => a?.isCOSC) && (
-            <div className="bg-green-900 text-green-400 px-3 py-1 rounded text-sm flex items-center gap-1">
+            <div className="bg-green-900 text-green-400 px-3 py-1 rounded text-sm flex items-center gap-1 font-bold">
               <CheckCircle className="w-4 h-4" />
               COSC COMPLIANT
             </div>
@@ -564,15 +511,16 @@ export default function ChronographeBancPro() {
         )}
       </div>
 
-      {/* Technical Info */}
+      {/* TECH SPECS */}
       <div className="mt-4 text-xs text-slate-600 flex justify-between items-center">
         <div className="flex gap-4">
           <span>Beat: {(selectedRate / 7200).toFixed(3)} Hz</span>
           <span>Période: {(3600 / (selectedRate / 7200)).toFixed(4)} s</span>
           <span>Échantillonnage: 2 Hz</span>
           <span>Précision: ±1ms</span>
+          <span>Température: 20°C ±2°</span>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <Cpu className="w-4 h-4" />
           <span>Algorithm v3.0 - Swiss Timing Compatible</span>
         </div>
