@@ -373,11 +373,22 @@ export default function ChronographeBancPro() {
               BEAT RATE <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Fréquence du mouvement (A/h = alternances/heure)")} onMouseLeave={hideTooltip} />
             </label>
             <select value={selectedRate} onChange={(e) => setSelectedRate(Number(e.target.value))} disabled={isRunning} className="w-full bg-black border border-slate-700 p-2 text-green-400 focus:border-green-500 focus:outline-none">
-              <option value="18000">18,000 | 2.5 Hz (ETA 6497)</option>
-              <option value="21600">21,600 | 3 Hz (Miyota)</option>
-              <option value="25200">25,200 | 3.5 Hz (ETA 2892)</option>
-              <option value="28800">28,800 | 4 Hz (ETA 2824)</option>
-              <option value="36000">36,000 | 5 Hz (El Primero)</option>
+              {/* Fréquences standards industrielles */}
+              <option value="18000">18,000 A/h | 2.5 Hz (ETA 6497, Unitas)</option>
+              <option value="21600">21,600 A/h | 3 Hz (Miyota, Seiko)</option>
+              <option value="25200">25,200 A/h | 3.5 Hz (ETA 2892)</option>
+              <option value="28800">28,800 A/h | 4 Hz (ETA 2824, Rolex 3135, Omega 8800)</option>
+              
+              {/* Fréquences haute précision */}
+              <option value="36000">36,000 A/h | 5 Hz (Zenith El Primero, Grand Seiko 9S)</option>
+              
+              {/* Fréquences haute horlogerie */}
+              <option value="43200">43,200 A/h | 6 Hz (Audemars Piguet 3120, Breguet 777)</option>
+              <option value="57600">57,600 A/h | 8 Hz (Chopard L.U.C, Breguet 574DR)</option>
+              <option value="72000">72,000 A/h | 10 Hz (Breguet Type XXII)</option>
+              
+              {/* Fréquences extrêmes (chronographes ultra-rapides) */}
+              <option value="360000">360,000 A/h | 50 Hz (TAG Heuer Mikrograph) - Chronographe seul</option>
             </select>
           </div>
 
