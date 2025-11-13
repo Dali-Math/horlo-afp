@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   Timer, Activity, BarChart2, Download, Info, Play, Square, RotateCw, Volume2,
-  CheckCircle, AlertTriangle, Cpu
+  CheckCircle, AlertTriangle, Cpu, Zap, Gauge, Target, FileText, TrendingUp
 } from 'lucide-react';
 
 interface TimingData {
@@ -15,7 +15,17 @@ interface TimingData {
   jitter: number;
   liftAngle: number;
   position: string;
+  qFactor?: number;
 }
+
+// BASE DE DONNÉES DES CALIBRES PRO
+const CALIBRE_DB = [
+  { id: 'eta2824', name: 'ETA 2824-2', liftAngle: 50, beatRate: 28800 },
+  { id: 'eta2892', name: 'ETA 2892-A2', liftAngle: 52, beatRate: 28800 },
+  { id: 'rolex3135', name: 'Rolex 3135', liftAngle: 52, beatRate: 28800 },
+  { id: 'omega8800', name: 'Omega 8800', liftAngle: 48, beatRate: 25200 },
+  { id: 'miyota9015', name: 'Miyota 9015', liftAngle: 52, beatRate: 28800 },
+];
 
 const POSITIONS = [
   { id: 'DU', name: 'Dial Up', rotation: '0°', icon: '↑' },
@@ -38,12 +48,24 @@ export default function ChronographeBancPro() {
   const [sessionResults, setSessionResults] = useState<Record<string, TimingData[]>>({});
   const [averages, setAverages] = useState<Record<string, any>>({});
   const [elapsed, setElapsed] = useState(0);
+  const [selectedCalibre, setSelectedCalibre] = useState('');
   
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
   const beatPeriod = 3600000 / selectedRate;
+
+  // Auto-configuration du calibre
+  useEffect(() => {
+    if (selectedCalibre) {
+      const calibre = CALIBRE_DB.find(c => c.id === selectedCalibre);
+      if (calibre) {
+        setLiftAngle(calibre.liftAngle);
+        setSelectedRate(calibre.beatRate);
+      }
+    }
+  }, [selectedCalibre]);
 
   // Audio feedback
   useEffect(() => {
@@ -66,7 +88,7 @@ export default function ChronographeBancPro() {
     oscillator.stop(ctx.currentTime + 0.03);
   }, [audioFeedback]);
 
-  // Génération de signal réaliste
+  // Génération de signal avec Q factor
   const generateSignal = useCallback((time: number): TimingData => {
     const baseAmplitude = 290;
     const amplitudeDrift = Math.sin(time * 0.001) * 15;
@@ -77,6 +99,7 @@ export default function ChronographeBancPro() {
     const periodError = (Math.random() - 0.5) * 0.0001;
     const rate = periodError * 86400 * 1000;
     const jitter = Math.random() * 0.5;
+    const qFactor = amplitude / (jitter + 0.1); // Estimation Q factor
     
     return {
       timestamp: time,
@@ -86,11 +109,12 @@ export default function ChronographeBancPro() {
       period: beatPeriod + periodError,
       jitter: parseFloat(jitter.toFixed(2)),
       liftAngle: liftAngle,
-      position: currentPosition
+      position: currentPosition,
+      qFactor: parseFloat(qFactor.toFixed(0))
     };
   }, [beatPeriod, liftAngle, currentPosition]);
 
-  // BOUCLE PRINCIPALE CORRIGÉE
+  // Boucle principale CORRIGÉE
   useEffect(() => {
     if (isRunning) {
       if (!startTimeRef.current) {
@@ -138,9 +162,20 @@ export default function ChronographeBancPro() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isRunning]);
 
+  // Diagnostic IA automatique
+  const diagnose = useCallback((stats: any) => {
+    const issues: string[] = [];
+    if (stats.amplitude.avg < 220) issues.push("Amplitude critique - vérifier le spiral");
+    if (stats.jitter.avg > 0.5) issues.push("Signal irrégulier - jeu d'ancre suspect");
+    if (stats.beatError.abs > 0.5) issues.push("Beat error élevé - colimaçon à recentrer");
+    if (stats.rate.std > 3) issues.push("Instabilité du rate - problème d'escapement");
+    return issues;
+  }, []);
+
   const handleStart = () => {
     setIsRunning(true);
     setElapsed(0);
+    startTimeRef.current = Date.now();
   };
 
   const handleStop = () => {
@@ -148,7 +183,7 @@ export default function ChronographeBancPro() {
     startTimeRef.current = null;
     setElapsed(0);
     
-    // Calcul des statistiques
+    // Calcul des statistiques avec diagnostic
     const newAverages: Record<string, any> = {};
     Object.entries(sessionResults).forEach(([pos, posData]) => {
       const n = posData.length;
@@ -158,19 +193,29 @@ export default function ChronographeBancPro() {
       const avgBeatError = posData.reduce((sum, d) => sum + d.beatError, 0) / n;
       const avgRate = posData.reduce((sum, d) => sum + d.rate, 0) / n;
       const avgJitter = posData.reduce((sum, d) => sum + d.jitter, 0) / n;
+      const avgQFactor = posData.reduce((sum, d) => sum + (d.qFactor || 0), 0) / n;
       
       const amplitudes = posData.map(d => d.amplitude);
       const isochronism = (Math.max(...amplitudes) - Math.min(...amplitudes)) / Math.max(...amplitudes) * 100;
       
-      newAverages[pos] = {
+      const stats = {
         amplitude: { avg: avgAmplitude, std: Math.sqrt(posData.reduce((sum, d) => sum + Math.pow(d.amplitude - avgAmplitude, 2), 0) / n) },
         beatError: { avg: avgBeatError, abs: Math.abs(avgBeatError) },
         rate: { avg: avgRate, std: Math.sqrt(posData.reduce((s, d) => s + Math.pow(d.rate - avgRate, 2), 0) / n) },
         jitter: { avg: avgJitter },
+        qFactor: { avg: avgQFactor },
         isochronism,
         count: n,
-        isCOSC: Math.abs(avgRate) <= 5 && avgAmplitude >= 260 && Math.abs(avgBeatError) <= 0.3
+        isCOSC: Math.abs(avgRate) <= 5 && avgAmplitude >= 260 && Math.abs(avgBeatError) <= 0.3,
+        diagnostics: diagnose({
+          amplitude: { avg: avgAmplitude },
+          jitter: { avg: avgJitter },
+          beatError: { abs: Math.abs(avgBeatError) },
+          rate: { std: Math.sqrt(posData.reduce((s, d) => s + Math.pow(d.rate - avgRate, 2), 0) / n) }
+        })
       };
+      
+      newAverages[pos] = stats;
     });
     setAverages(newAverages);
   };
@@ -184,26 +229,37 @@ export default function ChronographeBancPro() {
     startTimeRef.current = null;
   };
 
-  const exportCSV = () => {
-    const csv = [
-      ['Position', 'Amplitude Moy (°)', 'Ecart-type Amp', 'Beat Error (ms)', 'Rate (s/j)', 'Jitter (ms)', 'Isochronisme (%)', 'COSC'],
-      ...Object.entries(averages).map(([pos, stats]: [string, any]) => [
-        POSITIONS.find(p => p.id === pos)?.name || pos, 
-        stats.amplitude.avg.toFixed(1),
-        stats.amplitude.std.toFixed(2),
-        stats.beatError.avg.toFixed(1),
-        stats.rate.avg.toFixed(1),
-        stats.jitter.avg.toFixed(2),
-        stats.isochronism.toFixed(2),
-        stats.isCOSC ? 'OUI' : 'NON'
-      ])
-    ].map(row => row.join(',')).join('\n');
+  // Export PDF (simulé avec CSV amélioré)
+  const exportPDF = () => {
+    const report = [
+      `CHRONOGRAPHE DE BANC PRO - RAPPORT ${new Date().toLocaleString('fr-CH')}`,
+      '',
+      'PARAMÈTRES:',
+      `Date: ${new Date().toLocaleDateString('fr-CH')}`,
+      `Calibre: ${selectedCalibre || 'Manuel'}`,
+      `Lift Angle: ${liftAngle}°`,
+      `Beat Rate: ${selectedRate} A/h`,
+      '',
+      'RÉSULTATS:',
+      ['Position', 'Amplitude', 'Beat Error', 'Rate', 'Jitter', 'Q Factor', 'COSC'].join('\t'),
+      ...Object.entries(averages).map(([pos, stats]: [string, any]) => 
+        [
+          POSITIONS.find(p => p.id === pos)?.name,
+          `${stats.amplitude.avg.toFixed(1)}°`,
+          `${stats.beatError.abs.toFixed(1)}ms`,
+          `${stats.rate.avg > 0 ? '+' : ''}${stats.rate.avg.toFixed(1)}s/j`,
+          `${stats.jitter.avg.toFixed(2)}ms`,
+          `${stats.qFactor.avg.toFixed(0)}`,
+          stats.isCOSC ? '✓' : '✗'
+        ].join('\t')
+      )
+    ].join('\n');
 
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([report], { type: 'text/plain;charset=utf-8;' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `chronographe_${new Date().toISOString().split('T')[0]}_${Date.now()}.csv`;
+    a.download = `RAPPORT_CHRONO_${new Date().toISOString().split('T')[0]}.txt`;
     a.click();
   };
 
@@ -222,6 +278,7 @@ export default function ChronographeBancPro() {
         </div>
       )}
 
+      {/* HEADER */}
       <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 mb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -236,7 +293,24 @@ export default function ChronographeBancPro() {
         </div>
       </div>
 
+      {/* CONTROLS */}
       <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 mb-4">
+        {/* Sélection calibre (NOUVEAU) */}
+        <div className="mb-4">
+          <label className="block text-slate-400 text-xs mb-1 flex items-center gap-1">
+            CALIBRE (Base de données) <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Sélection auto-configure lift angle et beat rate")} onMouseLeave={hideTooltip} />
+          </label>
+          <select 
+            value={selectedCalibre} 
+            onChange={(e) => setSelectedCalibre(e.target.value)}
+            disabled={isRunning}
+            className="w-full bg-black border border-slate-700 p-2 text-green-400 focus:border-green-500 focus:outline-none mb-2"
+          >
+            <option value="">-- Sélectionner un calibre --</option>
+            {CALIBRE_DB.map(cal => <option key={cal.id} value={cal.id}>{cal.name}</option>)}
+          </select>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label className="block text-slate-400 text-xs mb-1 flex items-center gap-1">
@@ -280,10 +354,12 @@ export default function ChronographeBancPro() {
           <button onClick={handleStop} disabled={!isRunning} className="bg-red-900 hover:bg-red-800 disabled:bg-slate-800 px-4 py-2 border border-red-700 flex items-center gap-2 transition-colors"><Square className="w-4 h-4" /> STOP [Space]</button>
           <button onClick={handleReset} className="bg-slate-700 hover:bg-slate-600 px-4 py-2 border border-slate-600 flex items-center gap-2 transition-colors"><RotateCw className="w-4 h-4" /> RESET [Ctrl+R]</button>
           <button onClick={() => setAudioFeedback(!audioFeedback)} className={`px-4 py-2 border flex items-center gap-2 transition-colors ${audioFeedback ? 'bg-blue-900 hover:bg-blue-800 border-blue-700' : 'bg-slate-700 hover:bg-slate-600 border-slate-600'}`}><Volume2 className="w-4 h-4" /> AUDIO {audioFeedback ? 'ON' : 'OFF'}</button>
-          <button onClick={exportCSV} disabled={Object.keys(averages).length === 0} className="bg-blue-900 hover:bg-blue-800 disabled:bg-slate-800 ml-auto md:ml-0 px-4 py-2 border border-blue-700 flex items-center gap-2 transition-colors"><Download className="w-4 h-4" /> EXPORT CSV</button>
+          <button onClick={exportPDF} disabled={Object.keys(averages).length === 0} className="bg-purple-900 hover:bg-purple-800 disabled:bg-slate-800 ml-auto md:ml-0 px-4 py-2 border border-purple-700 flex items-center gap-2 transition-colors"><FileText className="w-4 h-4" /> EXPORT PDF</button>
+          <button onClick={exportCSV} disabled={Object.keys(averages).length === 0} className="bg-blue-900 hover:bg-blue-800 disabled:bg-slate-800 px-4 py-2 border border-blue-700 flex items-center gap-2 transition-colors"><Download className="w-4 h-4" /> EXPORT CSV</button>
         </div>
       </div>
 
+      {/* LIVE MEASUREMENTS */}
       {isRunning && latest && (
         <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 mb-4">
           <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
@@ -303,13 +379,13 @@ export default function ChronographeBancPro() {
             </div>
             
             <div className="bg-black p-3 rounded border border-slate-800">
-              <div className="text-slate-500 text-xs flex items-center gap-1">JITTER <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Stabilité du signal. Objectif: < 0.3ms")} onMouseLeave={hideTooltip} /></div>
-              <div className={`text-2xl font-bold ${latest.jitter < 0.3 ? 'text-green-400' : 'text-yellow-400'}`}>{latest.jitter.toFixed(2)} ms</div>
+              <div className="text-slate-500 text-xs flex items-center gap-1">Q FACTOR <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Qualité du balancier. >2000 = excellent")} onMouseLeave={hideTooltip} /></div>
+              <div className={`text-2xl font-bold ${latest.qFactor && latest.qFactor > 2000 ? 'text-green-400' : 'text-yellow-400'}`}>{latest.qFactor || 0}</div>
             </div>
             
             <div className="bg-black p-3 rounded border border-slate-800">
-              <div className="text-slate-500 text-xs flex items-center gap-1">ISOCHRONISME <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Variation d'amplitude entre positions")} onMouseLeave={hideTooltip} /></div>
-              <div className="text-2xl font-bold text-blue-400">{data.length > 1 ? ((Math.max(...data.map(d => d.amplitude)) - Math.min(...data.map(d => d.amplitude))) / Math.max(...data.map(d => d.amplitude)) * 100).toFixed(1) : '0.0'}%</div>
+              <div className="text-slate-500 text-xs flex items-center gap-1">JITTER <Info className="w-3 h-3 cursor-help" onMouseEnter={showTooltip("Stabilité du signal. Objectif: < 0.3ms")} onMouseLeave={hideTooltip} /></div>
+              <div className={`text-2xl font-bold ${latest.jitter < 0.3 ? 'text-green-400' : 'text-yellow-400'}`}>{latest.jitter.toFixed(2)} ms</div>
             </div>
             
             <div className="bg-black p-3 rounded border border-slate-800">
@@ -320,6 +396,7 @@ export default function ChronographeBancPro() {
         </div>
       )}
 
+      {/* TABLEAU RÉSULTATS + DIAGNOSTIC */}
       <div className="bg-slate-900 border border-slate-700 rounded-lg p-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold flex items-center gap-2"><BarChart2 className="w-5 h-5" />RÉSULTATS PAR POSITION</h2>
@@ -335,6 +412,7 @@ export default function ChronographeBancPro() {
                 <th className="text-right py-2 text-slate-400">ÉCART-TYPE</th>
                 <th className="text-right py-2 text-slate-400">BEAT ERR (ms)</th>
                 <th className="text-right py-2 text-slate-400">RATE (s/j)</th>
+                <th className="text-right py-2 text-slate-400">Q FACTOR</th>
                 <th className="text-right py-2 text-slate-400">JITTER (ms)</th>
                 <th className="text-right py-2 text-slate-400">ISOCHR (%)</th>
                 <th className="text-center py-2 text-slate-400">STATUT</th>
@@ -348,6 +426,7 @@ export default function ChronographeBancPro() {
                   <td className={`text-right py-2 ${stats.amplitude.std > 15 ? 'text-yellow-400' : 'text-slate-500'}`}>{stats.amplitude.std.toFixed(1)}</td>
                   <td className={`text-right py-2 ${stats.beatError.abs > 0.5 ? 'text-red-400' : 'text-green-400'}`}>{stats.beatError.avg.toFixed(1)}</td>
                   <td className={`text-right py-2 font-semibold ${Math.abs(stats.rate.avg) > 10 ? 'text-red-400' : Math.abs(stats.rate.avg) > 5 ? 'text-yellow-400' : 'text-green-400'}`}>{stats.rate.avg > 0 ? '+' : ''}{stats.rate.avg.toFixed(1)}</td>
+                  <td className={`text-right py-2 ${stats.qFactor.avg > 2000 ? 'text-green-400' : 'text-yellow-400'}`}>{stats.qFactor.avg.toFixed(0)}</td>
                   <td className={`text-right py-2 ${stats.jitter.avg > 0.4 ? 'text-red-400' : 'text-slate-400'}`}>{stats.jitter.avg.toFixed(2)}</td>
                   <td className={`text-right py-2 ${stats.isochronism > 10 ? 'text-yellow-400' : 'text-green-400'}`}>{stats.isochronism.toFixed(1)}%</td>
                   <td className="text-center py-2">{stats.isCOSC ? <CheckCircle className="w-4 h-4 text-green-400 inline" /> : <AlertTriangle className="w-4 h-4 text-yellow-400 inline" />}</td>
@@ -357,6 +436,23 @@ export default function ChronographeBancPro() {
           </table>
         </div>
 
+        {/* DIAGNOSTIC IA (NOUVEAU) */}
+        {Object.values(averages).map((stats: any, idx) => 
+          stats.diagnostics && stats.diagnostics.length > 0 && (
+            <div key={idx} className="mt-4 bg-red-900/20 border border-red-700 rounded p-3">
+              <div className="flex items-start gap-2">
+                <AlertTriangle className="w-5 h-5 text-red-400 mt-1" />
+                <div>
+                  <h3 className="text-red-400 font-bold text-sm">DIAGNOSTIC IA</h3>
+                  <ul className="text-red-300 text-xs mt-1 list-disc list-inside">
+                    {stats.diagnostics.map((issue: string, i: number) => <li key={i}>{issue}</li>)}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )
+        )}
+
         {Object.keys(averages).length === 0 && (
           <div className="text-center py-16 text-slate-600">
             <Activity className="w-16 h-16 mx-auto mb-4 opacity-30" />
@@ -364,6 +460,17 @@ export default function ChronographeBancPro() {
             <p className="text-xs mt-2 text-slate-700">Conseil: mesurez chaque position 30s minimum</p>
           </div>
         )}
+      </div>
+
+      {/* GRAPHIQUE TEMPS RÉEL (À IMPLÉMENTER) */}
+      <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 mt-4">
+        <h3 className="text-lg font-bold mb-2 flex items-center gap-2"><TrendingUp className="w-5 h-5" />Graphique temps réel (À venir)</h3>
+        <div className="h-64 bg-black rounded border border-slate-800 flex items-center justify-center text-slate-600">
+          <div className="text-center">
+            <BarChart2 className="w-12 h-12 mx-auto mb-2 opacity-30" />
+            <p className="text-sm">Intégration d'un graphique avec Recharts ou Chart.js recommandée</p>
+          </div>
+        </div>
       </div>
 
       <div className="mt-4 text-xs text-slate-600 flex justify-between items-center">
