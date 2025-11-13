@@ -45,6 +45,7 @@ export default function ChronographeBancPro() {
 
   const beatPeriod = 3600000 / selectedRate;
 
+  // Audio feedback
   useEffect(() => {
     if (audioFeedback && !audioContextRef.current) {
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -65,6 +66,7 @@ export default function ChronographeBancPro() {
     oscillator.stop(ctx.currentTime + 0.03);
   }, [audioFeedback]);
 
+  // Génération de signal réaliste
   const generateSignal = useCallback((time: number): TimingData => {
     const baseAmplitude = 290;
     const amplitudeDrift = Math.sin(time * 0.001) * 15;
@@ -88,15 +90,20 @@ export default function ChronographeBancPro() {
     };
   }, [beatPeriod, liftAngle, currentPosition]);
 
+  // BOUCLE PRINCIPALE CORRIGÉE
   useEffect(() => {
     if (isRunning) {
-      startTimeRef.current = Date.now();
-      
+      if (!startTimeRef.current) {
+        startTimeRef.current = Date.now();
+      }
+
       intervalRef.current = setInterval(() => {
         const now = Date.now();
-        setElapsed((now - (startTimeRef.current || now)) / 1000);
+        const currentElapsed = (now - (startTimeRef.current || now)) / 1000;
+        setElapsed(currentElapsed);
         
-        if (elapsed >= measurementDuration) {
+        // ARRÊT AUTOMATIQUE CORRIGÉ
+        if (currentElapsed >= measurementDuration) {
           handleStop();
           return;
         }
@@ -117,8 +124,9 @@ export default function ChronographeBancPro() {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isRunning, elapsed, measurementDuration, generateSignal, currentPosition, audioFeedback, playBeatSound]);
+  }, [isRunning, measurementDuration, generateSignal, currentPosition, audioFeedback, playBeatSound]);
 
+  // Raccourcis clavier
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
@@ -132,7 +140,7 @@ export default function ChronographeBancPro() {
 
   const handleStart = () => {
     setIsRunning(true);
-    startTimeRef.current = Date.now();
+    setElapsed(0);
   };
 
   const handleStop = () => {
@@ -140,6 +148,7 @@ export default function ChronographeBancPro() {
     startTimeRef.current = null;
     setElapsed(0);
     
+    // Calcul des statistiques
     const newAverages: Record<string, any> = {};
     Object.entries(sessionResults).forEach(([pos, posData]) => {
       const n = posData.length;
