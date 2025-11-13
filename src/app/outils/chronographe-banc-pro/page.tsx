@@ -1,5 +1,7 @@
 'use client';
-
+import { CALIBRE_DB } from '../data/calibres';
+import { POSITIONS } from '../data/positions';
+import { TimingData } from '../types';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   Timer, Activity, BarChart2, Download, Info, Play, Square, RotateCw, Volume2,
