@@ -20,25 +20,6 @@ interface TimingData {
   qFactor?: number;
   temperature?: number; // Simulation température
 }
-
-// BASE DE DONNÉES DES CALIBRES PRO
-const CALIBRE_DB = [
-  { id: 'eta2824', name: 'ETA 2824-2', liftAngle: 50, beatRate: 28800, minAmplitude: 260, maxBeatError: 0.3 },
-  { id: 'eta2892', name: 'ETA 2892-A2', liftAngle: 52, beatRate: 28800, minAmplitude: 260, maxBeatError: 0.3 },
-  { id: 'rolex3135', name: 'Rolex 3135', liftAngle: 52, beatRate: 28800, minAmplitude: 270, maxBeatError: 0.2 },
-  { id: 'omega8800', name: 'Omega 8800', liftAngle: 48, beatRate: 25200, minAmplitude: 260, maxBeatError: 0.3 },
-  { id: 'miyota9015', name: 'Miyota 9015', liftAngle: 52, beatRate: 28800, minAmplitude: 250, maxBeatError: 0.4 },
-];
-
-const POSITIONS = [
-  { id: 'DU', name: 'Dial Up', rotation: '0°', icon: '↑' },
-  { id: 'DD', name: 'Dial Down', rotation: '180°', icon: '↓' },
-  { id: 'CH', name: 'Crown Right', rotation: '90°', icon: '→' },
-  { id: 'CB', name: 'Crown Left', rotation: '270°', icon: '←' },
-  { id: 'CL', name: 'Crown Up', rotation: '0° lat.', icon: '↑' },
-  { id: 'CLD', name: 'Crown Down', rotation: '180° lat.', icon: '↓' },
-];
-
 export default function ChronographeBancPro() {
   const [isRunning, setIsRunning] = useState(false);
   const [currentPosition, setCurrentPosition] = useState('DU');
