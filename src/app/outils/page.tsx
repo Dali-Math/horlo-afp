@@ -50,7 +50,7 @@ const allTools = [
   { id: 'simulateur-chronometrie-thermique', name: 'Simulateur de Chronométrie Thermique', component: SimulateurChronometrieThermique, icon: Thermometer },
   { id: 'calculateur-dimensions-spiral', name: 'Calculateur de Dimensions du Spiral', component: CalculateurDimensionsSpiral, icon: Compass },
   { id: 'simulateur-echappement-avance', name: 'Simulateur d\'Échappement Ancre Avancé', component: SimulateurEchappementAncreAvance, icon: Settings },
-  { id: 'simulateur-resonance-3d', name: 'Simulateur Résonance 3D (THREE.js)', component: SimulateurResonance3D, icon: Cog },
+  { id: 'simulateur-resonance-3d', name: 'Simulateur Résonance 3D', component: SimulateurResonance3D, icon: Cog },
 ];
 
 export default function HorloLearnToolsPage() {
