@@ -25,7 +25,7 @@ import {
   SimulateurChronometrieThermique,
   CalculateurDimensionsSpiral,
   SimulateurEchappementAncreAvance,
-  SimulateurResonance3D 
+  import SimulateurResonance3D from '../../components/SimulateurResonance3D'; 
 } from '../../components';
 
 const allTools = [
