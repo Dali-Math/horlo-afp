@@ -25,9 +25,8 @@ import {
   SimulateurChronometrieThermique,
   CalculateurDimensionsSpiral,
   SimulateurEchappementAncreAvance,
-  import SimulateurResonance3D from '../../components/SimulateurResonance3D'; 
 } from '../../components';
-
+import SimulateurResonance3D from '../../components/SimulateurResonance3D'; 
 const allTools = [
   { id: 'bibliotheque-ressources', name: 'Bibliothèque de Ressources', component: RessourcesPage, icon: BookOpen },
   { id: 'cosc-calculator', name: 'Calculateur Précision COSC', component: COSCCalculator, icon: Calculator },
