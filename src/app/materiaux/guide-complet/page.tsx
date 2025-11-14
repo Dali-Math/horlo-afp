@@ -219,7 +219,7 @@ const AlloyMixer: React.FC = () => {
         <h4 className="font-bold mb-2">💡 Notes pédagogiques</h4>
         <ul className="text-sm space-y-1 text-gray-700">
           <li>• La dureté influence la résistance aux rayures (400+ HV pour les boîtiers)</li>
-          <li>• Résistance à la corrosion > 90% pour les montres de plongée</li>
+          <li>{'• Résistance à la corrosion > 90% pour les montres de plongée'}</li>
           <li>• Densité faible = montre plus légère et confortable</li>
           <li>• Titane hypoallergénique idéal pour peaux sensibles</li>
         </ul>
