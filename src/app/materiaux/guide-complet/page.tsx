@@ -825,6 +825,12 @@ export default function HomePage(): JSX.Element {
                 <p className="hero-subtitle">L&apos;Art et la Science des Matériaux Horlogers</p>
               </div>
             </div>
+            >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span>Retour aux Matériaux</span>
+          </Link>
 
             <div className="bento-item bento-summary">
               <h3 className="serif-heading text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100">Résumé Exécutif</h3>
