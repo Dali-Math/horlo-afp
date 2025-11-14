@@ -1,178 +1,179 @@
-// src/app/materiaux/guide-complet/page.tsx
-"use client";
+// app/page.tsx
+'use client';
 
-import React, { useEffect, useRef, useState } from "react";
-import Head from "next/head";
-import Script from "next/script";
+import React, { useEffect } from 'react';
+import Head from 'next/head';
+import Script from 'next/script';
 
-export default function GuideMetauxHorlogerie(): JSX.Element {
-  const mermaidContainerRef = useRef<HTMLDivElement | null>(null);
-  const [mermaidReady, setMermaidReady] = useState(false);
-
+export default function HomePage(): JSX.Element {
   useEffect(() => {
-    let isMounted = true;
-
+    // Initialize Mermaid and controls after DOM is loaded
     const initializeMermaidControls = () => {
-      const container = mermaidContainerRef.current;
-      if (!container) return;
+      const containers = document.querySelectorAll<HTMLElement>('.mermaid-container');
 
-      const mermaidElement = container.querySelector<HTMLElement>('.mermaid');
-      if (!mermaidElement) return;
+      containers.forEach(container => {
+        const mermaidElement = container.querySelector<HTMLElement>('.mermaid');
+        if (!mermaidElement) return;
 
-      let scale = 1;
-      let isDragging = false;
-      let startX = 0, startY = 0, translateX = 0, translateY = 0;
-      let isTouch = false, isPinching = false;
-      let initialDistance = 0, initialScale = 1;
+        let scale = 1;
+        let isDragging = false;
+        let startX = 0, startY = 0, translateX = 0, translateY = 0;
+        let isTouch = false;
+        let touchStartTime = 0;
+        let initialDistance = 0;
+        let initialScale = 1;
+        let isPinching = false;
 
-      const updateTransform = () => {
-        mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-        container.classList.toggle('zoomed', scale > 1);
-        mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
-      };
+        const zoomInBtn = container.querySelector<HTMLElement>('.zoom-in');
+        const zoomOutBtn = container.querySelector<HTMLElement>('.zoom-out');
+        const resetBtn = container.querySelector<HTMLElement>('.reset-zoom');
+        const fullscreenBtn = container.querySelector<HTMLElement>('.fullscreen');
 
-      // Contrôles de zoom
-      const zoomInBtn = container.querySelector<HTMLElement>('.zoom-in');
-      const zoomOutBtn = container.querySelector<HTMLElement>('.zoom-out');
-      const resetBtn = container.querySelector<HTMLElement>('.reset-zoom');
-      const fullscreenBtn = container.querySelector<HTMLElement>('.fullscreen');
+        const updateTransform = () => {
+          mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+          container.classList.toggle('zoomed', scale > 1);
+          mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+        };
 
-      zoomInBtn?.addEventListener('click', () => {
-        scale = Math.min(scale * 1.25, 4);
-        updateTransform();
-      });
-
-      zoomOutBtn?.addEventListener('click', () => {
-        scale = Math.max(scale / 1.25, 0.3);
-        if (scale <= 1) {
-          translateX = 0;
-          translateY = 0;
-        }
-        updateTransform();
-      });
-
-      resetBtn?.addEventListener('click', () => {
-        scale = 1;
-        translateX = 0;
-        translateY = 0;
-        updateTransform();
-      });
-
-      fullscreenBtn?.addEventListener('click', () => {
-        container.requestFullscreen?.();
-      });
-
-      // Événements souris
-      const handleMouseDown = (e: MouseEvent) => {
-        if (isTouch) return;
-        isDragging = true;
-        startX = e.clientX - translateX;
-        startY = e.clientY - translateY;
-        updateTransform();
-        e.preventDefault();
-      };
-
-      const handleMouseMove = (e: MouseEvent) => {
-        if (isDragging && !isTouch) {
-          translateX = e.clientX - startX;
-          translateY = e.clientY - startY;
+        zoomInBtn?.addEventListener('click', () => {
+          scale = Math.min(scale * 1.25, 4);
           updateTransform();
-        }
-      };
+        });
 
-      const handleMouseUp = () => {
-        if (isDragging && !isTouch) {
-          isDragging = false;
-          updateTransform();
-        }
-      };
-
-      mermaidElement.addEventListener('mousedown', handleMouseDown);
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      document.addEventListener('mouseleave', handleMouseUp);
-
-      // Touch events
-      const getTouchDistance = (touch1: Touch, touch2: Touch) => {
-        return Math.hypot(
-          touch2.clientX - touch1.clientX,
-          touch2.clientY - touch1.clientY
-        );
-      };
-
-      mermaidElement.addEventListener('touchstart', (e: TouchEvent) => {
-        isTouch = true;
-        touchStartTime = Date.now();
-
-        if (e.touches.length === 1) {
-          isPinching = false;
-          isDragging = true;
-          const touch = e.touches[0];
-          startX = touch.clientX - translateX;
-          startY = touch.clientY - translateY;
-        } else if (e.touches.length === 2) {
-          isPinching = true;
-          isDragging = false;
-          const touch1 = e.touches[0];
-          const touch2 = e.touches[1];
-          initialDistance = getTouchDistance(touch1, touch2);
-          initialScale = scale;
-        }
-        e.preventDefault();
-      }, { passive: false });
-
-      mermaidElement.addEventListener('touchmove', (e: TouchEvent) => {
-        if (e.touches.length === 1 && isDragging && !isPinching) {
-          const touch = e.touches[0];
-          translateX = touch.clientX - startX;
-          translateY = touch.clientY - startY;
-          updateTransform();
-        } else if (e.touches.length === 2 && isPinching) {
-          const touch1 = e.touches[0];
-          const touch2 = e.touches[1];
-          const currentDistance = getTouchDistance(touch1, touch2);
-          if (initialDistance > 0) {
-            scale = Math.min(Math.max(initialScale * (currentDistance / initialDistance), 0.3), 4);
-            updateTransform();
-          }
-        }
-        e.preventDefault();
-      }, { passive: false });
-
-      mermaidElement.addEventListener('touchend', (e: TouchEvent) => {
-        if (e.touches.length === 0) {
-          isDragging = false;
-          isPinching = false;
-          initialDistance = 0;
-          setTimeout(() => { isTouch = false; }, 100);
-        } else if (e.touches.length === 1 && isPinching) {
-          isPinching = false;
-          isDragging = true;
-          const touch = e.touches[0];
-          startX = touch.clientX - translateX;
-          startY = touch.clientY - translateY;
-        }
-        updateTransform();
-      });
-
-      container.addEventListener('wheel', (e: WheelEvent) => {
-        e.preventDefault();
-        const delta = e.deltaY > 0 ? 0.9 : 1.1;
-        const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
-        if (newScale !== scale) {
-          const scaleDiff = newScale / scale;
-          translateX = translateX * scaleDiff;
-          translateY = translateY * scaleDiff;
-          scale = newScale;
+        zoomOutBtn?.addEventListener('click', () => {
+          scale = Math.max(scale / 1.25, 0.3);
           if (scale <= 1) {
             translateX = 0;
             translateY = 0;
           }
           updateTransform();
-        }
-      });
+        });
 
-      updateTransform();
+        resetBtn?.addEventListener('click', () => {
+          scale = 1;
+          translateX = 0;
+          translateY = 0;
+          updateTransform();
+        });
+
+        fullscreenBtn?.addEventListener('click', () => {
+          container.requestFullscreen?.();
+        });
+
+        const getTouchDistance = (touch1: Touch, touch2: Touch) => {
+          return Math.hypot(
+            touch2.clientX - touch1.clientX,
+            touch2.clientY - touch1.clientY
+          );
+        };
+
+        const handleMouseDown = (e: MouseEvent) => {
+          if (isTouch) return;
+          isDragging = true;
+          startX = e.clientX - translateX;
+          startY = e.clientY - translateY;
+          updateTransform();
+          e.preventDefault();
+        };
+
+        const handleMouseMove = (e: MouseEvent) => {
+          if (isDragging && !isTouch) {
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            updateTransform();
+          }
+        };
+
+        const handleMouseUp = () => {
+          if (isDragging && !isTouch) {
+            isDragging = false;
+            updateTransform();
+          }
+        };
+
+        mermaidElement.addEventListener('mousedown', handleMouseDown);
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+        document.addEventListener('mouseleave', handleMouseUp);
+
+        mermaidElement.addEventListener('touchstart', (e: TouchEvent) => {
+          isTouch = true;
+          touchStartTime = Date.now();
+
+          if (e.touches.length === 1) {
+            isPinching = false;
+            isDragging = true;
+            const touch = e.touches[0];
+            startX = touch.clientX - translateX;
+            startY = touch.clientY - translateY;
+          } else if (e.touches.length === 2) {
+            isPinching = true;
+            isDragging = false;
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            initialDistance = getTouchDistance(touch1, touch2);
+            initialScale = scale;
+          }
+          e.preventDefault();
+        }, { passive: false });
+
+        mermaidElement.addEventListener('touchmove', (e: TouchEvent) => {
+          if (e.touches.length === 1 && isDragging && !isPinching) {
+            const touch = e.touches[0];
+            translateX = touch.clientX - startX;
+            translateY = touch.clientY - startY;
+            updateTransform();
+          } else if (e.touches.length === 2 && isPinching) {
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            const currentDistance = getTouchDistance(touch1, touch2);
+            if (initialDistance > 0) {
+              const newScale = Math.min(Math.max(
+                initialScale * (currentDistance / initialDistance),
+                0.3
+              ), 4);
+              scale = newScale;
+              updateTransform();
+            }
+          }
+          e.preventDefault();
+        }, { passive: false });
+
+        mermaidElement.addEventListener('touchend', (e: TouchEvent) => {
+          if (e.touches.length === 0) {
+            isDragging = false;
+            isPinching = false;
+            initialDistance = 0;
+            setTimeout(() => { isTouch = false; }, 100);
+          } else if (e.touches.length === 1 && isPinching) {
+            isPinching = false;
+            isDragging = true;
+            const touch = e.touches[0];
+            startX = touch.clientX - translateX;
+            startY = touch.clientY - translateY;
+          }
+          updateTransform();
+        });
+
+        container.addEventListener('wheel', (e: WheelEvent) => {
+          e.preventDefault();
+          const delta = e.deltaY > 0 ? 0.9 : 1.1;
+          const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+          if (newScale !== scale) {
+            const scaleDiff = newScale / scale;
+            translateX = translateX * scaleDiff;
+            translateY = translateY * scaleDiff;
+            scale = newScale;
+            if (scale <= 1) {
+              translateX = 0;
+              translateY = 0;
+            }
+            updateTransform();
+          }
+        });
+
+        updateTransform();
+      });
     };
 
     // Smooth scrolling for TOC links
@@ -213,59 +214,40 @@ export default function GuideMetauxHorlogerie(): JSX.Element {
     window.addEventListener('scroll', handleScroll);
 
     // Initialize Mermaid
-    const initMermaid = async () => {
-      if (typeof window === 'undefined') return;
-      
-      try {
-        const mermaidModule = await import('mermaid');
-        const mermaid = mermaidModule.default;
-        
-        mermaid.initialize({
-          startOnLoad: false,
-          theme: 'base',
-          themeVariables: {
-            primaryColor: '#f8f6f0',
-            primaryTextColor: '#1a1208',
-            primaryBorderColor: '#2c1810',
-            lineColor: '#8b7355',
-            secondaryColor: '#ffffff',
-            tertiaryColor: '#fef3c7',
-            background: '#ffffff',
-            mainBkg: '#f8f6f0',
-            secondBkg: '#ffffff',
-            tertiaryBkg: '#fef3c7',
-            nodeBorder: '#2c1810',
-            clusterBkg: '#f9fafb',
-            defaultLinkColor: '#8b7355',
-            titleColor: '#1a1208',
-            edgeLabelBackground: '#ffffff',
-            nodeTextColor: '#1a1208'
-          },
-          flowchart: {
-            useMaxWidth: false,
-            htmlLabels: true,
-            curve: 'basis',
-            padding: 20
-          },
-          fontFamily: 'Inter, sans-serif',
-          fontSize: '13px'
-        });
+    if (typeof window !== 'undefined') {
+      (window as any).mermaid?.initialize({
+        startOnLoad: true,
+        theme: 'base',
+        themeVariables: {
+          primaryColor: '#f8f6f0',
+          primaryTextColor: '#1a1208',
+          primaryBorderColor: '#2c1810',
+          lineColor: '#8b7355',
+          secondaryColor: '#ffffff',
+          tertiaryColor: '#fef3c7',
+          background: '#ffffff',
+          mainBkg: '#f8f6f0',
+          secondBkg: '#ffffff',
+          tertiaryBkg: '#fef3c7',
+          nodeBorder: '#2c1810',
+          clusterBkg: '#f9fafb',
+          defaultLinkColor: '#8b7355',
+          titleColor: '#1a1208',
+          edgeLabelBackground: '#ffffff',
+          nodeTextColor: '#1a1208'
+        },
+        flowchart: {
+          useMaxWidth: false,
+          htmlLabels: true,
+          curve: 'basis',
+          padding: 20
+        },
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '13px'
+      });
 
-        // Run mermaid on elements
-        await mermaid.run({
-          querySelector: '.mermaid',
-        });
-
-        if (isMounted) {
-          setMermaidReady(true);
-          setTimeout(initializeMermaidControls, 100);
-        }
-      } catch (error) {
-        console.error('Erreur Mermaid:', error);
-      }
-    };
-
-    initMermaid();
+      setTimeout(initializeMermaidControls, 500);
+    }
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -286,22 +268,14 @@ export default function GuideMetauxHorlogerie(): JSX.Element {
         
         {/* Font Awesome */}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        
+        {/* Mermaid */}
+        <Script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js" strategy="afterInteractive" />
+        
+        {/* Tailwind CSS */}
+        <Script src="https://cdn.tailwindcss.com" strategy="beforeInteractive" />
       </Head>
 
-      {/* Scripts avec Next.js Script component */}
-      <Script
-        src="https://cdn.tailwindcss.com"
-        strategy="beforeInteractive"
-      />
-      <Script
-        src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"
-        strategy="afterInteractive"
-        onLoad={() => {
-          // Mermaid sera initialisé dans useEffect
-        }}
-      />
-
-      {/* Styles globaux */}
       <style jsx global>{`
         :root {
           --color-primary: #2c1810;
@@ -386,6 +360,14 @@ export default function GuideMetauxHorlogerie(): JSX.Element {
           transform: scale(1.05);
         }
         
+        .chart-container {
+          background: white;
+          border-radius: 1rem;
+          padding: 2rem;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+          margin: 2rem 0;
+        }
+        
         .pull-quote {
           border-left: 4px solid var(--color-accent);
           background: rgba(166, 139, 91, 0.05);
@@ -422,6 +404,9 @@ export default function GuideMetauxHorlogerie(): JSX.Element {
           justify-content: center;
           align-items: center;
           touch-action: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
           user-select: none;
         }
 
@@ -432,9 +417,14 @@ export default function GuideMetauxHorlogerie(): JSX.Element {
           margin: 0 auto;
         }
 
+        .mermaid-container .mermaid:active {
+          cursor: grabbing;
+        }
+
         .mermaid-container.zoomed .mermaid {
           height: 100%;
           width: 100%;
+          cursor: grab;
         }
 
         .mermaid-controls {
@@ -461,6 +451,7 @@ export default function GuideMetauxHorlogerie(): JSX.Element {
           font-size: 14px;
           min-width: 36px;
           height: 36px;
+          text-align: center;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -477,6 +468,7 @@ export default function GuideMetauxHorlogerie(): JSX.Element {
           transform: scale(0.95);
         }
 
+        /* Enhanced node contrast for different colors */
         .mermaid .node rect,
         .mermaid .node circle,
         .mermaid .node ellipse,
@@ -508,6 +500,17 @@ export default function GuideMetauxHorlogerie(): JSX.Element {
         
         .mermaid .edge-pattern-solid {
           stroke: var(--color-secondary);
+        }
+        
+        /* Ensure proper contrast for different node colors */
+        .mermaid .node[class*="fill-"] .label {
+          color: var(--color-dark) !important;
+          text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9) !important;
+        }
+        
+        .mermaid .node[style*="fill:"] .label {
+          color: var(--color-dark) !important;
+          text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9) !important;
         }
         
         .bento-grid {
@@ -770,7 +773,7 @@ export default function GuideMetauxHorlogerie(): JSX.Element {
             </div>
 
             <div className="pull-quote">
-              &quot;La compréhension de ces matériaux est essentielle pour les élèves en formation horlogère et les passionnés, car elle éclaire les choix techniques et esthétiques des horlogers.&quot;
+              "La compréhension de ces matériaux est essentielle pour les élèves en formation horlogère et les passionnés, car elle éclaire les choix techniques et esthétiques des horlogers."
             </div>
           </div>
         </section>
@@ -787,7 +790,9 @@ export default function GuideMetauxHorlogerie(): JSX.Element {
               <div className="grid md:grid-cols-3 gap-6 mb-8">
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Composition et alliages</h4>
-                  <p className="mb-3">Les deux principaux alliages sont <strong>l&apos;acier 316L</strong> et <strong>l&apos;acier 904L</strong>, tous deux appartenant à la famille des aciers austénitiques <a href="https://rnm-metallurgie.fr/wp-content/uploads/2017/07/TM439-Prof-horlogerie.pdf" className="citation" target="_blank" rel="noopener noreferrer">[325]</a> <a href="https://www.chrono24.fr/magazine/durables-elegantes-et-intemporelles-quelle-est-lorigine-des-montres-en-acier-inoxydable-p_118021/" className="citation" target="_blank" rel="noopener noreferrer">[338]</a>.</p>
+                  <p className="mb-3">Les deux principaux alliages sont <strong>l&apos;acier 316L</strong> et <strong>l&apos;acier 904L</strong>, tous deux appartenant à la famille des aciers austénitiques <a href="https://rnm-metallurgie.fr/wp-content/uploads/2017/07/TM439-Prof-horlogerie.pdf" className="citation" target="_blank" rel="noopener noreferrer">[325]</a>
+                    <a href="https://www.chrono24.fr/magazine/durables-elegantes-et-intemporelles-quelle-est-lorigine-des-montres-en-acier-inoxydable-p_118021/" className="citation" target="_blank" rel="noopener noreferrer">[338]</a>.
+                  </p>
                   <ul className="text-sm space-y-1">
                     <li><strong>316L:</strong> 16-18% Cr, 10-14% Ni, 2-3% Mo</li>
                     <li><strong>904L:</strong> 19-23% Cr, 23-28% Ni, 4-5% Mo, 1-2% Cu</li>
@@ -1117,12 +1122,20 @@ export default function GuideMetauxHorlogerie(): JSX.Element {
             {/* Diagramme de structure métallique */}
             <div className="mb-12">
               <h3 className="serif-heading text-2xl font-bold mb-6 text-center">Structure granulaire métallique</h3>
-              <div ref={mermaidContainerRef} className="mermaid-container">
+              <div className="mermaid-container">
                 <div className="mermaid-controls">
-                  <button className="mermaid-control-btn zoom-in" title="Agrandir"><i className="fas fa-search-plus"></i></button>
-                  <button className="mermaid-control-btn zoom-out" title="Réduire"><i className="fas fa-search-minus"></i></button>
-                  <button className="mermaid-control-btn reset-zoom" title="Réinitialiser"><i className="fas fa-expand-arrows-alt"></i></button>
-                  <button className="mermaid-control-btn fullscreen" title="Plein écran"><i className="fas fa-expand"></i></button>
+                  <button className="mermaid-control-btn zoom-in" title="Agrandir">
+                    <i className="fas fa-search-plus"></i>
+                  </button>
+                  <button className="mermaid-control-btn zoom-out" title="Réduire">
+                    <i className="fas fa-search-minus"></i>
+                  </button>
+                  <button className="mermaid-control-btn reset-zoom" title="Réinitialiser">
+                    <i className="fas fa-expand-arrows-alt"></i>
+                  </button>
+                  <button className="mermaid-control-btn fullscreen" title="Plein écran">
+                    <i className="fas fa-expand"></i>
+                  </button>
                 </div>
                 <div className="mermaid">
                   {`graph TD
@@ -1258,32 +1271,46 @@ export default function GuideMetauxHorlogerie(): JSX.Element {
           </div>
         </section>
 
-        {/* PDF de Référence Section */}
-        <section id="pdf-reference" className="p-8">
-          <div className="section-card p-8">
-            <h2 className="serif-heading text-4xl font-bold mb-8 text-center">Intégration du PDF de Référence : &quot;Métaux Communs&quot;</h2>
+       {/* PDF de Référence Section */}
+<section id="pdf-reference" className="p-8">
+  <div className="section-card p-8">
+    <h2 className="serif-heading text-4xl font-bold mb-8 text-center">
+      Intégration du PDF de Référence : &quot;Métaux Communs&quot;
+    </h2>
 
-            <div className="material-card mb-8">
-              <h3 className="serif-heading text-2xl font-bold mb-4">Ressource Pédagogique Complémentaire</h3>
-              <p className="mb-4">Pour approfondir les connaissances sur les matériaux de base utilisés dans l&apos;industrie horlogère, un document de référence intitulé <strong>&quot;Métaux Communs&quot;</strong> est mis à disposition.</p>
-              <p className="mb-4">Ce PDF, hébergé dans le dépôt GitHub <code>horlo-afp</code>, constitue une ressource pédagogique précieuse pour les élèves en formation et les passionnés. Il est conçu pour être consulté directement sur la page, offrant une expérience de lecture fluide et intégrée.</p>
-              <p>Ce document fournit des informations fondamentales sur les propriétés, les compositions et les applications des métaux les plus couramment rencontrés en horlogerie. Il sert de complément essentiel aux explications détaillées présentées dans ce guide.</p>
-            </div>
+    <div className="material-card mb-8">
+      <h3 className="serif-heading text-2xl font-bold mb-4">
+        Ressource Pédagogique Complémentaire
+      </h3>
 
-            <div className="bg-gray-100 p-6 rounded-lg">
-              <h4 className="font-bold text-lg mb-4">Visionneuse de PDF Intégrée</h4>
-              <p className="mb-4 text-sm text-gray-600">Si le PDF ne s&apos;affiche pas correctement, vous pouvez le télécharger directement en cliquant sur le lien ci-dessous.</p>
-              <div className="text-center">
-                <a href="https://github.com/Dali-Math/horlo-afp/blob/main/public/pdfs/metaux-communs.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
-                  <i className="fas fa-download mr-2"></i>
-                  Télécharger le PDF &quot;Métaux Communs&quot;
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
+      <p className="mb-4">
+        Pour accompagner l’étude des matériaux utilisés en horlogerie, un document de référence intitulé 
+        <strong> « Métaux Communs » </strong> est proposé. Ce PDF présente de manière claire les principales 
+        familles de métaux, leurs propriétés techniques et leurs applications dans la fabrication horlogère.
+      </p>
 
-        {/* Footer */}
+      <p className="mb-4">
+        Il permet d’identifier rapidement la composition, les caractéristiques essentielles et les usages 
+        typiques de chaque matériau. Ressource synthétique et structurée, il vient compléter efficacement 
+        les informations détaillées fournies dans ce guide.
+      </p>
+    </div>
+
+    <div className="bg-gray-100 p-6 rounded-lg">
+      <h4 className="font-bold text-lg mb-4">Visionneuse de PDF Intégrée</h4>
+      <p className="mb-4 text-sm text-gray-600">
+        Le document ci-dessous est affiché grâce à la visionneuse PDF intégrée pour une consultation directe.
+      </p>
+    </div>
+    {/* Visionneuse PDF */}
+<div className="bg-white p-6 rounded-lg shadow border border-gray-200 mt-8">
+  <iframe
+    src="/pdfs/metaux-communs.pdf"
+    className="w-full h-[900px] rounded-lg border"
+  ></iframe>
+</div>
+</div>
+</section>
         <footer className="p-8 bg-gray-900 text-white">
           <div className="text-center">
             <h3 className="serif-heading text-2xl font-bold mb-4">Guide Complet des Métaux en Horlogerie</h3>
