@@ -1,10 +1,8 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
-
-export default function GuideCompletPage() {
 
   // Forcer UNIQUEMENT cette page en mode clair
   useEffect(() => {
