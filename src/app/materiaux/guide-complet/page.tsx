@@ -706,8 +706,8 @@ export default function HomePage(): JSX.Element {
          /* BOUTON FLOTTANT */
         .floating-back-btn {
           position: fixed;
-          bottom: 30px;
-          right: 30px;
+          bottom: 20px;
+          right: 20px;
           z-index: 999;
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
@@ -758,13 +758,6 @@ export default function HomePage(): JSX.Element {
             bottom: 15px;
             right: 15px;
           }
-
-          .floating-back-btn {
-            bottom: 20px;
-            right: 20px;
-          }
-        }
-
         @media (max-width: 768px) {
           section {
             padding-left: 1rem !important;
