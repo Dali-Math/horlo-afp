@@ -1119,11 +1119,6 @@ export default function HomePage(): JSX.Element {
           <div className="section-card p-8">
             <h2 className="serif-heading text-4xl font-bold mb-8 text-center">Schémas Techniques et Comparatifs Visuels</h2>
 
-            {/* Techniques et Comparatifs Section */}
-        <section id="techniques-comparatifs" className="p-8">
-          <div className="section-card p-8">
-            <h2 className="serif-heading text-4xl font-bold mb-8 text-center">Schémas Techniques et Comparatifs Visuels</h2>
-
             {/* Diagramme de structure métallique */}
             <div className="mb-12">
               <h3 className="serif-heading text-2xl font-bold mb-6 text-center">Structure granulaire métallique</h3>
@@ -1142,38 +1137,38 @@ export default function HomePage(): JSX.Element {
                     <i className="fas fa-expand"></i>
                   </button>
                 </div>
-                <pre className="mermaid">
-graph TD
-    A[Structure Métallique] --> B[Grains cristallins]
-    A --> C[Joints de grains]
-    A --> D[Dislocations]
+                <div className="mermaid">
+                  {`graph TD
+                  A["Structure Métallique"] --> B["Grains cristallins"]
+                  A --> C["Joints de grains"]
+                  A --> D["Dislocations"]
 
-    B --> B1[Taille du grain]
-    B --> B2[Forme du grain]
-    B --> B3[Orientation]
+                  B --> B1["Taille du grain"]
+                  B --> B2["Forme du grain"]
+                  B --> B3["Orientation"]
 
-    C --> C1[Interfaces entre cristaux]
-    C --> C2[Sites de corrosion potentielle]
-    C --> C3[Barrière au mouvement des dislocations]
+                  C --> C1["Interfaces entre cristaux"]
+                  C --> C2["Sites de corrosion potentielle"]
+                  C --> C3["Barrière au mouvement des dislocations"]
 
-    D --> D1[Défauts dans la structure]
-    D --> D2[Influence sur la ductilité]
-    D --> D3[Rôle dans le durcissement]
+                  D --> D1["Défauts dans la structure"]
+                  D --> D2["Influence sur la ductilité"]
+                  D --> D3["Rôle dans le durcissement"]
 
-    style A fill:#f8f6f0,stroke:#2c1810,stroke-width:3px
-    style B fill:#ffffff,stroke:#8b7355,stroke-width:2px
-    style C fill:#fef3c7,stroke:#a68b5b,stroke-width:2px
-    style D fill:#ecfdf5,stroke:#059669,stroke-width:2px
-    style B1 fill:#fafafa,stroke:#6b7280,stroke-width:1px
-    style B2 fill:#fafafa,stroke:#6b7280,stroke-width:1px
-    style B3 fill:#fafafa,stroke:#6b7280,stroke-width:1px
-    style C1 fill:#fef3c7,stroke:#d97706,stroke-width:1px
-    style C2 fill:#fef3c7,stroke:#d97706,stroke-width:1px
-    style C3 fill:#fef3c7,stroke:#d97706,stroke-width:1px
-    style D1 fill:#ecfdf5,stroke:#059669,stroke-width:1px
-    style D2 fill:#ecfdf5,stroke:#059669,stroke-width:1px
-    style D3 fill:#ecfdf5,stroke:#059669,stroke-width:1px
-                </pre>
+                  style A fill:#f8f6f0,stroke:#2c1810,stroke-width:3px,color:#1a1208
+                  style B fill:#ffffff,stroke:#8b7355,stroke-width:2px,color:#1a1208
+                  style C fill:#fef3c7,stroke:#a68b5b,stroke-width:2px,color:#1a1208
+                  style D fill:#ecfdf5,stroke:#059669,stroke-width:2px,color:#1a1208
+                  style B1 fill:#fafafa,stroke:#6b7280,stroke-width:1px,color:#1a1208
+                  style B2 fill:#fafafa,stroke:#6b7280,stroke-width:1px,color:#1a1208
+                  style B3 fill:#fafafa,stroke:#6b7280,stroke-width:1px,color:#1a1208
+                  style C1 fill:#fef3c7,stroke:#d97706,stroke-width:1px,color:#1a1208
+                  style C2 fill:#fef3c7,stroke:#d97706,stroke-width:1px,color:#1a1208
+                  style C3 fill:#fef3c7,stroke:#d97706,stroke-width:1px,color:#1a1208
+                  style D1 fill:#ecfdf5,stroke:#059669,stroke-width:1px,color:#1a1208
+                  style D2 fill:#ecfdf5,stroke:#059669,stroke-width:1px,color:#1a1208
+                  style D3 fill:#ecfdf5,stroke:#059669,stroke-width:1px,color:#1a1208`}
+                </div>
               </div>
               <p className="text-center text-gray-600 mt-4">
                 La taille, la forme et l&apos;orientation des grains influencent directement les propriétés mécaniques du métal.
