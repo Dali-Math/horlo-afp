@@ -704,16 +704,30 @@ export default function HomePage(): JSX.Element {
         }
 
         /* BOUTON FLOTTANT */
-        .floating-back-btn {
+.floating-back-btn {
   position: fixed;
   bottom: 30px;
   left: 0;
   z-index: 999;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  border-top-left-radius: 0;        
+  border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  border-top-right-radius: 9999px;  
+  border-top-right-radius: 9999px;
   border-bottom-right-radius: 9999px;
+}
+
+/* Sur tablettes */
+@media (max-width: 768px) {
+  .floating-back-btn {
+    bottom: 20px;
+  }
+}
+
+/* Sur mobiles */
+@media (max-width: 480px) {
+  .floating-back-btn {
+    bottom: 15px;
+  }
 }
         
         @media (max-width: 1024px) {
