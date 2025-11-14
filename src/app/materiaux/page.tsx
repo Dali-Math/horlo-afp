@@ -162,6 +162,33 @@ const MATERIALS: Material[] = [
     technicalDetails: "Alliage Cu/Sn, oxydation naturelle contrôlée, patine unique par utilisateur"
   },
 ]
+{/* === BLOC: Métaux Communs — Flipbook === */}
+<section className="bg-[#111827] p-8 rounded-2xl border border-yellow-500/30 shadow-xl mb-14">
+  <div className="flex items-center gap-3 mb-4">
+    <svg xmlns="http://www.w3.org/2000/svg"
+      className="text-yellow-400 w-7 h-7" fill="none"
+      viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+        d="M12 6v12m6-6H6" />
+    </svg>
+
+    <h2 className="text-2xl font-bold text-yellow-400">
+      Métaux Communs — Flipbook Interactif
+    </h2>
+  </div>
+
+  <p className="text-zinc-300 text-lg mb-6">
+    Accède au cours complet sur les métaux utilisés en horlogerie.  
+    Version flipbook verticale, immersive et lisible comme un vrai livre.
+  </p>
+
+  <a
+    href="/materiaux/metaux-communs"
+    className="inline-block bg-yellow-500 text-black font-semibold px-6 py-3 rounded-lg hover:bg-yellow-400 transition shadow-md"
+  >
+    📘 Ouvrir le Flipbook
+  </a>
+</section>
 
 const CATEGORIES = ['Tous', 'Classiques', 'Innovation', 'Décoratif'] as const
 type Category = (typeof CATEGORIES)[number]
