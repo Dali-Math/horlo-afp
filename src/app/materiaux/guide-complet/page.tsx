@@ -7,10 +7,13 @@ import Script from 'next/script';
 
 export default function GuideCompletPage() {
 
-  // Forcer UNIQUEMENT cette page en mode clair
   useEffect(() => {
     document.documentElement.classList.remove('dark');
   }, []);
+
+  return (
+    <div className="bg-white text-black dark:bg-white dark:text-black min-h-screen">
+
 // Définition des types pour le simulateur
 interface Metal {
   id: string;
