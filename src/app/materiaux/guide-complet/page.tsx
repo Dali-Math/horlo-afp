@@ -100,8 +100,8 @@ export default function Page() {
         })
 
         fullscreenBtn?.addEventListener('click', () => {
-          if (container.requestFullscreen) {
-            container.requestFullscreen()
+          if ((container as HTMLElement).requestFullscreen) {
+            (container as HTMLElement).requestFullscreen()
           } else if ((container as any).webkitRequestFullscreen) {
             ;(container as any).webkitRequestFullscreen()
           } else if ((container as any).msRequestFullscreen) {
@@ -231,12 +231,12 @@ export default function Page() {
           updateTransform()
         }
 
-        document.addEventListener('touchmove', handleTouchMove, { passive: false } as any)
-        document.addEventListener('touchend', handleTouchEnd)
-        document.addEventListener('touchcancel', handleTouchCancel)
+        document.addEventListener('touchmove', handleTouchMove as EventListener, { passive: false } as any)
+        document.addEventListener('touchend', handleTouchEnd as EventListener)
+        document.addEventListener('touchcancel', handleTouchCancel as EventListener)
 
         // Enhanced wheel zoom with proper type casting
-        container.addEventListener('wheel', (e: WheelEvent) => {
+        (container as HTMLElement).addEventListener('wheel', (e: WheelEvent) => {
           e.preventDefault()
           const delta = e.deltaY > 0 ? 0.9 : 1.1
           const newScale = Math.min(Math.max(scale * delta, 0.3), 4)
@@ -265,7 +265,7 @@ export default function Page() {
     tocLinks.forEach(link => {
       link.addEventListener('click', function(e) {
         e.preventDefault()
-        const targetId = this.getAttribute('href')!.substring(1)
+        const targetId = (this as HTMLElement).getAttribute('href')!.substring(1)
         const targetElement = document.getElementById(targetId)
         if (targetElement) {
           targetElement.scrollIntoView({
@@ -313,10 +313,10 @@ export default function Page() {
       <Head>
         <title>Guide Complet des Métaux en Horlogerie</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <script src="https://cdn.tailwindcss.com "></script>
+        <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js "></script>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital ,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css " />
         <style jsx global>{`
           :root {
             --color-primary: #2c1810;
@@ -720,7 +720,7 @@ export default function Page() {
         <section className="p-8">
           <div className="bento-grid">
             <div className="bento-item bento-hero">
-              <img src="https://kimi-img.moonshot.cn/pub/icon/spinner.svg" alt="Close-up macro photograph of luxury Swiss watch movement with metallic components" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+              <img src="https://kimi-img.moonshot.cn/pub/icon/spinner.svg " alt="Close-up macro photograph of luxury Swiss watch movement with metallic components" className="absolute inset-0 w-full h-full object-cover opacity-30" />
               <div className="relative z-10">
                 <h1 className="hero-title serif-heading">Guide Complet des Métaux</h1>
                 <p className="hero-subtitle">L'Art et la Science des Matériaux Horlogers</p>
@@ -755,14 +755,14 @@ export default function Page() {
             <div className="grid md:grid-cols-2 gap-8 mb-8">
               <div className="material-card">
                 <h3 className="serif-heading text-2xl font-bold mb-4">Vue d'ensemble des métaux et alliages</h3>
-                <p className="mb-4">L'horlogerie, à l'intersection de l'art et de la science, repose sur une sélection rigoureuse des matériaux pour créer des garde-temps à la fois fonctionnels et esthétiques <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank">[359]</a>. Chaque métal ou alliage joue un rôle spécifique, dicté par ses propriétés physiques, chimiques et mécaniques.</p>
-                <p>Les matériaux les plus couramment utilisés vont des métaux communs comme <strong>l'acier inoxydable</strong>, le <strong>laiton</strong> et le <strong>maillechort</strong>, aux métaux précieux comme <strong>l'or</strong> et le <strong>platine</strong>, en passant par des matériaux innovants comme le <strong>titane</strong>, la <strong>céramique</strong> et le <strong>bronze</strong> <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank">[359]</a>.</p>
+                <p className="mb-4">L'horlogerie, à l'intersection de l'art et de la science, repose sur une sélection rigoureuse des matériaux pour créer des garde-temps à la fois fonctionnels et esthétiques <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[359]</a>. Chaque métal ou alliage joue un rôle spécifique, dicté par ses propriétés physiques, chimiques et mécaniques.</p>
+                <p>Les matériaux les plus couramment utilisés vont des métaux communs comme <strong>l'acier inoxydable</strong>, le <strong>laiton</strong> et le <strong>maillechort</strong>, aux métaux précieux comme <strong>l'or</strong> et le <strong>platine</strong>, en passant par des matériaux innovants comme le <strong>titane</strong>, la <strong>céramique</strong> et le <strong>bronze</strong> <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[359]</a>.</p>
               </div>
 
               <div className="material-card">
                 <h3 className="serif-heading text-2xl font-bold mb-4">Importance de la sélection des matériaux</h3>
                 <p className="mb-4">La sélection des matériaux en horlogerie est un processus critique qui influence directement la <strong>performance, la durabilité, l'esthétique et le coût</strong> d'une montre. Chaque composant, du boîtier aux plus petits rouages, exige des propriétés spécifiques.</p>
-                <p>Par exemple, le boîtier, qui protège le mouvement, doit être robuste et résistant à la corrosion, ce qui fait de l'acier inoxydable un choix populaire <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank">[359]</a>. Cependant, pour les personnes sensibles au nickel, le titane, qui est hypoallergénique, est une alternative supérieure <a href="https://fr.haibowellti.com/info/titanium-watches-vs-stainless-steel-watches-96570776.html" className="citation" target="_blank">[355]</a>.</p>
+                <p>Par exemple, le boîtier, qui protège le mouvement, doit être robuste et résistant à la corrosion, ce qui fait de l'acier inoxydable un choix populaire <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[359]</a>. Cependant, pour les personnes sensibles au nickel, le titane, qui est hypoallergénique, est une alternative supérieure <a href="https://fr.haibowellti.com/info/titanium-watches-vs-stainless-steel-watches-96570776.html " className="citation" target="_blank">[355]</a>.</p>
               </div>
             </div>
 
@@ -784,8 +784,8 @@ export default function Page() {
               <div className="grid md:grid-cols-3 gap-6 mb-8">
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Composition et alliages</h4>
-                  <p className="mb-3">Les deux principaux alliages sont <strong>l'acier 316L</strong> et <strong>l'acier 904L</strong>, tous deux appartenant à la famille des aciers austénitiques <a href="https://rnm-metallurgie.fr/wp-content/uploads/2017/07/TM439-Prof-horlogerie.pdf" className="citation" target="_blank">[325]</a>
-                    <a href="https://www.chrono24.fr/magazine/durables-elegantes-et-intemporelles-quelle-est-lorigine-des-montres-en-acier-inoxydable-p_118021/" className="citation" target="_blank">[338]</a>.
+                  <p className="mb-3">Les deux principaux alliages sont <strong>l'acier 316L</strong> et <strong>l'acier 904L</strong>, tous deux appartenant à la famille des aciers austénitiques <a href="https://rnm-metallurgie.fr/wp-content/uploads/2017/07/TM439-Prof-horlogerie.pdf " className="citation" target="_blank">[325]</a>
+                    <a href="https://www.chrono24.fr/magazine/durables-elegantes-et-intemporelles-quelle-est-lorigine-des-montres-en-acier-inoxydable-p_118021/ " className="citation" target="_blank">[338]</a>.
                   </p>
                   <ul className="text-sm space-y-1">
                     <li><strong>316L:</strong> 16-18% Cr, 10-14% Ni, 2-3% Mo</li>
@@ -795,7 +795,7 @@ export default function Page() {
 
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Propriétés mécaniques</h4>
-                  <p className="mb-3">Les aciers austénitiques offrent une excellente résistance à la corrosion, une facilité de mise en forme et un rendu esthétique variable selon la finition <a href="https://rnm-metallurgie.fr/wp-content/uploads/2017/07/TM439-Prof-horlogerie.pdf" className="citation" target="_blank">[325]</a>.</p>
+                  <p className="mb-3">Les aciers austénitiques offrent une excellente résistance à la corrosion, une facilité de mise en forme et un rendu esthétique variable selon la finition <a href="https://rnm-metallurgie.fr/wp-content/uploads/2017/07/TM439-Prof-horlogerie.pdf " className="citation" target="_blank">[325]</a>.</p>
                   <ul className="text-sm space-y-1">
                     <li><strong>Dureté 316L:</strong> ~250 HV</li>
                     <li><strong>Durcissement surface:</strong> jusqu'à 1200 HV</li>
@@ -805,7 +805,7 @@ export default function Page() {
 
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Applications</h4>
-                  <p className="mb-3">L'acier inoxydable est le matériau de prédilection pour les boîtiers et les bracelets de montres, grâce à sa combinaison unique de robustesse et d'esthétique polyvalente <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank">[359]</a>.</p>
+                  <p className="mb-3">L'acier inoxydable est le matériau de prédilection pour les boîtiers et les bracelets de montres, grâce à sa combinaison unique de robustesse et d'esthétique polyvalente <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[359]</a>.</p>
                   <ul className="text-sm space-y-1">
                     <li><strong>316L:</strong> Montres de sport et classiques</li>
                     <li><strong>904L:</strong> Montres de plongée et haut de gamme</li>
@@ -822,7 +822,7 @@ export default function Page() {
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Caractéristiques uniques</h4>
-                  <p className="mb-4">Le titane s'est imposé comme un matériau de choix dans l'industrie horlogère, en particulier pour les montres techniques et sportives <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank">[359]</a>.</p>
+                  <p className="mb-4">Le titane s'est imposé comme un matériau de choix dans l'industrie horlogère, en particulier pour les montres techniques et sportives <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[359]</a>.</p>
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h5 className="font-semibold mb-2">Avantages clés:</h5>
                     <ul className="space-y-1 text-sm">
@@ -870,7 +870,7 @@ export default function Page() {
                     </table>
                   </div>
                   <p className="mt-4 text-sm text-gray-600">
-                    Source: <a href="https://fr.haibowellti.com/info/titanium-watches-vs-stainless-steel-watches-96570776.html" className="citation" target="_blank">[355]</a>
+                    Source: <a href="https://fr.haibowellti.com/info/titanium-watches-vs-stainless-steel-watches-96570776.html " className="citation" target="_blank">[355]</a>
                   </p>
                 </div>
               </div>
@@ -883,18 +883,18 @@ export default function Page() {
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Le Laiton : Utilisation historique</h4>
-                  <p className="mb-4">Le laiton, un alliage de cuivre et de zinc, est l'un des matériaux les plus historiquement significatifs en horlogerie <a href="https://www.machining-custom.com/fr/blog/brass-vs-aluminum-vs-stainless-steel.html" className="citation" target="_blank">[366]</a>.</p>
+                  <p className="mb-4">Le laiton, un alliage de cuivre et de zinc, est l'un des matériaux les plus historiquement significatifs en horlogerie <a href="https://www.machining-custom.com/fr/blog/brass-vs-aluminum-vs-stainless-steel.html " className="citation" target="_blank">[366]</a>.</p>
                   <ul className="space-y-2 mb-4">
                     <li><strong>Composition:</strong> Cuivre (Cu) + Zinc (Zn)</li>
                     <li><strong>Avantages:</strong> Excellente usinabilité, bonne résistance à la corrosion</li>
                     <li><strong>Applications:</strong> Platines, ponts, rouages historiques</li>
                   </ul>
-                  <p className="text-sm text-gray-600">Utilisé traditionnellement pour la "cage" ou le "bâti" du mouvement <a href="https://fr.wikipedia.org/wiki/M%C3%A9canisme_(horlogerie)" className="citation" target="_blank">[349]</a>.</p>
+                  <p className="text-sm text-gray-600">Utilisé traditionnellement pour la "cage" ou le "bâti" du mouvement <a href="https://fr.wikipedia.org/wiki/M%C3%A9canisme_(horlogerie )" className="citation" target="_blank">[349]</a>.</p>
                 </div>
 
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Le Maillechort : Composition et avantages</h4>
-                  <p className="mb-4">Le maillechort, également connu sous le nom d'argentan, est un alliage de cuivre, de nickel et de zinc <a href="https://inside.code41watches.com/fr/les-differents-materiaux-utilises-en-horlogerie" className="citation" target="_blank">[214]</a>.</p>
+                  <p className="mb-4">Le maillechort, également connu sous le nom d'argentan, est un alliage de cuivre, de nickel et de zinc <a href="https://inside.code41watches.com/fr/les-differents-materiaux-utilises-en-horlogerie " className="citation" target="_blank">[214]</a>.</p>
                   <div className="bg-gray-50 p-4 rounded-lg mb-4">
                     <h5 className="font-semibold mb-2">Composition typique:</h5>
                     <ul className="text-sm space-y-1">
@@ -903,7 +903,7 @@ export default function Page() {
                       <li>• <strong>Zinc:</strong> 20-45%</li>
                     </ul>
                   </div>
-                  <p className="text-sm">Résistance supérieure à la corrosion et rigidité accrue par rapport au laiton <a href="https://www.tartaix.com/content/103-maillechort" className="citation" target="_blank">[329]</a>.</p>
+                  <p className="text-sm">Résistance supérieure à la corrosion et rigidité accrue par rapport au laiton <a href="https://www.tartaix.com/content/103-maillechort " className="citation" target="_blank">[329]</a>.</p>
                 </div>
               </div>
             </div>
@@ -922,7 +922,7 @@ export default function Page() {
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Alliages d'or</h4>
-                  <p className="mb-4">L'or est utilisé sous forme d'alliage pour améliorer la dureté et la résistance. La teneur en or fin est exprimée en carats <a href="http://watches-lexic.ch/pages/fr/tec/exp6.htm" className="citation" target="_blank">[436]</a>.</p>
+                  <p className="mb-4">L'or est utilisé sous forme d'alliage pour améliorer la dureté et la résistance. La teneur en or fin est exprimée en carats <a href="http://watches-lexic.ch/pages/fr/tec/exp6.htm " className="citation" target="_blank">[436]</a>.</p>
                   <div className="space-y-3">
                     <div className="flex items-center">
                       <div className="w-4 h-4 bg-yellow-400 rounded-full mr-3"></div>
@@ -941,7 +941,7 @@ export default function Page() {
 
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Propriétés et traitement</h4>
-                  <p className="mb-4">Après durcissement par alliage, l'or 18 carats atteint une dureté de 120 à 200 HV, suffisante pour résister à l'usure quotidienne <a href="http://watches-lexic.ch/pages/fr/tec/exp6.htm" className="citation" target="_blank">[436]</a>.</p>
+                  <p className="mb-4">Après durcissement par alliage, l'or 18 carats atteint une dureté de 120 à 200 HV, suffisante pour résister à l'usure quotidienne <a href="http://watches-lexic.ch/pages/fr/tec/exp6.htm " className="citation" target="_blank">[436]</a>.</p>
                   <ul className="space-y-2">
                     <li><strong>Dureté:</strong> 120-200 HV (or 18K)</li>
                     <li><strong>Traitements:</strong> Polissage, satinage, rhodiage</li>
@@ -951,7 +951,7 @@ export default function Page() {
 
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Applications</h4>
-                  <p className="mb-4">L'or est principalement utilisé pour les boîtiers de montres de luxe et les éléments décoratifs <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank">[433]</a>.</p>
+                  <p className="mb-4">L'or est principalement utilisé pour les boîtiers de montres de luxe et les éléments décoratifs <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[433]</a>.</p>
                   <ul className="space-y-2">
                     <li><strong>Boîtiers:</strong> Symboles de prestige</li>
                     <li><strong>Cadrans:</strong> Souvent avec guillochage</li>
@@ -968,7 +968,7 @@ export default function Page() {
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Caractéristiques et densité</h4>
-                  <p className="mb-4">Le platine est un métal précieux encore plus rare et plus dense que l'or, réservé aux garde-temps les plus exclusifs <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank">[433]</a>.</p>
+                  <p className="mb-4">Le platine est un métal précieux encore plus rare et plus dense que l'or, réservé aux garde-temps les plus exclusifs <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[433]</a>.</p>
                   <div className="bg-gray-50 p-4 rounded-lg mb-4">
                     <h5 className="font-semibold mb-2">Propriétés remarquables:</h5>
                     <ul className="text-sm space-y-1">
@@ -982,7 +982,7 @@ export default function Page() {
 
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Applications haut de gamme</h4>
-                  <p className="mb-4">Le platine est réservé aux pièces les plus prestigieuses de la haute horlogerie, un symbole de statut et de valeur <a href="http://watches-lexic.ch/pages/fr/tec/exp6.htm" className="citation" target="_blank">[436]</a>.</p>
+                  <p className="mb-4">Le platine est réservé aux pièces les plus prestigieuses de la haute horlogerie, un symbole de statut et de valeur <a href="http://watches-lexic.ch/pages/fr/tec/exp6.htm " className="citation" target="_blank">[436]</a>.</p>
                   <ul className="space-y-2 mb-4">
                     <li><strong>Boîtiers:</strong> Présence unique et substantielle</li>
                     <li><strong>Éléments décoratifs:</strong> Cadrans, aiguilles, index</li>
@@ -1007,7 +1007,7 @@ export default function Page() {
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Propriétés exceptionnelles</h4>
-                  <p className="mb-4">La céramique est un matériau non métallique apprécié pour sa légèreté, sa résistance exceptionnelle aux rayures et son aspect futuriste <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank">[433]</a>.</p>
+                  <p className="mb-4">La céramique est un matériau non métallique apprécié pour sa légèreté, sa résistance exceptionnelle aux rayures et son aspect futuriste <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[433]</a>.</p>
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h5 className="font-semibold mb-2">Caractéristiques techniques:</h5>
                     <ul className="text-sm space-y-1">
@@ -1021,7 +1021,7 @@ export default function Page() {
 
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Procédés et applications</h4>
-                  <p className="mb-4">La fabrication de pièces en céramique est un processus complexe et hautement technologique, utilisant de la zircone yttriée (ZrO2) <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank">[433]</a>.</p>
+                  <p className="mb-4">La fabrication de pièces en céramique est un processus complexe et hautement technologique, utilisant de la zircone yttriée (ZrO2) <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[433]</a>.</p>
                   <div className="space-y-3 mb-4">
                     <div className="flex items-center">
                       <i className="fas fa-fire text-orange-500 mr-3"></i>
@@ -1047,7 +1047,7 @@ export default function Page() {
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Composition et évolution</h4>
-                  <p className="mb-4">Le bronze, un alliage de cuivre et d'étain, a connu un regain d'intérêt pour son évolution naturelle au fil du temps <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank">[433]</a>.</p>
+                  <p className="mb-4">Le bronze, un alliage de cuivre et d'étain, a connu un regain d'intérêt pour son évolution naturelle au fil du temps <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[433]</a>.</p>
                   <div className="bg-gradient-to-r from-orange-400 to-green-600 p-4 rounded-lg text-white mb-4">
                     <h5 className="font-semibold mb-2">Processus de patine:</h5>
                     <p className="text-sm">Cuivre brillant → Teintes brunes → Vertes (comme la Statue de la Liberté)</p>
@@ -1118,16 +1118,16 @@ export default function Page() {
               <h3 className="serif-heading text-2xl font-bold mb-6 text-center">Structure granulaire métallique</h3>
               <div className="mermaid-container">
                 <div className="mermaid-controls">
-                  <button className="mermaid-control-btn zoom-in" title="放大">
+                  <button className="mermaid-control-btn zoom-in" title="Zoom avant">
                     <i className="fas fa-search-plus"></i>
                   </button>
-                  <button className="mermaid-control-btn zoom-out" title="缩小">
+                  <button className="mermaid-control-btn zoom-out" title="Zoom arrière">
                     <i className="fas fa-search-minus"></i>
                   </button>
-                  <button className="mermaid-control-btn reset-zoom" title="重置">
+                  <button className="mermaid-control-btn reset-zoom" title="Réinitialiser">
                     <i className="fas fa-expand-arrows-alt"></i>
                   </button>
-                  <button className="mermaid-control-btn fullscreen" title="全屏查看">
+                  <button className="mermaid-control-btn fullscreen" title="Plein écran">
                     <i className="fas fa-expand"></i>
                   </button>
                 </div>
@@ -1252,7 +1252,7 @@ export default function Page() {
               <h4 className="font-bold text-lg mb-4">Visionneuse de PDF Intégrée</h4>
               <p className="mb-4 text-sm text-gray-600">Si le PDF ne s'affiche pas correctement, vous pouvez le télécharger directement en cliquant sur le lien ci-dessous.</p>
               <div className="text-center">
-                <a href="https://github.com/Dali-Math/horlo-afp/blob/main/public/pdfs/metaux-communs.pdf" target="_blank" className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                <a href="https://github.com/Dali-Math/horlo-afp/blob/main/public/pdfs/metaux-communs.pdf " target="_blank" className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
                   <i className="fas fa-download mr-2"></i>
                   Télécharger le PDF "Métaux Communs"
                 </a>
