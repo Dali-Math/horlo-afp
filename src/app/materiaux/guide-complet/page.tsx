@@ -1,11 +1,8 @@
-// app/page.tsx
-'use client';
-
-import React, { useEffect } from 'react';
 'use client';
 
 import { useEffect } from 'react';
 
+// Loader Mermaid
 function MermaidLoader() {
   useEffect(() => {
     if (typeof window === "undefined") return;
