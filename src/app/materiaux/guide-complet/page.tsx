@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useRef, useMemo } from 'react';
 
 export default function HorloLearn() {
@@ -111,13 +113,22 @@ export default function HorloLearn() {
       }
       
       const searchLower = searchTerm.toLowerCase();
-      const contentMatch = searchableElements.current.some(el => {
-        if (!el) return false;
-        const text = el.textContent?.toLowerCase() || '';
-        return text.includes(searchLower);
-      });
       
-      return matchesFilter && contentMatch;
+      // Recherche dans les propriétés du matériau
+      const searchInMaterial = (obj: any): boolean => {
+        if (typeof obj === 'string') {
+          return obj.toLowerCase().includes(searchLower);
+        }
+        if (Array.isArray(obj)) {
+          return obj.some(item => searchInMaterial(item));
+        }
+        if (typeof obj === 'object' && obj !== null) {
+          return Object.values(obj).some(value => searchInMaterial(value));
+        }
+        return false;
+      };
+      
+      return matchesFilter && searchInMaterial(material);
     });
   }, [activeFilter, searchTerm]);
 
@@ -164,178 +175,180 @@ export default function HorloLearn() {
           <button className={`filter-btn ${activeFilter === 'horlogerie' ? 'active' : ''}`} onClick={() => handleFilterClick('horlogerie')}>Usages Horlogerie</button>
         </div>
 
-        {filteredMaterials.map((material) => {
-          if (material.type === 'section-big') {
-            return (
-              <div
-                key={material.id}
-                ref={registerSearchableElement as unknown as React.LegacyRef<HTMLDivElement>}
-                className="section-big searchable"
-                data-category={material.category}
-              >
-                <h2 className="section-title">{material.title}</h2>
-                
-                {material.specs && (
-                  <div className="specs-grid" style={{ maxWidth: '600px', margin: '0 auto 30px' }}>
-                    {material.specs.map((spec, idx) => (
-                      <div key={idx} className="spec-item">
-                        <div className="spec-label">{spec.label}</div>
-                        <div className="spec-value">{spec.value}</div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {material.quickStats && (
-                  <div className="quick-stats" style={{ justifyContent: 'center', marginBottom: '30px' }}>
-                    {material.quickStats.map((stat, idx) => (
-                      <span key={idx} className="stat-badge">{stat}</span>
-                    ))}
-                  </div>
-                )}
-
-                {material.description && (
-                  <div className="category-desc" style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 40px' }}>
-                    {material.description}
-                  </div>
-                )}
-
-                {material.steelCategories && (
-                  <div className="steel-categories">
-                    {material.steelCategories.map((cat, idx) => (
-                      <div key={idx} className="steel-category">
-                        <div className="category-title">{cat.title}</div>
-                        <div className="category-desc">{cat.desc}</div>
-                        <div className="steel-types-grid">
-                          {cat.types.map((type, typeIdx) => (
-                            <div key={typeIdx} className="steel-type-item">
-                              <div className="steel-type-name">{type.name}</div>
-                              {type.desc && <div className="category-desc">{type.desc}</div>}
-                              {type.name === 'Qualités recherchées' && (
-                                <ul className="property-list" style={{ marginTop: '10px' }}>
-                                  {type.desc?.split(',').map((item, i) => (
-                                    <li key={i}>{item.trim()}</li>
-                                  ))}
-                                </ul>
-                              )}
-                            </div>
-                          ))}
+        <div className="materials-grid">
+          {filteredMaterials.map((material) => {
+            if (material.type === 'section-big') {
+              return (
+                <div
+                  key={material.id}
+                  ref={registerSearchableElement as unknown as React.LegacyRef<HTMLDivElement>}
+                  className="section-big searchable"
+                  data-category={material.category}
+                >
+                  <h2 className="section-title">{material.title}</h2>
+                  
+                  {material.specs && (
+                    <div className="specs-grid" style={{ maxWidth: '600px', margin: '0 auto 30px' }}>
+                      {material.specs.map((spec, idx) => (
+                        <div key={idx} className="spec-item">
+                          <div className="spec-label">{spec.label}</div>
+                          <div className="spec-value">{spec.value}</div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                      ))}
+                    </div>
+                  )}
 
-                {material.properties && (
-                  <div className="advantages-grid">
-                    <div className="advantage-card">
-                      <div className="advantage-title">Propriétés</div>
+                  {material.quickStats && (
+                    <div className="quick-stats" style={{ justifyContent: 'center', marginBottom: '30px' }}>
+                      {material.quickStats.map((stat, idx) => (
+                        <span key={idx} className="stat-badge">{stat}</span>
+                      ))}
+                    </div>
+                  )}
+
+                  {material.description && (
+                    <div className="category-desc" style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 40px' }}>
+                      {material.description}
+                    </div>
+                  )}
+
+                  {material.steelCategories && (
+                    <div className="steel-categories">
+                      {material.steelCategories.map((cat, idx) => (
+                        <div key={idx} className="steel-category">
+                          <div className="category-title">{cat.title}</div>
+                          <div className="category-desc">{cat.desc}</div>
+                          <div className="steel-types-grid">
+                            {cat.types.map((type, typeIdx) => (
+                              <div key={typeIdx} className="steel-type-item">
+                                <div className="steel-type-name">{type.name}</div>
+                                {type.desc && type.name !== 'Qualités recherchées' && <div className="category-desc">{type.desc}</div>}
+                                {type.name === 'Qualités recherchées' && (
+                                  <ul className="property-list" style={{ marginTop: '10px' }}>
+                                    {type.desc?.split(',').map((item, i) => (
+                                      <li key={i}>{item.trim()}</li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {material.properties && (
+                    <div className="advantages-grid">
+                      <div className="advantage-card">
+                        <div className="advantage-title">Propriétés</div>
+                        <ul className="property-list">
+                          {material.properties.map((prop, idx) => (
+                            <li key={idx}>{prop}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="advantage-card">
+                        <div className="advantage-title">Utilisation</div>
+                        <ul className="property-list">
+                          {material.usage?.map((use, idx) => (
+                            <li key={idx}>{use}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+
+                  {material.horlogerieUses && (
+                    <div className="horlogerie-uses">
+                      <div className="uses-title">🕰️ UTILISATIONS EN HORLOGERIE</div>
+                      <ul className="property-list">
+                        {material.horlogerieUses.map((use, idx) => (
+                          <li key={idx} dangerouslySetInnerHTML={{ __html: use }} />
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              );
+            } else {
+              return (
+                <div
+                  key={material.id}
+                  ref={registerSearchableElement as unknown as React.LegacyRef<HTMLDivElement>}
+                  className="material-card searchable"
+                  data-category={material.category}
+                >
+                  <div className="material-type">{material.materialType}</div>
+                  <div className="card-header">
+                    <h3 className="material-title">{material.title}</h3>
+                    <span className="material-icon">{material.icon}</span>
+                  </div>
+                  
+                  {material.specs && (
+                    <div className="specs-grid">
+                      {material.specs.map((spec, idx) => (
+                        <div key={idx} className="spec-item">
+                          <div className="spec-label">{spec.label}</div>
+                          <div className="spec-value">{spec.value}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {material.quickStats && (
+                    <div className="quick-stats">
+                      {material.quickStats.map((stat, idx) => (
+                        <span key={idx} className="stat-badge">{stat}</span>
+                      ))}
+                    </div>
+                  )}
+
+                  {material.description && (
+                    <p style={{ color: 'var(--text-dim)', margin: '16px 0' }}>
+                      {material.description}
+                    </p>
+                  )}
+
+                  <div className="section-divider"></div>
+                  
+                  {material.properties && (
+                    <>
+                      <div className="section-label">Propriétés</div>
                       <ul className="property-list">
                         {material.properties.map((prop, idx) => (
                           <li key={idx}>{prop}</li>
                         ))}
                       </ul>
-                    </div>
-                    <div className="advantage-card">
-                      <div className="advantage-title">Utilisation</div>
+                    </>
+                  )}
+
+                  {material.usage && (
+                    <>
+                      <div className="section-label">Utilisation</div>
                       <ul className="property-list">
-                        {material.usage?.map((use, idx) => (
+                        {material.usage.map((use, idx) => (
+                          <li key={idx}>{use}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+
+                  {material.horlogerieUses && (
+                    <div className="horlogerie-uses">
+                      <div className="uses-title">🕰️ EN HORLOGERIE</div>
+                      <ul className="property-list">
+                        {material.horlogerieUses.map((use, idx) => (
                           <li key={idx}>{use}</li>
                         ))}
                       </ul>
                     </div>
-                  </div>
-                )}
-
-                {material.horlogerieUses && (
-                  <div className="horlogerie-uses">
-                    <div className="uses-title">🕰️ UTILISATIONS EN HORLOGERIE</div>
-                    <ul className="property-list">
-                      {material.horlogerieUses.map((use, idx) => (
-                        <li key={idx} dangerouslySetInnerHTML={{ __html: use }} />
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            );
-          } else {
-            return (
-              <div
-                key={material.id}
-                ref={registerSearchableElement as unknown as React.LegacyRef<HTMLDivElement>}
-                className={`material-card searchable ${!filteredMaterials.some(m => m.id === material.id) ? 'hidden' : ''}`}
-                data-category={material.category}
-              >
-                <div className="material-type">{material.materialType}</div>
-                <div className="card-header">
-                  <h3 className="material-title">{material.title}</h3>
-                  <span className="material-icon">{material.icon}</span>
+                  )}
                 </div>
-                
-                {material.specs && (
-                  <div className="specs-grid">
-                    {material.specs.map((spec, idx) => (
-                      <div key={idx} className="spec-item">
-                        <div className="spec-label">{spec.label}</div>
-                        <div className="spec-value">{spec.value}</div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {material.quickStats && (
-                  <div className="quick-stats">
-                    {material.quickStats.map((stat, idx) => (
-                      <span key={idx} className="stat-badge">{stat}</span>
-                    ))}
-                  </div>
-                )}
-
-                {material.description && (
-                  <p style={{ color: 'var(--text-dim)', margin: '16px 0' }}>
-                    {material.description}
-                  </p>
-                )}
-
-                <div className="section-divider"></div>
-                
-                {material.properties && (
-                  <>
-                    <div className="section-label">Propriétés</div>
-                    <ul className="property-list">
-                      {material.properties.map((prop, idx) => (
-                        <li key={idx}>{prop}</li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-
-                {material.usage && (
-                  <>
-                    <div className="section-label">Utilisation</div>
-                    <ul className="property-list">
-                      {material.usage.map((use, idx) => (
-                        <li key={idx}>{use}</li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-
-                {material.horlogerieUses && (
-                  <div className="horlogerie-uses">
-                    <div className="uses-title">🕰️ EN HORLOGERIE</div>
-                    <ul className="property-list">
-                      {material.horlogerieUses.map((use, idx) => (
-                        <li key={idx}>{use}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            );
-          }
-        })}
+              );
+            }
+          })}
+        </div>
       </div>
 
       <style jsx global>{`
