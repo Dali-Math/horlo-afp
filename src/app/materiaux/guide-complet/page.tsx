@@ -1,22 +1,28 @@
-// app/page.tsx - VERSION AMÉLIORÉE AVEC SIMULATEUR OPTIMISÉ
+// app/page.tsx
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
+import Link from 'next/link';
 
-// Définition des types pour le simulateur
+// Définition des types pour le simulateur professionnel
 interface Metal {
   id: string;
   name: string;
   icon: string;
+  description: string;
   baseProperties: {
     hardness: number;
     corrosion: number;
     density: number;
     cost: number;
+    workability: number;
     color: string;
+    colorName: string;
   };
+  applications: string[];
+  characteristics: string[];
 }
 
 interface Additive {
@@ -24,89 +30,140 @@ interface Additive {
   name: string;
   symbol: string;
   maxPercent: number;
+  minPercent: number;
+  optimalRange: [number, number];
   effect: {
     hardness: number;
     corrosion: number;
     density: number;
     cost: number;
+    workability: number;
     description: string;
+    technicalNote: string;
   };
+  contraindications: string[];
+  synergies: string[];
 }
 
-// Composant AlloyMixer AMÉLIORÉ
+interface AlloyResult {
+  hardness: number;
+  corrosion: number;
+  density: number;
+  cost: number;
+  workability: number;
+  color: string;
+  colorName: string;
+  grade: 'A+' | 'A' | 'B' | 'C' | 'D';
+  applications: string[];
+  warnings: string[];
+  recommendations: string[];
+  industrialStandard?: string;
+}
+
+// Composant AlloyMixer professionnel amélioré
 const AlloyMixer: React.FC = () => {
   const baseMetals: Metal[] = [
     { 
-      id: 'steel316', 
+      id: 'steel316L', 
       name: 'Acier 316L', 
-      icon: '⚙️', 
+      icon: '⚙️',
+      description: 'Acier inoxydable austénitique, standard de l\'industrie horlogère',
       baseProperties: { 
         hardness: 200, 
         corrosion: 85, 
         density: 7.9, 
-        cost: 2,
-        color: '#e0e0e0' 
-      } 
+        cost: 50,
+        workability: 75,
+        color: '#e0e0e0',
+        colorName: 'Argenté brillant'
+      },
+      applications: ['Boîtiers sport', 'Bracelets', 'Composants internes', 'Montres plongée'],
+      characteristics: ['Résistant à la corrosion', 'Biocompatible', 'Usinable', 'Polissable']
     },
     { 
-      id: 'steel904', 
+      id: 'steel904L', 
       name: 'Acier 904L (Oystersteel)', 
-      icon: '🔷', 
+      icon: '🏆',
+      description: 'Acier superausténitique utilisé par Rolex, résistance exceptionnelle',
       baseProperties: { 
         hardness: 250, 
         corrosion: 95, 
         density: 8.0, 
-        cost: 3,
-        color: '#d0d0d0' 
-      } 
+        cost: 80,
+        workability: 60,
+        color: '#d5d5d5',
+        colorName: 'Argenté premium'
+      },
+      applications: ['Montres luxe', 'Environnements marins', 'Boîtiers haute performance'],
+      characteristics: ['Résistance chimique supérieure', 'Faible maintenance', 'Finition miroir']
     },
     { 
       id: 'titanium', 
       name: 'Titane Grade 5 (Ti-6Al-4V)', 
-      icon: '🪶', 
+      icon: '🪶',
+      description: 'Alliage de titane aéronautique, léger et biocompatible',
       baseProperties: { 
         hardness: 350, 
         corrosion: 95, 
         density: 4.5, 
-        cost: 5,
-        color: '#c0c0c0' 
-      } 
+        cost: 120,
+        workability: 45,
+        color: '#b8b8b8',
+        colorName: 'Gris-argent mat'
+      },
+      applications: ['Montres sport', 'Plongée professionnelle', 'Composants aéronautiques'],
+      characteristics: ['Ultra-léger', 'Hypoallergénique', 'Haute résistance', 'Ratio poids/résistance optimal']
     },
     { 
       id: 'gold18k', 
-      name: 'Or 18K (750‰)', 
-      icon: '👑', 
+      name: 'Or 18 Carats (750‰)', 
+      icon: '👑',
+      description: 'Or pur à 75%, le standard de la haute horlogerie',
       baseProperties: { 
         hardness: 150, 
         corrosion: 100, 
         density: 15.4, 
-        cost: 9,
-        color: '#ffd700' 
-      } 
+        cost: 500,
+        workability: 85,
+        color: '#ffd700',
+        colorName: 'Or jaune classique'
+      },
+      applications: ['Montres de luxe', 'Complications', 'Éditions limitées', 'Haute joaillerie'],
+      characteristics: ['Inoxydable', 'Prestige', 'Facile à travailler', 'Valeur patrimoniale']
     },
     { 
       id: 'platinum', 
-      name: 'Platine 950', 
-      icon: '⭐', 
+      name: 'Platine 950 (950‰)', 
+      icon: '⭐',
+      description: 'Le métal le plus noble et dense de l\'horlogerie',
       baseProperties: { 
         hardness: 130, 
         corrosion: 100, 
         density: 21.4, 
-        cost: 10,
-        color: '#e5e4e2' 
-      } 
+        cost: 800,
+        workability: 40,
+        color: '#e5e4e2',
+        colorName: 'Blanc-gris noble'
+      },
+      applications: ['Pièces d\'exception', 'Montres à complications', 'Collections museum'],
+      characteristics: ['Rareté extrême', 'Inaltérable', 'Poids substantiel', 'Prestige absolu']
     },
     { 
       id: 'bronze', 
-      name: 'Bronze CuSn8', 
-      icon: '🏛️', 
+      name: 'Bronze CuSn8 (92% Cu, 8% Sn)', 
+      icon: '🏛️',
+      description: 'Alliage traditionnel maritime avec patine vivante',
       baseProperties: { 
         hardness: 100, 
         corrosion: 70, 
         density: 8.8, 
-        cost: 2,
-        color: '#cd7f32' 
-      } 
+        cost: 40,
+        workability: 80,
+        color: '#cd7f32',
+        colorName: 'Cuivré chaud'
+      },
+      applications: ['Montres de plongée vintage', 'Éditions spéciales', 'Marine'],
+      characteristics: ['Patine unique', 'Antimicrobien', 'Look vintage', 'Évolution naturelle']
     },
   ];
 
@@ -115,169 +172,239 @@ const AlloyMixer: React.FC = () => {
       id: 'carbon', 
       name: 'Carbone', 
       symbol: 'C', 
-      maxPercent: 2, 
+      maxPercent: 2.0,
+      minPercent: 0.1,
+      optimalRange: [0.3, 1.2],
       effect: { 
-        hardness: 150, 
-        corrosion: -10, 
-        density: 0.1, 
-        cost: 0.5,
-        description: 'Augmente dureté, réduit résistance corrosion' 
-      } 
+        hardness: 180, 
+        corrosion: -15, 
+        density: 0.05, 
+        cost: 5,
+        workability: -25,
+        description: 'Durcissement structural majeur',
+        technicalNote: 'Formation de carbures, améliore la trempabilité'
+      },
+      contraindications: ['Éviter avec métaux précieux', 'Réduit la ductilité'],
+      synergies: ['Chrome (Cr)', 'Molybdène (Mo)']
     },
     { 
       id: 'nickel', 
       name: 'Nickel', 
       symbol: 'Ni', 
-      maxPercent: 30, 
+      maxPercent: 30,
+      minPercent: 2,
+      optimalRange: [8, 14],
       effect: { 
         hardness: 50, 
-        corrosion: 15, 
+        corrosion: 20, 
         density: 1.2, 
-        cost: 0.8,
-        description: 'Améliore brillance et résistance corrosion' 
-      } 
+        cost: 15,
+        workability: 10,
+        description: 'Améliore ductilité et brillance',
+        technicalNote: 'Stabilise la structure austénitique, peut causer allergies'
+      },
+      contraindications: ['Allergène potentiel', 'Réglementé dans certains pays'],
+      synergies: ['Chrome (Cr)', 'Cuivre (Cu)']
     },
     { 
       id: 'chrome', 
       name: 'Chrome', 
       symbol: 'Cr', 
-      maxPercent: 25, 
+      maxPercent: 25,
+      minPercent: 10.5,
+      optimalRange: [16, 18],
       effect: { 
         hardness: 80, 
-        corrosion: 40, 
+        corrosion: 45, 
         density: 0.8, 
-        cost: 1.0,
-        description: 'Rend inoxydable, augmente dureté' 
-      } 
+        cost: 12,
+        workability: -15,
+        description: 'Formation de couche passive protectrice',
+        technicalNote: 'Essentiel pour l\'inoxydabilité (>10.5% minimum)'
+      },
+      contraindications: ['Excès peut fragiliser'],
+      synergies: ['Nickel (Ni)', 'Molybdène (Mo)']
     },
     { 
       id: 'copper', 
       name: 'Cuivre', 
       symbol: 'Cu', 
-      maxPercent: 40, 
+      maxPercent: 40,
+      minPercent: 1,
+      optimalRange: [12, 25],
       effect: { 
-        hardness: -20, 
-        corrosion: 5, 
+        hardness: -15, 
+        corrosion: 8, 
         density: 1.0, 
-        cost: 0.3,
-        description: 'Favorise ductilité, teinte rosée' 
-      } 
+        cost: 8,
+        workability: 20,
+        description: 'Améliore la formabilité et couleur',
+        technicalNote: 'Base des alliages d\'or rose, favorise la ductilité'
+      },
+      contraindications: ['Peut oxyder'],
+      synergies: ['Argent (Ag)', 'Zinc (Zn)', 'Or (Au)']
     },
     { 
-      id: 'moly', 
+      id: 'molybdenum', 
       name: 'Molybdène', 
       symbol: 'Mo', 
-      maxPercent: 5, 
+      maxPercent: 6,
+      minPercent: 0.5,
+      optimalRange: [2, 4],
       effect: { 
-        hardness: 60, 
-        corrosion: 25, 
+        hardness: 70, 
+        corrosion: 30, 
         density: 1.5, 
-        cost: 1.2,
-        description: 'Excellente résistance marine' 
-      } 
+        cost: 25,
+        workability: -10,
+        description: 'Résistance exceptionnelle aux chlorures',
+        technicalNote: 'Crucial pour environnements marins (904L: 4-5%)'
+      },
+      contraindications: ['Coût élevé'],
+      synergies: ['Chrome (Cr)', 'Nickel (Ni)']
     },
     { 
       id: 'zinc', 
       name: 'Zinc', 
       symbol: 'Zn', 
-      maxPercent: 35, 
+      maxPercent: 35,
+      minPercent: 5,
+      optimalRange: [15, 25],
       effect: { 
-        hardness: 30, 
-        corrosion: -5, 
+        hardness: 25, 
+        corrosion: -8, 
         density: 0.9, 
-        cost: 0.2,
-        description: 'Facilite fusion et moulage' 
-      } 
-    },
-    { 
-      id: 'palladium', 
-      name: 'Palladium', 
-      symbol: 'Pd', 
-      maxPercent: 20, 
-      effect: { 
-        hardness: 40, 
-        corrosion: 30, 
-        density: 1.8, 
-        cost: 3.5,
-        description: 'Blanchit or, hypoallergénique' 
-      } 
-    },
-    { 
-      id: 'silver', 
-      name: 'Argent', 
-      symbol: 'Ag', 
-      maxPercent: 25, 
-      effect: { 
-        hardness: -10, 
-        corrosion: 10, 
-        density: 0.5, 
-        cost: 1.5,
-        description: 'Améliore éclat et malléabilité' 
-      } 
+        cost: 3,
+        workability: 25,
+        description: 'Facilite la fusion et le moulage',
+        technicalNote: 'Composant principal du laiton, abaisse le point de fusion'
+      },
+      contraindications: ['Volatil à haute température'],
+      synergies: ['Cuivre (Cu)']
     },
   ];
 
   const [selectedMetal, setSelectedMetal] = useState<Metal>(baseMetals[0]);
   const [selectedAdditives, setSelectedAdditives] = useState<Array<{additive: Additive, percentage: number}>>([]);
-  const [results, setResults] = useState({ hardness: 0, corrosion: 0, density: 0, cost: 0, color: '#ffffff' });
-  const [applications, setApplications] = useState<string[]>([]);
-  const [alloyName, setAlloyName] = useState('');
+  const [results, setResults] = useState<AlloyResult | null>(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
-  // Calcul des propriétés résultantes
-  useEffect(() => {
-    let total = 100;
-    let hardness = selectedMetal.baseProperties.hardness * 100;
-    let corrosion = selectedMetal.baseProperties.corrosion * 100;
-    let density = selectedMetal.baseProperties.density * 100;
-    let cost = selectedMetal.baseProperties.cost * 100;
+  // Calcul professionnel des propriétés résultantes
+  const calculateAlloyProperties = useCallback(() => {
+    let totalWeight = 100;
+    let weightedHardness = selectedMetal.baseProperties.hardness * 100;
+    let weightedCorrosion = selectedMetal.baseProperties.corrosion * 100;
+    let weightedDensity = selectedMetal.baseProperties.density * 100;
+    let weightedCost = selectedMetal.baseProperties.cost * 100;
+    let weightedWorkability = selectedMetal.baseProperties.workability * 100;
 
     selectedAdditives.forEach(({ additive, percentage }) => {
-      total += percentage;
-      hardness += additive.effect.hardness * percentage;
-      corrosion += additive.effect.corrosion * percentage;
-      density += additive.effect.density * percentage;
-      cost += additive.effect.cost * percentage;
+      totalWeight += percentage;
+      weightedHardness += additive.effect.hardness * percentage;
+      weightedCorrosion += additive.effect.corrosion * percentage;
+      weightedDensity += additive.effect.density * percentage;
+      weightedCost += additive.effect.cost * percentage;
+      weightedWorkability += additive.effect.workability * percentage;
     });
 
-    const finalHardness = Math.max(50, Math.min(2000, Math.round(hardness / total)));
-    const finalCorrosion = Math.max(0, Math.min(100, Math.round(corrosion / total)));
-    const finalDensity = Math.max(1, Math.round((density / total) * 10) / 10);
-    const finalCost = Math.max(1, Math.min(10, Math.round((cost / total) * 10) / 10));
+    const finalHardness = Math.max(50, Math.min(2000, Math.round(weightedHardness / totalWeight)));
+    const finalCorrosion = Math.max(0, Math.min(100, Math.round(weightedCorrosion / totalWeight)));
+    const finalDensity = Math.max(1, Math.round((weightedDensity / totalWeight) * 10) / 10);
+    const finalCost = Math.max(10, Math.round(weightedCost / totalWeight));
+    const finalWorkability = Math.max(0, Math.min(100, Math.round(weightedWorkability / totalWeight)));
 
-    setResults({ 
-      hardness: finalHardness, 
-      corrosion: finalCorrosion, 
-      density: finalDensity, 
-      cost: finalCost,
-      color: selectedMetal.baseProperties.color 
-    });
+    // Détermination du grade
+    let grade: 'A+' | 'A' | 'B' | 'C' | 'D' = 'C';
+    const score = (finalHardness / 10) + finalCorrosion + (100 - finalDensity * 3) + finalWorkability - (finalCost / 5);
+    
+    if (score > 180) grade = 'A+';
+    else if (score > 150) grade = 'A';
+    else if (score > 120) grade = 'B';
+    else if (score > 90) grade = 'C';
+    else grade = 'D';
 
     // Déterminer les applications
     const apps: string[] = [];
-    if (finalHardness > 600) apps.push('Composants d\'usure extrême');
-    if (finalHardness > 400 && finalHardness <= 600) apps.push('Boîtiers haute résistance');
-    if (finalCorrosion > 90) apps.push('Montres de plongée professionnelle');
-    if (finalCorrosion > 80 && finalCorrosion <= 90) apps.push('Montres de plongée récréative');
-    if (finalDensity < 6) apps.push('Montres sport ultra-légères');
-    if (finalDensity > 15) apps.push('Montres de luxe avec présence au poignet');
-    if (selectedMetal.id === 'gold18k' || selectedMetal.id === 'platinum') apps.push('Haute joaillerie et pièces d\'exception');
-    if (finalCost >= 8) apps.push('Segment ultra-luxe');
-    if (finalCost <= 3) apps.push('Horlogerie accessible');
-    
-    setApplications(apps);
+    if (finalHardness > 600) apps.push('✦ Composants haute résistance');
+    if (finalHardness > 400 && finalHardness <= 600) apps.push('✦ Boîtiers sport');
+    if (finalCorrosion > 90) apps.push('✦ Montres de plongée professionnelle');
+    if (finalCorrosion > 80 && finalCorrosion <= 90) apps.push('✦ Usage quotidien');
+    if (finalDensity < 6) apps.push('✦ Montres ultra-légères');
+    if (finalDensity > 15) apps.push('✦ Montres de prestige (poids substantiel)');
+    if (finalWorkability > 70) apps.push('✦ Pièces complexes / Gravure');
+    if (selectedMetal.id.includes('gold') || selectedMetal.id === 'platinum') apps.push('✦ Haute joaillerie');
+    if (finalCost < 100) apps.push('✦ Production série');
+    if (finalCost > 300) apps.push('✦ Éditions limitées / Luxe');
 
-    // Générer nom d'alliage
-    let name = selectedMetal.name;
-    if (selectedAdditives.length > 0) {
-      const additiveSymbols = selectedAdditives.map(a => `${a.additive.symbol}${a.percentage.toFixed(1)}`).join('-');
-      name += ` + ${additiveSymbols}`;
+    // Avertissements et recommandations
+    const warnings: string[] = [];
+    const recommendations: string[] = [];
+
+    selectedAdditives.forEach(({ additive, percentage }) => {
+      if (percentage > additive.optimalRange[1]) {
+        warnings.push(`⚠️ ${additive.symbol} au-dessus de la plage optimale (>${additive.optimalRange[1]}%)`);
+      }
+      if (percentage < additive.optimalRange[0]) {
+        warnings.push(`⚠️ ${additive.symbol} en-dessous de la plage optimale (<${additive.optimalRange[0]}%)`);
+      }
+      additive.contraindications.forEach(ci => {
+        warnings.push(`⚠️ ${additive.symbol}: ${ci}`);
+      });
+    });
+
+    if (finalWorkability < 50) {
+      warnings.push('⚠️ Usinabilité difficile - Outils spéciaux requis');
     }
-    setAlloyName(name);
+    if (finalHardness > 1500) {
+      warnings.push('⚠️ Dureté extrême - Usinage très complexe');
+    }
+    if (finalCorrosion < 70) {
+      recommendations.push('💡 Envisager traitement de surface (PVD, DLC)');
+    }
+    if (finalDensity > 18) {
+      recommendations.push('💡 Poids élevé - Vérifier confort au porté');
+    }
+    if (finalCost > 500) {
+      recommendations.push('💡 Coût premium - Justifier par prestige / complications');
+    }
+
+    // Standards industriels
+    let industrialStandard: string | undefined;
+    if (selectedMetal.id === 'steel316L' && selectedAdditives.some(a => a.additive.id === 'chrome')) {
+      industrialStandard = 'Conforme ASTM A240 / EN 1.4404';
+    } else if (selectedMetal.id === 'steel904L') {
+      industrialStandard = 'Conforme ASTM B625 / Rolex Oystersteel®';
+    } else if (selectedMetal.id === 'titanium') {
+      industrialStandard = 'Conforme ASTM B265 Grade 5 (Ti-6Al-4V)';
+    } else if (selectedMetal.id === 'gold18k') {
+      industrialStandard = 'Conforme hallmark 750‰ / 18K';
+    } else if (selectedMetal.id === 'platinum') {
+      industrialStandard = 'Conforme hallmark 950‰ Pt950';
+    }
+
+    setResults({
+      hardness: finalHardness,
+      corrosion: finalCorrosion,
+      density: finalDensity,
+      cost: finalCost,
+      workability: finalWorkability,
+      color: selectedMetal.baseProperties.color,
+      colorName: selectedMetal.baseProperties.colorName,
+      grade,
+      applications: apps.length ? apps : ['✦ Usage standard'],
+      warnings,
+      recommendations,
+      industrialStandard
+    });
   }, [selectedMetal, selectedAdditives]);
+
+  useEffect(() => {
+    calculateAlloyProperties();
+  }, [calculateAlloyProperties]);
 
   const addAdditive = (additive: Additive) => {
     if (!selectedAdditives.some(a => a.additive.id === additive.id) && selectedAdditives.length < 6) {
-      setSelectedAdditives([...selectedAdditives, { additive, percentage: Math.min(5, additive.maxPercent) }]);
+      setSelectedAdditives([...selectedAdditives, { additive, percentage: additive.optimalRange[0] }]);
     }
   };
 
@@ -287,118 +414,139 @@ const AlloyMixer: React.FC = () => {
 
   const updatePercentage = (id: string, value: number) => {
     setSelectedAdditives(selectedAdditives.map(a => 
-      a.additive.id === id ? { ...a, percentage: Math.min(a.additive.maxPercent, Math.max(0.1, value)) } : a
+      a.additive.id === id ? { ...a, percentage: Math.min(a.additive.maxPercent, Math.max(a.additive.minPercent, value)) } : a
     ));
   };
 
   const resetSimulator = () => {
     setSelectedMetal(baseMetals[0]);
     setSelectedAdditives([]);
+    setResults(null);
   };
 
-  const getHardnessLevel = (hardness: number) => {
-    if (hardness < 150) return { label: 'Tendre', color: 'bg-yellow-500', icon: '🟡' };
-    if (hardness < 300) return { label: 'Standard', color: 'bg-blue-500', icon: '🔵' };
-    if (hardness < 500) return { label: 'Dur', color: 'bg-green-500', icon: '🟢' };
-    if (hardness < 800) return { label: 'Très dur', color: 'bg-purple-500', icon: '🟣' };
-    return { label: 'Ultra-dur', color: 'bg-red-500', icon: '🔴' };
+  const getGradeColor = (grade: string) => {
+    switch(grade) {
+      case 'A+': return 'from-green-400 to-emerald-500';
+      case 'A': return 'from-blue-400 to-cyan-500';
+      case 'B': return 'from-yellow-400 to-orange-500';
+      case 'C': return 'from-orange-400 to-red-500';
+      case 'D': return 'from-red-500 to-pink-600';
+      default: return 'from-gray-400 to-gray-500';
+    }
   };
 
-  const getCorrosionLevel = (corrosion: number) => {
-    if (corrosion < 60) return { label: 'Faible', color: 'bg-red-500', icon: '⚠️' };
-    if (corrosion < 80) return { label: 'Bonne', color: 'bg-yellow-500', icon: '✓' };
-    if (corrosion < 90) return { label: 'Excellente', color: 'bg-green-500', icon: '✓✓' };
-    return { label: 'Exceptionnelle', color: 'bg-blue-500', icon: '✓✓✓' };
+  const getPropertyLevel = (value: number, type: 'hardness' | 'corrosion' | 'density' | 'cost' | 'workability') => {
+    switch(type) {
+      case 'hardness':
+        if (value > 1000) return { level: 'Extrême', color: 'text-purple-600 dark:text-purple-400' };
+        if (value > 600) return { level: 'Très élevée', color: 'text-blue-600 dark:text-blue-400' };
+        if (value > 300) return { level: 'Élevée', color: 'text-green-600 dark:text-green-400' };
+        if (value > 150) return { level: 'Moyenne', color: 'text-yellow-600 dark:text-yellow-400' };
+        return { level: 'Faible', color: 'text-orange-600 dark:text-orange-400' };
+      
+      case 'corrosion':
+        if (value > 90) return { level: 'Excellente', color: 'text-green-600 dark:text-green-400' };
+        if (value > 75) return { level: 'Très bonne', color: 'text-blue-600 dark:text-blue-400' };
+        if (value > 60) return { level: 'Bonne', color: 'text-yellow-600 dark:text-yellow-400' };
+        return { level: 'Limitée', color: 'text-orange-600 dark:text-orange-400' };
+      
+      case 'density':
+        if (value < 5) return { level: 'Ultra-léger', color: 'text-green-600 dark:text-green-400' };
+        if (value < 8) return { level: 'Léger', color: 'text-blue-600 dark:text-blue-400' };
+        if (value < 12) return { level: 'Moyen', color: 'text-yellow-600 dark:text-yellow-400' };
+        if (value < 18) return { level: 'Lourd', color: 'text-orange-600 dark:text-orange-400' };
+        return { level: 'Très lourd', color: 'text-purple-600 dark:text-purple-400' };
+      
+      case 'cost':
+        if (value > 500) return { level: 'Très élevé', color: 'text-red-600 dark:text-red-400' };
+        if (value > 200) return { level: 'Élevé', color: 'text-orange-600 dark:text-orange-400' };
+        if (value > 100) return { level: 'Moyen', color: 'text-yellow-600 dark:text-yellow-400' };
+        return { level: 'Abordable', color: 'text-green-600 dark:text-green-400' };
+      
+      case 'workability':
+        if (value > 75) return { level: 'Excellente', color: 'text-green-600 dark:text-green-400' };
+        if (value > 60) return { level: 'Bonne', color: 'text-blue-600 dark:text-blue-400' };
+        if (value > 45) return { level: 'Moyenne', color: 'text-yellow-600 dark:text-yellow-400' };
+        return { level: 'Difficile', color: 'text-orange-600 dark:text-orange-400' };
+      
+      default:
+        return { level: '', color: '' };
+    }
   };
-
-  const getDensityLevel = (density: number) => {
-    if (density < 6) return { label: 'Ultra-léger', color: 'bg-green-500', icon: '🪶' };
-    if (density < 10) return { label: 'Léger', color: 'bg-blue-500', icon: '⚖️' };
-    if (density < 15) return { label: 'Standard', color: 'bg-gray-500', icon: '⚖️' };
-    return { label: 'Lourd', color: 'bg-purple-500', icon: '🏋️' };
-  };
-
-  const getCostLevel = (cost: number) => {
-    if (cost < 3) return { label: 'Abordable', color: 'bg-green-500', icon: '💰' };
-    if (cost < 6) return { label: 'Moyen', color: 'bg-yellow-500', icon: '💰💰' };
-    if (cost < 8) return { label: 'Élevé', color: 'bg-orange-500', icon: '💰💰💰' };
-    return { label: 'Très élevé', color: 'bg-red-500', icon: '💎' };
-  };
-
-  const hardnessInfo = getHardnessLevel(results.hardness);
-  const corrosionInfo = getCorrosionLevel(results.corrosion);
-  const densityInfo = getDensityLevel(results.density);
-  const costInfo = getCostLevel(results.cost);
 
   return (
-    <div className="bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-950 rounded-2xl p-8 shadow-2xl border-2 border-blue-200 dark:border-blue-800">
-      {/* En-tête avec nom d'alliage */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-3 bg-white dark:bg-gray-800 px-6 py-3 rounded-full shadow-lg border-2 border-blue-300 dark:border-blue-700 mb-4">
-          <span className="text-3xl">🔬</span>
-          <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
-            Simulateur d&apos;Alliage Professionnel
-          </h3>
-        </div>
-        <p className="text-gray-600 dark:text-gray-400 text-sm">Créez et analysez des alliages métalliques selon les standards horlogers</p>
-        {alloyName && (
-          <div className="mt-3 inline-block bg-blue-100 dark:bg-blue-900/30 px-4 py-2 rounded-lg border border-blue-300 dark:border-blue-700">
-            <span className="text-sm font-mono text-blue-800 dark:text-blue-300">Formule: {alloyName}</span>
-          </div>
-        )}
+    <div className="w-full">
+      {/* En-tête avec bouton retour */}
+      <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
+        <Link 
+          href="/materiaux"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-slate-800 to-slate-700 dark:from-slate-700 dark:to-slate-600 text-white rounded-xl hover:from-slate-700 hover:to-slate-600 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 font-semibold"
+        >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span>Retour aux Matériaux</span>
+        </Link>
+
+        <button
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          className="px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800/40 transition-all duration-300 font-medium text-sm"
+        >
+          {showAdvanced ? '📊 Mode Simple' : '🔬 Mode Avancé'}
+        </button>
       </div>
-      
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* COLONNE 1: Sélection métal de base */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-          <h4 className="font-bold text-xl mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-2">
-            <span className="text-2xl">⚗️</span>
-            Métal de Base
-          </h4>
-          <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
-            {baseMetals.map(metal => (
-              <button
-                key={metal.id}
-                onClick={() => { setSelectedMetal(metal); setSelectedAdditives([]); }}
-                className={`w-full p-4 rounded-xl border-2 transition-all duration-300 text-left ${
-                  selectedMetal.id === metal.id 
-                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 shadow-lg scale-105' 
-                    : 'border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
-                    <span className="text-2xl">{metal.icon}</span>
-                    {metal.name}
-                  </span>
-                  {selectedMetal.id === metal.id && (
-                    <span className="text-blue-500 text-xl">✓</span>
-                  )}
-                </div>
-                <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-400">
-                  <div className="flex items-center gap-1">
-                    <span>💪</span>
-                    <span>{metal.baseProperties.hardness} HV</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span>🛡️</span>
-                    <span>{metal.baseProperties.corrosion}%</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span>⚖️</span>
-                    <span>{metal.baseProperties.density} g/cm³</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span>💰</span>
-                    <span>{'$'.repeat(metal.baseProperties.cost)}</span>
-                  </div>
-                </div>
-                <div className="mt-3 h-3 rounded-full border border-gray-300 dark:border-gray-600" 
-                     style={{ backgroundColor: metal.baseProperties.color }}></div>
-              </button>
-            ))}
-          </div>
+
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-2xl border-2 border-gray-200 dark:border-gray-700">
+        <div className="text-center mb-8">
+          <h3 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 mb-3">
+            🔬 Simulateur d&apos;Alliage Horloger Professionnel
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 text-lg">
+            Créez et analysez des alliages métalliques selon les standards de l&apos;industrie horlogère
+          </p>
         </div>
+        
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Colonne 1: Métal de base */}
+          <div>
+            <h4 className="font-bold text-xl text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
+              <span className="text-2xl">🛡️</span> Métal de Base
+            </h4>
+            
+            <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+              {baseMetals.map(metal => (
+                <button
+                  key={metal.id}
+                  onClick={() => { setSelectedMetal(metal); setSelectedAdditives([]); }}
+                  className={`w-full p-4 rounded-xl border-2 transition-all duration-300 text-left ${
+                    selectedMetal.id === metal.id 
+                      ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 shadow-lg scale-105' 
+                      : 'border-gray-200 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-md'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-bold text-lg text-gray-900 dark:text-gray-100">
+                      {metal.icon} {metal.name}
+                    </span>
+                    <div 
+                      className="w-8 h-8 rounded-full border-2 shadow-inner" 
+                      style={{ backgroundColor: metal.baseProperties.color, borderColor: metal.baseProperties.color }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">{metal.description}</p>
+                  
+                  {showAdvanced && (
+                    <div className="grid grid-cols-2 gap-1 text-xs mt-2 pt-2 border-t dark:border-gray-600">
+                      <div className="text-gray-700 dark:text-gray-300"><strong>Dureté:</strong> {metal.baseProperties.hardness} HV</div>
+                      <div className="text-gray-700 dark:text-gray-300"><strong>Densité:</strong> {metal.baseProperties.density} g/cm³</div>
+                      <div className="text-gray-700 dark:text-gray-300"><strong>Corrosion:</strong> {metal.baseProperties.corrosion}%</div>
+                      <div className="text-gray-700 dark:text-gray-300"><strong>Coût:</strong> {metal.baseProperties.cost}/100</div>
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
 
         {/* COLONNE 2: Éléments d'addition */}
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
