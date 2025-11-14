@@ -4,7 +4,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
-import Link from 'next/link';
 import AlloyMixer from '@/components/AlliageSimulator';
 
 // Page principale
@@ -276,17 +275,30 @@ export default function HomePage(): JSX.Element {
         <title>Guide Complet des Métaux en Horlogerie</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta charSet="UTF-8" />
-        
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-        
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-        
-        <Script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js" strategy="afterInteractive" onLoad={() => setMermaidReady(true)} />
-        
-        <Script src="https://cdn.tailwindcss.com" strategy="beforeInteractive" />
       </Head>
+
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      <link 
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" 
+        rel="stylesheet" 
+      />
+      
+      <link 
+        rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+      />
+      
+      <Script 
+        src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js" 
+        strategy="afterInteractive" 
+        onLoad={() => setMermaidReady(true)} 
+      />
+      
+      <Script 
+        src="https://cdn.tailwindcss.com" 
+        strategy="beforeInteractive" 
+      />
 
       <style jsx global>{`
         :root {
