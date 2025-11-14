@@ -4,6 +4,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
+import Link from 'next/link';
 import AlloyMixer from '@/components/AlliageSimulator';
 
 export default function HomePage(): JSX.Element {
@@ -701,6 +702,15 @@ export default function HomePage(): JSX.Element {
             background: rgba(166, 139, 91, 0.15);
           }
         }
+
+        /* BOUTON FLOTTANT */
+        .floating-back-btn {
+          position: fixed;
+          bottom: 30px;
+          right: 30px;
+          z-index: 999;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
         
         @media (max-width: 1024px) {
           .toc-fixed {
@@ -733,6 +743,11 @@ export default function HomePage(): JSX.Element {
             top: auto;
             bottom: 15px;
             right: 15px;
+          }
+
+          .floating-back-btn {
+            bottom: 20px;
+            right: 20px;
           }
         }
 
@@ -843,6 +858,19 @@ export default function HomePage(): JSX.Element {
                 <p className="text-lg font-medium">L&apos;union du savoir-faire traditionnel et de l&apos;innovation moderne</p>
               </div>
             </div>
+          </div>
+
+          {/* BOUTON RETOUR EN HAUT - Option 1 */}
+          <div className="mt-8">
+            <Link 
+              href="/materiaux" 
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-900 dark:from-gray-600 dark:to-gray-800 text-white rounded-xl hover:from-gray-600 hover:to-gray-800 dark:hover:from-gray-500 dark:hover:to-gray-700 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold"
+            >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              <span>Retour aux Matériaux</span>
+            </Link>
           </div>
         </section>
 
@@ -1207,17 +1235,15 @@ export default function HomePage(): JSX.Element {
           </div>
         </section>
 
-        {/* Techniques et Comparatifs Section - AVEC LE SIMULATEUR */}
+        {/* Techniques et Comparatifs Section */}
         <section id="techniques-comparatifs" className="p-8">
           <div className="section-card p-8">
             <h2 className="serif-heading text-4xl font-bold mb-8 text-center text-gray-900 dark:text-gray-100">Schémas Techniques et Comparatifs Visuels</h2>
 
-            {/* SIMULATEUR IMPORTÉ */}
             <div className="mb-12">
               <AlloyMixer />
             </div>
 
-            {/* Tableau comparatif complet */}
             <div className="mb-12">
               <h3 className="serif-heading text-2xl font-bold mb-6 text-center text-gray-900 dark:text-gray-100">Tableau comparatif des propriétés des matériaux</h3>
               <div className="overflow-x-auto">
@@ -1313,46 +1339,46 @@ export default function HomePage(): JSX.Element {
           </div>
         </section>
 
-       {/* PDF de Référence Section */}
-<section id="pdf-reference" className="p-8">
-  <div className="section-card p-8">
-    <h2 className="serif-heading text-4xl font-bold mb-8 text-center text-gray-900 dark:text-gray-100">
-      Intégration du PDF de Référence : &quot;Métaux Communs&quot;
-    </h2>
+        {/* PDF de Référence Section */}
+        <section id="pdf-reference" className="p-8">
+          <div className="section-card p-8">
+            <h2 className="serif-heading text-4xl font-bold mb-8 text-center text-gray-900 dark:text-gray-100">
+              Intégration du PDF de Référence : &quot;Métaux Communs&quot;
+            </h2>
 
-    <div className="material-card mb-8">
-      <h3 className="serif-heading text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">
-        Ressource Pédagogique Complémentaire
-      </h3>
+            <div className="material-card mb-8">
+              <h3 className="serif-heading text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">
+                Ressource Pédagogique Complémentaire
+              </h3>
 
-      <p className="mb-4 text-gray-700 dark:text-gray-300">
-        Pour accompagner l&apos;étude des matériaux utilisés en horlogerie, un document de référence intitulé 
-        <strong> « Métaux Communs » </strong> est proposé. Ce PDF présente de manière claire les principales 
-        familles de métaux, leurs propriétés techniques et leurs applications dans la fabrication horlogère.
-      </p>
+              <p className="mb-4 text-gray-700 dark:text-gray-300">
+                Pour accompagner l&apos;étude des matériaux utilisés en horlogerie, un document de référence intitulé 
+                <strong> « Métaux Communs » </strong> est proposé. Ce PDF présente de manière claire les principales 
+                familles de métaux, leurs propriétés techniques et leurs applications dans la fabrication horlogère.
+              </p>
 
-      <p className="mb-4 text-gray-700 dark:text-gray-300">
-        Il permet d&apos;identifier rapidement la composition, les caractéristiques essentielles et les usages 
-        typiques de chaque matériau. Ressource synthétique et structurée, il vient compléter efficacement 
-        les informations détaillées fournies dans ce guide.
-      </p>
-    </div>
+              <p className="mb-4 text-gray-700 dark:text-gray-300">
+                Il permet d&apos;identifier rapidement la composition, les caractéristiques essentielles et les usages 
+                typiques de chaque matériau. Ressource synthétique et structurée, il vient compléter efficacement 
+                les informations détaillées fournies dans ce guide.
+              </p>
+            </div>
 
-    <div className="bg-gray-100 dark:bg-gray-700/50 p-6 rounded-lg">
-      <h4 className="font-bold text-lg mb-4 text-gray-900 dark:text-gray-100">Visionneuse de PDF Intégrée</h4>
-      <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        Le document ci-dessous est affiché grâce à la visionneuse PDF intégrée pour une consultation directe.
-      </p>
-    </div>
-    
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border border-gray-200 dark:border-gray-700 mt-8">
-      <iframe
-        src="/pdfs/metaux-communs.pdf"
-        className="w-full h-[900px] rounded-lg border dark:border-gray-600"
-      ></iframe>
-    </div>
-  </div>
-</section>
+            <div className="bg-gray-100 dark:bg-gray-700/50 p-6 rounded-lg">
+              <h4 className="font-bold text-lg mb-4 text-gray-900 dark:text-gray-100">Visionneuse de PDF Intégrée</h4>
+              <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                Le document ci-dessous est affiché grâce à la visionneuse PDF intégrée pour une consultation directe.
+              </p>
+            </div>
+            
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow border border-gray-200 dark:border-gray-700 mt-8">
+              <iframe
+                src="/pdfs/metaux-communs.pdf"
+                className="w-full h-[900px] rounded-lg border dark:border-gray-600"
+              ></iframe>
+            </div>
+          </div>
+        </section>
 
         <footer className="p-8 bg-gray-900 text-white">
           <div className="text-center">
@@ -1367,6 +1393,17 @@ export default function HomePage(): JSX.Element {
             </div>
           </div>
         </footer>
+
+        {/* BOUTON RETOUR FLOTTANT - Option 3 */}
+        <Link 
+          href="/materiaux" 
+          className="floating-back-btn inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-500 dark:to-blue-700 text-white rounded-full hover:from-blue-500 hover:to-blue-700 dark:hover:from-blue-400 dark:hover:to-blue-600 transition-all duration-300 font-semibold text-sm"
+        >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span>Retour</span>
+        </Link>
       </main>
     </>
   );
