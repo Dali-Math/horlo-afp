@@ -1,517 +1,957 @@
-'use client';
-import React, { useState, useEffect } from 'react';
+import { useState, useRef, useMemo } from 'react';
 
-export default function GuideCompletPage() {
-  const [progress, setProgress] = useState(0);
-  const [activeSection, setActiveSection] = useState('sommaire');
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  const handleNavClick = (e: React.MouseEvent, id: string) => {
-    e.preventDefault();
-    setActiveSection(id);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+export default function HorloLearn() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeFilter, setActiveFilter] = useState('all');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  
+  const searchableElements = useRef<Array<HTMLElement | null>>([]);
+  const registerSearchableElement = (el: HTMLElement | null) => {
+    if (el && !searchableElements.current.includes(el)) {
+      searchableElements.current.push(el);
     }
   };
 
-  useEffect(() => {
-    const savedMode = localStorage.getItem('darkMode') === 'true';
-    setIsDarkMode(savedMode);
-    if (savedMode) {
-      document.body.classList.add('dark-mode');
+  const materials = [
+    {
+      id: 'fer',
+      type: 'section-big',
+      category: 'metal',
+      title: '⚒️ FER',
+      specs: [
+        { label: 'Masse volumique', value: '7,86 Kg/dm³' },
+        { label: 'Point de fusion', value: '1535°C' }
+      ],
+      description: "Le fer n'est pas un minéral obtenu de la nature à l'état pur, mais bien un métal extrait de minéraux très divers, dont la magnétite, les oxydes et l'hématite. Le fer est un métal de couleur blanc-gris. La métallurgie du fer (sidérurgie) a pour but de préparer des alliages fer-carbone dont la teneur en carbone est inférieure à 6,7% connus sous le nom de fontes et aciers.",
+      properties: ['Mou, ductile et malléable à l\'état pur', 'S\'oxyde facilement et se désagrège par corrosion', 'Entièrement recyclable', 'Se prête bien à tous les traitements de surface', 'Le fer pur est magnétisable', 'Bon conducteur thermique et électrique'],
+      usage: ['Armes et outils', 'Fer forgé', 'Chemins de fer', 'Carrosseries', 'Électroménager', 'Base des aciers et fontes']
+    },
+    {
+      id: 'aciers',
+      type: 'section-big',
+      category: 'acier',
+      title: '🔩 ACIERS',
+      description: "Il s'agit d'un alliage de fer contenant entre 0,02% et 2% de carbone. Plus la teneur en carbone est haute, plus l'acier sera dur. Grâce au pourcentage de carbone, nous pourrons maîtriser la dureté de la trempe. L'implémentation de petits éléments comme le manganèse, molybdène, ou autre sont destinés à modifier les propriétés mécaniques, magnétiques ou chimiques (résistance à la corrosion).",
+      steelCategories: [
+        {
+          title: 'ACIERS NON-ALLIÉS (AU CARBONE)',
+          desc: 'Les aciers non-alliés sont utilisés selon leurs caractéristiques mécaniques, principalement la limite d\'élasticité ou de rupture. Les aciers non alliés (au carbone) peuvent contenir jusqu\'à 2% en masse de carbone. Ils sont destinés à la construction soudée, à l\'usinage, au pliage, etc.',
+          types: [{ name: 'TYPE S', desc: 'Usage général de base' }, { name: 'TYPE P', desc: 'Usage dans les appareils à pression' }, { name: 'TYPE L', desc: 'Pour les tubes de conduites' }, { name: 'TYPE E', desc: 'Pour la construction mécanique' }, { name: 'TYPE R', desc: 'Pour les rails' }]
+        },
+        {
+          title: 'ACIERS FAIBLEMENT ALLIÉS (< 5%)',
+          desc: 'Dans lesquels la somme des éléments d\'alliage totaux est inférieur à 5%. Les aciers faiblement alliés se classent selon leur teneur en carbone ainsi que des éléments d\'alliages. Ces éléments tels que le nickel, le chrome et le molybdène, le manganèse et le silicium présentent des propriétés mécaniques supérieures aux aciers au carbone ordinaires.',
+          types: [{ name: 'Aciers trempés et revenus (QT)', desc: 'À faible teneur en carbone' }, { name: 'Aciers à ultra-haute résistance', desc: 'À moyenne teneur en carbone' }, { name: 'Aciers à roulement', desc: 'Pour applications mécaniques exigeantes' }]
+        },
+        {
+          title: 'ACIERS FORTEMENT ALLIÉS (> 5%)',
+          desc: 'Les aciers fortement alliés sont définis par un pourcentage élevé d\'éléments d\'alliage (somme totale > 5%). Dans cette catégorie, on trouve les aciers inoxydables, les aciers rapides pour la confection d\'outils, les aciers à résistance thermique etc. L\'acier inoxydable est un acier fortement allié qui contient au moins 12% de chrome.\n\nL\'acier inoxydable utilisé pour la fabrication en horlogerie est allié avec du chrome et du nickel. Suite à des normes européennes, la convention européenne a décidé de diminuer le taux de nickel pour éviter les allergies qui a été remplacé par du molybdène.',
+          types: [{ name: 'Qualités recherchées', desc: 'Résistance à la corrosion, Non-magnétique, Bonne usinabilité, Déformable à froid, Excellentes propriétés de polissage, Couleur uniforme, Fourniture sous forme de feuilles, planches ou barres, Possibilités d\'être recuit après déformation à froid' }]
+        }
+      ],
+      horlogerieUses: ['Boîtiers: Montres classiques, sportives, de plongée (ex. Rolex Submariner, Omega Seamaster)', 'Bracelets: Maillons pleins ou creux en acier, fermoirs déployants', 'Aiguilles: Notamment bleuies à la flamme pour des modèles haut de gamme', 'Ressorts: Ressorts de barillet, de tirette, de cliquet', 'Axes et pivots: Très utilisés dans les trains de rouage', 'Vis: Y compris les vis décoratives (par exemple, vis bleuies)', 'Glaces: Certaines montres utilisent des glaces en acier poli dans les montres de poche anciennes', 'Lunettes de montres: Lunette fixe ou tournante (ex. lunette tachymétrique ou de plongée)']
+    },
+    { id: 'chrome', type: 'card', category: 'metal', materialType: 'Métal Pur', title: 'CHROME', icon: '✨', specs: [{ label: 'Masse volumique', value: '7,2 Kg/dm³' }, { label: 'Point de fusion', value: '1857°C' }], description: 'Le chrome a été découvert à la fin du 18ème siècle dans un minerai venant de Sibérie qui était une météorite. Le chrome de couleur blanche, légèrement bleuté. Grande utilisation du chrome comme élément de recouvrement et protection contre la corrosion.', properties: ['Très dur, résistant à l\'usure', 'Inoxydable à l\'air', 'Résistant à la corrosion'], usage: ['Élément d\'alliage dans les aciers (entre 12% et 25%)', 'Acier inoxydable 18-10 (18% de Cr et 10% de Ni)', 'Très utilisé dans les ustensiles de cuisine, évier, installations chimiques'] },
+    { id: 'aluminium', type: 'card', category: 'metal', materialType: 'Métal Léger', title: 'ALUMINIUM', icon: '🪶', specs: [{ label: 'Masse volumique', value: '2,702 Kg/dm³' }, { label: 'Point de fusion', value: '660°C' }], quickStats: ['100% Recyclable', 'Ultra-léger'], description: 'À partir du minerai, la bauxite, on extrait dans un premier temps un oxyde d\'aluminium appelé alumine. Avec cette alumine, par réduction électrolytique, on obtient de l\'aluminium. L\'alumine est souvent utilisée comme abrasif. Il s\'agit d\'un métal léger, de teinte blanche. Il s\'agit d\'un métal recyclable à 100% sans une perte de la qualité. En contact avec l\'air, l\'aluminium ne change pas car il est protégé par une couche qui s\'appelle l\'anodisation obtenue par électrolyse.', properties: ['Léger, résistant à la corrosion', 'Bonne conductivité thermique et électrique', 'Très malléable et ductile', 'Non magnétique et non toxique', '100% recyclable'], usage: ['Machines outils, toiture, emballage, aérosol'], horlogerieUses: ['Lunettes colorées: Très utilisé pour les lunettes rotatives (montres de plongée, GMT)', 'Composants internes dans les montres quartz', 'Aiguilles squelettes: Pour gagner en légèreté', 'Cadrans: Certains cadrans sont en aluminium brossé ou anodisé', 'Plaques de décor: Pour ajouter des motifs au mouvement', 'Boîtiers de montres connectées ou de sport: Garmin, Suunto, etc.'] },
+    { id: 'titane', type: 'card', category: 'metal', materialType: 'Métal Premium', title: 'TITANE', icon: '💎', specs: [{ label: 'Masse volumique', value: '4,54 Kg/dm³' }, { label: 'Point de fusion', value: '1660°C' }], quickStats: ['45% plus léger que l\'acier', 'Amagnétique'], description: 'Il s\'agit d\'un élément que l\'on retrouve beaucoup dans la nature. Il est extrait de l\'ilménite et du rutile. Allié à l\'aluminium, l\'étain ou le molybdène, l\'alliage va être utilisé pour la fabrication des pièces d\'avions, d\'outils et d\'appareils médicaux. En horlogerie à cause de sa masse volumique plus basse de 45% par rapport à l\'acier.', properties: ['Métal léger, bonne résistance à la chaleur', 'Bonne conductibilité thermique', 'Faible dilation thermique', 'Bonne résistance mécanique', 'Excellent rapport résistance/masse volumique', 'Bonne résistance chimique, amagnétique', 'Excellente résistance à la corrosion'], usage: ['Pièces pour l\'aviation et l\'astronautique', 'Électrotechnique', 'Horlogerie et bijouterie', 'Médecine'] },
+    { id: 'nickel', type: 'card', category: 'metal', materialType: 'Métal Pur', title: 'NICKEL', icon: '🔘', specs: [{ label: 'Masse volumique', value: '8,906 Kg/dm³' }, { label: 'Point de fusion', value: '1455°C' }], description: 'Il s\'agit d\'un métal blanc rencontré à l\'état natif également. Grande utilisation du nickel comme élément d\'alliage dans les aciers inox. Nous entendrons également parler de nickelage qui consiste à déposer une fine couche de nickel sur la surface des pièces en métaux ferreux afin de les protéger de la corrosion.', properties: ['Ductile, malléable, très dur', 'Résistance remarquable à la corrosion', 'Ferromagnétique', '⚠️ Allergène'], usage: ['Dans la fabrication des pièces de monnaie, ustensiles de cuisine', 'L\'invar est un alliage de fer et de nickel à 36% souvent utilisé en horlogerie sur les ressorts spiral, le balancier', 'Sa qualité est sa faible déformation dimensionnelle'] },
+    { id: 'cuivre', type: 'card', category: 'metal', materialType: 'Métal Conducteur', title: 'CUIVRE', icon: '🟠', specs: [{ label: 'Masse volumique', value: '8,92 Kg/dm³' }, { label: 'Point de fusion', value: '1083°C' }], description: 'Il rentre dans la composition du laiton, du bronze, du maillechort mais également dans les alliages avec de l\'or. Il peut se trouver à l\'état natif. La particularité du cuivre est que l\'eau pure n\'a aucune action sur le cuivre peu importe la température. Cela ne veut pas dire que le cuivre ne s\'oxyde pas. La fine couche d\'oxydation sur le cuivre s\'appelle vert-de-gris et il est provoqué par l\'air humide. Cette dernière évite une attaque en profondeur du métal.', properties: ['Le meilleur conducteur de chaleur et de l\'électricité après l\'argent', 'Non-magnétique', 'Très malléable, très ductile', 'Résistance à la corrosion'], usage: ['Fil électrique, bobinage des moteurs (excellente conductivité)', 'Toiture, tuyauteries isolées (résistance à la corrosion)'] },
+    { id: 'zinc', type: 'card', category: 'metal', materialType: 'Métal Protecteur', title: 'ZINC', icon: '⚡', specs: [{ label: 'Masse volumique', value: '7,14 Kg/dm³' }, { label: 'Point de fusion', value: '419.5°C' }], description: 'Le zinc est un métal de couleur gris-bleu qui a plusieurs applications industrielles et est souvent utilisé en alliages, comme dans le laiton. Le zinc est connu depuis le XVIIe siècle. C\'est un métal bleuâtre qui s\'oxyde à l\'air humide et se recouvre d\'un oxyde qui le protège.', properties: ['Cassant à basse température', 'Se moule bien', 'Inoxydable à froid et à l\'air sec', 'Fortement attaqué par les acides sulfuriques'], usage: ['Utilisé principalement comme métal de recouvrement par immersion', 'Piquets de barrière, lampadaires, construction métallique', 'Le recouvrement avec le zinc peut également se faire par électrolyse'] },
+    { id: 'etain', type: 'card', category: 'metal', materialType: 'Métal Fusible', title: 'ÉTAIN', icon: '🥈', specs: [{ label: 'Masse volumique', value: '7,28 Kg/dm³' }, { label: 'Point de fusion', value: '231.9°C' }], description: 'L\'étain est un métal de couleur argentée, souvent utilisé dans les alliages, notamment avec le cuivre pour former le bronze. Métal blanc, facilement fusible et l\'un des constituants du bronze. À température ambiante, il change lentement et superficiellement mais à chaud, il s\'oxyde rapidement. Il ne change pas en contact de l\'air.', properties: ['Mou, très malléable', 'Se laisse réduire en feuilles très minces', 'Se laisse bien mouler', 'Inoxydable à l\'air', 'Résiste aux acides faibles', 'Conducteur électrique'], usage: ['Étamage (dépôt d\'étain à l\'intérieur des conserves)', 'Électronique (soudage)', 'Industrie chimique (peinture)', 'Industrie du verre'] },
+    { id: 'tungstene', type: 'card', category: 'metal', materialType: 'Métal Extrême', title: 'TUNGSTÈNE', icon: '⚫', specs: [{ label: 'Masse volumique', value: '19,35 Kg/dm³' }, { label: 'Point de fusion', value: '3410°C' }], quickStats: ['Plus haute température de fusion', 'Un des métaux les plus lourds'], description: 'Le tungstène pur est un métal de couleur allant du gris acier au blanc étain. Il s\'agit de métal avec la température de fusion la plus élevée et des métaux les plus lourds.', properties: ['Très dur, très ductile mais fragile', 'Inaltérable à l\'air', 'Réactif à l\'oxygène', 'Non-réactif aux acides et aux bases'], usage: ['Outils de coupe en carbure de tungstène (WC)', 'Élément d\'alliage dans les aciers rapides (acier outil)', 'Procédé de soudage TIG', 'Horlogerie de luxe (carrures, lunettes)'] },
+    { id: 'plomb', type: 'card', category: 'metal', materialType: 'Métal Dense', title: 'PLOMB', icon: '⚠️', specs: [{ label: 'Masse volumique', value: '11,34 Kg/dm³' }, { label: 'Point de fusion', value: '327.5°C' }], quickStats: ['⚠️ Vapeurs toxiques'], description: 'Le plomb est connu depuis l\'Antiquité, où il était utilisé comme support d\'écriture. Dans une époque plus récente, le plomb a été utilisé pour la tuyauterie d\'alimentation d\'eau des habitations. Il a donné son nom au métier des personnes qui avaient en charge la pose et l\'entretien de ces conduites : le métier de plombier. Le plomb pur est un métal gris bleuâtre, très mou. Après découpe de ce dernier, il reflète un vif éclat métallique qui se ternit à l\'air par suite d\'oxydation superficielle.', properties: ['Très mou, très malléable, ductile', 'Se ternit rapidement à l\'air', 'Oxydation superficielle', 'Résiste aux acides (à l\'exception de l\'acide nitrique)', '⚠️ Les vapeurs sont toxiques'], usage: ['Munition', 'Protection contre les rayons X', 'Toitures, tuyauterie'] },
+    {
+      id: 'laiton',
+      type: 'section-big',
+      category: 'alloy',
+      title: '🟡 LAITON',
+      specs: [
+        { label: 'Masse volumique', value: '8,5 - 8,8 Kg/dm³' },
+        { label: 'Point de fusion', value: '900 - 980°C' }
+      ],
+      quickStats: ['Cuivre 58%', 'Zinc 39%', 'Plomb 3%'],
+      description: "Nom générique des alliages de cuivre et de zinc. Teneur en zinc compris entre 5 et 45%. Laiton en horlogerie : Cuivre (58%) – Zinc (39%) – Plomb (3%). Grande utilisation dans l'industrie pour le moulage, emboutissage, soudure, malléabilité. La particularité du laiton est que sa couleur peut changer du rouge au jaune suivant la teneur en zinc. Le cuivre est majoritaire qui apporte la conductivité et la malléabilité. Le zinc augmente la dureté et la résistance mécanique.",
+      properties: ['Bonne résistance à la corrosion', 'Bonne conductivité électrique et thermique', 'Ductile, malléable', 'Bonne résistance mécanique'],
+      usage: ['Boites de montre', 'Pièces de mouvement horloger', 'Douille de cartouche', 'Robinetterie'],
+      horlogerieUses: ['Platines: La base sur laquelle tout le mouvement est assemblé', 'Ponts: Maintiennent les rouages et les organes du mouvement', 'Roue de minuterie: Roue qui transmet le mouvement aux aiguilles', 'Roue d\'ancre: Dans le système d\'échappement', 'Roue des heures, des minutes, des secondes', 'Tiges et leviers de mise à l\'heure: Utilisés dans le système de remontage', 'Couronnes: Parfois en laiton chromé dans les montres bon marché', 'Décorations galvanisées: Le laiton est souvent recouvert d\'un traitement galvanique (or, nickel, rhodium…)']
+    },
+    {
+      id: 'bronze',
+      type: 'section-big',
+      category: 'alloy',
+      title: '🟤 BRONZE',
+      specs: [
+        { label: 'Masse volumique', value: '8,7 - 8,8 Kg/dm³' },
+        { label: 'Point de fusion', value: '~1000°C' }
+      ],
+      quickStats: ['Cuivre 95%', 'Étain 2-10%'],
+      description: "Alliage de cuivre et d'étain. Teneur en cuivre 95%, teneur en étain 2% à 10% (bronze industriel). La particularité du bronze est que sa couleur varie en fonction de la teneur d'étain.",
+      properties: ['Bonne résistance à la corrosion', 'Facile à travailler', 'Non-magnétique', 'Bonne conductivité thermique et électrique'],
+      usage: ['Œuvres d\'art, lustrerie', 'Robinetterie', 'Cloches', 'Roues dentées, ressorts'],
+      horlogerieUses: ['Platines et ponts haut de gamme: Présents dans les montres artisanales (ex. A. Lange & Söhne, Glashütte)', 'Roues décorées: Dans les montres visibles par fond transparent', 'Composants gravés à la main: Grâce à sa dureté moyenne, il se prête bien à la gravure décorative', 'Base de cadrans: Sur lesquels sont appliqués des finis (émaillage, guillochage…)', 'Composants de complications: Tourbillons, quantièmes, etc., pour leur stabilité et leur résistance à l\'usure']
+    },
+    {
+      id: 'maillechort',
+      type: 'section-big',
+      category: 'alloy',
+      title: '⚪ MAILLECHORT',
+      quickStats: ['Cuivre 50-60%', 'Zinc 15-40%', 'Nickel 5-30%'],
+      description: "Alliage de nickel, cuivre et de zinc. Sa composition est très variable (en moyenne 50 à 60% de cuivre / 15 à 40% de zinc / 5 à 30% de nickel). Sa particularité est qu'il s'agit d'un métal dur et inaltérable (qui garde ses qualités). Sa différence avec le laiton est qu'il possède une résistance mécanique supérieure.",
+      properties: ['Très résistant à la corrosion et à l\'oxydation', 'Malléable et ductile', 'Bonnes caractéristiques mécaniques'],
+      usage: ['Pointes de stylos à bille']
     }
+  ];
 
-    const handleScroll = () => {
-      const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-      setProgress(scrolled);
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    document.querySelectorAll('*').forEach(el => {
-      const text = el.textContent;
-      if (text && text.includes('IDR SOLUTION')) {
-        el.remove();
+  const filteredMaterials = useMemo(() => {
+    return materials.filter(material => {
+      const matchesFilter = activeFilter === 'all' || material.category === activeFilter;
+      
+      if (!searchTerm.trim()) {
+        return matchesFilter;
       }
+      
+      const searchLower = searchTerm.toLowerCase();
+      const contentMatch = searchableElements.current.some(el => {
+        if (!el) return false;
+        const text = el.textContent?.toLowerCase() || '';
+        return text.includes(searchLower);
+      });
+      
+      return matchesFilter && contentMatch;
     });
-  }, []);
+  }, [activeFilter, searchTerm]);
+
+  const handleFilterClick = (filter: string) => {
+    setActiveFilter(filter);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
   return (
     <>
-      {/* BARRE DE PROGRESSION */}
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '4px',
-        background: isDarkMode ? '#333' : '#eee',
-        zIndex: 1000
-      }}>
-        <div style={{
-          width: `${progress}%`,
-          height: '4px',
-          background: 'linear-gradient(90deg, #8B1538, #C9A86E)',
-          transition: 'width 0.3s ease'
-        }}></div>
+      <div className="bg-animation">
+        <div className="bg-gradient"></div>
+        <div className="grid-overlay"></div>
       </div>
 
-      {/* CONTENEUR PRINCIPAL */}
-      <div className={`page-container ${isDarkMode ? 'dark-mode' : ''}`} style={{
-        display: 'flex',
-        minHeight: '100vh',
-        background: isDarkMode ? '#1a1a1a' : '#f9f7f4',
-        color: isDarkMode ? '#f9f7f4' : '#1a1a1a'
-      }}>
-        
-        {/* SIDEBAR */}
-        <aside className="sidebar" style={{
-          position: 'fixed',
-          width: '300px',
-          height: '100vh',
-          background: 'linear-gradient(180deg, #8B1538 0%, #6a0f2a 100%)',
-          color: 'white',
-          padding: '2rem 1.5rem',
-          overflowY: 'auto',
-          zIndex: 100,
-          boxShadow: '4px 0 25px rgba(0,0,0,0.15)'
-        }}>
-          <div className="sidebar-header" style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h2 style={{ marginTop: 0, fontSize: '1.4rem' }}>📚 Guide Matériaux</h2>
-            <p style={{ opacity: 0.8, fontSize: '0.9rem' }}>Formation Professionnelle 42p</p>
-          </div>
+      <div className="container">
+        <header>
+          <h1 className="logo">HORLOLEARN</h1>
+          <p className="subtitle">Guide Complet des Métaux et Matériaux en Horlogerie</p>
+        </header>
 
-          {/* CERCLE DE PROGRESSION */}
-          <div className="progress-circle" style={{
-            position: 'relative',
-            width: '80px',
-            height: '80px',
-            margin: '2rem auto'
-          }}>
-            <svg style={{ transform: 'rotate(-90deg)' }} width="80" height="80">
-              <circle cx="40" cy="40" r="36" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="8"/>
-              <circle 
-                cx="40" cy="40" r="36" 
-                fill="none" 
-                stroke="#C9A86E" 
-                strokeWidth="8"
-                strokeDasharray="226"
-                strokeDashoffset={226 - (progress / 100) * 226}
-                strokeLinecap="round"
-                style={{ transition: 'stroke-dashoffset 0.5s' }}
-              />
-            </svg>
-            <div style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              fontSize: '1.2rem',
-              fontWeight: 'bold'
-            }}>
-              {Math.round(progress)}%
-            </div>
+        <div className="search-container">
+          <div className="search-wrapper">
+            <input
+              type="text"
+              className="search-input"
+              ref={searchInputRef}
+              placeholder="Rechercher un matériau, une propriété, une utilisation..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            <span className="search-icon">🔍</span>
           </div>
+        </div>
 
-          {/* MENU */}
-          <nav className="nav-menu">
-            <div className="chapter-title" style={{
-              fontSize: '0.75rem',
-              textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.7)',
-              padding: '0 1rem',
-              marginBottom: '0.8rem'
-            }}>Chapitres</div>
-            
-            {[
-              {id: 'sommaire', title: '📖 Sommaire', desc: 'Vue d\'ensemble'},
-              {id: 'generalites', title: '⚛️ 1. Généralités', desc: 'Structure & Propriétés'},
-              {id: 'classification', title: '📐 2. Classification', desc: 'Normes & Standards'},
-              {id: 'fer', title: '🔩 3. Le fer', desc: 'Base industrielle'},
-              {id: 'fonte', title: '🏭 4. La fonte', desc: 'Types & Usages'},
-              {id: 'acier', title: '⚙️ 5. Aciers', desc: 'Familles complètes'},
-              {id: 'traitement', title: '🔥 6. Traitement', desc: 'Thermique & Chimique'},
-              {id: 'aluminium', title: '✈️ 7. Aluminium', desc: 'Alliages légers'},
-              {id: 'titane', title: '🚀 8. Titane', desc: 'Haute performance'},
-              {id: 'cuivre', title: '🟤 9. Cuivre & Laiton', desc: 'Tradition horlogère'},
-              {id: 'bronze', title: '🥉 10. Bronze', desc: 'Alliages cuivre-étain'},
-              {id: 'nickel', title: '🥈 11. Maillechort', desc: 'Nickel silver'},
-              {id: 'precieux', title: '💎 12. Métaux précieux', desc: 'Or, Argent, Platine'},
-              {id: 'plaquage', title: '🎨 13. Traitements', desc: 'Surface & Finition'},
-              {id: 'tests', title: '🔬 14. Essais & Normes', desc: 'ISO & Qualité'},
-              {id: 'cas1', title: '📋 Cas 1', desc: 'Rolex Submariner'},
-              {id: 'cas2', title: '📋 Cas 2', desc: 'Omega Speedmaster'},
-              {id: 'cas3', title: '📋 Cas 3', desc: 'Patek Nautilus'},
-              {id: 'cas4', title: '📋 Cas 4', desc: 'AP Royal Oak'},
-              {id: 'cas5', title: '📋 Cas 5', desc: 'TAG Heuer Monaco'},
-              {id: 'exercices', title: '✏️ Exercices', desc: 'QCM & Pratique'},
-              {id: 'glossaire', title: '📚 Glossaire', desc: '50+ termes'}
-            ].map(link => (
-              <a
-                key={link.id}
-                href={`#${link.id}`}
-                className={`nav-item ${activeSection === link.id ? 'active' : ''}`}
-                onClick={(e) => handleNavClick(e, link.id)}
-                style={{
-                  display: 'block',
-                  padding: '1rem',
-                  margin: '0.5rem 0',
-                  color: 'white',
-                  textDecoration: 'none',
-                  borderRadius: '12px',
-                  background: activeSection === link.id ? 'rgba(201, 168, 110, 0.3)' : 'rgba(255,255,255,0.05)',
-                  borderLeft: `4px solid ${activeSection === link.id ? '#C9A86E' : 'transparent'}`,
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-                }}
+        <div className="filters">
+          <button className={`filter-btn ${activeFilter === 'all' ? 'active' : ''}`} onClick={() => handleFilterClick('all')}>Tous</button>
+          <button className={`filter-btn ${activeFilter === 'metal' ? 'active' : ''}`} onClick={() => handleFilterClick('metal')}>Métaux Purs</button>
+          <button className={`filter-btn ${activeFilter === 'acier' ? 'active' : ''}`} onClick={() => handleFilterClick('acier')}>Aciers</button>
+          <button className={`filter-btn ${activeFilter === 'alloy' ? 'active' : ''}`} onClick={() => handleFilterClick('alloy')}>Alliages</button>
+          <button className={`filter-btn ${activeFilter === 'horlogerie' ? 'active' : ''}`} onClick={() => handleFilterClick('horlogerie')}>Usages Horlogerie</button>
+        </div>
+
+        {filteredMaterials.map((material) => {
+          if (material.type === 'section-big') {
+            return (
+              <div
+                key={material.id}
+                ref={registerSearchableElement as unknown as React.LegacyRef<HTMLDivElement>}
+                className="section-big searchable"
+                data-category={material.category}
               >
-                <div style={{ fontWeight: '600' }}>{link.title}</div>
-                <small style={{ opacity: 0.7 }}>{link.desc}</small>
-              </a>
-            ))}
-          </nav>
-        </aside>
+                <h2 className="section-title">{material.title}</h2>
+                
+                {material.specs && (
+                  <div className="specs-grid" style={{ maxWidth: '600px', margin: '0 auto 30px' }}>
+                    {material.specs.map((spec, idx) => (
+                      <div key={idx} className="spec-item">
+                        <div className="spec-label">{spec.label}</div>
+                        <div className="spec-value">{spec.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
-        {/* CONTENU PRINCIPAL */}
-        <main className="content-area" style={{
-          marginLeft: '300px',
-          flex: 1,
-          padding: '3rem',
-          maxWidth: '1200px'
-        }}>
-          
-          {/* HEADER */}
-          <div id="sommaire" className="content-header" style={{
-            background: 'white',
-            padding: '3rem',
-            borderRadius: '20px',
-            marginBottom: '3rem',
-            boxShadow: '0 8px 30px rgba(0,0,0,0.12)'
-          }}>
-            <h1 style={{ 
-              color: '#8B1538', 
-              margin: '0 0 1rem',
-              fontSize: '2.5rem',
-              fontWeight: 700
-            }}>
-              Guide Complet des Matériaux en Horlogerie
-            </h1>
-            <p style={{ 
-              color: '#666', 
-              fontSize: '1.1rem',
-              marginBottom: '2rem'
-            }}>
-              📄 42 pages détaillées | ⏱️ 45 min de lecture | 🎓 Formation Professionnelle Certifiante
-            </p>
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-              <a href="/docs/guide-materiaux-complet.pdf" download style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                background: '#8B1538',
-                color: 'white',
-                padding: '0.9rem 1.8rem',
-                borderRadius: '10px',
-                textDecoration: 'none',
-                fontWeight: '600',
-                transition: 'all 0.3s'
-              }}>
-                📥 Télécharger PDF Complet (42p)
-              </a>
-              <button onClick={() => window.print()} style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                background: '#C9A86E',
-                color: 'white',
-                padding: '0.9rem 1.8rem',
-                borderRadius: '10px',
-                border: 'none',
-                fontWeight: '600',
-                cursor: 'pointer'
-              }}>
-                🖨️ Imprimer Version Etudiant
-              </button>
-            </div>
-          </div>
+                {material.quickStats && (
+                  <div className="quick-stats" style={{ justifyContent: 'center', marginBottom: '30px' }}>
+                    {material.quickStats.map((stat, idx) => (
+                      <span key={idx} className="stat-badge">{stat}</span>
+                    ))}
+                  </div>
+                )}
 
-          {/* CHAPITRE 1 : GÉNÉRALITÉS (Pages 1-5) */}
-          <section id="generalites" className="chapter" style={{
-            background: 'white',
-            padding: '3rem',
-            marginBottom: '2.5rem',
-            borderRadius: '20px',
-            boxShadow: '0 6px 25px rgba(0,0,0,0.1)'
-          }}>
-            <h2 style={{ color: '#8B1538', fontSize: '2rem' }}>⚛️ Chapitre 1 : Généralités sur les métaux (Pages 1-5)</h2>
-            
-            <div className="info-card" style={{
-              background: 'linear-gradient(135deg, rgba(139,21,56,0.05), rgba(201,168,110,0.05))',
-              borderLeft: '5px solid #8B1538',
-              padding: '2rem',
-              margin: '2rem 0',
-              borderRadius: '0 16px 16px 0'
-            }}>
-              <h4 style={{ color: '#8B1538', marginTop: 0 }}>💡 Définition fondamentale</h4>
-              <p style={{ fontSize: '1.1rem', lineHeight: 1.6 }}>
-                Un <strong>alliage métallique</strong> est un matériau homogène composé de <strong>deux ou plusieurs éléments chimiques</strong>, dont au moins un métal. 
-                Les alliages sont utilisés pour <strong>améliorer les propriétés chimiques et mécaniques</strong> des métaux de base. En horlogerie, 99% des composants sont en alliages.
-              </p>
-            </div>
+                {material.description && (
+                  <div className="category-desc" style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 40px' }}>
+                    {material.description}
+                  </div>
+                )}
 
-            <h3>📊 Page 1-2 : Structure cristalline des métaux</h3>
-            <p>Les métaux cristallisent selon trois structures principales :</p>
-            <ul style={{ lineHeight: 1.8, margin: '1.5rem 0' }}>
-              <li><strong>CFC (Cubique à Faces Centrées) :</strong> Aluminium, cuivre, or, argent - haute ductilité</li>
-              <li><strong>CC (Cubique Centré) :</strong> Fer α, chrome, tungstène - forte résistance</li>
-              <li><strong>HC (Hexagonal Compact) :</strong> Titane, zinc, magnésium - anisotropie</li>
-            </ul>
-            
-            <div style={{ background: 'rgba(139,21,56,0.05)', padding: '1.5rem', borderRadius: '12px', margin: '1.5rem 0' }}>
-              <h4>📈 Tableau des paramètres de maille (Page 2)</h4>
-              <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '1rem' }}>
-                <thead><tr style={{ background: '#8B1538', color: 'white' }}>
-                  <th style={{ padding: '0.8rem', textAlign: 'left' }}>Métal</th>
-                  <th style={{ padding: '0.8rem' }}>Structure</th>
-                  <th style={{ padding: '0.8rem' }}>Paramètre a (Å)</th>
-                  <th style={{ padding: '0.8rem' }}>Densité théorique</th>
-                </tr></thead>
-                <tbody>
-                  <tr style={{ borderBottom: '1px solid #eee' }}>
-                    <td style={{ padding: '0.8rem' }}>Aluminium</td>
-                    <td style={{ padding: '0.8rem' }}>CFC</td>
-                    <td style={{ padding: '0.8rem' }}>4.05</td>
-                    <td style={{ padding: '0.8rem' }}>2.70 g/cm³</td>
-                  </tr>
-                  <tr style={{ borderBottom: '1px solid #eee' }}>
-                    <td style={{ padding: '0.8rem' }}>Cuivre</td>
-                    <td style={{ padding: '0.8rem' }}>CFC</td>
-                    <td style={{ padding: '0.8rem' }}>3.61</td>
-                    <td style={{ padding: '0.8rem' }}>8.92 g/cm³</td>
-                  </tr>
-                  <tr style={{ borderBottom: '1px solid #eee' }}>
-                    <td style={{ padding: '0.8rem' }}>Fer α</td>
-                    <td style={{ padding: '0.8rem' }}>CC</td>
-                    <td style={{ padding: '0.8rem' }}>2.87</td>
-                    <td style={{ padding: '0.8rem' }}>7.86 g/cm³</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                {material.steelCategories && (
+                  <div className="steel-categories">
+                    {material.steelCategories.map((cat, idx) => (
+                      <div key={idx} className="steel-category">
+                        <div className="category-title">{cat.title}</div>
+                        <div className="category-desc">{cat.desc}</div>
+                        <div className="steel-types-grid">
+                          {cat.types.map((type, typeIdx) => (
+                            <div key={typeIdx} className="steel-type-item">
+                              <div className="steel-type-name">{type.name}</div>
+                              {type.desc && <div className="category-desc">{type.desc}</div>}
+                              {type.name === 'Qualités recherchées' && (
+                                <ul className="property-list" style={{ marginTop: '10px' }}>
+                                  {type.desc?.split(',').map((item, i) => (
+                                    <li key={i}>{item.trim()}</li>
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
-            <h3>📏 Page 3-4 : Propriétés mécaniques fondamentales</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', margin: '2rem 0' }}>
-              <div style={{ background: 'rgba(201,168,110,0.05)', padding: '1.5rem', borderRadius: '12px' }}>
-                <h4 style={{ color: '#8B1538' }}>Module d'Young (E)</h4>
-                <p>Mesure la rigidité. Acier: 210 GPa | Titane: 110 GPa | Alu: 70 GPa</p>
+                {material.properties && (
+                  <div className="advantages-grid">
+                    <div className="advantage-card">
+                      <div className="advantage-title">Propriétés</div>
+                      <ul className="property-list">
+                        {material.properties.map((prop, idx) => (
+                          <li key={idx}>{prop}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="advantage-card">
+                      <div className="advantage-title">Utilisation</div>
+                      <ul className="property-list">
+                        {material.usage?.map((use, idx) => (
+                          <li key={idx}>{use}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+
+                {material.horlogerieUses && (
+                  <div className="horlogerie-uses">
+                    <div className="uses-title">🕰️ UTILISATIONS EN HORLOGERIE</div>
+                    <ul className="property-list">
+                      {material.horlogerieUses.map((use, idx) => (
+                        <li key={idx} dangerouslySetInnerHTML={{ __html: use }} />
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
-              <div style={{ background: 'rgba(201,168,110,0.05)', padding: '1.5rem', borderRadius: '12px' }}>
-                <h4 style={{ color: '#8B1538' }}>Limite d'élasticité (Re)</h4>
-                <p>Contrainte max avant déformation plastique. Acier 316L: 200 MPa</p>
+            );
+          } else {
+            return (
+              <div
+                key={material.id}
+                ref={registerSearchableElement as unknown as React.LegacyRef<HTMLDivElement>}
+                className={`material-card searchable ${!filteredMaterials.some(m => m.id === material.id) ? 'hidden' : ''}`}
+                data-category={material.category}
+              >
+                <div className="material-type">{material.materialType}</div>
+                <div className="card-header">
+                  <h3 className="material-title">{material.title}</h3>
+                  <span className="material-icon">{material.icon}</span>
+                </div>
+                
+                {material.specs && (
+                  <div className="specs-grid">
+                    {material.specs.map((spec, idx) => (
+                      <div key={idx} className="spec-item">
+                        <div className="spec-label">{spec.label}</div>
+                        <div className="spec-value">{spec.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {material.quickStats && (
+                  <div className="quick-stats">
+                    {material.quickStats.map((stat, idx) => (
+                      <span key={idx} className="stat-badge">{stat}</span>
+                    ))}
+                  </div>
+                )}
+
+                {material.description && (
+                  <p style={{ color: 'var(--text-dim)', margin: '16px 0' }}>
+                    {material.description}
+                  </p>
+                )}
+
+                <div className="section-divider"></div>
+                
+                {material.properties && (
+                  <>
+                    <div className="section-label">Propriétés</div>
+                    <ul className="property-list">
+                      {material.properties.map((prop, idx) => (
+                        <li key={idx}>{prop}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+
+                {material.usage && (
+                  <>
+                    <div className="section-label">Utilisation</div>
+                    <ul className="property-list">
+                      {material.usage.map((use, idx) => (
+                        <li key={idx}>{use}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+
+                {material.horlogerieUses && (
+                  <div className="horlogerie-uses">
+                    <div className="uses-title">🕰️ EN HORLOGERIE</div>
+                    <ul className="property-list">
+                      {material.horlogerieUses.map((use, idx) => (
+                        <li key={idx}>{use}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
-              <div style={{ background: 'rgba(201,168,110,0.05)', padding: '1.5rem', borderRadius: '12px' }}>
-                <h4 style={{ color: '#8B1538' }}>Dureté (HV/Vickers)</h4>
-                <p>Résistance à la pénétration. Acier trempé: 700 HV | Laiton: 120 HV</p>
-              </div>
-              <div style={{ background: 'rgba(201,168,110,0.05)', padding: '1.5rem', borderRadius: '12px' }}>
-                <h4 style={{ color: '#8B1538' }}>Allongement à la rupture</h4>
-                <p>Ductilité. Acier 316L: 40% | Titane Grade5: 15%</p>
-              </div>
-            </div>
-
-            <h3>🎯 Page 5 : Propriétés physico-chimiques spécifiques à l'horlogerie</h3>
-            <ul style={{ lineHeight: 1.8 }}>
-              <li><strong>Coefficient de dilatation thermique :</strong> Critique pour la précision (Invar: 1.2×10⁻⁶ /°C)</li>
-              <li><strong>Résistance à la corrosion :</strong> Essentielle pour les boîtiers (tests selon ISO 9227)</li>
-              <li><strong>Stabilité magnétique :</strong> {'<'} 4800 A/m pour mouvement antichamp</li>
-              <li><strong>Usinabilité :</strong> Laiton Pb3: excellent | Titane: difficile</li>
-              <li><strong>Finition de surface :</strong> Rugosité Ra {'<'} 0.1 μm pour pièces de prestige</li>
-            </ul>
-          </section>
-
-          {/* CHAPITRE 2 : CLASSIFICATION (Pages 6-8) */}
-          <section id="classification" className="chapter" style={{
-            background: 'white',
-            padding: '3rem',
-            marginBottom: '2.5rem',
-            borderRadius: '20px',
-            boxShadow: '0 6px 25px rgba(0,0,0,0.1)'
-          }}>
-            <h2 style={{ color: '#8B1538', fontSize: '2rem' }}>📐 Chapitre 2 : Classification des matériaux (Pages 6-8)</h2>
-            
-            <h3>Page 6 : Normes européennes EN 10027</h3>
-            <p>La désignation des aciers selon la norme EN 10027 utilise un système alphanumérique :</p>
-            <ul style={{ lineHeight: 1.8, margin: '1.5rem 0' }}>
-              <li><strong>Lettre :</strong> S pour acier structuriel, X pour acier haute teneur</li>
-              <li><strong>Chiffres :</strong> Limite d'élasticité (ex: S235 = 235 MPa)</li>
-              <li><strong>Nuances :</strong> JR, J0, J2 pour résilience</li>
-            </ul>
-
-            <h3>Page 7 : Système UNS (Unified Numbering System)</h3>
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', margin: '1.5rem 0' }}>
-                <thead><tr style={{ background: '#8B1538', color: 'white' }}>
-                  <th style={{ padding: '0.8rem', textAlign: 'left' }}>Famille</th>
-                  <th style={{ padding: '0.8rem' }}>Préfixe</th>
-                  <th style={{ padding: '0.8rem' }}>Exemples horlogerie</th>
-                </tr></thead>
-                <tbody>
-                  <tr><td style={{ padding: '0.8rem' }}>Aciers inoxydables</td>
-                    <td style={{ padding: '0.8rem' }}>S3xxxx</td>
-                    <td style={{ padding: '0.8rem' }}>S31603 = 316L</td></tr>
-                  <tr><td style={{ padding: '0.8rem' }}>Aluminium</td>
-                    <td style={{ padding: '0.8rem' }}>A9xxx</td>
-                    <td style={{ padding: '0.8rem' }}>A92024 = 2024</td></tr>
-                  <tr><td style={{ padding: '0.8rem' }}>Titane</td>
-                    <td style={{ padding: '0.8rem' }}>R5xxxx</td>
-                    <td style={{ padding: '0.8rem' }}>R56400 = Grade 5</td></tr>
-                </tbody>
-              </table>
-            </div>
-
-            <h3>Page 8 : Normes ISO spécifiques horlogerie</h3>
-            <ul style={{ lineHeight: 1.8 }}>
-              <li><strong>ISO 642:1985 :</strong> Essai de trempe en bain de sel</li>
-              <li><strong>ISO 6506:</strong> Essai de dureté Brinell pour aciers de mouvement</li>
-              <li><strong>ISO 6507:</strong> Essai de dureté Vickers pour composants microlissés</li>
-              <li><strong>ISO 6508:</strong> Essai Rockwell pour boîtiers</li>
-              <li><strong>REACH/ELV :</strong> Restrictions sur Ni, Pb, Cd pour contact peau</li>
-            </ul>
-          </section>
-
-          {/* CHAPITRE 3 : LE FER (Pages 9-11) */}
-          <section id="fer" className="chapter" style={{
-            background: 'white',
-            padding: '3rem',
-            marginBottom: '2.5rem',
-            borderRadius: '20px',
-            boxShadow: '0 6px 25px rgba(0,0,0,0.1)'
-          }}>
-            <h2 style={{ color: '#8B1538', fontSize: '2rem' }}>🔩 Chapitre 3 : Le fer et ses alliages (Pages 9-11)</h2>
-            
-            <h3>Page 9 : Propriétés atomiques du fer</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', margin: '2rem 0' }}>
-              <div style={{ background: 'rgba(139,21,56,0.05)', padding: '1.5rem', borderRadius: '12px' }}>
-                <strong>Numéro atomique :</strong> 26 | <strong>Masse :</strong> 55.845 u
-              </div>
-              <div style={{ background: 'rgba(139,21,56,0.05)', padding: '1.5rem', borderRadius: '12px' }}>
-                <strong>Configuration :</strong> [Ar] 3d⁶ 4s²
-              </div>
-              <div style={{ background: 'rgba(139,21,56,0.05)', padding: '1.5rem', borderRadius: '12px' }}>
-                <strong>Rayon atomique :</strong> 126 pm
-              </div>
-            </div>
-
-            <h3>Page 10 : Transformations allotropiques du fer</h3>
-            <p>Le fer change de structure cristalline avec la température :</p>
-            <ul style={{ lineHeight: 1.8, margin: '1.5rem 0' }}>
-              <li><strong>α-Fer (ferrite) :</strong> CC, stable jusqu'à 912°C, magnétique</li>
-              <li><strong>γ-Fer (austénite) :</strong> CFC, 912-1394°C, non magnétique</li>
-              <li><strong>δ-Fer :</strong> CC, 1394-1538°C, avant fusion</li>
-            </ul>
-            <p><em>Ces transformations sont cruciales pour les traitements thermiques des aciers.</em></p>
-
-            <h3>Page 11 : Pureté industrielle vs horlogerie</h3>
-            <table style={{ width: '100%', borderCollapse: 'collapse', margin: '1.5rem 0' }}>
-              <thead><tr style={{ background: '#8B1538', color: 'white' }}>
-                <th style={{ padding: '0.8rem', textAlign: 'left' }}>Grade</th>
-                <th style={{ padding: '0.8rem' }}>Pureté</th>
-                <th style={{ padding: '0.8rem' }}>Usage</th>
-                <th style={{ padding: '0.8rem' }}>Prix/kg</th>
-              </tr></thead>
-              <tbody>
-                <tr><td style={{ padding: '0.8rem' }}>Fer industriel</td>
-                  <td style={{ padding: '0.8rem' }}>99.5%</td>
-                  <td style={{ padding: '0.8rem' }}>Sidérurgie de base</td>
-                  <td style={{ padding: '0.8rem' }}>0.50 €</td></tr>
-                <tr><td style={{ padding: '0.8rem' }}>Fer Armco</td>
-                  <td style={{ padding: '0.8rem' }}>99.95%</td>
-                  <td style={{ padding: '0.8rem' }}>Recherche</td>
-                  <td style={{ padding: '0.8rem' }}>15 €</td></tr>
-                <tr><td style={{ padding: '0.8rem' }}>Fer monocristal</td>
-                  <td style={{ padding: '0.8rem' }}>99.999%</td>
-                  <td style={{ padding: '0.8rem' }}>Electronics</td>
-                  <td style={{ padding: '0.8rem' }}>500 €</td></tr>
-              </tbody>
-            </table>
-            <div className="warning-card" style={{
-              background: 'rgba(255,193,7,0.1)',
-              borderLeft: '5px solid #ffc107',
-              padding: '1.5rem',
-              margin: '2rem 0',
-              borderRadius: '0 12px 12px 0'
-            }}>
-              <strong>⚠️ Pourquoi le fer pur n'est pas utilisé en horlogerie :</strong> Trop mou (Re {'<'} 100 MPa), 
-              s'oxyde instantanément, magnétisme perturbateur pour mouvement.
-            </div>
-          </section>
-
-          {/* ... TOUT LE RESTE DU CODE DES 42+ PAGES ... */}
-          {/* LES AUTRES CHAPITRES SUIVENT EXACTEMENT LA MÊME STRUCTURE */}
-          {/* (Chapitres 4 à 14 + Études de Cas) */}
-          {/* Le code complet est disponible dans la version précédente */}
-          {/* Copiez-collez ici les sections manquantes si besoin */}
-
-        </main>
+            );
+          }
+        })}
       </div>
 
-      {/* BOUTON MODE SOMBRE */}
-      <button onClick={() => {
-        const newMode = !isDarkMode;
-        setIsDarkMode(newMode);
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('darkMode', String(newMode));
-      }} style={{
-        position: 'fixed',
-        bottom: '2rem',
-        right: '2rem',
-        background: '#8B1538',
-        color: 'white',
-        width: '60px',
-        height: '60px',
-        borderRadius: '50%',
-        border: 'none',
-        fontSize: '1.5rem',
-        cursor: 'pointer',
-        boxShadow: '0 6px 25px rgba(0,0,0,0.2)',
-        zIndex: 1001,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
-        {isDarkMode ? '☀️' : '🌙'}
-      </button>
-
-      {/* STYLES GLOBAUX */}
       <style jsx global>{`
-        .dark-mode {
-          background: #1a1a1a !important;
-          color: #f9f7f4 !important;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .dark-mode .chapter,
-        .dark-mode .content-header,
-        .dark-mode .summary-box {
-          background: #2a2a2a !important;
-          color: #f9f7f4 !important;
+
+        :root {
+            --primary: #0a0e27;
+            --secondary: #1a1f3a;
+            --accent: #00d4ff;
+            --accent2: #9333ea;
+            --text: #e4e4e7;
+            --text-dim: #a1a1aa;
+            --card-bg: rgba(26, 31, 58, 0.6);
+            --border: rgba(255, 255, 255, 0.1);
         }
-        .dark-mode .info-card,
-        .dark-mode .warning-card {
-          background: rgba(201,168,110,0.05) !important;
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary);
+            color: var(--text);
+            overflow-x: hidden;
         }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-gradient {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(147, 51, 234, 0.15) 0%, transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .grid-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.5;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 3.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: var(--text-dim);
+            font-weight: 300;
+        }
+
+        .search-container {
+            max-width: 700px;
+            margin: 60px auto 50px;
+            position: relative;
+        }
+
+        .search-wrapper {
+            position: relative;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .search-wrapper:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 20px 60px 20px 25px;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
+            font-size: 20px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+
+        .filter-btn {
+            padding: 12px 28px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-color: transparent;
+            color: white;
+        }
+
+        .section-big {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 50px;
+            margin: 80px 0;
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .material-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            margin-bottom: 24px;
+        }
+
+        .material-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .material-card:hover::before {
+            opacity: 1;
+        }
+
+        .material-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 212, 255, 0.5);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.2);
+        }
+
+        .material-card.hidden {
+            display: none;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .material-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .material-icon {
+            font-size: 2.5em;
+        }
+
+        .material-type {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .spec-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .spec-label {
+            font-size: 0.75em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .spec-value {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 24px 0;
+        }
+
+        .section-label {
+            font-size: 0.85em;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 20px 0 12px;
+        }
+
+        .property-list {
+            list-style: none;
+            display: grid;
+            gap: 10px;
+        }
+
+        .property-list li {
+            padding-left: 24px;
+            position: relative;
+            color: var(--text-dim);
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .property-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .steel-categories {
+            display: grid;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .steel-category {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .category-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .category-desc {
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            white-space: pre-line;
+        }
+
+        .steel-types-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .steel-type-item {
+            background: rgba(0, 212, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 3px solid var(--accent2);
+        }
+
+        .steel-type-name {
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 16px;
+            margin: 30px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(147, 51, 234, 0.2));
+            padding: 18px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .comparison-table td {
+            padding: 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-dim);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .comparison-table td:first-child {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .advantage-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .advantage-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent), var(--accent2));
+        }
+
+        .advantage-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .pros, .cons {
+            margin: 16px 0;
+        }
+
+        .pros-title {
+            color: #10b981;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .cons-title {
+            color: #ef4444;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .pros ul, .cons ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .pros li {
+            padding: 5px 0;
+            color: var(--text-dim);
+        }
+
+        .pros li::before {
+            content: '✓ ';
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .cons li {
+            padding: 5px 0;
+            color: var(--text-dim);
+        }
+
+        .cons li::before {
+            content: '✗ ';
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(147, 51, 234, 0.1));
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .info-icon {
+            font-size: 2em;
+            margin-bottom: 12px;
+        }
+
+        .info-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .info-text {
+            color: var(--text-dim);
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .quick-stats {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-badge {
+            padding: 6px 12px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            font-size: 0.8em;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .materials-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+
+            .section-big {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5em;
+            }
+
+            .subtitle {
+                font-size: 1.1em;
+            }
+
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .materials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 1.8em;
+            }
+        }
+
         ::-webkit-scrollbar {
-          width: 8px;
+            width: 10px;
         }
+
         ::-webkit-scrollbar-track {
-          background: #f1f1f1;
+            background: var(--secondary);
         }
+
         ::-webkit-scrollbar-thumb {
-          background: #8B1538;
+            background: linear-gradient(180deg, var(--accent), var(--accent2));
+            border-radius: 10px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-          background: #6a0f2a;
+
+        .horlogerie-uses {
+            background: rgba(147, 51, 234, 0.1);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .uses-title {
+            font-weight: 700;
+            color: var(--accent2);
+            margin-bottom: 15px;
+            font-size: 1.1em;
         }
       `}</style>
     </>
