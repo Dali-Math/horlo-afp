@@ -261,8 +261,8 @@ export default function MateriauxPage() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <Link href="/theorie" className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
-            <ChevronLeft className="w-5 h-5" /> Retour à la théorie
+          <Link href="/materiaux" className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+            <ChevronLeft className="w-5 h-5" /> Retour à la materiaux
           </Link>
         </div>
       </header>
