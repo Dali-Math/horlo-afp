@@ -10,7 +10,7 @@ const HTMLFlipBook = dynamic(() => import("react-pageflip"), { ssr: false });
 
 interface FlipBookViewerProps {
   file: string;
-  mode?: "vertical" | "horizontal"; // 🟡 nouveau paramètre !
+  mode?: "vertical" | "horizontal"; // 🟡 deux modes
 }
 
 export default function FlipBookViewer({ file, mode = "vertical" }: FlipBookViewerProps) {
@@ -18,7 +18,7 @@ export default function FlipBookViewer({ file, mode = "vertical" }: FlipBookView
   const [width, setWidth] = useState<number>(600);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // 📱 ajuste la largeur automatiquement
+  // 📱 ajuste la largeur automatiquement selon l’écran
   useEffect(() => {
     const handleResize = () => {
       if (containerRef.current) {
@@ -32,18 +32,18 @@ export default function FlipBookViewer({ file, mode = "vertical" }: FlipBookView
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // 🟡 CONFIG horizontal (livre ouvert)
+  // 🟡 MODE HORIZONTAL : LIVRE OUVERT COMME L’IMAGE
   const horizontalConfig = {
-    width: 900,
-    height: 550,
+    width: 900,     // livre large
+    height: 550,    // hauteur paysage
     minWidth: 800,
     maxWidth: 1600,
     minHeight: 500,
     maxHeight: 700,
-    usePortrait: false,
+    usePortrait: false, // 🔥 mode double-page horizontal
   };
 
-  // 🟢 CONFIG vertical (comme ETA 6497)
+  // 🟢 MODE VERTICAL : COMME ETA 6497
   const verticalConfig = {
     width,
     height: width * 1.3,
@@ -54,13 +54,15 @@ export default function FlipBookViewer({ file, mode = "vertical" }: FlipBookView
     usePortrait: true,
   };
 
+  // choisir config
   const config = mode === "horizontal" ? horizontalConfig : verticalConfig;
 
   return (
     <div ref={containerRef} className="flex flex-col items-center w-full">
+
       <Document
         file={file}
-        onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+        onLoadSuccess={(pdf: { numPages: number }) => setNumPages(pdf.numPages)} // 🔥 FIX TYPESCRIPT
         loading={<p className="text-yellow-400 text-lg mt-10">Chargement du PDF...</p>}
         error={<p className="text-red-400 mt-10">Erreur de chargement du document.</p>}
       >
@@ -81,7 +83,7 @@ export default function FlipBookViewer({ file, mode = "vertical" }: FlipBookView
               >
                 <Page
                   pageNumber={i + 1}
-                  width={mode === "horizontal" ? 430 : width}
+                  width={mode === "horizontal" ? 430 : width} // 🟡 430 = moitié du livre
                   renderTextLayer={false}
                   renderAnnotationLayer={false}
                 />
