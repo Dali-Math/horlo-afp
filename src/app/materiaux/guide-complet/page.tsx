@@ -474,190 +474,64 @@ const AlloyMixer: React.FC = () => {
   }
 };
   return (
-    <div className="w-full">
-      {/* En-tête avec bouton retour */}
-      <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
-        <Link 
-          href="/materiaux"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-slate-800 to-slate-700 dark:from-slate-700 dark:to-slate-600 text-white rounded-xl hover:from-slate-700 hover:to-slate-600 dark:hover:from-slate-600 dark:hover:to-slate-500 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 font-semibold"
-        >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          <span>Retour aux Matériaux</span>
-        </Link>
+  <div className="w-full">
+    {/* En-tête avec bouton retour */}
+    <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
+      {/* ... contenu de l'en-tête ... */}
+    </div>
 
-        <button
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          className="px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-800/40 transition-all duration-300 font-medium text-sm"
-        >
-          {showAdvanced ? '📊 Mode Simple' : '🔬 Mode Avancé'}
-        </button>
+    {/* Grille principale */}
+    <div className="grid lg:grid-cols-2 gap-8">
+      {/* Colonne gauche - Sélection */}
+      <div className="space-y-6">
+        {/* Carte de sélection du métal de base */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+          {/* ... contenu ... */}
+        </div>
+
+        {/* Carte de sélection des additifs */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+          {/* ... contenu ... */}
+        </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-2xl border-2 border-gray-200 dark:border-gray-700">
-        <div className="text-center mb-8">
-          <h3 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 mb-3">
-            🔬 Simulateur d&apos;Alliage Horloger Professionnel
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400 text-lg">
-            Créez et analysez des alliages métalliques selon les standards de l&apos;industrie horlogère
-          </p>
-        </div>
-        
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Colonne 1: Métal de base */}
-          <div>
-            <h4 className="font-bold text-xl text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
-              <span className="text-2xl">🛡️</span> Métal de Base
-            </h4>
-            
-            <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
-              {baseMetals.map(metal => (
-                <button
-                  key={metal.id}
-                  onClick={() => { setSelectedMetal(metal); setSelectedAdditives([]); }}
-                  className={`w-full p-4 rounded-xl border-2 transition-all duration-300 text-left ${
-                    selectedMetal.id === metal.id 
-                      ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 shadow-lg scale-105' 
-                      : 'border-gray-200 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-md'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold text-lg text-gray-900 dark:text-gray-100">
-                      {metal.icon} {metal.name}
-                    </span>
-                    <div 
-                      className="w-8 h-8 rounded-full border-2 shadow-inner" 
-                      style={{ backgroundColor: metal.baseProperties.color, borderColor: metal.baseProperties.color }}
-                    ></div>
-                  </div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">{metal.description}</p>
-                  
-                  {showAdvanced && (
-                    <div className="grid grid-cols-2 gap-1 text-xs mt-2 pt-2 border-t dark:border-gray-600">
-                      <div className="text-gray-700 dark:text-gray-300"><strong>Dureté:</strong> {metal.baseProperties.hardness} HV</div>
-                      <div className="text-gray-700 dark:text-gray-300"><strong>Densité:</strong> {metal.baseProperties.density} g/cm³</div>
-                      <div className="text-gray-700 dark:text-gray-300"><strong>Corrosion:</strong> {metal.baseProperties.corrosion}%</div>
-                      <div className="text-gray-700 dark:text-gray-300"><strong>Coût:</strong> {metal.baseProperties.cost}/100</div>
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
+      {/* Colonne droite - Résultats */}
+      <div className="space-y-6">
+        {/* Carte des résultats */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden sticky top-4">
+          <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-6">
+            <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+              <span className="text-3xl">⚗️</span>
+              Résultats de l'Alliage
+            </h3>
           </div>
 
-        {/* COLONNE 2: Éléments d'addition */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-          <h4 className="font-bold text-xl mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-2">
-            <span className="text-2xl">➕</span>
-            Éléments d&apos;Addition
-            <span className="text-sm font-normal text-gray-500 dark:text-gray-400">({selectedAdditives.length}/6)</span>
-          </h4>
-          
-          {/* Liste des additifs disponibles */}
-          <div className="mb-4">
-            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Cliquez pour ajouter:</p>
-            <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto p-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg border dark:border-gray-600">
-              {additives.map(additive => {
-                const isSelected = selectedAdditives.some(a => a.additive.id === additive.id);
-                const isFull = selectedAdditives.length >= 6;
-                return (
-                  <button
-                    key={additive.id}
-                    onClick={() => addAdditive(additive)}
-                    disabled={isSelected || isFull}
-                    className={`p-2 rounded-lg text-xs transition-all border ${
-                      isSelected 
-                        ? 'bg-blue-200 dark:bg-blue-800 cursor-not-allowed opacity-50 border-blue-400 dark:border-blue-600' 
-                        : isFull
-                        ? 'bg-gray-200 dark:bg-gray-600 cursor-not-allowed opacity-50 border-gray-300 dark:border-gray-500'
-                        : 'bg-white dark:bg-gray-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:border-blue-400 dark:hover:border-blue-600 border-gray-200 dark:border-gray-500 cursor-pointer'
-                    }`}
-                    title={additive.effect.description}
-                  >
-                    <div className="font-bold text-gray-800 dark:text-gray-100">{additive.symbol}</div>
-                    <div className="text-gray-600 dark:text-gray-300">{additive.name}</div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Additifs sélectionnés avec contrôles */}
-          <div className="space-y-3">
-            <p className="text-xs text-gray-500 dark:text-gray-400">Additifs actifs:</p>
-            {selectedAdditives.length === 0 ? (
-              <div className="text-center py-8 text-gray-400 dark:text-gray-500">
-                <span className="text-4xl mb-2 block">🔬</span>
-                <p className="text-sm">Aucun additif sélectionné</p>
+          <div className="p-6">
+            {!selectedMetal ? (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">🔬</div>
+                <p className="text-gray-500 dark:text-gray-400 mb-2">
+                  Sélectionnez un métal de base pour commencer
+                </p>
+                <p className="text-sm text-gray-400 dark:text-gray-500">
+                  Puis ajoutez des additifs pour créer votre alliage
+                </p>
               </div>
             ) : (
-              selectedAdditives.map(({ additive, percentage }) => (
-                <div key={additive.id} className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 p-4 rounded-xl border-2 border-blue-200 dark:border-blue-700 shadow-md">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-lg text-blue-600 dark:text-blue-400">{additive.symbol}</span>
-                      <span className="font-medium text-gray-800 dark:text-gray-100">{additive.name}</span>
+              <>
+                {/* Aperçu visuel */}
+                <div 
+                  className="mb-6 p-6 rounded-xl text-center shadow-inner border-2 border-gray-300 dark:border-gray-600" 
+                  style={{ backgroundColor: results?.color || '#f0f0f0' }}
+                >
+                  <div className="font-bold text-xl text-gray-800 mb-1">Alliage Créé</div>
+                  <div className="text-sm opacity-75 text-gray-700">Base: {selectedMetal.name}</div>
+                  {selectedAdditives.length > 0 && (
+                    <div className="text-xs mt-2 opacity-60 text-gray-700">
+                      + {selectedAdditives.length} additif{selectedAdditives.length > 1 ? 's' : ''}
                     </div>
-                    <button 
-                      onClick={() => removeAdditive(additive.id)} 
-                      className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:scale-110 transition-transform"
-                      title="Retirer"
-                    >
-                      <span className="text-xl">✕</span>
-                    </button>
-                  </div>
-                  
-                  <div className="mb-2">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-xs text-gray-600 dark:text-gray-400">Concentration</span>
-                      <span className="text-sm font-bold text-blue-600 dark:text-blue-400">{percentage.toFixed(1)}%</span>
-                    </div>
-                    <input 
-                      type="range" 
-                      min="0.1" 
-                      max={additive.maxPercent} 
-                      step="0.1" 
-                      value={percentage} 
-                      onChange={(e) => updatePercentage(additive.id, parseFloat(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-blue-500"
-                    />
-                    <div className="flex justify-between text-xs mt-1 text-gray-500 dark:text-gray-400">
-                      <span>0.1%</span>
-                      <span>Max: {additive.maxPercent}%</span>
-                    </div>
-                  </div>
-                  
-                  <p className="text-xs text-gray-600 dark:text-gray-400 italic mt-2">
-                    💡 {additive.effect.description}
-                  </p>
+                  )}
                 </div>
-              ))
-            )}
-          </div>
-        </div>
-
-        {/* COLONNE 3: Résultats et propriétés */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-          <h4 className="font-bold text-xl mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-2">
-            <span className="text-2xl">📊</span>
-            Propriétés Résultantes
-          </h4>
-          
-          // Cherchez cette section dans votre code (autour de la ligne 474) et remplacez-la par :
-
-{/* Aperçu visuel de l'alliage */}
-<div className="mb-6 p-6 rounded-xl text-center shadow-inner border-2 border-gray-300 dark:border-gray-600" 
-     style={{ backgroundColor: results?.color || '#f0f0f0' }}>
-  <div className="font-bold text-xl text-gray-800 mb-1">Alliage Créé</div>
-  <div className="text-sm opacity-75 text-gray-700">Base: {selectedMetal.name}</div>
-  {selectedAdditives.length > 0 && (
-    <div className="text-xs mt-2 opacity-60 text-gray-700">
-      + {selectedAdditives.length} additif{selectedAdditives.length > 1 ? 's' : ''}
-    </div>
-  )}
-</div>
 
 {/* Propriétés détaillées */}
 <div className="space-y-4">
