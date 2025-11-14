@@ -708,6 +708,7 @@ export default function HomePage(): JSX.Element {
           position: fixed;
           bottom: 30px;
           left: 30px;
+          right: auto;
           z-index: 999;
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
