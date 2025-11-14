@@ -1304,12 +1304,11 @@ export default function HomePage(): JSX.Element {
     </div>
     {/* Visionneuse PDF */}
     <div className="bg-white p-6 rounded-lg shadow border border-gray-200 mt-8">
-      <iframe
-        src="/pdfs/metaux-communs.pdf"
-        className="w-full h-[900px] rounded-lg border"
-      ></iframe>
-    </div>
-  </div>
+  <iframe
+    src="/pdfjs/web/viewer.html?file=/pdfs/metaux-communs.pdf&download=false#print=false"
+    className="w-full h-[900px] rounded-lg border"
+  ></iframe>
+</div>
 </section>
 
         {/* Footer */}
