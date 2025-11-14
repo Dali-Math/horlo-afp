@@ -1,110 +1,782 @@
-// app/theorie/introduction-montre-mecanique.tsx
-'use client';
+// Composant Animation de montre CORRIGÉ
+const AnimationMontre = () => {
+  const [vitesse, setVitesse] = useState(1);
+  const [isRunning, setIsRunning] = useState(true);
 
-import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ChevronLeft, Clock, Cog, Gauge, Settings, Eye, Watch, 
-  RotateCw, Trophy, BookOpen, Zap, TrendingUp, Award
-} from 'lucide-react';
-import Link from 'next/link';
+  return (
+    <div className="bg-gradient-to-br from-slate-900 to-blue-900 rounded-2xl p-8 border-2 border-blue-700">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-2xl font-bold text-white flex items-center gap-2">
+          <Watch className="w-7 h-7" />
+          Montre en Action
+        </h3>
+        <div className="flex gap-2">
+          {[0.5, 1, 2].map(v => (
+            <button
+              key={v}
+              onClick={() => setVitesse(v)}
+              className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                vitesse === v 
+                  ? 'bg-blue-500 text-white' 
+                  : 'bg-white/10 text-white/60 hover:bg-white/20'
+              }`}
+            >
+              {v}x
+            </button>
+          ))}
+        </div>
+      </div>
 
-// Composant Schéma Interactif
-const SchemaMecanisme = () => {
-  const [organeSelectionne, setOrganeSelectionne] = useState<string | null>(null);
+      <div className="relative w-full h-96 flex items-center justify-center">
+        {/* Cadran de la montre */}
+        <div className="relative">
+          {/* Boîtier externe */}
+          <div className="absolute -inset-8 bg-gradient-to-br from-slate-700 via-slate-600 to-slate-700 rounded-full shadow-2xl">
+            <div className="absolute inset-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-full"></div>
+          </div>
+
+          {/* Cadran principal */}
+          <div className="relative w-72 h-72 bg-gradient-to-br from-white to-slate-100 rounded-full border-8 border-slate-800 shadow-2xl overflow-hidden">
+            {/* Texture guilloché subtile */}
+            <div className="absolute inset-0 opacity-5">
+              <div className="absolute inset-0" style={{
+                backgroundImage: 'repeating-radial-gradient(circle at center, transparent 0, transparent 2px, #000 2px, #000 4px)'
+              }}></div>
+            </div>
+
+            {/* Marqueurs d'heures */}
+            {[...Array(12)].map((_, i) => {
+              const isMainHour = i % 3 === 0;
+              return (
+                <div
+                  key={i}
+                  className="absolute left-1/2 top-0 origin-bottom"
+                  style={{
+                    height: '50%',
+                    transform: `translateX(-50%) rotate(${i * 30}deg)`,
+                  }}
+                >
+                  <div 
+                    className={`mx-auto ${isMainHour ? 'w-1.5 h-8 bg-slate-900' : 'w-1 h-5 bg-slate-700'} rounded-full`}
+                    style={{ marginTop: '8px' }}
+                  />
+                  {isMainHour && (
+                    <div 
+                      className="text-center font-bold text-slate-900 mt-2"
+                      style={{
+                        transform: `rotate(-${i * 30}deg)`,
+                        fontSize: '18px'
+                      }}
+                    >
+                      {i === 0 ? 12 : i}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Sous-cadran secondes (à 6h) */}
+            <div className="absolute left-1/2 bottom-12 -translate-x-1/2 w-16 h-16 border-2 border-slate-300 rounded-full bg-white/50">
+              {[...Array(4)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-0.5 h-2 bg-slate-400 left-1/2 top-0 -translate-x-1/2"
+                  style={{
+                    transform: `translateX(-50%) rotate(${i * 90}deg)`,
+                    transformOrigin: 'center 32px'
+                  }}
+                />
+              ))}
+              {/* Aiguille sous-cadran */}
+              <motion.div
+                className="absolute w-0.5 h-6 bg-blue-600 rounded-full origin-bottom left-1/2 top-1/2 -translate-x-1/2"
+                animate={isRunning ? { rotate: 360 } : {}}
+                transition={{ duration: 60 / vitesse, repeat: Infinity, ease: "linear" }}
+              />
+            </div>
+
+            {/* Logo/marque (à 12h) */}
+            <div className="absolute top-16 left-1/2 -translate-x-1/2 text-center">
+              <div className="text-xs font-bold text-slate-700 tracking-wider">AUTOMATIC</div>
+              <div className="text-[10px] text-slate-500">SWISS MADE</div>
+            </div>
+
+            {/* Aiguille des heures */}
+            <motion.div
+              className="absolute w-2 bg-gradient-to-t from-slate-900 to-slate-700 rounded-full origin-bottom left-1/2 top-1/2 shadow-lg"
+              style={{ 
+                height: '80px',
+                transform: 'translateX(-50%) translateY(-100%)',
+              }}
+              animate={isRunning ? { rotate: 360 } : {}}
+              transition={{ duration: 43200 / vitesse, repeat: Infinity, ease: "linear" }}
+            >
+              {/* Luminova */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-12 bg-green-300 rounded-full opacity-70"></div>
+            </motion.div>
+
+            {/* Aiguille des minutes */}
+            <motion.div
+              className="absolute w-1.5 bg-gradient-to-t from-slate-900 to-slate-600 rounded-full origin-bottom left-1/2 top-1/2 shadow-lg"
+              style={{ 
+                height: '110px',
+                transform: 'translateX(-50%) translateY(-100%)',
+              }}
+              animate={isRunning ? { rotate: 360 } : {}}
+              transition={{ duration: 3600 / vitesse, repeat: Infinity, ease: "linear" }}
+            >
+              {/* Luminova */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-20 bg-green-300 rounded-full opacity-70"></div>
+            </motion.div>
+
+            {/* Aiguille des secondes */}
+            <motion.div
+              className="absolute w-0.5 bg-red-600 rounded-full origin-bottom left-1/2 top-1/2 shadow-lg"
+              style={{ 
+                height: '120px',
+                transform: 'translateX(-50%) translateY(-100%)',
+              }}
+              animate={isRunning ? { rotate: 360 } : {}}
+              transition={{ duration: 60 / vitesse, repeat: Infinity, ease: "linear" }}
+            >
+              {/* Contrepoids */}
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-3 h-8 bg-red-600 rounded-full"></div>
+            </motion.div>
+
+            {/* Axe central */}
+            <div className="absolute left-1/2 top-1/2 w-3 h-3 bg-slate-900 rounded-full -translate-x-1/2 -translate-y-1/2 z-10 shadow-lg">
+              <div className="absolute inset-0.5 bg-slate-700 rounded-full"></div>
+            </div>
+
+            {/* Verre saphir (reflet) */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-full pointer-events-none"></div>
+          </div>
+
+          {/* Couronne */}
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full">
+            <div className="w-8 h-12 bg-gradient-to-r from-slate-700 to-slate-600 rounded-r-lg shadow-lg">
+              <div className="w-full h-full flex flex-col justify-around p-1">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="w-full h-0.5 bg-slate-800 rounded"></div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Balancier animé à droite */}
+        <div className="absolute right-8 top-1/2 -translate-y-1/2">
+          <div className="relative">
+            {/* Support du balancier */}
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-12 bg-gradient-to-r from-amber-700 to-amber-600 rounded"></div>
+            
+            {/* Balancier */}
+            <motion.div
+              className="relative w-24 h-24"
+              animate={isRunning ? { 
+                rotate: [-30, 30, -30]
+              } : {}}
+              transition={{ 
+                duration: 0.6 / vitesse, 
+                repeat: Infinity, 
+                ease: "easeInOut"
+              }}
+              style={{ transformOrigin: 'left center' }}
+            >
+              {/* Bras du balancier */}
+              <div className="absolute left-0 top-1/2 w-20 h-1 bg-gradient-to-r from-amber-600 to-amber-500 rounded-full -translate-y-1/2 shadow-md"></div>
+              
+              {/* Roue du balancier */}
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full shadow-xl border-2 border-amber-400">
+                {/* Rayons */}
+                {[...Array(8)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute w-0.5 h-full bg-amber-700 left-1/2 top-0 -translate-x-1/2 origin-center"
+                    style={{ transform: `translateX(-50%) rotate(${i * 45}deg)` }}
+                  />
+                ))}
+                {/* Centre */}
+                <div className="absolute inset-2 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full"></div>
+              </div>
+
+              {/* Spiral */}
+              <svg className="absolute left-0 top-1/2 -translate-y-1/2 w-16 h-16 -translate-x-full" viewBox="0 0 100 100">
+                <motion.path
+                  d="M 50 50 Q 50 30, 60 30 T 70 40 T 70 50 T 60 60 T 50 60 T 40 50 T 40 40"
+                  fill="none"
+                  stroke="#d97706"
+                  strokeWidth="1"
+                  animate={isRunning ? {
+                    d: [
+                      "M 50 50 Q 50 30, 60 30 T 70 40 T 70 50 T 60 60 T 50 60 T 40 50 T 40 40",
+                      "M 50 50 Q 50 25, 65 25 T 75 40 T 75 50 T 65 65 T 50 65 T 35 50 T 35 35",
+                      "M 50 50 Q 50 30, 60 30 T 70 40 T 70 50 T 60 60 T 50 60 T 40 50 T 40 40"
+                    ]
+                  } : {}}
+                  transition={{
+                    duration: 0.6 / vitesse,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+              </svg>
+            </motion.div>
+            
+            <p className="text-white text-sm mt-4 text-center font-bold">Balancier-Spiral</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-8 grid grid-cols-3 gap-4 text-center">
+        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-blue-400/30">
+          <p className="text-blue-300 text-sm mb-1">Fréquence</p>
+          <p className="text-white text-2xl font-bold">4 Hz</p>
+        </div>
+        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-green-400/30">
+          <p className="text-green-300 text-sm mb-1">Alternances/h</p>
+          <p className="text-white text-2xl font-bold">28'800</p>
+        </div>
+        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-amber-400/30">
+          <p className="text-amber-300 text-sm mb-1">Réserve</p>
+          <p className="text-white text-2xl font-bold">48h</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Composant Schéma des 6 organes CORRIGÉ avec vraies pièces
+const SchemaSixOrganes = () => {
+  const [organeSelectionne, setOrganeSelectionne] = useState(null);
+  const [animation, setAnimation] = useState(true);
   
   const organes = useMemo(() => [
     { 
       id: 'barillet', 
       nom: 'Barillet', 
-      desc: 'Stocke l\'énergie du ressort moteur. Contient le ressort qui libère progressivement son énergie.', 
-      x: 15, y: 50, couleur: '#3B82F6', 
-      lien: '/theorie/le-barillet'
+      desc: 'Stocke l\'énergie du ressort moteur. Le ressort se détend progressivement pour alimenter toute la montre pendant 36-48h.',
+      x: 15, y: 50, couleur: '#3B82F6'
     },
     { 
       id: 'rouage', 
       nom: 'Rouage', 
-      desc: 'Transmet et démultiplie l\'énergie du barillet vers l\'échappement.', 
-      x: 38, y: 50, couleur: '#10B981', 
-      lien: '/theorie/le-rouage'
+      desc: 'Ensemble de roues dentées qui transmettent et démultiplient l\'énergie. Chaque roue tourne à une vitesse différente.',
+      x: 30, y: 50, couleur: '#10B981'
     },
     { 
       id: 'echappement', 
       nom: 'Échappement', 
-      desc: 'Transforme l\'énergie continue en impulsions régulières (le "tic-tac").', 
-      x: 61, y: 50, couleur: '#8B5CF6', 
-      lien: '/theorie/echappement-ancre'
+      desc: 'L\'ancre et la roue d\'échappement transforment l\'énergie continue en impulsions régulières. C\'est le "tic-tac" de la montre.',
+      x: 50, y: 50, couleur: '#8B5CF6'
     },
     { 
       id: 'balancier', 
       nom: 'Balancier-Spiral', 
-      desc: 'Organe réglant qui oscille à fréquence constante pour mesurer le temps.', 
-      x: 84, y: 50, couleur: '#F59E0B', 
-      lien: '/theorie/balancier-spiral'
+      desc: 'Oscille à fréquence constante (8 fois/seconde pour 28\'800 A/h). C\'est le cœur réglant qui assure la précision.',
+      x: 70, y: 50, couleur: '#F59E0B'
+    },
+    { 
+      id: 'remontoir', 
+      nom: 'Remontoir', 
+      desc: 'Mécanisme permettant de remonter le ressort via la couronne (manuel) ou la masse oscillante (automatique).',
+      x: 40, y: 25, couleur: '#EF4444'
+    },
+    { 
+      id: 'affichage', 
+      nom: 'Affichage', 
+      desc: 'Les aiguilles, cadran et système de transmission qui permettent de lire l\'heure visuellement.',
+      x: 60, y: 25, couleur: '#06B6D4'
     },
   ], []);
 
   return (
-    <div className="relative w-full h-96 bg-slate-50 dark:bg-slate-900 rounded-xl p-8 border-2 border-slate-200 dark:border-slate-700">
-      <svg className="w-full h-full">
-        <defs>
-          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" className="fill-blue-500" />
-          </marker>
-        </defs>
-        
-        {/* Flèches de flux */}
-        {organes.map((o, i) => i < organes.length - 1 && (
-          <motion.line
-            key={`fleche-${i}`}
-            x1={`${o.x + 5}%`} y1={`${o.y}%`}
-            x2={`${organes[i + 1].x - 5}%`} y2={`${organes[i + 1].y}%`}
-            stroke="#60A5FA" strokeWidth="3" markerEnd="url(#arrowhead)"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ delay: i * 0.3, duration: 0.8 }}
+    <div className="relative w-full bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 border-2 border-slate-700 shadow-2xl overflow-hidden">
+      {/* Particules de fond */}
+      <div className="absolute inset-0 opacity-10">
+        {[...Array(30)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-blue-400 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              scale: [1, 1.5, 1],
+              opacity: [0.3, 0.8, 0.3],
+            }}
+            transition={{
+              duration: 2 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
           />
         ))}
+      </div>
 
-        {/* Cercles des organes */}
-        {organes.map((o, i) => (
+      {/* Contrôle animation */}
+      <button
+        onClick={() => setAnimation(!animation)}
+        className="absolute top-4 right-4 z-10 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white p-2 rounded-lg transition-all flex items-center gap-2"
+      >
+        {animation ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+        <span className="text-sm font-medium">{animation ? 'Pause' : 'Play'}</span>
+      </button>
+
+      <svg className="w-full h-[500px]" viewBox="0 0 1000 600">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" className="fill-blue-400" />
+          </marker>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+
+          {/* Patterns pour les pièces */}
+          <pattern id="metal-texture" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+            <rect width="4" height="4" fill="#64748b" />
+            <path d="M0,0 L4,4 M4,0 L0,4" stroke="#475569" strokeWidth="0.5" />
+          </pattern>
+
+          <radialGradient id="brass-gradient">
+            <stop offset="0%" stopColor="#fbbf24" />
+            <stop offset="50%" stopColor="#f59e0b" />
+            <stop offset="100%" stopColor="#d97706" />
+          </radialGradient>
+
+          <radialGradient id="steel-gradient">
+            <stop offset="0%" stopColor="#cbd5e1" />
+            <stop offset="50%" stopColor="#94a3b8" />
+            <stop offset="100%" stopColor="#64748b" />
+          </radialGradient>
+        </defs>
+
+        {/* Lignes de connexion entre organes */}
+        <g opacity="0.5">
+          {/* Barillet -> Rouage */}
+          <motion.path
+            d="M 150 300 L 300 300"
+            stroke="#60A5FA" strokeWidth="3" markerEnd="url(#arrowhead)"
+            initial={{ pathLength: 0 }}
+            animate={animation ? { pathLength: [0, 1] } : { pathLength: 1 }}
+            transition={{ duration: 1.5, repeat: animation ? Infinity : 0 }}
+          />
+          {/* Rouage -> Échappement */}
+          <motion.path
+            d="M 300 300 L 500 300"
+            stroke="#60A5FA" strokeWidth="3" markerEnd="url(#arrowhead)"
+            initial={{ pathLength: 0 }}
+            animate={animation ? { pathLength: [0, 1] } : { pathLength: 1 }}
+            transition={{ duration: 1.5, delay: 0.5, repeat: animation ? Infinity : 0 }}
+          />
+          {/* Échappement -> Balancier */}
+          <motion.path
+            d="M 500 300 L 700 300"
+            stroke="#60A5FA" strokeWidth="3" markerEnd="url(#arrowhead)"
+            initial={{ pathLength: 0 }}
+            animate={animation ? { pathLength: [0, 1] } : { pathLength: 1 }}
+            transition={{ duration: 1.5, delay: 1, repeat: animation ? Infinity : 0 }}
+          />
+          {/* Remontoir -> Barillet */}
+          <motion.path
+            d="M 400 150 L 150 250"
+            stroke="#60A5FA" strokeWidth="3" strokeDasharray="5,5" markerEnd="url(#arrowhead)"
+            initial={{ pathLength: 0 }}
+            animate={animation ? { pathLength: [0, 1] } : { pathLength: 1 }}
+            transition={{ duration: 1.5, delay: 1.5, repeat: animation ? Infinity : 0 }}
+          />
+          {/* Rouage -> Affichage */}
+          <motion.path
+            d="M 300 300 L 600 200"
+            stroke="#60A5FA" strokeWidth="3" strokeDasharray="5,5" markerEnd="url(#arrowhead)"
+            initial={{ pathLength: 0 }}
+            animate={animation ? { pathLength: [0, 1] } : { pathLength: 1 }}
+            transition={{ duration: 1.5, delay: 2, repeat: animation ? Infinity : 0 }}
+          />
+        </g>
+
+        {/* 1. BARILLET avec ressort visible */}
+        <g 
+          className="cursor-pointer transition-all"
+          onClick={() => setOrganeSelectionne(organeSelectionne === 'barillet' ? null : 'barillet')}
+          opacity={organeSelectionne && organeSelectionne !== 'barillet' ? 0.4 : 1}
+        >
+          {/* Tambour du barillet */}
+          <circle cx="150" cy="300" r="60" fill="url(#steel-gradient)" stroke="#475569" strokeWidth="3" filter={organeSelectionne === 'barillet' ? "url(#glow)" : ""} />
+          <circle cx="150" cy="300" r="50" fill="#1e293b" stroke="#334155" strokeWidth="2" />
+          
+          {/* Ressort moteur en spirale */}
+          <motion.path
+            d="M 150 300 
+               Q 150 280, 165 280 
+               T 180 290 
+               T 185 300 
+               T 180 310 
+               T 165 315 
+               T 150 315 
+               T 135 310 
+               T 130 300"
+            fill="none"
+            stroke="#fbbf24"
+            strokeWidth="2"
+            animate={animation ? {
+              strokeDashoffset: [0, -100]
+            } : {}}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+            strokeDasharray="100"
+          />
+          
+          {/* Arbre de barillet */}
+          <circle cx="150" cy="300" r="8" fill="url(#brass-gradient)" />
+          
+          {/* Denture */}
+          {[...Array(12)].map((_, i) => (
+            <rect
+              key={i}
+              x="148"
+              y="240"
+              width="4"
+              height="10"
+              fill="#64748b"
+              transform={`rotate(${i * 30} 150 300)`}
+            />
+          ))}
+          
+          <text x="150" y="380" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">Barillet</text>
+        </g>
+
+        {/* 2. ROUAGE avec plusieurs roues */}
+        <g 
+          className="cursor-pointer"
+          onClick={() => setOrganeSelectionne(organeSelectionne === 'rouage' ? null : 'rouage')}
+          opacity={organeSelectionne && organeSelectionne !== 'rouage' ? 0.4 : 1}
+        >
+          {/* Grande moyenne (roue 1) */}
+          <g>
+            <circle cx="280" cy="300" r="45" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="3" filter={organeSelectionne === 'rouage' ? "url(#glow)" : ""} />
+            {[...Array(16)].map((_, i) => (
+              <motion.rect
+                key={i}
+                x="278"
+                y="255"
+                width="4"
+                height="12"
+                fill="#92400e"
+                transform={`rotate(${i * 22.5} 280 300)`}
+                animate={animation ? { rotate: 360 } : {}}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                style={{ transformOrigin: '280px 300px' }}
+              />
+            ))}
+            <circle cx="280" cy="300" r="8" fill="#1e293b" />
+          </g>
+          
+          {/* Petite moyenne (roue 2) */}
+          <g>
+            <circle cx="320" cy="280" r="30" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="2" />
+            {[...Array(12)].map((_, i) => (
+              <motion.rect
+                key={i}
+                x="318"
+                y="250"
+                width="4"
+                height="10"
+                fill="#92400e"
+                transform={`rotate(${i * 30} 320 280)`}
+                animate={animation ? { rotate: -360 } : {}}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                style={{ transformOrigin: '320px 280px' }}
+              />
+            ))}
+            <circle cx="320" cy="280" r="6" fill="#1e293b" />
+          </g>
+          
+          <text x="300" y="380" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">Rouage</text>
+        </g>
+
+        {/* 3. ÉCHAPPEMENT (ancre + roue) */}
+        <g 
+          className="cursor-pointer"
+          onClick={() => setOrganeSelectionne(organeSelectionne === 'echappement' ? null : 'echappement')}
+          opacity={organeSelectionne && organeSelectionne !== 'echappement' ? 0.4 : 1}
+        >
+          {/* Roue d'échappement */}
+          <circle cx="500" cy="300" r="40" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="3" filter={organeSelectionne === 'echappement' ? "url(#glow)" : ""} />
+          
+          {/* Dents de la roue d'échappement */}
+          {[...Array(15)].map((_, i) => (
+            <motion.path
+              key={i}
+              d="M 500 260 L 510 255 L 510 260 Z"
+              fill="#92400e"
+              transform={`rotate(${i * 24} 500 300)`}
+              animate={animation ? { rotate: [0, 24, 0] } : {}}
+              transition={{ duration: 0.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.033 }}
+              style={{ transformOrigin: '500px 300px' }}
+            />
+          ))}
+          
+          <circle cx="500" cy="300" r="10" fill="#1e293b" />
+          
+          {/* Ancre */}
           <motion.g
-            key={o.id}
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: i * 0.2, type: "spring", stiffness: 260, damping: 20 }}
-            className="cursor-pointer"
-            onClick={() => setOrganeSelectionne(o.id)}
+            animate={animation ? {
+              rotate: [-5, 5, -5]
+            } : {}}
+            transition={{
+              duration: 0.5,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            style={{ transformOrigin: '500px 330px' }}
           >
-            <circle cx={`${o.x}%`} cy={`${o.y}%`} r="40" fill={o.couleur} stroke="#fff" strokeWidth="3" />
-            <text x={`${o.x}%`} y={`${o.y}%`} textAnchor="middle" fill="white" fontSize="12" fontWeight="bold" dy=".3em">
-              {o.nom}
-            </text>
+            {/* Corps de l'ancre */}
+            <rect x="495" y="330" width="10" height="40" fill="url(#steel-gradient)" rx="2" />
+            {/* Fourchette */}
+            <path d="M 485 330 L 485 320 L 515 320 L 515 330 Z" fill="url(#steel-gradient)" />
+            {/* Palettes */}
+            <rect x="482" y="318" width="8" height="4" fill="#ef4444" rx="1" />
+            <rect x="510" y="318" width="8" height="4" fill="#ef4444" rx="1" />
           </motion.g>
-        ))}
+          
+          <text x="500" y="390" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">Échappement</text>
+        </g>
+
+        {/* 4. BALANCIER-SPIRAL */}
+        <g 
+          className="cursor-pointer"
+          onClick={() => setOrganeSelectionne(organeSelectionne === 'balancier' ? null : 'balancier')}
+          opacity={organeSelectionne && organeSelectionne !== 'balancier' ? 0.4 : 1}
+        >
+          {/* Pont de balancier */}
+          <rect x="670" y="260" width="60" height="15" fill="url(#steel-gradient)" stroke="#475569" strokeWidth="2" rx="3" />
+          <circle cx="685" cy="267" r="3" fill="#1e293b" />
+          <circle cx="715" cy="267" r="3" fill="#1e293b" />
+          
+          {/* Balancier oscillant */}
+          <motion.g
+            animate={animation ? {
+              rotate: [-35, 35, -35]
+            } : {}}
+            transition={{
+              duration: 0.25,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            style={{ transformOrigin: '700px 275px' }}
+          >
+            {/* Axe */}
+            <line x1="700" y1="275" x2="700" y2="310" stroke="#475569" strokeWidth="2" />
+            
+            {/* Roue du balancier */}
+            <circle cx="700" cy="310" r="35" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="3" filter={organeSelectionne === 'balancier' ? "url(#glow)" : ""} />
+            
+            {/* Rayons du balancier */}
+            {[...Array(8)].map((_, i) => (
+              <line
+                key={i}
+                x1="700"
+                y1="310"
+                x2="700"
+                y2="275"
+                stroke="#92400e"
+                strokeWidth="2"
+                transform={`rotate(${i * 45} 700 310)`}
+              />
+            ))}
+            
+            {/* Masselottes réglantes */}
+            {[0, 90, 180, 270].map((angle, i) => (
+              <g key={i} transform={`rotate(${angle} 700 310)`}>
+                <rect x="730" y="308" width="8" height="4" fill="#ef4444" rx="1" />
+              </g>
+            ))}
+            
+            <circle cx="700" cy="310" r="8" fill="#1e293b" />
+          </motion.g>
+          
+          {/* Spiral */}
+          <motion.path
+            d="M 700 275 
+               Q 700 270, 705 270 
+               T 712 273 
+               T 715 278 
+               T 715 285 
+               T 710 290 
+               T 700 292"
+            fill="none"
+            stroke="#fbbf24"
+            strokeWidth="1.5"
+            animate={animation ? {
+              d: [
+                "M 700 275 Q 700 270, 705 270 T 712 273 T 715 278 T 715 285 T 710 290 T 700 292",
+                "M 700 275 Q 700 268, 708 268 T 718 273 T 720 280 T 720 288 T 712 295 T 700 297",
+                "M 700 275 Q 700 270, 705 270 T 712 273 T 715 278 T 715 285 T 710 290 T 700 292"
+              ]
+            } : {}}
+            transition={{
+              duration: 0.25,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          
+          <text x="700" y="380" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">Balancier-Spiral</text>
+        </g>
+
+        {/* 5. REMONTOIR (couronne + tige) */}
+        <g 
+          className="cursor-pointer"
+          onClick={() => setOrganeSelectionne(organeSelectionne === 'remontoir' ? null : 'remontoir')}
+          opacity={organeSelectionne && organeSelectionne !== 'remontoir' ? 0.4 : 1}
+        >
+          {/* Tige de remontoir */}
+          <rect x="350" y="148" width="80" height="4" fill="url(#steel-gradient)" stroke="#475569" strokeWidth="1" />
+          
+          {/* Pignon coulant */}
+          <circle cx="380" cy="150" r="12" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="2" />
+          {[...Array(10)].map((_, i) => (
+            <rect
+              key={i}
+              x="378"
+              y="138"
+              width="4"
+              height="6"
+              fill="#92400e"
+              transform={`rotate(${i * 36} 380 150)`}
+            />
+          ))}
+          
+          {/* Couronne */}
+          <motion.g
+            animate={animation ? { rotate: 360 } : {}}
+            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+            style={{ transformOrigin: '430px 150px' }}
+          >
+            <circle cx="430" cy="150" r="25" fill="url(#steel-gradient)" stroke="#475569" strokeWidth="3" filter={organeSelectionne === 'remontoir' ? "url(#glow)" : ""} />
+            
+            {/* Cannelures de la couronne */}
+            {[...Array(12)].map((_, i) => (
+              <rect
+                key={i}
+                x="428"
+                y="125"
+                width="4"
+                height="10"
+                fill="#1e293b"
+                transform={`rotate(${i * 30} 430 150)`}
+              />
+            ))}
+            
+            <circle cx="430" cy="150" r="15" fill="#334155" />
+            <circle cx="430" cy="150" r="8" fill="#1e293b" />
+          </motion.g>
+          
+          <text x="400" y="200" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">Remontoir</text>
+        </g>
+
+        {/* 6. AFFICHAGE (aiguilles + cadran) */}
+        <g 
+          className="cursor-pointer"
+          onClick={() => setOrganeSelectionne(organeSelectionne === 'affichage' ? null : 'affichage')}
+          opacity={organeSelectionne && organeSelectionne !== 'affichage' ? 0.4 : 1}
+        >
+          {/* Cadran simplifié */}
+          <circle cx="600" cy="150" r="45" fill="#f8fafc" stroke="#1e293b" strokeWidth="3" filter={organeSelectionne === 'affichage' ? "url(#glow)" : ""} />
+          
+          {/* Index des heures */}
+          {[...Array(12)].map((_, i) => (
+            <line
+              key={i}
+              x1="600"
+              y1="110"
+              x2="600"
+              y2="115"
+              stroke="#1e293b"
+              strokeWidth={i % 3 === 0 ? "3" : "1.5"}
+              transform={`rotate(${i * 30} 600 150)`}
+            />
+          ))}
+          
+          {/* Aiguille des heures */}
+          <motion.line
+            x1="600"
+            y1="150"
+            x2="600"
+            y2="130"
+            stroke="#1e293b"
+            strokeWidth="4"
+            strokeLinecap="round"
+            animate={animation ? { rotate: 360 } : {}}
+            transition={{ duration: 43200, repeat: Infinity, ease: "linear" }}
+            style={{ transformOrigin: '600px 150px' }}
+          />
+          
+          {/* Aiguille des minutes */}
+          <motion.line
+            x1="600"
+            y1="150"
+            x2="600"
+            y2="120"
+            stroke="#475569"
+            strokeWidth="3"
+            strokeLinecap="round"
+            animate={animation ? { rotate: 360 } : {}}
+            transition={{ duration: 3600, repeat: Infinity, ease: "linear" }}
+            style={{ transformOrigin: '600px 150px' }}
+          />
+          
+          {/* Aiguille des secondes */}
+          <motion.line
+            x1="600"
+            y1="150"
+            x2="600"
+            y2="115"
+            stroke="#ef4444"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            animate={animation ? { rotate: 360 } : {}}
+            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+            style={{ transformOrigin: '600px 150px' }}
+          />
+          
+          {/* Axe central */}
+          <circle cx="600" cy="150" r="5" fill="#1e293b" />
+          
+          <text x="600" y="210" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">Affichage</text>
+        </g>
       </svg>
 
-      {/* Zone d'information */}
+      {/* Zone d'information détaillée */}
       <AnimatePresence>
         {organeSelectionne && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="absolute bottom-4 left-4 right-4 bg-white dark:bg-slate-800 rounded-lg p-4 shadow-xl border border-slate-200 dark:border-slate-700"
+            className="mt-8 bg-gradient-to-br from-white to-blue-50 dark:from-slate-800 dark:to-slate-700 rounded-xl p-6 shadow-2xl border-2 border-blue-300 dark:border-blue-600"
           >
             <div className="flex items-start justify-between">
-              <div>
-                <h4 className="font-bold text-slate-900 dark:text-white mb-2">
+              <div className="flex-1">
+                <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">
                   {organes.find(o => o.id === organeSelectionne)?.nom}
                 </h4>
-                <p className="text-sm text-slate-700 dark:text-slate-300">
+                <p className="text-slate-700 dark:text-slate-200 leading-relaxed text-lg">
                   {organes.find(o => o.id === organeSelectionne)?.desc}
                 </p>
               </div>
               <button
                 onClick={() => setOrganeSelectionne(null)}
-                className="ml-4 text-slate-400 hover:text-slate-600"
+                className="ml-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-3xl font-bold transition-colors"
               >
                 ×
               </button>
@@ -112,546 +784,10 @@ const SchemaMecanisme = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <p className="text-sm text-slate-300 text-center mt-6">
+        💡 Cliquez sur un organe pour en savoir plus • {animation ? '⏸️ Animation active' : '▶️ Animation en pause'}
+      </p>
     </div>
   );
 };
-
-// Données du quiz enrichies
-const quizData = [
-  {
-    question: "Quelle est la différence principale entre une montre mécanique et une montre à quartz ?",
-    options: [
-      "La montre mécanique utilise une pile",
-      "La montre mécanique fonctionne grâce à l'énergie d'un ressort",
-      "La montre à quartz est plus précise que toutes les montres mécaniques",
-      "Les montres mécaniques n'ont pas besoin d'entretien"
-    ],
-    correctAnswer: 1,
-    explanation: "Une montre mécanique tire son énergie d'un ressort moteur qui, une fois armé, libère progressivement son énergie. Une montre à quartz utilise une pile et un cristal de quartz pour sa précision."
-  },
-  {
-    question: "Combien d'organes principaux compose une montre mécanique simple ?",
-    options: ["3 organes", "6 organes", "10 organes", "12 organes"],
-    correctAnswer: 1,
-    explanation: "Une montre mécanique se compose de 6 organes principaux : le moteur (barillet), le rouage, l'échappement, l'organe réglant (balancier-spiral), le remontoir et l'affichage."
-  },
-  {
-    question: "Quel organe régule la vitesse de la montre et assure sa précision ?",
-    options: ["Le barillet", "Le rouage", "Le balancier-spiral", "La couronne"],
-    correctAnswer: 2,
-    explanation: "Le balancier-spiral est l'organe réglant de la montre. Il oscille à une fréquence constante et régule la vitesse à laquelle l'énergie du ressort est libérée, assurant ainsi la précision."
-  },
-  {
-    question: "Quelle est la fonction principale de l'échappement ?",
-    options: ["Stocker l'énergie", "Afficher l'heure", "Transformer l'énergie continue en impulsions régulières", "Remonter le ressort"],
-    correctAnswer: 2,
-    explanation: "L'échappement transforme l'énergie continue du ressort moteur en impulsions régulières qui entretiennent l'oscillation du balancier. C'est le 'cœur battant' de la montre."
-  },
-  {
-    question: "Quelle est la durée de marche typique d'une montre mécanique moderne ?",
-    options: ["12 heures", "24 heures", "36-48 heures", "7 jours"],
-    correctAnswer: 2,
-    explanation: "La plupart des montres mécaniques modernes offrent une réserve de marche de 36 à 48 heures. Certaines complications peuvent atteindre 8 jours ou plus grâce à des barillets multiples ou de plus grande taille."
-  },
-  {
-    question: "Quelle est la relation entre une oscillation et une alternance ?",
-    options: ["1 oscillation = 1 alternance", "1 oscillation = 2 alternances", "1 oscillation = 4 alternances", "Termes synonymes"],
-    correctAnswer: 1,
-    explanation: "Une alternance est le déplacement du balancier dans un seul sens, tandis qu'une oscillation représente un aller-retour complet. Donc 1 oscillation = 2 alternances."
-  },
-  {
-    question: "À quelle fréquence correspond 28'800 A/h ?",
-    options: ["3 Hz", "4 Hz (8 alternances/seconde)", "5 Hz", "2,5 Hz"],
-    correctAnswer: 1,
-    explanation: "28'800 alternances/heure ÷ 3'600 secondes = 8 alternances/seconde. Comme 1 oscillation = 2 alternances, la fréquence est de 4 Hz."
-  },
-  {
-    question: "Qu'est-ce que le COSC ?",
-    options: ["Un type de ressort", "Organisme de certification de précision", "Technique de fabrication", "Standard de résistance à l'eau"],
-    correctAnswer: 1,
-    explanation: "Le COSC (Contrôle Officiel Suisse des Chronomètres) est un organisme indépendant qui certifie la précision des montres chronométriques (-4/+6 secondes par jour)."
-  }
-];
-
-// Composant principal de la page
-export default function IntroductionMontreMecanique() {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [score, setScore] = useState(0);
-  const [quizCompleted, setQuizCompleted] = useState(false);
-  const [showResults, setShowResults] = useState(false);
-
-  const handleAnswerClick = (index: number) => {
-    if (selectedAnswer === null) {
-      setSelectedAnswer(index);
-      if (index === quizData[currentQuestion].correctAnswer) {
-        setScore(score + 1);
-      }
-    }
-  };
-
-  const handleNextQuestion = () => {
-    if (currentQuestion < quizData.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-      setSelectedAnswer(null);
-    } else {
-      setQuizCompleted(true);
-      setShowResults(true);
-    }
-  };
-
-  const resetQuiz = () => {
-    setCurrentQuestion(0);
-    setSelectedAnswer(null);
-    setScore(0);
-    setQuizCompleted(false);
-    setShowResults(false);
-  };
-
-  const pourcentageScore = Math.round((score / quizData.length) * 100);
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
-      {/* En-tête */}
-      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link href="/theorie" className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
-            <ChevronLeft className="w-5 h-5 mr-1" />
-            Retour à la théorie
-          </Link>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Hero */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <span className="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium mb-4">
-            Théorie de base • Niveau 1
-          </span>
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">
-            Introduction à la Montre Mécanique
-          </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
-            Découvrez les principes fondamentaux du fonctionnement d'une montre mécanique et ses organes essentiels
-          </p>
-        </motion.div>
-
-        {/* Section 1: Qu'est-ce qu'une montre mécanique ? */}
-        <motion.section 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-8"
-        >
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center">
-            <Watch className="w-8 h-8 mr-3 text-blue-600" />
-            Qu'est-ce qu'une montre mécanique ?
-          </h2>
-
-          <div className="space-y-4 text-slate-700 dark:text-slate-300">
-            <p>
-              Une <strong className="text-slate-900 dark:text-white">montre mécanique</strong> est un instrument de mesure du temps fonctionnant grâce à l'énergie mécanique d'un ressort moteur. 
-              Contrairement aux montres à quartz qui utilisent une pile et un oscillateur électronique, la montre mécanique est entièrement mécanique et ne nécessite aucune source d'énergie électrique.
-            </p>
-
-            <p>
-              Le principe de base est simple : un <strong>ressort</strong> est armé (par remontage manuel ou automatique), puis libère progressivement son énergie pour faire tourner les aiguilles. 
-              Cette énergie est régulée par un système d'<strong>échappement</strong> et un <strong>balancier-spiral</strong> qui oscillent à une fréquence constante, garantissant la précision du mouvement.
-            </p>
-
-            <div className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-600 p-6 rounded-r-lg my-6">
-              <p className="text-slate-700 dark:text-slate-300">
-                <strong className="text-blue-800 dark:text-blue-300">💡 Le saviez-vous ?</strong><br/>
-                Une montre mécanique peut contenir entre 100 et 300 composants, voire plus de 1 000 pour les grandes complications (chronographe, calendrier perpétuel, tourbillon...).
-              </p>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Section 2: Les 6 organes principaux */}
-        <motion.section 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-8"
-        >
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center">
-            <Cog className="w-8 h-8 mr-3 text-blue-600" />
-            Les 6 organes principaux
-          </h2>
-
-          <p className="text-slate-700 dark:text-slate-300 mb-6">
-            Une montre mécanique simple se compose de <strong className="text-slate-900 dark:text-white">six organes essentiels</strong> qui travaillent ensemble pour mesurer le temps avec précision :
-          </p>
-
-          {/* Schéma interactif */}
-          <SchemaMecanisme />
-          <p className="text-sm text-slate-500 text-center mt-4">
-            Cliquez sur un organe pour plus d'informations • <Link href="/theorie/anatomie-detaillee" className="text-blue-600 hover:underline">Voir l'anatomie détaillée</Link>
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-6 mt-8">
-            {[
-              { Icon: Clock, couleur: 'from-blue-50 to-indigo-50', bordure: 'border-blue-200', titre: '1. Le Moteur (Barillet)', desc: 'Le barillet contient le ressort moteur qui stocke l\'énergie mécanique. C\'est la source d\'énergie de la montre.', lien: '/theorie/le-barillet' },
-              { Icon: RotateCw, couleur: 'from-green-50 to-emerald-50', bordure: 'border-green-200', titre: '2. Le Rouage', desc: 'Ensemble de roues dentées et pignons qui transmettent l\'énergie du barillet vers l\'échappement en démultipliant la vitesse.', lien: '/theorie/le-rouage' },
-              { Icon: Gauge, couleur: 'from-purple-50 to-violet-50', bordure: 'border-purple-200', titre: '3. L\'Échappement', desc: 'Transforme l\'énergie continue en impulsions régulières. C\'est le "cœur battant" de la montre (tic-tac).', lien: '/theorie/echappement-ancre' },
-              { Icon: Settings, couleur: 'from-orange-50 to-amber-50', bordure: 'border-orange-200', titre: '4. L\'Organe Réglant', desc: 'Le balancier-spiral oscille à fréquence constante et régule la vitesse du mouvement. C\'est lui qui garantit la précision.', lien: '/theorie/balancier-spiral' },
-              { Icon: Eye, couleur: 'from-red-50 to-rose-50', bordure: 'border-red-200', titre: '5. Le Remontoir', desc: 'Mécanisme permettant d\'armer le ressort (manuellement via la couronne, ou automatiquement via une masse oscillante).', lien: '/theorie/remontage' },
-              { Icon: Watch, couleur: 'from-cyan-50 to-sky-50', bordure: 'border-cyan-200', titre: '6. L\'Affichage', desc: 'Les aiguilles et cadran qui permettent de lire l\'heure. Actionnés par le rouage via la chaussée et la minuterie.', lien: '/theorie/affichage' },
-            ].map((item, i) => (
-              <div 
-                key={i}
-                className={`bg-gradient-to-br ${item.couleur} dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border ${item.bordure} dark:border-slate-600 transition-transform hover:scale-105`}
-              >
-                <div className="flex items-center mb-3">
-                  <item.Icon className="w-8 h-8 text-blue-600 dark:text-blue-400 mr-3 flex-shrink-0" />
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">{item.titre}</h3>
-                </div>
-                <p className="text-slate-700 dark:text-slate-300 mb-3">{item.desc}</p>
-                <Link href={item.lien} className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
-                  En savoir plus →
-                </Link>
-              </div>
-            ))}
-          </div>
-        </motion.section>
-
-        {/* Section 3: Fonctionnement général */}
-        <motion.section 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-8"
-        >
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center">
-            <Zap className="w-8 h-8 mr-3 text-blue-600" />
-            Fonctionnement général
-          </h2>
-
-          <div className="space-y-4 text-slate-700 dark:text-slate-300">
-            <p>
-              Le fonctionnement d'une montre mécanique suit un <strong>circuit énergétique précis</strong> :
-            </p>
-
-            <ol className="list-decimal list-inside space-y-3 ml-4">
-              <li><strong>Stockage de l'énergie</strong> : Le ressort moteur est armé dans le barillet (remontage manuel ou automatique).</li>
-              <li><strong>Transmission</strong> : L'énergie passe par le rouage qui démultiplie la rotation du barillet pour atteindre des vitesses adaptées.</li>
-              <li><strong>Régulation</strong> : L'échappement transforme l'énergie continue en impulsions qui entretiennent l'oscillation du balancier-spiral.</li>
-              <li><strong>Comptage du temps</strong> : Chaque oscillation du balancier correspond à un "battement". Pour une fréquence de 28'800 alternances/heure, le balancier oscille 8 fois par seconde.</li>
-              <li><strong>Affichage</strong> : Le rouage transmet le mouvement aux aiguilles via la chaussée (aiguille des minutes) et le renvoi (aiguille des heures).</li>
-            </ol>
-          </div>
-        </motion.section>
-
-        {/* Section 4: Fréquences et précision */}
-        <motion.section 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-8"
-        >
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center">
-            <TrendingUp className="w-8 h-8 mr-3 text-blue-600" />
-            Fréquences, amplitude et précision
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-6 mb-6">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200 dark:from-slate-700 dark:to-slate-800">
-              <h3 className="text-xl font-bold text-blue-800 dark:text-blue-300 mb-3">18'000 A/h (2,5 Hz)</h3>
-              <p className="text-sm mb-2"><strong>Traditionnelle</strong> - 5 alternances/seconde</p>
-              <p className="text-xs text-slate-600 dark:text-slate-400">Fréquence historique, offre une autonomie légèrement supérieure. Utilisée dans les montres vintage.</p>
-            </div>
-            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200 dark:from-slate-700 dark:to-slate-800">
-              <h3 className="text-xl font-bold text-green-800 dark:text-green-300 mb-3">28'800 A/h (4 Hz)</h3>
-              <p className="text-sm mb-2"><strong>Standard moderne</strong> - 8 alternances/seconde</p>
-              <p className="text-xs text-slate-600 dark:text-slate-400">Fréquence la plus répandue. Excellent compromis entre précision et consommation d'énergie.</p>
-            </div>
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200 dark:from-slate-700 dark:to-slate-800">
-              <h3 className="text-xl font-bold text-purple-800 dark:text-purple-300 mb-3">36'000 A/h (5 Hz)</h3>
-              <p className="text-sm mb-2"><strong>Haute fréquence</strong> - 10 alternances/seconde</p>
-              <p className="text-xs text-slate-600 dark:text-slate-400">Utilisée pour les montres de haute précision. Meilleure stabilité face aux chocs.</p>
-            </div>
-          </div>
-
-          <div className="bg-amber-50 border-l-4 border-amber-600 p-6 rounded-r-lg dark:bg-amber-950/30">
-            <h4 className="font-bold text-amber-800 dark:text-amber-300 mb-3 flex items-center">
-              <Gauge className="w-5 h-5 mr-2" />
-              L'amplitude et le rabattement
-            </h4>
-            <p className="text-slate-700 dark:text-slate-300 mb-2">
-              <strong>Amplitude</strong> : Angle de rotation du balancier (normalement 180°-315°). Une amplitude trop basse indique un problème mécanique.
-            </p>
-            <p className="text-slate-700 dark:text-slate-300">
-              <strong>Rabattement</strong> : Phénomène où le balancier touche la fourchette, signe d'amplitude excessive.
-            </p>
-          </div>
-        </motion.section>
-
-        {/* Section 5: Montres iconiques */}
-        <motion.section 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-8"
-        >
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center">
-            <Trophy className="w-8 h-8 mr-3 text-blue-600" />
-            Des montres qui ont marqué l'histoire
-          </h2>
-
-          <div className="space-y-4">
-            {[
-              { annee: '1957', nom: 'Omega Speedmaster', desc: 'Première montre chronographe avec tachymètre sur le bezel, devenue la "Moonwatch" après avoir été portée sur la Lune.', calibre: 'Lemania 321' },
-              { annee: '1969', nom: 'TAG Heuer Monaco', desc: 'Premier chronographe automatique carré étanche, rendu célèbre par Steve McQueen dans "Le Mans".', calibre: 'Chronomatic 11' },
-              { annee: '1976', nom: 'Patek Philippe Nautilus', desc: 'Créée par Gérald Genta, révolution du design sportif de luxe en acier.', calibre: '28-255 C' },
-              { annee: '1972', nom: 'Audemars Piguet Royal Oak', desc: 'Première montre de luxe sportive en acier, aussi dessinée par Gérald Genta.', calibre: '2121' },
-            ].map((montre, i) => (
-              <div key={i} className="border-l-4 border-blue-600 pl-6 py-4 bg-slate-50 dark:bg-slate-900 rounded-r-lg">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                    {montre.annee} - {montre.nom}
-                  </h3>
-                  <Award className="w-5 h-5 text-amber-500" />
-                </div>
-                <p className="text-slate-700 dark:text-slate-300 mb-2">{montre.desc}</p>
-                <span className="text-sm text-slate-500 font-medium">Calibre : {montre.calibre}</span>
-              </div>
-            ))}
-          </div>
-        </motion.section>
-
-        {/* Section 6: Vocabulaire essentiel */}
-        <motion.section 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-8"
-        >
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center">
-            <BookOpen className="w-8 h-8 mr-3 text-blue-600" />
-            Vocabulaire essentiel
-          </h2>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            {[
-              { terme: 'Calibre', def: 'Désigne le type de mouvement horloger (ex : ETA 6497, Sellita SW200).', lien: '/vocabulaire/calibre' },
-              { terme: 'Platine', def: 'Plaque de base du mouvement sur laquelle sont fixés tous les organes.', lien: '/vocabulaire/platine' },
-              { terme: 'Pont', def: 'Pièce fixée sur la platine qui maintient les axes des mobiles (pont de barillet, pont d\'ancre...).', lien: '/vocabulaire/pont' },
-              { terme: 'Mobile', def: 'Ensemble formé par une roue et un pignon monté sur un axe.', lien: '/vocabulaire/mobile' },
-              { terme: 'Alternance (A/h)', def: 'Nombre d\'oscillations du balancier par heure. Valeurs courantes : 18\'000, 21\'600, 28\'800 A/h.', lien: '/vocabulaire/alternance' },
-              { terme: 'Réserve de marche', def: 'Durée pendant laquelle la montre fonctionne après un remontage complet (typiquement 36-48h).', lien: '/vocabulaire/reserve-de-marche' },
-              { terme: 'Chronomètre', def: 'Montre ayant obtenu la certification de précision du COSC (-4/+6 sec/jour).', lien: '/vocabulaire/chronometre' },
-              { terme: 'Complication', def: 'Fonction additionnelle à l\'affichage de l\'heure (chronographe, calendrier, etc.).', lien: '/vocabulaire/complication' },
-            ].map((item, i) => (
-              <div key={i} className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                <h4 className="font-bold text-slate-900 dark:text-white mb-2">{item.terme}</h4>
-                <p className="text-sm text-slate-700 dark:text-slate-300 mb-2">{item.def}</p>
-                <Link href={item.lien} className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-                  Voir la définition complète →
-                </Link>
-              </div>
-            ))}
-          </div>
-        </motion.section>
-
-        {/* Section 7: Comparatif */}
-        <motion.section 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-8"
-        >
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center">
-            <Gauge className="mr-3 text-blue-600" />
-            Montre mécanique vs autres technologies
-          </h2>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-slate-100 dark:bg-slate-700">
-                <tr>
-                  <th className="px-6 py-4 text-left font-bold text-slate-900 dark:text-white">Critère</th>
-                  <th className="px-6 py-4 text-left font-bold text-slate-900 dark:text-white">Mécanique</th>
-                  <th className="px-6 py-4 text-left font-bold text-slate-900 dark:text-white">Quartz</th>
-                  <th className="px-6 py-4 text-left font-bold text-slate-900 dark:text-white">Smartwatch</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                {[
-                  { crit: 'Source d\'énergie', meca: 'Ressort moteur', quartz: 'Pile', smart: 'Batterie rechargeable' },
-                  { crit: 'Précision', meca: '±5 à 15 sec/jour', quartz: '±15 sec/mois', smart: 'Connectée (précision absolue)' },
-                  { crit: 'Autonomie', meca: '36-48h (remontage)', quartz: '2-5 ans', smart: '1-2 jours' },
-                  { crit: 'Entretien', meca: 'Révision 3-5 ans', quartz: 'Changement pile', smart: 'Mises à jour logicielles' },
-                  { crit: 'Durée de vie', meca: 'Plusieurs générations', quartz: '10-20 ans', smart: '3-5 ans' },
-                  { crit: 'Valeur artisanale', meca: 'Très élevée', quartz: 'Faible', smart: 'Nulle' },
-                ].map((row, i) => (
-                  <tr key={i} className="hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
-                    <td className="px-6 py-4 font-bold text-slate-900 dark:text-white">{row.crit}</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">{row.meca}</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">{row.quartz}</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">{row.smart}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </motion.section>
-
-        {/* Quiz */}
-        <motion.section 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-8"
-        >
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center">
-            <Trophy className="w-8 h-8 mr-3 text-blue-600" />
-            Quiz : Testez vos connaissances
-          </h2>
-
-          {!quizCompleted ? (
-            <>
-              <div className="mb-6">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
-                    Question {currentQuestion + 1} sur {quizData.length}
-                  </span>
-                  <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                    Score : {score}/{quizData.length}
-                  </span>
-                </div>
-                <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-8">
-                  <div 
-                    className="bg-gradient-to-r from-blue-600 to-blue-500 h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${((currentQuestion + 1) / quizData.length) * 100}%` }}
-                  />
-                </div>
-              </div>
-
-              <h3 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white mb-6">
-                {quizData[currentQuestion].question}
-              </h3>
-
-              <div className="space-y-3 mb-6">
-                {quizData[currentQuestion].options.map((option, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerClick(index)}
-                    disabled={selectedAnswer !== null}
-                    aria-label={`Option ${String.fromCharCode(65 + index)} : ${option}`}
-                    className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-300 ${
-                      selectedAnswer === null
-                        ? 'border-slate-200 dark:border-slate-700 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30'
-                        : index === quizData[currentQuestion].correctAnswer
-                        ? 'border-green-500 bg-green-50 dark:bg-green-950/30'
-                        : selectedAnswer === index
-                        ? 'border-red-500 bg-red-50 dark:bg-red-950/30'
-                        : 'border-slate-200 dark:border-slate-700 opacity-50'
-                    }`}
-                  >
-                    <span className="font-bold mr-3 text-slate-700 dark:text-slate-200">
-                      {String.fromCharCode(65 + index)}.
-                    </span>
-                    <span className="text-slate-800 dark:text-slate-100">{option}</span>
-                  </button>
-                ))}
-              </div>
-
-              <AnimatePresence>
-                {selectedAnswer !== null && (
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-600 p-4 mb-6 rounded"
-                    >
-                      <p className="text-slate-700 dark:text-slate-300">{quizData[currentQuestion].explanation}</p>
-                    </motion.div>
-                    <motion.button
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      onClick={handleNextQuestion}
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg"
-                    >
-                      {currentQuestion < quizData.length - 1 ? 'Question suivante →' : 'Voir les résultats'}
-                    </motion.button>
-                  </>
-                )}
-              </AnimatePresence>
-            </>
-          ) : (
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-center"
-            >
-              <div className="mb-8">
-                <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-blue-600 to-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                  <span className="text-4xl font-bold text-white">{pourcentageScore}%</span>
-                </div>
-                <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">
-                  {pourcentageScore >= 80 ? 'Excellent !' : pourcentageScore >= 60 ? 'Bien joué !' : 'Continuez l\'effort !'}
-                </h3>
-                <p className="text-xl text-slate-700 dark:text-slate-300 mb-6">
-                  Vous avez obtenu {score} sur {quizData.length} ({pourcentageScore}%)
-                </p>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button
-                  onClick={resetQuiz}
-                  className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg"
-                >
-                  Recommencer le quiz
-                </button>
-                <Link 
-                  href="/theorie" 
-                  className="bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 px-8 rounded-lg transition-colors text-center"
-                >
-                  Retour à la théorie
-                </Link>
-              </div>
-            </motion.div>
-          )}
-        </motion.section>
-
-        {/* Section 8: Pour aller plus loin */}
-        <motion.section 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 rounded-2xl p-8"
-        >
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center">
-            <BookOpen className="w-8 h-8 mr-3 text-blue-600" />
-            Pour aller plus loin
-          </h2>
-          
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-              <h3 className="text-xl font-bold mb-3 text-slate-900 dark:text-white">📚 Ressources officielles</h3>
-              <ul className="space-y-2 text-slate-700 dark:text-slate-300">
-                <li>• <Link href="https://www.hautehorlogerie.org" className="text-blue-600 hover:underline dark:text-blue-400" target="_blank" rel="noopener noreferrer">Fondation Haute Horlogerie</Link></li>
-                <li>• <Link href="https://mih.ch" className="text-blue-600 hover:underline dark:text-blue-400" target="_blank" rel="noopener noreferrer">Musée International d'Horlogerie</Link></li>
-                <li>• <Link href="/ressources/guide-achat" className="text-blue-600 hover:underline dark:text-blue-400">Guide d'achat montre mécanique</Link></li>
-              </ul>
-            </div>
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-              <h3 className="text-xl font-bold mb-3 text-slate-900 dark:text-white">🎓 Prochaines leçons</h3>
-              <ul className="space-y-2 text-slate-700 dark:text-slate-300">
-                <li>• <Link href="/theorie/remontage-manuel-vs-automatique" className="text-blue-600 hover:underline dark:text-blue-400">Remontage manuel vs automatique</Link></li>
-                <li>• <Link href="/theorie/echappement-ancre-detaille" className="text-blue-600 hover:underline dark:text-blue-400">L'échappement à ancre en détail</Link></li>
-                <li>• <Link href="/pratique/entretien-montre-mecanique" className="text-blue-600 hover:underline dark:text-blue-400">Entretien et maintenance</Link></li>
-              </ul>
-            </div>
-          </div>
-        </motion.section>
-      </main>
-    </div>
-  );
-}
