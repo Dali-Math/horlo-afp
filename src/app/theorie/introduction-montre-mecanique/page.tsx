@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Watch, Play, Pause } from 'lucide-react';
+import { Watch, Play, Pause, Info, Zap, Settings, Clock, CheckCircle, XCircle, Award, History, Lightbulb } from 'lucide-react';
 
 // ============================================
 // COMPOSANT 1: ANIMATION MONTRE
@@ -347,12 +347,6 @@ const SchemaSixOrganes = () => {
             </feMerge>
           </filter>
 
-          {/* Patterns pour les pièces */}
-          <pattern id="metal-texture" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
-            <rect width="4" height="4" fill="#64748b" />
-            <path d="M0,0 L4,4 M4,0 L0,4" stroke="#475569" strokeWidth="0.5" />
-          </pattern>
-
           <radialGradient id="brass-gradient">
             <stop offset="0%" stopColor="#fbbf24" />
             <stop offset="50%" stopColor="#f59e0b" />
@@ -368,7 +362,6 @@ const SchemaSixOrganes = () => {
 
         {/* Lignes de connexion entre organes */}
         <g opacity="0.5">
-          {/* Barillet -> Rouage */}
           <motion.path
             d="M 150 300 L 300 300"
             stroke="#60A5FA" strokeWidth="3" markerEnd="url(#arrowhead)"
@@ -376,7 +369,6 @@ const SchemaSixOrganes = () => {
             animate={animation ? { pathLength: [0, 1] } : { pathLength: 1 }}
             transition={{ duration: 1.5, repeat: animation ? Infinity : 0 }}
           />
-          {/* Rouage -> Échappement */}
           <motion.path
             d="M 300 300 L 500 300"
             stroke="#60A5FA" strokeWidth="3" markerEnd="url(#arrowhead)"
@@ -384,7 +376,6 @@ const SchemaSixOrganes = () => {
             animate={animation ? { pathLength: [0, 1] } : { pathLength: 1 }}
             transition={{ duration: 1.5, delay: 0.5, repeat: animation ? Infinity : 0 }}
           />
-          {/* Échappement -> Balancier */}
           <motion.path
             d="M 500 300 L 700 300"
             stroke="#60A5FA" strokeWidth="3" markerEnd="url(#arrowhead)"
@@ -392,7 +383,6 @@ const SchemaSixOrganes = () => {
             animate={animation ? { pathLength: [0, 1] } : { pathLength: 1 }}
             transition={{ duration: 1.5, delay: 1, repeat: animation ? Infinity : 0 }}
           />
-          {/* Remontoir -> Barillet */}
           <motion.path
             d="M 400 150 L 150 250"
             stroke="#60A5FA" strokeWidth="3" strokeDasharray="5,5" markerEnd="url(#arrowhead)"
@@ -400,7 +390,6 @@ const SchemaSixOrganes = () => {
             animate={animation ? { pathLength: [0, 1] } : { pathLength: 1 }}
             transition={{ duration: 1.5, delay: 1.5, repeat: animation ? Infinity : 0 }}
           />
-          {/* Rouage -> Affichage */}
           <motion.path
             d="M 300 300 L 600 200"
             stroke="#60A5FA" strokeWidth="3" strokeDasharray="5,5" markerEnd="url(#arrowhead)"
@@ -410,77 +399,46 @@ const SchemaSixOrganes = () => {
           />
         </g>
 
-        {/* 1. BARILLET avec ressort visible */}
+        {/* 1. BARILLET */}
         <g 
           className="cursor-pointer transition-all"
           onClick={() => setOrganeSelectionne(organeSelectionne === 'barillet' ? null : 'barillet')}
           opacity={organeSelectionne && organeSelectionne !== 'barillet' ? 0.4 : 1}
         >
-          {/* Tambour du barillet */}
           <circle cx="150" cy="300" r="60" fill="url(#steel-gradient)" stroke="#475569" strokeWidth="3" filter={organeSelectionne === 'barillet' ? "url(#glow)" : ""} />
           <circle cx="150" cy="300" r="50" fill="#1e293b" stroke="#334155" strokeWidth="2" />
           
-          {/* Ressort moteur en spirale */}
           <motion.path
-            d="M 150 300 
-               Q 150 280, 165 280 
-               T 180 290 
-               T 185 300 
-               T 180 310 
-               T 165 315 
-               T 150 315 
-               T 135 310 
-               T 130 300"
+            d="M 150 300 Q 150 280, 165 280 T 180 290 T 185 300 T 180 310 T 165 315 T 150 315 T 135 310 T 130 300"
             fill="none"
             stroke="#fbbf24"
             strokeWidth="2"
-            animate={animation ? {
-              strokeDashoffset: [0, -100]
-            } : {}}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "linear"
-            }}
+            animate={animation ? { strokeDashoffset: [0, -100] } : {}}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
             strokeDasharray="100"
           />
           
-          {/* Arbre de barillet */}
           <circle cx="150" cy="300" r="8" fill="url(#brass-gradient)" />
           
-          {/* Denture */}
           {[...Array(12)].map((_, i) => (
-            <rect
-              key={i}
-              x="148"
-              y="240"
-              width="4"
-              height="10"
-              fill="#64748b"
-              transform={`rotate(${i * 30} 150 300)`}
-            />
+            <rect key={i} x="148" y="240" width="4" height="10" fill="#64748b" transform={`rotate(${i * 30} 150 300)`} />
           ))}
           
           <text x="150" y="380" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">Barillet</text>
         </g>
 
-        {/* 2. ROUAGE avec plusieurs roues */}
+        {/* 2. ROUAGE */}
         <g 
           className="cursor-pointer"
           onClick={() => setOrganeSelectionne(organeSelectionne === 'rouage' ? null : 'rouage')}
           opacity={organeSelectionne && organeSelectionne !== 'rouage' ? 0.4 : 1}
         >
-          {/* Grande moyenne (roue 1) */}
           <g>
             <circle cx="280" cy="300" r="45" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="3" filter={organeSelectionne === 'rouage' ? "url(#glow)" : ""} />
             {[...Array(16)].map((_, i) => (
               <motion.rect
                 key={i}
-                x="278"
-                y="255"
-                width="4"
-                height="12"
-                fill="#92400e"
+                x="278" y="255" width="4" height="12" fill="#92400e"
                 transform={`rotate(${i * 22.5} 280 300)`}
                 animate={animation ? { rotate: 360 } : {}}
                 transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
@@ -490,17 +448,12 @@ const SchemaSixOrganes = () => {
             <circle cx="280" cy="300" r="8" fill="#1e293b" />
           </g>
           
-          {/* Petite moyenne (roue 2) */}
           <g>
             <circle cx="320" cy="280" r="30" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="2" />
             {[...Array(12)].map((_, i) => (
               <motion.rect
                 key={i}
-                x="318"
-                y="250"
-                width="4"
-                height="10"
-                fill="#92400e"
+                x="318" y="250" width="4" height="10" fill="#92400e"
                 transform={`rotate(${i * 30} 320 280)`}
                 animate={animation ? { rotate: -360 } : {}}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
@@ -513,16 +466,14 @@ const SchemaSixOrganes = () => {
           <text x="300" y="380" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">Rouage</text>
         </g>
 
-        {/* 3. ÉCHAPPEMENT (ancre + roue) */}
+        {/* 3. ÉCHAPPEMENT */}
         <g 
           className="cursor-pointer"
           onClick={() => setOrganeSelectionne(organeSelectionne === 'echappement' ? null : 'echappement')}
           opacity={organeSelectionne && organeSelectionne !== 'echappement' ? 0.4 : 1}
         >
-          {/* Roue d'échappement */}
           <circle cx="500" cy="300" r="40" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="3" filter={organeSelectionne === 'echappement' ? "url(#glow)" : ""} />
           
-          {/* Dents de la roue d'échappement */}
           {[...Array(15)].map((_, i) => (
             <motion.path
               key={i}
@@ -537,23 +488,13 @@ const SchemaSixOrganes = () => {
           
           <circle cx="500" cy="300" r="10" fill="#1e293b" />
           
-          {/* Ancre */}
           <motion.g
-            animate={animation ? {
-              rotate: [-5, 5, -5]
-            } : {}}
-            transition={{
-              duration: 0.5,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
+            animate={animation ? { rotate: [-5, 5, -5] } : {}}
+            transition={{ duration: 0.5, repeat: Infinity, ease: "easeInOut" }}
             style={{ transformOrigin: '500px 330px' }}
           >
-            {/* Corps de l'ancre */}
             <rect x="495" y="330" width="10" height="40" fill="url(#steel-gradient)" rx="2" />
-            {/* Fourchette */}
             <path d="M 485 330 L 485 320 L 515 320 L 515 330 Z" fill="url(#steel-gradient)" />
-            {/* Palettes */}
             <rect x="482" y="318" width="8" height="4" fill="#ef4444" rx="1" />
             <rect x="510" y="318" width="8" height="4" fill="#ef4444" rx="1" />
           </motion.g>
@@ -567,44 +508,22 @@ const SchemaSixOrganes = () => {
           onClick={() => setOrganeSelectionne(organeSelectionne === 'balancier' ? null : 'balancier')}
           opacity={organeSelectionne && organeSelectionne !== 'balancier' ? 0.4 : 1}
         >
-          {/* Pont de balancier */}
           <rect x="670" y="260" width="60" height="15" fill="url(#steel-gradient)" stroke="#475569" strokeWidth="2" rx="3" />
           <circle cx="685" cy="267" r="3" fill="#1e293b" />
           <circle cx="715" cy="267" r="3" fill="#1e293b" />
           
-          {/* Balancier oscillant */}
           <motion.g
-            animate={animation ? {
-              rotate: [-35, 35, -35]
-            } : {}}
-            transition={{
-              duration: 0.25,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
+            animate={animation ? { rotate: [-35, 35, -35] } : {}}
+            transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut" }}
             style={{ transformOrigin: '700px 275px' }}
           >
-            {/* Axe */}
             <line x1="700" y1="275" x2="700" y2="310" stroke="#475569" strokeWidth="2" />
-            
-            {/* Roue du balancier */}
             <circle cx="700" cy="310" r="35" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="3" filter={organeSelectionne === 'balancier' ? "url(#glow)" : ""} />
             
-            {/* Rayons du balancier */}
             {[...Array(8)].map((_, i) => (
-              <line
-                key={i}
-                x1="700"
-                y1="310"
-                x2="700"
-                y2="275"
-                stroke="#92400e"
-                strokeWidth="2"
-                transform={`rotate(${i * 45} 700 310)`}
-              />
+              <line key={i} x1="700" y1="310" x2="700" y2="275" stroke="#92400e" strokeWidth="2" transform={`rotate(${i * 45} 700 310)`} />
             ))}
             
-            {/* Masselottes réglantes */}
             {[0, 90, 180, 270].map((angle, i) => (
               <g key={i} transform={`rotate(${angle} 700 310)`}>
                 <rect x="730" y="308" width="8" height="4" fill="#ef4444" rx="1" />
@@ -614,15 +533,8 @@ const SchemaSixOrganes = () => {
             <circle cx="700" cy="310" r="8" fill="#1e293b" />
           </motion.g>
           
-          {/* Spiral */}
           <motion.path
-            d="M 700 275 
-               Q 700 270, 705 270 
-               T 712 273 
-               T 715 278 
-               T 715 285 
-               T 710 290 
-               T 700 292"
+            d="M 700 275 Q 700 270, 705 270 T 712 273 T 715 278 T 715 285 T 710 290 T 700 292"
             fill="none"
             stroke="#fbbf24"
             strokeWidth="1.5"
@@ -633,40 +545,25 @@ const SchemaSixOrganes = () => {
                 "M 700 275 Q 700 270, 705 270 T 712 273 T 715 278 T 715 285 T 710 290 T 700 292"
               ]
             } : {}}
-            transition={{
-              duration: 0.25,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
+            transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut" }}
           />
           
           <text x="700" y="380" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">Balancier-Spiral</text>
         </g>
 
-        {/* 5. REMONTOIR (couronne + tige) */}
+        {/* 5. REMONTOIR */}
         <g 
           className="cursor-pointer"
           onClick={() => setOrganeSelectionne(organeSelectionne === 'remontoir' ? null : 'remontoir')}
           opacity={organeSelectionne && organeSelectionne !== 'remontoir' ? 0.4 : 1}
         >
-          {/* Tige de remontoir */}
           <rect x="350" y="148" width="80" height="4" fill="url(#steel-gradient)" stroke="#475569" strokeWidth="1" />
           
-          {/* Pignon coulant */}
           <circle cx="380" cy="150" r="12" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="2" />
           {[...Array(10)].map((_, i) => (
-            <rect
-              key={i}
-              x="378"
-              y="138"
-              width="4"
-              height="6"
-              fill="#92400e"
-              transform={`rotate(${i * 36} 380 150)`}
-            />
+            <rect key={i} x="378" y="138" width="4" height="6" fill="#92400e" transform={`rotate(${i * 36} 380 150)`} />
           ))}
           
-          {/* Couronne */}
           <motion.g
             animate={animation ? { rotate: 360 } : {}}
             transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
@@ -674,17 +571,8 @@ const SchemaSixOrganes = () => {
           >
             <circle cx="430" cy="150" r="25" fill="url(#steel-gradient)" stroke="#475569" strokeWidth="3" filter={organeSelectionne === 'remontoir' ? "url(#glow)" : ""} />
             
-            {/* Cannelures de la couronne */}
             {[...Array(12)].map((_, i) => (
-              <rect
-                key={i}
-                x="428"
-                y="125"
-                width="4"
-                height="10"
-                fill="#1e293b"
-                transform={`rotate(${i * 30} 430 150)`}
-              />
+              <rect key={i} x="428" y="125" width="4" height="10" fill="#1e293b" transform={`rotate(${i * 30} 430 150)`} />
             ))}
             
             <circle cx="430" cy="150" r="15" fill="#334155" />
@@ -694,72 +582,48 @@ const SchemaSixOrganes = () => {
           <text x="400" y="200" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">Remontoir</text>
         </g>
 
-        {/* 6. AFFICHAGE (aiguilles + cadran) */}
+        {/* 6. AFFICHAGE */}
         <g 
           className="cursor-pointer"
           onClick={() => setOrganeSelectionne(organeSelectionne === 'affichage' ? null : 'affichage')}
           opacity={organeSelectionne && organeSelectionne !== 'affichage' ? 0.4 : 1}
         >
-          {/* Cadran simplifié */}
           <circle cx="600" cy="150" r="45" fill="#f8fafc" stroke="#1e293b" strokeWidth="3" filter={organeSelectionne === 'affichage' ? "url(#glow)" : ""} />
           
-          {/* Index des heures */}
           {[...Array(12)].map((_, i) => (
             <line
               key={i}
-              x1="600"
-              y1="110"
-              x2="600"
-              y2="115"
+              x1="600" y1="110" x2="600" y2="115"
               stroke="#1e293b"
               strokeWidth={i % 3 === 0 ? "3" : "1.5"}
               transform={`rotate(${i * 30} 600 150)`}
             />
           ))}
           
-          {/* Aiguille des heures */}
           <motion.line
-            x1="600"
-            y1="150"
-            x2="600"
-            y2="130"
-            stroke="#1e293b"
-            strokeWidth="4"
-            strokeLinecap="round"
+            x1="600" y1="150" x2="600" y2="130"
+            stroke="#1e293b" strokeWidth="4" strokeLinecap="round"
             animate={animation ? { rotate: 360 } : {}}
             transition={{ duration: 43200, repeat: Infinity, ease: "linear" }}
             style={{ transformOrigin: '600px 150px' }}
           />
           
-          {/* Aiguille des minutes */}
           <motion.line
-            x1="600"
-            y1="150"
-            x2="600"
-            y2="120"
-            stroke="#475569"
-            strokeWidth="3"
-            strokeLinecap="round"
+            x1="600" y1="150" x2="600" y2="120"
+            stroke="#475569" strokeWidth="3" strokeLinecap="round"
             animate={animation ? { rotate: 360 } : {}}
             transition={{ duration: 3600, repeat: Infinity, ease: "linear" }}
             style={{ transformOrigin: '600px 150px' }}
           />
           
-          {/* Aiguille des secondes */}
           <motion.line
-            x1="600"
-            y1="150"
-            x2="600"
-            y2="115"
-            stroke="#ef4444"
-            strokeWidth="1.5"
-            strokeLinecap="round"
+            x1="600" y1="150" x2="600" y2="115"
+            stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round"
             animate={animation ? { rotate: 360 } : {}}
             transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
             style={{ transformOrigin: '600px 150px' }}
           />
           
-          {/* Axe central */}
           <circle cx="600" cy="150" r="5" fill="#1e293b" />
           
           <text x="600" y="210" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">Affichage</text>
@@ -803,23 +667,340 @@ const SchemaSixOrganes = () => {
 };
 
 // ============================================
+// COMPOSANT 3: PRINCIPES FONDAMENTAUX
+// ============================================
+const PrincipesFondamentaux = () => {
+  const principes = [
+    {
+      icon: <Zap className="w-12 h-12" />,
+      titre: "Source d'Énergie",
+      desc: "Le ressort moteur stocke l'énergie mécanique. Quand il se détend, il libère cette énergie progressivement sur 40-48h.",
+      couleur: "from-yellow-500 to-orange-500"
+    },
+    {
+      icon: <Settings className="w-12 h-12" />,
+      titre: "Transmission",
+      desc: "Le rouage (ensemble de roues dentées) transmet et démultiplie l'énergie du barillet vers l'échappement.",
+      couleur: "from-blue-500 to-cyan-500"
+    },
+    {
+      icon: <Clock className="w-12 h-12" />,
+      titre: "Régulation",
+      desc: "Le balancier-spiral oscille à fréquence constante (28'800 A/h). L'échappement découpe cette oscillation en 'tic-tac'.",
+      couleur: "from-purple-500 to-pink-500"
+    }
+  ];
+
+  return (
+    <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border-2 border-slate-700">
+      <h3 className="text-3xl font-bold text-white mb-8 text-center flex items-center justify-center gap-3">
+        <Info className="w-8 h-8 text-blue-400" />
+        Les 3 Principes Fondamentaux
+      </h3>
+
+      <div className="grid md:grid-cols-3 gap-6">
+        {principes.map((principe, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.2 }}
+            className="bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl p-6 border-2 border-slate-600 hover:border-blue-500 transition-all hover:scale-105"
+          >
+            <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${principe.couleur} flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+              <div className="text-white">
+                {principe.icon}
+              </div>
+            </div>
+            <h4 className="text-xl font-bold text-white text-center mb-3">
+              {principe.titre}
+            </h4>
+            <p className="text-slate-300 text-center leading-relaxed">
+              {principe.desc}
+            </p>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ============================================
+// COMPOSANT 4: QUIZ INTERACTIF
+// ============================================
+const QuizInteractif = () => {
+  const [questionActuelle, setQuestionActuelle] = useState(0);
+  const [score, setScore] = useState(0);
+  const [reponseSelectionnee, setReponseSelectionnee] = useState<number | null>(null);
+  const [quizTermine, setQuizTermine] = useState(false);
+
+  const questions = [
+    {
+      question: "Quelle est la fréquence typique d'un mouvement mécanique moderne ?",
+      reponses: ["2 Hz", "4 Hz", "8 Hz", "10 Hz"],
+      bonneReponse: 1
+    },
+    {
+      question: "Combien d'alternances par heure pour un mouvement à 4 Hz ?",
+      reponses: ["14'400 A/h", "21'600 A/h", "28'800 A/h", "36'000 A/h"],
+      bonneReponse: 2
+    },
+    {
+      question: "Quel organe régule la précision de la montre ?",
+      reponses: ["Le barillet", "Le rouage", "Le balancier-spiral", "L'échappement"],
+      bonneReponse: 2
+    }
+  ];
+
+  const handleReponse = (index: number) => {
+    if (reponseSelectionnee === null) {
+      setReponseSelectionnee(index);
+      if (index === questions[questionActuelle].bonneReponse) {
+        setScore(score + 1);
+      }
+      
+      setTimeout(() => {
+        if (questionActuelle < questions.length - 1) {
+          setQuestionActuelle(questionActuelle + 1);
+          setReponseSelectionnee(null);
+        } else {
+          setQuizTermine(true);
+        }
+      }, 1500);
+    }
+  };
+
+  const resetQuiz = () => {
+    setQuestionActuelle(0);
+    setScore(0);
+    setReponseSelectionnee(null);
+    setQuizTermine(false);
+  };
+
+  if (quizTermine) {
+    return (
+      <div className="bg-gradient-to-br from-green-900 to-blue-900 rounded-2xl p-8 border-2 border-green-600">
+        <div className="text-center">
+          <Award className="w-24 h-24 text-yellow-400 mx-auto mb-6" />
+          <h3 className="text-4xl font-bold text-white mb-4">Quiz Terminé !</h3>
+          <p className="text-2xl text-green-300 mb-6">
+            Votre score : {score} / {questions.length}
+          </p>
+          <button
+            onClick={resetQuiz}
+            className="bg-white text-blue-900 px-8 py-3 rounded-lg font-bold hover:bg-blue-100 transition-colors"
+          >
+            Recommencer
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-gradient-to-br from-purple-900 to-blue-900 rounded-2xl p-8 border-2 border-purple-600">
+      <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+        <Lightbulb className="w-8 h-8 text-yellow-400" />
+        Quiz : Testez vos connaissances
+      </h3>
+
+      <div className="mb-6">
+        <div className="flex justify-between text-white mb-2">
+          <span>Question {questionActuelle + 1} / {questions.length}</span>
+          <span>Score : {score}</span>
+        </div>
+        <div className="w-full bg-slate-700 rounded-full h-2">
+          <div 
+            className="bg-blue-500 h-2 rounded-full transition-all duration-500"
+            style={{ width: `${((questionActuelle + 1) / questions.length) * 100}%` }}
+          />
+        </div>
+      </div>
+
+      <h4 className="text-xl font-bold text-white mb-6">
+        {questions[questionActuelle].question}
+      </h4>
+
+      <div className="grid gap-4">
+        {questions[questionActuelle].reponses.map((reponse, index) => {
+          let bgColor = 'bg-slate-700 hover:bg-slate-600';
+          
+          if (reponseSelectionnee !== null) {
+            if (index === questions[questionActuelle].bonneReponse) {
+              bgColor = 'bg-green-600';
+            } else if (index === reponseSelectionnee) {
+              bgColor = 'bg-red-600';
+            }
+          }
+
+          return (
+            <button
+              key={index}
+              onClick={() => handleReponse(index)}
+              disabled={reponseSelectionnee !== null}
+              className={`${bgColor} text-white p-4 rounded-lg font-medium text-left transition-all flex items-center justify-between group`}
+            >
+              <span>{reponse}</span>
+              {reponseSelectionnee !== null && index === questions[questionActuelle].bonneReponse && (
+                <CheckCircle className="w-6 h-6 text-white" />
+              )}
+              {reponseSelectionnee !== null && index === reponseSelectionnee && index !== questions[questionActuelle].bonneReponse && (
+                <XCircle className="w-6 h-6 text-white" />
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+// ============================================
+// COMPOSANT 5: TIMELINE HISTORIQUE
+// ============================================
+const TimelineHistorique = () => {
+  const evenements = [
+    {
+      annee: "1675",
+      titre: "Invention du Spiral",
+      desc: "Christian Huygens invente le spiral réglant, révolutionnant la précision horlogère.",
+      couleur: "bg-blue-500"
+    },
+    {
+      annee: "1770",
+      titre: "Montre Automatique",
+      desc: "Abraham-Louis Perrelet crée la première montre à remontage automatique avec masse oscillante.",
+      couleur: "bg-green-500"
+    },
+    {
+      annee: "1926",
+      titre: "Oyster Case",
+      desc: "Rolex présente le premier boîtier étanche, permettant la montre-bracelet de plongée.",
+      couleur: "bg-purple-500"
+    },
+    {
+      annee: "1969",
+      titre: "El Primero",
+      desc: "Zenith lance le premier chronographe automatique à haute fréquence (36'000 A/h).",
+      couleur: "bg-orange-500"
+    }
+  ];
+
+  return (
+    <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border-2 border-slate-700">
+      <h3 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
+        <History className="w-8 h-8 text-amber-400" />
+        Grandes Dates de l&apos;Horlogerie
+      </h3>
+
+      <div className="relative">
+        {/* Ligne verticale */}
+        <div className="absolute left-8 top-0 bottom-0 w-1 bg-slate-600"></div>
+
+        {evenements.map((evt, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.2 }}
+            className="relative pl-20 pb-12 last:pb-0"
+          >
+            {/* Point sur la timeline */}
+            <div className={`absolute left-5 top-0 w-8 h-8 rounded-full ${evt.couleur} border-4 border-slate-900 shadow-lg`}></div>
+
+            {/* Contenu */}
+            <div className="bg-slate-700 rounded-lg p-6 border-2 border-slate-600 hover:border-blue-500 transition-all">
+              <div className="flex items-center gap-4 mb-3">
+                <span className={`${evt.couleur} text-white px-4 py-1 rounded-full font-bold text-sm`}>
+                  {evt.annee}
+                </span>
+                <h4 className="text-xl font-bold text-white">{evt.titre}</h4>
+              </div>
+              <p className="text-slate-300 leading-relaxed">{evt.desc}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ============================================
 // PAGE PRINCIPALE
 // ============================================
 export default function IntroductionMontreMecanique() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 py-12 px-4">
       <div className="max-w-7xl mx-auto space-y-12">
-        <div className="text-center">
-          <h1 className="text-5xl font-bold text-white mb-4">
+        {/* En-tête */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center"
+        >
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
             Introduction à la Montre Mécanique
           </h1>
           <p className="text-xl text-blue-200">
             Découvrez le fonctionnement fascinant de l&apos;horlogerie mécanique
           </p>
-        </div>
+        </motion.div>
 
-        <AnimationMontre />
-        <SchemaSixOrganes />
+        {/* Section 1 : Montre animée */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <AnimationMontre />
+        </motion.div>
+
+        {/* Section 2 : Les 6 organes */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <SchemaSixOrganes />
+        </motion.div>
+
+        {/* Section 3 : Principes fondamentaux */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          <PrincipesFondamentaux />
+        </motion.div>
+
+        {/* Section 4 : Quiz */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+        >
+          <QuizInteractif />
+        </motion.div>
+
+        {/* Section 5 : Timeline */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1 }}
+        >
+          <TimelineHistorique />
+        </motion.div>
+
+        {/* Footer */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="text-center text-slate-400 text-sm pt-8 border-t border-slate-700"
+        >
+          <p className="mb-2">✨ Animation interactive • 🎓 Contenu pédagogique • ⚙️ Horlogerie mécanique</p>
+          <p className="text-xs text-slate-500">Créé avec passion pour les amoureux de l&apos;horlogerie 🕰️</p>
+        </motion.div>
       </div>
     </div>
   );
