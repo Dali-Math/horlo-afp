@@ -2,8 +2,26 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import Head from 'next/head';
-import Script from 'next/script';
+'use client';
+
+import { useEffect } from 'react';
+
+function MermaidLoader() {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    import("mermaid").then((mermaid) => {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "base",
+        flowchart: { useMaxWidth: false },
+      });
+      mermaid.init();
+    });
+  }, []);
+
+  return null;
+}
 
 export default function HomePage(): JSX.Element {
   useEffect(() => {
