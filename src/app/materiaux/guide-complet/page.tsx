@@ -645,158 +645,162 @@ const AlloyMixer: React.FC = () => {
             Propriétés Résultantes
           </h4>
           
-          {/* Aperçu visuel de l'alliage */}
-          <div className="mb-6 p-6 rounded-xl text-center shadow-inner border-2 border-gray-300 dark:border-gray-600" 
-               style={{ backgroundColor: results.color }}>
-            <div className="font-bold text-xl text-gray-800 mb-1">Alliage Créé</div>
-            <div className="text-sm opacity-75 text-gray-700">Base: {selectedMetal.name}</div>
-            {selectedAdditives.length > 0 && (
-              <div className="text-xs mt-2 opacity-60 text-gray-700">
-                + {selectedAdditives.length} additif{selectedAdditives.length > 1 ? 's' : ''}
-              </div>
-            )}
+          // Cherchez cette section dans votre code (autour de la ligne 474) et remplacez-la par :
+
+{/* Aperçu visuel de l'alliage */}
+<div className="mb-6 p-6 rounded-xl text-center shadow-inner border-2 border-gray-300 dark:border-gray-600" 
+     style={{ backgroundColor: results?.color || '#f0f0f0' }}>
+  <div className="font-bold text-xl text-gray-800 mb-1">Alliage Créé</div>
+  <div className="text-sm opacity-75 text-gray-700">Base: {selectedMetal.name}</div>
+  {selectedAdditives.length > 0 && (
+    <div className="text-xs mt-2 opacity-60 text-gray-700">
+      + {selectedAdditives.length} additif{selectedAdditives.length > 1 ? 's' : ''}
+    </div>
+  )}
+</div>
+
+{/* Propriétés détaillées */}
+<div className="space-y-4">
+  {/* Dureté */}
+  {results && (
+    <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+      <div className="flex justify-between items-center mb-2">
+        <span className="font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+          💪 Dureté Vickers
+        </span>
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-lg font-bold text-gray-800 dark:text-gray-100">{results.hardness}</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400">HV</span>
+        </div>
+      </div>
+      <div className="flex items-center gap-2 mb-2">
+        <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-3 overflow-hidden">
+          <div 
+            className={`${hardnessInfo.color.replace('text-', 'bg-')} h-3 rounded-full transition-all duration-500`}
+            style={{ width: `${Math.min(100, (results.hardness / 20))}%` }}
+          ></div>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span className={`text-xs px-2 py-1 rounded ${hardnessInfo.color.replace('text-', 'bg-')} text-white font-semibold`}>
+          {hardnessInfo.level}
+        </span>
+        <span className="text-xs text-gray-500 dark:text-gray-400">0-2000 HV</span>
+      </div>
+    </div>
+  )}
+
+  {/* Résistance à la corrosion */}
+  {results && (
+    <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+      <div className="flex justify-between items-center mb-2">
+        <span className="font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+          🛡️ Résistance Corrosion
+        </span>
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-lg font-bold text-gray-800 dark:text-gray-100">{results.corrosion}</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400">%</span>
+        </div>
+      </div>
+      <div className="flex items-center gap-2 mb-2">
+        <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-3 overflow-hidden">
+          <div 
+            className={`${corrosionInfo.color.replace('text-', 'bg-')} h-3 rounded-full transition-all duration-500`}
+            style={{ width: `${results.corrosion}%` }}
+          ></div>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span className={`text-xs px-2 py-1 rounded ${corrosionInfo.color.replace('text-', 'bg-')} text-white font-semibold`}>
+          {corrosionInfo.level}
+        </span>
+        <span className="text-xs text-gray-500 dark:text-gray-400">0-100%</span>
+      </div>
+    </div>
+  )}
+
+  {/* Densité */}
+  {results && (
+    <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+      <div className="flex justify-between items-center mb-2">
+        <span className="font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+          ⚖️ Densité
+        </span>
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-lg font-bold text-gray-800 dark:text-gray-100">{results.density}</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400">g/cm³</span>
+        </div>
+      </div>
+      <div className="flex items-center gap-2 mb-2">
+        <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-3 overflow-hidden">
+          <div 
+            className={`${densityInfo.color.replace('text-', 'bg-')} h-3 rounded-full transition-all duration-500`}
+            style={{ width: `${Math.min(100, (results.density / 22) * 100)}%` }}
+          ></div>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span className={`text-xs px-2 py-1 rounded ${densityInfo.color.replace('text-', 'bg-')} text-white font-semibold`}>
+          {densityInfo.level}
+        </span>
+        <span className="text-xs text-gray-500 dark:text-gray-400">1-22 g/cm³</span>
+      </div>
+    </div>
+  )}
+
+  {/* Coût */}
+  {results && (
+    <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+      <div className="flex justify-between items-center mb-2">
+        <span className="font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+          💰 Indice de Coût
+        </span>
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-lg font-bold text-gray-800 dark:text-gray-100">{results.cost.toFixed(1)}</span>
+          <span className="text-sm text-gray-600 dark:text-gray-400">/1000</span>
+        </div>
+      </div>
+      <div className="flex items-center gap-2 mb-2">
+        <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-3 overflow-hidden">
+          <div 
+            className={`${costInfo.color.replace('text-', 'bg-')} h-3 rounded-full transition-all duration-500`}
+            style={{ width: `${(results.cost / 1000) * 100}%` }}
+          ></div>
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <span className={`text-xs px-2 py-1 rounded ${costInfo.color.replace('text-', 'bg-')} text-white font-semibold`}>
+          {costInfo.level}
+        </span>
+        <span className="text-xs text-gray-500 dark:text-gray-400">10-1000</span>
+      </div>
+    </div>
+  )}
+</div>
+
+{/* Applications recommandées */}
+{results && (
+  <div className="mt-6 pt-4 border-t-2 border-gray-200 dark:border-gray-600">
+    <h5 className="font-semibold text-sm mb-3 text-gray-800 dark:text-gray-100 flex items-center gap-2">
+      <span className="text-lg">🎯</span>
+      Applications Recommandées:
+    </h5>
+    {results.applications.length > 0 ? (
+      <div className="space-y-2">
+        {results.applications.map((app, i) => (
+          <div key={i} className="flex items-start gap-2 bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300 px-3 py-2 rounded-lg text-sm border border-green-200 dark:border-green-700">
+            <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+            <span>{app}</span>
           </div>
-
-          {/* Propriétés détaillées */}
-          <div className="space-y-4">
-            {/* Dureté */}
-            <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
-                  💪 Dureté Vickers
-                </span>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-lg font-bold text-gray-800 dark:text-gray-100">{results.hardness}</span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">HV</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-3 overflow-hidden">
-                  <div 
-                    className={`${hardnessInfo.color} h-3 rounded-full transition-all duration-500 flex items-center justify-end pr-1`} 
-                    style={{ width: `${Math.min(100, (results.hardness / 20))}%` }}
-                  >
-                    <span className="text-white text-xs font-bold">{hardnessInfo.icon}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className={`text-xs px-2 py-1 rounded ${hardnessInfo.color} text-white font-semibold`}>
-                  {hardnessInfo.label}
-                </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">0-2000 HV</span>
-              </div>
-            </div>
-
-            {/* Résistance à la corrosion */}
-            <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
-                  🛡️ Résistance Corrosion
-                </span>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-lg font-bold text-gray-800 dark:text-gray-100">{results.corrosion}</span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">%</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-3 overflow-hidden">
-                  <div 
-                    className={`${corrosionInfo.color} h-3 rounded-full transition-all duration-500 flex items-center justify-end pr-1`} 
-                    style={{ width: `${results.corrosion}%` }}
-                  >
-                    <span className="text-white text-xs">{corrosionInfo.icon}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className={`text-xs px-2 py-1 rounded ${corrosionInfo.color} text-white font-semibold`}>
-                  {corrosionInfo.label}
-                </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">0-100%</span>
-              </div>
-            </div>
-
-            {/* Densité */}
-            <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
-                  ⚖️ Densité
-                </span>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-lg font-bold text-gray-800 dark:text-gray-100">{results.density}</span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">g/cm³</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-3 overflow-hidden">
-                  <div 
-                    className={`${densityInfo.color} h-3 rounded-full transition-all duration-500 flex items-center justify-end pr-1`} 
-                    style={{ width: `${Math.min(100, (results.density / 22) * 100)}%` }}
-                  >
-                    <span className="text-white text-xs">{densityInfo.icon}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className={`text-xs px-2 py-1 rounded ${densityInfo.color} text-white font-semibold`}>
-                  {densityInfo.label}
-                </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">1-22 g/cm³</span>
-              </div>
-            </div>
-
-            {/* Coût */}
-            <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2">
-                  💰 Indice de Coût
-                </span>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-lg font-bold text-gray-800 dark:text-gray-100">{results.cost.toFixed(1)}</span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">/10</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-3 overflow-hidden">
-                  <div 
-                    className={`${costInfo.color} h-3 rounded-full transition-all duration-500 flex items-center justify-end pr-1`} 
-                    style={{ width: `${(results.cost / 10) * 100}%` }}
-                  >
-                    <span className="text-white text-xs">{costInfo.icon}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className={`text-xs px-2 py-1 rounded ${costInfo.color} text-white font-semibold`}>
-                  {costInfo.label}
-                </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">1-10</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Applications recommandées */}
-          <div className="mt-6 pt-4 border-t-2 border-gray-200 dark:border-gray-600">
-            <h5 className="font-semibold text-sm mb-3 text-gray-800 dark:text-gray-100 flex items-center gap-2">
-              <span className="text-lg">🎯</span>
-              Applications Recommandées:
-            </h5>
-            {applications.length > 0 ? (
-              <div className="space-y-2">
-                {applications.map((app, i) => (
-                  <div key={i} className="flex items-start gap-2 bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300 px-3 py-2 rounded-lg text-sm border border-green-200 dark:border-green-700">
-                    <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
-                    <span>{app}</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-4">
-                <span className="text-gray-400 dark:text-gray-500 text-sm italic">Ajoutez des additifs pour voir les applications</span>
-              </div>
-            )}
-          </div>
+        ))}
+      </div>
+    ) : (
+      <div className="text-center py-4">
+        <span className="text-gray-400 dark:text-gray-500 text-sm italic">Ajoutez des additifs pour voir les applications</span>
+      </div>
+    )}
+  </div>
+)}
 
           {/* Bouton reset */}
           <button 
