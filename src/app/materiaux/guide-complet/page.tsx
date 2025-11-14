@@ -1287,7 +1287,7 @@ export default function HomePage(): JSX.Element {
               <h4 className="font-bold text-lg mb-4">Visionneuse de PDF Intégrée</h4>
               <p className="mb-4 text-sm text-gray-600">Si le PDF ne s&apos;affiche pas correctement, vous pouvez le télécharger directement en cliquant sur le lien ci-dessous.</p>
               <div className="text-center">
-                <a href="https://github.com/Dali-Math/horlo-afp/blob/main/public/pdfs/metaux-communs.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                <a href="/pdfs/metaux-communs.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
                   <i className="fas fa-download mr-2"></i>
                   Télécharger le PDF &quot;Métaux Communs&quot;
                 </a>
