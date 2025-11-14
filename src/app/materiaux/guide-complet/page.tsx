@@ -1309,8 +1309,6 @@ export default function HomePage(): JSX.Element {
     className="w-full h-[900px] rounded-lg border"
   ></iframe>
 </div>
-</div>
-</section>
         <footer className="p-8 bg-gray-900 text-white">
           <div className="text-center">
             <h3 className="serif-heading text-2xl font-bold mb-4">Guide Complet des Métaux en Horlogerie</h3>
