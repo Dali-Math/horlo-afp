@@ -704,13 +704,18 @@ export default function HomePage(): JSX.Element {
         }
 
          /* BOUTON FLOTTANT */
-        .floating-back-btn {
-          position: fixed;
-          bottom: 20px;
-          right: 20px;
-          z-index: 999;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
+.floating-back-btn {
+  position: fixed !important;
+  bottom: 20px !important;
+  left: 0 !important;
+  right: auto !important;
+  z-index: 999;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-top-right-radius: 9999px !important;
+  border-bottom-right-radius: 9999px !important;
+}
 
 /* Sur tablettes */
 @media (max-width: 768px) {
@@ -870,9 +875,10 @@ export default function HomePage(): JSX.Element {
           {/* BOUTON RETOUR EN HAUT - Option 1 */}
           <div className="mt-8">
             <Link 
-              href="/materiaux" 
-              className="floating-back-btn inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-500 dark:to-blue-700 text-white rounded-r-full hover:from-blue-500 hover:to-blue-700 dark:hover:from-blue-400 dark:hover:to-blue-600 transition-all duration-300 font-semibold text-sm"
-            >
+              <Link 
+  href="/materiaux" 
+  className="floating-back-btn inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-500 dark:to-blue-700 text-white rounded-r-full hover:from-blue-500 hover:to-blue-700 dark:hover:from-blue-400 dark:hover:to-blue-600 transition-all duration-300 font-semibold text-sm"
+>
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
