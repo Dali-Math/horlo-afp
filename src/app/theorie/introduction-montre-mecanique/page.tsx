@@ -1,4 +1,5 @@
-// Composant Animation de montre CORRIGÉ
+'use client';
+
 const AnimationMontre = () => {
   const [vitesse, setVitesse] = useState(1);
   const [isRunning, setIsRunning] = useState(true);
