@@ -1,1629 +1,1037 @@
-"use client";
+'use client'
 
-import { useState, useMemo } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { useState, useEffect, useMemo } from 'react'
+import Link from 'next/link'
+import { ChevronLeft, Sparkles, Award, Layers, ExternalLink, Clock, Gem, Hammer, Search, Filter, BookOpen, Zap, Shield, Gauge, Menu, X, Download, Info, Cpu, Atom } from 'lucide-react'
 
-interface WorkshopGuide {
-  title: string;
-  steps: string[];
-  tools: string[];
-  safety: string[];
-  commonMistakes: string[];
+// Structure de données enrichie depuis le PDF
+type Metal = {
+  id: string
+  icon: string
+  title: string
+  symbol?: string
+  colorClass: string
+  illustration: string
+  description: string
+  properties: { label: string; value: string }[]
+  useCases: string[]
+  horlogerieUse: string[]
+  category: 'Métaux purs' | 'Alliages' | 'Acier & Fer' | 'Innovation'
+  historicalPeriod?: string
+  technicalDetails?: string
+  density?: string
+  meltingPoint?: string
 }
 
-interface TechnicalData {
-  property: string;
-  value: string;
-  unit?: string;
-  application: string;
-  explanation: string;
+const METALS: Metal[] = [
+  {
+    id: 'titane',
+    icon: 'Ti',
+    title: 'Titane',
+    symbol: 'Ti',
+    colorClass: 'bg-gradient-to-br from-indigo-400 to-indigo-600',
+    illustration: '/pdf/titane.png',
+    description: "Métal léger ultra-performant, 45% moins dense que l'acier. Extraction de l'ilménite et du rutile.",
+    properties: [
+      { label: 'Masse volumique', value: '4,54 kg/dm³' },
+      { label: 'Point de fusion', value: '1660°C' },
+      { label: 'Résistance', value: 'Excellente rapport résistance/poids' }
+    ],
+    useCases: ['Aéronautique, astronautique', 'Électrotechnique', 'Médecine', 'Horlogerie sportive'],
+    horlogerieUse: ['Boîtiers allégés', 'Vis spéciales', 'Platines techniques', 'Bracelets confortables'],
+    category: 'Métaux purs',
+    historicalPeriod: 'XXe siècle',
+    technicalDetails: 'Amagnétique, excellente résistance à la corrosion, alliages avec Al, Sn, Mo'
+  },
+  {
+    id: 'nickel',
+    icon: 'Ni',
+    title: 'Nickel',
+    symbol: 'Ni',
+    colorClass: 'bg-gradient-to-br from-gray-300 to-gray-500',
+    illustration: '/pdf/nickel.png',
+    description: "Métal blanc ferromagnétique, utilisé massivement dans les alliages d'acier inoxydable.",
+    properties: [
+      { label: 'Masse volumique', value: '8,906 kg/dm³' },
+      { label: 'Point de fusion', value: '1455°C' },
+      { label: 'Propriété', value: 'Ferromagnétique, allergène' }
+    ],
+    useCases: ['Aciers inoxydables', 'Pièces de monnaie', 'Ustensiles de cuisine', 'Alliage Invar®'],
+    horlogerieUse: ['Invar® 36% Ni pour ressorts spiraux', 'Balanciers', 'Composants à faible dilatation'],
+    category: 'Métaux purs',
+    historicalPeriod: 'XIXe siècle',
+    technicalDetails: 'Très résistant à la corrosion, ductile et malléable'
+  },
+  {
+    id: 'cuivre',
+    icon: 'Cu',
+    title: 'Cuivre',
+    symbol: 'Cu',
+    colorClass: 'bg-gradient-to-br from-orange-400 to-orange-600',
+    illustration: '/pdf/cuivre.png',
+    description: "Meilleur conducteur après l'argent. L'eau pure n'a aucune action sur le cuivre, s'oxyde par l'air humide (vert-de-gris).",
+    properties: [
+      { label: 'Masse volumique', value: '8,92 kg/dm³' },
+      { label: 'Point de fusion', value: '1083°C' },
+      { label: 'Conductivité', value: 'Thermique et électrique exceptionnelle' }
+    ],
+    useCases: ['Fils électriques', 'Bobinages moteurs', 'Toitures', 'Alliages (laiton, bronze)'],
+    horlogerieUse: ["Base des alliages laiton et bronze", "Circuit électrique des montres à quartz"],
+    category: 'Métaux purs',
+    historicalPeriod: 'Antiquité',
+    technicalDetails: 'Non-magnétique, très malléable et ductile, résistant à la corrosion'
+  },
+  {
+    id: 'chrome',
+    icon: 'Cr',
+    title: 'Chrome',
+    symbol: 'Cr',
+    colorClass: 'bg-gradient-to-br from-slate-200 to-slate-400',
+    illustration: '/pdf/chrome.png',
+    description: "Élément clé des aciers inoxydables. Découvert dans une météorite de Sibérie à la fin du 18e siècle.",
+    properties: [
+      { label: 'Masse volumique', value: '7,2 kg/dm³' },
+      { label: 'Point de fusion', value: '1857°C' },
+      { label: 'Dureté', value: 'Très dur et résistant à l\'usure' }
+    ],
+    useCases: ['Acier inoxydable 12-25% Cr', 'Protection anticorrosion', 'Revêtements décoratifs'],
+    horlogerieUse: ["Acier 316L (18% Cr, 10% Ni)", "Composants résistants à l'eau salée"],
+    category: 'Métaux purs',
+    historicalPeriod: 'XVIIIe siècle',
+    technicalDetails: 'Inoxydable à l\'air, résistant à la corrosion, très dur'
+  },
+  {
+    id: 'zinc',
+    icon: 'Zn',
+    title: 'Zinc',
+    symbol: 'Zn',
+    colorClass: 'bg-gradient-to-br from-gray-400 to-gray-600',
+    illustration: '/pdf/zinc.png',
+    description: "Métal gris-bleu utilisé depuis le XVIIe siècle. S'oxyde à l'air humide mais se protège par une couche d'oxyde.",
+    properties: [
+      { label: 'Masse volumique', value: '7,14 kg/dm³' },
+      { label: 'Point de fusion', value: '419,5°C' },
+      { label: 'Caractéristique', value: 'Cassant à basse température' }
+    ],
+    useCases: ['Galvanisation par immersion', 'Alliage laiton', 'Électrolyse', 'Barrières, lampadaires'],
+    horlogerieUse: ["Composant du laiton horloger (39% Zn)", "Augmente la dureté et résistance mécanique"],
+    category: 'Métaux purs',
+    historicalPeriod: 'XVIIe siècle',
+    technicalDetails: 'Se moule bien, inoxydable à froid et à l\'air sec'
+  },
+  {
+    id: 'etain',
+    icon: 'Sn',
+    title: 'Étain',
+    symbol: 'Sn',
+    colorClass: 'bg-gradient-to-br from-gray-200 to-gray-400',
+    illustration: '/pdf/etain.png',
+    description: "Métal blanc argenté, facilement fusible. Constituant essentiel du bronze avec le cuivre.",
+    properties: [
+      { label: 'Masse volumique', value: '7,28 kg/dm³' },
+      { label: 'Point de fusion', value: '231,9°C' },
+      { label: 'Malleabilité', value: 'Se réduit en feuilles très minces' }
+    ],
+    useCases: ['Étamage des conserves', 'Soudage électronique', 'Industrie chimique', 'Verre'],
+    horlogerieUse: ["Alliage bronze (2-10% Sn)", "Constituant historique des mouvements"],
+    category: 'Métaux purs',
+    historicalPeriod: 'Antiquité',
+    technicalDetails: 'Mou, très malléable, inoxydable à l\'air, résiste aux acides faibles'
+  },
+  {
+    id: 'tungstene',
+    icon: 'W',
+    title: 'Tungstène',
+    symbol: 'W',
+    colorClass: 'bg-gradient-to-br from-stone-300 to-stone-500',
+    illustration: '/pdf/tungstene.png',
+    description: "Métal avec la température de fusion la plus élevée (3410°C) et parmi les plus lourds. Couleur gris acier à blanc étain.",
+    properties: [
+      { label: 'Masse volumique', value: '19,35 kg/dm³' },
+      { label: 'Point de fusion', value: '3410°C' },
+      { label: 'Dureté', value: 'Très dur, ductile mais fragile' }
+    ],
+    useCases: ['Carbure de tungstène (outils de coupe)', 'Aciers rapides', 'Soudage TIG', 'Horlogerie de luxe'],
+    horlogerieUse: ["Carrures de montres de luxe", "Lunettes", "Aciers outils pour micro-usinage"],
+    category: 'Métaux purs',
+    historicalPeriod: 'Contemporain',
+    technicalDetails: 'Inaltérable à l\'air, non-réactif aux acides et bases'
+  },
+  {
+    id: 'plomb',
+    icon: 'Pb',
+    title: 'Plomb',
+    symbol: 'Pb',
+    colorClass: 'bg-gradient-to-br from-slate-400 to-slate-600',
+    illustration: '/pdf/plomb.png',
+    description: "Métal connu depuis l'Antiquité, utilisé pour la tuyauterie. Très mou, oxydation superficielle.",
+    properties: [
+      { label: 'Masse volumique', value: '11,34 kg/dm³' },
+      { label: 'Point de fusion', value: '327,5°C' },
+      { label: 'Toxicité', value: 'Vapeurs toxiques' }
+    ],
+    useCases: ['Munitions', 'Protection rayons X', 'Toitures', 'Tuyauterie historique'],
+    horlogerieUse: ["Historique (contre-poids)", "Utilisation limitée actuellement par toxicité"],
+    category: 'Métaux purs',
+    historicalPeriod: 'Antiquité',
+    technicalDetails: 'Très mou, malléable, ductile, résiste aux acides (sauf nitrique)'
+  },
+  {
+    id: 'laiton',
+    icon: '🟨',
+    title: 'Laiton',
+    symbol: 'Cu+Zn',
+    colorClass: 'bg-gradient-to-br from-yellow-500 to-yellow-700',
+    illustration: '/pdf/laiton.png',
+    description: "Alliage cuivre (58%) - zinc (39%) - plomb (3%) en horlogerie. Couleur du rouge au jaune selon la teneur en zinc.",
+    properties: [
+      { label: 'Masse volumique', value: '8,5-8,8 kg/dm³' },
+      { label: 'Point de fusion', value: '900-980°C' },
+      { label: 'Composition', value: 'Zn 5-45%, Cu majoritaire' }
+    ],
+    useCases: ['Moulage, emboutissage', 'Soudure', 'Robinetterie', 'Douilles de cartouche'],
+    horlogerieUse: ["Platines et ponts de mouvement", "Roues de minuterie", "Ponts décoratifs", "Couronnes (chromées)"],
+    category: 'Alliages',
+    historicalPeriod: 'XVIIIe siècle',
+    technicalDetails: 'Bonne conductivité, malléable, dureté modulable par le zinc'
+  },
+  {
+    id: 'bronze',
+    icon: '🥉',
+    title: 'Bronze',
+    symbol: 'Cu+Sn',
+    colorClass: 'bg-gradient-to-br from-amber-600 to-amber-800',
+    illustration: '/pdf/bronze.png',
+    description: "Alliage cuivre (95%) et étain (2-10%). Couleur variable selon la teneur en étain. Bonne résistance à la corrosion.",
+    properties: [
+      { label: 'Masse volumique', value: '8,7-8,8 kg/dm³' },
+      { label: 'Point de fusion', value: '~1000°C' },
+      { label: 'Composition', value: 'Cu 95%, Sn 2-10%' }
+    ],
+    useCases: ['Œuvres d\'art', 'Lustrerie', 'Robinetterie', 'Cloches', 'Roues dentées'],
+    horlogerieUse: ["Boîtiers vintage-style", "Lunettes plongeuses", "Éditions spéciales avec patine"],
+    category: 'Alliages',
+    historicalPeriod: 'Antiquité',
+    technicalDetails: 'Non-magnétique, bonne conductivité, facile à travailler'
+  },
+  {
+    id: 'maillechort',
+    icon: '🛡️',
+    title: 'Maillechort',
+    symbol: 'Cu+Zn+Ni',
+    colorClass: 'bg-gradient-to-br from-gray-200 to-gray-400',
+    illustration: '/pdf/maillechort.png',
+    description: "Alliage nickel, cuivre et zinc. Dur et inaltérable. Résistance mécanique supérieure au laiton.",
+    properties: [
+      { label: 'Moyenne composition', value: 'Cu 50-60%, Zn 15-40%, Ni 5-30%' },
+      { label: 'Caractéristique', value: 'Très variable selon composition' },
+      { label: 'Avantage', value: 'Résistance supérieure au laiton' }
+    ],
+    useCases: ['Pointes de stylos', 'Instruments de musique', 'Montures de lunettes', 'Brucelles'],
+    horlogerieUse: ["Platines et ponts haut de gamme", "Roues décorées", "Gravure manuelle", "Complications (tourbillons)"],
+    category: 'Alliages',
+    historicalPeriod: 'XIXe siècle',
+    technicalDetails: 'Très résistant à la corrosion et oxydation, dur et malléable'
+  },
+  {
+    id: 'acier',
+    icon: '⚙️',
+    title: 'Acier inoxydable',
+    symbol: 'Fe+C',
+    colorClass: 'bg-gradient-to-br from-gray-300 to-gray-500',
+    illustration: '/pdf/acier.png',
+    description: "Alliage fer-carbone (0,02-2% C). Aciers inoxydables avec Cr (12-25%) et Ni. Standard 316L en horlogerie.",
+    properties: [
+      { label: 'Masse volumique', value: '7,85 kg/dm³' },
+      { label: 'Point de fusion', value: '1140-1535°C' },
+      { label: 'Catégorie', value: 'Non-alliés, faiblement et fortement alliés' }
+    ],
+    useCases: ['Construction soudée', 'Appareils à pression', 'Outils', 'Rails'],
+    horlogerieUse: ["Boîtiers et bracelets (316L)", "Aiguilles bleuites", "Ressorts", "Axes et pivots", "Lunettes tournantes"],
+    category: 'Acier & Fer',
+    historicalPeriod: 'XXe siècle',
+    technicalDetails: 'Résistance à la corrosion, bonne usinabilité, déformable à froid'
+  },
+  {
+    id: 'fonte',
+    icon: '🏭',
+    title: 'Fonte',
+    symbol: 'Fe+C',
+    colorClass: 'bg-gradient-to-br from-zinc-700 to-zinc-900',
+    illustration: '/pdf/fonte.png',
+    description: "Alliage fer-carbone (2-6,7% C). Plus dur que l'acier mais très cassant. Facilité de moulage.",
+    properties: [
+      { label: 'Masse volumique', value: '7,4 kg/dm³' },
+      { label: 'Point de fusion', value: '1200°C' },
+      { label: 'Type', value: 'Fontes blanches (acier) et grises (coulée)' }
+    ],
+    useCases: ['Moulage industriel', 'Pièces de machine', 'Fonte ductile'],
+    horlogerieUse: ["Historique des machines-outils", "Structure de bancs d'essai"],
+    category: 'Acier & Fer',
+    historicalPeriod: 'XIXe siècle',
+    technicalDetails: 'Fonderie, moulage, production par haut-fourneau'
+  }
+]
+
+const CATEGORIES = ['Tous', 'Métaux purs', 'Alliages', 'Acier & Fer', 'Innovation'] as const
+type Category = (typeof CATEGORIES)[number]
+
+type HistoryPeriod = 'xvie' | 'xviiie' | 'xxe' | 'xxie'
+
+const HISTORY_TABS = [
+  { id: 'xvie' as HistoryPeriod, label: 'XVIe-XVIIe' },
+  { id: 'xviiie' as HistoryPeriod, label: 'XVIIIe-XIXe' },
+  { id: 'xxe' as HistoryPeriod, label: 'XXe siècle' },
+  { id: 'xxie' as HistoryPeriod, label: 'XXIe siècle' },
+]
+
+const HISTORY_CONTENT: Record<HistoryPeriod, { title: string; content: string[]; materials: string[]; image: string }> = {
+  xvie: {
+    title: "Les Origines : Orfèvrerie et Métaux Précieux",
+    content: [
+      "L'horlogerie suisse naît à Genève au XVIe siècle suite à la Réforme. L'interdiction du port d'objets ornementaux par Jean Calvin contraint les orfèvres genevois à se reconvertir. Les premiers garde-temps sont naturellement fabriqués en or et argent, matériaux que ces artisans maîtrisent déjà parfaitement.",
+      "L'arrivée des horlogers huguenots français, fuyant les persécutions religieuses après la révocation de l'Édit de Nantes (1685), renforce considérablement le savoir-faire local. Ces réfugiés apportent avec eux des techniques avancées et un sens aigu de la précision.",
+      "Les artisans genevois maîtrisent le travail des métaux précieux grâce à leur tradition d'orfèvrerie séculaire. Ces compétences - gravure, ciselure, émaillage - se révèlent essentielles pour créer les premiers boîtiers de montres, véritables bijoux portables."
+    ],
+    materials: ['Or 18 carats', 'Argent sterling', 'Platine', 'Email champlevé'],
+    image: '/images/histoire/xvie.jpg'
+  },
+  xviiie: {
+    title: "L'Âge d'Or : Laiton et Innovations Techniques",
+    content: [
+      "Le XVIIIe siècle marque l'émergence du laiton comme matériau de prédilection pour les mouvements horlogers. Cet alliage de cuivre et zinc offre une excellente usinabilité, une belle teinte dorée et une résistance mécanique optimale pour les composants internes.",
+      "Les horlogers développent des techniques sophistiquées de traitement de surface : le rhodiage et la galvanoplastie protègent les platines en laiton de l'oxydation tout en leur conférant un aspect luxueux. Le guilloché main fait son apparition sur les cadrans.",
+      "Révolution majeure : le rubis synthétique fait son apparition vers 1700 comme palier antifriction. Cette innovation, introduite par les horlogers anglais puis perfectionnée en Suisse, réduit considérablement l'usure des axes de roues et garantit une longévité exceptionnelle aux mouvements."
+    ],
+    materials: ['Laiton doré', 'Rubis synthétique', 'Acier trempé', 'Email cloisonné'],
+    image: '/images/histoire/xviiie.jpg'
+  },
+  xxe: {
+    title: "Révolution Industrielle : L'Ère de l'Acier et du Titane",
+    content: [
+      "Le XXe siècle marque l'avènement révolutionnaire de l'acier inoxydable 316L. Ce matériau moderne combine résistance à la corrosion marine, robustesse mécanique exceptionnelle et coût de production maîtrisé, démocratisant l'accès aux montres de qualité.",
+      "L'après-Seconde Guerre mondiale voit l'émergence des montres-outils en acier : plongeuses professionnelles, chronographes de pilote, montres d'explorateurs. Les finitions polies miroir et brossées satinées deviennent la signature esthétique des grandes manufactures.",
+      "Dans les années 1970-1980, le titane fait son entrée spectaculaire. Ultra-léger (40% plus léger que l'acier), hypoallergénique, non-magnétique et inoxydable, il devient le matériau privilégié des montres techniques professionnelles et sportives de haute performance."
+    ],
+    materials: ['Acier 316L', 'Titane Grade 2/5', 'Céramique première génération', 'Aluminium'],
+    image: '/images/histoire/xxe.jpg'
+  },
+  xxie: {
+    title: "Innovation High-Tech : Silicium, Composites et Nano-matériaux",
+    content: [
+      "Le XXIe siècle introduit des matériaux issus directement de la microtechnologie spatiale et informatique. Le silicium monocristallin révolutionne l'échappement : ultra-précis, totalement amagnétique, ne nécessitant aucune lubrification, il améliore drastiquement la précision chronométrique.",
+      "La céramique technique haute performance (zircone, carbure de silicium) s'impose : pratiquement inrayable (dureté Vickers 1200-1400), chimiquement inerte, elle permet des finitions brillantes ou mates spectaculaires. Les boîtiers entièrement céramiques deviennent des standards du luxe sportif.",
+      "Les composites carbone (NTPT, forged carbon, Carbotech) repoussent les limites : plus légers que le titane, plus résistants que l'acier, avec des motifs graphiques uniques pour chaque pièce. La recherche explore désormais les nano-matériaux, les alliages à mémoire de forme et les cristaux de saphir synthétique colorés."
+    ],
+    materials: ['Silicium monocristallin', 'Céramique ZrO2', 'Carbone forgé NTPT', 'Saphir coloré', 'Alliages or innovants', 'Graphène'],
+    image: '/images/histoire/xxie.jpg'
+  }
 }
 
-interface LearningCard {
-  question: string;
-  answer: string;
-  memoryTip?: string;
-}
-
-interface MaterialData {
-  id: string;
-  category: 'metal' | 'acier' | 'alloy' | 'composite';
-  type: string;
-  title: string;
-  icon: string;
-  complexity: 'apprenti' | 'compagnon' | 'master';
-  technicalData: TechnicalData[];
-  quickStats: string[];
-  properties: {
-    physical: TechnicalData[];
-    mechanical: TechnicalData[];
-    horlogerie: Array<{
-      property: string;
-      value: string;
-      why: string;
-    }>;
-  };
-  workshop: {
-    machinability: number;
-    polishability: number;
-    guides: WorkshopGuide[];
-    precautions: string[];
-    heatTreatment?: string;
-  };
-  identification: {
-    visual: string[];
-    magnetic: boolean;
-    color: string;
-    hardness: string;
-    sound?: string;
-    densityTest: string;
-  };
-  commonIssues: Array<{
-    problem: string;
-    cause: string;
-    solution: string;
-  }>;
-  history: string;
-  description: string;
-  applications: string[];
-  horlogerieUses: string[];
-  treatments: string[];
-  norms: string[];
-  learningCards: LearningCard[];
-  practice: {
-    exercises: string[];
-    miniProjects: string[];
-  };
-}
-
-export default function HorloLearnPedagogique() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeFilter, setActiveFilter] = useState('all');
-  const [selectedMaterial, setSelectedMaterial] = useState<MaterialData | null>(null);
-  const [activeTab, setActiveTab] = useState('fiche');
-  const [quizAnswers, setQuizAnswers] = useState<Record<string, boolean>>({});
-  const [studyMode, setStudyMode] = useState(false);
-
-  const materials: MaterialData[] = [
-    {
-      id: '316l',
-      category: 'acier',
-      type: 'Acier Inoxydable Austénitique',
-      title: '316L',
-      icon: '⚙️',
-      complexity: 'apprenti',
-      technicalData: [
-        { property: 'Masse volumique', value: '8.0', unit: 'Kg/dm³', application: 'Poids boîtiers', explanation: 'Permet de calculer le poids final de la montre' },
-        { property: 'Point de fusion', value: '1400-1450', unit: '°C', application: 'Soudage brasage', explanation: 'Ne jamais chauffer >600°C en polissage' },
-        { property: 'Limite élastique', value: '200', unit: 'MPa', application: 'Résistance déformation', explanation: 'Ne pas dépasser sous peine de déformation permanente' },
-        { property: 'Dureté Brinell', value: '150', unit: 'HB', application: 'Usure quotidienne', explanation: 'Dureté suffisante pour résister aux rayures' }
-      ],
-      quickStats: ['18% Cr', '14% Ni', '3% Mo', 'Non-magnétique', 'A4'],
-      properties: {
-        physical: [
-          { property: 'Conductivité thermique', value: '15', unit: 'W/m·K', application: 'Dispersion chaleur mouvement', explanation: 'Évite la dilatation thermique qui perturberait le balancier' },
-          { property: 'Coefficient dilatation', value: '16', unit: '10⁻⁶/°C', application: 'Tolérances ajustages', explanation: 'À 20°C→40°C, un pont de 10mm s’allonge de 3.2μm' },
-          { property: 'Résistance corrosion', value: 'Excellente', unit: '', application: 'Boîtiers étanches', explanation: 'Résiste à l\'eau de mer grâce au Mo à 3%' }
-        ],
-        mechanical: [
-          { property: 'Limite élastique', value: '200', unit: 'MPa', application: 'Résistance plateau', explanation: 'Un ressort de barillet ne déforme pas le pont à 180 MPa' },
-          { property: 'Allongement à rupture', value: '40', unit: '%', application: 'Formage bracelet', explanation: 'Permet cintrage maillon sans fissure' },
-          { property: 'Module Young', value: '200', unit: 'GPa', application: 'Rigidité structure', explanation: 'Pont rigide qui ne fléchit pas sous l\'échappement' }
-        ],
-        horlogerie: [
-          { property: 'Usinabilité', value: '8/10', why: 'Bon compromis vitesse/finition, copeaux réguliers' },
-          { property: 'Polissabilité', value: '9/10', why: 'Miroir optique possible jusqu\'à 0.1μm Ra' },
-          { property: 'Magnétisme', value: '<2%', why: 'Échappement à ancre peu affecté par champs <50 Gauss' },
-          { property: 'Stabilité', value: 'Excellente', why: 'Maintient cotes long terme, vieillissement négligeable' }
-        ]
-      },
-      workshop: {
-        machinability: 8,
-        polishability: 9,
-        guides: [
-          {
-            title: 'Usinage de précision (tour)',
-            steps: [
-              'Choisir plaquette carbure PVD-TiN (rayure bleue sur flanc)',
-              'Vitesse de coupe: 80-120 m/min (ex: Ø10mm → 2500-3800 tr/min)',
-              'Avance: 0.1-0.2 mm/tr pour finition, 0.05 mm/tr pour surfaçage',
-              'Profondeur passe: 0.2-0.5mm max en finition',
-              'Refroidissement: émulsion 5% en haute pression (30 bars)',
-              'Vérifier usure plaquette toutes les 30min (bavures = changement)'
-            ],
-            tools: ['Tour CNC ou manuel précision', 'Porte-plaquette 16x16', 'Plaquettes carbure PVD-TiN', 'Émulsion soluble 5%', 'Jauge digitale 0.001mm'],
-            safety: ['Port de lunettes obligatoire', 'Vérifier fixation pièce', 'Ne pas toucher copeaux chauds'],
-            commonMistakes: ['Vitesse trop haute → surchauffe + déformation', 'Avance trop forte → trainée + mauvaise finition', 'Refroidissement insuffisant → usure prématurée']
-          },
-          {
-            title: 'Polissage miroir (finishing)',
-            steps: [
-              'Phase 1: émeri 400 sur feutre dur, 2000 tr/min, pression légère',
-              'Phase 2: émeri 800, changer sens polissage de 90°',
-              'Phase 3: émeri 1200, vérifier disparition rayures 400',
-              'Phase 4: émeri 2000, surface doit être uniforme gris clair',
-              'Phase 5: pâte diamant 3μm sur feutre mou, 1500 tr/min',
-              'Phase 6: pâte diamant 1μm, surface commence à refléter',
-              'Phase 7: pâte diamant 0.25μm, miroir parfait',
-              'Phase 8: final oxyde de cérium sur feutre doux, 1000 tr/min',
-              'Décontamination: bain ultra-sons 10min alcool + rinçage eau déminéralisée'
-            ],
-            tools: ['Polissoir vitesse variable', 'Feutres dur, moyen, mou, doux', 'Émeris 400-800-1200-2000', 'Pâtes diamant 3-1-0.25μm', 'Oxyde cérium', 'Bac ultra-sons'],
-            safety: ['Masque anti-poussière FFP2', 'Ventilation aspirante au-dessus polissoir', 'Pas de flamme (poudres inflammables)'],
-            commonMistakes: ['Sauter grain → rayures profondes', 'Pression trop forte → surchauffe + couches oxyde jaunes', 'Contamination entre pâtes → refaire depuis début']
-          }
-        ],
-        precautions: [
-          '⚠️ Ne jamais chauffer >600°C (risque précipitation carbures → sensibilité corrosion)',
-          '🧪 Décontamination acide nitrique 30% 30min après polissage (restaure couche passive Cr2O3)',
-          '💧 Stockage sec avec pastille absorbeur humidité (oxydation possible en milieu chloré)',
-          '🧲 Garder à l\'écart aimants forts (sinon démagnétisation nécessaire)'
-        ],
-        heatTreatment: '✅ Recuit solution 1050°C + trempe eau (en usine uniquement) - Ne pas refaire en atelier!'
-      },
-      identification: {
-        visual: ['Gris argenté brillant', 'Non oxydé à l\'air', 'Grains fins polis visibles loupe x30', 'Reflet neutre pas cuivreux'],
-        magnetic: false,
-        color: 'Gris argenté neutre',
-        hardness: 'Résiste à la lime douce (lime glisse sans gratter)',
-        sound: 'Son métallique clair (pas mat comme l\'aluminium)',
-        densityTest: 'Plombe dans l\'eau (8 kg/dm³), similaire au laiton'
-      },
-      commonIssues: [
-        { 
-          problem: 'Piqûres de corrosion en milieu chloré (plage)', 
-          cause: 'Mo insuffisant si 304 utilisé à la place de 316L', 
-          solution: 'Vérifier composition spectro (Ni>10%, Mo>2%). Remplacer pièce ou traitement passivation renforcée'
-        },
-        { 
-          problem: 'Magnétisation anormale (aimantation champ fort)', 
-          cause: 'Contact avec aimant de haut-parleur, fermeture sac', 
-          solution: 'Démagnétiseur professionnel (champ alternatif décroissant). Ne pas frapper!'
-        },
-        { 
-          problem: 'Rayures apparaissent malgré polissage miroir', 
-          cause: 'Contamination abrasifs (pâte diamant usée, poussière)', 
-          solution: 'Repolir depuis grain 1200 minimum, bac ultra-sons entre chaque étape'
-        },
-        { 
-          problem: 'Décoloration jaunâtre après polissage', 
-          cause: 'Surchauffe >600°C → formation oxyde ferrique', 
-          solution: 'Repolir avec émeri 800 + refroidissement constant, jamais sec'
-        }
-      ],
-      history: 'Développé en 1912 pour industrie chimique (résistance acides). Adopté horlogerie suisse 1960 remplaçant l\'acier carbone (rouille). Standard montres de plongée depuis Rolex Submariner 1954. Evolution vers 904L (Rolex) pour meilleure résistance.',
-      description: 'Acier inoxydable austénitique de référence en horlogerie. Composition équilibrée offrant excellente résistance à la corrosion grâce au molybdène (3%), bonne usinabilité et finition miroir possible. Standard pour boîtiers de qualité.',
-      applications: ['Boîtiers montres de sport', 'Bracelets maillons', 'Couronnes vissées', 'Fonds boîtier transparents', 'Carters mouvement', 'Vis décoratives'],
-      horlogerieUses: [
-        'Boîtiers de plongée 100m+: Rolex Submariner, Omega Seamaster',
-        'Bracelets Oyster/Jubilee: maillons pleins ou creux moulés',
-        'Couronnes vissées: filetage résistant à l\'usure',
-        'Fonds transparent saphir: tenue pression 5 bar',
-        'Carters protection échappement: rigidité vibration'
-      ],
-      treatments: [
-        'Passivation acide nitrique 30% 30min: restaure couche passive Cr2O3',
-        'Polissage miroir (Ra<0.1μm): émeri 2000 + feutre + oxyde cérium',
-        'Brossage linéaire: brosses abrasives grain 180 direction constante',
-        'Sablage décoratif: corindon 50-100μm pression 3-4 bar',
-        'PVD TiN/DLC: 2-4μm durcissement surface + coloris'
-      ],
-      norms: ['EN 1.4404', 'ASTM A240 (chimie)', 'EN 10088-3 (barres)', 'ISO 5832-1 (implant)', 'RoHS 3 (santé)'],
-      learningCards: [
-        { 
-          question: 'Comment différencier 316L du 304 sans analyseur?', 
-          answer: 'Test goutte acide chlorhydrique: 316L résiste >5min (Mo), 304 s\'attaque rapidement',
-          memoryTip: 'Mo = Molybdène = Mer = Résiste à l\'eau de mer'
-        },
-        { 
-          question: 'Pourquoi polir à refroidissement constant?', 
-          answer: 'Surchauffe >600°C forme oxyde jaunâtre (Fe2O3) qui n\'est plus inoxydable',
-          memoryTip: 'Jaune = Chaud = Mauvais. Gris froid = Bon'
-        }
-      ],
-      practice: {
-        exercises: [
-          'Identifier 3 boîtiers de montre au hasard: 316L, 304, laiton',
-          'Polir un échantillon 316L jusqu\'à miroir (5 heures estimées)',
-          'Rédiger fiche sécurité stockage matériaux inox atelier'
-        ],
-        miniProjects: [
-          'Réaliser cube 10x10x10mm en 316L tolérance ±0.02mm',
-          'Créer collection échantillons métaux horlogerie (10 pièces)',
-          'Étude comparative corrosion: immerger 316L vs 304 vs acier carbone 1 semaine dans eau salée'
-        ]
-      }
-    }
-  ];
-
-  // Calcul pour affichage dashboard
-  const machinabilityData = materials.map(m => ({
-    name: m.title,
-    machinability: m.workshop.machinability,
-    polishability: m.workshop.polishability
-  }));
-
-  // Gestion quiz interactif
-  const handleQuizAnswer = (materialId: string, cardIndex: number, isCorrect: boolean) => {
-    setQuizAnswers({...quizAnswers, [`${materialId}-${cardIndex}`]: isCorrect});
-  };
-
-  const filteredMaterials = useMemo(() => {
-    return materials.filter(material => {
-      const matchesFilter = activeFilter === 'all' || material.category === activeFilter;
-      
-      if (!searchTerm.trim()) {
-        return matchesFilter;
-      }
-      
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        material.title.toLowerCase().includes(searchLower) ||
-        material.type.toLowerCase().includes(searchLower) ||
-        material.description.toLowerCase().includes(searchLower) ||
-        material.applications.some(app => app.toLowerCase().includes(searchLower)) ||
-        material.horlogerieUses.some(use => use.toLowerCase().includes(searchLower)) ||
-        material.workshop.guides.some(guide => 
-          guide.steps.some(step => step.toLowerCase().includes(searchLower))
-        )
-      );
-    });
-  }, [activeFilter, searchTerm]);
-
+function ZoomModal({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
   return (
-    <>
-      {/* Animation fond */}
-      <div className="bg-animation">
-        <div className="bg-gradient"></div>
-        <div className="grid-overlay"></div>
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center cursor-pointer"
+      aria-modal="true"
+      role="dialog"
+    >
+      <img src={src} alt={alt} className="max-h-[90vh] max-w-[90vw] rounded-3xl shadow-2xl border-4 border-amber-400/30" />
+    </div>
+  )
+}
+
+function MetalCard({ metal, onClick }: { metal: Metal; onClick: () => void }) {
+  return (
+    <article
+      onClick={onClick}
+      className="group cursor-pointer bg-slate-900/80 border border-slate-700/40 rounded-3xl overflow-hidden transition-all hover:-translate-y-2 hover:scale-[1.02] hover:shadow-amber-500/30 shadow-xl"
+    >
+      <div className="relative h-40 overflow-hidden">
+        <div className={`absolute inset-0 ${metal.colorClass} opacity-20`}></div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-6xl font-black text-white/30">{metal.symbol || metal.icon}</span>
+        </div>
+        {metal.illustration && (
+          <img
+            src={metal.illustration}
+            alt={metal.title}
+            className="w-full h-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
+            loading="lazy"
+          />
+        )}
       </div>
-
-      <div className="container-pedago">
-        {/* Header Éducatif */}
-        <header className="header-pedago">
-          <div className="brand-section">
-            <h1 className="logo-pedago">HORLOLEARN<span className="edu-badge">Formation</span></h1>
-            <p className="tagline">Base de connaissances technique pour horlogers en formation</p>
+      <div className="p-5">
+        <div className="flex items-center gap-3 mb-3">
+          <div className={`w-12 h-12 ${metal.colorClass} rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg`}>
+            {metal.symbol || metal.icon}
           </div>
-          <div className="complexity-selector">
-            {[
-              { id: 'apprenti', label: 'Apprenti', color: 'green' },
-              { id: 'compagnon', label: 'Compagnon', color: 'orange' },
-              { id: 'master', label: 'Master', color: 'red' }
-            ].map(level => (
-              <button
-                key={level.id}
-                className={`complexity-btn ${activeFilter === level.id ? 'active' : ''}`}
-                onClick={() => setActiveFilter(level.id)}
-              >
-                {level.label}
-              </button>
-            ))}
-          </div>
-        </header>
-
-        {/* Barre de recherche pédagogique */}
-        <div className="search-pedago-container">
-          <div className="search-wrapper-pedago">
-            <input
-              type="text"
-              className="search-input-pedago"
-              placeholder="Rechercher: propriété, problème atelier, technique..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <span className="search-icon-pedago">🔍</span>
-          </div>
-          <div className="pedago-tools">
-            <button 
-              className="tool-btn-pedago"
-              onClick={() => setStudyMode(!studyMode)}
-            >
-              {studyMode ? '📝 Mode Normal' : '📖 Mode Révision'}
-            </button>
-            <button className="tool-btn-pedago">📋 Fiches Synthèse</button>
+          <div>
+            <h3 className="text-xl font-bold text-amber-400">{metal.title}</h3>
+            <span className="text-xs text-slate-400">{metal.category}</span>
           </div>
         </div>
-
-        {/* Dashboard pédagogique */}
-        <div className="dashboard-pedago">
-          <div className="chart-card-pedago">
-            <h3>📊 Comparaison Usinabilité</h3>
-            <p className="chart-explanation">Plus le score est haut, plus le métal est facile à usiner sans outils spéciaux</p>
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={machinabilityData}>
-                <CartesianGrid stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="name" stroke="#a1a1aa" fontSize={11} angle={-45} textAnchor="end" />
-                <YAxis stroke="#a1a1aa" />
-                <Tooltip contentStyle={{ background: 'var(--card-bg)', border: '1px solid var(--border)' }} />
-                <Bar dataKey="machinability" fill="url(#machinabilityGradient)" />
-                <defs>
-                  <linearGradient id="machinabilityGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--success)" />
-                    <stop offset="100%" stopColor="var(--warning)" />
-                  </linearGradient>
-                </defs>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="tips-card-pedago">
-            <h3>💡 Astuces Mémorisation</h3>
-            <ul className="tips-list-pedago">
-              <li><strong>316L:</strong> Mo = Molybdène = Mer → résiste à l'eau de mer</li>
-              <li><strong>Laiton:</strong> Cuivre + Zinc → couleur jaune cuivreux</li>
-              <li><strong>Bronze:</strong> Cuivre + Étain → sonorité plus claire</li>
-            </ul>
-          </div>
-          <div className="quiz-card-pedago">
-            <h3>🎯 Quiz Rapide</h3>
-            <div className="quiz-preview">
-              <p>Quelle est la principale différence entre 304 et 316L ?</p>
-              <div className="quiz-options">
-                <button className="quiz-option">% de carbone</button>
-                <button className="quiz-option correct">% de molybdène</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Grille des matériaux */}
-        <div className="materials-grid-pedago">
-          {filteredMaterials.map((material) => (
-            <div
-              key={material.id}
-              className={`material-card-pedago ${material.complexity}`}
-              onClick={() => {
-                setSelectedMaterial(material);
-                setActiveTab('fiche');
-              }}
-            >
-              <div className="card-header-pedago">
-                <div className="card-title-pedago">
-                  <span className="material-icon-pedago">{material.icon}</span>
-                  <div>
-                    <h3>{material.title}</h3>
-                    <p className="type-pedago">{material.type}</p>
-                  </div>
-                </div>
-                <div className="complexity-badge">
-                  {material.complexity === 'apprenti' && '🟢'}
-                  {material.complexity === 'compagnon' && '🟡'}
-                  {material.complexity === 'master' && '🔴'}
-                </div>
-              </div>
-
-              <div className="specs-preview-pedago">
-                {material.technicalData.slice(0, 2).map((spec, idx) => (
-                  <div key={idx} className="spec-mini-pedago">
-                    <span className="spec-label-pedago">{spec.property}</span>
-                    <span className="spec-value-pedago">{spec.value} {spec.unit}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="properties-preview-pedago">
-                {material.properties.horlogerie.slice(0, 2).map((prop, idx) => (
-                  <div key={idx} className="prop-chip-pedago">
-                    <strong>{prop.property}:</strong> {prop.value}
-                  </div>
-                ))}
-              </div>
-
-              <div className="applications-preview-pedago">
-                <span className="app-label-pedago">Applications:</span>
-                <div className="app-tags-pedago">
-                  {material.applications.slice(0, 2).map((app, idx) => (
-                    <span key={idx} className="app-tag-pedago">{app}</span>
-                  ))}
-                </div>
-              </div>
+        
+        <p className="text-slate-300 text-sm mb-4 line-clamp-2">{metal.description}</p>
+        
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          {metal.properties.slice(0, 2).map((prop, i) => (
+            <div key={i} className="bg-slate-800/50 rounded-lg p-2 border border-slate-700/40">
+              <div className="text-xs text-slate-400">{prop.label}</div>
+              <div className="text-sm font-semibold text-amber-300">{prop.value}</div>
             </div>
           ))}
         </div>
 
-        {/* Modale d'apprentissage détaillée */}
-        {selectedMaterial && (
-          <div className="modal-overlay-pedago" onClick={() => setSelectedMaterial(null)}>
-            <div className="modal-content-pedago" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header-pedago">
-                <div className="modal-title-pedago">
-                  <span className="material-icon-lg-pedago">{selectedMaterial.icon}</span>
-                  <div>
-                    <h2>{selectedMaterial.title}</h2>
-                    <p className="type-detail-pedago">{selectedMaterial.type}</p>
+        <div className="border-t border-slate-700/40 pt-3">
+          <h4 className="text-xs text-slate-400 mb-2 flex items-center gap-1">
+            <Zap className="w-3 h-3" /> En horlogerie :
+          </h4>
+          <ul className="text-xs text-slate-300 space-y-1">
+            {metal.horlogerieUse.slice(0, 2).map((use, j) => (
+              <li key={j} className="flex items-start gap-1">
+                <span className="text-amber-500 mt-0.5">▸</span> {use}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      
+      <div className="px-5 py-3 border-t border-slate-700/40 bg-slate-800/40 text-xs text-slate-400 flex justify-between items-center">
+        <span className="flex items-center gap-1">
+          <Clock className="w-3 h-3" /> {metal.historicalPeriod || 'Période historique'}
+        </span>
+        <span className="text-amber-400 font-semibold">Voir détails →</span>
+      </div>
+    </article>
+  )
+}
+
+function MetalDetailModal({ metal, onClose }: { metal: Metal; onClose: () => void }) {
+  return (
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl overflow-y-auto"
+      aria-modal="true"
+      role="dialog"
+    >
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="bg-slate-900 border border-slate-700 rounded-3xl max-w-4xl w-full shadow-2xl overflow-hidden"
+        >
+          <div className={`h-32 ${metal.colorClass} relative`}>
+            <div className="absolute inset-0 bg-black/30"></div>
+            <div className="absolute bottom-4 left-6 right-6 flex items-end gap-4">
+              <div className="text-6xl font-black text-white/40">{metal.symbol || metal.icon}</div>
+              <div className="text-white">
+                <h2 className="text-3xl font-bold">{metal.title}</h2>
+                <p className="text-sm opacity-80">{metal.category}</p>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          
+          <div className="p-8 space-y-8">
+            <section>
+              <h3 className="text-xl font-bold text-amber-400 mb-3 flex items-center gap-2">
+                <Info className="w-5 h-5" /> Description
+              </h3>
+              <p className="text-slate-300 leading-relaxed">{metal.description}</p>
+            </section>
+
+            <section>
+              <h3 className="text-xl font-bold text-amber-400 mb-3 flex items-center gap-2">
+                <Atom className="w-5 h-5" /> Propriétés physico-chimiques
+              </h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                {metal.properties.map((prop, i) => (
+                  <div key={i} className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/40">
+                    <div className="text-sm text-slate-400">{prop.label}</div>
+                    <div className="text-lg font-semibold text-amber-300">{prop.value}</div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section>
+              <h3 className="text-xl font-bold text-amber-400 mb-3 flex items-center gap-2">
+                <Hammer className="w-5 h-5" /> Applications générales
+              </h3>
+              <ul className="grid md:grid-cols-2 gap-2">
+                {metal.useCases.map((use, i) => (
+                  <li key={i} className="flex items-start gap-2 text-slate-300">
+                    <span className="text-amber-500 mt-1">▸</span> {use}
+                  </li>
+                ))}
+              </ul>
+            </section>
+
+            <section>
+              <h3 className="text-xl font-bold text-amber-400 mb-3 flex items-center gap-2">
+                <Clock className="w-5 h-5" /> Applications en horlogerie
+              </h3>
+              <div className="bg-rose-900/20 border border-rose-700/40 rounded-xl p-5">
+                <ul className="space-y-2">
+                  {metal.horlogerieUse.map((use, i) => (
+                    <li key={i} className="flex items-start gap-3 text-slate-200">
+                      <span className="text-rose-400 text-xl leading-none">•</span>
+                      <span className="leading-relaxed">{use}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+
+            {metal.technicalDetails && (
+              <section>
+                <h3 className="text-xl font-bold text-amber-400 mb-3 flex items-center gap-2">
+                  <Cpu className="w-5 h-5" /> Détails techniques
+                </h3>
+                <p className="text-slate-300 bg-slate-800/30 rounded-lg p-4 border border-slate-700/40">
+                  {metal.technicalDetails}
+                </p>
+              </section>
+            )}
+
+            {metal.illustration && (
+              <div className="text-center">
+                <img
+                  src={metal.illustration}
+                  alt={`Fiche technique ${metal.title}`}
+                  className="max-h-96 mx-auto rounded-xl border border-slate-700 shadow-2xl"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function SidérurgieSection() {
+  const [activeStep, setActiveStep] = useState(0)
+  
+  const steps = [
+    {
+      title: "Extraction du minerai",
+      description: "Roche contenant de la magnétite, hématite ou oxydes. La gangue (roche inutile) doit être éliminée.",
+      icon: "⛏️"
+    },
+    {
+      title: "Préparation",
+      description: "Concassage, broyage en poudre fine (<1mm), criblage et séparation magnétique ou par densité.",
+      icon: "⚙️"
+    },
+    {
+      title: "Haut-fourneau",
+      description: "Production de fonte avec minerai, coke et ferraille. Fontes blanches (pour acier) ou grises (coulée).",
+      icon: "🔥"
+    },
+    {
+      title: "Production d'acier",
+      description: "Convertisseur à oxygène ou four électrique. Ajustement du carbone (0,02-2%) et des alliages.",
+      icon: "⚗️"
+    }
+  ]
+
+  return (
+    <section className="bg-gradient-to-br from-slate-100 to-amber-50 dark:from-slate-900 dark:to-slate-800 rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-700 mb-12">
+      <h2 className="text-3xl font-black text-center mb-8 text-slate-900 dark:text-white flex items-center justify-center gap-3">
+        <Factory className="w-8 h-8 text-amber-600" />
+        Sidérurgie & Production de l'Acier
+      </h2>
+      
+      <div className="grid md:grid-cols-4 gap-4 mb-8">
+        {steps.map((step, i) => (
+          <button
+            key={i}
+            onClick={() => setActiveStep(i)}
+            className={`p-5 rounded-2xl transition-all ${
+              activeStep === i
+                ? 'bg-amber-500 text-white shadow-lg scale-105'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:shadow-md'
+            } border border-slate-200 dark:border-slate-700`}
+          >
+            <div className="text-3xl mb-2">{step.icon}</div>
+            <div className="text-sm font-semibold">{step.title}</div>
+          </button>
+        ))}
+      </div>
+
+      <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
+        <div className="flex items-start gap-4">
+          <div className="text-4xl">{steps[activeStep].icon}</div>
+          <div>
+            <h3 className="text-xl font-bold text-amber-600 dark:text-amber-400 mb-2">
+              {steps[activeStep].title}
+            </h3>
+            <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+              {steps[activeStep].description}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 grid md:grid-cols-3 gap-4 text-sm">
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
+          <h4 className="font-bold text-amber-600 mb-2">🌱 Matières premières</h4>
+          <ul className="text-slate-600 dark:text-slate-400 space-y-1">
+            <li>• Minerai de fer (magnetite, hématite)</li>
+            <li>• Coke (issu de la houille)</li>
+            <li>• Ferraille (recyclage)</li>
+          </ul>
+        </div>
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
+          <h4 className="font-bold text-amber-600 mb-2">🔥 Procédés</h4>
+          <ul className="text-slate-600 dark:text-slate-400 space-y-1">
+            <li>• Haut-fourneau (fonte)</li>
+            <li>• Convertisseur à oxygène</li>
+            <li>• Four à arc électrique</li>
+          </ul>
+        </div>
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
+          <h4 className="font-bold text-amber-600 mb-2">📊 Stats mondiales</h4>
+          <ul className="text-slate-600 dark:text-slate-400 space-y-1">
+            <li>• Chine : 55,3%</li>
+            <li>• Inde : 7,9%</li>
+            <li>• Japon : 4,5%</li>
+            <li>• Etats-Unis : 4,3%</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export default function MateriauxPage() {
+  const [filter, setFilter] = useState<Category>('Tous')
+  const [search, setSearch] = useState('')
+  const [selectedMetal, setSelectedMetal] = useState<Metal | null>(null)
+  const [activeHistoryTab, setActiveHistoryTab] = useState<HistoryPeriod>('xvie')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const filteredMetals = useMemo(() => {
+    let filtered = filter === 'Tous' ? METALS : METALS.filter(m => m.category === filter)
+    if (search) {
+      const query = search.toLowerCase()
+      filtered = filtered.filter(m => 
+        m.title.toLowerCase().includes(query) ||
+        m.description.toLowerCase().includes(query) ||
+        m.properties.some(p => p.value.toLowerCase().includes(query)) ||
+        m.horlogerieUse.some(u => u.toLowerCase().includes(query))
+      )
+    }
+    return filtered
+  }, [filter, search])
+
+  return (
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/30 to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+      {/* Header amélioré */}
+      <header
+        className={`sticky top-0 z-40 transition-all duration-500 ${
+          scrolled
+            ? 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl shadow-xl'
+            : 'bg-white/70 dark:bg-slate-900/70 backdrop-blur-md'
+        } border-b border-slate-200 dark:border-slate-700`}
+      >
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <Link href="/theorie" className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-semibold">
+            <ChevronLeft className="w-5 h-5" /> Retour à la théorie
+          </Link>
+          
+          <div className="hidden md:flex items-center gap-4">
+            <div className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Rechercher un matériau..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-sm border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+              />
+            </div>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        {/* Hero Section améliorée */}
+        <div className="text-center mb-16 relative">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <Gem className="w-64 h-64 text-amber-400/5 animate-pulse" />
+          </div>
+          <h1 className="text-5xl sm:text-7xl font-black mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 tracking-tight">
+            Matériaux d'Exception
+          </h1>
+          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-8">
+            Découvrez les métaux, alliages et matériaux innovants qui composent les garde-temps suisses. 
+            Du savoir-faire traditionnel aux nanotechnologies du XXIe siècle.
+          </p>
+          
+          {/* Stats de la page */}
+          <div className="flex flex-wrap justify-center gap-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl px-6 py-4 shadow-lg border border-slate-200 dark:border-slate-700">
+              <div className="text-2xl font-black text-amber-600">17</div>
+              <div className="text-xs text-slate-500">Métaux & Alliages</div>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-2xl px-6 py-4 shadow-lg border border-slate-200 dark:border-slate-700">
+              <div className="text-2xl font-black text-amber-600">4</div>
+              <div className="text-xs text-slate-500">Siècles d'histoire</div>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-2xl px-6 py-4 shadow-lg border border-slate-200 dark:border-slate-700">
+              <div className="text-2xl font-black text-amber-600">100%</div>
+              <div className="text-xs text-slate-500">Recyclable (Al, Ti)</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation améliorée */}
+        <nav className="mb-12">
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div className="flex flex-wrap gap-3 justify-center">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setFilter(cat)}
+                  className={`px-6 py-3 rounded-2xl font-semibold text-sm transition-all duration-300 flex items-center gap-2 ${
+                    filter === cat
+                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg scale-105'
+                      : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:shadow-lg border border-slate-200 dark:border-slate-700'
+                  }`}
+                >
+                  {cat === 'Tous' && <Layers className="w-4 h-4" />}
+                  {cat === 'Métaux purs' && <Atom className="w-4 h-4" />}
+                  {cat === 'Alliages' && <Shield className="w-4 h-4" />}
+                  {cat === 'Acier & Fer' && <Hammer className="w-4 h-4" />}
+                  {cat === 'Innovation' && <Sparkles className="w-4 h-4" />}
+                  {cat}
+                </button>
+              ))}
+            </div>
+            
+            <div className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Filtrer..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-10 pr-4 py-3 bg-white dark:bg-slate-800 rounded-xl text-sm border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent min-w-64"
+              />
+            </div>
+          </div>
+        </nav>
+
+        {/* Grille des matériaux avec les fiches PDF */}
+        <section className="mb-20">
+          {filteredMetals.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="text-6xl mb-4">🔍</div>
+              <h3 className="text-2xl font-bold text-slate-600 dark:text-slate-400 mb-2">Aucun matériau trouvé</h3>
+              <p className="text-slate-500">Essayez de modifier votre recherche ou vos filtres</p>
+            </div>
+          ) : (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {filteredMetals.map((metal) => (
+                <MetalCard key={metal.id} metal={metal} onClick={() => setSelectedMetal(metal)} />
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Section Sidérurgie */}
+        <SidérurgieSection />
+
+        {/* Section Histoire Interactive */}
+        <section className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 shadow-2xl border-4 border-amber-500/30 mb-12">
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <Clock className="w-8 h-8 text-amber-400" />
+            <h2 className="text-4xl font-black text-center text-white">
+              Histoire des Matériaux Horlogers Suisses
+            </h2>
+          </div>
+          
+          <div className="flex justify-center gap-3 mb-8 flex-wrap">
+            {HISTORY_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveHistoryTab(tab.id)}
+                className={`px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                  activeHistoryTab === tab.id
+                    ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg scale-105'
+                    : 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-inner">
+            <div className="grid md:grid-cols-2 gap-0">
+              <div className="p-8">
+                <h3 className="text-3xl font-bold text-red-600 dark:text-red-500 mb-6">
+                  {HISTORY_CONTENT[activeHistoryTab].title}
+                </h3>
+                
+                {HISTORY_CONTENT[activeHistoryTab].content.map((paragraph, i) => (
+                  <p key={i} className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4 text-justify">
+                    {paragraph}
+                  </p>
+                ))}
+
+                <div className="mt-8">
+                  <h4 className="text-sm uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold mb-4 flex items-center gap-2">
+                    <Gem className="w-4 h-4" />
+                    Matériaux de l&apos;époque
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {HISTORY_CONTENT[activeHistoryTab].materials.map((material, i) => (
+                      <span
+                        key={i}
+                        className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-full text-sm font-semibold shadow-md hover:scale-105 transition-transform"
+                      >
+                        {material}
+                      </span>
+                    ))}
                   </div>
                 </div>
-                <button className="close-btn-pedago" onClick={() => setSelectedMaterial(null)}>✕</button>
               </div>
 
-              {/* Onglets pédagogiques */}
-              <div className="tabs-pedago">
-                <button 
-                  className={`tab-pedago ${activeTab === 'fiche' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('fiche')}
-                >
-                  📋 Fiche Technique
-                </button>
-                <button 
-                  className={`tab-pedago ${activeTab === 'atelier' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('atelier')}
-                >
-                  🔧 Guide Atelier
-                </button>
-                <button 
-                  className={`tab-pedago ${activeTab === 'identification' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('identification')}
-                >
-                  🔍 Identification
-                </button>
-                <button 
-                  className={`tab-pedago ${activeTab === 'exercices' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('exercices')}
-                >
-                  ✍️ Exercices
-                </button>
-                <button 
-                  className={`tab-pedago ${activeTab === 'history' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('history')}
-                >
-                  📚 Historique
-                </button>
-              </div>
-
-              {/* Contenu des onglets */}
-              <div className="tab-content-pedago">
-                {activeTab === 'fiche' && (
-                  <div className="fiche-content">
-                    <p className="description-pedago">{selectedMaterial.description}</p>
-                    
-                    <div className="properties-grid-pedago">
-                      {/* Propriétés physiques */}
-                      <div className="section-pedago">
-                        <h3>📐 Propriétés Physiques</h3>
-                        <ul className="property-list-pedago">
-                          {selectedMaterial.properties.physical.map((prop, idx) => (
-                            <li key={idx} className="property-item-pedago">
-                              <div className="prop-header">
-                                <strong>{prop.property}:</strong> {prop.value} {prop.unit}
-                              </div>
-                              <div className="prop-application">
-                                <small>🎯 {prop.application}</small>
-                              </div>
-                              <div className="prop-explanation">
-                                <small>ℹ️ {prop.explanation}</small>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Propriétés mécaniques */}
-                      <div className="section-pedago">
-                        <h3>⚙️ Propriétés Mécaniques</h3>
-                        <ul className="property-list-pedago">
-                          {selectedMaterial.properties.mechanical.map((prop, idx) => (
-                            <li key={idx} className="property-item-pedago">
-                              <div className="prop-header">
-                                <strong>{prop.property}:</strong> {prop.value} {prop.unit}
-                              </div>
-                              <div className="prop-application">
-                                <small>🎯 {prop.application}</small>
-                              </div>
-                              <div className="prop-explanation">
-                                <small>ℹ️ {prop.explanation}</small>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Spécificités horlogère */}
-                      <div className="section-pedago">
-                        <h3>🕰️ Spécificités Horlogère</h3>
-                        <ul className="property-list-pedago">
-                          {selectedMaterial.properties.horlogerie.map((prop, idx) => (
-                            <li key={idx} className="property-item-pedago">
-                              <div className="prop-header">
-                                <strong>{prop.property}:</strong> {prop.value}
-                              </div>
-                              <div className="prop-explanation">
-                                <small>ℹ️ Pourquoi: {prop.why}</small>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Normes */}
-                      <div className="section-pedago">
-                        <h3>📜 Normes & Standards</h3>
-                        <div className="norms-grid-pedago">
-                          {selectedMaterial.norms.map((norm, idx) => (
-                            <div key={idx} className="norm-card-pedago">
-                              <strong>{norm.split(' ')[0]}</strong>
-                              <small>{norm.split(' ').slice(1).join(' ')}</small>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'atelier' && (
-                  <div className="atelier-content">
-                    <div className="difficulty-section-pedago">
-                      <h3>Difficulté d'usinage: {selectedMaterial.workshop.machinability}/10</h3>
-                      <div className="difficulty-bar-pedago">
-                        <div 
-                          className="difficulty-fill-pedago"
-                          style={{width: `${selectedMaterial.workshop.machinability * 10}%`}}
-                        ></div>
-                      </div>
-                    </div>
-
-                    {selectedMaterial.workshop.guides.map((guide, idx) => (
-                      <div key={idx} className="guide-card-pedago">
-                        <h4>{guide.title}</h4>
-                        
-                        <div className="steps-section-pedago">
-                          <h5>Étapes détaillées:</h5>
-                          <ol className="steps-list-pedago">
-                            {guide.steps.map((step, stepIdx) => (
-                              <li key={stepIdx}>{step}</li>
-                            ))}
-                          </ol>
-                        </div>
-
-                        <div className="tools-section-pedago">
-                          <h5>Outils nécessaires:</h5>
-                          <div className="tools-tags-pedago">
-                            {guide.tools.map((tool, toolIdx) => (
-                              <span key={toolIdx} className="tool-tag-pedago">{tool}</span>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="safety-section-pedago">
-                          <h5>⚠️ Sécurité:</h5>
-                          <ul className="safety-list-pedago">
-                            {guide.safety.map((safety, safetyIdx) => (
-                              <li key={safetyIdx}>{safety}</li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        <div className="mistakes-section-pedago">
-                          <h5>❌ Erreurs courantes:</h5>
-                          <ul className="mistakes-list-pedago">
-                            {guide.commonMistakes.map((mistake, mistakeIdx) => (
-                              <li key={mistakeIdx}>{mistake}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    ))}
-
-                    <div className="precautions-section-pedago">
-                      <h4>⚠️ Précautions Générales</h4>
-                      <ul className="precautions-list-pedago">
-                        {selectedMaterial.workshop.precautions.map((prec, idx) => (
-                          <li key={idx}>{prec}</li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    {selectedMaterial.workshop.heatTreatment && (
-                      <div className="heat-treatment-pedago">
-                        <h4>🔥 Traitement Thermique</h4>
-                        <p>{selectedMaterial.workshop.heatTreatment}</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {activeTab === 'identification' && (
-                  <div className="identification-content">
-                    <div className="ident-methods-pedago">
-                      <h3>Tests d'Identification en Atelier</h3>
-                      
-                      <div className="test-section-pedago">
-                        <h4>1. Test Visuel</h4>
-                        <ul>
-                          {selectedMaterial.identification.visual.map((desc, idx) => (
-                            <li key={idx}>👁️ {desc}</li>
-                          ))}
-                        </ul>
-                        <div className="color-sample-pedago">
-                          <span className="color-label-pedago">Couleur caractéristique:</span>
-                          <div className="color-box-pedago" style={{backgroundColor: selectedMaterial.identification.color}}></div>
-                          <span>{selectedMaterial.identification.color}</span>
-                        </div>
-                      </div>
-
-                      <div className="test-section-pedago">
-                        <h4>2. Test Magnétique</h4>
-                        <p><strong>Résultat:</strong> {selectedMaterial.identification.magnetic ? 'Aimanté' : 'Non aimanté'}</p>
-                        <p><strong>Comment faire:</strong> Approcher un petit aimant neodymium</p>
-                      </div>
-
-                      <div className="test-section-pedago">
-                        <h4>3. Test Dureté</h4>
-                        <p><strong>Méthode:</strong> Gratter avec lime douce</p>
-                        <p><strong>Résultat:</strong> {selectedMaterial.identification.hardness}</p>
-                      </div>
-
-                      <div className="test-section-pedago">
-                        <h4>4. Test Densité (si doute)</h4>
-                        <p>{selectedMaterial.identification.densityTest}</p>
-                      </div>
-
-                      {selectedMaterial.identification.sound && (
-                        <div className="test-section-pedago">
-                          <h4>5. Test Sonore</h4>
-                          <p>{selectedMaterial.identification.sound}</p>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="troubleshooting-section-pedago">
-                      <h3>🚨 Dépannage Problèmes Courants</h3>
-                      {selectedMaterial.commonIssues.map((issue, idx) => (
-                        <div key={idx} className="issue-card-pedago">
-                          <h4>Problème: {issue.problem}</h4>
-                          <p><strong>Cause:</strong> {issue.cause}</p>
-                          <p><strong>Solution:</strong> {issue.solution}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'exercices' && (
-                  <div className="exercices-content">
-                    <div className="exercises-section-pedago">
-                      <h3>✍️ Exercices Pratiques</h3>
-                      <ul className="exercises-list-pedago">
-                        {selectedMaterial.practice.exercises.map((exercise, idx) => (
-                          <li key={idx} className="exercise-item-pedago">
-                            <span className="exercise-number">{idx + 1}.</span>
-                            <span>{exercise}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="projects-section-pedago">
-                      <h3>🎯 Mini-Projets</h3>
-                      <ul className="projects-list-pedago">
-                        {selectedMaterial.practice.miniProjects.map((project, idx) => (
-                          <li key={idx} className="project-item-pedago">
-                            <span className="project-number">{idx + 1}.</span>
-                            <span>{project}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="learning-cards-section-pedago">
-                      <h3>🧠 Fiches Mémorisation</h3>
-                      {selectedMaterial.learningCards.map((card, idx) => (
-                        <div key={idx} className="learning-card-pedago">
-                          <div className="card-question-pedago">
-                            <strong>❓ {card.question}</strong>
-                          </div>
-                          <div className="card-answer-pedago">
-                            <p>💡 {card.answer}</p>
-                            {card.memoryTip && (
-                              <p className="memory-tip-pedago">🎯 Astuce: {card.memoryTip}</p>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'history' && (
-                  <div className="history-content">
-                    <h3>📚 Historique & Évolution</h3>
-                    <p className="history-text-pedago">{selectedMaterial.history}</p>
-                    
-                    <div className="timeline-pedago">
-                      <h4>Points Clés:</h4>
-                      <ul className="timeline-list-pedago">
-                        {selectedMaterial.history.split('.').filter(Boolean).map((event, idx) => (
-                          <li key={idx} className="timeline-item-pedago">
-                            <span className="timeline-bullet-pedago">•</span>
-                            <span>{event.trim()}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="evolution-pedago">
-                      <h4>Évolution Technologique:</h4>
-                      <p>Ce matériau a remplacé progressivement les aciers au carbone en horlogerie moderne grâce à sa résistance à la corrosion sans traitement de surface obligatoire.</p>
-                    </div>
-                  </div>
-                )}
+              <div className="relative h-full min-h-[400px] bg-slate-200 dark:bg-slate-700">
+                <img 
+                  src={HISTORY_CONTENT[activeHistoryTab].image} 
+                  alt={HISTORY_CONTENT[activeHistoryTab].title}
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
           </div>
-        )}
 
-        {/* Footer éducatif */}
-        <footer className="footer-pedago">
-          <p>🎯 Conçu pour l'apprentissage technique des horlogers - Formation continue</p>
-          <p>Version pédagogique 2024 - Basé sur normes ISO/ASTM/EN horlogerie</p>
-        </footer>
+          <div className="text-center mt-8">
+            <a 
+              href="https://idchufzbxxy7.space.minimax.io/ " 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+            >
+              <ExternalLink className="w-5 h-5" />
+              Voir la version complète sur HorloLearn.ch
+            </a>
+          </div>
+        </section>
+
+        {/* Section Techniques de Transformation */}
+        <section className="bg-white dark:bg-slate-900/50 rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-700 mb-12">
+          <h2 className="text-3xl font-black text-center mb-8 text-slate-900 dark:text-white flex items-center justify-center gap-3">
+            <Hammer className="w-8 h-8 text-amber-500" />
+            Techniques de Transformation
+          </h2>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-slate-800 dark:to-slate-700 rounded-2xl p-6 border border-amber-200 dark:border-slate-600 hover:shadow-lg transition-all">
+              <h3 className="text-xl font-bold text-amber-900 dark:text-amber-400 mb-3">🔨 Usinage CNC</h3>
+              <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed mb-3">
+                Fraisage et tournage haute précision pour les boîtiers et composants. Tolérances de quelques microns.
+              </p>
+              <div className="text-xs text-amber-600 dark:text-amber-500 font-semibold">Matériaux : Acier, Titane, Laiton</div>
+            </div>
+
+            <div className="bg-gradient-to-br from-blue-50 to-sky-50 dark:from-slate-800 dark:to-slate-700 rounded-2xl p-6 border border-blue-200 dark:border-slate-600 hover:shadow-lg transition-all">
+              <h3 className="text-xl font-bold text-blue-900 dark:text-blue-400 mb-3">⚡ Électroérosion</h3>
+              <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed mb-3">
+                Technique pour usiner des formes complexes dans les matériaux durs comme la céramique et le carbure.
+              </p>
+              <div className="text-xs text-blue-600 dark:text-blue-500 font-semibold">Matériaux : Céramique, Carbure, Titane</div>
+            </div>
+
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-slate-800 dark:to-slate-700 rounded-2xl p-6 border border-purple-200 dark:border-slate-600 hover:shadow-lg transition-all">
+              <h3 className="text-xl font-bold text-purple-900 dark:text-purple-400 mb-3">🎨 Traitement PVD/DLC</h3>
+              <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed mb-3">
+                Dépôt sous vide de couches protectrices ultra-dures en nitrure ou carbone diamant.
+              </p>
+              <div className="text-xs text-purple-600 dark:text-purple-500 font-semibold">Matériaux : Acier, Titane</div>
+            </div>
+
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-slate-800 dark:to-slate-700 rounded-2xl p-6 border border-green-200 dark:border-slate-600 hover:shadow-lg transition-all">
+              <h3 className="text-xl font-bold text-green-900 dark:text-green-400 mb-3">🔥 Frittage</h3>
+              <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed mb-3">
+                Fusion à haute température pour la céramique technique. Processus de 1400-1600°C sur plusieurs jours.
+              </p>
+              <div className="text-xs text-green-600 dark:text-green-500 font-semibold">Matériaux : Céramique ZrO2, SiC</div>
+            </div>
+
+            <div className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-slate-800 dark:to-slate-700 rounded-2xl p-6 border border-red-200 dark:border-slate-600 hover:shadow-lg transition-all">
+              <h3 className="text-xl font-bold text-red-900 dark:text-red-400 mb-3">💎 Polissage</h3>
+              <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed mb-3">
+                Finitions miroir ou satinées réalisées à la main. Plusieurs heures pour un boîtier de haute horlogerie.
+              </p>
+              <div className="text-xs text-red-600 dark:text-red-500 font-semibold">Matériaux : Acier, Or, Platine</div>
+            </div>
+
+            <div className="bg-gradient-to-br from-indigo-50 to-violet-50 dark:from-slate-800 dark:to-slate-700 rounded-2xl p-6 border border-indigo-200 dark:border-slate-600 hover:shadow-lg transition-all">
+              <h3 className="text-xl font-bold text-indigo-900 dark:text-indigo-400 mb-3">⚗️ Galvanoplastie</h3>
+              <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed mb-3">
+                Dépôt électrolytique de métaux précieux (rhodiage, dorure) pour protéger et embellir.
+              </p>
+              <div className="text-xs text-indigo-600 dark:text-indigo-500 font-semibold">Matériaux : Laiton, Maillechort</div>
+            </div>
+          </div>
+        </section>
+
+        {/* Tableau comparatif amélioré */}
+        <section className="bg-gradient-to-br from-slate-100 to-amber-50 dark:from-slate-900 dark:to-slate-800 rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-700">
+          <h2 className="text-3xl font-black text-center mb-8 text-slate-900 dark:text-white">
+            📊 Comparaison des Propriétés
+          </h2>
+
+          <div className="overflow-x-auto rounded-xl shadow-lg">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-amber-500 text-white">
+                  <th className="px-4 py-4 text-left font-bold rounded-tl-xl">Matériau</th>
+                  <th className="px-4 py-4 text-center font-bold">Densité</th>
+                  <th className="px-4 py-4 text-center font-bold">Dureté HV</th>
+                  <th className="px-4 py-4 text-center font-bold">Résistance</th>
+                  <th className="px-4 py-4 text-center font-bold">Usinabilité</th>
+                  <th className="px-4 py-4 text-center font-bold rounded-tr-xl">Coût</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white dark:bg-slate-800">
+                <tr className="border-b border-slate-200 dark:border-slate-700 hover:bg-amber-50/50 dark:hover:bg-slate-700/50 transition-colors">
+                  <td className="px-4 py-4 font-semibold text-slate-900 dark:text-white">Acier 316L</td>
+                  <td className="px-4 py-4 text-center text-slate-700 dark:text-slate-300">7,9 g/cm³</td>
+                  <td className="px-4 py-4 text-center text-slate-700 dark:text-slate-300">200</td>
+                  <td className="px-4 py-4 text-center">
+                    <span className="inline-block w-20 h-2 bg-green-500 rounded-full"></span>
+                    <span className="sr-only">Excellente</span>
+                  </td>
+                  <td className="px-4 py-4 text-center">
+                    <span className="inline-block w-24 h-2 bg-green-500 rounded-full"></span>
+                    <span className="sr-only">Excellente</span>
+                  </td>
+                  <td className="px-4 py-4 text-center text-green-600 dark:text-green-400 font-bold">€€</td>
+                </tr>
+                <tr className="border-b border-slate-200 dark:border-slate-700 hover:bg-amber-50/50 dark:hover:bg-slate-700/50 transition-colors">
+                  <td className="px-4 py-4 font-semibold text-slate-900 dark:text-white">Titane Grade 5</td>
+                  <td className="px-4 py-4 text-center text-slate-700 dark:text-slate-300">4,5 g/cm³</td>
+                  <td className="px-4 py-4 text-center text-slate-700 dark:text-slate-300">350</td>
+                  <td className="px-4 py-4 text-center">
+                    <span className="inline-block w-24 h-2 bg-blue-500 rounded-full"></span>
+                    <span className="sr-only">Très bonne</span>
+                  </td>
+                  <td className="px-4 py-4 text-center">
+                    <span className="inline-block w-12 h-2 bg-yellow-500 rounded-full"></span>
+                    <span className="sr-only">Difficile</span>
+                  </td>
+                  <td className="px-4 py-4 text-center text-orange-600 dark:text-orange-400 font-bold">€€€</td>
+                </tr>
+                <tr className="border-b border-slate-200 dark:border-slate-700 hover:bg-amber-50/50 dark:hover:bg-slate-700/50 transition-colors">
+                  <td className="px-4 py-4 font-semibold text-slate-900 dark:text-white">Céramique ZrO2</td>
+                  <td className="px-4 py-4 text-center text-slate-700 dark:text-slate-300">6,0 g/cm³</td>
+                  <td className="px-4 py-4 text-center text-slate-700 dark:text-slate-300">1400</td>
+                  <td className="px-4 py-4 text-center">
+                    <span className="inline-block w-full h-2 bg-purple-500 rounded-full"></span>
+                    <span className="sr-only">Exceptionnelle</span>
+                  </td>
+                  <td className="px-4 py-4 text-center">
+                    <span className="inline-block w-8 h-2 bg-red-500 rounded-full"></span>
+                    <span className="sr-only">Très difficile</span>
+                  </td>
+                  <td className="px-4 py-4 text-center text-red-600 dark:text-red-400 font-bold">€€€€</td>
+                </tr>
+                <tr className="border-b border-slate-200 dark:border-slate-700 hover:bg-amber-50/50 dark:hover:bg-slate-700/50 transition-colors">
+                  <td className="px-4 py-4 font-semibold text-slate-900 dark:text-white">Or 18K</td>
+                  <td className="px-4 py-4 text-center text-slate-700 dark:text-slate-300">15,5 g/cm³</td>
+                  <td className="px-4 py-4 text-center text-slate-700 dark:text-slate-300">120</td>
+                  <td className="px-4 py-4 text-center">
+                    <span className="inline-block w-16 h-2 bg-yellow-500 rounded-full"></span>
+                    <span className="sr-only">Bonne</span>
+                  </td>
+                  <td className="px-4 py-4 text-center">
+                    <span className="inline-block w-20 h-2 bg-green-500 rounded-full"></span>
+                    <span className="sr-only">Excellente</span>
+                  </td>
+                  <td className="px-4 py-4 text-center text-red-600 dark:text-red-400 font-bold">€€€€€</td>
+                </tr>
+                <tr className="border-b border-slate-200 dark:border-slate-700 hover:bg-amber-50/50 dark:hover:bg-slate-700/50 transition-colors">
+                  <td className="px-4 py-4 font-semibold text-slate-900 dark:text-white">Platine 950</td>
+                  <td className="px-4 py-4 text-center text-slate-700 dark:text-slate-300">21,5 g/cm³</td>
+                  <td className="px-4 py-4 text-center text-slate-700 dark:text-slate-300">135</td>
+                  <td className="px-4 py-4 text-center">
+                    <span className="inline-block w-18 h-2 bg-yellow-500 rounded-full"></span>
+                    <span className="sr-only">Bonne</span>
+                  </td>
+                  <td className="px-4 py-4 text-center">
+                    <span className="inline-block w-16 h-2 bg-green-500 rounded-full"></span>
+                    <span className="sr-only">Bonne</span>
+                  </td>
+                  <td className="px-4 py-4 text-center text-red-600 dark:text-red-400 font-bold">€€€€€€</td>
+                </tr>
+                <tr className="hover:bg-amber-50/50 dark:hover:bg-slate-700/50 transition-colors">
+                  <td className="px-4 py-4 font-semibold text-slate-900 dark:text-white rounded-bl-xl">Laiton horloger</td>
+                  <td className="px-4 py-4 text-center text-slate-700 dark:text-slate-300">8,7 g/cm³</td>
+                  <td className="px-4 py-4 text-center text-slate-700 dark:text-slate-300">150</td>
+                  <td className="px-4 py-4 text-center">
+                    <span className="inline-block w-16 h-2 bg-yellow-500 rounded-full"></span>
+                    <span className="sr-only">Bonne</span>
+                  </td>
+                  <td className="px-4 py-4 text-center">
+                    <span className="inline-block w-24 h-2 bg-green-500 rounded-full"></span>
+                    <span className="sr-only">Excellente</span>
+                  </td>
+                  <td className="px-4 py-4 text-center text-green-600 dark:text-green-400 font-bold rounded-br-xl">€</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-6 flex flex-wrap justify-center gap-6 text-xs text-slate-600 dark:text-slate-400">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold">HV :</span> Dureté Vickers
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-semibold">€ :</span> Indicateur de coût relatif
+            </div>
+            <div className="flex items-center gap-2">
+              <Gauge className="w-4 h-4 text-amber-600" /> Résistance à la corrosion
+            </div>
+          </div>
+        </section>
+
+        {/* Bouton d'export PDF */}
+        <div className="text-center mt-12">
+          <button className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-slate-900 to-slate-800 dark:from-amber-500 dark:to-amber-600 text-white rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border-2 border-amber-500/30">
+            <Download className="w-5 h-5" />
+            Télécharger le guide complet (PDF)
+          </button>
+        </div>
       </div>
 
-      <style jsx global>{`
-        /* Variables thème éducatif */
-        :root {
-          --primary: #0a0e27;
-          --secondary: #1a1f3a;
-          --accent: #00d4ff;
-          --accent2: #9333ea;
-          --success: #10b981;
-          --warning: #f59e0b;
-          --danger: #ef4444;
-          --text: #e4e4e7;
-          --text-dim: #a1a1aa;
-          --card-bg: rgba(26, 31, 58, 0.6);
-          --card-bg-hover: rgba(26, 31, 58, 0.8);
-          --border: rgba(255, 255, 255, 0.1);
-        }
-
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-
-        body {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-          background: var(--primary);
-          color: var(--text);
-          line-height: 1.6;
-        }
-
-        /* Fond animé */
-        .bg-animation {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 0;
-          overflow: hidden;
-        }
-
-        .bg-gradient {
-          position: absolute;
-          width: 200%;
-          height: 200%;
-          background: radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
-                      radial-gradient(circle at 80% 80%, rgba(147, 51, 234, 0.15) 0%, transparent 50%);
-          animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-
-        .grid-overlay {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          background-image: 
-              linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-          background-size: 50px 50px;
-          opacity: 0.5;
-        }
-
-        /* Container principal */
-        .container-pedago {
-          max-width: 1600px;
-          margin: 0 auto;
-          padding: 0 30px;
-          position: relative;
-          z-index: 1;
-          min-height: 100vh;
-        }
-
-        /* Header éducatif */
-        .header-pedago {
-          padding: 40px 0 30px;
-          text-align: center;
-          border-bottom: 2px solid var(--border);
-          margin-bottom: 30px;
-        }
-
-        .logo-pedago {
-          font-size: 3em;
-          font-weight: 800;
-          background: linear-gradient(135deg, var(--accent), var(--accent2));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          letter-spacing: -2px;
-        }
-
-        .edu-badge {
-          display: inline-block;
-          margin-left: 15px;
-          padding: 6px 16px;
-          background: rgba(0, 212, 255, 0.1);
-          border: 1px solid rgba(0, 212, 255, 0.3);
-          border-radius: 20px;
-          font-size: 0.4em;
-          color: var(--accent);
-          vertical-align: middle;
-        }
-
-        .tagline {
-          font-size: 1.1em;
-          color: var(--text-dim);
-          margin-top: 10px;
-        }
-
-        .complexity-selector {
-          display: flex;
-          justify-content: center;
-          gap: 15px;
-          margin-top: 20px;
-        }
-
-        .complexity-btn {
-          padding: 8px 20px;
-          background: rgba(0, 0, 0, 0.3);
-          border: 1px solid var(--border);
-          border-radius: 20px;
-          color: var(--text-dim);
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-
-        .complexity-btn.active {
-          color: var(--primary);
-          font-weight: 800;
-        }
-
-        .complexity-btn.active[data-level="apprenti"] {
-          background: var(--success);
-          border-color: var(--success);
-        }
-        .complexity-btn.active[data-level="compagnon"] {
-          background: var(--warning);
-          border-color: var(--warning);
-        }
-        .complexity-btn.active[data-level="master"] {
-          background: var(--danger);
-          border-color: var(--danger);
-        }
-
-        /* Barre recherche */
-        .search-pedago-container {
-          display: flex;
-          gap: 15px;
-          margin-bottom: 30px;
-          padding: 20px;
-          background: var(--card-bg);
-          backdrop-filter: blur(20px);
-          border: 1px solid var(--border);
-          border-radius: 16px;
-        }
-
-        .search-wrapper-pedago {
-          flex: 1;
-          position: relative;
-        }
-
-        .search-input-pedago {
-          width: 100%;
-          padding: 12px 45px 12px 15px;
-          background: rgba(0, 0, 0, 0.3);
-          border: 1px solid var(--border);
-          border-radius: 8px;
-          color: var(--text);
-          font-size: 1em;
-        }
-
-        .search-icon-pedago {
-          position: absolute;
-          right: 15px;
-          top: 50%;
-          transform: translateY(-50%);
-          color: var(--accent);
-        }
-
-        .pedago-tools {
-          display: flex;
-          gap: 10px;
-        }
-
-        .tool-btn-pedago {
-          padding: 10px 20px;
-          background: rgba(147, 51, 234, 0.1);
-          border: 1px solid rgba(147, 51, 234, 0.3);
-          border-radius: 8px;
-          color: var(--accent2);
-          font-weight: 600;
-          cursor: pointer;
-        }
-
-        /* Dashboard */
-        .dashboard-pedago {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 20px;
-          margin-bottom: 30px;
-        }
-
-        .chart-card-pedago, .tips-card-pedago, .quiz-card-pedago {
-          background: var(--card-bg);
-          backdrop-filter: blur(20px);
-          border: 1px solid var(--border);
-          border-radius: 16px;
-          padding: 20px;
-        }
-
-        .chart-card-pedago h3, .tips-card-pedago h3, .quiz-card-pedago h3 {
-          color: var(--accent);
-          margin-bottom: 10px;
-        }
-
-        .chart-explanation {
-          font-size: 0.85em;
-          color: var(--text-dim);
-          margin-bottom: 15px;
-        }
-
-        .tips-list-pedago {
-          list-style: none;
-        }
-
-        .tips-list-pedago li {
-          padding: 8px 0;
-          border-bottom: 1px solid var(--border);
-          font-size: 0.9em;
-        }
-
-        .tips-list-pedago li:last-child {
-          border-bottom: none;
-        }
-
-        .quiz-preview {
-          font-size: 0.9em;
-        }
-
-        .quiz-options {
-          display: flex;
-          gap: 10px;
-          margin-top: 10px;
-        }
-
-        .quiz-option {
-          flex: 1;
-          padding: 8px;
-          background: rgba(0, 0, 0, 0.3);
-          border: 1px solid var(--border);
-          border-radius: 6px;
-          color: var(--text);
-          cursor: pointer;
-          font-size: 0.85em;
-        }
-
-        .quiz-option.correct {
-          background: rgba(16, 185, 129, 0.2);
-          border-color: var(--success);
-        }
-
-        /* Grille matériaux */
-        .materials-grid-pedago {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-          gap: 20px;
-          margin-bottom: 40px;
-        }
-
-        .material-card-pedago {
-          background: var(--card-bg);
-          backdrop-filter: blur(20px);
-          border: 1px solid var(--border);
-          border-radius: 16px;
-          padding: 20px;
-          transition: all 0.3s;
-          cursor: pointer;
-        }
-
-        .material-card-pedago:hover {
-          transform: translateY(-5px);
-          border-color: var(--accent);
-        }
-
-        .material-card-pedago.apprenti {
-          border-left: 4px solid var(--success);
-        }
-        .material-card-pedago.compagnon {
-          border-left: 4px solid var(--warning);
-        }
-        .material-card-pedago.master {
-          border-left: 4px solid var(--danger);
-        }
-
-        .card-header-pedago {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: 15px;
-        }
-
-        .card-title-pedago {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .material-icon-pedago {
-          font-size: 2em;
-        }
-
-        .card-title-pedago h3 {
-          color: var(--text);
-          font-size: 1.3em;
-          margin-bottom: 2px;
-        }
-
-        .type-pedago {
-          color: var(--text-dim);
-          font-size: 0.8em;
-        }
-
-        .complexity-badge {
-          font-size: 1.5em;
-        }
-
-        .specs-preview-pedago {
-          margin-bottom: 15px;
-        }
-
-        .spec-mini-pedago {
-          display: flex;
-          justify-content: space-between;
-          padding: 6px 0;
-          border-bottom: 1px solid var(--border);
-        }
-
-        .spec-mini-pedago:last-child {
-          border-bottom: none;
-        }
-
-        .spec-label-pedago {
-          font-size: 0.85em;
-          color: var(--text-dim);
-        }
-
-        .spec-value-pedago {
-          font-weight: 600;
-          color: var(--text);
-        }
-
-        .properties-preview-pedago {
-          margin-bottom: 15px;
-        }
-
-        .prop-chip-pedago {
-          padding: 6px 10px;
-          background: rgba(0, 212, 255, 0.1);
-          border: 1px solid rgba(0, 212, 255, 0.3);
-          border-radius: 6px;
-          font-size: 0.8em;
-          margin-bottom: 5px;
-        }
-
-        .applications-preview-pedago {
-          margin-top: 15px;
-        }
-
-        .app-label-pedago {
-          font-size: 0.8em;
-          color: var(--text-dim);
-          font-weight: 600;
-          margin-bottom: 5px;
-          display: block;
-        }
-
-        .app-tags-pedago {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 5px;
-        }
-
-        .app-tag-pedago {
-          padding: 4px 8px;
-          background: rgba(147, 51, 234, 0.1);
-          border: 1px solid rgba(147, 51, 234, 0.3);
-          border-radius: 4px;
-          font-size: 0.75em;
-          color: var(--accent2);
-        }
-
-        /* Modal */
-        .modal-overlay-pedago {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.9);
-          backdrop-filter: blur(10px);
-          z-index: 1000;
-          overflow-y: auto;
-        }
-
-        .modal-content-pedago {
-          max-width: 1200px;
-          margin: 20px auto;
-          background: var(--card-bg);
-          border: 1px solid var(--border);
-          border-radius: 20px;
-          overflow: hidden;
-        }
-
-        .modal-header-pedago {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 25px;
-          border-bottom: 1px solid var(--border);
-        }
-
-        .modal-title-pedago {
-          display: flex;
-          align-items: center;
-          gap: 15px;
-        }
-
-        .material-icon-lg-pedago {
-          font-size: 3em;
-        }
-
-        .type-detail-pedago {
-          color: var(--text-dim);
-        }
-
-        .close-btn-pedago {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background: rgba(0, 0, 0, 0.3);
-          border: 1px solid var(--border);
-          color: var(--text);
-          font-size: 1.5em;
-          cursor: pointer;
-        }
-
-        /* Onglets */
-        .tabs-pedago {
-          display: flex;
-          border-bottom: 1px solid var(--border);
-          padding: 0 25px;
-        }
-
-        .tab-pedago {
-          padding: 15px 25px;
-          background: none;
-          border: none;
-          color: var(--text-dim);
-          font-weight: 600;
-          cursor: pointer;
-          border-bottom: 2px solid transparent;
-          transition: all 0.2s;
-        }
-
-        .tab-pedago.active {
-          color: var(--accent);
-          border-bottom-color: var(--accent);
-        }
-
-        .tab-content-pedago {
-          padding: 25px;
-        }
-
-        /* Sections contenu */
-        .fiche-content, .atelier-content, .identification-content, .exercices-content, .history-content {
-          animation: fadeIn 0.3s ease-in;
-        }
-
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
-        .description-pedago {
-          font-size: 1.1em;
-          margin-bottom: 25px;
-          padding: 20px;
-          background: rgba(0, 212, 255, 0.05);
-          border-left: 4px solid var(--accent);
-          border-radius: 8px;
-        }
-
-        .properties-grid-pedago {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 25px;
-        }
-
-        .section-pedago h3 {
-          color: var(--accent);
-          margin-bottom: 15px;
-          font-size: 1.1em;
-        }
-
-        .property-list-pedago {
-          list-style: none;
-        }
-
-        .property-item-pedago {
-          padding: 12px;
-          margin-bottom: 10px;
-          background: rgba(0, 0, 0, 0.3);
-          border-radius: 8px;
-          border: 1px solid var(--border);
-        }
-
-        .property-item-pedago:last-child {
-          margin-bottom: 0;
-        }
-
-        .prop-header {
-          font-size: 0.95em;
-          margin-bottom: 5px;
-        }
-
-        .prop-application, .prop-explanation {
-          margin-top: 5px;
-          padding: 5px 10px;
-          border-radius: 4px;
-          font-size: 0.85em;
-        }
-
-        .prop-application {
-          background: rgba(16, 185, 129, 0.1);
-          border-left: 2px solid var(--success);
-        }
-
-        .prop-explanation {
-          background: rgba(0, 212, 255, 0.1);
-          border-left: 2px solid var(--accent);
-        }
-
-        .norms-grid-pedago {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 10px;
-        }
-
-        .norm-card-pedago {
-          padding: 12px;
-          background: rgba(0, 0, 0, 0.3);
-          border: 1px solid var(--border);
-          border-radius: 6px;
-          font-size: 0.85em;
-        }
-
-        .norm-card-pedago strong {
-          display: block;
-          color: var(--text);
-          margin-bottom: 3px;
-        }
-
-        .norm-card-pedago small {
-          color: var(--text-dim);
-        }
-
-        /* Section atelier */
-        .difficulty-section-pedago {
-          margin-bottom: 25px;
-        }
-
-        .difficulty-bar-pedago {
-          width: 100%;
-          height: 10px;
-          background: rgba(0, 0, 0, 0.3);
-          border-radius: 5px;
-          overflow: hidden;
-        }
-
-        .difficulty-fill-pedago {
-          height: 100%;
-          background: linear-gradient(90deg, var(--success), var(--warning));
-        }
-
-        .guide-card-pedago {
-          margin-bottom: 25px;
-          padding: 20px;
-          background: var(--card-bg);
-          border: 1px solid var(--border);
-          border-radius: 12px;
-        }
-
-        .guide-card-pedago h4 {
-          color: var(--accent);
-          margin-bottom: 15px;
-        }
-
-        .steps-section-pedago h5, .tools-section-pedago h5, .safety-section-pedago h5, .mistakes-section-pedago h5 {
-          margin: 15px 0 10px;
-          color: var(--text);
-        }
-
-        .steps-list-pedago {
-          list-style: none;
-          counter-reset: step-counter;
-        }
-
-        .steps-list-pedago li {
-          counter-increment: step-counter;
-          padding: 8px 0;
-          padding-left: 20px;
-          position: relative;
-        }
-
-        .steps-list-pedago li::before {
-          content: counter(step-counter) ".";
-          position: absolute;
-          left: 0;
-          color: var(--accent);
-          font-weight: 700;
-        }
-
-        .tools-tags-pedago {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-        }
-
-        .tool-tag-pedago {
-          padding: 6px 12px;
-          background: rgba(147, 51, 234, 0.1);
-          border: 1px solid rgba(147, 51, 234, 0.3);
-          border-radius: 20px;
-          font-size: 0.8em;
-          color: var(--accent2);
-        }
-
-        .safety-list-pedago, .mistakes-list-pedago {
-          list-style: none;
-          padding-left: 0;
-        }
-
-        .safety-list-pedago li {
-          padding: 6px 0;
-          padding-left: 20px;
-          position: relative;
-        }
-
-        .safety-list-pedago li::before {
-          content: "⚠️";
-          position: absolute;
-          left: 0;
-        }
-
-        .mistakes-list-pedago li {
-          padding: 6px 0;
-          padding-left: 20px;
-          position: relative;
-        }
-
-        .mistakes-list-pedago li::before {
-          content: "❌";
-          position: absolute;
-          left: 0;
-        }
-
-        .precautions-section-pedago, .heat-treatment-pedago {
-          margin-top: 25px;
-          padding: 15px;
-          background: rgba(239, 68, 68, 0.1);
-          border: 1px solid rgba(239, 68, 68, 0.3);
-          border-radius: 8px;
-        }
-
-        .precautions-list-pedago {
-          list-style: none;
-        }
-
-        .precautions-list-pedago li {
-          padding: 5px 0;
-          padding-left: 20px;
-          position: relative;
-        }
-
-        .precautions-list-pedago li::before {
-          content: "⚠️";
-          position: absolute;
-          left: 0;
-        }
-
-        /* Identification */
-        .test-section-pedago {
-          margin-bottom: 20px;
-          padding: 15px;
-          background: rgba(0, 212, 255, 0.05);
-          border: 1px solid var(--border);
-          border-radius: 8px;
-        }
-
-        .test-section-pedago h4 {
-          color: var(--accent);
-          margin-bottom: 10px;
-        }
-
-        .color-sample-pedago {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          margin-top: 10px;
-        }
-
-        .color-box-pedago {
-          width: 30px;
-          height: 30px;
-          border-radius: 4px;
-          border: 1px solid var(--border);
-        }
-
-        .troubleshooting-section-pedago {
-          margin-top: 25px;
-        }
-
-        .issue-card-pedago {
-          margin-bottom: 15px;
-          padding: 15px;
-          background: rgba(0, 0, 0, 0.3);
-          border-left: 4px solid var(--danger);
-          border-radius: 8px;
-        }
-
-        .issue-card-pedago h4 {
-          color: var(--danger);
-          margin-bottom: 8px;
-        }
-
-        /* Exercices */
-        .exercises-list-pedago, .projects-list-pedago {
-          list-style: none;
-        }
-
-        .exercise-item-pedago, .project-item-pedago {
-          padding: 10px 0;
-          padding-left: 20px;
-          position: relative;
-          margin-bottom: 5px;
-        }
-
-        .exercise-item-pedago::before, .project-item-pedago::before {
-          position: absolute;
-          left: 0;
-          font-weight: 700;
-        }
-
-        .exercise-item-pedago::before {
-          content: "✍️";
-        }
-
-        .project-item-pedago::before {
-          content: "🎯";
-        }
-
-        .exercise-number, .project-number {
-          font-weight: 700;
-          color: var(--accent);
-          margin-right: 8px;
-        }
-
-        .learning-card-pedago {
-          margin-bottom: 15px;
-          padding: 15px;
-          background: var(--card-bg);
-          border: 1px solid var(--border);
-          border-radius: 8px;
-        }
-
-        .card-question-pedago {
-          margin-bottom: 10px;
-        }
-
-        .card-answer-pedago {
-          padding: 10px;
-          background: rgba(16, 185, 129, 0.1);
-          border-left: 3px solid var(--success);
-          border-radius: 4px;
-        }
-
-        .memory-tip-pedago {
-          margin-top: 8px;
-          padding: 8px;
-          background: rgba(147, 51, 234, 0.1);
-          border-left: 3px solid var(--accent2);
-          border-radius: 4px;
-          font-style: italic;
-        }
-
-        /* Historique */
-        .history-text-pedago {
-          padding: 20px;
-          background: var(--card-bg);
-          border-radius: 8px;
-          line-height: 1.8;
-        }
-
-        .timeline-pedago {
-          margin-top: 20px;
-        }
-
-        .timeline-list-pedago {
-          list-style: none;
-        }
-
-        .timeline-item-pedago {
-          display: flex;
-          align-items: flex-start;
-          padding: 10px 0;
-        }
-
-        .timeline-bullet-pedago {
-          color: var(--accent);
-          font-weight: 700;
-          margin-right: 10px;
-          margin-top: 2px;
-        }
-
-        /* Footer */
-        .footer-pedago {
-          text-align: center;
-          padding: 30px;
-          border-top: 1px solid var(--border);
-          margin-top: 50px;
-          color: var(--text-dim);
-          font-size: 0.9em;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-          .container-pedago {
-            padding: 0 15px;
-          }
-          
-          .header-pedago {
-            padding: 30px 0 20px;
-          }
-          
-          .logo-pedago {
-            font-size: 2em;
-          }
-          
-          .dashboard-pedago {
-            grid-template-columns: 1fr;
-          }
-          
-          .properties-grid-pedago {
-            grid-template-columns: 1fr;
-          }
-          
-          .tabs-pedago {
-            flex-wrap: wrap;
-          }
-        }
-      `}</style>
-    </>
-  );
+      {/* Modals */}
+      {selectedMetal && (
+        <MetalDetailModal metal={selectedMetal} onClose={() => setSelectedMetal(null)} />
+      )}
+    </main>
+  )
 }
