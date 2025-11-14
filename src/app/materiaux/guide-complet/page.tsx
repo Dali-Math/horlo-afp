@@ -1,16 +1,16 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
 
 export default function GuideCompletPage() {
 
-  return (
-    <div className="bg-white text-black dark:bg-white dark:text-black min-h-screen">
-        </div>
-);
-
+  // Forcer UNIQUEMENT cette page en mode clair
+  useEffect(() => {
+    document.documentElement.classList.remove('dark');
+  }, []);
 // Définition des types pour le simulateur
 interface Metal {
   id: string;
