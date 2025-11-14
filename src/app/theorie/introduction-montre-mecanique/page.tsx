@@ -1,5 +1,12 @@
 'use client';
 
+import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Watch, Play, Pause } from 'lucide-react';
+
+// ============================================
+// COMPOSANT 1: ANIMATION MONTRE
+// ============================================
 const AnimationMontre = () => {
   const [vitesse, setVitesse] = useState(1);
   const [isRunning, setIsRunning] = useState(true);
@@ -236,7 +243,7 @@ const AnimationMontre = () => {
         </div>
         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-green-400/30">
           <p className="text-green-300 text-sm mb-1">Alternances/h</p>
-          <p className="text-white text-2xl font-bold">28'800</p>
+          <p className="text-white text-2xl font-bold">28&apos;800</p>
         </div>
         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-amber-400/30">
           <p className="text-amber-300 text-sm mb-1">Réserve</p>
@@ -247,9 +254,11 @@ const AnimationMontre = () => {
   );
 };
 
-// Composant Schéma des 6 organes CORRIGÉ avec vraies pièces
+// ============================================
+// COMPOSANT 2: SCHÉMA DES 6 ORGANES
+// ============================================
 const SchemaSixOrganes = () => {
-  const [organeSelectionne, setOrganeSelectionne] = useState(null);
+  const [organeSelectionne, setOrganeSelectionne] = useState<string | null>(null);
   const [animation, setAnimation] = useState(true);
   
   const organes = useMemo(() => [
@@ -792,3 +801,26 @@ const SchemaSixOrganes = () => {
     </div>
   );
 };
+
+// ============================================
+// PAGE PRINCIPALE
+// ============================================
+export default function IntroductionMontreMecanique() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 py-12 px-4">
+      <div className="max-w-7xl mx-auto space-y-12">
+        <div className="text-center">
+          <h1 className="text-5xl font-bold text-white mb-4">
+            Introduction à la Montre Mécanique
+          </h1>
+          <p className="text-xl text-blue-200">
+            Découvrez le fonctionnement fascinant de l&apos;horlogerie mécanique
+          </p>
+        </div>
+
+        <AnimationMontre />
+        <SchemaSixOrganes />
+      </div>
+    </div>
+  );
+}
