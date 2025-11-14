@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
-import React, { useState, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
 
 export default function GuideCompletPage() {
 
+  // Forcer UNIQUEMENT cette page en mode clair
   useEffect(() => {
     document.documentElement.classList.remove('dark');
   }, []);
