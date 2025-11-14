@@ -235,8 +235,8 @@ export default function Page() {
         document.addEventListener('touchend', handleTouchEnd)
         document.addEventListener('touchcancel', handleTouchCancel)
 
-        // Enhanced wheel zoom
-        container.addEventListener('wheel', (e) => {
+        // Enhanced wheel zoom with proper type casting
+        container.addEventListener('wheel', (e: WheelEvent) => {
           e.preventDefault()
           const delta = e.deltaY > 0 ? 0.9 : 1.1
           const newScale = Math.min(Math.max(scale * delta, 0.3), 4)
