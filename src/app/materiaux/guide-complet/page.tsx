@@ -1,19 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-// Loader Mermaid
-function MermaidLoader() {
+export function MermaidLoader() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    import("mermaid").then((mermaid) => {
-      mermaid.initialize({
-        startOnLoad: true,
-        theme: "base",
-        flowchart: { useMaxWidth: false },
+    import("mermaid").then(({ default: mermaid }) => {
+      mermaid.run({
+        querySelector: ".mermaid",
       });
-      mermaid.init();
     });
   }, []);
 
