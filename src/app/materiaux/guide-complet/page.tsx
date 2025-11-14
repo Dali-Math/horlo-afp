@@ -8,6 +8,8 @@ export default function GuideCompletPage() {
 
   return (
     <div className="bg-white text-black dark:bg-white dark:text-black min-h-screen">
+        </div>
+);
 
 // Définition des types pour le simulateur
 interface Metal {
