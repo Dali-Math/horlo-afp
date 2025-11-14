@@ -1,363 +1,526 @@
-'use client'
+'use client';
 
-import { useState, useMemo } from 'react'
-import Link from 'next/link'
-import { 
-  ChevronLeft, Factory, Search, Shield, Gauge, Clock, 
-  Atom, Hammer, Globe, Info, Zap, Calendar, ArrowRight, 
-  BookOpen, FileText, Download, X
-} from 'lucide-react'
+import React, { useState } from 'react';
+import { Calculator, Settings, Info, HelpCircle, Wrench, Cog, Database, FileText, BarChart3, Clock, Zap, Gauge, Target, Compass, BookOpen, Ruler, Music, Activity, Thermometer, Atom, Layers, Microscope, Award, TrendingUp, Search, Filter, Star, ChevronRight, Home, Menu, X } from 'lucide-react';
 
-// 📂 IMPORTANT : Le PDF complet et ses pages
-// Placez dans /public/pdfs/ :
-// - metaux-communs.pdf (document complet)
-// - page-29.png (Chrome)
-// - page-30.png (Aluminium)  
-// - page-31.png (Titane)
-// - page-32.png (Nickel)
-// - etc. jusqu'à page-40.png
+// Composant de démonstration pour les outils (remplacez par vos vrais composants)
+const ToolPlaceholder = ({ name }) => (
+  <div className="p-8 text-center text-slate-400">
+    <p className="text-lg">Composant: {name}</p>
+    <p className="text-sm mt-2">Intégrez vos composants réels ici</p>
+  </div>
+);
 
-type Metal = {
-  id: string
-  title: string
-  symbol: string
-  colorClass: string
-  pdfPage: string // Page spécifique du PDF
-  properties: { label: string; value: string }[]
-  horlogerieUse: string[]
-  category: string
-  historicalPeriod: string
-  description: string
-  pdfPageNumber: number
-}
+// Base de données des métaux du PDF
+const metauxDatabase = {
+  communs: [
+    {
+      id: 'fer',
+      nom: 'Fer',
+      symbole: 'Fe',
+      masseVolumique: 7.86,
+      pointFusion: 1535,
+      couleur: 'Blanc-gris',
+      proprietes: ['Mou', 'Ductile', 'Malléable', 'Magnétisable', 'Bon conducteur'],
+      utilisations: ['Armes', 'Outils', 'Fer forgé', 'Chemins de fer', 'Carrosseries'],
+      category: 'commun'
+    },
+    {
+      id: 'chrome',
+      nom: 'Chrome',
+      symbole: 'Cr',
+      masseVolumique: 7.2,
+      pointFusion: 1857,
+      couleur: 'Blanc bleuté',
+      proprietes: ['Très dur', 'Résistant à l\'usure', 'Inoxydable', 'Résistant à la corrosion'],
+      utilisations: ['Acier inoxydable 18-10', 'Ustensiles de cuisine', 'Installations chimiques'],
+      category: 'commun'
+    },
+    {
+      id: 'aluminium',
+      nom: 'Aluminium',
+      symbole: 'Al',
+      masseVolumique: 2.702,
+      pointFusion: 660,
+      couleur: 'Blanc argenté',
+      proprietes: ['Léger', 'Résistant à la corrosion', 'Malléable', 'Non magnétique', '100% recyclable'],
+      utilisations: ['Machines outils', 'Toiture', 'Emballage', 'Aérosol'],
+      category: 'commun'
+    },
+    {
+      id: 'titane',
+      nom: 'Titane',
+      symbole: 'Ti',
+      masseVolumique: 4.54,
+      pointFusion: 1660,
+      couleur: 'Gris métallique',
+      proprietes: ['Léger', 'Résistance élevée', 'Amagnétique', 'Excellente résistance à la corrosion'],
+      utilisations: ['Aviation', 'Astronautique', 'Horlogerie', 'Bijouterie', 'Médecine'],
+      category: 'commun',
+      horlogerie: '45% plus léger que l\'acier'
+    },
+    {
+      id: 'nickel',
+      nom: 'Nickel',
+      symbole: 'Ni',
+      masseVolumique: 8.906,
+      pointFusion: 1455,
+      couleur: 'Blanc argenté',
+      proprietes: ['Ductile', 'Malléable', 'Très dur', 'Ferromagnétique', 'Résistant à la corrosion'],
+      utilisations: ['Pièces de monnaie', 'Ustensiles de cuisine', 'Alliage Invar'],
+      category: 'commun',
+      horlogerie: 'Invar (36% Ni) - ressorts spiral, balancier'
+    },
+    {
+      id: 'cuivre',
+      nom: 'Cuivre',
+      symbole: 'Cu',
+      masseVolumique: 8.92,
+      pointFusion: 1083,
+      couleur: 'Rouge-orange',
+      proprietes: ['Meilleur conducteur après l\'argent', 'Non-magnétique', 'Très malléable', 'Ductile'],
+      utilisations: ['Fil électrique', 'Bobinage moteurs', 'Toiture', 'Tuyauteries'],
+      category: 'commun'
+    },
+    {
+      id: 'zinc',
+      nom: 'Zinc',
+      symbole: 'Zn',
+      masseVolumique: 7.14,
+      pointFusion: 419.5,
+      couleur: 'Gris-bleu',
+      proprietes: ['Cassant à froid', 'Se moule bien', 'Inoxydable à froid'],
+      utilisations: ['Galvanisation', 'Piquets de barrière', 'Lampadaires'],
+      category: 'commun'
+    },
+    {
+      id: 'etain',
+      nom: 'Étain',
+      symbole: 'Sn',
+      masseVolumique: 7.28,
+      pointFusion: 231.9,
+      couleur: 'Blanc argenté',
+      proprietes: ['Mou', 'Très malléable', 'Inoxydable à l\'air', 'Bon conducteur'],
+      utilisations: ['Étamage', 'Soudage électronique', 'Industrie chimique'],
+      category: 'commun'
+    },
+    {
+      id: 'tungstene',
+      nom: 'Tungstène',
+      symbole: 'W',
+      masseVolumique: 19.35,
+      pointFusion: 3410,
+      couleur: 'Gris acier',
+      proprietes: ['Très dur', 'Ductile mais fragile', 'Température de fusion la plus élevée'],
+      utilisations: ['Outils de coupe', 'Aciers rapides', 'Soudage TIG'],
+      category: 'commun',
+      horlogerie: 'Carrures et lunettes de luxe'
+    },
+    {
+      id: 'plomb',
+      nom: 'Plomb',
+      symbole: 'Pb',
+      masseVolumique: 11.34,
+      pointFusion: 327.5,
+      couleur: 'Gris bleuâtre',
+      proprietes: ['Très mou', 'Très malléable', 'Ductile', 'Toxique'],
+      utilisations: ['Munition', 'Protection rayons X', 'Toitures'],
+      category: 'commun'
+    }
+  ],
+  alliages: [
+    {
+      id: 'laiton',
+      nom: 'Laiton',
+      composition: 'Cu (58%) + Zn (39%) + Pb (3%)',
+      masseVolumique: '8.5-8.8',
+      pointFusion: '900-980',
+      couleur: 'Jaune doré',
+      proprietes: ['Bonne résistance à la corrosion', 'Ductile', 'Malléable', 'Bonne conductivité'],
+      utilisations: ['Boîtes de montre', 'Pièces de mouvement', 'Douilles', 'Robinetterie'],
+      category: 'alliage',
+      horlogerie: 'Platines, ponts, roues de minuterie, leviers'
+    },
+    {
+      id: 'bronze',
+      nom: 'Bronze',
+      composition: 'Cu (95%) + Sn (2-10%)',
+      masseVolumique: '8.7-8.8',
+      pointFusion: '~1000',
+      couleur: 'Brun-rouge',
+      proprietes: ['Bonne résistance à la corrosion', 'Facile à travailler', 'Non-magnétique'],
+      utilisations: ['Œuvres d\'art', 'Robinetterie', 'Cloches', 'Roues dentées', 'Ressorts'],
+      category: 'alliage',
+      horlogerie: 'Platines haut de gamme, composants gravés'
+    },
+    {
+      id: 'maillechort',
+      nom: 'Maillechort',
+      composition: 'Cu (50-60%) + Zn (15-40%) + Ni (5-30%)',
+      couleur: 'Blanc argenté',
+      proprietes: ['Très résistant à la corrosion', 'Malléable', 'Ductile', 'Inaltérable'],
+      utilisations: ['Pointes stylos', 'Instruments musique', 'Brucelles'],
+      category: 'alliage',
+      horlogerie: 'Pièces de mouvement, montres artisanales'
+    }
+  ],
+  aciers: [
+    {
+      id: 'acier-carbone',
+      nom: 'Acier au Carbone',
+      composition: 'Fe + C (0.02-2%)',
+      types: ['Type S - usage général', 'Type P - appareils à pression', 'Type L - tubes', 'Type E - construction mécanique'],
+      category: 'acier',
+      horlogerie: 'Boîtiers, bracelets, aiguilles, ressorts, axes, vis'
+    },
+    {
+      id: 'acier-inox',
+      nom: 'Acier Inoxydable',
+      composition: 'Fe + Cr (12-25%) + Ni/Mo',
+      proprietes: ['Résistance à la corrosion', 'Non-magnétique', 'Excellent polissage', 'Bonne usinabilité'],
+      category: 'acier',
+      horlogerie: 'Boîtiers classiques, sportifs, plongée (Rolex, Omega)'
+    }
+  ]
+};
 
-const METALS: Metal[] = [
-  {
-    id: 'titane',
-    title: 'Le Titane (Ti)',
-    symbol: 'Ti',
-    pdfPage: '/pdfs/page-31.png',
-    pdfPageNumber: 31,
-    colorClass: 'bg-gradient-to-br from-indigo-400 to-indigo-600',
-    description: "Métal léger ultra-performant, 45% moins dense que l'acier. Extraction de l'ilménite et du rutile. En horlogerie, allié à l'aluminium, l'étain ou le molybdène.",
-    properties: [
-      { label: 'Masse volumique', value: '4,54 kg/dm³' },
-      { label: 'Point de fusion', value: '1660°C' },
-      { label: 'Résistance', value: 'Excellente rapport résistance/masse' },
-      { label: 'Spécificités', value: 'Amagnétique, hypoallergénique, recyclable' }
-    ],
-    horlogerieUse: [
-      "Boîtiers allégés de 45% vs acier (montres sport)",
-      "Platines techniques de mouvement",
-      "Vis spéciales haute résistance",
-      "Bracelets ultra-confortables",
-      "Montres de plongée professionnelles"
-    ],
-    category: 'Métaux légers',
-    historicalPeriod: 'XXe siècle'
-  },
-  // ... (tous les autres métaux avec pdfPage correspondant)
-  {
-    id: 'nickel',
-    title: 'Le Nickel (Ni)',
-    symbol: 'Ni',
-    pdfPage: '/pdfs/page-32.png',
-    pdfPageNumber: 32,
-    colorClass: 'bg-gradient-to-br from-gray-300 to-gray-500',
-    description: "Métal blanc ferromagnétique. Alliage Invar® 36% Ni pour horlogerie (faible dilatation). Utilisé dans les aciers inoxydables.",
-    properties: [
-      { label: 'Masse volumique', value: '8,906 kg/dm³' },
-      { label: 'Point de fusion', value: '1455°C' },
-      { label: 'Propriété', value: 'Ferromagnétique' },
-      { label: 'Attention', value: 'Allergène (normes restrictives)' }
-    ],
-    horlogerieUse: [
-      "Invar® pour ressorts spiraux (faible dilatation)",
-      "Balanciers à inertie stable",
-      "Remplacé par Mo pour allergies",
-      "Aciers inox 316L (10% Ni)"
-    ],
-    category: 'Métaux purs',
-    historicalPeriod: 'XIXe siècle'
-  }
-]
+// Composant Guide des Métaux
+const GuideMetaux = () => {
+  const [selectedCategory, setSelectedCategory] = useState('tous');
+  const [selectedMetal, setSelectedMetal] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
-const CATEGORIES = ['Tous', 'Métaux purs', 'Alliages', 'Acier & Fer', 'Métaux légers'] as const
-type Category = (typeof CATEGORIES)[number]
+  const categories = [
+    { id: 'tous', label: 'Tous les métaux', icon: Layers },
+    { id: 'commun', label: 'Métaux communs', icon: Atom },
+    { id: 'alliage', label: 'Alliages', icon: Microscope },
+    { id: 'acier', label: 'Aciers', icon: Award }
+  ];
 
-type HistoryPeriod = 'xvie' | 'xviiie' | 'xxe' | 'xxie'
-const HISTORY_TABS = [
-  { id: 'xvie' as HistoryPeriod, label: 'XVIe-XVIIe' },
-  { id: 'xviiie' as HistoryPeriod, label: 'XVIIIe-XIXe' },
-  { id: 'xxe' as HistoryPeriod, label: 'XXe siècle' },
-  { id: 'xxie' as HistoryPeriod, label: 'XXIe siècle' },
-]
+  const getAllMetals = () => {
+    return [...metauxDatabase.communs, ...metauxDatabase.alliages, ...metauxDatabase.aciers];
+  };
 
-function PdfViewerModal({ page, pageNumber, onClose }: { page: string; pageNumber: number; onClose: () => void }) {
+  const filteredMetals = getAllMetals().filter(metal => {
+    const matchesCategory = selectedCategory === 'tous' || metal.category === selectedCategory;
+    const matchesSearch = metal.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (metal.symbole && metal.symbole.toLowerCase().includes(searchTerm.toLowerCase()));
+    return matchesCategory && matchesSearch;
+  });
+
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl overflow-y-auto"
-      aria-modal="true"
-      role="dialog"
-    >
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="bg-white dark:bg-slate-900 rounded-3xl max-w-5xl w-full shadow-2xl overflow-hidden border-2 border-amber-500/30"
-        >
-          {/* Header */}
-          <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white p-6 flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold">Page {pageNumber} - Cours du Professeur</h2>
-              <p className="text-sm opacity-90">Document original du module "Métaux Communs"</p>
-            </div>
-            <button
-              onClick={onClose}
-              className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Image de la page du PDF */}
-          <div className="p-8 bg-white">
-            <img
-              src={page}
-              alt={`Page ${pageNumber} du cours`}
-              className="w-full h-auto rounded-lg shadow-lg border border-slate-200"
-            />
-          </div>
-
-          {/* Footer avec actions */}
-          <div className="p-6 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex justify-between items-center">
-            <a
-              href="/pdfs/metaux-communs.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
-            >
-              <Download className="w-4 h-4" />
-              Télécharger le PDF complet
-            </a>
-            <span className="text-sm text-slate-500">
-              Cliquez à l'extérieur pour fermer
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function MetalCard({ metal, onClick }: { metal: Metal; onClick: () => void }) {
-  return (
-    <article
-      onClick={onClick}
-      className="group cursor-pointer bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl overflow-hidden transition-all hover:-translate-y-2 hover:shadow-2xl shadow-lg"
-    >
-      {/* Aperçu de la page du PDF */}
-      <div className="relative h-64 overflow-hidden bg-slate-100 dark:bg-slate-900">
-        <img
-          src={metal.pdfPage}
-          alt={`Page ${metal.pdfPageNumber} - ${metal.title}`}
-          className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
-        />
-        <div className={`absolute inset-0 ${metal.colorClass} opacity-10 mix-blend-multiply`}></div>
-        
-        {/* Badge page PDF */}
-        <div className="absolute top-4 left-4">
-          <span className="bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-            Page {metal.pdfPageNumber}
-          </span>
-        </div>
-
-        {/* Badge catégorie */}
-        <div className="absolute top-4 right-4">
-          <span className="bg-white/90 dark:bg-slate-800/90 text-slate-900 dark:text-slate-100 px-3 py-1 rounded-full text-xs border border-slate-200 dark:border-slate-600">
-            {metal.category}
-          </span>
-        </div>
-
-        {/* Overlay au hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-          <p className="text-white text-sm font-medium">
-            📄 Cliquez pour voir la page complète du PDF
-          </p>
-        </div>
-      </div>
-
-      {/* Contenu */}
-      <div className="p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className={`w-14 h-14 ${metal.colorClass} rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg`}>
-            {metal.symbol}
+    <div className="h-full flex flex-col">
+      {/* Header avec recherche */}
+      <div className="p-6 border-b border-slate-700">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="bg-amber-500/20 p-3 rounded-lg">
+            <Atom className="w-8 h-8 text-amber-500" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-amber-400">
-              {metal.title}
-            </h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
-              {metal.properties[0]?.value} • {metal.properties[1]?.value}
-            </p>
+            <h3 className="text-2xl font-bold text-white">Guide des Métaux en Horlogerie</h3>
+            <p className="text-slate-400">Base de données complète des matériaux horlogers</p>
           </div>
         </div>
 
-        <p className="text-slate-700 dark:text-slate-300 text-sm mb-4 leading-relaxed">
-          {metal.description}
-        </p>
-
-        <div className="bg-amber-50 dark:bg-slate-800/50 rounded-lg p-3 border border-amber-200 dark:border-slate-700 mb-4">
-          <div className="text-xs font-semibold text-amber-700 dark:text-amber-400 mb-2 flex items-center gap-1">
-            <Clock className="w-3 h-3" /> Applications en horlogerie :
-          </div>
-          <ul className="text-xs text-slate-600 dark:text-slate-400 space-y-1">
-            {metal.horlogerieUse.slice(0, 2).map((use, i) => (
-              <li key={i} className="flex items-start gap-1">
-                <span className="text-amber-500 mt-0.5">▸</span> {use}
-              </li>
-            ))}
-            {metal.horlogerieUse.length > 2 && (
-              <li className="text-amber-600 dark:text-amber-500 font-semibold">
-                +{metal.horlogerieUse.length - 2} exemples...
-              </li>
-            )}
-          </ul>
-        </div>
-
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
-            <Calendar className="w-3 h-3" /> {metal.historicalPeriod}
-          </span>
-          <span className="text-amber-600 dark:text-amber-400 font-semibold text-sm flex items-center gap-1">
-            Voir la page du PDF <ArrowRight className="w-3 h-3" />
-          </span>
+        {/* Barre de recherche */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <input
+            type="text"
+            placeholder="Rechercher un métal ou alliage..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
+          />
         </div>
       </div>
-    </article>
-  )
-}
 
-export default function MateriauxPage() {
-  const [filter, setFilter] = useState<Category>('Tous')
-  const [search, setSearch] = useState('')
-  const [pdfViewer, setPdfViewer] = useState<{ page: string; pageNumber: number } | null>(null)
-
-  const filteredMetals = useMemo(() => {
-    let filtered = filter === 'Tous' ? METALS : METALS.filter(m => m.category === filter)
-    if (search) {
-      const query = search.toLowerCase()
-      filtered = filtered.filter(m => 
-        m.title.toLowerCase().includes(query) ||
-        m.symbol.toLowerCase().includes(query) ||
-        m.description.toLowerCase().includes(query)
-      )
-    }
-    return filtered
-  }, [filter, search])
-
-  return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/30 to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-      {/* Header avec lien vers PDF complet */}
-      <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl shadow-lg border-b border-slate-200 dark:border-slate-700">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/theorie" className="inline-flex items-center gap-2 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-semibold">
-            <ChevronLeft className="w-5 h-5" /> Retour à la théorie
-          </Link>
-          
-          <a
-            href="/pdfs/metaux-communs.pdf"
-            target="_blank"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
-          >
-            <FileText className="w-4 h-4" />
-            PDF du Professeur
-          </a>
-        </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        {/* Hero */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl sm:text-7xl font-black mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600 tracking-tight">
-            Guide des Matériaux
-          </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto mb-8">
-            Cours complet basé sur le PDF du professeur. Cliquez sur chaque fiche pour voir la page originale.
-          </p>
-        </div>
-
-        {/* Navigation */}
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-12">
-          <div className="flex flex-wrap gap-3 justify-center">
-            {CATEGORIES.map((cat) => (
+      {/* Catégories */}
+      <div className="p-6 border-b border-slate-700">
+        <div className="flex flex-wrap gap-2">
+          {categories.map(cat => {
+            const IconComponent = cat.icon;
+            return (
               <button
-                key={cat}
-                onClick={() => setFilter(cat)}
-                className={`px-6 py-3 rounded-2xl font-semibold text-sm transition-all duration-300 ${
-                  filter === cat
-                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg scale-105'
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:shadow-lg border border-slate-200 dark:border-slate-700'
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                  selectedCategory === cat.id
+                    ? 'bg-amber-500 text-white shadow-lg'
+                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
                 }`}
               >
-                {cat}
+                <IconComponent className="w-4 h-4" />
+                {cat.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Liste et détails */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Liste des métaux */}
+        <div className="w-1/3 border-r border-slate-700 overflow-y-auto">
+          <div className="p-4 space-y-2">
+            {filteredMetals.map(metal => (
+              <button
+                key={metal.id}
+                onClick={() => setSelectedMetal(metal)}
+                className={`w-full text-left p-4 rounded-lg transition-all ${
+                  selectedMetal?.id === metal.id
+                    ? 'bg-amber-500/20 border-2 border-amber-500'
+                    : 'bg-slate-700 hover:bg-slate-600 border-2 border-transparent'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-semibold text-white flex items-center gap-2">
+                      {metal.nom}
+                      {metal.symbole && (
+                        <span className="text-xs bg-slate-600 px-2 py-0.5 rounded">
+                          {metal.symbole}
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-sm text-slate-400 mt-1">
+                      {metal.composition || metal.couleur}
+                    </div>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-slate-400" />
+                </div>
+                {metal.horlogerie && (
+                  <div className="mt-2 flex items-center gap-1 text-xs text-amber-400">
+                    <Star className="w-3 h-3" />
+                    <span>Application horlogère</span>
+                  </div>
+                )}
               </button>
             ))}
           </div>
-          
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Filtrer les matériaux..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 pr-4 py-3 bg-white dark:bg-slate-800 rounded-xl text-sm border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-            />
-          </div>
         </div>
 
-        {/* Grille des matériaux avec pages du PDF */}
-        <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-16">
-          {filteredMetals.map((metal) => (
-            <MetalCard
-              key={metal.id}
-              metal={metal}
-              onClick={() => setPdfViewer({ page: metal.pdfPage, pageNumber: metal.pdfPageNumber })}
-            />
-          ))}
-        </section>
+        {/* Détails du métal sélectionné */}
+        <div className="flex-1 overflow-y-auto">
+          {selectedMetal ? (
+            <div className="p-6">
+              <div className="bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl p-6 mb-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="text-3xl font-bold text-white mb-2">
+                      {selectedMetal.nom}
+                      {selectedMetal.symbole && (
+                        <span className="ml-3 text-xl text-amber-400">({selectedMetal.symbole})</span>
+                      )}
+                    </h3>
+                    {selectedMetal.composition && (
+                      <p className="text-slate-300">{selectedMetal.composition}</p>
+                    )}
+                  </div>
+                  <div className="bg-amber-500 px-4 py-2 rounded-lg">
+                    <span className="text-white font-semibold capitalize">{selectedMetal.category}</span>
+                  </div>
+                </div>
 
-        {/* Visualiseur PDF complet */}
-        <section className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-700">
-          <h2 className="text-3xl font-black text-center mb-6 text-slate-900 dark:text-white">
-            📖 Consulter le Cours Complet
-          </h2>
-          <p className="text-center text-slate-600 dark:text-slate-400 mb-6">
-            Accédez au document original du professeur avec toutes les pages et annotations
-          </p>
-          <div className="flex justify-center">
-            <a
-              href="/pdfs/metaux-communs.pdf"
-              target="_blank"
-              className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-slate-900 to-slate-800 dark:from-amber-500 dark:to-amber-600 text-white rounded-xl font-semibold text-lg hover:shadow-2xl transition-all"
-            >
-              <FileText className="w-6 h-6" />
-              Ouvrir le PDF dans un nouvel onglet
-            </a>
-          </div>
-        </section>
+                {/* Caractéristiques physiques */}
+                <div className="grid grid-cols-2 gap-4 mt-6">
+                  {selectedMetal.masseVolumique && (
+                    <div className="bg-slate-800/50 p-4 rounded-lg">
+                      <div className="text-slate-400 text-sm mb-1">Masse volumique</div>
+                      <div className="text-white text-xl font-bold">{selectedMetal.masseVolumique} kg/dm³</div>
+                    </div>
+                  )}
+                  {selectedMetal.pointFusion && (
+                    <div className="bg-slate-800/50 p-4 rounded-lg">
+                      <div className="text-slate-400 text-sm mb-1">Point de fusion</div>
+                      <div className="text-white text-xl font-bold">{selectedMetal.pointFusion}°C</div>
+                    </div>
+                  )}
+                  {selectedMetal.couleur && (
+                    <div className="bg-slate-800/50 p-4 rounded-lg col-span-2">
+                      <div className="text-slate-400 text-sm mb-1">Couleur</div>
+                      <div className="text-white text-lg font-semibold">{selectedMetal.couleur}</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Propriétés */}
+              {selectedMetal.proprietes && (
+                <div className="mb-6">
+                  <h4 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
+                    <Microscope className="w-5 h-5 text-amber-500" />
+                    Propriétés
+                  </h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    {selectedMetal.proprietes.map((prop, idx) => (
+                      <div key={idx} className="flex items-center gap-2 bg-slate-700 p-3 rounded-lg">
+                        <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                        <span className="text-slate-300">{prop}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Applications en horlogerie */}
+              {selectedMetal.horlogerie && (
+                <div className="mb-6 bg-amber-500/10 border-2 border-amber-500/30 rounded-xl p-6">
+                  <h4 className="text-xl font-bold text-amber-400 mb-3 flex items-center gap-2">
+                    <Star className="w-5 h-5" />
+                    Application Horlogère Spéciale
+                  </h4>
+                  <p className="text-white text-lg">{selectedMetal.horlogerie}</p>
+                </div>
+              )}
+
+              {/* Utilisations */}
+              {selectedMetal.utilisations && (
+                <div className="mb-6">
+                  <h4 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
+                    <Wrench className="w-5 h-5 text-amber-500" />
+                    Utilisations
+                  </h4>
+                  <div className="bg-slate-700 rounded-lg p-4">
+                    <ul className="space-y-2">
+                      {selectedMetal.utilisations.map((util, idx) => (
+                        <li key={idx} className="flex items-start gap-3 text-slate-300">
+                          <ChevronRight className="w-4 h-4 mt-1 text-amber-500 flex-shrink-0" />
+                          <span>{util}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              {/* Types (pour aciers) */}
+              {selectedMetal.types && (
+                <div>
+                  <h4 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
+                    <Layers className="w-5 h-5 text-amber-500" />
+                    Types
+                  </h4>
+                  <div className="space-y-2">
+                    {selectedMetal.types.map((type, idx) => (
+                      <div key={idx} className="bg-slate-700 p-4 rounded-lg text-slate-300">
+                        {type}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="h-full flex items-center justify-center text-slate-400">
+              <div className="text-center">
+                <Atom className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                <p className="text-lg">Sélectionnez un métal pour voir ses détails</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Composant Tableau Comparatif
+const TableauComparatif = () => {
+  return (
+    <div className="p-6 overflow-auto">
+      <div className="mb-6">
+        <h3 className="text-2xl font-bold text-white mb-2">Tableau Comparatif des Matériaux</h3>
+        <p className="text-slate-400">Comparaison des propriétés pour les applications horlogères</p>
       </div>
 
-      {/* Modal PDF Viewer */}
-      {pdfViewer && (
-        <PdfViewerModal
-          page={pdfViewer.page}
-          pageNumber={pdfViewer.pageNumber}
-          onClose={() => setPdfViewer(null)}
-        />
-      )}
-    </main>
-  )
-}
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-slate-700">
+              <th className="p-3 text-left text-white font-semibold">Critère</th>
+              <th className="p-3 text-left text-white font-semibold">Acier</th>
+              <th className="p-3 text-left text-white font-semibold">Laiton</th>
+              <th className="p-3 text-left text-white font-semibold">Maillechort</th>
+              <th className="p-3 text-left text-white font-semibold">Aluminium</th>
+              <th className="p-3 text-left text-white font-semibold">Plastique</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              { critere: 'Poids', values: ['Lourd', 'Lourd', 'Lourd', 'Très léger', 'Très léger'] },
+              { critere: 'Dureté / solidité', values: ['Très élevée', 'Moyenne', 'Élevée', 'Moyenne', 'Variable'] },
+              { critere: 'Résistance corrosion', values: ['Excellente', 'Bonne', 'Très bonne', 'Moyenne', 'Bonne'] },
+              { critere: 'Esthétique', values: ['Poli, brossé', 'Doré, plaqué', 'Gris-blanc', 'Coloré', 'Coloré'] },
+              { critere: 'Coût', values: ['Moyen/élevé', 'Faible', 'Élevé', 'Faible', 'Très faible'] },
+              { critere: 'Usinabilité', values: ['Moyenne', 'Excellente', 'Bonne', 'Très bonne', 'Excellente'] },
+            ].map((row, idx) => (
+              <tr key={idx} className="border-b border-slate-700 hover:bg-slate-700/50">
+                <td className="p-3 font-semibold text-amber-400">{row.critere}</td>
+                {row.values.map((val, vidx) => (
+                  <td key={vidx} className="p-3 text-slate-300">{val}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Avantages/Inconvénients */}
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[
+          { nom: 'Acier', avantages: 'Robuste, durable, esthétique', inconvenients: 'Lourd, difficile à usiner', color: 'blue' },
+          { nom: 'Laiton', avantages: 'Facile à travailler, économique', inconvenients: 'Moins noble, nécessite traitement', color: 'yellow' },
+          { nom: 'Maillechort', avantages: 'Belle finition, stable, pas de traitement', inconvenients: 'Coûteux, savoir-faire spécifique', color: 'purple' },
+          { nom: 'Aluminium', avantages: 'Léger, colorable, bon pour le sport', inconvenients: 'Moins résistant, rayable', color: 'green' },
+          { nom: 'Plastique', avantages: 'Léger, bon marché, idéal quartz', inconvenients: 'Moins prestigieux, peu durable', color: 'red' },
+        ].map((materiau, idx) => (
+          <div key={idx} className="bg-slate-700 rounded-lg p-4">
+            <h4 className="text-lg font-bold text-white mb-3">{materiau.nom}</h4>
+            <div className="mb-3">
+              <div className="text-xs text-green-400 font-semibold mb-1">✓ Avantages</div>
+              <div className="text-slate-300 text-sm">{materiau.avantages}</div>
+            </div>
+            <div>
+              <div className="text-xs text-red-400 font-semibold mb-1">✗ Inconvénients</div>
+              <div className="text-slate-300 text-sm">{materiau.inconvenients}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Liste de tous les outils
+const allTools = [
+  { id: 'guide-metaux', name: 'Guide des Métaux', component: GuideMetaux, icon: Atom, featured: true },
+  { id: 'tableau-comparatif', name: 'Tableau Comparatif', component: TableauComparatif, icon: BarChart3, featured: true },
+  { id: 'cosc-calculator', name: 'Calculateur Précision COSC', component: ToolPlaceholder, icon: Calculator },
+  { id: 'rapport-engrenages', name: 'Rapport d\'Engrenages', component: ToolPlaceholder, icon: Settings },
+  { id: 'convertisseur-frequence', name: 'Convertisseur de Fréquence', component: ToolPlaceholder, icon: Zap },
+  { id: 'reserve-marche', name: 'Réserve de Marche', component: ToolPlaceholder, icon: Clock },
+  { id: 'longueur-spiral', name: 'Longueur de Spiral', component: ToolPlaceholder, icon: Wrench },
+  { id: 'tableau-couples', name: 'Tableau des Couples', component: ToolPlaceholder, icon: Cog },
+  { id: 'guide-amplitude', name: 'Guide d\'Amplitude', component: ToolPlaceholder, icon: Gauge },
+  { id: 'identifier-mouvement', name: 'Identifier Mouvement', component: ToolPlaceholder, icon: Compass },
+  { id: 'chronometre', name: 'Chronomètre', component: ToolPlaceholder, icon: BarChart3 },
+  { id: 'convertisseur-unites', name: 'Convertisseur d\'Unités', component: ToolPlaceholder, icon: Target },
+  { id: 'simulateur-echappement', name: 'Simulateur d\'Échappement', component: ToolPlaceholder, icon: Target },
+  { id: 'generateur-fiches', name: 'Générateur de Fiches', component: ToolPlaceholder, icon: FileText },
+  { id: 'base-donnees-pieces', name: 'Base de Données des Pièces', component: ToolPlaceholder, icon: Database },
+  { id: 'complications', name: 'Simulateur de Complications', component: ToolPlaceholder, icon: Info },
+  { id: 'finishing', name: 'Finitions Swiss Made', component: ToolPlaceholder, icon: HelpCircle },
+  { id: 'calculateur-tolerances', name: 'Calculateur de Tolérances ISO 286', component: ToolPlaceholder, icon: Ruler },
+  { id: 'simulateur-resonance', name: 'Simulateur de Résonance Horlogère', component: ToolPlaceholder, icon: Music },
+  { id: 'calculateur-frequence-avance', name: 'Calculateur de Fréquence Avancé', component: ToolPlaceholder, icon: Activity },
+  { id: 'simulateur-chronometrie-thermique', name: 'Simulateur de Chronométrie Thermique', component: ToolPlaceholder, icon: Thermometer },
+  { id: 'calculateur-dimensions-spiral', name: 'Calculateur de Dimensions du Spiral', component: ToolPlaceholder, icon: Compass },
+];
+
+export default function HorloLearnToolsPage() {
+  const [selectedTool, setSelectedTool] = useState('guide-metaux');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const selectedToolData = allTools.find(tool => tool.id === selectedTool);
+  const ToolComponent = selectedToolData?.component || Tool
