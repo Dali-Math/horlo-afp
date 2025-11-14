@@ -17,7 +17,8 @@ export default function MetauxCommunsPage() {
             </h2>
           </div>
 
-          <FlipBookViewer file="/pdfs/metaux-communs.pdf" />
+          {/* MODE LIVRE HORIZONTAL */}
+          <FlipBookViewer file="/pdfs/metaux-communs.pdf" mode="horizontal" />
         </div>
 
       </div>
