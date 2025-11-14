@@ -703,20 +703,14 @@ export default function HomePage(): JSX.Element {
           }
         }
 
-        /* BOUTON FLOTTANT */
-.floating-back-btn {
-  position: fixed !important;
-  bottom: 30px !important;
-  left: 0 !important;
-  right: auto !important;  /* Ajoutez ceci pour annuler "right" */
-  z-index: 999;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  border-top-left-radius: 0 !important;
-  border-bottom-left-radius: 0 !important;
-  border-top-right-radius: 9999px !important;
-  border-bottom-right-radius: 9999px !important;
-  width: auto !important;  /* Empêche qu'il prenne toute la largeur */
-}
+         /* BOUTON FLOTTANT */
+        .floating-back-btn {
+          position: fixed;
+          bottom: 30px;
+          right: 30px;
+          z-index: 999;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
 
 /* Sur tablettes */
 @media (max-width: 768px) {
