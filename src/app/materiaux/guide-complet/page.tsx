@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-export function MermaidLoader() {
+function MermaidLoader() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -15,7 +15,6 @@ export function MermaidLoader() {
 
   return null;
 }
-
 export default function HomePage(): JSX.Element {
   useEffect(() => {
     // Initialize Mermaid and controls after DOM is loaded
