@@ -1303,15 +1303,14 @@ export default function HomePage(): JSX.Element {
       </p>
     </div>
     {/* Visionneuse PDF */}
-    <div className="bg-white p-6 rounded-lg shadow border border-gray-200 mt-8">
+<div className="bg-white p-6 rounded-lg shadow border border-gray-200 mt-8">
   <iframe
-    src="/pdfjs/web/viewer.html?file=/pdfs/metaux-communs.pdf&download=false#print=false"
+    src="/pdfs/metaux-communs.pdf"
     className="w-full h-[900px] rounded-lg border"
   ></iframe>
 </div>
+</div>
 </section>
-
-        {/* Footer */}
         <footer className="p-8 bg-gray-900 text-white">
           <div className="text-center">
             <h3 className="serif-heading text-2xl font-bold mb-4">Guide Complet des Métaux en Horlogerie</h3>
