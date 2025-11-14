@@ -1272,29 +1272,59 @@ export default function HomePage(): JSX.Element {
         </section>
 
         {/* PDF de Référence Section */}
-        <section id="pdf-reference" className="p-8">
-          <div className="section-card p-8">
-            <h2 className="serif-heading text-4xl font-bold mb-8 text-center">Intégration du PDF de Référence : &quot;Métaux Communs&quot;</h2>
+<section id="pdf-reference" className="p-8">
+  <div className="section-card p-8">
+    <h2 className="serif-heading text-4xl font-bold mb-8 text-center">
+      Intégration du PDF de Référence : &quot;Métaux Communs&quot;
+    </h2>
 
-            <div className="material-card mb-8">
-              <h3 className="serif-heading text-2xl font-bold mb-4">Ressource Pédagogique Complémentaire</h3>
-              <p className="mb-4">Pour approfondir les connaissances sur les matériaux de base utilisés dans l&apos;industrie horlogère, un document de référence intitulé <strong>&quot;Métaux Communs&quot;</strong> est mis à disposition.</p>
-              <p className="mb-4">Ce PDF, hébergé dans le dépôt GitHub <code>horlo-afp</code>, constitue une ressource pédagogique précieuse pour les élèves en formation et les passionnés. Il est conçu pour être consulté directement sur la page, offrant une expérience de lecture fluide et intégrée.</p>
-              <p>Ce document fournit des informations fondamentales sur les propriétés, les compositions et les applications des métaux les plus couramment rencontrés en horlogerie. Il sert de complément essentiel aux explications détaillées présentées dans ce guide.</p>
-            </div>
+    <div className="material-card mb-8">
+      <h3 className="serif-heading text-2xl font-bold mb-4">
+        Ressource Pédagogique Complémentaire
+      </h3>
+      <p className="mb-4">
+        Pour approfondir les connaissances sur les matériaux de base utilisés dans l&apos;industrie horlogère,
+        un document de référence intitulé <strong>&quot;Métaux Communs&quot;</strong> est mis à disposition.
+      </p>
+      <p className="mb-4">
+        Ce PDF, hébergé dans le dépôt GitHub <code>horlo-afp</code>, constitue une ressource pédagogique précieuse
+        pour les élèves en formation et les passionnés. Il est conçu pour être consulté directement sur la page,
+        offrant une expérience de lecture fluide et intégrée.
+      </p>
+      <p>
+        Ce document fournit des informations fondamentales sur les propriétés, les compositions et les applications
+        des métaux les plus couramment rencontrés en horlogerie. Il sert de complément essentiel aux explications
+        détaillées présentées dans ce guide.
+      </p>
+    </div>
 
-            <div className="bg-gray-100 p-6 rounded-lg">
-              <h4 className="font-bold text-lg mb-4">Visionneuse de PDF Intégrée</h4>
-              <p className="mb-4 text-sm text-gray-600">Si le PDF ne s&apos;affiche pas correctement, vous pouvez le télécharger directement en cliquant sur le lien ci-dessous.</p>
-              <div className="text-center">
-                <a href="/pdfs/metaux-communs.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
-                  <i className="fas fa-download mr-2"></i>
-                  Télécharger le PDF &quot;Métaux Communs&quot;
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
+    <div className="bg-gray-100 p-6 rounded-lg">
+      <h4 className="font-bold text-lg mb-4">Visionneuse de PDF Intégrée</h4>
+      <p className="mb-4 text-sm text-gray-600">
+        Si le PDF ne s&apos;affiche pas correctement, vous pouvez le télécharger directement en cliquant sur le lien ci-dessous.
+      </p>
+      <div className="text-center">
+        <a
+          href="/pdfs/metaux-communs.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <i className="fas fa-download mr-2"></i>
+          Télécharger le PDF &quot;Métaux Communs&quot;
+        </a>
+      </div>
+    </div>
+
+    {/* Visionneuse PDF */}
+    <div className="bg-white p-6 rounded-lg shadow border border-gray-200 mt-8">
+      <iframe
+        src="/pdfs/metaux-communs.pdf"
+        className="w-full h-[900px] rounded-lg border"
+      ></iframe>
+    </div>
+  </div>
+</section>
 
         {/* Footer */}
         <footer className="p-8 bg-gray-900 text-white">
