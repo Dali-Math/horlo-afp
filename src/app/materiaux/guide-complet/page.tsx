@@ -472,8 +472,6 @@ const AlloyMixer: React.FC = () => {
       default:
         return { level: '', color: '' };
     }
-  };
-
   return (
     <div className="w-full">
       {/* En-tête avec bouton retour */}
