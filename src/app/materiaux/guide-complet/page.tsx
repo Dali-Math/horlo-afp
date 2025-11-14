@@ -178,7 +178,7 @@ export default function Page() {
           if (e.touches.length === 1 && isDragging && !isPinching) {
             const touch = e.touches[0]
             translateX = touch.clientX - startX
-            translateY = touch.clientY - startY
+            translateY = touch.clientY - translateY
             updateTransform()
           } else if (e.touches.length === 2 && isPinching) {
             const touch1 = e.touches[0]
@@ -219,7 +219,7 @@ export default function Page() {
           updateTransform()
         }
 
-        function handleTouchCancel(e: TouchEvent) {
+        const handleTouchCancel = (e: TouchEvent) => {
           isDragging = false
           isPinching = false
           initialDistance = 0
