@@ -707,7 +707,7 @@ export default function HomePage(): JSX.Element {
         .floating-back-btn {
           position: fixed;
           bottom: 30px;
-          right: 30px;
+          left: 30px;
           z-index: 999;
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
