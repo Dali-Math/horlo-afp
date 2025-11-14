@@ -775,7 +775,7 @@ export default function IntroductionMontreMecanique() {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [userAnswers, setUserAnswers] = useState([]);
 
-  const handleAnswerClick = (index) => {
+  const handleAnswerClick = (index: number) => {
     if (selectedAnswer === null) {
       setSelectedAnswer(index);
       const isCorrect = index === quizData[currentQuestion].correctAnswer;
