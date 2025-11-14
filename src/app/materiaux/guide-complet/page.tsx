@@ -1,691 +1,693 @@
+// app/page.tsx
 'use client';
 
-import { useEffect } from 'react'
-import Head from 'next/head'
+import React, { useEffect } from 'react';
+import Head from 'next/head';
+import Script from 'next/script';
 
-export default function Page() {
+export default function HomePage(): JSX.Element {
   useEffect(() => {
-    // Initialize Mermaid
-    const initMermaid = () => {
-      if ((window as any).mermaid) {
-        (window as any).mermaid.initialize({
-          startOnLoad: true,
-          theme: 'base',
-          themeVariables: {
-            primaryColor: '#f8f6f0',
-            primaryTextColor: '#1a1208',
-            primaryBorderColor: '#2c1810',
-            lineColor: '#8b7355',
-            secondaryColor: '#ffffff',
-            tertiaryColor: '#fef3c7',
-            background: '#ffffff',
-            mainBkg: '#f8f6f0',
-            secondBkg: '#ffffff',
-            tertiaryBkg: '#fef3c7',
-            nodeBorder: '#2c1810',
-            clusterBkg: '#f9fafb',
-            defaultLinkColor: '#8b7355',
-            titleColor: '#1a1208',
-            edgeLabelBackground: '#ffffff',
-            nodeTextColor: '#1a1208'
-          },
-          flowchart: {
-            useMaxWidth: false,
-            htmlLabels: true,
-            curve: 'basis',
-            padding: 20
-          },
-          fontFamily: 'Inter, sans-serif',
-          fontSize: '13px'
-        })
-
-        // Initialize Mermaid Controls
-        initializeMermaidControls()
-      }
-    }
-
+    // Initialize Mermaid and controls after DOM is loaded
     const initializeMermaidControls = () => {
-      const containers = document.querySelectorAll('.mermaid-container')
+      const containers = document.querySelectorAll<HTMLElement>('.mermaid-container');
 
       containers.forEach(container => {
-        const mermaidElement = container.querySelector('.mermaid') as HTMLElement
-        let scale = 1
-        let isDragging = false
-        let startX = 0, startY = 0, translateX = 0, translateY = 0
+        const mermaidElement = container.querySelector<HTMLElement>('.mermaid');
+        if (!mermaidElement) return;
 
-        // Touch related state
-        let isTouch = false
-        let touchStartTime = 0
-        let initialDistance = 0
-        let initialScale = 1
-        let isPinching = false
+        let scale = 1;
+        let isDragging = false;
+        let startX = 0, startY = 0, translateX = 0, translateY = 0;
+        let isTouch = false;
+        let touchStartTime = 0;
+        let initialDistance = 0;
+        let initialScale = 1;
+        let isPinching = false;
 
-        // Zoom controls
-        const zoomInBtn = container.querySelector('.zoom-in')
-        const zoomOutBtn = container.querySelector('.zoom-out')
-        const resetBtn = container.querySelector('.reset-zoom')
-        const fullscreenBtn = container.querySelector('.fullscreen')
+        const zoomInBtn = container.querySelector<HTMLElement>('.zoom-in');
+        const zoomOutBtn = container.querySelector<HTMLElement>('.zoom-out');
+        const resetBtn = container.querySelector<HTMLElement>('.reset-zoom');
+        const fullscreenBtn = container.querySelector<HTMLElement>('.fullscreen');
 
         const updateTransform = () => {
-          mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`
-
-          if (scale > 1) {
-            container.classList.add('zoomed')
-          } else {
-            container.classList.remove('zoomed')
-          }
-
-          mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab'
-        }
+          mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+          container.classList.toggle('zoomed', scale > 1);
+          mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+        };
 
         zoomInBtn?.addEventListener('click', () => {
-          scale = Math.min(scale * 1.25, 4)
-          updateTransform()
-        })
+          scale = Math.min(scale * 1.25, 4);
+          updateTransform();
+        });
 
         zoomOutBtn?.addEventListener('click', () => {
-          scale = Math.max(scale / 1.25, 0.3)
+          scale = Math.max(scale / 1.25, 0.3);
           if (scale <= 1) {
-            translateX = 0
-            translateY = 0
+            translateX = 0;
+            translateY = 0;
           }
-          updateTransform()
-        })
+          updateTransform();
+        });
 
         resetBtn?.addEventListener('click', () => {
-          scale = 1
-          translateX = 0
-          translateY = 0
-          updateTransform()
-        })
+          scale = 1;
+          translateX = 0;
+          translateY = 0;
+          updateTransform();
+        });
 
         fullscreenBtn?.addEventListener('click', () => {
-          if ((container as HTMLElement).requestFullscreen) {
-            (container as HTMLElement).requestFullscreen()
-          } else if ((container as any).webkitRequestFullscreen) {
-            ;(container as any).webkitRequestFullscreen()
-          } else if ((container as any).msRequestFullscreen) {
-            ;(container as any).msRequestFullscreen()
-          }
-        })
+          container.requestFullscreen?.();
+        });
 
-        // Mouse Events
-        mermaidElement.addEventListener('mousedown', (e) => {
-          if (isTouch) return
-
-          isDragging = true
-          startX = e.clientX - translateX
-          startY = e.clientY - translateY
-          mermaidElement.style.cursor = 'grabbing'
-          updateTransform()
-          e.preventDefault()
-        })
-
-        const handleMouseMove = (e: MouseEvent) => {
-          if (isDragging && !isTouch) {
-            translateX = e.clientX - startX
-            translateY = e.clientY - startY
-            updateTransform()
-          }
-        }
-
-        const handleMouseUp = () => {
-          if (isDragging && !isTouch) {
-            isDragging = false
-            mermaidElement.style.cursor = 'grab'
-            updateTransform()
-          }
-        }
-
-        document.addEventListener('mousemove', handleMouseMove as EventListener)
-        document.addEventListener('mouseup', handleMouseUp as EventListener)
-        document.addEventListener('mouseleave', handleMouseUp as EventListener)
-
-        // Get touch distance
         const getTouchDistance = (touch1: Touch, touch2: Touch) => {
           return Math.hypot(
             touch2.clientX - touch1.clientX,
             touch2.clientY - touch1.clientY
-          )
-        }
+          );
+        };
 
-        // Touch Events
-        mermaidElement.addEventListener('touchstart', (e) => {
-          isTouch = true
-          touchStartTime = Date.now()
+        const handleMouseDown = (e: MouseEvent) => {
+          if (isTouch) return;
+          isDragging = true;
+          startX = e.clientX - translateX;
+          startY = e.clientY - translateY;
+          updateTransform();
+          e.preventDefault();
+        };
+
+        const handleMouseMove = (e: MouseEvent) => {
+          if (isDragging && !isTouch) {
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            updateTransform();
+          }
+        };
+
+        const handleMouseUp = () => {
+          if (isDragging && !isTouch) {
+            isDragging = false;
+            updateTransform();
+          }
+        };
+
+        mermaidElement.addEventListener('mousedown', handleMouseDown);
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+        document.addEventListener('mouseleave', handleMouseUp);
+
+        mermaidElement.addEventListener('touchstart', (e: TouchEvent) => {
+          isTouch = true;
+          touchStartTime = Date.now();
 
           if (e.touches.length === 1) {
-            isPinching = false
-            isDragging = true
-
-            const touch = e.touches[0]
-            startX = touch.clientX - translateX
-            startY = touch.clientY - translateY
+            isPinching = false;
+            isDragging = true;
+            const touch = e.touches[0];
+            startX = touch.clientX - translateX;
+            startY = touch.clientY - translateY;
           } else if (e.touches.length === 2) {
-            isPinching = true
-            isDragging = false
-
-            const touch1 = e.touches[0]
-            const touch2 = e.touches[1]
-            initialDistance = getTouchDistance(touch1, touch2)
-            initialScale = scale
+            isPinching = true;
+            isDragging = false;
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            initialDistance = getTouchDistance(touch1, touch2);
+            initialScale = scale;
           }
+          e.preventDefault();
+        }, { passive: false });
 
-          e.preventDefault()
-        }, { passive: false } as any)
-
-        const handleTouchMove = (e: TouchEvent) => {
+        mermaidElement.addEventListener('touchmove', (e: TouchEvent) => {
           if (e.touches.length === 1 && isDragging && !isPinching) {
-            const touch = e.touches[0]
-            translateX = touch.clientX - startX
-            translateY = touch.clientY - translateY
-            updateTransform()
+            const touch = e.touches[0];
+            translateX = touch.clientX - startX;
+            translateY = touch.clientY - startY;
+            updateTransform();
           } else if (e.touches.length === 2 && isPinching) {
-            const touch1 = e.touches[0]
-            const touch2 = e.touches[1]
-            const currentDistance = getTouchDistance(touch1, touch2)
-
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            const currentDistance = getTouchDistance(touch1, touch2);
             if (initialDistance > 0) {
               const newScale = Math.min(Math.max(
                 initialScale * (currentDistance / initialDistance),
                 0.3
-              ), 4)
-              scale = newScale
-              updateTransform()
+              ), 4);
+              scale = newScale;
+              updateTransform();
             }
           }
+          e.preventDefault();
+        }, { passive: false });
 
-          e.preventDefault()
-        }
-
-        const handleTouchEnd = (e: TouchEvent) => {
+        mermaidElement.addEventListener('touchend', (e: TouchEvent) => {
           if (e.touches.length === 0) {
-            isDragging = false
-            isPinching = false
-            initialDistance = 0
-
-            setTimeout(() => {
-              isTouch = false
-            }, 100)
+            isDragging = false;
+            isPinching = false;
+            initialDistance = 0;
+            setTimeout(() => { isTouch = false; }, 100);
           } else if (e.touches.length === 1 && isPinching) {
-            isPinching = false
-            isDragging = true
-
-            const touch = e.touches[0]
-            startX = touch.clientX - translateX
-            startY = touch.clientY - translateY
+            isPinching = false;
+            isDragging = true;
+            const touch = e.touches[0];
+            startX = touch.clientX - translateX;
+            startY = touch.clientY - translateY;
           }
+          updateTransform();
+        });
 
-          updateTransform()
-        }
-
-        const handleTouchCancel = (e: TouchEvent) => {
-          isDragging = false
-          isPinching = false
-          initialDistance = 0
-
-          setTimeout(() => {
-            isTouch = false
-          }, 100)
-
-          updateTransform()
-        }
-
-        document.addEventListener('touchmove', handleTouchMove as EventListener, { passive: false } as any)
-        document.addEventListener('touchend', handleTouchEnd as EventListener)
-        document.addEventListener('touchcancel', handleTouchCancel as EventListener)
-
-        // Enhanced wheel zoom with proper type casting
-        (container as HTMLElement).addEventListener('wheel', (e: WheelEvent) => {
-          e.preventDefault()
-          const delta = e.deltaY > 0 ? 0.9 : 1.1
-          const newScale = Math.min(Math.max(scale * delta, 0.3), 4)
-
+        container.addEventListener('wheel', (e: WheelEvent) => {
+          e.preventDefault();
+          const delta = e.deltaY > 0 ? 0.9 : 1.1;
+          const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
           if (newScale !== scale) {
-            const scaleDiff = newScale / scale
-            translateX = translateX * scaleDiff
-            translateY = translateY * scaleDiff
-            scale = newScale
-
+            const scaleDiff = newScale / scale;
+            translateX = translateX * scaleDiff;
+            translateY = translateY * scaleDiff;
+            scale = newScale;
             if (scale <= 1) {
-              translateX = 0
-              translateY = 0
+              translateX = 0;
+              translateY = 0;
             }
-
-            updateTransform()
+            updateTransform();
           }
-        })
+        });
 
-        updateTransform()
-      })
-    }
+        updateTransform();
+      });
+    };
 
     // Smooth scrolling for TOC links
-    const tocLinks = document.querySelectorAll('.toc-link')
+    const tocLinks = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
     tocLinks.forEach(link => {
-      link.addEventListener('click', function(e) {
-        e.preventDefault()
-        const targetId = (this as HTMLElement).getAttribute('href')!.substring(1)
-        const targetElement = document.getElementById(targetId)
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href')?.substring(1);
+        const targetElement = targetId ? document.getElementById(targetId) : null;
         if (targetElement) {
-          targetElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          })
+          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-      })
-    })
+      });
+    });
 
     // Highlight active section in TOC
     const handleScroll = () => {
-      const sections = document.querySelectorAll('section[id], div[id]')
-      const tocLinks = document.querySelectorAll('.toc-link')
+      const sections = document.querySelectorAll<HTMLElement>('section[id], div[id]');
+      const tocLinks = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
       
-      let currentSection = ''
+      let currentSection = '';
       sections.forEach(section => {
-        const sectionTop = section.offsetTop - 100
-        const sectionHeight = section.offsetHeight
+        const sectionTop = section.offsetTop - 100;
+        const sectionHeight = section.offsetHeight;
         if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
-          currentSection = section.getAttribute('id') || ''
+          currentSection = section.getAttribute('id') || '';
         }
-      })
+      });
       
       tocLinks.forEach(link => {
-        link.classList.remove('bg-yellow-500', 'text-black')
+        link.classList.remove('bg-yellow-500', 'text-black');
         if (link.getAttribute('href') === '#' + currentSection) {
-          link.classList.add('bg-yellow-500', 'text-black')
+          link.classList.add('bg-yellow-500', 'text-black');
         }
-      })
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    // Initialize Mermaid
+    if (typeof window !== 'undefined') {
+      (window as any).mermaid?.initialize({
+        startOnLoad: true,
+        theme: 'base',
+        themeVariables: {
+          primaryColor: '#f8f6f0',
+          primaryTextColor: '#1a1208',
+          primaryBorderColor: '#2c1810',
+          lineColor: '#8b7355',
+          secondaryColor: '#ffffff',
+          tertiaryColor: '#fef3c7',
+          background: '#ffffff',
+          mainBkg: '#f8f6f0',
+          secondBkg: '#ffffff',
+          tertiaryBkg: '#fef3c7',
+          nodeBorder: '#2c1810',
+          clusterBkg: '#f9fafb',
+          defaultLinkColor: '#8b7355',
+          titleColor: '#1a1208',
+          edgeLabelBackground: '#ffffff',
+          nodeTextColor: '#1a1208'
+        },
+        flowchart: {
+          useMaxWidth: false,
+          htmlLabels: true,
+          curve: 'basis',
+          padding: 20
+        },
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '13px'
+      });
+
+      setTimeout(initializeMermaidControls, 500);
     }
-
-    window.addEventListener('scroll', handleScroll)
-
-    // Initialize everything after DOM is loaded
-    initMermaid()
 
     return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
     <>
       <Head>
         <title>Guide Complet des Métaux en Horlogerie</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+        <meta charSet="UTF-8" />
+        
+        {/* Google Fonts */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+        
+        {/* Font Awesome */}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-        <style jsx global>{`
-          :root {
-            --color-primary: #2c1810;
-            --color-secondary: #8b7355;
-            --color-accent: #a68b5b;
-            --color-light: #f8f6f0;
-            --color-dark: #1a1208;
-          }
-          
-          body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--color-light);
-            color: var(--color-dark);
-            line-height: 1.7;
-            overflow-x: hidden;
-          }
-          
-          .serif-heading {
-            font-family: 'Playfair Display', serif;
-          }
-          
-          .hero-gradient {
-            background: linear-gradient(135deg, var(--color-dark) 0%, var(--color-primary) 50%, var(--color-secondary) 100%);
-          }
-          
+        
+        {/* Mermaid */}
+        <Script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js" strategy="afterInteractive" />
+        
+        {/* Tailwind CSS */}
+        <Script src="https://cdn.tailwindcss.com" strategy="beforeInteractive" />
+      </Head>
+
+      <style jsx global>{`
+        :root {
+          --color-primary: #2c1810;
+          --color-secondary: #8b7355;
+          --color-accent: #a68b5b;
+          --color-light: #f8f6f0;
+          --color-dark: #1a1208;
+        }
+        
+        body {
+          font-family: 'Inter', sans-serif;
+          background-color: var(--color-light);
+          color: var(--color-dark);
+          line-height: 1.7;
+          overflow-x: hidden;
+        }
+        
+        .serif-heading {
+          font-family: 'Playfair Display', serif;
+        }
+        
+        .hero-gradient {
+          background: linear-gradient(135deg, var(--color-dark) 0%, var(--color-primary) 50%, var(--color-secondary) 100%);
+        }
+        
+        .toc-fixed {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 280px;
+          height: 100vh;
+          background: var(--color-dark);
+          color: var(--color-light);
+          overflow-y: auto;
+          z-index: 1000;
+          padding: 2rem 1.5rem;
+          border-right: 3px solid var(--color-accent);
+        }
+        
+        .main-content {
+          margin-left: 280px;
+          min-height: 100vh;
+        }
+        
+        .toc-link {
+          display: block;
+          padding: 0.75rem 1rem;
+          color: var(--color-light);
+          text-decoration: none;
+          border-radius: 0.5rem;
+          transition: all 0.3s ease;
+          border-left: 3px solid transparent;
+        }
+        
+        .toc-link:hover {
+          background: rgba(255, 255, 255, 0.1);
+          border-left-color: var(--color-accent);
+          transform: translateX(4px);
+        }
+        
+        .section-card {
+          background: white;
+          border-radius: 1rem;
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+          border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .citation {
+          display: inline-block;
+          background: var(--color-accent);
+          color: white;
+          padding: 0.25rem 0.5rem;
+          border-radius: 0.25rem;
+          font-size: 0.875rem;
+          text-decoration: none;
+          margin: 0 0.25rem;
+          transition: all 0.3s ease;
+        }
+        
+        .citation:hover {
+          background: var(--color-primary);
+          transform: scale(1.05);
+        }
+        
+        .chart-container {
+          background: white;
+          border-radius: 1rem;
+          padding: 2rem;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+          margin: 2rem 0;
+        }
+        
+        .pull-quote {
+          border-left: 4px solid var(--color-accent);
+          background: rgba(166, 139, 91, 0.05);
+          padding: 2rem;
+          margin: 2rem 0;
+          font-style: italic;
+          font-size: 1.125rem;
+          border-radius: 0 0.5rem 0.5rem 0;
+        }
+        
+        .mermaid-container {
+          display: flex;
+          justify-content: center;
+          min-height: 300px;
+          max-height: 800px;
+          background: #ffffff;
+          border: 2px solid #e5e7eb;
+          border-radius: 12px;
+          padding: 30px;
+          margin: 30px 0;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .mermaid-container .mermaid {
+          width: 100%;
+          max-width: 100%;
+          height: 100%;
+          cursor: grab;
+          transition: transform 0.3s ease;
+          transform-origin: center center;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          touch-action: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
+
+        .mermaid-container .mermaid svg {
+          max-width: 100%;
+          height: 100%;
+          display: block;
+          margin: 0 auto;
+        }
+
+        .mermaid-container .mermaid:active {
+          cursor: grabbing;
+        }
+
+        .mermaid-container.zoomed .mermaid {
+          height: 100%;
+          width: 100%;
+          cursor: grab;
+        }
+
+        .mermaid-controls {
+          position: absolute;
+          top: 15px;
+          right: 15px;
+          display: flex;
+          gap: 10px;
+          z-index: 20;
+          background: rgba(255, 255, 255, 0.95);
+          padding: 8px;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mermaid-control-btn {
+          background: #ffffff;
+          border: 1px solid #d1d5db;
+          border-radius: 6px;
+          padding: 10px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          color: #374151;
+          font-size: 14px;
+          min-width: 36px;
+          height: 36px;
+          text-align: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .mermaid-control-btn:hover {
+          background: #f8fafc;
+          border-color: #3b82f6;
+          color: #3b82f6;
+          transform: translateY(-1px);
+        }
+
+        .mermaid-control-btn:active {
+          transform: scale(0.95);
+        }
+
+        /* Enhanced node contrast for different colors */
+        .mermaid .node rect,
+        .mermaid .node circle,
+        .mermaid .node ellipse,
+        .mermaid .node polygon {
+          stroke-width: 2px;
+          stroke: var(--color-primary);
+        }
+        
+        .mermaid .node .label {
+          color: var(--color-dark) !important;
+          font-weight: 600 !important;
+          font-size: 13px !important;
+          text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+        
+        .mermaid .edgeLabel {
+          background-color: rgba(255, 255, 255, 0.9) !important;
+          color: var(--color-dark) !important;
+          font-weight: 500 !important;
+          padding: 2px 6px !important;
+          border-radius: 4px !important;
+          border: 1px solid rgba(0, 0, 0, 0.1) !important;
+          font-size: 11px !important;
+        }
+        
+        .mermaid .edge-thickness-normal {
+          stroke-width: 2px;
+        }
+        
+        .mermaid .edge-pattern-solid {
+          stroke: var(--color-secondary);
+        }
+        
+        /* Ensure proper contrast for different node colors */
+        .mermaid .node[class*="fill-"] .label {
+          color: var(--color-dark) !important;
+          text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9) !important;
+        }
+        
+        .mermaid .node[style*="fill:"] .label {
+          color: var(--color-dark) !important;
+          text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9) !important;
+        }
+        
+        .bento-grid {
+          display: grid;
+          grid-template-columns: 2fr 1fr;
+          grid-template-rows: auto auto;
+          gap: 2rem;
+          height: 60vh;
+        }
+        
+        .bento-item {
+          border-radius: 1rem;
+          overflow: hidden;
+          position: relative;
+        }
+        
+        .bento-hero {
+          grid-row: 1 / 3;
+          background: linear-gradient(135deg, rgba(44, 24, 16, 0.8) 0%, rgba(139, 115, 85, 0.6) 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+        }
+        
+        .bento-summary {
+          background: white;
+          padding: 2rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+        
+        .bento-visual {
+          background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .hero-title {
+          font-size: 4rem;
+          font-weight: 700;
+          font-style: italic;
+          color: white;
+          text-align: center;
+          text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+          z-index: 2;
+          position: relative;
+        }
+        
+        .hero-subtitle {
+          font-size: 1.5rem;
+          color: rgba(255, 255, 255, 0.9);
+          text-align: center;
+          margin-top: 1rem;
+          z-index: 2;
+          position: relative;
+        }
+        
+        .material-card {
+          background: white;
+          border-radius: 1rem;
+          padding: 2rem;
+          margin: 1.5rem 0;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+          border-left: 4px solid var(--color-accent);
+          transition: transform 0.3s ease;
+        }
+        
+        .material-card:hover {
+          transform: translateY(-4px);
+        }
+        
+        .comparison-table {
+          background: white;
+          border-radius: 1rem;
+          overflow: hidden;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+          margin: 2rem 0;
+        }
+        
+        .comparison-table th {
+          background: var(--color-primary);
+          color: white;
+          padding: 1rem;
+          font-weight: 600;
+        }
+        
+        .comparison-table td {
+          padding: 1rem;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .comparison-table tr:hover {
+          background: rgba(166, 139, 91, 0.05);
+        }
+        
+        @media (max-width: 1024px) {
           .toc-fixed {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 280px;
-            height: 100vh;
-            background: var(--color-dark);
-            color: var(--color-light);
-            overflow-y: auto;
-            z-index: 1000;
-            padding: 2rem 1.5rem;
-            border-right: 3px solid var(--color-accent);
+            display: none;
           }
           
           .main-content {
-            margin-left: 280px;
-            min-height: 100vh;
+            margin-left: 0;
           }
           
-          .toc-link {
-            display: block;
-            padding: 0.75rem 1rem;
-            color: var(--color-light);
-            text-decoration: none;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
-          }
-          
-          .toc-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-left-color: var(--color-accent);
-            transform: translateX(4px);
-          }
-          
-          .section-card {
-            background: white;
-            border-radius: 1rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-          }
-          
-          .citation {
-            display: inline-block;
-            background: var(--color-accent);
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.875rem;
-            text-decoration: none;
-            margin: 0 0.25rem;
-            transition: all 0.3s ease;
-          }
-          
-          .citation:hover {
-            background: var(--color-primary);
-            transform: scale(1.05);
-          }
-          
-          .chart-container {
-            background: white;
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            margin: 2rem 0;
-          }
-          
-          .pull-quote {
-            border-left: 4px solid var(--color-accent);
-            background: rgba(166, 139, 91, 0.05);
-            padding: 2rem;
-            margin: 2rem 0;
-            font-style: italic;
-            font-size: 1.125rem;
-            border-radius: 0 0.5rem 0.5rem 0;
-          }
-          
-          .mermaid-container {
-            display: flex;
-            justify-content: center;
-            min-height: 300px;
-            max-height: 800px;
-            background: #ffffff;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 30px;
-            margin: 30px 0;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            position: relative;
-            overflow: hidden;
-          }
-
-          .mermaid-container .mermaid {
-            width: 100%;
-            max-width: 100%;
-            height: 100%;
-            cursor: grab;
-            transition: transform 0.3s ease;
-            transform-origin: center center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            touch-action: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-          }
-
-          .mermaid-container .mermaid svg {
-            max-width: 100%;
-            height: 100%;
-            display: block;
-            margin: 0 auto;
-          }
-
-          .mermaid-container .mermaid:active {
-            cursor: grabbing;
-          }
-
-          .mermaid-container.zoomed .mermaid {
-            height: 100%;
-            width: 100%;
-            cursor: grab;
-          }
-
-          .mermaid-controls {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            display: flex;
-            gap: 10px;
-            z-index: 20;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 8px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-          }
-
-          .mermaid-control-btn {
-            background: #ffffff;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            padding: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: #374151;
-            font-size: 14px;
-            min-width: 36px;
-            height: 36px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-
-          .mermaid-control-btn:hover {
-            background: #f8fafc;
-            border-color: #3b82f6;
-            color: #3b82f6;
-            transform: translateY(-1px);
-          }
-
-          .mermaid-control-btn:active {
-            transform: scale(0.95);
-          }
-
           .bento-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            grid-template-rows: auto auto;
-            gap: 2rem;
-            height: 60vh;
-          }
-          
-          .bento-item {
-            border-radius: 1rem;
-            overflow: hidden;
-            position: relative;
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto;
+            height: auto;
           }
           
           .bento-hero {
-            grid-row: 1 / 3;
-            background: linear-gradient(135deg, rgba(44, 24, 16, 0.8) 0%, rgba(139, 115, 85, 0.6) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-          }
-          
-          .bento-summary {
-            background: white;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-          }
-          
-          .bento-visual {
-            background: linear-gradient(45deg, var(--color-accent), var(--color-secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            grid-row: 1;
+            padding: 3rem 1rem;
           }
           
           .hero-title {
-            font-size: 4rem;
-            font-weight: 700;
-            font-style: italic;
-            color: white;
-            text-align: center;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            z-index: 2;
-            position: relative;
+            font-size: 2.5rem;
           }
           
+          .mermaid-control-btn:not(.reset-zoom) {
+            display: none;
+          }
+          .mermaid-controls {
+            top: auto;
+            bottom: 15px;
+            right: 15px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          section {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+          }
+
+          .hero-title {
+            font-size: 2rem;
+          }
+
           .hero-subtitle {
+            font-size: 1.2rem;
+          }
+
+          .bento-hero {
+            padding: 2rem 1rem;
+          }
+
+          .bento-summary h3 {
             font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.9);
-            text-align: center;
-            margin-top: 1rem;
-            z-index: 2;
-            position: relative;
-          }
-          
-          .material-card {
-            background: white;
-            border-radius: 1rem;
-            padding: 2rem;
-            margin: 1.5rem 0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid var(--color-accent);
-            transition: transform 0.3s ease;
-          }
-          
-          .material-card:hover {
-            transform: translateY(-4px);
-          }
-          
-          .comparison-table {
-            background: white;
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            margin: 2rem 0;
-          }
-          
-          .comparison-table th {
-            background: var(--color-primary);
-            color: white;
-            padding: 1rem;
-            font-weight: 600;
-          }
-          
-          .comparison-table td {
-            padding: 1rem;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-          }
-          
-          .comparison-table tr:hover {
-            background: rgba(166, 139, 91, 0.05);
           }
 
-          @media (max-width: 1024px) {
-            .toc-fixed {
-              display: none;
-            }
-            
-            .main-content {
-              margin-left: 0;
-            }
-            
-            .bento-grid {
-              grid-template-columns: 1fr;
-              grid-template-rows: auto auto auto;
-              height: auto;
-            }
-            
-            .bento-hero {
-              grid-row: 1;
-              padding: 3rem 1rem;
-            }
-            
-            .hero-title {
-              font-size: 2.5rem;
-            }
-
-            .mermaid-control-btn:not(.reset-zoom) {
-              display: none;
-            }
-
-            .mermaid-controls {
-              top: auto;
-              bottom: 15px;
-              right: 15px;
-            }
+          .bento-summary p {
+            font-size: 0.95rem;
           }
 
-          @media (max-width: 768px) {
-            section {
-              padding-left: 1rem !important;
-              padding-right: 1rem !important;
-            }
+          .bento-summary ul li {
+            font-size: 0.9rem;
+          }
+        }
 
-            .hero-title {
-              font-size: 2rem;
-            }
-
-            .hero-subtitle {
-              font-size: 1.2rem;
-            }
-
-            .bento-hero {
-              padding: 2rem 1rem;
-            }
-
-            .bento-summary h3 {
-              font-size: 1.5rem;
-            }
-
-            .bento-summary p {
-              font-size: 0.95rem;
-            }
-
-            .bento-summary ul li {
-              font-size: 0.9rem;
-            }
+        @media (max-width: 480px) {
+          .hero-title {
+            font-size: 1.5rem;
           }
 
-          @media (max-width: 480px) {
-            .hero-title {
-              font-size: 1.5rem;
-            }
-
-            .hero-subtitle {
-              font-size: 1rem;
-            }
-
-            .bento-summary h3 {
-              font-size: 1.2rem;
-            }
+          .hero-subtitle {
+            font-size: 1rem;
           }
-        `}</style>
-      </Head>
+
+          .bento-summary h3 {
+            font-size: 1.2rem;
+          }
+        }
+      `}</style>
 
       {/* Fixed Table of Contents */}
       <nav className="toc-fixed">
@@ -709,7 +711,7 @@ export default function Page() {
             <a href="#bronze" className="toc-link text-sm"><i className="fas fa-mountain mr-2"></i>Bronze</a>
             <a href="#avant-garde" className="toc-link text-sm"><i className="fas fa-atom mr-2"></i>Avant-Garde</a>
           </div>
-          <a href="#techniques-comparatifs" className="toc-link"><i className="fas fa-chart-bar mr-2"></i>Techniques & Comparatifs</a>
+          <a href="#techniques-comparatifs" className="toc-link"><i className="fas fa-chart-bar mr-2"></i>Techniques &amp; Comparatifs</a>
           <a href="#pdf-reference" className="toc-link"><i className="fas fa-file-pdf mr-2"></i>PDF de Référence</a>
         </div>
       </nav>
@@ -720,16 +722,20 @@ export default function Page() {
         <section className="p-8">
           <div className="bento-grid">
             <div className="bento-item bento-hero">
-              <img src="https://kimi-img.moonshot.cn/pub/icon/spinner.svg" alt="Close-up macro photograph of luxury Swiss watch movement with metallic components" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+              <img 
+                src="https://kimi-web-img.moonshot.cn/img/www.swisswatchexpo.com/23238b338e72f54fde90c79882e75973de8cb62b.png" 
+                alt="Close-up macro photograph of luxury Swiss watch movement with metallic components" 
+                className="absolute inset-0 w-full h-full object-cover opacity-30" 
+              />
               <div className="relative z-10">
                 <h1 className="hero-title serif-heading">Guide Complet des Métaux</h1>
-                <p className="hero-subtitle">L'Art et la Science des Matériaux Horlogers</p>
+                <p className="hero-subtitle">L&apos;Art et la Science des Matériaux Horlogers</p>
               </div>
             </div>
 
             <div className="bento-item bento-summary">
               <h3 className="serif-heading text-2xl font-bold mb-4 text-gray-800">Résumé Exécutif</h3>
-              <p className="text-gray-600 mb-4">Une exploration approfondie des métaux et alliages utilisés en horlogerie, de l'acier inoxydable aux métaux précieux, en passant par les matériaux innovants comme le titane et la céramique.</p>
+              <p className="text-gray-600 mb-4">Une exploration approfondie des métaux et alliages utilisés en horlogerie, de l&apos;acier inoxydable aux métaux précieux, en passant par les matériaux innovants comme le titane et la céramique.</p>
               <ul className="text-sm text-gray-500 space-y-1">
                 <li>• 7 matériaux principaux analysés</li>
                 <li>• Propriétés mécaniques comparées</li>
@@ -741,7 +747,7 @@ export default function Page() {
             <div className="bento-item bento-visual">
               <div className="text-center text-white">
                 <i className="fas fa-clock text-6xl mb-4 opacity-80"></i>
-                <p className="text-lg font-medium">L'union du savoir-faire traditionnel et de l'innovation moderne</p>
+                <p className="text-lg font-medium">L&apos;union du savoir-faire traditionnel et de l&apos;innovation moderne</p>
               </div>
             </div>
           </div>
@@ -754,15 +760,15 @@ export default function Page() {
 
             <div className="grid md:grid-cols-2 gap-8 mb-8">
               <div className="material-card">
-                <h3 className="serif-heading text-2xl font-bold mb-4">Vue d'ensemble des métaux et alliages</h3>
-                <p className="mb-4">L'horlogerie, à l'intersection de l'art et de la science, repose sur une sélection rigoureuse des matériaux pour créer des garde-temps à la fois fonctionnels et esthétiques <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[359]</a>. Chaque métal ou alliage joue un rôle spécifique, dicté par ses propriétés physiques, chimiques et mécaniques.</p>
-                <p>Les matériaux les plus couramment utilisés vont des métaux communs comme <strong>l'acier inoxydable</strong>, le <strong>laiton</strong> et le <strong>maillechort</strong>, aux métaux précieux comme <strong>l'or</strong> et le <strong>platine</strong>, en passant par des matériaux innovants comme le <strong>titane</strong>, la <strong>céramique</strong> et le <strong>bronze</strong> <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[359]</a>.</p>
+                <h3 className="serif-heading text-2xl font-bold mb-4">Vue d&apos;ensemble des métaux et alliages</h3>
+                <p className="mb-4">L&apos;horlogerie, à l&apos;intersection de l&apos;art et de la science, repose sur une sélection rigoureuse des matériaux pour créer des garde-temps à la fois fonctionnels et esthétiques <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank" rel="noopener noreferrer">[359]</a>. Chaque métal ou alliage joue un rôle spécifique, dicté par ses propriétés physiques, chimiques et mécaniques.</p>
+                <p>Les matériaux les plus couramment utilisés vont des métaux communs comme <strong>l&apos;acier inoxydable</strong>, le <strong>laiton</strong> et le <strong>maillechort</strong>, aux métaux précieux comme <strong>l&apos;or</strong> et le <strong>platine</strong>, en passant par des matériaux innovants comme le <strong>titane</strong>, la <strong>céramique</strong> et le <strong>bronze</strong> <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank" rel="noopener noreferrer">[359]</a>.</p>
               </div>
 
               <div className="material-card">
                 <h3 className="serif-heading text-2xl font-bold mb-4">Importance de la sélection des matériaux</h3>
-                <p className="mb-4">La sélection des matériaux en horlogerie est un processus critique qui influence directement la <strong>performance, la durabilité, l'esthétique et le coût</strong> d'une montre. Chaque composant, du boîtier aux plus petits rouages, exige des propriétés spécifiques.</p>
-                <p>Par exemple, le boîtier, qui protège le mouvement, doit être robuste et résistant à la corrosion, ce qui fait de l'acier inoxydable un choix populaire <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[359]</a>. Cependant, pour les personnes sensibles au nickel, le titane, qui est hypoallergénique, est une alternative supérieure <a href="https://fr.haibowellti.com/info/titanium-watches-vs-stainless-steel-watches-96570776.html " className="citation" target="_blank">[355]</a>.</p>
+                <p className="mb-4">La sélection des matériaux en horlogerie est un processus critique qui influence directement la <strong>performance, la durabilité, l&apos;esthétique et le coût</strong> d&apos;une montre. Chaque composant, du boîtier aux plus petits rouages, exige des propriétés spécifiques.</p>
+                <p>Par exemple, le boîtier, qui protège le mouvement, doit être robuste et résistant à la corrosion, ce qui fait de l&apos;acier inoxydable un choix populaire <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank" rel="noopener noreferrer">[359]</a>. Cependant, pour les personnes sensibles au nickel, le titane, qui est hypoallergénique, est une alternative supérieure <a href="https://fr.haibowellti.com/info/titanium-watches-vs-stainless-steel-watches-96570776.html" className="citation" target="_blank" rel="noopener noreferrer">[355]</a>.</p>
               </div>
             </div>
 
@@ -779,13 +785,13 @@ export default function Page() {
 
             {/* Acier Inoxydable */}
             <div id="acier" className="mb-12">
-              <h3 className="serif-heading text-3xl font-bold mb-6 text-center">L'Acier Inoxydable : Le Matériau de Base</h3>
+              <h3 className="serif-heading text-3xl font-bold mb-6 text-center">L&apos;Acier Inoxydable : Le Matériau de Base</h3>
 
               <div className="grid md:grid-cols-3 gap-6 mb-8">
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Composition et alliages</h4>
-                  <p className="mb-3">Les deux principaux alliages sont <strong>l'acier 316L</strong> et <strong>l'acier 904L</strong>, tous deux appartenant à la famille des aciers austénitiques <a href="https://rnm-metallurgie.fr/wp-content/uploads/2017/07/TM439-Prof-horlogerie.pdf " className="citation" target="_blank">[325]</a>
-                    <a href="https://www.chrono24.fr/magazine/durables-elegantes-et-intemporelles-quelle-est-lorigine-des-montres-en-acier-inoxydable-p_118021/ " className="citation" target="_blank">[338]</a>.
+                  <p className="mb-3">Les deux principaux alliages sont <strong>l&apos;acier 316L</strong> et <strong>l&apos;acier 904L</strong>, tous deux appartenant à la famille des aciers austénitiques <a href="https://rnm-metallurgie.fr/wp-content/uploads/2017/07/TM439-Prof-horlogerie.pdf" className="citation" target="_blank" rel="noopener noreferrer">[325]</a>
+                    <a href="https://www.chrono24.fr/magazine/durables-elegantes-et-intemporelles-quelle-est-lorigine-des-montres-en-acier-inoxydable-p_118021/" className="citation" target="_blank" rel="noopener noreferrer">[338]</a>.
                   </p>
                   <ul className="text-sm space-y-1">
                     <li><strong>316L:</strong> 16-18% Cr, 10-14% Ni, 2-3% Mo</li>
@@ -795,17 +801,17 @@ export default function Page() {
 
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Propriétés mécaniques</h4>
-                  <p className="mb-3">Les aciers austénitiques offrent une excellente résistance à la corrosion, une facilité de mise en forme et un rendu esthétique variable selon la finition <a href="https://rnm-metallurgie.fr/wp-content/uploads/2017/07/TM439-Prof-horlogerie.pdf " className="citation" target="_blank">[325]</a>.</p>
+                  <p className="mb-3">Les aciers austénitiques offrent une excellente résistance à la corrosion, une facilité de mise en forme et un rendu esthétique variable selon la finition <a href="https://rnm-metallurgie.fr/wp-content/uploads/2017/07/TM439-Prof-horlogerie.pdf" className="citation" target="_blank" rel="noopener noreferrer">[325]</a>.</p>
                   <ul className="text-sm space-y-1">
                     <li><strong>Dureté 316L:</strong> ~250 HV</li>
-                    <li><strong>Durcissement surface:</strong> jusqu'à 1200 HV</li>
+                    <li><strong>Durcissement surface:</strong> jusqu&apos;à 1200 HV</li>
                     <li><strong>Résistance corrosion:</strong> Excellente</li>
                   </ul>
                 </div>
 
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Applications</h4>
-                  <p className="mb-3">L'acier inoxydable est le matériau de prédilection pour les boîtiers et les bracelets de montres, grâce à sa combinaison unique de robustesse et d'esthétique polyvalente <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[359]</a>.</p>
+                  <p className="mb-3">L&apos;acier inoxydable est le matériau de prédilection pour les boîtiers et les bracelets de montres, grâce à sa combinaison unique de robustesse et d&apos;esthétique polyvalente <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank" rel="noopener noreferrer">[359]</a>.</p>
                   <ul className="text-sm space-y-1">
                     <li><strong>316L:</strong> Montres de sport et classiques</li>
                     <li><strong>904L:</strong> Montres de plongée et haut de gamme</li>
@@ -822,20 +828,20 @@ export default function Page() {
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Caractéristiques uniques</h4>
-                  <p className="mb-4">Le titane s'est imposé comme un matériau de choix dans l'industrie horlogère, en particulier pour les montres techniques et sportives <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[359]</a>.</p>
+                  <p className="mb-4">Le titane s&apos;est imposé comme un matériau de choix dans l&apos;industrie horlogère, en particulier pour les montres techniques et sportives <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank" rel="noopener noreferrer">[359]</a>.</p>
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h5 className="font-semibold mb-2">Avantages clés:</h5>
                     <ul className="space-y-1 text-sm">
-                      <li>• <strong>Légèreté:</strong> 45% plus léger que l'acier</li>
+                      <li>• <strong>Légèreté:</strong> 45% plus léger que l&apos;acier</li>
                       <li>• <strong>Hypoallergénique:</strong> Idéal pour peaux sensibles</li>
-                      <li>• <strong>Résistance corrosion:</strong> Supérieure à l'acier</li>
+                      <li>• <strong>Résistance corrosion:</strong> Supérieure à l&apos;acier</li>
                       <li>• <strong>Densité:</strong> ~4,51 g/cm³ vs ~7,8 g/cm³ (acier)</li>
                     </ul>
                   </div>
                 </div>
 
                 <div className="material-card">
-                  <h4 className="font-bold text-xl mb-3">Comparaison avec l'acier</h4>
+                  <h4 className="font-bold text-xl mb-3">Comparaison avec l&apos;acier</h4>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
@@ -870,7 +876,7 @@ export default function Page() {
                     </table>
                   </div>
                   <p className="mt-4 text-sm text-gray-600">
-                    Source: <a href="https://fr.haibowellti.com/info/titanium-watches-vs-stainless-steel-watches-96570776.html " className="citation" target="_blank">[355]</a>
+                    Source: <a href="https://fr.haibowellti.com/info/titanium-watches-vs-stainless-steel-watches-96570776.html" className="citation" target="_blank" rel="noopener noreferrer">[355]</a>
                   </p>
                 </div>
               </div>
@@ -883,18 +889,18 @@ export default function Page() {
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Le Laiton : Utilisation historique</h4>
-                  <p className="mb-4">Le laiton, un alliage de cuivre et de zinc, est l'un des matériaux les plus historiquement significatifs en horlogerie <a href="https://www.machining-custom.com/fr/blog/brass-vs-aluminum-vs-stainless-steel.html " className="citation" target="_blank">[366]</a>.</p>
+                  <p className="mb-4">Le laiton, un alliage de cuivre et de zinc, est l&apos;un des matériaux les plus historiquement significatifs en horlogerie <a href="https://www.machining-custom.com/fr/blog/brass-vs-aluminum-vs-stainless-steel.html" className="citation" target="_blank" rel="noopener noreferrer">[366]</a>.</p>
                   <ul className="space-y-2 mb-4">
                     <li><strong>Composition:</strong> Cuivre (Cu) + Zinc (Zn)</li>
                     <li><strong>Avantages:</strong> Excellente usinabilité, bonne résistance à la corrosion</li>
                     <li><strong>Applications:</strong> Platines, ponts, rouages historiques</li>
                   </ul>
-                  <p className="text-sm text-gray-600">Utilisé traditionnellement pour la "cage" ou le "bâti" du mouvement <a href="https://fr.wikipedia.org/wiki/M%C3%A9canisme_(horlogerie )" className="citation" target="_blank">[349]</a>.</p>
+                  <p className="text-sm text-gray-600">Utilisé traditionnellement pour la &quot;cage&quot; ou le &quot;bâti&quot; du mouvement <a href="https://fr.wikipedia.org/wiki/M%C3%A9canisme_(horlogerie)" className="citation" target="_blank" rel="noopener noreferrer">[349]</a>.</p>
                 </div>
 
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Le Maillechort : Composition et avantages</h4>
-                  <p className="mb-4">Le maillechort, également connu sous le nom d'argentan, est un alliage de cuivre, de nickel et de zinc <a href="https://inside.code41watches.com/fr/les-differents-materiaux-utilises-en-horlogerie " className="citation" target="_blank">[214]</a>.</p>
+                  <p className="mb-4">Le maillechort, également connu sous le nom d&apos;argentan, est un alliage de cuivre, de nickel et de zinc <a href="https://inside.code41watches.com/fr/les-differents-materiaux-utilises-en-horlogerie" className="citation" target="_blank" rel="noopener noreferrer">[214]</a>.</p>
                   <div className="bg-gray-50 p-4 rounded-lg mb-4">
                     <h5 className="font-semibold mb-2">Composition typique:</h5>
                     <ul className="text-sm space-y-1">
@@ -903,7 +909,7 @@ export default function Page() {
                       <li>• <strong>Zinc:</strong> 20-45%</li>
                     </ul>
                   </div>
-                  <p className="text-sm">Résistance supérieure à la corrosion et rigidité accrue par rapport au laiton <a href="https://www.tartaix.com/content/103-maillechort " className="citation" target="_blank">[329]</a>.</p>
+                  <p className="text-sm">Résistance supérieure à la corrosion et rigidité accrue par rapport au laiton <a href="https://www.tartaix.com/content/103-maillechort" className="citation" target="_blank" rel="noopener noreferrer">[329]</a>.</p>
                 </div>
               </div>
             </div>
@@ -917,12 +923,12 @@ export default function Page() {
 
             {/* Or */}
             <div id="or" className="mb-12">
-              <h3 className="serif-heading text-3xl font-bold mb-6 text-center">L'Or : Un Symbole de Luxe</h3>
+              <h3 className="serif-heading text-3xl font-bold mb-6 text-center">L&apos;Or : Un Symbole de Luxe</h3>
 
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="material-card">
-                  <h4 className="font-bold text-xl mb-3">Alliages d'or</h4>
-                  <p className="mb-4">L'or est utilisé sous forme d'alliage pour améliorer la dureté et la résistance. La teneur en or fin est exprimée en carats <a href="http://watches-lexic.ch/pages/fr/tec/exp6.htm " className="citation" target="_blank">[436]</a>.</p>
+                  <h4 className="font-bold text-xl mb-3">Alliages d&apos;or</h4>
+                  <p className="mb-4">L&apos;or est utilisé sous forme d&apos;alliage pour améliorer la dureté et la résistance. La teneur en or fin est exprimée en carats <a href="http://watches-lexic.ch/pages/fr/tec/exp6.htm" className="citation" target="_blank" rel="noopener noreferrer">[436]</a>.</p>
                   <div className="space-y-3">
                     <div className="flex items-center">
                       <div className="w-4 h-4 bg-yellow-400 rounded-full mr-3"></div>
@@ -941,7 +947,7 @@ export default function Page() {
 
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Propriétés et traitement</h4>
-                  <p className="mb-4">Après durcissement par alliage, l'or 18 carats atteint une dureté de 120 à 200 HV, suffisante pour résister à l'usure quotidienne <a href="http://watches-lexic.ch/pages/fr/tec/exp6.htm " className="citation" target="_blank">[436]</a>.</p>
+                  <p className="mb-4">Après durcissement par alliage, l&apos;or 18 carats atteint une dureté de 120 à 200 HV, suffisante pour résister à l&apos;usure quotidienne <a href="http://watches-lexic.ch/pages/fr/tec/exp6.htm" className="citation" target="_blank" rel="noopener noreferrer">[436]</a>.</p>
                   <ul className="space-y-2">
                     <li><strong>Dureté:</strong> 120-200 HV (or 18K)</li>
                     <li><strong>Traitements:</strong> Polissage, satinage, rhodiage</li>
@@ -951,7 +957,7 @@ export default function Page() {
 
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Applications</h4>
-                  <p className="mb-4">L'or est principalement utilisé pour les boîtiers de montres de luxe et les éléments décoratifs <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[433]</a>.</p>
+                  <p className="mb-4">L&apos;or est principalement utilisé pour les boîtiers de montres de luxe et les éléments décoratifs <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank" rel="noopener noreferrer">[433]</a>.</p>
                   <ul className="space-y-2">
                     <li><strong>Boîtiers:</strong> Symboles de prestige</li>
                     <li><strong>Cadrans:</strong> Souvent avec guillochage</li>
@@ -963,12 +969,12 @@ export default function Page() {
 
             {/* Platine */}
             <div id="platine" className="mb-12">
-              <h3 className="serif-heading text-3xl font-bold mb-6 text-center">Le Platine : L'Excellence Rare</h3>
+              <h3 className="serif-heading text-3xl font-bold mb-6 text-center">Le Platine : L&apos;Excellence Rare</h3>
 
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Caractéristiques et densité</h4>
-                  <p className="mb-4">Le platine est un métal précieux encore plus rare et plus dense que l'or, réservé aux garde-temps les plus exclusifs <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[433]</a>.</p>
+                  <p className="mb-4">Le platine est un métal précieux encore plus rare et plus dense que l&apos;or, réservé aux garde-temps les plus exclusifs <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank" rel="noopener noreferrer">[433]</a>.</p>
                   <div className="bg-gray-50 p-4 rounded-lg mb-4">
                     <h5 className="font-semibold mb-2">Propriétés remarquables:</h5>
                     <ul className="text-sm space-y-1">
@@ -982,7 +988,7 @@ export default function Page() {
 
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Applications haut de gamme</h4>
-                  <p className="mb-4">Le platine est réservé aux pièces les plus prestigieuses de la haute horlogerie, un symbole de statut et de valeur <a href="http://watches-lexic.ch/pages/fr/tec/exp6.htm " className="citation" target="_blank">[436]</a>.</p>
+                  <p className="mb-4">Le platine est réservé aux pièces les plus prestigieuses de la haute horlogerie, un symbole de statut et de valeur <a href="http://watches-lexic.ch/pages/fr/tec/exp6.htm" className="citation" target="_blank" rel="noopener noreferrer">[436]</a>.</p>
                   <ul className="space-y-2 mb-4">
                     <li><strong>Boîtiers:</strong> Présence unique et substantielle</li>
                     <li><strong>Éléments décoratifs:</strong> Cadrans, aiguilles, index</li>
@@ -1007,7 +1013,7 @@ export default function Page() {
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Propriétés exceptionnelles</h4>
-                  <p className="mb-4">La céramique est un matériau non métallique apprécié pour sa légèreté, sa résistance exceptionnelle aux rayures et son aspect futuriste <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[433]</a>.</p>
+                  <p className="mb-4">La céramique est un matériau non métallique apprécié pour sa légèreté, sa résistance exceptionnelle aux rayures et son aspect futuriste <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank" rel="noopener noreferrer">[433]</a>.</p>
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <h5 className="font-semibold mb-2">Caractéristiques techniques:</h5>
                     <ul className="text-sm space-y-1">
@@ -1021,7 +1027,7 @@ export default function Page() {
 
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Procédés et applications</h4>
-                  <p className="mb-4">La fabrication de pièces en céramique est un processus complexe et hautement technologique, utilisant de la zircone yttriée (ZrO2) <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[433]</a>.</p>
+                  <p className="mb-4">La fabrication de pièces en céramique est un processus complexe et hautement technologique, utilisant de la zircone yttriée (ZrO2) <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank" rel="noopener noreferrer">[433]</a>.</p>
                   <div className="space-y-3 mb-4">
                     <div className="flex items-center">
                       <i className="fas fa-fire text-orange-500 mr-3"></i>
@@ -1047,17 +1053,17 @@ export default function Page() {
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Composition et évolution</h4>
-                  <p className="mb-4">Le bronze, un alliage de cuivre et d'étain, a connu un regain d'intérêt pour son évolution naturelle au fil du temps <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie " className="citation" target="_blank">[433]</a>.</p>
+                  <p className="mb-4">Le bronze, un alliage de cuivre et d&apos;étain, a connu un regain d&apos;intérêt pour son évolution naturelle au fil du temps <a href="https://58facettes.fr/blogs/magazine/les-metaux-utilises-en-horlogerie" className="citation" target="_blank" rel="noopener noreferrer">[433]</a>.</p>
                   <div className="bg-gradient-to-r from-orange-400 to-green-600 p-4 rounded-lg text-white mb-4">
                     <h5 className="font-semibold mb-2">Processus de patine:</h5>
                     <p className="text-sm">Cuivre brillant → Teintes brunes → Vertes (comme la Statue de la Liberté)</p>
                   </div>
-                  <p className="text-sm">Chaque montre développe une patine unique selon l'environnement et l'utilisation.</p>
+                  <p className="text-sm">Chaque montre développe une patine unique selon l&apos;environnement et l&apos;utilisation.</p>
                 </div>
 
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Montres de plongée</h4>
-                  <p className="mb-4">Le bronze est particulièrement bien adapté aux montres de plongée, avec une excellente résistance à la corrosion dans l'eau salée.</p>
+                  <p className="mb-4">Le bronze est particulièrement bien adapté aux montres de plongée, avec une excellente résistance à la corrosion dans l&apos;eau salée.</p>
                   <div className="space-y-3 mb-4">
                     <div className="flex items-center">
                       <i className="fas fa-water text-blue-500 mr-3"></i>
@@ -1079,12 +1085,12 @@ export default function Page() {
 
             {/* Avant-Garde */}
             <div id="avant-garde" className="mb-12">
-              <h3 className="serif-heading text-3xl font-bold mb-6 text-center">Autres Matériaux d'Avant-Garde</h3>
+              <h3 className="serif-heading text-3xl font-bold mb-6 text-center">Autres Matériaux d&apos;Avant-Garde</h3>
 
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="material-card">
                   <h4 className="font-bold text-xl mb-3">Carbone Forgé</h4>
-                  <p className="mb-4">Matériau composite de pointe utilisé dans l'horlogerie haut de gamme, en particulier pour les montres de sport et de course automobile.</p>
+                  <p className="mb-4">Matériau composite de pointe utilisé dans l&apos;horlogerie haut de gamme, en particulier pour les montres de sport et de course automobile.</p>
                   <ul className="space-y-2">
                     <li><strong>Structure:</strong> Fibres de carbone dans résine polymère</li>
                     <li><strong>Avantages:</strong> Ultra-léger et rigide</li>
@@ -1097,7 +1103,7 @@ export default function Page() {
                   <h4 className="font-bold text-xl mb-3">Liquidmetal®</h4>
                   <p className="mb-4">Alliage amorphe (métal vitreux) introduit pour ses propriétés uniques, avec une structure atomique désordonnée.</p>
                   <ul className="space-y-2">
-                    <li><strong>Dureté:</strong> 3x plus dur que l'acier inoxydable</li>
+                    <li><strong>Dureté:</strong> 3x plus dur que l&apos;acier inoxydable</li>
                     <li><strong>Propriétés:</strong> Dureté, élasticité, résistance corrosion</li>
                     <li><strong>Applications:</strong> Lunettes tournantes, inserts de boîtier</li>
                     <li><strong>Pionnier:</strong> Omega (avec céramique)</li>
@@ -1118,10 +1124,10 @@ export default function Page() {
               <h3 className="serif-heading text-2xl font-bold mb-6 text-center">Structure granulaire métallique</h3>
               <div className="mermaid-container">
                 <div className="mermaid-controls">
-                  <button className="mermaid-control-btn zoom-in" title="Zoom avant">
+                  <button className="mermaid-control-btn zoom-in" title="Agrandir">
                     <i className="fas fa-search-plus"></i>
                   </button>
-                  <button className="mermaid-control-btn zoom-out" title="Zoom arrière">
+                  <button className="mermaid-control-btn zoom-out" title="Réduire">
                     <i className="fas fa-search-minus"></i>
                   </button>
                   <button className="mermaid-control-btn reset-zoom" title="Réinitialiser">
@@ -1132,11 +1138,40 @@ export default function Page() {
                   </button>
                 </div>
                 <div className="mermaid">
-                  {'graph TD\nA["Structure Métallique"] --> B["Grains cristallins"]\nA --> C["Joints de grains"]\nA --> D["Dislocations"]\n\nB --> B1["Taille du grain"]\nB --> B2["Forme du grain"]\nB --> B3["Orientation"]\n\nC --> C1["Interfaces entre cristaux"]\nC --> C2["Sites de corrosion potentielle"]\nC --> C3["Barrière au mouvement des dislocations"]\n\nD --> D1["Défauts dans la structure"]\nD --> D2["Influence sur la ductilité"]\nD --> D3["Rôle dans le durcissement"]\n\nstyle A fill:#f8f6f0,stroke:#2c1810,stroke-width:3px,color:#1a1208\nstyle B fill:#ffffff,stroke:#8b7355,stroke-width:2px,color:#1a1208\nstyle C fill:#fef3c7,stroke:#a68b5b,stroke-width:2px,color:#1a1208\nstyle D fill:#ecfdf5,stroke:#059669,stroke-width:2px,color:#1a1208\nstyle B1 fill:#fafafa,stroke:#6b7280,stroke-width:1px,color:#1a1208\nstyle B2 fill:#fafafa,stroke:#6b7280,stroke-width:1px,color:#1a1208\nstyle B3 fill:#fafafa,stroke:#6b7280,stroke-width:1px,color:#1a1208\nstyle C1 fill:#fef3c7,stroke:#d97706,stroke-width:1px,color:#1a1208\nstyle C2 fill:#fef3c7,stroke:#d97706,stroke-width:1px,color:#1a1208\nstyle C3 fill:#fef3c7,stroke:#d97706,stroke-width:1px,color:#1a1208\nstyle D1 fill:#ecfdf5,stroke:#059669,stroke-width:1px,color:#1a1208\nstyle D2 fill:#ecfdf5,stroke:#059669,stroke-width:1px,color:#1a1208\nstyle D3 fill:#ecfdf5,stroke:#059669,stroke-width:1px,color:#1a1208'}
+                  {`graph TD
+                  A["Structure Métallique"] --> B["Grains cristallins"]
+                  A --> C["Joints de grains"]
+                  A --> D["Dislocations"]
+
+                  B --> B1["Taille du grain"]
+                  B --> B2["Forme du grain"]
+                  B --> B3["Orientation"]
+
+                  C --> C1["Interfaces entre cristaux"]
+                  C --> C2["Sites de corrosion potentielle"]
+                  C --> C3["Barrière au mouvement des dislocations"]
+
+                  D --> D1["Défauts dans la structure"]
+                  D --> D2["Influence sur la ductilité"]
+                  D --> D3["Rôle dans le durcissement"]
+
+                  style A fill:#f8f6f0,stroke:#2c1810,stroke-width:3px,color:#1a1208
+                  style B fill:#ffffff,stroke:#8b7355,stroke-width:2px,color:#1a1208
+                  style C fill:#fef3c7,stroke:#a68b5b,stroke-width:2px,color:#1a1208
+                  style D fill:#ecfdf5,stroke:#059669,stroke-width:2px,color:#1a1208
+                  style B1 fill:#fafafa,stroke:#6b7280,stroke-width:1px,color:#1a1208
+                  style B2 fill:#fafafa,stroke:#6b7280,stroke-width:1px,color:#1a1208
+                  style B3 fill:#fafafa,stroke:#6b7280,stroke-width:1px,color:#1a1208
+                  style C1 fill:#fef3c7,stroke:#d97706,stroke-width:1px,color:#1a1208
+                  style C2 fill:#fef3c7,stroke:#d97706,stroke-width:1px,color:#1a1208
+                  style C3 fill:#fef3c7,stroke:#d97706,stroke-width:1px,color:#1a1208
+                  style D1 fill:#ecfdf5,stroke:#059669,stroke-width:1px,color:#1a1208
+                  style D2 fill:#ecfdf5,stroke:#059669,stroke-width:1px,color:#1a1208
+                  style D3 fill:#ecfdf5,stroke:#059669,stroke-width:1px,color:#1a1208`}
                 </div>
               </div>
               <p className="text-center text-gray-600 mt-4">
-                La taille, la forme et l'orientation des grains influencent directement les propriétés mécaniques du métal.
+                La taille, la forme et l&apos;orientation des grains influencent directement les propriétés mécaniques du métal.
               </p>
             </div>
 
@@ -1239,22 +1274,22 @@ export default function Page() {
         {/* PDF de Référence Section */}
         <section id="pdf-reference" className="p-8">
           <div className="section-card p-8">
-            <h2 className="serif-heading text-4xl font-bold mb-8 text-center">Intégration du PDF de Référence : "Métaux Communs"</h2>
+            <h2 className="serif-heading text-4xl font-bold mb-8 text-center">Intégration du PDF de Référence : &quot;Métaux Communs&quot;</h2>
 
             <div className="material-card mb-8">
               <h3 className="serif-heading text-2xl font-bold mb-4">Ressource Pédagogique Complémentaire</h3>
-              <p className="mb-4">Pour approfondir les connaissances sur les matériaux de base utilisés dans l'industrie horlogère, un document de référence intitulé <strong>"Métaux Communs"</strong> est mis à disposition.</p>
+              <p className="mb-4">Pour approfondir les connaissances sur les matériaux de base utilisés dans l&apos;industrie horlogère, un document de référence intitulé <strong>&quot;Métaux Communs&quot;</strong> est mis à disposition.</p>
               <p className="mb-4">Ce PDF, hébergé dans le dépôt GitHub <code>horlo-afp</code>, constitue une ressource pédagogique précieuse pour les élèves en formation et les passionnés. Il est conçu pour être consulté directement sur la page, offrant une expérience de lecture fluide et intégrée.</p>
               <p>Ce document fournit des informations fondamentales sur les propriétés, les compositions et les applications des métaux les plus couramment rencontrés en horlogerie. Il sert de complément essentiel aux explications détaillées présentées dans ce guide.</p>
             </div>
 
             <div className="bg-gray-100 p-6 rounded-lg">
               <h4 className="font-bold text-lg mb-4">Visionneuse de PDF Intégrée</h4>
-              <p className="mb-4 text-sm text-gray-600">Si le PDF ne s'affiche pas correctement, vous pouvez le télécharger directement en cliquant sur le lien ci-dessous.</p>
+              <p className="mb-4 text-sm text-gray-600">Si le PDF ne s&apos;affiche pas correctement, vous pouvez le télécharger directement en cliquant sur le lien ci-dessous.</p>
               <div className="text-center">
-                <a href="https://github.com/Dali-Math/horlo-afp/blob/main/public/pdfs/metaux-communs.pdf" target="_blank" className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                <a href="https://github.com/Dali-Math/horlo-afp/blob/main/public/pdfs/metaux-communs.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
                   <i className="fas fa-download mr-2"></i>
-                  Télécharger le PDF "Métaux Communs"
+                  Télécharger le PDF &quot;Métaux Communs&quot;
                 </a>
               </div>
             </div>
@@ -1277,5 +1312,5 @@ export default function Page() {
         </footer>
       </main>
     </>
-  )
+  );
 }
