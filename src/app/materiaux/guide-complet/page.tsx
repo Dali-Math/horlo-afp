@@ -137,9 +137,9 @@ export default function Page() {
           }
         }
 
-        document.addEventListener('mousemove', handleMouseMove)
-        document.addEventListener('mouseup', handleMouseUp)
-        document.addEventListener('mouseleave', handleMouseUp)
+        document.addEventListener('mousemove', handleMouseMove as EventListener)
+        document.addEventListener('mouseup', handleMouseUp as EventListener)
+        document.addEventListener('mouseleave', handleMouseUp as EventListener)
 
         // Get touch distance
         const getTouchDistance = (touch1: Touch, touch2: Touch) => {
@@ -219,7 +219,7 @@ export default function Page() {
           updateTransform()
         }
 
-        const handleTouchCancel = (e: TouchEvent) => {
+        function handleTouchCancel(e: TouchEvent) {
           isDragging = false
           isPinching = false
           initialDistance = 0
@@ -313,10 +313,10 @@ export default function Page() {
       <Head>
         <title>Guide Complet des Métaux en Horlogerie</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script src="https://cdn.tailwindcss.com "></script>
-        <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js "></script>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital ,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css " />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <style jsx global>{`
           :root {
             --color-primary: #2c1810;
@@ -720,7 +720,7 @@ export default function Page() {
         <section className="p-8">
           <div className="bento-grid">
             <div className="bento-item bento-hero">
-              <img src="https://kimi-img.moonshot.cn/pub/icon/spinner.svg " alt="Close-up macro photograph of luxury Swiss watch movement with metallic components" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+              <img src="https://kimi-img.moonshot.cn/pub/icon/spinner.svg" alt="Close-up macro photograph of luxury Swiss watch movement with metallic components" className="absolute inset-0 w-full h-full object-cover opacity-30" />
               <div className="relative z-10">
                 <h1 className="hero-title serif-heading">Guide Complet des Métaux</h1>
                 <p className="hero-subtitle">L'Art et la Science des Matériaux Horlogers</p>
@@ -1252,7 +1252,7 @@ export default function Page() {
               <h4 className="font-bold text-lg mb-4">Visionneuse de PDF Intégrée</h4>
               <p className="mb-4 text-sm text-gray-600">Si le PDF ne s'affiche pas correctement, vous pouvez le télécharger directement en cliquant sur le lien ci-dessous.</p>
               <div className="text-center">
-                <a href="https://github.com/Dali-Math/horlo-afp/blob/main/public/pdfs/metaux-communs.pdf " target="_blank" className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                <a href="https://github.com/Dali-Math/horlo-afp/blob/main/public/pdfs/metaux-communs.pdf" target="_blank" className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
                   <i className="fas fa-download mr-2"></i>
                   Télécharger le PDF "Métaux Communs"
                 </a>
