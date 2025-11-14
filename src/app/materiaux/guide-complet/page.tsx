@@ -705,28 +705,30 @@ export default function HomePage(): JSX.Element {
 
         /* BOUTON FLOTTANT */
 .floating-back-btn {
-  position: fixed;
-  bottom: 30px;
-  left: 0;
+  position: fixed !important;
+  bottom: 30px !important;
+  left: 0 !important;
+  right: auto !important;  /* Ajoutez ceci pour annuler "right" */
   z-index: 999;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-top-right-radius: 9999px;
-  border-bottom-right-radius: 9999px;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-top-right-radius: 9999px !important;
+  border-bottom-right-radius: 9999px !important;
+  width: auto !important;  /* Empêche qu'il prenne toute la largeur */
 }
 
 /* Sur tablettes */
 @media (max-width: 768px) {
   .floating-back-btn {
-    bottom: 20px;
+    bottom: 20px !important;
   }
 }
 
 /* Sur mobiles */
 @media (max-width: 480px) {
   .floating-back-btn {
-    bottom: 15px;
+    bottom: 15px !important;
   }
 }
         
@@ -882,7 +884,7 @@ export default function HomePage(): JSX.Element {
           <div className="mt-8">
             <Link 
               href="/materiaux" 
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-900 dark:from-gray-600 dark:to-gray-800 text-white rounded-xl hover:from-gray-600 hover:to-gray-800 dark:hover:from-gray-500 dark:hover:to-gray-700 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold"
+              className="floating-back-btn inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-500 dark:to-blue-700 text-white rounded-r-full hover:from-blue-500 hover:to-blue-700 dark:hover:from-blue-400 dark:hover:to-blue-600 transition-all duration-300 font-semibold text-sm"
             >
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
