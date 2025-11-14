@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
-import { ChevronLeft, Sparkles, Award, Layers, ExternalLink, Clock, Gem, Hammer, Search, Filter, BookOpen, Zap, Shield, Gauge, Menu, X, Download, Info, Cpu, Atom } from 'lucide-react'
-
+import { ChevronLeft, Sparkles, Award, Layers, ExternalLink, Clock, Gem, Hammer, Search, Filter, BookOpen, Zap, Shield, Gauge, Menu, X, Download, Info, Cpu, Atom, Factory } from 'lucide-react'
 // Structure de données enrichie depuis le PDF
 type Metal = {
   id: string
