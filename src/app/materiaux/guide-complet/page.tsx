@@ -436,42 +436,43 @@ const AlloyMixer: React.FC = () => {
   };
 
   const getPropertyLevel = (value: number, type: 'hardness' | 'corrosion' | 'density' | 'cost' | 'workability') => {
-    switch(type) {
-      case 'hardness':
-        if (value > 1000) return { level: 'Extrême', color: 'text-purple-600 dark:text-purple-400' };
-        if (value > 600) return { level: 'Très élevée', color: 'text-blue-600 dark:text-blue-400' };
-        if (value > 300) return { level: 'Élevée', color: 'text-green-600 dark:text-green-400' };
-        if (value > 150) return { level: 'Moyenne', color: 'text-yellow-600 dark:text-yellow-400' };
-        return { level: 'Faible', color: 'text-orange-600 dark:text-orange-400' };
-      
-      case 'corrosion':
-        if (value > 90) return { level: 'Excellente', color: 'text-green-600 dark:text-green-400' };
-        if (value > 75) return { level: 'Très bonne', color: 'text-blue-600 dark:text-blue-400' };
-        if (value > 60) return { level: 'Bonne', color: 'text-yellow-600 dark:text-yellow-400' };
-        return { level: 'Limitée', color: 'text-orange-600 dark:text-orange-400' };
-      
-      case 'density':
-        if (value < 5) return { level: 'Ultra-léger', color: 'text-green-600 dark:text-green-400' };
-        if (value < 8) return { level: 'Léger', color: 'text-blue-600 dark:text-blue-400' };
-        if (value < 12) return { level: 'Moyen', color: 'text-yellow-600 dark:text-yellow-400' };
-        if (value < 18) return { level: 'Lourd', color: 'text-orange-600 dark:text-orange-400' };
-        return { level: 'Très lourd', color: 'text-purple-600 dark:text-purple-400' };
-      
-      case 'cost':
-        if (value > 500) return { level: 'Très élevé', color: 'text-red-600 dark:text-red-400' };
-        if (value > 200) return { level: 'Élevé', color: 'text-orange-600 dark:text-orange-400' };
-        if (value > 100) return { level: 'Moyen', color: 'text-yellow-600 dark:text-yellow-400' };
-        return { level: 'Abordable', color: 'text-green-600 dark:text-green-400' };
-      
-      case 'workability':
-        if (value > 75) return { level: 'Excellente', color: 'text-green-600 dark:text-green-400' };
-        if (value > 60) return { level: 'Bonne', color: 'text-blue-600 dark:text-blue-400' };
-        if (value > 45) return { level: 'Moyenne', color: 'text-yellow-600 dark:text-yellow-400' };
-        return { level: 'Difficile', color: 'text-orange-600 dark:text-orange-400' };
-      
-      default:
-        return { level: '', color: '' };
-    }
+  switch(type) {
+    case 'hardness':
+      if (value > 1000) return { level: 'Extrême', color: 'text-purple-600 dark:text-purple-400' };
+      if (value > 600) return { level: 'Très élevée', color: 'text-blue-600 dark:text-blue-400' };
+      if (value > 300) return { level: 'Élevée', color: 'text-green-600 dark:text-green-400' };
+      if (value > 150) return { level: 'Moyenne', color: 'text-yellow-600 dark:text-yellow-400' };
+      return { level: 'Faible', color: 'text-orange-600 dark:text-orange-400' };
+    
+    case 'corrosion':
+      if (value > 90) return { level: 'Excellente', color: 'text-green-600 dark:text-green-400' };
+      if (value > 75) return { level: 'Très bonne', color: 'text-blue-600 dark:text-blue-400' };
+      if (value > 60) return { level: 'Bonne', color: 'text-yellow-600 dark:text-yellow-400' };
+      return { level: 'Limitée', color: 'text-orange-600 dark:text-orange-400' };
+    
+    case 'density':
+      if (value < 5) return { level: 'Ultra-léger', color: 'text-green-600 dark:text-green-400' };
+      if (value < 8) return { level: 'Léger', color: 'text-blue-600 dark:text-blue-400' };
+      if (value < 12) return { level: 'Moyen', color: 'text-yellow-600 dark:text-yellow-400' };
+      if (value < 18) return { level: 'Lourd', color: 'text-orange-600 dark:text-orange-400' };
+      return { level: 'Très lourd', color: 'text-purple-600 dark:text-purple-400' };
+    
+    case 'cost':
+      if (value > 500) return { level: 'Très élevé', color: 'text-red-600 dark:text-red-400' };
+      if (value > 200) return { level: 'Élevé', color: 'text-orange-600 dark:text-orange-400' };
+      if (value > 100) return { level: 'Moyen', color: 'text-yellow-600 dark:text-yellow-400' };
+      return { level: 'Abordable', color: 'text-green-600 dark:text-green-400' };
+    
+    case 'workability':
+      if (value > 75) return { level: 'Excellente', color: 'text-green-600 dark:text-green-400' };
+      if (value > 60) return { level: 'Bonne', color: 'text-blue-600 dark:text-blue-400' };
+      if (value > 45) return { level: 'Moyenne', color: 'text-yellow-600 dark:text-yellow-400' };
+      return { level: 'Difficile', color: 'text-orange-600 dark:text-orange-400' };
+    
+    default:
+      return { level: '', color: '' };
+  }
+};
   return (
     <div className="w-full">
       {/* En-tête avec bouton retour */}
