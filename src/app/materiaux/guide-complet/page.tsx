@@ -1,181 +1,406 @@
 // app/page.tsx
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
 
-export default function HomePage(): JSX.Element {
+// Définition des types pour le simulateur
+interface Metal {
+  id: string;
+  name: string;
+  icon: string;
+  baseProperties: {
+    hardness: number;
+    corrosion: number;
+    density: number;
+    color: string;
+  };
+}
+
+interface Additive {
+  id: string;
+  name: string;
+  symbol: string;
+  maxPercent: number;
+  effect: {
+    hardness: number;
+    corrosion: number;
+    density: number;
+    description: string;
+  };
+}
+
+// Composant AlloyMixer directement intégré
+const AlloyMixer: React.FC = () => {
+  const baseMetals: Metal[] = [
+    { id: 'steel', name: 'Acier 316L', icon: '⚙️', baseProperties: { hardness: 200, corrosion: 85, density: 7.9, color: '#e0e0e0' } },
+    { id: 'titanium', name: 'Titane', icon: '🪶', baseProperties: { hardness: 350, corrosion: 95, density: 4.5, color: '#c0c0c0' } },
+    { id: 'gold', name: 'Or 18K', icon: '👑', baseProperties: { hardness: 150, corrosion: 100, density: 15.4, color: '#ffd700' } },
+    { id: 'platinum', name: 'Platine', icon: '⭐', baseProperties: { hardness: 130, corrosion: 100, density: 21.4, color: '#e5e4e2' } },
+    { id: 'bronze', name: 'Bronze', icon: '🏛️', baseProperties: { hardness: 100, corrosion: 70, density: 8.8, color: '#cd7f32' } },
+  ];
+
+  const additives: Additive[] = [
+    { id: 'carbon', name: 'Carbone', symbol: 'C', maxPercent: 2, effect: { hardness: 150, corrosion: -10, density: 0.1, description: 'Durcit fortement' } },
+    { id: 'nickel', name: 'Nickel', symbol: 'Ni', maxPercent: 30, effect: { hardness: 50, corrosion: 15, density: 1.2, description: 'Améliore la brillance' } },
+    { id: 'chrome', name: 'Chrome', symbol: 'Cr', maxPercent: 25, effect: { hardness: 80, corrosion: 40, density: 0.8, description: 'Rend inoxydable' } },
+    { id: 'copper', name: 'Cuivre', symbol: 'Cu', maxPercent: 40, effect: { hardness: -20, corrosion: 5, density: 1.0, description: 'Favorise la ductilité' } },
+    { id: 'moly', name: 'Molybdène', symbol: 'Mo', maxPercent: 5, effect: { hardness: 60, corrosion: 25, density: 1.5, description: 'Résistance marine' } },
+    { id: 'zinc', name: 'Zinc', symbol: 'Zn', maxPercent: 35, effect: { hardness: 30, corrosion: -5, density: 0.9, description: 'Facilite la fusion' } },
+  ];
+
+  const [selectedMetal, setSelectedMetal] = useState<Metal>(baseMetals[0]);
+  const [selectedAdditives, setSelectedAdditives] = useState<Array<{additive: Additive, percentage: number}>>([]);
+  const [results, setResults] = useState({ hardness: 0, corrosion: 0, density: 0, color: '#ffffff' });
+  const [applications, setApplications] = useState<string[]>([]);
+
+  // Calcul des propriétés résultantes
   useEffect(() => {
-    // Initialize Mermaid and controls after DOM is loaded
-    const initializeMermaidControls = () => {
-      const containers = document.querySelectorAll<HTMLElement>('.mermaid-container');
+    let total = 100;
+    let hardness = selectedMetal.baseProperties.hardness * 100;
+    let corrosion = selectedMetal.baseProperties.corrosion * 100;
+    let density = selectedMetal.baseProperties.density * 100;
 
-      containers.forEach(container => {
-        const mermaidElement = container.querySelector<HTMLElement>('.mermaid');
-        if (!mermaidElement) return;
+    selectedAdditives.forEach(({ additive, percentage }) => {
+      total += percentage;
+      hardness += additive.effect.hardness * percentage;
+      corrosion += additive.effect.corrosion * percentage;
+      density += additive.effect.density * percentage;
+    });
 
-        let scale = 1;
-        let isDragging = false;
-        let startX = 0, startY = 0, translateX = 0, translateY = 0;
-        let isTouch = false;
-        let touchStartTime = 0;
-        let initialDistance = 0;
-        let initialScale = 1;
-        let isPinching = false;
+    const finalHardness = Math.max(50, Math.min(2000, Math.round(hardness / total)));
+    const finalCorrosion = Math.max(0, Math.min(100, Math.round(corrosion / total)));
+    const finalDensity = Math.max(1, Math.round((density / total) * 10) / 10);
 
-        const zoomInBtn = container.querySelector<HTMLElement>('.zoom-in');
-        const zoomOutBtn = container.querySelector<HTMLElement>('.zoom-out');
-        const resetBtn = container.querySelector<HTMLElement>('.reset-zoom');
-        const fullscreenBtn = container.querySelector<HTMLElement>('.fullscreen');
+    setResults({ hardness: finalHardness, corrosion: finalCorrosion, density: finalDensity, color: selectedMetal.baseProperties.color });
 
-        const updateTransform = () => {
-          mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-          container.classList.toggle('zoomed', scale > 1);
-          mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
-        };
+    // Déterminer les applications
+    const apps: string[] = [];
+    if (finalHardness > 600) apps.push('✦ Composants d\'usure');
+    if (finalCorrosion > 90) apps.push('✦ Montres de plongée');
+    if (finalDensity < 6) apps.push('✦ Montres sport légères');
+    if (selectedMetal.id === 'gold' || selectedMetal.id === 'platinum') apps.push('✦ Haute joaillerie');
+    setApplications(apps);
+  }, [selectedMetal, selectedAdditives]);
 
-        zoomInBtn?.addEventListener('click', () => {
-          scale = Math.min(scale * 1.25, 4);
+  const addAdditive = (additive: Additive) => {
+    if (!selectedAdditives.some(a => a.additive.id === additive.id) && selectedAdditives.length < 4) {
+      setSelectedAdditives([...selectedAdditives, { additive, percentage: 5 }]);
+    }
+  };
+
+  const updatePercentage = (id: string, value: number) => {
+    setSelectedAdditives(selectedAdditives.map(a => 
+      a.additive.id === id ? { ...a, percentage: Math.min(a.additive.maxPercent, Math.max(0.1, value)) } : a
+    ));
+  };
+
+  return (
+    <div className="bg-white rounded-xl p-6 shadow-lg border-2 border-gray-200">
+      <h3 className="text-2xl font-bold text-center mb-6 text-gray-800">🔬 Simulateur d'Alliage Horloger</h3>
+      
+      <div className="grid md:grid-cols-3 gap-6">
+        {/* Métal de base */}
+        <div>
+          <h4 className="font-bold text-lg mb-3 text-gray-700">Métal de base</h4>
+          <div className="space-y-2">
+            {baseMetals.map(metal => (
+              <button
+                key={metal.id}
+                onClick={() => { setSelectedMetal(metal); setSelectedAdditives([]); }}
+                className={`w-full p-3 rounded-lg border-2 transition-all ${
+                  selectedMetal.id === metal.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-400'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-medium">{metal.icon} {metal.name}</span>
+                  <div className="w-6 h-6 rounded-full border-2 border-gray-300" style={{ backgroundColor: metal.baseProperties.color }}></div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Additifs */}
+        <div>
+          <h4 className="font-bold text-lg mb-3 text-gray-700">Éléments d'addition</h4>
+          <div className="space-y-2 max-h-48 overflow-y-auto p-2 border rounded bg-gray-50">
+            {additives.map(additive => {
+              const isSelected = selectedAdditives.some(a => a.additive.id === additive.id);
+              return (
+                <button
+                  key={additive.id}
+                  onClick={() => addAdditive(additive)}
+                  disabled={isSelected || selectedAdditives.length >= 4}
+                  className={`w-full p-2 rounded text-sm transition-all ${
+                    isSelected ? 'bg-blue-200 cursor-not-allowed opacity-50' : 'bg-white hover:bg-gray-100 border'
+                  }`}
+                  title={additive.effect.description}
+                >
+                  <div className="flex justify-between">
+                    <span><strong>{additive.symbol}</strong> {additive.name}</span>
+                    <span className="text-xs text-gray-500">Max {additive.maxPercent}%</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mt-4 space-y-2">
+            {selectedAdditives.map(({ additive, percentage }) => (
+              <div key={additive.id} className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-medium">{additive.symbol} {additive.name}</span>
+                  <button onClick={() => setSelectedAdditives(selectedAdditives.filter(a => a.additive.id !== additive.id))} className="text-red-500">✕</button>
+                </div>
+                <input type="range" min="0.1" max={additive.maxPercent} step="0.1" value={percentage} 
+                       onChange={(e) => updatePercentage(additive.id, parseFloat(e.target.value))}
+                       className="w-full" />
+                <div className="flex justify-between text-xs mt-1">
+                  <span>{percentage.toFixed(1)}%</span>
+                  <span className="text-gray-500">{additive.effect.description}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Résultats */}
+        <div>
+          <h4 className="font-bold text-lg mb-3 text-gray-700">Propriétés résultantes</h4>
+          
+          <div className="mb-4 p-4 rounded-lg text-center" style={{ backgroundColor: results.color }}>
+            <div className="font-bold">Alliage créé</div>
+            <div className="text-xs opacity-75">Sur base de {selectedMetal.name}</div>
+          </div>
+
+          {[
+            { label: 'Dureté', value: results.hardness, unit: 'HV', level: results.hardness > 500 ? 'Dur' : 'Standard', color: results.hardness > 500 ? 'bg-blue-500' : 'bg-gray-400' },
+            { label: 'Corrosion', value: results.corrosion, unit: '%', level: results.corrosion > 80 ? 'Excellente' : 'Bonne', color: results.corrosion > 80 ? 'bg-green-500' : 'bg-yellow-500' },
+            { label: 'Densité', value: results.density, unit: 'g/cm³', level: results.density < 8 ? 'Léger' : 'Standard', color: results.density < 8 ? 'bg-green-500' : 'bg-gray-500' }
+          ].map((prop, i) => (
+            <div key={i} className="mb-3">
+              <div className="flex justify-between mb-1">
+                <span className="font-medium">{prop.label}</span>
+                <span className="font-mono text-sm">{prop.value} {prop.unit}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex-1 bg-gray-200 rounded-full h-2">
+                  <div className={`${prop.color} h-2 rounded-full transition-all duration-500`} 
+                       style={{ width: `${Math.min(100, prop.value / (prop.label === 'Dureté' ? 20 : 1))}%` }}></div>
+                </div>
+                <span className="text-xs">{prop.level}</span>
+              </div>
+            </div>
+          ))}
+
+          <div className="mt-4 pt-3 border-t">
+            <h5 className="font-semibold text-sm mb-2">Applications:</h5>
+            {applications.length ? (
+              <div className="flex flex-wrap gap-1">
+                {applications.map((app, i) => (
+                  <span key={i} className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">{app}</span>
+                ))}
+              </div>
+            ) : (
+              <span className="text-gray-400 text-sm">Propriétés standards</span>
+            )}
+          </div>
+
+          <button onClick={() => { setSelectedMetal(baseMetals[0]); setSelectedAdditives([]); }} 
+                  className="w-full mt-4 bg-gray-800 text-white py-2 rounded hover:bg-gray-700 text-sm">
+            🔄 Réinitialiser
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-6 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
+        <h4 className="font-bold mb-2">💡 Notes pédagogiques</h4>
+        <ul className="text-sm space-y-1 text-gray-700">
+          <li>• La dureté influence la résistance aux rayures (400+ HV pour les boîtiers)</li>
+          <li>• Résistance à la corrosion > 90% pour les montres de plongée</li>
+          <li>• Densité faible = montre plus légère et confortable</li>
+          <li>• Titane hypoallergénique idéal pour peaux sensibles</li>
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+// Page principale
+export default function HomePage(): JSX.Element {
+  const [mermaidReady, setMermaidReady] = useState(false);
+
+  const initializeMermaidControls = useCallback(() => {
+    const containers = document.querySelectorAll<HTMLElement>('.mermaid-container');
+    
+    containers.forEach(container => {
+      const mermaidElement = container.querySelector<HTMLElement>('.mermaid');
+      if (!mermaidElement) return;
+
+      let scale = 1;
+      let isDragging = false;
+      let startX = 0, startY = 0, translateX = 0, translateY = 0;
+      let isTouch = false;
+      let touchStartTime = 0;
+      let initialDistance = 0;
+      let initialScale = 1;
+      let isPinching = false;
+
+      const zoomInBtn = container.querySelector<HTMLElement>('.zoom-in');
+      const zoomOutBtn = container.querySelector<HTMLElement>('.zoom-out');
+      const resetBtn = container.querySelector<HTMLElement>('.reset-zoom');
+      const fullscreenBtn = container.querySelector<HTMLElement>('.fullscreen');
+
+      const updateTransform = () => {
+        mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        container.classList.toggle('zoomed', scale > 1);
+        mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+      };
+
+      zoomInBtn?.addEventListener('click', () => {
+        scale = Math.min(scale * 1.25, 4);
+        updateTransform();
+      });
+
+      zoomOutBtn?.addEventListener('click', () => {
+        scale = Math.max(scale / 1.25, 0.3);
+        if (scale <= 1) {
+          translateX = 0;
+          translateY = 0;
+        }
+        updateTransform();
+      });
+
+      resetBtn?.addEventListener('click', () => {
+        scale = 1;
+        translateX = 0;
+        translateY = 0;
+        updateTransform();
+      });
+
+      fullscreenBtn?.addEventListener('click', () => {
+        container.requestFullscreen?.();
+      });
+
+      const getTouchDistance = (touch1: Touch, touch2: Touch) => {
+        return Math.hypot(
+          touch2.clientX - touch1.clientX,
+          touch2.clientY - touch1.clientY
+        );
+      };
+
+      const handleMouseDown = (e: MouseEvent) => {
+        if (isTouch) return;
+        isDragging = true;
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+        updateTransform();
+        e.preventDefault();
+      };
+
+      const handleMouseMove = (e: MouseEvent) => {
+        if (isDragging && !isTouch) {
+          translateX = e.clientX - startX;
+          translateY = e.clientY - startY;
           updateTransform();
-        });
+        }
+      };
 
-        zoomOutBtn?.addEventListener('click', () => {
-          scale = Math.max(scale / 1.25, 0.3);
+      const handleMouseUp = () => {
+        if (isDragging && !isTouch) {
+          isDragging = false;
+          updateTransform();
+        }
+      };
+
+      mermaidElement.addEventListener('mousedown', handleMouseDown);
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('mouseleave', handleMouseUp);
+
+      mermaidElement.addEventListener('touchstart', (e: TouchEvent) => {
+        isTouch = true;
+        touchStartTime = Date.now();
+
+        if (e.touches.length === 1) {
+          isPinching = false;
+          isDragging = true;
+          const touch = e.touches[0];
+          startX = touch.clientX - translateX;
+          startY = touch.clientY - translateY;
+        } else if (e.touches.length === 2) {
+          isPinching = true;
+          isDragging = false;
+          const touch1 = e.touches[0];
+          const touch2 = e.touches[1];
+          initialDistance = getTouchDistance(touch1, touch2);
+          initialScale = scale;
+        }
+        e.preventDefault();
+      }, { passive: false });
+
+      mermaidElement.addEventListener('touchmove', (e: TouchEvent) => {
+        if (e.touches.length === 1 && isDragging && !isPinching) {
+          const touch = e.touches[0];
+          translateX = touch.clientX - startX;
+          translateY = touch.clientY - startY;
+          updateTransform();
+        } else if (e.touches.length === 2 && isPinching) {
+          const touch1 = e.touches[0];
+          const touch2 = e.touches[1];
+          const currentDistance = getTouchDistance(touch1, touch2);
+          if (initialDistance > 0) {
+            const newScale = Math.min(Math.max(
+              initialScale * (currentDistance / initialDistance),
+              0.3
+            ), 4);
+            scale = newScale;
+            updateTransform();
+          }
+        }
+        e.preventDefault();
+      }, { passive: false });
+
+      mermaidElement.addEventListener('touchend', (e: TouchEvent) => {
+        if (e.touches.length === 0) {
+          isDragging = false;
+          isPinching = false;
+          initialDistance = 0;
+          setTimeout(() => { isTouch = false; }, 100);
+        } else if (e.touches.length === 1 && isPinching) {
+          isPinching = false;
+          isDragging = true;
+          const touch = e.touches[0];
+          startX = touch.clientX - translateX;
+          startY = touch.clientY - translateY;
+        }
+        updateTransform();
+      });
+
+      container.addEventListener('wheel', (e: WheelEvent) => {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? 0.9 : 1.1;
+        const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+        if (newScale !== scale) {
+          const scaleDiff = newScale / scale;
+          translateX = translateX * scaleDiff;
+          translateY = translateY * scaleDiff;
+          scale = newScale;
           if (scale <= 1) {
             translateX = 0;
             translateY = 0;
           }
           updateTransform();
-        });
-
-        resetBtn?.addEventListener('click', () => {
-          scale = 1;
-          translateX = 0;
-          translateY = 0;
-          updateTransform();
-        });
-
-        fullscreenBtn?.addEventListener('click', () => {
-          container.requestFullscreen?.();
-        });
-
-        const getTouchDistance = (touch1: Touch, touch2: Touch) => {
-          return Math.hypot(
-            touch2.clientX - touch1.clientX,
-            touch2.clientY - touch1.clientY
-          );
-        };
-
-        const handleMouseDown = (e: MouseEvent) => {
-          if (isTouch) return;
-          isDragging = true;
-          startX = e.clientX - translateX;
-          startY = e.clientY - translateY;
-          updateTransform();
-          e.preventDefault();
-        };
-
-        const handleMouseMove = (e: MouseEvent) => {
-          if (isDragging && !isTouch) {
-            translateX = e.clientX - startX;
-            translateY = e.clientY - startY;
-            updateTransform();
-          }
-        };
-
-        const handleMouseUp = () => {
-          if (isDragging && !isTouch) {
-            isDragging = false;
-            updateTransform();
-          }
-        };
-
-        mermaidElement.addEventListener('mousedown', handleMouseDown);
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleMouseUp);
-        document.addEventListener('mouseleave', handleMouseUp);
-
-        mermaidElement.addEventListener('touchstart', (e: TouchEvent) => {
-          isTouch = true;
-          touchStartTime = Date.now();
-
-          if (e.touches.length === 1) {
-            isPinching = false;
-            isDragging = true;
-            const touch = e.touches[0];
-            startX = touch.clientX - translateX;
-            startY = touch.clientY - translateY;
-          } else if (e.touches.length === 2) {
-            isPinching = true;
-            isDragging = false;
-            const touch1 = e.touches[0];
-            const touch2 = e.touches[1];
-            initialDistance = getTouchDistance(touch1, touch2);
-            initialScale = scale;
-          }
-          e.preventDefault();
-        }, { passive: false });
-
-        mermaidElement.addEventListener('touchmove', (e: TouchEvent) => {
-          if (e.touches.length === 1 && isDragging && !isPinching) {
-            const touch = e.touches[0];
-            translateX = touch.clientX - startX;
-            translateY = touch.clientY - startY;
-            updateTransform();
-          } else if (e.touches.length === 2 && isPinching) {
-            const touch1 = e.touches[0];
-            const touch2 = e.touches[1];
-            const currentDistance = getTouchDistance(touch1, touch2);
-            if (initialDistance > 0) {
-              const newScale = Math.min(Math.max(
-                initialScale * (currentDistance / initialDistance),
-                0.3
-              ), 4);
-              scale = newScale;
-              updateTransform();
-            }
-          }
-          e.preventDefault();
-        }, { passive: false });
-
-        mermaidElement.addEventListener('touchend', (e: TouchEvent) => {
-          if (e.touches.length === 0) {
-            isDragging = false;
-            isPinching = false;
-            initialDistance = 0;
-            setTimeout(() => { isTouch = false; }, 100);
-          } else if (e.touches.length === 1 && isPinching) {
-            isPinching = false;
-            isDragging = true;
-            const touch = e.touches[0];
-            startX = touch.clientX - translateX;
-            startY = touch.clientY - translateY;
-          }
-          updateTransform();
-        });
-
-        container.addEventListener('wheel', (e: WheelEvent) => {
-          e.preventDefault();
-          const delta = e.deltaY > 0 ? 0.9 : 1.1;
-          const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
-          if (newScale !== scale) {
-            const scaleDiff = newScale / scale;
-            translateX = translateX * scaleDiff;
-            translateY = translateY * scaleDiff;
-            scale = newScale;
-            if (scale <= 1) {
-              translateX = 0;
-              translateY = 0;
-            }
-            updateTransform();
-          }
-        });
-
-        updateTransform();
+        }
       });
-    };
 
+      updateTransform();
+    });
+  }, []);
+
+  useEffect(() => {
     // Smooth scrolling for TOC links
     const tocLinks = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
     tocLinks.forEach(link => {
@@ -213,46 +438,61 @@ export default function HomePage(): JSX.Element {
 
     window.addEventListener('scroll', handleScroll);
 
-    // Initialize Mermaid
-    if (typeof window !== 'undefined') {
-      (window as any).mermaid?.initialize({
-        startOnLoad: true,
-        theme: 'base',
-        themeVariables: {
-          primaryColor: '#f8f6f0',
-          primaryTextColor: '#1a1208',
-          primaryBorderColor: '#2c1810',
-          lineColor: '#8b7355',
-          secondaryColor: '#ffffff',
-          tertiaryColor: '#fef3c7',
-          background: '#ffffff',
-          mainBkg: '#f8f6f0',
-          secondBkg: '#ffffff',
-          tertiaryBkg: '#fef3c7',
-          nodeBorder: '#2c1810',
-          clusterBkg: '#f9fafb',
-          defaultLinkColor: '#8b7355',
-          titleColor: '#1a1208',
-          edgeLabelBackground: '#ffffff',
-          nodeTextColor: '#1a1208'
-        },
-        flowchart: {
-          useMaxWidth: false,
-          htmlLabels: true,
-          curve: 'basis',
-          padding: 20
-        },
-        fontFamily: 'Inter, sans-serif',
-        fontSize: '13px'
-      });
-
-      setTimeout(initializeMermaidControls, 500);
-    }
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  // Initialize Mermaid when loaded
+  useEffect(() => {
+    if (!mermaidReady) return;
+
+    const init = () => {
+      if (typeof window !== 'undefined' && (window as any).mermaid) {
+        (window as any).mermaid.initialize({
+          startOnLoad: false,
+          theme: 'base',
+          themeVariables: {
+            primaryColor: '#f8f6f0',
+            primaryTextColor: '#1a1208',
+            primaryBorderColor: '#2c1810',
+            lineColor: '#8b7355',
+            secondaryColor: '#ffffff',
+            tertiaryColor: '#fef3c7',
+            background: '#ffffff',
+            mainBkg: '#f8f6f0',
+            secondBkg: '#ffffff',
+            tertiaryBkg: '#fef3c7',
+            nodeBorder: '#2c1810',
+            clusterBkg: '#f9fafb',
+            defaultLinkColor: '#8b7355',
+            titleColor: '#1a1208',
+            edgeLabelBackground: '#ffffff',
+            nodeTextColor: '#1a1208'
+          },
+          flowchart: {
+            useMaxWidth: false,
+            htmlLabels: true,
+            curve: 'basis',
+            padding: 20
+          },
+          fontFamily: 'Inter, sans-serif',
+          fontSize: '13px'
+        });
+
+        (window as any).mermaid.init(undefined, '.mermaid');
+        
+        setTimeout(initializeMermaidControls, 500);
+      }
+    };
+
+    if (document.readyState === 'complete') {
+      init();
+    } else {
+      window.addEventListener('load', init);
+      return () => window.removeEventListener('load', init);
+    }
+  }, [mermaidReady, initializeMermaidControls]);
 
   return (
     <>
@@ -270,7 +510,7 @@ export default function HomePage(): JSX.Element {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         
         {/* Mermaid */}
-        <Script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js" strategy="afterInteractive" />
+        <Script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js" strategy="afterInteractive" onLoad={() => setMermaidReady(true)} />
         
         {/* Tailwind CSS */}
         <Script src="https://cdn.tailwindcss.com" strategy="beforeInteractive" />
@@ -1114,65 +1354,15 @@ export default function HomePage(): JSX.Element {
           </div>
         </section>
 
-        {/* Techniques et Comparatifs Section */}
+        {/* Techniques et Comparatifs Section - AVEC LE SIMULATEUR */}
         <section id="techniques-comparatifs" className="p-8">
           <div className="section-card p-8">
             <h2 className="serif-heading text-4xl font-bold mb-8 text-center">Schémas Techniques et Comparatifs Visuels</h2>
 
-            {/* Diagramme de structure métallique */}
+            {/* REMPLACEMENT DU DIAGRAMME PAR LE SIMULATEUR */}
             <div className="mb-12">
-              <h3 className="serif-heading text-2xl font-bold mb-6 text-center">Structure granulaire métallique</h3>
-              <div className="mermaid-container">
-                <div className="mermaid-controls">
-                  <button className="mermaid-control-btn zoom-in" title="Agrandir">
-                    <i className="fas fa-search-plus"></i>
-                  </button>
-                  <button className="mermaid-control-btn zoom-out" title="Réduire">
-                    <i className="fas fa-search-minus"></i>
-                  </button>
-                  <button className="mermaid-control-btn reset-zoom" title="Réinitialiser">
-                    <i className="fas fa-expand-arrows-alt"></i>
-                  </button>
-                  <button className="mermaid-control-btn fullscreen" title="Plein écran">
-                    <i className="fas fa-expand"></i>
-                  </button>
-                </div>
-                <div className="mermaid">
-                  {`graph TD
-                  A["Structure Métallique"] --> B["Grains cristallins"]
-                  A --> C["Joints de grains"]
-                  A --> D["Dislocations"]
-
-                  B --> B1["Taille du grain"]
-                  B --> B2["Forme du grain"]
-                  B --> B3["Orientation"]
-
-                  C --> C1["Interfaces entre cristaux"]
-                  C --> C2["Sites de corrosion potentielle"]
-                  C --> C3["Barrière au mouvement des dislocations"]
-
-                  D --> D1["Défauts dans la structure"]
-                  D --> D2["Influence sur la ductilité"]
-                  D --> D3["Rôle dans le durcissement"]
-
-                  style A fill:#f8f6f0,stroke:#2c1810,stroke-width:3px,color:#1a1208
-                  style B fill:#ffffff,stroke:#8b7355,stroke-width:2px,color:#1a1208
-                  style C fill:#fef3c7,stroke:#a68b5b,stroke-width:2px,color:#1a1208
-                  style D fill:#ecfdf5,stroke:#059669,stroke-width:2px,color:#1a1208
-                  style B1 fill:#fafafa,stroke:#6b7280,stroke-width:1px,color:#1a1208
-                  style B2 fill:#fafafa,stroke:#6b7280,stroke-width:1px,color:#1a1208
-                  style B3 fill:#fafafa,stroke:#6b7280,stroke-width:1px,color:#1a1208
-                  style C1 fill:#fef3c7,stroke:#d97706,stroke-width:1px,color:#1a1208
-                  style C2 fill:#fef3c7,stroke:#d97706,stroke-width:1px,color:#1a1208
-                  style C3 fill:#fef3c7,stroke:#d97706,stroke-width:1px,color:#1a1208
-                  style D1 fill:#ecfdf5,stroke:#059669,stroke-width:1px,color:#1a1208
-                  style D2 fill:#ecfdf5,stroke:#059669,stroke-width:1px,color:#1a1208
-                  style D3 fill:#ecfdf5,stroke:#059669,stroke-width:1px,color:#1a1208`}
-                </div>
-              </div>
-              <p className="text-center text-gray-600 mt-4">
-                La taille, la forme et l&apos;orientation des grains influencent directement les propriétés mécaniques du métal.
-              </p>
+              <h3 className="serif-heading text-2xl font-bold mb-6 text-center">Simulateur d'Alliage Interactif</h3>
+              <AlloyMixer />
             </div>
 
             {/* Tableau comparatif complet */}
@@ -1285,7 +1475,7 @@ export default function HomePage(): JSX.Element {
 
       <p className="mb-4">
         Pour accompagner l’étude des matériaux utilisés en horlogerie, un document de référence intitulé 
-        <strong> « Métaux Communs » </strong> est proposé. Ce PDF présente de manière claire les principales 
+        <strong> « Métaux Communs » </strong> est proposé. Ce PDF présente de manière clare les principales 
         familles de métaux, leurs propriétés techniques et leurs applications dans la fabrication horlogère.
       </p>
 
