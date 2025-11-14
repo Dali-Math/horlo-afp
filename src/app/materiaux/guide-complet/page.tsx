@@ -705,13 +705,16 @@ export default function HomePage(): JSX.Element {
 
         /* BOUTON FLOTTANT */
         .floating-back-btn {
-          position: fixed;
-          bottom: 30px;
-          left: 30px;
-          right: auto;
-          z-index: 999;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
+  position: fixed;
+  bottom: 30px;
+  left: 0;
+  z-index: 999;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border-top-left-radius: 0;        
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 9999px;  
+  border-bottom-right-radius: 9999px;
+}
         
         @media (max-width: 1024px) {
           .toc-fixed {
