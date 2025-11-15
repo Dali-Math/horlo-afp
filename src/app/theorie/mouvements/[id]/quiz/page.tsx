@@ -3,16 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Brain, Check, X, Clock, Trophy, Star,
-  ArrowRight, ArrowLeft, RotateCcw, Sparkles,
-  Target, TrendingUp, Award, BookOpen,
-  ChevronRight, Zap, AlertCircle, Home,
-  CheckCircle2, XCircle, HelpCircle, Lightbulb
+  Brain, Check, X, Clock, Trophy,
+  ArrowRight, ArrowLeft, RotateCcw,
+  Target, TrendingUp, AlertCircle, Home,
+  CheckCircle2, XCircle, Lightbulb, BookOpen
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { concepts as conceptGroups } from '../../data';
-import type { Concept, ConceptGroup } from '../../types';
 
 // ============================================================================
 // TYPES
@@ -41,6 +39,15 @@ interface QuizStats {
   correctAnswers: number;
   averageTime: number;
   difficulty: string;
+}
+
+interface ConceptData {
+  id: string;
+  title: string;
+  level: string;
+  desc?: string;
+  description?: string;
+  category: string;
 }
 
 // ============================================================================
@@ -485,14 +492,23 @@ export default function QuizPage() {
   const router = useRouter();
   const conceptId = params.id as string;
 
-  // ✅ Aplatir les données pour trouver le concept
-  const allConcepts = conceptGroups.flatMap(group => 
-    group.concepts.map(c => ({
-      ...c,
-      category: group.title,
-      description: c.desc || c.description || ''
-    }))
-  );
+  // ✅ Aplatir et trouver le concept
+  const allConcepts: ConceptData[] = [];
+  
+  conceptGroups.forEach((group) => {
+    if (group.concepts && Array.isArray(group.concepts)) {
+      group.concepts.forEach((c: any) => {
+        allConcepts.push({
+          id: c.id,
+          title: c.title,
+          level: c.level,
+          desc: c.desc,
+          description: c.description,
+          category: group.title
+        });
+      });
+    }
+  });
 
   const concept = allConcepts.find(c => c.id === conceptId);
 
@@ -507,35 +523,21 @@ export default function QuizPage() {
   const generateQuestions = (): QuizQuestion[] => {
     if (!concept) return [];
 
-    const description = concept.desc || concept.description || 'Description non disponible';
+    const description = concept.desc || concept.description || 'Concept horloger';
     const allLevels = ['Débutant', 'Intermédiaire', 'Expert'];
     const correctLevelIndex = allLevels.indexOf(concept.level);
     const wrongLevels = allLevels.filter((_, i) => i !== correctLevelIndex);
 
-    const titleOptions = [
-      concept.title,
-      'Système de transmission automatique',
-      'Mécanisme de régulation avancé',
-      'Dispositif de chronométrage'
-    ];
-
-    const levelOptions = [
-      concept.level,
-      ...wrongLevels.slice(0, 3)
-    ];
-
-    const descOptions = [
-      description,
-      'Un système de remontage manuel',
-      'Une complication de calendrier',
-      'Un dispositif anti-choc'
-    ];
-
-    const baseQuestions: QuizQuestion[] = [
+    return [
       {
         id: `${conceptId}-q1`,
         question: `Comment s'appelle ce concept ?`,
-        options: titleOptions,
+        options: [
+          concept.title,
+          'Système de transmission automatique',
+          'Mécanisme de régulation avancé',
+          'Dispositif de chronométrage'
+        ],
         correctAnswer: 0,
         explanation: `Le concept s'appelle "${concept.title}". ${description}`,
         difficulty: 'Facile',
@@ -544,27 +546,14 @@ export default function QuizPage() {
       {
         id: `${conceptId}-q2`,
         question: `Quel est le niveau de ce concept ?`,
-        options: levelOptions,
+        options: [concept.level, ...wrongLevels],
         correctAnswer: 0,
-        explanation: `Ce concept est de niveau ${concept.level}. ${
-          concept.level === 'Débutant' ? 'Il est accessible aux débutants.' :
-          concept.level === 'Intermédiaire' ? 'Une base technique est requise.' :
-          'Ce concept est réservé aux experts.'
-        }`,
+        explanation: `Ce concept est de niveau ${concept.level}.`,
         difficulty: 'Facile',
         category: 'Théorie'
       },
       {
         id: `${conceptId}-q3`,
-        question: `Quelle est la description correcte de ce concept ?`,
-        options: descOptions,
-        correctAnswer: 0,
-        explanation: `La description exacte est : "${description}"`,
-        difficulty: 'Moyen',
-        category: 'Théorie'
-      },
-      {
-        id: `${conceptId}-q4`,
         question: `Quelle est la meilleure approche pour comprendre ce concept ?`,
         options: [
           'Étudier les bases théoriques avant la pratique',
@@ -573,13 +562,13 @@ export default function QuizPage() {
           'Se fier uniquement à l\'intuition'
         ],
         correctAnswer: 0,
-        explanation: `Une bonne compréhension théorique est essentielle avant toute manipulation pratique, surtout pour les concepts de niveau ${concept.level}.`,
+        explanation: `Une bonne compréhension théorique est essentielle avant toute manipulation pratique.`,
         difficulty: 'Moyen',
         category: 'Progression'
       },
       {
-        id: `${conceptId}-q5`,
-        question: `Pourquoi est-il important de respecter le niveau de difficulté indiqué ?`,
+        id: `${conceptId}-q4`,
+        question: `Pourquoi est-il important de respecter le niveau de difficulté ?`,
         options: [
           'Pour progresser de manière sûre et efficace',
           'Ce n\'est pas important',
@@ -587,13 +576,20 @@ export default function QuizPage() {
           'Pour aller plus vite'
         ],
         correctAnswer: 0,
-        explanation: `Respecter les niveaux permet de construire des bases solides et d'éviter les erreurs coûteuses. Ce concept est classé ${concept.level}, ce qui reflète les prérequis nécessaires.`,
+        explanation: `Respecter les niveaux permet de construire des bases solides.`,
         difficulty: 'Moyen',
         category: 'Sécurité'
+      },
+      {
+        id: `${conceptId}-q5`,
+        question: `Quelle est la catégorie de ce concept ?`,
+        options: [concept.category, 'Complications', 'Finitions', 'Outils'],
+        correctAnswer: 0,
+        explanation: `Ce concept appartient à la catégorie "${concept.category}".`,
+        difficulty: 'Facile',
+        category: 'Théorie'
       }
     ];
-
-    return baseQuestions;
   };
 
   const questions = generateQuestions();
@@ -669,12 +665,11 @@ export default function QuizPage() {
     difficulty: concept.level
   };
 
-  const description = concept.desc || concept.description || 'Description non disponible';
+  const description = concept.desc || concept.description || 'Concept horloger';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
         {!isQuizComplete && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -714,7 +709,6 @@ export default function QuizPage() {
           </motion.div>
         )}
 
-        {/* Quiz Content */}
         <AnimatePresence mode="wait">
           {isQuizComplete ? (
             <ResultsScreen
@@ -736,7 +730,6 @@ export default function QuizPage() {
                 timeSpent={(Date.now() - questionStartTime) / 1000}
               />
 
-              {/* Navigation */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
