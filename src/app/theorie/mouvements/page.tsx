@@ -181,7 +181,8 @@ export default function MouvementsPage() {
   const filteredConcepts = useMemo(() => {
     return concepts.filter(concept => {
       const matchesSearch = concept.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-                          concept.description.toLowerCase().includes(filters.search.toLowerCase());
+                     concept.description?.toLowerCase().includes(filters.search.toLowerCase()) ||
+                     false;
       const matchesCategory = filters.category === 'all' || concept.category === filters.category;
       const matchesDifficulty = filters.difficulty === 'all' || concept.level === filters.difficulty;
 
