@@ -2,7 +2,7 @@
 
 export type DifficultyLevel = 'Débutant' | 'Intermédiaire' | 'Expert';
 
-export interface Module {
+export interface ConceptGroup {
   id: string;
   title: string;
   icon: string;
@@ -10,11 +10,16 @@ export interface Module {
   concepts: Concept[];
 }
 
+// Alias pour compatibilité
+export type Module = ConceptGroup;
+
 export interface Concept {
   id: string;
   title: string;
-  desc: string;
+  desc?: string;
+  description?: string;  // Alias pour compatibilité
   level: DifficultyLevel;
+  category?: string;
 
   // Enrichissements
   tags?: string[];
@@ -26,26 +31,28 @@ export interface Concept {
 
   // Contenu structuré
   details?: {
-    principle?: string;                        // Principe de fonctionnement
-    materials?: string[];                      // Matériaux utilisés
-    dimensions?: Record<string, string>;       // Cotes techniques
-    adjustment?: string;                       // Procédure de réglage
-    commonErrors?: string[];                   // Erreurs courantes
-    tools?: string[];                          // Outils nécessaires
+    principle?: string;
+    materials?: string[];
+    dimensions?: Record<string, string>;
+    adjustment?: string;
+    commonErrors?: string[];
+    tools?: string[];
 
-    // Ajouts
-    howItWorks?: string;                       // Comment ça fonctionne
-    advantages?: string[];                     // Avantages
-    limitations?: string[];                    // Limitations
-    keyPoints?: string[];                      // Points clés
-    examples?: string[];                       // Exemples
-    relatedConcepts?: string[];                // Concepts liés
-    prerequisites?: string[];                  // ✅ Prérequis nécessaires
+    // Ajouts pédagogiques
+    howItWorks?: string;
+    advantages?: string[];
+    limitations?: string[];
+    keyPoints?: string[];
+    examples?: string[];
+    relatedConcepts?: string[];
+    prerequisites?: string[];
     
     // Spécifications techniques
     specs?: {
       difficulty?: string;
-      [key: string]: string | undefined;       // Pour permettre d'autres specs dynamiques
+      equipment?: string[];
+      safetyNotes?: string[];
+      [key: string]: string | string[] | undefined;
     };
 
     // Ressources pédagogiques
@@ -57,14 +64,14 @@ export interface Concept {
 
     // Applications pratiques
     applications?: {
-      realWorld?: string[];                    // Exemples concrets
-      variations?: string[];                   // Variantes existantes
-      progressions?: string[];                 // Progressions d'apprentissage
+      realWorld?: string[];
+      variations?: string[];
+      progressions?: string[];
     };
   };
 
-  gallery?: string[];                           // URLs d'images
-  relatedConcepts?: string[];                   // Liens vers d'autres concepts
+  gallery?: string[];
+  relatedConcepts?: string[];
 
   resources?: {
     videos?: Array<{ title: string; url: string }>;
