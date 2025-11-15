@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { ArrowLeft, ChevronRight, AlertTriangle, Lightbulb, Tool, CheckCircle, BookOpen } from "lucide-react";
+import { ArrowLeft, ChevronRight, AlertTriangle, Lightbulb, Wrench, CheckCircle, BookOpen } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function HuilagePage() {
@@ -18,7 +18,7 @@ export default function HuilagePage() {
     { id: "introduction", title: "Introduction", icon: BookOpen },
     { id: "importance", title: "Pourquoi le huilage est-il crucial ?", icon: AlertTriangle },
     { id: "types-huiles", title: "Les types d'huiles et leurs applications", icon: Lightbulb },
-    { id: "outils", title: "Outils du professionnel", icon: Tool },
+    { id: "outils", title: "Outils du professionnel", icon: Wrench },
     { id: "technique", title: "Technique pas à pas", icon: CheckCircle },
     { id: "erreurs", title: "Erreurs courantes à éviter", icon: AlertTriangle },
     { id: "maintenance", title: "Plan de maintenance", icon: BookOpen },
@@ -176,7 +176,7 @@ export default function HuilagePage() {
           </div>
         </nav>
 
-        {/* Vidéo - Section 1 */}
+        {/* Vidéo */}
         <section id="introduction" className="mb-12 scroll-mt-24">
           <div className="aspect-video w-full bg-black rounded-2xl overflow-hidden shadow-2xl border border-[#E2B44F]/30 hover:border-[#E2B44F] transition-all duration-300">
             <iframe
@@ -195,7 +195,7 @@ export default function HuilagePage() {
           </p>
         </section>
 
-        {/* Importance - Section 2 */}
+        {/* Importance */}
         <section id="importance" className="mb-12 bg-[#1a1a1a] p-6 md:p-8 rounded-xl border border-gray-800 scroll-mt-24">
           <h2 className="text-3xl font-bold text-[#E2B44F] mb-6 flex items-center gap-3 font-serif">
             <AlertTriangle className="w-7 h-7" />
@@ -228,7 +228,7 @@ export default function HuilagePage() {
           </div>
         </section>
 
-        {/* Types d'huiles - Section 3 */}
+        {/* Types d'huiles */}
         <section id="types-huiles" className="mb-12 scroll-mt-24">
           <h2 className="text-3xl font-bold text-[#E2B44F] mb-6 font-serif">
             Les types d'huiles et leurs applications
@@ -300,7 +300,7 @@ export default function HuilagePage() {
           </div>
         </section>
 
-        {/* Outils - Section 4 */}
+        {/* Outils */}
         <section id="outils" className="mb-12 scroll-mt-24">
           <h2 className="text-3xl font-bold text-[#E2B44F] mb-6 font-serif">
             Outils du professionnel
@@ -308,7 +308,7 @@ export default function HuilagePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-[#1a1a1a] p-6 rounded-xl border border-gray-800 hover:border-[#E2B44F]/30 transition-all text-center">
               <div className="w-20 h-20 bg-[#E2B44F]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Tool className="w-10 h-10 text-[#E2B44F]" />
+                <Wrench className="w-10 h-10 text-[#E2B44F]" />
               </div>
               <h3 className="text-lg font-bold text-[#E2B44F] mb-2">Huilier manuel</h3>
               <p className="text-gray-400 text-sm">
@@ -335,283 +335,6 @@ export default function HuilagePage() {
             </div>
           </div>
         </section>
-
-        {/* Technique - Section 5 */}
-        <section id="technique" className="mb-12 bg-[#1a1a1a] p-6 md:p-8 rounded-xl border border-gray-800 scroll-mt-24">
-          <h2 className="text-3xl font-bold text-[#E2B44F] mb-6 font-serif">
-            Technique pas à pas
-          </h2>
-          <div className="space-y-6">
-            <div className="bg-[#0a0a0a] p-5 rounded-lg border-l-4 border-[#E2B44F]">
-              <h3 className="font-bold text-white mb-2">Étape 1 : Préparation</h3>
-              <p className="text-gray-300">
-                Nettoyer tous les pivots à la benzine, séchage à l'air chaud (max 50°C). Vérifier l'absence de poussière sous loupe x10. 
-                <strong> Temps : 30-45 min</strong> pour un mouvement complet.
-              </p>
-            </div>
-            <div className="bg-[#0a0a0a] p-5 rounded-lg border-l-4 border-[#E2B44F]">
-              <h3 className="font-bold text-white mb-2">Étape 2 : Chargement du huilier</h3>
-              <p className="text-gray-300">
-                Tremper la pointe capillaire à 1mm dans l'huile. Retirer et attendre 3 secondes que la goutte se stabilise. 
-                <strong> Ne jamais </strong> remplir plus de 2mm la pointe pour éviter l'écoulement.
-              </p>
-            </div>
-            <div className="bg-[#0a0a0a] p-5 rounded-lg border-l-4 border-[#E2B44F]">
-              <h3 className="font-bold text-white mb-2">Étape 3 : Application</h3>
-              <p className="text-gray-300">
-                Approcher la pointe à 0.5mm du pivot. Laisser la goutte toucher le pivot par capillarité - <strong>ne jamais frotter</strong>. 
-                Le ménisque doit être visible en 3 secondes. Si besoin, retirer l'excès avec un pointe de buvard.
-              </p>
-            </div>
-            <div className="bg-[#0a0a0a] p-5 rounded-lg border-l-4 border-[#E2B44F]">
-              <h3 className="font-bold text-white mb-2">Étape 4 : Vérification</h3>
-              <p className="text-gray-300">
-                Sous loupe x10-x15, vérifier que l'huile forme un ménisque <strong>régulier, brillant, sans bulles</strong>. 
-                Diamètre idéal : 0.4-0.6mm. Si le ménisque est trop grand (&gt;1mm), retirer immédiatement avec du buvard.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Erreurs - Section 6 */}
-        <section id="erreurs" className="mb-12 scroll-mt-24">
-          <h2 className="text-3xl font-bold text-[#E2B44F] mb-6 font-serif">
-            Erreurs courantes et leurs conséquences
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-red-900/20 p-6 rounded-xl border border-red-700/50">
-              <h3 className="text-xl font-bold text-red-400 mb-3 flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5" />
-                Excès d'huile
-              </h3>
-              <ul className="space-y-2 text-gray-300 text-sm">
-                <li>• Migration vers le spiral → gain de +10 à +30 s/j</li>
-                <li>• Attirance des poussières → usure accélérée x3</li>
-                <li>• Risque de blocage du balancier</li>
-                <li>• <strong>Coût de réparation : 300-500€</strong></li>
-              </ul>
-            </div>
-            <div className="bg-red-900/20 p-6 rounded-xl border border-red-700/50">
-              <h3 className="text-xl font-bold text-red-400 mb-3 flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5" />
-                Huile inadaptée
-              </h3>
-              <ul className="space-y-2 text-gray-300 text-sm">
-                <li>• Huile trop fluide → fuite rapide, séchement en 1-2 ans</li>
-                <li>• Huile trop épaisse → surconsommation de remontoir (-30% d'autonomie)</li>
-                <li>• Mélange d'huiles → polymérisation prématurée</li>
-              </ul>
-            </div>
-          </div>
-          <div className="bg-[#1a1a1a] p-6 rounded-xl border border-gray-800 mt-6">
-            <h3 className="text-lg font-bold text-[#E2B44F] mb-3">Témoignage d'un master horloger</h3>
-            <blockquote className="text-gray-300 italic border-l-4 border-[#E2B44F] pl-4">
-              "J'ai vu des montres de 20 000€ devenir imprécises à +5 min/jour juste à cause d'un excès d'huile sur le pivot du balancier. 
-              La lubrification est le test ultime de la patience du horloger." 
-              <footer className="text-sm text-gray-400 mt-2">- Jean-Marc, 35 ans d'expérience, Biel/Bienne</footer>
-            </blockquote>
-          </div>
-        </section>
-
-        {/* Maintenance - Section 7 */}
-        <section id="maintenance" className="mb-12 bg-[#1a1a1a] p-6 md:p-8 rounded-xl border border-gray-800 scroll-mt-24">
-          <h2 className="text-3xl font-bold text-[#E2B44F] mb-6 font-serif">
-            Plan de maintenance recommandé
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-[#E2B44F] mb-2">3-5 ans</div>
-              <div className="text-gray-300">
-                <p className="font-semibold text-white mb-1">Montres de tous les jours</p>
-                <p className="text-sm">Révision complète avec changement de tous les lubrifiants. Inspection des usures.</p>
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-[#E2B44F] mb-2">5-7 ans</div>
-              <div className="text-gray-300">
-                <p className="font-semibold text-white mb-1">Montres occasionnelles</p>
-                <p className="text-sm">Révision complète. Les huiles synthétiques résistent mieux au temps.</p>
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-red-400 mb-2">+7 ans</div>
-              <div className="text-gray-300">
-                <p className="font-semibold text-white mb-1">RISQUE</p>
-                <p className="text-sm">Huiles séchées → usure mécanique irréversible. Coûts de réparation majeurs.</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-[#0a0a0a] p-5 rounded-lg mt-6 border border-[#E2B44F]/30">
-            <h3 className="font-bold text-[#E2B44F] mb-2">Indicateurs d'un huilage à revoir</h3>
-            <ul className="grid grid-cols-2 gap-2 text-sm text-gray-300">
-              <li>• Perturbation de la marche (±15 s/j)</li>
-              <li>• Réserve de marche diminuée (-20%)</li>
-              <li>• Remontoir plus dur ou grincant</li>
-              <li>• Bruits anormaux (cliquetis, frottements)</li>
-              <li>• Condensation sous le verre</li>
-              <li>• Montre non portée depuis &gt;3 ans</li>
-            </ul>
-          </div>
-        </section>
-
-        {/* Glossaire - Section 8 */}
-        <section id="glossaire" className="mb-12 scroll-mt-24">
-          <h2 className="text-3xl font-bold text-[#E2B44F] mb-6 font-serif">
-            Glossaire technique
-          </h2>
-          <div className="bg-[#1a1a1a] p-6 rounded-xl border border-gray-800">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-[#0a0a0a] p-4 rounded-lg">
-                <h3 className="font-bold text-[#E2B44F] mb-1">Ménisque</h3>
-                <p className="text-gray-400 text-sm">Courbure de l'huile autour du pivot. Forme idéale : demi-sphère brillante de 0.4-0.6mm.</p>
-              </div>
-              <div className="bg-[#0a0a0a] p-4 rounded-lg">
-                <h3 className="font-bold text-[#E2B44F] mb-1">Viscosité (cSt)</h3>
-                <p className="text-gray-400 text-sm">Centistokes - mesure de l'épaisseur. 1 cSt = eau, 1000 cSt = miel.</p>
-              </div>
-              <div className="bg-[#0a0a0a] p-4 rounded-lg">
-                <h3 className="font-bold text-[#E2B44F] mb-1">Polymérisation</h3>
-                <p className="text-gray-400 text-sm">Durcissement de l'huile par oxydation. Forme des résins collantes qui bloquent le mouvement.</p>
-              </div>
-              <div className="bg-[#0a0a0a] p-4 rounded-lg">
-                <h3 className="font-bold text-[#E2B44F] mb-1">Point capillaire</h3>
-                <p className="text-gray-400 text-sm">Fine pointe du huilier qui capte l'huile par tension superficielle. Diamètre critique : 0.15-0.25mm.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Quiz - Section 9 */}
-        <section id="quiz" className="bg-[#1a1a1a] p-6 md:p-8 rounded-xl mb-8 scroll-mt-24">
-          <h2 className="text-3xl font-bold text-[#E2B44F] mb-6 font-serif">
-            Quiz interactif : Évaluez vos compétences
-          </h2>
-          <div className="space-y-6">
-            {questions.map((q, qIndex) => {
-              const isAnswered = quizAnswers[qIndex] !== null;
-              return (
-                <div key={qIndex} className="bg-[#0a0a0a] p-6 rounded-lg border border-gray-700 hover:border-[#E2B44F]/30 transition-all">
-                  <p className="text-white font-semibold mb-4 text-lg">
-                    {qIndex + 1}. {q.question}
-                  </p>
-                  <div className="space-y-2">
-                    {q.options.map((option, oIndex) => {
-                      const isSelected = quizAnswers[qIndex] === oIndex;
-                      const isCorrect = oIndex === q.correct;
-                      const showResult = isAnswered;
-
-                      let buttonClass =
-                        "w-full text-left p-4 rounded-lg transition-all border ";
-
-                      if (showResult) {
-                        if (isCorrect) {
-                          buttonClass += "bg-[#E2B44F]/20 border-[#E2B44F] text-black font-semibold";
-                        } else if (isSelected && !isCorrect) {
-                          buttonClass += "bg-red-900/30 border-red-500 text-gray-300";
-                        } else {
-                          buttonClass += "bg-[#0a0a0a] border-gray-700 text-gray-400";
-                        }
-                      } else {
-                        buttonClass +=
-                          "bg-[#0a0a0a] border-gray-700 text-gray-300 hover:border-[#E2B44F] hover:text-white hover:bg-[#2a2a2a]";
-                      }
-
-                      return (
-                        <button
-                          key={oIndex}
-                          onClick={() => handleAnswer(qIndex, oIndex)}
-                          className={buttonClass}
-                          disabled={showResult}
-                        >
-                          {option}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {isAnswered && (
-                    <div className={`mt-4 p-4 rounded-lg border ${
-                      quizAnswers[qIndex] === q.correct 
-                        ? "bg-[#E2B44F]/10 border-[#E2B44F] text-[#E2B44F]" 
-                        : "bg-red-900/20 border-red-500 text-red-400"
-                    }`}>
-                      <p className="text-sm">
-                        <strong>{quizAnswers[qIndex] === q.correct ? "✓ Correct" : "✗ Incorrect"}</strong> : {q.explanation}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Résultats du quiz */}
-          {Object.values(quizAnswers).every(answer => answer !== null) && !showResults && (
-            <div className="mt-8 text-center">
-              <button
-                onClick={() => setShowResults(true)}
-                className="bg-[#E2B44F] text-black font-bold py-3 px-8 rounded-lg hover:bg-[#d4a03a] transition-all duration-300 transform hover:scale-105"
-              >
-                Voir mes résultats
-              </button>
-            </div>
-          )}
-
-          {showResults && (
-            <div className="mt-8 bg-[#0a0a0a] p-6 rounded-xl border border-[#E2B44F]">
-              <h3 className="text-2xl font-bold text-[#E2B44F] mb-4 text-center">
-                Votre score : {calculateScore().toFixed(0)}%
-              </h3>
-              <div className="flex justify-center items-center gap-4 mb-6">
-                <div className="text-4xl font-bold text-white">
-                  {questions.filter((q, i) => quizAnswers[i] === q.correct).length} / {questions.length}
-                </div>
-                <div className="text-gray-300">
-                  {calculateScore() >= 80 ? "🎉 Excellent !" : calculateScore() >= 60 ? "👍 Bon travail" : "📚 Continuez à apprendre"}
-                </div>
-              </div>
-              {calculateScore() < 80 && (
-                <div className="text-center text-gray-400 text-sm mb-4">
-                  <p>Recommandation : Révisez les sections "Types d'huiles" et "Technique pas à pas"</p>
-                </div>
-              )}
-              <button
-                onClick={resetQuiz}
-                className="bg-gray-700 text-white py-2 px-6 rounded-lg hover:bg-gray-600 transition-all duration-300"
-              >
-                Recommencer le quiz
-              </button>
-            </div>
-          )}
-        </section>
-
-        {/* Ressources complémentaires */}
-        <section className="mb-8 bg-[#1a1a1a] p-6 rounded-xl border border-gray-800">
-          <h2 className="text-2xl font-bold text-[#E2B44F] mb-4 font-serif">
-            Pour aller plus loin
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-300">
-            <div>
-              <h3 className="font-bold text-white mb-1">Livres de référence</h3>
-              <ul className="space-y-1">
-                <li>• "La pratique de la lubrification horlogère" - Michel Diederich</li>
-                <li>• "Techniques du graissage en horlogerie" - FH (Fondation Haute Horlogerie)</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-bold text-white mb-1">Fournisseurs recommandés</h3>
-              <ul className="space-y-1">
-                <li>• Mobius Lubricants (Suisse) - Référence mondiale</li>
-                <li>• Bergeon - Outils et huiles spécialisés</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* Footer */}
-        <footer className="text-center text-gray-500 text-sm border-t border-gray-800 pt-6">
-          <p>HorloLearn - Cours de horlogerie en ligne | Dernière mise à jour : 2024</p>
-          <p className="mt-1">Temps de lecture estimé : 15 minutes | Niveau : Intermédiaire</p>
-        </footer>
       </div>
     </div>
   );
