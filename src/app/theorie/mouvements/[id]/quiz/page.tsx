@@ -1,10 +1,6 @@
 'use client';
 
-/**
- * PAGE: Quiz sur un mouvement spécifique
- * CHEMIN: src/app/theorie/mouvements/[id]/quiz/page.tsx
- * DESCRIPTION: Page de quiz interactif pour tester les connaissances sur un mouvement avec système de scoring et révision
- */
+
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -291,28 +287,23 @@ const ResultsScreen = ({
   const percentage = Math.round((stats.score / stats.totalQuestions) * 100);
   
   let grade = '';
-  let gradeColor = '';
   let gradeIcon = '';
   let message = '';
 
   if (percentage >= 90) {
     grade = 'Excellent !';
-    gradeColor = 'text-green-600 dark:text-green-400';
     gradeIcon = '🏆';
     message = 'Performance exceptionnelle ! Vous maîtrisez parfaitement ce concept.';
   } else if (percentage >= 70) {
     grade = 'Très Bien';
-    gradeColor = 'text-blue-600 dark:text-blue-400';
     gradeIcon = '⭐';
     message = 'Bonne compréhension ! Continuez ainsi.';
   } else if (percentage >= 50) {
     grade = 'Bien';
-    gradeColor = 'text-amber-600 dark:text-amber-400';
     gradeIcon = '👍';
     message = 'Vous êtes sur la bonne voie. Revoyez quelques points.';
   } else {
     grade = 'À Revoir';
-    gradeColor = 'text-red-600 dark:text-red-400';
     gradeIcon = '📚';
     message = 'Prenez le temps de réviser le concept avant de réessayer.';
   }
@@ -495,10 +486,10 @@ export default function QuizPage() {
   const router = useRouter();
   const conceptId = params.id as string;
 
-  // Trouver le concept dans modules
-  const concept = modules.find(m => m.id === conceptId);
+  const concept = modules
+    .flatMap(m => m.concepts)
+    .find(c => c.id === conceptId);
 
-  // Quiz State
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
@@ -506,98 +497,118 @@ export default function QuizPage() {
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [isQuizComplete, setIsQuizComplete] = useState(false);
 
-  // Generate questions based on concept
+  // ✅ Questions génériques utilisant UNIQUEMENT id, title, desc, level
   const generateQuestions = (): QuizQuestion[] => {
     if (!concept) return [];
 
-    // Questions génériques basées uniquement sur les propriétés disponibles
+    const levelMapping: Record<string, number> = {
+      'Débutant': 0,
+      'Intermédiaire': 1,
+      'Avancé': 2,
+      'Expert': 3
+    };
+
+    const allLevels = ['Débutant', 'Intermédiaire', 'Avancé', 'Expert'];
+    const correctIndex = allLevels.indexOf(concept.level);
+    const wrongLevels = allLevels.filter((_, i) => i !== correctIndex);
+
     const baseQuestions: QuizQuestion[] = [
       {
         id: `${conceptId}-q1`,
-        question: `Quel est le titre de ce mouvement ?`,
+        question: `Comment s'appelle ce concept ?`,
         options: [
           concept.title,
-          'Salto arrière groupé',
-          'Salto avant tendu',
-          'Vrille complète'
-        ],
-        correctAnswer: 0,
-        explanation: `Le mouvement s'appelle "${concept.title}". Il est important de connaître le nom exact des mouvements pour une communication claire.`,
+          'Système de transmission automatique',
+          'Mécanisme de régulation avancé',
+          'Dispositif de chronométrage'
+        ].sort(() => Math.random() - 0.5),
+        correctAnswer: 0, // On va ajuster après shuffle
+        explanation: `Le concept s'appelle "${concept.title}". ${concept.desc}`,
         difficulty: 'Facile',
         category: 'Théorie'
       },
       {
         id: `${conceptId}-q2`,
-        question: `Quelle est la description de ce mouvement ?`,
+        question: `Quel est le niveau de ce concept ?`,
         options: [
-          concept.description || 'Description non disponible',
-          'Un mouvement de rotation',
-          'Une position statique',
-          'Un mouvement de transition'
-        ],
+          concept.level,
+          ...wrongLevels.slice(0, 3)
+        ].sort(() => Math.random() - 0.5),
         correctAnswer: 0,
-        explanation: `La description du mouvement est : "${concept.description}". Cette description aide à comprendre l'essence du mouvement.`,
-        difficulty: 'Moyen',
+        explanation: `Ce concept est de niveau ${concept.level}. ${
+          concept.level === 'Débutant' ? 'Il est accessible aux débutants.' :
+          concept.level === 'Intermédiaire' ? 'Une base technique est requise.' :
+          concept.level === 'Avancé' ? 'Une maîtrise avancée est nécessaire.' :
+          'Ce concept est réservé aux experts.'
+        }`,
+        difficulty: 'Facile',
         category: 'Théorie'
       },
       {
         id: `${conceptId}-q3`,
-        question: `Quel est le niveau de difficulté recommandé pour ce mouvement ?`,
+        question: `Quelle est la description correcte de ce concept ?`,
         options: [
-          concept.level,
-          concept.level === 'Débutant' ? 'Intermédiaire' : 'Débutant',
-          'Expert',
-          'Professionnel'
-        ],
+          concept.desc || 'Description non disponible',
+          'Un système de remontage manuel',
+          'Une complication de calendrier',
+          'Un dispositif anti-choc'
+        ].sort(() => Math.random() - 0.5),
         correctAnswer: 0,
-        explanation: `Ce mouvement est de niveau ${concept.level}. Respecter les niveaux de difficulté est crucial pour progresser en sécurité.`,
-        difficulty: 'Facile',
-        category: 'Progression'
+        explanation: `La description exacte est : "${concept.desc}"`,
+        difficulty: 'Moyen',
+        category: 'Théorie'
       },
       {
         id: `${conceptId}-q4`,
-        question: `Pourquoi est-il important de respecter la progression recommandée ?`,
+        question: `Quelle est la meilleure approche pour comprendre ce concept ?`,
         options: [
-          'Pour éviter les blessures et progresser efficacement',
-          'Pour impressionner les autres',
-          'Ce n\'est pas important',
-          'Pour aller plus vite'
+          'Étudier les bases théoriques avant la pratique',
+          'Essayer sans préparation',
+          'Ignorer les consignes',
+          'Se fier uniquement à l\'intuition'
         ],
         correctAnswer: 0,
-        explanation: `Respecter la progression permet d'éviter les blessures et de construire des bases solides. Chaque niveau prépare aux suivants.`,
+        explanation: `Une bonne compréhension théorique est essentielle avant toute manipulation pratique, surtout pour les concepts de niveau ${concept.level}.`,
         difficulty: 'Moyen',
-        category: 'Sécurité'
+        category: 'Progression'
       },
       {
         id: `${conceptId}-q5`,
-        question: `Quelle est la meilleure approche pour maîtriser "${concept.title}" ?`,
+        question: `Pourquoi est-il important de respecter le niveau de difficulté indiqué ?`,
         options: [
-          'Progresser étape par étape avec un bon échauffement',
-          'Essayer directement le mouvement complet',
-          'S\'entraîner seul sans supervision',
-          'Ignorer les conseils de sécurité'
+          'Pour progresser de manière sûre et efficace',
+          'Ce n\'est pas important',
+          'Pour impressionner les autres',
+          'Pour aller plus vite'
         ],
         correctAnswer: 0,
-        explanation: `La meilleure approche est toujours de progresser étape par étape, en s'échauffant correctement et en respectant les consignes de sécurité.`,
-        difficulty: 'Difficile',
-        category: 'Technique'
+        explanation: `Respecter les niveaux permet de construire des bases solides et d'éviter les erreurs coûteuses. Ce concept est classé ${concept.level}, ce qui reflète les prérequis nécessaires.`,
+        difficulty: 'Moyen',
+        category: 'Sécurité'
       }
     ];
 
-    return baseQuestions;
+    // Ajuster correctAnswer après shuffle
+    return baseQuestions.map(q => ({
+      ...q,
+      correctAnswer: q.options.findIndex(opt => 
+        opt === concept.title || 
+        opt === concept.level || 
+        opt === concept.desc ||
+        opt === q.options[0] // Pour les questions fixes
+      )
+    }));
   };
 
   const questions = generateQuestions();
   const currentQuestion = questions[currentQuestionIndex];
 
-  // Redirect if concept not found
   useEffect(() => {
     if (!concept) {
       router.push('/theorie/mouvements');
     }
   }, [concept, router]);
 
-  // Handle answer selection
   const handleSelectAnswer = (index: number) => {
     if (showResult) return;
     
@@ -617,7 +628,6 @@ export default function QuizPage() {
     setResults([...results, result]);
   };
 
-  // Handle next question
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -629,154 +639,130 @@ export default function QuizPage() {
     }
   };
 
-  // Handle previous question (review mode)
-  const handlePreviousQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-      setSelectedAnswer(null);
-      setShowResult(false);
-      setQuestionStartTime(Date.now());
-    }
-  };
-
-  // Retry quiz
   const handleRetry = () => {
     setCurrentQuestionIndex(0);
     setSelectedAnswer(null);
     setShowResult(false);
     setResults([]);
-    setIsQuizComplete(false);
     setQuestionStartTime(Date.now());
+    setIsQuizComplete(false);
   };
 
-  // Calculate stats
-  const calculateStats = (): QuizStats => {
-    const correctAnswers = results.filter(r => r.isCorrect).length;
-    const totalTime = results.reduce((sum, r) => sum + r.timeSpent, 0);
-    
-    return {
-      score: correctAnswers,
-      totalQuestions: questions.length,
-      correctAnswers,
-      averageTime: results.length > 0 ? totalTime / results.length : 0,
-      difficulty: concept?.level || 'Intermédiaire'
-    };
+  const handleBackToConcept = () => {
+    router.push(`/theorie/mouvements/${conceptId}`);
   };
 
   if (!concept) {
-    return null;
-  }
-
-  if (isQuizComplete) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-blue-950 py-12 px-4">
-        <ResultsScreen
-          stats={calculateStats()}
-          results={results}
-          questions={questions}
-          onRetry={handleRetry}
-          onBackToConcept={() => router.push(`/theorie/mouvements/${conceptId}`)}
-        />
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4">⏳</div>
+          <p className="text-xl text-slate-600 dark:text-slate-400">Chargement...</p>
+        </div>
       </div>
     );
   }
 
+  const stats: QuizStats = {
+    score: results.filter(r => r.isCorrect).length,
+    totalQuestions: questions.length,
+    correctAnswers: results.filter(r => r.isCorrect).length,
+    averageTime: results.length > 0 
+      ? results.reduce((sum, r) => sum + r.timeSpent, 0) / results.length 
+      : 0,
+    difficulty: concept.level
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-blue-950 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 py-12 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <Link 
-            href={`/theorie/mouvements/${conceptId}`}
-            className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline mb-4"
+        {!isQuizComplete && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Retour au concept
-          </Link>
-
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border-2 border-slate-200 dark:border-slate-700 shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-                  Quiz : {concept.title}
-                </h1>
-                <p className="text-slate-600 dark:text-slate-400">
-                  Testez vos connaissances sur ce concept
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-2">
-                  <Brain className="w-8 h-8 text-white" />
-                </div>
-                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                  {questions.length} questions
-                </span>
-              </div>
-            </div>
-
-            <ProgressBar current={currentQuestionIndex + 1} total={questions.length} />
-          </div>
-        </motion.div>
-
-        {/* Question */}
-        <AnimatePresence mode="wait">
-          <QuestionCard
-            key={currentQuestion.id}
-            question={currentQuestion}
-            questionNumber={currentQuestionIndex + 1}
-            totalQuestions={questions.length}
-            selectedAnswer={selectedAnswer}
-            onSelectAnswer={handleSelectAnswer}
-            showResult={showResult}
-            timeSpent={(Date.now() - questionStartTime) / 1000}
-          />
-        </AnimatePresence>
-
-        {/* Navigation */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mt-8 flex items-center justify-between"
-        >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handlePreviousQuestion}
-            disabled={currentQuestionIndex === 0}
-            className="px-6 py-3 bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-slate-100 rounded-xl font-bold hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Précédent
-          </motion.button>
-
-          {showResult && (
-            <motion.button
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleNextQuestion}
-              className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-lg"
+            <Link 
+              href={`/theorie/mouvements/${conceptId}`}
+              className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline mb-4"
             >
-              {currentQuestionIndex < questions.length - 1 ? (
-                <>
-                  Suivant
+              <ArrowLeft className="w-4 h-4" />
+              Retour au concept
+            </Link>
+
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border-2 border-slate-200 dark:border-slate-700 shadow-lg">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+                    Quiz : {concept.title}
+                  </h1>
+                  <p className="text-slate-600 dark:text-slate-400">
+                    {concept.desc}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="text-4xl font-bold text-blue-600 dark:text-blue-400">
+                    {currentQuestionIndex + 1}/{questions.length}
+                  </div>
+                  <div className="text-sm text-slate-600 dark:text-slate-400">
+                    Questions
+                  </div>
+                </div>
+              </div>
+
+              <ProgressBar current={currentQuestionIndex + 1} total={questions.length} />
+            </div>
+          </motion.div>
+        )}
+
+        {/* Quiz Content */}
+        <AnimatePresence mode="wait">
+          {isQuizComplete ? (
+            <ResultsScreen
+              stats={stats}
+              results={results}
+              questions={questions}
+              onRetry={handleRetry}
+              onBackToConcept={handleBackToConcept}
+            />
+          ) : (
+            <div key={currentQuestionIndex}>
+              <QuestionCard
+                question={currentQuestion}
+                questionNumber={currentQuestionIndex + 1}
+                totalQuestions={questions.length}
+                selectedAnswer={selectedAnswer}
+                onSelectAnswer={handleSelectAnswer}
+                showResult={showResult}
+                timeSpent={(Date.now() - questionStartTime) / 1000}
+              />
+
+              {/* Navigation */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="mt-6 flex justify-end"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleNextQuestion}
+                  disabled={!showResult}
+                  className={`px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-2 shadow-lg transition-all ${
+                    showResult
+                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      : 'bg-slate-300 dark:bg-slate-700 text-slate-500 dark:text-slate-500 cursor-not-allowed'
+                  }`}
+                >
+                  {currentQuestionIndex < questions.length - 1 ? 'Question Suivante' : 'Voir les Résultats'}
                   <ArrowRight className="w-5 h-5" />
-                </>
-              ) : (
-                <>
-                  Voir les Résultats
-                  <Trophy className="w-5 h-5" />
-                </>
-              )}
-            </motion.button>
+                </motion.button>
+              </motion.div>
+            </div>
           )}
-        </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );
