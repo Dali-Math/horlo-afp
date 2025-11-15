@@ -37,7 +37,9 @@ export interface Concept {
     howItWorks?: string;                       // Comment ça fonctionne
     advantages?: string[];                     // Avantages
     limitations?: string[];                    // Limitations
-    keyPoints?: string[];                      // Points clés
+    keyPoints?: string[];
+    examples?: string[];
+    relatedConcepts?: string[];
 
     applications?: {
       realWorld?: string[];                    // Exemples concrets
