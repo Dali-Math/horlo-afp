@@ -40,8 +40,13 @@ export interface Concept {
     keyPoints?: string[];                      // Points clés
     examples?: string[];                       // Exemples
     relatedConcepts?: string[];                // Concepts liés
+    
+    // ✅ AJOUTEZ specs ICI
+    specs?: {
+      difficulty?: string;
+      [key: string]: string | undefined;       // Pour permettre d'autres specs dynamiques
+    };
 
-    // ✅ Resources dans details (pour ResourcesTab)
     resources?: {
       videos?: Array<{ title: string; url: string }>;
       articles?: Array<{ title: string; url: string }>;
@@ -58,7 +63,6 @@ export interface Concept {
   gallery?: string[];                           // URLs d'images
   relatedConcepts?: string[];                   // Liens vers d'autres concepts
 
-  // Resources au niveau principal (si utilisé ailleurs)
   resources?: {
     videos?: Array<{ title: string; url: string }>;
     articles?: Array<{ title: string; url: string }>;
