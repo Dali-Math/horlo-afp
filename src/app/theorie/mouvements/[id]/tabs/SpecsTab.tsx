@@ -1,7 +1,9 @@
+// app/theorie/mouvements/[id]/tabs/SpecsTab.tsx
+
 'use client';
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { 
   Shield, Award, Package, AlertCircle, 
   ChevronRight, CheckCircle2, XCircle,
@@ -233,13 +235,16 @@ const InfoBox = ({ children }: { children: React.ReactNode }) => (
 // ============================================================================
 
 export default function SpecsTab({ concept }: SpecsTabProps) {
+  // ✅ CORRECTION : Utiliser [] au lieu de '' pour tous les tableaux
+  const prerequisites = concept.details?.prerequisites || [];
+  const advantages = concept.details?.advantages || [];
+  const limitations = concept.details?.limitations || [];
+  const equipment = concept.details?.specs?.equipment || [];
+  const safetyNotes = concept.details?.specs?.safetyNotes || [];
   const specs = concept.details?.specs;
   
   // Données par défaut si specs n'existe pas
   const difficulty = specs?.difficulty || concept.level || 'Intermédiaire';
-  const prerequisites = specs?.prerequisites || [];
-  const equipment = specs?.equipment || [];
-  const safetyNotes = specs?.safetyNotes || [];
 
   // Configuration des niveaux de difficulté
   const difficultyLevels: Record<string, DifficultyLevel> = {
@@ -344,6 +349,40 @@ export default function SpecsTab({ concept }: SpecsTabProps) {
           emptyMessage="Aucun prérequis spécifique - Niveau débutant accessible"
         />
       </motion.div>
+
+      {/* AVANTAGES */}
+      {advantages.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.25 }}
+        >
+          <SpecCard
+            icon={CheckCircle2}
+            title="Avantages"
+            items={advantages}
+            color="bg-gradient-to-r from-green-600 to-green-500"
+            accentColor="bg-green-700"
+          />
+        </motion.div>
+      )}
+
+      {/* LIMITATIONS */}
+      {limitations.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.27 }}
+        >
+          <SpecCard
+            icon={AlertCircle}
+            title="Limitations"
+            items={limitations}
+            color="bg-gradient-to-r from-orange-600 to-orange-500"
+            accentColor="bg-orange-700"
+          />
+        </motion.div>
+      )}
 
       {/* ÉQUIPEMENT */}
       <motion.div
