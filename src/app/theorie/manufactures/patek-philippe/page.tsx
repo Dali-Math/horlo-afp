@@ -3,7 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { legendaryCollections } from './data';
+import BackButton from '@/components/BackButton'
 
+export default function MaPage() {
+  return (
+    <div className="p-6">
+      <BackButton />
 export default function Page() {
   const router = useRouter();
   const vantaBgRef = useRef<HTMLDivElement>(null);
