@@ -2,224 +2,112 @@
 
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BookOpen, Target, AlertTriangle, Lightbulb, TrendingUp, 
-  Award, CheckCircle2, Circle, ArrowLeft, Share2, 
-  Bookmark, BookmarkPlus, Eye, Clock, Users,
-  ChevronRight, Star, Download, Printer, Link as LinkIcon,
-  Play, Pause, RotateCcw, Volume2, VolumeX,
-  Sparkles, Trophy, Zap, Flag, MapPin, Compass
+  Award, CheckCircle2, ArrowLeft, Bookmark, BookmarkPlus,
+  ChevronRight, Star, Sparkles, Trophy, Zap, Flag
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { concepts as conceptGroups } from '../data';
 
 // ============================================================================
-// DATA - Fusion des deux systèmes
-// ============================================================================
-
-const movements = [
-  {
-    id: 'salto-arriere',
-    title: 'Salto arrière',
-    category: 'Saltos',
-    difficulty: 'Intermédiaire',
-    prerequisites: ['Roulade arrière', 'Saut vertical'],
-    description: 'Rotation arrière complète du corps dans les airs.',
-    videoUrl: '/videos/salto-arriere.mp4',
-    imageUrl: '/images/salto-arriere.jpg',
-    variations: ['Salto groupé', 'Salto carpé', 'Salto tendu'],
-    commonMistakes: [
-      'Ne pas regarder en arrière assez tôt',
-      'Manque de hauteur sur le saut initial',
-      'Mauvaise synchronisation bras-jambes'
-    ],
-    safetyTips: [
-      'Toujours utiliser des tapis de réception',
-      'Avoir un pareur lors de l\'apprentissage',
-      'S\'assurer d\'avoir la technique du saut vertical'
-    ],
-    progressionSteps: [
-      'Maîtriser la roulade arrière',
-      'Travailler le saut vertical avec rotation',
-      'Pratiquer avec assistance',
-      'Réaliser le mouvement seul avec tapis',
-      'Perfectionner sur sol'
-    ],
-    relatedMoves: ['salto-avant', 'salto-lateral', 'roulade-arriere']
-  },
-  {
-    id: 'salto-avant',
-    title: 'Salto avant',
-    category: 'Saltos',
-    difficulty: 'Intermédiaire',
-    prerequisites: ['Roulade avant', 'Saut vertical'],
-    description: 'Rotation avant complète du corps dans les airs.',
-    variations: ['Salto groupé avant', 'Salto carpé avant'],
-    commonMistakes: [
-      'Rotation insuffisante',
-      'Manque d\'élan'
-    ],
-    safetyTips: [
-      'Utiliser des tapis',
-      'Avoir un pareur'
-    ],
-    progressionSteps: [
-      'Maîtriser la roulade avant',
-      'Pratiquer avec assistance'
-    ],
-    relatedMoves: ['salto-arriere', 'roulade-avant']
-  },
-  {
-    id: 'salto-lateral',
-    title: 'Salto latéral',
-    category: 'Saltos',
-    difficulty: 'Avancé',
-    prerequisites: ['Salto arrière', 'Salto avant'],
-    description: 'Rotation latérale complète du corps.',
-    variations: ['Salto latéral groupé'],
-    commonMistakes: [
-      'Déséquilibre latéral'
-    ],
-    safetyTips: [
-      'Surface adéquate',
-      'Pareur obligatoire'
-    ],
-    progressionSteps: [
-      'Maîtriser saltos de base'
-    ],
-    relatedMoves: ['salto-arriere', 'salto-avant']
-  },
-  {
-    id: 'roulade-avant',
-    title: 'Roulade avant',
-    category: 'Bases',
-    difficulty: 'Débutant',
-    prerequisites: [],
-    description: 'Roulade de base vers l\'avant.',
-    variations: ['Roulade plongée'],
-    commonMistakes: [
-      'Tête qui touche le sol'
-    ],
-    safetyTips: [
-      'Sol mou pour débuter'
-    ],
-    progressionSteps: [
-      'Position groupée',
-      'Poussée des jambes'
-    ],
-    relatedMoves: ['roulade-arriere']
-  },
-  {
-    id: 'roulade-arriere',
-    title: 'Roulade arrière',
-    category: 'Bases',
-    difficulty: 'Débutant',
-    prerequisites: ['Roulade avant'],
-    description: 'Roulade de base vers l\'arrière.',
-    variations: ['Roulade arrière à la verticale'],
-    commonMistakes: [
-      'Mains mal placées'
-    ],
-    safetyTips: [
-      'Protection de la nuque'
-    ],
-    progressionSteps: [
-      'Position assise',
-      'Rouler en arrière'
-    ],
-    relatedMoves: ['roulade-avant', 'salto-arriere']
-  }
-];
-
-// Aplatir les concepts horlogers
-const horlogeryConcepts = conceptGroups.flatMap(group => 
-  group.concepts.map(concept => ({
-    ...concept,
-    category: group.title,
-    difficulty: concept.level || 'Intermédiaire',
-    prerequisites: concept.details?.prerequisites || [],
-    commonMistakes: concept.details?.commonErrors || [],
-    safetyTips: concept.details?.specs?.safetyNotes || [],
-    progressionSteps: concept.details?.applications?.progressions || [],
-    variations: concept.details?.applications?.variations || [],
-    relatedMoves: concept.relatedConcepts || []
-  }))
-);
-
-// Combiner les deux sources
-const ALL_CONCEPTS = [...movements, ...horlogeryConcepts];
-
-const TABS = [
-  { id: 'description' as const, label: 'Principe', icon: BookOpen },
-  { id: 'prerequisites' as const, label: 'Prérequis', icon: Target },
-  { id: 'mistakes' as const, label: 'Erreurs courantes', icon: AlertTriangle },
-  { id: 'tips' as const, label: 'Conseils', icon: Lightbulb },
-  { id: 'progression' as const, label: 'Progression', icon: TrendingUp },
-  { id: 'variations' as const, label: 'Variations', icon: Sparkles }
-];
-
-type TabId = typeof TABS[number]['id'];
-
-// ============================================================================
 // TYPES
 // ============================================================================
 
-interface Concept {
+interface ConceptData {
   id: string;
   title: string;
   category: string;
   difficulty: string;
+  description: string;
   prerequisites: string[];
-  description?: string;
-  desc?: string;
-  variations?: string[];
-  commonMistakes?: string[];
-  safetyTips?: string[];
-  progressionSteps?: string[];
-  relatedMoves?: string[];
+  commonMistakes: string[];
+  safetyTips: string[];
+  progressionSteps: string[];
+  variations: string[];
+  relatedMoves: string[];
   details?: {
     principle?: string;
     howItWorks?: string;
     keyPoints?: string[];
     advantages?: string[];
     limitations?: string[];
-    prerequisites?: string[];
-    commonErrors?: string[];
-    specs?: {
-      safetyNotes?: string[];
-    };
-    applications?: {
-      progressions?: string[];
-      variations?: string[];
-    };
   };
 }
+
+// ============================================================================
+// DATA TRANSFORMATION
+// ============================================================================
+
+const transformConcepts = (): ConceptData[] => {
+  const transformed: ConceptData[] = [];
+
+  conceptGroups.forEach(group => {
+    group.concepts.forEach(concept => {
+      transformed.push({
+        id: concept.id,
+        title: concept.title,
+        category: group.title,
+        difficulty: concept.level || 'Intermédiaire',
+        description: concept.desc || '',
+        prerequisites: concept.details?.prerequisites || [],
+        commonMistakes: concept.details?.commonErrors || [],
+        safetyTips: concept.details?.specs?.safetyNotes || [],
+        progressionSteps: concept.details?.applications?.progressions || [],
+        variations: concept.details?.applications?.variations || [],
+        relatedMoves: concept.relatedConcepts || [],
+        details: {
+          principle: concept.details?.principle,
+          howItWorks: concept.details?.howItWorks,
+          keyPoints: concept.details?.keyPoints,
+          advantages: concept.details?.advantages,
+          limitations: concept.details?.limitations
+        }
+      });
+    });
+  });
+
+  return transformed;
+};
+
+const ALL_CONCEPTS = transformConcepts();
+
+const TABS = [
+  { id: 'description', label: 'Principe', icon: BookOpen },
+  { id: 'prerequisites', label: 'Prérequis', icon: Target },
+  { id: 'mistakes', label: 'Erreurs', icon: AlertTriangle },
+  { id: 'tips', label: 'Conseils', icon: Lightbulb },
+  { id: 'progression', label: 'Progression', icon: TrendingUp },
+  { id: 'variations', label: 'Variations', icon: Sparkles }
+] as const;
+
+type TabId = typeof TABS[number]['id'];
 
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
 
-const getDifficultyColor = (difficulty: string) => {
-  const colors = {
-    'Débutant': 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700',
-    'Intermédiaire': 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-700',
-    'Avancé': 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-300 dark:border-red-700',
-    'Expert': 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-700'
+const getDifficultyColor = (difficulty: string): string => {
+  const colors: Record<string, string> = {
+    'Débutant': 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-300',
+    'Intermédiaire': 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-300',
+    'Avancé': 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-300',
+    'Expert': 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-300'
   };
-  return colors[difficulty as keyof typeof colors] || colors['Intermédiaire'];
+  return colors[difficulty] || colors['Intermédiaire'];
 };
 
 const getDifficultyIcon = (difficulty: string) => {
-  const icons = {
+  const icons: Record<string, typeof Star> = {
     'Débutant': Star,
     'Intermédiaire': Award,
     'Avancé': Trophy,
     'Expert': Zap
   };
-  return icons[difficulty as keyof typeof icons] || Award;
+  return icons[difficulty] || Award;
 };
 
 // ============================================================================
@@ -241,93 +129,71 @@ const ProgressionTimeline = ({ steps }: { steps: string[] }) => {
 
   return (
     <div className="space-y-6">
-      {/* Progress Bar */}
       <div className="bg-slate-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
+          transition={{ duration: 0.5 }}
           className="h-full bg-gradient-to-r from-green-500 to-blue-500 rounded-full"
         />
       </div>
 
       <div className="flex items-center justify-between text-sm font-medium">
         <span className="text-slate-600 dark:text-slate-400">
-          {completedSteps.length} / {steps.length} étapes complétées
+          {completedSteps.length} / {steps.length} étapes
         </span>
         <span className="text-blue-600 dark:text-blue-400 font-bold">
           {Math.round(progress)}%
         </span>
       </div>
 
-      {/* Steps */}
-      <div className="relative space-y-4">
+      <div className="space-y-4">
         {steps.map((step, index) => {
           const isCompleted = completedSteps.includes(index);
           const isActive = index === completedSteps.length && !isCompleted;
 
           return (
-            <motion.div
+            <motion.button
               key={index}
+              onClick={() => toggleStep(index)}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="relative"
+              className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 transition-all ${
+                isCompleted
+                  ? 'bg-green-50 dark:bg-green-900/20 border-green-300'
+                  : isActive
+                  ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300'
+                  : 'bg-white dark:bg-slate-800 border-slate-200'
+              }`}
             >
-              <button
-                onClick={() => toggleStep(index)}
-                className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 transition-all ${
+              <div
+                className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold ${
                   isCompleted
-                    ? 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700'
+                    ? 'bg-green-600 text-white'
                     : isActive
-                    ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700'
-                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-slate-200 text-slate-600'
                 }`}
               >
-                {/* Step Number/Checkmark */}
-                <div
-                  className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold transition-all ${
-                    isCompleted
-                      ? 'bg-green-600 text-white'
-                      : isActive
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
-                  }`}
+                {isCompleted ? <CheckCircle2 className="w-5 h-5" /> : index + 1}
+              </div>
+
+              <p className={`flex-1 text-left font-medium ${
+                isCompleted ? 'text-green-900 dark:text-green-100 line-through' : 'text-slate-900 dark:text-slate-100'
+              }`}>
+                {step}
+              </p>
+
+              {isActive && (
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ repeat: Infinity, duration: 2 }}
                 >
-                  {isCompleted ? (
-                    <CheckCircle2 className="w-5 h-5" />
-                  ) : (
-                    <span>{index + 1}</span>
-                  )}
-                </div>
-
-                {/* Step Content */}
-                <div className="flex-1 text-left">
-                  <p
-                    className={`font-medium ${
-                      isCompleted
-                        ? 'text-green-900 dark:text-green-100 line-through'
-                        : isActive
-                        ? 'text-blue-900 dark:text-blue-100'
-                        : 'text-slate-900 dark:text-slate-100'
-                    }`}
-                  >
-                    {step}
-                  </p>
-                </div>
-
-                {/* Indicator */}
-                {isActive && (
-                  <motion.div
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ repeat: Infinity, duration: 2 }}
-                    className="flex-shrink-0"
-                  >
-                    <Flag className="w-5 h-5 text-blue-600" />
-                  </motion.div>
-                )}
-              </button>
-            </motion.div>
+                  <Flag className="w-5 h-5 text-blue-600" />
+                </motion.div>
+              )}
+            </motion.button>
           );
         })}
       </div>
@@ -346,18 +212,14 @@ const RelatedConcepts = ({ relatedIds }: { relatedIds: string[] }) => {
         const DiffIcon = getDifficultyIcon(concept.difficulty);
         
         return (
-          <Link
-            key={concept.id}
-            href={`/theorie/mouvements/${concept.id}`}
-            className="block"
-          >
+          <Link key={concept.id} href={`/theorie/mouvements/${concept.id}`}>
             <motion.div
               whileHover={{ x: 4 }}
-              className="bg-white dark:bg-slate-800 rounded-xl p-4 border-2 border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-600 transition-all group"
+              className="bg-white dark:bg-slate-800 rounded-xl p-4 border-2 border-slate-200 hover:border-blue-400 transition-all group"
             >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <h4 className="font-bold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1">
+                  <h4 className="font-bold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 mb-1">
                     {concept.title}
                   </h4>
                   <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -370,7 +232,7 @@ const RelatedConcepts = ({ relatedIds }: { relatedIds: string[] }) => {
                     <DiffIcon className="w-3 h-3" />
                     {concept.difficulty}
                   </span>
-                  <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
+                  <ChevronRight className="w-5 h-5 text-slate-400" />
                 </div>
               </div>
             </motion.div>
@@ -392,33 +254,44 @@ export default function ConceptDetailPage() {
 
   const [activeTab, setActiveTab] = useState<TabId>('description');
   const [isBookmarked, setIsBookmarked] = useState(false);
-
-  const concept = useMemo(() => {
-    return ALL_CONCEPTS.find(c => c.id === conceptId);
-  }, [conceptId]);
+  const [concept, setConcept] = useState<ConceptData | null>(null);
 
   useEffect(() => {
-    if (!concept) {
+    const foundConcept = ALL_CONCEPTS.find(c => c.id === conceptId);
+    if (foundConcept) {
+      setConcept(foundConcept);
+    } else {
       router.push('/theorie/mouvements');
     }
-  }, [concept, router]);
+  }, [conceptId, router]);
 
   useEffect(() => {
-    const bookmarks = JSON.parse(localStorage.getItem('bookmarkedConcepts') || '[]');
-    setIsBookmarked(bookmarks.includes(conceptId));
+    if (typeof window !== 'undefined') {
+      const bookmarks = JSON.parse(localStorage.getItem('bookmarkedConcepts') || '[]');
+      setIsBookmarked(bookmarks.includes(conceptId));
+    }
   }, [conceptId]);
 
   const toggleBookmark = () => {
-    const bookmarks = JSON.parse(localStorage.getItem('bookmarkedConcepts') || '[]');
-    const newBookmarks = isBookmarked
-      ? bookmarks.filter((id: string) => id !== conceptId)
-      : [...bookmarks, conceptId];
-    localStorage.setItem('bookmarkedConcepts', JSON.stringify(newBookmarks));
-    setIsBookmarked(!isBookmarked);
+    if (typeof window !== 'undefined') {
+      const bookmarks = JSON.parse(localStorage.getItem('bookmarkedConcepts') || '[]');
+      const newBookmarks = isBookmarked
+        ? bookmarks.filter((id: string) => id !== conceptId)
+        : [...bookmarks, conceptId];
+      localStorage.setItem('bookmarkedConcepts', JSON.stringify(newBookmarks));
+      setIsBookmarked(!isBookmarked);
+    }
   };
 
   if (!concept) {
-    return null;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-blue-950 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600 dark:text-slate-400">Chargement...</p>
+        </div>
+      </div>
+    );
   }
 
   const DiffIcon = getDifficultyIcon(concept.difficulty);
@@ -441,10 +314,10 @@ export default function ConceptDetailPage() {
           </Link>
 
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 border-2 border-slate-200 dark:border-slate-700 shadow-lg">
-            <div className="flex items-start justify-between mb-6">
+            <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-bold border-2 border-blue-300 dark:border-blue-700">
+                  <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-bold border-2 border-blue-300">
                     {concept.category}
                   </span>
                   <span className={`px-3 py-1 rounded-full text-sm font-bold border-2 flex items-center gap-1.5 ${getDifficultyColor(concept.difficulty)}`}>
@@ -458,27 +331,25 @@ export default function ConceptDetailPage() {
                 </h1>
 
                 <p className="text-lg text-slate-600 dark:text-slate-400">
-                  {concept.desc || concept.description}
+                  {concept.description}
                 </p>
               </div>
 
-              <div className="flex flex-col gap-2 ml-6">
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={toggleBookmark}
-                  className={`p-3 rounded-xl transition-all border-2 ${
-                    isBookmarked
-                      ? 'bg-amber-100 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-300'
-                      : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-amber-300 dark:hover:border-amber-700'
-                  }`}
-                >
-                  {isBookmarked ? (
-                    <Bookmark className="w-6 h-6 fill-current" />
-                  ) : (
-                    <BookmarkPlus className="w-6 h-6" />
-                  )}
-                </motion.button>
-              </div>
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={toggleBookmark}
+                className={`ml-6 p-3 rounded-xl transition-all border-2 ${
+                  isBookmarked
+                    ? 'bg-amber-100 dark:bg-amber-900/30 border-amber-300 text-amber-700'
+                    : 'bg-white dark:bg-slate-800 border-slate-200 text-slate-600'
+                }`}
+              >
+                {isBookmarked ? (
+                  <Bookmark className="w-6 h-6 fill-current" />
+                ) : (
+                  <BookmarkPlus className="w-6 h-6" />
+                )}
+              </motion.button>
             </div>
           </div>
         </motion.div>
@@ -530,15 +401,16 @@ export default function ConceptDetailPage() {
               >
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
                   <BookOpen className="w-6 h-6 text-blue-600" />
-                  {concept.details?.principle ? 'Principe de fonctionnement' : 'Principe du mouvement'}
+                  Principe de fonctionnement
                 </h2>
+                
                 <div className="prose dark:prose-invert max-w-none">
-                  <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">
-                    {concept.details?.principle || concept.description || concept.desc}
+                  <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
+                    {concept.details?.principle || concept.description}
                   </p>
                   
                   {concept.details?.howItWorks && (
-                    <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border-2 border-blue-200 dark:border-blue-800">
+                    <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border-2 border-blue-200">
                       <h3 className="font-bold text-blue-900 dark:text-blue-100 mb-2">
                         Comment ça fonctionne ?
                       </h3>
@@ -556,7 +428,7 @@ export default function ConceptDetailPage() {
                       <ul className="space-y-3">
                         {concept.details.keyPoints.map((point, index) => (
                           <li key={index} className="flex items-start gap-3">
-                            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-sm font-bold">
+                            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold">
                               {index + 1}
                             </span>
                             <span className="text-slate-700 dark:text-slate-300 pt-0.5">
@@ -569,7 +441,7 @@ export default function ConceptDetailPage() {
                   )}
 
                   {concept.details?.advantages && concept.details.advantages.length > 0 && (
-                    <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-xl border-2 border-green-200 dark:border-green-800">
+                    <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-xl border-2 border-green-200">
                       <h3 className="font-bold text-green-900 dark:text-green-100 mb-3">
                         ✅ Avantages
                       </h3>
@@ -584,7 +456,7 @@ export default function ConceptDetailPage() {
                   )}
 
                   {concept.details?.limitations && concept.details.limitations.length > 0 && (
-                    <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border-2 border-amber-200 dark:border-amber-800">
+                    <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border-2 border-amber-200">
                       <h3 className="font-bold text-amber-900 dark:text-amber-100 mb-3">
                         ⚠️ Limitations
                       </h3>
@@ -613,7 +485,7 @@ export default function ConceptDetailPage() {
                   Prérequis nécessaires
                 </h2>
 
-                {concept.prerequisites && concept.prerequisites.length > 0 ? (
+                {concept.prerequisites.length > 0 ? (
                   <div className="space-y-3">
                     {concept.prerequisites.map((prereq, index) => (
                       <motion.div
@@ -621,9 +493,9 @@ export default function ConceptDetailPage() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="flex items-start gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border-2 border-blue-200 dark:border-blue-800"
+                        className="flex items-start gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border-2 border-blue-200"
                       >
-                        <CheckCircle2 className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                        <CheckCircle2 className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                         <span className="text-slate-900 dark:text-slate-100 font-medium">
                           {prereq}
                         </span>
@@ -650,7 +522,7 @@ export default function ConceptDetailPage() {
                   Erreurs courantes à éviter
                 </h2>
 
-                {concept.commonMistakes && concept.commonMistakes.length > 0 ? (
+                {concept.commonMistakes.length > 0 ? (
                   <div className="space-y-3">
                     {concept.commonMistakes.map((mistake, index) => (
                       <motion.div
@@ -658,9 +530,9 @@ export default function ConceptDetailPage() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border-2 border-red-200 dark:border-red-800"
+                        className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border-2 border-red-200"
                       >
-                        <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                        <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                         <span className="text-slate-900 dark:text-slate-100 font-medium">
                           {mistake}
                         </span>
@@ -687,7 +559,7 @@ export default function ConceptDetailPage() {
                   Conseils de sécurité
                 </h2>
 
-                {concept.safetyTips && concept.safetyTips.length > 0 ? (
+                {concept.safetyTips.length > 0 ? (
                   <div className="space-y-3">
                     {concept.safetyTips.map((tip, index) => (
                       <motion.div
@@ -695,9 +567,9 @@ export default function ConceptDetailPage() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border-2 border-amber-200 dark:border-amber-800"
+                        className="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border-2 border-amber-200"
                       >
-                        <Lightbulb className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                        <Lightbulb className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                         <span className="text-slate-900 dark:text-slate-100 font-medium">
                           {tip}
                         </span>
@@ -724,7 +596,7 @@ export default function ConceptDetailPage() {
                   Plan de progression
                 </h2>
 
-                {concept.progressionSteps && concept.progressionSteps.length > 0 ? (
+                {concept.progressionSteps.length > 0 ? (
                   <ProgressionTimeline steps={concept.progressionSteps} />
                 ) : (
                   <p className="text-slate-600 dark:text-slate-400 italic">
@@ -746,7 +618,7 @@ export default function ConceptDetailPage() {
                   Variations et concepts liés
                 </h2>
 
-                {concept.variations && concept.variations.length > 0 && (
+                {concept.variations.length > 0 && (
                   <div className="mb-8">
                     <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">
                       Variations
@@ -758,9 +630,9 @@ export default function ConceptDetailPage() {
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1 }}
-                          className="flex items-start gap-3 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl border-2 border-purple-200 dark:border-purple-800"
+                          className="flex items-start gap-3 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl border-2 border-purple-200"
                         >
-                          <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" />
+                          <Sparkles className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
                           <span className="text-slate-900 dark:text-slate-100 font-medium">
                             {variation}
                           </span>
@@ -770,7 +642,7 @@ export default function ConceptDetailPage() {
                   </div>
                 )}
 
-                {concept.relatedMoves && concept.relatedMoves.length > 0 && (
+                {concept.relatedMoves.length > 0 && (
                   <div>
                     <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">
                       Concepts associés
@@ -779,8 +651,7 @@ export default function ConceptDetailPage() {
                   </div>
                 )}
 
-                {(!concept.variations || concept.variations.length === 0) && 
-                 (!concept.relatedMoves || concept.relatedMoves.length === 0) && (
+                {concept.variations.length === 0 && concept.relatedMoves.length === 0 && (
                   <p className="text-slate-600 dark:text-slate-400 italic">
                     Aucune variation ou concept lié répertorié.
                   </p>
