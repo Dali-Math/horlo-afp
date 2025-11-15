@@ -1,3 +1,5 @@
+// app/theorie/mouvements/types.ts
+
 export type DifficultyLevel = 'Débutant' | 'Intermédiaire' | 'Expert';
 
 export interface Concept {
@@ -5,20 +7,22 @@ export interface Concept {
   title: string;
   desc: string;
   level: DifficultyLevel;
-  // Métadonnées optionnelles
+  // Enrichissements
   tags?: string[];
   iso?: string[];
   manufactures?: string[];
   history?: string;
   formula?: string;
   patent?: string[];
-  [key: string]: any; // Permet d'ajouter n'importe quel champ sans erreur TypeScript
-}
-
-export interface Module {
-  id: string;
-  title: string;
-  icon: string; // Nom de l'icône Lucide
-  color: string; // Classes Tailwind (ex: "from-blue-500 to-cyan-600")
-  concepts: Concept[];
+  // NOUVEAU : Contenu structuré
+  details?: {
+    principle?: string; // Principe de fonctionnement
+    materials?: string[]; // Matériaux spécifiques
+    dimensions?: Record<string, string>; // Cotes techniques
+    adjustment?: string; // Procédure de réglage
+    commonErrors?: string[]; // Erreurs courantes
+    tools?: string[]; // Outils nécessaires
+  };
+  gallery?: string[]; // URLs images
+  relatedConcepts?: string[]; // IDs de concepts liés
 }
