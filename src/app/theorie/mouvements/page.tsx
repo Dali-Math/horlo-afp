@@ -81,8 +81,9 @@ const ConceptCard = ({ concept }: { concept: Concept }) => {
           <div className="flex items-center gap-2 text-white">
             {concept.category && <CategoryIcon category={concept.category} />}
             <span className="text-xs font-medium opacity-90">
-              {concept.category.replace(/^[🏗️⚙️⏱️🎯🔧]\s*/, '')}
-            </span>
+  <CategoryIcon category={concept.category || ''} />
+  {(concept.category || '').replace(/^[🏗️⚙️🔋⏱️🔄✨📊🎯🔧]\s*/, '')}
+</span>
           </div>
           <DifficultyBadge level={concept.level} />
         </div>
