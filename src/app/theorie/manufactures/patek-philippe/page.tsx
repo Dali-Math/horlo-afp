@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { legendaryCollections } from './data';
 
 export default function Page() {
+  const router = useRouter();
   const vantaBgRef = useRef<HTMLDivElement>(null);
   const vantaEffectRef = useRef<any>(null);
   const [expandedCollection, setExpandedCollection] = useState<string | null>(null);
@@ -22,10 +24,10 @@ export default function Page() {
     const initVanta = async () => {
       try {
         if (!(window as any).THREE) {
-          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js ');
         }
         if (!(window as any).VANTA) {
-          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js');
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js ');
         }
         if (vantaBgRef.current && (window as any).VANTA) {
           vantaEffectRef.current = (window as any).VANTA.BIRDS({
@@ -75,7 +77,7 @@ export default function Page() {
     const loadAnime = async () => {
       if (!(window as any).anime) {
         const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js';
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js ';
         script.async = true;
         document.head.appendChild(script);
         
@@ -318,6 +320,24 @@ export default function Page() {
           font-family: 'Playfair Display', serif;
         }
         
+        .back-btn {
+          padding: 0.5rem 1rem;
+          background: var(--gold);
+          color: var(--white);
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-weight: 500;
+          font-family: 'Inter', sans-serif;
+          transition: all 0.3s ease;
+          font-size: 0.9rem;
+        }
+        
+        .back-btn:hover {
+          background: var(--gold-dark);
+          transform: translateY(-1px);
+        }
+
         .hero-section {
           height: 100vh;
           position: relative;
@@ -878,6 +898,22 @@ export default function Page() {
         </div>
       </section>
 
+      {/* Navigation avec bouton Retour */}
+      <nav className="nav-container">
+        <div className="nav-content">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <button onClick={() => router.back()} className="back-btn">Retour</button>
+            <a href="#home" className="nav-logo font-display">Patek Philippe</a>
+          </div>
+          <ul className="nav-links">
+            <li><a href="#heritage">Héritage</a></li>
+            <li><a href="#collections">Collections</a></li>
+            <li><a href="#innovation">Innovation</a></li>
+            <li><a href="#craftsmanship">Savoir-faire</a></li>
+          </ul>
+        </div>
+      </nav>
+
       {/* Heritage Section */}
       <section id="heritage" className="section">
         <h2 className="section-title font-display">185 Ans d'Excellence</h2>
@@ -936,7 +972,7 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Collections Section - ACCORDÉON AVEC VRAIES IMAGES */}
+      {/* Collections Section */}
       <section id="collections" className="section">
         <h2 className="section-title font-display">Collections Légendaires</h2>
         <div className="collections-grid">
