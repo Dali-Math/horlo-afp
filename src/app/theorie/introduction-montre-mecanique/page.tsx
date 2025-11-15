@@ -121,17 +121,18 @@ const AnimationMontre = () => {
             </div>
 
             {/* Aiguille des heures avec luminova */}
-            <motion.div
-              className="absolute w-2 bg-gradient-to-t from-slate-900 to-slate-700 rounded-full origin-bottom left-1/2 top-1/2 shadow-lg"
-              style={{ 
-                height: '80px',
-                transform: 'translateX(-50%) translateY(-100%)',
-              }}
-              animate={isRunning ? { rotate: 360 } : {}}
-              transition={{ duration: 43200 / vitesse, repeat: Infinity, ease: "linear" }}
-            >
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-12 bg-green-300 rounded-full opacity-70"></div>
-            </motion.div>
+<motion.div
+  className="absolute w-2 bg-gradient-to-t from-slate-900 to-slate-700 rounded-full left-1/2 top-1/2 shadow-lg"
+  style={{
+    height: '80px',
+    transform: 'translate(-50%, -50%)',
+    transformOrigin: '50% 100%',
+  }}
+  animate={isRunning ? { rotate: 360 } : {}}
+  transition={{ duration: 43200 / vitesse, repeat: Infinity, ease: "linear" }}
+>
+  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-12 bg-green-300 rounded-full opacity-70"></div>
+</motion.div>
 
             {/* Aiguille des minutes avec luminova */}
             <motion.div
