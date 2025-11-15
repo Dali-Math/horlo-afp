@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { ArrowLeft, ChevronRight, AlertTriangle, Lightbulb, Wrench, CheckCircle, BookOpen, Target, Award, Practice, HelpCircle, Info } from "lucide-react";
+import { ArrowLeft, ChevronRight, AlertTriangle, Lightbulb, Wrench, CheckCircle, BookOpen, Target, Award, Practice, Info } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function HuilagePage() {
@@ -382,7 +382,7 @@ export default function HuilagePage() {
               <div className="text-gray-300 text-sm space-y-2">
                 <p><strong>9010 = 10 cSt →</strong> Pensez « 10 = vitesse de course à pied », pour les parties RAPIDES (rotor)</p>
                 <p><strong>9020 = 20 cSt →</strong> « 20 = vitesse modérée », pour les parties MOYENNES (roue de centre)</p>
-                <p><strong>9415 = 15 cSt →</strong> « 9415 = échappement spécial », seule huile avec un 4 au milieu</p>
+                <p><strong>9415 = 15 cSp →</strong> « 9415 = échappement spécial », seule huile avec un 4 au milieu</p>
                 <p><strong>8200 = 800 cSt →</strong> « 8h00 = barillet », le barillet fait 1 tour toutes les 8 heures</p>
               </div>
             </div>
@@ -830,7 +830,7 @@ export default function HuilagePage() {
 
               <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 bg-blue-900/20 rounded-lg border border-blue-800/50">
-                  <h5 className="font-semibold text-blue-400 mb-2">📚 Prochaines étapes si ≥ 80% :</h5>
+                  <h5 className="font-semibold text-blue-400 mb-2">📚 Prochaines étapes si 80% ou plus :</h5>
                   <ul className="text-sm text-gray-400 space-y-1">
                     <li>• Passer aux exercices pratiques sur mouvement</li>
                     <li>• Visionner la vidéo en repérant les gestes</li>
@@ -838,7 +838,7 @@ export default function HuilagePage() {
                   </ul>
                 </div>
                 <div className="p-4 bg-yellow-900/20 rounded-lg border border-yellow-800/50">
-                  <h5 className="font-semibold text-yellow-400 mb-2">🔄 Si < 80% :</h5>
+                  <h5 className="font-semibold text-yellow-400 mb-2">🔄 Si moins de 80% :</h5>
                   <ul className="text-sm text-gray-400 space-y-1">
                     <li>• Relire les sections "Mémo élève" et "Technique pas à pas"</li>
                     <li>• Refaire le quiz après 24h (effet mémoire)</li>
