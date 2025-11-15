@@ -903,7 +903,7 @@ export default function Page() {
         <div className="nav-content">
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button onClick={() => router.back()} className="back-btn">Retour</button>
-            <a href="#home" className="nav-logo font-display">Patek Philippe</a>
+            <a href="/theorie/manufactures" className="nav-logo font-display">Patek Philippe</a>
           </div>
           <ul className="nav-links">
             <li><a href="#heritage">Héritage</a></li>
