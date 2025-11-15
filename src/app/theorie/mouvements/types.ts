@@ -2,6 +2,15 @@
 
 export type DifficultyLevel = 'Débutant' | 'Intermédiaire' | 'Expert';
 
+// ✅ AJOUTEZ CETTE INTERFACE
+export interface Module {
+  id: string;
+  title: string;
+  icon: string;
+  color: string;
+  concepts: Concept[];
+}
+
 export interface Concept {
   id: string;
   title: string;
