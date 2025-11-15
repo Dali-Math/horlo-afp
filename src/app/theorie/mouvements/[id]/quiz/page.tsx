@@ -51,7 +51,33 @@ interface ConceptData {
 }
 
 // ============================================================================
-// COMPONENTS
+// UTILITY FUNCTIONS
+// ============================================================================
+
+const getAllConcepts = (): ConceptData[] => {
+  const allConcepts: ConceptData[] = [];
+  
+  conceptGroups.forEach((group: any) => {
+    // ✅ Vérification robuste
+    const conceptsList = group.concepts || [];
+    
+    conceptsList.forEach((c: any) => {
+      allConcepts.push({
+        id: c.id || '',
+        title: c.title || 'Sans titre',
+        level: c.level || 'Débutant',
+        desc: c.desc,
+        description: c.description,
+        category: group.title || 'Général'
+      });
+    });
+  });
+
+  return allConcepts;
+};
+
+// ============================================================================
+// COMPONENTS (identiques à avant)
 // ============================================================================
 
 const ProgressBar = ({ current, total }: { current: number; total: number }) => {
@@ -145,7 +171,6 @@ const QuestionCard = ({
       transition={{ duration: 0.3 }}
       className="bg-white dark:bg-slate-900 rounded-2xl p-8 border-2 border-slate-200 dark:border-slate-700 shadow-lg"
     >
-      {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-3">
@@ -167,7 +192,6 @@ const QuestionCard = ({
         </div>
       </div>
 
-      {/* Options */}
       <div className="space-y-3 mb-6">
         {question.options.map((option, index) => {
           const isSelected = selectedAnswer === index;
@@ -231,7 +255,6 @@ const QuestionCard = ({
         })}
       </div>
 
-      {/* Explanation */}
       <AnimatePresence>
         {showResult && (
           <motion.div
@@ -321,7 +344,6 @@ const ResultsScreen = ({
       transition={{ duration: 0.5 }}
       className="max-w-4xl mx-auto"
     >
-      {/* Score Card */}
       <div className="bg-gradient-to-br from-blue-600 to-purple-700 rounded-2xl p-8 md:p-12 text-white text-center mb-8 shadow-2xl">
         <motion.div
           initial={{ scale: 0 }}
@@ -385,7 +407,6 @@ const ResultsScreen = ({
         </motion.div>
       </div>
 
-      {/* Question Review */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -452,7 +473,6 @@ const ResultsScreen = ({
         </div>
       </motion.div>
 
-      {/* Actions */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -492,24 +512,8 @@ export default function QuizPage() {
   const router = useRouter();
   const conceptId = params.id as string;
 
-  // ✅ Aplatir et trouver le concept
-  const allConcepts: ConceptData[] = [];
-  
-  conceptGroups.forEach((group) => {
-    if (group.concepts && Array.isArray(group.concepts)) {
-      group.concepts.forEach((c: any) => {
-        allConcepts.push({
-          id: c.id,
-          title: c.title,
-          level: c.level,
-          desc: c.desc,
-          description: c.description,
-          category: group.title
-        });
-      });
-    }
-  });
-
+  // ✅ Utiliser la fonction utilitaire
+  const allConcepts = getAllConcepts();
   const concept = allConcepts.find(c => c.id === conceptId);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -519,7 +523,6 @@ export default function QuizPage() {
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [isQuizComplete, setIsQuizComplete] = useState(false);
 
-  // ✅ Questions génériques
   const generateQuestions = (): QuizQuestion[] => {
     if (!concept) return [];
 
