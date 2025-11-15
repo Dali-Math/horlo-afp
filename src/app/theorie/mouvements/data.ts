@@ -1,30 +1,4 @@
 import type { Module } from './types';
-
-export const modules: Module[] = [
-  export type DifficultyLevel = 'Débutant' | 'Intermédiaire' | 'Expert';
-
-export interface Concept {
-  id: string;
-  title: string;
-  desc: string;
-  level: DifficultyLevel;
-  tags?: string[];
-  iso?: string[];
-  manufactures?: string[];
-  history?: string;
-  formula?: string;
-  patent?: string[];
-  // Permet d'ajouter d'autres métadonnées sans erreur TypeScript
-  [key: string]: any;
-}
-
-export interface Module {
-  id: string;
-  title: string;
-  icon: string;
-  color: string;
-  concepts: Concept[];
-}
   {
     id: 'architecture',
     title: "🏗️ Architecture du Mouvement",
