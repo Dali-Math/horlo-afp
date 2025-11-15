@@ -7,7 +7,7 @@ import {
   // ✅ BookOpen EST maintenant importé
 } from 'lucide-react';
 import { modules } from '../data';
-import type { Concept } from '../../types';
+import type { Concept } from '../types';
 
 // Récupère un concept par son ID
 function getConceptById(id: string): Concept | undefined {
