@@ -1,4 +1,4 @@
-// Types simples pour la référence horlogère
+// app/theorie/mouvements/types.ts
 
 export type DifficultyLevel = 'Débutant' | 'Intermédiaire' | 'Expert';
 
@@ -7,12 +7,19 @@ export interface Concept {
   title: string;
   desc: string;
   level: DifficultyLevel;
+  tags?: string[];
+  iso?: string[];
+  manufactures?: string[];
+  history?: string;
+  formula?: string;
+  patent?: string[];
+  [key: string]: any; // Pour champs optionnels supplémentaires
 }
 
 export interface Module {
   id: string;
   title: string;
-  icon: string; // On stockera juste le nom de l'icône
-  color: string; // Classe Tailwind pour le dégradé
+  icon: string; // Nom de l'icône Lucide
+  color: string; // Classes Tailwind gradient
   concepts: Concept[];
 }
