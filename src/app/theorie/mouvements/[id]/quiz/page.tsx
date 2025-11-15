@@ -496,13 +496,18 @@ export default function QuizPage() {
 
   // ✅ Correction : recherche dans la structure correcte
   let concept: Concept | undefined;
-  for (const module of modules) {
-    const found = module.concepts.find(c => c.id === conceptId);
-    if (found) {
-      concept = found;
-      break;
-    }
+
+for (const module of modules) {
+  const found = module.concepts?.find((c: any) => c.id === conceptId);
+  
+  if (found) {
+    concept = {
+      ...found,
+      category: module.title
+    };
+    break;
   }
+}
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
