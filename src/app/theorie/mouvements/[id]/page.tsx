@@ -139,6 +139,7 @@ const horlogeryConcepts = conceptGroups.flatMap(group =>
   group.concepts.map(concept => ({
     ...concept,
     category: group.title,
+    difficulty: concept.level || 'Intermédiaire',
     prerequisites: concept.details?.prerequisites || [],
     commonMistakes: concept.details?.commonErrors || [],
     safetyTips: concept.details?.specs?.safetyNotes || [],
@@ -170,8 +171,7 @@ interface Concept {
   id: string;
   title: string;
   category: string;
-  difficulty?: string;
-  level?: string;
+  difficulty: string;
   prerequisites: string[];
   description?: string;
   desc?: string;
@@ -343,8 +343,7 @@ const RelatedConcepts = ({ relatedIds }: { relatedIds: string[] }) => {
   return (
     <div className="space-y-4">
       {relatedConcepts.map((concept) => {
-        const difficulty = concept.difficulty || 'Intermédiaire';
-        const DiffIcon = getDifficultyIcon(difficulty);
+        const DiffIcon = getDifficultyIcon(concept.difficulty);
         
         return (
           <Link
@@ -367,9 +366,9 @@ const RelatedConcepts = ({ relatedIds }: { relatedIds: string[] }) => {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold border-2 flex items-center gap-1.5 ${getDifficultyColor(difficulty)}`}>
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold border-2 flex items-center gap-1.5 ${getDifficultyColor(concept.difficulty)}`}>
                     <DiffIcon className="w-3 h-3" />
-                    {difficulty}
+                    {concept.difficulty}
                   </span>
                   <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
                 </div>
@@ -422,8 +421,7 @@ export default function ConceptDetailPage() {
     return null;
   }
 
-  const difficulty = concept.difficulty || 'Intermédiaire';
-  const DiffIcon = getDifficultyIcon(difficulty);
+  const DiffIcon = getDifficultyIcon(concept.difficulty);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-blue-950 py-12 px-4">
@@ -449,9 +447,9 @@ export default function ConceptDetailPage() {
                   <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-bold border-2 border-blue-300 dark:border-blue-700">
                     {concept.category}
                   </span>
-                  <span className={`px-3 py-1 rounded-full text-sm font-bold border-2 flex items-center gap-1.5 ${getDifficultyColor(difficulty)}`}>
+                  <span className={`px-3 py-1 rounded-full text-sm font-bold border-2 flex items-center gap-1.5 ${getDifficultyColor(concept.difficulty)}`}>
                     <DiffIcon className="w-4 h-4" />
-                    {difficulty}
+                    {concept.difficulty}
                   </span>
                 </div>
 
