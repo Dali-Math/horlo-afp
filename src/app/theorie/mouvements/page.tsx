@@ -2,18 +2,22 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, Search, BookOpen, Heart } from 'lucide-react';
-import { Layers, Zap, Clock } from 'lucide-react'; // Importez les icônes
-
-// IMPORTS DES FICHIERS SÉPARÉS
+import { 
+  ChevronLeft, Search, BookOpen, Heart,
+  // CORRECTION : imports avec majuscule et sans "s"
+  Layers, Zap, Clock, Target, Tool, Scroll
+} from 'lucide-react';
 import { modules } from './data';
 import type { Concept, Module } from './types';
 
-// MAP pour associer nom d'icône au composant
+// MAP CORRECT
 const iconMap = {
-  Layers: Layers,
-  Zap: Zap,
-  Clock: Clock,
+  Layers,
+  Zap,
+  Clock,
+  Target, // Pour le module "🎯 Régulation"
+  Tool,   // Pour le module "🔧 Diagnostic"
+  Scroll, // Pour le module "📜 Histoire"
 };
 
 export default function SimpleReferencePage() {
@@ -68,58 +72,62 @@ export default function SimpleReferencePage() {
 
       {/* CONTENU */}
       <section className="max-w-6xl mx-auto px-4 pb-16">
-        {modules.map((module) => (
-          <div key={module.id} className="mb-12">
-            <div className="flex items-center gap-3 mb-6 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700">
-              <div className={`w-10 h-10 bg-gradient-to-br ${module.color} rounded-lg flex items-center justify-center text-white`}>
-                {/* Rendu dynamique de l'icône */}
-                {React.createElement(iconMap[module.icon as keyof typeof iconMap], { className: "w-5 h-5" })}
+        {modules.map((module) => {
+          // RENDU SÛR de l'icône
+          const IconComponent = iconMap[module.icon as keyof typeof iconMap];
+          
+          return (
+            <div key={module.id} className="mb-12">
+              <div className="flex items-center gap-3 mb-6 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700">
+                <div className={`w-10 h-10 bg-gradient-to-br ${module.color} rounded-lg flex items-center justify-center text-white`}>
+                  {IconComponent ? <IconComponent className="w-5 h-5" /> : null}
+                </div>
+                <h2 className="text-2xl font-bold">{module.title}</h2>
               </div>
-              <h2 className="text-2xl font-bold">{module.title}</h2>
-            </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {module.concepts
-                .filter(c => 
-                  c.title.toLowerCase().includes(search.toLowerCase()) ||
-                  c.desc.toLowerCase().includes(search.toLowerCase())
-                )
-                .map((concept) => (
-                <Link key={concept.id} href={`/theorie/mouvements/${concept.id}`}>
-                  <div className="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-5 hover:border-blue-500 hover:shadow-md transition-all cursor-pointer">
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toggleFavorite(concept.id);
-                      }}
-                      className="absolute top-3 right-3 text-slate-400 hover:text-red-500 transition-colors z-10"
-                    >
-                      <Heart className={`w-4 h-4 ${favorites.includes(concept.id) ? 'fill-red-500 text-red-500' : ''}`} />
-                    </button>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {module.concepts
+                  .filter(c => 
+                    c.title.toLowerCase().includes(search.toLowerCase()) ||
+                    c.desc.toLowerCase().includes(search.toLowerCase())
+                  )
+                  .map((concept) => (
+                  <Link key={concept.id} href={`/theorie/mouvements/${concept.id}`}>
+                    <div className="group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-5 hover:border-blue-500 hover:shadow-md transition-all cursor-pointer">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleFavorite(concept.id);
+                        }}
+                        className="absolute top-3 right-3 text-slate-400 hover:text-red-500 transition-colors z-10"
+                      >
+                        <Heart className={`w-4 h-4 ${favorites.includes(concept.id) ? 'fill-red-500 text-red-500' : ''}`} />
+                      </button>
 
-                    <h3 className="font-bold text-lg mb-2 group-hover:text-blue-600 transition-colors">
-                      {concept.title}
-                    </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
-                      {concept.desc}
-                    </p>
-                    
-                    <div className="flex items-center justify-between text-xs">
-                      <span className={`px-2 py-1 rounded-full ${
-                        concept.level === 'Débutant' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' :
-                        concept.level === 'Expert' ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300' :
-                        'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300'
-                      }`}>
-                        {concept.level}
-                      </span>
-                      <span className="text-slate-400">→</span>
+                      <h3 className="font-bold text-lg mb-2 group-hover:text-blue-600 transition-colors">
+                        {concept.title}
+                      </h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
+                        {concept.desc}
+                      </p>
+                      
+                      <div className="flex items-center justify-between text-xs">
+                        <span className={`px-2 py-1 rounded-full ${
+                          concept.level === 'Débutant' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' :
+                          concept.level === 'Expert' ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300' :
+                          'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300'
+                        }`}>
+                          {concept.level}
+                        </span>
+                        <span className="text-slate-400">→</span>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </section>
 
       {/* FOOTER */}
