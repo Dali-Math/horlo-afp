@@ -7,7 +7,6 @@ export const modules: Module[] = [
     icon: "Layers",
     color: "from-blue-500 to-cyan-600",
     concepts: [
-      // PLATINE & PONTS
       { 
         id: 'platine-definition', 
         title: "Définition de la Platine", 
@@ -62,7 +61,7 @@ export const modules: Module[] = [
         desc: "Protection pivots contre chocs. Ressort lyre, fourche de blocage.", 
         level: "Intermédiaire",
         tags: ["protection", "anti-choc", "incabloc"],
-        patent: ["Brevet 1934"]
+        patent: ["Brevet 1934"] // ← CORRIGÉ : tableau
       },
       { 
         id: 'fixation-cadran', 
@@ -158,7 +157,7 @@ export const modules: Module[] = [
         desc: "Socle mobile pour roue intermédiaire. Fixation par vis.", 
         level: "Intermédiaire",
         tags: ["aubier", "mobile", "intermediaire"],
-        patent: "Breguet 1801"
+        patent: ["Breguet 1801"] // ← CORRIGÉ : tableau
       },
       { 
         id: 'roue-trois-pommes', 
@@ -286,8 +285,8 @@ export const modules: Module[] = [
         title: "Échappement Co-Axial", 
         desc: "George Daniels 1974. Lubrification réduite. Omega 1999.", 
         level: "Expert",
-        tags: ["coaxial", "omega", "lubrification"],
-        patent: "GB 1508022"
+        tags: ["coaxial", "daniels", "omega"],
+        patent: ["GB 1508022"] // ← CORRIGÉ : tableau
       },
       { 
         id: 'spiral-silicium', 
@@ -303,7 +302,7 @@ export const modules: Module[] = [
         desc: "Alliage Nb-Zr-O. 10x plus résistant aux chocs.", 
         level: "Intermédiaire",
         tags: ["rolex", "parachrom", "niobium"],
-        patent: "EP 1208483"
+        patent: ["EP 1208483"] // ← CORRIGÉ : tableau
       },
       { 
         id: 'masse-oscillante', 
@@ -360,7 +359,7 @@ export const modules: Module[] = [
         desc: "Isocronisme. Spirale Breguet ou Philips. Compense température.", 
         level: "Expert",
         tags: ["isochronisme", "spirale", "compensation"],
-        patent: "Breguet 1795"
+        patent: ["Breguet 1795"] // ← CORRIGÉ : tableau
       },
       { 
         id: 'index-raquette', 
@@ -411,7 +410,7 @@ export const modules: Module[] = [
         cosc: "-4/+6 s/jour"
       },
       { 
-        id: 'spiral-métalloïde', 
+        id: 'spiral-metalloide', 
         title: "Spiral Métalloïde", 
         desc: "Elinvar, Nivarox. Constante d'élasticité thermique.", 
         level: "Expert",
@@ -543,11 +542,10 @@ export const modules: Module[] = [
       { 
         id: 'rolex-3135', 
         title: "Rolex Calibre 3135", 
-        title: "Rolex Calibre 3135", 
         desc: "Chronomètre certifié. Parachrom, KIF. 1988-2020.", 
         level: "Intermédiaire",
         tags: ["rolex", "chronometre", "parachrom"],
-        production: "1988-2020, remplacé par 3235"
+        production: "1988-2020, remplacé par 3235" // ← OK car [key: string]: any
       },
       { 
         id: 'patek-324', 
