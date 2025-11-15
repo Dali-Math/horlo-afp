@@ -1,11 +1,5 @@
 'use client';
 
-/**
- * PAGE: Quiz sur un mouvement spécifique
- * CHEMIN: src/app/theorie/mouvements/[id]/quiz/page.tsx
- * DESCRIPTION: Page de quiz interactif pour tester les connaissances sur un mouvement avec système de scoring et révision
- */
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -21,8 +15,7 @@ import { concepts as conceptGroups } from '../../data';
 
 // Transformer en structure modules si nécessaire
 const modules = conceptGroups;
-import type { Concept } from '../../types';
-
+import type { Concept, ConceptGroup } from '../../types';
 // ============================================================================
 // TYPES
 // ============================================================================
