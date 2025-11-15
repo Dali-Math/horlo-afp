@@ -12,6 +12,7 @@ import {
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { modules } from '../../data';
+
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -488,7 +489,9 @@ export default function QuizPage() {
   const router = useRouter();
   const conceptId = params.id as string;
 
-  const concept = movements.find(m => m.id === conceptId);
+  // ✅ CORRECTION : Utiliser modules.flatMap pour récupérer tous les mouvements
+  const allMovements = modules.flatMap(module => module.concepts);
+  const concept = allMovements.find(m => m.id === conceptId);
 
   // Quiz State
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
