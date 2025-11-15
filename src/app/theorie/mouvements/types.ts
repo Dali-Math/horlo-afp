@@ -45,3 +45,9 @@ export interface Concept {
     books?: Array<{ title: string; author: string }>;
   };
 }
+applications?: {
+    realWorld?: string[];
+    variations?: string[];
+    progressions?: string[];
+  };
+}
