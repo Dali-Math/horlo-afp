@@ -40,19 +40,22 @@ export interface Concept {
     keyPoints?: string[];                      // Points clés
     examples?: string[];                       // Exemples
     relatedConcepts?: string[];                // Concepts liés
+    prerequisites?: string[];                  // ✅ Prérequis nécessaires
     
-    // ✅ AJOUTEZ specs ICI
+    // Spécifications techniques
     specs?: {
       difficulty?: string;
       [key: string]: string | undefined;       // Pour permettre d'autres specs dynamiques
     };
 
+    // Ressources pédagogiques
     resources?: {
       videos?: Array<{ title: string; url: string }>;
       articles?: Array<{ title: string; url: string }>;
       books?: Array<{ title: string; author: string }>;
     };
 
+    // Applications pratiques
     applications?: {
       realWorld?: string[];                    // Exemples concrets
       variations?: string[];                   // Variantes existantes
