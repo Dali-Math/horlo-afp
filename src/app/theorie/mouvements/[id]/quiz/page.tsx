@@ -17,7 +17,10 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { modules } from '../../data';
+import { concepts as conceptGroups } from '../../data';
+
+// Transformer en structure modules si nécessaire
+const modules = conceptGroups;
 import type { Concept } from '../../types';
 
 // ============================================================================
