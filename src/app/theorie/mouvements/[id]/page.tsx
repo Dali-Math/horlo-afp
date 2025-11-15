@@ -1,3 +1,5 @@
+// app/theorie/mouvements/[id]/page.tsx
+
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -12,9 +14,10 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import { concepts as conceptGroups } from '../data';
 
 // ============================================================================
-// DATA
+// DATA - Fusion des deux systèmes
 // ============================================================================
 
 const movements = [
@@ -131,8 +134,22 @@ const movements = [
   }
 ];
 
-// ✅ Utilisation directe de movements au lieu de modules.flatMap
-const ALL_CONCEPTS = movements;
+// Aplatir les concepts horlogers
+const horlogeryConcepts = conceptGroups.flatMap(group => 
+  group.concepts.map(concept => ({
+    ...concept,
+    category: group.title,
+    prerequisites: concept.details?.prerequisites || [],
+    commonMistakes: concept.details?.commonErrors || [],
+    safetyTips: concept.details?.specs?.safetyNotes || [],
+    progressionSteps: concept.details?.applications?.progressions || [],
+    variations: concept.details?.applications?.variations || [],
+    relatedMoves: concept.relatedConcepts || []
+  }))
+);
+
+// Combiner les deux sources
+const ALL_CONCEPTS = [...movements, ...horlogeryConcepts];
 
 const TABS = [
   { id: 'description' as const, label: 'Principe', icon: BookOpen },
@@ -153,14 +170,32 @@ interface Concept {
   id: string;
   title: string;
   category: string;
-  difficulty: string;
+  difficulty?: string;
+  level?: string;
   prerequisites: string[];
-  description: string;
+  description?: string;
+  desc?: string;
   variations?: string[];
   commonMistakes?: string[];
   safetyTips?: string[];
   progressionSteps?: string[];
   relatedMoves?: string[];
+  details?: {
+    principle?: string;
+    howItWorks?: string;
+    keyPoints?: string[];
+    advantages?: string[];
+    limitations?: string[];
+    prerequisites?: string[];
+    commonErrors?: string[];
+    specs?: {
+      safetyNotes?: string[];
+    };
+    applications?: {
+      progressions?: string[];
+      variations?: string[];
+    };
+  };
 }
 
 // ============================================================================
@@ -308,7 +343,8 @@ const RelatedConcepts = ({ relatedIds }: { relatedIds: string[] }) => {
   return (
     <div className="space-y-4">
       {relatedConcepts.map((concept) => {
-        const DiffIcon = getDifficultyIcon(concept.difficulty);
+        const difficulty = concept.level || concept.difficulty || 'Intermédiaire';
+        const DiffIcon = getDifficultyIcon(difficulty);
         
         return (
           <Link
@@ -331,9 +367,9 @@ const RelatedConcepts = ({ relatedIds }: { relatedIds: string[] }) => {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold border-2 flex items-center gap-1.5 ${getDifficultyColor(concept.difficulty)}`}>
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold border-2 flex items-center gap-1.5 ${getDifficultyColor(difficulty)}`}>
                     <DiffIcon className="w-3 h-3" />
-                    {concept.difficulty}
+                    {difficulty}
                   </span>
                   <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
                 </div>
@@ -386,7 +422,8 @@ export default function ConceptDetailPage() {
     return null;
   }
 
-  const DiffIcon = getDifficultyIcon(concept.difficulty);
+  const difficulty = concept.level || concept.difficulty || 'Intermédiaire';
+  const DiffIcon = getDifficultyIcon(difficulty);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-blue-950 py-12 px-4">
@@ -402,7 +439,7 @@ export default function ConceptDetailPage() {
             className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
-            Retour aux mouvements
+            Retour aux concepts
           </Link>
 
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 border-2 border-slate-200 dark:border-slate-700 shadow-lg">
@@ -412,9 +449,9 @@ export default function ConceptDetailPage() {
                   <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-bold border-2 border-blue-300 dark:border-blue-700">
                     {concept.category}
                   </span>
-                  <span className={`px-3 py-1 rounded-full text-sm font-bold border-2 flex items-center gap-1.5 ${getDifficultyColor(concept.difficulty)}`}>
+                  <span className={`px-3 py-1 rounded-full text-sm font-bold border-2 flex items-center gap-1.5 ${getDifficultyColor(difficulty)}`}>
                     <DiffIcon className="w-4 h-4" />
-                    {concept.difficulty}
+                    {difficulty}
                   </span>
                 </div>
 
@@ -423,7 +460,7 @@ export default function ConceptDetailPage() {
                 </h1>
 
                 <p className="text-lg text-slate-600 dark:text-slate-400">
-                  {concept.description}
+                  {concept.desc || concept.description}
                 </p>
               </div>
 
@@ -443,16 +480,6 @@ export default function ConceptDetailPage() {
                     <BookmarkPlus className="w-6 h-6" />
                   )}
                 </motion.button>
-
-                <Link href={`/theorie/mouvements/${conceptId}/notes`}>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="p-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-colors border-2 border-blue-700"
-                  >
-                    <BookOpen className="w-6 h-6" />
-                  </motion.button>
-                </Link>
               </div>
             </div>
           </div>
@@ -505,11 +532,74 @@ export default function ConceptDetailPage() {
               >
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
                   <BookOpen className="w-6 h-6 text-blue-600" />
-                  Principe du mouvement
+                  {concept.details?.principle ? 'Principe de fonctionnement' : 'Principe du mouvement'}
                 </h2>
-                <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
-                  {concept.description}
-                </p>
+                <div className="prose dark:prose-invert max-w-none">
+                  <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">
+                    {concept.details?.principle || concept.description || concept.desc}
+                  </p>
+                  
+                  {concept.details?.howItWorks && (
+                    <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border-2 border-blue-200 dark:border-blue-800">
+                      <h3 className="font-bold text-blue-900 dark:text-blue-100 mb-2">
+                        Comment ça fonctionne ?
+                      </h3>
+                      <p className="text-slate-700 dark:text-slate-300">
+                        {concept.details.howItWorks}
+                      </p>
+                    </div>
+                  )}
+
+                  {concept.details?.keyPoints && concept.details.keyPoints.length > 0 && (
+                    <div className="mt-6">
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-4">
+                        Points clés
+                      </h3>
+                      <ul className="space-y-3">
+                        {concept.details.keyPoints.map((point, index) => (
+                          <li key={index} className="flex items-start gap-3">
+                            <span className="flex-shrink-0 w-6 h-6 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center text-sm font-bold">
+                              {index + 1}
+                            </span>
+                            <span className="text-slate-700 dark:text-slate-300 pt-0.5">
+                              {point}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {concept.details?.advantages && concept.details.advantages.length > 0 && (
+                    <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-xl border-2 border-green-200 dark:border-green-800">
+                      <h3 className="font-bold text-green-900 dark:text-green-100 mb-3">
+                        ✅ Avantages
+                      </h3>
+                      <ul className="space-y-2">
+                        {concept.details.advantages.map((adv, index) => (
+                          <li key={index} className="text-green-800 dark:text-green-200">
+                            • {adv}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {concept.details?.limitations && concept.details.limitations.length > 0 && (
+                    <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border-2 border-amber-200 dark:border-amber-800">
+                      <h3 className="font-bold text-amber-900 dark:text-amber-100 mb-3">
+                        ⚠️ Limitations
+                      </h3>
+                      <ul className="space-y-2">
+                        {concept.details.limitations.map((lim, index) => (
+                          <li key={index} className="text-amber-800 dark:text-amber-200">
+                            • {lim}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
               </motion.div>
             )}
 
@@ -655,13 +745,13 @@ export default function ConceptDetailPage() {
               >
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6 flex items-center gap-2">
                   <Sparkles className="w-6 h-6 text-purple-600" />
-                  Variations et mouvements liés
+                  Variations et concepts liés
                 </h2>
 
                 {concept.variations && concept.variations.length > 0 && (
                   <div className="mb-8">
                     <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">
-                      Variations du mouvement
+                      Variations
                     </h3>
                     <div className="space-y-3">
                       {concept.variations.map((variation, index) => (
@@ -685,7 +775,7 @@ export default function ConceptDetailPage() {
                 {concept.relatedMoves && concept.relatedMoves.length > 0 && (
                   <div>
                     <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">
-                      Mouvements associés
+                      Concepts associés
                     </h3>
                     <RelatedConcepts relatedIds={concept.relatedMoves} />
                   </div>
@@ -694,7 +784,7 @@ export default function ConceptDetailPage() {
                 {(!concept.variations || concept.variations.length === 0) && 
                  (!concept.relatedMoves || concept.relatedMoves.length === 0) && (
                   <p className="text-slate-600 dark:text-slate-400 italic">
-                    Aucune variation ou mouvement lié répertorié.
+                    Aucune variation ou concept lié répertorié.
                   </p>
                 )}
               </motion.div>
