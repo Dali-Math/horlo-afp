@@ -402,7 +402,7 @@ export const modules: Module[] = [
           tools: ["Aléseuse CNC", "Palpeur 3D TESA", "Lubrifiant alésage Moebius"]
         },
         gallery: [
-          "https://cdn.horlolearn.ch/pervage/alésage-diamant.jpg",
+          "https://cdn.horlolearn.ch/pervage/alesage-diamant.jpg",
           "https://cdn.horlolearn.ch/pervage/palpeur-3d.jpg"
         ],
         relatedConcepts: ["platine-definition", "vis-ponts", "chocs-incabloc"]
@@ -484,7 +484,7 @@ export const modules: Module[] = [
             "Pivots socle": "0.15 mm",
             "Serrage vis": "12 N·mm"
           },
-          adjustment: "Déplacement radial par rotation socale. Verrouillage vis après chronométrage.",
+          adjustment: "Déplacement radial par rotation socle. Verrouillage vis après chronométrage.",
           commonErrors: ["Socle qui bouge → désaxement", "Course insuffisante → mauvais engrenage", "Vis desserrée → jeu"],
           tools: ["Tournevis M1.2", "Pince à aubier", "Chronocomparateur"]
         },
@@ -911,7 +911,7 @@ export const modules: Module[] = [
           tools: ["Microscope électronique", "Interféromètre", "Chambre jaune"]
         },
         gallery: [
-          "https://cdn.horlolearn.ch/spiral-silicium/drie- gravure.jpg",
+          "https://cdn.horlolearn.ch/spiral-silicium/drie-gravure.jpg",
           "https://cdn.horlolearn.ch/spiral-silicium/spiromax-patek.jpg"
         ],
         relatedConcepts: ["spiral-parachrom", "co-axial", "masse-oscillante"]
@@ -1092,6 +1092,7 @@ export const modules: Module[] = [
           adjustment: "Formage à la main par artisan. Contrôle interferométrie. Sélection meilleurs résultats pour COSC.",
           commonErrors: ["Forme incorrecte → mauvaise compensation", "Stress contrainte → rupture", "Cout élevé"],
           tools: ["Touret formage", "Microscope interferomètre", "Chambre climatique"],
+        },
         gallery: [
           "https://cdn.horlolearn.ch/courbe/breguet-overcoil.jpg",
           "https://cdn.horlolearn.ch/courbe/philips-terminaison.jpg"
@@ -1275,217 +1276,4 @@ export const modules: Module[] = [
           "https://cdn.horlolearn.ch/spirale/nivarox-ct.jpg",
           "https://cdn.horlolearn.ch/spirale/alliage-fe-ni-cr.jpg"
         ],
-        relatedConcepts: ["courbe-reglage", "index-raquette", "spiral-parachrom"]
-      },
-      { 
-        id: 'reglage-micrometrique', 
-        title: "Réglage Micrométrique", 
-        desc: "Vis à pas fin 0.20mm. 1 tour = 30s/jour. Précision extrême.", 
-        level: "Intermédiaire",
-        tags: ["micrometrique", "vis", "reglage", "precision"],
-        manufactures: ["Rolex (Microstella)", "Patek (Gyromax)", "Omega"],
-        patent: ["Brevet 1920"],
-        details: {
-          principle: "Vis M2.5 à pas ultra-fin. Rotation 1 cran = 30s/j. Pas besoin index/raquette.",
-          materials: ["Vis acier inox", "Rondelles réglable", "Balancier maillechort"],
-          dimensions: {
-            "Pas vis": "0.20 mm",
-            "Course": "±5 tours",
-            "Sensibilité": "30 s/j/tour"
-          },
-          adjustment: "Outil spécial Rolex/Patek. Réglage cran par cran. Contrôle chronocomparateur.",
-          commonErrors: ["Vis bloquée → pas de réglage", "Rondelles qui bougent → dérèglement", "Pas de vis → usure"],
-          tools: ["Outil Microstella", "Outil Gyromax", "Chronocomparateur"]
-        },
-        gallery: [
-          "https://cdn.horlolearn.ch/micrometrique/rolex-microstella.jpg",
-          "https://cdn.horlolearn.ch/micrometrique/patek-gyromax.jpg"
-        ],
-        relatedConcepts: ["index-raquette", "balancier-reglage", "equilibrage-balancier"]
-      }
-    ]
-  },
-  
-  {
-    id: 'diagnostic',
-    title: "🔧 Diagnostic & Dépannage",
-    icon: "Wrench",
-    color: "from-gray-500 to-slate-600",
-    concepts: [
-      { 
-        id: 'diagnostic-arret', 
-        title: "Mouvement à l'Arrêt", 
-        desc: "Spiral collé, ancre bloquée, barillet détendu. Arbre de première brisé.", 
-        level: "Débutant",
-        tags: ["arret", "diagnostic", "depannage", "checklist"],
-        details: {
-          principle: "Diagnostic systématique par élimination. Commencer par énergie, puis rouage, puis échappement.",
-          materials: ["Checklist papier", "Brucelle", "Loupe 4x"],
-          dimensions: {
-            "Tension ressort barillet": "> 30% pour démarrage",
-            "Amplitude min": "180°",
-            "Jeux pivots": "< 0.020 mm"
-          },
-          adjustment: "Vérification pas à pas. Démarrage manuel par barillet. Ecoute échappement.",
-          commonErrors: ["Sauter étapes → diagnostic long", "Forcer composants → casse", "Lubrification sauvage → blocage"],
-          tools: ["Checklist", "Brucelle", "Stéthoscope acoustique"]
-        },
-        gallery: [
-          "https://cdn.horlolearn.ch/diagnostic/checklist-depannage.jpg",
-          "https://cdn.horlolearn.ch/diagnostic/brucelle-manuelle.jpg"
-        ],
-        relatedConcepts: ["amplitude-faible", "roue-libre-ronron", "defaut-isochronisme"]
-      },
-      { 
-        id: 'amplitude-faible', 
-        title: "Amplitude < 220°", 
-        desc: "Lubrification sèche, spiral touchant, démagnétisation nécessaire.", 
-        level: "Intermédiaire",
-        tags: ["amplitude", "lubrification", "demagnetisation", "diagnostic"],
-        details: {
-          principle: "Amplitude basse = frottements élevés ou énergie faible. Causes multiples à isoler.",
-          materials: ["Testeur amplitude", "Démaimanteur", "Lubrifiant Moebius"],
-          dimensions: {
-            "Amplitude normale": "270-300°",
-            "Seuil alarme": "220°",
-            "Abaissement": "-5°/année (vieillissement lubrifiant)"
-          },
-          adjustment: "Démagnétisation si Bes. Graissage si sécheresse. Changement spiral si touchant.",
-          commonErrors: ["Graissage excessif → blocage", "Démagnétisation partielle → revient", "Spiral déformé → touche"],
-          tools: ["Chronocomparateur", "Démaimanteur", "Graisseur precision"]
-        },
-        gallery: [
-          "https://cdn.horlolearn.ch/amplitude-faible/test-amplitude.jpg",
-          "https://cdn.horlolearn.ch/amplitude-faible/chrono-witschi.jpg"
-        ],
-        relatedConcepts: ["etude-amplitude", "spiral-silicium", "magnetisation"]
-      },
-      { 
-        id: 'roue-libre-ronron', 
-        title: "Ronronnement Roue Libre", 
-        desc: "Graissage insuffisant. 1 goutte Moebius 9010.", 
-        level: "Débutant",
-        tags: ["roue-libre", "bruit", "graissage", "cliquets"],
-        details: {
-          principle: "Bruit = frottement sec cliquets. Lubrifiant manquant ou épais.",
-          materials: ["Moebius 9010", "Graisseur precision", "Stéthoscope"],
-          dimensions: {
-            "Quantité huile": "1 goutte (0.02 µL)",
-            "Viscosité 9010": "17 cSt",
-            "Intervalle": "Tous les 5 ans"
-          },
-          adjustment: "Démontage roue. Nettoyage solvant. Graissage 1 goutte 9010. Test acoustique.",
-          commonErrors: ["Trop d'huile → projections → platine sale", "Huile épaisse (8000) → blocage", "Oubli goutte → repasse 1 an"],
-          tools: ["Graisseur", "Solvant R603", "Stéthoscope"]
-        },
-        gallery: [
-          "https://cdn.horlolearn.ch/ronron/graisseur-9010.jpg",
-          "https://cdn.horlolearn.ch/ronron/stethoscope-acoustique.jpg"
-        ],
-        relatedConcepts: ["remontoir-bidirectionnel", "masse-oscillante", "diagnostic-arret"]
-      },
-      { 
-        id: 'defaut-isochronisme', 
-        title: "Défaut d'Isochronisme", 
-        desc: "Amplitude varie avec détente. Spirale défectueuse. Test 24h positions.", 
-        level: "Expert",
-        tags: ["isochronisme", "amplitude", "defaut", "test", "positions"],
-        iso: ["ISO 3159"],
-        details: {
-          principle: "Variation vitesse selon position. Spirale non concentrique ou mal compensée.",
-          materials: ["Testeur isochronisme", "Chronocomparateur", "Logiciel analyse"],
-          dimensions: {
-            "Variation max": "30 s/j entre positions",
-            "Test durée": "24h/position",
-            "Positions": "6 (plat, couronne, pendentif)"
-          },
-          adjustment: "Analyse delta positions. Recentrage spiral si faulte. Remplacement si défectueux.",
-          commonErrors: ["Test pas assez long → variations non visibles", "Température variable → fausse mesure", "Spiral touchant → delta élevé"],
-          tools: ["Chronocomparateur", "Chambre climatique", "Analyseur temporel"]
-        },
-        gallery: [
-          "https://cdn.horlolearn.ch/isochronisme/test-24h.jpg",
-          "https://cdn.horlolearn.ch/isochronisme/centre-amplitude.jpg"
-        ],
-        relatedConcepts: ["etude-amplitude", "faulte-battement", "spiral-metalloide"]
-      },
-      { 
-        id: 'trottoir-ecappement', 
-        title: "Trottoir sur Ancre", 
-        desc: "Matière arrachée sur palettes. Rehausse nécessaire.", 
-        level: "Expert",
-        tags: ["trottoir", "usure", "ancre", "rehausse"],
-        details: {
-          principle: "Usure localisée par frottement pointe palette. Trottoir = creux. Empêche bon levage.",
-          materials: ["Ancre acier", "Pierre rehausse", "Polissage"],
-          dimensions: {
-            "Profondeur trottoir": "0.01-0.02 mm",
-            "Longueur rehausse": "0.5 mm",
-            "Largeur palette": "0.08 mm"
-          },
-          adjustment: "Rehausse laser ou soudure. Polissage pierre d'agathe. Contrôle microscope 30x.",
-          commonErrors: ["Rehausse trop haute → chevauchement", "Rehausse désaxée → faux appui", "Poli mauvais → réusure rapide"],
-          tools: ["Laser rehausse", "Pierre agate", "Microscope 30x"]
-        },
-        gallery: [
-          "https://cdn.horlolearn.ch/trottoir/trottoir-microscope.jpg",
-          "https://cdn.horlolearn.ch/trottoir/rehausse-laser.jpg"
-        ],
-        relatedConcepts: ["echappement-ancre", "ancre-double", "pignon-echappement"]
-      },
-      { 
-        id: 'magnetisation', 
-        title: "Détection Magnétisation", 
-        desc: "Boussole, détecteur Gauss. Champ > 60 Gauss.", 
-        level: "Intermédiaire",
-        tags: ["magnetisme", "detection", "gauss", "diagnostic"],
-        details: {
-          principle: "Champ magnétique perturbe acier spirale/ancre. Boussole dévie. Gaussmètre mesure.",
-          materials: ["Boussole de table", "Gaussmètre numérique", "Testeur détente"],
-          dimensions: {
-            "Seuil critique": "60 Gauss (ISO 764)",
-            "Champ iPhone": "50 Gauss",
-            "Champ MRI": "10'000 Gauss"
-          },
-          adjustment: "Détection: Boussole ou gaussmètre. Démagnétisation si > 60 Gauss.",
-          commonErrors: ["Boussole pas précise → faux négatif", "Champ variable → mesure difficile", "Acier non magnétique → rien"],
-          tools: ["Boussole", "Gaussmètre GM07", "Test aimant"]
-        },
-        gallery: [
-          "https://cdn.horlolearn.ch/magnetisation/boussole-table.jpg",
-          "https://cdn.horlolearn.ch/magnetisation/gaussmetre-num.jpg"
-        ],
-        relatedConcepts: ["demagnetisation-procedure", "amplitude-faible", "spiral-metalloide"]
-      },
-      { 
-        id: 'demagnetisation-procedure', 
-        title: "Procédure Démagnétisation", 
-        desc: "Déma devolutor. Mouvement tournant, champ décroissant. 2 cycles.", 
-        level: "Intermédiaire",
-        tags: ["demagnetisation", "procedure", "champ", "devolutor"],
-        manufactures: ["Bergeon", "Depez", "AF"],
-        details: {
-          principle: "Champ alternatif décroissant ramène dipôles acier à zéro. 2 passages garanti.",
-          materials: ["Déma Devolutor 2", "Support mouvement", "Cycle 2 passages"],
-          dimensions: {
-            "Champ max": "800 A/m",
-            "Temps cycle": "30 secondes",
-            "Distance": "5 cm"
-          },
-          adjustment: "Mouvement éloigné lentement. 2 fois. Pas de contact. Tester après avec boussole.",
-          commonErrors: ["Pas assez loin → champ trop fort → ne démagnétise pas", "Trop rapide → champ ne decroiît pas", "Un seul passage → inutile"],
-          tools: ["Déma Bergeon 2", "Boussole", "Gaussmètre"]
-        },
-        gallery: [
-          "https://cdn.horlolearn.ch/demagnetisation/devolutor-2.jpg",
-          "https://cdn.horlolearn.ch/demagnetisation/cycle-champ.jpg"
-        ],
-        relatedConcepts: ["magnetisation", "amplitude-faible", "spiral-metalloide"]
-      },
-      { 
-        id: 'centre-amplitude', 
-        title: "Amplitude au Centre", 
-        desc: "Montre au poignet. 240-260° acceptable. Frottement huître.", 
-        level: "Expert",
-        tags: ["centre", "amplitude", "port", "statistique"],
-        manufactures: ["Rolex", "Omega", "T
+        relatedConcepts: ["courbe-reglage", "index-raquette", "spir
