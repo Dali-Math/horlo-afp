@@ -7,8 +7,8 @@ import {
   ArrowLeft, ArrowRight, Image, AlertTriangle, Wrench, Calculator,
   PlayCircle, FileText, Link2
 } from 'lucide-react';
-import { modules } from '../../data';
-import type { Concept } from '../../types';
+import { modules } from '../data';
+import type { Concept } from '../types';
 
 // Navigation entre concepts
 function getNavigation(id: string) {
