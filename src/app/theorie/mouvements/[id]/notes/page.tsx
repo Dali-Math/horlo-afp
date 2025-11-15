@@ -12,7 +12,125 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { modules } from '../../data';
+
+// ============================================================================
+// IMPORTS DATA
+// ============================================================================
+
+const movements = [
+  {
+    id: 'salto-arriere',
+    title: 'Salto arrière',
+    category: 'Saltos',
+    difficulty: 'Intermédiaire',
+    prerequisites: ['Roulade arrière', 'Saut vertical'],
+    description: 'Rotation arrière complète du corps dans les airs.',
+    videoUrl: '/videos/salto-arriere.mp4',
+    imageUrl: '/images/salto-arriere.jpg',
+    variations: ['Salto groupé', 'Salto carpé', 'Salto tendu'],
+    commonMistakes: [
+      'Ne pas regarder en arrière assez tôt',
+      'Manque de hauteur sur le saut initial',
+      'Mauvaise synchronisation bras-jambes'
+    ],
+    safetyTips: [
+      'Toujours utiliser des tapis de réception',
+      'Avoir un pareur lors de l\'apprentissage',
+      'S\'assurer d\'avoir la technique du saut vertical'
+    ],
+    progressionSteps: [
+      'Maîtriser la roulade arrière',
+      'Travailler le saut vertical avec rotation',
+      'Pratiquer avec assistance',
+      'Réaliser le mouvement seul avec tapis',
+      'Perfectionner sur sol'
+    ],
+    relatedMoves: ['salto-avant', 'salto-lateral', 'roulade-arriere']
+  },
+  {
+    id: 'salto-avant',
+    title: 'Salto avant',
+    category: 'Saltos',
+    difficulty: 'Intermédiaire',
+    prerequisites: ['Roulade avant', 'Saut vertical'],
+    description: 'Rotation avant complète du corps dans les airs.',
+    variations: ['Salto groupé avant', 'Salto carpé avant'],
+    commonMistakes: [
+      'Rotation insuffisante',
+      'Manque d\'élan'
+    ],
+    safetyTips: [
+      'Utiliser des tapis',
+      'Avoir un pareur'
+    ],
+    progressionSteps: [
+      'Maîtriser la roulade avant',
+      'Pratiquer avec assistance'
+    ],
+    relatedMoves: ['salto-arriere', 'roulade-avant']
+  },
+  {
+    id: 'salto-lateral',
+    title: 'Salto latéral',
+    category: 'Saltos',
+    difficulty: 'Avancé',
+    prerequisites: ['Salto arrière', 'Salto avant'],
+    description: 'Rotation latérale complète du corps.',
+    variations: ['Salto latéral groupé'],
+    commonMistakes: [
+      'Déséquilibre latéral'
+    ],
+    safetyTips: [
+      'Surface adéquate',
+      'Pareur obligatoire'
+    ],
+    progressionSteps: [
+      'Maîtriser saltos de base'
+    ],
+    relatedMoves: ['salto-arriere', 'salto-avant']
+  },
+  {
+    id: 'roulade-avant',
+    title: 'Roulade avant',
+    category: 'Bases',
+    difficulty: 'Débutant',
+    prerequisites: [],
+    description: 'Roulade de base vers l\'avant.',
+    variations: ['Roulade plongée'],
+    commonMistakes: [
+      'Tête qui touche le sol'
+    ],
+    safetyTips: [
+      'Sol mou pour débuter'
+    ],
+    progressionSteps: [
+      'Position groupée',
+      'Poussée des jambes'
+    ],
+    relatedMoves: ['roulade-arriere']
+  },
+  {
+    id: 'roulade-arriere',
+    title: 'Roulade arrière',
+    category: 'Bases',
+    difficulty: 'Débutant',
+    prerequisites: ['Roulade avant'],
+    description: 'Roulade de base vers l\'arrière.',
+    variations: ['Roulade arrière à la verticale'],
+    commonMistakes: [
+      'Mains mal placées'
+    ],
+    safetyTips: [
+      'Protection de la nuque'
+    ],
+    progressionSteps: [
+      'Position assise',
+      'Rouler en arrière'
+    ],
+    relatedMoves: ['roulade-avant', 'salto-arriere']
+  }
+];
+
 // ============================================================================
 // TYPES
 // ============================================================================
