@@ -10,7 +10,15 @@ import {
   ChevronRight, TrendingUp, Award, Zap,
   Settings, BookOpen, Target, Sparkles
 } from 'lucide-react';
-import { concepts } from './data';
+import { concepts as conceptGroups } from './data';
+
+// Aplatir la structure groupée en liste plate
+const concepts = conceptGroups.flatMap(group => 
+  group.concepts.map(concept => ({
+    ...concept,
+    category: group.title
+  }))
+);
 import type { Concept } from './types';
 
 // ============================================================================
