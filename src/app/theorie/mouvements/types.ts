@@ -2,7 +2,6 @@
 
 export type DifficultyLevel = 'Débutant' | 'Intermédiaire' | 'Expert';
 
-// ✅ AJOUTEZ CETTE INTERFACE
 export interface Module {
   id: string;
   title: string;
@@ -33,6 +32,13 @@ export interface Concept {
     adjustment?: string;       // Procédure de réglage
     commonErrors?: string[];   // Erreurs courantes
     tools?: string[];          // Outils nécessaires
+    
+    // ✅ applications est maintenant ICI, à l'intérieur de details
+    applications?: {
+      realWorld?: string[];
+      variations?: string[];
+      progressions?: string[];
+    };
   };
 
   gallery?: string[];          // URLs images
@@ -43,11 +49,5 @@ export interface Concept {
     videos?: Array<{ title: string; url: string }>;
     articles?: Array<{ title: string; url: string }>;
     books?: Array<{ title: string; author: string }>;
-  };
-}
-applications?: {
-    realWorld?: string[];
-    variations?: string[];
-    progressions?: string[];
   };
 }
