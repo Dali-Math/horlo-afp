@@ -498,7 +498,7 @@ export default function QuizPage() {
   let concept: Concept | undefined;
 
 for (const module of modules) {
-  const found = module.concepts?.find((c: any) => c.id === conceptId);
+  const found = module.concepts.find((c: any) => c.id === conceptId);
   
   if (found) {
     concept = {
