@@ -11,9 +11,9 @@ import type { Concept, Module } from './types';
 
 // MAP pour associer nom d'icône au composant
 const iconMap = {
-  Layers: layers,
-  Zap: zap,
-  Clock: clock,
+  Layers: Layers,
+  Zap: Zap,
+  Clock: Clock,
 };
 
 export default function SimpleReferencePage() {
