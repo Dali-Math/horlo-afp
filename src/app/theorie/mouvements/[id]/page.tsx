@@ -343,7 +343,7 @@ const RelatedConcepts = ({ relatedIds }: { relatedIds: string[] }) => {
   return (
     <div className="space-y-4">
       {relatedConcepts.map((concept) => {
-        const difficulty = concept.level || concept.difficulty || 'Intermédiaire';
+        const difficulty = concept.difficulty || 'Intermédiaire';
         const DiffIcon = getDifficultyIcon(difficulty);
         
         return (
@@ -422,7 +422,7 @@ export default function ConceptDetailPage() {
     return null;
   }
 
-  const difficulty = concept.level || concept.difficulty || 'Intermédiaire';
+  const difficulty = concept.difficulty || 'Intermédiaire';
   const DiffIcon = getDifficultyIcon(difficulty);
 
   return (
