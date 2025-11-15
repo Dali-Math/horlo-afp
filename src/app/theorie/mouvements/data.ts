@@ -1,4 +1,6 @@
 import type { Module } from './types';
+
+export const modules: Module[] = [
   {
     id: 'architecture',
     title: "🏗️ Architecture du Mouvement",
