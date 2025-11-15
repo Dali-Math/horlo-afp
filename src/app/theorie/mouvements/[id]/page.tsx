@@ -10,6 +10,9 @@ import {
 import { modules } from '../data';
 import type { Concept } from '../types';
 
+// Type pour les onglets
+type TabId = 'description' | 'specs' | 'applications' | 'resources';
+
 // Navigation entre concepts
 function getNavigation(id: string) {
   const allConcepts = modules.flatMap(m => m.concepts);
@@ -24,7 +27,7 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
   const concept = modules.flatMap(m => m.concepts).find(c => c.id === params.id);
   
   // Gestion onglets
-  const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'applications' | 'resources'>('description');
+  const [activeTab, setActiveTab] = useState<TabId>('description');
 
   if (!concept) {
     return (
@@ -106,16 +109,16 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
         <div className="border-b border-slate-200 dark:border-slate-700">
           <nav className="flex gap-8 overflow-x-auto">
             {[
-              { id: 'description', label: 'Principe', icon: BookOpen },
-              { id: 'specs', label: 'Spécifications', icon: Wrench },
-              { id: 'applications', label: 'Applications', icon: Image },
-              { id: 'resources', label: 'Ressources', icon: Link2 }
+              { id: 'description' as TabId, label: 'Principe', icon: BookOpen },
+              { id: 'specs' as TabId, label: 'Spécifications', icon: Wrench },
+              { id: 'applications' as TabId, label: 'Applications', icon: Image },
+              { id: 'resources' as TabId, label: 'Ressources', icon: Link2 }
             ].map(tab => {
               const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center gap-2 py-4 px-2 border-b-2 transition-all whitespace-nowrap ${
                     activeTab === tab.id 
                       ? 'border-blue-500 text-blue-600 dark:text-blue-400 font-semibold' 
@@ -153,8 +156,8 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                   <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
                     <h2 className="text-2xl font-bold mb-4">Matériaux & Composants</h2>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {concept.details.materials.map((material: string) => (
-                        <li key={material} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                      {concept.details.materials.map((material: string, idx: number) => (
+                        <li key={idx} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
                           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                           <span className="text-slate-700 dark:text-slate-300">{material}</span>
                         </li>
@@ -209,8 +212,8 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                   <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
                     <h2 className="text-2xl font-bold mb-4">Outils Requis</h2>
                     <div className="space-y-3">
-                      {concept.details.tools.map(tool => (
-                        <div key={tool} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                      {concept.details.tools.map((tool, idx) => (
+                        <div key={idx} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
                           <Wrench className="w-5 h-5 text-blue-500" />
                           <span className="text-slate-700 dark:text-slate-300">{tool}</span>
                         </div>
@@ -259,8 +262,8 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                   <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
                     <h2 className="text-2xl font-bold mb-4">Applications dans les Montres</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {concept.manufactures.slice(0, 4).map(manufacture => (
-                        <div key={manufacture} className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                      {concept.manufactures.slice(0, 4).map((manufacture, idx) => (
+                        <div key={idx} className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
                           <div className="font-bold mb-1">{manufacture}</div>
                           <div className="text-sm text-slate-600 dark:text-slate-400">
                             Utilise ce concept dans ses calibres modernes
@@ -279,9 +282,9 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                 <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
                   <h2 className="text-2xl font-bold mb-4">Ressources Complémentaires</h2>
                   <div className="space-y-3">
-                    {concept.iso?.map(iso => (
+                    {concept.iso?.map((iso, idx) => (
                       <a 
-                        key={iso}
+                        key={idx}
                         href={`https://www.iso.org/standard/${iso.split(' ')[1]}.html`}
                         target="_blank" 
                         rel="noopener noreferrer"
