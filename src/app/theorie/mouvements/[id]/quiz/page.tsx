@@ -554,8 +554,8 @@ export default function QuizPage() {
         explanation: `Ce concept est de niveau ${concept.level}. ${
           concept.level === 'Débutant' ? 'Il est accessible aux débutants.' :
           concept.level === 'Intermédiaire' ? 'Une base technique est requise.' :
-          concept.level === 'Avancé' ? 'Une maîtrise avancée est nécessaire.' :
-          'Ce concept est réservé aux experts.'
+          concept.level === 'Expert' ? 'Ce concept est réservé aux experts.' :
+        'Une maîtrise avancée est requise.'
         }`,
         difficulty: 'Facile',
         category: 'Théorie'
