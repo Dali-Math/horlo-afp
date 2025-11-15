@@ -37,20 +37,28 @@ export interface Concept {
     howItWorks?: string;                       // Comment ça fonctionne
     advantages?: string[];                     // Avantages
     limitations?: string[];                    // Limitations
-    keyPoints?: string[];
-    examples?: string[];
-    relatedConcepts?: string[];
+    keyPoints?: string[];                      // Points clés
+    examples?: string[];                       // Exemples
+    relatedConcepts?: string[];                // Concepts liés
+
+    // ✅ Resources dans details (pour ResourcesTab)
+    resources?: {
+      videos?: Array<{ title: string; url: string }>;
+      articles?: Array<{ title: string; url: string }>;
+      books?: Array<{ title: string; author: string }>;
+    };
 
     applications?: {
       realWorld?: string[];                    // Exemples concrets
       variations?: string[];                   // Variantes existantes
-      progressions?: string[];                 // Progressions d’apprentissage
+      progressions?: string[];                 // Progressions d'apprentissage
     };
   };
 
   gallery?: string[];                           // URLs d'images
   relatedConcepts?: string[];                   // Liens vers d'autres concepts
 
+  // Resources au niveau principal (si utilisé ailleurs)
   resources?: {
     videos?: Array<{ title: string; url: string }>;
     articles?: Array<{ title: string; url: string }>;
