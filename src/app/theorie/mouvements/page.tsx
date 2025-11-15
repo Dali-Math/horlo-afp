@@ -79,7 +79,7 @@ const ConceptCard = ({ concept }: { concept: Concept }) => {
         {/* Header avec catégorie */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-500 p-4 flex items-center justify-between">
           <div className="flex items-center gap-2 text-white">
-            <CategoryIcon category={concept.category} />
+            {concept.category && <CategoryIcon category={concept.category} />}
             <span className="text-xs font-medium opacity-90">
               {concept.category.replace(/^[🏗️⚙️⏱️🎯🔧]\s*/, '')}
             </span>
