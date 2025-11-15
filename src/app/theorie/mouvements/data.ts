@@ -1,6 +1,6 @@
-import type { Module } from './types'; 
+import type { Concept } from './types';
 
-export const modules: Module[] = [
+export const concepts: Concept[] = [
   {
     id: 'architecture',
     title: "🏗️ Architecture du Mouvement",
