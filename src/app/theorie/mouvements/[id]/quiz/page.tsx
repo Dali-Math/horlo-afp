@@ -486,9 +486,8 @@ export default function QuizPage() {
   const router = useRouter();
   const conceptId = params.id as string;
 
-  const concept = modules
-    .flatMap(m => m.concepts)
-    .find(c => c.id === conceptId);
+  const concept = modules.find(c => c.id === conceptId);
+
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
