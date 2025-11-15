@@ -6,7 +6,7 @@ import {
   ChevronLeft, BookOpen, Award, Clock, Bookmark, ExternalLink
   // ✅ BookOpen EST maintenant importé
 } from 'lucide-react';
-import { modules } from '../../data';
+import { modules } from '../data';
 import type { Concept } from '../../types';
 
 // Récupère un concept par son ID
