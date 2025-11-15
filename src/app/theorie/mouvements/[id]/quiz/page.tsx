@@ -12,10 +12,8 @@ import {
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { concepts as conceptGroups } from '../../data';
-
-// Transformer en structure modules si nécessaire
-const modules = conceptGroups;
 import type { Concept, ConceptGroup } from '../../types';
+
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -487,20 +485,16 @@ export default function QuizPage() {
   const router = useRouter();
   const conceptId = params.id as string;
 
-  // ✅ Correction : recherche dans la structure correcte
-  let concept: Concept | undefined;
+  // ✅ Aplatir les données pour trouver le concept
+  const allConcepts = conceptGroups.flatMap(group => 
+    group.concepts.map(c => ({
+      ...c,
+      category: group.title,
+      description: c.desc || c.description || ''
+    }))
+  );
 
-for (const module of modules) {
-  const found = module.concepts.find((c: any) => c.id === conceptId);
-  
-  if (found) {
-    concept = {
-      ...found,
-      category: module.title
-    };
-    break;
-  }
-}
+  const concept = allConcepts.find(c => c.id === conceptId);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -509,15 +503,15 @@ for (const module of modules) {
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [isQuizComplete, setIsQuizComplete] = useState(false);
 
-  // ✅ Questions génériques utilisant UNIQUEMENT id, title, desc, level
+  // ✅ Questions génériques
   const generateQuestions = (): QuizQuestion[] => {
     if (!concept) return [];
 
-    const allLevels = ['Débutant', 'Intermédiaire', 'Avancé', 'Expert'];
+    const description = concept.desc || concept.description || 'Description non disponible';
+    const allLevels = ['Débutant', 'Intermédiaire', 'Expert'];
     const correctLevelIndex = allLevels.indexOf(concept.level);
     const wrongLevels = allLevels.filter((_, i) => i !== correctLevelIndex);
 
-    // Créer les options pour chaque question
     const titleOptions = [
       concept.title,
       'Système de transmission automatique',
@@ -531,7 +525,7 @@ for (const module of modules) {
     ];
 
     const descOptions = [
-      concept.desc || 'Description non disponible',
+      description,
       'Un système de remontage manuel',
       'Une complication de calendrier',
       'Un dispositif anti-choc'
@@ -543,7 +537,7 @@ for (const module of modules) {
         question: `Comment s'appelle ce concept ?`,
         options: titleOptions,
         correctAnswer: 0,
-        explanation: `Le concept s'appelle "${concept.title}". ${concept.desc}`,
+        explanation: `Le concept s'appelle "${concept.title}". ${description}`,
         difficulty: 'Facile',
         category: 'Théorie'
       },
@@ -555,8 +549,7 @@ for (const module of modules) {
         explanation: `Ce concept est de niveau ${concept.level}. ${
           concept.level === 'Débutant' ? 'Il est accessible aux débutants.' :
           concept.level === 'Intermédiaire' ? 'Une base technique est requise.' :
-          concept.level === 'Expert' ? 'Ce concept est réservé aux experts.' :
-        'Une maîtrise avancée est requise.'
+          'Ce concept est réservé aux experts.'
         }`,
         difficulty: 'Facile',
         category: 'Théorie'
@@ -566,7 +559,7 @@ for (const module of modules) {
         question: `Quelle est la description correcte de ce concept ?`,
         options: descOptions,
         correctAnswer: 0,
-        explanation: `La description exacte est : "${concept.desc}"`,
+        explanation: `La description exacte est : "${description}"`,
         difficulty: 'Moyen',
         category: 'Théorie'
       },
@@ -676,6 +669,8 @@ for (const module of modules) {
     difficulty: concept.level
   };
 
+  const description = concept.desc || concept.description || 'Description non disponible';
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 py-12 px-4">
       <div className="max-w-4xl mx-auto">
@@ -701,7 +696,7 @@ for (const module of modules) {
                     Quiz : {concept.title}
                   </h1>
                   <p className="text-slate-600 dark:text-slate-400">
-                    {concept.desc}
+                    {description}
                   </p>
                 </div>
                 <div className="text-right">
