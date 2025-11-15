@@ -24,7 +24,9 @@ function getNavigation(id: string) {
 }
 
 export default function ConceptDetailPage({ params }: { params: { id: string } }) {
-  const concept = modules.flatMap(m => m.concepts).find(c => c.id === params.id);
+  // ✅ CORRECTION : Trouver le concept dans les modules
+  const allConcepts = modules.flatMap(m => m.concepts);
+  const concept = allConcepts.find(c => c.id === params.id);
   
   // Gestion onglets
   const [activeTab, setActiveTab] = useState<TabId>('description');
@@ -78,7 +80,7 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
               }`}>
                 {concept.level}
               </span>
-              {concept.iso && (
+              {concept.iso && concept.iso.length > 0 && (
                 <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full">
                   <Award className="w-4 h-4" />
                   <span className="text-sm">{concept.iso.join(', ')}</span>
@@ -152,14 +154,32 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                 )}
 
                 {/* Points clés */}
-                {concept.details?.materials && (
+                {concept.details?.materials && concept.details.materials.length > 0 && (
                   <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
                     <h2 className="text-2xl font-bold mb-4">Matériaux & Composants</h2>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {concept.details.materials.map((material: string, idx: number) => (
+                      {concept.details.materials.map((material, idx) => (
                         <li key={idx} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
                           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                           <span className="text-slate-700 dark:text-slate-300">{material}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Erreurs courantes */}
+                {concept.details?.commonErrors && concept.details.commonErrors.length > 0 && (
+                  <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
+                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                      <AlertTriangle className="w-6 h-6 text-amber-500" />
+                      Erreurs Courantes
+                    </h2>
+                    <ul className="space-y-2">
+                      {concept.details.commonErrors.map((error, idx) => (
+                        <li key={idx} className="flex items-start gap-3 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
+                          <div className="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2"></div>
+                          <span className="text-slate-700 dark:text-slate-300">{error}</span>
                         </li>
                       ))}
                     </ul>
@@ -208,17 +228,27 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                 )}
 
                 {/* Outils nécessaires */}
-                {concept.details?.tools && (
+                {concept.details?.tools && concept.details.tools.length > 0 && (
                   <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
                     <h2 className="text-2xl font-bold mb-4">Outils Requis</h2>
                     <div className="space-y-3">
-                      {concept.details.tools.map((tool: string, idx: number) => (
+                      {concept.details.tools.map((tool, idx) => (
                         <div key={idx} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
                           <Wrench className="w-5 h-5 text-blue-500" />
                           <span className="text-slate-700 dark:text-slate-300">{tool}</span>
                         </div>
                       ))}
                     </div>
+                  </div>
+                )}
+
+                {/* Procédure de réglage */}
+                {concept.details?.adjustment && (
+                  <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
+                    <h2 className="text-2xl font-bold mb-4">Procédure de Réglage</h2>
+                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                      {concept.details.adjustment}
+                    </p>
                   </div>
                 )}
 
@@ -246,7 +276,7 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                   <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
                     <h2 className="text-2xl font-bold mb-4">Galerie Technique</h2>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                      {concept.gallery.map((img: string, i: number) => (
+                      {concept.gallery.map((img, i) => (
                         <div key={i} className="aspect-square bg-slate-50 dark:bg-slate-800 rounded-lg overflow-hidden group cursor-pointer">
                           <div className="w-full h-full flex items-center justify-center text-slate-400 group-hover:text-blue-500 transition-colors">
                             <Image className="w-12 h-12" />
@@ -258,11 +288,11 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                 )}
 
                 {/* Montres emblématiques */}
-                {concept.manufactures && (
+                {concept.manufactures && concept.manufactures.length > 0 && (
                   <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
                     <h2 className="text-2xl font-bold mb-4">Applications dans les Montres</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {concept.manufactures.slice(0, 4).map((manufacture: string, idx: number) => (
+                      {concept.manufactures.slice(0, 4).map((manufacture, idx) => (
                         <div key={idx} className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
                           <div className="font-bold mb-1">{manufacture}</div>
                           <div className="text-sm text-slate-600 dark:text-slate-400">
@@ -273,37 +303,66 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                     </div>
                   </div>
                 )}
+
+                {/* Historique */}
+                {concept.history && (
+                  <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
+                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                      <Clock className="w-6 h-6" />
+                      Historique
+                    </h2>
+                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                      {concept.history}
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 
             {activeTab === 'resources' && (
               <div className="space-y-6">
-                {/* Liens externes */}
-                <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
-                  <h2 className="text-2xl font-bold mb-4">Ressources Complémentaires</h2>
-                  <div className="space-y-3">
-                    {concept.iso?.map((iso: string, idx: number) => (
-                      <a 
-                        key={idx}
-                        href={`https://www.iso.org/standard/${iso.split(' ')[1]}.html`}
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                      >
-                        <span className="font-medium">{iso}</span>
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-                    ))}
+                {/* Normes ISO */}
+                {concept.iso && concept.iso.length > 0 && (
+                  <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
+                    <h2 className="text-2xl font-bold mb-4">Normes ISO</h2>
+                    <div className="space-y-3">
+                      {concept.iso.map((iso, idx) => (
+                        <a 
+                          key={idx}
+                          href={`https://www.iso.org/standard/${iso.split(' ')[1]}.html`}
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                        >
+                          <span className="font-medium">{iso}</span>
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* Brevets */}
+                {concept.patent && concept.patent.length > 0 && (
+                  <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
+                    <h2 className="text-2xl font-bold mb-4">Brevets Historiques</h2>
+                    <div className="space-y-2">
+                      {concept.patent.map((pat, idx) => (
+                        <div key={idx} className="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg font-mono text-sm">
+                          {pat}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Concepts liés */}
-                {concept.relatedConcepts && (
+                {concept.relatedConcepts && concept.relatedConcepts.length > 0 && (
                   <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
                     <h2 className="text-2xl font-bold mb-4">Concepts Liés</h2>
                     <div className="space-y-2">
-                      {concept.relatedConcepts.map((relatedId: string) => {
-                        const related = modules.flatMap(m => m.concepts).find(c => c.id === relatedId);
+                      {concept.relatedConcepts.map((relatedId) => {
+                        const related = allConcepts.find(c => c.id === relatedId);
                         return related ? (
                           <Link key={relatedId} href={`/theorie/mouvements/${relatedId}`}>
                             <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
@@ -344,6 +403,25 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
               <button className="w-full px-4 py-2 bg-white text-purple-600 rounded-lg font-bold">
                 Démarrer le Quiz
               </button>
+            </div>
+
+            {/* Métadonnées */}
+            <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+              <h3 className="font-bold mb-3">Métadonnées</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Tags</span>
+                  <span className="font-medium">{concept.tags?.length || 0}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Manufactures</span>
+                  <span className="font-medium">{concept.manufactures?.length || 0}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Normes ISO</span>
+                  <span className="font-medium">{concept.iso?.length || 0}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
