@@ -235,12 +235,27 @@ const InfoBox = ({ children }: { children: React.ReactNode }) => (
 // ============================================================================
 
 export default function SpecsTab({ concept }: SpecsTabProps) {
-  // ✅ CORRECTION : Utiliser [] au lieu de '' pour tous les tableaux
-  const prerequisites = concept.details?.prerequisites || [];
-  const advantages = concept.details?.advantages || [];
-  const limitations = concept.details?.limitations || [];
-  const equipment = concept.details?.specs?.equipment || [];
-  const safetyNotes = concept.details?.specs?.safetyNotes || [];
+  // ✅ CORRECTION : Typage explicite avec vérification Array.isArray
+  const prerequisites: string[] = Array.isArray(concept.details?.prerequisites) 
+    ? concept.details.prerequisites 
+    : [];
+  
+  const advantages: string[] = Array.isArray(concept.details?.advantages) 
+    ? concept.details.advantages 
+    : [];
+  
+  const limitations: string[] = Array.isArray(concept.details?.limitations) 
+    ? concept.details.limitations 
+    : [];
+  
+  const equipment: string[] = Array.isArray(concept.details?.specs?.equipment) 
+    ? concept.details.specs.equipment 
+    : [];
+  
+  const safetyNotes: string[] = Array.isArray(concept.details?.specs?.safetyNotes) 
+    ? concept.details.specs.safetyNotes 
+    : [];
+
   const specs = concept.details?.specs;
   
   // Données par défaut si specs n'existe pas
