@@ -26,28 +26,28 @@ export interface Concept {
 
   // Contenu structuré
   details?: {
-    principle?: string;        // Principe de fonctionnement
-    materials?: string[];      // Matériaux spécifiques
-    dimensions?: Record<string, string>; // Cotes techniques
-    adjustment?: string;       // Procédure de réglage
-    commonErrors?: string[];   // Erreurs courantes
-    tools?: string[];          // Outils nécessaires
-    
-    // ✅ AJOUTEZ CES PROPRIÉTÉS
-    howItWorks?: string;       // Comment ça fonctionne
-    advantages?: string[];     // Avantages
-    limitations?: string[];    // Limitations
-    keyPoints?: string[];      // Points clés
-    
+    principle?: string;                        // Principe de fonctionnement
+    materials?: string[];                      // Matériaux utilisés
+    dimensions?: Record<string, string>;       // Cotes techniques
+    adjustment?: string;                       // Procédure de réglage
+    commonErrors?: string[];                   // Erreurs courantes
+    tools?: string[];                          // Outils nécessaires
+
+    // Ajouts
+    howItWorks?: string;                       // Comment ça fonctionne
+    advantages?: string[];                     // Avantages
+    limitations?: string[];                    // Limitations
+    keyPoints?: string[];                      // Points clés
+
     applications?: {
-      realWorld?: string[];
-      variations?: string[];
-      progressions?: string[];
+      realWorld?: string[];                    // Exemples concrets
+      variations?: string[];                   // Variantes existantes
+      progressions?: string[];                 // Progressions d’apprentissage
     };
   };
 
-  gallery?: string[];          
-  relatedConcepts?: string[];  
+  gallery?: string[];                           // URLs d'images
+  relatedConcepts?: string[];                   // Liens vers d'autres concepts
 
   resources?: {
     videos?: Array<{ title: string; url: string }>;
