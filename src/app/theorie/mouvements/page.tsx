@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, Search, BookOpen, Heart } from 'lucide-react';
-import { layers, zap, clock } from 'lucide-react'; // Importez les icônes
+import { Layers, Zap, Clock } from 'lucide-react'; // Importez les icônes
 
 // IMPORTS DES FICHIERS SÉPARÉS
 import { modules } from './data';
