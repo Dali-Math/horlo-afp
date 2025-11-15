@@ -246,7 +246,7 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                   <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
                     <h2 className="text-2xl font-bold mb-4">Galerie Technique</h2>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                      {concept.gallery.map((img, i) => (
+                      {concept.gallery.map((img: string, i: number) => (
                         <div key={i} className="aspect-square bg-slate-50 dark:bg-slate-800 rounded-lg overflow-hidden group cursor-pointer">
                           <div className="w-full h-full flex items-center justify-center text-slate-400 group-hover:text-blue-500 transition-colors">
                             <Image className="w-12 h-12" />
