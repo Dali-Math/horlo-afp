@@ -212,7 +212,7 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                   <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
                     <h2 className="text-2xl font-bold mb-4">Outils Requis</h2>
                     <div className="space-y-3">
-                      {concept.details.tools.map((tool, idx) => (
+                      {concept.details.tools.map((tool: string, idx: number) => (
                         <div key={idx} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
                           <Wrench className="w-5 h-5 text-blue-500" />
                           <span className="text-slate-700 dark:text-slate-300">{tool}</span>
@@ -262,7 +262,7 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                   <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
                     <h2 className="text-2xl font-bold mb-4">Applications dans les Montres</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {concept.manufactures.slice(0, 4).map((manufacture, idx) => (
+                      {concept.manufactures.slice(0, 4).map((manufacture: string, idx: number) => (
                         <div key={idx} className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
                           <div className="font-bold mb-1">{manufacture}</div>
                           <div className="text-sm text-slate-600 dark:text-slate-400">
@@ -282,7 +282,7 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                 <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
                   <h2 className="text-2xl font-bold mb-4">Ressources Complémentaires</h2>
                   <div className="space-y-3">
-                    {concept.iso?.map((iso, idx) => (
+                    {concept.iso?.map((iso: string, idx: number) => (
                       <a 
                         key={idx}
                         href={`https://www.iso.org/standard/${iso.split(' ')[1]}.html`}
@@ -302,7 +302,7 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                   <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
                     <h2 className="text-2xl font-bold mb-4">Concepts Liés</h2>
                     <div className="space-y-2">
-                      {concept.relatedConcepts.map(relatedId => {
+                      {concept.relatedConcepts.map((relatedId: string) => {
                         const related = modules.flatMap(m => m.concepts).find(c => c.id === relatedId);
                         return related ? (
                           <Link key={relatedId} href={`/theorie/mouvements/${relatedId}`}>
