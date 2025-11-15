@@ -1,6 +1,10 @@
 'use client';
 
-
+/**
+ * PAGE: Quiz sur un mouvement spécifique
+ * CHEMIN: src/app/theorie/mouvements/[id]/quiz/page.tsx
+ * DESCRIPTION: Page de quiz interactif pour tester les connaissances sur un mouvement avec système de scoring et révision
+ */
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,6 +18,7 @@ import {
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { modules } from '../../data';
+import type { Concept } from '../../types';
 
 // ============================================================================
 // TYPES
@@ -486,8 +491,15 @@ export default function QuizPage() {
   const router = useRouter();
   const conceptId = params.id as string;
 
-  const concept = modules.find(c => c.id === conceptId);
-
+  // ✅ Correction : recherche dans la structure correcte
+  let concept: Concept | undefined;
+  for (const module of modules) {
+    const found = module.concepts.find(c => c.id === conceptId);
+    if (found) {
+      concept = found;
+      break;
+    }
+  }
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -500,28 +512,36 @@ export default function QuizPage() {
   const generateQuestions = (): QuizQuestion[] => {
     if (!concept) return [];
 
-    const levelMapping: Record<string, number> = {
-      'Débutant': 0,
-      'Intermédiaire': 1,
-      'Avancé': 2,
-      'Expert': 3
-    };
-
     const allLevels = ['Débutant', 'Intermédiaire', 'Avancé', 'Expert'];
-    const correctIndex = allLevels.indexOf(concept.level);
-    const wrongLevels = allLevels.filter((_, i) => i !== correctIndex);
+    const correctLevelIndex = allLevels.indexOf(concept.level);
+    const wrongLevels = allLevels.filter((_, i) => i !== correctLevelIndex);
+
+    // Créer les options pour chaque question
+    const titleOptions = [
+      concept.title,
+      'Système de transmission automatique',
+      'Mécanisme de régulation avancé',
+      'Dispositif de chronométrage'
+    ];
+
+    const levelOptions = [
+      concept.level,
+      ...wrongLevels.slice(0, 3)
+    ];
+
+    const descOptions = [
+      concept.desc || 'Description non disponible',
+      'Un système de remontage manuel',
+      'Une complication de calendrier',
+      'Un dispositif anti-choc'
+    ];
 
     const baseQuestions: QuizQuestion[] = [
       {
         id: `${conceptId}-q1`,
         question: `Comment s'appelle ce concept ?`,
-        options: [
-          concept.title,
-          'Système de transmission automatique',
-          'Mécanisme de régulation avancé',
-          'Dispositif de chronométrage'
-        ].sort(() => Math.random() - 0.5),
-        correctAnswer: 0, // On va ajuster après shuffle
+        options: titleOptions,
+        correctAnswer: 0,
         explanation: `Le concept s'appelle "${concept.title}". ${concept.desc}`,
         difficulty: 'Facile',
         category: 'Théorie'
@@ -529,10 +549,7 @@ export default function QuizPage() {
       {
         id: `${conceptId}-q2`,
         question: `Quel est le niveau de ce concept ?`,
-        options: [
-          concept.level,
-          ...wrongLevels.slice(0, 3)
-        ].sort(() => Math.random() - 0.5),
+        options: levelOptions,
         correctAnswer: 0,
         explanation: `Ce concept est de niveau ${concept.level}. ${
           concept.level === 'Débutant' ? 'Il est accessible aux débutants.' :
@@ -546,12 +563,7 @@ export default function QuizPage() {
       {
         id: `${conceptId}-q3`,
         question: `Quelle est la description correcte de ce concept ?`,
-        options: [
-          concept.desc || 'Description non disponible',
-          'Un système de remontage manuel',
-          'Une complication de calendrier',
-          'Un dispositif anti-choc'
-        ].sort(() => Math.random() - 0.5),
+        options: descOptions,
         correctAnswer: 0,
         explanation: `La description exacte est : "${concept.desc}"`,
         difficulty: 'Moyen',
@@ -587,16 +599,7 @@ export default function QuizPage() {
       }
     ];
 
-    // Ajuster correctAnswer après shuffle
-    return baseQuestions.map(q => ({
-      ...q,
-      correctAnswer: q.options.findIndex(opt => 
-        opt === concept.title || 
-        opt === concept.level || 
-        opt === concept.desc ||
-        opt === q.options[0] // Pour les questions fixes
-      )
-    }));
+    return baseQuestions;
   };
 
   const questions = generateQuestions();
