@@ -1,10 +1,25 @@
 import type { Concept } from './types';
+export interface Concept {
+  id: string;
+  title: string;
+  level: string;
+  desc?: string;
+  description?: string;
+}
+
+export interface ConceptGroup {
+  id: string;
+  title: string;
+  icon?: string;  // Pour supporter la propriété icon si vous l'utilisez
+  color: string;
+ concepts: Concept[];
+}
 
 export const concepts: Concept[] = [
   {
     id: 'architecture',
     title: "🏗️ Architecture du Mouvement",
-    icon: "Layers",
+    
     color: "from-blue-500 to-cyan-600",
     concepts: [
       { 
