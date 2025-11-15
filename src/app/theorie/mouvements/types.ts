@@ -7,6 +7,7 @@ export interface Concept {
   title: string;
   desc: string;
   level: DifficultyLevel;
+
   // Enrichissements
   tags?: string[];
   iso?: string[];
@@ -14,15 +15,24 @@ export interface Concept {
   history?: string;
   formula?: string;
   patent?: string[];
-  // NOUVEAU : Contenu structuré
+
+  // Contenu structuré
   details?: {
-    principle?: string; // Principe de fonctionnement
-    materials?: string[]; // Matériaux spécifiques
+    principle?: string;        // Principe de fonctionnement
+    materials?: string[];      // Matériaux spécifiques
     dimensions?: Record<string, string>; // Cotes techniques
-    adjustment?: string; // Procédure de réglage
-    commonErrors?: string[]; // Erreurs courantes
-    tools?: string[]; // Outils nécessaires
+    adjustment?: string;       // Procédure de réglage
+    commonErrors?: string[];   // Erreurs courantes
+    tools?: string[];          // Outils nécessaires
   };
-  gallery?: string[]; // URLs images
-  relatedConcepts?: string[]; // IDs de concepts liés
+
+  gallery?: string[];          // URLs images
+  relatedConcepts?: string[];  // IDs de concepts liés
+
+  // 🔥 NOUVEAU : Ressources pédagogiques
+  resources?: {
+    videos?: Array<{ title: string; url: string }>;
+    articles?: Array<{ title: string; url: string }>;
+    books?: Array<{ title: string; author: string }>;
+  };
 }
