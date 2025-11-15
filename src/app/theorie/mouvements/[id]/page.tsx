@@ -1,201 +1,348 @@
 'use client';
 
-import React, { useState, useMemo, useCallback, useEffect, useRef, Suspense, lazy, useTransition } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { 
-  ChevronLeft, BookOpen, Award, Clock, Bookmark, ExternalLink, 
-  ArrowLeft, ArrowRight, Image as ImageIcon, AlertTriangle, Wrench, 
-  Calculator, Link2, Check, Loader2, Share2, FileText
-} from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { modules } from '../data';
-import type { Concept } from '../types';
+import { 
+  BookOpen, Target, AlertTriangle, Lightbulb, TrendingUp, 
+  Award, CheckCircle2, Circle, ArrowLeft, Share2, 
+  Bookmark, BookmarkPlus, Eye, Clock, Users,
+  ChevronRight, Star, Download, Printer, Link as LinkIcon,
+  Play, Pause, RotateCcw, Volume2, VolumeX,
+  Sparkles, Trophy, Zap, Flag, MapPin, Compass
+} from 'lucide-react';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
 
 // ============================================================================
-// LAZY LOADED COMPONENTS
+// DATA
 // ============================================================================
 
-const DescriptionTab = lazy(() => import('./tabs/DescriptionTab').catch(() => ({
-  default: ({ concept }: { concept: Concept }) => <DescriptionTabFallback concept={concept} />
-})));
+const movements = [
+  {
+    id: 'salto-arriere',
+    title: 'Salto arrière',
+    category: 'Saltos',
+    difficulty: 'Intermédiaire',
+    prerequisites: ['Roulade arrière', 'Saut vertical'],
+    description: 'Rotation arrière complète du corps dans les airs.',
+    videoUrl: '/videos/salto-arriere.mp4',
+    imageUrl: '/images/salto-arriere.jpg',
+    variations: ['Salto groupé', 'Salto carpé', 'Salto tendu'],
+    commonMistakes: [
+      'Ne pas regarder en arrière assez tôt',
+      'Manque de hauteur sur le saut initial',
+      'Mauvaise synchronisation bras-jambes'
+    ],
+    safetyTips: [
+      'Toujours utiliser des tapis de réception',
+      'Avoir un pareur lors de l\'apprentissage',
+      'S\'assurer d\'avoir la technique du saut vertical'
+    ],
+    progressionSteps: [
+      'Maîtriser la roulade arrière',
+      'Travailler le saut vertical avec rotation',
+      'Pratiquer avec assistance',
+      'Réaliser le mouvement seul avec tapis',
+      'Perfectionner sur sol'
+    ],
+    relatedMoves: ['salto-avant', 'salto-lateral', 'roulade-arriere']
+  },
+  {
+    id: 'salto-avant',
+    title: 'Salto avant',
+    category: 'Saltos',
+    difficulty: 'Intermédiaire',
+    prerequisites: ['Roulade avant', 'Saut vertical'],
+    description: 'Rotation avant complète du corps dans les airs.',
+    variations: ['Salto groupé avant', 'Salto carpé avant'],
+    commonMistakes: [
+      'Rotation insuffisante',
+      'Manque d\'élan'
+    ],
+    safetyTips: [
+      'Utiliser des tapis',
+      'Avoir un pareur'
+    ],
+    progressionSteps: [
+      'Maîtriser la roulade avant',
+      'Pratiquer avec assistance'
+    ],
+    relatedMoves: ['salto-arriere', 'roulade-avant']
+  },
+  {
+    id: 'salto-lateral',
+    title: 'Salto latéral',
+    category: 'Saltos',
+    difficulty: 'Avancé',
+    prerequisites: ['Salto arrière', 'Salto avant'],
+    description: 'Rotation latérale complète du corps.',
+    variations: ['Salto latéral groupé'],
+    commonMistakes: [
+      'Déséquilibre latéral'
+    ],
+    safetyTips: [
+      'Surface adéquate',
+      'Pareur obligatoire'
+    ],
+    progressionSteps: [
+      'Maîtriser saltos de base'
+    ],
+    relatedMoves: ['salto-arriere', 'salto-avant']
+  },
+  {
+    id: 'roulade-avant',
+    title: 'Roulade avant',
+    category: 'Bases',
+    difficulty: 'Débutant',
+    prerequisites: [],
+    description: 'Roulade de base vers l\'avant.',
+    variations: ['Roulade plongée'],
+    commonMistakes: [
+      'Tête qui touche le sol'
+    ],
+    safetyTips: [
+      'Sol mou pour débuter'
+    ],
+    progressionSteps: [
+      'Position groupée',
+      'Poussée des jambes'
+    ],
+    relatedMoves: ['roulade-arriere']
+  },
+  {
+    id: 'roulade-arriere',
+    title: 'Roulade arrière',
+    category: 'Bases',
+    difficulty: 'Débutant',
+    prerequisites: ['Roulade avant'],
+    description: 'Roulade de base vers l\'arrière.',
+    variations: ['Roulade arrière à la verticale'],
+    commonMistakes: [
+      'Mains mal placées'
+    ],
+    safetyTips: [
+      'Protection de la nuque'
+    ],
+    progressionSteps: [
+      'Position assise',
+      'Rouler en arrière'
+    ],
+    relatedMoves: ['roulade-avant', 'salto-arriere']
+  }
+];
 
-const SpecsTab = lazy(() => import('./tabs/SpecsTab').catch(() => ({
-  default: ({ concept }: { concept: Concept }) => <SpecsTabFallback concept={concept} />
-})));
-
-const ApplicationsTab = lazy(() => import('./tabs/ApplicationsTab').catch(() => ({
-  default: ({ concept }: { concept: Concept }) => <ApplicationsTabFallback concept={concept} />
-})));
-
-const ResourcesTab = lazy(() => import('./tabs/ResourcesTab').catch(() => ({
-  default: ({ concept }: { concept: Concept }) => <ResourcesTabFallback concept={concept} />
-})));
-
-// ============================================================================
-// TYPES & CONSTANTS
-// ============================================================================
-
-type TabId = 'description' | 'specs' | 'applications' | 'resources';
-
-interface UserProgress {
-  understood: boolean;
-  lastVisited: Date;
-  quizScore?: number;
-  notes?: string;
-}
-
-// ✅ Calcul unique au chargement du module
-const ALL_CONCEPTS = modules.flatMap(m => m.concepts);
+// ✅ Utilisation directe de movements au lieu de modules.flatMap
+const ALL_CONCEPTS = movements;
 
 const TABS = [
-  { id: 'description' as TabId, label: 'Principe', icon: BookOpen },
-  { id: 'specs' as TabId, label: 'Spécifications', icon: Wrench },
-  { id: 'applications' as TabId, label: 'Applications', icon: ImageIcon },
-  { id: 'resources' as TabId, label: 'Ressources', icon: Link2 }
-] as const;
+  { id: 'description' as const, label: 'Principe', icon: BookOpen },
+  { id: 'prerequisites' as const, label: 'Prérequis', icon: Target },
+  { id: 'mistakes' as const, label: 'Erreurs courantes', icon: AlertTriangle },
+  { id: 'tips' as const, label: 'Conseils', icon: Lightbulb },
+  { id: 'progression' as const, label: 'Progression', icon: TrendingUp },
+  { id: 'variations' as const, label: 'Variations', icon: Sparkles }
+];
 
-const TAB_ANIMATION = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -10 },
-  transition: { duration: 0.2 }
-};
+type TabId = typeof TABS[number]['id'];
+
+// ============================================================================
+// TYPES
+// ============================================================================
+
+interface Concept {
+  id: string;
+  title: string;
+  category: string;
+  difficulty: string;
+  prerequisites: string[];
+  description: string;
+  variations?: string[];
+  commonMistakes?: string[];
+  safetyTips?: string[];
+  progressionSteps?: string[];
+  relatedMoves?: string[];
+}
 
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
 
-function getNavigation(id: string) {
-  const currentIndex = ALL_CONCEPTS.findIndex(c => c.id === id);
-  return {
-    prev: currentIndex > 0 ? ALL_CONCEPTS[currentIndex - 1] : null,
-    next: currentIndex < ALL_CONCEPTS.length - 1 ? ALL_CONCEPTS[currentIndex + 1] : null,
+const getDifficultyColor = (difficulty: string) => {
+  const colors = {
+    'Débutant': 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700',
+    'Intermédiaire': 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-700',
+    'Avancé': 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-300 dark:border-red-700',
+    'Expert': 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-700'
   };
-}
+  return colors[difficulty as keyof typeof colors] || colors['Intermédiaire'];
+};
 
-// ✅ LocalStorage avec gestion d'erreurs
-function getStoredProgress(conceptId: string): UserProgress | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const data = localStorage.getItem(`progress-${conceptId}`);
-    return data ? JSON.parse(data) : null;
-  } catch {
-    return null;
-  }
-}
-
-function saveProgress(conceptId: string, progress: Partial<UserProgress>) {
-  if (typeof window === 'undefined') return;
-  try {
-    const current = getStoredProgress(conceptId) || { understood: false, lastVisited: new Date() };
-    const updated = { ...current, ...progress, lastVisited: new Date() };
-    localStorage.setItem(`progress-${conceptId}`, JSON.stringify(updated));
-  } catch (error) {
-    console.error('Failed to save progress:', error);
-  }
-}
+const getDifficultyIcon = (difficulty: string) => {
+  const icons = {
+    'Débutant': Star,
+    'Intermédiaire': Award,
+    'Avancé': Trophy,
+    'Expert': Zap
+  };
+  return icons[difficulty as keyof typeof icons] || Award;
+};
 
 // ============================================================================
-// SKELETON COMPONENTS
+// COMPONENTS
 // ============================================================================
 
-const TabSkeleton = () => (
-  <div className="space-y-6 animate-pulse">
-    <div className="h-48 bg-slate-200 dark:bg-slate-800 rounded-xl" />
-    <div className="h-32 bg-slate-200 dark:bg-slate-800 rounded-xl" />
-    <div className="h-64 bg-slate-200 dark:bg-slate-800 rounded-xl" />
-  </div>
-);
+const ProgressionTimeline = ({ steps }: { steps: string[] }) => {
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
 
-const DescriptionTabFallback = ({ concept }: { concept: Concept }) => (
-  <div className="space-y-6">
-    <SectionCard>
-      <SectionTitle>Principe de Fonctionnement</SectionTitle>
-      <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-        {concept.details?.principle || concept.desc}
-      </p>
-    </SectionCard>
-  </div>
-);
+  const toggleStep = (index: number) => {
+    setCompletedSteps(prev =>
+      prev.includes(index)
+        ? prev.filter(i => i !== index)
+        : [...prev, index].sort((a, b) => a - b)
+    );
+  };
 
-const SpecsTabFallback = ({ concept }: { concept: Concept }) => (
-  <div className="space-y-6">
-    <SectionCard>
-      <SectionTitle>Spécifications Techniques</SectionTitle>
-      <p className="text-slate-600 dark:text-slate-400">Chargement des spécifications...</p>
-    </SectionCard>
-  </div>
-);
-
-const ApplicationsTabFallback = ({ concept }: { concept: Concept }) => (
-  <div className="space-y-6">
-    <SectionCard>
-      <SectionTitle>Applications Pratiques</SectionTitle>
-      <p className="text-slate-600 dark:text-slate-400">Chargement des applications...</p>
-    </SectionCard>
-  </div>
-);
-
-const ResourcesTabFallback = ({ concept }: { concept: Concept }) => (
-  <div className="space-y-6">
-    <SectionCard>
-      <SectionTitle>Ressources Disponibles</SectionTitle>
-      <p className="text-slate-600 dark:text-slate-400">Chargement des ressources...</p>
-    </SectionCard>
-  </div>
-);
-
-// ============================================================================
-// REUSABLE COMPONENTS
-// ============================================================================
-
-const DifficultyBadge = React.memo(({ level }: { level: string }) => (
-  <span className={`px-4 py-2 rounded-full font-bold uppercase tracking-wide text-sm ${
-    level === 'Débutant' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' :
-    level === 'Expert' ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300' :
-    'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300'
-  }`}>
-    {level}
-  </span>
-));
-DifficultyBadge.displayName = 'DifficultyBadge';
-
-const SectionCard = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <div className={`bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700 shadow-sm ${className}`}>
-    {children}
-  </div>
-);
-
-const SectionTitle = ({ children, icon }: { children: React.ReactNode; icon?: React.ReactNode }) => (
-  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-    {icon}
-    {children}
-  </h2>
-);
-
-// ✅ Toast Simple (sans dépendance externe)
-const Toast = ({ message, type = 'success', onClose }: { message: string; type?: 'success' | 'error'; onClose: () => void }) => {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 3000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
+  const progress = (completedSteps.length / steps.length) * 100;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 50 }}
-      className={`fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 z-50 ${
-        type === 'success' 
-          ? 'bg-green-500 text-white' 
-          : 'bg-red-500 text-white'
-      }`}
-    >
-      <Check className="w-5 h-5" />
-      <span className="font-medium">{message}</span>
-    </motion.div>
+    <div className="space-y-6">
+      {/* Progress Bar */}
+      <div className="bg-slate-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="h-full bg-gradient-to-r from-green-500 to-blue-500 rounded-full"
+        />
+      </div>
+
+      <div className="flex items-center justify-between text-sm font-medium">
+        <span className="text-slate-600 dark:text-slate-400">
+          {completedSteps.length} / {steps.length} étapes complétées
+        </span>
+        <span className="text-blue-600 dark:text-blue-400 font-bold">
+          {Math.round(progress)}%
+        </span>
+      </div>
+
+      {/* Steps */}
+      <div className="relative space-y-4">
+        {steps.map((step, index) => {
+          const isCompleted = completedSteps.includes(index);
+          const isActive = index === completedSteps.length && !isCompleted;
+
+          return (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="relative"
+            >
+              <button
+                onClick={() => toggleStep(index)}
+                className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 transition-all ${
+                  isCompleted
+                    ? 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700'
+                    : isActive
+                    ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700'
+                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700'
+                }`}
+              >
+                {/* Step Number/Checkmark */}
+                <div
+                  className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold transition-all ${
+                    isCompleted
+                      ? 'bg-green-600 text-white'
+                      : isActive
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
+                  }`}
+                >
+                  {isCompleted ? (
+                    <CheckCircle2 className="w-5 h-5" />
+                  ) : (
+                    <span>{index + 1}</span>
+                  )}
+                </div>
+
+                {/* Step Content */}
+                <div className="flex-1 text-left">
+                  <p
+                    className={`font-medium ${
+                      isCompleted
+                        ? 'text-green-900 dark:text-green-100 line-through'
+                        : isActive
+                        ? 'text-blue-900 dark:text-blue-100'
+                        : 'text-slate-900 dark:text-slate-100'
+                    }`}
+                  >
+                    {step}
+                  </p>
+                </div>
+
+                {/* Indicator */}
+                {isActive && (
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                    className="flex-shrink-0"
+                  >
+                    <Flag className="w-5 h-5 text-blue-600" />
+                  </motion.div>
+                )}
+              </button>
+            </motion.div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const RelatedConcepts = ({ relatedIds }: { relatedIds: string[] }) => {
+  const relatedConcepts = ALL_CONCEPTS.filter(c => relatedIds.includes(c.id));
+
+  if (relatedConcepts.length === 0) return null;
+
+  return (
+    <div className="space-y-4">
+      {relatedConcepts.map((concept) => {
+        const DiffIcon = getDifficultyIcon(concept.difficulty);
+        
+        return (
+          <Link
+            key={concept.id}
+            href={`/theorie/mouvements/${concept.id}`}
+            className="block"
+          >
+            <motion.div
+              whileHover={{ x: 4 }}
+              className="bg-white dark:bg-slate-800 rounded-xl p-4 border-2 border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-600 transition-all group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <h4 className="font-bold text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1">
+                    {concept.title}
+                  </h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    {concept.category}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold border-2 flex items-center gap-1.5 ${getDifficultyColor(concept.difficulty)}`}>
+                    <DiffIcon className="w-3 h-3" />
+                    {concept.difficulty}
+                  </span>
+                  <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
+                </div>
+              </div>
+            </motion.div>
+          </Link>
+        );
+      })}
+    </div>
   );
 };
 
@@ -203,443 +350,358 @@ const Toast = ({ message, type = 'success', onClose }: { message: string; type?:
 // MAIN COMPONENT
 // ============================================================================
 
-export default function ConceptDetailPage({ params }: { params: { id: string } }) {
+export default function ConceptDetailPage() {
+  const params = useParams();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const tabPanelRef = useRef<HTMLDivElement>(null);
-  
-  // ✅ Transitions React 18
-  const [isPending, startTransition] = useTransition();
+  const conceptId = params.id as string;
 
-  // ✅ State
   const [activeTab, setActiveTab] = useState<TabId>('description');
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
-  const [progress, setProgress] = useState<UserProgress | null>(null);
   const [isBookmarked, setIsBookmarked] = useState(false);
 
-  // ✅ Memoized Data
-  const concept = useMemo(() => 
-    ALL_CONCEPTS.find(c => c.id === params.id),
-    [params.id]
-  );
+  const concept = useMemo(() => {
+    return ALL_CONCEPTS.find(c => c.id === conceptId);
+  }, [conceptId]);
 
-  const navigation = useMemo(() => 
-    concept ? getNavigation(params.id) : { prev: null, next: null },
-    [params.id, concept]
-  );
-
-  // ✅ Sync avec URL
   useEffect(() => {
-    const tab = searchParams.get('tab') as TabId;
-    if (tab && TABS.some(t => t.id === tab)) {
-      setActiveTab(tab);
+    if (!concept) {
+      router.push('/theorie/mouvements');
     }
-  }, [searchParams]);
+  }, [concept, router]);
 
-  // ✅ Charger la progression
   useEffect(() => {
-    if (concept) {
-      const stored = getStoredProgress(concept.id);
-      setProgress(stored);
-      
-      // Vérifier bookmark
-      const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
-      setIsBookmarked(bookmarks.includes(concept.id));
-      
-      // Enregistrer la visite
-      saveProgress(concept.id, {});
-    }
-  }, [concept]);
+    const bookmarks = JSON.parse(localStorage.getItem('bookmarkedConcepts') || '[]');
+    setIsBookmarked(bookmarks.includes(conceptId));
+  }, [conceptId]);
 
-  // ✅ Navigation clavier
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.metaKey || e.ctrlKey) return; // Ignorer les raccourcis système
-      
-      if (e.key === 'ArrowLeft' && navigation.prev) {
-        router.push(`/theorie/mouvements/${navigation.prev.id}`);
-      }
-      if (e.key === 'ArrowRight' && navigation.next) {
-        router.push(`/theorie/mouvements/${navigation.next.id}`);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [navigation.prev, navigation.next, router]);
-
-  // ✅ Callbacks
-  const handleTabChange = useCallback((tabId: TabId) => {
-    startTransition(() => {
-      setActiveTab(tabId);
-      router.push(`?tab=${tabId}`, { scroll: false });
-      
-      // Focus management pour a11y
-      setTimeout(() => {
-        tabPanelRef.current?.focus();
-      }, 100);
-    });
-  }, [router]);
-
-  const handleMarkAsUnderstood = useCallback(() => {
-    if (!concept) return;
-    
-    const newUnderstood = !(progress?.understood || false);
-    saveProgress(concept.id, { understood: newUnderstood });
-    setProgress(prev => ({ ...prev!, understood: newUnderstood }));
-    
-    setToast({
-      message: newUnderstood ? 'Concept marqué comme compris !' : 'Marqué comme non compris',
-      type: 'success'
-    });
-  }, [concept, progress]);
-
-  const handleBookmark = useCallback(() => {
-    if (!concept) return;
-    
-    try {
-      const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
-      let updated: string[];
-      
-      if (isBookmarked) {
-        updated = bookmarks.filter((id: string) => id !== concept.id);
-      } else {
-        updated = [...bookmarks, concept.id];
-      }
-      
-      localStorage.setItem('bookmarks', JSON.stringify(updated));
-      setIsBookmarked(!isBookmarked);
-      
-      setToast({
-        message: isBookmarked ? 'Retiré des favoris' : 'Ajouté aux favoris !',
-        type: 'success'
-      });
-    } catch (error) {
-      setToast({
-        message: 'Erreur lors de la sauvegarde',
-        type: 'error'
-      });
-    }
-  }, [concept, isBookmarked]);
-
-  const handleShare = useCallback(async () => {
-    if (!concept) return;
-    
-    const shareData = {
-      title: concept.title,
-      text: concept.desc,
-      url: window.location.href,
-    };
-
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else {
-        await navigator.clipboard.writeText(window.location.href);
-        setToast({
-          message: 'Lien copié dans le presse-papiers !',
-          type: 'success'
-        });
-      }
-    } catch (error) {
-      console.error('Error sharing:', error);
-    }
-  }, [concept]);
-
-  // ============================================================================
-  // RENDER
-  // ============================================================================
+  const toggleBookmark = () => {
+    const bookmarks = JSON.parse(localStorage.getItem('bookmarkedConcepts') || '[]');
+    const newBookmarks = isBookmarked
+      ? bookmarks.filter((id: string) => id !== conceptId)
+      : [...bookmarks, conceptId];
+    localStorage.setItem('bookmarkedConcepts', JSON.stringify(newBookmarks));
+    setIsBookmarked(!isBookmarked);
+  };
 
   if (!concept) {
-    return (
-      <main className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center px-4">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center max-w-md"
-        >
-          <h1 className="text-6xl font-black text-slate-300 dark:text-slate-700 mb-4">404</h1>
-          <h2 className="text-2xl font-bold mb-4">Concept non trouvé</h2>
-          <Link href="/theorie/mouvements" className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
-            <ChevronLeft className="w-4 h-4" />
-            Retour à la référence
-          </Link>
-        </motion.div>
-      </main>
-    );
+    return null;
   }
 
-  const { prev, next } = navigation;
-  const progressPercentage = progress?.understood ? 100 : 0;
+  const DiffIcon = getDifficultyIcon(concept.difficulty);
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
-      {/* HEADER */}
-      <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-20 backdrop-blur-sm bg-opacity-90 dark:bg-opacity-90">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link 
-            href="/theorie/mouvements" 
-            className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors group"
-          >
-            <ChevronLeft className="w-5 h-5 mr-1 group-hover:-translate-x-1 transition-transform" />
-            Retour à la référence
-          </Link>
-          <div className="flex items-center gap-2 text-xs text-slate-500">
-            <span className="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded font-mono">
-              {params.id}
-            </span>
-            {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-          </div>
-        </div>
-      </header>
-
-      {/* HERO */}
-      <section className="max-w-7xl mx-auto px-4 pt-16 pb-12">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-blue-950 py-12 px-4">
+      <div className="max-w-5xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="grid md:grid-cols-3 gap-8 items-start"
+          className="mb-8"
         >
-          <div className="md:col-span-2">
-            <h1 className="text-6xl font-black mb-4 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              {concept.title}
-            </h1>
-            <p className="text-2xl text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
-              {concept.desc}
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <DifficultyBadge level={concept.level} />
-              {concept.iso && concept.iso.length > 0 && (
-                <motion.div 
-                  whileHover={{ scale: 1.05 }}
-                  className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full"
-                >
-                  <Award className="w-4 h-4" />
-                  <span className="text-sm">{concept.iso.join(', ')}</span>
-                </motion.div>
-              )}
-            </div>
-          </div>
-
-          {/* Quick Actions */}
-          <SectionCard>
-            <h3 className="font-bold mb-4">Actions Rapides</h3>
-            <div className="space-y-3">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleBookmark}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                  isBookmarked
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700'
-                }`}
-              >
-                <Bookmark className={`w-5 h-5 ${isBookmarked ? 'fill-current' : ''}`} />
-                {isBookmarked ? 'Retiré des favoris' : 'Sauvegarder'}
-              </motion.button>
-              
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleShare}
-                className="w-full flex items-center gap-3 px-4 py-3 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-              >
-                <Share2 className="w-5 h-5" />
-                Partager
-              </motion.button>
-
-              <Link
-                href={`/theorie/mouvements/${concept.id}/notes`}
-                className="w-full flex items-center gap-3 px-4 py-3 bg-slate-100 dark:bg-slate-800 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-              >
-                <FileText className="w-5 h-5" />
-                Mes notes
-              </Link>
-            </div>
-          </SectionCard>
-        </motion.div>
-      </section>
-
-      {/* ONGLETS */}
-      <section className="max-w-7xl mx-auto px-4 pb-8">
-        <div className="border-b border-slate-200 dark:border-slate-700">
-          <nav className="flex gap-8 overflow-x-auto" role="tablist" aria-label="Sections du concept">
-            {TABS.map(tab => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <motion.button
-                  key={tab.id}
-                  onClick={() => handleTabChange(tab.id)}
-                  role="tab"
-                  aria-selected={isActive}
-                  aria-controls={`panel-${tab.id}`}
-                  whileHover={{ y: -2 }}
-                  className={`flex items-center gap-2 py-4 px-2 border-b-2 transition-all whitespace-nowrap ${
-                    isActive
-                      ? 'border-blue-500 text-blue-600 dark:text-blue-400 font-semibold' 
-                      : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  {tab.label}
-                </motion.button>
-              );
-            })}
-          </nav>
-        </div>
-      </section>
-
-      {/* CONTENU ONGLETS */}
-      <section className="max-w-7xl mx-auto px-4 pb-16">
-        <div className="grid md:grid-cols-4 gap-8">
-          {/* Contenu principal (3/4) */}
-          <div 
-            ref={tabPanelRef}
-            className="md:col-span-3 focus:outline-none"
-            tabIndex={-1}
+          <Link 
+            href="/theorie/mouvements"
+            className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline mb-4"
           >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                {...TAB_ANIMATION}
-              >
-                <Suspense fallback={<TabSkeleton />}>
-                  {activeTab === 'description' && <DescriptionTab concept={concept} />}
-                  {activeTab === 'specs' && <SpecsTab concept={concept} />}
-                  {activeTab === 'applications' && <ApplicationsTab concept={concept} />}
-                  {activeTab === 'resources' && <ResourcesTab concept={concept} />}
-                </Suspense>
-              </motion.div>
-            </AnimatePresence>
-          </div>
+            <ArrowLeft className="w-4 h-4" />
+            Retour aux mouvements
+          </Link>
 
-          {/* Sidebar (1/4) */}
-          <aside className="space-y-6">
-            {/* Progression */}
-            <SectionCard>
-              <h3 className="font-bold mb-3">Progression</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span>Compréhension</span>
-                  <span className="text-blue-600 font-bold">{progressPercentage}%</span>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 border-2 border-slate-200 dark:border-slate-700 shadow-lg">
+            <div className="flex items-start justify-between mb-6">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-bold border-2 border-blue-300 dark:border-blue-700">
+                    {concept.category}
+                  </span>
+                  <span className={`px-3 py-1 rounded-full text-sm font-bold border-2 flex items-center gap-1.5 ${getDifficultyColor(concept.difficulty)}`}>
+                    <DiffIcon className="w-4 h-4" />
+                    {concept.difficulty}
+                  </span>
                 </div>
-                <div className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                  <motion.div 
-                    className="h-full bg-blue-500"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${progressPercentage}%` }}
-                    transition={{ duration: 0.5 }}
-                  />
-                </div>
+
+                <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-3">
+                  {concept.title}
+                </h1>
+
+                <p className="text-lg text-slate-600 dark:text-slate-400">
+                  {concept.description}
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-2 ml-6">
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleMarkAsUnderstood}
-                  className={`w-full px-4 py-2 rounded-lg font-medium transition-colors ${
-                    progress?.understood
-                      ? 'bg-green-500 text-white'
-                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                  whileTap={{ scale: 0.95 }}
+                  onClick={toggleBookmark}
+                  className={`p-3 rounded-xl transition-all border-2 ${
+                    isBookmarked
+                      ? 'bg-amber-100 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-300'
+                      : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-amber-300 dark:hover:border-amber-700'
                   }`}
                 >
-                  {progress?.understood ? (
-                    <>
-                      <Check className="w-4 h-4 inline mr-2" />
-                      Compris !
-                    </>
+                  {isBookmarked ? (
+                    <Bookmark className="w-6 h-6 fill-current" />
                   ) : (
-                    'Marquer comme compris'
+                    <BookmarkPlus className="w-6 h-6" />
                   )}
                 </motion.button>
+
+                <Link href={`/theorie/mouvements/${conceptId}/notes`}>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="p-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-colors border-2 border-blue-700"
+                  >
+                    <BookOpen className="w-6 h-6" />
+                  </motion.button>
+                </Link>
               </div>
-            </SectionCard>
+            </div>
+          </div>
+        </motion.div>
 
-            {/* Quiz Flash */}
-            <motion.div 
-              whileHover={{ scale: 1.02 }}
-              className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl p-6 text-white cursor-pointer"
-            >
-              <h3 className="font-bold mb-3">Quiz Flash</h3>
-              <p className="text-sm opacity-90 mb-4">Testez vos connaissances sur {concept.title}</p>
-              <Link 
-                href={`/theorie/mouvements/${concept.id}/quiz`}
-                className="w-full block text-center px-4 py-2 bg-white text-purple-600 rounded-lg font-bold hover:bg-slate-100 transition-colors"
+        {/* Tabs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mb-8"
+        >
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-2 border-2 border-slate-200 dark:border-slate-700 shadow-lg">
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
+              {TABS.map((tab) => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`px-4 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
+                      activeTab === tab.id
+                        ? 'bg-blue-600 text-white shadow-md'
+                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span className="hidden md:inline">{tab.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Content */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white dark:bg-slate-900 rounded-2xl p-8 border-2 border-slate-200 dark:border-slate-700 shadow-lg"
+        >
+          <AnimatePresence mode="wait">
+            {activeTab === 'description' && (
+              <motion.div
+                key="description"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
               >
-                Démarrer le Quiz
-              </Link>
-            </motion.div>
-
-            {/* Dernière visite */}
-            {progress?.lastVisited && (
-              <SectionCard>
-                <h3 className="font-bold mb-2">Dernière visite</h3>
-                <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                  <Clock className="w-4 h-4" />
-                  {new Date(progress.lastVisited).toLocaleDateString('fr-FR', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
-                  })}
-                </div>
-              </SectionCard>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+                  <BookOpen className="w-6 h-6 text-blue-600" />
+                  Principe du mouvement
+                </h2>
+                <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
+                  {concept.description}
+                </p>
+              </motion.div>
             )}
-          </aside>
-        </div>
-      </section>
 
-      {/* NAVIGATION PRÉCÉDENT/SUIVANT */}
-      <section className="max-w-7xl mx-auto px-4 pb-16">
-        <nav className="flex justify-between items-center py-8 border-t border-slate-200 dark:border-slate-700" aria-label="Navigation entre concepts">
-          {prev ? (
-            <Link 
-              href={`/theorie/mouvements/${prev.id}`} 
-              prefetch
-            >
+            {activeTab === 'prerequisites' && (
               <motion.div
-                whileHover={{ scale: 1.02, x: -5 }}
-                className="flex items-center gap-3 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-500 transition-all max-w-xs group cursor-pointer"
+                key="prerequisites"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
               >
-                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                <div>
-                  <div className="text-sm text-slate-500">Précédent</div>
-                  <div className="font-semibold">{prev.title}</div>
-                </div>
-              </motion.div>
-            </Link>
-          ) : <div />}
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6 flex items-center gap-2">
+                  <Target className="w-6 h-6 text-blue-600" />
+                  Prérequis nécessaires
+                </h2>
 
-          {next ? (
-            <Link 
-              href={`/theorie/mouvements/${next.id}`} 
-              prefetch
-            >
+                {concept.prerequisites && concept.prerequisites.length > 0 ? (
+                  <div className="space-y-3">
+                    {concept.prerequisites.map((prereq, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="flex items-start gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border-2 border-blue-200 dark:border-blue-800"
+                      >
+                        <CheckCircle2 className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                        <span className="text-slate-900 dark:text-slate-100 font-medium">
+                          {prereq}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-slate-600 dark:text-slate-400 italic">
+                    Aucun prérequis spécifique requis.
+                  </p>
+                )}
+              </motion.div>
+            )}
+
+            {activeTab === 'mistakes' && (
               <motion.div
-                whileHover={{ scale: 1.02, x: 5 }}
-                className="flex items-center gap-3 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-500 transition-all max-w-xs text-right group cursor-pointer"
+                key="mistakes"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
               >
-                <div>
-                  <div className="text-sm text-slate-500">Suivant</div>
-                  <div className="font-semibold">{next.title}</div>
-                </div>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </motion.div>
-            </Link>
-          ) : <div />}
-        </nav>
-      </section>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6 flex items-center gap-2">
+                  <AlertTriangle className="w-6 h-6 text-red-600" />
+                  Erreurs courantes à éviter
+                </h2>
 
-      {/* TOAST NOTIFICATIONS */}
-      <AnimatePresence>
-        {toast && (
-          <Toast
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast(null)}
-          />
-        )}
-      </AnimatePresence>
-    </main>
+                {concept.commonMistakes && concept.commonMistakes.length > 0 ? (
+                  <div className="space-y-3">
+                    {concept.commonMistakes.map((mistake, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border-2 border-red-200 dark:border-red-800"
+                      >
+                        <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                        <span className="text-slate-900 dark:text-slate-100 font-medium">
+                          {mistake}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-slate-600 dark:text-slate-400 italic">
+                    Aucune erreur courante répertoriée.
+                  </p>
+                )}
+              </motion.div>
+            )}
+
+            {activeTab === 'tips' && (
+              <motion.div
+                key="tips"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+              >
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6 flex items-center gap-2">
+                  <Lightbulb className="w-6 h-6 text-amber-600" />
+                  Conseils de sécurité
+                </h2>
+
+                {concept.safetyTips && concept.safetyTips.length > 0 ? (
+                  <div className="space-y-3">
+                    {concept.safetyTips.map((tip, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border-2 border-amber-200 dark:border-amber-800"
+                      >
+                        <Lightbulb className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                        <span className="text-slate-900 dark:text-slate-100 font-medium">
+                          {tip}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-slate-600 dark:text-slate-400 italic">
+                    Aucun conseil spécifique répertorié.
+                  </p>
+                )}
+              </motion.div>
+            )}
+
+            {activeTab === 'progression' && (
+              <motion.div
+                key="progression"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+              >
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6 flex items-center gap-2">
+                  <TrendingUp className="w-6 h-6 text-green-600" />
+                  Plan de progression
+                </h2>
+
+                {concept.progressionSteps && concept.progressionSteps.length > 0 ? (
+                  <ProgressionTimeline steps={concept.progressionSteps} />
+                ) : (
+                  <p className="text-slate-600 dark:text-slate-400 italic">
+                    Aucun plan de progression disponible.
+                  </p>
+                )}
+              </motion.div>
+            )}
+
+            {activeTab === 'variations' && (
+              <motion.div
+                key="variations"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+              >
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6 flex items-center gap-2">
+                  <Sparkles className="w-6 h-6 text-purple-600" />
+                  Variations et mouvements liés
+                </h2>
+
+                {concept.variations && concept.variations.length > 0 && (
+                  <div className="mb-8">
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">
+                      Variations du mouvement
+                    </h3>
+                    <div className="space-y-3">
+                      {concept.variations.map((variation, index) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="flex items-start gap-3 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl border-2 border-purple-200 dark:border-purple-800"
+                        >
+                          <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" />
+                          <span className="text-slate-900 dark:text-slate-100 font-medium">
+                            {variation}
+                          </span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {concept.relatedMoves && concept.relatedMoves.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">
+                      Mouvements associés
+                    </h3>
+                    <RelatedConcepts relatedIds={concept.relatedMoves} />
+                  </div>
+                )}
+
+                {(!concept.variations || concept.variations.length === 0) && 
+                 (!concept.relatedMoves || concept.relatedMoves.length === 0) && (
+                  <p className="text-slate-600 dark:text-slate-400 italic">
+                    Aucune variation ou mouvement lié répertorié.
+                  </p>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+    </div>
   );
 }
