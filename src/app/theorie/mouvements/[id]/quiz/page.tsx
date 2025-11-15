@@ -1,5 +1,10 @@
 'use client';
 
+/**
+ * PAGE: Quiz sur un mouvement spécifique
+ * CHEMIN: src/app/theorie/mouvements/[id]/quiz/page.tsx
+ * DESCRIPTION: Page de quiz interactif pour tester les connaissances sur un mouvement avec système de scoring et révision
+ */
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -490,7 +495,7 @@ export default function QuizPage() {
   const router = useRouter();
   const conceptId = params.id as string;
 
-  // ✅ CORRECTION : Accès correct à modules qui est un tableau de concepts
+  // Trouver le concept dans modules
   const concept = modules.find(m => m.id === conceptId);
 
   // Quiz State
@@ -505,68 +510,75 @@ export default function QuizPage() {
   const generateQuestions = (): QuizQuestion[] => {
     if (!concept) return [];
 
+    // Questions génériques basées uniquement sur les propriétés disponibles
     const baseQuestions: QuizQuestion[] = [
       {
         id: `${conceptId}-q1`,
-        question: `Quel est le niveau de difficulté du mouvement "${concept.title}" ?`,
-        options: ['Débutant', 'Intermédiaire', 'Expert', 'Très facile'],
-        correctAnswer: ['Débutant', 'Intermédiaire', 'Expert'].indexOf(concept.level),
-        explanation: `Le ${concept.title} est classé en niveau ${concept.level}. ${
-          concept.level === 'Débutant' ? 'C\'est un mouvement accessible aux pratiquants qui débutent.' :
-          concept.level === 'Intermédiaire' ? 'Ce mouvement nécessite une base technique solide.' :
-          'Ce mouvement requiert une maîtrise avancée et une préparation spécifique.'
-        }`,
+        question: `Quel est le titre de ce mouvement ?`,
+        options: [
+          concept.title,
+          'Salto arrière groupé',
+          'Salto avant tendu',
+          'Vrille complète'
+        ],
+        correctAnswer: 0,
+        explanation: `Le mouvement s'appelle "${concept.title}". Il est important de connaître le nom exact des mouvements pour une communication claire.`,
         difficulty: 'Facile',
         category: 'Théorie'
       },
       {
         id: `${conceptId}-q2`,
-        question: `Quelle est la catégorie principale du ${concept.title} ?`,
-        options: ['Saltos', 'Vrilles', 'Statiques', 'Transitions'],
-        correctAnswer: ['Saltos', 'Vrilles', 'Statiques', 'Transitions'].indexOf(concept.category),
-        explanation: `Le ${concept.title} appartient à la catégorie "${concept.category}". Cette classification permet de mieux organiser l'apprentissage et la progression.`,
-        difficulty: 'Facile',
+        question: `Quelle est la description de ce mouvement ?`,
+        options: [
+          concept.description || 'Description non disponible',
+          'Un mouvement de rotation',
+          'Une position statique',
+          'Un mouvement de transition'
+        ],
+        correctAnswer: 0,
+        explanation: `La description du mouvement est : "${concept.description}". Cette description aide à comprendre l'essence du mouvement.`,
+        difficulty: 'Moyen',
         category: 'Théorie'
       },
       {
         id: `${conceptId}-q3`,
-        question: `Parmi ces éléments, lequel est un prérequis essentiel pour le ${concept.title} ?`,
+        question: `Quel est le niveau de difficulté recommandé pour ce mouvement ?`,
         options: [
-          concept.details?.prerequisites?.[0] || 'Bonne condition physique',
-          'Aucun prérequis nécessaire',
-          'Niveau expert minimum',
-          'Équipement spécialisé obligatoire'
+          concept.level,
+          concept.level === 'Débutant' ? 'Intermédiaire' : 'Débutant',
+          'Expert',
+          'Professionnel'
         ],
         correctAnswer: 0,
-        explanation: `${concept.details?.prerequisites?.[0] || 'Une bonne condition physique'} est un prérequis fondamental. Il est crucial de respecter les étapes de progression pour éviter les blessures.`,
-        difficulty: 'Moyen',
+        explanation: `Ce mouvement est de niveau ${concept.level}. Respecter les niveaux de difficulté est crucial pour progresser en sécurité.`,
+        difficulty: 'Facile',
         category: 'Progression'
       },
       {
         id: `${conceptId}-q4`,
-        question: `Quelle est la principale consigne de sécurité pour le ${concept.title} ?`,
+        question: `Pourquoi est-il important de respecter la progression recommandée ?`,
         options: [
-          concept.details?.safetyTips?.[0] || 'Toujours s\'échauffer correctement',
-          'Pratiquer seul pour se concentrer',
-          'Commencer directement par le mouvement complet',
-          'Ignorer les douleurs légères'
+          'Pour éviter les blessures et progresser efficacement',
+          'Pour impressionner les autres',
+          'Ce n\'est pas important',
+          'Pour aller plus vite'
         ],
         correctAnswer: 0,
-        explanation: `${concept.details?.safetyTips?.[0] || 'S\'échauffer correctement'} est primordial. La sécurité doit toujours être la priorité absolue lors de l'entraînement.`,
+        explanation: `Respecter la progression permet d'éviter les blessures et de construire des bases solides. Chaque niveau prépare aux suivants.`,
         difficulty: 'Moyen',
         category: 'Sécurité'
       },
       {
         id: `${conceptId}-q5`,
-        question: `Quelle erreur commune faut-il éviter lors de l'exécution du ${concept.title} ?`,
+        question: `Quelle est la meilleure approche pour maîtriser "${concept.title}" ?`,
         options: [
-          concept.details?.commonMistakes?.[0] || 'Manque de préparation physique',
-          'Trop de concentration',
-          'Trop d\'échauffement',
-          'Utiliser des protections'
+          'Progresser étape par étape avec un bon échauffement',
+          'Essayer directement le mouvement complet',
+          'S\'entraîner seul sans supervision',
+          'Ignorer les conseils de sécurité'
         ],
         correctAnswer: 0,
-        explanation: `${concept.details?.commonMistakes?.[0] || 'Le manque de préparation physique'} est une erreur fréquente qui peut compromettre la réussite et la sécurité du mouvement.`,
+        explanation: `La meilleure approche est toujours de progresser étape par étape, en s'échauffant correctement et en respectant les consignes de sécurité.`,
         difficulty: 'Difficile',
         category: 'Technique'
       }
