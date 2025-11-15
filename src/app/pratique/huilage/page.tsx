@@ -162,7 +162,7 @@ export default function HuilagePage() {
             </div>
           </div>
           <div className="bg-[#1a1a1a] p-6 rounded-xl border border-gray-800 mt-6">
-            <h3 className="text-xl font-bold text-[#E2B44F] mb-3">Tableau de compatibilité</h3>
+            <h3 className="text-xl font-bold text-[#E2B44F] mb-3">Tableau de compatibilité complet</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left text-gray-300">
                 <thead className="text-xs text-[#E2B44F] uppercase bg-[#0a0a0a]">
@@ -283,7 +283,7 @@ export default function HuilagePage() {
               <h3 className="text-xl font-bold text-red-400 mb-3">✗ Mauvais huilage</h3>
               <ul className="space-y-2 text-gray-300 text-sm">
                 <li>• Ménisque plat ou irrégulier</li>
-                <li>• Diamètre >1mm (excès) ou &lt;0.3mm (insuffisance)</li>
+                <li>• Diamètre &gt;1mm (excès) ou &lt;0.3mm (insuffisance)</li>
                 <li>• Bulles d'air piégées = contamination</li>
                 <li>• Huile qui déborde sur le pont = risque de migration</li>
                 <li>• Aspect terne ou granuleux = huile séchée</li>
@@ -366,7 +366,7 @@ export default function HuilagePage() {
               <li>• Remontoir plus dur ou grincant</li>
               <li>• Bruits anormaux (cliquetis, frottements secs)</li>
               <li>• Condensation sous le verre (signe de séchage)</li>
-              <li>• Montre non portée depuis >3 ans</li>
+              <li>• Montre non portée depuis &gt;3 ans</li>
             </ul>
           </div>
         </section>
