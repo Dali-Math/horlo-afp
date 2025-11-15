@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { movements } from '../../../../data/movements';
+import { movements } from '../../data/movements';
 
 // ============================================================================
 // TYPES
