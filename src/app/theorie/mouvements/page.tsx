@@ -4,8 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
   ChevronLeft, Search, BookOpen, Heart,
-  // CORRECTION : imports avec majuscule et sans "s"
-  Layers, Zap, Clock, Target, Tool, Scroll
+  Layers, Zap, Clock, Target, Wrench, Scroll
 } from 'lucide-react';
 import { modules } from './data';
 import type { Concept, Module } from './types';
@@ -15,9 +14,9 @@ const iconMap = {
   Layers,
   Zap,
   Clock,
-  Target, // Pour le module "🎯 Régulation"
-  Tool,   // Pour le module "🔧 Diagnostic"
-  Scroll, // Pour le module "📜 Histoire"
+  Target,
+  Wrench, // ← CORRIGÉ
+  Scroll,
 };
 
 export default function SimpleReferencePage() {
