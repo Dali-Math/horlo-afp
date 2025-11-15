@@ -33,7 +33,12 @@ export interface Concept {
     commonErrors?: string[];   // Erreurs courantes
     tools?: string[];          // Outils nécessaires
     
-    // ✅ applications est maintenant ICI, à l'intérieur de details
+    // ✅ AJOUTEZ CES PROPRIÉTÉS
+    howItWorks?: string;       // Comment ça fonctionne
+    advantages?: string[];     // Avantages
+    limitations?: string[];    // Limitations
+    keyPoints?: string[];      // Points clés
+    
     applications?: {
       realWorld?: string[];
       variations?: string[];
@@ -41,10 +46,9 @@ export interface Concept {
     };
   };
 
-  gallery?: string[];          // URLs images
-  relatedConcepts?: string[];  // IDs de concepts liés
+  gallery?: string[];          
+  relatedConcepts?: string[];  
 
-  // 🔥 NOUVEAU : Ressources pédagogiques
   resources?: {
     videos?: Array<{ title: string; url: string }>;
     articles?: Array<{ title: string; url: string }>;
