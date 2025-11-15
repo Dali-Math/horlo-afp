@@ -200,7 +200,7 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                       {Object.entries(concept.details.dimensions).map(([key, value]) => (
                         <div key={key} className="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
                           <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">{key}</div>
-                          <div className="font-mono font-bold">{value}</div>
+                          <div className="font-mono font-bold">{String(value)}</div>
                         </div>
                       ))}
                     </div>
