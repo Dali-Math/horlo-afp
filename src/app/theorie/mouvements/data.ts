@@ -431,7 +431,7 @@ export const modules: Module[] = [
   {
     id: 'diagnostic',
     title: "🔧 Diagnostic & Dépannage",
-    icon: "Tool",
+    icon: "Wrench",
     color: "from-gray-500 to-slate-600",
     concepts: [
       { 
