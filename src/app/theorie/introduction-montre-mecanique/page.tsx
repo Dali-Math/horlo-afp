@@ -773,7 +773,13 @@ export default function IntroductionMontreMecanique() {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
-  const [userAnswers, setUserAnswers] = useState([]);
+  interface UserAnswer {
+  question: number;
+  selected: number;
+  correct: boolean;
+}
+
+const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
 
   const handleAnswerClick = (index: number) => {
     if (selectedAnswer === null) {
