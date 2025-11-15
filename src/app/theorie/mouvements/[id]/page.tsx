@@ -153,7 +153,7 @@ export default function ConceptDetailPage({ params }: { params: { id: string } }
                   <div className="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
                     <h2 className="text-2xl font-bold mb-4">Matériaux & Composants</h2>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {concept.details.materials.map(material => (
+                      {concept.details.materials.map((material: string) => (
                         <li key={material} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
                           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                           <span className="text-slate-700 dark:text-slate-300">{material}</span>
