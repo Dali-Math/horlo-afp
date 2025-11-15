@@ -1,5 +1,6 @@
 'use client';
 
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -489,9 +490,8 @@ export default function QuizPage() {
   const router = useRouter();
   const conceptId = params.id as string;
 
-  // ✅ CORRECTION : Utiliser modules.flatMap pour récupérer tous les mouvements
-  const allMovements = modules.flatMap(module => module.concepts);
-  const concept = allMovements.find(m => m.id === conceptId);
+  // ✅ CORRECTION : Accès correct à modules qui est un tableau de concepts
+  const concept = modules.find(m => m.id === conceptId);
 
   // Quiz State
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
