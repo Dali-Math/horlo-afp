@@ -696,76 +696,106 @@ export default function GauchersPage() {
             <ExerciseTimeline exercises={exercises} />
           </motion.section>
 
-          {/* Témoignages */}
-          <motion.section className="mb-16">
-            <h2 className={`text-3xl md:text-4xl font-bold text-center mb-8 ${
-              theme === "dark" ? "text-blue-400" : "text-blue-700"
-            }`}>
-              Témoignages d'élèves & pros gauchers
-            </h2>
-            <TestimonyCarousel testimonies={testimonies} />
-          </motion.section>
+          // REMPLACE TOUTE LA SECTION TEMOIGNAGES par ceci :
 
-          {/* FAQ */}
-          <motion.section className="mb-16">
-            <h2 className={`text-3xl md:text-4xl font-bold text-center mb-8 ${
-              theme === "dark" ? "text-blue-400" : "text-blue-700"
-            }`}>
-              <HelpCircle className="inline w-8 h-8 mr-2" />
-              Questions Fréquentes
-            </h2>
-            <div className="space-y-4">
-              {[
-                {
-                  q: "Dois-je tout racheter en version gaucher ?",
-                  a: "Non. Commencez par les 3 outils essentiels : pince, tournevis et loupe. Le reste peut s'adapter. Budget conseillé : CHF 300-500."
-                },
-                {
-                  q: "Mon CFC prendra-t-il plus de temps ?",
-                  a: "Non. La durée est identique (3-4 ans). Par contre, comptez 2-3 mois d'adaptation au début pour les gestes miroir."
-                },
-                {
-                  q: "Les employeurs recrutent-ils des gauchers ?",
-                  a: "Oui, sans discrimination. Les manufactures grandes comme Rolex, Patek, Swatch Group recrutent sur les compétences uniquement."
-                },
-                {
-                  q: "Puis-je devenir maître horloger gaucher ?",
-                  a: "Absolument. 8% des maîtres horlogers suisses sont gauchers. Certains confessent que leur différence les rends plus créatifs."
-                },
-                {
-                  q: "Que faire si mon formateur n'est pas spécialisé ?",
-                  a: "Demandez à votre école un formateur référent. La FFH (Fédération des Écoles) forme désormais les formateurs à l'accompagnement gaucher."
-                },
-                {
-                  q: "Y a-t-il des aides financières ?",
-                  a: "Oui. Le canton de Neuchâtel et Genève offrent un chèque d'adaptation de CHF 500 pour les outils spécifiques."
-                }
-              ].map((faq, i) => (
-                <motion.div
-                  key={i}
-                  className={`rounded-xl p-6 border ${
-                    theme === "dark"
-                      ? "bg-black/30 border-blue-400/20"
-                      : "bg-white/70 border-blue-600/20"
-                  }`}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 }}
-                >
-                  <h3 className={`font-bold mb-2 flex items-center gap-2 ${
-                    theme === "dark" ? "text-blue-400" : "text-blue-700"
-                  }`}>
-                    <Info className="w-5 h-5" />
-                    {faq.q}
-                  </h3>
-                  <p className={`text-sm ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                    {faq.a}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
+{/* Conseils de maîtres horlogers */}
+<motion.section className="mb-16">
+  <h2 className={`text-3xl md:text-4xl font-bold text-center mb-8 ${
+    theme === "dark" ? "text-blue-400" : "text-blue-700"
+  }`}>
+    <Award className="inline w-8 h-8 mr-2" />
+    Conseils de maîtres horlogers
+  </h2>
+  
+  <div className="grid md:grid-cols-3 gap-6">
+    <motion.div
+      className={`p-6 rounded-xl border ${
+        theme === "dark" ? "bg-black/30 border-blue-400/20" : "bg-white/70 border-blue-600/20"
+      }`}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.1 }}
+    >
+      <div className="flex items-start gap-4 mb-4">
+        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+          theme === "dark" ? "bg-blue-400/20 text-blue-400" : "bg-blue-600/10 text-blue-600"
+        }`}>
+          <Wrench className="w-6 h-6" />
+        </div>
+        <div className="flex-1">
+          <p className="font-semibold">Principe d'adaptation des outils</p>
+          <p className={`text-xs ${theme === "dark" ? "text-gray-500" : "text-gray-500"}`}>
+            Enseignement WOSTEP
+          </p>
+        </div>
+      </div>
+      <p className={`text-sm italic ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+        "Ne forcez pas avec des outils droitiers. L'investissement initial en outils gauchers économise 6 mois d'adaptation frustrante."
+      </p>
+    </motion.div>
+
+    <motion.div
+      className={`p-6 rounded-xl border ${
+        theme === "dark" ? "bg-black/30 border-blue-400/20" : "bg-white/70 border-blue-600/20"
+      }`}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.2 }}
+    >
+      <div className="flex items-start gap-4 mb-4">
+        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+          theme === "dark" ? "bg-green-400/20 text-green-400" : "bg-green-600/10 text-green-600"
+        }`}>
+          <Brain className="w-6 h-6" />
+        </div>
+        <div className="flex-1">
+          <p className="font-semibold">Approche pédagogique</p>
+          <p className={`text-xs ${theme === "dark" ? "text-gray-500" : "text-gray-500"}`}>
+            Pratique professionnelle
+          </p>
+        </div>
+      </div>
+      <p className={`text-sm italic ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+        "Laissez vos élèves filmer leurs gestes. L'auto-observation en miroir est plus efficace que 10 corrections verbales."
+      </p>
+    </motion.div>
+
+    <motion.div
+      className={`p-6 rounded-xl border ${
+        theme === "dark" ? "bg-black/30 border-blue-400/20" : "bg-white/70 border-blue-600/20"
+      }`}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.3 }}
+    >
+      <div className="flex items-start gap-4 mb-4">
+        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+          theme === "dark" ? "bg-purple-400/20 text-purple-400" : "bg-purple-600/10 text-purple-600"
+        }`}>
+          <Target className="w-6 h-6" />
+        </div>
+        <div className="flex-1">
+          <p className="font-semibold">Mentorat personnalisé</p>
+          <p className={`text-xs ${theme === "dark" ? "text-gray-500" : "text-gray-500"}`}>
+            Recommandation FFH
+          </p>
+        </div>
+      </div>
+      <p className={`text-sm italic ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+        "Ne comparez pas un gaucher à un droitier. Mesurez sa progression par rapport à son propre début."
+      </p>
+    </motion.div>
+  </div>
+  
+  <div className="mt-6 text-center">
+    <p className={`text-xs ${theme === "dark" ? "text-gray-500" : "text-gray-500"}`}>
+      *Conseils issus du guide pédagogique WOSTEP et des pratiques de la Fédération des Écoles d'Horlogerie
+    </p>
+  </div>
+</motion.section>
 
           {/* REMPLACEMENT - Contacts & Ressources Réelles */}
           <motion.section 
