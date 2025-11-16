@@ -3,11 +3,7 @@
 
 import { useState, useEffect, createContext, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowLeft, Moon, Sun, Wrench, Eye, Brain, Heart, Trophy, Clock, Award, Users,
-  Target, CheckCircle, Zap, ShoppingCart, BookOpen, HelpCircle, UserCheck,
-  Video, TrendingUp, Shield, Info
-} from "lucide-react";
+import { ArrowLeft, Moon, Sun, Wrench, Eye, Brain, Heart, Trophy, Clock, Award, Users, Target, CheckCircle, Zap, ShoppingCart, BookOpen, HelpCircle, UserCheck, Video, Tools, TrendingUp, Shield, Info } from "lucide-react";
 import Link from "next/link";
 
 // Types
@@ -769,7 +765,7 @@ export default function GauchersPage() {
             </div>
           </motion.section>
 
-          {/* NOUVELLE VERSION - Section unique qui remplace les deux anciennes */}
+          {/* SEULE MODIFICATION : Le titre de cette section */}
           <motion.section 
             className={`rounded-2xl p-8 md:p-12 border backdrop-blur-sm ${
               theme === "dark" ? "bg-black/20 border-blue-400/20" : "bg-white/60 border-blue-600/20"
@@ -781,7 +777,7 @@ export default function GauchersPage() {
             <h2 className={`text-3xl font-bold text-center mb-8 ${
               theme === "dark" ? "text-blue-400" : "text-blue-700"
             }`}>
-              Prochaines étapes et ressources
+              Ressources et accompagnement  {/* ← TITRE MODIFIÉ */}
             </h2>
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
@@ -831,7 +827,6 @@ export default function GauchersPage() {
               </div>
             </div>
           </motion.section>
-          {/* FIN DE LA SECTION MODIFIÉE */}
         </div>
       </div>
     </ThemeContext.Provider>
