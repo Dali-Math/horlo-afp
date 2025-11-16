@@ -769,7 +769,80 @@ export default function GauchersPage() {
             </div>
           </motion.section>
 
-          {/* LA SECTION A ÉTÉ SUPPRIMÉE - La page se termine ici */}
+          {/* NOUVELLE SECTION DE REMPLACEMENT */}
+          <motion.section 
+            className={`rounded-2xl p-8 md:p-12 border backdrop-blur-sm ${
+              theme === "dark" ? "bg-black/20 border-blue-400/20" : "bg-white/60 border-blue-600/20"
+            }`}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+          >
+            <h2 className={`text-3xl font-bold text-center mb-8 ${
+              theme === "dark" ? "text-blue-400" : "text-blue-700"
+            }`}>
+              Prochaines étapes concrètes
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <motion.div
+                className={`text-center p-6 rounded-xl border ${
+                  theme === "dark" ? "bg-black/30 border-blue-400/20" : "bg-white/70 border-blue-600/20"
+                }`}
+                whileHover={{ scale: 1.05 }}
+              >
+                <BookOpen className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`} />
+                <h3 className={`font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                  1. Commandez vos outils
+                </h3>
+                <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                  Équipez-vous du minimum vital dès la première semaine
+                </p>
+              </motion.div>
+              
+              <motion.div
+                className={`text-center p-6 rounded-xl border ${
+                  theme === "dark" ? "bg-black/30 border-blue-400/20" : "bg-white/70 border-blue-600/20"
+                }`}
+                whileHover={{ scale: 1.05 }}
+              >
+                <Target className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-green-400" : "text-green-600"}`} />
+                <h3 className={`font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                  2. Démarrez l'entraînement
+                </h3>
+                <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                  Suivez le programme semaine par semaine sans sauter d'étapes
+                </p>
+              </motion.div>
+              
+              <motion.div
+                className={`text-center p-6 rounded-xl border ${
+                  theme === "dark" ? "bg-black/30 border-blue-400/20" : "bg-white/70 border-blue-600/20"
+                }`}
+                whileHover={{ scale: 1.05 }}
+              >
+                <UserCheck className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-purple-400" : "text-purple-600"}`} />
+                <h3 className={`font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                  3. Trouvez un mentor
+                </h3>
+                <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                  Rejoignez la communauté et échangez avec des pros
+                </p>
+              </motion.div>
+            </div>
+            <div className="mt-8 text-center">
+              <motion.div whileHover={{ scale: 1.05 }}>
+                <Link href="/debuter" className={`inline-block px-8 py-3 rounded-lg font-bold ${
+                  theme === "dark" ? "bg-blue-400 text-black hover:bg-blue-300" : "bg-blue-600 text-white hover:bg-blue-700"
+                }`}>
+                  Commencer maintenant
+                </Link>
+              </motion.div>
+              <p className={`mt-4 text-sm ${theme === "dark" ? "text-gray-500" : "text-gray-500"}`}>
+                Première séance gratuite avec un formateur certifié
+              </p>
+            </div>
+          </motion.section>
+          {/* FIN DE LA NOUVELLE SECTION */}
         </div>
       </div>
     </ThemeContext.Provider>
