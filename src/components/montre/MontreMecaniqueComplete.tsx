@@ -1,11 +1,10 @@
 // src/components/montre/MontreMecaniqueComplete.tsx
 import { Play, Pause } from 'lucide-react';
-import { useMontre } from './MontreMecaniqueProvider';
+import { MontreProvider, useMontre } from './MontreMecaniqueProvider';
 import { NavigationMontre } from './NavigationMontre';
 import { AnimationMontre } from './AnimationMontre';
 import { Card } from '@/components/ui/Card';
 
-// Composants simplifiés pour chaque section
 const IntroductionSection = () => (
   <Card gradient="from-slate-900 via-blue-900 to-purple-900 border-blue-500">
     <h2 className="text-3xl font-bold text-white mb-4">La Montre Mécanique</h2>
@@ -33,10 +32,10 @@ const OrganesSection = () => {
   const organes = [
     { nom: 'Barillet', desc: "Stocke l'énergie du ressort moteur", icon: '⚡' },
     { nom: 'Rouage', desc: "Transmet et démultiplie l'énergie", icon: '⚙️' },
-    { nom: 'Échappement', desc: 'Régule la libération d\'énergie', icon: '💓' },
+    { nom: 'Échappement', desc: "Régule la libération d'énergie", icon: '💓' },
     { nom: 'Balancier', desc: 'Oscille à fréquence constante', icon: '🎯' },
     { nom: 'Remontoir', desc: 'Permet de remonter le ressort', icon: '🔄' },
-    { nom: 'Affichage', desc: 'Interface de lecture de l\'heure', icon: '🕐' }
+    { nom: 'Affichage', desc: "Interface de lecture de l'heure", icon: '🕐' }
   ];
 
   return (
@@ -55,7 +54,7 @@ const OrganesSection = () => {
   );
 };
 
-export function MontreMecaniqueComplete() {
+function MontreContent() {
   const { activeTab, globalAnimation, setGlobalAnimation, progression } = useMontre();
 
   const sections = {
@@ -124,4 +123,10 @@ export function MontreMecaniqueComplete() {
   );
 }
 
-export default MontreMecaniqueComplete;
+export default function MontreMecaniqueComplete() {
+  return (
+    <MontreProvider>
+      <MontreContent />
+    </MontreProvider>
+  );
+}
