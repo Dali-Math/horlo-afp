@@ -8,6 +8,7 @@ import {
   ExternalLink, Menu, X, ArrowUp, Search
 } from 'lucide-react';
 
+// --- Styles CSS personnalisés pour les animations avancées ---
 const customStyles = `
   @keyframes fadeInUp {
     from {
@@ -99,7 +100,7 @@ const useOnScreen = (ref: React.RefObject<HTMLDivElement>) => {
       ([entry]) => {
         setIntersecting(entry.isIntersecting);
       },
-      { threshold: 0.1 } // Déclenche l'animation quand 10% de l'élément est visible
+      { threshold: 0.1 }
     );
 
     if (ref.current) {
@@ -116,7 +117,7 @@ const useOnScreen = (ref: React.RefObject<HTMLDivElement>) => {
   return isIntersecting;
 };
 
-// --- Types et données (inchangés) ---
+// --- Types et données ---
 interface PageItem {
   slug: string;
   titre: string;
@@ -134,7 +135,19 @@ const pagesFonctionnement: PageItem[] = [
   { slug: 'balancier-spiral', titre: "Le Balancier-Spiral", description: "Le régulateur de temps : oscillations, réglage de la précision et matériaux modernes.", icon: <Settings2 className="w-7 h-7 text-green-600 dark:text-green-300" />, tag: 'avancé', readTime: '35 min' },
   { slug: 'remontage', titre: "Le Remontage", description: "Systèmes manuels et automatiques, la couronne et le mécanisme de remontage.", icon: <RotateCw className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />, tag: 'pratique', readTime: '20 min' },
 ];
-const pagesMateriaux: PageItem[] = [{ slug: 'materiaux', titre: "Matériaux en Horlogerie", description: "Aciers, métaux précieux, titane, céramiques, silicium... Découvrez leurs usages.", icon: <Gem className="w-7 h-7 text-yellow-500 dark:text-yellow-400" />, tag: 'culture', readTime: '40 min' }];
+
+// --- CORRECTION APPLIQUÉE ICI ---
+const pagesMateriaux: PageItem[] = [
+  {
+    slug: '/materiaux', // <--- CHANGÉ : C'est maintenant un chemin absolu
+    titre: "Matériaux en Horlogerie",
+    description: "Aciers, métaux précieux, titane, céramiques, silicium... Découvrez leurs usages.",
+    icon: <Gem className="w-7 h-7 text-yellow-500 dark:text-yellow-400" />,
+    tag: 'culture',
+    readTime: '40 min'
+  },
+];
+
 const pagesMouvement: PageItem[] = [{ slug: 'mouvements', titre: "Architecture du Mouvement", description: "Platine, ponts, viroles, decoration : comprendre la structure d'un calibre.", icon: <Boxes className="w-7 h-7 text-slate-600 dark:text-slate-300" />, tag: 'fondamental', readTime: '25 min' }];
 const pagesHistoireCulture: PageItem[] = [{ slug: 'histoire-horlogerie-suisse', titre: "Histoire de l'Horlogerie Suisse", description: "Des origines à nos jours : l'établissage, les crises, et l'essor du Made in Switzerland.", icon: <Book className="w-7 h-7 text-amber-600 dark:text-amber-400" />, tag: 'culture', readTime: '30 min' }];
 const pagesManufactures: PageItem[] = [{ slug: 'manufactures', titre: "Grandes Manufactures Suisses", description: "Patek Philippe, Rolex, Audemars Piguet... Histoire, innovations et savoir-faire unique.", icon: <Building2 className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />, tag: 'culture', readTime: '45 min' }];
@@ -193,9 +206,8 @@ export default function TheoriePage() {
         ? prev.filter(item => item !== slug)
         : [...prev, slug]
     );
-    // Déclenche l'animation du cœur
     setAnimatingHeart(slug);
-    setTimeout(() => setAnimatingHeart(null), 800); // Durée de l'animation
+    setTimeout(() => setAnimatingHeart(null), 800);
   }, []);
 
   const scrollToSection = useCallback((sectionId: string) => {
@@ -328,7 +340,8 @@ export default function TheoriePage() {
                     className="group relative bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden"
                     style={{animationDelay: `${pageIndex * 0.1}s`}}
                   >
-                    <Link href={`/theorie/${page.slug}`} className="block p-6">
+                    {/* --- CORRECTION APPLIQUÉE ICI --- */}
+                    <Link href={page.slug.startsWith('/') ? page.slug : `/theorie/${page.slug}`} className="block p-6">
                       <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-500"></div>
                       <div className="relative">
                         <div className="flex items-start justify-between mb-4">
