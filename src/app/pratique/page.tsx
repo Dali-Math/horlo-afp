@@ -47,6 +47,12 @@ export default function PratiquePage() {
         "Standards et parcours professionnels de l'horlogerie suisse.",
       slug: "certifications",
     },
+    {
+  title: "Guide pour Gauchers",
+  icon: <Wrench className="w-6 h-6 text-purple-600 dark:text-purple-400" />,
+  description: "Solutions concrètes et adaptations pour élèves gauchers en horlogerie.",
+  slug: "gauchers"
+}
   ];
 
   return (
