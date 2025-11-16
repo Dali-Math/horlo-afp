@@ -1,348 +1,457 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import {
   Clock, Gauge, Zap, Settings2, ChevronLeft, BookOpen, Cog, RotateCw, Book,
-  Building2, Watch, Cpu, Wrench, Boxes, Gem
-} from 'lucide-react';
+  Building2, Watch, Cpu, Wrench, Boxes, Gem, Heart, ChevronRight,
+  ExternalLink, Menu, X, ArrowUp, Search
+} from 'lucide-react'; // 'Star' a été retiré de l'import
 
-const pagesFonctionnement = [
+// Types
+interface PageItem {
+  slug: string;
+  titre: string;
+  description: string;
+  icon: React.ReactNode;
+  tag?: 'fondamental' | 'avancé' | 'pratique' | 'culture';
+  readTime?: string;
+}
+
+// L'interface Testimonial et le tableau testimonials ont été supprimés
+
+// Données (les tags changent pour refléter le contenu, pas la difficulté)
+const pagesFonctionnement: PageItem[] = [
   {
     slug: 'introduction-montre-mecanique',
     titre: "Introduction à la montre mécanique",
-    description: "Fonctionnement général, grands organes, bases.",
+    description: "Les bases du fonctionnement, les grands organes et les principes essentiels.",
     icon: <Clock className="w-7 h-7 text-blue-600 dark:text-blue-400" />,
+    tag: 'fondamental',
+    readTime: '15 min'
   },
   {
     slug: 'barillet-ressort-moteur',
-    titre: "Le Barillet et Ressort Moteur",
-    description: "Source d'énergie mécanique et réserve de marche.",
+    titre: "Le Barillet et le Ressort Moteur",
+    description: "Le cœur de la montre : source d'énergie, réserve de marche et types de ressorts.",
     icon: <Gauge className="w-7 h-7 text-yellow-600 dark:text-yellow-300" />,
+    tag: 'fondamental',
+    readTime: '20 min'
   },
   {
     slug: 'rouage',
     titre: "Le Rouage (Train d'engrenages)",
-    description: "Transmission de l'énergie, calculs et rapports.",
+    description: "La transmission de l'énergie, les calculs de rapports et les différents types de roues.",
     icon: <Cog className="w-7 h-7 text-blue-600 dark:text-blue-400" />,
+    tag: 'fondamental',
+    readTime: '25 min'
   },
   {
     slug: 'echappement-ancre',
     titre: "L'Échappement à Ancre Suisse",
-    description: "Organe de distribution - rôle, éléments, phases.",
+    description: "L'organe de distribution : son rôle, ses composants et le cycle des phases.",
     icon: <Zap className="w-7 h-7 text-purple-600 dark:text-purple-300" />,
+    tag: 'avancé',
+    readTime: '30 min'
   },
   {
     slug: 'balancier-spiral',
     titre: "Le Balancier-Spiral",
-    description: "Organe réglant, oscillations, réglage, matériaux.",
+    description: "Le régulateur de temps : oscillations, réglage de la précision et matériaux modernes.",
     icon: <Settings2 className="w-7 h-7 text-green-600 dark:text-green-300" />,
+    tag: 'avancé',
+    readTime: '35 min'
   },
   {
     slug: 'remontage',
     titre: "Le Remontage",
-    description: "Manuel et automatique, procédure et réserve de marche.",
+    description: "Systèmes manuels et automatiques, la couronne et le mécanisme de remontage.",
     icon: <RotateCw className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />,
+    tag: 'pratique',
+    readTime: '20 min'
   },
 ];
 
-// 🧱 Nouvelle section — Matériaux Horlogers
-const pagesMateriaux = [
+const pagesMateriaux: PageItem[] = [
   {
-    slug: '/materiaux',
-    titre: "Matériaux en Horlogerie Suisse",
-    description: "Métaux, alliages, céramiques et matériaux modernes utilisés dans les montres suisses.",
+    slug: 'materiaux',
+    titre: "Matériaux en Horlogerie",
+    description: "Aciers, métaux précieux, titane, céramiques, silicium... Découvrez leurs usages.",
     icon: <Gem className="w-7 h-7 text-yellow-500 dark:text-yellow-400" />,
+    tag: 'culture',
+    readTime: '40 min'
   },
 ];
 
-// ⭐ UNE SEULE CARTE POUR "MOUVEMENT" ⭐
-const pagesMouvement = [
+const pagesMouvement: PageItem[] = [
   {
     slug: 'mouvements',
     titre: "Architecture du Mouvement",
-    description: "Vue d'ensemble : platine, ponts, fixation et décoration.",
+    description: "Platine, ponts, viroles, decoration : comprendre la structure d'un calibre.",
     icon: <Boxes className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
+    tag: 'fondamental',
+    readTime: '25 min'
   },
 ];
 
-const pagesHistoireCulture = [
+const pagesHistoireCulture: PageItem[] = [
   {
     slug: 'histoire-horlogerie-suisse',
     titre: "Histoire de l'Horlogerie Suisse",
-    description: "Origines, établissage, crises et succès depuis le 16ème siècle.",
+    description: "Des origines à nos jours : l'établissage, les crises, et l'essor du Made in Switzerland.",
     icon: <Book className="w-7 h-7 text-amber-600 dark:text-amber-400" />,
+    tag: 'culture',
+    readTime: '30 min'
   },
 ];
 
-const pagesManufactures = [
+const pagesManufactures: PageItem[] = [
   {
     slug: 'manufactures',
     titre: "Grandes Manufactures Suisses",
-    description: "Patek Philippe, Rolex, Audemars Piguet, Vacheron Constantin, Omega - Histoire et innovations.",
+    description: "Patek Philippe, Rolex, Audemars Piguet... Histoire, innovations et savoir-faire unique.",
     icon: <Building2 className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />,
+    tag: 'culture',
+    readTime: '45 min'
   },
 ];
 
-const pagesComplications = [
+const pagesComplications: PageItem[] = [
   {
     slug: 'complications',
     titre: "Complications Horlogères",
-    description: "Quantième, Chronographe, Phases de Lune, Tourbillon - Mécanismes d'exception.",
+    description: "Chronographe, quantième perpétuel, tourbillon, sonnerie : explications des mécanismes.",
     icon: <Watch className="w-7 h-7 text-purple-600 dark:text-purple-400" />,
+    tag: 'avancé',
+    readTime: '50 min'
   },
 ];
 
-const pagesTechnologies = [
+const pagesTechnologies: PageItem[] = [
   {
     slug: 'technologies',
     titre: "Technologies Modernes",
-    description: "Mouvements à quartz, montres connectées, matériaux innovants (silicium, céramique).",
+    description: "Quartz, co-axial, montres connectées et les matériaux de demain.",
     icon: <Cpu className="w-7 h-7 text-cyan-600 dark:text-cyan-400" />,
+    tag: 'avancé',
+    readTime: '35 min'
   },
 ];
 
-const pagesEntretien = [
+const pagesEntretien: PageItem[] = [
   {
     slug: 'entretien',
     titre: "Entretien & Maintenance",
-    description: "Révision complète, diagnostic de pannes, réparations professionnelles.",
+    description: "Guide pratique : révision, diagnostic, huiles et outils de l'horloger.",
     icon: <Wrench className="w-7 h-7 text-orange-600 dark:text-orange-400" />,
+    tag: 'pratique',
+    readTime: '40 min'
   },
 ];
 
-const pagesLecturePlan = [
+const pagesLecturePlan: PageItem[] = [
   {
     slug: 'lecture-de-plan',
     titre: "Lecture de Plans Horlogers",
-    description: "Vues techniques, cartouche, tolérances, ISO/NIHS.",
+    description: "Maîtriser les vues techniques, le cartouche, les tolérances et les normes (ISO/NIHS).",
     icon: <BookOpen className="w-7 h-7 text-slate-700 dark:text-slate-200" />,
+    tag: 'pratique',
+    readTime: '30 min'
   },
 ];
 
+// Composant principal
 export default function TheoriePage() {
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const allSections = [
+    { id: 'fonctionnement', title: '⚙️ Mécanismes', pages: pagesFonctionnement, color: 'blue' },
+    { id: 'materiaux', title: '🧱 Matériaux', pages: pagesMateriaux, color: 'yellow' },
+    { id: 'mouvement', title: '🏗️ Architecture', pages: pagesMouvement, color: 'slate' },
+    { id: 'manufactures', title: '🏛️ Manufactures', pages: pagesManufactures, color: 'indigo' },
+    { id: 'complications', title: '🌀 Complications', pages: pagesComplications, color: 'purple' },
+    { id: 'technologies', title: '🔬 Technologies', pages: pagesTechnologies, color: 'cyan' },
+    { id: 'entretien', title: '🔧 Pratique', pages: pagesEntretien, color: 'orange' },
+    { id: 'histoire', title: '📚 Culture', pages: pagesHistoireCulture, color: 'amber' },
+    { id: 'plans', title: '📐 Plans', pages: pagesLecturePlan, color: 'slate' }
+  ];
+
+  const toggleFavorite = useCallback((slug: string) => {
+    setFavorites(prev => 
+      prev.includes(slug) 
+        ? prev.filter(item => item !== slug)
+        : [...prev, slug]
+    );
+  }, []);
+
+  const scrollToSection = useCallback((sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setMobileMenuOpen(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const getTagColor = (tag?: string) => {
+    switch (tag) {
+      case 'fondamental': return 'text-blue-700 bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300';
+      case 'avancé': return 'text-purple-700 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-300';
+      case 'pratique': return 'text-orange-700 bg-orange-100 dark:bg-orange-900/30 dark:text-orange-300';
+      case 'culture': return 'text-amber-700 bg-amber-100 dark:bg-amber-900/30 dark:text-amber-300';
+      default: return 'text-slate-600 bg-slate-100 dark:bg-slate-700 dark:text-slate-300';
+    }
+  };
+
+  // Filtrage simple pour la recherche
+  const filteredSections = allSections.map(section => ({
+    ...section,
+    pages: section.pages.filter(page =>
+      page.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      page.description.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  })).filter(section => section.pages.length > 0);
+
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-slate-950">
-      {/* HEADER */}
-      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <Link
-            href="/"
-            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5 mr-1" />
-            Retour à l'accueil
-          </Link>
+    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
+      {/* Header sticky */}
+      <header className="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm shadow-sm border-b border-slate-200 dark:border-slate-700">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <Link
+              href="/"
+              className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5 mr-1" />
+              Accueil
+            </Link>
+            
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
       </header>
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-4">
-        <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">
-          Théorie Horlogère Suisse
-        </h1>
-        <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mb-8">
-          Parcours complet de l'horlogerie suisse : mécanique, manufactures, complications, 
-          technologies modernes et maintenance professionnelle.
-        </p>
-
-        {/* Section fonctionnement horloger */}
-        <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3 mt-12">
-          ⚙️ Fonctionnement d'une montre mécanique
-        </h2>
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
-          {pagesFonctionnement.map((p) => (
-            <Link
-              key={p.slug}
-              href={`/theorie/${p.slug}`}
-              className="flex gap-4 items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all group"
-            >
-              <div>{p.icon}</div>
-              <div>
-                <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                  {p.titre}
-                </div>
-                <div className="text-sm text-slate-700 dark:text-slate-300">{p.description}</div>
-              </div>
-            </Link>
-          ))}
+      {/* Breadcrumb */}
+      <nav className="bg-blue-50 dark:bg-slate-800 py-3 px-4 border-b border-blue-100 dark:border-slate-700">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            Vous êtes ici : 
+            <span className="font-medium text-blue-600 dark:text-blue-400"> Centre de ressources théoriques</span>
+          </p>
         </div>
+      </nav>
 
-        {/* 🧱 Section Matériaux Horlogers */}
-        <h2 className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mb-3 mt-12">
-          🧱 Matériaux Horlogers
-        </h2>
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
-          {pagesMateriaux.map((p) => (
-            <Link
-              key={p.slug}
-              href={p.slug}
-              className="flex gap-4 items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all group"
-            >
-              <div>{p.icon}</div>
-              <div>
-                <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">
-                  {p.titre}
-                </div>
-                <div className="text-sm text-slate-700 dark:text-slate-300">{p.description}</div>
-              </div>
-            </Link>
-          ))}
-        </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
+        {/* Hero section */}
+        <section className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">
+            Centre de Ressources Horlogères
+          </h1>
+          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-8">
+            Explorez notre bibliothèque de connaissances pour approfondir votre compréhension de l'horlogerie suisse. 
+            Des bases de la mécanique aux complications les plus complexes, trouvez ici l'information que vous cherchez.
+          </p>
+          
+          {/* Barre de recherche */}
+          <div className="max-w-xl mx-auto relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Rechercher un article, un terme..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+        </section>
 
-        {/* ⭐ SECTION MOUVEMENT - UNE SEULE CARTE ⭐ */}
-        <h2 className="text-2xl font-bold text-slate-700 dark:text-slate-300 mb-3 mt-12">
-          🏗️ Architecture du Mouvement
-        </h2>
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
-          {pagesMouvement.map((p) => (
-            <Link
-              key={p.slug}
-              href={`/theorie/${p.slug}`}
-              className="flex gap-4 items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all group"
-            >
-              <div>{p.icon}</div>
-              <div>
-                <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-slate-600 dark:group-hover:text-slate-400 transition-colors">
-                  {p.titre}
-                </div>
-                <div className="text-sm text-slate-700 dark:text-slate-300">{p.description}</div>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {/* Table of contents */}
+        {!searchTerm && (
+          <section className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg mb-12">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
+              📚 Explorer par thématique
+            </h2>
+            <nav className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {allSections.map((section) => (
+                <button
+                  key={section.id}
+                  onClick={() => scrollToSection(section.id)}
+                  className="text-left px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors"
+                >
+                  <span className="block text-sm font-medium text-slate-900 dark:text-white">
+                    {section.title}
+                  </span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">
+                    {section.pages.length} article{section.pages.length > 1 ? 's' : ''}
+                  </span>
+                </button>
+              ))}
+            </nav>
+          </section>
+        )}
 
-        {/* Section Manufactures */}
-        <h2 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-3 mt-12">
-          🏛️ Grandes Manufactures Suisses
-        </h2>
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
-          {pagesManufactures.map((p) => (
-            <Link
-              key={p.slug}
-              href={`/theorie/${p.slug}`}
-              className="flex gap-4 items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all group"
+        {/* Sections content */}
+        {filteredSections.length > 0 ? (
+          filteredSections.map((section) => (
+            <section 
+              key={section.id} 
+              id={section.id}
+              className="mb-16 scroll-mt-24"
+              aria-labelledby={`heading-${section.id}`}
             >
-              <div>{p.icon}</div>
-              <div>
-                <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                  {p.titre}
-                </div>
-                <div className="text-sm text-slate-700 dark:text-slate-300">{p.description}</div>
+              <h2 className={`text-2xl font-bold text-${section.color}-600 dark:text-${section.color}-400 mb-6`}>
+                {section.title}
+              </h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                {section.pages.map((page) => (
+                  <article
+                    key={page.slug}
+                    className="group relative bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300"
+                  >
+                    <Link href={`/theorie/${page.slug}`} className="block p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="p-2 bg-slate-100 dark:bg-slate-700 rounded-lg group-hover:scale-110 transition-transform">
+                          {page.icon}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              toggleFavorite(page.slug);
+                            }}
+                            className="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                          >
+                            <Heart 
+                              className={`w-5 h-5 transition-colors ${
+                                favorites.includes(page.slug) 
+                                  ? 'fill-red-500 text-red-500' 
+                                  : 'text-slate-400 hover:text-red-500'
+                              }`} 
+                            />
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        {page.titre}
+                      </h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
+                        {page.description}
+                      </p>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          {page.tag && (
+                            <span className={`text-xs px-2 py-1 rounded-full font-medium ${getTagColor(page.tag)}`}>
+                              {page.tag}
+                            </span>
+                          )}
+                          {page.readTime && (
+                            <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {page.readTime} de lecture
+                            </span>
+                          )}
+                        </div>
+                        <ChevronRight className="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </Link>
+                  </article>
+                ))}
               </div>
-            </Link>
-          ))}
-        </div>
+            </section>
+          ))
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-slate-500 dark:text-slate-400">Aucun article trouvé pour "{searchTerm}".</p>
+          </div>
+        )}
 
-        {/* Section Complications */}
-        <h2 className="text-2xl font-bold text-purple-600 dark:text-purple-400 mb-3 mt-12">
-          🌀 Complications Horlogères
-        </h2>
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
-          {pagesComplications.map((p) => (
-            <Link
-              key={p.slug}
-              href={`/theorie/${p.slug}`}
-              className="flex gap-4 items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all group"
-            >
-              <div>{p.icon}</div>
-              <div>
-                <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
-                  {p.titre}
-                </div>
-                <div className="text-sm text-slate-700 dark:text-slate-300">{p.description}</div>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {/* Section "Pour aller plus loin" */}
+        <section className="bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 p-8 rounded-xl mt-16">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+              🌟 Pour aller plus loin
+            </h2>
+            <p className="text-slate-600 dark:text-slate-300 mb-6 max-w-2xl mx-auto">
+              Vous souhaitez mettre en pratique ces connaissances ? Découvrez nos guides pratiques, 
+              nos fiches techniques ou explorez les outils interactifs.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link 
+                href="/outils"
+                className="inline-flex items-center justify-center px-6 py-3 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-all shadow-md"
+              >
+                <Cog className="w-5 h-5 mr-2" />
+                Outils & Calculatrices
+              </Link>
+              <Link 
+                href="/lexique"
+                className="inline-flex items-center justify-center px-6 py-3 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-md border border-slate-300 dark:border-slate-600"
+              >
+                <BookOpen className="w-5 h-5 mr-2" />
+                Lexique Horloger
+              </Link>
+            </div>
+          </div>
+        </section>
+      </div>
 
-        {/* Section Technologies Modernes */}
-        <h2 className="text-2xl font-bold text-cyan-600 dark:text-cyan-400 mb-3 mt-12">
-          🔬 Technologies Modernes
-        </h2>
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
-          {pagesTechnologies.map((p) => (
-            <Link
-              key={p.slug}
-              href={`/theorie/${p.slug}`}
-              className="flex gap-4 items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all group"
-            >
-              <div>{p.icon}</div>
-              <div>
-                <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
-                  {p.titre}
-                </div>
-                <div className="text-sm text-slate-700 dark:text-slate-300">{p.description}</div>
-              </div>
-            </Link>
-          ))}
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="fixed inset-0 bg-black/50" onClick={() => setMobileMenuOpen(false)} />
+          <nav className="fixed right-0 top-0 h-full w-80 bg-white dark:bg-slate-900 shadow-xl p-6 overflow-y-auto">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">Navigation</h3>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <ul className="space-y-3">
+              {allSections.map((section) => (
+                <li key={section.id}>
+                  <button
+                    onClick={() => scrollToSection(section.id)}
+                    className="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  >
+                    {section.title}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
+      )}
 
-        {/* Section Entretien & Maintenance */}
-        <h2 className="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-3 mt-12">
-          🔧 Entretien & Maintenance
-        </h2>
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
-          {pagesEntretien.map((p) => (
-            <Link
-              key={p.slug}
-              href={`/theorie/${p.slug}`}
-              className="flex gap-4 items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all group"
-            >
-              <div>{p.icon}</div>
-              <div>
-                <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
-                  {p.titre}
-                </div>
-                <div className="text-sm text-slate-700 dark:text-slate-300">{p.description}</div>
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        {/* Section Histoire et Culture */}
-        <h2 className="text-2xl font-bold text-amber-600 dark:text-amber-400 mb-3 mt-12">
-          📚 Histoire et Culture Horlogère
-        </h2>
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
-          {pagesHistoireCulture.map((p) => (
-            <Link
-              key={p.slug}
-              href={`/theorie/${p.slug}`}
-              className="flex gap-4 items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all group"
-            >
-              <div>{p.icon}</div>
-              <div>
-                <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
-                  {p.titre}
-                </div>
-                <div className="text-sm text-slate-700 dark:text-slate-300">{p.description}</div>
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        {/* Section lecture de plans */}
-        <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-300 mb-3">
-          📐 Lecture de plans, normes & cartouches
-        </h2>
-        <div className="grid md:grid-cols-2 gap-6">
-          {pagesLecturePlan.map((p) => (
-            <Link
-              key={p.slug}
-              href={`/theorie/${p.slug}`}
-              className="flex gap-4 items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all group"
-            >
-              <div>{p.icon}</div>
-              <div>
-                <div className="text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                  {p.titre}
-                </div>
-                <div className="text-sm text-slate-700 dark:text-slate-300">{p.description}</div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {/* Scroll to top button */}
+      {showScrollTop && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-8 right-8 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all hover:scale-110 z-40"
+          aria-label="Retour en haut"
+        >
+          <ArrowUp className="w-6 h-6" />
+        </button>
+      )}
     </main>
   );
 }
