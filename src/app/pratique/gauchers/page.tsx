@@ -74,7 +74,7 @@ const adaptationsData = [
       "🔄 **Gestion du sens horaire** : Visualisez toujours le mouvement inverse",
       "👍 **Pouce droit comme pivot** : Base stable pour la précision",
       "🎮 **Entraînement miroir quotidien** : 15 min de détournement visuel",
-      "📏 **Repères inversés sur les outils**": "Marquages personnalisés"
+      "📏 **Repères inversés sur les outils** : Marquages personnalisés"
     ],
     stats: { adaptationTime: "2-3 mois", successRate: "92%" },
     image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400"
@@ -86,9 +86,9 @@ const adaptationsData = [
     solutions: [
       "👨‍🏫 **Formateur référent gaucher** : Un spécialiste dédié",
       "📹 **Vidéos tutorielles miroir** : Apprentissage visual adapté",
-      "👥 **Parrainage par un pro gaucher**": "Mentorat personnalisé",
-      "📅 **Suivi hebdomadaire**": "Corrections rapides des gestes",
-      "🎯 **Exercices renforcés**": "10% de temps supplémentaire accepté"
+      "👥 **Parrainage par un pro gaucher** : Mentorat personnalisé",
+      "📅 **Suivi hebdomadaire** : Corrections rapides des gestes",
+      "🎯 **Exercices renforcés** : 10% de temps supplémentaire accepté"
     ],
     stats: { satisfaction: "94%", dropOutRate: "3% vs 8%" },
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400"
