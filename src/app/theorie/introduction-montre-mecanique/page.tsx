@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ChevronLeft, Clock, Cog, Gauge, Settings, Eye, Watch, 
+  ChevronLeft,Download, Clock, Cog, Gauge, Settings, Eye, Watch, 
   RotateCw, Trophy, BookOpen, Zap, TrendingUp, Award,
   Play, Pause, SkipForward, CheckCircle, XCircle, Lightbulb,
   Star, GraduationCap, Target, ArrowRight, Battery, Wind,
