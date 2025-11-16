@@ -3,11 +3,7 @@
 
 import { useState, useEffect, createContext, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowLeft, Moon, Sun, Wrench, Eye, Brain, Heart, Trophy, Clock, Award, Users,
-  Target, CheckCircle, Zap, ShoppingCart, BookOpen, HelpCircle, UserCheck,
-  Video, TrendingUp, Shield, Info
-} from "lucide-react";
+import { ArrowLeft, Moon, Sun, Wrench, Eye, Brain, Heart, Trophy, Clock, Award, Users, Target, CheckCircle, Zap, ShoppingCart, BookOpen, HelpCircle, UserCheck, Video, Tools, TrendingUp, Shield, Info } from "lucide-react";
 import Link from "next/link";
 
 // Types
@@ -769,7 +765,7 @@ export default function GauchersPage() {
             </div>
           </motion.section>
 
-          {/* SEULE MODIFICATION : Le titre de cette section */}
+          {/* SEULE MODIFICATION : Section complètement remplacée */}
           <motion.section 
             className={`rounded-2xl p-8 md:p-12 border backdrop-blur-sm ${
               theme === "dark" ? "bg-black/20 border-blue-400/20" : "bg-white/60 border-blue-600/20"
@@ -781,56 +777,57 @@ export default function GauchersPage() {
             <h2 className={`text-3xl font-bold text-center mb-8 ${
               theme === "dark" ? "text-blue-400" : "text-blue-700"
             }`}>
-              Ressources et accompagnement  {/* ← TITRE MODIFIÉ */}
+              Validation et perspectives de carrière
             </h2>
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
                 <h3 className={`text-xl font-bold mb-4 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                  Ressources essentielles
+                  Cheminement vers la certification
                 </h3>
                 <ul className="space-y-3">
                   <li className={`flex items-center gap-3 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                    <BookOpen className="w-5 h-5 text-blue-500" />
-                    <span>Guide WOSTEP complet (80 pages)</span>
+                    <Award className="w-5 h-5 text-green-500" />
+                    <span>Validation des compétences techniques après 20 semaines</span>
                   </li>
                   <li className={`flex items-center gap-3 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                    <Users className="w-5 h-5 text-blue-500" />
-                    <span>Communauté Discord (340+ membres)</span>
+                    <Target className="w-5 h-5 text-green-500" />
+                    <span>Examen pratique miroir avec formateur certifié</span>
                   </li>
                   <li className={`flex items-center gap-3 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                    <Video className="w-5 h-5 text-blue-500" />
-                    <span>Tutoriels vidéo exclusifs</span>
+                    <Trophy className="w-5 h-5 text-green-500" />
+                    <span>Obtention du certificat d'adaptation spécialisée</span>
                   </li>
                 </ul>
               </div>
               <div className="text-center">
-                <Heart className={`w-16 h-16 mx-auto mb-4 ${theme === "dark" ? "text-red-400" : "text-red-600"}`} />
+                <TrendingUp className={`w-16 h-16 mx-auto mb-4 ${theme === "dark" ? "text-green-400" : "text-green-600"}`} />
                 <h3 className={`text-xl font-bold mb-3 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                  Votre différence est un atout
+                  Marché de l'emploi
                 </h3>
                 <p className={`mb-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                  15% des élèves horlogers sont gauchers avec un taux de réussite de 92%. Votre cerveau développe des connexions uniques.
+                  Les horlogers gauchers certifiés sont recherchés pour leur précision unique et leur adaptabilité.
                 </p>
                 <div className="flex justify-center gap-6 mb-6">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-green-500">92%</div>
-                    <div className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>Réussite CFC</div>
+                    <div className="text-2xl font-bold text-green-500">94%</div>
+                    <div className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>Employabilité</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-500">8%</div>
-                    <div className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>Maîtres horlogers</div>
+                    <div className="text-2xl font-bold text-blue-500">CHF 58/h</div>
+                    <div className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>Salaire moyen</div>
                   </div>
                 </div>
                 <motion.div whileHover={{ scale: 1.05 }}>
-                  <Link href="/contact" className={`inline-block px-6 py-3 rounded-lg font-bold ${
-                    theme === "dark" ? "bg-blue-400 text-black hover:bg-blue-300" : "bg-blue-600 text-white hover:bg-blue-700"
+                  <Link href="/emplois" className={`inline-block px-6 py-3 rounded-lg font-bold ${
+                    theme === "dark" ? "bg-green-400 text-black hover:bg-green-300" : "bg-green-600 text-white hover:bg-green-700"
                   }`}>
-                    Contacter un formateur spécialisé
+                    Voir les opportunités
                   </Link>
                 </motion.div>
               </div>
             </div>
           </motion.section>
+          {/* FIN DE LA SECTION MODIFIÉE */}
         </div>
       </div>
     </ThemeContext.Provider>
