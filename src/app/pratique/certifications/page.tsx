@@ -299,7 +299,7 @@ export default function CertificationsPage() {
               theme === "dark" ? "border-amber-400/20" : "border-blue-600/20"
             }`}>
               <img
-                src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?w=1200&h=675&fit=crop"
+                src="https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=1200&h=675&fit=crop"
                 alt="Atelier horlogerie suisse"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
