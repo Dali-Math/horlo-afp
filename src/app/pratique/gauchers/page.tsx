@@ -696,7 +696,7 @@ export default function GauchersPage() {
             <ExerciseTimeline exercises={exercises} />
           </motion.section>
 
-          // REMPLACE TOUTE LA SECTION TEMOIGNAGES par ceci :
+          
 
 {/* Conseils de maîtres horlogers */}
 <motion.section className="mb-16">
