@@ -1,7 +1,6 @@
-'use client';
-
+// src/components/montre/MontreMecaniqueComplete.tsx
 import { Play, Pause } from 'lucide-react';
-import { MontreProvider, useMontre } from './MontreMecaniqueProvider';
+import { useMontre } from './MontreMecaniqueProvider';
 import { NavigationMontre } from './NavigationMontre';
 import { AnimationMontre } from './AnimationMontre';
 import { Card } from '@/components/ui/Card';
@@ -32,8 +31,8 @@ const IntroductionSection = () => (
 
 const OrganesSection = () => {
   const organes = [
-    { nom: 'Barillet', desc: 'Stocke l\'énergie du ressort moteur', icon: '⚡' },
-    { nom: 'Rouage', desc: 'Transmet et démultiplie l\'énergie', icon: '⚙️' },
+    { nom: 'Barillet', desc: "Stocke l'énergie du ressort moteur", icon: '⚡' },
+    { nom: 'Rouage', desc: "Transmet et démultiplie l'énergie", icon: '⚙️' },
     { nom: 'Échappement', desc: 'Régule la libération d\'énergie', icon: '💓' },
     { nom: 'Balancier', desc: 'Oscille à fréquence constante', icon: '🎯' },
     { nom: 'Remontoir', desc: 'Permet de remonter le ressort', icon: '🔄' },
@@ -62,7 +61,7 @@ export function MontreMecaniqueComplete() {
   const sections = {
     introduction: <IntroductionSection />,
     organes: <OrganesSection />,
-    animation: <AnimationMontre />,
+    animation: <AnimationMontre />
     // Ajouter d'autres sections au besoin
   };
 
@@ -70,61 +69,59 @@ export function MontreMecaniqueComplete() {
   const totalCount = Object.keys(progression).length;
 
   return (
-    <MontreProvider>
-      <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 py-12 px-4">
-        <div className="max-w-7xl mx-auto">
-          {/* Header avec progression */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-white text-center mb-6">
-              Introduction aux Montres Mécaniques
-            </h1>
-            
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-4">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-slate-300">Progression</span>
-                <span className="text-slate-400">{completedCount}/{totalCount}</span>
-              </div>
-              <div className="w-full bg-slate-700 rounded-full h-3">
-                <div 
-                  className="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all"
-                  style={{ width: `${(completedCount / totalCount) * 100}%` }}
-                />
-              </div>
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 py-12 px-4">
+      <div className="max-w-7xl mx-auto">
+        {/* Header avec progression */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-white text-center mb-6">
+            Introduction aux Montres Mécaniques
+          </h1>
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-slate-300">Progression</span>
+              <span className="text-slate-400">{completedCount}/{totalCount}</span>
+            </div>
+            <div className="w-full bg-slate-700 rounded-full h-3">
+              <div
+                className="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all"
+                style={{ width: `${(completedCount / totalCount) * 100}%` }}
+              />
             </div>
           </div>
+        </div>
 
-          {/* Navigation */}
-          <NavigationMontre />
-          
-          {/* Contrôle global */}
-          <div className="flex justify-end mb-6">
-            <button
-              onClick={() => setGlobalAnimation(!globalAnimation)}
-              className={`px-6 py-3 rounded-xl font-bold flex items-center gap-2 ${
-                globalAnimation 
-                  ? 'bg-gradient-to-r from-red-500 to-red-600' 
-                  : 'bg-gradient-to-r from-green-500 to-green-600'
-              } text-white`}
-            >
-              {globalAnimation ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
-              {globalAnimation ? 'Pause' : 'Play'}
-            </button>
-          </div>
+        {/* Navigation */}
+        <NavigationMontre />
 
-          {/* Contenu */}
-          <div className="space-y-8">
-            {sections[activeTab as keyof typeof sections]}
-          </div>
+        {/* Contrôle global */}
+        <div className="flex justify-end mb-6">
+          <button
+            onClick={() => setGlobalAnimation(!globalAnimation)}
+            className={`px-6 py-3 rounded-xl font-bold flex items-center gap-2 ${
+              globalAnimation
+                ? 'bg-gradient-to-r from-red-500 to-red-600'
+                : 'bg-gradient-to-r from-green-500 to-green-600'
+            } text-white`}
+          >
+            {globalAnimation ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
+            {globalAnimation ? 'Pause' : 'Play'}
+          </button>
+        </div>
 
-          {/* Footer */}
-          <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-6 text-center mt-12">
-            <p className="text-slate-300">
-              Visualisation interactive basée sur l'article de Bartosz Ciechanowski
-            </p>
-          </div>
+        {/* Contenu */}
+        <div className="space-y-8">
+          {sections[activeTab as keyof typeof sections]}
+        </div>
+
+        {/* Footer */}
+        <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-6 text-center mt-12">
+          <p className="text-slate-300">
+            Visualisation interactive basée sur l'article de Bartosz Ciechanowski
+          </p>
         </div>
       </div>
-    </MontreProvider>
+    </div>
   );
 }
+
 export default MontreMecaniqueComplete;
