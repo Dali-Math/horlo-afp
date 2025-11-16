@@ -5,6 +5,8 @@ import { MontreProvider, useMontre } from './MontreMecaniqueProvider';
 import { NavigationMontre } from './NavigationMontre';
 import { AnimationMontre } from './AnimationMontre';
 import { Card } from '@/components/ui/Card';
+export default MontreMecaniqueComplete;
+
 
 // Composants simplifiés pour chaque section
 const IntroductionSection = () => (
