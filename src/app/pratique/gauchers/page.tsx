@@ -53,7 +53,7 @@ const adaptationsData = [
       "⚙️ Clefs de montage miroir : Sens de serrage inversé"
     ],
     stats: { priceReduction: "20-30%", availability: "85%" },
-    image: "https://images.unsplash.com/photo-1504148455328-c376907d0815?w=400 "
+    image: "/images/outils.jpg "
   },
   {
     id: "posture",
@@ -67,7 +67,7 @@ const adaptationsData = [
       "🪑 Siège avec repose-coude gauche : Stabilité du bras"
     ],
     stats: { fatigueReduction: "40%", precisionImprovement: "25%" },
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400 "
+    image: "/images/posture.jpg "
   },
   {
     id: "techniques",
@@ -81,7 +81,7 @@ const adaptationsData = [
       "📏 Repères inversés sur les outils : Marquages personnalisés"
     ],
     stats: { adaptationTime: "2-3 mois", successRate: "92%" },
-    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400 "
+    image: "/images/techniques.jpg "
   },
   {
     id: "formation",
