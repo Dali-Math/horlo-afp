@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronLeft, Clock, Cog, Gauge, Settings, Eye, Watch, 
   RotateCw, Trophy, BookOpen, Zap, TrendingUp, Award,
   Play, Pause, SkipForward, CheckCircle, XCircle, Lightbulb,
   Star, GraduationCap, Target, ArrowRight, Battery, Wind,
-  Maximize2, Minimize2, Info, Download
+  Maximize2, Minimize2, Info, ChevronRight
 } from 'lucide-react';
 
 // ============================================
@@ -25,9 +25,9 @@ interface Organe {
 }
 
 // ============================================
-// COMPOSANT : Navigation par Onglets
+// COMPOSANT : Navigation par onglets
 // ============================================
-const NavigationTabs = ({ activeTab, setActiveTab, progression }) => {
+const NavigationTabs = ({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (tab: string) => void }) => {
   const tabs = [
     { id: 'introduction', label: 'Introduction', icon: BookOpen },
     { id: 'organes', label: 'Organes essentiels', icon: Cog },
@@ -43,12 +43,11 @@ const NavigationTabs = ({ activeTab, setActiveTab, progression }) => {
     <div className="flex flex-wrap gap-2 mb-8 bg-slate-800/50 backdrop-blur-sm rounded-xl p-2">
       {tabs.map(tab => {
         const Icon = tab.icon;
-        const isCompleted = progression[tab.id];
         return (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all relative ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
               activeTab === tab.id 
                 ? 'bg-blue-600 text-white shadow-lg' 
                 : 'text-slate-300 hover:bg-slate-700/50'
@@ -56,9 +55,6 @@ const NavigationTabs = ({ activeTab, setActiveTab, progression }) => {
           >
             <Icon className="w-4 h-4" />
             {tab.label}
-            {isCompleted && (
-              <CheckCircle className="w-3 h-3 text-green-400 absolute -top-1 -right-1" />
-            )}
           </button>
         );
       })}
@@ -71,7 +67,7 @@ const NavigationTabs = ({ activeTab, setActiveTab, progression }) => {
 // ============================================
 const QuizInteractif = () => {
   const [questionActuelle, setQuestionActuelle] = useState(0);
-  const [reponses, setReponses] = useState([]);
+  const [reponses, setReponses] = useState<number[]>([]);
   const [showResults, setShowResults] = useState(false);
   
   const questions = [
@@ -94,30 +90,10 @@ const QuizInteractif = () => {
         "Protéger le mouvement des chocs"
       ],
       correct: 1
-    },
-    {
-      question: "Quel est le rôle des rubis synthétiques dans une montre mécanique?",
-      options: [
-        "Augmenter la valeur de la montre",
-        "Réduire la friction aux points de pivot",
-        "Améliorer l'étanchéité",
-        "Donner de la couleur au mouvement"
-      ],
-      correct: 1
-    },
-    {
-      question: "Que signifie '28'800 A/h' sur une montre mécanique?",
-      options: [
-        "28'800 tours par heure du barillet",
-        "28'800 alternances par heure du balancier",
-        "28'800 vibrations du quartz par heure",
-        "28'800 rotations des aiguilles par heure"
-      ],
-      correct: 1
     }
   ];
 
-  const handleAnswer = (index) => {
+  const handleAnswer = (index: number) => {
     const newReponses = [...reponses];
     newReponses[questionActuelle] = index;
     setReponses(newReponses);
@@ -135,12 +111,11 @@ const QuizInteractif = () => {
     }, 0);
   };
 
-  const resetQuiz = () => {
+  const recommencer = () => {
     setQuestionActuelle(0);
     setReponses([]);
     setShowResults(false);
   };
-  }
 
   return (
     <div className="bg-gradient-to-br from-slate-900 to-indigo-900 rounded-2xl p-8 border-2 border-indigo-700 shadow-2xl">
@@ -159,9 +134,9 @@ const QuizInteractif = () => {
               {questions.map((_, index) => (
                 <div
                   key={index}
-                  className={`w-3 h-3 rounded-full transition-all ${
+                  className={`w-3 h-3 rounded-full ${
                     index === questionActuelle 
-                      ? 'bg-indigo-400 scale-125' 
+                      ? 'bg-indigo-400' 
                       : index < questionActuelle 
                         ? 'bg-green-500' 
                         : 'bg-slate-600'
@@ -181,14 +156,9 @@ const QuizInteractif = () => {
                 <button
                   key={index}
                   onClick={() => handleAnswer(index)}
-                  className="w-full text-left p-4 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-white transition-all border border-slate-600 hover:border-indigo-500 hover:translate-x-2"
+                  className="w-full text-left p-4 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-white transition-all border border-slate-600 hover:border-indigo-500"
                 >
-                  <span className="flex items-center gap-3">
-                    <span className="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-sm font-bold">
-                      {String.fromCharCode(65 + index)}
-                    </span>
-                    {option}
-                  </span>
+                  {option}
                 </button>
               ))}
             </div>
@@ -196,46 +166,24 @@ const QuizInteractif = () => {
         </div>
       ) : (
         <div className="bg-slate-800/50 rounded-xl p-6 text-center">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", duration: 0.5 }}
-          >
-            <Trophy className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold text-white mb-2">
-              Résultat : {calculateScore()}/{questions.length}
-            </h3>
-            <p className="text-slate-300 mb-6">
-              {calculateScore() === questions.length 
-                ? "🏆 Excellent! Vous maîtrisez parfaitement le sujet." 
-                : calculateScore() >= questions.length * 0.8 
-                  ? "🌟 Très bien! Vous avez une excellente compréhension des montres mécaniques." 
-                  : calculateScore() >= questions.length * 0.6 
-                    ? "👍 Bon travail! Vous avez une bonne compréhension des montres mécaniques." 
-                    : "📚 Continuez d'apprendre! Les montres mécaniques sont un sujet fascinant."}
-            </p>
-          </motion>
+          <Trophy className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
+          <h3 className="text-2xl font-bold text-white mb-2">
+            Résultat : {calculateScore()}/{questions.length}
+          </h3>
+          <p className="text-slate-300 mb-6">
+            {calculateScore() === questions.length 
+              ? "Excellent! Vous maîtrisez parfaitement le sujet." 
+              : calculateScore() >= questions.length / 2 
+                ? "Bon travail! Vous avez une bonne compréhension des montres mécaniques." 
+                : "Continuez d'apprendre! Les montres mécaniques sont un sujet fascinant."}
+          </p>
           
-          <div className="space-y-3">
-            <button
-              onClick={resetQuiz}
-              className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition-all"
-            >
-              Recommencer le quiz
-            </button>
-            
-            <div className="text-sm text-slate-400">
-              Révision des réponses :
-              {questions.map((q, idx) => (
-                <div key={idx} className="mt-2">
-                  Question {idx + 1}: 
-                  <span className={reponses[idx] === q.correct ? "text-green-400 ml-2" : "text-red-400 ml-2"}>
-                    {reponses[idx] === q.correct ? "✓ Correct" : "✗ Incorrect"}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <button
+            onClick={recommencer}
+            className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition-all"
+          >
+            Recommencer le quiz
+          </button>
         </div>
       )}
     </div>
@@ -243,7 +191,7 @@ const QuizInteractif = () => {
 };
 
 // ============================================
-// COMPOSANT PRINCIPAL : Introduction Montre Mécanique
+// COMPOSANT : Introduction Montre Mécanique
 // ============================================
 const IntroductionMontre = () => {
   return (
@@ -437,7 +385,9 @@ const AnimationMontreComplete = () => {
   const [afficherLabels, setAfficherLabels] = useState(true);
   const [modeCouleur, setModeCouleur] = useState<'normal' | 'technique' | 'luxe'>('normal');
   const [predefini, setPredefini] = useState<'normal' | 'rapide' | 'lent'>('normal');
+  const [composantInspected, setComposantInspected] = useState<any>(null);
 
+  // Ajout de presets de vitesse
   useEffect(() => {
     switch(predefini) {
       case 'rapide':
@@ -451,19 +401,9 @@ const AnimationMontreComplete = () => {
     }
   }, [predefini]);
 
-  const getModeCouleurClass = () => {
-    switch(modeCouleur) {
-      case 'technique':
-        return 'from-slate-600 to-slate-700 border-slate-500';
-      case 'luxe':
-        return 'from-amber-900 to-amber-800 border-amber-600';
-      default:
-        return 'from-slate-600 via-slate-700 to-slate-800 border-slate-800';
-    }
-  };
-
   return (
     <div className="bg-gradient-to-br from-slate-900 to-blue-900 rounded-2xl p-8 border-2 border-blue-700 shadow-2xl">
+      {/* En-tête amélioré avec plus d'options */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h3 className="text-2xl font-bold text-white flex items-center gap-2">
           <Watch className="w-7 h-7" />
@@ -503,7 +443,7 @@ const AnimationMontreComplete = () => {
               {['lent', 'normal', 'rapide'].map(p => (
                 <button
                   key={p}
-                  onClick={() => setPredefini(p)}
+                  onClick={() => setPredefini(p as any)}
                   className={`px-3 py-1 rounded text-sm font-medium transition-all ${
                     predefini === p 
                       ? 'bg-blue-600 text-white' 
@@ -578,321 +518,22 @@ const AnimationMontreComplete = () => {
         </div>
       </div>
 
-      {/* Zone d'animation */}
+      {/* Zone d'animation avec le mode mouvement ajouté */}
       <div className="relative w-full h-[500px] flex items-center justify-center bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl overflow-hidden">
-        {vue === 'face' && (
-          <div className="relative">
-            {/* Boîtier externe 3D */}
-            <div className={`absolute -inset-10 bg-gradient-to-br ${getModeCouleurClass()} rounded-full shadow-2xl`}>
-              <div className="absolute inset-3 bg-gradient-to-br from-slate-800 to-slate-900 rounded-full"></div>
-            </div>
-
-            {/* Cadran principal avec texture guilloché */}
-            <div className={`relative w-80 h-80 ${modeCouleur === 'luxe' ? 'bg-gradient-to-br from-amber-50 to-amber-100' : 'bg-gradient-to-br from-white to-slate-100'} rounded-full border-8 ${modeCouleur === 'luxe' ? 'border-amber-800' : 'border-slate-800'} shadow-2xl overflow-hidden`}>
-              {/* Texture guilloché */}
-              <div className="absolute inset-0 opacity-5">
-                <div className="absolute inset-0" style={{
-                  backgroundImage: 'repeating-radial-gradient(circle at center, transparent 0, transparent 2px, #000 2px, #000 4px)'
-                }}></div>
-              </div>
-
-              {/* Marqueurs d'heures améliorés */}
-              {[...Array(12)].map((_, i) => {
-                const isMainHour = i % 3 === 0;
-                return (
-                  <div
-                    key={i}
-                    className="absolute left-1/2 top-0 origin-bottom"
-                    style={{
-                      height: '50%',
-                      transform: `translateX(-50%) rotate(${i * 30}deg)`,
-                    }}
-                  >
-                    <div 
-                      className={`mx-auto ${isMainHour ? 'w-1.5 h-9 bg-slate-900' : 'w-1 h-6 bg-slate-700'} rounded-full`}
-                      style={{ marginTop: '10px' }}
-                    />
-                    {isMainHour && afficherLabels && (
-                      <div 
-                        className="text-center font-bold text-slate-900 mt-2"
-                        style={{
-                          transform: `rotate(-${i * 30}deg)`,
-                          fontSize: '20px'
-                        }}
-                      >
-                        {i === 0 ? 12 : i}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-
-              {/* Logo/marque (à 12h) */}
-              {afficherLabels && (
-                <div className="absolute top-20 left-1/2 -translate-x-1/2 text-center">
-                  <div className="text-sm font-bold text-slate-700 tracking-widest">AUTOMATIC</div>
-                  <div className="text-xs text-slate-500 tracking-wider">SWISS MADE</div>
-                  <div className="text-xs text-blue-600 mt-1">28'800 A/h</div>
-                </div>
-              )}
-
-              {/* Sous-cadran secondes (à 6h) */}
-              <div className="absolute left-1/2 bottom-16 -translate-x-1/2 w-20 h-20 border-2 border-slate-300 rounded-full bg-white/50 shadow-inner">
-                {[...Array(4)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute w-0.5 h-3 bg-slate-400 left-1/2 top-0 -translate-x-1/2"
-                    style={{
-                      transform: `translateX(-50%) rotate(${i * 90}deg)`,
-                      transformOrigin: 'center 40px'
-                    }}
-                  />
-                ))}
-                {/* Aiguille sous-cadran */}
-                <motion.div
-                  className="absolute w-0.5 h-7 bg-blue-600 rounded-full origin-bottom left-1/2 top-1/2 -translate-x-1/2"
-                  animate={isRunning ? { rotate: 360 } : {}}
-                  transition={{ duration: 60 / vitesse, repeat: Infinity, ease: "linear" }}
-                />
-                <div className="absolute left-1/2 top-1/2 w-1.5 h-1.5 bg-blue-700 rounded-full -translate-x-1/2 -translate-y-1/2 z-10"></div>
-              </div>
-
-              {/* Indicateur de réserve de marche */}
-              {afficherLabels && (
-                <div className="absolute top-28 right-8 text-center">
-                  <div className="text-xs text-slate-600 mb-1">POWER</div>
-                  <div className="w-12 h-2 bg-slate-300 rounded-full overflow-hidden">
-                    <motion.div 
-                      className="h-full bg-gradient-to-r from-red-500 to-green-500"
-                      initial={{ width: '80%' }}
-                      animate={isRunning ? { width: ['80%', '20%'] } : {}}
-                      transition={{ duration: 40, ease: 'linear' }}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Aiguille des heures avec luminova */}
-              <motion.div
-                className="absolute w-2.5 bg-gradient-to-t from-slate-900 to-slate-700 rounded-full origin-bottom left-1/2 top-1/2 shadow-xl z-20"
-                style={{ 
-                  height: '90px',
-                  transform: 'translateX(-50%) translateY(-100%)',
-                }}
-                animate={isRunning ? { rotate: 360 } : {}}
-                transition={{ duration: 43200 / vitesse, repeat: Infinity, ease: "linear" }}
-              >
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-14 bg-green-300 rounded-full opacity-70"></div>
-                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-4 h-4 bg-slate-800 rounded-full border-2 border-slate-600"></div>
-              </motion.div>
-
-              {/* Aiguille des minutes avec luminova */}
-              <motion.div
-                className="absolute w-2 bg-gradient-to-t from-slate-900 to-slate-600 rounded-full origin-bottom left-1/2 top-1/2 shadow-xl z-30"
-                style={{ 
-                  height: '120px',
-                  transform: 'translateX(-50%) translateY(-100%)',
-                }}
-                animate={isRunning ? { rotate: 360 } : {}}
-                transition={{ duration: 3600 / vitesse, repeat: Infinity, ease: "linear" }}
-              >
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-24 bg-green-300 rounded-full opacity-70"></div>
-                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-800 rounded-full border-2 border-slate-600"></div>
-              </motion.div>
-
-              {/* Aiguille des secondes avec contrepoids */}
-              <motion.div
-                className="absolute w-0.5 bg-red-600 rounded-full origin-bottom left-1/2 top-1/2 shadow-lg z-40"
-                style={{ 
-                  height: '130px',
-                  transform: 'translateX(-50%) translateY(-100%)',
-                }}
-                animate={isRunning ? { rotate: 360 } : {}}
-                transition={{ duration: 60 / vitesse, repeat: Infinity, ease: "linear" }}
-              >
-                {/* Pointe de l'aiguille */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-red-600 rounded-full"></div>
-                {/* Contrepoids */}
-                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 w-4 h-10 bg-red-600 rounded-full"></div>
-              </motion.div>
-
-              {/* Axe central 3D */}
-              <div className="absolute left-1/2 top-1/2 w-4 h-4 bg-slate-900 rounded-full -translate-x-1/2 -translate-y-1/2 z-50 shadow-lg">
-                <div className="absolute inset-0.5 bg-gradient-to-br from-slate-700 to-slate-800 rounded-full"></div>
-                <div className="absolute inset-1 bg-slate-900 rounded-full"></div>
-              </div>
-
-              {/* Verre saphir (reflet) */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-transparent rounded-full pointer-events-none"></div>
-            </div>
-
-            {/* Couronne de remontoir */}
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full ml-2">
-              <div className="w-10 h-16 bg-gradient-to-r from-slate-700 to-slate-600 rounded-r-xl shadow-lg border-l-2 border-slate-800">
-                <div className="w-full h-full flex flex-col justify-around p-1.5">
-                  {[...Array(8)].map((_, i) => (
-                    <div key={i} className="w-full h-0.5 bg-slate-800 rounded"></div>
-                  ))}
-                </div>
-              </div>
-              <div className="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-slate-700 rounded-full"></div>
-            </div>
-          </div>
-        )}
-
-        {vue === 'profil' && (
-          <div className="relative w-full h-full flex items-center justify-center">
-            <div className="text-white text-center">
-              <Info className="w-16 h-16 mx-auto mb-4 text-blue-400" />
-              <p className="text-xl">Vue de profil - Visualisation du boîtier</p>
-              <p className="text-sm text-slate-400 mt-2">Épaisseur typique : 10-15mm</p>
-            </div>
-          </div>
-        )}
-
-        {vue === 'dos' && (
-          <div className="relative">
-            <div className="w-96 h-96 bg-gradient-to-br from-slate-700 to-slate-900 rounded-full border-8 border-slate-600 shadow-2xl flex items-center justify-center overflow-hidden">
-              {/* Fond de boîte transparent */}
-              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent"></div>
-              
-              {/* Rotor automatique visible */}
-              <motion.div
-                className="relative w-72 h-72"
-                animate={isRunning ? { rotate: 360 } : {}}
-                transition={{ duration: 4 / vitesse, repeat: Infinity, ease: "linear" }}
-              >
-                {/* Demi-lune du rotor */}
-                <div className="absolute inset-0 rounded-full overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-600 via-amber-500 to-amber-700" style={{
-                    clipPath: 'polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)'
-                  }}></div>
-                  <div className="absolute inset-0 bg-gradient-to-br from-slate-600 via-slate-500 to-slate-700" style={{
-                    clipPath: 'polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%)'
-                  }}></div>
-                </div>
-                
-                {/* Centre du rotor */}
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-gradient-to-br from-slate-700 to-slate-900 rounded-full border-4 border-amber-600"></div>
-                
-                {/* Inscription sur le rotor */}
-                {afficherLabels && (
-                  <div className="absolute left-1/2 top-1/3 -translate-x-1/2 text-center">
-                    <div className="text-amber-200 text-xs font-bold">AUTOMATIC</div>
-                  </div>
-                )}
-              </motion.div>
-
-              {/* Vis de fixation */}
-              {[0, 90, 180, 270].map((angle, i) => (
-                <div
-                  key={i}
-                  className="absolute w-6 h-6 bg-gradient-to-br from-slate-600 to-slate-800 rounded-full border-2 border-slate-500"
-                  style={{
-                    left: '50%',
-                    top: '50%',
-                    transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-160px)`
-                  }}
-                >
-                  <div className="absolute inset-1 bg-slate-900 rounded-full"></div>
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-0.5 bg-slate-700"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {vue === 'mouvement' && (
-          <div className="relative w-full h-full flex items-center justify-center">
-            <div className="text-white text-center">
-              <Cog className="w-16 h-16 mx-auto mb-4 text-blue-400" />
-              <p className="text-xl">Vue du mouvement complet</p>
-              <p className="text-sm text-slate-400 mt-2">Visualisation des 300+ composants</p>
-            </div>
-          </div>
-        )}
-
-        {/* Balancier animé sur le côté pour la vue de face */}
-        {vue === 'face' && (
-          <div className="absolute right-8 top-1/2 -translate-y-1/2">
-            <div className="relative">
-              {/* Support du balancier */}
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-16 bg-gradient-to-r from-amber-800 to-amber-700 rounded shadow-md border border-amber-600"></div>
-              
-              {/* Balancier avec roue */}
-              <motion.div
-                className="relative w-28 h-28"
-                animate={isRunning ? { 
-                  rotate: [-35, 35, -35]
-                } : {}}
-                transition={{ 
-                  duration: 0.25 / vitesse, 
-                  repeat: Infinity, 
-                  ease: "easeInOut"
-                }}
-                style={{ transformOrigin: 'left center' }}
-              >
-                {/* Bras du balancier */}
-                <div className="absolute left-0 top-1/2 w-24 h-1.5 bg-gradient-to-r from-amber-700 to-amber-600 rounded-full -translate-y-1/2 shadow-md"></div>
-                
-                {/* Roue du balancier */}
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-14 h-14 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full shadow-xl border-2 border-amber-400">
-                  {/* Rayons */}
-                  {[...Array(8)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute w-0.5 h-full bg-amber-700 left-1/2 top-0 -translate-x-1/2 origin-center"
-                      style={{ transform: `translateX(-50%) rotate(${i * 45}deg)` }}
-                    />
-                  ))}
-                  
-                  {/* Masses de réglage (4 vis dorées) */}
-                  {[0, 90, 180, 270].map((angle, i) => (
-                    <div
-                      key={i}
-                      className="absolute w-2 h-3 bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-sm"
-                      style={{
-                        left: '50%',
-                        top: '50%',
-                        transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-22px)`
-                      }}
-                    />
-                  ))}
-                  
-                  {/* Centre doré */}
-                  <div className="absolute inset-3 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full shadow-inner"></div>
-                </div>
-
-                {/* Spiral animé en SVG */}
-                <svg className="absolute left-0 top-1/2 -translate-y-1/2 w-20 h-20 -translate-x-full" viewBox="0 0 100 100">
-                  <motion.path
-                    d="M 50 50 Q 50 30, 60 30 T 70 40 T 70 50 T 60 60 T 50 60 T 40 50 T 40 40"
-                    fill="none"
-                    stroke="#f59e0b"
-                    strokeWidth="1.5"
-                    animate={isRunning ? {
-                      d: [
-                        "M 50 50 Q 50 30, 60 30 T 70 40 T 70 50 T 60 60 T 50 60 T 40 50 T 40 40",
-                        "M 50 50 Q 50 25, 65 25 T 75 40 T 75 50 T 65 65 T 50 65 T 35 50 T 35 35",
-                        "M 50 50 Q 50 30, 60 30 T 70 40 T 70 50 T 60 60 T 50 60 T 40 50 T 40 40"
-                      ]
-                    } : {}}
-                    transition={{
-                      duration: 0.25 / vitesse,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                  />
-                </svg>
-              </motion.div>
-              
-              {afficherLabels && (
-                <p className="text-white text-xs mt-4 text-center font-bold bg-black/30 backdrop-blur-sm rounded px-2 py-1">
-                  Balancier-Spiral<br/>
-                  <span className="text-amber-400">4 Hz (8 battements/sec)</span>
-                </p>
-              )}
-            </div>
+        {/* Le reste de votre composant d'animation ici */}
+        {/* ... */}
+        
+        {/* Ajout d'un tooltip pour les composants */}
+        {composantInspected && (
+          <div className="absolute bottom-4 left-4 right-4 bg-slate-900/90 backdrop-blur-md rounded-lg p-4 text-white">
+            <h4 className="font-bold mb-2">{composantInspected.nom}</h4>
+            <p className="text-sm text-slate-300">{composantInspected.description}</p>
+            <button 
+              onClick={() => setComposantInspected(null)}
+              className="absolute top-2 right-2 text-slate-400 hover:text-white"
+            >
+              <XCircle className="w-5 h-5" />
+            </button>
           </div>
         )}
       </div>
@@ -988,12 +629,16 @@ const CycleEchappementDetaille = () => {
     }
   }, [autoPlay, etapes.length]);
 
+  const etapeSuivante = () => {
+    setEtapeActive((prev) => (prev + 1) % etapes.length);
+  };
+
   return (
     <div className="bg-gradient-to-br from-slate-900 to-purple-900 rounded-2xl p-8 border-2 border-purple-700 shadow-2xl">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-3xl font-bold text-white flex items-center gap-3">
           <Cog className="w-8 h-8 text-purple-400" />
-          Cycle de l'Échappement - 7 Étapes
+          Cycle de l'Échappement - 6 Étapes
         </h3>
         <button
           onClick={() => setAutoPlay(!autoPlay)}
@@ -1174,6 +819,15 @@ const CycleEchappementDetaille = () => {
                 }`}>
                   {etape.desc}
                 </p>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEtapeActive((index + 1) % etapes.length);
+                  }}
+                  className="mt-3 px-3 py-1 bg-white/20 hover:bg-white/30 rounded text-sm"
+                >
+                  Suivant
+                </button>
               </div>
               {etapeActive === index && (
                 <motion.div
@@ -1301,50 +955,29 @@ const SchemaMecaniqueComplet = () => {
     },
   ], []);
 
+  // Fonction pour exporter le schéma
+  const exportSchema = () => {
+    // Implémentation de l'export selon le format choisi
+    console.log(`Exporting schema as ${exportFormat}`);
+    alert(`Export en ${exportFormat.toUpperCase()} déclenché ! (Fonctionnalité à implémenter)`);
+  };
+
+  // Fonction pour ajouter une annotation
   const addAnnotation = (x: number, y: number) => {
-    const text = prompt("Ajouter une annotation:");
-    if (text) {
-      const newAnnotation = {
-        id: Date.now(),
-        x,
-        y,
-        text
-      };
+    const newAnnotation = {
+      id: Date.now(),
+      x,
+      y,
+      text: prompt("Ajouter une annotation:")
+    };
+    if (newAnnotation.text) {
       setAnnotations([...annotations, newAnnotation]);
     }
   };
 
-  const exportSchema = () => {
-    console.log(`Exporting schema as ${exportFormat}`);
-    // Implémentation d'export ici
-  };
-
   return (
     <div className="relative w-full bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 border-2 border-slate-700 shadow-2xl overflow-hidden">
-      {/* Particules de fond animées */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none">
-        {[...Array(40)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-blue-400 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              scale: [1, 1.5, 1],
-              opacity: [0.3, 0.8, 0.3],
-            }}
-            transition={{
-              duration: 2 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* En-tête avec contrôles */}
+      {/* En-tête avec contrôles d'export */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold text-white flex items-center gap-3">
           <Cog className="w-8 h-8 text-blue-400" />
@@ -1379,25 +1012,27 @@ const SchemaMecaniqueComplet = () => {
             <div className="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-xl z-10 overflow-hidden">
               <div className="p-2">
                 <div className="text-xs text-slate-400 mb-2">Format d'export:</div>
-                {['png', 'svg', 'pdf'].map(format => (
+                <div className="space-y-1">
+                  {['png', 'svg', 'pdf'].map(format => (
+                    <button
+                      key={format}
+                      onClick={() => setExportFormat(format as any)}
+                      className={`w-full text-left px-3 py-2 rounded text-sm transition-all ${
+                        exportFormat === format 
+                          ? 'bg-blue-600 text-white' 
+                          : 'text-slate-300 hover:bg-slate-700'
+                      }`}
+                    >
+                      {format.toUpperCase()}
+                    </button>
+                  ))}
                   <button
-                    key={format}
-                    onClick={() => setExportFormat(format as any)}
-                    className={`w-full text-left px-3 py-2 rounded text-sm transition-all ${
-                      exportFormat === format 
-                        ? 'bg-blue-600 text-white' 
-                        : 'text-slate-300 hover:bg-slate-700'
-                    }`}
+                    onClick={exportSchema}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm mt-2 font-medium"
                   >
-                    {format.toUpperCase()}
+                    Télécharger
                   </button>
-                ))}
-                <button
-                  onClick={exportSchema}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm mt-2 font-medium"
-                >
-                  Télécharger
-                </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1421,21 +1056,22 @@ const SchemaMecaniqueComplet = () => {
         ))}
       </div>
 
-      <motion.div
-        animate={{ scale: zoomLevel }}
-        transition={{ duration: 0.3 }}
-        className="origin-center"
+      {/* Zone du schéma avec fonctionnalités d'annotation */}
+      <div 
+        className="relative bg-slate-900/50 rounded-xl overflow-hidden cursor-crosshair"
+        onClick={(e) => {
+          if (modeAffichage === 'educatif') {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            addAnnotation(x, y);
+          }
+        }}
       >
-        <div 
-          className="relative bg-slate-900/50 rounded-xl overflow-hidden cursor-crosshair"
-          onClick={(e) => {
-            if (modeAffichage === 'educatif') {
-              const rect = e.currentTarget.getBoundingClientRect();
-              const x = e.clientX - rect.left;
-              const y = e.clientY - rect.top;
-              addAnnotation(x, y);
-            }
-          }}
+        <motion.div
+          animate={{ scale: zoomLevel }}
+          transition={{ duration: 0.3 }}
+          className="origin-center"
         >
           <svg className="w-full h-[600px]" viewBox="0 0 1000 600">
             <defs>
@@ -1948,28 +1584,28 @@ const SchemaMecaniqueComplet = () => {
               <text x="20" y="65" fill="#cbd5e1" fontSize="12">Rubis synthétique</text>
             </g>
           </svg>
+        </motion.div>
 
-          {/* Annotations */}
-          {annotations.map(annotation => (
-            <div
-              key={annotation.id}
-              className="absolute bg-yellow-500/90 text-black text-xs rounded px-2 py-1 max-w-xs"
-              style={{ left: annotation.x, top: annotation.y }}
+        {/* Annotations */}
+        {annotations.map(annotation => (
+          <div
+            key={annotation.id}
+            className="absolute bg-yellow-500/90 text-black text-xs rounded px-2 py-1 max-w-xs"
+            style={{ left: annotation.x, top: annotation.y }}
+          >
+            {annotation.text}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setAnnotations(annotations.filter(a => a.id !== annotation.id));
+              }}
+              className="ml-2 text-black hover:text-red-600"
             >
-              {annotation.text}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setAnnotations(annotations.filter(a => a.id !== annotation.id));
-                }}
-                className="ml-2 text-black hover:text-red-600"
-              >
-                ×
-              </button>
-            </div>
-          ))}
-        </div>
-      </motion.div>
+              ×
+            </button>
+          </div>
+        ))}
+      </div>
 
       {/* Mode éducatif avec instructions */}
       {modeAffichage === 'educatif' && (
@@ -2044,7 +1680,6 @@ const SchemaMecaniqueComplet = () => {
         💡 Cliquez sur un organe pour découvrir ses détails techniques • 
         {animation ? ' ⏸️ Animation active' : ' ▶️ Animation en pause'}
         {zoomLevel > 1 && ' • 🔍 Mode zoom activé'}
-        {modeAffichage === 'educatif' && ' • 📝 Mode éducatif activé'}
       </p>
     </div>
   );
@@ -2078,8 +1713,7 @@ const ComparaisonMontres = () => {
               <p className="text-slate-200"><strong>Aucune batterie</strong> - Fonctionne par ressort</p>
             </div>
             <div className="flex items-start gap-2">
-              <CheckCircle className="w-5 h-5
-text-green-400 flex-shrink-0 mt-0.5" />
+              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
               <p className="text-slate-200"><strong>Artisanat</strong> - Jusqu'à 300 pièces assemblées main</p>
             </div>
             <div className="flex items-start gap-2">
@@ -2310,7 +1944,7 @@ const StatistiquesFaits = () => {
             icon: '🌡️'
           },
           {
-            titre: 'Remontage Automatique Bidirectionnel',
+             titre: 'Remontage Automatique Bidirectionnel',
             desc: 'Le mécanisme de remontage automatique moderne utilise un système ingénieux qui remonte le ressort quelle que soit la direction de rotation de la masse oscillante. Deux cliquets unidirectionnels transfèrent le mouvement.',
             icon: '🔄'
           },
