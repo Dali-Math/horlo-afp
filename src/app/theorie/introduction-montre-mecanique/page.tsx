@@ -140,6 +140,7 @@ const QuizInteractif = () => {
     setReponses([]);
     setShowResults(false);
   };
+  }
 
   return (
     <div className="bg-gradient-to-br from-slate-900 to-indigo-900 rounded-2xl p-8 border-2 border-indigo-700 shadow-2xl">
