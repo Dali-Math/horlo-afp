@@ -22,7 +22,7 @@ export default function OutilsPage() {
 
   const sections = [
     { id: "introduction", title: "Introduction", icon: BookOpen },
-    { id: "essentiels", title: "Les 5 outils essentiels", icon: Tool },
+    { id: "essentiels", title: "Les 5 outils essentiels", icon: Wrench },
     { id: "types-brucelles", title: "Les brucelles", icon: Eye },
     { id: "tournevis", title: "Tournevis horlogers", icon: Settings },
     { id: "bergeron", title: "Porte-pièces & Bergeron", icon: Package },
