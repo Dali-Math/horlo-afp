@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Play, Pause, Eye, Maximize2 } from 'lucide-react';
+import { Play, Pause } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/Card';
 import { useMontre } from './MontreMecaniqueProvider';
@@ -23,7 +23,7 @@ export function AnimationMontre() {
   return (
     <Card className="bg-gradient-to-br from-slate-900 to-blue-900 border-blue-700">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-2xl font-bold text-white flex items-center gap-2">
+        <h3 className="text-2xl font-bold text-white">
           Montre Mécanique en Action
         </h3>
         
@@ -47,7 +47,7 @@ export function AnimationMontre() {
               <button
                 key={v.value}
                 onClick={() => setVitesse(v.value)}
-                className={`px-3 py-1 rounded text-sm ${
+                className={`px-3 py-1 rounded text-sm font-medium ${
                   vitesse === v.value 
                     ? 'bg-blue-600 text-white' 
                     : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
@@ -88,34 +88,36 @@ export function AnimationMontre() {
         </div>
       </div>
 
-      {/* Zone d'animation */}
+      {/* Zone d'animation simplifiée */}
       <div className="relative h-[400px] flex items-center justify-center bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl overflow-hidden">
         {vue === 'face' && (
           <div className="relative">
-            {/* Cadran simplifié mais élégant */}
             <div className="w-64 h-64 bg-gradient-to-br from-white to-slate-100 rounded-full border-8 border-slate-800 shadow-2xl relative">
               {/* Marqueurs d'heures */}
-              {[...Array(12)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute left-1/2 top-0 origin-bottom"
-                  style={{
-                    height: '50%',
-                    transform: `translateX(-50%) rotate(${i * 30}deg)`,
-                  }}
-                >
-                  <div 
-                    className={`mx-auto ${i % 3 === 0 ? 'w-1 h-6 bg-slate-900' : 'w-0.5 h-4 bg-slate-700'} rounded-full`}
-                    style={{ marginTop: '8px' }}
-                  />
-                </div>
-              ))}
+              {[...Array(12)].map((_, i) => {
+                const isMainHour = i % 3 === 0;
+                return (
+                  <div
+                    key={i}
+                    className="absolute left-1/2 top-0 origin-bottom"
+                    style={{
+                      height: '50%',
+                      transform: `translateX(-50%) rotate(${i * 30}deg)`,
+                    }}
+                  >
+                    <div 
+                      className={`mx-auto ${isMainHour ? 'w-1 h-6 bg-slate-900' : 'w-0.5 h-4 bg-slate-700'} rounded-full`}
+                      style={{ marginTop: '8px' }}
+                    />
+                  </div>
+                );
+              })}
 
               {/* Aiguilles animées */}
               <motion.div
-                className="absolute left-1/2 top-1/2 w-1 bg-slate-900 origin-bottom"
+                className="absolute left-1/2 top-1/2 w-0.5 bg-slate-900 origin-bottom"
                 style={{ 
-                  height: '80px',
+                  height: '60px',
                   transform: 'translateX(-50%) translateY(-100%)',
                 }}
                 animate={isRunning && globalAnimation ? { rotate: 360 } : {}}
@@ -125,7 +127,7 @@ export function AnimationMontre() {
               <motion.div
                 className="absolute left-1/2 top-1/2 w-0.5 bg-red-600 origin-bottom"
                 style={{ 
-                  height: '100px',
+                  height: '80px',
                   transform: 'translateX(-50%) translateY(-100%)',
                 }}
                 animate={isRunning && globalAnimation ? { rotate: 360 } : {}}
@@ -157,7 +159,7 @@ export function AnimationMontre() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
         {[
           { label: 'Fréquence', value: '4 Hz' },
-          { label: 'Alternances/h', value: '28\'800' },
+          { label: 'Alternances/h', value: "28'800" },
           { label: 'Réserve', value: '40h' },
           { label: 'Battements/s', value: '8' }
         ].map((stat, idx) => (
