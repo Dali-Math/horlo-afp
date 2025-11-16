@@ -1,4 +1,11 @@
 // ============================================
+// PAGE : Introduction Montre Mécanique
+// ============================================
+import React, { useState, useEffect } from 'react';
+import { motion, useMotionValue, animate, AnimatePresence } from 'framer-motion';
+import { Watch, Info, Pause, Play, CheckCircle, Cog, Eye, Lightbulb } from 'lucide-react';
+
+// ============================================
 // COMPOSANT : Montre Mécanique en Action - VERSION PROFESSIONNELLE
 // ============================================
 const AnimationMontreComplete = () => {
@@ -738,6 +745,10 @@ const CycleEchappementDetaille = () => {
                 <stop offset="0%" stopColor="#ec4899" />
                 <stop offset="100%" stopColor="#be185d" />
               </radialGradient>
+              <linearGradient id="steel-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#94a3b8" />
+                <stop offset="100%" stopColor="#475569" />
+              </linearGradient>
               <filter id="glow">
                 <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
                 <feMerge>
@@ -895,7 +906,7 @@ const CycleEchappementDetaille = () => {
                         }}
                       />
                     ))}
-                  </div>
+                  </motion.div>
                   
                   {/* Ancre réaliste */}
                   <motion.div
@@ -912,7 +923,7 @@ const CycleEchappementDetaille = () => {
                     {/* Palettes en rubis réalistes */}
                     <div className="absolute -left-4 top-4 w-8 h-4 bg-gradient-to-r from-pink-500 to-pink-600 rounded-full shadow-lg"></div>
                     <div className="absolute -right-4 bottom-4 w-8 h-4 bg-gradient-to-r from-pink-500 to-pink-600 rounded-full shadow-lg"></div>
-                  </div>
+                  </motion.div>
                   
                   {/* Balancier réaliste */}
                   <motion.div
@@ -953,7 +964,7 @@ const CycleEchappementDetaille = () => {
                       animate={etapeActive === 2 ? { scale: [1, 1.5, 1] } : {}}
                       transition={{ duration: 0.5, repeat: etapeActive === 2 ? Infinity : 0 }}
                     />
-                  </div>
+                  </motion.div>
                 </div>
               </div>
               
@@ -1030,3 +1041,36 @@ const CycleEchappementDetaille = () => {
     </div>
   );
 };
+
+// ============================================
+// PAGE PRINCIPALE
+// ============================================
+export default function IntroductionMontreMecanique() {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 py-12 px-4">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Introduction à la Montre Mécanique
+          </h1>
+          <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+            Découvrez le fonctionnement fascinant des montres mécaniques, 
+            ces merveilles d'ingénierie qui mesurent le temps avec une précision remarquable 
+            sans aucune source d'énergie électrique.
+          </p>
+        </div>
+
+        <div className="space-y-12">
+          <AnimationMontreComplete />
+          <CycleEchappementDetaille />
+        </div>
+
+        <div className="mt-12 text-center">
+          <p className="text-slate-400">
+            © 2023 - Introduction à l'Horlogerie Mécanique
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
