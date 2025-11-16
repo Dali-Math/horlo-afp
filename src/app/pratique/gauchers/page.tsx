@@ -818,8 +818,7 @@ export default function GauchersPage() {
                   </div>
                   <div className="text-center">
                   
-                    <div className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>Salaire moyen</div>
-                  </div>
+                    
                 </div>
                 <motion.div whileHover={{ scale: 1.05 }}>
                   <Link href="/emplois" className={`inline-block px-6 py-3 rounded-lg font-bold ${
