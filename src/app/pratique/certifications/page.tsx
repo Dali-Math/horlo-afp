@@ -3,7 +3,7 @@
 
 import { useState, useEffect, createContext, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Moon, Sun, Trophy, Clock, Award, Users, Target } from "lucide-react";
+import { ArrowLeft, Moon, Sun, Trophy, Clock, Award, Users, Target, Play } from "lucide-react";
 import Link from "next/link";
 
 // Types
@@ -288,23 +288,40 @@ export default function CertificationsPage() {
             </p>
           </motion.section>
 
-          {/* Video */}
+          {/* REMPLACEMENT VIDÉO - Image Hero Interactive */}
           <motion.section 
             className="mb-16"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <div className={`aspect-video w-full rounded-2xl overflow-hidden shadow-2xl border ${
+            <div className={`aspect-video w-full rounded-2xl overflow-hidden shadow-2xl border relative group ${
               theme === "dark" ? "border-amber-400/20" : "border-blue-600/20"
             }`}>
-              <iframe
-                src="https://www.youtube.com/embed/kSBFPhmsBmU"
-                title="Certifications en horlogerie"
-                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full"
+              <img
+                src="https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?w=1200&h=675&fit=crop"
+                alt="Atelier horlogerie suisse"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6">
+                <p className={`text-lg md:text-xl font-light ${
+                  theme === "dark" ? "text-white" : "text-white"
+                }`}>
+                  Découvrez l'excellence de la formation horlogère suisse
+                </p>
+                <p className={`text-sm mt-2 ${
+                  theme === "dark" ? "text-gray-200" : "text-gray-200"
+                }`}>
+                  Une tradition d'innovation et de précision depuis des siècles
+                </p>
+              </div>
+              <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center transition-all group-hover:scale-110 ${
+                theme === "dark" ? "bg-amber-400/90" : "bg-blue-600/90"
+              }`}>
+                <Play className="w-8 h-8 text-white ml-1" />
+              </div>
             </div>
           </motion.section>
 
