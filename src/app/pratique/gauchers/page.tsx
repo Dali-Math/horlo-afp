@@ -38,18 +38,19 @@ type Testimony = {
 // Contexte Thème
 const ThemeContext = createContext<{ theme: Theme; toggleTheme: () => void } | undefined>(undefined);
 
-// Données enrichies
+
+
 const adaptationsData = [
   {
     id: "outils",
     title: "Outils Inversés & Spécialisés",
     description: "Investir dans des outils gauchers est le premier pas vers une formation sereine. La plupart des fournisseurs proposent désormais des versions adaptées.",
     solutions: [
-      "🔧 **Pinces inversées** : Les mâchoires s'ouvrent à gauche",
-      "🔄 **Tours à gauche** : Rotation inverse pour plus de confort",
-      "✂️ **Ciseaux à ressort inversés** : La force se fait naturellement",
-      "🔍 **Loupes latérales** : Fixation à gauche pour meilleure visée",
-      "⚙️ **Clefs de montage miroir** : Sens de serrage inversé"
+      "🔧 Pinces inversées : Les mâchoires s'ouvrent à gauche",
+      "🔄 Tours à gauche : Rotation inverse pour plus de confort",
+      "✂️ Ciseaux à ressort inversés : La force se fait naturellement",
+      "🔍 Loupes latérales : Fixation à gauche pour meilleure visée",
+      "⚙️ Clefs de montage miroir : Sens de serrage inversé"
     ],
     stats: { priceReduction: "20-30%", availability: "85%" },
     image: "https://images.unsplash.com/photo-1504148455328-c376907d0815?w=400 "
@@ -59,11 +60,11 @@ const adaptationsData = [
     title: "Optimisation du Poste de Travail",
     description: "Un espace adapté réduit la fatigue de 40% et améliore la précision. L'ergonomie est cruciale pour les longues sessions.",
     solutions: [
-      "📐 **Table inclinée 15° à gauche** : Pour un meilleur angle de vue",
-      "💡 **Lampe positionnable à droite** : Évite les ombres de la main",
-      "📦 **Rangement gauche-dominant** : Outils à portée de main gauche",
-      "🪞 **Miroir de travail réglable** : Double vue sur la pièce",
-      "🪑 **Siège avec repose-coude gauche** : Stabilité du bras"
+      "📐 Table inclinée 15° à gauche : Pour un meilleur angle de vue",
+      "💡 Lampe positionnable à droite : Évite les ombres de la main",
+      "📦 Rangement gauche-dominant : Outils à portée de main gauche",
+      "🪞 Miroir de travail réglable : Double vue sur la pièce",
+      "🪑 Siège avec repose-coude gauche : Stabilité du bras"
     ],
     stats: { fatigueReduction: "40%", precisionImprovement: "25%" },
     image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400 "
@@ -73,11 +74,11 @@ const adaptationsData = [
     title: "Techniques & Méthodes Inversées",
     description: "Apprendre les gestes miroir demande du temps mais garantit une maîtrise totale. Ces techniques sont validées par des pros.",
     solutions: [
-      "⌚ **Position 9h au lieu de 3h** : La montre est tenue à l'envers",
-      "🔄 **Gestion du sens horaire** : Visualisez toujours le mouvement inverse",
-      "👍 **Pouce droit comme pivot** : Base stable pour la précision",
-      "🎮 **Entraînement miroir quotidien** : 15 min de détournement visuel",
-      "📏 **Repères inversés sur les outils** : Marquages personnalisés"
+      "⌚ Position 9h au lieu de 3h : La montre est tenue à l'envers",
+      "🔄 Gestion du sens horaire : Visualisez toujours le mouvement inverse",
+      "👍 Pouce droit comme pivot : Base stable pour la précision",
+      "🎮 Entraînement miroir quotidien : 15 min de détournement visuel",
+      "📏 Repères inversés sur les outils : Marquages personnalisés"
     ],
     stats: { adaptationTime: "2-3 mois", successRate: "92%" },
     image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400 "
@@ -87,11 +88,11 @@ const adaptationsData = [
     title: "Accompagnement Personnalisé",
     description: "Les écoles horlogères suisses offrent désormais des modules spécifiques. N'hésitez pas à demander de l'aide.",
     solutions: [
-      "👨‍🏫 **Formateur référent gaucher** : Un spécialiste dédié",
-      "📹 **Vidéos tutorielles miroir** : Apprentissage visual adapté",
-      "👥 **Parrainage par un pro gaucher** : Mentorat personnalisé",
-      "📅 **Suivi hebdomadaire** : Corrections rapides des gestes",
-      "🎯 **Exercices renforcés** : 10% de temps supplémentaire accepté"
+      "👨‍🏫 Formateur référent gaucher : Un spécialiste dédié",
+      "📹 Vidéos tutorielles miroir : Apprentissage visual adapté",
+      "👥 Parrainage par un pro gaucher : Mentorat personnalisé",
+      "📅 Suivi hebdomadaire : Corrections rapides des gestes",
+      "🎯 Exercices renforcés : 10% de temps supplémentaire accepté"
     ],
     stats: { satisfaction: "94%", dropOutRate: "3% vs 8%" },
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400 "
