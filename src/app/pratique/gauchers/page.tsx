@@ -3,11 +3,18 @@
 
 import { useState, useEffect, createContext, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Moon, Sun, Wrench, Eye, Brain, Heart, Zap, CheckCircle, Users, Target } from "lucide-react";
+import { ArrowLeft, Moon, Sun, Wrench, Eye, Brain, Heart, Trophy, Clock, Award, Users, Target, CheckCircle, Zap } from "lucide-react";
 import Link from "next/link";
 
 // Types
 type Theme = "light" | "dark";
+
+// ✅ CORRECTION : Type explicite pour éviter la référence circulaire
+type Exercise = {
+  title: string;
+  description: string;
+  steps: string[];
+};
 
 // Contexte Thème
 const ThemeContext = createContext<{ theme: Theme; toggleTheme: () => void } | undefined>(undefined);
@@ -44,7 +51,7 @@ const adaptationsData = [
   }
 ];
 
-const exercises = [
+const exercises: Exercise[] = [
   {
     title: "Exercice 1 : Coordination Main-Oeil",
     description: "Entraînez votre cerveau à inverser les mouvements",
@@ -71,7 +78,7 @@ function ThemeToggle() {
       onClick={toggleTheme}
       className={`p-3 rounded-xl border backdrop-blur-sm transition-all ${
         theme === "dark"
-          ? "bg-black/40 border-amber-400/20 text-amber-400 hover:border-amber-400/40"
+          ? "bg-black/40 border-blue-400/20 text-blue-400 hover:border-blue-400/40"
           : "bg-white/60 border-blue-600/20 text-blue-600 hover:border-blue-600/40"
       }`}
       whileHover={{ scale: 1.1 }}
@@ -140,8 +147,9 @@ function AdaptationCard({ adaptation }: { adaptation: typeof adaptationsData[0] 
   );
 }
 
-function ExerciseTimeline({ exercises }: { exercises: typeof exercises }) {
-  const { theme } = useContext(ThemeContext)!;
+// ✅ CORRECTION : Signature de fonction et syntaxe
+function ExerciseTimeline({ exercises }: { exercises: Exercise[] }) {
+  const { theme } = useContext(ThemeContext)!; // ✅ Syntaxe corrigée
   
   return (
     <div className="space-y-6">
@@ -267,7 +275,7 @@ export default function GauchersPage() {
             </p>
           </motion.section>
 
-          {/* Image Hero - Atelier adapté */}
+          {/* Image Hero */}
           <motion.section 
             className="mb-16"
             initial={{ opacity: 0 }}
@@ -291,11 +299,6 @@ export default function GauchersPage() {
                 <p className="text-sm mt-2 text-gray-200">
                   Des solutions existent pour chaque difficulté. Vous n'êtes pas seul.
                 </p>
-              </div>
-              <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold backdrop-blur-sm ${
-                theme === "dark" ? "bg-blue-400/20 text-blue-300 border border-blue-400/30" : "bg-blue-600/20 text-blue-700 border border-blue-600/30"
-              }`}>
-                Spécial Gaucher
               </div>
             </div>
           </motion.section>
