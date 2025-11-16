@@ -769,68 +769,7 @@ export default function GauchersPage() {
             </div>
           </motion.section>
 
-          {/* SEULE MODIFICATION : Section complètement remplacée */}
-          <motion.section 
-            className={`rounded-2xl p-8 md:p-12 border backdrop-blur-sm ${
-              theme === "dark" ? "bg-black/20 border-blue-400/20" : "bg-white/60 border-blue-600/20"
-            }`}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-          >
-            <h2 className={`text-3xl font-bold text-center mb-8 ${
-              theme === "dark" ? "text-blue-400" : "text-blue-700"
-            }`}>
-              Validation et perspectives de carrière
-            </h2>
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div>
-                <h3 className={`text-xl font-bold mb-4 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                  Cheminement vers la certification
-                </h3>
-                <ul className="space-y-3">
-                  <li className={`flex items-center gap-3 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                    <Award className="w-5 h-5 text-green-500" />
-                    <span>Validation des compétences techniques après 20 semaines</span>
-                  </li>
-                  <li className={`flex items-center gap-3 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                    <Target className="w-5 h-5 text-green-500" />
-                    <span>Examen pratique miroir avec formateur certifié</span>
-                  </li>
-                  <li className={`flex items-center gap-3 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                    <Trophy className="w-5 h-5 text-green-500" />
-                    <span>Obtention du certificat d'adaptation spécialisée</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="text-center">
-                <TrendingUp className={`w-16 h-16 mx-auto mb-4 ${theme === "dark" ? "text-green-400" : "text-green-600"}`} />
-                <h3 className={`text-xl font-bold mb-3 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                  Marché de l'emploi
-                </h3>
-                <p className={`mb-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                  Les horlogers gauchers certifiés sont recherchés pour leur précision unique et leur adaptabilité.
-                </p>
-                <div className="flex justify-center gap-6 mb-6">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-500">94%</div>
-                    <div className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>Employabilité</div>
-                  </div>
-                  <div className="text-center">
-                  
-                    
-                </div>
-                <motion.div whileHover={{ scale: 1.05 }}>
-                  <Link href="/emplois" className={`inline-block px-6 py-3 rounded-lg font-bold ${
-                    theme === "dark" ? "bg-green-400 text-black hover:bg-green-300" : "bg-green-600 text-white hover:bg-green-700"
-                  }`}>
-                    Voir les opportunités
-                  </Link>
-                </motion.div>
-              </div>
-            </div>
-          </motion.section>
-          {/* FIN DE LA SECTION MODIFIÉE */}
+          {/* LA SECTION A ÉTÉ SUPPRIMÉE - La page se termine ici */}
         </div>
       </div>
     </ThemeContext.Provider>
