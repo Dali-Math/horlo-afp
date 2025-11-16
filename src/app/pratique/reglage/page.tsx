@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { ArrowLeft, Info, BookOpen, Tool, Clock, Award, ChevronDown, ChevronRight, RefreshCw, Target, Zap } from "lucide-react";
+import { ArrowLeft, Info, BookOpen, Clock, Award, ChevronDown, ChevronRight, RefreshCw, Target, Zap, Wrench } from "lucide-react";
 import { useState } from "react";
 
 export default function ReglagePage() {
