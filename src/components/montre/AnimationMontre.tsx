@@ -38,7 +38,7 @@ export function AnimationMontre() {
         </div>
       </div>
 
-      {/* Contrôles simplifiés */}
+      {/* Contrôles */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div>
           <label className="text-slate-300 text-sm font-medium mb-2">Vitesse</label>
@@ -88,7 +88,7 @@ export function AnimationMontre() {
         </div>
       </div>
 
-      {/* Zone d'animation simplifiée */}
+      {/* Zone d'animation */}
       <div className="relative h-[400px] flex items-center justify-center bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl overflow-hidden">
         {vue === 'face' && (
           <div className="relative">
@@ -115,7 +115,7 @@ export function AnimationMontre() {
 
               {/* Aiguilles animées */}
               <motion.div
-                className="absolute left-1/2 top-1/2 w-0.5 bg-slate-900 origin-bottom"
+                className="absolute left-1/2 top-1/2 w-1 bg-slate-900 origin-bottom"
                 style={{ 
                   height: '60px',
                   transform: 'translateX(-50%) translateY(-100%)',
