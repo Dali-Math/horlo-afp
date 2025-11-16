@@ -556,31 +556,30 @@ export default function GauchersPage() {
           </motion.section>
 
           {/* Statistiques clés */}
-          <motion.section className="mb-16">
-            <div className="grid md:grid-cols-4 gap-6">
-              {[
-                { icon: Users, value: "15%", label: "Élèves gauchers" },
-                { icon: Trophy, value: "92%", label: "Taux de réussite CFC" },
-                { icon: Brain, value: "3-4", label: "Mois d'adaptation" },
-                { icon: Shield, value: "100%", label: "Réussite possible" }
-              ].map((stat, i) => (
-                <motion.div
-                  key={i}
-                  className={`text-center p-6 rounded-xl border transition-all ${
-                    theme === "dark"
-                      ? "bg-black/40 border-blue-400/20 hover:border-blue-400/40"
-                      : "bg-white/60 border-blue-600/20 hover:border-blue-600/40"
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <stat.icon className={`w-10 h-10 mx-auto mb-3 ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`} />
-                  <div className="text-2xl font-bold mb-1">{stat.value}</div>
-                  <div className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>{stat.label}</div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
-
+<motion.section className="mb-16">
+  <div className="grid md:grid-cols-4 gap-6">
+    {[
+      { icon: Users, value: "15%", label: "Élèves gauchers" },
+      { icon: Trophy, value: "92%", label: "Taux de réussite CFC" },
+      { icon: Brain, value: "3-4", label: "Mois d'adaptation" },
+      { icon: Award, value: "100%", label: "Réussite possible" } // Award au lieu de Shield
+    ].map((stat, i) => (
+      <motion.div
+        key={i}
+        className={`text-center p-6 rounded-xl border transition-all ${
+          theme === "dark"
+            ? "bg-black/40 border-blue-400/20 hover:border-blue-400/40"
+            : "bg-white/60 border-blue-600/20 hover:border-blue-600/40"
+        }`}
+        whileHover={{ scale: 1.05 }}
+      >
+        <stat.icon className={`w-10 h-10 mx-auto mb-3 ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`} />
+        <div className="text-2xl font-bold mb-1">{stat.value}</div>
+        <div className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>{stat.label}</div>
+      </motion.div>
+    ))}
+  </div>
+</motion.section>
           {/* Image Hero */}
           <motion.section 
             className="mb-16"
