@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronLeft, Clock, Cog, Gauge, Settings, Eye, Watch, 
   RotateCw, Trophy, BookOpen, Zap, TrendingUp, Award,
   Play, Pause, SkipForward, CheckCircle, XCircle, Lightbulb,
   Star, GraduationCap, Target, ArrowRight, Battery, Wind,
-  Maximize2, Minimize2, Info
+  Maximize2, Minimize2, Info, Download
 } from 'lucide-react';
 
 // ============================================
@@ -23,6 +23,223 @@ interface Organe {
   couleur: string;
   icon: string;
 }
+
+// ============================================
+// COMPOSANT : Navigation par Onglets
+// ============================================
+const NavigationTabs = ({ activeTab, setActiveTab, progression }) => {
+  const tabs = [
+    { id: 'introduction', label: 'Introduction', icon: BookOpen },
+    { id: 'organes', label: 'Organes essentiels', icon: Cog },
+    { id: 'animation', label: 'Animation 3D', icon: Watch },
+    { id: 'echappement', label: "Cycle d'échappement", icon: RotateCw },
+    { id: 'schema', label: 'Schéma mécanique', icon: Settings },
+    { id: 'comparaison', label: 'Comparaison', icon: Trophy },
+    { id: 'statistiques', label: 'Statistiques', icon: TrendingUp },
+    { id: 'quiz', label: 'Quiz', icon: GraduationCap }
+  ];
+
+  return (
+    <div className="flex flex-wrap gap-2 mb-8 bg-slate-800/50 backdrop-blur-sm rounded-xl p-2">
+      {tabs.map(tab => {
+        const Icon = tab.icon;
+        const isCompleted = progression[tab.id];
+        return (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all relative ${
+              activeTab === tab.id 
+                ? 'bg-blue-600 text-white shadow-lg' 
+                : 'text-slate-300 hover:bg-slate-700/50'
+            }`}
+          >
+            <Icon className="w-4 h-4" />
+            {tab.label}
+            {isCompleted && (
+              <CheckCircle className="w-3 h-3 text-green-400 absolute -top-1 -right-1" />
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+// ============================================
+// COMPOSANT : Quiz Interactif
+// ============================================
+const QuizInteractif = () => {
+  const [questionActuelle, setQuestionActuelle] = useState(0);
+  const [reponses, setReponses] = useState([]);
+  const [showResults, setShowResults] = useState(false);
+  
+  const questions = [
+    {
+      question: "Combien de battements par heure une montre mécanique standard effectue-t-elle?",
+      options: ["14'400", "21'600", "28'800", "36'000"],
+      correct: 2
+    },
+    {
+      question: "Quel composant régule la libération d'énergie dans une montre mécanique?",
+      options: ["Le barillet", "L'échappement", "Le balancier", "Le rouage"],
+      correct: 1
+    },
+    {
+      question: "Quelle est la fonction principale du spiral dans une montre mécanique?",
+      options: [
+        "Transmettre l'énergie aux aiguilles",
+        "Assurer l'oscillation régulière du balancier",
+        "Permettre le remontage automatique",
+        "Protéger le mouvement des chocs"
+      ],
+      correct: 1
+    },
+    {
+      question: "Quel est le rôle des rubis synthétiques dans une montre mécanique?",
+      options: [
+        "Augmenter la valeur de la montre",
+        "Réduire la friction aux points de pivot",
+        "Améliorer l'étanchéité",
+        "Donner de la couleur au mouvement"
+      ],
+      correct: 1
+    },
+    {
+      question: "Que signifie '28'800 A/h' sur une montre mécanique?",
+      options: [
+        "28'800 tours par heure du barillet",
+        "28'800 alternances par heure du balancier",
+        "28'800 vibrations du quartz par heure",
+        "28'800 rotations des aiguilles par heure"
+      ],
+      correct: 1
+    }
+  ];
+
+  const handleAnswer = (index) => {
+    const newReponses = [...reponses];
+    newReponses[questionActuelle] = index;
+    setReponses(newReponses);
+    
+    if (questionActuelle < questions.length - 1) {
+      setQuestionActuelle(questionActuelle + 1);
+    } else {
+      setShowResults(true);
+    }
+  };
+
+  const calculateScore = () => {
+    return reponses.reduce((score, answer, index) => {
+      return answer === questions[index].correct ? score + 1 : score;
+    }, 0);
+  };
+
+  const resetQuiz = () => {
+    setQuestionActuelle(0);
+    setReponses([]);
+    setShowResults(false);
+  };
+
+  return (
+    <div className="bg-gradient-to-br from-slate-900 to-indigo-900 rounded-2xl p-8 border-2 border-indigo-700 shadow-2xl">
+      <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+        <GraduationCap className="w-8 h-8 text-indigo-400" />
+        Testez vos connaissances
+      </h2>
+
+      {!showResults ? (
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <span className="text-indigo-300 font-medium">
+              Question {questionActuelle + 1} sur {questions.length}
+            </span>
+            <div className="flex gap-1">
+              {questions.map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-3 h-3 rounded-full transition-all ${
+                    index === questionActuelle 
+                      ? 'bg-indigo-400 scale-125' 
+                      : index < questionActuelle 
+                        ? 'bg-green-500' 
+                        : 'bg-slate-600'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-slate-800/50 rounded-xl p-6 mb-6">
+            <h3 className="text-xl font-bold text-white mb-4">
+              {questions[questionActuelle].question}
+            </h3>
+            
+            <div className="space-y-3">
+              {questions[questionActuelle].options.map((option, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleAnswer(index)}
+                  className="w-full text-left p-4 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-white transition-all border border-slate-600 hover:border-indigo-500 hover:translate-x-2"
+                >
+                  <span className="flex items-center gap-3">
+                    <span className="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-sm font-bold">
+                      {String.fromCharCode(65 + index)}
+                    </span>
+                    {option}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-slate-800/50 rounded-xl p-6 text-center">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", duration: 0.5 }}
+          >
+            <Trophy className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
+            <h3 className="text-2xl font-bold text-white mb-2">
+              Résultat : {calculateScore()}/{questions.length}
+            </h3>
+            <p className="text-slate-300 mb-6">
+              {calculateScore() === questions.length 
+                ? "🏆 Excellent! Vous maîtrisez parfaitement le sujet." 
+                : calculateScore() >= questions.length * 0.8 
+                  ? "🌟 Très bien! Vous avez une excellente compréhension des montres mécaniques." 
+                  : calculateScore() >= questions.length * 0.6 
+                    ? "👍 Bon travail! Vous avez une bonne compréhension des montres mécaniques." 
+                    : "📚 Continuez d'apprendre! Les montres mécaniques sont un sujet fascinant."}
+            </p>
+          </motion>
+          
+          <div className="space-y-3">
+            <button
+              onClick={resetQuiz}
+              className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition-all"
+            >
+              Recommencer le quiz
+            </button>
+            
+            <div className="text-sm text-slate-400">
+              Révision des réponses :
+              {questions.map((q, idx) => (
+                <div key={idx} className="mt-2">
+                  Question {idx + 1}: 
+                  <span className={reponses[idx] === q.correct ? "text-green-400 ml-2" : "text-red-400 ml-2"}>
+                    {reponses[idx] === q.correct ? "✓ Correct" : "✗ Incorrect"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // ============================================
 // COMPOSANT PRINCIPAL : Introduction Montre Mécanique
@@ -215,16 +432,44 @@ const SixOrganesEssentiels = () => {
 const AnimationMontreComplete = () => {
   const [vitesse, setVitesse] = useState(1);
   const [isRunning, setIsRunning] = useState(true);
-  const [vue, setVue] = useState<'face' | 'profil' | 'dos'>('face');
+  const [vue, setVue] = useState<'face' | 'profil' | 'dos' | 'mouvement'>('face');
+  const [afficherLabels, setAfficherLabels] = useState(true);
+  const [modeCouleur, setModeCouleur] = useState<'normal' | 'technique' | 'luxe'>('normal');
+  const [predefini, setPredefini] = useState<'normal' | 'rapide' | 'lent'>('normal');
+
+  useEffect(() => {
+    switch(predefini) {
+      case 'rapide':
+        setVitesse(5);
+        break;
+      case 'lent':
+        setVitesse(0.25);
+        break;
+      default:
+        setVitesse(1);
+    }
+  }, [predefini]);
+
+  const getModeCouleurClass = () => {
+    switch(modeCouleur) {
+      case 'technique':
+        return 'from-slate-600 to-slate-700 border-slate-500';
+      case 'luxe':
+        return 'from-amber-900 to-amber-800 border-amber-600';
+      default:
+        return 'from-slate-600 via-slate-700 to-slate-800 border-slate-800';
+    }
+  };
 
   return (
     <div className="bg-gradient-to-br from-slate-900 to-blue-900 rounded-2xl p-8 border-2 border-blue-700 shadow-2xl">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h3 className="text-2xl font-bold text-white flex items-center gap-2">
           <Watch className="w-7 h-7" />
           Montre Mécanique en Action
         </h3>
-        <div className="flex gap-2">
+        
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setIsRunning(!isRunning)}
             className="px-4 py-2 rounded-lg font-bold transition-all bg-white/10 text-white hover:bg-white/20 flex items-center gap-2"
@@ -232,53 +477,117 @@ const AnimationMontreComplete = () => {
             {isRunning ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
             {isRunning ? 'Pause' : 'Play'}
           </button>
+          
+          <button
+            onClick={() => setAfficherLabels(!afficherLabels)}
+            className={`px-4 py-2 rounded-lg font-bold transition-all flex items-center gap-2 ${
+              afficherLabels 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-white/10 text-white hover:bg-white/20'
+            }`}
+          >
+            <Eye className="w-5 h-5" />
+            Labels
+          </button>
         </div>
       </div>
 
-      {/* Contrôles de vitesse */}
-      <div className="flex gap-2 mb-4 justify-center">
-        {[0.5, 1, 2, 5].map(v => (
-          <button
-            key={v}
-            onClick={() => setVitesse(v)}
-            className={`px-4 py-2 rounded-lg font-bold transition-all ${
-              vitesse === v 
-                ? 'bg-blue-500 text-white shadow-lg' 
-                : 'bg-white/10 text-white/60 hover:bg-white/20'
-            }`}
-          >
-            {v}x
-          </button>
-        ))}
+      {/* Contrôles avancés */}
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Contrôles de vitesse avec presets */}
+          <div>
+            <label className="text-slate-300 text-sm font-medium mb-2 block">Vitesse</label>
+            <div className="flex gap-2 mb-2">
+              {['lent', 'normal', 'rapide'].map(p => (
+                <button
+                  key={p}
+                  onClick={() => setPredefini(p)}
+                  className={`px-3 py-1 rounded text-sm font-medium transition-all ${
+                    predefini === p 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                  }`}
+                >
+                  {p === 'lent' ? '0.25x' : p === 'normal' ? '1x' : '5x'}
+                </button>
+              ))}
+            </div>
+            <input
+              type="range"
+              min="0.1"
+              max="10"
+              step="0.1"
+              value={vitesse}
+              onChange={(e) => setVitesse(parseFloat(e.target.value))}
+              className="w-full"
+            />
+            <div className="text-center text-slate-400 text-sm mt-1">{vitesse.toFixed(1)}x</div>
+          </div>
+
+          {/* Sélecteur de vue amélioré */}
+          <div>
+            <label className="text-slate-300 text-sm font-medium mb-2 block">Vue</label>
+            <div className="grid grid-cols-2 gap-2">
+              {(['face', 'profil', 'dos', 'mouvement'] as const).map(v => (
+                <button
+                  key={v}
+                  onClick={() => setVue(v)}
+                  className={`px-3 py-1 rounded text-sm font-medium transition-all capitalize ${
+                    vue === v 
+                      ? 'bg-purple-600 text-white' 
+                      : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                  }`}
+                >
+                  {v}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Mode couleur */}
+          <div>
+            <label className="text-slate-300 text-sm font-medium mb-2 block">Mode couleur</label>
+            <div className="grid grid-cols-1 gap-2">
+              {(['normal', 'technique', 'luxe'] as const).map(c => (
+                <button
+                  key={c}
+                  onClick={() => setModeCouleur(c)}
+                  className={`px-3 py-1 rounded text-sm font-medium transition-all capitalize ${
+                    modeCouleur === c 
+                      ? 'bg-amber-600 text-white' 
+                      : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Informations techniques */}
+          <div>
+            <label className="text-slate-300 text-sm font-medium mb-2 block">Informations</label>
+            <div className="bg-slate-900/50 rounded p-2 text-xs text-slate-400">
+              <div>Fréquence: 4 Hz</div>
+              <div>Réserve: 40h</div>
+              <div>Jewels: 25</div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Sélecteur de vue */}
-      <div className="flex gap-2 mb-6 justify-center">
-        {(['face', 'profil', 'dos'] as const).map(v => (
-          <button
-            key={v}
-            onClick={() => setVue(v)}
-            className={`px-6 py-2 rounded-lg font-bold transition-all capitalize ${
-              vue === v 
-                ? 'bg-purple-500 text-white shadow-lg' 
-                : 'bg-white/10 text-white/60 hover:bg-white/20'
-            }`}
-          >
-            {v}
-          </button>
-        ))}
-      </div>
-
+      {/* Zone d'animation */}
       <div className="relative w-full h-[500px] flex items-center justify-center bg-gradient-to-b from-slate-800 to-slate-900 rounded-xl overflow-hidden">
         {vue === 'face' && (
           <div className="relative">
             {/* Boîtier externe 3D */}
-            <div className="absolute -inset-10 bg-gradient-to-br from-slate-600 via-slate-700 to-slate-800 rounded-full shadow-2xl">
+            <div className={`absolute -inset-10 bg-gradient-to-br ${getModeCouleurClass()} rounded-full shadow-2xl`}>
               <div className="absolute inset-3 bg-gradient-to-br from-slate-800 to-slate-900 rounded-full"></div>
             </div>
 
             {/* Cadran principal avec texture guilloché */}
-            <div className="relative w-80 h-80 bg-gradient-to-br from-white to-slate-100 rounded-full border-8 border-slate-800 shadow-2xl overflow-hidden">
+            <div className={`relative w-80 h-80 ${modeCouleur === 'luxe' ? 'bg-gradient-to-br from-amber-50 to-amber-100' : 'bg-gradient-to-br from-white to-slate-100'} rounded-full border-8 ${modeCouleur === 'luxe' ? 'border-amber-800' : 'border-slate-800'} shadow-2xl overflow-hidden`}>
               {/* Texture guilloché */}
               <div className="absolute inset-0 opacity-5">
                 <div className="absolute inset-0" style={{
@@ -302,7 +611,7 @@ const AnimationMontreComplete = () => {
                       className={`mx-auto ${isMainHour ? 'w-1.5 h-9 bg-slate-900' : 'w-1 h-6 bg-slate-700'} rounded-full`}
                       style={{ marginTop: '10px' }}
                     />
-                    {isMainHour && (
+                    {isMainHour && afficherLabels && (
                       <div 
                         className="text-center font-bold text-slate-900 mt-2"
                         style={{
@@ -318,11 +627,13 @@ const AnimationMontreComplete = () => {
               })}
 
               {/* Logo/marque (à 12h) */}
-              <div className="absolute top-20 left-1/2 -translate-x-1/2 text-center">
-                <div className="text-sm font-bold text-slate-700 tracking-widest">AUTOMATIC</div>
-                <div className="text-xs text-slate-500 tracking-wider">SWISS MADE</div>
-                <div className="text-xs text-blue-600 mt-1">28'800 A/h</div>
-              </div>
+              {afficherLabels && (
+                <div className="absolute top-20 left-1/2 -translate-x-1/2 text-center">
+                  <div className="text-sm font-bold text-slate-700 tracking-widest">AUTOMATIC</div>
+                  <div className="text-xs text-slate-500 tracking-wider">SWISS MADE</div>
+                  <div className="text-xs text-blue-600 mt-1">28'800 A/h</div>
+                </div>
+              )}
 
               {/* Sous-cadran secondes (à 6h) */}
               <div className="absolute left-1/2 bottom-16 -translate-x-1/2 w-20 h-20 border-2 border-slate-300 rounded-full bg-white/50 shadow-inner">
@@ -346,17 +657,19 @@ const AnimationMontreComplete = () => {
               </div>
 
               {/* Indicateur de réserve de marche */}
-              <div className="absolute top-28 right-8 text-center">
-                <div className="text-xs text-slate-600 mb-1">POWER</div>
-                <div className="w-12 h-2 bg-slate-300 rounded-full overflow-hidden">
-                  <motion.div 
-                    className="h-full bg-gradient-to-r from-red-500 to-green-500"
-                    initial={{ width: '80%' }}
-                    animate={isRunning ? { width: ['80%', '20%'] } : {}}
-                    transition={{ duration: 40, ease: 'linear' }}
-                  />
+              {afficherLabels && (
+                <div className="absolute top-28 right-8 text-center">
+                  <div className="text-xs text-slate-600 mb-1">POWER</div>
+                  <div className="w-12 h-2 bg-slate-300 rounded-full overflow-hidden">
+                    <motion.div 
+                      className="h-full bg-gradient-to-r from-red-500 to-green-500"
+                      initial={{ width: '80%' }}
+                      animate={isRunning ? { width: ['80%', '20%'] } : {}}
+                      transition={{ duration: 40, ease: 'linear' }}
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Aiguille des heures avec luminova */}
               <motion.div
@@ -462,9 +775,11 @@ const AnimationMontreComplete = () => {
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-gradient-to-br from-slate-700 to-slate-900 rounded-full border-4 border-amber-600"></div>
                 
                 {/* Inscription sur le rotor */}
-                <div className="absolute left-1/2 top-1/3 -translate-x-1/2 text-center">
-                  <div className="text-amber-200 text-xs font-bold">AUTOMATIC</div>
-                </div>
+                {afficherLabels && (
+                  <div className="absolute left-1/2 top-1/3 -translate-x-1/2 text-center">
+                    <div className="text-amber-200 text-xs font-bold">AUTOMATIC</div>
+                  </div>
+                )}
               </motion.div>
 
               {/* Vis de fixation */}
@@ -482,6 +797,16 @@ const AnimationMontreComplete = () => {
                   <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-0.5 bg-slate-700"></div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {vue === 'mouvement' && (
+          <div className="relative w-full h-full flex items-center justify-center">
+            <div className="text-white text-center">
+              <Cog className="w-16 h-16 mx-auto mb-4 text-blue-400" />
+              <p className="text-xl">Vue du mouvement complet</p>
+              <p className="text-sm text-slate-400 mt-2">Visualisation des 300+ composants</p>
             </div>
           </div>
         )}
@@ -560,10 +885,12 @@ const AnimationMontreComplete = () => {
                 </svg>
               </motion.div>
               
-              <p className="text-white text-xs mt-4 text-center font-bold bg-black/30 backdrop-blur-sm rounded px-2 py-1">
-                Balancier-Spiral<br/>
-                <span className="text-amber-400">4 Hz (8 battements/sec)</span>
-              </p>
+              {afficherLabels && (
+                <p className="text-white text-xs mt-4 text-center font-bold bg-black/30 backdrop-blur-sm rounded px-2 py-1">
+                  Balancier-Spiral<br/>
+                  <span className="text-amber-400">4 Hz (8 battements/sec)</span>
+                </p>
+              )}
             </div>
           </div>
         )}
@@ -651,7 +978,7 @@ const CycleEchappementDetaille = () => {
     }
   ];
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (autoPlay) {
       const interval = setInterval(() => {
         setEtapeActive((prev) => (prev + 1) % etapes.length);
@@ -665,7 +992,7 @@ const CycleEchappementDetaille = () => {
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-3xl font-bold text-white flex items-center gap-3">
           <Cog className="w-8 h-8 text-purple-400" />
-          Cycle de l'Échappement - 6 Étapes
+          Cycle de l'Échappement - 7 Étapes
         </h3>
         <button
           onClick={() => setAutoPlay(!autoPlay)}
@@ -882,6 +1209,9 @@ const SchemaMecaniqueComplet = () => {
   const [organeSelectionne, setOrganeSelectionne] = useState<string | null>(null);
   const [animation, setAnimation] = useState(true);
   const [zoomLevel, setZoomLevel] = useState(1);
+  const [modeAffichage, setModeAffichage] = useState<'normal' | 'technique' | 'educatif'>('normal');
+  const [annotations, setAnnotations] = useState<any[]>([]);
+  const [exportFormat, setExportFormat] = useState<'png' | 'svg' | 'pdf'>('png');
   
   const organes: Organe[] = useMemo(() => [
     { 
@@ -970,6 +1300,24 @@ const SchemaMecaniqueComplet = () => {
     },
   ], []);
 
+  const addAnnotation = (x: number, y: number) => {
+    const text = prompt("Ajouter une annotation:");
+    if (text) {
+      const newAnnotation = {
+        id: Date.now(),
+        x,
+        y,
+        text
+      };
+      setAnnotations([...annotations, newAnnotation]);
+    }
+  };
+
+  const exportSchema = () => {
+    console.log(`Exporting schema as ${exportFormat}`);
+    // Implémentation d'export ici
+  };
+
   return (
     <div className="relative w-full bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 border-2 border-slate-700 shadow-2xl overflow-hidden">
       {/* Particules de fond animées */}
@@ -1017,7 +1365,59 @@ const SchemaMecaniqueComplet = () => {
           >
             {zoomLevel === 1 ? <Maximize2 className="w-5 h-5" /> : <Minimize2 className="w-5 h-5" />}
           </button>
+          
+          {/* Menu d'export */}
+          <div className="relative">
+            <button
+              className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all flex items-center gap-2 shadow-lg"
+            >
+              <Download className="w-5 h-5" />
+              <span className="text-sm font-medium">Exporter</span>
+            </button>
+            
+            <div className="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-xl z-10 overflow-hidden">
+              <div className="p-2">
+                <div className="text-xs text-slate-400 mb-2">Format d'export:</div>
+                {['png', 'svg', 'pdf'].map(format => (
+                  <button
+                    key={format}
+                    onClick={() => setExportFormat(format as any)}
+                    className={`w-full text-left px-3 py-2 rounded text-sm transition-all ${
+                      exportFormat === format 
+                        ? 'bg-blue-600 text-white' 
+                        : 'text-slate-300 hover:bg-slate-700'
+                    }`}
+                  >
+                    {format.toUpperCase()}
+                  </button>
+                ))}
+                <button
+                  onClick={exportSchema}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm mt-2 font-medium"
+                >
+                  Télécharger
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      {/* Sélecteur de mode d'affichage */}
+      <div className="flex gap-2 mb-6">
+        {(['normal', 'technique', 'educatif'] as const).map(mode => (
+          <button
+            key={mode}
+            onClick={() => setModeAffichage(mode)}
+            className={`px-4 py-2 rounded-lg font-medium transition-all capitalize ${
+              modeAffichage === mode 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+            }`}
+          >
+            {mode}
+          </button>
+        ))}
       </div>
 
       <motion.div
@@ -1025,518 +1425,560 @@ const SchemaMecaniqueComplet = () => {
         transition={{ duration: 0.3 }}
         className="origin-center"
       >
-        <svg className="w-full h-[600px]" viewBox="0 0 1000 600">
-          <defs>
-            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-              <polygon points="0 0, 10 3.5, 0 7" className="fill-blue-400" />
-            </marker>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
+        <div 
+          className="relative bg-slate-900/50 rounded-xl overflow-hidden cursor-crosshair"
+          onClick={(e) => {
+            if (modeAffichage === 'educatif') {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              const y = e.clientY - rect.top;
+              addAnnotation(x, y);
+            }
+          }}
+        >
+          <svg className="w-full h-[600px]" viewBox="0 0 1000 600">
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" className="fill-blue-400" />
+              </marker>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                <feMerge>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
 
-            <radialGradient id="brass-gradient">
-              <stop offset="0%" stopColor="#fbbf24" />
-              <stop offset="50%" stopColor="#f59e0b" />
-              <stop offset="100%" stopColor="#d97706" />
-            </radialGradient>
+              <radialGradient id="brass-gradient">
+                <stop offset="0%" stopColor="#fbbf24" />
+                <stop offset="50%" stopColor="#f59e0b" />
+                <stop offset="100%" stopColor="#d97706" />
+              </radialGradient>
 
-            <radialGradient id="steel-gradient">
-              <stop offset="0%" stopColor="#cbd5e1" />
-              <stop offset="50%" stopColor="#94a3b8" />
-              <stop offset="100%" stopColor="#64748b" />
-            </radialGradient>
+              <radialGradient id="steel-gradient">
+                <stop offset="0%" stopColor="#cbd5e1" />
+                <stop offset="50%" stopColor="#94a3b8" />
+                <stop offset="100%" stopColor="#64748b" />
+              </radialGradient>
 
-            <radialGradient id="ruby-gradient">
-              <stop offset="0%" stopColor="#f9a8d4" />
-              <stop offset="50%" stopColor="#ec4899" />
-              <stop offset="100%" stopColor="#be185d" />
-            </radialGradient>
-          </defs>
+              <radialGradient id="ruby-gradient">
+                <stop offset="0%" stopColor="#f9a8d4" />
+                <stop offset="50%" stopColor="#ec4899" />
+                <stop offset="100%" stopColor="#be185d" />
+              </radialGradient>
+            </defs>
 
-          {/* Lignes de connexion animées entre organes */}
-          <g opacity="0.7">
-            {/* Barillet → Rouage */}
-            <motion.path
-              d="M 150 300 L 300 300"
-              stroke="#60A5FA" strokeWidth="4" markerEnd="url(#arrowhead)"
-              strokeDasharray="10,5"
-              initial={{ pathLength: 0 }}
-              animate={animation ? { 
-                pathLength: [0, 1],
-                strokeDashoffset: [0, -15]
-              } : { pathLength: 1 }}
-              transition={{ 
-                pathLength: { duration: 1.5, repeat: animation ? Infinity : 0 },
-                strokeDashoffset: { duration: 1, repeat: animation ? Infinity : 0, ease: "linear" }
-              }}
-            />
-            
-            {/* Rouage → Échappement */}
-            <motion.path
-              d="M 300 300 L 500 300"
-              stroke="#60A5FA" strokeWidth="4" markerEnd="url(#arrowhead)"
-              strokeDasharray="10,5"
-              initial={{ pathLength: 0 }}
-              animate={animation ? { 
-                pathLength: [0, 1],
-                strokeDashoffset: [0, -15]
-              } : { pathLength: 1 }}
-              transition={{ 
-                pathLength: { duration: 1.5, delay: 0.5, repeat: animation ? Infinity : 0 },
-                strokeDashoffset: { duration: 1, repeat: animation ? Infinity : 0, ease: "linear" }
-              }}
-            />
-            
-            {/* Échappement → Balancier */}
-            <motion.path
-              d="M 500 300 L 700 300"
-              stroke="#60A5FA" strokeWidth="4" markerEnd="url(#arrowhead)"
-              strokeDasharray="10,5"
-              initial={{ pathLength: 0 }}
-              animate={animation ? { 
-                pathLength: [0, 1],
-                strokeDashoffset: [0, -15]
-              } : { pathLength: 1 }}
-              transition={{ 
-                pathLength: { duration: 1.5, delay: 1, repeat: animation ? Infinity : 0 },
-                strokeDashoffset: { duration: 1, repeat: animation ? Infinity : 0, ease: "linear" }
-              }}
-            />
-            
-            {/* Remontoir → Barillet (en pointillés pour le remontage) */}
-            <motion.path
-              d="M 400 150 L 150 250"
-              stroke="#EF4444" strokeWidth="3" strokeDasharray="8,8" markerEnd="url(#arrowhead)"
-              initial={{ pathLength: 0 }}
-              animate={animation ? { 
-                pathLength: [0, 1],
-                opacity: [0.3, 0.8, 0.3]
-              } : { pathLength: 1 }}
-              transition={{ 
-                pathLength: { duration: 2, delay: 1.5, repeat: animation ? Infinity : 0 },
-                opacity: { duration: 2, repeat: animation ? Infinity : 0 }
-              }}
-            />
-            
-            {/* Rouage → Affichage */}
-            <motion.path
-              d="M 300 300 L 600 200"
-              stroke="#06B6D4" strokeWidth="3" strokeDasharray="8,8" markerEnd="url(#arrowhead)"
-              initial={{ pathLength: 0 }}
-              animate={animation ? { pathLength: [0, 1] } : { pathLength: 1 }}
-              transition={{ duration: 1.5, delay: 2, repeat: animation ? Infinity : 0 }}
-            />
-          </g>
-
-          {/* 1. BARILLET avec ressort animé */}
-          <g 
-            className="cursor-pointer transition-all"
-            onClick={() => setOrganeSelectionne(organeSelectionne === 'barillet' ? null : 'barillet')}
-            opacity={organeSelectionne && organeSelectionne !== 'barillet' ? 0.4 : 1}
-          >
-            <motion.circle 
-              cx="150" cy="300" r="65" 
-              fill="url(#steel-gradient)" 
-              stroke="#475569" 
-              strokeWidth="4"
-              filter={organeSelectionne === 'barillet' ? "url(#glow)" : ""}
-              whileHover={{ scale: 1.1 }}
-            />
-            <circle cx="150" cy="300" r="52" fill="#1e293b" stroke="#334155" strokeWidth="2" />
-            
-            {/* Ressort spiralé animé à l'intérieur */}
-            <motion.path
-              d="M 150 300 Q 150 280, 165 280 T 180 290 T 185 300 T 180 310 T 165 315 T 150 315 T 135 310 T 130 300"
-              fill="none"
-              stroke="#fbbf24"
-              strokeWidth="2.5"
-              animate={animation ? { 
-                strokeDashoffset: [0, -100],
-                opacity: [0.6, 1, 0.6]
-              } : {}}
-              transition={{ 
-                strokeDashoffset: { duration: 3, repeat: Infinity, ease: "linear" },
-                opacity: { duration: 2, repeat: Infinity }
-              }}
-              strokeDasharray="100"
-            />
-            
-            <circle cx="150" cy="300" r="10" fill="url(#brass-gradient)" />
-            
-            {/* Dents du barillet */}
-            {[...Array(12)].map((_, i) => (
-              <rect key={i} x="148" y="235" width="4" height="12" fill="#64748b" transform={`rotate(${i * 30} 150 300)`} />
-            ))}
-            
-            <text x="150" y="395" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Barillet</text>
-            <text x="150" y="415" textAnchor="middle" fill="#3B82F6" fontSize="14">Mainspring</text>
-          </g>
-
-          {/* 2. ROUAGE avec roues multiples */}
-          <g 
-            className="cursor-pointer"
-            onClick={() => setOrganeSelectionne(organeSelectionne === 'rouage' ? null : 'rouage')}
-            opacity={organeSelectionne && organeSelectionne !== 'rouage' ? 0.4 : 1}
-          >
-            {/* Grande roue (2e roue) */}
-            <g>
-              <motion.circle 
-                cx="280" cy="300" r="50" 
-                fill="url(#brass-gradient)" 
-                stroke="#d97706" 
-                strokeWidth="4" 
-                filter={organeSelectionne === 'rouage' ? "url(#glow)" : ""}
-                whileHover={{ scale: 1.1 }}
-              />
-              {[...Array(20)].map((_, i) => (
-                <motion.rect
-                  key={i}
-                  x="278" y="250" width="4" height="14" fill="#92400e"
-                  style={{
-                    transformOrigin: '280px 300px',
-                  }}
-                  animate={animation ? { rotate: 360 } : {}}
-                  transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-                  transform={`rotate(${i * 18})`}
-                />
-              ))}
-              <circle cx="280" cy="300" r="10" fill="#1e293b" />
-              
-              {/* Trous pour réduire l'inertie */}
-              {[0, 120, 240].map((angle) => (
-                <circle 
-                  key={angle}
-                  cx={280 + 30 * Math.cos((angle * Math.PI) / 180)}
-                  cy={300 + 30 * Math.sin((angle * Math.PI) / 180)}
-                  r="6"
-                  fill="#1e293b"
-                />
-              ))}
-            </g>
-            
-            {/* Petite roue (pinion) */}
-            <g>
-              <circle cx="330" cy="270" r="25" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="3" />
-              {[...Array(10)].map((_, i) => (
-                <motion.rect
-                  key={i}
-                  x="328" y="245" width="4" height="10" fill="#92400e"
-                  style={{
-                    transformOrigin: '330px 270px',
-                  }}
-                  animate={animation ? { rotate: -360 } : {}}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
-                  transform={`rotate(${i * 36})`}
-                />
-              ))}
-              <circle cx="330" cy="270" r="6" fill="#1e293b" />
-            </g>
-            
-            <text x="300" y="395" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Rouage</text>
-            <text x="300" y="415" textAnchor="middle" fill="#10B981" fontSize="14">Going Train</text>
-          </g>
-
-          {/* 3. ÉCHAPPEMENT avec ancre animée */}
-          <g 
-            className="cursor-pointer"
-            onClick={() => setOrganeSelectionne(organeSelectionne === 'echappement' ? null : 'echappement')}
-            opacity={organeSelectionne && organeSelectionne !== 'echappement' ? 0.4 : 1}
-          >
-            {/* Roue d'échappement */}
-            <motion.circle 
-              cx="500" cy="300" r="45" 
-              fill="url(#brass-gradient)" 
-              stroke="#d97706" 
-              strokeWidth="4" 
-              filter={organeSelectionne === 'echappement' ? "url(#glow)" : ""}
-              whileHover={{ scale: 1.1 }}
-            />
-            
-            {/* Dents d'échappement avec forme spéciale */}
-            {[...Array(15)].map((_, i) => (
+            {/* Lignes de connexion animées entre organes */}
+            <g opacity="0.7">
+              {/* Barillet → Rouage */}
               <motion.path
-                key={i}
-                d="M 500 255 L 512 248 L 512 255 Z"
-                fill="#92400e"
-                style={{
-                  transformOrigin: '500px 300px',
+                d="M 150 300 L 300 300"
+                stroke="#60A5FA" strokeWidth="4" markerEnd="url(#arrowhead)"
+                strokeDasharray="10,5"
+                initial={{ pathLength: 0 }}
+                animate={animation ? { 
+                  pathLength: [0, 1],
+                  strokeDashoffset: [0, -15]
+                } : { pathLength: 1 }}
+                transition={{ 
+                  pathLength: { duration: 1.5, repeat: animation ? Infinity : 0 },
+                  strokeDashoffset: { duration: 1, repeat: animation ? Infinity : 0, ease: "linear" }
                 }}
-                animate={animation ? { rotate: [0, 24, 0] } : {}}
-                transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut", delay: i * 0.0167 }}
-                transform={`rotate(${i * 24})`}
               />
-            ))}
-            
-            <circle cx="500" cy="300" r="12" fill="#1e293b" />
-            
-            {/* Ancre animée (Pallet Fork) */}
-            <motion.g
-              animate={animation ? { rotate: [-8, 8, -8] } : {}}
-              transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut" }}
-              style={{ transformOrigin: '500px 340px' }}
-            >
-              {/* Corps de l'ancre */}
-              <rect x="495" y="340" width="10" height="50" fill="url(#steel-gradient)" rx="3" />
               
-              {/* Bras de l'ancre */}
-              <path d="M 485 340 L 485 325 L 515 325 L 515 340 Z" fill="url(#steel-gradient)" />
+              {/* Rouage → Échappement */}
+              <motion.path
+                d="M 300 300 L 500 300"
+                stroke="#60A5FA" strokeWidth="4" markerEnd="url(#arrowhead)"
+                strokeDasharray="10,5"
+                initial={{ pathLength: 0 }}
+                animate={animation ? { 
+                  pathLength: [0, 1],
+                  strokeDashoffset: [0, -15]
+                } : { pathLength: 1 }}
+                transition={{ 
+                  pathLength: { duration: 1.5, delay: 0.5, repeat: animation ? Infinity : 0 },
+                  strokeDashoffset: { duration: 1, repeat: animation ? Infinity : 0, ease: "linear" }
+                }}
+              />
               
-              {/* Palettes en rubis */}
-              <ellipse cx="478" cy="323" rx="10" ry="5" fill="url(#ruby-gradient)" opacity="0.8" />
-              <ellipse cx="522" cy="323" rx="10" ry="5" fill="url(#ruby-gradient)" opacity="0.8" />
+              {/* Échappement → Balancier */}
+              <motion.path
+                d="M 500 300 L 700 300"
+                stroke="#60A5FA" strokeWidth="4" markerEnd="url(#arrowhead)"
+                strokeDasharray="10,5"
+                initial={{ pathLength: 0 }}
+                animate={animation ? { 
+                  pathLength: [0, 1],
+                  strokeDashoffset: [0, -15]
+                } : { pathLength: 1 }}
+                transition={{ 
+                  pathLength: { duration: 1.5, delay: 1, repeat: animation ? Infinity : 0 },
+                  strokeDashoffset: { duration: 1, repeat: animation ? Infinity : 0, ease: "linear" }
+                }}
+              />
               
-              {/* Fourchette */}
-              <path d="M 490 390 L 490 400 L 510 400 L 510 390 Z" fill="url(#steel-gradient)" />
-            </motion.g>
-            
-            <text x="500" y="420" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Échappement</text>
-            <text x="500" y="440" textAnchor="middle" fill="#8B5CF6" fontSize="14">Escapement</text>
-          </g>
+              {/* Remontoir → Barillet (en pointillés pour le remontage) */}
+              <motion.path
+                d="M 400 150 L 150 250"
+                stroke="#EF4444" strokeWidth="3" strokeDasharray="8,8" markerEnd="url(#arrowhead)"
+                initial={{ pathLength: 0 }}
+                animate={animation ? { 
+                  pathLength: [0, 1],
+                  opacity: [0.3, 0.8, 0.3]
+                } : { pathLength: 1 }}
+                transition={{ 
+                  pathLength: { duration: 2, delay: 1.5, repeat: animation ? Infinity : 0 },
+                  opacity: { duration: 2, repeat: animation ? Infinity : 0 }
+                }}
+              />
+              
+              {/* Rouage → Affichage */}
+              <motion.path
+                d="M 300 300 L 600 200"
+                stroke="#06B6D4" strokeWidth="3" strokeDasharray="8,8" markerEnd="url(#arrowhead)"
+                initial={{ pathLength: 0 }}
+                animate={animation ? { pathLength: [0, 1] } : { pathLength: 1 }}
+                transition={{ duration: 1.5, delay: 2, repeat: animation ? Infinity : 0 }}
+              />
+            </g>
 
-          {/* 4. BALANCIER-SPIRAL avec animation réaliste */}
-          <g 
-            className="cursor-pointer"
-            onClick={() => setOrganeSelectionne(organeSelectionne === 'balancier' ? null : 'balancier')}
-            opacity={organeSelectionne && organeSelectionne !== 'balancier' ? 0.4 : 1}
-          >
-            {/* Support du balancier (Balance Bridge) */}
-            <rect x="665" y="250" width="70" height="18" fill="url(#steel-gradient)" stroke="#475569" strokeWidth="3" rx="4" />
-            <circle cx="682" cy="259" r="4" fill="#1e293b" />
-            <circle cx="718" cy="259" r="4" fill="#1e293b" />
-            
-            {/* Jewels de support (protection anti-choc) */}
-            <circle cx="700" cy="259" r="6" fill="url(#ruby-gradient)" opacity="0.6" />
-            
-            {/* Balancier oscillant */}
-            <motion.g
-              animate={animation ? { rotate: [-40, 40, -40] } : {}}
-              transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut" }}
-              style={{ transformOrigin: '700px 268px' }}
+            {/* 1. BARILLET avec ressort animé */}
+            <g 
+              className="cursor-pointer transition-all"
+              onClick={() => setOrganeSelectionne(organeSelectionne === 'barillet' ? null : 'barillet')}
+              opacity={organeSelectionne && organeSelectionne !== 'barillet' ? 0.4 : 1}
             >
-              {/* Axe du balancier */}
-              <line x1="700" y1="268" x2="700" y2="315" stroke="#475569" strokeWidth="3" />
-              
-              {/* Roue du balancier */}
               <motion.circle 
-                cx="700" cy="315" r="40" 
+                cx="150" cy="300" r="65" 
+                fill="url(#steel-gradient)" 
+                stroke="#475569" 
+                strokeWidth="4"
+                filter={organeSelectionne === 'barillet' ? "url(#glow)" : ""}
+                whileHover={{ scale: 1.1 }}
+              />
+              <circle cx="150" cy="300" r="52" fill="#1e293b" stroke="#334155" strokeWidth="2" />
+              
+              {/* Ressort spiralé animé à l'intérieur */}
+              <motion.path
+                d="M 150 300 Q 150 280, 165 280 T 180 290 T 185 300 T 180 310 T 165 315 T 150 315 T 135 310 T 130 300"
+                fill="none"
+                stroke="#fbbf24"
+                strokeWidth="2.5"
+                animate={animation ? { 
+                  strokeDashoffset: [0, -100],
+                  opacity: [0.6, 1, 0.6]
+                } : {}}
+                transition={{ 
+                  strokeDashoffset: { duration: 3, repeat: Infinity, ease: "linear" },
+                  opacity: { duration: 2, repeat: Infinity }
+                }}
+                strokeDasharray="100"
+              />
+              
+              <circle cx="150" cy="300" r="10" fill="url(#brass-gradient)" />
+              
+              {/* Dents du barillet */}
+              {[...Array(12)].map((_, i) => (
+                <rect key={i} x="148" y="235" width="4" height="12" fill="#64748b" transform={`rotate(${i * 30} 150 300)`} />
+              ))}
+              
+              <text x="150" y="395" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Barillet</text>
+              <text x="150" y="415" textAnchor="middle" fill="#3B82F6" fontSize="14">Mainspring</text>
+            </g>
+
+            {/* 2. ROUAGE avec roues multiples */}
+            <g 
+              className="cursor-pointer"
+              onClick={() => setOrganeSelectionne(organeSelectionne === 'rouage' ? null : 'rouage')}
+              opacity={organeSelectionne && organeSelectionne !== 'rouage' ? 0.4 : 1}
+            >
+              {/* Grande roue (2e roue) */}
+              <g>
+                <motion.circle 
+                  cx="280" cy="300" r="50" 
+                  fill="url(#brass-gradient)" 
+                  stroke="#d97706" 
+                  strokeWidth="4" 
+                  filter={organeSelectionne === 'rouage' ? "url(#glow)" : ""}
+                  whileHover={{ scale: 1.1 }}
+                />
+                {[...Array(20)].map((_, i) => (
+                  <motion.rect
+                    key={i}
+                    x="278" y="250" width="4" height="14" fill="#92400e"
+                    style={{
+                      transformOrigin: '280px 300px',
+                    }}
+                    animate={animation ? { rotate: 360 } : {}}
+                    transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+                    transform={`rotate(${i * 18})`}
+                  />
+                ))}
+                <circle cx="280" cy="300" r="10" fill="#1e293b" />
+                
+                {/* Trous pour réduire l'inertie */}
+                {[0, 120, 240].map((angle) => (
+                  <circle 
+                    key={angle}
+                    cx={280 + 30 * Math.cos((angle * Math.PI) / 180)}
+                    cy={300 + 30 * Math.sin((angle * Math.PI) / 180)}
+                    r="6"
+                    fill="#1e293b"
+                  />
+                ))}
+              </g>
+              
+              {/* Petite roue (pinion) */}
+              <g>
+                <circle cx="330" cy="270" r="25" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="3" />
+                {[...Array(10)].map((_, i) => (
+                  <motion.rect
+                    key={i}
+                    x="328" y="245" width="4" height="10" fill="#92400e"
+                    style={{
+                      transformOrigin: '330px 270px',
+                    }}
+                    animate={animation ? { rotate: -360 } : {}}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+                    transform={`rotate(${i * 36})`}
+                  />
+                ))}
+                <circle cx="330" cy="270" r="6" fill="#1e293b" />
+              </g>
+              
+              <text x="300" y="395" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Rouage</text>
+              <text x="300" y="415" textAnchor="middle" fill="#10B981" fontSize="14">Going Train</text>
+            </g>
+
+            {/* 3. ÉCHAPPEMENT avec ancre animée */}
+            <g 
+              className="cursor-pointer"
+              onClick={() => setOrganeSelectionne(organeSelectionne === 'echappement' ? null : 'echappement')}
+              opacity={organeSelectionne && organeSelectionne !== 'echappement' ? 0.4 : 1}
+            >
+              {/* Roue d'échappement */}
+              <motion.circle 
+                cx="500" cy="300" r="45" 
                 fill="url(#brass-gradient)" 
                 stroke="#d97706" 
                 strokeWidth="4" 
-                filter={organeSelectionne === 'balancier' ? "url(#glow)" : ""}
+                filter={organeSelectionne === 'echappement' ? "url(#glow)" : ""}
                 whileHover={{ scale: 1.1 }}
               />
               
-              {/* Rayons du balancier */}
-              {[...Array(8)].map((_, i) => (
-                <line 
-                  key={i} 
-                  x1="700" y1="315" 
-                  x2="700" y2="275" 
-                  stroke="#92400e" 
-                  strokeWidth="2.5" 
-                  transform={`rotate(${i * 45} 700 315)`} 
+              {/* Dents d'échappement avec forme spéciale */}
+              {[...Array(15)].map((_, i) => (
+                <motion.path
+                  key={i}
+                  d="M 500 255 L 512 248 L 512 255 Z"
+                  fill="#92400e"
+                  style={{
+                    transformOrigin: '500px 300px',
+                  }}
+                  animate={animation ? { rotate: [0, 24, 0] } : {}}
+                  transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut", delay: i * 0.0167 }}
+                  transform={`rotate(${i * 24})`}
                 />
               ))}
               
-              {/* Masses de réglage (4 vis dorées pour ajuster la fréquence) */}
-              {[0, 90, 180, 270].map((angle, i) => (
-                <g key={i} transform={`rotate(${angle} 700 315)`}>
-                  <rect x="735" y="313" width="10" height="4" fill="#fbbf24" rx="1" />
-                  <circle cx="740" cy="315" r="2" fill="#92400e" />
-                </g>
+              <circle cx="500" cy="300" r="12" fill="#1e293b" />
+              
+              {/* Ancre animée (Pallet Fork) */}
+              <motion.g
+                animate={animation ? { rotate: [-8, 8, -8] } : {}}
+                transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut" }}
+                style={{ transformOrigin: '500px 340px' }}
+              >
+                {/* Corps de l'ancre */}
+                <rect x="495" y="340" width="10" height="50" fill="url(#steel-gradient)" rx="3" />
+                
+                {/* Bras de l'ancre */}
+                <path d="M 485 340 L 485 325 L 515 325 L 515 340 Z" fill="url(#steel-gradient)" />
+                
+                {/* Palettes en rubis */}
+                <ellipse cx="478" cy="323" rx="10" ry="5" fill="url(#ruby-gradient)" opacity="0.8" />
+                <ellipse cx="522" cy="323" rx="10" ry="5" fill="url(#ruby-gradient)" opacity="0.8" />
+                
+                {/* Fourchette */}
+                <path d="M 490 390 L 490 400 L 510 400 L 510 390 Z" fill="url(#steel-gradient)" />
+              </motion.g>
+              
+              <text x="500" y="420" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Échappement</text>
+              <text x="500" y="440" textAnchor="middle" fill="#8B5CF6" fontSize="14">Escapement</text>
+            </g>
+
+            {/* 4. BALANCIER-SPIRAL avec animation réaliste */}
+            <g 
+              className="cursor-pointer"
+              onClick={() => setOrganeSelectionne(organeSelectionne === 'balancier' ? null : 'balancier')}
+              opacity={organeSelectionne && organeSelectionne !== 'balancier' ? 0.4 : 1}
+            >
+              {/* Support du balancier (Balance Bridge) */}
+              <rect x="665" y="250" width="70" height="18" fill="url(#steel-gradient)" stroke="#475569" strokeWidth="3" rx="4" />
+              <circle cx="682" cy="259" r="4" fill="#1e293b" />
+              <circle cx="718" cy="259" r="4" fill="#1e293b" />
+              
+              {/* Jewels de support (protection anti-choc) */}
+              <circle cx="700" cy="259" r="6" fill="url(#ruby-gradient)" opacity="0.6" />
+              
+              {/* Balancier oscillant */}
+              <motion.g
+                animate={animation ? { rotate: [-40, 40, -40] } : {}}
+                transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut" }}
+                style={{ transformOrigin: '700px 268px' }}
+              >
+                {/* Axe du balancier */}
+                <line x1="700" y1="268" x2="700" y2="315" stroke="#475569" strokeWidth="3" />
+                
+                {/* Roue du balancier */}
+                <motion.circle 
+                  cx="700" cy="315" r="40" 
+                  fill="url(#brass-gradient)" 
+                  stroke="#d97706" 
+                  strokeWidth="4" 
+                  filter={organeSelectionne === 'balancier' ? "url(#glow)" : ""}
+                  whileHover={{ scale: 1.1 }}
+                />
+                
+                {/* Rayons du balancier */}
+                {[...Array(8)].map((_, i) => (
+                  <line 
+                    key={i} 
+                    x1="700" y1="315" 
+                    x2="700" y2="275" 
+                    stroke="#92400e" 
+                    strokeWidth="2.5" 
+                    transform={`rotate(${i * 45} 700 315)`} 
+                  />
+                ))}
+                
+                {/* Masses de réglage (4 vis dorées pour ajuster la fréquence) */}
+                {[0, 90, 180, 270].map((angle, i) => (
+                  <g key={i} transform={`rotate(${angle} 700 315)`}>
+                    <rect x="735" y="313" width="10" height="4" fill="#fbbf24" rx="1" />
+                    <circle cx="740" cy="315" r="2" fill="#92400e" />
+                  </g>
+                ))}
+                
+                {/* Jewel roller (rubis qui frappe l'ancre) */}
+                <circle cx="660" cy="315" r="6" fill="url(#ruby-gradient)" opacity="0.9" />
+                
+                {/* Centre doré */}
+                <circle cx="700" cy="315" r="10" fill="#1e293b" />
+              </motion.g>
+              
+              {/* Spiral animé (Hairspring en Nivarox) */}
+              <motion.path
+                d="M 700 268 Q 700 263, 705 263 T 712 266 T 715 271 T 715 278 T 710 283 T 700 285"
+                fill="none"
+                stroke="#fbbf24"
+                strokeWidth="2"
+                animate={animation ? {
+                  d: [
+                    "M 700 268 Q 700 263, 705 263 T 712 266 T 715 271 T 715 278 T 710 283 T 700 285",
+                    "M 700 268 Q 700 258, 710 258 T 720 266 T 722 276 T 722 286 T 712 294 T 700 297",
+                    "M 700 268 Q 700 263, 705 263 T 712 266 T 715 271 T 715 278 T 710 283 T 700 285"
+                  ]
+                } : {}}
+                transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut" }}
+              />
+              
+              {/* Régulateurs du spiral (composants teal) */}
+              <rect x="715" y="266" width="8" height="3" fill="#14b8a6" rx="1" opacity="0.8" />
+              <rect x="715" y="280" width="8" height="3" fill="#14b8a6" rx="1" opacity="0.8" />
+              
+              <text x="700" y="390" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Balancier</text>
+              <text x="700" y="410" textAnchor="middle" fill="#F59E0B" fontSize="14">Balance Wheel</text>
+              <text x="700" y="427" textAnchor="middle" fill="#fbbf24" fontSize="12">4 Hz / 28'800 A/h</text>
+            </g>
+
+            {/* 5. REMONTOIR avec masse oscillante */}
+            <g 
+              className="cursor-pointer"
+              onClick={() => setOrganeSelectionne(organeSelectionne === 'remontoir' ? null : 'remontoir')}
+              opacity={organeSelectionne && organeSelectionne !== 'remontoir' ? 0.4 : 1}
+            >
+              {/* Axe de transmission */}
+              <rect x="340" y="148" width="90" height="4" fill="url(#steel-gradient)" stroke="#475569" strokeWidth="1" />
+              
+              {/* Pignon intermédiaire */}
+              <circle cx="370" cy="150" r="14" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="2" />
+              {[...Array(12)].map((_, i) => (
+                <rect key={i} x="368" y="136" width="4" height="7" fill="#92400e" transform={`rotate(${i * 30} 370 150)`} />
               ))}
               
-              {/* Jewel roller (rubis qui frappe l'ancre) */}
-              <circle cx="660" cy="315" r="6" fill="url(#ruby-gradient)" opacity="0.9" />
+              {/* Roue à rochet (Ratchet Wheel) */}
+              <motion.circle 
+                cx="420" cy="150" r="22" 
+                fill="url(#brass-gradient)" 
+                stroke="#d97706" 
+                strokeWidth="3" 
+                filter={organeSelectionne === 'remontoir' ? "url(#glow)" : ""}
+                whileHover={{ scale: 1.1 }}
+              />
+              {[...Array(16)].map((_, i) => (
+                <path 
+                  key={i}
+                  d="M 420 128 L 425 125 L 425 128 Z"
+                  fill="#92400e"
+                  transform={`rotate(${i * 22.5} 420 150)`}
+                />
+              ))}
               
-              {/* Centre doré */}
-              <circle cx="700" cy="315" r="10" fill="#1e293b" />
-            </motion.g>
-            
-            {/* Spiral animé (Hairspring en Nivarox) */}
-            <motion.path
-              d="M 700 268 Q 700 263, 705 263 T 712 266 T 715 271 T 715 278 T 710 283 T 700 285"
-              fill="none"
-              stroke="#fbbf24"
-              strokeWidth="2"
-              animate={animation ? {
-                d: [
-                  "M 700 268 Q 700 263, 705 263 T 712 266 T 715 271 T 715 278 T 710 283 T 700 285",
-                  "M 700 268 Q 700 258, 710 258 T 720 266 T 722 276 T 722 286 T 712 294 T 700 297",
-                  "M 700 268 Q 700 263, 705 263 T 712 266 T 715 271 T 715 278 T 710 283 T 700 285"
-                ]
-              } : {}}
-              transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut" }}
-            />
-            
-            {/* Régulateurs du spiral (composants teal) */}
-            <rect x="715" y="266" width="8" height="3" fill="#14b8a6" rx="1" opacity="0.8" />
-            <rect x="715" y="280" width="8" height="3" fill="#14b8a6" rx="1" opacity="0.8" />
-            
-            <text x="700" y="390" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Balancier</text>
-            <text x="700" y="410" textAnchor="middle" fill="#F59E0B" fontSize="14">Balance Wheel</text>
-            <text x="700" y="427" textAnchor="middle" fill="#fbbf24" fontSize="12">4 Hz / 28'800 A/h</text>
-          </g>
-
-          {/* 5. REMONTOIR avec masse oscillante */}
-          <g 
-            className="cursor-pointer"
-            onClick={() => setOrganeSelectionne(organeSelectionne === 'remontoir' ? null : 'remontoir')}
-            opacity={organeSelectionne && organeSelectionne !== 'remontoir' ? 0.4 : 1}
-          >
-            {/* Axe de transmission */}
-            <rect x="340" y="148" width="90" height="4" fill="url(#steel-gradient)" stroke="#475569" strokeWidth="1" />
-            
-            {/* Pignon intermédiaire */}
-            <circle cx="370" cy="150" r="14" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="2" />
-            {[...Array(12)].map((_, i) => (
-              <rect key={i} x="368" y="136" width="4" height="7" fill="#92400e" transform={`rotate(${i * 30} 370 150)`} />
-            ))}
-            
-            {/* Roue à rochet (Ratchet Wheel) */}
-            <motion.circle 
-              cx="420" cy="150" r="22" 
-              fill="url(#brass-gradient)" 
-              stroke="#d97706" 
-              strokeWidth="3" 
-              filter={organeSelectionne === 'remontoir' ? "url(#glow)" : ""}
-              whileHover={{ scale: 1.1 }}
-            />
-            {[...Array(16)].map((_, i) => (
-              <path 
-                key={i}
-                d="M 420 128 L 425 125 L 425 128 Z"
-                fill="#92400e"
-                transform={`rotate(${i * 22.5} 420 150)`}
-              />
-            ))}
-            
-            {/* Cliquet (Click) - mécanisme anti-retour */}
-            <g>
-              <path d="M 442 145 L 450 140 L 450 150 Z" fill="#ef4444" stroke="#991b1b" strokeWidth="1.5" />
-              <motion.circle
-                cx="445" cy="145" r="2"
-                animate={animation ? { scale: [1, 1.3, 1] } : {}}
+              {/* Cliquet (Click) - mécanisme anti-retour */}
+              <g>
+                <path d="M 442 145 L 450 140 L 450 150 Z" fill="#ef4444" stroke="#991b1b" strokeWidth="1.5" />
+                <motion.circle
+                  cx="445" cy="145" r="2"
+                  animate={animation ? { scale: [1, 1.3, 1] } : {}}
+                  transition={{ duration: 0.5, repeat: Infinity }}
+                  fill="#fca5a5"
+                />
+              </g>
+              
+              {/* Ressort du cliquet (Click Spring) */}
+              <motion.path
+                d="M 448 148 Q 453 150, 456 148"
+                stroke="#94a3b8"
+                strokeWidth="2"
+                fill="none"
+                animate={animation ? {
+                  d: [
+                    "M 448 148 Q 453 150, 456 148",
+                    "M 448 148 Q 453 153, 456 148",
+                    "M 448 148 Q 453 150, 456 148"
+                  ]
+                } : {}}
                 transition={{ duration: 0.5, repeat: Infinity }}
-                fill="#fca5a5"
               />
+              
+              <circle cx="420" cy="150" r="8" fill="#1e293b" />
+              
+              <text x="400" y="205" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Remontoir</text>
+              <text x="400" y="225" textAnchor="middle" fill="#EF4444" fontSize="14">Winding</text>
             </g>
-            
-            {/* Ressort du cliquet (Click Spring) */}
-            <motion.path
-              d="M 448 148 Q 453 150, 456 148"
-              stroke="#94a3b8"
-              strokeWidth="2"
-              fill="none"
-              animate={animation ? {
-                d: [
-                  "M 448 148 Q 453 150, 456 148",
-                  "M 448 148 Q 453 153, 456 148",
-                  "M 448 148 Q 453 150, 456 148"
-                ]
-              } : {}}
-              transition={{ duration: 0.5, repeat: Infinity }}
-            />
-            
-            <circle cx="420" cy="150" r="8" fill="#1e293b" />
-            
-            <text x="400" y="205" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Remontoir</text>
-            <text x="400" y="225" textAnchor="middle" fill="#EF4444" fontSize="14">Winding</text>
-          </g>
 
-          {/* 6. AFFICHAGE avec aiguilles */}
-          <g 
-            className="cursor-pointer"
-            onClick={() => setOrganeSelectionne(organeSelectionne === 'affichage' ? null : 'affichage')}
-            opacity={organeSelectionne && organeSelectionne !== 'affichage' ? 0.4 : 1}
-          >
-            {/* Cadran */}
-            <motion.circle 
-              cx="600" cy="150" r="50" 
-              fill="#f8fafc" 
-              stroke="#1e293b" 
-              strokeWidth="4" 
-              filter={organeSelectionne === 'affichage' ? "url(#glow)" : ""}
-              whileHover={{ scale: 1.1 }}
-            />
-            
-            {/* Index horaires */}
-            {[...Array(12)].map((_, i) => (
-              <line
-                key={i}
-                x1="600" y1="105" x2="600" y2={i % 3 === 0 ? "112" : "110"}
-                stroke="#1e293b"
-                strokeWidth={i % 3 === 0 ? "4" : "2"}
-                transform={`rotate(${i * 30} 600 150)`}
+            {/* 6. AFFICHAGE avec aiguilles */}
+            <g 
+              className="cursor-pointer"
+              onClick={() => setOrganeSelectionne(organeSelectionne === 'affichage' ? null : 'affichage')}
+              opacity={organeSelectionne && organeSelectionne !== 'affichage' ? 0.4 : 1}
+            >
+              {/* Cadran */}
+              <motion.circle 
+                cx="600" cy="150" r="50" 
+                fill="#f8fafc" 
+                stroke="#1e293b" 
+                strokeWidth="4" 
+                filter={organeSelectionne === 'affichage' ? "url(#glow)" : ""}
+                whileHover={{ scale: 1.1 }}
               />
-            ))}
-            
-            {/* Chiffres principaux */}
-            {[12, 3, 6, 9].map((num, idx) => {
-              const angle = (num - 3) * 30;
-              const rad = (angle * Math.PI) / 180;
-              const x = 600 + 32 * Math.cos(rad);
-              const y = 150 + 32 * Math.sin(rad);
-              return (
-                <text key={num} x={x} y={y + 4} textAnchor="middle" fill="#1e293b" fontSize="14" fontWeight="bold">
-                  {num}
-                </text>
-              );
-            })}
-            
-            {/* Aiguille des heures */}
-            <motion.line
-              x1="600" y1="150" x2="600" y2="130"
-              stroke="#1e293b" strokeWidth="5" strokeLinecap="round"
-              animate={animation ? { rotate: 360 } : {}}
-              transition={{ duration: 43200, repeat: Infinity, ease: "linear" }}
-              style={{ transformOrigin: '600px 150px' }}
-            />
-            
-            {/* Aiguille des minutes */}
-            <motion.line
-              x1="600" y1="150" x2="600" y2="118"
-              stroke="#475569" strokeWidth="4" strokeLinecap="round"
-              animate={animation ? { rotate: 360 } : {}}
-              transition={{ duration: 3600, repeat: Infinity, ease: "linear" }}
-              style={{ transformOrigin: '600px 150px' }}
-            />
-            
-            {/* Aiguille des secondes */}
-            <motion.line
-              x1="600" y1="150" x2="600" y2="110"
-              stroke="#ef4444" strokeWidth="2" strokeLinecap="round"
-              animate={animation ? { rotate: 360 } : {}}
-              transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-              style={{ transformOrigin: '600px 150px' }}
-            />
-            
-            {/* Axe central */}
-            <circle cx="600" cy="150" r="6" fill="#1e293b" />
-            <circle cx="600" cy="150" r="3" fill="#f8fafc" />
-            
-            <text x="600" y="220" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Affichage</text>
-            <text x="600" y="240" textAnchor="middle" fill="#06B6D4" fontSize="14">Display</text>
-          </g>
+              
+              {/* Index horaires */}
+              {[...Array(12)].map((_, i) => (
+                <line
+                  key={i}
+                  x1="600" y1="105" x2="600" y2={i % 3 === 0 ? "112" : "110"}
+                  stroke="#1e293b"
+                  strokeWidth={i % 3 === 0 ? "4" : "2"}
+                  transform={`rotate(${i * 30} 600 150)`}
+                />
+              ))}
+              
+              {/* Chiffres principaux */}
+              {[12, 3, 6, 9].map((num, idx) => {
+                const angle = (num - 3) * 30;
+                const rad = (angle * Math.PI) / 180;
+                const x = 600 + 32 * Math.cos(rad);
+                const y = 150 + 32 * Math.sin(rad);
+                return (
+                  <text key={num} x={x} y={y + 4} textAnchor="middle" fill="#1e293b" fontSize="14" fontWeight="bold">
+                    {num}
+                  </text>
+                );
+              })}
+              
+              {/* Aiguille des heures */}
+              <motion.line
+                x1="600" y1="150" x2="600" y2="130"
+                stroke="#1e293b" strokeWidth="5" strokeLinecap="round"
+                animate={animation ? { rotate: 360 } : {}}
+                transition={{ duration: 43200, repeat: Infinity, ease: "linear" }}
+                style={{ transformOrigin: '600px 150px' }}
+              />
+              
+              {/* Aiguille des minutes */}
+              <motion.line
+                x1="600" y1="150" x2="600" y2="118"
+                stroke="#475569" strokeWidth="4" strokeLinecap="round"
+                animate={animation ? { rotate: 360 } : {}}
+                transition={{ duration: 3600, repeat: Infinity, ease: "linear" }}
+                style={{ transformOrigin: '600px 150px' }}
+              />
+              
+              {/* Aiguille des secondes */}
+              <motion.line
+                x1="600" y1="150" x2="600" y2="110"
+                stroke="#ef4444" strokeWidth="2" strokeLinecap="round"
+                animate={animation ? { rotate: 360 } : {}}
+                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                style={{ transformOrigin: '600px 150px' }}
+              />
+              
+              {/* Axe central */}
+              <circle cx="600" cy="150" r="6" fill="#1e293b" />
+              <circle cx="600" cy="150" r="3" fill="#f8fafc" />
+              
+              <text x="600" y="220" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Affichage</text>
+              <text x="600" y="240" textAnchor="middle" fill="#06B6D4" fontSize="14">Display</text>
+            </g>
 
-          {/* Légende des couleurs */}
-          <g transform="translate(50, 480)">
-            <text x="0" y="0" fill="white" fontSize="14" fontWeight="bold">Légende :</text>
-            <circle cx="10" cy="20" r="5" fill="#60A5FA" />
-            <text x="20" y="25" fill="#cbd5e1" fontSize="12">Flux d'énergie</text>
-            
-            <circle cx="10" cy="40" r="5" fill="#EF4444" />
-            <text x="20" y="45" fill="#cbd5e1" fontSize="12">Remontage</text>
-            
-            <circle cx="10" cy="60" r="5" fill="url(#ruby-gradient)" />
-            <text x="20" y="65" fill="#cbd5e1" fontSize="12">Rubis synthétique</text>
-          </g>
-        </svg>
+            {/* Légende des couleurs */}
+            <g transform="translate(50, 480)">
+              <text x="0" y="0" fill="white" fontSize="14" fontWeight="bold">Légende :</text>
+              <circle cx="10" cy="20" r="5" fill="#60A5FA" />
+              <text x="20" y="25" fill="#cbd5e1" fontSize="12">Flux d'énergie</text>
+              
+              <circle cx="10" cy="40" r="5" fill="#EF4444" />
+              <text x="20" y="45" fill="#cbd5e1" fontSize="12">Remontage</text>
+              
+              <circle cx="10" cy="60" r="5" fill="url(#ruby-gradient)" />
+              <text x="20" y="65" fill="#cbd5e1" fontSize="12">Rubis synthétique</text>
+            </g>
+          </svg>
+
+          {/* Annotations */}
+          {annotations.map(annotation => (
+            <div
+              key={annotation.id}
+              className="absolute bg-yellow-500/90 text-black text-xs rounded px-2 py-1 max-w-xs"
+              style={{ left: annotation.x, top: annotation.y }}
+            >
+              {annotation.text}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setAnnotations(annotations.filter(a => a.id !== annotation.id));
+                }}
+                className="ml-2 text-black hover:text-red-600"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
       </motion.div>
+
+      {/* Mode éducatif avec instructions */}
+      {modeAffichage === 'educatif' && (
+        <div className="mt-4 bg-blue-900/30 border border-blue-500 rounded-lg p-4">
+          <p className="text-blue-200 text-sm">
+            <strong>Mode éducatif :</strong> Cliquez n'importe où sur le schéma pour ajouter des annotations. 
+            Cliquez sur une annotation pour la supprimer.
+          </p>
+        </div>
+      )}
 
       {/* Zone d'information détaillée */}
       <AnimatePresence>
@@ -1601,6 +2043,7 @@ const SchemaMecaniqueComplet = () => {
         💡 Cliquez sur un organe pour découvrir ses détails techniques • 
         {animation ? ' ⏸️ Animation active' : ' ▶️ Animation en pause'}
         {zoomLevel > 1 && ' • 🔍 Mode zoom activé'}
+        {modeAffichage === 'educatif' && ' • 📝 Mode éducatif activé'}
       </p>
     </div>
   );
@@ -1634,7 +2077,8 @@ const ComparaisonMontres = () => {
               <p className="text-slate-200"><strong>Aucune batterie</strong> - Fonctionne par ressort</p>
             </div>
             <div className="flex items-start gap-2">
-              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+              <CheckCircle className="w-5 h-5
+text-green-400 flex-shrink-0 mt-0.5" />
               <p className="text-slate-200"><strong>Artisanat</strong> - Jusqu'à 300 pièces assemblées main</p>
             </div>
             <div className="flex items-start gap-2">
