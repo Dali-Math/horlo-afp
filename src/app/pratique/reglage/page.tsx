@@ -2,20 +2,31 @@
 
 import Link from "next/link";
 import { ArrowLeft, BookOpen, Settings, Clock, Wrench, Target, Zap, Award, ChevronRight, PlayCircle, Activity, Gauge, RotateCw, Eye } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 export default function ReglagePage() {
+  // État pour la section active dans la table des matières
   const [activeSection, setActiveSection] = useState<string>("introduction");
+  
+  // État pour le loader initial
   const [isLoading, setIsLoading] = useState(true);
+  
+  // État pour le simulateur de réglage
   const [simulatedOffset, setSimulatedOffset] = useState(0);
+  
+  // État pour les effets hover sur les outils
   const [hoveredTool, setHoveredTool] = useState<number | null>(null);
+  
+  // État pour les cartes expandables
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
 
+  // Effet pour masquer le loader après le montage
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
 
+  // Effet pour observer les sections et mettre à jour la table des matières
   useEffect(() => {
     const sections = document.querySelectorAll("section[id]");
     const observer = new IntersectionObserver(
@@ -33,18 +44,21 @@ export default function ReglagePage() {
     return () => observer.disconnect();
   }, []);
 
+  // Fonction de navigation fluide
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  // Fonction pour le simulateur de réglage
   const adjustRegulation = (direction: 'advance' | 'retard') => {
     setSimulatedOffset(prev => direction === 'advance' ? prev + 5 : prev - 5);
   };
 
+  // Structure principale du composant - le return DOIT être à l'intérieur de la fonction
   return (
     <main className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-black text-white overflow-x-hidden">
-      {/* Loader animé */}
+      {/* Loader animé avec overlay */}
       {isLoading && (
         <div className="fixed inset-0 bg-black z-50 flex items-center justify-center transition-opacity duration-500">
           <div className="relative">
@@ -69,12 +83,9 @@ export default function ReglagePage() {
             </Link>
             <div className="hidden md:flex items-center gap-2 text-amber-400/60 text-sm">
               <div className="flex items-center gap-1">
-                <div className={`w-1.5 h-1.5 rounded-full ${activeSection === 'introduction' ? 'bg-amber-400' : 'bg-amber-400/30'}`}></div>
-                <div className={`w-1.5 h-1.5 rounded-full ${activeSection === 'principes' ? 'bg-amber-400' : 'bg-amber-400/30'}`}></div>
-                <div className={`w-1.5 h-1.5 rounded-full ${activeSection === 'outils' ? 'bg-amber-400' : 'bg-amber-400/30'}`}></div>
-                <div className={`w-1.5 h-1.5 rounded-full ${activeSection === 'techniques' ? 'bg-amber-400' : 'bg-amber-400/30'}`}></div>
-                <div className={`w-1.5 h-1.5 rounded-full ${activeSection === 'conseils' ? 'bg-amber-400' : 'bg-amber-400/30'}`}></div>
-                <div className={`w-1.5 h-1.5 rounded-full ${activeSection === 'glossaire' ? 'bg-amber-400' : 'bg-amber-400/30'}`}></div>
+                {['introduction', 'principes', 'outils', 'techniques', 'conseils', 'glossaire'].map((section) => (
+                  <div key={section} className={`w-1.5 h-1.5 rounded-full ${activeSection === section ? 'bg-amber-400' : 'bg-amber-400/30'}`}></div>
+                ))}
               </div>
             </div>
           </div>
@@ -88,7 +99,7 @@ export default function ReglagePage() {
             <div className="absolute top-0 right-0 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl"></div>
           </div>
-          <h1 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 bg-clip-text text-transparent mb-6 animate-fade-in">
+          <h1 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 bg-clip-text text-transparent mb-6">
             Réglage & Précision
           </h1>
           <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
@@ -96,13 +107,13 @@ export default function ReglagePage() {
           </p>
           <div className="flex justify-center gap-6 text-amber-400/70">
             <Gauge className="w-12 h-12 animate-pulse" />
-            <Activity className="w-12 h-12 animate-pulse [animation-delay:0.2s]" />
-            <RotateCw className="w-12 h-12 animate-pulse [animation-delay:0.4s]" />
+            <Activity className="w-12 h-12 animate-pulse" />
+            <RotateCw className="w-12 h-12 animate-pulse" />
           </div>
         </header>
 
         {/* Table des matières interactive avec effet 3D */}
-        <aside className="mb-20 bg-neutral-800/40 backdrop-blur-xl rounded-3xl p-8 border border-amber-500/30 shadow-2xl shadow-amber-500/10">
+        <aside className="mb-20 bg-neutral-800/40 backdrop-blur-xl rounded-3xl p-8 border border-amber-500/30 shadow-2xl">
           <h2 className="text-3xl font-bold text-amber-400 mb-8 flex items-center gap-4 justify-center">
             <BookOpen className="w-8 h-8" />
             Table des matières interactive
@@ -121,7 +132,7 @@ export default function ReglagePage() {
                 onClick={() => scrollToSection(item.id)}
                 className={`group relative overflow-hidden bg-gradient-to-br ${activeSection === item.id ? item.color : 'from-neutral-800 to-neutral-900'} 
                   rounded-2xl p-6 border border-amber-500/20 hover:border-amber-500/50 transition-all duration-500 
-                  ${activeSection === item.id ? 'scale-105 shadow-2xl shadow-amber-500/30' : 'hover:-translate-y-2 hover:shadow-xl'}`}
+                  ${activeSection === item.id ? 'scale-105 shadow-2xl' : 'hover:-translate-y-2 hover:shadow-xl'}`}
               >
                 <div className="flex items-center gap-4">
                   <div className={`w-16 h-16 rounded-xl flex items-center justify-center text-3xl transition-all duration-300 
@@ -133,13 +144,9 @@ export default function ReglagePage() {
                       {item.label}
                     </h3>
                     {activeSection === item.id && (
-                      <p className="text-sm text-black/70 mt-1 animate-fade-in">En cours de lecture</p>
+                      <p className="text-sm text-black/70 mt-1">En cours de lecture</p>
                     )}
                   </div>
-                </div>
-                <div className={`absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center
-                  transition-all duration-300 ${activeSection === item.id ? 'bg-white/30' : 'bg-amber-400/10'}`}>
-                  <ChevronRight className={`w-5 h-5 transition-transform ${activeSection === item.id ? 'rotate-90 text-black' : 'text-amber-400'}`} />
                 </div>
               </button>
             ))}
@@ -171,19 +178,19 @@ export default function ReglagePage() {
             <div className="flex gap-4 justify-center">
               <button
                 onClick={() => adjustRegulation('advance')}
-                className="bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-red-500/30"
+                className="bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-3 rounded-full transition-all duration-300 hover:scale-110"
               >
                 ➕ Avance (+5s/j)
               </button>
               <button
                 onClick={() => adjustRegulation('retard')}
-                className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-green-500/30"
+                className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-3 rounded-full transition-all duration-300 hover:scale-110"
               >
                 ➖ Retard (-5s/j)
               </button>
               <button
                 onClick={() => setSimulatedOffset(0)}
-                className="bg-amber-600 hover:bg-amber-500 text-black font-bold px-6 py-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-amber-500/30"
+                className="bg-amber-600 hover:bg-amber-500 text-black font-bold px-6 py-3 rounded-full transition-all duration-300 hover:scale-110"
               >
                 🔄 Réinitialiser
               </button>
@@ -194,7 +201,6 @@ export default function ReglagePage() {
         {/* Section Vidéo avec cadre premium */}
         <section id="introduction" className="mb-24 scroll-mt-24">
           <div className="relative bg-black rounded-3xl overflow-hidden shadow-2xl border border-amber-500/40 group">
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 via-transparent to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative" style={{ paddingBottom: "56.25%" }}>
               <iframe
                 className="absolute top-0 left-0 w-full h-full"
@@ -225,7 +231,7 @@ export default function ReglagePage() {
         {/* Principes Fondamentaux avec cards 3D */}
         <section id="principes" className="mb-24 scroll-mt-24">
           <h2 className="text-4xl font-bold text-amber-400 mb-12 flex items-center gap-6 justify-center">
-            <Settings className="w-10 h-10 animate-spin-slow" />
+            <Settings className="w-10 h-10" />
             Principes fondamentaux du réglage
           </h2>
           
@@ -258,12 +264,12 @@ export default function ReglagePage() {
             ].map((card, index) => (
               <div
                 key={index}
-                className="relative bg-gradient-to-br from-neutral-800/60 to-neutral-900/60 rounded-2xl p-8 border border-amber-500/20 hover:border-amber-500/50 transition-all duration-500 hover:-translate-y-4 hover:shadow-2xl hover:shadow-amber-500/20"
+                className="relative bg-gradient-to-br from-neutral-800/60 to-neutral-900/60 rounded-2xl p-8 border border-amber-500/20 hover:border-amber-500/50 transition-all duration-500 hover:-translate-y-4 hover:shadow-2xl"
                 onMouseEnter={() => setHoveredTool(index)}
                 onMouseLeave={() => setHoveredTool(null)}
               >
                 <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${card.color} opacity-0 hover:opacity-100 transition-opacity`}></div>
-                <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${card.color} flex items-center justify-center mb-6 transition-transform duration-300 ${hoveredTool === index ? 'rotate-12 scale-110' : ''}`}>
+                <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${card.color} flex items-center justify-center mb-6 transition-transform ${hoveredTool === index ? 'rotate-12 scale-110' : ''}`}>
                   {card.icon}
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-4">{card.title}</h3>
@@ -276,7 +282,7 @@ export default function ReglagePage() {
                 </div>
                 <button
                   onClick={() => setExpandedCard(expandedCard === index ? null : index)}
-                  className="mt-4 text-amber-400 hover:text-amber-300 text-sm font-semibold transition-all"
+                  className="mt-4 text-amber-400 hover:text-amber-300 text-sm font-semibold"
                 >
                   {expandedCard === index ? '▲ Moins de détails' : '▼ Plus de détails'}
                 </button>
@@ -285,11 +291,11 @@ export default function ReglagePage() {
           </div>
         </section>
 
-        {/* Oils du réglage avec carrousel d'outils */}
+        {/* Outils du réglage */}
         <section id="outils" className="mb-24 scroll-mt-24">
           <h2 className="text-4xl font-bold text-amber-400 mb-12 flex items-center gap-6 justify-center">
             <Wrench className="w-10 h-10" />
-            Oils essentiels du réglage
+            Outils essentiels du réglage
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -364,7 +370,7 @@ export default function ReglagePage() {
                     <span className="text-sm text-amber-300 mt-2 block">{item.time}</span>
                   </div>
                 </div>
-                <div className="absolute left-1/2 -translate-x-1/2 w-6 h-6 bg-amber-400 rounded-full border-4 border-neutral-900 shadow-lg shadow-amber-400/50"></div>
+                <div className="absolute left-1/2 -translate-x-1/2 w-6 h-6 bg-amber-400 rounded-full border-4 border-neutral-900 shadow-lg"></div>
               </div>
             ))}
           </div>
@@ -391,7 +397,7 @@ export default function ReglagePage() {
                 >
                   <div className="text-4xl">{tip.icon}</div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-white transition-colors group-hover:text-amber-300">{tip.title}</h3>
+                    <h3 className="text-xl font-bold text-white">{tip.title}</h3>
                     <div className={`text-gray-400 mt-2 transition-all duration-500 ${expandedCard === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
                       <p className="leading-relaxed">{tip.content}</p>
                     </div>
@@ -403,7 +409,7 @@ export default function ReglagePage() {
           </div>
         </section>
 
-        {/* Glossaire avec recherche */}
+        {/* Glossaire */}
         <section id="glossaire" className="mb-24 scroll-mt-24">
           <h2 className="text-4xl font-bold text-amber-400 mb-12 flex items-center gap-6 justify-center">
             <Award className="w-10 h-10" />
@@ -439,9 +445,27 @@ export default function ReglagePage() {
               Prêt à devenir régleur ?
             </h2>
             <p className="text-xl text-white/90 mb-10 max-w-3xl mx-auto">
-              La précision horlogère est un art qui s'acquiert avec la pratique, la patience et la compréhension des principes fondamentaux. Commencez votre voyage vers l'excellence chronométrique.
+              La précision horlogère est un art qui s'acquiert avec la pratique, la patience et la compréhension des principes fondamentaux.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link
                 href="/pratique"
-                className="inline-flex items-center
+                className="inline-flex items-center gap-3 bg-white text-black font-bold px-8 py-4 rounded-full hover:shadow-2xl transition-all duration-300 group"
+              >
+                <span>Passer à la pratique</span>
+                <ChevronRight className="w-6 h-6 transition-transform group-hover:translate-x-2" />
+              </Link>
+              <Link
+                href="/theorie/mouvements"
+                className="inline-flex items-center gap-3 border-2 border-white text-white font-bold px-8 py-4 rounded-full hover:bg-white hover:text-black transition-all duration-300"
+              >
+                <BookOpen className="w-6 h-6" />
+                <span>Approfondir la théorie</span>
+              </Link>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+}
