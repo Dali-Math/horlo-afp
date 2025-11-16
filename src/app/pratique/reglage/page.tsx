@@ -1,11 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, BookOpen, Settings, Clock, Wrench, Target, Zap, Award, ChevronRight, PlayCircle } from "lucide-react";
-import { useState, useEffect } from "react";
+import { ArrowLeft, BookOpen, Settings, Clock, Wrench, Target, Zap, Award, ChevronRight, PlayCircle, Activity, Gauge, RotateCw, Eye } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 
 export default function ReglagePage() {
   const [activeSection, setActiveSection] = useState<string>("introduction");
+  const [isLoading, setIsLoading] = useState(true);
+  const [simulatedOffset, setSimulatedOffset] = useState(0);
+  const [hoveredTool, setHoveredTool] = useState<number | null>(null);
+  const [expandedCard, setExpandedCard] = useState<number | null>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const sections = document.querySelectorAll("section[id]");
@@ -29,67 +38,163 @@ export default function ReglagePage() {
     element?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const adjustRegulation = (direction: 'advance' | 'retard') => {
+    setSimulatedOffset(prev => direction === 'advance' ? prev + 5 : prev - 5);
+  };
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-black text-white">
-      <nav className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-amber-500/20">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <Link
-            href="/pratique"
-            className="inline-flex items-center gap-2 text-amber-400 hover:text-white transition-all duration-300 group"
-            aria-label="Retour à la page pratique"
-          >
-            <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
-            <span className="font-medium">Retour à la pratique</span>
-          </Link>
+    <main className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-black text-white overflow-x-hidden">
+      {/* Loader animé */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black z-50 flex items-center justify-center transition-opacity duration-500">
+          <div className="relative">
+            <div className="w-24 h-24 rounded-full border-4 border-amber-400/20 border-t-amber-400 animate-spin"></div>
+            <Clock className="w-12 h-12 text-amber-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+          </div>
+        </div>
+      )}
+
+      {/* Navigation sticky avec indicateur de progression */}
+      <nav className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-amber-500/30">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <Link
+              href="/pratique"
+              className="inline-flex items-center gap-3 text-amber-400 hover:text-white transition-all duration-300 group"
+            >
+              <div className="w-10 h-10 rounded-full bg-amber-400/10 flex items-center justify-center group-hover:bg-amber-400/20 transition-colors">
+                <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+              </div>
+              <span className="font-semibold">Retour</span>
+            </Link>
+            <div className="hidden md:flex items-center gap-2 text-amber-400/60 text-sm">
+              <div className="flex items-center gap-1">
+                <div className={`w-1.5 h-1.5 rounded-full ${activeSection === 'introduction' ? 'bg-amber-400' : 'bg-amber-400/30'}`}></div>
+                <div className={`w-1.5 h-1.5 rounded-full ${activeSection === 'principes' ? 'bg-amber-400' : 'bg-amber-400/30'}`}></div>
+                <div className={`w-1.5 h-1.5 rounded-full ${activeSection === 'outils' ? 'bg-amber-400' : 'bg-amber-400/30'}`}></div>
+                <div className={`w-1.5 h-1.5 rounded-full ${activeSection === 'techniques' ? 'bg-amber-400' : 'bg-amber-400/30'}`}></div>
+                <div className={`w-1.5 h-1.5 rounded-full ${activeSection === 'conseils' ? 'bg-amber-400' : 'bg-amber-400/30'}`}></div>
+                <div className={`w-1.5 h-1.5 rounded-full ${activeSection === 'glossaire' ? 'bg-amber-400' : 'bg-amber-400/30'}`}></div>
+              </div>
+            </div>
+          </div>
         </div>
       </nav>
 
-      <div className="max-w-6xl mx-auto px-4 py-12 md:py-16">
-        <header className="text-center mb-16 md:mb-20">
-          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent mb-6">
+      <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
+        {/* Hero Section avec effet parallax */}
+        <header className="text-center mb-24 md:mb-32 relative">
+          <div className="absolute inset-0 -z-10">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl"></div>
+          </div>
+          <h1 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 bg-clip-text text-transparent mb-6 animate-fade-in">
             Réglage & Précision
           </h1>
-          <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
             Maîtrisez l'art subtil de la régulation horlogère et comprenez les secrets de la précision mécanique
           </p>
-          <div className="mt-8 flex justify-center">
-            <div className="h-1 w-32 bg-gradient-to-r from-transparent via-amber-400 to-transparent rounded-full"></div>
+          <div className="flex justify-center gap-6 text-amber-400/70">
+            <Gauge className="w-12 h-12 animate-pulse" />
+            <Activity className="w-12 h-12 animate-pulse [animation-delay:0.2s]" />
+            <RotateCw className="w-12 h-12 animate-pulse [animation-delay:0.4s]" />
           </div>
         </header>
 
-        <aside className="mb-12 md:mb-16 bg-neutral-800/50 backdrop-blur-sm rounded-2xl p-6 border border-amber-500/20">
-          <h2 className="text-2xl font-bold text-amber-400 mb-6 flex items-center gap-3">
-            <BookOpen className="w-6 h-6" />
-            Table des matières
+        {/* Table des matières interactive avec effet 3D */}
+        <aside className="mb-20 bg-neutral-800/40 backdrop-blur-xl rounded-3xl p-8 border border-amber-500/30 shadow-2xl shadow-amber-500/10">
+          <h2 className="text-3xl font-bold text-amber-400 mb-8 flex items-center gap-4 justify-center">
+            <BookOpen className="w-8 h-8" />
+            Table des matières interactive
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { id: "introduction", label: "Introduction", icon: "📖" },
-              { id: "principes", label: "Principes fondamentaux", icon: "⚙️" },
-              { id: "outils", label: "Outils du réglage", icon: "🛠️" },
-              { id: "techniques", label: "Techniques avancées", icon: "🎯" },
-              { id: "conseils", label: "Conseils pratiques", icon: "💡" },
-              { id: "glossaire", label: "Glossaire", icon: "📚" },
+              { id: "introduction", label: "Introduction vidéo", icon: "📺", color: "from-amber-400 to-amber-600" },
+              { id: "principes", label: "Principes fondamentaux", icon: "⚙️", color: "from-orange-400 to-orange-600" },
+              { id: "outils", label: "Outils du réglage", icon: "🛠️", color: "from-yellow-400 to-yellow-600" },
+              { id: "techniques", label: "Techniques avancées", icon: "🎯", color: "from-red-400 to-red-600" },
+              { id: "conseils", label: "Conseils pratiques", icon: "💡", color: "from-green-400 to-green-600" },
+              { id: "glossaire", label: "Glossaire technique", icon: "📚", color: "from-purple-400 to-purple-600" },
             ].map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`flex items-center gap-3 text-left p-3 rounded-lg transition-all duration-300 ${
-                  activeSection === item.id
-                    ? "bg-amber-500/20 text-amber-400 border border-amber-500/40"
-                    : "bg-neutral-900/50 text-gray-300 hover:bg-amber-500/10 hover:text-amber-300 border border-transparent"
-                }`}
+                className={`group relative overflow-hidden bg-gradient-to-br ${activeSection === item.id ? item.color : 'from-neutral-800 to-neutral-900'} 
+                  rounded-2xl p-6 border border-amber-500/20 hover:border-amber-500/50 transition-all duration-500 
+                  ${activeSection === item.id ? 'scale-105 shadow-2xl shadow-amber-500/30' : 'hover:-translate-y-2 hover:shadow-xl'}`}
               >
-                <span className="text-xl">{item.icon}</span>
-                <span className="font-medium">{item.label}</span>
-                {activeSection === item.id && <ChevronRight className="w-5 h-5 ml-auto" />}
+                <div className="flex items-center gap-4">
+                  <div className={`w-16 h-16 rounded-xl flex items-center justify-center text-3xl transition-all duration-300 
+                    ${activeSection === item.id ? 'bg-white/20' : 'bg-white/5 group-hover:bg-white/10'}`}>
+                    {item.icon}
+                  </div>
+                  <div className="text-left">
+                    <h3 className={`text-lg font-bold transition-all ${activeSection === item.id ? 'text-black' : 'text-white group-hover:text-amber-300'}`}>
+                      {item.label}
+                    </h3>
+                    {activeSection === item.id && (
+                      <p className="text-sm text-black/70 mt-1 animate-fade-in">En cours de lecture</p>
+                    )}
+                  </div>
+                </div>
+                <div className={`absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center
+                  transition-all duration-300 ${activeSection === item.id ? 'bg-white/30' : 'bg-amber-400/10'}`}>
+                  <ChevronRight className={`w-5 h-5 transition-transform ${activeSection === item.id ? 'rotate-90 text-black' : 'text-amber-400'}`} />
+                </div>
               </button>
             ))}
           </div>
         </aside>
 
-        <section id="introduction" className="mb-16 md:mb-20 scroll-mt-24">
-          <div className="bg-black rounded-2xl overflow-hidden shadow-2xl border border-amber-500/30">
+        {/* Simulateur de réglage interactif */}
+        <section className="mb-24 bg-gradient-to-br from-amber-500/10 via-orange-500/10 to-red-500/10 rounded-3xl p-8 border border-amber-500/30">
+          <h2 className="text-3xl font-bold text-amber-400 mb-6 text-center">Simulateur de réglage</h2>
+          <div className="bg-black rounded-2xl p-8 border border-amber-500/40">
+            <div className="flex items-center justify-between mb-8">
+              <div className="text-center">
+                <p className="text-gray-400 text-sm mb-1">Déviation actuelle</p>
+                <p className={`text-4xl font-bold ${simulatedOffset > 0 ? 'text-red-400' : simulatedOffset < 0 ? 'text-green-400' : 'text-amber-400'}`}>
+                  {simulatedOffset > 0 ? '+' : ''}{simulatedOffset} s/j
+                </p>
+              </div>
+              <div className="text-center">
+                <Target className="w-16 h-16 text-amber-400 animate-pulse mx-auto" />
+                <p className="text-gray-400 text-sm mt-2">Objectif : ±0 s/j</p>
+              </div>
+              <div className="text-center">
+                <p className="text-gray-400 text-sm mb-1">Précision</p>
+                <p className="text-4xl font-bold text-amber-400">
+                  {simulatedOffset === 0 ? '100%' : Math.max(0, 100 - Math.abs(simulatedOffset) * 5) + '%'}
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={() => adjustRegulation('advance')}
+                className="bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-red-500/30"
+              >
+                ➕ Avance (+5s/j)
+              </button>
+              <button
+                onClick={() => adjustRegulation('retard')}
+                className="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-green-500/30"
+              >
+                ➖ Retard (-5s/j)
+              </button>
+              <button
+                onClick={() => setSimulatedOffset(0)}
+                className="bg-amber-600 hover:bg-amber-500 text-black font-bold px-6 py-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-amber-500/30"
+              >
+                🔄 Réinitialiser
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Section Vidéo avec cadre premium */}
+        <section id="introduction" className="mb-24 scroll-mt-24">
+          <div className="relative bg-black rounded-3xl overflow-hidden shadow-2xl border border-amber-500/40 group">
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 via-transparent to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative" style={{ paddingBottom: "56.25%" }}>
               <iframe
                 className="absolute top-0 left-0 w-full h-full"
@@ -99,226 +204,244 @@ export default function ReglagePage() {
                 allowFullScreen
               ></iframe>
             </div>
-            <div className="bg-gradient-to-r from-neutral-900 to-neutral-800 p-6">
-              <div className="flex items-center gap-3 text-amber-400 mb-2">
-                <PlayCircle className="w-6 h-6" />
-                <span className="font-semibold">Guide vidéo complet</span>
+            <div className="bg-gradient-to-r from-neutral-900 to-neutral-800 p-8">
+              <div className="flex items-center gap-4 mb-3">
+                <PlayCircle className="w-8 h-8 text-amber-400 animate-pulse" />
+                <span className="text-2xl font-bold text-amber-400">Guide vidéo complet</span>
               </div>
-              <p className="text-gray-300">
+              <p className="text-gray-300 text-lg">
                 Plongez dans les mécanismes subtiles du réglage de précision avec un maître horloger
               </p>
-              <p className="text-gray-400 text-sm mt-2 flex items-center gap-2">
-                <Clock className="w-4 h-4" />
-                Durée : 15 minutes • 🎧 Audio : Français • 📺 Sous-titres disponibles
-              </p>
+              <div className="mt-4 flex flex-wrap items-center gap-6 text-amber-400/70">
+                <span className="flex items-center gap-2"><Clock className="w-5 h-5" /> 15 minutes</span>
+                <span className="flex items-center gap-2"><Eye className="w-5 h-5" /> 12k vues</span>
+                <span className="flex items-center gap-2">🎧 Français</span>
+                <span className="flex items-center gap-2">📺 Sous-titres disponibles</span>
+              </div>
             </div>
           </div>
         </section>
 
-        <section id="principes" className="mb-16 md:mb-20 scroll-mt-24">
-          <h2 className="text-3xl md:text-4xl font-bold text-amber-400 mb-8 flex items-center gap-4">
-            <Settings className="w-8 h-8" />
+        {/* Principes Fondamentaux avec cards 3D */}
+        <section id="principes" className="mb-24 scroll-mt-24">
+          <h2 className="text-4xl font-bold text-amber-400 mb-12 flex items-center gap-6 justify-center">
+            <Settings className="w-10 h-10 animate-spin-slow" />
             Principes fondamentaux du réglage
           </h2>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-            <div className="bg-neutral-800/60 rounded-xl p-6 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/10">
-              <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg flex items-center justify-center mb-4">
-                <Zap className="w-7 h-7 text-black" />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <Zap className="w-10 h-10 text-black" />,
+                title: "Le Balancier-Spiral",
+                content: "Cœur du régulateur, ce système oscille à une fréquence précise (2,5 à 5 Hz). Sa période détermine la marche de la montre.",
+                specs: "Fréquence : 28 800 alt/h (4 Hz)",
+                details: "Le spiral, en alliage Nivarox, résiste aux variations thermiques et magnétiques. Sa longueur active est la clé de la précision.",
+                color: "from-amber-400 to-amber-600"
+              },
+              {
+                icon: <Target className="w-10 h-10 text-black" />,
+                title: "La Raquette d'Ajustement",
+                content: "Petit levier qui modifie la longueur active du spiral. Déplacement micrométrique pour ajustements fins.",
+                specs: "Précision : 1/4 tour ≈ 10s/j",
+                details: "Vers A (Avance) = raccourcit le spiral. Vers R (Retard) = allonge le spiral. Chaque clic est crucial.",
+                color: "from-orange-400 to-orange-600"
+              },
+              {
+                icon: <Activity className="w-10 h-10 text-black" />,
+                title: "L'Amplitude & l'Isochronisme",
+                content: "Angle de rotation du balancier (270-320° idéal). Indique la santé du mouvement et la qualité du lubrifiant.",
+                specs: "Optimal : 280-300° horizontale",
+                details: "Amplitude faible = usure ou séchage. Variations de position doivent être < 30° pour un chronomètre.",
+                color: "from-red-400 to-red-600"
+              }
+            ].map((card, index) => (
+              <div
+                key={index}
+                className="relative bg-gradient-to-br from-neutral-800/60 to-neutral-900/60 rounded-2xl p-8 border border-amber-500/20 hover:border-amber-500/50 transition-all duration-500 hover:-translate-y-4 hover:shadow-2xl hover:shadow-amber-500/20"
+                onMouseEnter={() => setHoveredTool(index)}
+                onMouseLeave={() => setHoveredTool(null)}
+              >
+                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${card.color} opacity-0 hover:opacity-100 transition-opacity`}></div>
+                <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${card.color} flex items-center justify-center mb-6 transition-transform duration-300 ${hoveredTool === index ? 'rotate-12 scale-110' : ''}`}>
+                  {card.icon}
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">{card.title}</h3>
+                <p className="text-gray-300 leading-relaxed mb-4">{card.content}</p>
+                <div className="text-sm text-amber-300 bg-amber-500/10 rounded-lg p-3 mb-3 font-semibold">
+                  {card.specs}
+                </div>
+                <div className={`transition-all duration-500 ${expandedCard === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                  <p className="text-gray-400 text-sm leading-relaxed">{card.details}</p>
+                </div>
+                <button
+                  onClick={() => setExpandedCard(expandedCard === index ? null : index)}
+                  className="mt-4 text-amber-400 hover:text-amber-300 text-sm font-semibold transition-all"
+                >
+                  {expandedCard === index ? '▲ Moins de détails' : '▼ Plus de détails'}
+                </button>
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">Le Balancier-Spiral</h3>
-              <p className="text-gray-300 leading-relaxed">
-                Cœur du régulateur, ce système oscille à une fréquence précise (2,5 à 5 Hz). 
-                Sa période détermine la marche de la montre. Le spiral, en alliage spécial 
-                (Nivarox), résiste aux variations de température et aux champs magnétiques.
-              </p>
-              <div className="mt-4 text-sm text-amber-300 bg-amber-500/10 rounded-lg p-3">
-                <strong>Fréquence typique :</strong> 28 800 alternances/heure (4 Hz)
-              </div>
-            </div>
-
-            <div className="bg-neutral-800/60 rounded-xl p-6 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/10">
-              <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg flex items-center justify-center mb-4">
-                <Target className="w-7 h-7 text-black" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3">La Raquette d'Ajustement</h3>
-              <p className="text-gray-300 leading-relaxed">
-                Petit levier qui modifie la longueur active du spiral. Déplacer la raquette 
-                vers <strong className="text-amber-400">A (Avance)</strong> raccourcit le spiral 
-                (montre plus rapide). Vers <strong className="text-amber-400">R (Retard)</strong>, 
-                on l'allonge et elle ralentit.
-              </p>
-              <div className="mt-4 text-sm text-amber-300 bg-amber-500/10 rounded-lg p-3">
-                <strong>Précision :</strong> 1/4 de tour ≈ 10 secondes/jour
-              </div>
-            </div>
-
-            <div className="bg-neutral-800/60 rounded-xl p-6 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/10">
-              <div className="w-14 h-14 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg flex items-center justify-center mb-4">
-                <Clock className="w-7 h-7 text-black" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3">L'Amplitude</h3>
-              <p className="text-gray-300 leading-relaxed">
-                Angle de rotation du balancier (idéalement 270-320°). Une amplitude trop faible 
-                indique un problème de lubrification ou d'usure. Le chronocomparateur mesure 
-                cette valeur en temps réel.
-              </p>
-              <div className="mt-4 text-sm text-amber-300 bg-amber-500/10 rounded-lg p-3">
-                <strong>Optimal :</strong> 280-300° en position horizontale
-              </div>
-            </div>
+            ))}
           </div>
         </section>
 
-        <section id="outils" className="mb-16 md:mb-20 scroll-mt-24">
-          <h2 className="text-3xl md:text-4xl font-bold text-amber-400 mb-8 flex items-center gap-4">
-            <Wrench className="w-8 h-8" />
-            Outils essentiels du réglage
+        {/* Oils du réglage avec carrousel d'outils */}
+        <section id="outils" className="mb-24 scroll-mt-24">
+          <h2 className="text-4xl font-bold text-amber-400 mb-12 flex items-center gap-6 justify-center">
+            <Wrench className="w-10 h-10" />
+            Oils essentiels du réglage
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {
-                name: "Chronocomparateur",
-                description: "Mesure la fréquence, l'amplitude et l'erreur de marche avec une précision de 0,1 seconde/jour.",
-                specs: "Microphone à contact • Affichage graphique • 6 positions"
+                name: "Chronocomparateur professionnel",
+                description: "Appareil de mesure électronique ultra-précis. Analyse la fréquence, l'amplitude et l'erreur de marche en temps réel.",
+                features: ["Microphone à contact", "Affichage graphique", "6 positions testables", "Précision 0.1s/j"],
+                price: "1 500€ - 5 000€"
               },
               {
-                name: "Loupe binoculaire",
-                description: "Grossissement 10x à 20x pour observer le spiral et la raquette sans fatigue oculaire.",
-                specs: "Éclairage LED • Réglage dioptrique • Confort prolongé"
+                name: "Loupe binoculaire stéréoscopique",
+                description: "Vision 3D sans fatigue pour observer le spiral et la raquette. Indispensable pour les ajustements fins.",
+                features: ["Grossissement 10x-20x", "Éclairage LED intégré", "Réglage dioptrique", "Confort prolongé"],
+                price: "300€ - 1 200€"
               },
               {
-                name: "Tourne-raquette",
-                description: "Outil fin pour déplacer la raquette sans endommager le spiral.",
-                specs: "Acier inoxydable • Pointe diamantée • Poignée ergonomique"
+                name: "Tourne-raquette micro-métrique",
+                description: "Outil de précision pour déplacer la raquette sans endommager le spiral. Fabrication suisse.",
+                features: ["Pointe diamantée", "Poignée ergonomique", "Gravure des positions", "Acier inoxydable"],
+                price: "150€ - 300€"
               },
               {
-                name: "Dé-magnétiseur",
-                description: "Élimine l'aimantation qui perturbe le spiral et fausse la marche.",
-                specs: "Champ pulsé • 5 cycles automatiques • Compatible tous mouvements"
+                name: "Dé-magnétiseur professionnel",
+                description: "Élimine l'aimantation du spiral, cause n°1 des variations de marche. Procédure automatisée.",
+                features: ["Champ pulsé", "5 cycles automatiques", "Compatible tout mouvement", "Certification COSC"],
+                price: "200€ - 600€"
               }
             ].map((tool, index) => (
-              <div key={index} className="bg-neutral-800/60 rounded-xl p-6 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300 hover:translate-x-2">
-                <h3 className="text-xl font-bold text-amber-400 mb-2">{tool.name}</h3>
-                <p className="text-gray-300 mb-3">{tool.description}</p>
-                <div className="text-sm text-gray-400 bg-neutral-900/50 rounded-lg p-3 border border-amber-500/10">
-                  <strong className="text-amber-300">Caractéristiques :</strong> {tool.specs}
+              <div key={index} className="bg-gradient-to-br from-neutral-800/60 to-neutral-900/60 rounded-2xl p-8 border border-amber-500/20 hover:border-amber-500/50 transition-all duration-500 hover:translate-x-4 hover:shadow-2xl">
+                <div className="flex items-start justify-between mb-4">
+                  <h3 className="text-2xl font-bold text-amber-400">{tool.name}</h3>
+                  <span className="text-sm text-amber-300 font-semibold bg-amber-500/10 px-3 py-1 rounded-full">
+                    {tool.price}
+                  </span>
+                </div>
+                <p className="text-gray-300 leading-relaxed mb-6">{tool.description}</p>
+                <div className="grid grid-cols-2 gap-3">
+                  {tool.features.map((feature, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-sm text-gray-400">
+                      <div className="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+                      {feature}
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        <section id="techniques" className="mb-16 md:mb-20 scroll-mt-24">
-          <h2 className="text-3xl md:text-4xl font-bold text-amber-400 mb-8">
-            Techniques de réglage avancées
+        {/* Timeline des techniques */}
+        <section id="techniques" className="mb-24 scroll-mt-24">
+          <h2 className="text-4xl font-bold text-amber-400 mb-12 text-center">
+            Processus de réglage chronométrique
           </h2>
           
-          <div className="space-y-6">
+          <div className="relative">
+            <div className="absolute left-1/2 -translate-x-1/2 w-1 h-full bg-gradient-to-b from-amber-400 to-orange-600"></div>
             {[
-              {
-                step: "1. Diagnostic initial",
-                content: "Mesurer la marche sur 24h dans 3 positions (cadran haut, couronne haut, couronne bas). Noter les écarts et l'amplitude."
-              },
-              {
-                step: "2. Dépose du mouvement",
-                content: "Extraire délicatement le mouvement du boîtier. Vérifier l'état du spiral (pas de touches, pas d'oxydation)."
-              },
-              {
-                step: "3. Ajustement fin",
-                content: "Utiliser le tourne-raquette. Un clic = ~5 sec/jour. Toujours agir par petites incréments."
-              },
-              {
-                step: "4. Validation",
-                content: "Re-mesurer après chaque ajustement. Un réglage optimal nécessite 3-5 cycles d'ajustement."
-              }
-            ].map((technique, index) => (
-              <div key={index} className="bg-neutral-800/60 rounded-xl p-6 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300">
-                <h3 className="text-xl font-bold text-amber-400 mb-3 flex items-center gap-3">
-                  <span className="w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center text-black font-bold text-sm">
-                    {index + 1}
-                  </span>
-                  {technique.step}
-                </h3>
-                <p className="text-gray-300 leading-relaxed ml-11">{technique.content}</p>
+              { step: "Diagnostic initial", desc: "Mesure sur 24h en 3 positions", time: "Jour 1" },
+              { step: "Analyse des résultats", desc: "Identification des positions problématiques", time: "Jour 1" },
+              { step: "Ajustement préliminaire", desc: "Déplacement de la raquette par 1/4 tours", time: "Jour 2" },
+              { step: "Validation", desc: "Re-mesure et comparaison", time: "Jour 2-3" },
+              { step: "Micro-ajustements", desc: "Finitions au 1/8 de tour", time: "Jour 3-4" },
+              { step: "Certification", desc: "Tests COSC (optionnel)", time: "Jour 5" }
+            ].map((item, index) => (
+              <div key={index} className={`relative flex items-center mb-12 ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
+                <div className={`w-5/12 ${index % 2 === 0 ? 'text-right pr-8' : 'text-left pl-8'}`}>
+                  <div className="bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-2xl p-6 border border-amber-500/20 hover:border-amber-500/50 transition-all duration-300 hover:shadow-xl">
+                    <h3 className="text-xl font-bold text-amber-400 mb-2">{item.step}</h3>
+                    <p className="text-gray-300">{item.desc}</p>
+                    <span className="text-sm text-amber-300 mt-2 block">{item.time}</span>
+                  </div>
+                </div>
+                <div className="absolute left-1/2 -translate-x-1/2 w-6 h-6 bg-amber-400 rounded-full border-4 border-neutral-900 shadow-lg shadow-amber-400/50"></div>
               </div>
             ))}
           </div>
         </section>
 
-        <section id="conseils" className="mb-16 md:mb-20 scroll-mt-24">
-          <h2 className="text-3xl md:text-4xl font-bold text-amber-400 mb-8">
-            Conseils pratiques pour horlogers amateurs
+        {/* Conseils pratiques avec accordéons */}
+        <section id="conseils" className="mb-24 scroll-mt-24">
+          <h2 className="text-4xl font-bold text-amber-400 mb-12 text-center">
+            Conseils pratiques d'horloger
           </h2>
           
-          <div className="bg-gradient-to-r from-amber-500/10 to-amber-600/10 rounded-2xl p-8 border border-amber-500/30">
-            <ul className="space-y-4">
-              {[
-                "🎯 **Ne jamais forcer** : La raquette est fragile. Un mouvement doux est préférable à un réglage brutal.",
-                "🌡️ **Température stable** : Régler à 20°C ±2°C. Les variations thermiques affectent le spiral.",
-                "🧲 **Dé-magnétiser systématiquement** : Avant tout réglage, vérifiez l'aimantation.",
-                "💧 **Lubrification contrôlée** : Trop de lubrifiant ralentit la montre, trop peu l'use prématurément.",
-                "📊 **Documenter chaque étape** : Notez les mesures initiales et les ajustements effectués.",
-                "⏱️ **Patience est mère de précision** : Un réglage parfait peut prendre plusieurs jours."
-              ].map((tip, index) => (
-                <li key={index} className="text-gray-300 leading-relaxed flex gap-3">
-                  <span className="text-amber-400 mt-1">•</span>
-                  <span dangerouslySetInnerHTML={{ __html: tip }}></span>
-                </li>
-              ))}
-            </ul>
+          <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-3xl p-8 border border-amber-500/30">
+            {[
+              { icon: "🎯", title: "Gentillesse avant tout", content: "La raquette est un organe délicat. Utilisez toujours un tourne-raquette adapté et n'appliquez jamais de force. Un mouvement doux et précis vaut mieux qu'une correction brutale qui endommagerait le spiral." },
+              { icon: "🌡️", title: "Environnement contrôlé", content: "Effectuez vos réglages à température constante (20°C ±2°C). Les variations thermiques modifient l'élasticité du spiral et faussent vos mesures. Évitez les courants d'air et la lumière directe du soleil." },
+              { icon: "🧲", title: "Dé-magnétisation systématique", content: "Avant chaque réglage, vérifiez l'aimantation. 70% des montres qui arrivent en atelier sont magnétisées. Un spiral aimanté ne peut pas être réglé correctement." },
+              { icon: "💧", title: "Lubrification parcimonieuse", content: "Trop de lubrifiant = amortissement du balancier. Trop peu = usure accélérée. Une goutte de 0.5mm est suffisante sur chaque pivot. Utilisez des huiles synthétiques modernes." },
+              { icon: "📊", title: "Documentation rigoureuse", content: "Notez toutes vos mesures initiales, chaque ajustement, les variations de position. C'est la seule façon de progresser et de comprendre le comportement de chaque mouvement." }
+            ].map((tip, index) => (
+              <div key={index} className="mb-6 last:mb-0">
+                <button
+                  onClick={() => setExpandedCard(expandedCard === index ? null : index)}
+                  className="w-full flex items-center gap-6 text-left p-6 bg-neutral-900/50 hover:bg-amber-500/10 rounded-2xl transition-all duration-300 hover:translate-x-4 border border-transparent hover:border-amber-500/30"
+                >
+                  <div className="text-4xl">{tip.icon}</div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-white transition-colors group-hover:text-amber-300">{tip.title}</h3>
+                    <div className={`text-gray-400 mt-2 transition-all duration-500 ${expandedCard === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                      <p className="leading-relaxed">{tip.content}</p>
+                    </div>
+                  </div>
+                  <ChevronRight className={`w-7 h-7 text-amber-400 transition-transform duration-300 ${expandedCard === index ? 'rotate-90' : ''}`} />
+                </button>
+              </div>
+            ))}
           </div>
         </section>
 
-        <section id="glossaire" className="mb-16 md:mb-20 scroll-mt-24">
-          <h2 className="text-3xl md:text-4xl font-bold text-amber-400 mb-8 flex items-center gap-4">
-            <Award className="w-8 h-8" />
+        {/* Glossaire avec recherche */}
+        <section id="glossaire" className="mb-24 scroll-mt-24">
+          <h2 className="text-4xl font-bold text-amber-400 mb-12 flex items-center gap-6 justify-center">
+            <Award className="w-10 h-10" />
             Glossaire technique
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { term: "Isochronisme", def: "Capacité du spiral à osciller à la même fréquence quel que soit l'amplitude." },
-              { term: "Béat", def: "Chaque oscillation du balancier (un aller-retour). 28 800 alternances = 14 400 béats." },
-              { term: "Position", def: "Orientation de la montre (cadran haut, bas, gauche, droite, couronne haut/bas)." },
-              { term: "Chronomètre", def: "Montre certifiée ayant passé avec succès des tests de précision au COSC." },
-              { term: "Échappement", def: "Mécanisme qui transmet l'énergie du ressort au balancier par impulsions." },
-              { term: "Inertie", def: "Propriété du balancier à résister aux changements de vitesse de rotation." }
+              { term: "Isochronisme", def: "Capacité du spiral à osciller à la même fréquence quel que soit l'amplitude. Critère de qualité d'un régulateur." },
+              { term: "Béat", def: "Chaque oscillation du balancier (aller-retour). 28 800 alternances = 14 400 béats par heure." },
+              { term: "Position", def: "Orientation de la montre lors du test. 6 positions pour la certification chronomètre." },
+              { term: "Chronomètre", def: "Montre certifiée par le COSC après 15 jours de tests. Précision : -4/+6 s/j." },
+              { term: "Échappement", def: "Mécanisme qui transmet l'énergie par impulsions discretes au balancier." },
+              { term: "Inertie", def: "Propriété du balancier à résister aux changements de vitesse. Influence la période d'oscillation." },
+              { term: "Nivarox", def: "Alliage anti-magnétique utilisé pour les spiraux. Compose 85% des spiraux modernes." },
+              { term: "COSC", def: "Contrôle Officiel Suisse des Chronomètres. Organisme de certification des chronomètres." },
+              { term: "Amplitude", def: "Angle de rotation du balancier entre deux points extrêmes. Se mesure en degrés." },
+              { term: "Raquette", def: "Levier d'ajustement de la longueur du spiral. Le plus petit déplacement change la marche." }
             ].map((item, index) => (
-              <div key={index} className="bg-neutral-800/60 rounded-lg p-5 border border-amber-500/20 hover:border-amber-500/40 transition-all duration-300">
-                <h3 className="text-lg font-bold text-amber-400 mb-2">{item.term}</h3>
-                <p className="text-gray-300 text-sm leading-relaxed">{item.def}</p>
+              <div key={index} className="bg-gradient-to-br from-neutral-800/60 to-neutral-900/60 rounded-2xl p-6 border border-amber-500/20 hover:border-amber-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                <h3 className="text-xl font-bold text-amber-400 mb-3">{item.term}</h3>
+                <p className="text-gray-300 leading-relaxed text-sm">{item.def}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="text-center bg-gradient-to-r from-amber-500/20 to-amber-600/20 rounded-2xl p-10 md:p-12 border border-amber-500/30">
-          <h2 className="text-3xl font-bold text-amber-400 mb-4">
-            Prêt à maîtriser le réglage ?
-          </h2>
-          <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-            La précision horlogère est un art qui s'acquiert avec la pratique, la patience et la compréhension des principes fondamentaux.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/pratique"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-600 text-black font-bold px-8 py-3 rounded-full hover:shadow-lg hover:shadow-amber-500/30 transition-all duration-300 group"
-            >
-              <span>Passer à la pratique</span>
-              <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-            </Link>
-            <Link
-              href="/theorie/mouvements"
-              className="inline-flex items-center gap-2 border-2 border-amber-400 text-amber-400 font-bold px-8 py-3 rounded-full hover:bg-amber-400 hover:text-black transition-all duration-300"
-            >
-              <BookOpen className="w-5 h-5" />
-              <span>Approfondir la théorie</span>
-            </Link>
-          </div>
-        </section>
-      </div>
-    </main>
-  );
-}
+        {/* CTA Final premium */}
+        <section className="relative text-center bg-gradient-to-br from-amber-600 via-orange-600 to-red-600 rounded-3xl p-16 border border-amber-500/50 overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-tl from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div className="relative z-10">
+            <h2 className="text-4xl font-bold text-white mb-6">
+              Prêt à devenir régleur ?
+            </h2>
+            <p className="text-xl text-white/90 mb-10 max-w-3xl mx-auto">
+              La précision horlogère est un art qui s'acquiert avec la pratique, la patience et la compréhension des principes fondamentaux. Commencez votre voyage vers l'excellence chronométrique.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Link
+                href="/pratique"
+                className="inline-flex items-center
