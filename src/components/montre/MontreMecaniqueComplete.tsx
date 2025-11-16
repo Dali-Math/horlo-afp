@@ -1,6 +1,6 @@
-// src/components/montre/MontreMecaniqueComplete.tsx
+'use client';
 import { Play, Pause } from 'lucide-react';
-import { MontreProvider, useMontre } from './MontreMecaniqueProvider';
+import { useMontre } from './MontreMecaniqueProvider';
 import { NavigationMontre } from './NavigationMontre';
 import { AnimationMontre } from './AnimationMontre';
 import { Card } from '@/components/ui/Card';
@@ -54,7 +54,7 @@ const OrganesSection = () => {
   );
 };
 
-function MontreContent() {
+export default function MontreMecaniqueComplete() {
   const { activeTab, globalAnimation, setGlobalAnimation, progression } = useMontre();
 
   const sections = {
@@ -120,13 +120,5 @@ function MontreContent() {
         </div>
       </div>
     </div>
-  );
-}
-
-export default function MontreMecaniqueComplete() {
-  return (
-    <MontreProvider>
-      <MontreContent />
-    </MontreProvider>
   );
 }
