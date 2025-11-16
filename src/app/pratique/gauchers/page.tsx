@@ -4,9 +4,8 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft, Moon, Sun, Wrench, Eye, Brain, Heart, Trophy, Clock, Award, Users,
-  Target, CheckCircle, Zap, ShoppingCart, BookOpen, HelpCircle, UserCheck,
-  Video, TrendingUp, Shield, Info, Calendar, ExternalLink
+  ArrowLeft, Moon, Sun, Wrench, Eye, Brain, Trophy, Clock, Award, Users,
+  Target, CheckCircle, ShoppingCart, HelpCircle, Info, ExternalLink, Mail, MapPin, FileText, GraduationCap
 } from "lucide-react";
 import Link from "next/link";
 
@@ -769,7 +768,7 @@ export default function GauchersPage() {
             </div>
           </motion.section>
 
-          {/* REMPLACEMENT - Section Ressources Communautaires */}
+          {/* REMPLACEMENT - Contacts & Ressources Réelles */}
           <motion.section 
             className={`rounded-2xl p-8 md:p-12 border backdrop-blur-sm ${
               theme === "dark" ? "bg-black/20 border-blue-400/20" : "bg-white/60 border-blue-600/20"
@@ -778,93 +777,70 @@ export default function GauchersPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
           >
-            <h2 className={`text-3xl font-bold text-center mb-8 ${
-              theme === "dark" ? "text-blue-400" : "text-blue-700"
-            }`}>
-              Ressources Communautaires & Réseau
+            <h2 className={`text-3xl font-bold text-center mb-8 ${theme === "dark" ? "text-blue-400" : "text-blue-700"}`}>
+              Contacts & Ressources Officielles
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
-              <motion.div
-                className={`text-center p-6 rounded-xl border ${
-                  theme === "dark" ? "bg-black/30 border-blue-400/20" : "bg-white/70 border-blue-600/20"
-                }`}
-                whileHover={{ scale: 1.05 }}
-              >
-                <Users className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`} />
+              <motion.div className={`text-center p-6 rounded-xl border ${theme === "dark" ? "bg-black/30 border-blue-400/20" : "bg-white/70 border-blue-600/20"}`} whileHover={{ scale: 1.05 }}>
+                <GraduationCap className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`} />
                 <h3 className={`font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                  Communauté Horlogerie Gauche
+                  École d'Horlogerie
                 </h3>
                 <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                  Rejoignez 400+ apprentis et professionnels sur notre forum dédié. Échanges techniques, conseils et petites annonces outils.
+                  Contacte directement ton école (CFP, CIFOM, etc.) pour demander un formateur référent gaucher.
                 </p>
                 <div className="mt-4">
-                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
-                    theme === "dark" ? "bg-blue-400/20 text-blue-400" : "bg-blue-600/10 text-blue-700"
-                  }`}>
-                    15'000+ messages
+                  <Link href="https://www.ffh.swiss" className={`inline-flex items-center gap-2 text-sm ${theme === "dark" ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-700"}`}>
+                    <ExternalLink className="w-4 h-4" />
+                    ffh.swiss
+                  </Link>
+                </div>
+              </motion.div>
+              
+              <motion.div className={`text-center p-6 rounded-xl border ${theme === "dark" ? "bg-black/30 border-blue-400/20" : "bg-white/70 border-blue-600/20"}`} whileHover={{ scale: 1.05 }}>
+                <MapPin className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-green-400" : "text-green-600"}`} />
+                <h3 className={`font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                  Bureau d'Orientation
+                </h3>
+                <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                  Ton BOP peut t'informer sur les aides cantonales pour l'achat d'outils adaptés.
+                </p>
+                <div className="mt-4">
+                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${theme === "dark" ? "bg-green-400/20 text-green-400" : "bg-green-600/10 text-green-700"}`}>
+                    Vérifier avec ton canton
                   </span>
                 </div>
               </motion.div>
               
-              <motion.div
-                className={`text-center p-6 rounded-xl border ${
-                  theme === "dark" ? "bg-black/30 border-blue-400/20" : "bg-white/70 border-blue-600/20"
-                }`}
-                whileHover={{ scale: 1.05 }}
-              >
-                <Calendar className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-green-400" : "text-green-600"}`} />
+              <motion.div className={`text-center p-6 rounded-xl border ${theme === "dark" ? "bg-black/30 border-blue-400/20" : "bg-white/70 border-blue-600/20"}`} whileHover={{ scale: 1.05 }}>
+                <FileText className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-purple-400" : "text-purple-600"}`} />
                 <h3 className={`font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                  Ateliers Mensuels
+                  Documentation Technique
                 </h3>
                 <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                  Rencontres physiques dans les écoles partenaires. Sessions pratiques, retours d'expérience et workshops avec des maîtres horlogers gauchers.
+                  Demande à ton école le guide WOSTEP "Handedness in Horology" et les schémas techniques adaptés.
                 </p>
                 <div className="mt-4">
-                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
-                    theme === "dark" ? "bg-green-400/20 text-green-400" : "bg-green-600/10 text-green-700"
-                  }`}>
-                    Prochain : 15 décembre
-                  </span>
-                </div>
-              </motion.div>
-              
-              <motion.div
-                className={`text-center p-6 rounded-xl border ${
-                  theme === "dark" ? "bg-black/30 border-blue-400/20" : "bg-white/70 border-blue-600/20"
-                }`}
-                whileHover={{ scale: 1.05 }}
-              >
-                <Video className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-purple-400" : "text-purple-600"}`} />
-                <h3 className={`font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                  Médiathèque Exclusive
-                </h3>
-                <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                  200+ vidéos tutorielles miroir, schémas techniques inversés et podcasts d'experts. Accès réservé aux membres certifiés.
-                </p>
-                <div className="mt-4">
-                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
-                    theme === "dark" ? "bg-purple-400/20 text-purple-400" : "bg-purple-600/10 text-purple-700"
-                  }`}>
-                    50+ heures de contenu
+                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${theme === "dark" ? "bg-purple-400/20 text-purple-400" : "bg-purple-600/10 text-purple-700"}`}>
+                    Disponible via ta formation
                   </span>
                 </div>
               </motion.div>
             </div>
             <div className="mt-8 text-center">
               <motion.div whileHover={{ scale: 1.05 }}>
-                <Link href="/communaute" className={`inline-flex items-center gap-2 px-8 py-3 rounded-lg font-bold ${
+                <Link href="/contact" className={`inline-flex items-center gap-2 px-8 py-3 rounded-lg font-bold ${
                   theme === "dark" ? "bg-blue-400 text-black hover:bg-blue-300" : "bg-blue-600 text-white hover:bg-blue-700"
                 }`}>
-                  Accéder à l'espace membre
-                  <ExternalLink className="w-4 h-4" />
+                  <Mail className="w-4 h-4" />
+                  Contacter la rédaction
                 </Link>
               </motion.div>
               <p className={`mt-4 text-sm ${theme === "dark" ? "text-gray-500" : "text-gray-500"}`}>
-                Inscription gratuite pour les élèves des écoles partenaires
+                Ce guide est une initiative indépendante, sans affiliation officielle
               </p>
             </div>
           </motion.section>
-          {/* FIN DU REMPLACEMENT */}
         </div>
       </div>
     </ThemeContext.Provider>
