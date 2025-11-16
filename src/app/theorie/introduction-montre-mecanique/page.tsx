@@ -1,3 +1,4 @@
+"use client";
 import { MontreMecaniqueComplete } from '@/components/montre/MontreMecaniqueComplete';
 
 export default function IntroductionMontreMecaniquePage() {
