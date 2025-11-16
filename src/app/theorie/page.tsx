@@ -8,9 +8,6 @@ import {
   ExternalLink, Menu, X, ArrowUp, Search
 } from 'lucide-react';
 
-// --- Styles CSS personnalisés pour les animations avancées ---
-// J'utilise une balise <style> pour garder tout au même endroit.
-// Dans un projet réel, vous mettriez ceci dans votre fichier CSS global.
 const customStyles = `
   @keyframes fadeInUp {
     from {
