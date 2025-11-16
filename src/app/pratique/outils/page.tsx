@@ -1,20 +1,6 @@
 "use client";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  ChevronRight,
-  Wrench,
-  Eye,
-  Shield,
-  DollarSign,
-  Award,
-  Zap,
-  BookOpen,
-  Package,
-  Heart,
-  Settings
-} from "lucide-react";
-
+import { ArrowLeft, ChevronRight, Wrench, Eye, Shield, DollarSign, Award, Zap, BookOpen, Package, Heart, Settings } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function OutilsPage() {
@@ -91,14 +77,14 @@ export default function OutilsPage() {
 
         <section id="introduction" className="mb-12 scroll-mt-24">
           <div className="aspect-video w-full bg-black rounded-2xl overflow-hidden shadow-2xl border border-[#E2B44F]/30 hover:border-[#E2B44F] transition-all duration-300">
-            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/4tl7xNPvmyM?start=573" title="Présentation des outils horlogers" frameBorder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full h-full"></iframe>
+            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/4tl7xNPvmyM?start=573 " title="Présentation des outils horlogers" frameBorder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full h-full"></iframe>
           </div>
           <p className="text-sm text-gray-400 mt-3 italic text-center">🎧 Langue audio : anglais — sous-titres français disponibles dans les paramètres YouTube</p>
         </section>
 
         <section id="essentiels" className="mb-12 bg-[#1a1a1a] p-6 md:p-8 rounded-xl border border-gray-800 scroll-mt-24">
           <h2 className="text-3xl font-bold text-[#E2B44F] mb-6 flex items-center gap-3 font-serif">
-            <Tool className="w-7 h-7" />
+            <Wrench className="w-7 h-7" />
             Les 5 outils essentiels pour débuter
           </h2>
           <div className="text-gray-300 leading-relaxed space-y-6">
