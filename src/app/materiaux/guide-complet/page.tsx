@@ -1,4 +1,4 @@
-// app/page.tsx - VERSION AMÉLIORÉE AVEC SIMULATEUR OPTIMISÉ
+// app/page.tsx - VERSION AMÉLIORÉE AVEC CARTES FLASH
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
@@ -6,6 +6,318 @@ import Head from 'next/head';
 import Script from 'next/script';
 import Link from 'next/link';
 import AlloyMixer from '@/components/AlliageSimulator';
+
+// Données des cartes flash
+const flashcardsData = [
+  { id: 0, question: "Quelle est la masse volumique du fer ?", answer: "La masse volumique du fer est de 7,86 Kg/dm³." },
+  { id: 1, question: "Quel est le point de fusion du fer ?", answer: "Le point de fusion du fer est de 1535°C." },
+  { id: 2, question: "Le fer est un métal obtenu de la nature à l'état pur. Vrai ou faux et pourquoi ?", answer: "Faux, c'est un métal extrait de minéraux très divers comme la magnétite, les oxydes et l'hématite." },
+  { id: 3, question: "Quel est le but de la sidérurgie ?", answer: "La sidérurgie a pour but de préparer des alliages fer-carbone, connus sous le nom de fontes et aciers." },
+  { id: 4, question: "Quelle est la teneur en carbone d'un alliage pour être considéré comme une fonte ou un acier ?", answer: "La teneur en carbone doit être inférieure à 6,7%." },
+  { id: 5, question: "L'acier est un alliage de fer contenant entre _____ et _____ % de carbone.", answer: "0,02% et 2%" },
+  { id: 6, question: "Comment la teneur en carbone influence-t-elle la dureté de l'acier ?", answer: "Plus la teneur en carbone est haute, plus l'acier sera dur." },
+  { id: 7, question: "Quel est le rôle de l'ajout de petits éléments comme le manganèse ou le molybdène dans l'acier ?", answer: "Ils sont destinés à modifier les propriétés mécaniques, magnétiques ou chimiques de l'acier." },
+  { id: 8, question: "Quelle est la caractéristique principale des aciers non-alliés ?", answer: "Ils sont utilisés selon leurs caractéristiques mécaniques, principalement la limite d'élasticité ou de rupture." },
+  { id: 9, question: "Dans la classification des aciers non-alliés, à quel usage correspond le type S ?", answer: "Le type S correspond à un usage général de base." },
+  { id: 10, question: "Dans la classification des aciers non-alliés, à quel usage correspond le type E ?", answer: "Le type E est destiné à la construction mécanique." },
+  { id: 11, question: "Comment définit-on les aciers faiblement alliés en termes de composition ?", answer: "La somme des éléments d'alliage totaux est inférieure à 5%." },
+  { id: 12, question: "Citez trois éléments d'alliage couramment utilisés dans les aciers faiblement alliés.", answer: "Le nickel, le chrome, le molybdène, le manganèse ou le silicium." },
+  { id: 13, question: "Comment définit-on les aciers fortement alliés en termes de composition ?", answer: "La somme des éléments d'alliage totaux est supérieure à 5%." },
+  { id: 14, question: "Quelle est la teneur minimale en chrome pour qu'un acier soit considéré comme inoxydable ?", answer: "L'acier inoxydable contient au moins 12% de chrome." },
+  { id: 15, question: "En horlogerie, pourquoi le taux de nickel dans l'acier inoxydable a-t-il été diminué et par quoi a-t-il été remplacé ?", answer: "Il a été diminué pour éviter les allergies et a été remplacé par du molybdène." },
+  { id: 16, question: "Citez trois qualités recherchées dans un acier destiné à l'horlogerie.", answer: "Résistance à la corrosion, non-magnétique, bonne usinabilité, déformable à froid, excellentes propriétés de polissage, couleur uniforme." },
+  { id: 17, question: "Quelle est la différence entre la métallurgie et la sidérurgie ?", answer: "La métallurgie concerne l'obtention de tous les métaux, tandis que la sidérurgie se concentre spécifiquement sur le fer, les fontes et les aciers." },
+  { id: 18, question: "Quelles sont les quatre phases de la métallurgie ?", answer: "Extraction du minerai, préparation de ce minerai, extraction du métal et affinage, et mise en forme des produits." },
+  { id: 19, question: "Comment appelle-t-on la matière sans intérêt économique qui entoure les minerais dans leurs gisements ?", answer: "La gangue." },
+  { id: 20, question: "En quoi consiste le criblage dans la préparation du minerai ?", answer: "Le criblage consiste à classer les morceaux de minerais suivant leur grosseur." },
+  { id: 21, question: "Quelle est la masse volumique du chrome ?", answer: "La masse volumique du chrome est de 7,2 Kg/dm³." },
+  { id: 22, question: "Quels sont la teneur en chrome et en nickel d'un acier inoxydable 18-10 ?", answer: "Il contient 18% de chrome (Cr) et 10% de nickel (Ni)." },
+  { id: 23, question: "Quel est le point de fusion de l'aluminium ?", answer: "Le point de fusion de l'aluminium est de 660°C." },
+  { id: 24, question: "À partir de quel minerai l'aluminium est-il extrait ?", answer: "L'aluminium est extrait de la bauxite." },
+  { id: 25, question: "Comment s'appelle la couche protectrice qui se forme sur l'aluminium au contact de l'air, obtenue par électrolyse ?", answer: "Cette couche s'appelle l'anodisation." },
+  { id: 26, question: "Quelle est la masse volumique du titane ?", answer: "La masse volumique du titane est de 4,54 Kg/dm³." },
+  { id: 27, question: "De quels minéraux le titane est-il principalement extrait ?", answer: "Il est extrait de l'ilménite et du rutile." },
+  { id: 28, question: "Pourquoi le titane est-il particulièrement apprécié en horlogerie par rapport à l'acier ?", answer: "Car sa masse volumique est plus basse de 45% par rapport à l'acier." },
+  { id: 29, question: "Quel est le point de fusion du nickel ?", answer: "Le point de fusion du nickel est de 1455°C." },
+  { id: 30, question: "Qu'est-ce que le nickelage ?", answer: "Le nickelage consiste à déposer une fine couche de nickel sur la surface des pièces en métaux ferreux pour les protéger de la corrosion." },
+  { id: 31, question: "Définition : Invar", answer: "Il s'agit d'un alliage de fer et de nickel à 36% utilisé en horlogerie pour sa faible déformation dimensionnelle." },
+  { id: 32, question: "Quel métal est le meilleur conducteur de chaleur et d'électricité après l'argent ?", answer: "Le cuivre." },
+  { id: 33, question: "Comment s'appelle la fine couche d'oxydation qui se forme sur le cuivre et le protège ?", answer: "Elle s'appelle le vert-de-gris." },
+  { id: 34, question: "Quelle est la masse volumique du zinc ?", answer: "La masse volumique du zinc est de 7,14 Kg/dm³." },
+  { id: 35, question: "Quelle est la propriété du zinc à basse température ?", answer: "Il est cassant à basse température." },
+  { id: 36, question: "Quel est le point de fusion de l'étain ?", answer: "Le point de fusion de l'étain est d'environ 231,9°C." },
+  { id: 37, question: "Qu'est-ce que l'étamage ?", answer: "C'est le dépôt d'étain à l'intérieur des boîtes de conserve." },
+  { id: 38, question: "Quel métal possède le point de fusion le plus élevé (3410 °C) ?", answer: "Le tungstène." },
+  { id: 39, question: "Dans quel domaine les outils de coupe en carbure de tungstène (WC) sont-ils utilisés ?", answer: "Ils sont utilisés comme outils de coupe et comme élément d'alliage dans les aciers rapides." },
+  { id: 40, question: "Quelle est la masse volumique du plomb ?", answer: "La masse volumique du plomb est de 11,34 Kg/dm³." },
+  { id: 41, question: "Pourquoi les vapeurs de plomb sont-elles dangereuses ?", answer: "Les vapeurs de plomb sont toxiques." },
+  { id: 42, question: "Le laiton est un alliage de _____ et de _____.", answer: "cuivre et zinc" },
+  { id: 43, question: "Quelle est la composition typique du laiton utilisé en horlogerie ?", answer: "Cuivre (58%), Zinc (39%), Plomb (3%)." },
+  { id: 44, question: "Comment la teneur en zinc affecte-t-elle la couleur du laiton ?", answer: "La couleur du laiton peut changer du rouge au jaune suivant la teneur en zinc." },
+  { id: 45, question: "Quel est le rôle du zinc dans un alliage de laiton ?", answer: "Le zinc augmente la dureté et la résistance mécanique." },
+  { id: 46, question: "Le bronze est un alliage de cuivre et d'_____.", answer: "étain" },
+  { id: 47, question: "Quelle est la teneur en cuivre typique du bronze ?", answer: "Le bronze contient environ 95% de cuivre." },
+  { id: 48, question: "Le maillechort est un alliage de quels trois métaux ?", answer: "C'est un alliage de nickel, de cuivre et de zinc." },
+  { id: 49, question: "Quelle est la principale différence entre le maillechort et le laiton ?", answer: "Le maillechort possède une résistance mécanique supérieure à celle du laiton." },
+  { id: 50, question: "Pour quelles pièces de mouvement d'horlogerie l'acier est-il fréquemment utilisé ?", answer: "L'acier est utilisé pour les ressorts, les axes, les pivots et les vis." },
+  { id: 51, question: "Quel matériau est principalement utilisé pour les platines et les ponts dans les montres classiques ?", answer: "Le laiton." },
+  { id: 52, question: "Pourquoi le laiton utilisé pour les mouvements de montre est-il souvent recouvert d'un traitement galvanique ?", answer: "Pour la décoration et la protection, avec des placages d'or, de nickel ou de rhodium." },
+  { id: 53, question: "Dans quel type de montres trouve-t-on des platines et des ponts en maillechort ?", answer: "On les trouve dans les montres artisanales et haut de gamme." },
+  { id: 54, question: "Quel avantage offre le maillechort pour les composants gravés à la main ?", answer: "Sa dureté moyenne se prête bien à la gravure décorative." },
+  { id: 55, question: "Pour quel type de montre l'aluminium est-il couramment utilisé pour les boîtiers ?", answer: "Il est utilisé pour les boîtiers de montres connectées ou de sport." },
+  { id: 56, question: "Dans les montres à quartz, quel est l'avantage d'utiliser de l'aluminium pour les composants internes ?", answer: "Il allège le mouvement pour améliorer la durée de vie de la pile." },
+  { id: 57, question: "Quel matériau est utilisé pour les engrenages dans certaines montres à quartz pour être économique et silencieux ?", answer: "Le plastique ou les composites." },
+  { id: 58, question: "Citez un exemple de montre dont le mouvement est quasi entièrement en plastique.", answer: "La Swatch SISTEM51." },
+  { id: 59, question: "Classez les matériaux suivants du plus lourd au plus léger : acier, aluminium, plastique.", answer: "Acier (lourd), aluminium (très léger), plastique (très léger)." },
+  { id: 60, question: "Quel matériau d'horlogerie a une dureté très élevée mais est difficile à usiner ?", answer: "L'acier." },
+  { id: 61, question: "Comparez la résistance à la corrosion de l'acier, du laiton et du maillechort.", answer: "Acier (excellente), maillechort (très bonne), laiton (bonne si traité)." },
+  { id: 62, question: "Quel est le principal inconvénient de l'aluminium en horlogerie ?", answer: "Il est moins résistant et facilement rayable." },
+  { id: 63, question: "Quel est le principal avantage du laiton en horlogerie ?", answer: "Il est facile à travailler et économique." },
+  { id: 64, question: "Quel avantage esthétique le maillechort offre-t-il par rapport au laiton ?", answer: "Il a une belle finition naturelle et n'a pas besoin de traitement de surface." },
+  { id: 65, question: "Pour quel type de montres le plastique est-il un matériau de choix pour le boîtier ?", answer: "Pour les montres à quartz, connectées ou pour enfants." },
+  { id: 66, question: "Quel est le principal inconvénient du plastique en tant que matériau horloger ?", answer: "Il est moins prestigieux et peu durable dans le temps." },
+  { id: 67, question: "Quel alliage de fer est connu pour être mou, ductile et malléable à l'état pur ?", answer: "Le fer pur." },
+  { id: 68, question: "Laquelle de ces propriétés n'appartient pas au titane : léger, bonne résistance à la chaleur, magnétique, bonne résistance chimique ?", answer: "Magnétique (le titane est amagnétique)." },
+  { id: 69, question: "La fine couche d'oxydation sur le cuivre, provoquée par l'air humide, s'appelle le _____.", answer: "vert-de-gris" },
+  { id: 70, question: "Quel métal est connu pour être un allergène et est donc de moins en moins utilisé en contact direct avec la peau en horlogerie ?", answer: "Le nickel." },
+  { id: 71, question: "Quel métal est principalement utilisé pour la protection contre les rayons X ?", answer: "Le plomb." },
+  { id: 72, question: "Pour quel composant d'une montre de plongée l'aluminium est-il souvent utilisé ?", answer: "Pour les lunettes colorées rotatives." },
+  { id: 73, question: "Quel est le coût relatif du maillechort par rapport au laiton ?", answer: "Le maillechort est plus coûteux que le laiton." }
+];
+
+// Composant pour les cartes flash
+const FlashcardsComponent = () => {
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [filter, setFilter] = useState('all'); // all, materials, metallurgy, watchmaking
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  // Filtrer les cartes en fonction du filtre et du terme de recherche
+  const filteredCards = flashcardsData.filter(card => {
+    const matchesFilter = filter === 'all' || 
+      (filter === 'materials' && (card.question.includes('masse volumique') || card.question.includes('point de fusion') || card.question.includes('alliage'))) ||
+      (filter === 'metallurgy' && (card.question.includes('sidérurgie') || card.question.includes('métallurgie') || card.question.includes('minerai'))) ||
+      (filter === 'watchmaking' && (card.question.includes('horlogerie') || card.question.includes('montre') || card.question.includes('mouvement')));
+    
+    const matchesSearch = card.question.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         card.answer.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    return matchesFilter && matchesSearch;
+  });
+  
+  const currentCard = filteredCards[currentCardIndex];
+  
+  const nextCard = () => {
+    setCurrentCardIndex((prevIndex) => (prevIndex + 1) % filteredCards.length);
+    setShowAnswer(false);
+    setIsFlipped(false);
+  };
+  
+  const prevCard = () => {
+    setCurrentCardIndex((prevIndex) => (prevIndex - 1 + filteredCards.length) % filteredCards.length);
+    setShowAnswer(false);
+    setIsFlipped(false);
+  };
+  
+  const toggleAnswer = () => {
+    setShowAnswer(!showAnswer);
+    setIsFlipped(!isFlipped);
+  };
+  
+  const randomCard = () => {
+    const randomIndex = Math.floor(Math.random() * filteredCards.length);
+    setCurrentCardIndex(randomIndex);
+    setShowAnswer(false);
+    setIsFlipped(false);
+  };
+  
+  useEffect(() => {
+    if (currentCardIndex >= filteredCards.length && filteredCards.length > 0) {
+      setCurrentCardIndex(0);
+    }
+  }, [filteredCards, currentCardIndex]);
+  
+  return (
+    <div className="section-card p-8 mb-8">
+      <h2 className="serif-heading text-4xl font-bold mb-8 text-center text-gray-900 dark:text-gray-100">Matériaux Fiches</h2>
+      <p className="text-center mb-6 text-gray-600 dark:text-gray-400">D'après 1 source</p>
+      
+      {/* Filtres et recherche */}
+      <div className="flex flex-wrap justify-center gap-4 mb-8">
+        <div className="flex gap-2">
+          <button 
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              filter === 'all' 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+            }`}
+            onClick={() => setFilter('all')}
+          >
+            Toutes
+          </button>
+          <button 
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              filter === 'materials' 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+            }`}
+            onClick={() => setFilter('materials')}
+          >
+            Matériaux
+          </button>
+          <button 
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              filter === 'metallurgy' 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+            }`}
+            onClick={() => setFilter('metallurgy')}
+          >
+            Métallurgie
+          </button>
+          <button 
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              filter === 'watchmaking' 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+            }`}
+            onClick={() => setFilter('watchmaking')}
+          >
+            Horlogerie
+          </button>
+        </div>
+        
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Rechercher..."
+            className="px-4 py-2 pl-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <svg className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+      
+      {/* Carte flash */}
+      <div className="max-w-2xl mx-auto mb-8">
+        <div className="relative h-64 md:h-80">
+          <div 
+            className={`absolute inset-0 w-full h-full transition-all duration-500 transform-gpu preserve-3d cursor-pointer ${
+              isFlipped ? 'rotate-y-180' : ''
+            }`}
+            onClick={toggleAnswer}
+            style={{ transformStyle: 'preserve-3d' }}
+          >
+            {/* Face avant (question) */}
+            <div 
+              className="absolute inset-0 w-full h-full bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col justify-center items-center backface-hidden"
+              style={{ backfaceVisibility: 'hidden' }}
+            >
+              <div className="text-center">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Question {currentCardIndex + 1} / {filteredCards.length}</p>
+                <h3 className="text-xl md:text-2xl font-medium text-gray-900 dark:text-gray-100">
+                  {currentCard?.question}
+                </h3>
+              </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">Cliquez pour voir la réponse</p>
+            </div>
+            
+            {/* Face arrière (réponse) */}
+            <div 
+              className="absolute inset-0 w-full h-full bg-blue-600 dark:bg-blue-700 rounded-xl shadow-lg p-6 flex flex-col justify-center items-center rotate-y-180 backface-hidden"
+              style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+            >
+              <div className="text-center">
+                <p className="text-sm text-blue-100 mb-2">Réponse</p>
+                <p className="text-xl md:text-2xl font-medium text-white">
+                  {currentCard?.answer}
+                </p>
+              </div>
+              <p className="text-sm text-blue-100 mt-4">Cliquez pour voir la question</p>
+            </div>
+          </div>
+        </div>
+        
+        {/* Bouton Afficher la réponse */}
+        {!isFlipped && (
+          <div className="text-center mt-4">
+            <button 
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+              onClick={toggleAnswer}
+            >
+              Afficher la réponse
+            </button>
+          </div>
+        )}
+      </div>
+      
+      {/* Contrôles de navigation */}
+      <div className="flex justify-center gap-4 mb-4">
+        <button 
+          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-colors flex items-center gap-2"
+          onClick={prevCard}
+          disabled={filteredCards.length <= 1}
+        >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Précédent
+        </button>
+        
+        <button 
+          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-colors flex items-center gap-2"
+          onClick={randomCard}
+          disabled={filteredCards.length <= 1}
+        >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Aléatoire
+        </button>
+        
+        <button 
+          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-colors flex items-center gap-2"
+          onClick={nextCard}
+          disabled={filteredCards.length <= 1}
+        >
+          Suivant
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+      
+      {/* Indicateur de progression */}
+      <div className="max-w-2xl mx-auto">
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+          <div 
+            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+            style={{ width: `${((currentCardIndex + 1) / filteredCards.length) * 100}%` }}
+          ></div>
+        </div>
+        <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">
+          {currentCardIndex + 1} / {filteredCards.length}
+        </p>
+      </div>
+      
+      <style jsx>{`
+        .preserve-3d {
+          transform-style: preserve-3d;
+        }
+        .backface-hidden {
+          backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+          transform: rotateY(180deg);
+        }
+      `}</style>
+    </div>
+  );
+};
 
 export default function HomePage(): JSX.Element {
   const [mermaidReady, setMermaidReady] = useState(false);
@@ -821,6 +1133,7 @@ export default function HomePage(): JSX.Element {
           </div>
           <a href="#techniques-comparatifs" className="toc-link"><i className="fas fa-chart-bar mr-2"></i>Techniques &amp; Comparatifs</a>
           <a href="#pdf-reference" className="toc-link"><i className="fas fa-file-pdf mr-2"></i>PDF de Référence</a>
+          <a href="#flashcards" className="toc-link"><i className="fas fa-clone mr-2"></i>Cartes Flash</a>
         </div>
       </nav>
 
@@ -1378,6 +1691,11 @@ export default function HomePage(): JSX.Element {
               ></iframe>
             </div>
           </div>
+        </section>
+
+        {/* Cartes Flash Section */}
+        <section id="flashcards" className="p-8">
+          <FlashcardsComponent />
         </section>
 
         <footer className="p-8 bg-gray-900 text-white">
