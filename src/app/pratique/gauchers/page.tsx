@@ -3,11 +3,7 @@
 
 import { useState, useEffect, createContext, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowLeft, Moon, Sun, Wrench, Eye, Brain, Heart, Trophy, Clock, Award, Users,
-  Target, CheckCircle, Zap, ShoppingCart, BookOpen, HelpCircle, UserCheck,
-  Video, TrendingUp, Shield, Info
-} from "lucide-react";
+import { ArrowLeft, Moon, Sun, Wrench, Eye, Brain, Heart, Trophy, Clock, Award, Users, Target, CheckCircle, Zap, ShoppingCart, BookOpen, HelpCircle, UserCheck, Video, Tools, TrendingUp, Shield, Info } from "lucide-react";
 import Link from "next/link";
 
 // Types
@@ -769,10 +765,10 @@ export default function GauchersPage() {
             </div>
           </motion.section>
 
-          {/* Ressources & communauté */}
+          {/* NOUVELLE VERSION - Section unique qui remplace les deux anciennes */}
           <motion.section 
             className={`rounded-2xl p-8 md:p-12 border backdrop-blur-sm ${
-              theme === "dark" ? "bg-gradient-to-br from-blue-900/20 to-purple-900/20 border-blue-400/20" : "bg-gradient-to-br from-blue-100/50 to-purple-100/50 border-blue-600/20"
+              theme === "dark" ? "bg-black/20 border-blue-400/20" : "bg-white/60 border-blue-600/20"
             }`}
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -781,158 +777,57 @@ export default function GauchersPage() {
             <h2 className={`text-3xl font-bold text-center mb-8 ${
               theme === "dark" ? "text-blue-400" : "text-blue-700"
             }`}>
-              Ressources & Communauté
+              Prochaines étapes et ressources
             </h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              <motion.div
-                className={`text-center p-6 rounded-xl border transition-all ${
-                  theme === "dark"
-                    ? "bg-black/40 border-blue-400/20 hover:border-blue-400/40"
-                    : "bg-white/60 border-blue-600/20 hover:border-blue-600/40"
-                }`}
-                whileHover={{ scale: 1.05 }}
-              >
-                <BookOpen className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`} />
-                <h3 className={`font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                  Guide WOSTEP Gaucher
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h3 className={`text-xl font-bold mb-4 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                  Ressources essentielles
                 </h3>
-                <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                  PDF officiel avec 80 pages de techniques
-                </p>
-                <Link href="https://www.wostep.ch/guide-gaucher" className={`text-sm mt-2 inline-block ${
-                  theme === "dark" ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-700"
-                }`}>
-                  Télécharger →
-                </Link>
-              </motion.div>
-              
-              <motion.div
-                className={`text-center p-6 rounded-xl border transition-all ${
-                  theme === "dark"
-                    ? "bg-black/40 border-blue-400/20 hover:border-blue-400/40"
-                    : "bg-white/60 border-blue-600/20 hover:border-blue-600/40"
-                }`}
-                whileHover={{ scale: 1.05 }}
-              >
-                <Users className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`} />
-                <h3 className={`font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                  Discord Gauchers CH
+                <ul className="space-y-3">
+                  <li className={`flex items-center gap-3 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                    <BookOpen className="w-5 h-5 text-blue-500" />
+                    <span>Guide WOSTEP complet (80 pages)</span>
+                  </li>
+                  <li className={`flex items-center gap-3 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                    <Users className="w-5 h-5 text-blue-500" />
+                    <span>Communauté Discord (340+ membres)</span>
+                  </li>
+                  <li className={`flex items-center gap-3 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                    <Video className="w-5 h-5 text-blue-500" />
+                    <span>Tutoriels vidéo exclusifs</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="text-center">
+                <Heart className={`w-16 h-16 mx-auto mb-4 ${theme === "dark" ? "text-red-400" : "text-red-600"}`} />
+                <h3 className={`text-xl font-bold mb-3 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                  Votre différence est un atout
                 </h3>
-                <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                  340+ élèves et pros en ligne
+                <p className={`mb-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                  15% des élèves horlogers sont gauchers avec un taux de réussite de 92%. Votre cerveau développe des connexions uniques.
                 </p>
-                <Link href="https://discord.gg/horlogerie-gaucher" className={`text-sm mt-2 inline-block ${
-                  theme === "dark" ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-700"
-                }`}>
-                  Rejoindre →
-                </Link>
-              </motion.div>
-              
-              <motion.div
-                className={`text-center p-6 rounded-xl border transition-all ${
-                  theme === "dark"
-                    ? "bg-black/40 border-blue-400/20 hover:border-blue-400/40"
-                    : "bg-white/60 border-blue-600/20 hover:border-blue-600/40"
-                }`}
-                whileHover={{ scale: 1.05 }}
-              >
-                <Video className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`} />
-                <h3 className={`font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                  Tutoriels Vidéo
-                </h3>
-                <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                  25 vidéos exclusives miroir
-                </p>
-                <Link href="https://youtube.com/@horlogerie-gaucher" className={`text-sm mt-2 inline-block ${
-                  theme === "dark" ? "text-blue-400 hover:text-blue-300" : "text-blue-600 hover:text-blue-700"
-                }`}>
-                  S'abonner →
-                </Link>
-              </motion.div>
-            </div>
-          </motion.section>
-
-          {/* Conclusion & Motivation */}
-          <motion.section 
-            className={`rounded-2xl p-8 md:p-12 border backdrop-blur-sm ${
-              theme === "dark" ? "bg-gradient-to-br from-purple-900/20 to-blue-900/20 border-purple-400/20" : "bg-gradient-to-br from-purple-100/50 to-blue-100/50 border-purple-600/20"
-            }`}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-          >
-            <div className="text-center">
-              <Heart className={`w-16 h-16 mx-auto mb-6 ${theme === "dark" ? "text-red-400" : "text-red-600"}`} />
-              <h2 className={`text-3xl font-bold mb-4 ${theme === "dark" ? "text-purple-400" : "text-purple-700"}`}>
-                Votre différence est votre force
-              </h2>
-              <p className={`text-lg mb-6 max-w-3xl mx-auto ${
-                theme === "dark" ? "text-gray-300" : "text-gray-600"
-              }`}>
-                15% des élèves horlogers sont gauchers. Ils réussissent leurs formations et deviennent d'excellents professionnels. Votre différence vous oblige à être plus créatif, plus persévérant, et finalement plus habile que la moyenne.
-              </p>
-              
-              <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-                <motion.div
-                  className={`p-4 rounded-lg border ${
-                    theme === "dark" ? "bg-black/40 border-purple-400/20" : "bg-white/60 border-purple-600/20"
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <TrendingUp className={`w-8 h-8 mx-auto mb-2 ${theme === "dark" ? "text-green-400" : "text-green-600"}`} />
-                  <p className={`font-semibold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                    +30% de créativité
-                  </p>
-                  <p className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                    Adaptation constante forces innovation
-                  </p>
-                </motion.div>
-                
-                <motion.div
-                  className={`p-4 rounded-lg border ${
-                    theme === "dark" ? "bg-black/40 border-purple-400/20" : "bg-white/60 border-purple-600/20"
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <Trophy className={`w-8 h-8 mx-auto mb-2 ${theme === "dark" ? "text-yellow-400" : "text-yellow-600"}`} />
-                  <p className={`font-semibold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                    92% de réussite
-                  </p>
-                  <p className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                    Taux global CFC gauchers
-                  </p>
-                </motion.div>
-                
-                <motion.div
-                  className={`p-4 rounded-lg border ${
-                    theme === "dark" ? "bg-black/40 border-purple-400/20" : "bg-white/60 border-purple-600/20"
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <Zap className={`w-8 h-8 mx-auto mb-2 ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`} />
-                  <p className={`font-semibold ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                    8% des experts
-                  </p>
-                  <p className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                    Maîtres horlogers gauchers
-                  </p>
+                <div className="flex justify-center gap-6 mb-6">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-500">92%</div>
+                    <div className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>Réussite CFC</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-500">8%</div>
+                    <div className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>Maîtres horlogers</div>
+                  </div>
+                </div>
+                <motion.div whileHover={{ scale: 1.05 }}>
+                  <Link href="/contact" className={`inline-block px-6 py-3 rounded-lg font-bold ${
+                    theme === "dark" ? "bg-blue-400 text-black hover:bg-blue-300" : "bg-blue-600 text-white hover:bg-blue-700"
+                  }`}>
+                    Contacter un formateur spécialisé
+                  </Link>
                 </motion.div>
               </div>
-              
-              <motion.div
-                className="mt-8"
-                whileHover={{ scale: 1.05 }}
-              >
-                <Link href="/contact" className={`inline-block px-8 py-3 rounded-lg font-bold transition-all ${
-                  theme === "dark"
-                    ? "bg-purple-400 text-black hover:bg-purple-300"
-                    : "bg-purple-600 text-white hover:bg-purple-700"
-                }`}>
-                  Prendre contact avec un formateur spécialisé
-                </Link>
-              </motion.div>
             </div>
           </motion.section>
+          {/* FIN DE LA SECTION MODIFIÉE */}
         </div>
       </div>
     </ThemeContext.Provider>
