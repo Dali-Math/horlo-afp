@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronLeft, Clock, Cog, Gauge, Settings, Eye, Watch, 
@@ -25,7 +25,7 @@ interface Organe {
 }
 
 // ============================================
-// COMPOSANT : Navigation par Onglets
+// COMPOSANT : Navigation par onglets
 // ============================================
 const NavigationTabs = ({ activeTab, setActiveTab, progression }) => {
   const tabs = [
@@ -678,6 +678,1129 @@ const AnimationMontreComplete = () => {
 };
 
 // ============================================
+// COMPOSANT : Cycle de l'Échappement Détaillé
+// ============================================
+const CycleEchappementDetaille = () => {
+  const [etapeActive, setEtapeActive] = useState(0);
+  const [autoPlay, setAutoPlay] = useState(false);
+
+  const etapes = [
+    {
+      num: 1,
+      titre: "Le balancier oscille vers l'arrière",
+      desc: "Le balancier-spiral termine son mouvement dans une direction et commence à revenir.",
+      couleur: "from-blue-500 to-blue-600"
+    },
+    {
+      num: 2,
+      titre: "Le jewel roller frappe l'ancre",
+      desc: "Le petit rubis (jewel roller) sur le balancier vient frapper la palette de l'ancre (pallet fork), la délogeant de sa position.",
+      couleur: "from-purple-500 to-purple-600"
+    },
+    {
+      num: 3,
+      titre: "La roue d'échappement se déverrouille",
+      desc: "L'ancre libère la roue d'échappement qui commence à tourner, poussée par l'énergie du ressort moteur.",
+      couleur: "from-green-500 to-green-600"
+    },
+    {
+      num: 4,
+      titre: "La roue pousse le jewel de l'ancre",
+      desc: "En tournant, une dent de la roue d'échappement pousse sur le rubis (jewel) situé à l'extrémité de l'ancre.",
+      couleur: "from-amber-500 to-amber-600"
+    },
+    {
+      num: 5,
+      titre: "L'ancre pousse le jewel roller",
+      desc: "L'ancre, poussée par la roue, transmet cette énergie au jewel roller, donnant une impulsion au balancier. C'est l'équivalent de pousser quelqu'un sur une balançoire.",
+      couleur: "from-red-500 to-red-600"
+    },
+    {
+      num: 6,
+      titre: "La roue se verrouille à nouveau",
+      desc: "Une fois le balancier relancé, l'autre palette de l'ancre vient bloquer la roue d'échappement jusqu'au prochain cycle.",
+      couleur: "from-cyan-500 to-cyan-600"
+    },
+    {
+      num: 7,
+      titre: "Le balancier continue son oscillation",
+      desc: "Rechargé en énergie, le balancier poursuit son mouvement et reviendra dans l'autre sens pour répéter le cycle.",
+      couleur: "from-pink-500 to-pink-600"
+    }
+  ];
+
+  useEffect(() => {
+    if (autoPlay) {
+      const interval = setInterval(() => {
+        setEtapeActive((prev) => (prev + 1) % etapes.length);
+      }, 2000);
+      return () => clearInterval(interval);
+    }
+  }, [autoPlay, etapes.length]);
+
+  return (
+    <div className="bg-gradient-to-br from-slate-900 to-purple-900 rounded-2xl p-8 border-2 border-purple-700 shadow-2xl">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-3xl font-bold text-white flex items-center gap-3">
+          <Cog className="w-8 h-8 text-purple-400" />
+          Cycle de l'Échappement - 7 Étapes
+        </h3>
+        <button
+          onClick={() => setAutoPlay(!autoPlay)}
+          className={`px-4 py-2 rounded-lg font-bold transition-all flex items-center gap-2 ${
+            autoPlay ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'
+          } text-white`}
+        >
+          {autoPlay ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+          {autoPlay ? 'Arrêter' : 'Auto'}
+        </button>
+      </div>
+
+      <p className="text-slate-300 mb-6 text-lg">
+        L'échappement est le cœur battant de la montre. Il transforme l'énergie continue du ressort 
+        en impulsions régulières qui entretiennent l'oscillation du balancier.
+      </p>
+
+      {/* Visualisation SVG de l'échappement */}
+      <div className="bg-slate-800 rounded-xl p-6 mb-6">
+        <svg className="w-full h-64" viewBox="0 0 800 300">
+          <defs>
+            <radialGradient id="escape-wheel-grad">
+              <stop offset="0%" stopColor="#fbbf24" />
+              <stop offset="100%" stopColor="#f59e0b" />
+            </radialGradient>
+            <radialGradient id="balance-grad">
+              <stop offset="0%" stopColor="#f59e0b" />
+              <stop offset="100%" stopColor="#d97706" />
+            </radialGradient>
+          </defs>
+
+          {/* Roue d'échappement */}
+          <g transform="translate(250, 150)">
+            <circle cx="0" cy="0" r="60" fill="url(#escape-wheel-grad)" stroke="#d97706" strokeWidth="3" />
+            
+            {/* Dents de la roue d'échappement */}
+            {[...Array(15)].map((_, i) => (
+              <motion.path
+                key={i}
+                d="M 0 -60 L 10 -65 L 10 -60 Z"
+                fill="#92400e"
+                initial={{ opacity: 0.5 }}
+                animate={etapeActive === 3 || etapeActive === 4 ? { opacity: [0.5, 1, 0.5] } : {}}
+                transition={{ duration: 0.5, repeat: etapeActive === 3 || etapeActive === 4 ? Infinity : 0 }}
+                style={{
+                  transformOrigin: 'center',
+                  transform: `rotate(${i * 24}deg)`
+                }}
+              />
+            ))}
+            
+            <circle cx="0" cy="0" r="15" fill="#1e293b" />
+          </g>
+
+          {/* Ancre (Pallet Fork) */}
+          <motion.g
+            transform="translate(400, 150)"
+            animate={
+              etapeActive === 2 || etapeActive === 5 
+                ? { rotate: [-10, 10, -10] } 
+                : {}
+            }
+            transition={{ duration: 1, repeat: (etapeActive === 2 || etapeActive === 5) ? Infinity : 0 }}
+          >
+            {/* Corps de l'ancre */}
+            <rect x="-5" y="-80" width="10" height="160" fill="url(#steel-gradient)" rx="3" />
+            
+            {/* Palettes en rubis */}
+            <ellipse cx="-40" cy="-70" rx="15" ry="8" fill="#ec4899" opacity="0.7" />
+            <ellipse cx="40" cy="70" rx="15" ry="8" fill="#ec4899" opacity="0.7" />
+            
+            {/* Fourchette */}
+            <path d="M -30 80 L -30 90 L 30 90 L 30 80 Z" fill="url(#steel-gradient)" />
+          </motion.g>
+
+          {/* Balancier */}
+          <motion.g
+            transform="translate(550, 150)"
+            animate={
+              etapeActive === 1 || etapeActive === 7 
+                ? { rotate: [-40, 40, -40] } 
+                : etapeActive === 5
+                ? { rotate: [0, 15, 0] }
+                : {}
+            }
+            transition={{ 
+              duration: etapeActive === 5 ? 0.5 : 1, 
+              repeat: (etapeActive === 1 || etapeActive === 7) ? Infinity : 0,
+              ease: "easeInOut"
+            }}
+          >
+            {/* Axe */}
+            <line x1="0" y1="0" x2="0" y2="60" stroke="#475569" strokeWidth="3" />
+            
+            {/* Roue du balancier */}
+            <circle cx="0" cy="60" r="50" fill="url(#balance-grad)" stroke="#d97706" strokeWidth="3" />
+            
+            {/* Rayons */}
+            {[...Array(8)].map((_, i) => (
+              <line
+                key={i}
+                x1="0" y1="60" x2="0" y2="10"
+                stroke="#92400e"
+                strokeWidth="2"
+                style={{
+                  transformOrigin: '0px 60px',
+                  transform: `rotate(${i * 45}deg)`
+                }}
+              />
+            ))}
+            
+            {/* Jewel roller (rubis qui frappe l'ancre) */}
+            <motion.circle 
+              cx="-45" 
+              cy="60" 
+              r="8" 
+              fill="#ec4899" 
+              opacity="0.8"
+              animate={etapeActive === 2 ? { scale: [1, 1.5, 1] } : {}}
+              transition={{ duration: 0.5, repeat: etapeActive === 2 ? Infinity : 0 }}
+            />
+            
+            <circle cx="0" cy="60" r="12" fill="#1e293b" />
+          </motion.g>
+
+          {/* Flèches d'indication */}
+          {etapeActive === 4 && (
+            <motion.g
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 1, 0] }}
+              transition={{ duration: 1, repeat: Infinity }}
+            >
+              <path d="M 310 150 L 350 150 L 345 145 M 350 150 L 345 155" stroke="#22c55e" strokeWidth="3" fill="none" />
+              <text x="330" y="140" fill="#22c55e" fontSize="14" fontWeight="bold">Pousse</text>
+            </motion.g>
+          )}
+
+          {etapeActive === 5 && (
+            <motion.g
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 1, 0] }}
+              transition={{ duration: 1, repeat: Infinity }}
+            >
+              <path d="M 460 150 L 500 150 L 495 145 M 500 150 L 495 155" stroke="#eab308" strokeWidth="3" fill="none" />
+              <text x="465" y="140" fill="#eab308" fontSize="14" fontWeight="bold">Impulsion</text>
+            </motion.g>
+          )}
+        </svg>
+      </div>
+
+      {/* Étapes détaillées */}
+      <div className="space-y-3">
+        {etapes.map((etape, index) => (
+          <motion.div
+            key={index}
+            className={`rounded-xl p-5 border-2 cursor-pointer transition-all ${
+              etapeActive === index
+                ? `bg-gradient-to-r ${etape.couleur} border-white shadow-2xl`
+                : 'bg-slate-800/50 border-slate-700 hover:border-slate-600'
+            }`}
+            onClick={() => setEtapeActive(index)}
+            whileHover={{ scale: 1.02 }}
+          >
+            <div className="flex items-start gap-4">
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0 ${
+                etapeActive === index ? 'bg-white text-slate-900' : 'bg-slate-700 text-white'
+              }`}>
+                {etape.num}
+              </div>
+              <div className="flex-1">
+                <h4 className={`text-lg font-bold mb-2 ${
+                  etapeActive === index ? 'text-white' : 'text-slate-300'
+                }`}>
+                  {etape.titre}
+                </h4>
+                <p className={`text-sm ${
+                  etapeActive === index ? 'text-white/90' : 'text-slate-400'
+                }`}>
+                  {etape.desc}
+                </p>
+              </div>
+              {etapeActive === index && (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="flex-shrink-0"
+                >
+                  <CheckCircle className="w-6 h-6 text-white" />
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="mt-6 bg-blue-900/30 border-2 border-blue-500 rounded-xl p-4">
+        <p className="text-blue-200 text-sm flex items-start gap-2">
+          <Lightbulb className="w-5 h-5 flex-shrink-0 mt-0.5" />
+          <span>
+            <strong>Pourquoi c'est essentiel :</strong> Sans l'échappement, le ressort moteur se déroulerait 
+            en quelques secondes. L'échappement régule la libération d'énergie en petites doses, 
+            8 fois par seconde (pour une montre à 28'800 A/h), créant le tic-tac caractéristique.
+          </span>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+// ============================================
+// COMPOSANT : Schéma Mécanique Interactif Détaillé
+// ============================================
+const SchemaMecaniqueComplet = () => {
+  const [organeSelectionne, setOrganeSelectionne] = useState<string | null>(null);
+  const [animation, setAnimation] = useState(true);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [modeAffichage, setModeAffichage] = useState<'normal' | 'technique' | 'educatif'>('normal');
+  const [annotations, setAnnotations] = useState<any[]>([]);
+  const [exportFormat, setExportFormat] = useState<'png' | 'svg' | 'pdf'>('png');
+  
+  const organes: Organe[] = useMemo(() => [
+    { 
+      id: 'barillet', 
+      nom: 'Barillet (Barrel)', 
+      desc: 'Stocke l\'énergie du ressort moteur (mainspring). Le ressort peut se détendre progressivement pour alimenter toute la montre pendant 36-48h. C\'est la source d\'énergie primaire de tout le mouvement.',
+      detailsTechniques: [
+        'Ressort en forme de S pour équilibrer la tension',
+        'Bande métallique créant une friction avec le barillet',
+        'Mécanisme de sécurité contre le sur-remontage',
+        'Environ 7 rotations sur remontage complet'
+      ],
+      x: 150, y: 300, couleur: '#3B82F6',
+      icon: '⚡'
+    },
+    { 
+      id: 'rouage', 
+      nom: 'Rouage (Going Train)', 
+      desc: 'Ensemble de 4 roues dentées qui transmettent et démultiplient l\'énergie du barillet. Chaque roue tourne à une vitesse différente pour créer les rapports nécessaires. Transforme ~7 rotations en ~2400 rotations.',
+      detailsTechniques: [
+        'Ratio global de réduction : ~343:1',
+        '1ère roue (Barrel) → 2e roue',
+        '2e roue → 3e roue → 4e roue (secondes)',
+        'Trous dans les roues pour réduire l\'inertie',
+        'Profils de dents cycloïdaux'
+      ],
+      x: 300, y: 300, couleur: '#10B981',
+      icon: '⚙️'
+    },
+    { 
+      id: 'echappement', 
+      nom: 'Échappement (Escapement)', 
+      desc: 'L\'ancre (pallet fork) et la roue d\'échappement transforment l\'énergie continue en impulsions régulières. C\'est le "tic-tac" de la montre qui régule la libération d\'énergie en petites doses précises.',
+      detailsTechniques: [
+        'Palettes en rubis synthétique (faible friction)',
+        'Libère l\'énergie 8 fois par seconde',
+        'Cycle en 6 étapes précises',
+        'Dents d\'échappement à forme spéciale',
+        'Pousse le balancier pour l\'entretenir'
+      ],
+      x: 500, y: 300, couleur: '#8B5CF6',
+      icon: '💓'
+    },
+    { 
+      id: 'balancier', 
+      nom: 'Balancier-Spiral (Balance Wheel)', 
+      desc: 'Oscille à fréquence constante (4 Hz = 8 battements/sec pour 28\'800 A/h). Le spiral (hairspring) en Nivarox assure une oscillation régulière. C\'est le cœur réglant qui garantit la précision.',
+      detailsTechniques: [
+        'Fréquence : 4 Hz (4 oscillations complètes/sec)',
+        'Spiral en Nivarox (insensible à la température)',
+        'Masses de réglage pour ajuster la précision',
+        'Amplitude d\'oscillation : ~270-300°',
+        'Protection anti-choc du pivot',
+        'Jewel roller pour frapper l\'ancre'
+      ],
+      x: 700, y: 300, couleur: '#F59E0B',
+      icon: '🎯'
+    },
+    { 
+      id: 'remontoir', 
+      nom: 'Remontoir (Winding Mechanism)', 
+      desc: 'Mécanisme permettant de remonter le ressort via la couronne (manuel) ou la masse oscillante (automatique). Recharge l\'énergie du mouvement. Le cliquet empêche le ressort de se dérouler.',
+      detailsTechniques: [
+        'Couronne avec tige carrée',
+        'Cliquet (click) anti-retour',
+        'Roue à rochet (ratchet wheel)',
+        'Roue de couronne (crown wheel)',
+        'Remontage automatique bidirectionnel possible'
+      ],
+      x: 400, y: 150, couleur: '#EF4444',
+      icon: '🔄'
+    },
+    { 
+      id: 'affichage', 
+      nom: 'Affichage (Display)', 
+      desc: 'Les aiguilles, cadran et système de transmission (motion works) permettent de lire l\'heure visuellement. Interface entre le mouvement et l\'utilisateur. Réduction supplémentaire pour les minutes et heures.',
+      detailsTechniques: [
+        'Pignon canon (cannon pinion) pour les minutes',
+        'Réduction 60:1 pour minute hand',
+        'Réduction 12:1 pour hour hand',
+        'Friction contrôlée pour réglage de l\'heure',
+        'Aiguille des secondes sur la 4e roue'
+      ],
+      x: 600, y: 150, couleur: '#06B6D4',
+      icon: '🕐'
+    },
+  ], []);
+
+  const addAnnotation = (x: number, y: number) => {
+    const text = prompt("Ajouter une annotation:");
+    if (text) {
+      const newAnnotation = {
+        id: Date.now(),
+        x,
+        y,
+        text
+      };
+      setAnnotations([...annotations, newAnnotation]);
+    }
+  };
+
+  const exportSchema = () => {
+    console.log(`Exporting schema as ${exportFormat}`);
+    // Implémentation d'export ici
+  };
+
+  return (
+    <div className="relative w-full bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 border-2 border-slate-700 shadow-2xl overflow-hidden">
+      {/* Particules de fond animées */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        {[...Array(40)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-blue-400 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              scale: [1, 1.5, 1],
+              opacity: [0.3, 0.8, 0.3],
+            }}
+            transition={{
+              duration: 2 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* En-tête avec contrôles */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+          <Cog className="w-8 h-8 text-blue-400" />
+          Schéma du Mécanisme Complet
+        </h2>
+        
+        <div className="flex gap-2">
+          <button
+            onClick={() => setAnimation(!animation)}
+            className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all flex items-center gap-2 shadow-lg"
+          >
+            {animation ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+            <span className="text-sm font-medium">{animation ? 'Pause' : 'Play'}</span>
+          </button>
+          
+          <button
+            onClick={() => setZoomLevel(zoomLevel === 1 ? 1.5 : 1)}
+            className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all flex items-center gap-2 shadow-lg"
+          >
+            {zoomLevel === 1 ? <Maximize2 className="w-5 h-5" /> : <Minimize2 className="w-5 h-5" />}
+          </button>
+          
+          {/* Menu d'export */}
+          <div className="relative">
+            <button
+              className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all flex items-center gap-2 shadow-lg"
+            >
+              <Download className="w-5 h-5" />
+              <span className="text-sm font-medium">Exporter</span>
+            </button>
+            
+            <div className="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-xl z-10 overflow-hidden">
+              <div className="p-2">
+                <div className="text-xs text-slate-400 mb-2">Format d'export:</div>
+                {['png', 'svg', 'pdf'].map(format => (
+                  <button
+                    key={format}
+                    onClick={() => setExportFormat(format as any)}
+                    className={`w-full text-left px-3 py-2 rounded text-sm transition-all ${
+                      exportFormat === format 
+                        ? 'bg-blue-600 text-white' 
+                        : 'text-slate-300 hover:bg-slate-700'
+                    }`}
+                  >
+                    {format.toUpperCase()}
+                  </button>
+                ))}
+                <button
+                  onClick={exportSchema}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm mt-2 font-medium"
+                >
+                  Télécharger
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sélecteur de mode d'affichage */}
+      <div className="flex gap-2 mb-6">
+        {(['normal', 'technique', 'educatif'] as const).map(mode => (
+          <button
+            key={mode}
+            onClick={() => setModeAffichage(mode)}
+            className={`px-4 py-2 rounded-lg font-medium transition-all capitalize ${
+              modeAffichage === mode 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+            }`}
+          >
+            {mode}
+          </button>
+        ))}
+      </div>
+
+      <motion.div
+        animate={{ scale: zoomLevel }}
+        transition={{ duration: 0.3 }}
+        className="origin-center"
+      >
+        <div 
+          className="relative bg-slate-900/50 rounded-xl overflow-hidden cursor-crosshair"
+          onClick={(e) => {
+            if (modeAffichage === 'educatif') {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              const y = e.clientY - rect.top;
+              addAnnotation(x, y);
+            }
+          }}
+        >
+          <svg className="w-full h-[600px]" viewBox="0 0 1000 600">
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" className="fill-blue-400" />
+              </marker>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                <feMerge>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+
+              <radialGradient id="brass-gradient">
+                <stop offset="0%" stopColor="#fbbf24" />
+                <stop offset="50%" stopColor="#f59e0b" />
+                <stop offset="100%" stopColor="#d97706" />
+              </radialGradient>
+
+              <radialGradient id="steel-gradient">
+                <stop offset="0%" stopColor="#cbd5e1" />
+                <stop offset="50%" stopColor="#94a3b8" />
+                <stop offset="100%" stopColor="#64748b" />
+              </radialGradient>
+
+              <radialGradient id="ruby-gradient">
+                <stop offset="0%" stopColor="#f9a8d4" />
+                <stop offset="50%" stopColor="#ec4899" />
+                <stop offset="100%" stopColor="#be185d" />
+              </radialGradient>
+            </defs>
+
+            {/* Lignes de connexion animées entre organes */}
+            <g opacity="0.7">
+              {/* Barillet → Rouage */}
+              <motion.path
+                d="M 150 300 L 300 300"
+                stroke="#60A5FA" strokeWidth="4" markerEnd="url(#arrowhead)"
+                strokeDasharray="10,5"
+                initial={{ pathLength: 0 }}
+                animate={animation ? { 
+                  pathLength: [0, 1],
+                  strokeDashoffset: [0, -15]
+                } : { pathLength: 1 }}
+                transition={{ 
+                  pathLength: { duration: 1.5, repeat: animation ? Infinity : 0 },
+                  strokeDashoffset: { duration: 1, repeat: animation ? Infinity : 0, ease: "linear" }
+                }}
+              />
+              
+              {/* Rouage → Échappement */}
+              <motion.path
+                d="M 300 300 L 500 300"
+                stroke="#60A5FA" strokeWidth="4" markerEnd="url(#arrowhead)"
+                strokeDasharray="10,5"
+                initial={{ pathLength: 0 }}
+                animate={animation ? { 
+                  pathLength: [0, 1],
+                  strokeDashoffset: [0, -15]
+                } : { pathLength: 1 }}
+                transition={{ 
+                  pathLength: { duration: 1.5, delay: 0.5, repeat: animation ? Infinity : 0 },
+                  strokeDashoffset: { duration: 1, repeat: animation ? Infinity : 0, ease: "linear" }
+                }}
+              />
+              
+              {/* Échappement → Balancier */}
+              <motion.path
+                d="M 500 300 L 700 300"
+                stroke="#60A5FA" strokeWidth="4" markerEnd="url(#arrowhead)"
+                strokeDasharray="10,5"
+                initial={{ pathLength: 0 }}
+                animate={animation ? { 
+                  pathLength: [0, 1],
+                  strokeDashoffset: [0, -15]
+                } : { pathLength: 1 }}
+                transition={{ 
+                  pathLength: { duration: 1.5, delay: 1, repeat: animation ? Infinity : 0 },
+                  strokeDashoffset: { duration: 1, repeat: animation ? Infinity : 0, ease: "linear" }
+                }}
+              />
+              
+              {/* Remontoir → Barillet (en pointillés pour le remontage) */}
+              <motion.path
+                d="M 400 150 L 150 250"
+                stroke="#EF4444" strokeWidth="3" strokeDasharray="8,8" markerEnd="url(#arrowhead)"
+                initial={{ pathLength: 0 }}
+                animate={animation ? { 
+                  pathLength: [0, 1],
+                  opacity: [0.3, 0.8, 0.3]
+                } : { pathLength: 1 }}
+                transition={{ 
+                  pathLength: { duration: 2, delay: 1.5, repeat: animation ? Infinity : 0 },
+                  opacity: { duration: 2, repeat: animation ? Infinity : 0 }
+                }}
+              />
+              
+              {/* Rouage → Affichage */}
+              <motion.path
+                d="M 300 300 L 600 200"
+                stroke="#06B6D4" strokeWidth="3" strokeDasharray="8,8" markerEnd="url(#arrowhead)"
+                initial={{ pathLength: 0 }}
+                animate={animation ? { pathLength: [0, 1] } : { pathLength: 1 }}
+                transition={{ duration: 1.5, delay: 2, repeat: animation ? Infinity : 0 }}
+              />
+            </g>
+
+            {/* 1. BARILLET avec ressort animé */}
+            <g 
+              className="cursor-pointer transition-all"
+              onClick={() => setOrganeSelectionne(organeSelectionne === 'barillet' ? null : 'barillet')}
+              opacity={organeSelectionne && organeSelectionne !== 'barillet' ? 0.4 : 1}
+            >
+              <motion.circle 
+                cx="150" cy="300" r="65" 
+                fill="url(#steel-gradient)" 
+                stroke="#475569" 
+                strokeWidth="4"
+                filter={organeSelectionne === 'barillet' ? "url(#glow)" : ""}
+                whileHover={{ scale: 1.1 }}
+              />
+              <circle cx="150" cy="300" r="52" fill="#1e293b" stroke="#334155" strokeWidth="2" />
+              
+              {/* Ressort spiralé animé à l'intérieur */}
+              <motion.path
+                d="M 150 300 Q 150 280, 165 280 T 180 290 T 185 300 T 180 310 T 165 315 T 150 315 T 135 310 T 130 300"
+                fill="none"
+                stroke="#fbbf24"
+                strokeWidth="2.5"
+                animate={animation ? { 
+                  strokeDashoffset: [0, -100],
+                  opacity: [0.6, 1, 0.6]
+                } : {}}
+                transition={{ 
+                  strokeDashoffset: { duration: 3, repeat: Infinity, ease: "linear" },
+                  opacity: { duration: 2, repeat: Infinity }
+                }}
+                strokeDasharray="100"
+              />
+              
+              <circle cx="150" cy="300" r="10" fill="url(#brass-gradient)" />
+              
+              {/* Dents du barillet */}
+              {[...Array(12)].map((_, i) => (
+                <rect key={i} x="148" y="235" width="4" height="12" fill="#64748b" transform={`rotate(${i * 30} 150 300)`} />
+              ))}
+              
+              <text x="150" y="395" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Barillet</text>
+              <text x="150" y="415" textAnchor="middle" fill="#3B82F6" fontSize="14">Mainspring</text>
+            </g>
+
+            {/* 2. ROUAGE avec roues multiples */}
+            <g 
+              className="cursor-pointer"
+              onClick={() => setOrganeSelectionne(organeSelectionne === 'rouage' ? null : 'rouage')}
+              opacity={organeSelectionne && organeSelectionne !== 'rouage' ? 0.4 : 1}
+            >
+              {/* Grande roue (2e roue) */}
+              <g>
+                <motion.circle 
+                  cx="280" cy="300" r="50" 
+                  fill="url(#brass-gradient)" 
+                  stroke="#d97706" 
+                  strokeWidth="4" 
+                  filter={organeSelectionne === 'rouage' ? "url(#glow)" : ""}
+                  whileHover={{ scale: 1.1 }}
+                />
+                {[...Array(20)].map((_, i) => (
+                  <motion.rect
+                    key={i}
+                    x="278" y="250" width="4" height="14" fill="#92400e"
+                    style={{
+                      transformOrigin: '280px 300px',
+                    }}
+                    animate={animation ? { rotate: 360 } : {}}
+                    transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+                    transform={`rotate(${i * 18})`}
+                  />
+                ))}
+                <circle cx="280" cy="300" r="10" fill="#1e293b" />
+                
+                {/* Trous pour réduire l'inertie */}
+                {[0, 120, 240].map((angle) => (
+                  <circle 
+                    key={angle}
+                    cx={280 + 30 * Math.cos((angle * Math.PI) / 180)}
+                    cy={300 + 30 * Math.sin((angle * Math.PI) / 180)}
+                    r="6"
+                    fill="#1e293b"
+                  />
+                ))}
+              </g>
+              
+              {/* Petite roue (pinion) */}
+              <g>
+                <circle cx="330" cy="270" r="25" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="3" />
+                {[...Array(10)].map((_, i) => (
+                  <motion.rect
+                    key={i}
+                    x="328" y="245" width="4" height="10" fill="#92400e"
+                    style={{
+                      transformOrigin: '330px 270px',
+                    }}
+                    animate={animation ? { rotate: -360 } : {}}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+                    transform={`rotate(${i * 36})`}
+                  />
+                ))}
+                <circle cx="330" cy="270" r="6" fill="#1e293b" />
+              </g>
+              
+              <text x="300" y="395" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Rouage</text>
+              <text x="300" y="415" textAnchor="middle" fill="#10B981" fontSize="14">Going Train</text>
+            </g>
+
+            {/* 3. ÉCHAPPEMENT avec ancre animée */}
+            <g 
+              className="cursor-pointer"
+              onClick={() => setOrganeSelectionne(organeSelectionne === 'echappement' ? null : 'echappement')}
+              opacity={organeSelectionne && organeSelectionne !== 'echappement' ? 0.4 : 1}
+            >
+              {/* Roue d'échappement */}
+              <motion.circle 
+                cx="500" cy="300" r="45" 
+                fill="url(#brass-gradient)" 
+                stroke="#d97706" 
+                strokeWidth="4" 
+                filter={organeSelectionne === 'echappement' ? "url(#glow)" : ""}
+                whileHover={{ scale: 1.1 }}
+              />
+              
+              {/* Dents d'échappement avec forme spéciale */}
+              {[...Array(15)].map((_, i) => (
+                <motion.path
+                  key={i}
+                  d="M 500 255 L 512 248 L 512 255 Z"
+                  fill="#92400e"
+                  style={{
+                    transformOrigin: '500px 300px',
+                  }}
+                  animate={animation ? { rotate: [0, 24, 0] } : {}}
+                  transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut", delay: i * 0.0167 }}
+                  transform={`rotate(${i * 24})`}
+                />
+              ))}
+              
+              <circle cx="500" cy="300" r="12" fill="#1e293b" />
+              
+              {/* Ancre animée (Pallet Fork) */}
+              <motion.g
+                animate={animation ? { rotate: [-8, 8, -8] } : {}}
+                transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut" }}
+                style={{ transformOrigin: '500px 340px' }}
+              >
+                {/* Corps de l'ancre */}
+                <rect x="495" y="340" width="10" height="50" fill="url(#steel-gradient)" rx="3" />
+                
+                {/* Bras de l'ancre */}
+                <path d="M 485 340 L 485 325 L 515 325 L 515 340 Z" fill="url(#steel-gradient)" />
+                
+                {/* Palettes en rubis */}
+                <ellipse cx="478" cy="323" rx="10" ry="5" fill="url(#ruby-gradient)" opacity="0.8" />
+                <ellipse cx="522" cy="323" rx="10" ry="5" fill="url(#ruby-gradient)" opacity="0.8" />
+                
+                {/* Fourchette */}
+                <path d="M 490 390 L 490 400 L 510 400 L 510 390 Z" fill="url(#steel-gradient)" />
+              </motion.g>
+              
+              <text x="500" y="420" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Échappement</text>
+              <text x="500" y="440" textAnchor="middle" fill="#8B5CF6" fontSize="14">Escapement</text>
+            </g>
+
+            {/* 4. BALANCIER-SPIRAL avec animation réaliste */}
+            <g 
+              className="cursor-pointer"
+              onClick={() => setOrganeSelectionne(organeSelectionne === 'balancier' ? null : 'balancier')}
+              opacity={organeSelectionne && organeSelectionne !== 'balancier' ? 0.4 : 1}
+            >
+              {/* Support du balancier (Balance Bridge) */}
+              <rect x="665" y="250" width="70" height="18" fill="url(#steel-gradient)" stroke="#475569" strokeWidth="3" rx="4" />
+              <circle cx="682" cy="259" r="4" fill="#1e293b" />
+              <circle cx="718" cy="259" r="4" fill="#1e293b" />
+              
+              {/* Jewels de support (protection anti-choc) */}
+              <circle cx="700" cy="259" r="6" fill="url(#ruby-gradient)" opacity="0.6" />
+              
+              {/* Balancier oscillant */}
+              <motion.g
+                animate={animation ? { rotate: [-40, 40, -40] } : {}}
+                transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut" }}
+                style={{ transformOrigin: '700px 268px' }}
+              >
+                {/* Axe du balancier */}
+                <line x1="700" y1="268" x2="700" y2="315" stroke="#475569" strokeWidth="3" />
+                
+                {/* Roue du balancier */}
+                <motion.circle 
+                  cx="700" cy="315" r="40" 
+                  fill="url(#brass-gradient)" 
+                  stroke="#d97706" 
+                  strokeWidth="4" 
+                  filter={organeSelectionne === 'balancier' ? "url(#glow)" : ""}
+                  whileHover={{ scale: 1.1 }}
+                />
+                
+                {/* Rayons du balancier */}
+                {[...Array(8)].map((_, i) => (
+                  <line 
+                    key={i} 
+                    x1="700" y1="315" 
+                    x2="700" y2="275" 
+                    stroke="#92400e" 
+                    strokeWidth="2.5" 
+                    transform={`rotate(${i * 45} 700 315)`} 
+                  />
+                ))}
+                
+                {/* Masses de réglage (4 vis dorées pour ajuster la fréquence) */}
+                {[0, 90, 180, 270].map((angle, i) => (
+                  <g key={i} transform={`rotate(${angle} 700 315)`}>
+                    <rect x="735" y="313" width="10" height="4" fill="#fbbf24" rx="1" />
+                    <circle cx="740" cy="315" r="2" fill="#92400e" />
+                  </g>
+                ))}
+                
+                {/* Jewel roller (rubis qui frappe l'ancre) */}
+                <circle cx="660" cy="315" r="6" fill="url(#ruby-gradient)" opacity="0.9" />
+                
+                {/* Centre doré */}
+                <circle cx="700" cy="315" r="10" fill="#1e293b" />
+              </motion.g>
+              
+              {/* Spiral animé (Hairspring en Nivarox) */}
+              <motion.path
+                d="M 700 268 Q 700 263, 705 263 T 712 266 T 715 271 T 715 278 T 710 283 T 700 285"
+                fill="none"
+                stroke="#fbbf24"
+                strokeWidth="2"
+                animate={animation ? {
+                  d: [
+                    "M 700 268 Q 700 263, 705 263 T 712 266 T 715 271 T 715 278 T 710 283 T 700 285",
+                    "M 700 268 Q 700 258, 710 258 T 720 266 T 722 276 T 722 286 T 712 294 T 700 297",
+                    "M 700 268 Q 700 263, 705 263 T 712 266 T 715 271 T 715 278 T 710 283 T 700 285"
+                  ]
+                } : {}}
+                transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut" }}
+              />
+              
+              {/* Régulateurs du spiral (composants teal) */}
+              <rect x="715" y="266" width="8" height="3" fill="#14b8a6" rx="1" opacity="0.8" />
+              <rect x="715" y="280" width="8" height="3" fill="#14b8a6" rx="1" opacity="0.8" />
+              
+              <text x="700" y="390" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Balancier</text>
+              <text x="700" y="410" textAnchor="middle" fill="#F59E0B" fontSize="14">Balance Wheel</text>
+              <text x="700" y="427" textAnchor="middle" fill="#fbbf24" fontSize="12">4 Hz / 28'800 A/h</text>
+            </g>
+
+            {/* 5. REMONTOIR avec masse oscillante */}
+            <g 
+              className="cursor-pointer"
+              onClick={() => setOrganeSelectionne(organeSelectionne === 'remontoir' ? null : 'remontoir')}
+              opacity={organeSelectionne && organeSelectionne !== 'remontoir' ? 0.4 : 1}
+            >
+              {/* Axe de transmission */}
+              <rect x="340" y="148" width="90" height="4" fill="url(#steel-gradient)" stroke="#475569" strokeWidth="1" />
+              
+              {/* Pignon intermédiaire */}
+              <circle cx="370" cy="150" r="14" fill="url(#brass-gradient)" stroke="#d97706" strokeWidth="2" />
+              {[...Array(12)].map((_, i) => (
+                <rect key={i} x="368" y="136" width="4" height="7" fill="#92400e" transform={`rotate(${i * 30} 370 150)`} />
+              ))}
+              
+              {/* Roue à rochet (Ratchet Wheel) */}
+              <motion.circle 
+                cx="420" cy="150" r="22" 
+                fill="url(#brass-gradient)" 
+                stroke="#d97706" 
+                strokeWidth="3" 
+                filter={organeSelectionne === 'remontoir' ? "url(#glow)" : ""}
+                whileHover={{ scale: 1.1 }}
+              />
+              {[...Array(16)].map((_, i) => (
+                <path 
+                  key={i}
+                  d="M 420 128 L 425 125 L 425 128 Z"
+                  fill="#92400e"
+                  transform={`rotate(${i * 22.5} 420 150)`}
+                />
+              ))}
+              
+              {/* Cliquet (Click) - mécanisme anti-retour */}
+              <g>
+                <path d="M 442 145 L 450 140 L 450 150 Z" fill="#ef4444" stroke="#991b1b" strokeWidth="1.5" />
+                <motion.circle
+                  cx="445" cy="145" r="2"
+                  animate={animation ? { scale: [1, 1.3, 1] } : {}}
+                  transition={{ duration: 0.5, repeat: Infinity }}
+                  fill="#fca5a5"
+                />
+              </g>
+              
+              {/* Ressort du cliquet (Click Spring) */}
+              <motion.path
+                d="M 448 148 Q 453 150, 456 148"
+                stroke="#94a3b8"
+                strokeWidth="2"
+                fill="none"
+                animate={animation ? {
+                  d: [
+                    "M 448 148 Q 453 150, 456 148",
+                    "M 448 148 Q 453 153, 456 148",
+                    "M 448 148 Q 453 150, 456 148"
+                  ]
+                } : {}}
+                transition={{ duration: 0.5, repeat: Infinity }}
+              />
+              
+              <circle cx="420" cy="150" r="8" fill="#1e293b" />
+              
+              <text x="400" y="205" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Remontoir</text>
+              <text x="400" y="225" textAnchor="middle" fill="#EF4444" fontSize="14">Winding</text>
+            </g>
+
+            {/* 6. AFFICHAGE avec aiguilles */}
+            <g 
+              className="cursor-pointer"
+              onClick={() => setOrganeSelectionne(organeSelectionne === 'affichage' ? null : 'affichage')}
+              opacity={organeSelectionne && organeSelectionne !== 'affichage' ? 0.4 : 1}
+            >
+              {/* Cadran */}
+              <motion.circle 
+                cx="600" cy="150" r="50" 
+                fill="#f8fafc" 
+                stroke="#1e293b" 
+                strokeWidth="4" 
+                filter={organeSelectionne === 'affichage' ? "url(#glow)" : ""}
+                whileHover={{ scale: 1.1 }}
+              />
+              
+              {/* Index horaires */}
+              {[...Array(12)].map((_, i) => (
+                <line
+                  key={i}
+                  x1="600" y1="105" x2="600" y2={i % 3 === 0 ? "112" : "110"}
+                  stroke="#1e293b"
+                  strokeWidth={i % 3 === 0 ? "4" : "2"}
+                  transform={`rotate(${i * 30} 600 150)`}
+                />
+              ))}
+              
+              {/* Chiffres principaux */}
+              {[12, 3, 6, 9].map((num, idx) => {
+                const angle = (num - 3) * 30;
+                const rad = (angle * Math.PI) / 180;
+                const x = 600 + 32 * Math.cos(rad);
+                const y = 150 + 32 * Math.sin(rad);
+                return (
+                  <text key={num} x={x} y={y + 4} textAnchor="middle" fill="#1e293b" fontSize="14" fontWeight="bold">
+                    {num}
+                  </text>
+                );
+              })}
+              
+              {/* Aiguille des heures */}
+              <motion.line
+                x1="600" y1="150" x2="600" y2="130"
+                stroke="#1e293b" strokeWidth="5" strokeLinecap="round"
+                animate={animation ? { rotate: 360 } : {}}
+                transition={{ duration: 43200, repeat: Infinity, ease: "linear" }}
+                style={{ transformOrigin: '600px 150px' }}
+              />
+              
+              {/* Aiguille des minutes */}
+              <motion.line
+                x1="600" y1="150" x2="600" y2="118"
+                stroke="#475569" strokeWidth="4" strokeLinecap="round"
+                animate={animation ? { rotate: 360 } : {}}
+                transition={{ duration: 3600, repeat: Infinity, ease: "linear" }}
+                style={{ transformOrigin: '600px 150px' }}
+              />
+              
+              {/* Aiguille des secondes */}
+              <motion.line
+                x1="600" y1="150" x2="600" y2="110"
+                stroke="#ef4444" strokeWidth="2" strokeLinecap="round"
+                animate={animation ? { rotate: 360 } : {}}
+                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                style={{ transformOrigin: '600px 150px' }}
+              />
+              
+              {/* Axe central */}
+              <circle cx="600" cy="150" r="6" fill="#1e293b" />
+              <circle cx="600" cy="150" r="3" fill="#f8fafc" />
+              
+              <text x="600" y="220" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Affichage</text>
+              <text x="600" y="240" textAnchor="middle" fill="#06B6D4" fontSize="14">Display</text>
+            </g>
+
+            {/* Légende des couleurs */}
+            <g transform="translate(50, 480)">
+              <text x="0" y="0" fill="white" fontSize="14" fontWeight="bold">Légende :</text>
+              <circle cx="10" cy="20" r="5" fill="#60A5FA" />
+              <text x="20" y="25" fill="#cbd5e1" fontSize="12">Flux d'énergie</text>
+              
+              <circle cx="10" cy="40" r="5" fill="#EF4444" />
+              <text x="20" y="45" fill="#cbd5e1" fontSize="12">Remontage</text>
+              
+              <circle cx="10" cy="60" r="5" fill="url(#ruby-gradient)" />
+              <text x="20" y="65" fill="#cbd5e1" fontSize="12">Rubis synthétique</text>
+            </g>
+          </svg>
+
+          {/* Annotations */}
+          {annotations.map(annotation => (
+            <div
+              key={annotation.id}
+              className="absolute bg-yellow-500/90 text-black text-xs rounded px-2 py-1 max-w-xs"
+              style={{ left: annotation.x, top: annotation.y }}
+            >
+              {annotation.text}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setAnnotations(annotations.filter(a => a.id !== annotation.id));
+                }}
+                className="ml-2 text-black hover:text-red-600"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Mode éducatif avec instructions */}
+      {modeAffichage === 'educatif' && (
+        <div className="mt-4 bg-blue-900/30 border border-blue-500 rounded-lg p-4">
+          <p className="text-blue-200 text-sm">
+            <strong>Mode éducatif :</strong> Cliquez n'importe où sur le schéma pour ajouter des annotations. 
+            Cliquez sur une annotation pour la supprimer.
+          </p>
+        </div>
+      )}
+
+      {/* Zone d'information détaillée */}
+      <AnimatePresence>
+        {organeSelectionne && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: 'auto' }}
+            exit={{ opacity: 0, y: 20, height: 0 }}
+            className="mt-8 bg-gradient-to-br from-white to-blue-50 dark:from-slate-800 dark:to-slate-700 rounded-xl p-6 shadow-2xl border-2 border-blue-300 dark:border-blue-600 overflow-hidden"
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-4xl">{organes.find(o => o.id === organeSelectionne)?.icon}</span>
+                  <div>
+                    <h4 className="text-2xl font-bold text-slate-900 dark:text-white">
+                      {organes.find(o => o.id === organeSelectionne)?.nom}
+                    </h4>
+                    <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mt-1"></div>
+                  </div>
+                </div>
+                
+                <p className="text-slate-700 dark:text-slate-200 leading-relaxed text-lg mb-4">
+                  {organes.find(o => o.id === organeSelectionne)?.desc}
+                </p>
+
+                <div className="bg-gradient-to-br from-blue-900/10 to-purple-900/10 dark:from-blue-900/30 dark:to-purple-900/30 rounded-lg p-4 border border-blue-300/30 dark:border-blue-600/30">
+                  <h5 className="font-bold text-blue-900 dark:text-blue-300 mb-3 flex items-center gap-2">
+                    <Info className="w-5 h-5" />
+                    Détails Techniques
+                  </h5>
+                  <ul className="space-y-2">
+                    {organes.find(o => o.id === organeSelectionne)?.detailsTechniques.map((detail, idx) => (
+                      <motion.li
+                        key={idx}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: idx * 0.1 }}
+                        className="flex items-start gap-2 text-slate-700 dark:text-slate-300 text-sm"
+                      >
+                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span>{detail}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              
+              <button
+                onClick={() => setOrganeSelectionne(null)}
+                className="ml-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-4xl font-bold transition-colors hover:rotate-90 transform duration-300"
+              >
+                ×
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <p className="text-sm text-slate-300 text-center mt-6 bg-slate-800/50 backdrop-blur-sm rounded-lg p-3">
+        <Lightbulb className="w-4 h-4 inline mr-2 text-yellow-400" />
+        💡 Cliquez sur un organe pour découvrir ses détails techniques • 
+        {animation ? ' ⏸️ Animation active' : ' ▶️ Animation en pause'}
+        {zoomLevel > 1 && ' • 🔍 Mode zoom activé'}
+        {modeAffichage === 'educatif' && ' • 📝 Mode éducatif activé'}
+      </p>
+    </div>
+  );
+};
+
+// ============================================
 // COMPOSANT : Comparaison Mécanique vs Quartz vs Smart
 // ============================================
 const ComparaisonMontres = () => {
@@ -710,278 +1833,4 @@ const ComparaisonMontres = () => {
             </div>
             <div className="flex items-start gap-2">
               <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-              <p className="text-slate-200"><strong>Durabilité</strong> - Peut durer des générations</p>
-            </div>
-            <div className="flex items-start gap-2">
-              <XCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-              <p className="text-slate-200"><strong>Précision</strong> - ±5-30 sec/jour</p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* QUARTZ */}
-        <motion.div 
-          className="bg-gradient-to-br from-blue-900/50 to-blue-800/50 rounded-xl p-6 border-2 border-blue-500 hover:border-blue-400 transition-all"
-          whileHover={{ scale: 1.05, y: -5 }}
-        >
-          <div className="flex items-center gap-3 mb-4">
-            <Zap className="w-10 h-10 text-blue-400" />
-            <h3 className="text-2xl font-bold text-white">Quartz</h3>
-          </div>
-
-          <div className="space-y-3 text-sm">
-            <div className="flex items-start gap-2">
-              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-              <p className="text-slate-200"><strong>Très précis</strong> - ±15 sec/mois</p>
-            </div>
-            <div className="flex items-start gap-2">
-              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-              <p className="text-slate-200"><strong>Abordable</strong> - Prix accessible</p>
-            </div>
-            <div className="flex items-start gap-2">
-              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-              <p className="text-slate-200"><strong>Peu d'entretien</strong> - Change batterie tous les 2-3 ans</p>
-            </div>
-            <div className="flex items-start gap-2">
-              <XCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-              <p className="text-slate-200"><strong>Batterie</strong> - Nécessite une pile</p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* SMART */}
-        <motion.div 
-          className="bg-gradient-to-br from-purple-900/50 to-purple-800/50 rounded-xl p-6 border-2 border-purple-500 hover:border-purple-400 transition-all"
-          whileHover={{ scale: 1.05, y: -5 }}
-        >
-          <div className="flex items-center gap-3 mb-4">
-            <Watch className="w-10 h-10 text-purple-400" />
-            <h3 className="text-2xl font-bold text-white">Smart</h3>
-          </div>
-
-          <div className="space-y-3 text-sm">
-            <div className="flex items-start gap-2">
-              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-              <p className="text-slate-200"><strong>Multifonction</strong> - Santé, notifications, GPS</p>
-            </div>
-            <div className="flex items-start gap-2">
-              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-              <p className="text-slate-200"><strong>Connectivité</strong> - Sync avec smartphone</p>
-            </div>
-            <div className="flex items-start gap-2">
-              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-              <p className="text-slate-200"><strong>Précis</strong> - Synchronisation atomique</p>
-            </div>
-            <div className="flex items-start gap-2">
-              <XCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-              <p className="text-slate-200"><strong>Batterie quotidienne</strong> - Charge tous les 1-2 jours</p>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </div>
-  );
-};
-
-// ============================================
-// COMPOSANT : Statistiques et Faits
-// ============================================
-const StatistiquesFaits = () => {
-  const stats = [
-    { label: 'Pièces dans un mouvement complexe', value: '~300', icon: Cog, couleur: 'blue' },
-    { label: 'Battements par jour', value: '691\'200', icon: Clock, couleur: 'green' },
-    { label: 'Précision typique', value: '±5-30 sec/jour', icon: Target, couleur: 'amber' },
-    { label: 'Réserve de marche', value: '36-72h', icon: Battery, couleur: 'purple' },
-    { label: 'Fréquence standard', value: '4 Hz', icon: Zap, couleur: 'red' },
-    { label: 'Alternances/heure', value: '28\'800', icon: TrendingUp, couleur: 'cyan' },
-  ];
-
-  return (
-    <div className="bg-gradient-to-br from-slate-900 to-blue-900 rounded-2xl p-8 border-2 border-blue-700 shadow-2xl">
-      <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-        <Award className="w-8 h-8 text-yellow-400" />
-        Statistiques et Faits Fascinants
-      </h2>
-
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        {stats.map((stat, idx) => {
-          const Icon = stat.icon;
-          const couleurs = {
-            blue: 'from-blue-500 to-blue-600 border-blue-400',
-            green: 'from-green-500 to-green-600 border-green-400',
-            amber: 'from-amber-500 to-amber-600 border-amber-400',
-            purple: 'from-purple-500 to-purple-600 border-purple-400',
-            red: 'from-red-500 to-red-600 border-red-400',
-            cyan: 'from-cyan-500 to-cyan-600 border-cyan-400',
-          };
-
-          return (
-            <motion.div
-              key={idx}
-              className={`bg-gradient-to-br ${couleurs[stat.couleur as keyof typeof couleurs]} rounded-xl p-6 border-2 shadow-lg`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1 }}
-              whileHover={{ scale: 1.05, y: -5 }}
-            >
-              <Icon className="w-10 h-10 text-white mb-3" />
-              <p className="text-white/80 text-sm mb-2">{stat.label}</p>
-              <p className="text-white text-3xl font-bold">{stat.value}</p>
-            </motion.div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
-// ============================================
-// COMPOSANT PRINCIPAL D'EXPORT
-// ============================================
-export default function MontreMecaniqueComplete() {
-  const [activeTab, setActiveTab] = useState('introduction');
-  const [globalAnimation, setGlobalAnimation] = useState(true);
-  const [progression, setProgression] = useState({
-    introduction: true,
-    organes: false,
-    animation: false,
-    echappement: false,
-    schema: false,
-    comparaison: false,
-    statistiques: false,
-    quiz: false
-  });
-  
-  // Mettre à jour la progression lors du changement d'onglet
-  useEffect(() => {
-    setProgression(prev => ({
-      ...prev,
-      [activeTab]: true
-    }));
-  }, [activeTab]);
-
-  // Sauvegarder la progression dans localStorage
-  useEffect(() => {
-    localStorage.setItem('montreMecaniqueProgression', JSON.stringify(progression));
-  }, [progression]);
-
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 py-12 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* En-tête avec barre de progression */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white text-center mb-6">
-            Introduction aux Montres Mécaniques
-          </h1>
-          
-          <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-4">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-slate-300 font-medium">Votre progression</span>
-              <span className="text-slate-400 text-sm">
-                {Object.values(progression).filter(Boolean).length}/{Object.keys(progression).length} modules complétés
-              </span>
-            </div>
-            <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
-              <div 
-                className="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-full transition-all duration-500"
-                style={{ 
-                  width: `${(Object.values(progression).filter(Boolean).length / Object.keys(progression).length) * 100}%` 
-                }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation par onglets */}
-        <NavigationTabs activeTab={activeTab} setActiveTab={setActiveTab} progression={progression} />
-        
-        {/* Contrôle global d'animation */}
-        <div className="flex justify-end mb-6">
-          <button
-            onClick={() => setGlobalAnimation(!globalAnimation)}
-            className={`px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 shadow-2xl ${
-              globalAnimation 
-                ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700' 
-                : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700'
-            } text-white`}
-          >
-            {globalAnimation ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
-            <span>{globalAnimation ? 'Pause Globale' : 'Play Global'}</span>
-          </button>
-        </div>
-
-        {/* Contenu basé sur l'onglet sélectionné */}
-        <div className="space-y-12">
-          {activeTab === 'introduction' && <IntroductionMontre />}
-          {activeTab === 'organes' && <SixOrganesEssentiels />}
-          {activeTab === 'animation' && <AnimationMontreComplete />}
-          {activeTab === 'comparaison' && <ComparaisonMontres />}
-          {activeTab === 'statistiques' && <StatistiquesFaits />}
-          {activeTab === 'quiz' && <QuizInteractif />}
-        </div>
-
-        {/* Navigation entre modules */}
-        <div className="flex justify-between items-center mt-12">
-          <button
-            onClick={() => {
-              const tabs = ['introduction', 'organes', 'animation', 'echappement', 'schema', 'comparaison', 'statistiques', 'quiz'];
-              const currentIndex = tabs.indexOf(activeTab);
-              if (currentIndex > 0) {
-                setActiveTab(tabs[currentIndex - 1]);
-              }
-            }}
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
-              activeTab === 'introduction' 
-                ? 'bg-slate-800/50 text-slate-500 cursor-not-allowed' 
-                : 'bg-slate-700 hover:bg-slate-600 text-white'
-            }`}
-            disabled={activeTab === 'introduction'}
-          >
-            <ChevronLeft className="w-5 h-5" />
-            Précédent
-          </button>
-          
-          <button
-            onClick={() => {
-              const tabs = ['introduction', 'organes', 'animation', 'echappement', 'schema', 'comparaison', 'statistiques', 'quiz'];
-              const currentIndex = tabs.indexOf(activeTab);
-              if (currentIndex < tabs.length - 1) {
-                setActiveTab(tabs[currentIndex + 1]);
-              }
-            }}
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
-              activeTab === 'quiz' 
-                ? 'bg-slate-800/50 text-slate-500 cursor-not-allowed' 
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
-            }`}
-            disabled={activeTab === 'quiz'}
-          >
-            Suivant
-            <ArrowRight className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Footer */}
-        <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-8 border-2 border-slate-700 text-center mt-12">
-          <p className="text-slate-300 text-lg mb-4">
-            Cette visualisation interactive est basée sur l'excellent article de <strong className="text-blue-400">Bartosz Ciechanowski</strong>
-          </p>
-          <a 
-            href="https://ciechanow.ski/mechanical-watch/" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all"
-          >
-            <BookOpen className="w-5 h-5" />
-            Lire l'article original
-            <ArrowRight className="w-5 h-5" />
-          </a>
-          
-          <p className="text-slate-500 text-sm mt-6">
-            © 2025 - Composant React éducatif sur les montres mécaniques
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
+              <p className="text-slate-200"><strong>Durabilité</strong> - Peut
