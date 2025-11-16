@@ -1,150 +1,383 @@
+// app/pratique/certifications/page.tsx
 "use client";
+
+import { useState, useEffect, createContext, useContext } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, Moon, Sun, Trophy, Clock, Award, Users, Target } from "lucide-react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { useState } from "react";
 
+// Types
+type Theme = "light" | "dark";
+
+// Contexte Thème
+const ThemeContext = createContext<{ theme: Theme; toggleTheme: () => void } | undefined>(undefined);
+
+// Données
+const certificationsData = [
+  {
+    id: "afp",
+    title: "Attestation Fédérale de Formation (AFP)",
+    duration: "2 ans",
+    level: "Niveau initial",
+    description: "Première marche du parcours horloger, l'AFP fournit les fondamentaux techniques et théoriques du métier.",
+    skills: ["Base du démontage/remontage", "Connaissance des pièces", "Techniques d'assemblage basique", "Respect des normes de qualité"],
+    stats: { completion: 85, employability: 90 },
+    color: "blue",
+    image: "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?w=400"
+  },
+  {
+    id: "cfc",
+    title: "Certificat Fédéral de Capacité (CFC)",
+    duration: "3-4 ans",
+    level: "Niveau professionnel",
+    description: "Le diplôme de référence pour devenir horloger qualifié, combinant théorie et pratique en entreprise.",
+    skills: ["Réparation complète de mouvements", "Régulation chronométrique", "Enrichissement de boîtes", "Garantie et contrôle qualité"],
+    stats: { completion: 78, employability: 95 },
+    color: "gold",
+    image: "https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?w=400"
+  },
+  {
+    id: "wostep",
+    title: "WOSTEP Programme",
+    duration: "1-2 ans (post-CFC)",
+    level: "Spécialisation",
+    description: "Formation intensive reconnue par les grandes manufactures horlogères suisses et internationales.",
+    skills: ["Complications horlogères", "Microtechniques avancées", "Restauration de pièces anciennes", "Innovation technologique"],
+    stats: { completion: 92, employability: 98 },
+    color: "purple",
+    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400"
+  },
+  {
+    id: "master",
+    title: "Brevet Fédéral & Maître Horloger",
+    duration: "2-3 ans (post-CFC)",
+    level: "Expertise",
+    description: "Diplôme de maîtrise pour accéder aux postes de responsable d'atelier ou de recherche.",
+    skills: ["Gestion d'équipe", "Recherche et développement", "Conception de mouvements", "Stratégie d'entreprise"],
+    stats: { completion: 70, employability: 100 },
+    color: "green",
+    image: "https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=400"
+  }
+];
+
+// Sous-composants
+function ThemeToggle() {
+  const { theme, toggleTheme } = useContext(ThemeContext)!;
+  
+  return (
+    <motion.button
+      onClick={toggleTheme}
+      className={`p-3 rounded-xl border backdrop-blur-sm transition-all ${
+        theme === "dark"
+          ? "bg-black/40 border-amber-400/20 text-amber-400 hover:border-amber-400/40"
+          : "bg-white/60 border-blue-600/20 text-blue-600 hover:border-blue-600/40"
+      }`}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
+      aria-label="Basculer le thème"
+    >
+      <AnimatePresence mode="wait">
+        {theme === "dark" ? (
+          <Sun key="sun" className="w-6 h-6" />
+        ) : (
+          <Moon key="moon" className="w-6 h-6" />
+        )}
+      </AnimatePresence>
+    </motion.button>
+  );
+}
+
+function CertificationCard({ cert }: { cert: typeof certificationsData[0] }) {
+  const { theme } = useContext(ThemeContext)!;
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className={`rounded-2xl overflow-hidden border transition-all hover:shadow-2xl ${
+        theme === "dark"
+          ? "bg-black/40 border-amber-400/20 hover:border-amber-400/40"
+          : "bg-white/60 border-blue-600/20 hover:border-blue-600/40"
+      }`}
+    >
+      <div className="relative h-48 overflow-hidden">
+        <img
+          src={cert.image}
+          alt={cert.title}
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+          loading="lazy"
+        />
+        <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold ${
+          theme === "dark" ? "bg-amber-400 text-black" : "bg-blue-600 text-white"
+        }`}>
+          {cert.level}
+        </div>
+      </div>
+      
+      <div className="p-6">
+        <h3 className={`text-xl font-bold mb-2 ${theme === "dark" ? "text-amber-400" : "text-blue-700"}`}>
+          {cert.title}
+        </h3>
+        <p className={`mb-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+          {cert.description}
+        </p>
+        
+        <div className="mb-4">
+          <div className={`text-sm font-semibold mb-2 flex items-center gap-2 ${
+            theme === "dark" ? "text-amber-400" : "text-blue-600"
+          }`}>
+            <Clock className="w-4 h-4" />
+            Durée : {cert.duration}
+          </div>
+        </div>
+
+        <div>
+          <h4 className={`text-sm font-semibold mb-2 ${theme === "dark" ? "text-amber-400" : "text-blue-600"}`}>
+            Compétences acquises :
+          </h4>
+          <ul className="space-y-1">
+            {cert.skills.map((skill, i) => (
+              <li key={i} className={`flex items-start gap-2 text-sm ${
+                theme === "dark" ? "text-gray-400" : "text-gray-600"
+              }`}>
+                <Trophy className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-500" />
+                {skill}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mt-4 pt-4 border-t border-gray-700 flex justify-between">
+          <div className="text-center">
+            <div className="text-lg font-bold text-green-500">{cert.stats.completion}%</div>
+            <div className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>Réussite</div>
+          </div>
+          <div className="text-center">
+            <div className="text-lg font-bold text-blue-500">{cert.stats.employability}%</div>
+            <div className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>Employabilité</div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function Timeline({ steps }: { steps: { year: string; title: string; description: string }[] }) {
+  const { theme } = useContext(ThemeContext)!;
+  
+  return (
+    <div className="relative">
+      <div className={`absolute left-1/2 transform -translate-x-1/2 h-full w-1 ${
+        theme === "dark" ? "bg-amber-400/30" : "bg-blue-600/30"
+      }`} />
+      
+      {steps.map((step, index) => (
+        <motion.div
+          key={index}
+          className={`flex items-center mb-8 ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}
+          initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+        >
+          <div className={`flex-1 ${index % 2 === 0 ? "md:text-right md:pr-8" : "md:text-left md:pl-8"}`}>
+            <motion.div
+              className={`inline-block px-4 py-2 rounded-full text-sm font-bold mb-2 ${
+                theme === "dark" ? "bg-amber-400 text-black" : "bg-blue-600 text-white"
+              }`}
+              whileHover={{ scale: 1.05 }}
+            >
+              {step.year}
+            </motion.div>
+            <h3 className={`text-xl font-bold mb-1 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+              {step.title}
+            </h3>
+            <p className={`${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+              {step.description}
+            </p>
+          </div>
+          
+          <div className={`w-4 h-4 rounded-full z-10 ${
+            theme === "dark" ? "bg-amber-400" : "bg-blue-600"
+          }`} />
+          
+          <div className="flex-1" />
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+// Composant Principal
 export default function CertificationsPage() {
-  const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: number | null }>({
-    0: null,
-    1: null,
-    2: null,
-  });
+  const [theme, setTheme] = useState<Theme>("dark");
 
-  const questions = [
-    {
-      question: "Quelle est la durée typique de l'AFP en horlogerie ?",
-      options: ["1 an", "2 ans", "3 ans", "4 ans"],
-      correct: 1,
-    },
-    {
-      question: "Quel diplôme suit généralement l'AFP pour devenir horloger qualifié ?",
-      options: ["Bac Pro", "CFC", "Master", "WOSTEP"],
-      correct: 1,
-    },
-    {
-      question: "Que signifie WOSTEP ?",
-      options: [
-        "World Organization for Swiss Timepiece Experts",
-        "Watchmaking Schools Technical Exchange Program",
-        "Worldwide Official Swiss Training for Expert Professionals",
-        "Workshop for Swiss Technical Education Programs",
-      ],
-      correct: 1,
-    },
-  ];
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") as Theme;
+    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else {
+      setTheme(systemPrefersDark ? "dark" : "light");
+    }
+  }, []);
 
-  const handleAnswer = (questionIndex: number, answerIndex: number) => {
-    setQuizAnswers({ ...quizAnswers, [questionIndex]: answerIndex });
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === "dark" ? "light" : "dark");
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Bouton retour */}
-        <Link
-          href="/pratique"
-          className="inline-flex items-center gap-2 text-[#E2B44F] hover:text-white transition-colors mb-8"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          Retour
-        </Link>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      <div className={`min-h-screen ${
+        theme === "dark" 
+          ? "bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white" 
+          : "bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900"
+      } py-8 px-4 transition-colors duration-300`}>
+        
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <motion.div 
+            className="flex justify-between items-center mb-8"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Link
+              href="/pratique"
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all backdrop-blur-sm ${
+                theme === "dark"
+                  ? "text-amber-400 hover:text-amber-300 hover:bg-amber-400/10 border border-amber-400/20"
+                  : "text-blue-600 hover:text-blue-700 hover:bg-blue-600/10 border border-blue-600/20"
+              }`}
+            >
+              <ArrowLeft className="w-5 h-5" />
+              Retour
+            </Link>
+            <ThemeToggle />
+          </motion.div>
 
-        {/* Titre */}
-        <h1 className="text-4xl md:text-5xl font-bold text-[#E2B44F] mb-8 text-center">
-          Certifications Horlogères
-        </h1>
-
-        {/* Bloc vidéo */}
-        <section className="mb-12">
-          <div className="aspect-video w-full bg-black rounded-lg overflow-hidden shadow-lg">
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/kSBFPhmsBmU"
-              title="Certifications en horlogerie"
-              frameBorder="0"
-              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full"
-            ></iframe>
-          </div>
-        </section>
-
-        {/* Bloc texte pédagogique */}
-        <section className="mb-12 bg-[#1a1a1a] p-6 md:p-8 rounded-lg">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#E2B44F] mb-4">
-            Les Certifications en Horlogerie Suisse
-          </h2>
-          <div className="text-gray-300 leading-relaxed space-y-4">
-            <p>
-              Le parcours de formation en horlogerie suisse est structuré autour de plusieurs
-              certifications reconnues internationalement. L'<strong className="text-[#E2B44F]">AFP (Attestation Fédérale de Formation Professionnelle)</strong> constitue
-              la première étape, permettant d'acquérir les bases du métier en 2 ans.
+          {/* Hero */}
+          <motion.section 
+            className="text-center mb-16"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, type: "spring" }}
+          >
+            <h1 className={`text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent ${
+              theme === "dark"
+                ? "bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500"
+                : "bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700"
+            }`}>
+              Certifications Horlogères
+            </h1>
+            <p className={`text-lg md:text-xl max-w-3xl mx-auto ${
+              theme === "dark" ? "text-gray-300" : "text-gray-600"
+            }`}>
+              Maîtrisez les étapes de la formation professionnelle horlogère suisse et forgez votre excellence technique.
             </p>
-            <p>
-              Le <strong className="text-[#E2B44F]">CFC (Certificat Fédéral de Capacité)</strong> est
-              le diplôme standard pour devenir horloger qualifié. Cette formation de 3 à 4 ans
-              combine apprentissage pratique en entreprise et cours théoriques en école professionnelle.
-            </p>
-            <p>
-              Pour les professionnels souhaitant se spécialiser, le <strong className="text-[#E2B44F]">WOSTEP</strong> (Watchmaking
-              Schools Technical Exchange Program) offre une formation intensive reconnue par les plus
-              grandes manufactures horlogères. D'autres certifications comme le Brevet Fédéral ou
-              le diplôme de maître horloger permettent d'accéder à des postes à responsabilité.
-            </p>
-          </div>
-        </section>
+          </motion.section>
 
-        {/* Bloc mini-quiz */}
-        <section className="bg-[#1a1a1a] p-6 md:p-8 rounded-lg">
-          <h2 className="text-2xl md:text-3xl font-bold text-[#E2B44F] mb-6">
-            Mini-Quiz : Testez vos connaissances
-          </h2>
-          <div className="space-y-6">
-            {questions.map((q, qIndex) => (
-              <div key={qIndex} className="bg-[#0a0a0a] p-4 md:p-6 rounded-lg">
-                <p className="text-white font-semibold mb-4">
-                  {qIndex + 1}. {q.question}
-                </p>
-                <div className="space-y-2">
-                  {q.options.map((option, oIndex) => {
-                    const isSelected = quizAnswers[qIndex] === oIndex;
-                    const isCorrect = oIndex === q.correct;
-                    const showResult = quizAnswers[qIndex] !== null;
+          {/* Video */}
+          <motion.section 
+            className="mb-16"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className={`aspect-video w-full rounded-2xl overflow-hidden shadow-2xl border ${
+              theme === "dark" ? "border-amber-400/20" : "border-blue-600/20"
+            }`}>
+              <iframe
+                src="https://www.youtube.com/embed/kSBFPhmsBmU"
+                title="Certifications en horlogerie"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              />
+            </div>
+          </motion.section>
 
-                    let buttonClass =
-                      "w-full text-left p-3 rounded-lg transition-all border ";
+          {/* Timeline */}
+          <motion.section className="mb-16">
+            <h2 className={`text-3xl md:text-4xl font-bold text-center mb-12 ${
+              theme === "dark" ? "text-amber-400" : "text-blue-700"
+            }`}>
+              Votre Parcours de Formation
+            </h2>
+            <Timeline steps={[
+              { year: "Année 1-2", title: "AFP", description: "Bases fondamentales du métier" },
+              { year: "Année 3-6", title: "CFC", description: "Qualification professionnelle complète" },
+              { year: "Année 7-8", title: "Spécialisation", description: "WOSTEP ou Brevet Fédéral" },
+              { year: "Année 9+", title: "Expertise", description: "Maîtrise et leadership" }
+            ]} />
+          </motion.section>
 
-                    if (showResult) {
-                      if (isCorrect) {
-                        buttonClass += "bg-[#E2B44F] border-[#E2B44F] text-black font-semibold";
-                      } else if (isSelected && !isCorrect) {
-                        buttonClass += "bg-red-900/30 border-red-500 text-gray-300";
-                      } else {
-                        buttonClass += "bg-[#0a0a0a] border-gray-700 text-gray-400";
-                      }
-                    } else {
-                      buttonClass +=
-                        "bg-[#0a0a0a] border-gray-700 text-gray-300 hover:border-[#E2B44F] hover:text-white";
-                    }
+          {/* Certifications Grid */}
+          <motion.section className="mb-16">
+            <h2 className={`text-3xl md:text-4xl font-bold text-center mb-12 ${
+              theme === "dark" ? "text-amber-400" : "text-blue-700"
+            }`}>
+              Les Certifications Détaillées
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              {certificationsData.map((cert, index) => (
+                <CertificationCard key={cert.id} cert={cert} />
+              ))}
+            </div>
+          </motion.section>
 
-                    return (
-                      <button
-                        key={oIndex}
-                        onClick={() => handleAnswer(qIndex, oIndex)}
-                        className={buttonClass}
-                        disabled={showResult}
-                      >
-                        {option}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+          {/* Statistics */}
+          <motion.section 
+            className={`rounded-2xl p-8 md:p-12 border backdrop-blur-sm ${
+              theme === "dark" ? "bg-gray-900/50 border-amber-400/20" : "bg-white/70 border-blue-600/20"
+            }`}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className={`text-3xl font-bold text-center mb-8 ${
+              theme === "dark" ? "text-amber-400" : "text-blue-700"
+            }`}>
+              Pourquoi Choisir cette Formation ?
+            </h2>
+            <div className="grid md:grid-cols-4 gap-6 text-center">
+              {[
+                { icon: Trophy, value: "95%", label: "Taux d'emploi" },
+                { icon: Clock, value: "3-4", label: "Années moyennes" },
+                { icon: Award, value: "4", label: "Niveaux de certification" },
+                { icon: Users, value: "500+", label: "Élèves formés/an" }
+              ].map((stat, i) => (
+                <motion.div
+                  key={i}
+                  className={`p-6 rounded-xl border transition-all ${
+                    theme === "dark"
+                      ? "bg-black/40 border-amber-400/20 hover:border-amber-400/40"
+                      : "bg-white/60 border-blue-600/20 hover:border-blue-600/40"
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <stat.icon className={`w-10 h-10 mx-auto mb-3 ${
+                    theme === "dark" ? "text-amber-400" : "text-blue-600"
+                  }`} />
+                  <div className="text-2xl font-bold mb-1">{stat.value}</div>
+                  <div className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>{stat.label}</div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.section>
+        </div>
       </div>
-    </div>
+    </ThemeContext.Provider>
   );
 }
