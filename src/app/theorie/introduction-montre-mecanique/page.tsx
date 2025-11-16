@@ -1,7 +1,13 @@
+'use client';
+import { MontreProvider } from '@/components/montre/MontreMecaniqueProvider';
 import MontreMecaniqueComplete from '@/components/montre/MontreMecaniqueComplete';
 
 export default function IntroductionMontreMecaniquePage() {
-  return <MontreMecaniqueComplete />;
+  return (
+    <MontreProvider>
+      <MontreMecaniqueComplete />
+    </MontreProvider>
+  );
 }
 
 export const metadata = {
