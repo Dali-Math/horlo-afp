@@ -3,7 +3,11 @@
 
 import { useState, useEffect, createContext, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Moon, Sun, Wrench, Eye, Brain, Heart, Trophy, Clock, Award, Users, Target, CheckCircle, Zap, ShoppingCart, BookOpen, HelpCircle, UserCheck, Video, Tools, TrendingUp, Shield, Info } from "lucide-react";
+import {
+  ArrowLeft, Moon, Sun, Wrench, Eye, Brain, Heart, Trophy, Clock, Award, Users,
+  Target, CheckCircle, Zap, ShoppingCart, BookOpen, HelpCircle, UserCheck,
+  Video, TrendingUp, Shield, Info
+} from "lucide-react";
 import Link from "next/link";
 
 // Types
