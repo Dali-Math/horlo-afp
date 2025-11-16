@@ -6,7 +6,7 @@ import {
   Clock, Gauge, Zap, Settings2, ChevronLeft, BookOpen, Cog, RotateCw, Book,
   Building2, Watch, Cpu, Wrench, Boxes, Gem, Heart, ChevronRight,
   ExternalLink, Menu, X, ArrowUp, Search
-} from 'lucide-react'; // 'Star' a été retiré de l'import
+} from 'lucide-react';
 
 // Types
 interface PageItem {
@@ -18,147 +18,23 @@ interface PageItem {
   readTime?: string;
 }
 
-// L'interface Testimonial et le tableau testimonials ont été supprimés
-
-// Données (les tags changent pour refléter le contenu, pas la difficulté)
+// Données (inchangées)
 const pagesFonctionnement: PageItem[] = [
-  {
-    slug: 'introduction-montre-mecanique',
-    titre: "Introduction à la montre mécanique",
-    description: "Les bases du fonctionnement, les grands organes et les principes essentiels.",
-    icon: <Clock className="w-7 h-7 text-blue-600 dark:text-blue-400" />,
-    tag: 'fondamental',
-    readTime: '15 min'
-  },
-  {
-    slug: 'barillet-ressort-moteur',
-    titre: "Le Barillet et le Ressort Moteur",
-    description: "Le cœur de la montre : source d'énergie, réserve de marche et types de ressorts.",
-    icon: <Gauge className="w-7 h-7 text-yellow-600 dark:text-yellow-300" />,
-    tag: 'fondamental',
-    readTime: '20 min'
-  },
-  {
-    slug: 'rouage',
-    titre: "Le Rouage (Train d'engrenages)",
-    description: "La transmission de l'énergie, les calculs de rapports et les différents types de roues.",
-    icon: <Cog className="w-7 h-7 text-blue-600 dark:text-blue-400" />,
-    tag: 'fondamental',
-    readTime: '25 min'
-  },
-  {
-    slug: 'echappement-ancre',
-    titre: "L'Échappement à Ancre Suisse",
-    description: "L'organe de distribution : son rôle, ses composants et le cycle des phases.",
-    icon: <Zap className="w-7 h-7 text-purple-600 dark:text-purple-300" />,
-    tag: 'avancé',
-    readTime: '30 min'
-  },
-  {
-    slug: 'balancier-spiral',
-    titre: "Le Balancier-Spiral",
-    description: "Le régulateur de temps : oscillations, réglage de la précision et matériaux modernes.",
-    icon: <Settings2 className="w-7 h-7 text-green-600 dark:text-green-300" />,
-    tag: 'avancé',
-    readTime: '35 min'
-  },
-  {
-    slug: 'remontage',
-    titre: "Le Remontage",
-    description: "Systèmes manuels et automatiques, la couronne et le mécanisme de remontage.",
-    icon: <RotateCw className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />,
-    tag: 'pratique',
-    readTime: '20 min'
-  },
+  { slug: 'introduction-montre-mecanique', titre: "Introduction à la montre mécanique", description: "Les bases du fonctionnement, les grands organes et les principes essentiels.", icon: <Clock className="w-7 h-7 text-blue-600 dark:text-blue-400" />, tag: 'fondamental', readTime: '15 min' },
+  { slug: 'barillet-ressort-moteur', titre: "Le Barillet et le Ressort Moteur", description: "Le cœur de la montre : source d'énergie, réserve de marche et types de ressorts.", icon: <Gauge className="w-7 h-7 text-yellow-600 dark:text-yellow-300" />, tag: 'fondamental', readTime: '20 min' },
+  { slug: 'rouage', titre: "Le Rouage (Train d'engrenages)", description: "La transmission de l'énergie, les calculs de rapports et les différents types de roues.", icon: <Cog className="w-7 h-7 text-blue-600 dark:text-blue-400" />, tag: 'fondamental', readTime: '25 min' },
+  { slug: 'echappement-ancre', titre: "L'Échappement à Ancre Suisse", description: "L'organe de distribution : son rôle, ses composants et le cycle des phases.", icon: <Zap className="w-7 h-7 text-purple-600 dark:text-purple-300" />, tag: 'avancé', readTime: '30 min' },
+  { slug: 'balancier-spiral', titre: "Le Balancier-Spiral", description: "Le régulateur de temps : oscillations, réglage de la précision et matériaux modernes.", icon: <Settings2 className="w-7 h-7 text-green-600 dark:text-green-300" />, tag: 'avancé', readTime: '35 min' },
+  { slug: 'remontage', titre: "Le Remontage", description: "Systèmes manuels et automatiques, la couronne et le mécanisme de remontage.", icon: <RotateCw className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />, tag: 'pratique', readTime: '20 min' },
 ];
-
-const pagesMateriaux: PageItem[] = [
-  {
-    slug: 'materiaux',
-    titre: "Matériaux en Horlogerie",
-    description: "Aciers, métaux précieux, titane, céramiques, silicium... Découvrez leurs usages.",
-    icon: <Gem className="w-7 h-7 text-yellow-500 dark:text-yellow-400" />,
-    tag: 'culture',
-    readTime: '40 min'
-  },
-];
-
-const pagesMouvement: PageItem[] = [
-  {
-    slug: 'mouvements',
-    titre: "Architecture du Mouvement",
-    description: "Platine, ponts, viroles, decoration : comprendre la structure d'un calibre.",
-    icon: <Boxes className="w-7 h-7 text-slate-600 dark:text-slate-300" />,
-    tag: 'fondamental',
-    readTime: '25 min'
-  },
-];
-
-const pagesHistoireCulture: PageItem[] = [
-  {
-    slug: 'histoire-horlogerie-suisse',
-    titre: "Histoire de l'Horlogerie Suisse",
-    description: "Des origines à nos jours : l'établissage, les crises, et l'essor du Made in Switzerland.",
-    icon: <Book className="w-7 h-7 text-amber-600 dark:text-amber-400" />,
-    tag: 'culture',
-    readTime: '30 min'
-  },
-];
-
-const pagesManufactures: PageItem[] = [
-  {
-    slug: 'manufactures',
-    titre: "Grandes Manufactures Suisses",
-    description: "Patek Philippe, Rolex, Audemars Piguet... Histoire, innovations et savoir-faire unique.",
-    icon: <Building2 className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />,
-    tag: 'culture',
-    readTime: '45 min'
-  },
-];
-
-const pagesComplications: PageItem[] = [
-  {
-    slug: 'complications',
-    titre: "Complications Horlogères",
-    description: "Chronographe, quantième perpétuel, tourbillon, sonnerie : explications des mécanismes.",
-    icon: <Watch className="w-7 h-7 text-purple-600 dark:text-purple-400" />,
-    tag: 'avancé',
-    readTime: '50 min'
-  },
-];
-
-const pagesTechnologies: PageItem[] = [
-  {
-    slug: 'technologies',
-    titre: "Technologies Modernes",
-    description: "Quartz, co-axial, montres connectées et les matériaux de demain.",
-    icon: <Cpu className="w-7 h-7 text-cyan-600 dark:text-cyan-400" />,
-    tag: 'avancé',
-    readTime: '35 min'
-  },
-];
-
-const pagesEntretien: PageItem[] = [
-  {
-    slug: 'entretien',
-    titre: "Entretien & Maintenance",
-    description: "Guide pratique : révision, diagnostic, huiles et outils de l'horloger.",
-    icon: <Wrench className="w-7 h-7 text-orange-600 dark:text-orange-400" />,
-    tag: 'pratique',
-    readTime: '40 min'
-  },
-];
-
-const pagesLecturePlan: PageItem[] = [
-  {
-    slug: 'lecture-de-plan',
-    titre: "Lecture de Plans Horlogers",
-    description: "Maîtriser les vues techniques, le cartouche, les tolérances et les normes (ISO/NIHS).",
-    icon: <BookOpen className="w-7 h-7 text-slate-700 dark:text-slate-200" />,
-    tag: 'pratique',
-    readTime: '30 min'
-  },
-];
+const pagesMateriaux: PageItem[] = [{ slug: 'materiaux', titre: "Matériaux en Horlogerie", description: "Aciers, métaux précieux, titane, céramiques, silicium... Découvrez leurs usages.", icon: <Gem className="w-7 h-7 text-yellow-500 dark:text-yellow-400" />, tag: 'culture', readTime: '40 min' }];
+const pagesMouvement: PageItem[] = [{ slug: 'mouvements', titre: "Architecture du Mouvement", description: "Platine, ponts, viroles, decoration : comprendre la structure d'un calibre.", icon: <Boxes className="w-7 h-7 text-slate-600 dark:text-slate-300" />, tag: 'fondamental', readTime: '25 min' }];
+const pagesHistoireCulture: PageItem[] = [{ slug: 'histoire-horlogerie-suisse', titre: "Histoire de l'Horlogerie Suisse", description: "Des origines à nos jours : l'établissage, les crises, et l'essor du Made in Switzerland.", icon: <Book className="w-7 h-7 text-amber-600 dark:text-amber-400" />, tag: 'culture', readTime: '30 min' }];
+const pagesManufactures: PageItem[] = [{ slug: 'manufactures', titre: "Grandes Manufactures Suisses", description: "Patek Philippe, Rolex, Audemars Piguet... Histoire, innovations et savoir-faire unique.", icon: <Building2 className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />, tag: 'culture', readTime: '45 min' }];
+const pagesComplications: PageItem[] = [{ slug: 'complications', titre: "Complications Horlogères", description: "Chronographe, quantième perpétuel, tourbillon, sonnerie : explications des mécanismes.", icon: <Watch className="w-7 h-7 text-purple-600 dark:text-purple-400" />, tag: 'avancé', readTime: '50 min' }];
+const pagesTechnologies: PageItem[] = [{ slug: 'technologies', titre: "Technologies Modernes", description: "Quartz, co-axial, montres connectées et les matériaux de demain.", icon: <Cpu className="w-7 h-7 text-cyan-600 dark:text-cyan-400" />, tag: 'avancé', readTime: '35 min' }];
+const pagesEntretien: PageItem[] = [{ slug: 'entretien', titre: "Entretien & Maintenance", description: "Guide pratique : révision, diagnostic, huiles et outils de l'horloger.", icon: <Wrench className="w-7 h-7 text-orange-600 dark:text-orange-400" />, tag: 'pratique', readTime: '40 min' }];
+const pagesLecturePlan: PageItem[] = [{ slug: 'lecture-de-plan', titre: "Lecture de Plans Horlogers", description: "Maîtriser les vues techniques, le cartouche, les tolérances et les normes (ISO/NIHS).", icon: <BookOpen className="w-7 h-7 text-slate-700 dark:text-slate-200" />, tag: 'pratique', readTime: '30 min' }];
 
 // Composant principal
 export default function TheoriePage() {
@@ -213,7 +89,6 @@ export default function TheoriePage() {
     }
   };
 
-  // Filtrage simple pour la recherche
   const filteredSections = allSections.map(section => ({
     ...section,
     pages: section.pages.filter(page =>
@@ -224,7 +99,7 @@ export default function TheoriePage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
-      {/* Header sticky */}
+      {/* Header */}
       <header className="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm shadow-sm border-b border-slate-200 dark:border-slate-700">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
@@ -235,10 +110,9 @@ export default function TheoriePage() {
               <ChevronLeft className="w-5 h-5 mr-1" />
               Accueil
             </Link>
-            
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+              className="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -266,8 +140,6 @@ export default function TheoriePage() {
             Explorez notre bibliothèque de connaissances pour approfondir votre compréhension de l'horlogerie suisse. 
             Des bases de la mécanique aux complications les plus complexes, trouvez ici l'information que vous cherchez.
           </p>
-          
-          {/* Barre de recherche */}
           <div className="max-w-xl mx-auto relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
             <input
@@ -291,7 +163,8 @@ export default function TheoriePage() {
                 <button
                   key={section.id}
                   onClick={() => scrollToSection(section.id)}
-                  className="text-left px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors"
+                  // AJOUT: Animation au clic
+                  className="text-left px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 transition-all duration-150 transform active:scale-95"
                 >
                   <span className="block text-sm font-medium text-slate-900 dark:text-white">
                     {section.title}
@@ -321,11 +194,12 @@ export default function TheoriePage() {
                 {section.pages.map((page) => (
                   <article
                     key={page.slug}
-                    className="group relative bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300"
+                    // AJOUT: Animation au clic
+                    className="group relative bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform active:scale-[0.98] active:shadow-inner cursor-pointer"
                   >
                     <Link href={`/theorie/${page.slug}`} className="block p-6">
                       <div className="flex items-start justify-between mb-4">
-                        <div className="p-2 bg-slate-100 dark:bg-slate-700 rounded-lg group-hover:scale-110 transition-transform">
+                        <div className="p-2 bg-slate-100 dark:bg-slate-700 rounded-lg group-hover:scale-110 transition-transform duration-200">
                           {page.icon}
                         </div>
                         <div className="flex items-center gap-2">
@@ -334,10 +208,11 @@ export default function TheoriePage() {
                               e.preventDefault();
                               toggleFavorite(page.slug);
                             }}
-                            className="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                            // AJOUT: Animation au clic pour le bouton favori
+                            className="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-150 transform active:scale-110"
                           >
                             <Heart 
-                              className={`w-5 h-5 transition-colors ${
+                              className={`w-5 h-5 transition-colors duration-200 ${
                                 favorites.includes(page.slug) 
                                   ? 'fill-red-500 text-red-500' 
                                   : 'text-slate-400 hover:text-red-500'
@@ -368,7 +243,7 @@ export default function TheoriePage() {
                             </span>
                           )}
                         </div>
-                        <ChevronRight className="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition-transform" />
+                        <ChevronRight className="w-5 h-5 text-slate-400 group-hover:translate-x-1 transition-transform duration-200" />
                       </div>
                     </Link>
                   </article>
@@ -395,14 +270,16 @@ export default function TheoriePage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link 
                 href="/outils"
-                className="inline-flex items-center justify-center px-6 py-3 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-all shadow-md"
+                // AJOUT: Animation au clic
+                className="inline-flex items-center justify-center px-6 py-3 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-all duration-150 transform active:scale-95 shadow-md"
               >
                 <Cog className="w-5 h-5 mr-2" />
                 Outils & Calculatrices
               </Link>
               <Link 
                 href="/lexique"
-                className="inline-flex items-center justify-center px-6 py-3 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-md border border-slate-300 dark:border-slate-600"
+                // AJOUT: Animation au clic
+                className="inline-flex items-center justify-center px-6 py-3 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-150 transform active:scale-95 shadow-md border border-slate-300 dark:border-slate-600"
               >
                 <BookOpen className="w-5 h-5 mr-2" />
                 Lexique Horloger
@@ -431,7 +308,8 @@ export default function TheoriePage() {
                 <li key={section.id}>
                   <button
                     onClick={() => scrollToSection(section.id)}
-                    className="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    // AJOUT: Animation au clic
+                    className="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-150 transform active:scale-95"
                   >
                     {section.title}
                   </button>
@@ -446,7 +324,8 @@ export default function TheoriePage() {
       {showScrollTop && (
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-8 right-8 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all hover:scale-110 z-40"
+          // AJOUT: Animation au clic
+          className="fixed bottom-8 right-8 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all duration-150 transform active:scale-110 z-40"
           aria-label="Retour en haut"
         >
           <ArrowUp className="w-6 h-6" />
