@@ -5,28 +5,17 @@ import { ArrowLeft, BookOpen, Settings, Clock, Wrench, Target, Zap, Award, Chevr
 import { useState, useEffect } from "react";
 
 export default function ReglagePage() {
-  // État pour la section active dans la table des matières
   const [activeSection, setActiveSection] = useState<string>("introduction");
-  
-  // État pour le loader initial
   const [isLoading, setIsLoading] = useState(true);
-  
-  // État pour le simulateur de réglage
   const [simulatedOffset, setSimulatedOffset] = useState(0);
-  
-  // État pour les effets hover sur les outils
   const [hoveredTool, setHoveredTool] = useState<number | null>(null);
-  
-  // État pour les cartes expandables
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
 
-  // Effet pour masquer le loader après le montage
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
 
-  // Effet pour observer les sections et mettre à jour la table des matières
   useEffect(() => {
     const sections = document.querySelectorAll("section[id]");
     const observer = new IntersectionObserver(
@@ -44,23 +33,20 @@ export default function ReglagePage() {
     return () => observer.disconnect();
   }, []);
 
-  // Fonction de navigation fluide
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  // Fonction pour le simulateur de réglage
   const adjustRegulation = (direction: 'advance' | 'retard') => {
     setSimulatedOffset(prev => direction === 'advance' ? prev + 5 : prev - 5);
   };
 
-  // Structure principale du composant - le return DOIT être à l'intérieur de la fonction
   return (
-    <main className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-black text-white overflow-x-hidden">
-      {/* Loader animé avec overlay */}
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900 text-slate-900 dark:text-white overflow-x-hidden">
+      {/* Loader animé */}
       {isLoading && (
-        <div className="fixed inset-0 bg-black z-50 flex items-center justify-center transition-opacity duration-500">
+        <div className="fixed inset-0 bg-white dark:bg-black z-50 flex items-center justify-center transition-opacity duration-500">
           <div className="relative">
             <div className="w-24 h-24 rounded-full border-4 border-amber-400/20 border-t-amber-400 animate-spin"></div>
             <Clock className="w-12 h-12 text-amber-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
@@ -68,23 +54,23 @@ export default function ReglagePage() {
         </div>
       )}
 
-      {/* Navigation sticky avec indicateur de progression */}
-      <nav className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-amber-500/30">
+      {/* Navigation sticky */}
+      <nav className="sticky top-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b border-slate-200 dark:border-amber-500/30">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link
               href="/pratique"
-              className="inline-flex items-center gap-3 text-amber-400 hover:text-white transition-all duration-300 group"
+              className="inline-flex items-center gap-3 text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 transition-all duration-300 group"
             >
-              <div className="w-10 h-10 rounded-full bg-amber-400/10 flex items-center justify-center group-hover:bg-amber-400/20 transition-colors">
+              <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-400/10 flex items-center justify-center group-hover:bg-amber-200 dark:group-hover:bg-amber-400/20 transition-colors">
                 <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
               </div>
-              <span className="font-semibold">Retour</span>
+              <span className="font-semibold">Retour à la pratique</span>
             </Link>
-            <div className="hidden md:flex items-center gap-2 text-amber-400/60 text-sm">
+            <div className="hidden md:flex items-center gap-2 text-amber-600 dark:text-amber-400/60 text-sm">
               <div className="flex items-center gap-1">
                 {['introduction', 'principes', 'outils', 'techniques', 'conseils', 'glossaire'].map((section) => (
-                  <div key={section} className={`w-1.5 h-1.5 rounded-full ${activeSection === section ? 'bg-amber-400' : 'bg-amber-400/30'}`}></div>
+                  <div key={section} className={`w-1.5 h-1.5 rounded-full ${activeSection === section ? 'bg-amber-600 dark:bg-amber-400' : 'bg-amber-300 dark:bg-amber-400/30'}`}></div>
                 ))}
               </div>
             </div>
@@ -93,58 +79,58 @@ export default function ReglagePage() {
       </nav>
 
       <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
-        {/* Hero Section avec effet parallax */}
+        {/* Hero Section */}
         <header className="text-center mb-24 md:mb-32 relative">
           <div className="absolute inset-0 -z-10">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl"></div>
+            <div className="absolute top-0 right-0 w-96 h-96 bg-amber-400/10 dark:bg-amber-400/5 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange-500/10 dark:bg-orange-500/5 rounded-full blur-3xl"></div>
           </div>
-          <h1 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 bg-clip-text text-transparent mb-6">
+          <h1 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-amber-600 via-amber-500 to-amber-400 dark:from-amber-400 dark:via-amber-500 dark:to-amber-600 bg-clip-text text-transparent mb-6">
             Réglage & Précision
           </h1>
-          <p className="text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
+          <p className="text-2xl text-slate-600 dark:text-slate-300 max-w-4xl mx-auto leading-relaxed mb-8">
             Maîtrisez l'art subtil de la régulation horlogère et comprenez les secrets de la précision mécanique
           </p>
-          <div className="flex justify-center gap-6 text-amber-400/70">
+          <div className="flex justify-center gap-6 text-amber-600 dark:text-amber-400/70">
             <Gauge className="w-12 h-12 animate-pulse" />
             <Activity className="w-12 h-12 animate-pulse" />
             <RotateCw className="w-12 h-12 animate-pulse" />
           </div>
         </header>
 
-        {/* Table des matières interactive avec effet 3D */}
-        <aside className="mb-20 bg-neutral-800/40 backdrop-blur-xl rounded-3xl p-8 border border-amber-500/30 shadow-2xl">
-          <h2 className="text-3xl font-bold text-amber-400 mb-8 flex items-center gap-4 justify-center">
+        {/* Table des matières interactive */}
+        <aside className="mb-20 bg-white/60 dark:bg-neutral-800/40 backdrop-blur-xl rounded-3xl p-8 border border-slate-200 dark:border-amber-500/30 shadow-2xl">
+          <h2 className="text-3xl font-bold text-amber-600 dark:text-amber-400 mb-8 flex items-center gap-4 justify-center">
             <BookOpen className="w-8 h-8" />
             Table des matières interactive
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { id: "introduction", label: "Introduction vidéo", icon: "📺", color: "from-amber-400 to-amber-600" },
-              { id: "principes", label: "Principes fondamentaux", icon: "⚙️", color: "from-orange-400 to-orange-600" },
-              { id: "outils", label: "Outils du réglage", icon: "🛠️", color: "from-yellow-400 to-yellow-600" },
-              { id: "techniques", label: "Techniques avancées", icon: "🎯", color: "from-red-400 to-red-600" },
-              { id: "conseils", label: "Conseils pratiques", icon: "💡", color: "from-green-400 to-green-600" },
-              { id: "glossaire", label: "Glossaire technique", icon: "📚", color: "from-purple-400 to-purple-600" },
+              { id: "introduction", label: "Introduction vidéo", icon: "📺", color: "from-amber-600 to-amber-400 dark:from-amber-400 dark:to-amber-600" },
+              { id: "principes", label: "Principes fondamentaux", icon: "⚙️", color: "from-orange-600 to-orange-400 dark:from-orange-400 dark:to-orange-600" },
+              { id: "outils", label: "Outils du réglage", icon: "🛠️", color: "from-yellow-600 to-yellow-400 dark:from-yellow-400 dark:to-yellow-600" },
+              { id: "techniques", label: "Techniques avancées", icon: "🎯", color: "from-red-600 to-red-400 dark:from-red-400 dark:to-red-600" },
+              { id: "conseils", label: "Conseils pratiques", icon: "💡", color: "from-green-600 to-green-400 dark:from-green-400 dark:to-green-600" },
+              { id: "glossaire", label: "Glossaire technique", icon: "📚", color: "from-purple-600 to-purple-400 dark:from-purple-400 dark:to-purple-600" },
             ].map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`group relative overflow-hidden bg-gradient-to-br ${activeSection === item.id ? item.color : 'from-neutral-800 to-neutral-900'} 
-                  rounded-2xl p-6 border border-amber-500/20 hover:border-amber-500/50 transition-all duration-500 
+                className={`group relative overflow-hidden bg-gradient-to-br ${activeSection === item.id ? item.color : 'from-white to-slate-100 dark:from-neutral-800 dark:to-neutral-900'} 
+                  rounded-2xl p-6 border border-slate-200 dark:border-amber-500/20 hover:border-amber-500/50 transition-all duration-500 
                   ${activeSection === item.id ? 'scale-105 shadow-2xl' : 'hover:-translate-y-2 hover:shadow-xl'}`}
               >
                 <div className="flex items-center gap-4">
                   <div className={`w-16 h-16 rounded-xl flex items-center justify-center text-3xl transition-all duration-300 
-                    ${activeSection === item.id ? 'bg-white/20' : 'bg-white/5 group-hover:bg-white/10'}`}>
+                    ${activeSection === item.id ? 'bg-white/20' : 'bg-white/80 dark:bg-white/5 group-hover:bg-white/10'}`}>
                     {item.icon}
                   </div>
                   <div className="text-left">
-                    <h3 className={`text-lg font-bold transition-all ${activeSection === item.id ? 'text-black' : 'text-white group-hover:text-amber-300'}`}>
+                    <h3 className={`text-lg font-bold transition-all ${activeSection === item.id ? 'text-white' : 'text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-300'}`}>
                       {item.label}
                     </h3>
                     {activeSection === item.id && (
-                      <p className="text-sm text-black/70 mt-1">En cours de lecture</p>
+                      <p className="text-sm text-white/70 mt-1">En cours de lecture</p>
                     )}
                   </div>
                 </div>
@@ -154,23 +140,23 @@ export default function ReglagePage() {
         </aside>
 
         {/* Simulateur de réglage interactif */}
-        <section className="mb-24 bg-gradient-to-br from-amber-500/10 via-orange-500/10 to-red-500/10 rounded-3xl p-8 border border-amber-500/30">
-          <h2 className="text-3xl font-bold text-amber-400 mb-6 text-center">Simulateur de réglage</h2>
-          <div className="bg-black rounded-2xl p-8 border border-amber-500/40">
+        <section className="mb-24 bg-gradient-to-br from-amber-500/10 via-orange-500/10 to-red-500/10 dark:from-amber-500/5 dark:via-orange-500/5 dark:to-red-500/5 rounded-3xl p-8 border border-amber-500/30">
+          <h2 className="text-3xl font-bold text-amber-600 dark:text-amber-400 mb-6 text-center">Simulateur de réglage</h2>
+          <div className="bg-white dark:bg-black rounded-2xl p-8 border border-amber-500/40">
             <div className="flex items-center justify-between mb-8">
               <div className="text-center">
-                <p className="text-gray-400 text-sm mb-1">Déviation actuelle</p>
-                <p className={`text-4xl font-bold ${simulatedOffset > 0 ? 'text-red-400' : simulatedOffset < 0 ? 'text-green-400' : 'text-amber-400'}`}>
+                <p className="text-slate-600 dark:text-gray-400 text-sm mb-1">Déviation actuelle</p>
+                <p className={`text-4xl font-bold ${simulatedOffset > 0 ? 'text-red-600 dark:text-red-400' : simulatedOffset < 0 ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400'}`}>
                   {simulatedOffset > 0 ? '+' : ''}{simulatedOffset} s/j
                 </p>
               </div>
               <div className="text-center">
-                <Target className="w-16 h-16 text-amber-400 animate-pulse mx-auto" />
-                <p className="text-gray-400 text-sm mt-2">Objectif : ±0 s/j</p>
+                <Target className="w-16 h-16 text-amber-600 dark:text-amber-400 animate-pulse mx-auto" />
+                <p className="text-slate-600 dark:text-gray-400 text-sm mt-2">Objectif : ±0 s/j</p>
               </div>
               <div className="text-center">
-                <p className="text-gray-400 text-sm mb-1">Précision</p>
-                <p className="text-4xl font-bold text-amber-400">
+                <p className="text-slate-600 dark:text-gray-400 text-sm mb-1">Précision</p>
+                <p className="text-4xl font-bold text-amber-600 dark:text-amber-400">
                   {simulatedOffset === 0 ? '100%' : Math.max(0, 100 - Math.abs(simulatedOffset) * 5) + '%'}
                 </p>
               </div>
@@ -198,9 +184,9 @@ export default function ReglagePage() {
           </div>
         </section>
 
-        {/* Section Vidéo avec cadre premium */}
+        {/* Section Vidéo */}
         <section id="introduction" className="mb-24 scroll-mt-24">
-          <div className="relative bg-black rounded-3xl overflow-hidden shadow-2xl border border-amber-500/40 group">
+          <div className="relative bg-white dark:bg-black rounded-3xl overflow-hidden shadow-2xl border border-amber-500/40">
             <div className="relative" style={{ paddingBottom: "56.25%" }}>
               <iframe
                 className="absolute top-0 left-0 w-full h-full"
@@ -210,15 +196,15 @@ export default function ReglagePage() {
                 allowFullScreen
               ></iframe>
             </div>
-            <div className="bg-gradient-to-r from-neutral-900 to-neutral-800 p-8">
+            <div className="bg-gradient-to-r from-white to-slate-100 dark:from-neutral-900 dark:to-neutral-800 p-8">
               <div className="flex items-center gap-4 mb-3">
-                <PlayCircle className="w-8 h-8 text-amber-400 animate-pulse" />
-                <span className="text-2xl font-bold text-amber-400">Guide vidéo complet</span>
+                <PlayCircle className="w-8 h-8 text-amber-600 dark:text-amber-400 animate-pulse" />
+                <span className="text-2xl font-bold text-amber-600 dark:text-amber-400">Guide vidéo complet</span>
               </div>
-              <p className="text-gray-300 text-lg">
+              <p className="text-slate-700 dark:text-gray-300 text-lg">
                 Plongez dans les mécanismes subtiles du réglage de précision avec un maître horloger
               </p>
-              <div className="mt-4 flex flex-wrap items-center gap-6 text-amber-400/70">
+              <div className="mt-4 flex flex-wrap items-center gap-6 text-amber-600 dark:text-amber-400/70">
                 <span className="flex items-center gap-2"><Clock className="w-5 h-5" /> 15 minutes</span>
                 <span className="flex items-center gap-2"><Eye className="w-5 h-5" /> 12k vues</span>
                 <span className="flex items-center gap-2">🎧 Français</span>
@@ -228,9 +214,9 @@ export default function ReglagePage() {
           </div>
         </section>
 
-        {/* Principes Fondamentaux avec cards 3D */}
+        {/* Principes Fondamentaux */}
         <section id="principes" className="mb-24 scroll-mt-24">
-          <h2 className="text-4xl font-bold text-amber-400 mb-12 flex items-center gap-6 justify-center">
+          <h2 className="text-4xl font-bold text-amber-600 dark:text-amber-400 mb-12 flex items-center gap-6 justify-center">
             <Settings className="w-10 h-10" />
             Principes fondamentaux du réglage
           </h2>
@@ -243,7 +229,7 @@ export default function ReglagePage() {
                 content: "Cœur du régulateur, ce système oscille à une fréquence précise (2,5 à 5 Hz). Sa période détermine la marche de la montre.",
                 specs: "Fréquence : 28 800 alt/h (4 Hz)",
                 details: "Le spiral, en alliage Nivarox, résiste aux variations thermiques et magnétiques. Sa longueur active est la clé de la précision.",
-                color: "from-amber-400 to-amber-600"
+                color: "from-amber-600 to-amber-400 dark:from-amber-400 dark:to-amber-600"
               },
               {
                 icon: <Target className="w-10 h-10 text-black" />,
@@ -251,7 +237,7 @@ export default function ReglagePage() {
                 content: "Petit levier qui modifie la longueur active du spiral. Déplacement micrométrique pour ajustements fins.",
                 specs: "Précision : 1/4 tour ≈ 10s/j",
                 details: "Vers A (Avance) = raccourcit le spiral. Vers R (Retard) = allonge le spiral. Chaque clic est crucial.",
-                color: "from-orange-400 to-orange-600"
+                color: "from-orange-600 to-orange-400 dark:from-orange-400 dark:to-orange-600"
               },
               {
                 icon: <Activity className="w-10 h-10 text-black" />,
@@ -259,12 +245,12 @@ export default function ReglagePage() {
                 content: "Angle de rotation du balancier (270-320° idéal). Indique la santé du mouvement et la qualité du lubrifiant.",
                 specs: "Optimal : 280-300° horizontale",
                 details: "Amplitude faible = usure ou séchage. Variations de position doivent être < 30° pour un chronomètre.",
-                color: "from-red-400 to-red-600"
+                color: "from-red-600 to-red-400 dark:from-red-400 dark:to-red-600"
               }
             ].map((card, index) => (
               <div
                 key={index}
-                className="relative bg-gradient-to-br from-neutral-800/60 to-neutral-900/60 rounded-2xl p-8 border border-amber-500/20 hover:border-amber-500/50 transition-all duration-500 hover:-translate-y-4 hover:shadow-2xl"
+                className="relative bg-gradient-to-br from-white to-slate-100 dark:from-neutral-800/60 dark:to-neutral-900/60 rounded-2xl p-8 border border-slate-200 dark:border-amber-500/20 hover:border-amber-500/50 transition-all duration-500 hover:-translate-y-4 hover:shadow-2xl"
                 onMouseEnter={() => setHoveredTool(index)}
                 onMouseLeave={() => setHoveredTool(null)}
               >
@@ -272,17 +258,17 @@ export default function ReglagePage() {
                 <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${card.color} flex items-center justify-center mb-6 transition-transform ${hoveredTool === index ? 'rotate-12 scale-110' : ''}`}>
                   {card.icon}
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">{card.title}</h3>
-                <p className="text-gray-300 leading-relaxed mb-4">{card.content}</p>
-                <div className="text-sm text-amber-300 bg-amber-500/10 rounded-lg p-3 mb-3 font-semibold">
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{card.title}</h3>
+                <p className="text-slate-700 dark:text-gray-300 leading-relaxed mb-4">{card.content}</p>
+                <div className="text-sm text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-500/10 rounded-lg p-3 mb-3 font-semibold">
                   {card.specs}
                 </div>
                 <div className={`transition-all duration-500 ${expandedCard === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-                  <p className="text-gray-400 text-sm leading-relaxed">{card.details}</p>
+                  <p className="text-slate-600 dark:text-gray-400 text-sm leading-relaxed">{card.details}</p>
                 </div>
                 <button
                   onClick={() => setExpandedCard(expandedCard === index ? null : index)}
-                  className="mt-4 text-amber-400 hover:text-amber-300 text-sm font-semibold"
+                  className="mt-4 text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 text-sm font-semibold"
                 >
                   {expandedCard === index ? '▲ Moins de détails' : '▼ Plus de détails'}
                 </button>
@@ -293,7 +279,7 @@ export default function ReglagePage() {
 
         {/* Outils du réglage */}
         <section id="outils" className="mb-24 scroll-mt-24">
-          <h2 className="text-4xl font-bold text-amber-400 mb-12 flex items-center gap-6 justify-center">
+          <h2 className="text-4xl font-bold text-amber-600 dark:text-amber-400 mb-12 flex items-center gap-6 justify-center">
             <Wrench className="w-10 h-10" />
             Outils essentiels du réglage
           </h2>
@@ -325,18 +311,18 @@ export default function ReglagePage() {
                 price: "200€ - 600€"
               }
             ].map((tool, index) => (
-              <div key={index} className="bg-gradient-to-br from-neutral-800/60 to-neutral-900/60 rounded-2xl p-8 border border-amber-500/20 hover:border-amber-500/50 transition-all duration-500 hover:translate-x-4 hover:shadow-2xl">
+              <div key={index} className="bg-gradient-to-br from-white to-slate-100 dark:from-neutral-800/60 dark:to-neutral-900/60 rounded-2xl p-8 border border-slate-200 dark:border-amber-500/20 hover:border-amber-500/50 transition-all duration-500 hover:translate-x-4 hover:shadow-2xl">
                 <div className="flex items-start justify-between mb-4">
-                  <h3 className="text-2xl font-bold text-amber-400">{tool.name}</h3>
-                  <span className="text-sm text-amber-300 font-semibold bg-amber-500/10 px-3 py-1 rounded-full">
+                  <h3 className="text-2xl font-bold text-amber-600 dark:text-amber-400">{tool.name}</h3>
+                  <span className="text-sm text-amber-700 dark:text-amber-300 font-semibold bg-amber-100 dark:bg-amber-500/10 px-3 py-1 rounded-full">
                     {tool.price}
                   </span>
                 </div>
-                <p className="text-gray-300 leading-relaxed mb-6">{tool.description}</p>
+                <p className="text-slate-700 dark:text-gray-300 leading-relaxed mb-6">{tool.description}</p>
                 <div className="grid grid-cols-2 gap-3">
                   {tool.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-sm text-gray-400">
-                      <div className="w-1.5 h-1.5 rounded-full bg-amber-400"></div>
+                    <div key={idx} className="flex items-center gap-2 text-sm text-slate-600 dark:text-gray-400">
+                      <div className="w-1.5 h-1.5 rounded-full bg-amber-600 dark:bg-amber-400"></div>
                       {feature}
                     </div>
                   ))}
@@ -348,12 +334,12 @@ export default function ReglagePage() {
 
         {/* Timeline des techniques */}
         <section id="techniques" className="mb-24 scroll-mt-24">
-          <h2 className="text-4xl font-bold text-amber-400 mb-12 text-center">
+          <h2 className="text-4xl font-bold text-amber-600 dark:text-amber-400 mb-12 text-center">
             Processus de réglage chronométrique
           </h2>
           
           <div className="relative">
-            <div className="absolute left-1/2 -translate-x-1/2 w-1 h-full bg-gradient-to-b from-amber-400 to-orange-600"></div>
+            <div className="absolute left-1/2 -translate-x-1/2 w-1 h-full bg-gradient-to-b from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400"></div>
             {[
               { step: "Diagnostic initial", desc: "Mesure sur 24h en 3 positions", time: "Jour 1" },
               { step: "Analyse des résultats", desc: "Identification des positions problématiques", time: "Jour 1" },
@@ -364,13 +350,13 @@ export default function ReglagePage() {
             ].map((item, index) => (
               <div key={index} className={`relative flex items-center mb-12 ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
                 <div className={`w-5/12 ${index % 2 === 0 ? 'text-right pr-8' : 'text-left pl-8'}`}>
-                  <div className="bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-2xl p-6 border border-amber-500/20 hover:border-amber-500/50 transition-all duration-300 hover:shadow-xl">
-                    <h3 className="text-xl font-bold text-amber-400 mb-2">{item.step}</h3>
-                    <p className="text-gray-300">{item.desc}</p>
-                    <span className="text-sm text-amber-300 mt-2 block">{item.time}</span>
+                  <div className="bg-gradient-to-br from-white to-slate-100 dark:from-neutral-800 dark:to-neutral-900 rounded-2xl p-6 border border-slate-200 dark:border-amber-500/20 hover:border-amber-500/50 transition-all duration-300 hover:shadow-xl">
+                    <h3 className="text-xl font-bold text-amber-600 dark:text-amber-400 mb-2">{item.step}</h3>
+                    <p className="text-slate-700 dark:text-gray-300">{item.desc}</p>
+                    <span className="text-sm text-amber-700 dark:text-amber-300 mt-2 block">{item.time}</span>
                   </div>
                 </div>
-                <div className="absolute left-1/2 -translate-x-1/2 w-6 h-6 bg-amber-400 rounded-full border-4 border-neutral-900 shadow-lg"></div>
+                <div className="absolute left-1/2 -translate-x-1/2 w-6 h-6 bg-amber-600 dark:bg-amber-400 rounded-full border-4 border-white dark:border-neutral-900 shadow-lg"></div>
               </div>
             ))}
           </div>
@@ -378,11 +364,11 @@ export default function ReglagePage() {
 
         {/* Conseils pratiques avec accordéons */}
         <section id="conseils" className="mb-24 scroll-mt-24">
-          <h2 className="text-4xl font-bold text-amber-400 mb-12 text-center">
+          <h2 className="text-4xl font-bold text-amber-600 dark:text-amber-400 mb-12 text-center">
             Conseils pratiques d'horloger
           </h2>
           
-          <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-3xl p-8 border border-amber-500/30">
+          <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 dark:from-amber-500/5 dark:to-orange-500/5 rounded-3xl p-8 border border-amber-500/30">
             {[
               { icon: "🎯", title: "Gentillesse avant tout", content: "La raquette est un organe délicat. Utilisez toujours un tourne-raquette adapté et n'appliquez jamais de force. Un mouvement doux et précis vaut mieux qu'une correction brutale qui endommagerait le spiral." },
               { icon: "🌡️", title: "Environnement contrôlé", content: "Effectuez vos réglages à température constante (20°C ±2°C). Les variations thermiques modifient l'élasticité du spiral et faussent vos mesures. Évitez les courants d'air et la lumière directe du soleil." },
@@ -393,16 +379,16 @@ export default function ReglagePage() {
               <div key={index} className="mb-6 last:mb-0">
                 <button
                   onClick={() => setExpandedCard(expandedCard === index ? null : index)}
-                  className="w-full flex items-center gap-6 text-left p-6 bg-neutral-900/50 hover:bg-amber-500/10 rounded-2xl transition-all duration-300 hover:translate-x-4 border border-transparent hover:border-amber-500/30"
+                  className="w-full flex items-center gap-6 text-left p-6 bg-white dark:bg-neutral-900/50 hover:bg-amber-100 dark:hover:bg-amber-500/10 rounded-2xl transition-all duration-300 hover:translate-x-4 border border-transparent hover:border-amber-500/30"
                 >
                   <div className="text-4xl">{tip.icon}</div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-white">{tip.title}</h3>
-                    <div className={`text-gray-400 mt-2 transition-all duration-500 ${expandedCard === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">{tip.title}</h3>
+                    <div className={`text-slate-600 dark:text-gray-400 mt-2 transition-all duration-500 ${expandedCard === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
                       <p className="leading-relaxed">{tip.content}</p>
                     </div>
                   </div>
-                  <ChevronRight className={`w-7 h-7 text-amber-400 transition-transform duration-300 ${expandedCard === index ? 'rotate-90' : ''}`} />
+                  <ChevronRight className={`w-7 h-7 text-amber-600 dark:text-amber-400 transition-transform duration-300 ${expandedCard === index ? 'rotate-90' : ''}`} />
                 </button>
               </div>
             ))}
@@ -411,7 +397,7 @@ export default function ReglagePage() {
 
         {/* Glossaire */}
         <section id="glossaire" className="mb-24 scroll-mt-24">
-          <h2 className="text-4xl font-bold text-amber-400 mb-12 flex items-center gap-6 justify-center">
+          <h2 className="text-4xl font-bold text-amber-600 dark:text-amber-400 mb-12 flex items-center gap-6 justify-center">
             <Award className="w-10 h-10" />
             Glossaire technique
           </h2>
@@ -429,15 +415,15 @@ export default function ReglagePage() {
               { term: "Amplitude", def: "Angle de rotation du balancier entre deux points extrêmes. Se mesure en degrés." },
               { term: "Raquette", def: "Levier d'ajustement de la longueur du spiral. Le plus petit déplacement change la marche." }
             ].map((item, index) => (
-              <div key={index} className="bg-gradient-to-br from-neutral-800/60 to-neutral-900/60 rounded-2xl p-6 border border-amber-500/20 hover:border-amber-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                <h3 className="text-xl font-bold text-amber-400 mb-3">{item.term}</h3>
-                <p className="text-gray-300 leading-relaxed text-sm">{item.def}</p>
+              <div key={index} className="bg-gradient-to-br from-white to-slate-100 dark:from-neutral-800/60 dark:to-neutral-900/60 rounded-2xl p-6 border border-slate-200 dark:border-amber-500/20 hover:border-amber-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                <h3 className="text-xl font-bold text-amber-600 dark:text-amber-400 mb-3">{item.term}</h3>
+                <p className="text-slate-700 dark:text-gray-300 text-sm leading-relaxed">{item.def}</p>
               </div>
             ))}
           </div>
         </section>
 
-        {/* CTA Final premium */}
+        {/* CTA Final */}
         <section className="relative text-center bg-gradient-to-br from-amber-600 via-orange-600 to-red-600 rounded-3xl p-16 border border-amber-500/50 overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-tl from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           <div className="relative z-10">
