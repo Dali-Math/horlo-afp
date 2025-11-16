@@ -1,8 +1,14 @@
 'use client';
 
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import Link from 'next/link';
-import { Clock, Gauge, Zap, Settings2, RotateCw, Book, Building2, Watch, Cpu, Wrench, Boxes, Gem, ChevronLeft, BookOpen } from 'lucide-react';
+import { 
+  Clock, Gauge, Zap, Settings2, RotateCw, Book, Building2, Watch, Cpu, Wrench, Boxes, Gem, ChevronLeft, BookOpen, Cog
+} from 'lucide-react';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TYPES (TypeScript strict)
+// ─────────────────────────────────────────────────────────────────────────────
 
 interface Card {
   slug: string;
@@ -13,8 +19,17 @@ interface Card {
   time?: string;
 }
 
-// Les données, corrigées et concentrées
-const sections = [
+interface Section {
+  id: string;
+  title: string;
+  cards: Card[];
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DONNÉES (Source unique de vérité)
+// ─────────────────────────────────────────────────────────────────────────────
+
+const sections: Section[] = [
   {
     id: 'fonctionnement',
     title: "⚙️ Les Fondamentaux Mécaniques",
@@ -74,7 +89,7 @@ const sections = [
     title: "🧱 L'Art des Matériaux",
     cards: [
       {
-        slug: '/theorie/materiaux', // LIEN CORRIGÉ
+        slug: '/theorie/materiaux',
         titre: "Matières d'Exception",
         description: "De l'acier au céramique en passant par l'or rouge : ce qui fait la noblesse d'une montre.",
         icon: <Gem className="w-7 h-7 text-yellow-500 dark:text-yellow-400" aria-hidden="true" />,
@@ -183,57 +198,87 @@ const sections = [
   }
 ];
 
-// Composant unique et simple
-function Card({ card }: { card: Card }) {
+// ─────────────────────────────────────────────────────────────────────────────
+// COMPOSANTS (Optimisés avec React.memo)
+// ─────────────────────────────────────────────────────────────────────────────
+
+const Card = memo(({ card }: { card: Card }) => {
   const baseUrl = '/theorie';
   const href = card.slug.startsWith('/') ? card.slug : `${baseUrl}/${card.slug}`;
 
   return (
     <Link
       href={href}
-      className="group relative flex flex-col bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="group relative flex flex-col bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
     >
+      {/* Tags */}
       {card.tags && (
         <div className="flex gap-2 mb-3">
           {card.tags.map(tag => (
-            <span key={tag} className="px-2 py-1 text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full">
+            <span key={tag} className="px-2 py-1 text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full transition-colors">
               #{tag}
             </span>
           ))}
         </div>
       )}
       
+      {/* Contenu principal */}
       <div className="flex items-start gap-4">
-        <div className="flex-shrink-0">{card.icon}</div>
-        <div>
-          <h3 className="text-lg font-medium text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
+        <div className="flex-shrink-0 p-2 bg-slate-50 dark:bg-slate-700/30 rounded-lg transition-colors group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20">
+          {card.icon}
+        </div>
+        <div className="flex-1">
+          <h3 className="text-lg font-medium text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
             {card.titre}
           </h3>
-          <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
+          <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">
             {card.description}
           </p>
         </div>
       </div>
 
+      {/* Méta */}
       {card.time && (
-        <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center gap-1 text-xs text-slate-400">
+        <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
           <Clock className="w-3 h-3" aria-hidden="true" />
           <span>{card.time}</span>
         </div>
       )}
     </Link>
   );
-}
+});
+Card.displayName = 'Card';
+
+const Section = memo(({ section }: { section: Section }) => (
+  <section id={section.id} className="mb-16 scroll-mt-24">
+    <h2 className="text-xl md:text-2xl font-medium text-slate-800 dark:text-slate-100 mb-5 pb-2 border-b border-slate-200 dark:border-slate-700">
+      {section.title}
+    </h2>
+    <div className="grid md:grid-cols-2 gap-5">
+      {section.cards.map(card => (
+        <Card key={card.slug} card={card} />
+      ))}
+    </div>
+  </section>
+));
+Section.displayName = 'Section';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PAGE PRINCIPALE (Component principal optimisé)
+// ─────────────────────────────────────────────────────────────────────────────
 
 export default function TheoriePage() {
+  const memorizedSections = useMemo(() => sections, []);
+
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-slate-950">
-      {/* Header simple */}
-      <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
+    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 font-serif">
+      {/* Header */}
+      <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10 backdrop-blur-sm bg-opacity-90">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <Link
             href="/"
-            className="inline-flex items-center text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-colors text-sm"
+            className="inline-flex items-center text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm font-medium"
+            aria-label="Retour à l'accueil"
           >
             <ChevronLeft className="w-4 h-4 mr-1" aria-hidden="true" />
             retour
@@ -241,36 +286,28 @@ export default function TheoriePage() {
         </div>
       </header>
 
+      {/* Contenu */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Hero minimal */}
+        {/* Hero */}
         <div className="mb-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-light text-slate-900 dark:text-white mb-3">
+          <h1 className="text-4xl md:text-5xl font-light text-slate-900 dark:text-white mb-4 tracking-tight">
             Théorie Horlogère Suisse
           </h1>
-          <p className="text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+          <p className="text-base md:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
             Ressources pour apprentis horlogers et passionnés. Un savoir-faire suisse, partagé.
           </p>
         </div>
 
         {/* Sections */}
-        {sections.map(section => (
-          <section key={section.id} id={section.id} className="mb-16">
-            <h2 className="text-xl md:text-2xl font-medium text-slate-800 dark:text-slate-100 mb-5 pb-2 border-b border-slate-200 dark:border-slate-700">
-              {section.title}
-            </h2>
-            <div className="grid md:grid-cols-2 gap-5">
-              {section.cards.map(card => (
-                <Card key={card.slug} card={card} />
-              ))}
-            </div>
-          </section>
+        {memorizedSections.map(section => (
+          <Section key={section.id} section={section} />
         ))}
       </div>
 
-      {/* Footer ultra-minimal */}
-      <footer className="mt-20 py-8 border-t border-slate-200 dark:border-slate-800">
+      {/* Footer */}
+      <footer className="mt-24 py-8 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-400 font-medium">
             Passionnément horloger depuis 2024
           </p>
         </div>
