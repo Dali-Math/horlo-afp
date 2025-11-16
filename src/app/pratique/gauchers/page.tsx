@@ -817,7 +817,7 @@ export default function GauchersPage() {
                     <div className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>Employabilité</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-500">CHF 58/h</div>
+                  
                     <div className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>Salaire moyen</div>
                   </div>
                 </div>
