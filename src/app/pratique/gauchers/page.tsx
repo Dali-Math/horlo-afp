@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Moon, Sun, Wrench, Eye, Brain, Heart, Trophy, Clock, Award, Users,
   Target, CheckCircle, Zap, ShoppingCart, BookOpen, HelpCircle, UserCheck,
-  Video, TrendingUp, Shield, Info
+  Video, TrendingUp, Shield, Info, Calendar, ExternalLink
 } from "lucide-react";
 import Link from "next/link";
 
@@ -53,7 +53,7 @@ const adaptationsData = [
       "⚙️ **Clefs de montage miroir** : Sens de serrage inversé"
     ],
     stats: { priceReduction: "20-30%", availability: "85%" },
-    image: "https://images.unsplash.com/photo-1504148455328-c376907d0815?w=400"
+    image: "https://images.unsplash.com/photo-1504148455328-c376907d0815?w=400 "
   },
   {
     id: "posture",
@@ -67,7 +67,7 @@ const adaptationsData = [
       "🪑 **Siège avec repose-coude gauche** : Stabilité du bras"
     ],
     stats: { fatigueReduction: "40%", precisionImprovement: "25%" },
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400"
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400 "
   },
   {
     id: "techniques",
@@ -81,7 +81,7 @@ const adaptationsData = [
       "📏 **Repères inversés sur les outils** : Marquages personnalisés"
     ],
     stats: { adaptationTime: "2-3 mois", successRate: "92%" },
-    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400"
+    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400 "
   },
   {
     id: "formation",
@@ -95,7 +95,7 @@ const adaptationsData = [
       "🎯 **Exercices renforcés** : 10% de temps supplémentaire accepté"
     ],
     stats: { satisfaction: "94%", dropOutRate: "3% vs 8%" },
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400"
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400 "
   }
 ];
 
@@ -173,14 +173,14 @@ const tools: Tool[] = [
     description: "Pinces Bergeon inversées, modèle 3000-G",
     price: "CHF 89.-",
     supplier: "Bergeon SA",
-    link: "https://www.bergeon.ch/gaucher"
+    link: "https://www.bergeon.ch/gaucher "
   },
   {
     name: "Loupe Binoculaire Latérale",
     description: "Loupe 10x avec fixation gauche, légère",
     price: "CHF 145.-",
     supplier: "Horotec",
-    link: "https://www.horotec.com/loupes"
+    link: "https://www.horotec.com/loupes "
   },
   {
     name: "Kit Outils Gaucher Complet",
@@ -194,7 +194,7 @@ const tools: Tool[] = [
     description: "Plan inclinable 15° avec repères miroir",
     price: "CHF 450.-",
     supplier: "ESCON Switzerland",
-    link: "https://www.escon.ch/horlogerie"
+    link: "https://www.escon.ch/horlogerie "
   }
 ];
 
@@ -203,19 +203,19 @@ const testimonies: Testimony[] = [
     name: "Marc Dubois",
     role: "CFC obtenu en 2023, maintenant chez Rolex",
     text: "\"J'ai failli abandonner au bout de 2 mois. Les outils inversés m'ont sauvé. Maintenant je suis aussi rapide que mes collègues.\"",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100"
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100 "
   },
   {
     name: "Sophie Martin",
     role: "Élève en 2ème année CFC, mention excellence",
     text: "\"Mon formateur m'a appris à voir ma différence comme un avantage. Je suis plus précise car je suis obligée de me concentrer davantage.\"",
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b5bc?w=100"
+    image: "https://images.unsplash.com/photo-1494790108755-2616b612b5bc?w=100 "
   },
   {
     name: "Ahmed Zouari",
     role: "Maître Horloger, 15 ans d'expérience",
     text: "\"Aujourd'hui, je forme les nouveaux gauchers. Je leur dis : votre cerveau va créer des connexions uniques que les droitiers n'auront jamais.\"",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100"
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100 "
   }
 ];
 
@@ -593,7 +593,7 @@ export default function GauchersPage() {
               theme === "dark" ? "border-blue-400/20" : "border-blue-600/20"
             }`}>
               <img
-                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&h=675&fit=crop"
+                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&h=675&fit=crop "
                 alt="Atelier horlogerie adapté pour gaucher"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
@@ -769,7 +769,7 @@ export default function GauchersPage() {
             </div>
           </motion.section>
 
-          {/* NOUVELLE SECTION DE REMPLACEMENT */}
+          {/* REMPLACEMENT - Section Ressources Communautaires */}
           <motion.section 
             className={`rounded-2xl p-8 md:p-12 border backdrop-blur-sm ${
               theme === "dark" ? "bg-black/20 border-blue-400/20" : "bg-white/60 border-blue-600/20"
@@ -781,7 +781,7 @@ export default function GauchersPage() {
             <h2 className={`text-3xl font-bold text-center mb-8 ${
               theme === "dark" ? "text-blue-400" : "text-blue-700"
             }`}>
-              Prochaines étapes concrètes
+              Ressources Communautaires & Réseau
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               <motion.div
@@ -790,13 +790,20 @@ export default function GauchersPage() {
                 }`}
                 whileHover={{ scale: 1.05 }}
               >
-                <BookOpen className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`} />
+                <Users className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`} />
                 <h3 className={`font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                  1. Commandez vos outils
+                  Communauté Horlogerie Gauche
                 </h3>
                 <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                  Équipez-vous du minimum vital dès la première semaine
+                  Rejoignez 400+ apprentis et professionnels sur notre forum dédié. Échanges techniques, conseils et petites annonces outils.
                 </p>
+                <div className="mt-4">
+                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
+                    theme === "dark" ? "bg-blue-400/20 text-blue-400" : "bg-blue-600/10 text-blue-700"
+                  }`}>
+                    15'000+ messages
+                  </span>
+                </div>
               </motion.div>
               
               <motion.div
@@ -805,13 +812,20 @@ export default function GauchersPage() {
                 }`}
                 whileHover={{ scale: 1.05 }}
               >
-                <Target className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-green-400" : "text-green-600"}`} />
+                <Calendar className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-green-400" : "text-green-600"}`} />
                 <h3 className={`font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                  2. Démarrez l'entraînement
+                  Ateliers Mensuels
                 </h3>
                 <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                  Suivez le programme semaine par semaine sans sauter d'étapes
+                  Rencontres physiques dans les écoles partenaires. Sessions pratiques, retours d'expérience et workshops avec des maîtres horlogers gauchers.
                 </p>
+                <div className="mt-4">
+                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
+                    theme === "dark" ? "bg-green-400/20 text-green-400" : "bg-green-600/10 text-green-700"
+                  }`}>
+                    Prochain : 15 décembre
+                  </span>
+                </div>
               </motion.div>
               
               <motion.div
@@ -820,29 +834,37 @@ export default function GauchersPage() {
                 }`}
                 whileHover={{ scale: 1.05 }}
               >
-                <UserCheck className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-purple-400" : "text-purple-600"}`} />
+                <Video className={`w-12 h-12 mx-auto mb-4 ${theme === "dark" ? "text-purple-400" : "text-purple-600"}`} />
                 <h3 className={`font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
-                  3. Trouvez un mentor
+                  Médiathèque Exclusive
                 </h3>
                 <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                  Rejoignez la communauté et échangez avec des pros
+                  200+ vidéos tutorielles miroir, schémas techniques inversés et podcasts d'experts. Accès réservé aux membres certifiés.
                 </p>
+                <div className="mt-4">
+                  <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
+                    theme === "dark" ? "bg-purple-400/20 text-purple-400" : "bg-purple-600/10 text-purple-700"
+                  }`}>
+                    50+ heures de contenu
+                  </span>
+                </div>
               </motion.div>
             </div>
             <div className="mt-8 text-center">
               <motion.div whileHover={{ scale: 1.05 }}>
-                <Link href="/debuter" className={`inline-block px-8 py-3 rounded-lg font-bold ${
+                <Link href="/communaute" className={`inline-flex items-center gap-2 px-8 py-3 rounded-lg font-bold ${
                   theme === "dark" ? "bg-blue-400 text-black hover:bg-blue-300" : "bg-blue-600 text-white hover:bg-blue-700"
                 }`}>
-                  Commencer maintenant
+                  Accéder à l'espace membre
+                  <ExternalLink className="w-4 h-4" />
                 </Link>
               </motion.div>
               <p className={`mt-4 text-sm ${theme === "dark" ? "text-gray-500" : "text-gray-500"}`}>
-                Première séance gratuite avec un formateur certifié
+                Inscription gratuite pour les élèves des écoles partenaires
               </p>
             </div>
           </motion.section>
-          {/* FIN DE LA NOUVELLE SECTION */}
+          {/* FIN DU REMPLACEMENT */}
         </div>
       </div>
     </ThemeContext.Provider>
