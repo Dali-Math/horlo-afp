@@ -1,6 +1,20 @@
 "use client";
 import Link from "next/link";
-import { ArrowLeft, ChevronRight, Wrench, Eye, Shield, DollarSign, Award, Tool, Zap, BookOpen, Package, Heart, Settings } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronRight,
+  Wrench,
+  Eye,
+  Shield,
+  DollarSign,
+  Award,
+  Zap,
+  BookOpen,
+  Package,
+  Heart,
+  Settings
+} from "lucide-react";
+
 import { useState, useEffect } from "react";
 
 export default function OutilsPage() {
