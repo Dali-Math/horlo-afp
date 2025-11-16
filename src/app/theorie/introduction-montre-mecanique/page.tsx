@@ -1,6 +1,5 @@
-// ============================================
-// PAGE : Introduction Montre Mécanique
-// ============================================
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import { motion, useMotionValue, animate, AnimatePresence } from 'framer-motion';
 import { Watch, Info, Pause, Play, CheckCircle, Cog, Eye, Lightbulb } from 'lucide-react';
