@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, BookOpen, Settings, Clock, Tool, Target, Zap, Award, ChevronRight, PlayCircle } from "lucide-react";
+import { ArrowLeft, BookOpen, Settings, Clock, Wrench, Target, Zap, Award, ChevronRight, PlayCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function ReglagePage() {
   const [activeSection, setActiveSection] = useState<string>("introduction");
 
-  // Suivi de la section active pour la table des matières
   useEffect(() => {
     const sections = document.querySelectorAll("section[id]");
     const observer = new IntersectionObserver(
@@ -32,7 +31,6 @@ export default function ReglagePage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-black text-white">
-      {/* Navigation sticky */}
       <nav className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-amber-500/20">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <Link
@@ -47,7 +45,6 @@ export default function ReglagePage() {
       </nav>
 
       <div className="max-w-6xl mx-auto px-4 py-12 md:py-16">
-        {/* En-tête */}
         <header className="text-center mb-16 md:mb-20">
           <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent mb-6">
             Réglage & Précision
@@ -60,7 +57,6 @@ export default function ReglagePage() {
           </div>
         </header>
 
-        {/* Table des matières */}
         <aside className="mb-12 md:mb-16 bg-neutral-800/50 backdrop-blur-sm rounded-2xl p-6 border border-amber-500/20">
           <h2 className="text-2xl font-bold text-amber-400 mb-6 flex items-center gap-3">
             <BookOpen className="w-6 h-6" />
@@ -92,7 +88,6 @@ export default function ReglagePage() {
           </div>
         </aside>
 
-        {/* Section Vidéo */}
         <section id="introduction" className="mb-16 md:mb-20 scroll-mt-24">
           <div className="bg-black rounded-2xl overflow-hidden shadow-2xl border border-amber-500/30">
             <div className="relative" style={{ paddingBottom: "56.25%" }}>
@@ -120,7 +115,6 @@ export default function ReglagePage() {
           </div>
         </section>
 
-        {/* Principes Fondamentaux */}
         <section id="principes" className="mb-16 md:mb-20 scroll-mt-24">
           <h2 className="text-3xl md:text-4xl font-bold text-amber-400 mb-8 flex items-center gap-4">
             <Settings className="w-8 h-8" />
@@ -152,7 +146,7 @@ export default function ReglagePage() {
                 Petit levier qui modifie la longueur active du spiral. Déplacer la raquette 
                 vers <strong className="text-amber-400">A (Avance)</strong> raccourcit le spiral 
                 (montre plus rapide). Vers <strong className="text-amber-400">R (Retard)</strong>, 
-                on l'allonge (montre plus lente).
+                on l'allonge et elle ralentit.
               </p>
               <div className="mt-4 text-sm text-amber-300 bg-amber-500/10 rounded-lg p-3">
                 <strong>Précision :</strong> 1/4 de tour ≈ 10 secondes/jour
@@ -176,10 +170,9 @@ export default function ReglagePage() {
           </div>
         </section>
 
-        {/* Outils du réglage */}
         <section id="outils" className="mb-16 md:mb-20 scroll-mt-24">
           <h2 className="text-3xl md:text-4xl font-bold text-amber-400 mb-8 flex items-center gap-4">
-            <Tool className="w-8 h-8" />
+            <Wrench className="w-8 h-8" />
             Outils essentiels du réglage
           </h2>
           
@@ -217,7 +210,6 @@ export default function ReglagePage() {
           </div>
         </section>
 
-        {/* Techniques de réglage */}
         <section id="techniques" className="mb-16 md:mb-20 scroll-mt-24">
           <h2 className="text-3xl md:text-4xl font-bold text-amber-400 mb-8">
             Techniques de réglage avancées
@@ -255,7 +247,6 @@ export default function ReglagePage() {
           </div>
         </section>
 
-        {/* Conseils pratiques */}
         <section id="conseils" className="mb-16 md:mb-20 scroll-mt-24">
           <h2 className="text-3xl md:text-4xl font-bold text-amber-400 mb-8">
             Conseils pratiques pour horlogers amateurs
@@ -280,7 +271,6 @@ export default function ReglagePage() {
           </div>
         </section>
 
-        {/* Glossaire */}
         <section id="glossaire" className="mb-16 md:mb-20 scroll-mt-24">
           <h2 className="text-3xl md:text-4xl font-bold text-amber-400 mb-8 flex items-center gap-4">
             <Award className="w-8 h-8" />
@@ -304,7 +294,6 @@ export default function ReglagePage() {
           </div>
         </section>
 
-        {/* CTA Final */}
         <section className="text-center bg-gradient-to-r from-amber-500/20 to-amber-600/20 rounded-2xl p-10 md:p-12 border border-amber-500/30">
           <h2 className="text-3xl font-bold text-amber-400 mb-4">
             Prêt à maîtriser le réglage ?
