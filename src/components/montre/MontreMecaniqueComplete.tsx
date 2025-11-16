@@ -5,8 +5,6 @@ import { MontreProvider, useMontre } from './MontreMecaniqueProvider';
 import { NavigationMontre } from './NavigationMontre';
 import { AnimationMontre } from './AnimationMontre';
 import { Card } from '@/components/ui/Card';
-export default MontreMecaniqueComplete;
-
 
 // Composants simplifiés pour chaque section
 const IntroductionSection = () => (
@@ -48,7 +46,7 @@ const OrganesSection = () => {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {organes.map((organe, idx) => (
           <div key={idx} className="bg-slate-700/50 rounded-lg p-4 hover:bg-slate-700 transition-all">
-            <div className="text-3xl mb-2">{organe.icon}</div>
+            <div className="text-2xl mb-2">{organe.icon}</div>
             <h3 className="font-bold text-white mb-2">{organe.nom}</h3>
             <p className="text-sm text-slate-300">{organe.desc}</p>
           </div>
@@ -121,7 +119,7 @@ export function MontreMecaniqueComplete() {
           {/* Footer */}
           <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-6 text-center mt-12">
             <p className="text-slate-300">
-              Visualisation interactive basée sur l'excellent article de Bartosz Ciechanowski
+              Visualisation interactive basée sur l'article de Bartosz Ciechanowski
             </p>
           </div>
         </div>
