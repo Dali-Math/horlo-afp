@@ -282,15 +282,15 @@ function AdaptationCard({ adaptation }: { adaptation: typeof adaptationsData[0] 
             Solutions concrètes :
           </h4>
           <ul className="space-y-2">
-            {adaptation.solutions.map((solution, i) => (
-              <li key={i} className={`flex items-start gap-3 text-sm ${
-                theme === "dark" ? "text-gray-400" : "text-gray-600"
-              }`}>
-                <CheckCircle className="w-5 h-5 flex-shrink-0 text-green-500 mt-0.5" />
-                <span dangerouslySetInnerHTML={{ __html: solution }} />
-              </li>
-            ))}
-          </ul>
+  {adaptation.solutions.map((solution, i) => (
+    <li key={i} className={`flex items-start gap-3 text-sm ${
+      theme === "dark" ? "text-gray-400" : "text-gray-600"
+    }`}>
+      <CheckCircle className="w-5 h-5 flex-shrink-0 text-green-500 mt-0.5" />
+      <span>{solution}</span> 
+    </li>
+  ))}
+</ul>
         </div>
 
         <div className="mt-4 pt-4 border-t border-gray-700 flex justify-between text-xs">
