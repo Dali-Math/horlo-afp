@@ -127,3 +127,4 @@ export function MontreMecaniqueComplete() {
     </MontreProvider>
   );
 }
+export default MontreMecaniqueComplete;
