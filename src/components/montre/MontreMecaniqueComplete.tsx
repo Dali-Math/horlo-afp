@@ -5,6 +5,7 @@ import { NavigationMontre } from './NavigationMontre';
 import { AnimationMontre } from './AnimationMontre';
 import { Card } from '@/components/ui/Card';
 
+// Composants simplifiés pour chaque section
 const IntroductionSection = () => (
   <Card gradient="from-slate-900 via-blue-900 to-purple-900 border-blue-500">
     <h2 className="text-3xl font-bold text-white mb-4">La Montre Mécanique</h2>
