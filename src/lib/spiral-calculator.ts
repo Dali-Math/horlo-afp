@@ -1,4 +1,4 @@
-import database from './spirals-database.json';
+import { database } from './database';
 
 export interface SpiralParams {
   diametre: number;
