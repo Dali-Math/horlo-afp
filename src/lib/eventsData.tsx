@@ -18,7 +18,7 @@ export const eventsData: Event[] = [
     title: 'Watches & Wonders 2026 : Dates Confirmées',
     description: "L'événement horloger le plus important de l'année a officiellement annoncé ses dates.",
     date: '2024-05-21',
-    location: "Genève, Suisse',
+    location: "Genève, Suisse",
     imageUrl: '/images/events/watches-wonders-2026.jpg',
     isPast: true,
     tags: ['Événement', 'Watches & Wonders', 'Genève'],
