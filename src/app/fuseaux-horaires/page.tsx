@@ -43,7 +43,6 @@ const bottomRowCities = [
 ];
 
 function createClockSVG(hours: number, minutes: number, seconds: number, clockId: string) {
-  // ... (fonction inchangée) ...
   const secondAngle = seconds * 6;
   const minuteAngle = minutes * 6 + seconds * 0.1;
   const hourAngle = ((hours % 12) * 30) + (minutes * 0.5) + (seconds * 0.5 / 60);
@@ -253,6 +252,39 @@ export default function WorldClocksPage(): JSX.Element {
 
   return (
     <>
+      {/* Carte du monde en arrière-plan */}
+      <div className="map-container">
+        <svg className="world-map" viewBox="0 0 2000 1000" xmlns="http://www.w3.org/2000/svg">
+          <rect width="2000" height="1000" fill="#e8f4f8"/>
+          {/* Continents simplifiés */}
+          <g fill="#c8e6c9" opacity="0.6">
+            {/* Amérique du Nord */}
+            <path d="M 200 200 L 400 180 L 450 300 L 350 400 L 250 380 L 150 300 Z"/>
+            {/* Amérique du Sud */}
+            <path d="M 350 450 L 400 440 L 420 600 L 380 750 L 320 700 L 330 550 Z"/>
+            {/* Europe */}
+            <path d="M 900 200 L 1000 190 L 1050 280 L 950 320 L 880 280 Z"/>
+            {/* Afrique */}
+            <path d="M 920 350 L 1020 340 L 1080 500 L 1000 700 L 900 680 L 880 500 Z"/>
+            {/* Asie */}
+            <path d="M 1100 150 L 1400 140 L 1500 300 L 1400 450 L 1200 400 L 1050 250 Z"/>
+            {/* Océanie */}
+            <path d="M 1500 600 L 1650 590 L 1700 700 L 1600 750 L 1480 720 Z"/>
+          </g>
+          {/* Grille de longitude/latitude */}
+          <g stroke="#b0d4e0" stroke-width="1" opacity="0.3">
+            {Array.from({length: 19}, (_, i) => {
+              const x = (i + 1) * 100;
+              return `<line x1="${x}" y1="0" x2="${x}" y2="1000" />`;
+            }).join('')}
+            {Array.from({length: 9}, (_, i) => {
+              const y = (i + 1) * 100;
+              return `<line x1="0" y1="${y}" x2="2000" y2="${y}" />`;
+            }).join('')}
+          </g>
+        </svg>
+      </div>
+
       <header>
         <h1>Fuseaux Horaires Mondiaux</h1>
       </header>
@@ -354,13 +386,40 @@ export default function WorldClocksPage(): JSX.Element {
           -moz-osx-font-smoothing: grayscale;
         }
 
+        /* Carte du monde en arrière-plan */
+        .map-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+          overflow: hidden;
+          pointer-events: none;
+        }
+
+        .world-map {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          opacity: 0.08;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .world-map {
+            opacity: 0.05;
+            filter: brightness(0.7);
+          }
+        }
+
         header {
-          background: linear-gradient(to bottom, #ffffff 0%, #f9f9f9 100%);
+          background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95) 0%, rgba(249, 249, 249, 0.95) 100%);
           padding: 40px 20px 60px;
           text-align: center;
           border-bottom: 1px solid #d0d0d0;
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
           position: relative;
+          backdrop-filter: blur(5px);
         }
 
         header::after {
@@ -401,7 +460,7 @@ export default function WorldClocksPage(): JSX.Element {
 
         @media (prefers-color-scheme: dark) {
           header {
-            background: linear-gradient(to bottom, #1f2121 0%, #1a1c1c 100%);
+            background: linear-gradient(to bottom, rgba(31, 33, 33, 0.95) 0%, rgba(26, 28, 28, 0.95) 100%);
             border-bottom: 1px solid #3a3a3a;
           }
 
@@ -431,6 +490,7 @@ export default function WorldClocksPage(): JSX.Element {
           width: 100%;
           max-width: 1200px;
           margin: 0 auto;
+          z-index: 1;
         }
 
         .top-row {
@@ -466,18 +526,28 @@ export default function WorldClocksPage(): JSX.Element {
           transition: all 0.5s ease;
           position: relative;
           cursor: pointer;
+          background: rgba(255, 255, 255, 0.7);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(208, 208, 208, 0.3);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
         
         .clock-item:hover {
           transform: translateY(-4px);
+          background: rgba(255, 255, 255, 0.85);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
         }
         
         .clock-item.daytime {
-          background-color: #f5f5f5;
+          background: rgba(245, 245, 245, 0.7);
         }
         
         .clock-item.nighttime {
-          background-color: #2a2a3a;
+          background: rgba(42, 42, 58, 0.7);
+        }
+        
+        .clock-item.nighttime:hover {
+          background: rgba(42, 42, 58, 0.85);
         }
         
         .clock-item.nighttime .city-name {
@@ -540,6 +610,7 @@ export default function WorldClocksPage(): JSX.Element {
           text-align: center;
           min-width: 300px;
           max-width: 90%;
+          backdrop-filter: blur(10px);
         }
 
         .date-label {
@@ -583,6 +654,23 @@ export default function WorldClocksPage(): JSX.Element {
 
           .time-value {
             color: #f5f5f5;
+          }
+
+          .clock-item {
+            background: rgba(31, 33, 33, 0.7);
+            border: 1px solid rgba(58, 58, 58, 0.3);
+          }
+
+          .clock-item:hover {
+            background: rgba(31, 33, 33, 0.85);
+          }
+
+          .clock-item.daytime {
+            background: rgba(26, 28, 28, 0.7);
+          }
+
+          .clock-item.daytime:hover {
+            background: rgba(26, 28, 28, 0.85);
           }
         }
 
