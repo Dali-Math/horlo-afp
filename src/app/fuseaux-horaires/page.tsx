@@ -43,7 +43,6 @@ const bottomRowCities = [
 ];
 
 function createClockSVG(hours: number, minutes: number, seconds: number, clockId: string) {
-  // ... (fonction inchangée) ...
   const secondAngle = seconds * 6;
   const minuteAngle = minutes * 6 + seconds * 0.1;
   const hourAngle = ((hours % 12) * 30) + (minutes * 0.5) + (seconds * 0.5 / 60);
@@ -346,7 +345,15 @@ export default function WorldClocksPage(): JSX.Element {
 
         body {
           font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
-          background-color: #f8f8f8;
+          /* --- MODIFICATIONS ICI --- */
+          /* L'image est maintenant l'arrière-plan de toute la page */
+          background-color: #f8f8f8; /* Couleur de fond si l'image ne charge pas */
+          background-image: url('/images/fuseaux-horaires.jpg');
+          background-size: cover; /* Couvre toute la surface */
+          background-position: center; /* Centre l'image */
+          background-attachment: fixed; /* L'image reste fixe lors du scroll */
+          background-repeat: no-repeat; /* Empêche la répétition de l'image */
+          /* --- FIN DES MODIFICATIONS --- */
           color: #2a2a2a;
           padding: 0;
           margin: 0;
@@ -431,6 +438,13 @@ export default function WorldClocksPage(): JSX.Element {
           width: 100%;
           max-width: 1200px;
           margin: 0 auto;
+          /* --- MODIFICATIONS ICI --- */
+          /* Un fond semi-transparent pour que le contenu soit lisible */
+          background-color: rgba(248, 248, 248, 0.85);
+          backdrop-filter: blur(8px); /* Effet de flou moderne */
+          border-radius: 16px;
+          padding: 40px;
+          /* --- FIN DES MODIFICATIONS --- */
         }
 
         .top-row {
