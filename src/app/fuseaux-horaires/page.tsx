@@ -49,8 +49,7 @@ const AnalogClock: React.FC<{ watch: Watch; time: ClockTime; dayNight: DayNightI
   // Calculer les angles des aiguilles
   const secondAngle = time.seconds * 6;
   const minuteAngle = time.minutes * 6 + time.seconds * 0.1;
-  const hourAngle = hours12 * 30 + time.minutes * 0.5 + (time.seconds * 0.5) / 60;
-
+  const hourAngle = hours12 * 30 + time.minutes * 0.5 + time.seconds * 0.00833;
   return (
     <div onClick={onClick} className="flex flex-col items-center cursor-pointer transition-transform hover:scale-105">
       <div
