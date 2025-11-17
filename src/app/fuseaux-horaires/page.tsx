@@ -183,6 +183,9 @@ export default function WorldClocksPage(): JSX.Element {
   const [clocks, setClocks] = useState<ClockData[]>([]);
   const [selectedDate, setSelectedDate] = useState<SelectedDateInfo | null>(null);
 
+  // ✅ URL de votre image locale dans le dossier public/images/
+  const mapImageUrl = "/images/fuseaux-horaires.jpg";
+
   useEffect(() => {
     const createClockData = (city: typeof topRowCities[0]) => {
       const clockId = `clock-${clockCounter.current++}`;
@@ -252,38 +255,16 @@ export default function WorldClocksPage(): JSX.Element {
 
   return (
     <>
-      {/* Carte du monde en arrière-plan */}
-      <div className="map-container">
-        <svg className="world-map" viewBox="0 0 2000 1000" xmlns="http://www.w3.org/2000/svg">
-          <rect width="2000" height="1000" fill="#e8f4f8"/>
-          {/* Continents simplifiés */}
-          <g fill="#c8e6c9" opacity="0.6">
-            {/* Amérique du Nord */}
-            <path d="M 200 200 L 400 180 L 450 300 L 350 400 L 250 380 L 150 300 Z"/>
-            {/* Amérique du Sud */}
-            <path d="M 350 450 L 400 440 L 420 600 L 380 750 L 320 700 L 330 550 Z"/>
-            {/* Europe */}
-            <path d="M 900 200 L 1000 190 L 1050 280 L 950 320 L 880 280 Z"/>
-            {/* Afrique */}
-            <path d="M 920 350 L 1020 340 L 1080 500 L 1000 700 L 900 680 L 880 500 Z"/>
-            {/* Asie */}
-            <path d="M 1100 150 L 1400 140 L 1500 300 L 1400 450 L 1200 400 L 1050 250 Z"/>
-            {/* Océanie */}
-            <path d="M 1500 600 L 1650 590 L 1700 700 L 1600 750 L 1480 720 Z"/>
-          </g>
-          {/* Grille de longitude/latitude */}
-          <g stroke="#b0d4e0" stroke-width="1" opacity="0.3">
-            {Array.from({length: 19}, (_, i) => {
-              const x = (i + 1) * 100;
-              return `<line x1="${x}" y1="0" x2="${x}" y2="1000" />`;
-            }).join('')}
-            {Array.from({length: 9}, (_, i) => {
-              const y = (i + 1) * 100;
-              return `<line x1="0" y1="${y}" x2="2000" y2="${y}" />`;
-            }).join('')}
-          </g>
-        </svg>
-      </div>
+      {/* Carte du monde en arrière-plan avec image locale */}
+      <div 
+        className="map-container" 
+        style={{ 
+          backgroundImage: `url('${mapImageUrl}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      />
 
       <header>
         <h1>Fuseaux Horaires Mondiaux</h1>
@@ -386,7 +367,7 @@ export default function WorldClocksPage(): JSX.Element {
           -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Carte du monde en arrière-plan */
+        /* Carte du monde en arrière-plan avec image */
         .map-container {
           position: fixed;
           top: 0;
@@ -396,19 +377,14 @@ export default function WorldClocksPage(): JSX.Element {
           z-index: -1;
           overflow: hidden;
           pointer-events: none;
-        }
-
-        .world-map {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
           opacity: 0.08;
+          filter: grayscale(30%);
         }
 
         @media (prefers-color-scheme: dark) {
-          .world-map {
+          .map-container {
             opacity: 0.05;
-            filter: brightness(0.7);
+            filter: grayscale(30%) brightness(0.7);
           }
         }
 
