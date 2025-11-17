@@ -13,10 +13,7 @@ interface NavbarProps {
 export default function Navbar({ onSearchClick }: NavbarProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [theorieOpen, setTheorieOpen] = useState(false);
-  const [theorieOpenDesktop, setTheorieOpenDesktop] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
+  // La gestion du sous-menu/caret/flèche n'est plus utile
   const navLinks = [
     { href: "/pratique", label: "Pratique" },
     { href: "/quiz", label: "Quiz" },
@@ -29,15 +26,6 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
     { href: "/communaute", label: "Communauté" },
     { href: "/actualites", label: "Actualités" },
   ];
-
-  const handleMouseEnter = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setTheorieOpenDesktop(true);
-  };
-
-  const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => setTheorieOpenDesktop(false), 250);
-  };
 
   return (
     <nav className="flex flex-wrap items-center justify-between px-6 md:px-12 py-4 bg-white dark:bg-[#0A0A0A] text-slate-900 dark:text-white border-b border-gray-200 dark:border-gray-800 relative z-50 transition-colors duration-300">
@@ -66,38 +54,17 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
 
       {/* Liens desktop */}
       <div className="hidden lg:flex items-center gap-6 text-sm font-medium relative">
-        {/* Bloc Théorie avec sous-menu */}
-        <div
-          className="relative"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+        {/* Bloc Théorie sans flèche ni sous-menu */}
+        <Link
+          href="/theorie"
+          className={`flex items-center transition-colors ${
+            pathname.startsWith("/theorie")
+              ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
+              : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
+          }`}
         >
-          <Link
-            href="/theorie"
-            className={`flex items-center gap-1 transition-colors ${
-              pathname.startsWith("/theorie")
-                ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
-                : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
-            }`}
-          >
-            Théorie
-          </Link>
-
-          {theorieOpenDesktop && (
-            <div
-              className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-[#111] border border-[#E2B44F33] rounded-lg shadow-lg transition-all duration-200 ease-out opacity-100 translate-y-0 z-50"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <Link
-                href="/theorie/lecture-de-plan"
-                className="block px-4 py-3 text-sm text-slate-700 dark:text-gray-300 hover:bg-[#E2B44F22] hover:text-[#E2B44F] transition-colors"
-              >
-                Lecture de Plan
-              </Link>
-            </div>
-          )}
-        </div>
+          Théorie
+        </Link>
 
         {/* Autres liens */}
         {navLinks.map(({ href, label }) => (
@@ -153,7 +120,7 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
         <div className="lg:hidden w-full mt-4 pb-4 border-t border-gray-200 dark:border-gray-800 pt-4 bg-white dark:bg-[#0A0A0A] rounded-lg">
           <div className="flex flex-col space-y-3">
             <div className="flex flex-col">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center">
                 <Link
                   href="/theorie"
                   className={`flex-1 py-2 px-2 rounded ${
@@ -166,16 +133,6 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
                   Théorie
                 </Link>
               </div>
-
-              {theorieOpen && (
-                <Link
-                  href="/theorie/lecture-de-plan"
-                  className="pl-6 py-2 text-slate-600 dark:text-gray-400 hover:text-[#E2B44F] transition-colors block"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  ↳ Lecture de Plan
-                </Link>
-              )}
             </div>
 
             {navLinks.map(({ href, label }) => (
