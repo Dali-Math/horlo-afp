@@ -105,13 +105,13 @@ export async function POST(request: NextRequest) {
     }
 
     // 5. Construction des paramètres
-    const params: SpiralParams = {
-      diametre,
-      frequence,
-      amplitude,
-      materiau: materiau as 'nivarox' | 'silicium' | 'acier',
-      typeSpiral: typeSpiral as 'phillips' | 'breguet' | 'grossmann'
-    };
+   const params: SpiralParams = {
+  diametre: diametre || 10.0,     
+  frequence: frequence || 28800,    
+  amplitude: amplitude || 270,      
+  materiau: materiau as 'nivarox' | 'silicium' | 'acier',
+  typeSpiral: typeSpiral as 'phillips' | 'breguet' | 'grossmann'
+};
 
     // 6. Exécution du calcul
     const startTime = Date.now();
