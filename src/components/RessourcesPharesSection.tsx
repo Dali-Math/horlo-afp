@@ -1,10 +1,10 @@
-// components/RessourcesPharesSection.tsx
+// src/components/RessourcesPharesSection.tsx
 
-'use client'; // Nécessaire car il utilise motion.div
+'use client';
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'next/link';
+import Link from 'next/link'; // <-- CORRIGÉ : import par défaut
 import { Wand2, FileText, Users, Download, ArrowRight } from 'lucide-react';
 import { FeaturedResource } from '@/lib/homepageData';
 
@@ -35,7 +35,55 @@ export default function RessourcesPharesSection({ resources }: Props) {
               viewport={{ once: true }}
               className="group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl overflow-hidden border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300"
             >
-              {/* ... (Le reste du JSX pour une ressource phare) ... */}
+              <div className="absolute top-4 right-4 z-10">
+                <span className="px-3 py-1 bg-amber-500/90 text-white text-xs font-bold rounded-full">
+                  {resource.badge}
+                </span>
+              </div>
+
+              <div className="p-8">
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center">
+                    {resource.type === 'Outil IA' ? (
+                      <Wand2 className="w-6 h-6 text-white" />
+                    ) : (
+                      <FileText className="w-6 h-6 text-white" />
+                    )}
+                  </div>
+                  <span className="text-sm font-bold text-amber-400 uppercase tracking-wider">
+                    {resource.type}
+                  </span>
+                </div>
+
+                <h3 className="text-xl font-bold mb-3 text-white group-hover:text-amber-400 transition-colors">
+                  {resource.title}
+                </h3>
+
+                <p className="text-gray-400 mb-6 text-sm leading-relaxed">
+                  {resource.description}
+                </p>
+
+                <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+                  <span className="flex items-center">
+                    <Users className="w-4 h-4 mr-1" />
+                    {resource.author}
+                  </span>
+                  <span>{resource.readTime}</span>
+                </div>
+
+                <div className="flex items-center justify-between pt-6 border-t border-amber-500/10">
+                  <div className="flex items-center text-sm text-gray-400">
+                    <Download className="w-4 h-4 mr-2 text-amber-400" />
+                    {resource.downloads} téléchargements
+                  </div>
+                  <Link
+                    href={resource.href ?? '#'}
+                    className="text-amber-400 font-semibold hover:text-amber-300 transition-colors flex items-center"
+                  >
+                    Voir <ArrowRight className="ml-1 w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>
