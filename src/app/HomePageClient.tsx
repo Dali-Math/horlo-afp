@@ -12,10 +12,7 @@ import {
 } from 'lucide-react'
 
 // Importation des données depuis notre fichier central
-import { navigationLinks, stats, thematiques, featuredResources, actualites } from '@/lib/homepageData';
-
-// Importation du composant partagé pour la navigation
-import Navbar from '@/components/Navbar';
+import { stats, thematiques, featuredResources, actualites } from '@/lib/homepageData';
 
 // --- IMPORTATION DYNAMIQUE DES SECTIONS ---
 const RessourcesPharesSection = dynamic(() => import('@/components/RessourcesPharesSection'), {
@@ -100,9 +97,6 @@ export default function HorloLearnHome() {
         </motion.div>
       </div>
 
-      {/* UTILISATION DE LA BARRE DE NAVIGATION PARTAGÉE */}
-      <Navbar />
-
       {/* Hero Section */}
       <section id="accueil" className="relative min-h-screen flex items-center justify-center px-4 pt-20">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
@@ -181,6 +175,7 @@ export default function HorloLearnHome() {
               role="img" 
               aria-label={`Horloge interactive. Il est actuellement ${time.toLocaleTimeString('fr-FR')}`}
             >
+              {/* ... Le reste du code de l'horloge reste identique ... */}
               <motion.div 
                 animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }}
                 transition={{ duration: 3, repeat: Infinity }}
@@ -325,78 +320,6 @@ export default function HorloLearnHome() {
           </motion.div>
         </div>
       </FadeInSection>
-
-      {/* Footer */}
-      <footer className="relative border-t border-amber-500/10 bg-slate-950/50 py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-12 mb-12">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <Watch className="w-6 h-6 text-amber-400" />
-                <span className="text-xl font-bold">
-                  <span className="text-amber-400">Horlo</span>
-                  <span className="text-white">Learn</span>
-                </span>
-              </div>
-              <p className="text-sm text-gray-400 mb-6">
-                Plateforme communautaire de partage de ressources horlogères. Par des passionnés, pour des passionnés.
-              </p>
-              <div className="flex items-center space-x-2 text-sm">
-                <Heart className="w-4 h-4 text-red-400" />
-                <span className="text-gray-400">100% Gratuit & Collaboratif</span>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-amber-400 mb-6 uppercase tracking-wider text-sm">Explorer</h4>
-              <ul className="space-y-3 text-sm text-gray-400">
-                {['Théorie', 'Pratique', 'Évaluation', 'Actualités'].map((item, i) => (
-                  <li key={i}>
-                    <a href="#" className="hover:text-amber-400 transition-colors">
-                      {item}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-amber-400 mb-6 uppercase tracking-wider text-sm">Communauté</h4>
-              <ul className="space-y-3 text-sm text-gray-400">
-                {['Forum', 'Contribuer', 'Discord', 'Newsletter'].map((item, i) => (
-                  <li key={i}>
-                    <a href="#" className="hover:text-amber-400 transition-colors">
-                      {item}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-amber-400 mb-6 uppercase tracking-wider text-sm">Légal</h4>
-              <ul className="space-y-3 text-sm text-gray-400">
-                {['CGU', 'Confidentialité', 'Mentions légales', 'Contact'].map((item, i) => (
-                  <li key={i}>
-                    <a href="#" className="hover:text-amber-400 transition-colors">
-                      {item}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-amber-500/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-            <p>© 2025 HorloLearn. Projet communautaire open-source 🇨🇭</p>
-            <div className="flex items-center space-x-2 mt-4 md:mt-0">
-              <span>Fait avec</span>
-              <Heart className="w-4 h-4 text-red-400 animate-pulse" />
-              <span>par la communauté horlogère</span>
-            </div>
-          </div>
-        </div>
-      </footer>
 
       {/* Styles globaux */}
       <style jsx global>{`
