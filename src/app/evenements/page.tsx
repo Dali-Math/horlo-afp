@@ -4,7 +4,9 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { format } from 'date-fns';
+import { fr } from 'date-fns/locale'; // CORRECTION 1: Importer la locale 'fr' pour formater la date en français.
 import { eventsData } from '@/lib/eventsData';
+import { Calendar, MapPin, ChevronRight } from 'lucide-react'; // CORRECTION 2: Importer les icônes Calendar, MapPin et ChevronRight utilisées dans le JSX.
 
 export const metadata: Metadata = {
   title: 'Événements Horlogers | HorloLearn',
@@ -16,7 +18,7 @@ export const metadata: Metadata = {
     url: 'https://www.horlolearn.ch/evenements',
     images: [
       {
-        url: 'https://www.hlolearn.ch/images/evenements/og-image.jpg',
+        url: 'https://www.hlolearn.ch/images/evenements/og-image.jpg', 
         width: 1200,
         height: 630,
         alt: 'Événements Horlogers - HorloLearn',
@@ -40,18 +42,14 @@ export default function EventsPage() {
           </p>
         </header>
 
-        <div className="grid grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {events.map((event) => (
             <Link
               key={event.id}
               href={`/evenements/${event.slug}`}
               className="group relative bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
             >
-              <div className="absolute top-4 right-4 z-10">
-                {event.isPast && (
-                  <span className="Passé</span>
-                )}
-              </div>
+              
               <div className="relative w-full h-48">
                 <Image
                   src={event.imageUrl}
@@ -70,7 +68,8 @@ export default function EventsPage() {
                 <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
                   <span className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
-                    <span>{format(new Date(event.date, 'dd MMMM yyyy', { locale: 'fr-FR' })}</span>
+                    
+                    <span>{format(new Date(event.date), 'dd MMMM yyyy', { locale: fr })}</span>
                   </span>
                   <span className="flex items-center gap-1">
                     <MapPin className="w-4 h-4" />
