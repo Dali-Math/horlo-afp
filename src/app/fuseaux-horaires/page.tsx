@@ -37,19 +37,6 @@ interface DayNightInfo {
   textColor: string;
 }
 
-interface HandCoordinates {
-  x: number;
-  y: number;
-}
-
-const calculateHandCoordinates = (angle: number, length: number): HandCoordinates => {
-  const radians = (angle - 90) * (Math.PI / 180);
-  return {
-    x: 70 + length * Math.cos(radians),
-    y: 70 + length * Math.sin(radians),
-  };
-};
-
 const AnalogClock: React.FC<{ watch: Watch; time: ClockTime; dayNight: DayNightInfo; onClick: () => void }> = ({
   watch,
   time,
@@ -61,36 +48,67 @@ const AnalogClock: React.FC<{ watch: Watch; time: ClockTime; dayNight: DayNightI
   const minuteAngle = time.minutes * 6 + time.seconds * 0.1;
   const hourAngle = hours12 * 30 + time.minutes * 0.5 + time.seconds * (0.5 / 60);
 
-  const hourHand = calculateHandCoordinates(hourAngle, 30);
-  const minuteHand = calculateHandCoordinates(minuteAngle, 45);
-  const secondHand = calculateHandCoordinates(secondAngle, 50);
+  const secondHandX = 70 + 50 * Math.cos(((secondAngle - 90) * Math.PI) / 180);
+  const secondHandY = 70 + 50 * Math.sin(((secondAngle - 90) * Math.PI) / 180);
+  const minuteHandX = 70 + 45 * Math.cos(((minuteAngle - 90) * Math.PI) / 180);
+  const minuteHandY = 70 + 45 * Math.sin(((minuteAngle - 90) * Math.PI) / 180);
+  const hourHandX = 70 + 30 * Math.cos(((hourAngle - 90) * Math.PI) / 180);
+  const hourHandY = 70 + 30 * Math.sin(((hourAngle - 90) * Math.PI) / 180);
 
   return (
     <div onClick={onClick} className="flex flex-col items-center cursor-pointer transition-transform hover:scale-105">
       <div
-        className="relative w-36 h-36 rounded-full shadow-lg transition-colors"
+        className="relative w-40 h-40 rounded-full shadow-2xl flex items-center justify-center"
         style={{
           backgroundColor: dayNight.bgColor,
-          border: '3px solid #555555',
+          border: '5px solid #777777',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.2), inset 0 2px 5px rgba(255,255,255,0.2)',
         }}
       >
-        <div className="absolute top-2 right-2 text-xl">{dayNight.icon}</div>
+        {/* Day/Night Icon */}
+        <div className="absolute top-3 right-3 text-2xl">{dayNight.icon}</div>
 
-        <svg className="w-full h-full" viewBox="0 0 140 140">
+        {/* SVG Clock Face */}
+        <svg className="absolute w-full h-full" viewBox="0 0 140 140" style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.1))' }}>
+          {/* Background */}
+          <circle cx="70" cy="70" r="67" fill={dayNight.bgColor} stroke={dayNight.textColor} strokeWidth="1" opacity="0.1" />
+
+          {/* Hour markers */}
+          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => {
+            const angle = (i * 30) * (Math.PI / 180);
+            const x1 = 70 + 58 * Math.cos(angle);
+            const y1 = 70 + 58 * Math.sin(angle);
+            const x2 = 70 + 63 * Math.cos(angle);
+            const y2 = 70 + 63 * Math.sin(angle);
+            return (
+              <line
+                key={`marker-${i}`}
+                x1={x1}
+                y1={y1}
+                x2={x2}
+                y2={y2}
+                stroke={dayNight.textColor}
+                strokeWidth="2"
+              />
+            );
+          })}
+
+          {/* Numbers 1-12 */}
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => {
             const angle = ((num - 3) * 30) * (Math.PI / 180);
-            const x = 70 + 55 * Math.cos(angle);
-            const y = 70 + 55 * Math.sin(angle);
+            const x = 70 + 50 * Math.cos(angle);
+            const y = 70 + 50 * Math.sin(angle);
             return (
               <text
-                key={num}
+                key={`number-${num}`}
                 x={x}
                 y={y}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fontSize="14"
-                fontWeight="bold"
+                fontSize="16"
+                fontWeight="600"
                 fill={dayNight.textColor}
+                fontFamily="Arial, sans-serif"
               >
                 {num}
               </text>
@@ -98,43 +116,28 @@ const AnalogClock: React.FC<{ watch: Watch; time: ClockTime; dayNight: DayNightI
           })}
 
           {/* Hour hand */}
-          <line
-            x1="70"
-            y1="70"
-            x2={hourHand.x}
-            y2={hourHand.y}
-            stroke={dayNight.textColor}
-            strokeWidth="4"
-            strokeLinecap="round"
-          />
+          <line x1="70" y1="70" x2={hourHandX} y2={hourHandY} stroke={dayNight.textColor} strokeWidth="5" strokeLinecap="round" />
 
           {/* Minute hand */}
           <line
             x1="70"
             y1="70"
-            x2={minuteHand.x}
-            y2={minuteHand.y}
+            x2={minuteHandX}
+            y2={minuteHandY}
             stroke={dayNight.textColor}
-            strokeWidth="3"
+            strokeWidth="4"
             strokeLinecap="round"
           />
 
-          {/* Second hand */}
-          <line
-            x1="70"
-            y1="70"
-            x2={secondHand.x}
-            y2={secondHand.y}
-            stroke="#cc0000"
-            strokeWidth="1"
-            strokeLinecap="round"
-          />
+          {/* Second hand - RED */}
+          <line x1="70" y1="70" x2={secondHandX} y2={secondHandY} stroke="#cc0000" strokeWidth="2" strokeLinecap="round" />
 
           {/* Center dot */}
-          <circle cx="70" cy="70" r="5" fill={dayNight.textColor} />
+          <circle cx="70" cy="70" r="7" fill={dayNight.textColor} />
+          <circle cx="70" cy="70" r="3" fill={dayNight.bgColor} />
         </svg>
       </div>
-      <p className="mt-3 font-bold text-lg" style={{ color: '#1a1a1a' }}>
+      <p className="mt-4 font-bold text-lg text-center" style={{ color: '#1a1a1a', minWidth: '120px' }}>
         {watch.city}
       </p>
     </div>
@@ -175,8 +178,8 @@ export default function FuseauxHoraires() {
     return {
       isDaytime,
       icon: isDaytime ? '☀️' : '🌙',
-      bgColor: isDaytime ? '#f5f5f5' : '#2a2a3a',
-      textColor: isDaytime ? '#1a1a1a' : '#ffffff',
+      bgColor: isDaytime ? '#ffffff' : '#2a2a3a',
+      textColor: isDaytime ? '#000000' : '#ffffff',
     };
   };
 
@@ -205,14 +208,20 @@ export default function FuseauxHoraires() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f8f8f8] to-[#f0f0f0] p-8">
       <div className="max-w-7xl mx-auto">
+        {/* Title */}
         <h1
-          className="text-5xl font-bold text-center mb-16 text-[#1a1a1a]"
-          style={{ letterSpacing: '1.5px', fontFamily: 'Playfair Display, Montserrat, sans-serif' }}
+          className="text-6xl font-bold text-center mb-20 text-[#1a1a1a]"
+          style={{
+            letterSpacing: '2px',
+            fontFamily: "'Playfair Display', 'Montserrat', sans-serif",
+            textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          }}
         >
           Fuseaux Horaires Mondiaux
         </h1>
 
-        <div className="flex justify-center gap-16 mb-20 flex-wrap">
+        {/* Top Row */}
+        <div className="flex justify-center gap-20 mb-24 flex-wrap">
           {topRow.map((watch) => {
             const time = times.get(watch.city + watch.timezone) || { hours: 0, minutes: 0, seconds: 0 };
             const dayNight = getDayNightInfo(time.hours);
@@ -228,7 +237,8 @@ export default function FuseauxHoraires() {
           })}
         </div>
 
-        <div className="flex justify-center gap-16 mb-20 flex-wrap">
+        {/* Middle Row */}
+        <div className="flex justify-center gap-20 mb-24 flex-wrap">
           {middleRow.map((watch) => {
             const time = times.get(watch.city + watch.timezone) || { hours: 0, minutes: 0, seconds: 0 };
             const dayNight = getDayNightInfo(time.hours);
@@ -244,7 +254,8 @@ export default function FuseauxHoraires() {
           })}
         </div>
 
-        <div className="flex justify-center gap-16 mb-20 flex-wrap">
+        {/* Bottom Row */}
+        <div className="flex justify-center gap-20 mb-24 flex-wrap">
           {bottomRow.map((watch) => {
             const time = times.get(watch.city + watch.timezone) || { hours: 0, minutes: 0, seconds: 0 };
             const dayNight = getDayNightInfo(time.hours);
@@ -260,16 +271,17 @@ export default function FuseauxHoraires() {
           })}
         </div>
 
+        {/* Date Modal */}
         {selectedDate && (
-          <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-2xl p-6 max-w-md z-50">
-            <p className="text-lg font-semibold text-[#1a1a1a]">{selectedCity}</p>
-            <p className="text-2xl font-bold text-[#3a7ca5] mt-2">{selectedDate}</p>
+          <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white rounded-xl shadow-2xl p-8 max-w-md z-50 border border-gray-200">
+            <p className="text-xl font-semibold text-[#1a1a1a]">{selectedCity}</p>
+            <p className="text-3xl font-bold text-[#3a7ca5] mt-4 capitalize">{selectedDate}</p>
             <button
               onClick={() => {
                 setSelectedCity(null);
                 setSelectedDate(null);
               }}
-              className="mt-4 w-full px-4 py-2 bg-[#3a7ca5] text-white rounded hover:bg-[#2a5a8a] transition-colors"
+              className="mt-6 w-full px-4 py-3 bg-[#3a7ca5] text-white rounded-lg hover:bg-[#2a5a8a] transition-all font-semibold"
             >
               Fermer
             </button>
