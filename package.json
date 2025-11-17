@@ -45,7 +45,8 @@
     "three": "^0.180.0",
     "mermaid": "^10.x.x",
     "react-focus-lock": "^2.12.0",
-    "tailwind-merge": "^2.2.0"
+    "tailwind-merge": "^2.2.0",
+    "date-fns": "^3.6.0"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
