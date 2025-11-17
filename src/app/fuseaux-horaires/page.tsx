@@ -1,293 +1,478 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-interface Watch {
+interface ClockData {
+  id: string;
   city: string;
   timezone: string;
-  utcOffset: number;
-  row: 'top' | 'middle' | 'bottom';
-}
-
-const watches: Watch[] = [
-  { city: 'New York', timezone: 'America/New_York', utcOffset: -5, row: 'top' },
-  { city: 'London', timezone: 'Europe/London', utcOffset: 0, row: 'top' },
-  { city: 'Tokyo', timezone: 'Asia/Tokyo', utcOffset: 9, row: 'top' },
-  { city: 'Paris', timezone: 'Europe/Paris', utcOffset: 1, row: 'top' },
-  { city: 'Sydney', timezone: 'Australia/Sydney', utcOffset: 11, row: 'middle' },
-  { city: 'Moscow', timezone: 'Europe/Moscow', utcOffset: 3, row: 'middle' },
-  { city: 'Bern', timezone: 'Europe/Zurich', utcOffset: 1, row: 'middle' },
-  { city: 'Dubai', timezone: 'Asia/Dubai', utcOffset: 4, row: 'middle' },
-  { city: 'Vienna', timezone: 'Europe/Vienna', utcOffset: 1, row: 'bottom' },
-  { city: 'Moscow', timezone: 'Europe/Moscow', utcOffset: 3, row: 'bottom' },
-  { city: 'Beijing', timezone: 'Asia/Shanghai', utcOffset: 8, row: 'bottom' },
-  { city: 'Berlin', timezone: 'Europe/Berlin', utcOffset: 1, row: 'bottom' },
-];
-
-interface ClockTime {
   hours: number;
   minutes: number;
   seconds: number;
 }
 
-interface DayNightInfo {
-  isDaytime: boolean;
-  icon: string;
-  bgColor: string;
-  textColor: string;
+const topRowCities = [
+  { name: 'New York', timezone: 'America/New_York' },
+  { name: 'London', timezone: 'Europe/London' },
+  { name: 'Tokyo', timezone: 'Asia/Tokyo' },
+  { name: 'Paris', timezone: 'Europe/Paris' }
+];
+
+const middleCities = [
+  { name: 'Sydney', timezone: 'Australia/Sydney' },
+  { name: 'Moscow', timezone: 'Europe/Moscow' },
+  { name: 'Bern', timezone: 'Europe/Zurich' },
+  { name: 'Dubai', timezone: 'Asia/Dubai' }
+];
+
+const bottomRowCities = [
+  { name: 'Vienna', timezone: 'Europe/Vienna' },
+  { name: 'Moscow', timezone: 'Europe/Moscow' },
+  { name: 'Beijing', timezone: 'Asia/Shanghai' },
+  { name: 'Berlin', timezone: 'Europe/Berlin' }
+];
+
+function createClockSVG(hours: number, minutes: number, seconds: number, clockId: string) {
+  const secondAngle = seconds * 6;
+  const minuteAngle = minutes * 6 + seconds * 0.1;
+  const hourAngle = ((hours % 12) * 30) + (minutes * 0.5) + (seconds * 0.5 / 60);
+  
+  const centerX = 70;
+  const centerY = 70;
+  const secondLength = 54;
+  
+  const numbers = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  const numberRadius = 48;
+  let numbersSVG = '';
+  
+  numbers.forEach((num, i) => {
+    const angle = (i * 30 - 90) * Math.PI / 180;
+    const x = centerX + numberRadius * Math.cos(angle);
+    const y = centerY + numberRadius * Math.sin(angle);
+    numbersSVG += `<text x="${x}" y="${y + 0.5}" font-size="10" font-weight="700" font-family="'Georgia', serif" text-anchor="middle" dominant-baseline="middle" fill="#555555" opacity="0.3">${num}</text>`;
+    numbersSVG += `<text x="${x}" y="${y}" font-size="10" font-weight="700" font-family="'Georgia', serif" text-anchor="middle" dominant-baseline="middle" fill="#1a1a1a">${num}</text>`;
+  });
+  
+  let minuteMarkersSVG = '';
+  for (let i = 0; i < 60; i++) {
+    const angle = (i * 6 - 90) * Math.PI / 180;
+    const isHourMark = i % 5 === 0;
+    const innerR = isHourMark ? 54 : 57;
+    const outerR = 59;
+    const x1 = centerX + innerR * Math.cos(angle);
+    const y1 = centerY + innerR * Math.sin(angle);
+    const x2 = centerX + outerR * Math.cos(angle);
+    const y2 = centerY + outerR * Math.sin(angle);
+    const strokeWidth = isHourMark ? 2.5 : 0.8;
+    const strokeColor = isHourMark ? '#2a2a2a' : '#808080';
+    minuteMarkersSVG += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round"/>`;
+  }
+  
+  return `
+    <svg class="clock-svg" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bezelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#d4d4d4;stop-opacity:1" />
+          <stop offset="25%" style="stop-color:#a8a8a8;stop-opacity:1" />
+          <stop offset="50%" style="stop-color:#e8e8e8;stop-opacity:1" />
+          <stop offset="75%" style="stop-color:#9a9a9a;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#c8c8c8;stop-opacity:1" />
+        </linearGradient>
+        <radialGradient id="dialFace" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+          <stop offset="70%" style="stop-color:#f5f5f5;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#e8e8e8;stop-opacity:1" />
+        </radialGradient>
+        <linearGradient id="steelHand" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#b0b0b0;stop-opacity:1" />
+          <stop offset="50%" style="stop-color:#2a2a2a;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#b0b0b0;stop-opacity:1" />
+        </linearGradient>
+        <radialGradient id="jewelGrad" cx="30%" cy="30%" r="70%">
+          <stop offset="0%" style="stop-color:#f0f0f0;stop-opacity:1" />
+          <stop offset="50%" style="stop-color:#a8a8a8;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#606060;stop-opacity:1" />
+        </radialGradient>
+      </defs>
+      <circle cx="70" cy="72" r="66" fill="rgba(0, 0, 0, 0.15)"/>
+      <circle cx="70" cy="70" r="68" fill="url(#bezelGrad)" stroke="#a0a0a0" stroke-width="0.5"/>
+      <circle cx="70" cy="70" r="65" fill="#c0c0c0" stroke="#989898" stroke-width="1"/>
+      <circle cx="70" cy="70" r="63" fill="none" stroke="url(#bezelGrad)" stroke-width="3"/>
+      <circle cx="70" cy="70" r="61.5" fill="none" stroke="#888888" stroke-width="0.5"/>
+      <circle cx="70" cy="70" r="60" fill="url(#dialFace)" stroke="#d0d0d0" stroke-width="0.5"/>
+      <circle cx="70" cy="70" r="59" fill="none" stroke="#e0e0e0" stroke-width="0.3"/>
+      ${minuteMarkersSVG}
+      ${numbersSVG}
+      <g id="hour-hand-${clockId}" style="transform-origin: ${centerX}px ${centerY}px; transform: rotate(${hourAngle}deg); transition: transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);">
+        <path d="M ${centerX - 3.5},${centerY + 1} L ${centerX - 1.5},${centerY - 4} L ${centerX - 1.2},${centerY - 32} L ${centerX},${centerY - 33} L ${centerX + 1.2},${centerY - 32} L ${centerX + 1.5},${centerY - 4} L ${centerX + 3.5},${centerY + 1} Z" fill="rgba(0, 0, 0, 0.15)"/>
+        <path d="M ${centerX - 3.5},${centerY} L ${centerX - 1.5},${centerY - 5} L ${centerX - 1.2},${centerY - 32} L ${centerX},${centerY - 33} L ${centerX + 1.2},${centerY - 32} L ${centerX + 1.5},${centerY - 5} L ${centerX + 3.5},${centerY} Z" fill="url(#steelHand)" stroke="#1a1a1a" stroke-width="0.5"/>
+        <circle cx="${centerX}" cy="${centerY - 32}" r="1.5" fill="#c8e6c9" stroke="#1a1a1a" stroke-width="0.3"/>
+      </g>
+      <g id="minute-hand-${clockId}" style="transform-origin: ${centerX}px ${centerY}px; transform: rotate(${minuteAngle}deg); transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);">
+        <path d="M ${centerX - 2.2},${centerY + 1} L ${centerX - 1},${centerY - 10} L ${centerX - 0.8},${centerY - 50} L ${centerX},${centerY - 51.2} L ${centerX + 0.8},${centerY - 50} L ${centerX + 1},${centerY - 10} L ${centerX + 2.2},${centerY + 1} Z" fill="rgba(0, 0, 0, 0.15)"/>
+        <path d="M ${centerX - 2.2},${centerY} L ${centerX - 1},${centerY - 10} L ${centerX - 0.8},${centerY - 50} L ${centerX},${centerY - 51.2} L ${centerX + 0.8},${centerY - 50} L ${centerX + 1},${centerY - 10} L ${centerX + 2.2},${centerY} Z" fill="url(#steelHand)" stroke="#1a1a1a" stroke-width="0.5"/>
+        <circle cx="${centerX}" cy="${centerY - 50}" r="1.2" fill="#c8e6c9" stroke="#1a1a1a" stroke-width="0.3"/>
+      </g>
+      <g id="second-hand-${clockId}" style="transform-origin: ${centerX}px ${centerY}px; transform: rotate(${secondAngle}deg); transition: transform 0.05s linear;">
+        <line x1="${centerX}" y1="${centerY}" x2="${centerX}" y2="${centerY + 12}" stroke="#cc0000" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="${centerX}" y1="${centerY}" x2="${centerX}" y2="${centerY - secondLength}" stroke="#cc0000" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="${centerX}" cy="${centerY - secondLength}" r="1.5" fill="#cc0000"/>
+        <circle cx="${centerX}" cy="${centerY + 8}" r="2.5" fill="#cc0000" stroke="#990000" stroke-width="0.5"/>
+      </g>
+      <circle cx="${centerX}" cy="${centerY}" r="6" fill="#b0b0b0" stroke="#808080" stroke-width="0.5"/>
+      <circle cx="${centerX}" cy="${centerY}" r="5" fill="url(#jewelGrad)"/>
+      <circle cx="${centerX}" cy="${centerY}" r="3.5" fill="#2a2a2a" stroke="#505050" stroke-width="0.3"/>
+      <circle cx="${centerX}" cy="${centerY}" r="2.5" fill="#3a3a3a"/>
+      <circle cx="${centerX - 0.8}" cy="${centerY - 0.8}" r="1" fill="#888888" opacity="0.6"/>
+      <circle cx="70" cy="10" r="1.5" fill="#a0a0a0" stroke="#707070" stroke-width="0.3"/>
+      <line x1="69" y1="10" x2="71" y2="10" stroke="#505050" stroke-width="0.3"/>
+      <circle cx="70" cy="130" r="1.5" fill="#a0a0a0" stroke="#707070" stroke-width="0.3"/>
+      <line x1="69" y1="130" x2="71" y2="130" stroke="#505050" stroke-width="0.3"/>
+      <circle cx="10" cy="70" r="1.5" fill="#a0a0a0" stroke="#707070" stroke-width="0.3"/>
+      <line x1="10" y1="69" x2="10" y2="71" stroke="#505050" stroke-width="0.3"/>
+      <circle cx="130" cy="70" r="1.5" fill="#a0a0a0" stroke="#707070" stroke-width="0.3"/>
+      <line x1="130" y1="69" x2="130" y2="71" stroke="#505050" stroke-width="0.3"/>
+    </svg>
+  `;
 }
 
-const AnalogClock: React.FC<{ watch: Watch; time: ClockTime; dayNight: DayNightInfo; onClick: () => void }> = ({
-  watch,
-  time,
-  dayNight,
-  onClick,
-}) => {
-  const hours12 = time.hours % 12;
-  const secondAngle = time.seconds * 6;
-  const minuteAngle = time.minutes * 6 + time.seconds * 0.1;
-  const hourAngle = hours12 * 30 + time.minutes * 0.5 + time.seconds * (0.5 / 60);
+function getTimeInTimezone(timezone: string) {
+  const now = new Date();
+  const options: Intl.DateTimeFormatOptions = {
+    timeZone: timezone,
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: false
+  };
+  const formatter = new Intl.DateTimeFormat('en-US', options);
+  const parts = formatter.formatToParts(now);
+  
+  const hours = parseInt(parts.find(p => p.type === 'hour')?.value || '0');
+  const minutes = parseInt(parts.find(p => p.type === 'minute')?.value || '0');
+  const seconds = parseInt(parts.find(p => p.type === 'second')?.value || '0');
+  
+  return { hours, minutes, seconds };
+}
 
-  const secondHandX = 70 + 50 * Math.cos(((secondAngle - 90) * Math.PI) / 180);
-  const secondHandY = 70 + 50 * Math.sin(((secondAngle - 90) * Math.PI) / 180);
-  const minuteHandX = 70 + 45 * Math.cos(((minuteAngle - 90) * Math.PI) / 180);
-  const minuteHandY = 70 + 45 * Math.sin(((minuteAngle - 90) * Math.PI) / 180);
-  const hourHandX = 70 + 30 * Math.cos(((hourAngle - 90) * Math.PI) / 180);
-  const hourHandY = 70 + 30 * Math.sin(((hourAngle - 90) * Math.PI) / 180);
-
-  return (
-    <div onClick={onClick} className="flex flex-col items-center cursor-pointer transition-transform hover:scale-105">
-      <div
-        className="relative w-40 h-40 rounded-full shadow-2xl flex items-center justify-center"
-        style={{
-          backgroundColor: dayNight.bgColor,
-          border: '5px solid #777777',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.2), inset 0 2px 5px rgba(255,255,255,0.2)',
-        }}
-      >
-        {/* Day/Night Icon */}
-        <div className="absolute top-3 right-3 text-2xl">{dayNight.icon}</div>
-
-        {/* SVG Clock Face */}
-        <svg className="absolute w-full h-full" viewBox="0 0 140 140" style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.1))' }}>
-          {/* Background */}
-          <circle cx="70" cy="70" r="67" fill={dayNight.bgColor} stroke={dayNight.textColor} strokeWidth="1" opacity="0.1" />
-
-          {/* Hour markers */}
-          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => {
-            const angle = (i * 30) * (Math.PI / 180);
-            const x1 = 70 + 58 * Math.cos(angle);
-            const y1 = 70 + 58 * Math.sin(angle);
-            const x2 = 70 + 63 * Math.cos(angle);
-            const y2 = 70 + 63 * Math.sin(angle);
-            return (
-              <line
-                key={`marker-${i}`}
-                x1={x1}
-                y1={y1}
-                x2={x2}
-                y2={y2}
-                stroke={dayNight.textColor}
-                strokeWidth="2"
-              />
-            );
-          })}
-
-          {/* Numbers 1-12 */}
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => {
-            const angle = ((num - 3) * 30) * (Math.PI / 180);
-            const x = 70 + 50 * Math.cos(angle);
-            const y = 70 + 50 * Math.sin(angle);
-            return (
-              <text
-                key={`number-${num}`}
-                x={x}
-                y={y}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize="16"
-                fontWeight="600"
-                fill={dayNight.textColor}
-                fontFamily="Arial, sans-serif"
-              >
-                {num}
-              </text>
-            );
-          })}
-
-          {/* Hour hand */}
-          <line x1="70" y1="70" x2={hourHandX} y2={hourHandY} stroke={dayNight.textColor} strokeWidth="5" strokeLinecap="round" />
-
-          {/* Minute hand */}
-          <line
-            x1="70"
-            y1="70"
-            x2={minuteHandX}
-            y2={minuteHandY}
-            stroke={dayNight.textColor}
-            strokeWidth="4"
-            strokeLinecap="round"
-          />
-
-          {/* Second hand - RED */}
-          <line x1="70" y1="70" x2={secondHandX} y2={secondHandY} stroke="#cc0000" strokeWidth="2" strokeLinecap="round" />
-
-          {/* Center dot */}
-          <circle cx="70" cy="70" r="7" fill={dayNight.textColor} />
-          <circle cx="70" cy="70" r="3" fill={dayNight.bgColor} />
-        </svg>
-      </div>
-      <p className="mt-4 font-bold text-lg text-center" style={{ color: '#1a1a1a', minWidth: '120px' }}>
-        {watch.city}
-      </p>
-    </div>
-  );
-};
-
-export default function FuseauxHoraires() {
-  const [times, setTimes] = useState<Map<string, ClockTime>>(new Map());
-  const [selectedCity, setSelectedCity] = useState<string | null>(null);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+export default function WorldClocksPage(): JSX.Element {
+  const clockCounter = useRef(0);
+  const [clocks, setClocks] = useState<ClockData[]>([]);
 
   useEffect(() => {
-    const updateTimes = () => {
-      const now = new Date();
-      const newTimes = new Map<string, ClockTime>();
-
-      watches.forEach((watch) => {
-        const utcTime = now.getTime() + now.getTimezoneOffset() * 60000;
-        const localTime = new Date(utcTime + watch.utcOffset * 60 * 60 * 1000);
-
-        newTimes.set(watch.city + watch.timezone, {
-          hours: localTime.getHours(),
-          minutes: localTime.getMinutes(),
-          seconds: localTime.getSeconds(),
-        });
-      });
-
-      setTimes(newTimes);
+    const createClockData = (city: typeof topRowCities[0]) => {
+      const clockId = `clock-${clockCounter.current++}`;
+      const time = getTimeInTimezone(city.timezone);
+      const isDaytime = time.hours >= 6 && time.hours < 18;
+      
+      return {
+        id: clockId,
+        city: city.name,
+        timezone: city.timezone,
+        ...time,
+        isDaytime
+      };
     };
 
-    updateTimes();
-    const interval = setInterval(updateTimes, 1000);
+    const initialClocks = [
+      ...topRowCities.map(createClockData),
+      ...middleCities.map(createClockData),
+      ...bottomRowCities.map(createClockData)
+    ];
+    
+    setClocks(initialClocks);
+
+    const interval = setInterval(() => {
+      setClocks(prevClocks => 
+        prevClocks.map(clock => {
+          const time = getTimeInTimezone(clock.timezone);
+          const isDaytime = time.hours >= 6 && time.hours < 18;
+          return { ...clock, ...time, isDaytime };
+        })
+      );
+    }, 1000);
+
     return () => clearInterval(interval);
   }, []);
 
-  const getDayNightInfo = (hours: number): DayNightInfo => {
-    const isDaytime = hours >= 6 && hours < 18;
-    return {
-      isDaytime,
-      icon: isDaytime ? '☀️' : '🌙',
-      bgColor: isDaytime ? '#ffffff' : '#2a2a3a',
-      textColor: isDaytime ? '#000000' : '#ffffff',
-    };
-  };
-
-  const handleWatchClick = (watch: Watch) => {
-    const time = times.get(watch.city + watch.timezone);
-    if (time) {
-      const utcTime = new Date();
-      utcTime.setUTCHours(utcTime.getUTCHours() + watch.utcOffset);
-
-      const formatter = new Intl.DateTimeFormat('fr-FR', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-
-      setSelectedCity(watch.city);
-      setSelectedDate(formatter.format(utcTime));
-    }
-  };
-
-  const topRow = watches.filter((w) => w.row === 'top');
-  const middleRow = watches.filter((w) => w.row === 'middle');
-  const bottomRow = watches.filter((w) => w.row === 'bottom');
+  const topClocks = clocks.slice(0, 4);
+  const middleClocks = clocks.slice(4, 8);
+  const bottomClocks = clocks.slice(8, 12);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f8f8f8] to-[#f0f0f0] p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Title */}
-        <h1
-          className="text-6xl font-bold text-center mb-20 text-[#1a1a1a]"
-          style={{
-            letterSpacing: '2px',
-            fontFamily: "'Playfair Display', 'Montserrat', sans-serif",
-            textShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          }}
-        >
-          Fuseaux Horaires Mondiaux
-        </h1>
+    <>
+      <header>
+        <h1>Fuseaux Horaires Mondiaux</h1>
+      </header>
 
-        {/* Top Row */}
-        <div className="flex justify-center gap-20 mb-24 flex-wrap">
-          {topRow.map((watch) => {
-            const time = times.get(watch.city + watch.timezone) || { hours: 0, minutes: 0, seconds: 0 };
-            const dayNight = getDayNightInfo(time.hours);
-            return (
-              <AnalogClock
-                key={watch.city + watch.timezone}
-                watch={watch}
-                time={time}
-                dayNight={dayNight}
-                onClick={() => handleWatchClick(watch)}
-              />
-            );
-          })}
-        </div>
-
-        {/* Middle Row */}
-        <div className="flex justify-center gap-20 mb-24 flex-wrap">
-          {middleRow.map((watch) => {
-            const time = times.get(watch.city + watch.timezone) || { hours: 0, minutes: 0, seconds: 0 };
-            const dayNight = getDayNightInfo(time.hours);
-            return (
-              <AnalogClock
-                key={watch.city + watch.timezone}
-                watch={watch}
-                time={time}
-                dayNight={dayNight}
-                onClick={() => handleWatchClick(watch)}
-              />
-            );
-          })}
-        </div>
-
-        {/* Bottom Row */}
-        <div className="flex justify-center gap-20 mb-24 flex-wrap">
-          {bottomRow.map((watch) => {
-            const time = times.get(watch.city + watch.timezone) || { hours: 0, minutes: 0, seconds: 0 };
-            const dayNight = getDayNightInfo(time.hours);
-            return (
-              <AnalogClock
-                key={watch.city + watch.timezone}
-                watch={watch}
-                time={time}
-                dayNight={dayNight}
-                onClick={() => handleWatchClick(watch)}
-              />
-            );
-          })}
-        </div>
-
-        {/* Date Modal */}
-        {selectedDate && (
-          <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white rounded-xl shadow-2xl p-8 max-w-md z-50 border border-gray-200">
-            <p className="text-xl font-semibold text-[#1a1a1a]">{selectedCity}</p>
-            <p className="text-3xl font-bold text-[#3a7ca5] mt-4 capitalize">{selectedDate}</p>
-            <button
-              onClick={() => {
-                setSelectedCity(null);
-                setSelectedDate(null);
-              }}
-              className="mt-6 w-full px-4 py-3 bg-[#3a7ca5] text-white rounded-lg hover:bg-[#2a5a8a] transition-all font-semibold"
-            >
-              Fermer
-            </button>
+      <div className="container">
+        <div className="main-content">
+          <div className="top-row">
+            {topClocks.map(clock => (
+              <div 
+                key={clock.id} 
+                className={`clock-item ${clock.isDaytime ? 'daytime' : 'nighttime'}`}
+                data-timezone={clock.timezone}
+                data-clock-id={clock.id}
+              >
+                <div className="day-night-indicator">{clock.isDaytime ? '☀️' : '🌙'}</div>
+                <div dangerouslySetInnerHTML={{ 
+                  __html: createClockSVG(clock.hours, clock.minutes, clock.seconds, clock.id) 
+                }} />
+                <div className="city-name">{clock.city}</div>
+              </div>
+            ))}
           </div>
-        )}
+
+          <div className="middle-row">
+            {middleClocks.map(clock => (
+              <div 
+                key={clock.id} 
+                className={`clock-item ${clock.isDaytime ? 'daytime' : 'nighttime'}`}
+                data-timezone={clock.timezone}
+                data-clock-id={clock.id}
+              >
+                <div className="day-night-indicator">{clock.isDaytime ? '☀️' : '🌙'}</div>
+                <div dangerouslySetInnerHTML={{ 
+                  __html: createClockSVG(clock.hours, clock.minutes, clock.seconds, clock.id) 
+                }} />
+                <div className="city-name">{clock.city}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="bottom-row">
+            {bottomClocks.map(clock => (
+              <div 
+                key={clock.id} 
+                className={`clock-item ${clock.isDaytime ? 'daytime' : 'nighttime'}`}
+                data-timezone={clock.timezone}
+                data-clock-id={clock.id}
+              >
+                <div className="day-night-indicator">{clock.isDaytime ? '☀️' : '🌙'}</div>
+                <div dangerouslySetInnerHTML={{ 
+                  __html: createClockSVG(clock.hours, clock.minutes, clock.seconds, clock.id) 
+                }} />
+                <div className="city-name">{clock.city}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;600;700&display=swap');
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+          background-color: #f8f8f8;
+          color: #2a2a2a;
+          padding: 0;
+          margin: 0;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        header {
+          background: linear-gradient(to bottom, #ffffff 0%, #f9f9f9 100%);
+          padding: 40px 20px 60px;
+          text-align: center;
+          border-bottom: 1px solid #d0d0d0;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+          position: relative;
+        }
+
+        header::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 100px;
+          height: 3px;
+          background: linear-gradient(to right, transparent, #1a1a1a, transparent);
+        }
+
+        h1 {
+          font-family: 'Playfair Display', 'Georgia', serif;
+          font-size: 46px;
+          font-weight: 700;
+          color: #1a1a1a;
+          margin: 0;
+          letter-spacing: 1.5px;
+          text-transform: none;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          line-height: 1.3;
+          position: relative;
+          display: inline-block;
+        }
+
+        h1::before {
+          content: '';
+          position: absolute;
+          top: -15px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 60px;
+          height: 2px;
+          background: linear-gradient(to right, transparent, #1a1a1a, transparent);
+        }
+
+        @media (prefers-color-scheme: dark) {
+          header {
+            background: linear-gradient(to bottom, #1f2121 0%, #1a1c1c 100%);
+            border-bottom: 1px solid #3a3a3a;
+          }
+
+          header::after {
+            background: linear-gradient(to right, transparent, #f5f5f5, transparent);
+          }
+
+          h1 {
+            color: #f5f5f5;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+          }
+
+          h1::before {
+            background: linear-gradient(to right, transparent, #f5f5f5, transparent);
+          }
+        }
+
+        .container {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 60px 20px;
+          position: relative;
+        }
+
+        .main-content {
+          position: relative;
+          width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        .top-row {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 50px;
+          margin-bottom: 60px;
+        }
+
+        .middle-row {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 50px;
+          margin-bottom: 60px;
+        }
+
+        .bottom-row {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 50px;
+        }
+
+        .clock-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 16px;
+          padding: 24px;
+          border-radius: 16px;
+          transition: all 0.5s ease;
+          position: relative;
+        }
+        
+        .clock-item.daytime {
+          background-color: #f5f5f5;
+        }
+        
+        .clock-item.nighttime {
+          background-color: #2a2a3a;
+        }
+        
+        .clock-item.nighttime .city-name {
+          color: #ffffff;
+        }
+        
+        .day-night-indicator {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          font-size: 20px;
+          opacity: 0.9;
+          transition: opacity 0.3s ease;
+        }
+        
+        .clock-item:hover .day-night-indicator {
+          opacity: 1;
+        }
+
+        .clock-svg {
+          width: 140px;
+          height: 140px;
+          filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.15));
+          transition: transform 0.3s ease;
+        }
+
+        .clock-item:hover .clock-svg {
+          transform: scale(1.05);
+        }
+
+        .city-name {
+          font-size: 16px;
+          font-weight: 600;
+          color: #3a3a3a;
+          text-align: center;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+          .container {
+            padding: 40px 15px;
+          }
+
+          header {
+            padding: 40px 20px 30px;
+          }
+
+          h1 {
+            font-size: 32px;
+            letter-spacing: 1px;
+          }
+
+          h1::before {
+            top: -12px;
+            width: 50px;
+          }
+
+          .top-row,
+          .middle-row,
+          .bottom-row {
+            flex-wrap: wrap;
+            gap: 35px;
+          }
+
+          .clock-svg {
+            width: 100px;
+            height: 100px;
+          }
+
+          .city-name {
+            font-size: 14px;
+          }
+        }
+      `}</style>
+    </>
   );
 }
