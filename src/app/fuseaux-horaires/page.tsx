@@ -1,124 +1,57 @@
 'use client';
 
-import React, { useState } from 'react';
-import { ChevronLeft, Clock, Watch, Calendar, Sun, Moon } from 'lucide-react';
-import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 
-interface CorrectionType {
-  id: string;
-  name: string;
-  description: string;
-  examples: string[];
-  displayType: 'analog' | 'digital' | '24h';
-  features: string[];
+interface Watch {
+  city: string;
+  timezone: string;
+  utcOffset: number;
+  row: 'top' | 'middle' | 'bottom';
 }
 
-const corrections: CorrectionType[] = [
-  {
-    id: 'central-12h',
-    name: 'AIGUILLE 12H AU CENTRE',
-    description: 'Correction par poussoirs (incrémentation et décrémentation)',
-    examples: ['23', '24', '22', '21', '12', '12', '12', '12', '11', '11'],
-    displayType: 'analog',
-    features: ['EP', 'P', 'P', '10', '10', '10', '18', '9', '3', '3', '16', '5', '6', '6', '15', '14', '13', '11']
-  },
-  {
-    id: 'excentric-hm',
-    name: 'AIGUILLES H+M /12H EXCENTRÉES',
-    description: 'Aiguilles des heures et minutes excentrées sur cadran 12H',
-    examples: [],
-    displayType: 'analog',
-    features: ['Quantieme']
-  },
-  {
-    id: 'digital',
-    name: 'AFFICHAGE NUMÉRIQUE',
-    description: 'Affichage numérique des heures, minutes et secondes',
-    examples: [],
-    displayType: 'digital',
-    features: ['6', '6']
-  },
-  {
-    id: 'central-24h',
-    name: 'AIGUILLE 24H AU CENTRE & INDICATEUR JOUR/NUIT',
-    description: 'Aiguille centrale sur cadran 24H avec indicateur jour/nuit',
-    examples: [],
-    displayType: '24h',
-    features: ['24h', 'Jour/Nuit']
-  },
-  {
-    id: 'day-night-disc',
-    name: 'INDICATEUR JOUR/NUIT SUR DISQUE 24H',
-    description: 'Indication du jour et de la nuit sur disque tournant 24H',
-    examples: [],
-    displayType: '24h',
-    features: ['Disque 24H', 'Rotation continue']
-  }
+const watches: Watch[] = [
+  { city: 'New York', timezone: 'America/New_York', utcOffset: -5, row: 'top' },
+  { city: 'London', timezone: 'Europe/London', utcOffset: 0, row: 'top' },
+  { city: 'Tokyo', timezone: 'Asia/Tokyo', utcOffset: 9, row: 'top' },
+  { city: 'Paris', timezone: 'Europe/Paris', utcOffset: 1, row: 'top' },
+  { city: 'Sydney', timezone: 'Australia/Sydney', utcOffset: 11, row: 'middle' },
+  { city: 'Moscow', timezone: 'Europe/Moscow', utcOffset: 3, row: 'middle' },
+  { city: 'Bern', timezone: 'Europe/Zurich', utcOffset: 1, row: 'middle' },
+  { city: 'Dubai', timezone: 'Asia/Dubai', utcOffset: 4, row: 'middle' },
+  { city: 'Vienna', timezone: 'Europe/Vienna', utcOffset: 1, row: 'bottom' },
+  { city: 'Moscow', timezone: 'Europe/Moscow', utcOffset: 3, row: 'bottom' },
+  { city: 'Beijing', timezone: 'Asia/Shanghai', utcOffset: 8, row: 'bottom' },
+  { city: 'Berlin', timezone: 'Europe/Berlin', utcOffset: 1, row: 'bottom' },
 ];
 
-export default function CorrectionsMontresPage() {
-  return (
-    <main className="min-h-screen bg-white font-sans">
-      <header className="max-w-5xl mx-auto px-6 py-8">
-        <Link href="/" className="text-sm text-black flex items-center gap-1 hover:opacity-70 transition-opacity">
-          <ChevronLeft className="w-4 h-4" /> retour
-        </Link>
-      </header>
-
-      <div className="max-w-5xl mx-auto px-6 pb-16">
-        <h1 className="text-5xl font-bold text-black mb-12 tracking-tight">CORRECTIONS MONTRES</h1>
-        
-        <div className="space-y-0 divide-y divide-slate-200">
-          {corrections.map((correction) => (
-            <div key={correction.id} className="py-8 hover:bg-slate-50 transition-colors">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h2 className="text-2xl font-bold text-black tracking-tight mb-2">
-                    {correction.name}
-                  </h2>
-                  <p className="text-sm text-slate-600 font-mono">
-                    {correction.description}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  {correction.displayType === 'analog' && <Watch className="w-5 h-5 text-slate-400" />}
-                  {correction.displayType === 'digital' && <Clock className="w-5 h-5 text-slate-400" />}
-                  {correction.displayType === '24h' && (
-                    <div className="flex">
-                      <Sun className="w-5 h-5 text-yellow-400" />
-                      <Moon className="w-5 h-5 text-indigo-400" />
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {correction.examples.length > 0 && (
-                <div className="mb-4">
-                  <div className="flex flex-wrap gap-2">
-                    {correction.examples.map((ex, idx) => (
-                      <span key={idx} className="px-2 py-1 bg-slate-100 text-xs font-mono text-slate-700 rounded">
-                        {ex}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="grid grid-cols-6 md:grid-cols-12 gap-2">
-                {correction.features.map((feature, idx) => (
-                  <div key={idx} className="text-center">
-                    <span className="text-xs font-mono text-slate-500">{feature}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="text-center mt-16 text-sm text-black opacity-50">
-          @ 2024 • Documentation technique horlogère
-        </div>
-      </div>
-    </main>
-  );
+interface ClockTime {
+  hours: number;
+  minutes: number;
+  seconds: number;
 }
+
+interface DayNightInfo {
+  isDaytime: boolean;
+  icon: string;
+  bgColor: string;
+  textColor: string;
+}
+
+const AnalogClock: React.FC<{ watch: Watch; time: ClockTime; dayNight: DayNightInfo; onClick: () => void }> = ({
+  watch,
+  time,
+  dayNight,
+  onClick,
+}) => {
+  // Convertir les heures 24h en 12h
+  const hours12 = time.hours % 12;
+
+  // Calculer les angles des aiguilles
+  const secondAngle = time.seconds * 6;
+  const minuteAngle = time.minutes * 6 + time.seconds * 0.1;
+  const hourAngle = hours12 * 30 + time.minutes * 0.5 + (time.seconds * 0.5) / 60;
+
+  return (
+    <div onClick={onClick} className="flex flex-col items-center cursor-pointer transition-transform hover:scale-105">
+      <div
+        className="relative w-36 h-36 rounded-full shadow-lg transition-colors"
