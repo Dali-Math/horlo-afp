@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, Search } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import { useState, useRef } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -80,12 +80,7 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
                 : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
             }`}
           >
-            Théorie{" "}
-            <ChevronDown
-              className={`w-4 h-4 mt-0.5 transition-transform duration-200 ${
-                theorieOpenDesktop ? "rotate-180 text-[#E2B44F]" : ""
-              }`}
-            />
+            Théorie
           </Link>
 
           {theorieOpenDesktop && (
@@ -170,17 +165,6 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
                 >
                   Théorie
                 </Link>
-                <button
-                  onClick={() => setTheorieOpen(!theorieOpen)}
-                  className="p-2 text-slate-700 dark:text-gray-300 hover:text-[#E2B44F]"
-                  aria-label="Toggle sous-menu Théorie"
-                >
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform ${
-                      theorieOpen ? "rotate-180 text-[#E2B44F]" : ""
-                    }`}
-                  />
-                </button>
               </div>
 
               {theorieOpen && (
