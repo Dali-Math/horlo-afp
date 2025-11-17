@@ -1,29 +1,35 @@
+// src/app/HomePageClient.tsx
+
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
+import dynamic from 'next/dynamic';
 import { 
-  Clock, 
-  Watch, 
-  BookOpen, 
-  Award, 
-  Heart, 
-  ChevronRight, 
-  Menu, 
-  X, 
-  Users, 
-  Share2,
-  Download,
-  PlayCircle,
-  FileText,
-  TrendingUp,
-  Sparkles,
-  ArrowRight,
-  Radio,
-  Globe,
-  Wand2, // ✅ nouvel import
+  Clock, Watch, BookOpen, Award, Heart, ChevronRight, Menu, X, Users, Share2,
+  Download, PlayCircle, FileText, TrendingUp, Sparkles, ArrowRight, Radio, Globe, Wand2,
 } from 'lucide-react'
+
+// Importation des données depuis notre fichier central
+import { navigationLinks, stats, thematiques, featuredResources, actualites } from '@/lib/homepageData';
+
+// Importation du composant partagé pour la navigation
+import Navbar from '@/components/Navbar';
+
+// --- IMPORTATION DYNAMIQUE DES SECTIONS ---
+const RessourcesPharesSection = dynamic(() => import('@/components/RessourcesPharesSection'), {
+  loading: () => <p className="text-center text-gray-500">Chargement des ressources...</p>,
+});
+
+const ThematiquesSection = dynamic(() => import('@/components/ThematiquesSection'), {
+  loading: () => <p className="text-center text-gray-500">Chargement des thématiques...</p>,
+});
+
+const ActualitesSection = dynamic(() => import('@/components/ActualitesSection'), {
+  loading: () => <p className="text-center text-gray-500">Chargement des actualités...</p>,
+});
+
 
 // --- Composant d'animation au scroll ---
 const FadeInSection = ({ id, children, className = "" }: { id?: string; children: React.ReactNode; className?: string }) => {
@@ -46,8 +52,6 @@ const FadeInSection = ({ id, children, className = "" }: { id?: string; children
 
 // --- Page Principale ---
 export default function HorloLearnHome() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [time, setTime] = useState(new Date())
   const [onlineUsers] = useState(48)
   const { scrollYProgress } = useScroll()
@@ -63,114 +67,6 @@ export default function HorloLearnHome() {
   const secondsDegrees = (time.getSeconds() / 60) * 360
   const minutesDegrees = ((time.getMinutes() + time.getSeconds() / 60) / 60) * 360
   const hoursDegrees = ((time.getHours() % 12 + time.getMinutes() / 60) / 12) * 360
-
-  const navigationLinks = [
-    { 
-      label: 'Théorie', 
-      href: '/theorie', 
-      hasDropdown: true,
-      subLinks: [
-        { label: 'Lecture de plan', href: '/theorie/lecture-de-plan' },
-      ]
-    },
-    { label: 'Pratique', href: '/pratique' },
-    { label: 'Quiz', href: '/quiz' },
-    { label: 'Outils', href: '/outils' },
-    { label: 'Ressources', href: '/ressources' },
-    { label: 'CH Horlogerie Suisse', href: '/ch-horlogerie-suisse' },
-    { label: 'Podcasts', href: '/podcasts' },
-    { label: 'Culture', href: '/culture' },
-    { label: 'Événements', href: '/evenements' },
-    { label: 'Communauté', href: '/communaute' },
-  ]
-
-  const stats = [
-    { value: '2,500+', label: 'Ressources Partagées', icon: FileText },
-    { value: '1,200+', label: 'Passionnés Actifs', icon: Users },
-    { value: '150h+', label: 'Vidéos Tutoriels', icon: PlayCircle },
-    { value: '100%', label: 'Gratuit & Libre', icon: Heart },
-  ]
-
-  const thematiques = [
-    {
-      icon: '📚',
-      title: 'Théorie',
-      description: 'Principes fondamentaux, histoire et terminologie horlogère',
-      items: ['Cours détaillés', 'Schémas annotés', 'Glossaire illustré'],
-      color: 'from-blue-500 to-cyan-500',
-      resources: '850+',
-      link: '/theorie'
-    },
-    {
-      icon: '🔧',
-      title: 'Pratique',
-      description: 'Démontage, remontage et réglage de mouvements',
-      items: ['Tutoriels vidéo', 'Plans techniques', 'Guides pas-à-pas'],
-      color: 'from-amber-500 to-orange-500',
-      resources: '1,200+',
-      link: '/pratique'
-    },
-    {
-      icon: '✅',
-      title: 'Évaluation',
-      description: 'Testez vos connaissances avec nos quiz interactifs',
-      items: ['Quiz interactifs', 'Correction détaillée', 'Suivi progrès'],
-      color: 'from-green-500 to-emerald-500',
-      resources: '450+',
-      link: '/quiz'
-    },
-  ]
-
-  // ✅ Ressources avec l'Analyseur IA mis en avant
-  const featuredResources = [
-    {
-      type: 'Outil IA',
-      title: 'Analyseur de Montres IA',
-      description:
-        'Déposez une photo et obtenez une analyse détaillée : boîtier, cadran, index, aiguilles et style horloger.',
-      author: 'HorloLearn',
-      downloads: 'Nouveau',
-      readTime: '—',
-      badge: 'Ressource de la semaine',
-      href: '/outils/analyseur',
-    },
-    {
-  type: 'Vidéo',
-  title: 'Montage démontage mouvement 6497',
-  description:
-    'Tutoriel vidéo HD : technique professionnelle de montage et démontage mouvement 6497.',
-  badge: 'Populaire',
-  href: 'https://www.horlolearn.ch/pratique/demontage',
-},
-    {
-  type: 'Ressource',
-  title: 'Outils de mesure en horlogerie moderne',
-  description:
-    'Découvrez les 10 instruments essentiels utilisés aujourd’hui pour garantir la précision du travail horloger.',
-  badge: 'Nouveau',
-  href: 'https://www.horlolearn.ch/outils/outils-de-mesure',
-},
-  ]
-
-  const actualites = [
-    {
-      title: 'Watches & Wonders 2026 : Dates confirmées',
-      time: 'Il y a 2 jours',
-      category: 'Événement'
-    },
-    {
-  title: 'Rapport complet sur l’Horlogerie Suisse 2024',
-  time: 'Publié par HorloLearn',
-  category: 'Découverte',
-  link: '/horlogerie/ecoles/rapport-horlogerie-suisse'
-},
-
-    {
-  title: 'Les Écoles Suisses d’Horlogerie',
-  category: 'Découverte',
-  link: '/horlogerie/ecoles'
-},
-  ]
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden">
@@ -204,126 +100,8 @@ export default function HorloLearnHome() {
         </motion.div>
       </div>
 
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-black z-50 border-b border-gray-800">
-        <div className="w-full px-8 lg:px-16">
-          <div className="flex items-center h-16">
-            <Link href="/" className="flex items-center space-x-3 mr-auto">
-              <div className="relative w-10 h-10">
-                <motion.svg
-                  viewBox="0 0 50 50"
-                  className="w-full h-full"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                >
-                  <circle cx="25" cy="25" r="23" fill="none" stroke="#f59e0b" strokeWidth="1" />
-                  {[...Array(12)].map((_, i) => (
-                    <circle 
-                      key={i} 
-                      cx={25 + 19 * Math.cos((i * 30 - 90) * Math.PI / 180)} 
-                      cy={25 + 19 * Math.sin((i * 30 - 90) * Math.PI / 180)} 
-                      r="1.5" 
-                      fill="#f59e0b" 
-                    />
-                  ))}
-                </motion.svg>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold leading-tight">
-                  <span className="text-amber-400">Horlo</span>
-                  <span className="text-white">Learn</span>
-                </span>
-                <span className="text-xs text-gray-400 leading-tight">Passion & Découverte</span>
-              </div>
-            </Link>
-
-            <div className="hidden lg:flex items-center space-x-10 flex-1 justify-center ml-12">
-              {navigationLinks.map((link, index) => (
-                <div 
-                  key={index}
-                  className="relative"
-                  onMouseEnter={() => link.hasDropdown && setOpenDropdown(link.label)}
-                  onMouseLeave={() => setOpenDropdown(null)}
-                >
-                  <Link
-                    href={link.href}
-                    className="text-white text-sm hover:text-gray-300 transition-colors duration-200 flex items-center whitespace-nowrap"
-                  >
-                    {link.label}
-                    {link.hasDropdown && <span className="ml-1 text-xs">▼</span>}
-                  </Link>
-
-                  {link.hasDropdown && link.subLinks && openDropdown === link.label && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="absolute top-full left-0 mt-2 w-56 bg-gray-900 border border-gray-800 rounded-lg shadow-xl py-2 z-50"
-                    >
-                      {link.subLinks.map((subLink, subIndex) => (
-                        <Link
-                          key={subIndex}
-                          href={subLink.href}
-                          className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-amber-400 transition-colors duration-200"
-                        >
-                          {subLink.label}
-                        </Link>
-                      ))}
-                    </motion.div>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2 text-white hover:text-gray-300 transition-colors ml-auto"
-              aria-label="Menu"
-            >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-        </div>
-
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-black border-t border-gray-800"
-          >
-            <div className="px-4 py-4 space-y-1">
-              {navigationLinks.map((link, index) => (
-                <div key={index}>
-                  <Link
-                    href={link.href}
-                    onClick={() => !link.hasDropdown && setIsMenuOpen(false)}
-                    className="block px-4 py-3 text-white hover:text-gray-300 hover:bg-gray-900 rounded transition-colors duration-200"
-                  >
-                    {link.label}
-                    {link.hasDropdown && <span className="ml-2 text-xs">▼</span>}
-                  </Link>
-                  
-                  {link.hasDropdown && link.subLinks && (
-                    <div className="ml-4 mt-1 space-y-1">
-                      {link.subLinks.map((subLink, subIndex) => (
-                        <Link
-                          key={subIndex}
-                          href={subLink.href}
-                          onClick={() => setIsMenuOpen(false)}
-                          className="block px-4 py-2 text-sm text-gray-400 hover:text-amber-400 hover:bg-gray-900 rounded transition-colors duration-200"
-                        >
-                          {subLink.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </nav>
+      {/* UTILISATION DE LA BARRE DE NAVIGATION PARTAGÉE */}
+      <Navbar />
 
       {/* Hero Section */}
       <section id="accueil" className="relative min-h-screen flex items-center justify-center px-4 pt-20">
@@ -398,7 +176,11 @@ export default function HorloLearnHome() {
             transition={{ duration: 1, delay: 0.3 }}
             className="relative flex justify-center items-center"
           >
-            <div className="relative w-96 h-96">
+            <div className="relative w-96 h-96"
+              // AMÉLIORATION ACCESSIBILITÉ
+              role="img" 
+              aria-label={`Horloge interactive. Il est actuellement ${time.toLocaleTimeString('fr-FR')}`}
+            >
               <motion.div 
                 animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }}
                 transition={{ duration: 3, repeat: Infinity }}
@@ -491,189 +273,10 @@ export default function HorloLearnHome() {
         </div>
       </FadeInSection>
 
-      {/* Ressources Phares */}
-      <FadeInSection id="ressources" className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Ressources <span className="text-amber-400">Phares</span>
-            </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Découvrez nos contenus les plus appréciés par la communauté
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {featuredResources.map((resource, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.15 }}
-                viewport={{ once: true }}
-                className="group relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl overflow-hidden border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300"
-              >
-                <div className="absolute top-4 right-4 z-10">
-                  <span className="px-3 py-1 bg-amber-500/90 text-white text-xs font-bold rounded-full">
-                    {resource.badge}
-                  </span>
-                </div>
-
-                <div className="p-8">
-                  <div className="flex items-center space-x-3 mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center">
-                      {resource.type === 'Outil IA' ? (
-                        <Wand2 className="w-6 h-6 text-white" />
-                      ) : (
-                        <FileText className="w-6 h-6 text-white" />
-                      )}
-                    </div>
-                    <span className="text-sm font-bold text-amber-400 uppercase tracking-wider">
-                      {resource.type}
-                    </span>
-                  </div>
-
-                  <h3 className="text-xl font-bold mb-3 text-white group-hover:text-amber-400 transition-colors">
-                    {resource.title}
-                  </h3>
-
-                  <p className="text-gray-400 mb-6 text-sm leading-relaxed">
-                    {resource.description}
-                  </p>
-
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
-                    <span className="flex items-center">
-                      <Users className="w-4 h-4 mr-1" />
-                      {resource.author}
-                    </span>
-                    <span>{resource.readTime}</span>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-6 border-t border-amber-500/10">
-                    <div className="flex items-center text-sm text-gray-400">
-                      <Download className="w-4 h-4 mr-2 text-amber-400" />
-                      {resource.downloads} téléchargements
-                    </div>
-                    {/* ✅ Lien “Voir” qui utilise resource.href */}
-                    <Link
-                      href={resource.href ?? '#'}
-                      className="text-amber-400 font-semibold hover:text-amber-300 transition-colors flex items-center"
-                    >
-                      Voir <ArrowRight className="ml-1 w-4 h-4" />
-                    </Link>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </FadeInSection>
-
-      {/* Thématiques */}
-      <FadeInSection id="communaute" className="py-20 px-4 bg-slate-900/30">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Explorez par <span className="text-amber-400">Thématique</span>
-            </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Une bibliothèque vivante organisée pour votre apprentissage
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {thematiques.map((theme, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -10 }}
-                className="relative group"
-              >
-                <div className={`absolute inset-0 bg-gradient-to-br ${theme.color} opacity-10 group-hover:opacity-20 rounded-2xl blur-xl transition-opacity duration-300`} />
-                
-                <div className="relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 rounded-2xl p-8 border border-amber-500/10 group-hover:border-amber-500/30 transition-all duration-300 backdrop-blur-sm">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="text-5xl">{theme.icon}</div>
-                    <span className="px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-xs font-bold text-amber-300">
-                      {theme.resources}
-                    </span>
-                  </div>
-
-                  <h3 className="text-2xl font-bold mb-3 text-amber-400">{theme.title}</h3>
-                  <p className="text-gray-400 mb-6">{theme.description}</p>
-
-                  <ul className="space-y-2 mb-6">
-                    {theme.items.map((item, i) => (
-                      <li key={i} className="flex items-center text-sm text-gray-300">
-                        <ChevronRight className="w-4 h-4 mr-2 text-amber-400" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Link href={theme.link} className="block w-full py-3 border-2 border-amber-400/50 rounded-lg font-semibold hover:bg-amber-500/10 transition-all duration-300 text-center">
-                    Découvrir
-                  </Link>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </FadeInSection>
-
-      {/* Actualités */}
-      <FadeInSection id="actualites" className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-end mb-12">
-            <div>
-              <h2 className="text-4xl font-bold mb-4">
-                <span className="text-amber-400">Actualités</span> Horlogères
-              </h2>
-              <p className="text-gray-400">Restez informé des dernières nouveautés</p>
-            </div>
-            <button className="hidden md:block text-amber-400 font-semibold hover:text-amber-300 transition-colors flex items-center">
-              Voir tout <ArrowRight className="ml-2 w-5 h-5" />
-            </button>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-  {actualites.map((news, index) => (
-  <motion.div
-    key={index}
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ delay: index * 0.1 }}
-    viewport={{ once: true }}
-    className="bg-gradient-to-br from-slate-800/30 to-slate-900/30 rounded-xl p-6 border border-amber-500/10 hover:border-amber-500/30 transition-all duration-300 group"
-  >
-    <a
-      href={
-        news.title === 'Nouveau calibre Sellita SW330-2 annoncé'
-          ? '/horlogerie/ecoles/rapport-horlogerie-suisse'
-          : news.link || '#'
-      }
-      className="block no-underline cursor-pointer"
-    >
-      <span className="inline-block px-3 py-1 bg-amber-500/20 border border-amber-500/30 rounded-full text-xs font-bold text-amber-300 mb-4">
-        {news.category}
-      </span>
-
-      <h3 className="text-lg font-bold mb-3 text-white group-hover:text-amber-400 transition-colors">
-        {news.title}
-      </h3>
-
-      {news.time && (
-        <p className="text-sm text-gray-500">{news.time}</p>
-      )}
-    </a>
-  </motion.div>
-))}
-</div>
-        </div>
-      </FadeInSection>
+      {/* Sections chargées dynamiquement */}
+      <RessourcesPharesSection resources={featuredResources} />
+      <ThematiquesSection thematiques={thematiques} />
+      <ActualitesSection actualites={actualites} />
 
       {/* Newsletter */}
       <FadeInSection id="contribuer" className="py-20 px-4 bg-slate-900/30">
