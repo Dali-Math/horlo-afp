@@ -1,12 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Clock } from 'lucide-react';
 import Link from 'next/link';
-
-// ─────────────────────────────────────────────────────────────────────────────
-// TYPES
-// ─────────────────────────────────────────────────────────────────────────────
 
 interface City {
   id: string;
@@ -14,12 +10,8 @@ interface City {
   timezone: string;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// DONNÉES
-// ─────────────────────────────────────────────────────────────────────────────
-
 const cities: City[] = [
-  { id: 'new-york', name: 'NEWYORK', timezone: 'America/New_York' },
+  { id: 'new-york', name: 'NEW YORK', timezone: 'America/New_York' },
   { id: 'london', name: 'LONDON', timezone: 'Europe/London' },
   { id: 'tokyo', name: 'TOKYO', timezone: 'Asia/Tokyo' },
   { id: 'paris', name: 'PARIS', timezone: 'Europe/Paris' },
@@ -31,10 +23,6 @@ const cities: City[] = [
   { id: 'berlin', name: 'BERLIN', timezone: 'Europe/Berlin' },
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
-// UTILS
-// ─────────────────────────────────────────────────────────────────────────────
-
 function formatTime(date: Date, timezone: string): string {
   return date.toLocaleTimeString('fr-FR', {
     timeZone: timezone,
@@ -45,59 +33,57 @@ function formatTime(date: Date, timezone: string): string {
   });
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// COMPOSANT CARTE
-// ─────────────────────────────────────────────────────────────────────────────
-
 function CityRow({ city }: { city: City }) {
   const [time, setTime] = useState(() => formatTime(new Date(), city.timezone));
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTime(formatTime(new Date(), city.timezone));
-    }, 1000);
+    const interval = setInterval(() => setTime(formatTime(new Date(), city.timezone)), 1000);
     return () => clearInterval(interval);
   }, [city.timezone]);
 
   return (
-    <div className="flex justify-between py-5 border-b border-slate-200 font-mono">
-      <span className="text-2xl text-black font-medium tracking-tight">{city.name}</span>
-      <span className="text-2xl text-black font-mono tracking-tight">{time}</span>
+    <div className="group flex justify-between items-center py-5 border-b border-slate-100 hover:bg-slate-50 transition-all duration-200 cursor-pointer">
+      <div className="flex items-center gap-4">
+        <span className="text-sm text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Clock className="w-4 h-4" />
+        </span>
+        <span className="text-xl font-medium text-slate-900 tracking-tight">{city.name}</span>
+      </div>
+      <span className="text-xl font-mono text-slate-700 tracking-tight tabular-nums">{time}</span>
     </div>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// PAGE PRINCIPALE
-// ─────────────────────────────────────────────────────────────────────────────
-
 export default function FuseauxHorairesPage() {
+  const pageTitle = "FUSEAUX HORAIRES";
+  
   return (
-    <main className="min-h-screen bg-white font-sans">
-      {/* Header avec lien retour */}
-      <header className="max-w-3xl mx-auto px-5 py-6">
+    <main className="min-h-screen bg-gradient-to-b from-white to-slate-50 font-sans">
+      <div className="max-w-2xl mx-auto px-6 py-12">
+        {/* Header */}
         <Link 
           href="/" 
-          className="text-sm text-black flex items-center gap-1 hover:opacity-70 transition-opacity"
+          className="inline-flex items-center text-sm text-slate-500 hover:text-slate-900 mb-8 transition-colors"
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-4 h-4 mr-1.5" />
           retour
         </Link>
-      </header>
-
-      {/* Contenu principal */}
-      <div className="max-w-3xl mx-auto px-5 pb-16">
-        <h1 className="text-4xl font-bold text-black mb-8 tracking-tight">FUSEAUX HORAIRES</h1>
         
-        <div className="space-y-0">
+        {/* Titre principal */}
+        <h1 className="text-5xl font-bold text-slate-900 mb-12 tracking-tight">
+          {pageTitle}
+        </h1>
+
+        {/* Liste des villes */}
+        <div className="space-y-0 bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
           {cities.map(city => (
             <CityRow key={city.id} city={city} />
           ))}
         </div>
 
-        {/* Footer copyright */}
-        <div className="text-center mt-12 text-sm text-black opacity-50">
-          @ 2024
+        {/* Footer */}
+        <div className="text-center mt-12 text-sm text-slate-400">
+          Passion horlogère • @ 2024
         </div>
       </div>
     </main>
