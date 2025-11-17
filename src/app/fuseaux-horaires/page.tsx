@@ -434,18 +434,11 @@ export default function WorldClocksPage(): JSX.Element {
         }
 
         .main-content {
-          position: relative;
-          width: 100%;
-          max-width: 1200px;
-          margin: 0 auto;
-          /* --- MODIFICATIONS ICI --- */
-          /* Un fond semi-transparent pour que le contenu soit lisible */
-          background-color: rgba(248, 248, 248, 0.85);
-          backdrop-filter: blur(8px); /* Effet de flou moderne */
-          border-radius: 16px;
-          padding: 40px;
-          /* --- FIN DES MODIFICATIONS --- */
-        }
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
         .top-row {
           display: flex;
