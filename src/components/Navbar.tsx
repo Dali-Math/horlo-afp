@@ -24,6 +24,7 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
     { href: "/culture", label: "Culture" },
     { href: "/evenements", label: "Événements" },
     { href: "/communaute", label: "Communauté" },
+    { href: "/fuseaux-horaires", label: "Fuseaux Horaires" }, // <-- LIEN AJOUTÉ
     { href: "/actualites", label: "Actualités" },
   ];
 
