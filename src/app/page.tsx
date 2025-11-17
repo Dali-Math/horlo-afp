@@ -1,4 +1,4 @@
-// app/page.tsx
+// src/app/page.tsx
 
 import { Metadata } from 'next';
 import HomePageClient from './HomePageClient';
@@ -7,7 +7,7 @@ import HomePageClient from './HomePageClient';
 export const metadata: Metadata = {
   title: 'HorloLearn - La Passion & Découverte Horlogère Suisse',
   description: 'Explorez librement ressources, tutoriels et savoirs horlogers partagés par des passionnés pour des passionnés. Théorie, pratique, quiz et bien plus.',
-  keywords: ['horlogerie', 'montres suisses', 'apprendre l'horlogerie', 'ressources horlogères', 'forum horlogerie'],
+  keywords: ['horlogerie', 'montres suisses', 'apprendre l\'horlogerie', 'ressources horlogères', 'forum horlogerie'], // <-- LIGNE CORRIGÉE
   openGraph: {
     title: 'HorloLearn - La Passion Horlogère Suisse',
     description: 'Plongez dans l\'univers de l\'horlogerie suisse avec des cours, tutoriels et une communauté passionnée.',
