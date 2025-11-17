@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Search, X, Clock, FileText, Video, BookOpen } from "lucide-react";
-import { FocusLock } from 'react-focus-lock'; // <-- 1. IMPORTER FOCUSLOCK
+import FocusLock from 'react-focus-lock'; // <-- CORRIGÉ : import sans accolades
 import { searchData } from "@/lib/searchData";
 
 interface SearchModalProps {
@@ -18,12 +18,12 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [results, setResults] = useState<typeof searchData>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // ✅ focus automatique quand on ouvre le modal
+  // focus automatique quand on ouvre le modal
   useEffect(() => {
     if (isOpen && inputRef.current) inputRef.current.focus();
   }, [isOpen]);
 
-  // <-- 2. AJOUTÉ : GESTION DE LA TOUCHE "ÉCHAP"
+  // GESTION DE LA TOUCHE "ÉCHAP"
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -35,13 +35,12 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
       document.addEventListener('keydown', handleEscape);
     }
 
-    // Nettoyer l'écouteur d'événement quand le composant se démonte ou se ferme
     return () => {
       document.removeEventListener('keydown', handleEscape);
     };
-  }, [isOpen, onClose]); // Se réactive quand `isOpen` change
+  }, [isOpen, onClose]);
 
-  // ✅ recherche dans searchData global
+  // recherche dans searchData global
   useEffect(() => {
     if (query.length < 2) {
       setResults([]);
@@ -65,7 +64,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   const handleResultClick = (url: string) => {
     onClose();
-    router.push(url); // ✅ navigation interne
+    router.push(url);
   };
 
   const getIcon = (type: string) => {
@@ -104,7 +103,6 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
       />
 
       {/* Modal */}
-      {/* <-- 3. MODIFIÉ : ENVELOPPER LE MODAL AVEC <FocusLock> */}
       <FocusLock>
         <div className="relative w-full max-w-2xl bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
           {/* Barre de recherche */}
