@@ -1,4 +1,4 @@
-// lib/homepageData.ts
+// src/lib/homepageData.ts
 
 import { LucideIcon } from 'lucide-react';
 
@@ -117,6 +117,9 @@ export const featuredResources: FeaturedResource[] = [
     type: 'Vidéo',
     title: 'Montage démontage mouvement 6497',
     description: 'Tutoriel vidéo HD : technique professionnelle de montage et démontage mouvement 6497.',
+    author: 'HorloLearn', // <-- AJOUTÉ
+    downloads: '1.2k+', // <-- AJOUTÉ
+    readTime: '25 min', // <-- AJOUTÉ
     badge: 'Populaire',
     href: 'https://www.horlolearn.ch/pratique/demontage',
   },
@@ -124,6 +127,9 @@ export const featuredResources: FeaturedResource[] = [
     type: 'Ressource',
     title: 'Outils de mesure en horlogerie moderne',
     description: 'Découvrez les 10 instruments essentiels utilisés aujourd’hui pour garantir la précision du travail horloger.',
+    author: 'HorloLearn', // <-- AJOUTÉ
+    downloads: '800+', // <-- AJOUTÉ
+    readTime: '15 min', // <-- AJOUTÉ
     badge: 'Nouveau',
     href: 'https://www.horlolearn.ch/outils/outils-de-mesure',
   },
