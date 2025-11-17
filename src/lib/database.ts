@@ -847,4 +847,4 @@ export const database = {
     "safetyFactor": 1.02
   }
 }
-EOF
+
