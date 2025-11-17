@@ -44,6 +44,7 @@
     "swiper": "^12.0.3",
     "three": "^0.180.0",
     "mermaid": "^10.x.x",
+    "react-focus-lock": "^2.12.0",
     "tailwind-merge": "^2.2.0"
   },
   "devDependencies": {
