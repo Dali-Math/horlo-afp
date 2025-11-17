@@ -4,21 +4,21 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale'; // CORRECTION 1: Importer la locale 'fr' pour formater la date en français.
+import { fr } from 'date-fns/locale';
 import { eventsData } from '@/lib/eventsData';
-import { Calendar, MapPin, ChevronRight } from 'lucide-react'; // CORRECTION 2: Importer les icônes Calendar, MapPin et ChevronRight utilisées dans le JSX.
+import { Calendar, MapPin, ChevronRight } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Événements Horlogers | HorloLearn',
-  description: 'Retrouvez tous les événements, salons et rendez-vous importants du monde de l\'horlogerie, des salons aux expositions.',
-  keywords: ['événements horlogers', 'salons horlogers', 'expositions horlogères', 'watches & wonders', 'genève', 'bâle', 'salon', 'genève'],
+  description: 'Retrouvez tous les événements, salons et rendez-vous importants du monde de l\'horlogerie.',
+  keywords: ['événements horlogers', 'salons horlogers', 'expositions horlogères', 'watches & wonders', 'genève', 'bâle', 'salon'],
   openGraph: {
     title: 'Événements Horlogers | HorloLearn',
-    description: 'Retrouvez tous les événements, salons et rendez-vous importants du monde de l\'horlogerie, des salons aux expositions.',
+    description: 'Retrouvez tous les événements, salons et rendez-vous importants du monde de l\'horlogerie.',
     url: 'https://www.horlolearn.ch/evenements',
     images: [
       {
-        url: 'https://www.hlolearn.ch/images/evenements/og-image.jpg', 
+        url: 'https://www.horlolearn.ch/images/evenements/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Événements Horlogers - HorloLearn',
@@ -28,7 +28,14 @@ export const metadata: Metadata = {
 };
 
 export default function EventsPage() {
-  const events = eventsData.filter(event => !event.isPast); // Ne montrer que les événements à venir
+  // CORRECTION : On filtre dynamiquement les événements dont la date est postérieure à aujourd'hui.
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // On ignore l'heure pour la comparaison
+
+  const events = eventsData.filter(event => {
+    const eventDate = new Date(event.date);
+    return eventDate >= today;
+  });
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900">
@@ -42,44 +49,51 @@ export default function EventsPage() {
           </p>
         </header>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {events.map((event) => (
-            <Link
-              key={event.id}
-              href={`/evenements/${event.slug}`}
-              className="group relative bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-            >
-              
-              <div className="relative w-full h-48">
-                <Image
-                  src={event.imageUrl}
-                  alt={event.title}
-                  className="w-full h-full object-cover rounded-t-xl"
-                  priority={event.isPast ? undefined : true}
-                />
-              </div>
-              <div className="p-4">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                  {event.title}
-                </h2>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {event.description}
-                </p>
-                <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    
-                    <span>{format(new Date(event.date), 'dd MMMM yyyy', { locale: fr })}</span>
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-4 h-4" />
-                    <span>{event.location}</span>
-                  </span>
+        {events.length > 0 ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {events.map((event) => (
+              <Link
+                key={event.id}
+                href={`/evenements/${event.slug}`}
+                className="group relative bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+              >
+                <div className="relative w-full h-48">
+                  <Image
+                    src={event.imageUrl}
+                    alt={event.title}
+                    fill // Utiliser `fill` pour un conteneur de taille relative
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
                 </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+                <div className="p-4">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                    {event.title}
+                  </h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    {event.description}
+                  </p>
+                  <div className="flex flex-wrap items-center justify-between text-xs text-gray-500 dark:text-gray-400 gap-2">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      <span>{format(new Date(event.date), 'dd MMMM yyyy', { locale: fr })}</span>
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <MapPin className="w-4 h-4" />
+                      <span>{event.location}</span>
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-xl text-gray-600 dark:text-gray-400">
+              Aucun événement à venir n'est programmé pour le moment.
+            </p>
+          </div>
+        )}
 
         <div className="text-center mt-12">
           <Link
