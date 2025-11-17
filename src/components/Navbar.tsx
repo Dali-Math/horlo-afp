@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, Search } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState } from "react"; // <-- MODIFIÉ : useRef a été supprimé car il n'était pas utilisé
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface NavbarProps {
@@ -24,7 +24,7 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
     { href: "/culture", label: "Culture" },
     { href: "/evenements", label: "Événements" },
     { href: "/communaute", label: "Communauté" },
-    { href: "/fuseaux-horaires", label: "Fuseaux Horaires" }, // <-- LIEN AJOUTÉ
+    { href: "/fuseaux-horaires", label: "Fuseaux Horaires" }, // <-- LIEN AJOUTÉ PRÉCÉDEMMENT
     { href: "/actualites", label: "Actualités" },
   ];
 
@@ -111,6 +111,8 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="p-2 text-slate-900 dark:text-white hover:text-[#E2B44F] transition-colors"
           aria-label="Toggle menu"
+          aria-controls="mobile-menu" // <-- AJOUTÉ : Améliore l'accessibilité
+          aria-expanded={mobileMenuOpen} // <-- AJOUTÉ : Indique l'état du menu aux lecteurs d'écran
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -118,7 +120,10 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
 
       {/* Menu mobile */}
       {mobileMenuOpen && (
-        <div className="lg:hidden w-full mt-4 pb-4 border-t border-gray-200 dark:border-gray-800 pt-4 bg-white dark:bg-[#0A0A0A] rounded-lg">
+        <div
+          id="mobile-menu" // <-- AJOUTÉ : L'ID correspond à aria-controls du bouton
+          className="lg:hidden w-full mt-4 pb-4 border-t border-gray-200 dark:border-gray-800 pt-4 bg-white dark:bg-[#0A0A0A] rounded-lg"
+        >
           <div className="flex flex-col space-y-3">
             <div className="flex flex-col">
               <div className="flex items-center">
