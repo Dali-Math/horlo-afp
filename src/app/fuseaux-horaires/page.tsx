@@ -37,7 +37,7 @@ const middleCities = [
 
 const bottomRowCities = [
   { name: 'Vienna', timezone: 'Europe/Vienna' },
-  { name: 'Moscow', timezone: 'Europe/Moscow' },
+  { name: 'Rome', timezone: 'Europe/Rome' },
   { name: 'Beijing', timezone: 'Asia/Shanghai' },
   { name: 'Berlin', timezone: 'Europe/Berlin' }
 ];
