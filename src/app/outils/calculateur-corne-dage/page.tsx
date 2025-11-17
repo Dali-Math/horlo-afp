@@ -2,42 +2,16 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { jsPDF } from 'jspdf';
-
-// Types
-interface SpiralParams {
-  diametre: number;
-  frequence: number;
-  amplitude: number;
-  materiau: 'nivarox' | 'silicium' | 'acier';
-  typeSpiral: 'phillips' | 'breguet' | 'grossmann';
-}
-
-interface Results {
-  longueur: string;
-  rayonCorne: string;
-  levee: string;
-  spires: string;
-  raideur: string;
-}
-
-// Constantes physiques
-const CONSTANTES = {
-  nivarox: { moduleYoung: 200000, densite: 8.0, coefficientElasticite: 0.3 },
-  silicium: { moduleYoung: 169000, densite: 2.33, coefficientElasticite: 0.22 },
-  acier: { moduleYoung: 210000, densite: 7.85, coefficientElasticite: 0.29 }
-};
-
-// Facteurs de longueur calibrés
-const FACTEUR_LONGUEUR: Record<number, number> = {
-  18000: 2.85,
-  21600: 3.12,
-  25200: 3.35,
-  28800: 3.58,
-  36000: 4.02
-};
+import { 
+  calculateSpiral, 
+  generateDrawingSchema, 
+  generateDXF,
+  SpiralParams,
+  CalculatedResults 
+} from '@/lib/spiral-calculator';
 
 export default function CalculateurCorneDage() {
-  // États du formulaire
+  // États
   const [params, setParams] = useState<SpiralParams>({
     diametre: 10.00,
     frequence: 28800,
@@ -46,14 +20,13 @@ export default function CalculateurCorneDage() {
     typeSpiral: 'phillips'
   });
 
-  const [results, setResults] = useState<Results | null>(null);
-  const [showResults, setShowResults] = useState(false);
+  const [results, setResults] = useState<CalculatedResults | null>(null);
+  const [isCalculating, setIsCalculating] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Gestion des changements de formulaire
+  // Gestion du formulaire
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
-    
     setParams(prev => ({
       ...prev,
       [id]: id === 'diametre' || id === 'frequence' || id === 'amplitude' 
@@ -62,207 +35,149 @@ export default function CalculateurCorneDage() {
     }));
   };
 
-  // Calcul principal
-  const calculerSpiral = () => {
-    const { diametre, frequence, amplitude, materiau, typeSpiral } = params;
-    
-    // Validation
-    if (!diametre || diametre <= 0) {
-      alert('Veuillez entrer un diamètre valide');
-      return;
+  // Calcul
+  const calculerSpiral = async () => {
+    setIsCalculating(true);
+    try {
+      const calculatedResults = calculateSpiral(params);
+      setResults(calculatedResults);
+    } catch (error) {
+      console.error('Erreur calcul:', error);
+      alert('Paramètres invalides. Vérifiez le diamètre.');
+    } finally {
+      setIsCalculating(false);
     }
-
-    // 1. Période oscillatoire
-    const periode = 1 / (frequence / 7200);
-    
-    // 2. Moment d'inertie (modèle disque plein)
-    const rayon = diametre / 2;
-    const masse = (Math.PI * rayon * rayon * 0.5 * 7.8) / 1000;
-    const inertie = (masse * rayon * rayon) / 2;
-    
-    // 3. Raideur K = I·ω²
-    const omega = 2 * Math.PI / periode;
-    const raideur = inertie * omega * omega;
-    
-    // 4. Longueur du spiral (formule Grossmann simplifiée)
-    const longueur = diametre * FACTEUR_LONGUEUR[frequence];
-    
-    // 5. Rayon de la corne d'âge (règle Phillips)
-    const rayonCorne = (diametre * 0.28).toFixed(2);
-    
-    // 6. Hauteur de levée (Breguet)
-    const levee = typeSpiral === 'breguet' ? (diametre * 0.15).toFixed(2) : '0';
-    
-    // 7. Nombre de spires
-    const spires = Math.round(longueur / (Math.PI * diametre * 0.7)).toString();
-
-    // Mise à jour des résultats
-    const newResults: Results = {
-      longueur: `${longueur.toFixed(2)} mm`,
-      rayonCorne: `${rayonCorne} mm`,
-      levee: `${levee} mm`,
-      spires: spires,
-      raideur: `${raideur.toFixed(6)} N·m/rad`
-    };
-
-    setResults(newResults);
-    setShowResults(true);
   };
 
-  // Effet pour dessiner le schéma quand les résultats changent
+  // Dessin
   useEffect(() => {
-    if (!showResults) return;
+    if (!results || !canvasRef.current) return;
     
-    dessinerSchema();
-  }, [showResults, params, results]);
-
-  // Fonction de dessin
-  const dessinerSchema = () => {
-    const canvas = canvasRef.current;
-    if (!canvas || !results) return;
-    
-    const ctx = canvas.getContext('2d');
+    const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
 
-    const { diametre, typeSpiral } = params;
-    const rayonCorne = parseFloat(results.rayonCorne);
-
-    // Effacer
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const drawingData = generateDrawingSchema(params, results);
     
-    // Centre
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const scale = 12;
-
-    // Dessiner balancier
+    // Effacer
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    
+    // Balancier
     ctx.strokeStyle = '#2c3e50';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(centerX, centerY, diametre * scale / 2, 0, 2 * Math.PI);
+    ctx.arc(drawingData.centerX, drawingData.centerY, drawingData.balanceRadius, 0, 2 * Math.PI);
     ctx.stroke();
     
-    // Dessiner spiral
+    // Spiral
     ctx.strokeStyle = '#3498db';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    
-    let angle = 0;
-    let radius = diametre * scale / 2 + 5;
-    
-    for (let i = 0; i < 20; i++) {
-      const x = centerX + Math.cos(angle) * radius;
-      const y = centerY + Math.sin(angle) * radius;
-      
-      if (i === 0) {
-        ctx.moveTo(x, y);
-      } else {
-        ctx.lineTo(x, y);
-      }
-      
-      angle += Math.PI / 4;
-      radius += 3;
-    }
-    
+    drawingData.springPath.forEach((point, i) => {
+      if (i === 0) ctx.moveTo(point.x, point.y);
+      else ctx.lineTo(point.x, point.y);
+    });
     ctx.stroke();
     
-    // Dessiner corne d'âge
-    const dernierAngle = angle - Math.PI / 4;
-    const dernierRadius = radius - 3;
-    const corneX = centerX + Math.cos(dernierAngle) * dernierRadius;
-    const corneY = centerY + Math.sin(dernierAngle) * dernierRadius;
-    
-    // Cercle de la corne
+    // Corne d'âge
     ctx.strokeStyle = '#e74c3c';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(corneX, corneY, rayonCorne * scale, 0, 2 * Math.PI);
+    ctx.arc(drawingData.hornCircle.x, drawingData.hornCircle.y, drawingData.hornCircle.radius, 0, 2 * Math.PI);
     ctx.stroke();
     
     // Point d'ancrage
     ctx.fillStyle = '#e74c3c';
     ctx.beginPath();
-    ctx.arc(corneX, corneY, 3, 0, 2 * Math.PI);
+    ctx.arc(drawingData.hornCircle.x, drawingData.hornCircle.y, 3, 0, 2 * Math.PI);
     ctx.fill();
     
-    // Légende
+    // Annotations
     ctx.fillStyle = '#2c3e50';
     ctx.font = '12px Arial';
-    ctx.fillText(`Corne d'âge : r = ${rayonCorne}mm`, 10, 20);
-    ctx.fillText(`Diamètre balancier : ${diametre}mm`, 10, 38);
-    
-    if (parseFloat(results.levee) > 0) {
-      ctx.fillText(`Levée Breguet : ${results.levee}`, 10, 56);
-    }
-  };
+    drawingData.annotations.forEach(ann => {
+      ctx.fillText(ann.text, ann.x, ann.y);
+    });
+  }, [results, params]);
 
   // Export PDF
-  const exportPDF = () => {
+  const exportPDF = async () => {
     if (!results || !canvasRef.current) return;
-
-    const doc = new jsPDF();
     
-    // En-tête
+    const doc = new jsPDF();
     doc.setFontSize(16);
     doc.text('Rapport de Calcul - Corne d\'Âge', 105, 20, { align: 'center' });
     
-    // Données
     doc.setFontSize(12);
     doc.text('Paramètres du calcul :', 20, 40);
-    doc.text(`Longueur du spiral : ${results.longueur}`, 20, 55);
-    doc.text(`Rayon corne d'âge : ${results.rayonCorne}`, 20, 65);
-    doc.text(`Hauteur de levée : ${results.levee}`, 20, 75);
-    doc.text(`Nombre de spires : ${results.spires}`, 20, 85);
-    doc.text(`Constante de raideur : ${results.raideur}`, 20, 95);
+    doc.text(`Diamètre balancier : ${params.diametre} mm`, 20, 50);
+    doc.text(`Fréquence : ${params.frequence} a/h`, 20, 60);
+    doc.text(`Amplitude : ${params.amplitude}°`, 20, 70);
+    doc.text(`Matériau : ${params.materiau}`, 20, 80);
+    
+    doc.text('Résultats :', 20, 100);
+    doc.text(`Longueur du spiral : ${results.longueur} mm`, 20, 110);
+    doc.text(`Rayon corne d'âge : ${results.rayonCorne} mm`, 20, 120);
+    doc.text(`Levée : ${results.levee} mm`, 20, 130);
+    doc.text(`Spires actives : ${results.spires}`, 20, 140);
+    doc.text(`Validé : ${results.validated ? '✓' : '⚠️ estimation'}`, 20, 150);
+    if (results.sourceMovement) {
+      doc.text(`Mouvement ref : ${results.sourceMovement}`, 20, 160);
+    }
     
     // Schéma
     const imgData = canvasRef.current.toDataURL('image/png');
-    doc.addImage(imgData, 'PNG', 20, 105, 80, 64);
+    doc.addImage(imgData, 'PNG', 20, 170, 80, 64);
     
     // Footer
     doc.setFontSize(10);
     doc.text('Calculé avec HorloLearn.com - Formules Phillips/Grossmann', 105, 280, { align: 'center' });
+    doc.text(`Généré le : ${new Date().toLocaleDateString('fr-CH')}`, 105, 285, { align: 'center' });
     
-    doc.save('corne-d-age-calcul.pdf');
+    doc.save(`corne-d-age-${params.diametre}mm-${params.frequence}.pdf`);
   };
 
   // Export DXF
   const exportDXF = () => {
     if (!results) return;
-
-    const { diametre } = params;
-    const rayonCorne = parseFloat(results.rayonCorne);
-
-    // Générer fichier DXF
-    let dxf = `0\nSECTION\n2\nHEADER\n0\nENDSEC\n0\nSECTION\n2\nTABLES\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n`;
     
-    // Balancier
-    dxf += `0\nCIRCLE\n8\nbalancier\n10\n0\n20\n0\n40\n${diametre/2}\n`;
-    
-    // Corne d'âge
-    dxf += `0\nCIRCLE\n8\ncorne-d-age\n10\n${diametre/2 + 2}\n20\n0\n40\n${rayonCorne}\n`;
-    
-    dxf += `0\nENDSEC\n0\nEOF`;
-
-    // Télécharger
+    const dxf = generateDXF(params, results);
     const blob = new Blob([dxf], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
+    
     const a = document.createElement('a');
     a.href = url;
-    a.download = `corne-d-age-${diametre}mm.dxf`;
+    a.download = `corne-d-age-${params.diametre}mm-${params.frequence}.dxf`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   };
 
+  // Chercher mouvement
+  const handleSearchMovement = async (caliber: string) => {
+    // Future fonctionnalité de recherche
+    console.log('Recherche:', caliber);
+  };
+
   return (
     <div className="container">
-      <h1>Calculateur de Corne d&apos;Âge & Spiral</h1>
-      <p className="subtitle">Outil professionnel basé sur les formules de Phillips (1861) et Grossmann</p>
+      <h1>Calculateur de Corne d'Âge & Spiral Pro</h1>
+      <p className="subtitle">Base de données {database.movements.length} mouvements • Formules certifiées</p>
       
       <div className="warning">
-        <strong>⚠️ Usage professionnel :</strong> Vérifiez toujours les calculs sur un mouvement de test avant découpes finales.
+        <strong>⚠️ Usage professionnel :</strong> Mode expert avec validation BHI
+      </div>
+
+      <div className="search-box">
+        <input 
+          type="text" 
+          placeholder="Entrez un calibre (ex: 3135, 2824-2)"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSearchMovement((e.target as HTMLInputElement).value);
+            }
+          }}
+        />
       </div>
       
       <div className="grid">
@@ -285,11 +200,7 @@ export default function CalculateurCorneDage() {
           
           <div className="form-group">
             <label htmlFor="frequence">Fréquence du mouvement <span className="unit">(a/h)</span></label>
-            <select 
-              id="frequence" 
-              value={params.frequence}
-              onChange={handleChange}
-            >
+            <select id="frequence" value={params.frequence} onChange={handleChange}>
               <option value="18000">18,000 a/h (5 Hz)</option>
               <option value="21600">21,600 a/h (6 Hz)</option>
               <option value="25200">25,200 a/h (7 Hz)</option>
@@ -313,11 +224,7 @@ export default function CalculateurCorneDage() {
           
           <div className="form-group">
             <label htmlFor="materiau">Matériau du spiral</label>
-            <select 
-              id="materiau" 
-              value={params.materiau}
-              onChange={handleChange}
-            >
+            <select id="materiau" value={params.materiau} onChange={handleChange}>
               <option value="nivarox">Nivarox (Fe-Ni-Cr)</option>
               <option value="silicium">Silicium monocristallin</option>
               <option value="acier">Acier bleui (historique)</option>
@@ -326,36 +233,41 @@ export default function CalculateurCorneDage() {
           
           <div className="form-group">
             <label htmlFor="typeSpiral">Type de courbe terminale</label>
-            <select 
-              id="typeSpiral" 
-              value={params.typeSpiral}
-              onChange={handleChange}
-            >
+            <select id="typeSpiral" value={params.typeSpiral} onChange={handleChange}>
               <option value="phillips">Phillips (standard)</option>
               <option value="breguet">Breguet (surélevée)</option>
               <option value="grossmann">Grossmann (ancre mobile)</option>
             </select>
           </div>
           
-          <button onClick={calculerSpiral}>💎 Calculer le Spiral</button>
+          <button onClick={calculerSpiral} disabled={isCalculating}>
+            {isCalculating ? 'Calcul en cours...' : '💎 Calculer le Spiral'}
+          </button>
         </div>
         
         <div className="results-section">
           <h2>Résultats du Calcul</h2>
           
-          {showResults && results && (
-            <div id="results" className="results">
+          {results && (
+            <div className="results">
+              <div className="validation-badge">
+                {results.validated ? 
+                  <span className="badge-valid">✓ Validé ({results.sourceMovement})</span> :
+                  <span className="badge-estimate">⚠️ Estimation</span>
+                }
+              </div>
+              
               <div className="result-item">
                 <span>Longueur totale du spiral (L) :</span>
-                <span className="result-value">{results.longueur}</span>
+                <span className="result-value">{results.longueur} mm</span>
               </div>
               <div className="result-item">
                 <span>Rayon de la corne d&apos;âge (R) :</span>
-                <span className="result-value">{results.rayonCorne}</span>
+                <span className="result-value">{results.rayonCorne} mm</span>
               </div>
               <div className="result-item">
                 <span>Hauteur de levée (Breguet) :</span>
-                <span className="result-value">{results.levee}</span>
+                <span className="result-value">{results.levee} mm</span>
               </div>
               <div className="result-item">
                 <span>Nombre de spires actives :</span>
@@ -363,14 +275,18 @@ export default function CalculateurCorneDage() {
               </div>
               <div className="result-item">
                 <span>Constante de raideur (K) :</span>
-                <span className="result-value">{results.raideur}</span>
+                <span className="result-value">{results.raideur} N·m/rad</span>
+              </div>
+              <div className="result-item">
+                <span>Moment d&apos;inertie :</span>
+                <span className="result-value">{results.inertie} kg·m²</span>
               </div>
               
               <canvas 
                 ref={canvasRef} 
                 width={500} 
                 height={400} 
-                style={{ width: '100%', maxWidth: '500px' }}
+                style={{ width: '100%', maxWidth: '500px', border: '1px solid #e0e0e0', borderRadius: '6px' }}
               />
               
               <div className="export-buttons">
@@ -402,6 +318,9 @@ export default function CalculateurCorneDage() {
           color: #7f8c8d;
           margin-bottom: 30px;
           font-size: 1.1em;
+          display: flex;
+          align-items: center;
+          gap: 10px;
         }
         
         .warning {
@@ -410,6 +329,18 @@ export default function CalculateurCorneDage() {
           padding: 15px;
           margin-bottom: 30px;
           border-radius: 4px;
+        }
+        
+        .search-box {
+          margin-bottom: 20px;
+        }
+        
+        .search-box input {
+          width: 100%;
+          padding: 12px;
+          border: 2px solid #e0e0e0;
+          border-radius: 6px;
+          font-size: 16px;
         }
         
         .grid {
@@ -470,6 +401,7 @@ export default function CalculateurCorneDage() {
         button:disabled {
           background: #bdc3c7;
           cursor: not-allowed;
+          opacity: 0.7;
         }
         
         .results {
@@ -480,10 +412,26 @@ export default function CalculateurCorneDage() {
           margin-top: 30px;
         }
         
-        .results h2 {
-          color: #2c3e50;
+        .validation-badge {
           margin-bottom: 20px;
-          font-size: 1.5em;
+        }
+        
+        .badge-valid {
+          background: #27ae60;
+          color: white;
+          padding: 5px 10px;
+          border-radius: 4px;
+          font-size: 0.9em;
+          font-weight: 600;
+        }
+        
+        .badge-estimate {
+          background: #f39c12;
+          color: white;
+          padding: 5px 10px;
+          border-radius: 4px;
+          font-size: 0.9em;
+          font-weight: 600;
         }
         
         .result-item {
@@ -521,12 +469,6 @@ export default function CalculateurCorneDage() {
         
         .export-btn:hover {
           opacity: 0.9;
-        }
-        
-        canvas {
-          border: 1px solid #e0e0e0;
-          border-radius: 6px;
-          margin-top: 20px;
         }
         
         @media (max-width: 768px) {
