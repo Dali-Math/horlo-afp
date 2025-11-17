@@ -12,6 +12,12 @@ interface ClockData {
   isDaytime: boolean;
 }
 
+interface SelectedDateInfo {
+  city: string;
+  timezone: string;
+  dateString: string;
+}
+
 const topRowCities = [
   { name: 'New York', timezone: 'America/New_York' },
   { name: 'London', timezone: 'Europe/London' },
@@ -156,9 +162,23 @@ function getTimeInTimezone(timezone: string) {
   return { hours, minutes, seconds };
 }
 
+function getDateInTimezone(timezone: string): string {
+  const options: Intl.DateTimeFormatOptions = {
+    timeZone: timezone,
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  };
+  
+  const formatter = new Intl.DateTimeFormat('fr-FR', options);
+  return formatter.format(new Date());
+}
+
 export default function WorldClocksPage(): JSX.Element {
   const clockCounter = useRef(0);
   const [clocks, setClocks] = useState<ClockData[]>([]);
+  const [selectedDate, setSelectedDate] = useState<SelectedDateInfo | null>(null);
 
   useEffect(() => {
     const createClockData = (city: typeof topRowCities[0]) => {
@@ -196,6 +216,11 @@ export default function WorldClocksPage(): JSX.Element {
     return () => clearInterval(interval);
   }, []);
 
+  const handleClockClick = (city: string, timezone: string) => {
+    const dateString = getDateInTimezone(timezone);
+    setSelectedDate({ city, timezone, dateString });
+  };
+
   const topClocks = clocks.slice(0, 4);
   const middleClocks = clocks.slice(4, 8);
   const bottomClocks = clocks.slice(8, 12);
@@ -215,6 +240,9 @@ export default function WorldClocksPage(): JSX.Element {
                 className={`clock-item ${clock.isDaytime ? 'daytime' : 'nighttime'}`}
                 data-timezone={clock.timezone}
                 data-clock-id={clock.id}
+                onClick={() => handleClockClick(clock.city, clock.timezone)}
+                role="button"
+                tabIndex={0}
               >
                 <div className="day-night-indicator">{clock.isDaytime ? '☀️' : '🌙'}</div>
                 <div dangerouslySetInnerHTML={{ 
@@ -232,6 +260,9 @@ export default function WorldClocksPage(): JSX.Element {
                 className={`clock-item ${clock.isDaytime ? 'daytime' : 'nighttime'}`}
                 data-timezone={clock.timezone}
                 data-clock-id={clock.id}
+                onClick={() => handleClockClick(clock.city, clock.timezone)}
+                role="button"
+                tabIndex={0}
               >
                 <div className="day-night-indicator">{clock.isDaytime ? '☀️' : '🌙'}</div>
                 <div dangerouslySetInnerHTML={{ 
@@ -249,6 +280,9 @@ export default function WorldClocksPage(): JSX.Element {
                 className={`clock-item ${clock.isDaytime ? 'daytime' : 'nighttime'}`}
                 data-timezone={clock.timezone}
                 data-clock-id={clock.id}
+                onClick={() => handleClockClick(clock.city, clock.timezone)}
+                role="button"
+                tabIndex={0}
               >
                 <div className="day-night-indicator">{clock.isDaytime ? '☀️' : '🌙'}</div>
                 <div dangerouslySetInnerHTML={{ 
@@ -258,6 +292,15 @@ export default function WorldClocksPage(): JSX.Element {
               </div>
             ))}
           </div>
+
+          {selectedDate && (
+            <div className="date-display">
+              <div className="date-content">
+                <div className="date-label">Date à {selectedDate.city}</div>
+                <div className="date-value">{selectedDate.dateString}</div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -391,6 +434,11 @@ export default function WorldClocksPage(): JSX.Element {
           border-radius: 16px;
           transition: all 0.5s ease;
           position: relative;
+          cursor: pointer;
+        }
+        
+        .clock-item:hover {
+          transform: translateY(-4px);
         }
         
         .clock-item.daytime {
@@ -438,6 +486,62 @@ export default function WorldClocksPage(): JSX.Element {
           text-transform: uppercase;
         }
 
+        .date-display {
+          margin-top: 80px;
+          display: flex;
+          justify-content: center;
+          opacity: 0;
+          animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+          to {
+            opacity: 1;
+          }
+        }
+
+        .date-content {
+          background: linear-gradient(to bottom, #ffffff 0%, #f9f9f9 100%);
+          padding: 30px 50px;
+          border-radius: 16px;
+          border: 1px solid #d0d0d0;
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+          text-align: center;
+          min-width: 300px;
+          max-width: 90%;
+        }
+
+        .date-label {
+          font-family: 'Playfair Display', serif;
+          font-size: 18px;
+          font-weight: 700;
+          color: #1a1a1a;
+          margin-bottom: 12px;
+          letter-spacing: 0.5px;
+        }
+
+        .date-value {
+          font-size: 24px;
+          font-weight: 600;
+          color: #3a3a3a;
+          letter-spacing: 0.5px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .date-content {
+            background: linear-gradient(to bottom, #1f2121 0%, #1a1c1c 100%);
+            border: 1px solid #3a3a3a;
+          }
+
+          .date-label {
+            color: #f5f5f5;
+          }
+
+          .date-value {
+            color: #e0e0e0;
+          }
+        }
+
         @media (max-width: 768px) {
           .container {
             padding: 40px 15px;
@@ -471,6 +575,18 @@ export default function WorldClocksPage(): JSX.Element {
 
           .city-name {
             font-size: 14px;
+          }
+
+          .date-content {
+            padding: 20px 30px;
+          }
+
+          .date-label {
+            font-size: 16px;
+          }
+
+          .date-value {
+            font-size: 20px;
           }
         }
       `}</style>
