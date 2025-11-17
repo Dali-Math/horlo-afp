@@ -101,7 +101,7 @@ export default function RootLayout({
 
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className="bg-light-100 text-slate-900 dark:bg-dark-900 dark:text-light-100 transition-colors duration-300">
+      <body className="bg-gray-50 text-slate-900 dark:bg-gray-900 dark:text-slate-100 transition-colors duration-300">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <ClientLayout>
             <main className="min-h-screen overflow-visible relative">{children}</main>
