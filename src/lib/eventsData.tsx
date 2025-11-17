@@ -4,68 +4,63 @@ export interface Event {
   id: string;
   title: string;
   description: string;
-  date: string;
+  date: string; // Format 'YYYY-MM-DD'
   location: string;
   imageUrl: string;
-  isPast: boolean;
   tags: string[];
   slug: string;
+  // La propriété 'isPast' a été supprimée
 }
 
 export const eventsData: Event[] = [
   {
-    id: 'watches-wonders-2026',
-    title: 'Watches & Wonders 2026 : Dates Confirmées',
-    description: "L'événement horloger le plus important de l'année a officiellement annoncé ses dates.",
-    date: '2024-05-21',
-    location: "Genève, Suisse",
-    imageUrl: '/images/events/watches-wonders-2026.jpg',
-    isPast: true,
-    tags: ['Événement', 'Watches & Wonders', 'Genève'],
-    slug: '/evenements/watches-wonders-2026'
-  },
-  {
-    id: 'nouveau-calibre-sellita-sw330-2',
-    title: 'Nouveau Calibre Sellita SW330-2 Annoncé',
-    description: "Sellita dévoile son nouveau calibre automatique, une avancée majeure dans le domaine de l'horlogerie.",  // Corrigé: guillemets doubles à la fin
-    date: '2024-05-15',
-    location: 'La Chaux-de-Fonds, Suisse',
-    imageUrl: '/images/events/nouveau-calibre-sellita.jpg',
-    isPast: true,
-    tags: ['Nouveauté', 'Mouvement', 'Sellita'],
-    slug: '/evenements/nouveau-calibre-sellita-sw330-2'
-  },
-  {
-    id: 'salon-international-horlogerie-2024',
-    title: 'Salon International de l\'Horlogerie 2024',
-    description: 'Le salon international de l\'horlogerie rassemble les plus grandes marques horlogères du monde entier.',
-    date: '2024-09-10',
-    location: 'Paris, France',
-    imageUrl: '/images/events/salon-international-horlogerie-2024.jpg',
-    isPast: false,
-    tags: ['Salon', 'Exposition', 'Paris'],
-    slug: '/evenements/salon-international-horlogerie-2024'
-  },
-  {
-    id: 'exposition-breguet-200-ans',
-    title: 'Exposition Breguet : 200 Ans d\'Innovation',
-    description: 'Une exposition exceptionnelle célébrant deux siècles d\'innovations horlogères de la maison Breguet.',
-    date: '2024-11-15',
+    id: 'watches-wonders-geneve-2025',
+    title: 'Watches & Wonders Genève 2025',
+    description: "Le plus grand salon horloger du monde revient à Genève pour une édition promise inoubliable.",
+    date: '2025-04-01', // METTRE À JOUR AVEC UNE DATE FUTURE
     location: 'Genève, Suisse',
-    imageUrl: '/images/events/exposition-breguet-200-ans.jpg',
-    isPast: false,
-    tags: ['Exposition', 'Histoire', 'Breguet'],
-    slug: '/evenements/exposition-breguet-200-ans'
+    imageUrl: '/images/events/watches-wonders-geneve-2025.jpg',
+    tags: ['Salon', 'Watches & Wonders', 'Genève'],
+    slug: '/evenements/watches-wonders-geneve-2025'
   },
   {
-    id: 'conference-micro-rotor',
-    title: 'Conférence sur l\'Évolution du Micro-Rotor',
-    description: 'Une conférence technique dédiée à l\'évolution et à l\'avenir du micro-rotor en horlogerie.',
-    date: '2024-12-05',
+    id: 'grand-prix-horlogerie-2025',
+    title: 'Grand Prix d\'Horlogerie de Genève 2025',
+    description: 'La cérémonie de remise des prix la plus prestigieuse de l\'industrie horlogère.',
+    date: '2025-11-12', // METTRE À JOUR AVEC UNE DATE FUTURE
+    location: 'Genève, Suisse',
+    imageUrl: '/images/events/gphg-2025.jpg',
+    tags: ['Cérémonie', 'Récompense', 'Genève'],
+    slug: '/evenements/grand-prix-horlogerie-2025'
+  },
+  {
+    id: 'salon-international-horlogerie-2025',
+    title: 'Salon International de l\'Horlogerie 2025',
+    description: 'Un salon dédié aux maisons indépendantes et à l'artisanat d'excellence.',
+    date: '2025-09-10', // METTRE À JOUR AVEC UNE DATE FUTURE
+    location: 'Paris, France',
+    imageUrl: '/images/events/salon-international-horlogerie-2025.jpg',
+    tags: ['Salon', 'Exposition', 'Paris'],
+    slug: '/evenements/salon-international-horlogerie-2025'
+  },
+  {
+    id: 'exposition-breguet-innovation',
+    title: 'Exposition Breguet : L\'Art de l\'Innovation',
+    description: 'Une plongée dans l'histoire des inventions qui ont marqué l'horlogerie grâce à Abraham-Louis Breguet.',
+    date: '2025-06-15', // METTRE À JOUR AVEC UNE DATE FUTURE
     location: 'La Chaux-de-Fonds, Suisse',
-    imageUrl: '/images/events/conference-micro-rotor.jpg',
-    isPast: false,
+    imageUrl: '/images/events/exposition-breguet-2025.jpg',
+    tags: ['Exposition', 'Histoire', 'Breguet'],
+    slug: '/evenements/exposition-breguet-innovation'
+  },
+  {
+    id: 'conference-micro-rotor-futur',
+    title: 'Conférence : Le Futur du Micro-Rotor',
+    description: 'Les experts discutent des dernières avancées et des tendances futures pour le micro-rotor.',
+    date: '2025-10-20', // METTRE À JOUR AVEC UNE DATE FUTURE
+    location: 'Bienne, Suisse',
+    imageUrl: '/images/events/conference-micro-rotor-2025.jpg',
     tags: ['Conférence', 'Technique', 'Mouvement'],
-    slug: '/evenements/conference-micro-rotor'
+    slug: '/evenements/conference-micro-rotor-futur'
   }
 ];
