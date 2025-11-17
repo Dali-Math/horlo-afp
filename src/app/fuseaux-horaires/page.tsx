@@ -9,6 +9,7 @@ interface ClockData {
   hours: number;
   minutes: number;
   seconds: number;
+  isDaytime: boolean;
 }
 
 const topRowCities = [
