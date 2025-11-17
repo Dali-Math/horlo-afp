@@ -16,6 +16,9 @@ interface SelectedDateInfo {
   city: string;
   timezone: string;
   dateString: string;
+  hours: number;
+  minutes: number;
+  seconds: number;
 }
 
 const topRowCities = [
@@ -40,6 +43,7 @@ const bottomRowCities = [
 ];
 
 function createClockSVG(hours: number, minutes: number, seconds: number, clockId: string) {
+  // ... (fonction inchangée) ...
   const secondAngle = seconds * 6;
   const minuteAngle = minutes * 6 + seconds * 0.1;
   const hourAngle = ((hours % 12) * 30) + (minutes * 0.5) + (seconds * 0.5 / 60);
@@ -216,9 +220,31 @@ export default function WorldClocksPage(): JSX.Element {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (!selectedDate) return;
+
+    const interval = setInterval(() => {
+      const time = getTimeInTimezone(selectedDate.timezone);
+      setSelectedDate(prev => prev ? {
+        ...prev,
+        hours: time.hours,
+        minutes: time.minutes,
+        seconds: time.seconds
+      } : null);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [selectedDate?.timezone]);
+
   const handleClockClick = (city: string, timezone: string) => {
+    const time = getTimeInTimezone(timezone);
     const dateString = getDateInTimezone(timezone);
-    setSelectedDate({ city, timezone, dateString });
+    setSelectedDate({
+      city,
+      timezone,
+      dateString,
+      ...time
+    });
   };
 
   const topClocks = clocks.slice(0, 4);
@@ -296,8 +322,13 @@ export default function WorldClocksPage(): JSX.Element {
           {selectedDate && (
             <div className="date-display">
               <div className="date-content">
-                <div className="date-label">Date à {selectedDate.city}</div>
+                <div className="date-label">Date et heure à {selectedDate.city}</div>
                 <div className="date-value">{selectedDate.dateString}</div>
+                <div className="time-value">
+                  {String(selectedDate.hours).padStart(2, '0')}:
+                  {String(selectedDate.minutes).padStart(2, '0')}:
+                  {String(selectedDate.seconds).padStart(2, '0')}
+                </div>
               </div>
             </div>
           )}
@@ -521,10 +552,19 @@ export default function WorldClocksPage(): JSX.Element {
         }
 
         .date-value {
-          font-size: 24px;
+          font-size: 20px;
           font-weight: 600;
           color: #3a3a3a;
           letter-spacing: 0.5px;
+          margin-bottom: 8px;
+        }
+
+        .time-value {
+          font-size: 28px;
+          font-weight: 700;
+          color: #1a1a1a;
+          font-family: 'Playfair Display', serif;
+          letter-spacing: 1px;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -539,6 +579,10 @@ export default function WorldClocksPage(): JSX.Element {
 
           .date-value {
             color: #e0e0e0;
+          }
+
+          .time-value {
+            color: #f5f5f5;
           }
         }
 
@@ -586,7 +630,11 @@ export default function WorldClocksPage(): JSX.Element {
           }
 
           .date-value {
-            font-size: 20px;
+            font-size: 18px;
+          }
+
+          .time-value {
+            font-size: 24px;
           }
         }
       `}</style>
