@@ -28,14 +28,15 @@ export const metadata: Metadata = {
 };
 
 export default function EventsPage() {
-  // CORRECTION : On filtre dynamiquement les événements dont la date est postérieure à aujourd'hui.
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); // On ignore l'heure pour la comparaison
+  // --- CORRECTION ROBUSTE CONTRE LES FUSEAUX HORAIRE ---
+  // On compare les dates sous forme de chaînes 'YYYY-MM-DD'.
+  // C'est la méthode la plus fiable pour éviter les problèmes de timezone.
+  const todayString = new Date().toISOString().split('T')[0];
 
   const events = eventsData.filter(event => {
-    const eventDate = new Date(event.date);
-    return eventDate >= today;
+    return event.date >= todayString;
   });
+  // --- FIN DE LA CORRECTION ---
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900">
@@ -61,7 +62,7 @@ export default function EventsPage() {
                   <Image
                     src={event.imageUrl}
                     alt={event.title}
-                    fill // Utiliser `fill` pour un conteneur de taille relative
+                    fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
