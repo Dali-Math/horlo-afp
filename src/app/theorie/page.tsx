@@ -10,10 +10,10 @@ export const metadata: Metadata = {
     title: 'Théorie Horlogère - Les Fondamentaux | HorloLearn',
     description: 'Apprenez les bases du mouvement d\'une montre et des complications horlogères.',
     type: 'website',
-    url: 'https://horlo-afp.vercel.app/theorie', // Mettez l'URL de votre site
+    url: 'https://www.horlolearn.ch/theorie', 
     images: [
       {
-        url: '/images/theorie-cover.jpg', // IMPORTANT: Créez cette image
+        url: '/images/theorie-cover.jpg', 
         width: 1200,
         height: 630,
         alt: 'Théorie Horlogère sur HorloLearn',
