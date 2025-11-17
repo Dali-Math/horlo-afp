@@ -1,3 +1,4 @@
+cat > app/outils/calculateur-corne-dage/page.tsx << 'EOF'
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
@@ -6,12 +7,15 @@ import {
   calculateSpiral, 
   generateDrawingSchema, 
   generateDXF,
+  findClosestMovement,
   SpiralParams,
-  CalculatedResults 
+  CalculatedResults,
+  MovementMatch
 } from '@/lib/spiral-calculator';
+import database from '@/lib/spirals-database.json';
 
 export default function CalculateurCorneDage() {
-  // États du calculateur
+  // États
   const [params, setParams] = useState<SpiralParams>({
     diametre: 10.00,
     frequence: 28800,
@@ -22,10 +26,34 @@ export default function CalculateurCorneDage() {
 
   const [results, setResults] = useState<CalculatedResults | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [matchedMovement, setMatchedMovement] = useState<MovementMatch | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [activeTab, setActiveTab] = useState<'calculateur' | 'documentation'>('calculateur');
 
-  // Gestion du formulaire
+  // Recherche automatique
+  useEffect(() => {
+    if (searchTerm.length < 3) {
+      setMatchedMovement(null);
+      return;
+    }
+    
+    const match = findClosestMovement(params);
+    setMatchedMovement(match);
+    
+    // Si match exact, pré-remplir
+    if (match.exactMatch) {
+      setParams(prev => ({
+        ...prev,
+        diametre: match.closestMovement.balanceDiameter,
+        frequence: match.closestMovement.frequency,
+        materiau: match.closestMovement.springMaterial as 'nivarox' | 'silicium' | 'acier',
+        typeSpiral: match.closestMovement.terminalCurve as 'phillips' | 'breguet' | 'grossmann'
+      }));
+    }
+  }, [searchTerm, params.diametre, params.frequence]);
+
+  // Gestion formulaire
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
     setParams(prev => ({
@@ -156,8 +184,8 @@ export default function CalculateurCorneDage() {
 
   return (
     <div className="container">
-      <h1>Calculateur de Corne d'Âge & Spiral</h1>
-      <p className="subtitle">Outil professionnel basé sur les formules de Phillips (1861) et Grossmann</p>
+      <h1>Calculateur de Corne d'Âge & Spiral Pro</h1>
+      <p className="subtitle">Base de données {database.movements.length} mouvements • Formules certifiées BHI</p>
       
       {/* Onglets */}
       <div className="tabs">
@@ -175,9 +203,27 @@ export default function CalculateurCorneDage() {
         </button>
       </div>
 
-      {/* Contenu de l'onglet Calculateur */}
+      {/* Contenu Calculateur avec recherche */}
       {activeTab === 'calculateur' && (
         <>
+          {/* 🔍 BARRE DE RECHERCHE */}
+          <div className="search-box">
+            <input 
+              type="text" 
+              placeholder="🔍 Recherche par calibre (ex: 3135, 2824, 7750, 6R15)"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            {matchedMovement && (
+              <div className="search-result">
+                {matchedMovement.exactMatch ? 
+                  <span className="match-exact">✅ Match exact : {matchedMovement.closestMovement.brand} {matchedMovement.closestMovement.caliber}</span> :
+                  <span className="match-close">📌 Proche : {matchedMovement.closestMovement.brand} {matchedMovement.closestMovement.caliber} ({Math.round(matchedMovement.confidence)}%)</span>
+                }
+              </div>
+            )}
+          </div>
+
           <div className="warning">
             <strong>⚠️ Usage professionnel :</strong> Vérifiez toujours les calculs sur un mouvement de test avant découpes finales.
           </div>
@@ -230,6 +276,7 @@ export default function CalculateurCorneDage() {
                   <option value="nivarox">Nivarox (Fe-Ni-Cr)</option>
                   <option value="silicium">Silicium monocristallin</option>
                   <option value="acier">Acier bleui (historique)</option>
+                  <option value="spron">Spron (Seiko)</option>
                 </select>
               </div>
               
@@ -254,7 +301,7 @@ export default function CalculateurCorneDage() {
                 <div className="results">
                   <div className="validation-badge">
                     {results.validated ? 
-                      <span className="badge-valid">✓ Validé ({results.sourceMovement})</span> :
+                      <span className="badge-valid">✅ Validé ({results.sourceMovement})</span> :
                       <span className="badge-estimate">⚠️ Estimation</span>
                     }
                   </div>
@@ -279,16 +326,12 @@ export default function CalculateurCorneDage() {
                     <span>Constante de raideur (K) :</span>
                     <span className="result-value">{results.raideur} N·m/rad</span>
                   </div>
-                  <div className="result-item">
-                    <span>Moment d&apos;inertie :</span>
-                    <span className="result-value">{results.inertie} kg·m²</span>
-                  </div>
                   
                   <canvas 
                     ref={canvasRef} 
                     width={500} 
                     height={400} 
-                    style={{ width: '100%', maxWidth: '500px', border: '1px solid #e0e0e0', borderRadius: '6px' }}
+                    style={{ width: '100%', maxWidth: '500px' }}
                   />
                   
                   <div className="export-buttons">
@@ -302,7 +345,7 @@ export default function CalculateurCorneDage() {
         </>
       )}
 
-      {/* Contenu de l'onglet Documentation - ✅ CORRIGÉ */}
+      {/* Documentation */}
       {activeTab === 'documentation' && (
         <div className="documentation-section">
           <h2>🚀 Documentation API</h2>
@@ -326,7 +369,9 @@ export default function CalculateurCorneDage() {
 
           <div className="doc-block">
             <h3>Tester avec curl</h3>
-            <pre className="code-block">{`curl -X POST http://localhost:3000/api/spirals/calculate \\\n  -H "Content-Type: application/json" \\\n  -d '{"diametre":10,"frequence":28800,"amplitude":270,"materiau":"nivarox","typeSpiral":"phillips"}'`}</pre>
+            <pre className="code-block">{`curl -X POST http://localhost:3000/api/spirals/calculate \\
+  -H "Content-Type: application/json" \\
+  -d '{"diametre":10,"frequence":28800,"amplitude":270,"materiau":"nivarox","typeSpiral":"phillips"}'`}</pre>
           </div>
 
           <div className="doc-block">
@@ -341,7 +386,6 @@ export default function CalculateurCorneDage() {
         </div>
       )}
 
-      {/* Styles */}
       <style jsx>{`
         .container {
           max-width: 1200px;
@@ -528,6 +572,39 @@ export default function CalculateurCorneDage() {
           opacity: 0.9;
         }
         
+        /* 🔍 NOUVEAUX STYLES POUR LA RECHERCHE */
+        .search-box {
+          margin-bottom: 25px;
+        }
+
+        .search-box input {
+          width: 100%;
+          padding: 14px;
+          border: 2px solid #3498db;
+          border-radius: 8px;
+          font-size: 16px;
+          background: #f8f9fa;
+        }
+
+        .search-result {
+          margin-top: 10px;
+          padding: 10px;
+          border-radius: 6px;
+          font-size: 0.9em;
+        }
+
+        .match-exact {
+          background: #d4edda;
+          color: #155724;
+          border-left: 4px solid #28a745;
+        }
+
+        .match-close {
+          background: #fff3cd;
+          color: #856404;
+          border-left: 4px solid #ffc107;
+        }
+        
         /* Styles documentation */
         .documentation-section {
           margin-top: 20px;
@@ -582,3 +659,4 @@ export default function CalculateurCorneDage() {
     </div>
   );
 }
+EOF
