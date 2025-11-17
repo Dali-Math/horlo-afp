@@ -1,5 +1,4 @@
-# Créez ce fichier avec la commande
-cat > lib/spirals-database.json << 'EOF'
+
 {
   "metadata": {
     "version": "2.0.0",
