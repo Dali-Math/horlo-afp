@@ -108,7 +108,7 @@ export default function CultureHorlogerie() {
             className={`nav-btn ${activeSection === 'timeline' ? 'active' : ''}`}
             onClick={() => setActiveSection('timeline')}
           >
-            <Timeline size={18} /> Lignes du temps
+            <History size={18} /> Lignes du temps
           </button>
           <button 
             className={`nav-btn ${activeSection === 'histoire' ? 'active' : ''}`}
