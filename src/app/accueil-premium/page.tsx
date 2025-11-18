@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Clock, Museum, PlayCircle, Timeline, Sun, Moon, ChevronRight, Calendar, MapPin, Play } from 'lucide-react';
+import { Clock, Landmark, PlayCircle, Sun, Moon, ChevronRight, Calendar, MapPin, Play } from 'lucide-react';
 
 // Données pour la timeline
 const timelineData = [
