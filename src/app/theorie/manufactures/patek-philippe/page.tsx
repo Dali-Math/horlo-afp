@@ -9,234 +9,215 @@ export default function Page() {
   const vantaBgRef = useRef<HTMLDivElement>(null);
   const vantaEffectRef = useRef<any>(null);
   const [expandedCollection, setExpandedCollection] = useState<string | null>(null);
+  const [animationsLoaded, setAnimationsLoaded] = useState(false);
 
+  // Vanta optimisé avec 10-12 oiseaux
   useEffect(() => {
-  const loadScript = (src: string) => {
-    return new Promise((resolve, reject) => {
-      if (document.querySelector(`script[src="${src}"]`)) {
-        resolve(true);
-        return;
-      }
-      const script = document.createElement('script');
-      script.src = src;
-      script.async = true;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  };
+    const loadScript = (src: string) => {
+      return new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${src}"]`)) {
+          resolve(true);
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    };
 
-  const initVanta = async () => {
-    try {
-      const isMobile = window.innerWidth < 768;
-      const isTablet = window.innerWidth < 1024;
-      const isLargeScreen = window.innerWidth >= 1920;
-      
-      if (!(window as any).THREE) {
-        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
-      }
-      if (!(window as any).VANTA) {
-        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js');
-      }
-      
-      if (vantaBgRef.current && (window as any).VANTA) {
-        // Adaptation selon taille écran
-        let birdCount = 12; // Desktop standard
-        if (isLargeScreen) birdCount = 15; // Grand écran : 15 oiseaux
-        if (isTablet) birdCount = 8; // Tablette : 8 oiseaux
-        if (isMobile) birdCount = 5; // Mobile : 5 oiseaux minimum
+    const initVanta = async () => {
+      try {
+        const isMobile = window.innerWidth < 768;
+        const isTablet = window.innerWidth < 1024;
         
-        vantaEffectRef.current = (window as any).VANTA.BIRDS({
-          el: vantaBgRef.current,
-          mouseControls: !isMobile,
-          touchControls: !isMobile,
-          gyroControls: false,
-          minHeight: 300.00,
-          minWidth: 300.00,
-          scale: 1.0,
-          scaleMobile: 1.0,
-          backgroundColor: 0xf8f6f0,
-          color1: 0xd4af37,
-          color2: 0x1a2332,
-          birdSize: 1.0, // Légèrement réduit pour plus d'oiseaux
-          wingSpan: 20, // Légèrement réduit
-          quantity: birdCount, // 5-15 selon appareil
-          separation: 40, // Rapprochés pour mouvement fluide
-          alignment: 60,
-          cohesion: 50,
-          speedLimit: 3.0, // Vitesse optimisée
-          backgroundAlpha: 1.0,
-          // OPTIMISATIONS AVANCÉES
-          lowQuality: isMobile, // Basse qualité sur mobile
-          fps: isMobile ? 30 : 60 // 30fps mobile, 60fps desktop
-        });
+        if (!(window as any).THREE) {
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
+        }
+        if (!(window as any).VANTA) {
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js');
+        }
+        
+        if (vantaBgRef.current && (window as any).VANTA) {
+          let birdCount = 12; // Desktop: 12 oiseaux
+          if (isTablet) birdCount = 8;
+          if (isMobile) birdCount = 5;
+          
+          vantaEffectRef.current = (window as any).VANTA.BIRDS({
+            el: vantaBgRef.current,
+            mouseControls: !isMobile,
+            touchControls: !isMobile,
+            gyroControls: false,
+            minHeight: 300.00,
+            minWidth: 300.00,
+            scale: 1.0,
+            scaleMobile: 1.0,
+            backgroundColor: 0xf8f6f0,
+            color1: 0xd4af37,
+            color2: 0x1a2332,
+            birdSize: 1.0,
+            wingSpan: 20,
+            quantity: birdCount,
+            separation: 40,
+            alignment: 60,
+            cohesion: 50,
+            speedLimit: 3.0
+          });
+        }
+      } catch (error) {
+        console.error('Error loading Vanta:', error);
       }
-    } catch (error) {
-      console.error('Error loading Vanta:', error);
-    }
-  };
+    };
 
-  const timer = setTimeout(initVanta, 250);
+    const timer = setTimeout(initVanta, 250);
 
-  return () => {
-    clearTimeout(timer);
-    if (vantaEffectRef.current) {
-      vantaEffectRef.current.destroy();
-    }
-  };
-}, []);
+    return () => {
+      clearTimeout(timer);
+      if (vantaEffectRef.current) {
+        vantaEffectRef.current.destroy();
+      }
+    };
+  }, []); // ← PARENTHÈSE FERMANTE CORRECTE
 
-  
+  // Anime.js optimisé - CODE CORRIGÉ
+  useEffect(() => {
     const loadAnime = async () => {
       if (!(window as any).anime) {
         const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js ';
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js';
         script.async = true;
-        document.head.appendChild(script);
         
         script.onload = () => {
+          setAnimationsLoaded(true);
           initAnimations();
         };
+        
+        document.head.appendChild(script);
       } else {
+        setAnimationsLoaded(true);
         initAnimations();
       }
     };
 
     const initAnimations = () => {
       const anime = (window as any).anime;
+      if (!anime) return;
       
       anime({
         targets: '.hero-title',
         opacity: [0, 1],
-        translateY: [50, 0],
-        duration: 1000,
-        delay: 500,
-        easing: 'easeOutQuart'
+        translateY: [30, 0],
+        duration: 800,
+        delay: 400,
+        easing: 'easeOutQuad'
       });
 
       anime({
         targets: '.hero-subtitle',
         opacity: [0, 1],
-        translateY: [30, 0],
-        duration: 800,
-        delay: 800,
-        easing: 'easeOutQuart'
+        translateY: [20, 0],
+        duration: 600,
+        delay: 700,
+        easing: 'easeOutQuad'
       });
 
       anime({
         targets: '.hero-quote',
         opacity: [0, 1],
-        translateY: [30, 0],
-        duration: 800,
-        delay: 1100,
-        easing: 'easeOutQuart'
+        translateY: [20, 0],
+        duration: 600,
+        delay: 900,
+        easing: 'easeOutQuad'
       });
 
       anime({
         targets: '.stat-item',
         opacity: [0, 1],
-        translateY: [30, 0],
-        duration: 600,
-        delay: anime?.stagger?.(200, {start: 1400}) || 1400,
-        easing: 'easeOutQuart'
-      });
-
-      const timelineItems = document.querySelectorAll('.timeline-item');
-      timelineItems.forEach((item: Element, index: number) => {
-        anime({
-          targets: item,
-          opacity: [0, 1],
-          translateY: [50, 0],
-          duration: 600,
-          delay: index * 200,
-          easing: 'easeOutQuart'
-        });
-      });
-
-      const collectionCards = document.querySelectorAll('.collection-card');
-      collectionCards.forEach((card: Element, index: number) => {
-        anime({
-          targets: card,
-          opacity: [0, 1],
-          translateY: [50, 0],
-          duration: 600,
-          delay: index * 100,
-          easing: 'easeOutQuart'
-        });
-      });
-
-      const innovationNumbers = document.querySelectorAll('.innovation-number');
-      innovationNumbers.forEach((number: Element) => {
-        const target = parseInt(number.getAttribute('data-count') || '0');
-        anime({
-          targets: number,
-          innerHTML: [0, target],
-          duration: 2000,
-          delay: 500,
-          easing: 'easeOutQuart',
-          round: 1
-        });
-      });
-
-      const craftItems = document.querySelectorAll('.craft-item');
-      craftItems.forEach((item: Element, index: number) => {
-        anime({
-          targets: item,
-          opacity: [0, 1],
-          translateY: [30, 0],
-          duration: 600,
-          delay: index * 200,
-          easing: 'easeOutQuart'
-        });
+        translateY: [20, 0],
+        duration: 500,
+        delay: anime.stagger(150, {start: 1100}),
+        easing: 'easeOutQuad'
       });
     };
 
-    loadAnime();
-  }, []);
+    const timer = setTimeout(loadAnime, 500);
 
+    return () => clearTimeout(timer);
+  }, []); // ← PARENTHÈSE FERMANTE CORRECTE
+
+  // Intersection Observer
   useEffect(() => {
     const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
+      threshold: 0.15,
+      rootMargin: '0px 0px -100px 0px'
     };
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const target = entry.target as HTMLElement;
-          target.style.opacity = '1';
-          target.style.transform = 'translateY(0)';
+          const anime = (window as any).anime;
+          
+          if (anime && !target.classList.contains('animated')) {
+            target.classList.add('animated');
+            
+            anime({
+              targets: target,
+              opacity: [0, 1],
+              translateY: [30, 0],
+              duration: 600,
+              easing: 'easeOutQuad'
+            });
+          }
         }
       });
     }, observerOptions);
 
-    const sectionTitles = document.querySelectorAll('.section-title');
-    sectionTitles.forEach(title => observer.observe(title));
+    const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
+    elementsToAnimate.forEach(el => observer.observe(el));
 
     return () => observer.disconnect();
-  }, []);
+  }, [animationsLoaded]);
 
+  // Compteurs innovation
   useEffect(() => {
-    const handleNavScroll = () => {
-      const nav = document.querySelector('.nav-container') as HTMLElement;
-      if (nav) {
-        if (window.scrollY > 100) {
-          nav.style.background = 'rgba(250, 248, 245, 0.98)';
-        } else {
-          nav.style.background = 'rgba(250, 248, 245, 0.95)';
-        }
-      }
-    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+            entry.target.classList.add('counted');
+            const target = parseInt(entry.target.getAttribute('data-count') || '0');
+            const anime = (window as any).anime;
+            
+            if (anime) {
+              anime({
+                targets: entry.target,
+                innerHTML: [0, target],
+                duration: 1500,
+                easing: 'easeOutQuad',
+                round: 1
+              });
+            }
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
 
-    window.addEventListener('scroll', handleNavScroll);
-    return () => window.removeEventListener('scroll', handleNavScroll);
-  }, []);
+    const counters = document.querySelectorAll('.innovation-number');
+    counters.forEach(counter => observer.observe(counter));
 
+    return () => observer.disconnect();
+  }, [animationsLoaded]);
+
+  // Smooth scroll
   useEffect(() => {
     const handleAnchorClick = (e: Event) => {
       const anchor = e.currentTarget as HTMLAnchorElement;
       const href = anchor.getAttribute('href');
-      if (href && href.startsWith('#')) {
+      if (href?.startsWith('#')) {
         e.preventDefault();
         const target = document.querySelector(href);
         if (target) {
@@ -260,25 +241,27 @@ export default function Page() {
     };
   }, []);
 
+  // Hover cards
   useEffect(() => {
-    const anime = (window as any).anime;
-    if (!anime) return;
+    if (!(window as any).anime) return;
 
     const handleMouseEnter = function(this: HTMLElement) {
+      const anime = (window as any).anime;
       anime({
         targets: this,
         scale: 1.02,
-        duration: 300,
-        easing: 'easeOutQuart'
+        duration: 250,
+        easing: 'easeOutQuad'
       });
     };
 
     const handleMouseLeave = function(this: HTMLElement) {
+      const anime = (window as any).anime;
       anime({
         targets: this,
         scale: 1,
-        duration: 300,
-        easing: 'easeOutQuart'
+        duration: 250,
+        easing: 'easeOutQuad'
       });
     };
 
@@ -294,7 +277,7 @@ export default function Page() {
         card.removeEventListener('mouseleave', handleMouseLeave);
       });
     };
-  }, []);
+  }, [animationsLoaded]);
 
   const toggleCollection = (name: string) => {
     setExpandedCollection(expandedCollection === name ? null : name);
@@ -367,7 +350,6 @@ export default function Page() {
           width: 100%;
           height: 100%;
           z-index: 0;
-          will-change: transform;
         }
         
         .hero-content {
@@ -388,7 +370,6 @@ export default function Page() {
           -webkit-text-fill-color: transparent;
           background-clip: text;
           opacity: 0;
-          transform: translateY(50px);
         }
         
         .hero-subtitle {
@@ -397,7 +378,6 @@ export default function Page() {
           margin-bottom: 3rem;
           color: var(--charcoal-light);
           opacity: 0;
-          transform: translateY(30px);
         }
         
         .hero-quote {
@@ -409,7 +389,10 @@ export default function Page() {
           margin-left: auto;
           margin-right: auto;
           opacity: 0;
-          transform: translateY(30px);
+        }
+        
+        .stat-item {
+          opacity: 0;
         }
         
         .nav-container {
@@ -418,10 +401,9 @@ export default function Page() {
           left: 0;
           right: 0;
           z-index: 1000;
-          background: rgba(250, 248, 245, 0.95);
+          background: rgba(250, 248, 245, 0.98);
           backdrop-filter: blur(20px);
           border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-          transition: all 0.3s ease;
         }
         
         .nav-content {
@@ -487,8 +469,10 @@ export default function Page() {
           text-align: center;
           margin-bottom: 4rem;
           color: var(--charcoal);
+        }
+        
+        .animate-on-scroll {
           opacity: 0;
-          transform: translateY(30px);
         }
         
         .timeline-container {
@@ -510,8 +494,6 @@ export default function Page() {
         .timeline-item {
           position: relative;
           margin-bottom: 4rem;
-          opacity: 0;
-          transform: translateY(50px);
         }
         
         .timeline-item:nth-child(odd) {
@@ -570,20 +552,15 @@ export default function Page() {
           overflow: hidden;
           box-shadow: 0 20px 40px var(--shadow-dark);
           transition: all 0.4s ease;
-          opacity: 0;
-          transform: translateY(50px);
           cursor: pointer;
         }
         
         .collection-card:hover {
-          transform: translateY(-10px);
           box-shadow: 0 30px 60px var(--shadow-dark);
         }
         
         .collection-card.expanded {
           grid-column: 1 / -1;
-          transform: none;
-          box-shadow: 0 30px 60px var(--shadow-dark);
         }
         
         .collection-header {
@@ -690,14 +667,6 @@ export default function Page() {
           }
         }
         
-        .timeline-title {
-          font-size: 1.3rem;
-          font-weight: 600;
-          color: var(--gold);
-          margin-bottom: 1.5rem;
-          margin-top: 1.5rem;
-        }
-        
         .timeline-event {
           display: flex;
           gap: 1rem;
@@ -714,12 +683,6 @@ export default function Page() {
           min-width: 80px;
         }
         
-        .timeline-description {
-          flex: 1;
-          color: var(--charcoal-light);
-          line-height: 1.6;
-        }
-        
         .innovation-section {
           background: linear-gradient(135deg, var(--charcoal), var(--charcoal-light));
           color: var(--white);
@@ -734,11 +697,6 @@ export default function Page() {
           gap: 3rem;
           max-width: 1200px;
           margin: 4rem auto 0;
-        }
-        
-        .innovation-item {
-          opacity: 0;
-          transform: translateY(30px);
         }
         
         .innovation-number {
@@ -893,7 +851,7 @@ export default function Page() {
             Vous en êtes le gardien pour les générations futures."
           </p>
           <div className="hero-stats">
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '3rem', marginTop: '3rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '3rem', marginTop: '3rem', flexWrap: 'wrap' }}>
               <div className="stat-item">
                 <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--gold)' }}>1839</div>
                 <div style={{ fontSize: '1rem', color: 'var(--charcoal-light)' }}>Fondation</div>
@@ -911,15 +869,15 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Navigation avec bouton Retour */}
+      {/* Navigation */}
       <nav className="nav-container">
         <div className="nav-content">
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-  <button onClick={() => router.push('/theorie/manufactures')} className="back-btn">
-    Retour
-  </button>
-  <a href="#home" className="nav-logo font-display">Patek Philippe</a>
-</div>
+            <button onClick={() => router.push('/theorie/manufactures')} className="back-btn">
+              Retour
+            </button>
+            <a href="#home" className="nav-logo font-display">Patek Philippe</a>
+          </div>
           <ul className="nav-links">
             <li><a href="#heritage">Héritage</a></li>
             <li><a href="#collections">Collections</a></li>
@@ -931,21 +889,21 @@ export default function Page() {
 
       {/* Heritage Section */}
       <section id="heritage" className="section">
-        <h2 className="section-title font-display">185 Ans d'Excellence</h2>
+        <h2 className="section-title font-display animate-on-scroll">185 Ans d'Excellence</h2>
         <div className="timeline-container">
           <div className="timeline-line"></div>
           
-          <div className="timeline-item">
+          <div className="timeline-item animate-on-scroll">
             <div className="timeline-marker"></div>
             <div className="timeline-date">1839</div>
             <h3 className="timeline-title">Fondation de la Manufacture</h3>
             <p className="timeline-description">
-              Antoine Norbert de Patek, aristocrate polonais exilé, fonde Patek, Czapek &amp; Cie à Genève avec François Czapek. 
+              Antoine Norbert de Patek, aristocrate polonais exilé, fonde Patek, Czapek & Cie à Genève avec François Czapek. 
               Début d'une aventure qui révolutionnera l'horlogerie mondiale.
             </p>
           </div>
           
-          <div className="timeline-item">
+          <div className="timeline-item animate-on-scroll">
             <div className="timeline-marker"></div>
             <div className="timeline-date">1844</div>
             <h3 className="timeline-title">Rencontre Historique à Paris</h3>
@@ -955,7 +913,7 @@ export default function Page() {
             </p>
           </div>
           
-          <div className="timeline-item">
+          <div className="timeline-item animate-on-scroll">
             <div className="timeline-marker"></div>
             <div className="timeline-date">1851</div>
             <h3 className="timeline-title">Consécration Royale</h3>
@@ -965,7 +923,7 @@ export default function Page() {
             </p>
           </div>
           
-          <div className="timeline-item">
+          <div className="timeline-item animate-on-scroll">
             <div className="timeline-marker"></div>
             <div className="timeline-date">1868</div>
             <h3 className="timeline-title">Première Montre-bracelet</h3>
@@ -975,7 +933,7 @@ export default function Page() {
             </p>
           </div>
           
-          <div className="timeline-item">
+          <div className="timeline-item animate-on-scroll">
             <div className="timeline-marker"></div>
             <div className="timeline-date">1889</div>
             <h3 className="timeline-title">Brevet du Calendrier Perpétuel</h3>
@@ -989,11 +947,11 @@ export default function Page() {
 
       {/* Collections Section */}
       <section id="collections" className="section">
-        <h2 className="section-title font-display">Collections Légendaires</h2>
+        <h2 className="section-title font-display animate-on-scroll">Collections Légendaires</h2>
         <div className="collections-grid">
           {legendaryCollections.map((collection) => (
             <div 
-              className={`collection-card ${expandedCollection === collection.name ? 'expanded' : ''}`}
+              className={`collection-card animate-on-scroll ${expandedCollection === collection.name ? 'expanded' : ''}`}
               key={collection.name}
             >
               <div className="collection-header" onClick={() => toggleCollection(collection.name)}>
@@ -1001,12 +959,7 @@ export default function Page() {
                   <img 
                     src={collection.illustration} 
                     alt={collection.name}
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
-                      objectFit: 'contain',
-                      padding: '1.5rem'
-                    }}
+                    loading="lazy"
                   />
                 </div>
                 <div className="collection-content">
@@ -1041,13 +994,13 @@ export default function Page() {
 
       {/* Innovation Section */}
       <section id="innovation" className="innovation-section">
-        <h2 className="section-title font-display" style={{ color: 'var(--white)', marginBottom: '2rem' }}>Innovations Révolutionnaires</h2>
-        <p style={{ fontSize: '1.2rem', marginBottom: '4rem', opacity: 0.9 }}>
+        <h2 className="section-title font-display animate-on-scroll" style={{ color: 'var(--white)', marginBottom: '2rem' }}>Innovations Révolutionnaires</h2>
+        <p className="animate-on-scroll" style={{ fontSize: '1.2rem', marginBottom: '4rem', opacity: 0.9 }}>
           Patek Philippe a révolutionné l'horlogerie avec plus de 70 brevets déposés depuis 1839
         </p>
         
         <div className="innovation-grid">
-          <div className="innovation-item">
+          <div className="animate-on-scroll">
             <div className="innovation-number" data-count="70">0</div>
             <h3 className="innovation-title">Brevets Déposés</h3>
             <p className="innovation-description">
@@ -1055,7 +1008,7 @@ export default function Page() {
             </p>
           </div>
           
-          <div className="innovation-item">
+          <div className="animate-on-scroll">
             <div className="innovation-number" data-count="100">0</div>
             <h3 className="innovation-title">% Indépendance</h3>
             <p className="innovation-description">
@@ -1063,7 +1016,7 @@ export default function Page() {
             </p>
           </div>
           
-          <div className="innovation-item">
+          <div className="animate-on-scroll">
             <div className="innovation-number" data-count="185">0</div>
             <h3 className="innovation-title">Ans d'Excellence</h3>
             <p className="innovation-description">
@@ -1071,7 +1024,7 @@ export default function Page() {
             </p>
           </div>
           
-          <div className="innovation-item">
+          <div className="animate-on-scroll">
             <div className="innovation-number" data-count="60000">0</div>
             <h3 className="innovation-title">Montres/An</h3>
             <p className="innovation-description">
@@ -1083,16 +1036,16 @@ export default function Page() {
 
       {/* Craftsmanship Section */}
       <section id="craftsmanship" className="section">
-        <h2 className="section-title font-display">Savoir-faire Exceptionnel</h2>
+        <h2 className="section-title font-display animate-on-scroll">Savoir-faire Exceptionnel</h2>
         <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center' }}>
-          <p style={{ fontSize: '1.3rem', lineHeight: 1.8, marginBottom: '4rem', color: 'var(--charcoal-light)' }}>
+          <p className="animate-on-scroll" style={{ fontSize: '1.3rem', lineHeight: 1.8, marginBottom: '4rem', color: 'var(--charcoal-light)' }}>
             Chaque Patek Philippe est le fruit de centaines d'heures de travail artisanal, 
             alliant tradition séculaire et innovation constante. Nos maîtres horlogers transmettent 
             leur savoir-faire de génération en génération.
           </p>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem', marginTop: '4rem' }}>
-            <div className="craft-item">
+            <div className="animate-on-scroll">
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚙️</div>
               <h3 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1rem' }}>Mécanique Fine</h3>
               <p style={{ color: 'var(--charcoal-light)', lineHeight: 1.6 }}>
@@ -1101,7 +1054,7 @@ export default function Page() {
               </p>
             </div>
             
-            <div className="craft-item">
+            <div className="animate-on-scroll">
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>💎</div>
               <h3 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1rem' }}>Joaillerie</h3>
               <p style={{ color: 'var(--charcoal-light)', lineHeight: 1.6 }}>
@@ -1110,7 +1063,7 @@ export default function Page() {
               </p>
             </div>
             
-            <div className="craft-item">
+            <div className="animate-on-scroll">
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎨</div>
               <h3 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1rem' }}>Arts Décoratifs</h3>
               <p style={{ color: 'var(--charcoal-light)', lineHeight: 1.6 }}>
@@ -1124,8 +1077,8 @@ export default function Page() {
 
       {/* CTA Section */}
       <section className="cta-section">
-        <h2 className="cta-title font-display">Découvrez l'Univers Patek Philippe</h2>
-        <p style={{ fontSize: '1.2rem', marginBottom: '3rem', color: 'var(--charcoal)' }}>
+        <h2 className="cta-title font-display animate-on-scroll">Découvrez l'Univers Patek Philippe</h2>
+        <p className="animate-on-scroll" style={{ fontSize: '1.2rem', marginBottom: '3rem', color: 'var(--charcoal)' }}>
           Plongez dans l'histoire, les collections et l'excellence horlogère suisse
         </p>
         <div className="cta-buttons">
