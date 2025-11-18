@@ -11,69 +11,82 @@ export default function Page() {
   const [expandedCollection, setExpandedCollection] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadScript = (src: string) => {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = src;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-      });
-    };
-
-    const initVanta = async () => {
-      try {
-        if (!(window as any).THREE) {
-          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js ');
-        }
-        if (!(window as any).VANTA) {
-          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js ');
-        }
-        if (vantaBgRef.current && (window as any).VANTA) {
-          vantaEffectRef.current = (window as any).VANTA.BIRDS({
-            el: vantaBgRef.current,
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 300.00,
-            minWidth: 300.00,
-            scale: 1.0,
-            scaleMobile: 1.0,
-            backgroundColor: 0xf8f6f0,
-            color1: 0xd4af37,
-            color2: 0x1a2332,
-            birdSize: 1.2,
-            wingSpan: 25,
-            quantity: 3,
-          });
-        }
-      } catch (error) {
-        console.error('Error loading Vanta:', error);
+  const loadScript = (src: string) => {
+    return new Promise((resolve, reject) => {
+      if (document.querySelector(`script[src="${src}"]`)) {
+        resolve(true);
+        return;
       }
-    };
+      const script = document.createElement('script');
+      script.src = src;
+      script.async = true;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  };
 
-    initVanta();
-
-    const handleScroll = () => {
-      const scrolled = window.pageYOffset;
-      const parallax = vantaBgRef.current;
-      if (parallax) {
-        const speed = scrolled * 0.3;
-        parallax.style.transform = `translateY(${speed}px)`;
+  const initVanta = async () => {
+    try {
+      const isMobile = window.innerWidth < 768;
+      const isTablet = window.innerWidth < 1024;
+      const isLargeScreen = window.innerWidth >= 1920;
+      
+      if (!(window as any).THREE) {
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
       }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      if (vantaEffectRef.current) {
-        vantaEffectRef.current.destroy();
+      if (!(window as any).VANTA) {
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js');
       }
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+      
+      if (vantaBgRef.current && (window as any).VANTA) {
+        // Adaptation selon taille écran
+        let birdCount = 12; // Desktop standard
+        if (isLargeScreen) birdCount = 15; // Grand écran : 15 oiseaux
+        if (isTablet) birdCount = 8; // Tablette : 8 oiseaux
+        if (isMobile) birdCount = 5; // Mobile : 5 oiseaux minimum
+        
+        vantaEffectRef.current = (window as any).VANTA.BIRDS({
+          el: vantaBgRef.current,
+          mouseControls: !isMobile,
+          touchControls: !isMobile,
+          gyroControls: false,
+          minHeight: 300.00,
+          minWidth: 300.00,
+          scale: 1.0,
+          scaleMobile: 1.0,
+          backgroundColor: 0xf8f6f0,
+          color1: 0xd4af37,
+          color2: 0x1a2332,
+          birdSize: 1.0, // Légèrement réduit pour plus d'oiseaux
+          wingSpan: 20, // Légèrement réduit
+          quantity: birdCount, // 5-15 selon appareil
+          separation: 40, // Rapprochés pour mouvement fluide
+          alignment: 60,
+          cohesion: 50,
+          speedLimit: 3.0, // Vitesse optimisée
+          backgroundAlpha: 1.0,
+          // OPTIMISATIONS AVANCÉES
+          lowQuality: isMobile, // Basse qualité sur mobile
+          fps: isMobile ? 30 : 60 // 30fps mobile, 60fps desktop
+        });
+      }
+    } catch (error) {
+      console.error('Error loading Vanta:', error);
+    }
+  };
 
-  useEffect(() => {
+  const timer = setTimeout(initVanta, 250);
+
+  return () => {
+    clearTimeout(timer);
+    if (vantaEffectRef.current) {
+      vantaEffectRef.current.destroy();
+    }
+  };
+}, []);
+
+  
     const loadAnime = async () => {
       if (!(window as any).anime) {
         const script = document.createElement('script');
