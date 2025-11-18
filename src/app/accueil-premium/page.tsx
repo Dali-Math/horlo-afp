@@ -7,19 +7,66 @@ import {
   Clock, MapPin, Building2, Users, TrendingUp, Award, Download,
   BookOpen, ExternalLink, ChevronRight, Factory, Globe, Star,
   Crown, Shield, Trophy, GraduationCap, Lightbulb, Eye, Heart,
-  Target, Zap, ArrowRight, Play, BookMarked, FileText
+  Target, Zap, ArrowRight, FileText
 } from 'lucide-react'
+
+// ============================================================================
+// INTERFACES TYPESCRIPT
+// ============================================================================
+
+interface FadeInSectionProps {
+  children: React.ReactNode
+  className?: string
+  id?: string
+}
+
+interface StatCardProps {
+  icon: React.ElementType
+  value: string
+  label: string
+  color: string
+  delay?: number
+}
+
+interface RegionData {
+  name: string
+  cities: string[]
+  description: string
+  manufactures: number
+  emplois: number
+  speciality: string
+  icon: React.ElementType
+  color: string
+}
+
+interface RegionCardProps {
+  region: RegionData
+  delay?: number
+}
+
+interface BrandData {
+  name: string
+  founded: number
+  employees: number
+  location: string
+}
+
+interface BrandCardProps {
+  brand: BrandData
+  delay?: number
+}
 
 // ============================================================================
 // COMPOSANTS RÉUTILISABLES
 // ============================================================================
 
-const FadeInSection = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => {
+const FadeInSection: React.FC<FadeInSectionProps> = ({ children, className = "", id }) => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   return (
     <motion.div
+      id={id}
       ref={ref}
       initial={{ opacity: 0, y: 60 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
@@ -31,7 +78,7 @@ const FadeInSection = ({ children, className = "" }: { children: React.ReactNode
   )
 }
 
-const StatCard = ({ icon: Icon, value, label, color, delay = 0 }: any) => {
+const StatCard: React.FC<StatCardProps> = ({ icon: Icon, value, label, color, delay = 0 }) => {
   const { theme } = useTheme()
   
   return (
@@ -47,17 +94,14 @@ const StatCard = ({ icon: Icon, value, label, color, delay = 0 }: any) => {
           : 'bg-white/90 border-slate-200 hover:border-amber-400/60 hover:shadow-2xl hover:shadow-amber-300/30'
       }`}
     >
-      {/* Gradient animé au survol */}
       <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
       
-      {/* Icône */}
       <div className={`relative z-10 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 ${
         theme === 'dark' ? 'bg-amber-500/10' : 'bg-amber-100'
       }`}>
-        <Icon className={`w-8 h-8 text-amber-400 group-hover:scale-110 transition-transform duration-300`} />
+        <Icon className="w-8 h-8 text-amber-400 group-hover:scale-110 transition-transform duration-300" />
       </div>
       
-      {/* Valeur */}
       <motion.h3 
         className="text-5xl font-extrabold mb-3 relative z-10 bg-gradient-to-br from-amber-400 to-amber-600 bg-clip-text text-transparent"
         initial={{ opacity: 0 }}
@@ -67,7 +111,6 @@ const StatCard = ({ icon: Icon, value, label, color, delay = 0 }: any) => {
         {value}
       </motion.h3>
       
-      {/* Label */}
       <p className={`text-base font-semibold relative z-10 ${
         theme === 'dark' ? 'text-gray-300' : 'text-slate-700'
       }`}>
@@ -77,7 +120,7 @@ const StatCard = ({ icon: Icon, value, label, color, delay = 0 }: any) => {
   )
 }
 
-const RegionCard = ({ region, delay = 0 }: any) => {
+const RegionCard: React.FC<RegionCardProps> = ({ region, delay = 0 }) => {
   const { theme } = useTheme()
   const Icon = region.icon
   
@@ -94,11 +137,9 @@ const RegionCard = ({ region, delay = 0 }: any) => {
           : 'bg-white/90 border-slate-200 hover:border-amber-400/50 hover:shadow-xl'
       }`}
     >
-      {/* Gradient d'arrière-plan */}
       <div className={`absolute inset-0 bg-gradient-to-br ${region.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
       
       <div className="relative z-10">
-        {/* En-tête avec icône */}
         <div className="flex items-start justify-between mb-6">
           <div className={`w-20 h-20 rounded-2xl flex items-center justify-center ${
             theme === 'dark' ? 'bg-amber-500/10' : 'bg-amber-100'
@@ -114,23 +155,20 @@ const RegionCard = ({ region, delay = 0 }: any) => {
           </div>
         </div>
 
-        {/* Titre */}
         <h3 className={`text-2xl font-bold mb-3 ${
           theme === 'dark' ? 'text-white' : 'text-slate-900'
         }`}>
           {region.name}
         </h3>
 
-        {/* Description */}
         <p className={`text-sm mb-4 leading-relaxed ${
           theme === 'dark' ? 'text-gray-400' : 'text-slate-600'
         }`}>
           {region.description}
         </p>
 
-        {/* Villes */}
         <div className="flex flex-wrap gap-2 mb-4">
-          {region.cities.map((city: string, i: number) => (
+          {region.cities.map((city, i) => (
             <span
               key={i}
               className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -144,7 +182,6 @@ const RegionCard = ({ region, delay = 0 }: any) => {
           ))}
         </div>
 
-        {/* Spécialité */}
         <div className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
           theme === 'dark' ? 'bg-amber-500/10' : 'bg-amber-50'
         }`}>
@@ -156,7 +193,6 @@ const RegionCard = ({ region, delay = 0 }: any) => {
           </span>
         </div>
 
-        {/* Emplois */}
         <div className="mt-4 flex items-center space-x-2">
           <Users className="w-5 h-5 text-amber-400" />
           <span className={`text-sm font-semibold ${
@@ -170,7 +206,7 @@ const RegionCard = ({ region, delay = 0 }: any) => {
   )
 }
 
-const BrandCard = ({ brand, delay = 0 }: any) => {
+const BrandCard: React.FC<BrandCardProps> = ({ brand, delay = 0 }) => {
   const { theme } = useTheme()
   
   return (
@@ -229,7 +265,7 @@ const BrandCard = ({ brand, delay = 0 }: any) => {
 // DONNÉES
 // ============================================================================
 
-const regions = [
+const regions: RegionData[] = [
   {
     name: "Arc Jurassien",
     cities: ["La Chaux-de-Fonds", "Le Locle", "Neuchâtel", "Bienne"],
@@ -272,7 +308,7 @@ const regions = [
   }
 ]
 
-const majorBrands = [
+const majorBrands: BrandData[] = [
   { name: "Rolex", founded: 1905, employees: 9000, location: "Genève" },
   { name: "Patek Philippe", founded: 1839, employees: 2000, location: "Genève" },
   { name: "Audemars Piguet", founded: 1875, employees: 1850, location: "Le Brassus" },
@@ -339,7 +375,7 @@ export default function HorlogerieSuissePage() {
               style={{ fontFamily: 'Bebas Neue, Oswald, sans-serif' }}
             >
               <span className={theme === 'dark' ? 'text-white' : 'text-slate-900'}>
-                L'Horlogerie
+                L&apos;Horlogerie
               </span>
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 animate-gradient">
@@ -353,7 +389,7 @@ export default function HorlogerieSuissePage() {
             }`}>
               La <span className="font-bold text-amber-400">référence absolue mondiale</span> en matière de 
               <span className="font-bold text-amber-400"> précision</span>, 
-              d'<span className="font-bold text-amber-400">excellence</span> et de 
+              d&apos;<span className="font-bold text-amber-400">excellence</span> et de 
               <span className="font-bold text-amber-400"> savoir-faire</span> horloger
             </p>
 
@@ -448,7 +484,7 @@ export default function HorlogerieSuissePage() {
             </motion.div>
 
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              L'Impact <span className="text-amber-400">Économique</span>
+              L&apos;Impact <span className="text-amber-400">Économique</span>
             </h2>
           </div>
 
@@ -534,7 +570,7 @@ export default function HorlogerieSuissePage() {
             </motion.div>
 
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Les <span className="text-amber-400">Grands Noms</span> de l'Horlogerie
+              Les <span className="text-amber-400">Grands Noms</span> de l&apos;Horlogerie
             </h2>
             <p className={`text-xl max-w-3xl mx-auto ${
               theme === 'dark' ? 'text-gray-400' : 'text-slate-600'
@@ -568,7 +604,7 @@ export default function HorlogerieSuissePage() {
             </motion.div>
 
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Guide <span className="text-amber-400">Complet</span> de l'Horlogerie Suisse
+              Guide <span className="text-amber-400">Complet</span> de l&apos;Horlogerie Suisse
             </h2>
             <p className={`text-xl max-w-3xl mx-auto mb-8 ${
               theme === 'dark' ? 'text-gray-400' : 'text-slate-600'
@@ -654,7 +690,7 @@ export default function HorlogerieSuissePage() {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                icon: BookMarked,
+                icon: BookOpen,
                 title: "Cours Théoriques",
                 description: "Modules complets sur l'histoire et les techniques",
                 link: "/theorie"
@@ -738,13 +774,13 @@ export default function HorlogerieSuissePage() {
               <Heart className="w-20 h-20 text-amber-400 mx-auto mb-8" />
 
               <h2 className="text-5xl font-bold mb-6">
-                Rejoignez l'Excellence Horlogère
+                Rejoignez l&apos;Excellence Horlogère
               </h2>
 
               <p className={`text-2xl mb-12 max-w-3xl mx-auto ${
                 theme === 'dark' ? 'text-gray-300' : 'text-slate-700'
               }`}>
-                Devenez maître horloger et perpétuez une tradition d'excellence vieille de 500 ans
+                Devenez maître horloger et perpétuez une tradition d&apos;excellence vieille de 500 ans
               </p>
 
               <motion.button
