@@ -9,7 +9,8 @@ import {
   Building2 as Architecture, BookOpen, Zap, MousePointer2, Eye, 
   Sun as SunIcon, Moon as MoonIcon, CheckCircle, Copy, Download,
   Globe, Grid3x3, Video, MapPin, Sparkles, Settings, Layers,
-  History, Palette as PaletteIcon, Code2, Monitor, AccessibilityIcon
+  History, Palette as PaletteIcon, Code2, Monitor, Accessibility,
+  ZoomIn
 } from 'lucide-react';
 
 // ==========================================
@@ -474,7 +475,7 @@ className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
                   </ul>
                 </Card>
                 
-                <Card icon={AccessibilityIcon} title="Accessibilité et inclusion" subtitle="WCAG 2.1">
+                <Card icon={Accessibility} title="Accessibilité et inclusion" subtitle="WCAG 2.1">
                   <div className="flex gap-2 mb-4">
                     <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">WCAG 2.1</span>
                     <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">Navigation clavier</span>
@@ -605,13 +606,3 @@ className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
     </ThemeContext.Provider>
   );
 }
-
-// Composant manquant pour Slide 5
-const ZoomIn = ({ className = '' }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <circle cx="11" cy="11" r="8"></circle>
-    <path d="m21 21-4.35-4.35"></path>
-    <line x1="11" y1="8" x2="11" y2="14"></line>
-    <line x1="8" y1="11" x2="14" y2="11"></line>
-  </svg>
-);
