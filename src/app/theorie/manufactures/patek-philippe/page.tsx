@@ -10,17 +10,11 @@ export default function Page() {
   const vantaEffectRef = useRef<any>(null);
   const [expandedCollection, setExpandedCollection] = useState<string | null>(null);
 
-  // Vanta.js - Optimisé avec 10-12 oiseaux
   useEffect(() => {
     const loadScript = (src: string) => {
       return new Promise((resolve, reject) => {
-        if (document.querySelector(`script[src="${src}"]`)) {
-          resolve(true);
-          return;
-        }
         const script = document.createElement('script');
         script.src = src;
-        script.async = true;
         script.onload = resolve;
         script.onerror = reject;
         document.head.appendChild(script);
@@ -29,25 +23,17 @@ export default function Page() {
 
     const initVanta = async () => {
       try {
-        const isMobile = window.innerWidth < 768;
-        const isTablet = window.innerWidth < 1024;
-        
         if (!(window as any).THREE) {
-          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js');
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js ');
         }
         if (!(window as any).VANTA) {
-          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js');
+          await loadScript('https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.birds.min.js ');
         }
-        
         if (vantaBgRef.current && (window as any).VANTA) {
-          let birdCount = 12;
-          if (isTablet) birdCount = 8;
-          if (isMobile) birdCount = 5;
-          
           vantaEffectRef.current = (window as any).VANTA.BIRDS({
             el: vantaBgRef.current,
-            mouseControls: !isMobile,
-            touchControls: !isMobile,
+            mouseControls: true,
+            touchControls: true,
             gyroControls: false,
             minHeight: 300.00,
             minWidth: 300.00,
@@ -56,13 +42,9 @@ export default function Page() {
             backgroundColor: 0xf8f6f0,
             color1: 0xd4af37,
             color2: 0x1a2332,
-            birdSize: 1.0,
-            wingSpan: 20,
-            quantity: birdCount,
-            separation: 40,
-            alignment: 60,
-            cohesion: 50,
-            speedLimit: 3.0
+            birdSize: 1.2,
+            wingSpan: 25,
+            quantity: 3,
           });
         }
       } catch (error) {
@@ -70,27 +52,38 @@ export default function Page() {
       }
     };
 
-    const timer = setTimeout(initVanta, 300);
+    initVanta();
+
+    const handleScroll = () => {
+      const scrolled = window.pageYOffset;
+      const parallax = vantaBgRef.current;
+      if (parallax) {
+        const speed = scrolled * 0.3;
+        parallax.style.transform = `translateY(${speed}px)`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      clearTimeout(timer);
       if (vantaEffectRef.current) {
         vantaEffectRef.current.destroy();
       }
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
-  // Anime.js - Optimisé
   useEffect(() => {
-    const loadAnime = () => {
+    const loadAnime = async () => {
       if (!(window as any).anime) {
         const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js';
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js ';
         script.async = true;
-        script.onload = () => {
-          setTimeout(initAnimations, 100);
-        };
         document.head.appendChild(script);
+        
+        script.onload = () => {
+          initAnimations();
+        };
       } else {
         initAnimations();
       }
@@ -98,128 +91,195 @@ export default function Page() {
 
     const initAnimations = () => {
       const anime = (window as any).anime;
-      if (!anime) return;
       
       anime({
         targets: '.hero-title',
         opacity: [0, 1],
-        translateY: [30, 0],
-        duration: 800,
-        delay: 400,
-        easing: 'easeOutQuad'
+        translateY: [50, 0],
+        duration: 1000,
+        delay: 500,
+        easing: 'easeOutQuart'
       });
 
       anime({
         targets: '.hero-subtitle',
         opacity: [0, 1],
-        translateY: [20, 0],
-        duration: 600,
-        delay: 700,
-        easing: 'easeOutQuad'
+        translateY: [30, 0],
+        duration: 800,
+        delay: 800,
+        easing: 'easeOutQuart'
       });
 
       anime({
         targets: '.hero-quote',
         opacity: [0, 1],
-        translateY: [20, 0],
-        duration: 600,
-        delay: 900,
-        easing: 'easeOutQuad'
+        translateY: [30, 0],
+        duration: 800,
+        delay: 1100,
+        easing: 'easeOutQuart'
       });
 
       anime({
         targets: '.stat-item',
         opacity: [0, 1],
-        translateY: [20, 0],
-        duration: 500,
-        delay: anime.stagger(150, {start: 1100}),
-        easing: 'easeOutQuad'
+        translateY: [30, 0],
+        duration: 600,
+        delay: anime?.stagger?.(200, {start: 1400}) || 1400,
+        easing: 'easeOutQuart'
+      });
+
+      const timelineItems = document.querySelectorAll('.timeline-item');
+      timelineItems.forEach((item: Element, index: number) => {
+        anime({
+          targets: item,
+          opacity: [0, 1],
+          translateY: [50, 0],
+          duration: 600,
+          delay: index * 200,
+          easing: 'easeOutQuart'
+        });
+      });
+
+      const collectionCards = document.querySelectorAll('.collection-card');
+      collectionCards.forEach((card: Element, index: number) => {
+        anime({
+          targets: card,
+          opacity: [0, 1],
+          translateY: [50, 0],
+          duration: 600,
+          delay: index * 100,
+          easing: 'easeOutQuart'
+        });
+      });
+
+      const innovationNumbers = document.querySelectorAll('.innovation-number');
+      innovationNumbers.forEach((number: Element) => {
+        const target = parseInt(number.getAttribute('data-count') || '0');
+        anime({
+          targets: number,
+          innerHTML: [0, target],
+          duration: 2000,
+          delay: 500,
+          easing: 'easeOutQuart',
+          round: 1
+        });
+      });
+
+      const craftItems = document.querySelectorAll('.craft-item');
+      craftItems.forEach((item: Element, index: number) => {
+        anime({
+          targets: item,
+          opacity: [0, 1],
+          translateY: [30, 0],
+          duration: 600,
+          delay: index * 200,
+          easing: 'easeOutQuart'
+        });
       });
     };
 
-    setTimeout(loadAnime, 500);
+    loadAnime();
   }, []);
 
-  // Intersection Observer pour animations au scroll
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
-            entry.target.classList.add('animated');
-            const anime = (window as any).anime;
-            
-            if (anime) {
-              anime({
-                targets: entry.target,
-                opacity: [0, 1],
-                translateY: [30, 0],
-                duration: 600,
-                easing: 'easeOutQuad'
-              });
-            }
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
 
-    const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
-    elementsToAnimate.forEach(el => observer.observe(el));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const target = entry.target as HTMLElement;
+          target.style.opacity = '1';
+          target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    const sectionTitles = document.querySelectorAll('.section-title');
+    sectionTitles.forEach(title => observer.observe(title));
 
     return () => observer.disconnect();
   }, []);
 
-  // Compteurs
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
-            entry.target.classList.add('counted');
-            const targetValue = parseInt(entry.target.getAttribute('data-count') || '0');
-            const anime = (window as any).anime;
-            
-            if (anime) {
-              anime({
-                targets: entry.target,
-                innerHTML: [0, targetValue],
-                duration: 1500,
-                easing: 'easeOutQuad',
-                round: 1
-              });
-            }
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
+    const handleNavScroll = () => {
+      const nav = document.querySelector('.nav-container') as HTMLElement;
+      if (nav) {
+        if (window.scrollY > 100) {
+          nav.style.background = 'rgba(250, 248, 245, 0.98)';
+        } else {
+          nav.style.background = 'rgba(250, 248, 245, 0.95)';
+        }
+      }
+    };
 
-    const counters = document.querySelectorAll('.innovation-number');
-    counters.forEach(counter => observer.observe(counter));
-
-    return () => observer.disconnect();
+    window.addEventListener('scroll', handleNavScroll);
+    return () => window.removeEventListener('scroll', handleNavScroll);
   }, []);
 
-  // Smooth scroll
   useEffect(() => {
     const handleAnchorClick = (e: Event) => {
       const anchor = e.currentTarget as HTMLAnchorElement;
       const href = anchor.getAttribute('href');
-      if (href?.startsWith('#')) {
+      if (href && href.startsWith('#')) {
         e.preventDefault();
         const target = document.querySelector(href);
         if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
         }
       }
     };
 
     const anchors = document.querySelectorAll('a[href^="#"]');
-    anchors.forEach(anchor => anchor.addEventListener('click', handleAnchorClick));
+    anchors.forEach(anchor => {
+      anchor.addEventListener('click', handleAnchorClick);
+    });
 
     return () => {
-      anchors.forEach(anchor => anchor.removeEventListener('click', handleAnchorClick));
+      anchors.forEach(anchor => {
+        anchor.removeEventListener('click', handleAnchorClick);
+      });
+    };
+  }, []);
+
+  useEffect(() => {
+    const anime = (window as any).anime;
+    if (!anime) return;
+
+    const handleMouseEnter = function(this: HTMLElement) {
+      anime({
+        targets: this,
+        scale: 1.02,
+        duration: 300,
+        easing: 'easeOutQuart'
+      });
+    };
+
+    const handleMouseLeave = function(this: HTMLElement) {
+      anime({
+        targets: this,
+        scale: 1,
+        duration: 300,
+        easing: 'easeOutQuart'
+      });
+    };
+
+    const cards = document.querySelectorAll('.collection-card');
+    cards.forEach(card => {
+      card.addEventListener('mouseenter', handleMouseEnter);
+      card.addEventListener('mouseleave', handleMouseLeave);
+    });
+
+    return () => {
+      cards.forEach(card => {
+        card.removeEventListener('mouseenter', handleMouseEnter);
+        card.removeEventListener('mouseleave', handleMouseLeave);
+      });
     };
   }, []);
 
@@ -268,6 +328,7 @@ export default function Page() {
           border-radius: 5px;
           cursor: pointer;
           font-weight: 500;
+          font-family: 'Inter', sans-serif;
           transition: all 0.3s ease;
           font-size: 0.9rem;
         }
@@ -293,6 +354,7 @@ export default function Page() {
           width: 100%;
           height: 100%;
           z-index: 0;
+          will-change: transform;
         }
         
         .hero-content {
@@ -313,6 +375,7 @@ export default function Page() {
           -webkit-text-fill-color: transparent;
           background-clip: text;
           opacity: 0;
+          transform: translateY(50px);
         }
         
         .hero-subtitle {
@@ -321,6 +384,7 @@ export default function Page() {
           margin-bottom: 3rem;
           color: var(--charcoal-light);
           opacity: 0;
+          transform: translateY(30px);
         }
         
         .hero-quote {
@@ -332,10 +396,7 @@ export default function Page() {
           margin-left: auto;
           margin-right: auto;
           opacity: 0;
-        }
-        
-        .stat-item {
-          opacity: 0;
+          transform: translateY(30px);
         }
         
         .nav-container {
@@ -344,9 +405,10 @@ export default function Page() {
           left: 0;
           right: 0;
           z-index: 1000;
-          background: rgba(250, 248, 245, 0.98);
+          background: rgba(250, 248, 245, 0.95);
           backdrop-filter: blur(20px);
           border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+          transition: all 0.3s ease;
         }
         
         .nav-content {
@@ -376,10 +438,26 @@ export default function Page() {
           color: var(--charcoal);
           font-weight: 500;
           transition: color 0.3s ease;
+          position: relative;
         }
         
         .nav-links a:hover {
           color: var(--gold);
+        }
+        
+        .nav-links a::after {
+          content: '';
+          position: absolute;
+          bottom: -5px;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background: var(--gold);
+          transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+          width: 100%;
         }
         
         .section {
@@ -396,10 +474,8 @@ export default function Page() {
           text-align: center;
           margin-bottom: 4rem;
           color: var(--charcoal);
-        }
-        
-        .animate-on-scroll {
           opacity: 0;
+          transform: translateY(30px);
         }
         
         .timeline-container {
@@ -421,6 +497,8 @@ export default function Page() {
         .timeline-item {
           position: relative;
           margin-bottom: 4rem;
+          opacity: 0;
+          transform: translateY(50px);
         }
         
         .timeline-item:nth-child(odd) {
@@ -479,20 +557,25 @@ export default function Page() {
           overflow: hidden;
           box-shadow: 0 20px 40px var(--shadow-dark);
           transition: all 0.4s ease;
+          opacity: 0;
+          transform: translateY(50px);
           cursor: pointer;
         }
         
         .collection-card:hover {
-          transform: translateY(-5px);
+          transform: translateY(-10px);
           box-shadow: 0 30px 60px var(--shadow-dark);
         }
         
         .collection-card.expanded {
           grid-column: 1 / -1;
+          transform: none;
+          box-shadow: 0 30px 60px var(--shadow-dark);
         }
         
         .collection-header {
           cursor: pointer;
+          position: relative;
         }
         
         .collection-image {
@@ -502,6 +585,7 @@ export default function Page() {
           display: flex;
           align-items: center;
           justify-content: center;
+          overflow: hidden;
         }
         
         .collection-image img {
@@ -570,6 +654,11 @@ export default function Page() {
           transition: all 0.3s ease;
         }
         
+        .collection-card:hover .expand-indicator {
+          background: var(--gold-dark);
+          transform: scale(1.1);
+        }
+        
         .expanded-timeline {
           padding: 0 2rem 2rem;
           border-top: 1px solid rgba(212, 175, 55, 0.2);
@@ -588,6 +677,14 @@ export default function Page() {
           }
         }
         
+        .timeline-title {
+          font-size: 1.3rem;
+          font-weight: 600;
+          color: var(--gold);
+          margin-bottom: 1.5rem;
+          margin-top: 1.5rem;
+        }
+        
         .timeline-event {
           display: flex;
           gap: 1rem;
@@ -604,6 +701,12 @@ export default function Page() {
           min-width: 80px;
         }
         
+        .timeline-description {
+          flex: 1;
+          color: var(--charcoal-light);
+          line-height: 1.6;
+        }
+        
         .innovation-section {
           background: linear-gradient(135deg, var(--charcoal), var(--charcoal-light));
           color: var(--white);
@@ -618,6 +721,11 @@ export default function Page() {
           gap: 3rem;
           max-width: 1200px;
           margin: 4rem auto 0;
+        }
+        
+        .innovation-item {
+          opacity: 0;
+          transform: translateY(30px);
         }
         
         .innovation-number {
@@ -666,6 +774,7 @@ export default function Page() {
           text-decoration: none;
           font-weight: 600;
           transition: all 0.3s ease;
+          display: inline-block;
           cursor: pointer;
           border: none;
         }
@@ -678,6 +787,7 @@ export default function Page() {
         .btn-primary:hover {
           background: var(--charcoal-light);
           transform: translateY(-2px);
+          box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
         
         .btn-secondary {
@@ -699,6 +809,11 @@ export default function Page() {
           text-align: center;
         }
         
+        .footer-content {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+        
         .footer-logo {
           font-size: 2rem;
           font-weight: 700;
@@ -707,6 +822,7 @@ export default function Page() {
         }
         
         .footer-text {
+          font-size: 1rem;
           opacity: 0.8;
           margin-bottom: 2rem;
         }
@@ -741,9 +857,19 @@ export default function Page() {
           .collections-grid {
             grid-template-columns: 1fr;
           }
+          
+          .innovation-grid {
+            grid-template-columns: 1fr;
+          }
+          
+          .cta-buttons {
+            flex-direction: column;
+            align-items: center;
+          }
         }
       `}</style>
 
+      {/* Hero Section */}
       <section id="home" className="hero-section">
         <div ref={vantaBgRef} className="vanta-bg"></div>
         <div className="hero-content">
@@ -753,31 +879,34 @@ export default function Page() {
             "Vous ne possédez jamais complètement une Patek Philippe. 
             Vous en êtes le gardien pour les générations futures."
           </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '3rem', marginTop: '3rem', flexWrap: 'wrap' }}>
-            <div className="stat-item">
-              <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--gold)' }}>1839</div>
-              <div style={{ fontSize: '1rem', color: 'var(--charcoal-light)' }}>Fondation</div>
-            </div>
-            <div className="stat-item">
-              <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--gold)' }}>70+</div>
-              <div style={{ fontSize: '1rem', color: 'var(--charcoal-light)' }}>Brevets</div>
-            </div>
-            <div className="stat-item">
-              <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--gold)' }}>100%</div>
-              <div style={{ fontSize: '1rem', color: 'var(--charcoal-light)' }}>Indépendance</div>
+          <div className="hero-stats">
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '3rem', marginTop: '3rem' }}>
+              <div className="stat-item">
+                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--gold)' }}>1839</div>
+                <div style={{ fontSize: '1rem', color: 'var(--charcoal-light)' }}>Fondation</div>
+              </div>
+              <div className="stat-item">
+                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--gold)' }}>70+</div>
+                <div style={{ fontSize: '1rem', color: 'var(--charcoal-light)' }}>Brevets</div>
+              </div>
+              <div className="stat-item">
+                <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--gold)' }}>100%</div>
+                <div style={{ fontSize: '1rem', color: 'var(--charcoal-light)' }}>Indépendance</div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
+      {/* Navigation avec bouton Retour */}
       <nav className="nav-container">
         <div className="nav-content">
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <button onClick={() => router.push('/theorie/manufactures')} className="back-btn">
-              Retour
-            </button>
-            <a href="#home" className="nav-logo font-display">Patek Philippe</a>
-          </div>
+  <button onClick={() => router.push('/theorie/manufactures')} className="back-btn">
+    Retour
+  </button>
+  <a href="#home" className="nav-logo font-display">Patek Philippe</a>
+</div>
           <ul className="nav-links">
             <li><a href="#heritage">Héritage</a></li>
             <li><a href="#collections">Collections</a></li>
@@ -787,22 +916,23 @@ export default function Page() {
         </div>
       </nav>
 
+      {/* Heritage Section */}
       <section id="heritage" className="section">
-        <h2 className="section-title font-display animate-on-scroll">185 Ans d'Excellence</h2>
+        <h2 className="section-title font-display">185 Ans d'Excellence</h2>
         <div className="timeline-container">
           <div className="timeline-line"></div>
           
-          <div className="timeline-item animate-on-scroll">
+          <div className="timeline-item">
             <div className="timeline-marker"></div>
             <div className="timeline-date">1839</div>
             <h3 className="timeline-title">Fondation de la Manufacture</h3>
             <p className="timeline-description">
-              Antoine Norbert de Patek, aristocrate polonais exilé, fonde Patek, Czapek & Cie à Genève avec François Czapek. 
+              Antoine Norbert de Patek, aristocrate polonais exilé, fonde Patek, Czapek &amp; Cie à Genève avec François Czapek. 
               Début d'une aventure qui révolutionnera l'horlogerie mondiale.
             </p>
           </div>
           
-          <div className="timeline-item animate-on-scroll">
+          <div className="timeline-item">
             <div className="timeline-marker"></div>
             <div className="timeline-date">1844</div>
             <h3 className="timeline-title">Rencontre Historique à Paris</h3>
@@ -812,7 +942,7 @@ export default function Page() {
             </p>
           </div>
           
-          <div className="timeline-item animate-on-scroll">
+          <div className="timeline-item">
             <div className="timeline-marker"></div>
             <div className="timeline-date">1851</div>
             <h3 className="timeline-title">Consécration Royale</h3>
@@ -822,7 +952,7 @@ export default function Page() {
             </p>
           </div>
           
-          <div className="timeline-item animate-on-scroll">
+          <div className="timeline-item">
             <div className="timeline-marker"></div>
             <div className="timeline-date">1868</div>
             <h3 className="timeline-title">Première Montre-bracelet</h3>
@@ -832,7 +962,7 @@ export default function Page() {
             </p>
           </div>
           
-          <div className="timeline-item animate-on-scroll">
+          <div className="timeline-item">
             <div className="timeline-marker"></div>
             <div className="timeline-date">1889</div>
             <h3 className="timeline-title">Brevet du Calendrier Perpétuel</h3>
@@ -844,12 +974,13 @@ export default function Page() {
         </div>
       </section>
 
+      {/* Collections Section */}
       <section id="collections" className="section">
-        <h2 className="section-title font-display animate-on-scroll">Collections Légendaires</h2>
+        <h2 className="section-title font-display">Collections Légendaires</h2>
         <div className="collections-grid">
           {legendaryCollections.map((collection) => (
             <div 
-              className={`collection-card animate-on-scroll ${expandedCollection === collection.name ? 'expanded' : ''}`}
+              className={`collection-card ${expandedCollection === collection.name ? 'expanded' : ''}`}
               key={collection.name}
             >
               <div className="collection-header" onClick={() => toggleCollection(collection.name)}>
@@ -857,7 +988,12 @@ export default function Page() {
                   <img 
                     src={collection.illustration} 
                     alt={collection.name}
-                    loading="lazy"
+                    style={{ 
+                      width: '100%', 
+                      height: '100%', 
+                      objectFit: 'contain',
+                      padding: '1.5rem'
+                    }}
                   />
                 </div>
                 <div className="collection-content">
@@ -890,16 +1026,15 @@ export default function Page() {
         </div>
       </section>
 
+      {/* Innovation Section */}
       <section id="innovation" className="innovation-section">
-        <h2 className="section-title font-display animate-on-scroll" style={{ color: 'var(--white)', marginBottom: '2rem' }}>
-          Innovations Révolutionnaires
-        </h2>
-        <p className="animate-on-scroll" style={{ fontSize: '1.2rem', marginBottom: '4rem', opacity: 0.9 }}>
+        <h2 className="section-title font-display" style={{ color: 'var(--white)', marginBottom: '2rem' }}>Innovations Révolutionnaires</h2>
+        <p style={{ fontSize: '1.2rem', marginBottom: '4rem', opacity: 0.9 }}>
           Patek Philippe a révolutionné l'horlogerie avec plus de 70 brevets déposés depuis 1839
         </p>
         
         <div className="innovation-grid">
-          <div className="animate-on-scroll">
+          <div className="innovation-item">
             <div className="innovation-number" data-count="70">0</div>
             <h3 className="innovation-title">Brevets Déposés</h3>
             <p className="innovation-description">
@@ -907,7 +1042,7 @@ export default function Page() {
             </p>
           </div>
           
-          <div className="animate-on-scroll">
+          <div className="innovation-item">
             <div className="innovation-number" data-count="100">0</div>
             <h3 className="innovation-title">% Indépendance</h3>
             <p className="innovation-description">
@@ -915,7 +1050,7 @@ export default function Page() {
             </p>
           </div>
           
-          <div className="animate-on-scroll">
+          <div className="innovation-item">
             <div className="innovation-number" data-count="185">0</div>
             <h3 className="innovation-title">Ans d'Excellence</h3>
             <p className="innovation-description">
@@ -923,7 +1058,7 @@ export default function Page() {
             </p>
           </div>
           
-          <div className="animate-on-scroll">
+          <div className="innovation-item">
             <div className="innovation-number" data-count="60000">0</div>
             <h3 className="innovation-title">Montres/An</h3>
             <p className="innovation-description">
@@ -933,61 +1068,70 @@ export default function Page() {
         </div>
       </section>
 
+      {/* Craftsmanship Section */}
       <section id="craftsmanship" className="section">
-        <h2 className="section-title font-display animate-on-scroll">Savoir-faire Exceptionnel</h2>
+        <h2 className="section-title font-display">Savoir-faire Exceptionnel</h2>
         <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center' }}>
-          <p className="animate-on-scroll" style={{ fontSize: '1.3rem', lineHeight: 1.8, marginBottom: '4rem', color: 'var(--charcoal-light)' }}>
+          <p style={{ fontSize: '1.3rem', lineHeight: 1.8, marginBottom: '4rem', color: 'var(--charcoal-light)' }}>
             Chaque Patek Philippe est le fruit de centaines d'heures de travail artisanal, 
-            alliant tradition séculaire et innovation constante.
+            alliant tradition séculaire et innovation constante. Nos maîtres horlogers transmettent 
+            leur savoir-faire de génération en génération.
           </p>
           
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem' }}>
-            <div className="animate-on-scroll">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem', marginTop: '4rem' }}>
+            <div className="craft-item">
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚙️</div>
               <h3 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1rem' }}>Mécanique Fine</h3>
               <p style={{ color: 'var(--charcoal-light)', lineHeight: 1.6 }}>
-                Mouvements développés et assemblés à la main avec une précision extrême.
+                Mouvements développés et assemblés à la main avec une précision extrême, 
+                chaque composant est poli et décoré selon les plus hauts standards.
               </p>
             </div>
             
-            <div className="animate-on-scroll">
+            <div className="craft-item">
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>💎</div>
               <h3 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1rem' }}>Joaillerie</h3>
               <p style={{ color: 'var(--charcoal-light)', lineHeight: 1.6 }}>
-                Sertissage artisanal selon les techniques traditionnelles suisses.
+                Sertissage artisanal de diamants et pierres précieuses selon les techniques 
+                traditionnelles suisses les plus exigeantes.
               </p>
             </div>
             
-            <div className="animate-on-scroll">
+            <div className="craft-item">
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎨</div>
               <h3 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1rem' }}>Arts Décoratifs</h3>
               <p style={{ color: 'var(--charcoal-light)', lineHeight: 1.6 }}>
-                Émaux, gravures et guillochages par des artistes spécialisés.
+                Émaux, gravures et guillochages réalisés par des artistes spécialisés 
+                utilisant des techniques ancestrales préservées.
               </p>
             </div>
           </div>
         </div>
       </section>
 
+      {/* CTA Section */}
       <section className="cta-section">
-        <h2 className="cta-title font-display animate-on-scroll">Découvrez l'Univers Patek Philippe</h2>
-        <p className="animate-on-scroll" style={{ fontSize: '1.2rem', marginBottom: '3rem' }}>
+        <h2 className="cta-title font-display">Découvrez l'Univers Patek Philippe</h2>
+        <p style={{ fontSize: '1.2rem', marginBottom: '3rem', color: 'var(--charcoal)' }}>
           Plongez dans l'histoire, les collections et l'excellence horlogère suisse
         </p>
         <div className="cta-buttons">
-          <button className="btn btn-primary">Explorer l'Héritage</button>
-          <button className="btn btn-secondary">Voir les Collections</button>
+          <a href="heritage.html" className="btn btn-primary">Explorer l'Héritage</a>
+          <a href="collections.html" className="btn btn-secondary">Voir les Collections</a>
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="footer">
-        <div className="footer-logo font-display">Patek Philippe</div>
-        <p className="footer-text">
-          Vous ne possédez jamais complètement une Patek Philippe. 
-          Vous en êtes le gardien pour les générations futures.
-        </p>
-        <div className="footer-bottom">
-          <p>© 2024 Patek Philippe SA. Tous droits réservés.</p>
+        <div className="footer-content">
+          <div className="footer-logo font-display">Patek Philippe</div>
+          <p className="footer-text">
+            Vous ne possédez jamais complètement une Patek Philippe. 
+            Vous en êtes le gardien pour les générations futures.
+          </p>
+          <div className="footer-bottom">
+            <p>© 2024 Patek Philippe SA. Tous droits réservés. Référence mondiale en horlogerie suisse.</p>
+          </div>
         </div>
       </footer>
     </>
