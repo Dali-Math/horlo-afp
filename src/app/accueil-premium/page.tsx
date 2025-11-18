@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { motion } from 'framer-motion';
+import { ThemeContext } from '@/context/ThemeContext';
 import { 
   Clock, Palette, Code, Smartphone, Sun, Moon, 
   Clock as WatchIcon, Museum, PlayCircle, BarChart3 as TimelineIcon, 
@@ -160,8 +161,8 @@ export default function SwissWatchesPage() {
   if (!mounted) return null;
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-900'}`}>
+  <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-900'}`}>
         
         {/* SLIDE 1: Référence Mondiale */}
         <section className="relative h-screen flex items-center justify-center overflow-hidden">
