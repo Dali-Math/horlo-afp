@@ -1,18 +1,19 @@
-// app/page.tsx
+// app/accueil-premium/page.tsx
 'use client';
 
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Clock, Palette, Code, Smartphone, Accessibility, Sun, Moon, 
-  Watch, Museum, PlayCircle, Timeline, Architecture, HistoryEdu, 
-  IntegrationInstructions, AutoAwesome, TouchApp, Visibility, Speed,
-  Contrast, SpaceBar, Highlight, Devices, TextFields, Description,
-  CheckCircle, Download, Copy
+  Clock, Palette, Code, Smartphone, Sun, Moon, 
+  Clock as WatchIcon, Museum, PlayCircle, BarChart3 as TimelineIcon, 
+  Building2 as Architecture, BookOpen, Zap, MousePointer2, Eye, 
+  Sun as SunIcon, Moon as MoonIcon, CheckCircle, Copy, Download,
+  Globe, Grid3x3, Video, MapPin, Sparkles, Settings, Layers,
+  History, Palette as PaletteIcon, Code2, Monitor, AccessibilityIcon
 } from 'lucide-react';
 
 // ==========================================
-// 1. TYPES ET CONTEXTES
+// TYPES ET CONTEXTES
 // ==========================================
 
 type Theme = 'dark' | 'light';
@@ -28,7 +29,7 @@ const ThemeContext = createContext<ThemeContextType>({
 });
 
 // ==========================================
-// 2. COMPOSANTS RÉUTILISABLES
+// COMPOSANTS RÉUTILISABLES
 // ==========================================
 
 const FadeIn = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
@@ -90,7 +91,7 @@ const CodeBlock = ({ code }: { code: string }) => (
 );
 
 // ==========================================
-// 3. COMPOSANTS SPÉCIFIQUES
+// COMPOSANT DE BASCULE DU THÈME
 // ==========================================
 
 const ThemeToggle = () => {
@@ -114,87 +115,8 @@ const ThemeToggle = () => {
   );
 };
 
-const TimelineHorlogerie = () => {
-  const timelineData = [
-    { year: '1510', event: 'Première montre portable', icon: '⌚' },
-    { year: '1675', event: 'Spiral réglant', icon: '🔁' },
-    { year: '1770', event: 'Montres automatiques', icon: '🌀' },
-    { year: '1969', event: 'Montre-bracelet automatique', icon: '⚙️' },
-  ];
-
-  return (
-    <div className="overflow-x-auto">
-      <div className="flex gap-6 pb-4">
-        {timelineData.map((item, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="bg-white/5 rounded-lg p-4 min-w-max hover:bg-white/10 transition-colors"
-          >
-            <div className="text-2xl mb-2">{item.icon}</div>
-            <div className="font-bold text-yellow-400 text-lg">{item.year}</div>
-            <div className="text-gray-300 text-sm">{item.event}</div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const MuseesGrid = () => {
-  const musees = [
-    { name: 'Musée international d\'horlogerie', city: 'La Chaux-de-Fonds' },
-    { name: 'Patek Philippe Museum', city: 'Genève' },
-    { name: 'Musée d\'horlogerie du Locle', city: 'Le Locle' },
-    { name: 'Omega Museum', city: 'Biel/Bienne' },
-  ];
-
-  return (
-    <div className="grid grid-cols-2 gap-4">
-      {musees.map((musee, index) => (
-        <motion.div
-          key={index}
-          whileHover={{ scale: 1.02 }}
-          className="bg-white/5 rounded-lg p-4 hover:bg-white/10 transition-colors cursor-pointer"
-        >
-          <Museum className="w-6 h-6 text-yellow-400 mb-2" />
-          <h4 className="font-semibold text-gray-100">{musee.name}</h4>
-          <p className="text-gray-400 text-sm">{musee.city}</p>
-        </motion.div>
-      ))}
-    </div>
-  );
-};
-
-const VideosGrid = () => {
-  const videos = [
-    { title: 'Naissance d\'une Rolex', type: 'Documentaire' },
-    { title: 'Complications horlogères', type: 'Tutoriel' },
-    { title: 'Manufacture Patek Philippe', type: 'Visite' },
-    { title: 'Histoire de l\'horlogerie', type: 'Cours' },
-  ];
-
-  return (
-    <div className="grid grid-cols-2 gap-4">
-      {videos.map((video, index) => (
-        <motion.div
-          key={index}
-          whileHover={{ scale: 1.02 }}
-          className="bg-white/5 rounded-lg p-4 hover:bg-white/10 transition-colors cursor-pointer"
-        >
-          <PlayCircle className="w-6 h-6 text-yellow-400 mb-2" />
-          <h4 className="font-semibold text-gray-100">{video.title}</h4>
-          <p className="text-gray-400 text-sm">{video.type}</p>
-        </motion.div>
-      ))}
-    </div>
-  );
-};
-
 // ==========================================
-// 4. COMPOSANT PRINCIPAL
+// COMPOSANT PRINCIPAL
 // ==========================================
 
 export default function SwissWatchesPage() {
@@ -248,7 +170,7 @@ export default function SwissWatchesPage() {
           />
           <div className="relative z-10 max-w-7xl mx-auto px-8 flex flex-col lg:flex-row items-center gap-16">
             <FadeIn className="lg:w-3/5">
-              <h1 className="font-oswald text-6xl font-bold mb-6 leading-tight">
+              <h1 className="font-bold text-6xl mb-6 leading-tight" style={{ fontFamily: 'Oswald, sans-serif' }}>
                 Référence Mondiale en <span className="text-yellow-400">Horlogerie Suisse</span>
               </h1>
               <p className="text-xl text-gray-300 mb-8 max-w-2xl">
@@ -257,9 +179,9 @@ export default function SwissWatchesPage() {
             </FadeIn>
             <FadeIn className="lg:w-2/5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <Card icon={Clock} title="Excellence Suisse" subtitle="Tradition et innovation" />
-                <Card icon={Sun} title="Mode Sombre/Clair" subtitle="Expérience adaptative" />
-                <Card icon={AutoAwesome} title="Design Premium" subtitle="Élégance et modernité" />
+                <Card icon={WatchIcon} title="Excellence Suisse" subtitle="Tradition et innovation" />
+                <Card icon={SunIcon} title="Mode Sombre/Clair" subtitle="Expérience adaptative" />
+                <Card icon={Sparkles} title="Design Premium" subtitle="Élégance et modernité" />
                 <Card icon={Globe} title="Référence Mondiale" subtitle="Portée internationale" />
               </div>
             </FadeIn>
@@ -274,7 +196,7 @@ export default function SwissWatchesPage() {
           />
           <div className="relative z-10 max-w-7xl mx-auto px-8 flex-1">
             <FadeIn>
-              <h2 className="font-oswald text-4xl font-bold mb-4">
+              <h2 className="font-bold text-4xl mb-4" style={{ fontFamily: 'Oswald, sans-serif' }}>
                 Structure de la page avec <span className="text-yellow-400">mode sombre/clair intégré</span>
               </h2>
               <p className="text-xl text-gray-300 mb-12 max-w-3xl">
@@ -292,7 +214,7 @@ export default function SwissWatchesPage() {
                     <FeatureItem>CSS-in-JS avec Tailwind CSS</FeatureItem>
                   </ul>
                 </Card>
-                <Card icon={ViewQuilt} title="Organisation des sections" subtitle="Layout responsive">
+                <Card icon={Grid3x3} title="Organisation des sections" subtitle="Layout responsive">
                   <ul className="mt-4">
                     <FeatureItem>En-tête avec navigation adaptative</FeatureItem>
                     <FeatureItem>Timeline interactive des dates clés</FeatureItem>
@@ -303,7 +225,7 @@ export default function SwissWatchesPage() {
               </div>
               
               <div className="space-y-8">
-                <Card icon={DarkMode} title="Mode Sombre/Clair" subtitle="Expérience utilisateur">
+                <Card icon={Moon} title="Mode Sombre/Clair" subtitle="Expérience utilisateur">
                   <ul className="mt-4">
                     <FeatureItem>Détection automatique du système</FeatureItem>
                     <FeatureItem>Transition fluide entre thèmes</FeatureItem>
@@ -314,7 +236,7 @@ export default function SwissWatchesPage() {
                     <ThemeToggle />
                   </div>
                 </Card>
-                <Card icon={IntegrationInstructions} title="Intégration complète" subtitle="Déploiement simple">
+                <Card icon={Code2} title="Intégration complète" subtitle="Déploiement simple">
                   <ul className="mt-4">
                     <FeatureItem>Code <span className="text-sky-400 font-semibold">100% intégré</span> dans page.tsx</FeatureItem>
                     <FeatureItem>Sans dépendances externes problématiques</FeatureItem>
@@ -335,7 +257,7 @@ export default function SwissWatchesPage() {
           />
           <div className="relative z-10 max-w-7xl mx-auto px-8 flex-1">
             <FadeIn>
-              <h2 className="font-oswald text-4xl font-bold mb-4">
+              <h2 className="font-bold text-4xl mb-4" style={{ fontFamily: 'Oswald, sans-serif' }}>
                 Composants React/Next.js pour l'<span className="text-yellow-400">horlogerie suisse</span>
               </h2>
               <p className="text-xl text-gray-300 mb-12">
@@ -344,7 +266,7 @@ export default function SwissWatchesPage() {
             </FadeIn>
             
             <div className="grid lg:grid-cols-2 gap-8">
-              <Card icon={Timeline} title="TimelineHorlogerie" subtitle="src/app/culture/TimelineHorlogerie.tsx">
+              <Card icon={TimelineIcon} title="TimelineHorlogerie" subtitle="src/app/culture/TimelineHorlogerie.tsx">
                 <div className="flex gap-2 mb-4">
                   <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">Animation</span>
                   <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">Interactive</span>
@@ -357,7 +279,7 @@ export default function SwissWatchesPage() {
                 <CodeBlock code="{timelineData.map((item, index) => (<TimelineCard key={index} {...item} />))}" />
               </Card>
 
-              <Card icon={HistoryEdu} title="HistoireHorlogerie" subtitle="src/app/culture/HistoireHorlogerie.tsx">
+              <Card icon={BookOpen} title="HistoireHorlogerie" subtitle="src/app/culture/HistoireHorlogerie.tsx">
                 <div className="flex gap-2 mb-4">
                   <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">Culture</span>
                   <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">Références</span>
@@ -407,7 +329,7 @@ export default function SwissWatchesPage() {
           />
           <div className="relative z-10 max-w-7xl mx-auto px-8 flex-1">
             <FadeIn>
-              <h2 className="font-oswald text-4xl font-bold mb-4">
+              <h2 className="font-bold text-4xl mb-4" style={{ fontFamily: 'Oswald, sans-serif' }}>
                 Implémentation du <span className="text-yellow-400">mode sombre/clair</span>
               </h2>
               <p className="text-xl text-gray-300 mb-12">
@@ -417,7 +339,7 @@ export default function SwissWatchesPage() {
             
             <div className="grid lg:grid-cols-2 gap-8">
               <div className="space-y-8">
-                <Card icon={Code} title="Structure du thème" subtitle="Gestion d'état">
+                <Card icon={Code2} title="Structure du thème" subtitle="Gestion d'état">
                   <ul className="mt-4">
                     <FeatureItem>Contexte React pour <span className="text-sky-400 font-semibold">gestion d'état</span></FeatureItem>
                     <FeatureItem>Détection automatique du système</FeatureItem>
@@ -430,7 +352,7 @@ export default function SwissWatchesPage() {
 });`} />
                 </Card>
                 
-                <Card icon={Palette} title="Palette de couleurs" subtitle="Accessibilité">
+                <Card icon={PaletteIcon} title="Palette de couleurs" subtitle="Accessibilité">
                   <ul className="mt-4">
                     <FeatureItem>Contraste optimal pour <span className="text-sky-400 font-semibold">accessibilité</span></FeatureItem>
                     <FeatureItem>Cohérence visuelle entre thèmes</FeatureItem>
@@ -445,7 +367,7 @@ export default function SwissWatchesPage() {
               </div>
               
               <div className="space-y-8">
-                <Card icon={IntegrationInstructions} title="Intégration Next.js" subtitle="SSR compatible">
+                <Card icon={Settings} title="Intégration Next.js" subtitle="SSR compatible">
                   <ul className="mt-4">
                     <FeatureItem>App Router avec <span className="text-sky-400 font-semibold">layout.tsx</span></FeatureItem>
                     <FeatureItem>CSS-in-JS avec Tailwind CSS</FeatureItem>
@@ -459,7 +381,7 @@ darkMode: ['class', '[data-theme="dark"]'],
 className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
                 </Card>
                 
-                <Card icon={AutoAwesome} title="Composant de bascule" subtitle="UI/UX">
+                <Card icon={Sparkles} title="Composant de bascule" subtitle="UI/UX">
                   <ul className="mt-4">
                     <FeatureItem>Icônes adaptatifs <span className="text-sky-400 font-semibold">lucide-react</span></FeatureItem>
                     <FeatureItem>Animation de transition fluide</FeatureItem>
@@ -467,11 +389,11 @@ className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
                   </ul>
                   <div className="flex justify-center gap-4 mt-6">
                     <div className="bg-white/10 border-2 border-yellow-400 rounded-full px-5 py-2 flex items-center gap-2">
-                      <Sun className="w-5 h-5 text-yellow-400" />
+                      <SunIcon className="w-5 h-5 text-yellow-400" />
                       <span className="text-gray-100">Clair</span>
                     </div>
                     <div className="bg-white/10 border-2 border-yellow-400 rounded-full px-5 py-2 flex items-center gap-2">
-                      <Moon className="w-5 h-5 text-yellow-400" />
+                      <MoonIcon className="w-5 h-5 text-yellow-400" />
                       <span className="text-gray-100">Sombre</span>
                     </div>
                   </div>
@@ -489,7 +411,7 @@ className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
           />
           <div className="relative z-10 max-w-7xl mx-auto px-8 flex-1">
             <FadeIn>
-              <h2 className="font-oswald text-4xl font-bold mb-4">
+              <h2 className="font-bold text-4xl mb-4" style={{ fontFamily: 'Oswald, sans-serif' }}>
                 Meilleures pratiques pour une expérience <span className="text-yellow-400">immersive</span>
               </h2>
               <p className="text-xl text-gray-300 mb-12">
@@ -499,7 +421,7 @@ className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
             
             <div className="grid lg:grid-cols-2 gap-8">
               <div className="space-y-8">
-                <Card icon={TouchApp} title="Interactivité et engagement" subtitle="Micro-interactions">
+                <Card icon={MousePointer2} title="Interactivité et engagement" subtitle="Micro-interactions">
                   <div className="flex gap-2 mb-4">
                     <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">Micro-interactions</span>
                     <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">Animations fluides</span>
@@ -512,7 +434,7 @@ className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
                   </ul>
                   <div className="grid grid-cols-2 gap-4 mt-6">
                     <div className="bg-black/30 rounded-lg p-4 text-center">
-                      <TouchApp className="w-7 h-7 text-yellow-400 mb-2 mx-auto" />
+                      <MousePointer2 className="w-7 h-7 text-yellow-400 mb-2 mx-auto" />
                       <h4 className="font-semibold mb-1">Gestes</h4>
                       <p className="text-gray-400 text-sm">Swipe pour timeline</p>
                     </div>
@@ -524,7 +446,7 @@ className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
                   </div>
                 </Card>
                 
-                <Card icon={Visibility} title="Hiérarchie visuelle" subtitle="Design system">
+                <Card icon={Eye} title="Hiérarchie visuelle" subtitle="Design system">
                   <div className="flex gap-2 mb-4">
                     <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">Contraste</span>
                     <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">Équilibre</span>
@@ -539,7 +461,7 @@ className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
               </div>
               
               <div className="space-y-8">
-                <Card icon={Smartphone} title="Design responsive" subtitle="Mobile-first">
+                <Card icon={Monitor} title="Design responsive" subtitle="Mobile-first">
                   <div className="flex gap-2 mb-4">
                     <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">Mobile-first</span>
                     <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">Adaptatif</span>
@@ -552,7 +474,7 @@ className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
                   </ul>
                 </Card>
                 
-                <Card icon={Accessibility} title="Accessibilité et inclusion" subtitle="WCAG 2.1">
+                <Card icon={AccessibilityIcon} title="Accessibilité et inclusion" subtitle="WCAG 2.1">
                   <div className="flex gap-2 mb-4">
                     <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">WCAG 2.1</span>
                     <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">Navigation clavier</span>
@@ -577,7 +499,7 @@ className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
           />
           <div className="relative z-10 max-w-7xl mx-auto px-8 flex-1">
             <FadeIn>
-              <h2 className="font-oswald text-4xl font-bold mb-4">
+              <h2 className="font-bold text-4xl mb-4" style={{ fontFamily: 'Oswald, sans-serif' }}>
                 Code complet intégré dans un seul <span className="text-yellow-400">page.tsx</span>
               </h2>
               <p className="text-xl text-gray-300 mb-12">
@@ -587,7 +509,7 @@ className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
             
             <div className="grid lg:grid-cols-2 gap-8">
               <div className="space-y-8">
-                <Card icon={Architecture} title="Structure du fichier" subtitle="Monolithe intelligent">
+                <Card icon={Layers} title="Structure du fichier" subtitle="Monolithe intelligent">
                   <div className="flex gap-2 mb-4">
                     <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">Modulaire</span>
                     <span className="bg-sky-400/20 text-sky-400 px-3 py-1 rounded-full text-sm">Auto-contenu</span>
@@ -601,17 +523,17 @@ className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
                   </ul>
                   <div className="flex gap-3 mt-6">
                     <div className="bg-white/10 rounded-lg px-4 py-3 flex items-center flex-1">
-                      <Code className="w-6 h-6 text-yellow-400 mr-3" />
+                      <Code2 className="w-6 h-6 text-yellow-400 mr-3" />
                       <span className="font-semibold">Next.js 13+</span>
                     </div>
                     <div className="bg-white/10 rounded-lg px-4 py-3 flex items-center flex-1">
-                      <Palette className="w-6 h-6 text-yellow-400 mr-3" />
+                      <PaletteIcon className="w-6 h-6 text-yellow-400 mr-3" />
                       <span className="font-semibold">Tailwind CSS</span>
                     </div>
                   </div>
                 </Card>
                 
-                <Card icon={IntegrationInstructions} title="Intégration simple" subtitle="Plug & Play">
+                <Card icon={Download} title="Intégration simple" subtitle="Plug & Play">
                   <ul className="mt-4">
                     <FeatureItem>Remplacement <span className="text-sky-400 font-semibold">direct</span> de votre page</FeatureItem>
                     <FeatureItem>Personnalisation facile</FeatureItem>
@@ -621,7 +543,7 @@ className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
               </div>
               
               <div className="space-y-8">
-                <Card icon={Code} title="Extrait du code" subtitle="Aperçu complet">
+                <Card icon={Code2} title="Extrait du code" subtitle="Aperçu complet">
                   <div className="bg-black/30 rounded-lg p-4 mt-4 font-mono text-sm text-sky-400 overflow-hidden flex-1">
                     <div className="flex justify-between mb-3 border-b border-white/10 pb-2">
                       <span className="text-gray-200 font-semibold">page.tsx</span>
@@ -667,7 +589,7 @@ className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
         {/* FOOTER */}
         <footer className="bg-black/50 py-12 px-8 text-center">
           <FadeIn>
-            <p className="text-2xl font-oswald mb-4">
+            <p className="text-2xl mb-4" style={{ fontFamily: 'Oswald, sans-serif' }}>
               "L'horlogerie suisse n'est pas une industrie, c'est une <span className="text-yellow-400">passion</span>"
             </p>
             <p className="text-gray-400">
@@ -683,3 +605,13 @@ className={\`bg-\${theme === 'dark' ? 'gray-900' : 'white'}\`}`} />
     </ThemeContext.Provider>
   );
 }
+
+// Composant manquant pour Slide 5
+const ZoomIn = ({ className = '' }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <circle cx="11" cy="11" r="8"></circle>
+    <path d="m21 21-4.35-4.35"></path>
+    <line x1="11" y1="8" x2="11" y2="14"></line>
+    <line x1="8" y1="11" x2="14" y2="11"></line>
+  </svg>
+);
