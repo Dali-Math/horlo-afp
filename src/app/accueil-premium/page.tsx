@@ -1,754 +1,668 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect, useRef } from 'react'
-import Link from 'next/link'
-import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion'
-import { useTheme } from 'next-themes'
-import { 
-  Clock, Watch, BookOpen, Award, Heart, ChevronRight, Users, Share2,
-  PlayCircle, TrendingUp, Sparkles, ArrowRight, Globe, Zap, Star,
-  BookMarked, Trophy, Compass, Target, Lightbulb, Coffee, Eye, Shield,
-  Moon, Sun
-} from 'lucide-react'
+import { useState, useEffect } from 'react';
+import { Clock, Museum, PlayCircle, Timeline, Sun, Moon, ChevronRight, MapPin } from 'lucide-react';
 
-// ============================================================================
-// COMPOSANTS RÉUTILISABLES
-// ============================================================================
+// Données pour la timeline
+const timelineData = [
+  { year: '1510', title: 'Première montre portable', icon: '⌚', description: 'Peter Henlein de Nuremberg crée les premières montres portables.' },
+  { year: '1675', title: 'Spiral réglant', icon: '🔁', description: 'Christiaan Huygens invente le spiral réglant.' },
+  { year: '1755', title: 'Échappement à ancre', icon: '⚙️', description: 'Thomas Mudge invente l\'échappement à ancre.' },
+  { year: '1839', title: 'Fondation de Patek Philippe', icon: '👑', description: 'Antoni Patek et Adrien Philippe fondent Patek Philippe & Co.' },
+  { year: '1868', title: 'Première montre-bracelet', icon: '💎', description: 'Patek Philippe crée la première montre-bracelet.' },
+  { year: '1905', title: 'Naissance de Rolex', icon: '🏆', description: 'Hans Wilsdorf fonde Rolex à Londres.' },
+  { year: '1969', title: 'Révolution du quartz', icon: '⚡', description: 'Seiko introduit la première montre à quartz.' }
+];
 
-const FadeInSection = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-50px" })
+// Données pour les musées
+const museesData = [
+  { 
+    name: 'Musée International d\'Horlogerie', 
+    location: 'La Chaux-de-Fonds',
+    description: 'Le plus grand musée d\'horlogerie au monde.'
+  },
+  { 
+    name: 'Musée Patek Philippe', 
+    location: 'Genève',
+    description: 'Collection exceptionnelle de montres de luxe.'
+  },
+  { 
+    name: 'Musée d\'Horlogerie du Locle', 
+    location: 'Le Locle',
+    description: 'Présente l\'évolution de l\'horlogerie.'
+  },
+  { 
+    name: 'Audemars Piguet Museum', 
+    location: 'Le Brassus',
+    description: 'Retrace 140 ans d\'innovation horlogère.'
+  }
+];
 
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  )
-}
+// Données pour les vidéos
+const videosData = [
+  { 
+    title: 'Les Maîtres du Temps — RTS', 
+    duration: '52:30',
+    description: 'Documentaire sur les artisans horlogers suisses.'
+  },
+  { 
+    title: 'L\'Art du Réglage — FHH', 
+    duration: '18:45',
+    description: 'Secrets du réglage des mouvements mécaniques.'
+  },
+  { 
+    title: 'Secrets de fabrication — Vacheron Constantin', 
+    duration: '35:12',
+    description: 'Au cœur de la plus ancienne manufacture.'
+  }
+];
 
-const StatCard = ({ icon: Icon, value, label, delay = 0 }: any) => {
-  const { theme } = useTheme()
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay }}
-      whileHover={{ scale: 1.05, y: -5 }}
-      className={`relative group p-8 rounded-2xl backdrop-blur-xl border transition-all duration-300 ${
-        theme === 'dark' 
-          ? 'bg-slate-900/50 border-amber-500/20 hover:border-amber-500/50 hover:shadow-2xl hover:shadow-amber-500/20' 
-          : 'bg-white/70 border-amber-300/30 hover:border-amber-400/60 hover:shadow-xl hover:shadow-amber-300/30'
-      }`}
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-      
-      <Icon className="w-12 h-12 text-amber-400 mb-4 relative z-10" />
-      <motion.h3 
-        className="text-4xl font-bold mb-2 relative z-10 text-amber-400"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ delay: delay + 0.2 }}
-      >
-        {value}
-      </motion.h3>
-      <p className={`text-sm font-medium relative z-10 ${
-        theme === 'dark' ? 'text-gray-300' : 'text-slate-600'
-      }`}>
-        {label}
-      </p>
-    </motion.div>
-  )
-}
-
-const FeatureCard = ({ icon: Icon, title, description, link, delay = 0 }: any) => {
-  const { theme } = useTheme()
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay }}
-      whileHover={{ scale: 1.03, y: -8 }}
-      className="group"
-    >
-      <Link href={link}>
-        <div className={`relative h-full p-8 rounded-2xl backdrop-blur-xl border transition-all duration-300 overflow-hidden ${
-          theme === 'dark'
-            ? 'bg-slate-900/50 border-slate-700/50 hover:border-amber-500/50'
-            : 'bg-white/80 border-slate-200 hover:border-amber-400/50'
-        }`}>
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          
-          <div className="relative z-10">
-            <div className={`w-16 h-16 rounded-xl flex items-center justify-center mb-6 transition-all duration-300 ${
-              theme === 'dark'
-                ? 'bg-amber-500/10 group-hover:bg-amber-500/20'
-                : 'bg-amber-100 group-hover:bg-amber-200'
-            }`}>
-              <Icon className="w-8 h-8 text-amber-400 group-hover:scale-110 transition-transform" />
-            </div>
-
-            <h3 className={`text-2xl font-bold mb-3 ${
-              theme === 'dark' ? 'text-white' : 'text-slate-900'
-            }`}>
-              {title}
-            </h3>
-
-            <p className={`mb-6 leading-relaxed ${
-              theme === 'dark' ? 'text-gray-400' : 'text-slate-600'
-            }`}>
-              {description}
-            </p>
-
-            <div className="flex items-center text-amber-400 font-semibold group-hover:translate-x-2 transition-transform">
-              Explorer
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </div>
-          </div>
-        </div>
-      </Link>
-    </motion.div>
-  )
-}
-
-// ============================================================================
-// COMPOSANT HORLOGE INTERACTIVE AVANCÉE
-// ============================================================================
-
-const InteractiveWatch = () => {
-  const { theme } = useTheme()
-  const [time, setTime] = useState(new Date())
-  const [is24Hour, setIs24Hour] = useState(false)
+export default function CultureHorlogerie() {
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [activeSection, setActiveSection] = useState('timeline');
+  const [selectedTimelineItem, setSelectedTimelineItem] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000)
-    return () => clearInterval(timer)
-  }, [])
+    setMounted(true);
+    // Vérifier la préférence du système
+    const savedTheme = localStorage.getItem('theme');
+    const systemTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    const initialTheme = (savedTheme as 'dark' | 'light') || systemTheme;
+    
+    setTheme(initialTheme);
+    document.documentElement.setAttribute('data-theme', initialTheme);
+  }, []);
 
-  const seconds = time.getSeconds()
-  const minutes = time.getMinutes()
-  const hours = time.getHours()
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
 
-  const secondsDeg = (seconds / 60) * 360
-  const minutesDeg = ((minutes + seconds / 60) / 60) * 360
-  const hoursDeg = ((hours % 12 + minutes / 60) / 12) * 360
+  // Éviter les erreurs d'hydratation
+  if (!mounted) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8, rotateY: 90 }}
-      animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-      transition={{ duration: 1.2, ease: "easeOut" }}
-      className="relative w-full max-w-md mx-auto"
-    >
-      {/* Aura lumineuse */}
-      <motion.div
-        animate={{ 
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3]
-        }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute inset-0 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 rounded-full blur-3xl"
-      />
-
-      {/* Corps de l'horloge */}
-      <div className="relative w-full aspect-square">
-        <div className={`absolute inset-0 rounded-full shadow-2xl backdrop-blur-xl border-8 transition-all duration-500 ${
-          theme === 'dark'
-            ? 'bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 border-amber-500/30'
-            : 'bg-gradient-to-br from-white via-slate-50 to-slate-100 border-amber-400/40'
-        }`}>
-          {/* Cercles concentriques */}
-          <div className="absolute inset-8 border-2 border-amber-500/10 rounded-full" />
-          <div className="absolute inset-12 border border-amber-500/5 rounded-full" />
-
-          {/* Marques d'heures */}
-          {[...Array(12)].map((_, i) => (
-            <div
-              key={i}
-              className={`absolute ${i % 3 === 0 ? 'w-1.5 h-10 bg-gradient-to-b from-amber-400 to-amber-500' : 'w-0.5 h-6 bg-amber-500/60'}`}
-              style={{
-                transform: `rotate(${i * 30}deg) translateY(-44%)`,
-                transformOrigin: 'center',
-                left: 'calc(50% - 3px)',
-                top: '50%'
-              }}
-            />
-          ))}
-
-          {/* Chiffres */}
-          {[12, 3, 6, 9].map((num) => {
-            const angle = (num === 12 ? 0 : num === 3 ? 90 : num === 6 ? 180 : 270) - 90
-            const rad = (angle * Math.PI) / 180
-            const distance = 38
-            const x = Math.cos(rad) * distance
-            const y = Math.sin(rad) * distance
-            
-            return (
-              <div
-                key={num}
-                className="absolute text-2xl font-bold text-amber-400 select-none"
-                style={{
-                  left: '50%',
-                  top: '50%',
-                  transform: `translate(calc(-50% + ${x}%), calc(-50% + ${y}%))`
-                }}
-              >
-                {num}
-              </div>
-            )
-          })}
-
-          {/* Aiguille des heures */}
-          <motion.div
-            className="absolute w-2 h-24 bg-gradient-to-t from-amber-500 to-amber-400 rounded-full origin-bottom shadow-lg"
-            style={{
-              bottom: '50%',
-              left: 'calc(50% - 4px)',
-              rotate: hoursDeg
-            }}
-            transition={{ type: "spring", stiffness: 50, damping: 20 }}
-          />
-
-          {/* Aiguille des minutes */}
-          <motion.div
-            className="absolute w-1.5 h-32 bg-gradient-to-t from-amber-400 to-amber-300 rounded-full origin-bottom shadow-lg"
-            style={{
-              bottom: '50%',
-              left: 'calc(50% - 3px)',
-              rotate: minutesDeg
-            }}
-            transition={{ type: "spring", stiffness: 50, damping: 20 }}
-          />
-
-          {/* Aiguille des secondes */}
-          <motion.div
-            className="absolute w-0.5 h-36 bg-gradient-to-t from-red-500 to-red-400 rounded-full origin-bottom shadow-lg"
-            style={{
-              bottom: '50%',
-              left: 'calc(50% - 1px)',
-              rotate: secondsDeg
-            }}
-            transition={{ ease: "linear", duration: 0.05 }}
-          />
-
-          {/* Centre */}
-          <div className="absolute w-6 h-6 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full z-10 border-2 border-white shadow-lg"
-               style={{ left: 'calc(50% - 12px)', top: 'calc(50% - 12px)' }} />
-          <div className="absolute w-4 h-4 bg-slate-900 rounded-full z-20"
-               style={{ left: 'calc(50% - 8px)', top: 'calc(50% - 8px)' }} />
-
-          {/* Affichage numérique */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className={`absolute bottom-20 left-1/2 -translate-x-1/2 px-6 py-3 rounded-xl border backdrop-blur-md ${
-              theme === 'dark'
-                ? 'bg-slate-900/80 border-amber-500/30'
-                : 'bg-white/80 border-amber-400/30'
-            }`}
-          >
-            <div className="text-amber-400 font-mono text-lg font-bold text-center">
-              {time.toLocaleTimeString('fr-FR', { 
-                hour12: !is24Hour,
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-              })}
-            </div>
-          </motion.div>
-
-          {/* Marque HorloLearn */}
-          <div className="absolute top-24 left-1/2 -translate-x-1/2 text-center">
-            <p className="text-amber-400 font-serif text-base font-bold tracking-wider">HORLOLEARN</p>
-            <p className="text-amber-500/70 text-xs mt-1">Swiss Excellence</p>
+    <div className={`culture-horlogerie ${theme}`}>
+      {/* En-tête avec navigation */}
+      <header className="header">
+        <div className="header-content">
+          <div className="header-text">
+            <h1>Culture horlogère</h1>
+            <p>Un voyage à travers l'histoire et l'art du temps.</p>
           </div>
-        </div>
-      </div>
-
-      {/* Toggle 12/24h */}
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIs24Hour(!is24Hour)}
-        className={`mt-6 mx-auto block px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-          theme === 'dark'
-            ? 'bg-slate-800 hover:bg-slate-700 text-amber-400'
-            : 'bg-slate-100 hover:bg-slate-200 text-amber-600'
-        }`}
-      >
-        {is24Hour ? '24H' : '12H'} Format
-      </motion.button>
-    </motion.div>
-  )
-}
-
-// ============================================================================
-// BOUTON TOGGLE THÈME
-// ============================================================================
-
-const ThemeToggle = () => {
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => setMounted(true), [])
-
-  if (!mounted) return null
-
-  return (
-    <motion.button
-      whileHover={{ scale: 1.1, rotate: 180 }}
-      whileTap={{ scale: 0.9 }}
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className={`fixed top-6 right-6 z-50 p-4 rounded-full backdrop-blur-xl border shadow-lg transition-all duration-300 ${
-        theme === 'dark'
-          ? 'bg-slate-900/50 border-amber-500/30 hover:border-amber-500/60'
-          : 'bg-white/70 border-amber-300/30 hover:border-amber-400/60'
-      }`}
-      aria-label="Changer le thème"
-    >
-      <AnimatePresence mode="wait">
-        {theme === 'dark' ? (
-          <motion.div
-            key="sun"
-            initial={{ rotate: -90, opacity: 0 }}
-            animate={{ rotate: 0, opacity: 1 }}
-            exit={{ rotate: 90, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <Sun className="w-6 h-6 text-amber-400" />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="moon"
-            initial={{ rotate: 90, opacity: 0 }}
-            animate={{ rotate: 0, opacity: 1 }}
-            exit={{ rotate: -90, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <Moon className="w-6 h-6 text-slate-700" />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.button>
-  )
-}
-
-// ============================================================================
-// PAGE PRINCIPALE
-// ============================================================================
-
-export default function HorloLearnHomePage() {
-  const { theme } = useTheme()
-  const { scrollYProgress } = useScroll()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => setMounted(true), [])
-
-  const gearRotate = useTransform(scrollYProgress, [0, 1], [0, 360])
-  const gearRotateReverse = useTransform(scrollYProgress, [0, 1], [360, 0])
-
-  if (!mounted) return null
-
-  return (
-    <div className={`min-h-screen transition-colors duration-500 ${
-      theme === 'dark'
-        ? 'bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white'
-        : 'bg-gradient-to-b from-slate-50 via-white to-slate-100 text-slate-900'
-    }`}>
-      
-      {/* Toggle thème */}
-      <ThemeToggle />
-
-      {/* Arrière-plan animé */}
-      <div className="fixed inset-0 opacity-[0.03] pointer-events-none overflow-hidden">
-        <motion.div style={{ rotate: gearRotate }} className="absolute top-10 right-10 w-96 h-96">
-          <svg viewBox="0 0 100 100" className="w-full h-full text-amber-400">
-            <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            {[...Array(12)].map((_, i) => (
-              <rect key={i} x="48" y="10" width="4" height="10" fill="currentColor"
-                style={{ transform: `rotate(${i * 30}deg)`, transformOrigin: '50px 50px' }} />
-            ))}
-          </svg>
-        </motion.div>
-        <motion.div style={{ rotate: gearRotateReverse }} className="absolute bottom-20 left-10 w-72 h-72">
-          <svg viewBox="0 0 100 100" className="w-full h-full text-blue-400">
-            <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            {[...Array(8)].map((_, i) => (
-              <rect key={i} x="48" y="15" width="4" height="8" fill="currentColor"
-                style={{ transform: `rotate(${i * 45}deg)`, transformOrigin: '50px 50px' }} />
-            ))}
-          </svg>
-        </motion.div>
-      </div>
-
-      {/* ======================== HERO SECTION ======================== */}
-      <section className="relative min-h-screen flex items-center justify-center px-4 pt-32 pb-20">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
           
-          {/* Contenu texte */}
-          <motion.div
-            initial={{ opacity: 0, x: -60 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+          <button 
+            className="theme-toggle" 
+            onClick={toggleTheme}
+            aria-label="Basculer le thème"
           >
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className={`inline-flex items-center px-5 py-2.5 rounded-full mb-8 backdrop-blur-sm ${
-                theme === 'dark'
-                  ? 'bg-amber-500/10 border border-amber-500/30'
-                  : 'bg-amber-100 border border-amber-300'
-              }`}
-            >
-              <Sparkles className="w-5 h-5 text-amber-400 mr-2 animate-pulse" />
-              <span className="text-amber-400 font-bold text-sm tracking-wide">
-                La Référence Mondiale en Horlogerie Suisse
-              </span>
-            </motion.div>
-
-            {/* Titre */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-[1.1]">
-              <span className={theme === 'dark' ? 'text-white' : 'text-slate-900'}>
-                Excellence &
-              </span>
-              <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 animate-gradient">
-                Passion Horlogère
-              </span>
-            </h1>
-
-            {/* Description */}
-            <p className={`text-xl md:text-2xl mb-10 leading-relaxed ${
-              theme === 'dark' ? 'text-gray-300' : 'text-slate-600'
-            }`}>
-              La plateforme <span className="text-amber-400 font-bold">premium</span> pour maîtriser l'art de l'horlogerie suisse. 
-              Du <span className="text-amber-400 font-semibold">novice</span> à l'<span className="text-amber-400 font-semibold">expert</span>.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
-              <motion.button
-                whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(251, 146, 60, 0.4)" }}
-                whileTap={{ scale: 0.95 }}
-                className="group px-10 py-5 bg-gradient-to-r from-amber-500 via-amber-600 to-orange-500 rounded-xl font-bold text-lg shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 flex items-center justify-center relative overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center">
-                  Commencer Maintenant
-                  <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-amber-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </motion.button>
-
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`px-10 py-5 border-2 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center ${
-                  theme === 'dark'
-                    ? 'border-amber-500/50 hover:bg-amber-500/10 hover:border-amber-400'
-                    : 'border-amber-400/60 hover:bg-amber-50 hover:border-amber-500'
-                }`}
-              >
-                <PlayCircle className="mr-3 w-6 h-6" />
-                Voir la Démo
-              </motion.button>
-            </div>
-
-            {/* Stats */}
-            <div className="flex flex-wrap items-center gap-8 text-sm">
-              <div className={`flex items-center space-x-3 ${theme === 'dark' ? 'text-gray-400' : 'text-slate-600'}`}>
-                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse shadow-lg shadow-green-400/50" />
-                <span><span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>2,847</span> passionnés en ligne</span>
-              </div>
-              <div className={`flex items-center space-x-3 ${theme === 'dark' ? 'text-gray-400' : 'text-slate-600'}`}>
-                <Heart className="w-6 h-6 text-red-400" />
-                <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>100% Gratuit & Open Source</span>
-              </div>
-              <div className={`flex items-center space-x-3 ${theme === 'dark' ? 'text-gray-400' : 'text-slate-600'}`}>
-                <span className="text-3xl">🇨🇭</span>
-                <span className="font-semibold">Made with ❤️ in Switzerland</span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Horloge interactive */}
-          <InteractiveWatch />
+            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
         </div>
+        
+        <nav className="nav-categories">
+          <button 
+            className={`nav-btn ${activeSection === 'timeline' ? 'active' : ''}`}
+            onClick={() => setActiveSection('timeline')}
+          >
+            <Timeline size={18} /> Lignes du temps
+          </button>
+          <button 
+            className={`nav-btn ${activeSection === 'histoire' ? 'active' : ''}`}
+            onClick={() => setActiveSection('histoire')}
+          >
+            <Clock size={18} /> Histoire
+          </button>
+          <button 
+            className={`nav-btn ${activeSection === 'musees' ? 'active' : ''}`}
+            onClick={() => setActiveSection('musees')}
+          >
+            <Museum size={18} /> Musées
+          </button>
+          <button 
+            className={`nav-btn ${activeSection === 'videos' ? 'active' : ''}`}
+            onClick={() => setActiveSection('videos')}
+          >
+            <PlayCircle size={18} /> Vidéos
+          </button>
+        </nav>
+      </header>
 
-        {/* Indicateur de scroll */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: [0.5, 1, 0.5], y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
-        >
-          <ChevronRight className="w-10 h-10 text-amber-400 rotate-90" />
-        </motion.div>
-      </section>
-
-      {/* ======================== STATS SECTION ======================== */}
-      <FadeInSection className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <StatCard icon={Users} value="15K+" label="Membres Actifs" delay={0} />
-            <StatCard icon={BookOpen} value="500+" label="Ressources Premium" delay={0.1} />
-            <StatCard icon={Award} value="98%" label="Satisfaction" delay={0.2} />
-            <StatCard icon={Globe} value="45" label="Pays Représentés" delay={0.3} />
+      {/* Section Timeline */}
+      {activeSection === 'timeline' && (
+        <section className="timeline-section">
+          <h2>Lignes du temps de l'horlogerie</h2>
+          <div className="timeline-container">
+            <div className="timeline-track">
+              {timelineData.map((item, index) => (
+                <div
+                  key={index}
+                  className={`timeline-item ${index === selectedTimelineItem ? 'active' : ''}`}
+                  onClick={() => setSelectedTimelineItem(index)}
+                >
+                  <div className="timeline-icon">{item.icon}</div>
+                  <div className="timeline-year">{item.year}</div>
+                  <div className="timeline-title">{item.title}</div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </FadeInSection>
+          
+          <div className="timeline-detail">
+            <div className="timeline-detail-header">
+              <div className="timeline-detail-icon">{timelineData[selectedTimelineItem].icon}</div>
+              <div>
+                <h3>{timelineData[selectedTimelineItem].year}</h3>
+                <h4>{timelineData[selectedTimelineItem].title}</h4>
+              </div>
+            </div>
+            <p>{timelineData[selectedTimelineItem].description}</p>
+          </div>
+        </section>
+      )}
 
-      {/* ======================== INTRO SECTION ======================== */}
-      <FadeInSection className={`py-32 px-4 ${
-        theme === 'dark' ? 'bg-slate-900/30' : 'bg-slate-100/50'
-      }`}>
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            className="inline-flex items-center space-x-3 px-6 py-3 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 rounded-full mb-10 backdrop-blur-sm"
-          >
-            <Clock className="w-6 h-6 text-amber-400" />
-            <span className="text-amber-300 font-semibold">Plongez dans l'univers horloger</span>
-          </motion.div>
+      {/* Section Histoire */}
+      {activeSection === 'histoire' && (
+        <section className="histoire-section">
+          <h2>Histoire de l'horlogerie</h2>
+          <div className="histoire-content">
+            <div className="histoire-text">
+              <p>L'horlogerie suisse est née au XVIe siècle avec l'arrivée des huguenots français fuyant les persécutions religieuses. Ils apportèrent avec eux leur savoir-faire en horlogerie.</p>
+              <p>Au XVIIIe siècle, l'horlogerie suisse s'est spécialisée dans la production de montres de haute qualité, établissant des normes d'excellence.</p>
+              <p>Le XIXe siècle a vu l'émergence de grandes manufactures comme Patek Philippe (1839), Vacheron Constantin (1755) et Audemars Piguet (1875).</p>
+              <p>Au XXe siècle, l'industrie horlogère suisse a fait face à la "crise du quartz" mais a su se réinventer en se concentrant sur l'excellence mécanique.</p>
+            </div>
+            <div className="histoire-highlights">
+              <h3>Repères historiques</h3>
+              {timelineData.slice(0, 4).map((item, index) => (
+                <div key={index} className="highlight-item">
+                  <div className="highlight-year">{item.year}</div>
+                  <div className="highlight-title">{item.title}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500"
-          >
-            Le Temps à l'État d'Art
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className={`text-xl md:text-2xl leading-relaxed mb-10 ${
-              theme === 'dark' ? 'text-gray-300' : 'text-slate-600'
-            }`}
-          >
-            Découvrez les <span className="text-amber-400 font-bold">secrets millénaires</span> de l'horlogerie,
-            maîtrisez les <span className="text-amber-400 font-bold">techniques ancestrales</span>,
-            et rejoignez une communauté d'<span className="text-amber-400 font-bold">excellence</span>.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-            className="flex flex-wrap justify-center gap-4"
-          >
-            {[
-              { icon: Shield, text: "Certifié & Validé" },
-              { icon: Star, text: "Qualité Premium" },
-              { icon: Zap, text: "Mise à jour constante" }
-            ].map((item, i) => (
-              <div
-                key={i}
-                className={`flex items-center space-x-2 px-5 py-3 rounded-full backdrop-blur-sm ${
-                  theme === 'dark'
-                    ? 'bg-slate-800/50 border border-slate-700'
-                    : 'bg-white border border-slate-200'
-                }`}
-              >
-                <item.icon className="w-5 h-5 text-amber-400" />
-                <span className={`font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-slate-700'}`}>
-                  {item.text}
-                </span>
+      {/* Section Musées */}
+      {activeSection === 'musees' && (
+        <section className="musees-section">
+          <h2>Musées de l'horlogerie</h2>
+          <div className="musees-grid">
+            {museesData.map((musee, index) => (
+              <div key={index} className="musee-card">
+                <div className="musee-image">
+                  <div className="placeholder-image" style={{backgroundImage: `url(https://picsum.photos/seed/musee-${index}/400/300.jpg)`}}></div>
+                </div>
+                <div className="musee-content">
+                  <Museum className="musee-icon" />
+                  <h3>{musee.name}</h3>
+                  <div className="musee-location">
+                    <MapPin size={14} />
+                    <span>{musee.location}</span>
+                  </div>
+                  <p>{musee.description}</p>
+                  <a href="#" className="musee-link">
+                    Découvrir <ChevronRight size={16} />
+                  </a>
+                </div>
               </div>
             ))}
-          </motion.div>
-        </div>
-      </FadeInSection>
-
-      {/* ======================== FEATURES GRID ======================== */}
-      <section className="py-32 px-4">
-        <div className="max-w-7xl mx-auto">
-          <FadeInSection className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-extrabold mb-6">
-              <span className={theme === 'dark' ? 'text-white' : 'text-slate-900'}>Votre Parcours </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">
-                vers l'Excellence
-              </span>
-            </h2>
-            <p className={`text-xl max-w-3xl mx-auto ${
-              theme === 'dark' ? 'text-gray-400' : 'text-slate-600'
-            }`}>
-              Un écosystème complet pour apprendre, pratiquer et maîtriser tous les aspects de l'horlogerie suisse
-            </p>
-          </FadeInSection>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <FeatureCard
-              icon={BookMarked}
-              title="Théorie Complète"
-              description="Cours détaillés sur l'histoire, les mécanismes et les techniques horlogères, du niveau débutant à expert."
-              link="/theorie"
-              delay={0}
-            />
-            <FeatureCard
-              icon={Target}
-              title="Pratique Guidée"
-              description="Tutoriels pas-à-pas, démontages virtuels et exercices pratiques pour maîtriser chaque geste."
-              link="/pratique"
-              delay={0.1}
-            />
-            <FeatureCard
-              icon={Trophy}
-              title="Quiz & Certification"
-              description="Testez vos connaissances et obtenez des certifications reconnues par la communauté horlogère."
-              link="/quiz"
-              delay={0.2}
-            />
-            <FeatureCard
-              icon={Compass}
-              title="Culture Horlogère"
-              description="Plongez dans l'histoire fascinante des manufactures suisses et des grandes innovations."
-              link="/culture"
-              delay={0.3}
-            />
-            <FeatureCard
-              icon={Lightbulb}
-              title="Outils Pro"
-              description="Calculateurs, simulateurs et outils de conception pour vos projets horlogers."
-              link="/outils"
-              delay={0.4}
-            />
-            <FeatureCard
-              icon={Coffee}
-              title="Communauté"
-              description="Échangez avec des passionnés, partagez vos créations et participez aux événements."
-              link="/communaute"
-              delay={0.5}
-            />
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* ======================== CTA FINAL ======================== */}
-      <FadeInSection className={`py-32 px-4 ${
-        theme === 'dark' ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' : 'bg-gradient-to-br from-slate-100 via-white to-slate-100'
-      }`}>
-        <div className="max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="relative rounded-3xl p-12 md:p-16 text-center overflow-hidden"
-            style={{
-              background: theme === 'dark' 
-                ? 'linear-gradient(135deg, rgba(251, 146, 60, 0.1), rgba(249, 115, 22, 0.1))'
-                : 'linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(251, 146, 60, 0.2))'
-            }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-500/10 to-transparent animate-pulse" />
-            
-            <div className="relative z-10">
-              <Globe className="w-16 h-16 text-amber-400 mx-auto mb-8 animate-pulse" />
-              
-              <h2 className="text-4xl md:text-5xl font-extrabold mb-6">
-                Rejoignez l'Élite Horlogère
-              </h2>
-              
-              <p className={`text-xl md:text-2xl mb-12 max-w-3xl mx-auto ${
-                theme === 'dark' ? 'text-gray-300' : 'text-slate-700'
-              }`}>
-                Recevez chaque semaine les <span className="text-amber-400 font-bold">nouvelles ressources</span>, 
-                les <span className="text-amber-400 font-bold">techniques avancées</span> et 
-                les <span className="text-amber-400 font-bold">actualités exclusives</span>.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto mb-8">
-                <input
-                  type="email"
-                  placeholder="votre@email.com"
-                  className={`flex-1 rounded-xl px-6 py-5 text-lg focus:outline-none focus:ring-4 focus:ring-amber-500/50 transition-all ${
-                    theme === 'dark'
-                      ? 'bg-slate-900/70 border-2 border-amber-500/30 text-white placeholder-gray-500'
-                      : 'bg-white border-2 border-amber-300 text-slate-900 placeholder-slate-400'
-                  }`}
-                />
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-10 py-5 bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl font-bold text-lg shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 whitespace-nowrap"
-                >
-                  S'Abonner Gratuitement
-                </motion.button>
+      {/* Section Vidéos */}
+      {activeSection === 'videos' && (
+        <section className="videos-section">
+          <h2>Documentaires et vidéos</h2>
+          <div className="videos-grid">
+            {videosData.map((video, index) => (
+              <div key={index} className="video-card">
+                <div className="video-thumbnail">
+                  <div className="placeholder-image" style={{backgroundImage: `url(https://picsum.photos/seed/video-${index}/400/225.jpg)`}}></div>
+                  <div className="video-overlay">
+                    <PlayCircle className="play-icon" />
+                    <span className="video-duration">{video.duration}</span>
+                  </div>
+                </div>
+                <div className="video-content">
+                  <h3>{video.title}</h3>
+                  <p>{video.description}</p>
+                  <a href="#" className="video-link">
+                    Regarder <ChevronRight size={16} />
+                  </a>
+                </div>
               </div>
+            ))}
+          </div>
+        </section>
+      )}
 
-              <div className={`flex flex-wrap items-center justify-center gap-8 text-sm ${
-                theme === 'dark' ? 'text-gray-400' : 'text-slate-600'
-              }`}>
-                <span className="flex items-center">
-                  <Eye className="w-5 h-5 mr-2 text-amber-400" />
-                  Aucun spam, promis
-                </span>
-                <span className="flex items-center">
-                  <Share2 className="w-5 h-5 mr-2 text-green-400" />
-                  15K+ abonnés satisfaits
-                </span>
-                <span className="flex items-center">
-                  <Shield className="w-5 h-5 mr-2 text-blue-400" />
-                  Données 100% sécurisées
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </FadeInSection>
+      {/* Pied de page */}
+      <footer className="footer">
+        <p>"L'horlogerie est l'art de comprendre le temps avant de le mesurer."</p>
+      </footer>
 
-      {/* Scroll to top */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: scrollYProgress.get() > 0.2 ? 1 : 0 }}
-        className="fixed bottom-8 right-8 z-40"
-      >
-        <motion.button
-          whileHover={{ scale: 1.1, y: -5 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className={`p-4 rounded-full backdrop-blur-xl border shadow-2xl transition-all ${
-            theme === 'dark'
-              ? 'bg-slate-900/50 border-amber-500/30 hover:border-amber-500/60'
-              : 'bg-white/70 border-amber-300/30 hover:border-amber-400/60'
-          }`}
-          aria-label="Retour en haut"
-        >
-          <ChevronRight className="w-6 h-6 text-amber-400 -rotate-90" />
-        </motion.button>
-      </motion.div>
-
-      {/* Styles globaux */}
       <style jsx global>{`
-        html { scroll-behavior: smooth; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Bebas+Neue&display=swap');
         
-        @keyframes gradient {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
+        :root {
+          --bg-color: #0a0a0a;
+          --text-color: #f3f4f6;
+          --secondary-text-color: #9ca3af;
+          --card-bg-color: #121212;
+          --accent-color: #facc15;
+          --border-color: rgba(255, 255, 255, 0.1);
         }
         
-        .animate-gradient {
-          background-size: 200% 200%;
-          animation: gradient 3s ease infinite;
+        [data-theme="light"] {
+          --bg-color: #ffffff;
+          --text-color: #1f2937;
+          --secondary-text-color: #6b7280;
+          --card-bg-color: #f9fafb;
+          --accent-color: #38bdf8;
+          --border-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        * {
+          box-sizing: border-box;
+        }
+        
+        body {
+          margin: 0;
+          padding: 0;
+          font-family: 'Inter', sans-serif;
+          background-color: var(--bg-color);
+          color: var(--text-color);
+          transition: background-color 0.3s ease, color 0.3s ease;
+        }
+      `}</style>
+      
+      <style jsx>{`
+        .culture-horlogerie {
+          min-height: 100vh;
+          transition: all 0.3s ease;
+        }
+
+        .header {
+          padding: 60px 70px 30px;
+          position: relative;
+        }
+
+        .header-content {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 40px;
+        }
+
+        .header h1 {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 60px;
+          margin: 0;
+          color: var(--text-color);
+        }
+
+        .header p {
+          font-size: 20px;
+          margin-top: 10px;
+          color: var(--secondary-text-color);
+        }
+
+        .theme-toggle {
+          cursor: pointer;
+          padding: 10px;
+          border-radius: 50%;
+          background-color: var(--border-color);
+          border: none;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .theme-toggle:hover {
+          background-color: var(--accent-color);
+        }
+
+        .nav-categories {
+          display: flex;
+          gap: 20px;
+          flex-wrap: wrap;
+        }
+
+        .nav-btn {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 20px;
+          border: none;
+          border-radius: 8px;
+          background-color: var(--border-color);
+          color: var(--text-color);
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+          background-color: var(--accent-color);
+          color: var(--bg-color);
+        }
+
+        .nav-btn.active {
+          background-color: var(--accent-color);
+          color: var(--bg-color);
+        }
+
+        section {
+          padding: 40px 70px;
+        }
+
+        section h2 {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 40px;
+          margin-bottom: 30px;
+          color: var(--text-color);
+        }
+
+        .timeline-container {
+          margin-bottom: 40px;
+        }
+
+        .timeline-track {
+          display: flex;
+          gap: 20px;
+          overflow-x: auto;
+          padding-bottom: 20px;
+        }
+
+        .timeline-item {
+          min-width: 200px;
+          padding: 20px;
+          border-radius: 12px;
+          background-color: var(--card-bg-color);
+          text-align: center;
+          transition: all 0.3s ease;
+          cursor: pointer;
+        }
+
+        .timeline-item:hover {
+          transform: translateY(-5px);
+        }
+
+        .timeline-item.active {
+          background-color: var(--accent-color);
+          color: var(--bg-color);
+        }
+
+        .timeline-icon {
+          font-size: 30px;
+          margin-bottom: 10px;
+        }
+
+        .timeline-year {
+          font-weight: bold;
+          margin-bottom: 5px;
+        }
+
+        .timeline-detail {
+          padding: 30px;
+          border-radius: 12px;
+          background-color: var(--card-bg-color);
+        }
+
+        .timeline-detail-header {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          margin-bottom: 20px;
+        }
+
+        .timeline-detail-icon {
+          font-size: 40px;
+        }
+
+        .timeline-detail h3 {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 28px;
+          margin: 0;
+        }
+
+        .timeline-detail h4 {
+          font-size: 20px;
+          margin: 5px 0 0;
+        }
+
+        .timeline-detail p {
+          font-size: 18px;
+          line-height: 1.6;
+        }
+
+        .histoire-content {
+          display: flex;
+          gap: 40px;
+        }
+
+        .histoire-text {
+          flex: 2;
+        }
+
+        .histoire-text p {
+          margin-bottom: 20px;
+          line-height: 1.6;
+          font-size: 18px;
+        }
+
+        .histoire-highlights {
+          flex: 1;
+        }
+
+        .histoire-highlights h3 {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 28px;
+          margin-bottom: 20px;
+        }
+
+        .highlight-item {
+          padding: 15px;
+          margin-bottom: 15px;
+          border-left: 3px solid var(--accent-color);
+          background-color: var(--border-color);
+        }
+
+        .highlight-year {
+          font-weight: bold;
+          margin-bottom: 5px;
+          font-size: 18px;
+        }
+
+        .highlight-title {
+          font-size: 16px;
+        }
+
+        .musees-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 30px;
+        }
+
+        .musee-card {
+          border-radius: 12px;
+          overflow: hidden;
+          background-color: var(--card-bg-color);
+          transition: all 0.3s ease;
+        }
+
+        .musee-image {
+          height: 200px;
+          overflow: hidden;
+        }
+
+        .placeholder-image {
+          width: 100%;
+          height: 100%;
+          background-size: cover;
+          background-position: center;
+          transition: transform 0.3s ease;
+        }
+
+        .musee-card:hover .placeholder-image {
+          transform: scale(1.05);
+        }
+
+        .musee-content {
+          padding: 25px;
+        }
+
+        .musee-icon {
+          font-size: 30px;
+          margin-bottom: 15px;
+          color: var(--accent-color);
+        }
+
+        .musee-card h3 {
+          margin-bottom: 10px;
+          font-size: 22px;
+        }
+
+        .musee-location {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          margin-bottom: 15px;
+          color: var(--secondary-text-color);
+        }
+
+        .musee-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          margin-top: 15px;
+          color: var(--accent-color);
+          text-decoration: none;
+          font-weight: 500;
+        }
+
+        .videos-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 30px;
+        }
+
+        .video-card {
+          border-radius: 12px;
+          overflow: hidden;
+          background-color: var(--card-bg-color);
+          transition: all 0.3s ease;
+        }
+
+        .video-thumbnail {
+          position: relative;
+          height: 180px;
+          overflow: hidden;
+        }
+
+        .video-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.3);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .play-icon {
+          font-size: 40px;
+          color: white;
+        }
+
+        .video-duration {
+          position: absolute;
+          bottom: 10px;
+          right: 10px;
+          background-color: rgba(0, 0, 0, 0.7);
+          color: white;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 14px;
+        }
+
+        .video-content {
+          padding: 20px;
+        }
+
+        .video-card h3 {
+          margin-bottom: 10px;
+          font-size: 18px;
+        }
+
+        .video-content p {
+          margin-bottom: 15px;
+          font-size: 14px;
+          color: var(--secondary-text-color);
+        }
+
+        .video-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          color: var(--accent-color);
+          text-decoration: none;
+          font-weight: 500;
+        }
+
+        .footer {
+          padding: 40px 70px;
+          text-align: center;
+          font-style: italic;
+          background: linear-gradient(var(--bg-color), var(--card-bg-color));
+          font-size: 18px;
+        }
+
+        @media (max-width: 1024px) {
+          .musees-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .videos-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        @media (max-width: 768px) {
+          .header {
+            padding: 40px 20px 20px;
+          }
+
+          section {
+            padding: 30px 20px;
+          }
+
+          .header h1 {
+            font-size: 40px;
+          }
+
+          .musees-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .videos-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .histoire-content {
+            flex-direction: column;
+          }
         }
       `}</style>
     </div>
-  )
+  );
 }
