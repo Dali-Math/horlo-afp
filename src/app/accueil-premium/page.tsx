@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Clock, PlayCircle, Sun, Moon, ChevronRight, Calendar, MapPin, Play } from 'lucide-react';
+import { Clock, PlayCircle, History, Sun, Moon, ChevronRight, Calendar, MapPin, Play } from 'lucide-react';
 
 // Données pour la timeline
 const timelineData = [
