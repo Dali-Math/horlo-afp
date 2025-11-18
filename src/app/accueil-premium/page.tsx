@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Clock, PlayCircle, History, Sun, Moon, ChevronRight, Calendar, MapPin, Play } from 'lucide-react';
-import { Building } from 'lucide-react';
 
 // Données pour la timeline
 const timelineData = [
@@ -67,19 +65,23 @@ export default function CultureHorlogerie() {
   useEffect(() => {
     setMounted(true);
     // Vérifier la préférence du système
-    const savedTheme = localStorage.getItem('theme');
-    const systemTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-    const initialTheme = (savedTheme as 'dark' | 'light') || systemTheme;
-    
-    setTheme(initialTheme);
-    document.documentElement.setAttribute('data-theme', initialTheme);
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme');
+      const systemTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      const initialTheme = (savedTheme as 'dark' | 'light') || systemTheme;
+      
+      setTheme(initialTheme);
+      document.documentElement.setAttribute('data-theme', initialTheme);
+    }
   }, []);
 
   const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
+    if (typeof window !== 'undefined') {
+      const newTheme = theme === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+      localStorage.setItem('theme', newTheme);
+      document.documentElement.setAttribute('data-theme', newTheme);
+    }
   };
 
   // Éviter les erreurs d'hydratation
@@ -100,7 +102,7 @@ export default function CultureHorlogerie() {
             onClick={toggleTheme}
             aria-label="Basculer le thème"
           >
-            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            {theme === 'dark' ? '☀️' : '🌙'}
           </button>
         </div>
         
@@ -109,25 +111,25 @@ export default function CultureHorlogerie() {
             className={`nav-btn ${activeSection === 'timeline' ? 'active' : ''}`}
             onClick={() => setActiveSection('timeline')}
           >
-            <History size={18} /> Lignes du temps
+            ⏳ Lignes du temps
           </button>
           <button 
             className={`nav-btn ${activeSection === 'histoire' ? 'active' : ''}`}
             onClick={() => setActiveSection('histoire')}
           >
-            <Clock size={18} /> Histoire
+            🕰️ Histoire
           </button>
           <button 
             className={`nav-btn ${activeSection === 'musees' ? 'active' : ''}`}
             onClick={() => setActiveSection('musees')}
           >
-            <Landmark size={18} /> Musées
+            🏛️ Musées
           </button>
           <button 
             className={`nav-btn ${activeSection === 'videos' ? 'active' : ''}`}
             onClick={() => setActiveSection('videos')}
           >
-            <PlayCircle size={18} /> Vidéos
+            🎥 Vidéos
           </button>
         </nav>
       </header>
@@ -200,15 +202,14 @@ export default function CultureHorlogerie() {
                   <div className="placeholder-image" style={{backgroundImage: `url(https://picsum.photos/seed/musee-${index}/400/300.jpg)`}}></div>
                 </div>
                 <div className="musee-content">
-                  <Museum className="musee-icon" />
+                  <div className="musee-icon">🏛️</div>
                   <h3>{musee.name}</h3>
                   <div className="musee-location">
-                    <MapPin size={14} />
-                    <span>{musee.location}</span>
+                    📍 {musee.location}
                   </div>
                   <p>{musee.description}</p>
                   <a href="#" className="musee-link">
-                    Découvrir <ChevronRight size={16} />
+                    Découvrir →
                   </a>
                 </div>
               </div>
@@ -227,7 +228,7 @@ export default function CultureHorlogerie() {
                 <div className="video-thumbnail">
                   <div className="placeholder-image" style={{backgroundImage: `url(https://picsum.photos/seed/video-${index}/400/225.jpg)`}}></div>
                   <div className="video-overlay">
-                    <PlayCircle className="play-icon" />
+                    <div className="play-icon">▶️</div>
                     <span className="video-duration">{video.duration}</span>
                   </div>
                 </div>
@@ -235,7 +236,7 @@ export default function CultureHorlogerie() {
                   <h3>{video.title}</h3>
                   <p>{video.description}</p>
                   <a href="#" className="video-link">
-                    Regarder <ChevronRight size={16} />
+                    Regarder →
                   </a>
                 </div>
               </div>
@@ -325,6 +326,7 @@ export default function CultureHorlogerie() {
           display: flex;
           align-items: center;
           justify-content: center;
+          font-size: 20px;
         }
 
         .theme-toggle:hover {
@@ -523,7 +525,6 @@ export default function CultureHorlogerie() {
         .musee-icon {
           font-size: 30px;
           margin-bottom: 15px;
-          color: var(--accent-color);
         }
 
         .musee-card h3 {
