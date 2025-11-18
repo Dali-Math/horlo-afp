@@ -120,7 +120,7 @@ export default function CultureHorlogerie() {
             className={`nav-btn ${activeSection === 'musees' ? 'active' : ''}`}
             onClick={() => setActiveSection('musees')}
           >
-            <Museum size={18} /> Musées
+            <Landmark size={18} /> Musées
           </button>
           <button 
             className={`nav-btn ${activeSection === 'videos' ? 'active' : ''}`}
