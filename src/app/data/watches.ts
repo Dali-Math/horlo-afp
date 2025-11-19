@@ -1,6 +1,5 @@
 
-import { Watch } from '../types';
-
+import { Watch } from '@/types/types';
 export const watches: Watch[] = [
   {
     id: '1',
