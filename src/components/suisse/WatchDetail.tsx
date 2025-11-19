@@ -2,8 +2,8 @@
 import React, { useEffect, useState, useRef, Suspense } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShieldCheck, Watch as WatchIcon, Droplets, Clock, Activity, ZoomIn, Layers, Check, Rotate3D, Image as ImageIcon, Gem, CircleDot, FileText } from 'lucide-react';
-import { watches } from '@/app/data/watches';
-import { StrapOption } from '../types';
+import { Watch } from '@/types/types';
+import { StrapOption } from '@/types/types';
 
 // Lazy load the 3D component to improve initial page load time.
 const Watch3DViewer = React.lazy(() => import('./Watch3DViewer'));
