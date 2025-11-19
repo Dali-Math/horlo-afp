@@ -1,3 +1,4 @@
+import { WatchDetailParams, Watch, Quote } from '@/types/types';
 
 export interface StrapOption {
   id: string;
