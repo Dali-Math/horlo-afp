@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { watches } ''@/app/data/watches';
+import { watches } from '@/app/data/watches';
 import Skeleton from './Skeleton';
 
 // Utility to optimize Unsplash URLs for grid display
