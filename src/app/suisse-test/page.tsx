@@ -1,19 +1,19 @@
 'use client';
 import React from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import { ThemeProvider } from './components/suisse/ThemeContext';
-import Navbar from './components/suisse/Navbar';
-import Hero from './components/suisse/Hero';
-import Features from './components/suisse/Features';
-import Collection from './components/suisse/Collection';
-import WatchDetail from './components/suisse/WatchDetail';
-import Footer from './components/suisse/Footer';
-import Movements from './components/suisse/Movements';
-import Glossary from './components/suisse/Glossary';
-import History from './components/suisse/History';
-import SwissMap from './components/suisse/SwissMap';
-import OfficialResources from './components/suisse/OfficialResources';
-import MasterQuotes from './components/suisse/MasterQuotes';
+import { ThemeProvider } from '@/components/suisse/ThemeContext';
+import Navbar from '@/components/suisse/Navbar';
+import Hero from '@/components/suisse/Hero';
+import Features from '@/components/suisse/Features';
+import Collection from '@/components/suisse/Collection';
+import WatchDetail from '@/components/suisse/WatchDetail';
+import Footer from '@/components/suisse/Footer';
+import Movements from '@/components/suisse/Movements';
+import Glossary from '@/components/suisse/Glossary';
+import History from '@/components/suisse/History';
+import SwissMap from '@/components/suisse/SwissMap';
+import OfficialResources from '@/components/suisse/OfficialResources';
+import MasterQuotes from '@/components/suisse/MasterQuotes';
 
 // Utility for optimizing static images in App
 const optimize = (url: string, width = 1200) => {
