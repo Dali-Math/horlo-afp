@@ -36,6 +36,7 @@ export default function Flashcards6497() {
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const total = cards.length;
+  const progressPercent = Math.round(((index + 1) / total) * 100);
 
   const nextCard = (e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -51,7 +52,10 @@ export default function Flashcards6497() {
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Enter") setFlipped((f) => !f);
+      if (e.key === "Enter" || e.code === "Space") {
+        e.preventDefault();
+        setFlipped((f) => !f);
+      }
       if (e.key === "ArrowRight") nextCard();
       if (e.key === "ArrowLeft") prevCard();
     };
@@ -60,56 +64,77 @@ export default function Flashcards6497() {
   }, []);
 
   return (
-    <div className="bg-transparent text-slate-800 dark:text-gray-200 flex flex-col items-center justify-center pt-4 pb-8 px-4 sm:px-8 lg:px-12 overflow-visible transition-colors duration-300">
-      <h3 className="text-2xl md:text-3xl font-bold text-amber-600 dark:text-[#E2B44F] mb-8 text-center">
-        Démontage & Remontage — Mouvement ETA 6497
-      </h3>
+    <div className="bg-transparent text-slate-800 dark:text-gray-200 flex flex-col items-center justify-center pt-2 pb-6 px-4 max-w-4xl mx-auto transition-colors duration-300">
+      
+      {/* Barre de progression de l'épreuve */}
+      <div className="w-full max-w-md mx-auto mb-8">
+        <div className="flex items-center justify-between text-xs font-bold text-slate-600 dark:text-slate-400 mb-2">
+          <span>Progression de l'évaluation</span>
+          <span className="text-amber-600 dark:text-amber-400">
+            Question {index + 1} / {total} • {progressPercent}%
+          </span>
+        </div>
+        <div className="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-amber-500 to-amber-600 rounded-full transition-all duration-300"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+      </div>
 
-      {/* Carte géante */}
+      {/* Carte géante interactive */}
       <div
         onClick={() => setFlipped(!flipped)}
-        className="cursor-pointer bg-slate-50 dark:bg-[#1a1a1a] border-2 border-amber-500/80 dark:border-[#E2B44F] rounded-3xl shadow-lg hover:shadow-2xl 
-           p-6 md:p-10 xl:p-12 text-center w-full sm:w-[90%] md:w-[70%] lg:w-[60%]
-           max-w-3xl min-h-[260px] flex flex-col items-center justify-center 
+        className="cursor-pointer bg-slate-50 dark:bg-slate-950/80 border-2 border-amber-500/70 dark:border-[#E2B44F] rounded-3xl shadow-lg hover:shadow-2xl 
+           p-8 md:p-12 text-center w-full max-w-3xl min-h-[300px] flex flex-col items-center justify-between 
            transition-all duration-300 hover:scale-[1.01]"
       >
-        <p
-          className={`text-2xl md:text-3xl xl:text-4xl leading-relaxed max-w-3xl ${
-            flipped ? "text-slate-800 dark:text-gray-200 font-medium" : "text-amber-700 dark:text-[#E2B44F] font-semibold"
-          }`}
+        <div className="w-full">
+          <span className="inline-block px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-500/20 border border-amber-300 dark:border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-bold uppercase tracking-wider mb-6">
+            {flipped ? "Protocole & Réponse d'Atelier" : `Question Technique N°${index + 1}`}
+          </span>
+
+          <p
+            className={`text-xl md:text-3xl leading-relaxed max-w-2xl mx-auto transition-colors duration-200 ${
+              flipped
+                ? "text-slate-800 dark:text-slate-200 font-medium"
+                : "text-amber-800 dark:text-[#E2B44F] font-bold"
+            }`}
+          >
+            {flipped ? cards[index].answer : cards[index].question}
+          </p>
+        </div>
+
+        {/* Ligne de commandes d'examen */}
+        <div
+          className="flex justify-center items-center gap-3 sm:gap-4 mt-8 flex-wrap w-full"
+          onClick={(e) => e.stopPropagation()}
         >
-          {flipped ? cards[index].answer : cards[index].question}
-        </p>
-
-        <p className="text-sm font-medium text-amber-600 dark:text-[#E2B44F] mt-8">
-          Carte {index + 1} sur {total}
-        </p>
-
-        {/* Ligne de boutons à l'intérieur de la carte */}
-        <div className="flex justify-center gap-4 sm:gap-6 mt-8 flex-wrap" onClick={(e) => e.stopPropagation()}>
           <button
             onClick={prevCard}
-            className="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 dark:bg-[#E2B44F]/20 dark:border-[#E2B44F] dark:text-[#E2B44F] dark:hover:bg-[#E2B44F]/40 font-semibold py-2.5 px-6 rounded-xl transition-colors text-sm"
+            className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 px-5 rounded-xl transition-colors text-xs sm:text-sm"
           >
-            ← Précédent
+            &larr; Précédent
           </button>
+
           <button
             onClick={() => setFlipped(!flipped)}
-            className="bg-amber-500 hover:bg-amber-600 text-slate-950 dark:bg-[#E2B44F] dark:hover:bg-[#c89b3d] dark:text-black font-bold py-2.5 px-8 rounded-xl transition-colors shadow-sm text-sm"
+            className="bg-amber-500 hover:bg-amber-600 text-slate-950 dark:bg-[#E2B44F] dark:hover:bg-[#c89b3d] dark:text-black font-bold py-2.5 px-7 rounded-xl transition-all shadow-md hover:shadow-amber-500/20 text-xs sm:text-sm"
           >
-            {flipped ? "Retour à la question" : "Retourner"}
+            {flipped ? "Voir la question" : "Retourner la carte"}
           </button>
+
           <button
             onClick={nextCard}
-            className="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 dark:bg-[#E2B44F]/20 dark:border-[#E2B44F] dark:text-[#E2B44F] dark:hover:bg-[#E2B44F]/40 font-semibold py-2.5 px-6 rounded-xl transition-colors text-sm"
+            className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 px-5 rounded-xl transition-colors text-xs sm:text-sm"
           >
-            Suivant →
+            Suivant &rarr;
           </button>
         </div>
       </div>
 
-      <p className="text-slate-500 dark:text-[#8B7355] mt-8 text-xs sm:text-sm text-center italic">
-        Cliquez sur la carte pour la retourner — compatible mobile, tablette et clavier (Entrée, ←, →)
+      <p className="text-slate-500 dark:text-slate-400 mt-6 text-xs text-center italic">
+        Cliquez sur la carte ou appuyez sur [Espace] pour la retourner • Touches [&larr; / &rarr;] pour naviguer
       </p>
     </div>
   );
