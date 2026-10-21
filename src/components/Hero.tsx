@@ -56,7 +56,7 @@ const Hero: React.FC<HeroProps> = ({ getQuizCount, getCompletedCount }) => {
             transition={{ duration: 1, delay: 0.3 }}
             className="text-2xl md:text-3xl text-white/90 mb-6 font-light"
           >
-            Quiz & Culture Horlogère Suisse - Version Finale
+            Quiz & Culture Horlogère Suisse 
           </motion.h2>
           
           <motion.p
