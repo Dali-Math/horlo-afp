@@ -1,8 +1,9 @@
+// src/app/quiz/page.tsx
+
 'use client'
 
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Navigation from '@/components/Navigation'
 import ProgressTracker from '@/components/ProgressTracker'
 import ParticlesBackground from '@/components/ParticlesBackground'
 import Hero from '@/components/Hero'
@@ -11,7 +12,6 @@ import MarquesGallery from '@/components/MarquesGallery'
 import QuizHub from '@/components/QuizHub'
 import MecanismesSection from '@/components/MecanismesSection'
 import QuizInterface from '@/components/QuizInterface'
-import Footer from '@/components/Footer'
 import { QuizFinal, TOUS_LES_QUIZZES, SECTIONS_EDUCATIVES } from '@/data/quizData'
 
 type AppState = 'home' | 'quiz';
@@ -26,7 +26,6 @@ interface QuizSession {
 }
 
 function App() {
-  const [darkMode, setDarkMode] = useState(true);
   const [progress, setProgress] = useState(0);
   const [appState, setAppState] = useState<AppState>('home');
   const [currentQuiz, setCurrentQuiz] = useState<QuizFinal | null>(null);
@@ -44,10 +43,6 @@ function App() {
       setCompletedQuizzes(JSON.parse(savedCompleted));
     }
   }, []);
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
 
   const updateProgress = (newProgress: number) => {
     setProgress(newProgress);
@@ -93,55 +88,44 @@ function App() {
   const getCompletedCount = () => completedQuizzes.length;
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 ${
-      darkMode 
-        ? 'bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white' 
-        : 'bg-gradient-to-br from-rose-50 via-amber-50 to-slate-50 text-slate-900'
-    }`}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white">
       <ParticlesBackground />
-      <Navigation 
-        darkMode={darkMode} 
-        toggleDarkMode={toggleDarkMode}
-        currentState={appState}
-        onNavigateHome={() => setAppState('home')}
-      />
       <ProgressTracker progress={progress} />
       
-      <main className="pt-20">
-  <AnimatePresence mode="wait">
-    {appState === 'home' ? (
-      <motion.div
-        key="home"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Hero 
-          getQuizCount={getQuizCount}
-          getCompletedCount={getCompletedCount}
-        />
-        <Timeline />
-        <MarquesGallery />
-        <QuizHub 
-          quizzes={TOUS_LES_QUIZZES}
-          completedQuizzes={completedQuizzes}
-          onStartInteractiveQuiz={startInteractiveQuiz}
-          onStartPersonalizedQuiz={startPersonalizedQuiz}
-        />
-        <MecanismesSection />
-        <Footer />
-      </motion.div>
-    ) : (
-      <QuizInterface
-        key="quiz"
-        quiz={currentQuiz}
-        onExit={exitQuiz}
-        onComplete={completeQuiz}
-      />
-    )}
-  </AnimatePresence>
-</main>
+      <main className="pt-24 pb-16">
+        <AnimatePresence mode="wait">
+          {appState === 'home' ? (
+            <motion.div
+              key="home"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Hero 
+                getQuizCount={getQuizCount}
+                getCompletedCount={getCompletedCount}
+              />
+              <Timeline />
+              <MarquesGallery />
+              <QuizHub 
+                quizzes={TOUS_LES_QUIZZES}
+                completedQuizzes={completedQuizzes}
+                onStartInteractiveQuiz={startInteractiveQuiz}
+                onStartPersonalizedQuiz={startPersonalizedQuiz}
+              />
+              <MecanismesSection />
+            </motion.div>
+          ) : (
+            <QuizInterface
+              key="quiz"
+              quiz={currentQuiz}
+              onExit={exitQuiz}
+              onComplete={completeQuiz}
+            />
+          )}
+        </AnimatePresence>
+      </main>
     </div>
   );
 }
