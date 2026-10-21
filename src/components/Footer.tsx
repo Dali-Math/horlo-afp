@@ -16,7 +16,7 @@ export default function Footer() {
   ];
 
   // Titre texte (intégrée au scroll)
-  const titleText = "Avec le soutien des grandes maisons horlogères";
+  const titleText = "Hommage aux grandes manufactures et standards suisses";
 
   return (
     <footer className="bg-[#0A0A0A] text-gray-300 border-t border-gray-800 py-10 px-6">
