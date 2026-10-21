@@ -9,9 +9,11 @@ import {
   ExternalLink,
   Clock,
   RefreshCw,
-  Sparkles,
+  Crown,
+  Award,
   Newspaper,
   TrendingUp,
+  Building2,
   Cpu,
   Calendar,
   Gavel,
@@ -90,7 +92,7 @@ const INITIAL_NEWS: NewsItem[] = [
 
 const CATEGORIES = [
   { id: 'all', label: 'Toutes les dépêches', icon: Newspaper },
-  { id: 'Haute Horlogerie', label: 'Haute Horlogerie', icon: Sparkles },
+  { id: 'Haute Horlogerie', label: 'Haute Horlogerie', icon: Crown },
   { id: 'Économie & Industrie', label: 'Économie & Industrie', icon: TrendingUp },
   { id: 'Innovation & Calibres', label: 'Innovations & Calibres', icon: Cpu },
   { id: 'Événements & Salons', label: 'Salons & Événements', icon: Calendar },
@@ -106,6 +108,7 @@ export default function ActualitesHorlogeresPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [lastSync, setLastSync] = useState<string>('À l’instant');
 
+  // Chargement des actualités en direct depuis l'API
   const fetchNews = async (isManual = false) => {
     if (isManual) setRefreshing(true);
     try {
@@ -121,7 +124,7 @@ export default function ActualitesHorlogeresPage() {
         }
       }
     } catch (err) {
-      console.warn('Flux en direct momentanément indisponible, maintien des données locales.', err);
+      console.warn('Impossible de synchroniser le flux en direct, conservation du cache local.', err);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -130,12 +133,14 @@ export default function ActualitesHorlogeresPage() {
 
   useEffect(() => {
     fetchNews();
+    // Rafraîchissement automatique toutes les 10 minutes si l'onglet reste ouvert
     const interval = setInterval(() => {
       fetchNews();
     }, 10 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
+  // Filtrage intelligent
   const filteredNews = useMemo(() => {
     return news.filter((item) => {
       const matchesCategory =
@@ -265,7 +270,7 @@ export default function ActualitesHorlogeresPage() {
               {searchQuery && ` pour « ${searchQuery} »`}
             </span>
             <span className="hidden sm:inline">
-              Source : Flux certifié horlogerie suisse (Google News CH / FHS)
+              Source : Flux officiel horlogerie suisse (Google News CH / FHS)
             </span>
           </div>
         </div>
@@ -289,7 +294,7 @@ export default function ActualitesHorlogeresPage() {
                 <div>
                   <div className="flex flex-wrap items-center gap-3 mb-4">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500 text-slate-950 text-xs font-bold uppercase tracking-wider shadow-sm">
-                      <Sparkles className="w-3.5 h-3.5" /> À la Une
+                      <Award className="w-3.5 h-3.5" /> À la Une
                     </span>
                     <span className="px-3 py-1 rounded-full bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300">
                       {featuredArticle.category}
@@ -324,6 +329,7 @@ export default function ActualitesHorlogeresPage() {
 
         {/* --- GRILLE DES ARTICLES --- */}
         {loading && news.length === 0 ? (
+          // Skeleton loader
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <div
@@ -349,7 +355,7 @@ export default function ActualitesHorlogeresPage() {
                   className="group flex flex-col justify-between p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 hover:border-amber-500/50 dark:hover:border-amber-500/40 shadow-sm hover:shadow-xl dark:hover:shadow-amber-500/5 transition-all duration-300 relative"
                 >
                   <div>
-                    {/* Catégorie & Date */}
+                    {/* Entête de carte : Catégorie & Date */}
                     <div className="flex items-center justify-between gap-2 mb-3">
                       <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/20">
                         {item.category}
@@ -372,7 +378,7 @@ export default function ActualitesHorlogeresPage() {
                     </a>
                   </div>
 
-                  {/* Source & Lien externe */}
+                  {/* Pied de carte : Source & Lien externe */}
                   <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3">
                     <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 truncate max-w-[170px]">
                       <Newspaper className="w-3 h-3 text-slate-400 flex-shrink-0" />
@@ -395,6 +401,7 @@ export default function ActualitesHorlogeresPage() {
             </AnimatePresence>
           </div>
         ) : (
+          // État vide
           <div className="text-center py-16 px-4 bg-white dark:bg-slate-900/40 rounded-3xl border border-slate-200 dark:border-slate-800">
             <Newspaper className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
             <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">
@@ -415,7 +422,7 @@ export default function ActualitesHorlogeresPage() {
           </div>
         )}
 
-        {/* --- BANNIÈRE D'INFORMATION SUISSE --- */}
+        {/* --- BANNIÈRE D'INFORMATION & MENTIONS SUISSES --- */}
         <div className="mt-16 p-6 rounded-2xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-500/20 text-slate-700 dark:text-slate-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
