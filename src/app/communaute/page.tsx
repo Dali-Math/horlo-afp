@@ -18,7 +18,8 @@ import {
   Send,
   CheckCircle2,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Trash2
 } from 'lucide-react';
 
 export type CategoryType = 'outillage' | 'emploi' | 'question' | 'vente';
@@ -42,71 +43,7 @@ export interface Post {
   comments: Comment[];
 }
 
-// Annonces de départ reflétant les vrais besoins d'un atelier horloger
-const DEFAULT_POSTS: Post[] = [
-  {
-    id: 'post-1',
-    category: 'outillage',
-    title: 'Cherche brucelles Dumont No. 3 ou No. 5 antimagnétiques',
-    author: 'Marc',
-    location: 'Genève (GE)',
-    contact: 'contact.horlogeries@gmail.com',
-    description:
-      'Bonjour à tous, je débute mon entraînement sur le calibre ETA 6497 et je cherche une bonne paire de brucelles Dumont No. 3 ou No. 5 en bon état (pointes non tordues). Si quelqu’un en a une en double dans son atelier, merci de me contacter !',
-    createdAt: 'Hier à 14:30',
-    comments: [
-      {
-        id: 'c-1',
-        author: 'Alexandre',
-        text: 'Salut Marc, j’ai une Dumont No. 3 en Dumoxel en rab dans mon atelier à Plainpalais si tu veux. Écris-moi.',
-        createdAt: 'Hier à 16:15'
-      }
-    ]
-  },
-  {
-    id: 'post-2',
-    category: 'emploi',
-    title: 'Apprenti horloger cherche place de stage ou emploi junior en rhabillage',
-    author: 'Julien',
-    location: 'Vaud / Genève',
-    contact: 'contact.horlogeries@gmail.com',
-    description:
-      'Titulaire d’une formation pratique en horlogerie (démontage, assemblage, lubrification et réglage sur calibres manuels et automatiques). Je recherche un stage pratique de perfectionnement ou un poste d’assistant rhabilleur en manufacture ou atelier indépendant.',
-    createdAt: 'Il y a 2 jours',
-    comments: []
-  },
-  {
-    id: 'post-3',
-    category: 'question',
-    title: 'Question sur réglage de raquette ETA 6497 : retard persistant de 20s/j',
-    author: 'David',
-    location: 'Neuchâtel (NE)',
-    contact: 'contact.horlogeries@gmail.com',
-    description:
-      'Après nettoyage et lubrification selon la fiche officielle, ma montre accuse un retard régulier de -20s/j sur le Witschi, même en déplaçant la raquette vers l’avance. Avez-vous une piste ? Est-ce que le spiral touche la goupille de raquette ?',
-    createdAt: 'Il y a 3 jours',
-    comments: [
-      {
-        id: 'c-2',
-        author: 'Maître Horloger',
-        text: 'Vérifie au microscope binoculaire le jeu du spiral entre les goupilles de raquette. Le spiral doit battre librement entre les deux goupilles sans coller.',
-        createdAt: 'Il y a 3 jours'
-      }
-    ]
-  },
-  {
-    id: 'post-4',
-    category: 'vente',
-    title: 'Vends porte-mouvement réversible Bergeon 4040',
-    author: 'Nicolas',
-    location: 'Bienne (BE)',
-    contact: 'contact.horlogeries@gmail.com',
-    description:
-      'Je vends mon porte-mouvement Bergeon 4040 en très bon état, idéal pour calibres de 8 ¾’’’ à 19’’’. Prix : 40 CHF. Remise en mains propres sur Bienne ou envoi postal possible.',
-    createdAt: 'Cette semaine',
-    comments: []
-  }
-];
+const STORAGE_KEY = 'horlo_annonces_reelles_v1';
 
 const CATEGORIES: { id: CategoryType | 'all'; label: string; icon: any }[] = [
   { id: 'all', label: 'Toutes les annonces', icon: MessageSquare },
@@ -117,7 +54,7 @@ const CATEGORIES: { id: CategoryType | 'all'; label: string; icon: any }[] = [
 ];
 
 export default function CommunautePage() {
-  const [posts, setPosts] = useState<Post[]>(DEFAULT_POSTS);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -132,24 +69,25 @@ export default function CommunautePage() {
   const [formContact, setFormContact] = useState('');
   const [formDescription, setFormDescription] = useState('');
 
+  // Charger les vraies annonces publiées par les utilisateurs
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('horlo_community_posts');
+      const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed)) {
           setPosts(parsed);
         }
       }
     } catch {
-      // Ignore
+      setPosts([]);
     }
   }, []);
 
   const savePosts = (newPosts: Post[]) => {
     setPosts(newPosts);
     try {
-      localStorage.setItem('horlo_community_posts', JSON.stringify(newPosts));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newPosts));
     } catch {
       // Ignore
     }
@@ -172,7 +110,7 @@ export default function CommunautePage() {
       category: formCategory,
       title: formTitle.trim(),
       author: formAuthor.trim(),
-      location: formLocation.trim() || 'Suisse Romande',
+      location: formLocation.trim() || 'Suisse',
       contact: formContact.trim() || 'contact.horlogeries@gmail.com',
       description: formDescription.trim(),
       createdAt: 'À l’instant',
@@ -192,6 +130,14 @@ export default function CommunautePage() {
     showToast('Votre annonce a été publiée avec succès !');
   };
 
+  const handleDeletePost = (postId: string) => {
+    if (confirm('Voulez-vous supprimer cette annonce ?')) {
+      const updated = posts.filter((p) => p.id !== postId);
+      savePosts(updated);
+      showToast('Annonce supprimée.');
+    }
+  };
+
   const handleAddComment = (postId: string) => {
     const input = replyInputs[postId];
     if (!input || !input.text.trim()) {
@@ -201,7 +147,7 @@ export default function CommunautePage() {
 
     const newComment: Comment = {
       id: `c-${Date.now()}`,
-      author: input.author.trim() || 'Horloger',
+      author: input.author.trim() || 'Visiteur',
       text: input.text.trim(),
       createdAt: 'À l’instant'
     };
@@ -307,7 +253,6 @@ export default function CommunautePage() {
       {/* --- ZONE PRINCIPALE : RECHERCHE & FILTRES --- */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-          {/* Barre de Recherche */}
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <input
@@ -327,7 +272,6 @@ export default function CommunautePage() {
             )}
           </div>
 
-          {/* Filtres par Catégorie */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
             {CATEGORIES.map((cat) => {
               const Icon = cat.icon;
@@ -355,7 +299,7 @@ export default function CommunautePage() {
               {filteredPosts.length > 1 ? 's' : ''}
               {searchQuery && ` pour « ${searchQuery} »`}
             </span>
-            <span>🇨🇭 Entraide directe entre horlogers et passionnés</span>
+            <span>🇨🇭 Entraide directe entre horlogers, apprentis et passionnés</span>
           </div>
         </div>
 
@@ -375,7 +319,6 @@ export default function CommunautePage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 hover:border-amber-500/40 shadow-sm hover:shadow-xl transition-all"
                   >
-                    {/* Entête Carte */}
                     <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
                       <div className="flex items-center gap-3">
                         <span className={`px-3 py-1 rounded-full text-xs font-bold border ${badge.bg}`}>
@@ -388,27 +331,34 @@ export default function CommunautePage() {
                         </span>
                       </div>
 
-                      <span className="inline-flex items-center gap-1 text-xs text-slate-400">
-                        <Clock className="w-3 h-3" />
-                        {post.createdAt}
-                      </span>
+                      <div className="flex items-center gap-3">
+                        <span className="inline-flex items-center gap-1 text-xs text-slate-400">
+                          <Clock className="w-3 h-3" />
+                          {post.createdAt}
+                        </span>
+
+                        <button
+                          onClick={() => handleDeletePost(post.id)}
+                          title="Supprimer cette annonce"
+                          className="text-slate-400 hover:text-rose-500 transition-colors p-1"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
 
-                    {/* Titre */}
                     <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3 leading-snug">
                       {post.title}
                     </h2>
 
-                    {/* Description */}
                     <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6 whitespace-pre-line">
                       {post.description}
                     </p>
 
-                    {/* Méta Auteur & Contact */}
                     <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs">
                       <div className="flex items-center gap-2">
                         <div className="w-7 h-7 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-400 font-bold flex items-center justify-center text-xs">
-                          {post.author.charAt(0)}
+                          {post.author.charAt(0).toUpperCase()}
                         </div>
                         <span className="font-semibold text-slate-700 dark:text-slate-300">
                           {post.author}
@@ -416,7 +366,6 @@ export default function CommunautePage() {
                       </div>
 
                       <div className="flex items-center gap-3">
-                        {/* Bouton pour contacter l'auteur */}
                         {post.contact && (
                           <a
                             href={`mailto:${post.contact}?subject=${encodeURIComponent(`[HorloLearn] Réponse à votre annonce : ${post.title}`)}`}
@@ -427,7 +376,6 @@ export default function CommunautePage() {
                           </a>
                         )}
 
-                        {/* Bouton pour ouvrir / fermer la discussion */}
                         <button
                           onClick={() => toggleComments(post.id)}
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 font-bold hover:bg-amber-100 transition-colors border border-amber-200 dark:border-amber-500/20"
@@ -443,14 +391,12 @@ export default function CommunautePage() {
                       </div>
                     </div>
 
-                    {/* Zone de discussion / Réponses dépliable */}
                     {isExpanded && (
                       <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 space-y-4">
                         <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
                           Réponses & Échanges ({post.comments.length})
                         </h4>
 
-                        {/* Liste des commentaires */}
                         {post.comments.length > 0 ? (
                           <div className="space-y-3">
                             {post.comments.map((comment) => (
@@ -476,7 +422,6 @@ export default function CommunautePage() {
                           </p>
                         )}
 
-                        {/* Formulaire pour répondre */}
                         <div className="pt-3 space-y-2">
                           <div className="grid sm:grid-cols-3 gap-2">
                             <input
@@ -521,19 +466,23 @@ export default function CommunautePage() {
                 );
               })
             ) : (
-              <div className="text-center py-16 px-4 bg-white dark:bg-slate-900/40 rounded-3xl border border-slate-200 dark:border-slate-800">
-                <MessageSquare className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-                <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">
-                  Aucune annonce trouvée dans cette catégorie
+              /* --- ÉTAT VIDE PROPRE (AUCUNE FAUSSE ANNONCE) --- */
+              <div className="text-center py-16 px-4 bg-white dark:bg-slate-900/40 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800">
+                <div className="w-16 h-16 rounded-3xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center mx-auto mb-4">
+                  <MessageSquare className="w-8 h-8" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">
+                  Le tableau d’affichage est ouvert !
                 </h3>
                 <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-6">
-                  Vous cherchez un outil spécifique ou vous avez une question ? Déposez la première annonce !
+                  Aucune annonce pour le moment. Vous cherchez un outil (brucelles, etc.), vous cherchez un stage ou un travail horloger, ou vous avez une question d'établi ? Publiez la première annonce !
                 </p>
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="px-6 py-3 rounded-2xl bg-amber-500 text-slate-950 font-bold text-sm hover:bg-amber-400 transition-all shadow-md"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-500 text-slate-950 font-extrabold text-sm hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20 active:scale-95"
                 >
-                  Publier une annonce maintenant
+                  <Plus className="w-5 h-5" />
+                  <span>Publier la première annonce</span>
                 </button>
               </div>
             )}
@@ -571,7 +520,6 @@ export default function CommunautePage() {
               </div>
 
               <form onSubmit={handleCreatePost} className="space-y-4">
-                {/* Choix de la catégorie */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                     Type d’annonce *
@@ -588,7 +536,6 @@ export default function CommunautePage() {
                   </select>
                 </div>
 
-                {/* Titre */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                     Titre clair de votre annonce *
@@ -603,7 +550,6 @@ export default function CommunautePage() {
                   />
                 </div>
 
-                {/* Auteur & Ville */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
@@ -633,7 +579,6 @@ export default function CommunautePage() {
                   </div>
                 </div>
 
-                {/* Contact */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                     Moyen de contact (Email ou Téléphone) *
@@ -651,7 +596,6 @@ export default function CommunautePage() {
                   </p>
                 </div>
 
-                {/* Description */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                     Description détaillée *
@@ -666,7 +610,6 @@ export default function CommunautePage() {
                   />
                 </div>
 
-                {/* Actions */}
                 <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                   <button
                     type="button"
