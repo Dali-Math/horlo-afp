@@ -68,7 +68,7 @@ export default function HorloLearnHome() {
 
   return (
     // Style Sombre Permanent Haute Horlogerie (Prestige Suisse)
-    <div className="min-h-screen overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
+    <div className="min-h-screen overflow-hidden bg-slate-50 dark:bg-gradient-to-b dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-slate-900 dark:text-white transition-colors duration-300">
       
       {/* Arrière-plan animé avec engrenages */}
       <div className="fixed inset-0 opacity-5 pointer-events-none overflow-hidden">
@@ -113,20 +113,20 @@ export default function HorloLearnHome() {
               transition={{ delay: 0.3 }}
               className="inline-flex items-center px-4 py-2 rounded-full mb-8 bg-amber-500/10 border border-amber-500/20"
             >
-              <Sparkles className="w-5 h-5 text-amber-400 mr-2" />
-              <span className="text-amber-400 font-semibold text-sm">L'horlogerie suisse accessible à tous</span>
+              <Sparkles className="w-5 h-5 text-amber-600 dark:text-amber-400 mr-2" />
+              <span className="text-amber-600 dark:text-amber-400 font-semibold text-sm">L'horlogerie suisse accessible à tous</span>
             </motion.div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              <span className="text-white">Passion & Découverte</span>
+              <span className="text-slate-900 dark:text-white">Passion & Découverte</span>
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 via-amber-600 to-orange-500 dark:from-amber-400 dark:via-amber-300 dark:to-amber-500">
                 Horlogère Suisse
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl mb-8 leading-relaxed text-gray-300">
-              Explorez librement ressources, tutoriels et savoirs horlogers partagés par des <span className="text-amber-400 font-semibold">passionnés</span> pour des <span className="text-amber-400 font-semibold">passionnés</span>
+            <p className="text-xl md:text-2xl mb-8 leading-relaxed text-slate-600 dark:text-gray-300">
+              Explorez librement ressources, tutoriels et savoirs horlogers partagés par des <span className="text-amber-600 dark:text-amber-400 font-semibold">passionnés</span> pour des <span className="text-amber-600 dark:text-amber-400 font-semibold">passionnés</span>
             </p>
 
             {/* Actions d'Atelier Haute Horlogerie */}
@@ -147,7 +147,7 @@ export default function HorloLearnHome() {
                 <motion.button
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
-                  className="w-full px-8 py-4 bg-slate-900/90 hover:bg-slate-850 border border-slate-700 hover:border-amber-500/50 text-slate-200 hover:text-white font-semibold rounded-xl backdrop-blur-sm shadow-md hover:shadow-amber-500/10 transition-all duration-300 flex items-center justify-center gap-2.5 text-base group"
+                  className="w-full px-8 py-4 bg-white dark:bg-slate-900/90 hover:bg-slate-100 dark:hover:bg-slate-850 border border-slate-300 dark:border-slate-700 hover:border-amber-500 text-slate-800 dark:text-slate-200 font-semibold rounded-xl backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center gap-2.5 text-base group"
                 >
                   <Sparkles className="w-5 h-5 text-amber-400 group-hover:rotate-12 transition-transform duration-300" />
                   <span>Outils & Diagnostic IA</span>
@@ -157,24 +157,24 @@ export default function HorloLearnHome() {
 
             {/* Badges de légitimité & standards horlogers */}
             <div className="flex flex-wrap items-center gap-3 text-xs">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 shadow-sm backdrop-blur-sm">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="font-medium text-slate-200">Standards NIHS & COSC</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-sm backdrop-blur-sm">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
+                <span className="font-medium text-slate-800 dark:text-slate-200">Standards NIHS & COSC</span>
               </div>
 
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 shadow-sm backdrop-blur-sm">
-                <span className="text-amber-400">⚙️</span>
-                <span className="font-medium text-slate-200">Calibres & Habillage</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-sm backdrop-blur-sm">
+                <span className="text-amber-500 dark:text-amber-400">⚙️</span>
+                <span className="font-medium text-slate-800 dark:text-slate-200">Calibres & Habillage</span>
               </div>
 
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 shadow-sm backdrop-blur-sm">
-                <span className="text-amber-400">🇨🇭</span>
-                <span className="font-medium text-slate-200">Savoir-Faire Genevois</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-sm backdrop-blur-sm">
+                <span className="text-amber-500 dark:text-amber-400">🇨🇭</span>
+                <span className="font-medium text-slate-800 dark:text-slate-200">Savoir-Faire Genevois</span>
               </div>
             </div>
           </motion.div>
 
-          {/* Horloge interactive (100% INTACTE ET ORIGINALE) */}
+          {/* Horloge interactive */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -259,18 +259,18 @@ export default function HorloLearnHome() {
       </section>
 
       {/* Intro */}
-      <FadeInSection id="theorie" className="py-32 text-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+      <FadeInSection id="theorie" className="py-32 text-center bg-white dark:bg-gradient-to-b dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300">
         <div className="max-w-3xl mx-auto px-4">
           <div className="inline-flex items-center space-x-2 px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full mb-8">
-            <Clock className="w-4 h-4 text-amber-400" />
-            <span className="text-sm text-amber-300">Bienvenue dans l'univers horloger</span>
+            <Clock className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+            <span className="text-sm text-amber-600 dark:text-amber-300">Bienvenue dans l'univers horloger</span>
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-slate-900 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-amber-400 dark:via-amber-300 dark:to-amber-500">
             Le Temps à l'État Pur
           </h2>
 
-          <p className="text-xl leading-relaxed text-gray-300">
+          <p className="text-xl leading-relaxed text-slate-600 dark:text-gray-300">
             Plongez dans l'univers fascinant de l'horlogerie. Explorez l'histoire,
             maîtrisez les techniques, et découvrez les secrets de ces merveilles
             mécaniques qui battent au rythme du temps.
@@ -284,24 +284,24 @@ export default function HorloLearnHome() {
       <ActualitesSection actualites={actualites} />
 
       {/* Newsletter */}
-      <FadeInSection id="contribuer" className="py-20 px-4 bg-slate-900/30">
+      <FadeInSection id="contribuer" className="py-20 px-4 bg-slate-100/80 dark:bg-slate-900/30 transition-colors duration-300">
         <div className="max-w-4xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="relative bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 rounded-3xl p-12 border border-amber-500/30 overflow-hidden text-center"
+            className="relative bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 dark:from-amber-500/20 dark:via-orange-500/20 dark:to-amber-500/20 rounded-3xl p-12 border border-amber-500/30 overflow-hidden text-center shadow-lg"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-500/10 to-transparent animate-pulse" />
             
             <div className="relative z-10">
-              <Globe className="w-12 h-12 text-amber-400 mx-auto mb-6" />
+              <Globe className="w-12 h-12 text-amber-500 dark:text-amber-400 mx-auto mb-6" />
               
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-white">
                 Restez Informé
               </h2>
               
-              <p className="text-lg mb-8 max-w-2xl mx-auto text-gray-300">
+              <p className="text-lg mb-8 max-w-2xl mx-auto text-slate-600 dark:text-gray-300">
                 Recevez chaque semaine : nouvelles ressources partagées, astuces d'atelier et actualités horlogères
               </p>
 
@@ -309,14 +309,14 @@ export default function HorloLearnHome() {
                 <input
                   type="email"
                   placeholder="Votre email"
-                  className="flex-1 rounded-lg px-6 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-colors backdrop-blur-sm bg-slate-900/50 border border-amber-500/30"
+                  className="flex-1 rounded-lg px-6 py-4 text-slate-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-amber-500 transition-colors backdrop-blur-sm bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-amber-500/30"
                 />
                 <button className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 whitespace-nowrap text-white">
                   S'Abonner
                 </button>
               </div>
 
-              <div className="flex items-center justify-center gap-6 mt-6 text-sm text-gray-400">
+              <div className="flex items-center justify-center gap-6 mt-6 text-sm text-slate-500 dark:text-gray-400">
                 <span className="flex items-center">
                   <Share2 className="w-4 h-4 mr-2 text-amber-400" />
                   Flux RSS disponible
