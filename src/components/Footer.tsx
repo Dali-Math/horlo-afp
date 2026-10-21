@@ -124,6 +124,19 @@ export default function Footer() {
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-[11px] text-amber-400/90 mt-2">
               <span>Genève &bull; Suisse</span>
             </div>
+
+            {/* Soutien d'Atelier / Café Horloger */}
+            <a
+              href="https://www.paypal.com/donate/?business=contact.horlogeries@gmail.com&currency_code=CHF&item_name=Soutien+a+l+Atelier+HorloLearn"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-amber-500/20 to-amber-500/10 hover:from-amber-500/25 hover:to-amber-500/20 border border-amber-500/40 hover:border-amber-400 text-xs font-semibold text-amber-300 hover:text-white transition-all duration-300 shadow-sm mt-2 group"
+              title="Soutenir la transmission du savoir-faire horloger suisse"
+            >
+              <span className="text-sm group-hover:scale-110 transition-transform">☕</span>
+              <span>Offrir un café à l'établi</span>
+              <span className="text-[10px] text-amber-400/80 font-normal pl-1.5 border-l border-amber-500/30">Soutenir</span>
+            </a>
           </div>
         </div>
 
