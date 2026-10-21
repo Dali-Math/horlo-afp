@@ -1,141 +1,273 @@
 // src/app/communaute/page.tsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Users,
-  BookOpen,
-  GraduationCap,
-  ExternalLink,
+  MessageSquare,
+  Wrench,
+  Briefcase,
+  HelpCircle,
+  Tag,
+  Plus,
+  Search,
+  MapPin,
+  Clock,
   Mail,
-  Calendar,
-  Download,
+  Send,
   CheckCircle2,
-  MessageCircle,
-  ArrowRight,
-  ShieldCheck,
-  Send
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 
-const OFFICIAL_COMMUNITIES = [
-  {
-    name: 'Forum À Montres (FAM)',
-    badge: 'Communauté Francophone',
-    desc: 'Le plus important forum indépendant francophone. Plus de 80 000 passionnés, rubriques techniques d’établi, revues de pièces et histoire des manufactures.',
-    link: 'https://forumamontres.forumactif.com/',
-    highlights: ['Discussions d’amateurs et professionnels', 'Section technique & démontage', 'Revue de montres vintage et modernes']
-  },
-  {
-    name: 'Horlogerie-Suisse (Le Forum)',
-    badge: 'Technique & Établi Suisse',
-    desc: 'Le forum technique helvétique de référence, fondé par et pour les horlogers. Idéal pour les questions de calibres, lubrification et restauration.',
-    link: 'https://www.horlogerie-suisse.com/',
-    highlights: ['Conseils pointus de professionnels', 'Fiches pas-à-pas sur mouvements suisses', 'Partage d’expériences d’atelier']
-  },
-  {
-    name: 'Société Suisse de Chronométrie (SSC)',
-    badge: 'Institution Savante',
-    desc: 'La société officielle réunissant les ingénieurs, techniciens, formateurs et horlogers de l’industrie suisse. Congrès annuels et publications scientifiques.',
-    link: 'https://www.ssc.ch/',
-    highlights: ['Journées d’études techniques', 'Bulletins scientifiques', 'Réseau de l’industrie horlogère']
-  },
-  {
-    name: 'WatchUSeek (WUS)',
-    badge: 'International',
-    desc: 'La plus vaste communauté horlogère mondiale en langue anglaise. Sous-forums dédiés aux mouvements mécaniques, calibres suisses et outillage.',
-    link: 'https://www.watchuseek.com/',
-    highlights: ['Portée internationale', 'Forums dédiés par grandes marques', 'Base de données collaborative']
-  }
-];
+export type CategoryType = 'outillage' | 'emploi' | 'question' | 'vente';
 
-const SWISS_SCHOOLS = [
+export interface Comment {
+  id: string;
+  author: string;
+  text: string;
+  createdAt: string;
+}
+
+export interface Post {
+  id: string;
+  category: CategoryType;
+  title: string;
+  author: string;
+  location: string;
+  contact: string;
+  description: string;
+  createdAt: string;
+  comments: Comment[];
+}
+
+// Annonces de départ reflétant les vrais besoins d'un atelier horloger
+const DEFAULT_POSTS: Post[] = [
   {
-    name: 'École d’Horlogerie de Genève (CFPT)',
+    id: 'post-1',
+    category: 'outillage',
+    title: 'Cherche brucelles Dumont No. 3 ou No. 5 antimagnétiques',
+    author: 'Marc',
     location: 'Genève (GE)',
-    canton: 'Genève',
-    desc: 'Fondée en 1824. Formations officielles menant aux CFC d’Horloger praticien (3 ans) et d’Horloger (4 ans), ainsi qu’aux diplômes de technicien.',
-    link: 'https://www.ge.ch/ecole-horlogerie-geneve',
-    type: 'Formation Publique d’État'
+    contact: 'contact.horlogeries@gmail.com',
+    description:
+      'Bonjour à tous, je débute mon entraînement sur le calibre ETA 6497 et je cherche une bonne paire de brucelles Dumont No. 3 ou No. 5 en bon état (pointes non tordues). Si quelqu’un en a une en double dans son atelier, merci de me contacter !',
+    createdAt: 'Hier à 14:30',
+    comments: [
+      {
+        id: 'c-1',
+        author: 'Alexandre',
+        text: 'Salut Marc, j’ai une Dumont No. 3 en Dumoxel en rab dans mon atelier à Plainpalais si tu veux. Écris-moi.',
+        createdAt: 'Hier à 16:15'
+      }
+    ]
   },
   {
-    name: 'École Technique de la Vallée de Joux (ETVJ)',
-    location: 'Le Sentier (VD)',
-    canton: 'Vaud',
-    desc: 'Située au berceau des plus grandes complications. Formations d’excellence en horlogerie, micromécanique et finitions de Haute Horlogerie.',
-    link: 'https://etvj.ch',
-    type: 'Centre d’Excellence Complications'
+    id: 'post-2',
+    category: 'emploi',
+    title: 'Apprenti horloger cherche place de stage ou emploi junior en rhabillage',
+    author: 'Julien',
+    location: 'Vaud / Genève',
+    contact: 'contact.horlogeries@gmail.com',
+    description:
+      'Titulaire d’une formation pratique en horlogerie (démontage, assemblage, lubrification et réglage sur calibres manuels et automatiques). Je recherche un stage pratique de perfectionnement ou un poste d’assistant rhabilleur en manufacture ou atelier indépendant.',
+    createdAt: 'Il y a 2 jours',
+    comments: []
   },
   {
-    name: 'CIFOM – Pôle Horloger des Montagnes Neuchâteloises',
-    location: 'Le Locle & La Chaux-de-Fonds (NE)',
-    canton: 'Neuchâtel',
-    desc: 'Au cœur du patrimoine horloger UNESCO. Formation initiale et continue d’horlogers, restaurateurs et créateurs de calibres.',
-    link: 'https://cifom.ch',
-    type: 'Patrimoine & Haute Horlogerie'
+    id: 'post-3',
+    category: 'question',
+    title: 'Question sur réglage de raquette ETA 6497 : retard persistant de 20s/j',
+    author: 'David',
+    location: 'Neuchâtel (NE)',
+    contact: 'contact.horlogeries@gmail.com',
+    description:
+      'Après nettoyage et lubrification selon la fiche officielle, ma montre accuse un retard régulier de -20s/j sur le Witschi, même en déplaçant la raquette vers l’avance. Avez-vous une piste ? Est-ce que le spiral touche la goupille de raquette ?',
+    createdAt: 'Il y a 3 jours',
+    comments: [
+      {
+        id: 'c-2',
+        author: 'Maître Horloger',
+        text: 'Vérifie au microscope binoculaire le jeu du spiral entre les goupilles de raquette. Le spiral doit battre librement entre les deux goupilles sans coller.',
+        createdAt: 'Il y a 3 jours'
+      }
+    ]
   },
   {
-    name: 'Centre de Formation Professionnelle Bienne (CFP Bienne)',
+    id: 'post-4',
+    category: 'vente',
+    title: 'Vends porte-mouvement réversible Bergeon 4040',
+    author: 'Nicolas',
     location: 'Bienne (BE)',
-    canton: 'Berne',
-    desc: 'École bilingue (français / allemand) au carrefour des grands groupes horlogers suisses (Rolex, Omega, Swatch Group).',
-    link: 'https://www.cfp-biel-bienne.ch',
-    type: 'Filière Bilingue & Industrielle'
+    contact: 'contact.horlogeries@gmail.com',
+    description:
+      'Je vends mon porte-mouvement Bergeon 4040 en très bon état, idéal pour calibres de 8 ¾’’’ à 19’’’. Prix : 40 CHF. Remise en mains propres sur Bienne ou envoi postal possible.',
+    createdAt: 'Cette semaine',
+    comments: []
   }
 ];
 
-const REFERENCE_BOOKS = [
-  {
-    title: 'Théorie d’Horlogerie',
-    authors: 'C.-A. Reymondin, G. Monnier, D. Jeanneret, U. Pelaratti',
-    publisher: 'Fédération des Écoles Techniques (FET)',
-    desc: 'La bible officielle et indispensable utilisée par toutes les écoles d’horlogerie en Suisse. Couvre la mécanique, l’échappement, le rouage, l’isochronisme et les complications.',
-    category: 'Ouvrage officiel suisse'
-  },
-  {
-    title: 'Dictionnaire Professionnel Illustré de l’Horlogerie',
-    authors: 'G.-A. Berner',
-    publisher: 'Fédération Horlogère Suisse (FHS)',
-    desc: 'L’ouvrage linguistique et technique de référence absolue définissant chaque composant, outil et geste horloger avec schémas précis.',
-    category: 'Lexique officiel FHS'
-  },
-  {
-    title: 'La Montre : Principes et Mécanismes',
-    authors: 'George Daniels',
-    publisher: 'Éditions Scriptar',
-    desc: 'Le chef-d’œuvre du maître qui a inventé l’échappement Co-Axial. Une plongée magistrale dans la fabrication intégrale à la main d’une montre de précision.',
-    category: 'Haute Horlogerie'
-  },
-  {
-    title: 'Fiches & Guides Techniques ETA (6497-1, 2824-2, 7750)',
-    authors: 'Manufacture ETA SA',
-    publisher: 'Documentation Technique Officielle',
-    desc: 'Plans d’assemblage, éclatés de composants, nomenclature des vis et tableaux officiels de lubrification Moebius.',
-    category: 'Documentation d’atelier'
-  }
+const CATEGORIES: { id: CategoryType | 'all'; label: string; icon: any }[] = [
+  { id: 'all', label: 'Toutes les annonces', icon: MessageSquare },
+  { id: 'outillage', label: '🔧 Recherche d’outillage', icon: Wrench },
+  { id: 'emploi', label: '💼 Emploi & Stages', icon: Briefcase },
+  { id: 'question', label: '❓ Questions d’établi', icon: HelpCircle },
+  { id: 'vente', label: '🏷️ Ventes & Échanges', icon: Tag },
 ];
 
 export default function CommunautePage() {
-  const [activeTab, setActiveTab] = useState<'forums' | 'ecoles' | 'bibliotheque' | 'planning'>('forums');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [posts, setPosts] = useState<Post[]>(DEFAULT_POSTS);
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType | 'all'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [expandedComments, setExpandedComments] = useState<{ [postId: string]: boolean }>({});
+  const [replyInputs, setReplyInputs] = useState<{ [postId: string]: { author: string; text: string } }>({});
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const handleSubmitQuestion = (e: React.FormEvent) => {
+  const [formCategory, setFormCategory] = useState<CategoryType>('outillage');
+  const [formTitle, setFormTitle] = useState('');
+  const [formAuthor, setFormAuthor] = useState('');
+  const [formLocation, setFormLocation] = useState('');
+  const [formContact, setFormContact] = useState('');
+  const [formDescription, setFormDescription] = useState('');
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('horlo_community_posts');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setPosts(parsed);
+        }
+      }
+    } catch {
+      // Ignore
+    }
+  }, []);
+
+  const savePosts = (newPosts: Post[]) => {
+    setPosts(newPosts);
+    try {
+      localStorage.setItem('horlo_community_posts', JSON.stringify(newPosts));
+    } catch {
+      // Ignore
+    }
+  };
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 4000);
+  };
+
+  const handleCreatePost = (e: React.FormEvent) => {
     e.preventDefault();
-    const mailto = `mailto:contact.horlogeries@gmail.com?subject=${encodeURIComponent(
-      `[HorloLearn Communauté] ${subject || 'Question d’établi'}`
-    )}&body=${encodeURIComponent(
-      `Nom: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
-    )}`;
-    window.location.href = mailto;
-    setSubmitted(true);
+    if (!formTitle.trim() || !formAuthor.trim() || !formDescription.trim()) {
+      showToast('Veuillez remplir les champs obligatoires.');
+      return;
+    }
+
+    const newPost: Post = {
+      id: `post-${Date.now()}`,
+      category: formCategory,
+      title: formTitle.trim(),
+      author: formAuthor.trim(),
+      location: formLocation.trim() || 'Suisse Romande',
+      contact: formContact.trim() || 'contact.horlogeries@gmail.com',
+      description: formDescription.trim(),
+      createdAt: 'À l’instant',
+      comments: []
+    };
+
+    const updated = [newPost, ...posts];
+    savePosts(updated);
+    setIsModalOpen(false);
+
+    setFormTitle('');
+    setFormAuthor('');
+    setFormLocation('');
+    setFormContact('');
+    setFormDescription('');
+
+    showToast('Votre annonce a été publiée avec succès !');
+  };
+
+  const handleAddComment = (postId: string) => {
+    const input = replyInputs[postId];
+    if (!input || !input.text.trim()) {
+      showToast('Veuillez écrire un message.');
+      return;
+    }
+
+    const newComment: Comment = {
+      id: `c-${Date.now()}`,
+      author: input.author.trim() || 'Horloger',
+      text: input.text.trim(),
+      createdAt: 'À l’instant'
+    };
+
+    const updated = posts.map((p) => {
+      if (p.id === postId) {
+        return { ...p, comments: [...p.comments, newComment] };
+      }
+      return p;
+    });
+
+    savePosts(updated);
+    setReplyInputs((prev) => ({ ...prev, [postId]: { author: '', text: '' } }));
+    setExpandedComments((prev) => ({ ...prev, [postId]: true }));
+    showToast('Votre réponse a été ajoutée.');
+  };
+
+  const toggleComments = (postId: string) => {
+    setExpandedComments((prev) => ({ ...prev, [postId]: !prev[postId] }));
+  };
+
+  const filteredPosts = useMemo(() => {
+    return posts.filter((p) => {
+      const matchCat = selectedCategory === 'all' || p.category === selectedCategory;
+      const q = searchQuery.toLowerCase().trim();
+      const matchQuery =
+        !q ||
+        p.title.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q) ||
+        p.location.toLowerCase().includes(q) ||
+        p.author.toLowerCase().includes(q);
+
+      return matchCat && matchQuery;
+    });
+  }, [posts, selectedCategory, searchQuery]);
+
+  const getCategoryBadge = (cat: CategoryType) => {
+    switch (cat) {
+      case 'outillage':
+        return { label: 'Recherche Outillage', bg: 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800' };
+      case 'emploi':
+        return { label: 'Emploi & Stage', bg: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' };
+      case 'question':
+        return { label: 'Question d’établi', bg: 'bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800' };
+      case 'vente':
+        return { label: 'Vente / Échange', bg: 'bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800' };
+    }
   };
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#07090e] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-6 right-6 z-50 px-5 py-3.5 rounded-2xl bg-amber-500 text-slate-950 font-bold shadow-2xl flex items-center gap-3 text-sm border border-amber-400"
+          >
+            <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+            <span>{toastMessage}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* --- HERO HEADER --- */}
       <section className="relative pt-12 pb-10 border-b border-slate-200 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/40 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -143,435 +275,419 @@ export default function CommunautePage() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-semibold uppercase tracking-wider mb-4">
                 <span>🇨🇭</span>
-                Réseau & Transmission • Horlogerie Suisse
+                Espace Communauté & Petites Annonces de l’Établi
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-                La Communauté &{' '}
+                Annonces, Entraide &{' '}
                 <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 bg-clip-text text-transparent">
-                  Le Réseau Horloger
+                  Discussions Horlogères
                 </span>
               </h1>
 
               <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed">
-                Pas de faux profils, pas d’artifices : HorloLearn est une plateforme indépendante qui réunit les véritables communautés, les écoles suisses officielles, la bibliographie de référence et un canal direct d’entraide avec notre établi.
+                Le tableau d’affichage libre de la communauté : vous cherchez un outil (brucelles, porte-mouvement), vous recherchez un stage ou un travail horloger, ou vous avez une question sur un calibre ? Publiez votre annonce et échangez librement.
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
-              <a
-                href="#contact-etabli"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-amber-600 hover:bg-amber-500 text-white dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 font-bold text-sm shadow-md transition-all active:scale-95"
+            {/* Bouton Publier une annonce */}
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-600 hover:bg-amber-500 text-white dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 font-bold text-sm shadow-lg shadow-amber-500/20 transition-all active:scale-95"
               >
-                <Mail className="w-4 h-4" />
-                <span>Poser une question à l’établi</span>
-              </a>
-            </div>
-          </div>
-
-          {/* Les 4 Engagements d'authenticité */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-8 border-t border-slate-200/60 dark:border-slate-800">
-            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800">
-              <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 mb-1">
-                <ShieldCheck className="w-4 h-4" />
-                <span className="text-sm font-bold">100% Authentique</span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Aucun faux profil, aucun faux avis.</p>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800">
-              <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 mb-1">
-                <GraduationCap className="w-4 h-4" />
-                <span className="text-sm font-bold">Filière Suisse</span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Liens directs vers les 4 grandes écoles.</p>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800">
-              <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 mb-1">
-                <BookOpen className="w-4 h-4" />
-                <span className="text-sm font-bold">Théorie Officielle</span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Manuels et normes suisses de référence.</p>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800">
-              <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 mb-1">
-                <Users className="w-4 h-4" />
-                <span className="text-sm font-bold">Entraide Gratuite</span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Réponse humaine de passionnés à l’établi.</p>
+                <Plus className="w-5 h-5" />
+                <span>Publier une annonce / question</span>
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* --- ONGLET DE NAVIGATION --- */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        <div className="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-none border-b border-slate-200 dark:border-slate-800">
-          <button
-            onClick={() => setActiveTab('forums')}
-            className={`inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-bold whitespace-nowrap transition-all ${
-              activeTab === 'forums'
-                ? 'bg-amber-600 text-white dark:bg-amber-500 dark:text-slate-950 shadow-md'
-                : 'bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-amber-500/50'
-            }`}
-          >
-            <MessageCircle className="w-4 h-4" />
-            <span>Forums & Communautés Réelles</span>
-          </button>
+      {/* --- ZONE PRINCIPALE : RECHERCHE & FILTRES --- */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          {/* Barre de Recherche */}
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Rechercher par mot-clé (ex: brucelle, stage, travail, Bergeon, ETA 6497, Genève...)"
+              className="w-full pl-12 pr-10 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition-all"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-sm"
+              >
+                ✕
+              </button>
+            )}
+          </div>
 
-          <button
-            onClick={() => setActiveTab('ecoles')}
-            className={`inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-bold whitespace-nowrap transition-all ${
-              activeTab === 'ecoles'
-                ? 'bg-amber-600 text-white dark:bg-amber-500 dark:text-slate-950 shadow-md'
-                : 'bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-amber-500/50'
-            }`}
-          >
-            <GraduationCap className="w-4 h-4" />
-            <span>Les Écoles Officielles Suisses</span>
-          </button>
+          {/* Filtres par Catégorie */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+            {CATEGORIES.map((cat) => {
+              const Icon = cat.icon;
+              const isActive = selectedCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
+                    isActive
+                      ? 'bg-amber-600 text-white dark:bg-amber-500 dark:text-slate-950 shadow-md'
+                      : 'bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-amber-500/40 hover:text-amber-600 dark:hover:text-amber-400'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{cat.label}</span>
+                </button>
+              );
+            })}
+          </div>
 
-          <button
-            onClick={() => setActiveTab('bibliotheque')}
-            className={`inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-bold whitespace-nowrap transition-all ${
-              activeTab === 'bibliotheque'
-                ? 'bg-amber-600 text-white dark:bg-amber-500 dark:text-slate-950 shadow-md'
-                : 'bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-amber-500/50'
-            }`}
-          >
-            <BookOpen className="w-4 h-4" />
-            <span>Livres & Références de l’Établi</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('planning')}
-            className={`inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-bold whitespace-nowrap transition-all ${
-              activeTab === 'planning'
-                ? 'bg-amber-600 text-white dark:bg-amber-500 dark:text-slate-950 shadow-md'
-                : 'bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-amber-500/50'
-            }`}
-          >
-            <Calendar className="w-4 h-4" />
-            <span>Documents & Planning Élèves</span>
-          </button>
+          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <span>
+              {filteredPosts.length} annonce{filteredPosts.length > 1 ? 's' : ''} disponible
+              {filteredPosts.length > 1 ? 's' : ''}
+              {searchQuery && ` pour « ${searchQuery} »`}
+            </span>
+            <span>🇨🇭 Entraide directe entre horlogers et passionnés</span>
+          </div>
         </div>
-      </div>
 
-      {/* --- CONTENU --- */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
-        {/* --- ONGLET 1 : LES VRAIS FORUMS HORLOGERS --- */}
-        {activeTab === 'forums' && (
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-                Les Forums Horlogers Actifs & Recommandés
-              </h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
-                Ces espaces rassemblent quotidiennement des milliers de collectionneurs, passionnés et horlogers professionnels francophones et internationaux.
-              </p>
-            </div>
+        {/* --- LISTE DES ANNONCES & DISCUSSIONS --- */}
+        <div className="space-y-6">
+          <AnimatePresence>
+            {filteredPosts.length > 0 ? (
+              filteredPosts.map((post) => {
+                const badge = getCategoryBadge(post.category);
+                const isExpanded = !!expandedComments[post.id];
+                const replyState = replyInputs[post.id] || { author: '', text: '' };
 
-            <div className="grid md:grid-cols-2 gap-6">
-              {OFFICIAL_COMMUNITIES.map((com, idx) => (
-                <div
-                  key={idx}
-                  className="p-6 rounded-3xl bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/20">
-                        {com.badge}
+                return (
+                  <motion.div
+                    key={post.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 hover:border-amber-500/40 shadow-sm hover:shadow-xl transition-all"
+                  >
+                    {/* Entête Carte */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+                      <div className="flex items-center gap-3">
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold border ${badge.bg}`}>
+                          {badge.label}
+                        </span>
+
+                        <span className="inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
+                          <MapPin className="w-3.5 h-3.5 text-amber-500" />
+                          {post.location}
+                        </span>
+                      </div>
+
+                      <span className="inline-flex items-center gap-1 text-xs text-slate-400">
+                        <Clock className="w-3 h-3" />
+                        {post.createdAt}
                       </span>
                     </div>
 
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-                      {com.name}
-                    </h3>
+                    {/* Titre */}
+                    <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3 leading-snug">
+                      {post.title}
+                    </h2>
 
-                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
-                      {com.desc}
+                    {/* Description */}
+                    <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6 whitespace-pre-line">
+                      {post.description}
                     </p>
 
-                    <div className="space-y-1.5 mb-6">
-                      {com.highlights.map((h, i) => (
-                        <div
-                          key={i}
-                          className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400"
-                        >
-                          <CheckCircle2 className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />
-                          <span>{h}</span>
+                    {/* Méta Auteur & Contact */}
+                    <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-400 font-bold flex items-center justify-center text-xs">
+                          {post.author.charAt(0)}
                         </div>
-                      ))}
-                    </div>
-                  </div>
+                        <span className="font-semibold text-slate-700 dark:text-slate-300">
+                          {post.author}
+                        </span>
+                      </div>
 
-                  <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-                    <a
-                      href={com.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm font-bold text-amber-600 dark:text-amber-400 hover:underline"
-                    >
-                      <span>Accéder au forum</span>
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+                      <div className="flex items-center gap-3">
+                        {/* Bouton pour contacter l'auteur */}
+                        {post.contact && (
+                          <a
+                            href={`mailto:${post.contact}?subject=${encodeURIComponent(`[HorloLearn] Réponse à votre annonce : ${post.title}`)}`}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold hover:text-amber-600 dark:hover:text-amber-400 transition-colors border border-slate-200 dark:border-slate-700"
+                          >
+                            <Mail className="w-3.5 h-3.5 text-amber-500" />
+                            <span>Contacter ({post.contact})</span>
+                          </a>
+                        )}
 
-        {/* --- ONGLET 2 : LES ÉCOLES SUISSES --- */}
-        {activeTab === 'ecoles' && (
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-                Les Écoles d’Horlogerie Officielles en Suisse
-              </h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
-                Vous souhaitez vous former professionnellement ? Voici les centres reconnus par la Confédération suisse pour préparer les diplômes AFP et CFC.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {SWISS_SCHOOLS.map((school, idx) => (
-                <div
-                  key={idx}
-                  className="p-6 rounded-3xl bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between"
-                >
-                  <div>
-                    <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/20 mb-3">
-                      {school.type}
-                    </span>
-
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
-                      {school.name}
-                    </h3>
-
-                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
-                      {school.desc}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-                    <span className="font-semibold text-slate-500">📍 {school.location}</span>
-                    <a
-                      href={school.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 font-bold text-amber-600 dark:text-amber-400 hover:underline"
-                    >
-                      <span>Site officiel</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* --- ONGLET 3 : LIVRES & BIBLIOGRAPHIE --- */}
-        {activeTab === 'bibliotheque' && (
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-                La Bibliothèque de Référence de l’Horloger
-              </h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
-                Les ouvrages théoriques et techniques authentiques utilisés par les maîtres d’atelier et les élèves en Suisse.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {REFERENCE_BOOKS.map((book, idx) => (
-                <div
-                  key={idx}
-                  className="p-6 rounded-3xl bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                        {book.category}
-                      </span>
+                        {/* Bouton pour ouvrir / fermer la discussion */}
+                        <button
+                          onClick={() => toggleComments(post.id)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 font-bold hover:bg-amber-100 transition-colors border border-amber-200 dark:border-amber-500/20"
+                        >
+                          <MessageSquare className="w-3.5 h-3.5" />
+                          <span>
+                            {post.comments.length > 0
+                              ? `Discuter (${post.comments.length})`
+                              : 'Répondre'}
+                          </span>
+                          {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
                     </div>
 
-                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
-                      {book.title}
-                    </h3>
+                    {/* Zone de discussion / Réponses dépliable */}
+                    {isExpanded && (
+                      <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 space-y-4">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                          Réponses & Échanges ({post.comments.length})
+                        </h4>
 
-                    <p className="text-xs text-amber-600 dark:text-amber-400 font-semibold mb-3">
-                      {book.authors} • {book.publisher}
-                    </p>
+                        {/* Liste des commentaires */}
+                        {post.comments.length > 0 ? (
+                          <div className="space-y-3">
+                            {post.comments.map((comment) => (
+                              <div
+                                key={comment.id}
+                                className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-xs sm:text-sm"
+                              >
+                                <div className="flex items-center justify-between mb-1.5">
+                                  <span className="font-bold text-slate-800 dark:text-slate-200">
+                                    {comment.author}
+                                  </span>
+                                  <span className="text-slate-400 text-[11px]">{comment.createdAt}</span>
+                                </div>
+                                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                                  {comment.text}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-xs text-slate-400 italic">
+                            Aucune réponse pour le moment. Soyez le premier à répondre ou à donner un conseil !
+                          </p>
+                        )}
 
-                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-                      {book.desc}
-                    </p>
-                  </div>
+                        {/* Formulaire pour répondre */}
+                        <div className="pt-3 space-y-2">
+                          <div className="grid sm:grid-cols-3 gap-2">
+                            <input
+                              type="text"
+                              value={replyState.author}
+                              onChange={(e) =>
+                                setReplyInputs((prev) => ({
+                                  ...prev,
+                                  [post.id]: { ...replyState, author: e.target.value }
+                                }))
+                              }
+                              placeholder="Votre prénom / nom"
+                              className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-amber-500"
+                            />
+                            <input
+                              type="text"
+                              value={replyState.text}
+                              onChange={(e) =>
+                                setReplyInputs((prev) => ({
+                                  ...prev,
+                                  [post.id]: { ...replyState, text: e.target.value }
+                                }))
+                              }
+                              placeholder="Votre réponse ou proposition..."
+                              className="sm:col-span-2 px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-amber-500"
+                            />
+                          </div>
 
-                  <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-                    <span className="text-slate-500">Ressource recommandée</span>
-                    <Link
-                      href="/theorie"
-                      className="font-bold text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1"
-                    >
-                      Consulter les résumés de cours <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* --- ONGLET 4 : PLANNING & DOCUMENTS --- */}
-        {activeTab === 'planning' && (
-          <div className="p-8 rounded-3xl bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 shadow-sm text-center max-w-3xl mx-auto space-y-6">
-            <div className="w-16 h-16 rounded-3xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center mx-auto">
-              <Calendar className="w-8 h-8" />
-            </div>
-
-            <div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-                Planning Scolaire & Modules d’Atelier 2025-2026
-              </h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                Accès direct au document de formation modulaire pour les élèves et candidats libres. Pas de mot de passe requis.
-              </p>
-            </div>
-
-            <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-left space-y-3 text-sm">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-slate-800 dark:text-slate-200">
-                  📄 Planning Modulaire d’Horlogerie (PDF)
-                </span>
-                <span className="text-xs text-slate-500">1.2 Mo • Document officiel</span>
+                          <div className="text-right">
+                            <button
+                              onClick={() => handleAddComment(post.id)}
+                              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 font-bold text-xs shadow-sm transition-all"
+                            >
+                              <Send className="w-3.5 h-3.5" />
+                              <span>Envoyer ma réponse</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                );
+              })
+            ) : (
+              <div className="text-center py-16 px-4 bg-white dark:bg-slate-900/40 rounded-3xl border border-slate-200 dark:border-slate-800">
+                <MessageSquare className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
+                <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">
+                  Aucune annonce trouvée dans cette catégorie
+                </h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-6">
+                  Vous cherchez un outil spécifique ou vous avez une question ? Déposez la première annonce !
+                </p>
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="px-6 py-3 rounded-2xl bg-amber-500 text-slate-950 font-bold text-sm hover:bg-amber-400 transition-all shadow-md"
+                >
+                  Publier une annonce maintenant
+                </button>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Calendrier des modules pratiques (assemblage, lubrification, réglage de marche) et révisions théoriques.
-              </p>
-            </div>
+            )}
+          </AnimatePresence>
+        </div>
+      </main>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a
-                href="/planning-horlogerie.pdf"
-                download="Planning-Horlogerie-2025-2026.pdf"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-600 hover:bg-amber-500 text-white dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 font-bold text-sm shadow-md transition-all"
+      {/* --- MODALE : PUBLIER UNE ANNONCE OU QUESTION --- */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="w-full max-w-xl rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto relative text-slate-900 dark:text-white"
+            >
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:hover:text-white text-lg p-1"
               >
-                <Download className="w-4 h-4" />
-                <span>Télécharger le Planning en PDF</span>
-              </a>
+                ✕
+              </button>
 
-              <Link
-                href="/pratique"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-semibold text-sm transition-all hover:bg-slate-200 dark:hover:bg-slate-700"
-              >
-                <span>Voir les 8 modules pratiques</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {/* --- SECTION CONTACT DIRECT AVEC L'ÉTABLI (VRAIE ENTRAIDE) --- */}
-        <section
-          id="contact-etabli"
-          className="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-amber-600/10 via-white to-amber-600/5 dark:from-slate-900 dark:via-slate-900/90 dark:to-amber-950/20 border border-amber-500/30 shadow-xl"
-        >
-          <div className="max-w-3xl mx-auto">
-            <div className="text-center mb-8">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-bold uppercase tracking-wider mb-3">
-                <Mail className="w-3.5 h-3.5" /> Entraide Directe
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-3">
-                Une question sur un calibre ou un cours ? Écrivez à l’établi.
-              </h2>
-              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Vous bloquez sur un remontage de calibre ETA 6497, un problème de dard ou un calcul d’examen ? Envoyez votre question directement à notre équipe à <span className="font-semibold text-amber-600 dark:text-amber-400">contact.horlogeries@gmail.com</span>.
-              </p>
-            </div>
-
-            <form onSubmit={handleSubmitQuestion} className="space-y-4">
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                  <Plus className="w-5 h-5" />
+                </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Votre Nom ou Prénom *
+                  <h3 className="text-xl font-bold">Publier sur la Communauté</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Recherche d'outils, emploi & stage, questions d’établi ou vente
+                  </p>
+                </div>
+              </div>
+
+              <form onSubmit={handleCreatePost} className="space-y-4">
+                {/* Choix de la catégorie */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                    Type d’annonce *
+                  </label>
+                  <select
+                    value={formCategory}
+                    onChange={(e) => setFormCategory(e.target.value as CategoryType)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500"
+                  >
+                    <option value="outillage">🔧 Recherche d’outillage & matériel (ex: brucelles, porte-mouvement)</option>
+                    <option value="emploi">💼 Emploi, Stage & Apprentissage (ex: cherche travail, cherche stage)</option>
+                    <option value="question">❓ Question d’établi & Entraide (ex: panne calibre, huilage)</option>
+                    <option value="vente">🏷️ Vente ou Don de matériel d’occasion</option>
+                  </select>
+                </div>
+
+                {/* Titre */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                    Titre clair de votre annonce *
                   </label>
                   <input
                     type="text"
                     required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Ex: Marc"
-                    className="w-full px-4 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500"
+                    value={formTitle}
+                    onChange={(e) => setFormTitle(e.target.value)}
+                    placeholder="Ex: Cherche brucelles Dumont No. 3 ou No. 5 pour atelier..."
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500"
                   />
                 </div>
 
+                {/* Auteur & Ville */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                      Votre Prénom ou Nom *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formAuthor}
+                      onChange={(e) => setFormAuthor(e.target.value)}
+                      placeholder="Ex: Marc"
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                      Ville / Canton
+                    </label>
+                    <input
+                      type="text"
+                      value={formLocation}
+                      onChange={(e) => setFormLocation(e.target.value)}
+                      placeholder="Ex: Genève (GE), Vaud..."
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Contact */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                    Votre Adresse Email *
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                    Moyen de contact (Email ou Téléphone) *
                   </label>
                   <input
-                    type="email"
+                    type="text"
                     required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="marc@exemple.ch"
-                    className="w-full px-4 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500"
+                    value={formContact}
+                    onChange={(e) => setFormContact(e.target.value)}
+                    placeholder="Ex: monemail@exemple.ch ou +41 79 ..."
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500"
+                  />
+                  <p className="text-[11px] text-slate-400 mt-1">
+                    Ce contact sera affiché sur votre annonce pour que les membres puissent vous joindre.
+                  </p>
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                    Description détaillée *
+                  </label>
+                  <textarea
+                    required
+                    rows={4}
+                    value={formDescription}
+                    onChange={(e) => setFormDescription(e.target.value)}
+                    placeholder="Précisez votre demande, vos disponibilités, les détails techniques ou les conditions d'échange..."
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500 resize-none"
                   />
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  Sujet de votre question *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  placeholder="Ex: Question sur la lubrification de l’échappement sur ETA 6497"
-                  className="w-full px-4 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  Votre Message / Détail de l’établi *
-                </label>
-                <textarea
-                  required
-                  rows={4}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Décrivez votre question, le calibre concerné ou l'exercice théorique..."
-                  className="w-full px-4 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500 resize-none"
-                />
-              </div>
-
-              <div className="text-center pt-2">
-                <button
-                  type="submit"
-                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-amber-600 hover:bg-amber-500 text-white dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-slate-950 font-bold text-sm shadow-md transition-all active:scale-95"
-                >
-                  <Send className="w-4 h-4" />
-                  <span>Envoyer ma question à l’établi</span>
-                </button>
-              </div>
-
-              {submitted && (
-                <p className="text-center text-xs text-emerald-600 dark:text-emerald-400 font-semibold pt-2">
-                  Votre messagerie s’ouvre avec votre message pré-rempli pour envoi à contact.horlogeries@gmail.com.
-                </p>
-              )}
-            </form>
+                {/* Actions */}
+                <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                  <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-800"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="submit"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-md transition-all"
+                  >
+                    <Send className="w-4 h-4" />
+                    <span>Publier mon annonce</span>
+                  </button>
+                </div>
+              </form>
+            </motion.div>
           </div>
-        </section>
-      </main>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
