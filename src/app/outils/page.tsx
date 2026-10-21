@@ -1,7 +1,29 @@
+// src/app/outils/page.tsx
+
 'use client';
 
 import React, { useState } from 'react';
-import { Calculator, Settings, Info, HelpCircle, Wrench, Cog, Database, FileText, BarChart3, Clock, Zap, Gauge, Target, Compass, BookOpen, Ruler, Music, Activity, Thermometer } from 'lucide-react';
+import {
+  Calculator,
+  Settings,
+  Info,
+  HelpCircle,
+  Wrench,
+  Cog,
+  Database,
+  FileText,
+  BarChart3,
+  Clock,
+  Zap,
+  Gauge,
+  Target,
+  Compass,
+  BookOpen,
+  Ruler,
+  Music,
+  Activity,
+  Thermometer,
+} from 'lucide-react';
 import { 
   COSCCalculator, 
   ComplicationsSimulator, 
@@ -28,6 +50,7 @@ import {
 } from '../../components';
 import SimulateurResonance3D from '../../components/SimulateurResonance3D';
 import ChronographeBancProPage from './chronographe-banc-pro/page';
+
 const allTools = [
   { id: 'bibliotheque-ressources', name: 'Bibliothèque de Ressources', component: RessourcesPage, icon: BookOpen },
   { id: 'cosc-calculator', name: 'Calculateur Précision COSC', component: COSCCalculator, icon: Calculator },
@@ -63,69 +86,79 @@ export default function HorloLearnToolsPage() {
   const SelectedIcon = selectedToolData?.icon || BookOpen;
 
   return (
-    <div className="min-h-screen bg-slate-900 flex">
-      {/* Sidebar Navigation */}
-      <div className="w-80 bg-slate-800 border-r border-slate-700 flex flex-col">
-        {/* Sidebar Header */}
-        <div className="p-6 border-b border-slate-700">
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-            <div className="bg-amber-500 p-2 rounded-lg">
-              <Calculator className="w-6 h-6 text-slate-900" />
+    <div className="min-h-screen bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white flex transition-colors duration-300">
+      
+      {/* Barre latérale (Sidebar) */}
+      <div className="w-80 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col transition-colors duration-300 shadow-sm">
+        
+        {/* En-tête Sidebar */}
+        <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+            <div className="bg-amber-500 p-2 rounded-xl text-slate-950 font-bold shadow-sm">
+              <Calculator className="w-6 h-6 text-slate-950" />
             </div>
             HorloLearn Tools
           </h1>
-          <p className="text-slate-400 text-sm mt-2">22 outils horlogers professionnels</p>
+          <p className="text-slate-500 dark:text-slate-400 text-xs mt-2 font-medium">
+            22 outils horlogers professionnels
+          </p>
         </div>
 
-        {/* Tools Navigation */}
+        {/* Liste des outils */}
         <div className="flex-1 overflow-y-auto p-4">
-          <nav className="space-y-2">
+          <nav className="space-y-1.5">
             {allTools.map((tool) => {
               const IconComponent = tool.icon;
+              const isSelected = selectedTool === tool.id;
               return (
                 <button
                   key={tool.id}
                   onClick={() => setSelectedTool(tool.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 ${
-                    selectedTool === tool.id
-                      ? 'bg-amber-500 text-white shadow-lg font-semibold'
-                      : 'text-slate-300 hover:bg-slate-700 hover:text-white'
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-left transition-all duration-200 text-sm ${
+                    isSelected
+                      ? 'bg-amber-500 text-slate-950 font-bold shadow-sm'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/70 hover:text-slate-900 dark:hover:text-white font-medium'
                   }`}
                 >
                   <IconComponent className="w-5 h-5 flex-shrink-0" />
-                  <span className="font-medium text-sm">{tool.name}</span>
+                  <span>{tool.name}</span>
                 </button>
               );
             })}
           </nav>
         </div>
 
-        {/* Sidebar Footer */}
-        <div className="p-4 border-t border-slate-700">
-          <p className="text-slate-400 text-xs text-center">
-            © 2025 HorloLearn – Outils Professionnels Horlogers
+        {/* Pied de Sidebar */}
+        <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+          <p className="text-slate-400 dark:text-slate-500 text-xs text-center">
+            © {new Date().getFullYear()} HorloLearn • Outils Professionnels
           </p>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Main Header */}
-        <header className="bg-slate-800 border-b border-slate-700 p-6">
+      {/* Contenu principal de l'outil */}
+      <div className="flex-1 flex flex-col bg-slate-50 dark:bg-slate-900 transition-colors duration-300 min-w-0">
+        
+        {/* En-tête de l'outil actif */}
+        <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-8 py-5 shadow-sm transition-colors duration-300">
           <div className="flex items-center gap-4">
-            <div className="bg-amber-500/20 p-3 rounded-lg">
-              <SelectedIcon className="w-8 h-8 text-amber-500" />
+            <div className="bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/20 p-2.5 rounded-xl">
+              <SelectedIcon className="w-7 h-7 text-amber-600 dark:text-amber-400" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white">{selectedToolData?.name}</h2>
-              <p className="text-slate-400">Outil professionnel pour l'horlogerie de précision</p>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                {selectedToolData?.name}
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Outil professionnel pour l'horlogerie de précision
+              </p>
             </div>
           </div>
         </header>
 
-        {/* Tool Content */}
-        <main className="flex-1 bg-slate-900 p-6 overflow-y-auto">
-          <div className="bg-slate-800 rounded-xl border border-slate-700 h-full">
+        {/* Cadre de l'outil */}
+        <main className="flex-1 p-6 md:p-8 overflow-y-auto">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden h-full">
             <ToolComponent />
           </div>
         </main>
