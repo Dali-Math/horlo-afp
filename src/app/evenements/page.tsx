@@ -8,14 +8,20 @@ import {
   Calendar,
   MapPin,
   ExternalLink,
-  Sparkles,
   Search,
+  Filter,
   CheckCircle2,
+  Clock,
   Download,
+  Share2,
   Mail,
+  Tag,
+  Building2,
   ArrowRight,
   ChevronRight,
-  Award
+  Eye,
+  Award,
+  Compass
 } from 'lucide-react';
 
 interface EventItem {
@@ -277,7 +283,7 @@ export default function EvenementsPage() {
   const [freeOnly, setFreeOnly] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Téléchargement du fichier .ics pour l'agenda Apple, Google ou Outlook
+  // Fonction pour télécharger l'événement au format .ICS (compatible Apple Calendar, Google Calendar, Outlook)
   const downloadIcs = (event: EventItem) => {
     const start = event.dateIsoStart ? `${event.dateIsoStart}T090000Z` : '20260406T090000Z';
     const end = event.dateIsoEnd ? `${event.dateIsoEnd}T180000Z` : '20260410T180000Z';
@@ -313,6 +319,7 @@ export default function EvenementsPage() {
     link.click();
     document.body.removeChild(link);
 
+    // Notification toast discrète
     setToastMessage(`Événement « ${event.title} » exporté dans votre calendrier !`);
     setTimeout(() => setToastMessage(null), 4000);
   };
@@ -361,7 +368,8 @@ export default function EvenementsPage() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-semibold uppercase tracking-wider mb-4">
-                <Sparkles className="w-3.5 h-3.5" />
+                <Calendar className="w-3.5 h-3.5 text-amber-500" />
+                <span>🇨🇭</span>
                 Agenda Horloger Suisse Officiel • 2026-2027
               </div>
 
