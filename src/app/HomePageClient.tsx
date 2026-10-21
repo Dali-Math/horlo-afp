@@ -50,7 +50,6 @@ const FadeInSection = ({ id, children, className = "" }: { id?: string; children
 export default function HorloLearnHome() {
   const [mounted, setMounted] = useState(false)
   const [time, setTime] = useState<Date>(new Date(0))
-  const [onlineUsers] = useState(48)
   const { scrollYProgress } = useScroll()
   
   const gearRotate = useTransform(scrollYProgress, [0, 1], [0, 360])
@@ -130,43 +129,52 @@ export default function HorloLearnHome() {
               Explorez librement ressources, tutoriels et savoirs horlogers partagés par des <span className="text-amber-400 font-semibold">passionnés</span> pour des <span className="text-amber-400 font-semibold">passionnés</span>
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold text-lg hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 flex items-center justify-center text-white"
-              >
-                Commencer l'exploration
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </motion.button>
+            {/* Actions d'Atelier Haute Horlogerie */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-10">
+              <Link href="/theorie" className="w-full sm:w-auto">
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full px-8 py-4 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all duration-300 flex items-center justify-center gap-3 text-base"
+                >
+                  <BookOpen className="w-5 h-5 text-slate-950" />
+                  <span>Entrer dans l'Atelier</span>
+                  <ArrowRight className="w-5 h-5 text-slate-950" />
+                </motion.button>
+              </Link>
 
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 border-2 border-amber-400/50 rounded-lg font-semibold text-lg hover:bg-amber-500/10 transition-all duration-300 flex items-center justify-center text-white"
-              >
-                <PlayCircle className="mr-2 w-6 h-6" />
-                Voir la démo
-              </motion.button>
+              <Link href="/outils" className="w-full sm:w-auto">
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full px-8 py-4 bg-slate-900/90 hover:bg-slate-850 border border-slate-700 hover:border-amber-500/50 text-slate-200 hover:text-white font-semibold rounded-xl backdrop-blur-sm shadow-md hover:shadow-amber-500/10 transition-all duration-300 flex items-center justify-center gap-2.5 text-base group"
+                >
+                  <Sparkles className="w-5 h-5 text-amber-400 group-hover:rotate-12 transition-transform duration-300" />
+                  <span>Outils & Diagnostic IA</span>
+                </motion.button>
+              </Link>
             </div>
 
-            <div className="flex flex-wrap items-center gap-6 text-sm">
-              <div className="flex items-center space-x-2 text-gray-400">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                <span><span className="text-white font-semibold">{onlineUsers}</span> passionnés en ligne</span>
+            {/* Badges de légitimité & standards horlogers */}
+            <div className="flex flex-wrap items-center gap-3 text-xs">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 shadow-sm backdrop-blur-sm">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="font-medium text-slate-200">Standards NIHS & COSC</span>
               </div>
-              <div className="flex items-center space-x-2 text-gray-400">
-                <Heart className="w-5 h-5 text-red-400" />
-                <span className="text-white font-semibold">100% Gratuit</span>
+
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 shadow-sm backdrop-blur-sm">
+                <span className="text-amber-400">⚙️</span>
+                <span className="font-medium text-slate-200">Calibres & Habillage</span>
               </div>
-              <div className="flex items-center space-x-2 text-gray-400">
-                <span className="text-2xl">🇨🇭</span>
-                <span>Made in Switzerland</span>
+
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 shadow-sm backdrop-blur-sm">
+                <span className="text-amber-400">🇨🇭</span>
+                <span className="font-medium text-slate-200">Savoir-Faire Genevois</span>
               </div>
             </div>
           </motion.div>
 
-          {/* Horloge interactive */}
+          {/* Horloge interactive (100% INTACTE ET ORIGINALE) */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
