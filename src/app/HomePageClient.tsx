@@ -10,7 +10,7 @@ import {
   Clock, Watch, BookOpen, Award, Heart, ChevronRight, Menu, X, Users, Share2,
   Download, PlayCircle, FileText, TrendingUp, Sparkles, ArrowRight, Radio, Globe, Wand2,
 } from 'lucide-react'
-import { useTheme } from 'next-themes'; // <-- MODIFIÉ : Importer le hook pour le thème
+import { useTheme } from 'next-themes';
 
 // Importation des données depuis notre fichier central
 import { stats, thematiques, featuredResources, actualites } from '@/lib/homepageData';
@@ -28,11 +28,10 @@ const ActualitesSection = dynamic(() => import('@/components/ActualitesSection')
   loading: () => <p className="text-center text-gray-500">Chargement des actualités...</p>,
 });
 
-
 // --- Composant d'animation au scroll ---
 const FadeInSection = ({ id, children, className = "" }: { id?: string; children: React.ReactNode; className?: string }) => {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const isInView = useInView(ref, { once: true, margin: "0px" })
 
   return (
     <motion.section
@@ -50,25 +49,27 @@ const FadeInSection = ({ id, children, className = "" }: { id?: string; children
 
 // --- Page Principale ---
 export default function HorloLearnHome() {
-  const { theme } = useTheme(); // <-- MODIFIÉ : Récupérer le thème actuel
-  const [time, setTime] = useState(new Date())
-  const [onlineUsers] = useState(48)
-  const { scrollYProgress } = useScroll()
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [time, setTime] = useState<Date>(new Date(0));
+  const [onlineUsers] = useState(48);
+  const { scrollYProgress } = useScroll();
   
-  const gearRotate = useTransform(scrollYProgress, [0, 1], [0, 360])
-  const gearRotateReverse = useTransform(scrollYProgress, [0, 1], [0, -360])
+  const gearRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
+  const gearRotateReverse = useTransform(scrollYProgress, [0, 1], [0, -360]);
 
   useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000)
-    return () => clearInterval(timer)
-  }, [])
+    setMounted(true);
+    setTime(new Date());
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-  const secondsDegrees = (time.getSeconds() / 60) * 360
-  const minutesDegrees = ((time.getMinutes() + time.getSeconds() / 60) / 60) * 360
-  const hoursDegrees = ((time.getHours() % 12 + time.getMinutes() / 60) / 12) * 360
+  const secondsDegrees = mounted ? (time.getSeconds() / 60) * 360 : 0;
+  const minutesDegrees = mounted ? ((time.getMinutes() + time.getSeconds() / 60) / 60) * 360 : 0;
+  const hoursDegrees = mounted ? (((time.getHours() % 12) + time.getMinutes() / 60) / 12) * 360 : 0;
 
   return (
-    // <-- MODIFIÉ : Le fond principal s'adapte au thème
     <div className={`min-h-screen overflow-hidden ${
       theme === 'dark' 
         ? 'bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white' 
@@ -116,7 +117,6 @@ export default function HorloLearnHome() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              // <-- MODIFIÉ : Le fond du badge s'adapte au thème
               className={`inline-flex items-center px-4 py-2 rounded-full mb-8 ${
                 theme === 'dark' ? 'bg-amber-500/10 border border-amber-500/20' : 'bg-amber-500/10 border border-amber-500/30'
               }`}
@@ -160,19 +160,19 @@ export default function HorloLearnHome() {
             </div>
 
             <div className="flex flex-wrap items-center gap-6 text-sm">
-  <div className="flex items-center space-x-2 text-gray-400">
-    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-    <span><span className="text-white font-semibold">{onlineUsers}</span> passionnés en ligne</span>
-  </div>
-  <div className="flex items-center space-x-2 text-gray-400">
-    <Heart className="w-5 h-5 text-red-400" />
-    <span className="text-white font-semibold">100% Gratuit</span>
-  </div>
-  <div className="flex items-center space-x-2 text-gray-400">
-    <span className="text-2xl">🇨🇭</span>
-    <span>Made in Switzerland</span>
-  </div>
-</div>
+              <div className="flex items-center space-x-2 text-gray-400">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                <span><span className="text-white font-semibold">{onlineUsers}</span> passionnés en ligne</span>
+              </div>
+              <div className="flex items-center space-x-2 text-gray-400">
+                <Heart className="w-5 h-5 text-red-400" />
+                <span className="text-white font-semibold">100% Gratuit</span>
+              </div>
+              <div className="flex items-center space-x-2 text-gray-400">
+                <span className="text-2xl">🇨🇭</span>
+                <span>Made in Switzerland</span>
+              </div>
+            </div>
           </motion.div>
 
           {/* Horloge interactive */}
@@ -184,9 +184,8 @@ export default function HorloLearnHome() {
           >
             <div className="relative w-96 h-96"
               role="img" 
-              aria-label={`Horloge interactive. Il est actuellement ${time.toLocaleTimeString('fr-FR')}`}
+              aria-label={mounted ? `Horloge interactive. Il est actuellement ${time.toLocaleTimeString('fr-FR')}` : "Horloge interactive"}
             >
-              {/* ... Le reste du code de l'horloge reste identique ... */}
               <motion.div 
                 animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }}
                 transition={{ duration: 3, repeat: Infinity }}
@@ -236,8 +235,8 @@ export default function HorloLearnHome() {
                 <div className="absolute w-6 h-6 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full z-10 border-2 border-white shadow-lg" />
                 <div className="absolute w-4 h-4 bg-slate-900 rounded-full z-20" />
                 <div className="absolute bottom-24 bg-slate-900/80 backdrop-blur-sm px-4 py-2 rounded-lg border border-amber-500/30">
-                  <span className="text-amber-400 font-mono text-sm">
-                    {time.toLocaleTimeString('fr-FR')}
+                  <span className="text-amber-400 font-mono text-sm" suppressHydrationWarning>
+                    {mounted ? time.toLocaleTimeString('fr-FR') : "--:--:--"}
                   </span>
                 </div>
                 <div className="absolute top-28 text-center">
