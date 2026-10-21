@@ -43,6 +43,7 @@ export interface Post {
   comments: Comment[];
 }
 
+// Aucune fausse annonce pré-remplie : le tableau est 100% réel et propre dès le départ
 const STORAGE_KEY = 'horlo_annonces_reelles_v1';
 
 const CATEGORIES: { id: CategoryType | 'all'; label: string; icon: any }[] = [
@@ -62,6 +63,7 @@ export default function CommunautePage() {
   const [replyInputs, setReplyInputs] = useState<{ [postId: string]: { author: string; text: string } }>({});
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // Formulaire pour publier une nouvelle annonce
   const [formCategory, setFormCategory] = useState<CategoryType>('outillage');
   const [formTitle, setFormTitle] = useState('');
   const [formAuthor, setFormAuthor] = useState('');
@@ -89,7 +91,7 @@ export default function CommunautePage() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newPosts));
     } catch {
-      // Ignore
+      // Ignorer si stockage plein
     }
   };
 
@@ -121,6 +123,7 @@ export default function CommunautePage() {
     savePosts(updated);
     setIsModalOpen(false);
 
+    // Réinitialisation du formulaire
     setFormTitle('');
     setFormAuthor('');
     setFormLocation('');
@@ -187,13 +190,13 @@ export default function CommunautePage() {
   const getCategoryBadge = (cat: CategoryType) => {
     switch (cat) {
       case 'outillage':
-        return { label: 'Recherche Outillage', bg: 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800' };
+        return { label: 'Recherche Outillage', bg: 'bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-600/60' };
       case 'emploi':
-        return { label: 'Emploi & Stage', bg: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' };
+        return { label: 'Emploi & Stage', bg: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-600/60' };
       case 'question':
-        return { label: 'Question d’établi', bg: 'bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800' };
+        return { label: 'Question d’établi', bg: 'bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-600/60' };
       case 'vente':
-        return { label: 'Vente / Échange', bg: 'bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800' };
+        return { label: 'Vente / Échange', bg: 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-600/60' };
     }
   };
 
@@ -252,7 +255,8 @@ export default function CommunautePage() {
 
       {/* --- ZONE PRINCIPALE : RECHERCHE & FILTRES --- */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+        <div className="p-6 rounded-3xl bg-white dark:bg-[#0f1422] border-2 border-slate-200 dark:border-slate-600 shadow-md dark:shadow-2xl dark:shadow-black/60 space-y-4 ring-1 ring-slate-900/5 dark:ring-white/10">
+          {/* Barre de Recherche */}
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <input
@@ -260,7 +264,7 @@ export default function CommunautePage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Rechercher par mot-clé (ex: brucelle, stage, travail, Bergeon, ETA 6497, Genève...)"
-              className="w-full pl-12 pr-10 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition-all"
+              className="w-full pl-12 pr-10 py-3.5 rounded-2xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition-all"
             />
             {searchQuery && (
               <button
@@ -272,6 +276,7 @@ export default function CommunautePage() {
             )}
           </div>
 
+          {/* Filtres par Catégorie */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
             {CATEGORIES.map((cat) => {
               const Icon = cat.icon;
@@ -282,8 +287,8 @@ export default function CommunautePage() {
                   onClick={() => setSelectedCategory(cat.id)}
                   className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
                     isActive
-                      ? 'bg-amber-600 text-white dark:bg-amber-500 dark:text-slate-950 shadow-md'
-                      : 'bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-amber-500/40 hover:text-amber-600 dark:hover:text-amber-400'
+                      ? 'bg-amber-600 text-white dark:bg-amber-500 dark:text-slate-950 shadow-md font-bold'
+                      : 'bg-slate-100 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-amber-500/40 hover:text-amber-600 dark:hover:text-amber-400'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -293,7 +298,7 @@ export default function CommunautePage() {
             })}
           </div>
 
-          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-700/60">
             <span>
               {filteredPosts.length} annonce{filteredPosts.length > 1 ? 's' : ''} disponible
               {filteredPosts.length > 1 ? 's' : ''}
@@ -317,15 +322,16 @@ export default function CommunautePage() {
                     key={post.id}
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 hover:border-amber-500/40 shadow-sm hover:shadow-xl transition-all"
+                    className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#0f1422] border-2 border-slate-200 dark:border-slate-600 hover:border-amber-500/50 dark:hover:border-amber-400 shadow-md hover:shadow-xl dark:shadow-2xl dark:shadow-black/70 transition-all duration-300 ring-1 ring-slate-900/5 dark:ring-white/10"
                   >
+                    {/* Entête Carte */}
                     <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
                       <div className="flex items-center gap-3">
                         <span className={`px-3 py-1 rounded-full text-xs font-bold border ${badge.bg}`}>
                           {badge.label}
                         </span>
 
-                        <span className="inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
+                        <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600">
                           <MapPin className="w-3.5 h-3.5 text-amber-500" />
                           {post.location}
                         </span>
@@ -337,6 +343,7 @@ export default function CommunautePage() {
                           {post.createdAt}
                         </span>
 
+                        {/* Bouton pour supprimer l'annonce */}
                         <button
                           onClick={() => handleDeletePost(post.id)}
                           title="Supprimer cette annonce"
@@ -347,15 +354,18 @@ export default function CommunautePage() {
                       </div>
                     </div>
 
+                    {/* Titre */}
                     <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3 leading-snug">
                       {post.title}
                     </h2>
 
+                    {/* Description */}
                     <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6 whitespace-pre-line">
                       {post.description}
                     </p>
 
-                    <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs">
+                    {/* Méta Auteur & Contact */}
+                    <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-200 dark:border-slate-700/80 text-xs">
                       <div className="flex items-center gap-2">
                         <div className="w-7 h-7 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-400 font-bold flex items-center justify-center text-xs">
                           {post.author.charAt(0).toUpperCase()}
@@ -366,19 +376,21 @@ export default function CommunautePage() {
                       </div>
 
                       <div className="flex items-center gap-3">
+                        {/* Bouton pour contacter l'auteur */}
                         {post.contact && (
                           <a
                             href={`mailto:${post.contact}?subject=${encodeURIComponent(`[HorloLearn] Réponse à votre annonce : ${post.title}`)}`}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold hover:text-amber-600 dark:hover:text-amber-400 transition-colors border border-slate-200 dark:border-slate-700"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold hover:text-amber-600 dark:hover:text-amber-400 transition-colors border border-slate-300 dark:border-slate-600"
                           >
                             <Mail className="w-3.5 h-3.5 text-amber-500" />
                             <span>Contacter ({post.contact})</span>
                           </a>
                         )}
 
+                        {/* Bouton pour ouvrir / fermer la discussion */}
                         <button
                           onClick={() => toggleComments(post.id)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 font-bold hover:bg-amber-100 transition-colors border border-amber-200 dark:border-amber-500/20"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 font-bold hover:bg-amber-100 dark:hover:bg-amber-500/25 transition-colors border border-amber-300 dark:border-amber-500/40"
                         >
                           <MessageSquare className="w-3.5 h-3.5" />
                           <span>
@@ -391,18 +403,20 @@ export default function CommunautePage() {
                       </div>
                     </div>
 
+                    {/* Zone de discussion / Réponses dépliable */}
                     {isExpanded && (
-                      <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 space-y-4">
+                      <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700/80 space-y-4">
                         <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
                           Réponses & Échanges ({post.comments.length})
                         </h4>
 
+                        {/* Liste des commentaires */}
                         {post.comments.length > 0 ? (
                           <div className="space-y-3">
                             {post.comments.map((comment) => (
                               <div
                                 key={comment.id}
-                                className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-xs sm:text-sm"
+                                className="p-4 rounded-2xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-600 text-xs sm:text-sm"
                               >
                                 <div className="flex items-center justify-between mb-1.5">
                                   <span className="font-bold text-slate-800 dark:text-slate-200">
@@ -422,6 +436,7 @@ export default function CommunautePage() {
                           </p>
                         )}
 
+                        {/* Formulaire pour répondre */}
                         <div className="pt-3 space-y-2">
                           <div className="grid sm:grid-cols-3 gap-2">
                             <input
@@ -434,7 +449,7 @@ export default function CommunautePage() {
                                 }))
                               }
                               placeholder="Votre prénom / nom"
-                              className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-amber-500"
+                              className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-600 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
                             />
                             <input
                               type="text"
@@ -446,7 +461,7 @@ export default function CommunautePage() {
                                 }))
                               }
                               placeholder="Votre réponse ou proposition..."
-                              className="sm:col-span-2 px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:border-amber-500"
+                              className="sm:col-span-2 px-3 py-2 rounded-xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-600 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
                             />
                           </div>
 
@@ -467,7 +482,7 @@ export default function CommunautePage() {
               })
             ) : (
               /* --- ÉTAT VIDE PROPRE (AUCUNE FAUSSE ANNONCE) --- */
-              <div className="text-center py-16 px-4 bg-white dark:bg-slate-900/40 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800">
+              <div className="text-center py-16 px-4 bg-white dark:bg-[#0f1422] rounded-3xl border-2 border-dashed border-slate-300 dark:border-slate-600 ring-1 ring-white/5">
                 <div className="w-16 h-16 rounded-3xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center mx-auto mb-4">
                   <MessageSquare className="w-8 h-8" />
                 </div>
@@ -498,7 +513,7 @@ export default function CommunautePage() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="w-full max-w-xl rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto relative text-slate-900 dark:text-white"
+              className="w-full max-w-xl rounded-3xl bg-white dark:bg-[#0f1422] border-2 border-slate-200 dark:border-slate-600 shadow-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto relative text-slate-900 dark:text-white ring-1 ring-white/10"
             >
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -520,6 +535,7 @@ export default function CommunautePage() {
               </div>
 
               <form onSubmit={handleCreatePost} className="space-y-4">
+                {/* Choix de la catégorie */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                     Type d’annonce *
@@ -527,7 +543,7 @@ export default function CommunautePage() {
                   <select
                     value={formCategory}
                     onChange={(e) => setFormCategory(e.target.value as CategoryType)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-600 text-sm focus:outline-none focus:border-amber-500"
                   >
                     <option value="outillage">🔧 Recherche d’outillage & matériel (ex: brucelles, porte-mouvement)</option>
                     <option value="emploi">💼 Emploi, Stage & Apprentissage (ex: cherche travail, cherche stage)</option>
@@ -536,6 +552,7 @@ export default function CommunautePage() {
                   </select>
                 </div>
 
+                {/* Titre */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                     Titre clair de votre annonce *
@@ -546,10 +563,11 @@ export default function CommunautePage() {
                     value={formTitle}
                     onChange={(e) => setFormTitle(e.target.value)}
                     placeholder="Ex: Cherche brucelles Dumont No. 3 ou No. 5 pour atelier..."
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-600 text-sm focus:outline-none focus:border-amber-500"
                   />
                 </div>
 
+                {/* Auteur & Ville */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
@@ -561,7 +579,7 @@ export default function CommunautePage() {
                       value={formAuthor}
                       onChange={(e) => setFormAuthor(e.target.value)}
                       placeholder="Ex: Marc"
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500"
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-600 text-sm focus:outline-none focus:border-amber-500"
                     />
                   </div>
 
@@ -574,11 +592,12 @@ export default function CommunautePage() {
                       value={formLocation}
                       onChange={(e) => setFormLocation(e.target.value)}
                       placeholder="Ex: Genève (GE), Vaud..."
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500"
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-600 text-sm focus:outline-none focus:border-amber-500"
                     />
                   </div>
                 </div>
 
+                {/* Contact */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                     Moyen de contact (Email ou Téléphone) *
@@ -589,13 +608,14 @@ export default function CommunautePage() {
                     value={formContact}
                     onChange={(e) => setFormContact(e.target.value)}
                     placeholder="Ex: monemail@exemple.ch ou +41 79 ..."
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-600 text-sm focus:outline-none focus:border-amber-500"
                   />
                   <p className="text-[11px] text-slate-400 mt-1">
                     Ce contact sera affiché sur votre annonce pour que les membres puissent vous joindre.
                   </p>
                 </div>
 
+                {/* Description */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                     Description détaillée *
@@ -606,10 +626,11 @@ export default function CommunautePage() {
                     value={formDescription}
                     onChange={(e) => setFormDescription(e.target.value)}
                     placeholder="Précisez votre demande, vos disponibilités, les détails techniques ou les conditions d'échange..."
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:border-amber-500 resize-none"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-600 text-sm focus:outline-none focus:border-amber-500 resize-none"
                   />
                 </div>
 
+                {/* Actions */}
                 <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                   <button
                     type="button"
