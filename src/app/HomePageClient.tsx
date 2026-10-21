@@ -5,28 +5,27 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
-import dynamic from 'next/dynamic';
+import dynamic from 'next/dynamic'
 import { 
   Clock, Watch, BookOpen, Award, Heart, ChevronRight, Menu, X, Users, Share2,
   Download, PlayCircle, FileText, TrendingUp, Sparkles, ArrowRight, Radio, Globe, Wand2,
 } from 'lucide-react'
-import { useTheme } from 'next-themes';
 
 // Importation des données depuis notre fichier central
-import { stats, thematiques, featuredResources, actualites } from '@/lib/homepageData';
+import { stats, thematiques, featuredResources, actualites } from '@/lib/homepageData'
 
 // --- IMPORTATION DYNAMIQUE DES SECTIONS ---
 const RessourcesPharesSection = dynamic(() => import('@/components/RessourcesPharesSection'), {
   loading: () => <p className="text-center text-gray-500">Chargement des ressources...</p>,
-});
+})
 
 const ThematiquesSection = dynamic(() => import('@/components/ThematiquesSection'), {
   loading: () => <p className="text-center text-gray-500">Chargement des thématiques...</p>,
-});
+})
 
 const ActualitesSection = dynamic(() => import('@/components/ActualitesSection'), {
   loading: () => <p className="text-center text-gray-500">Chargement des actualités...</p>,
-});
+})
 
 // --- Composant d'animation au scroll ---
 const FadeInSection = ({ id, children, className = "" }: { id?: string; children: React.ReactNode; className?: string }) => {
@@ -49,32 +48,28 @@ const FadeInSection = ({ id, children, className = "" }: { id?: string; children
 
 // --- Page Principale ---
 export default function HorloLearnHome() {
-  const { theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  const [time, setTime] = useState<Date>(new Date(0));
-  const [onlineUsers] = useState(48);
-  const { scrollYProgress } = useScroll();
+  const [mounted, setMounted] = useState(false)
+  const [time, setTime] = useState<Date>(new Date(0))
+  const [onlineUsers] = useState(48)
+  const { scrollYProgress } = useScroll()
   
-  const gearRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
-  const gearRotateReverse = useTransform(scrollYProgress, [0, 1], [0, -360]);
+  const gearRotate = useTransform(scrollYProgress, [0, 1], [0, 360])
+  const gearRotateReverse = useTransform(scrollYProgress, [0, 1], [0, -360])
 
   useEffect(() => {
-    setMounted(true);
-    setTime(new Date());
-    const timer = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
+    setMounted(true)
+    setTime(new Date())
+    const timer = setInterval(() => setTime(new Date()), 1000)
+    return () => clearInterval(timer)
+  }, [])
 
-  const secondsDegrees = mounted ? (time.getSeconds() / 60) * 360 : 0;
-  const minutesDegrees = mounted ? ((time.getMinutes() + time.getSeconds() / 60) / 60) * 360 : 0;
-  const hoursDegrees = mounted ? (((time.getHours() % 12) + time.getMinutes() / 60) / 12) * 360 : 0;
+  const secondsDegrees = mounted ? (time.getSeconds() / 60) * 360 : 0
+  const minutesDegrees = mounted ? ((time.getMinutes() + time.getSeconds() / 60) / 60) * 360 : 0
+  const hoursDegrees = mounted ? (((time.getHours() % 12) + time.getMinutes() / 60) / 12) * 360 : 0
 
   return (
-    <div className={`min-h-screen overflow-hidden ${
-      theme === 'dark' 
-        ? 'bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white' 
-        : 'bg-gradient-to-b from-slate-50 via-white to-slate-100 text-slate-900'
-    }`}>
+    // Style Sombre Permanent Haute Horlogerie (Prestige Suisse)
+    <div className="min-h-screen overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
       
       {/* Arrière-plan animé avec engrenages */}
       <div className="fixed inset-0 opacity-5 pointer-events-none overflow-hidden">
@@ -117,25 +112,21 @@ export default function HorloLearnHome() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className={`inline-flex items-center px-4 py-2 rounded-full mb-8 ${
-                theme === 'dark' ? 'bg-amber-500/10 border border-amber-500/20' : 'bg-amber-500/10 border border-amber-500/30'
-              }`}
+              className="inline-flex items-center px-4 py-2 rounded-full mb-8 bg-amber-500/10 border border-amber-500/20"
             >
               <Sparkles className="w-5 h-5 text-amber-400 mr-2" />
               <span className="text-amber-400 font-semibold text-sm">L'horlogerie suisse accessible à tous</span>
             </motion.div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              <span className={theme === 'dark' ? 'text-white' : 'text-slate-900'}>Passion & Découverte</span>
+              <span className="text-white">Passion & Découverte</span>
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500">
                 Horlogère Suisse
               </span>
             </h1>
 
-            <p className={`text-xl md:text-2xl mb-8 leading-relaxed ${
-              theme === 'dark' ? 'text-gray-300' : 'text-slate-600'
-            }`}>
+            <p className="text-xl md:text-2xl mb-8 leading-relaxed text-gray-300">
               Explorez librement ressources, tutoriels et savoirs horlogers partagés par des <span className="text-amber-400 font-semibold">passionnés</span> pour des <span className="text-amber-400 font-semibold">passionnés</span>
             </p>
 
@@ -143,7 +134,7 @@ export default function HorloLearnHome() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold text-lg hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 flex items-center justify-center"
+                className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold text-lg hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 flex items-center justify-center text-white"
               >
                 Commencer l'exploration
                 <ArrowRight className="ml-2 w-5 h-5" />
@@ -152,7 +143,7 @@ export default function HorloLearnHome() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 border-2 border-amber-400/50 rounded-lg font-semibold text-lg hover:bg-amber-500/10 transition-all duration-300 flex items-center justify-center"
+                className="px-8 py-4 border-2 border-amber-400/50 rounded-lg font-semibold text-lg hover:bg-amber-500/10 transition-all duration-300 flex items-center justify-center text-white"
               >
                 <PlayCircle className="mr-2 w-6 h-6" />
                 Voir la démo
@@ -182,7 +173,8 @@ export default function HorloLearnHome() {
             transition={{ duration: 1, delay: 0.3 }}
             className="relative flex justify-center items-center"
           >
-            <div className="relative w-96 h-96"
+            <div 
+              className="relative w-96 h-96"
               role="img" 
               aria-label={mounted ? `Horloge interactive. Il est actuellement ${time.toLocaleTimeString('fr-FR')}` : "Horloge interactive"}
             >
@@ -205,10 +197,10 @@ export default function HorloLearnHome() {
                   />
                 ))}
                 {[12, 3, 6, 9].map((num) => {
-                  const angle = (num === 12 ? 0 : num === 3 ? 90 : num === 6 ? 180 : 270) - 90;
-                  const rad = (angle * Math.PI) / 180;
-                  const x = Math.cos(rad) * 140;
-                  const y = Math.sin(rad) * 140;
+                  const angle = (num === 12 ? 0 : num === 3 ? 90 : num === 6 ? 180 : 270) - 90
+                  const rad = (angle * Math.PI) / 180
+                  const x = Math.cos(rad) * 140
+                  const y = Math.sin(rad) * 140
                   return (
                     <div 
                       key={num}
@@ -217,7 +209,7 @@ export default function HorloLearnHome() {
                     >
                       {num}
                     </div>
-                  );
+                  )
                 })}
                 <motion.div 
                   className="absolute w-3 h-28 bg-gradient-to-t from-amber-400 to-amber-500 rounded-full origin-bottom shadow-lg"
@@ -259,11 +251,7 @@ export default function HorloLearnHome() {
       </section>
 
       {/* Intro */}
-      <FadeInSection id="theorie" className={`py-32 text-center ${
-        theme === 'dark' 
-          ? 'bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950' 
-          : 'bg-gradient-to-b from-slate-50 via-white to-slate-100'
-      }`}>
+      <FadeInSection id="theorie" className="py-32 text-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
         <div className="max-w-3xl mx-auto px-4">
           <div className="inline-flex items-center space-x-2 px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full mb-8">
             <Clock className="w-4 h-4 text-amber-400" />
@@ -274,9 +262,7 @@ export default function HorloLearnHome() {
             Le Temps à l'État Pur
           </h2>
 
-          <p className={`text-xl leading-relaxed ${
-            theme === 'dark' ? 'text-gray-300' : 'text-slate-600'
-          }`}>
+          <p className="text-xl leading-relaxed text-gray-300">
             Plongez dans l'univers fascinant de l'horlogerie. Explorez l'histoire,
             maîtrisez les techniques, et découvrez les secrets de ces merveilles
             mécaniques qui battent au rythme du temps.
@@ -290,9 +276,7 @@ export default function HorloLearnHome() {
       <ActualitesSection actualites={actualites} />
 
       {/* Newsletter */}
-      <FadeInSection id="contribuer" className={`py-20 px-4 ${
-        theme === 'dark' ? 'bg-slate-900/30' : 'bg-slate-100/30'
-      }`}>
+      <FadeInSection id="contribuer" className="py-20 px-4 bg-slate-900/30">
         <div className="max-w-4xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
@@ -309,9 +293,7 @@ export default function HorloLearnHome() {
                 Restez Informé
               </h2>
               
-              <p className={`text-lg mb-8 max-w-2xl mx-auto ${
-                theme === 'dark' ? 'text-gray-300' : 'text-slate-600'
-              }`}>
+              <p className="text-lg mb-8 max-w-2xl mx-auto text-gray-300">
                 Recevez chaque semaine : nouvelles ressources partagées, astuces d'atelier et actualités horlogères
               </p>
 
@@ -319,11 +301,9 @@ export default function HorloLearnHome() {
                 <input
                   type="email"
                   placeholder="Votre email"
-                  className={`flex-1 rounded-lg px-6 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-colors backdrop-blur-sm ${
-                    theme === 'dark' ? 'bg-slate-900/50 border border-amber-500/30' : 'bg-white border border-gray-300'
-                  }`}
+                  className="flex-1 rounded-lg px-6 py-4 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-colors backdrop-blur-sm bg-slate-900/50 border border-amber-500/30"
                 />
-                <button className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 whitespace-nowrap">
+                <button className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 whitespace-nowrap text-white">
                   S'Abonner
                 </button>
               </div>
