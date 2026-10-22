@@ -371,7 +371,7 @@ export default function OutilsPage() {
                 </div>
 
                 <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
-                  ℹ️ Formule : $H_{\text{réserve}} = N_{\text{tours}} \times \left(\frac{Z_{\text{barillet}}}{Z_{\text{pignon centre}}}\right)$
+                  ℹ️ Formule : Autonomie = Tours utiles de barillet × Démultiplication de la roue de centre
                 </div>
               </div>
             </div>
