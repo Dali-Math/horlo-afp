@@ -1,7 +1,7 @@
 // src/app/communaute/page.tsx
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -67,8 +67,17 @@ const STORAGE_KEY = 'horlo_annonces_reelles_v1';
 const MY_POSTS_KEY = 'horlo_my_created_posts';
 const ADMIN_SESSION_KEY = 'horlo_admin_moderation_logged';
 
-// Mot de passe administrateur sécurisé défini par Dali
-const ADMIN_PASSWORDS = ['Dali06052026@'];
+// Empreinte cryptographique SHA-256 irréversible du mot de passe administrateur (Dali)
+// Le mot de passe en clair N'EXISTE PAS dans le code : impossible à trouver via l'inspecteur web (F12)
+const ADMIN_PASS_HASH = 'c19f367dbd785e7a9355ea112edccb4fc8e3ad192dc8a6a1ac0ac71621e67397';
+
+async function hashPassword(input: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+}
 
 // --- FILTRE ANTI-INSULTES, RACISME ET PROPOS HAINEUX ---
 const TOXIC_PATTERNS = [
@@ -152,6 +161,26 @@ export default function CommunautePage() {
   const [adminPasswordInput, setAdminPasswordInput] = useState('');
   const [adminPasswordError, setAdminPasswordError] = useState('');
   const [showOnlyReported, setShowOnlyReported] = useState(false);
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [lockoutUntil, setLockoutUntil] = useState<number | null>(null);
+
+  // Déclencheur secret : triple clic sur le drapeau suisse
+  const lastClickRef = useRef<number>(0);
+  const clickCountRef = useRef<number>(0);
+
+  const handleSwissFlagClick = () => {
+    const now = Date.now();
+    if (now - lastClickRef.current > 1500) {
+      clickCountRef.current = 1;
+    } else {
+      clickCountRef.current += 1;
+      if (clickCountRef.current >= 3) {
+        setIsAdminModalOpen(true);
+        clickCountRef.current = 0;
+      }
+    }
+    lastClickRef.current = now;
+  };
 
   // Signalement
   const [reportReason, setReportReason] = useState(REPORT_REASONS[0]);
@@ -202,6 +231,33 @@ export default function CommunautePage() {
     } catch {
       setIsAdmin(false);
     }
+  }, []);
+
+  // Détection du paramètre secret dans l'URL (?admin=true ou ?mode=admin)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (
+        searchParams.get('admin') === 'true' ||
+        searchParams.get('admin') === 'dali' ||
+        searchParams.get('mode') === 'mod' ||
+        searchParams.get('dali') === '1'
+      ) {
+        setIsAdminModalOpen(true);
+      }
+    }
+  }, []);
+
+  // Raccourci clavier secret pour Dali : Ctrl + Shift + A ou Alt + M
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') || (e.altKey && e.key.toLowerCase() === 'm')) {
+        e.preventDefault();
+        setIsAdminModalOpen((prev: boolean) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const savePosts = (newPosts: Post[]) => {
@@ -386,20 +442,38 @@ export default function CommunautePage() {
     showToast('Signalements effacés. L’annonce est maintenue.', 'success');
   };
 
-  // --- CONNEXION & DÉCONNEXION ADMIN ---
-  const handleAdminLogin = (e: React.FormEvent) => {
+  // --- CONNEXION & DÉCONNEXION ADMIN AVEC SHA-256 ET ANTI-BRUTE-FORCE ---
+  const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setAdminPasswordError('');
 
+    if (lockoutUntil && Date.now() < lockoutUntil) {
+      const remainingSeconds = Math.ceil((lockoutUntil - Date.now()) / 1000);
+      setAdminPasswordError(`Accès temporairement verrouillé suite à trop d’échecs. Réessayez dans ${remainingSeconds} secondes.`);
+      return;
+    }
+
     const cleanInput = adminPasswordInput.trim();
-    if (ADMIN_PASSWORDS.includes(cleanInput)) {
+    const hashed = await hashPassword(cleanInput);
+
+    if (hashed === ADMIN_PASS_HASH) {
       setIsAdmin(true);
       sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
       setIsAdminModalOpen(false);
       setAdminPasswordInput('');
+      setFailedAttempts(0);
+      setLockoutUntil(null);
       showToast('Mode Modérateur Dali activé avec succès.', 'success');
     } else {
-      setAdminPasswordError('Mot de passe incorrect. Veuillez réessayer.');
+      const nextAttempts = failedAttempts + 1;
+      setFailedAttempts(nextAttempts);
+      if (nextAttempts >= 4) {
+        const lockoutTime = Date.now() + 10 * 60 * 1000; // 10 minutes
+        setLockoutUntil(lockoutTime);
+        setAdminPasswordError('Sécurité : 4 tentatives infructueuses. Verrouillage de sécurité pendant 10 minutes.');
+      } else {
+        setAdminPasswordError(`Mot de passe incorrect (${4 - nextAttempts} tentative${4 - nextAttempts > 1 ? 's' : ''} restante${4 - nextAttempts > 1 ? 's' : ''}).`);
+      }
     }
   };
 
@@ -487,8 +561,16 @@ export default function CommunautePage() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-semibold uppercase tracking-wider mb-4">
-                <span>🇨🇭</span>
-                Espace Communauté & Petites Annonces de l’Établi
+                <span
+                  onClick={handleSwissFlagClick}
+                  className="cursor-pointer select-none active:scale-125 transition-transform"
+                  title=""
+                  role="button"
+                  tabIndex={0}
+                >
+                  🇨🇭
+                </span>
+                <span>Espace Communauté & Petites Annonces de l’Établi</span>
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
@@ -505,9 +587,9 @@ export default function CommunautePage() {
 
             {/* Boutons d'Action Header */}
             <div className="flex flex-wrap items-center gap-3 flex-shrink-0">
-              {/* Bouton Accès Modérateur */}
-              {isAdmin ? (
-                <div className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-amber-500/15 border-2 border-amber-500/40 text-amber-700 dark:text-amber-300 text-xs sm:text-sm font-bold">
+              {/* Statut Modérateur (visible UNIQUEMENT si déjà connecté en admin) */}
+              {isAdmin && (
+                <div className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-amber-500/15 border-2 border-amber-500/40 text-amber-700 dark:text-amber-300 text-xs sm:text-sm font-bold shadow-md">
                   <ShieldCheck className="w-4 h-4 text-amber-500" />
                   <span>Modérateur Actif (Dali)</span>
                   <button
@@ -517,15 +599,6 @@ export default function CommunautePage() {
                     Déconnexion
                   </button>
                 </div>
-              ) : (
-                <button
-                  onClick={() => setIsAdminModalOpen(true)}
-                  className="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-semibold border border-slate-300 dark:border-slate-600 transition-all"
-                  title="Accès Modérateur HorloLearn"
-                >
-                  <Shield className="w-4 h-4 text-amber-500" />
-                  <span>Modération / Admin</span>
-                </button>
               )}
 
               {/* Bouton Publier une annonce */}
