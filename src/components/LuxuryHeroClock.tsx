@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 export default function LuxuryHeroClock() {
   const [mounted, setMounted] = useState(false);
   const [digitalTime, setDigitalTime] = useState('--:--:--');
-  
+
   const hourHandRef = useRef<SVGGElement | null>(null);
   const minuteHandRef = useRef<SVGGElement | null>(null);
   const secondHandRef = useRef<SVGGElement | null>(null);
@@ -29,13 +29,13 @@ export default function LuxuryHeroClock() {
       const secDeg = s * 6;
 
       if (hourHandRef.current) {
-        hourHandRef.current.setAttribute('transform', `rotate(${hourDeg} 250 250)`);
+        hourHandRef.current.setAttribute('transform', `rotate(${hourDeg})`);
       }
       if (minuteHandRef.current) {
-        minuteHandRef.current.setAttribute('transform', `rotate(${minDeg} 250 250)`);
+        minuteHandRef.current.setAttribute('transform', `rotate(${minDeg})`);
       }
       if (secondHandRef.current) {
-        secondHandRef.current.setAttribute('transform', `rotate(${secDeg} 250 250)`);
+        secondHandRef.current.setAttribute('transform', `rotate(${secDeg})`);
       }
 
       animationFrameId = requestAnimationFrame(renderSweep);
@@ -43,7 +43,6 @@ export default function LuxuryHeroClock() {
 
     renderSweep();
 
-    // Mettre à jour l'affichage numérique chaque seconde
     const interval = setInterval(() => {
       setDigitalTime(new Date().toLocaleTimeString('fr-FR'));
     }, 1000);
@@ -59,17 +58,17 @@ export default function LuxuryHeroClock() {
     <motion.div
       initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.9, delay: 0.25 }}
+      transition={{ duration: 0.8, delay: 0.2 }}
       className="relative flex flex-col justify-center items-center select-none"
     >
       {/* Halo d'ambiance d'atelier doré */}
       <motion.div
-        animate={{ scale: [1, 1.08, 1], opacity: [0.18, 0.28, 0.18] }}
+        animate={{ scale: [1, 1.08, 1], opacity: [0.15, 0.25, 0.15] }}
         transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
         className="absolute w-72 sm:w-80 md:w-96 h-72 sm:h-80 md:h-96 bg-amber-500/20 rounded-full blur-3xl pointer-events-none"
       />
 
-      {/* Cadran Haute Horlogerie SVG Vectoriel */}
+      {/* Cadran Haute Horlogerie SVG Vectoriel 100% centré */}
       <div className="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 aspect-square drop-shadow-2xl">
         <svg
           viewBox="0 0 500 500"
@@ -133,7 +132,7 @@ export default function LuxuryHeroClock() {
           <circle cx="250" cy="250" r="218" fill="none" stroke="#D4AF37" strokeWidth="1" opacity="0.35" />
           <circle cx="250" cy="250" r="182" fill="none" stroke="#D4AF37" strokeWidth="1" opacity="0.25" />
 
-          {/* 3. CHEMIN DE FER DES 60 MINUTES (Généré mathématiquement) */}
+          {/* 3. CHEMIN DE FER DES 60 MINUTES */}
           <g strokeLinecap="round" opacity="0.85">
             {Array.from({ length: 60 }).map((_, i) => {
               const angle = (i * 6 * Math.PI) / 180;
@@ -172,70 +171,75 @@ export default function LuxuryHeroClock() {
             </text>
           </g>
 
-          {/* 5. CŒUR OUVERT (OPEN HEART) À 6 HEURES AVEC BALANCIER OSCILLANT */}
-          <g>
+          {/* 5. CŒUR OUVERT (OPEN HEART) À 6 HEURES (Centré en 0,0 translaté à 250, 335) */}
+          <g transform="translate(250, 335)">
             {/* Puits circulaire du balancier */}
-            <circle cx="250" cy="335" r="54" fill="#060709" stroke="url(#heroGoldBezel)" strokeWidth="3.5" />
-            <circle cx="250" cy="335" r="48" fill="#0C0E14" stroke="#D4AF37" strokeWidth="0.8" opacity="0.5" />
-            <circle cx="250" cy="335" r="46" fill="#151A26" />
+            <circle cx="0" cy="0" r="54" fill="#060709" stroke="url(#heroGoldBezel)" strokeWidth="3.5" />
+            <circle cx="0" cy="0" r="48" fill="#0C0E14" stroke="#D4AF37" strokeWidth="0.8" opacity="0.5" />
+            <circle cx="0" cy="0" r="46" fill="#151A26" />
 
-            {/* Balancier oscillant à 4 Hz (28'800 alt/h) */}
-            <g className="origin-[250px_335px] animate-[balanceSpin_0.25s_ease-in-out_infinite_alternate]">
-              <circle cx="250" cy="335" r="38" fill="none" stroke="#FDE047" strokeWidth="3" opacity="0.85" />
+            {/* Balancier oscillant à 4 Hz (28'800 alt/h) avec animation native SVG pure */}
+            <g>
+              <animateTransform attributeName="transform" type="rotate" values="-28; 28; -28" dur="0.25s" repeatCount="indefinite" />
+              <circle cx="0" cy="0" r="38" fill="none" stroke="#FDE047" strokeWidth="3" opacity="0.85" />
               {/* Masselottes d'inertie */}
-              <circle cx="250" cy="297" r="2" fill="#D4AF37" />
-              <circle cx="250" cy="373" r="2" fill="#D4AF37" />
-              <circle cx="212" cy="335" r="2" fill="#D4AF37" />
-              <circle cx="288" cy="335" r="2" fill="#D4AF37" />
+              <circle cx="0" cy="-38" r="2" fill="#D4AF37" />
+              <circle cx="0" cy="38" r="2" fill="#D4AF37" />
+              <circle cx="-38" cy="0" r="2" fill="#D4AF37" />
+              <circle cx="38" cy="0" r="2" fill="#D4AF37" />
               {/* Bras du balancier */}
-              <line x1="212" y1="335" x2="288" y2="335" stroke="#FDE047" strokeWidth="2.5" />
-              <line x1="250" y1="297" x2="250" y2="373" stroke="#FDE047" strokeWidth="2.5" />
+              <line x1="-38" y1="0" x2="38" y2="0" stroke="#FDE047" strokeWidth="2.5" />
+              <line x1="0" y1="-38" x2="0" y2="38" stroke="#FDE047" strokeWidth="2.5" />
               {/* Spire régulatrice */}
-              <circle cx="250" cy="335" r="14" fill="none" stroke="#38BDF8" strokeWidth="1" opacity="0.75" />
-              <circle cx="250" cy="335" r="22" fill="none" stroke="#38BDF8" strokeWidth="0.8" opacity="0.5" />
+              <circle cx="0" cy="0" r="14" fill="none" stroke="#38BDF8" strokeWidth="1" opacity="0.75" />
+              <circle cx="0" cy="0" r="22" fill="none" stroke="#38BDF8" strokeWidth="0.8" opacity="0.5" />
             </g>
 
             {/* Coq de balancier traversant (Pont supérieur) */}
-            <path d="M 215 320 Q 250 315 285 320 L 280 345 Q 250 355 220 345 Z" fill="#1E2433" stroke="url(#heroGoldBezel)" strokeWidth="1.5" />
-            
+            <path d="M -35 -15 Q 0 -20 35 -15 L 30 10 Q 0 20 -30 10 Z" fill="#1E2433" stroke="url(#heroGoldBezel)" strokeWidth="1.5" />
+
             {/* Rubis synthétique d'axe de balancier (rouge corindon chatoyant) */}
-            <circle cx="250" cy="335" r="8" fill="#E11D48" stroke="#FFE4E6" strokeWidth="1.5" />
-            <circle cx="250" cy="335" r="4" fill="#9F1239" />
-            <circle cx="248" cy="333" r="1.5" fill="#FFFFFF" opacity="0.8" />
+            <circle cx="0" cy="0" r="8" fill="#E11D48" stroke="#FFE4E6" strokeWidth="1.5" />
+            <circle cx="0" cy="0" r="4" fill="#9F1239" />
+            <circle cx="-2" cy="-2" r="1.5" fill="#FFFFFF" opacity="0.8" />
           </g>
 
           <text x="250" y="418" fontFamily="sans-serif" fontSize="8" fontWeight="bold" fill="#64748B" letterSpacing="2" textAnchor="middle">
             SWISS MADE
           </text>
 
-          {/* 6. AIGUILLES DAUPHINES FACETTÉES 3D (HEURES ET MINUTES) */}
-          {/* Aiguille des Heures */}
-          <g ref={hourHandRef} className="origin-[250px_250px] transition-transform duration-75 ease-out">
-            <path d="M 250 250 L 243 250 L 249 140 L 250 135 Z" fill="url(#heroDauphineLight)" />
-            <path d="M 250 250 L 257 250 L 251 140 L 250 135 Z" fill="url(#heroDauphineDark)" />
-            <path d="M 245 250 L 255 250 L 252 270 L 248 270 Z" fill="#8C6D1F" />
+          {/* ============================================================== */}
+          {/* 6. AIGUILLES DAUPHINES FACETTÉES 3D & TROTTEUSE (CENTRAGE ABSOLU 0,0) */}
+          {/* ============================================================== */}
+          <g transform="translate(250, 250)">
+            {/* Aiguille des Heures Dauphine Facettée */}
+            <g ref={hourHandRef}>
+              <path d="M 0 0 L -7 0 L -1 -110 L 0 -115 Z" fill="url(#heroDauphineLight)" />
+              <path d="M 0 0 L 7 0 L 1 -110 L 0 -115 Z" fill="url(#heroDauphineDark)" />
+              <path d="M -5 0 L 5 0 L 2 20 L -2 20 Z" fill="#8C6D1F" />
+            </g>
+
+            {/* Aiguille des Minutes Dauphine Facettée */}
+            <g ref={minuteHandRef}>
+              <path d="M 0 0 L -6 0 L -0.5 -175 L 0 -180 Z" fill="url(#heroDauphineLight)" />
+              <path d="M 0 0 L 6 0 L 0.5 -175 L 0 -180 Z" fill="url(#heroDauphineDark)" />
+              <path d="M -4 0 L 4 0 L 2 28 L -2 28 Z" fill="#8C6D1F" />
+            </g>
+
+            {/* Canon de centre & rondelle polie */}
+            <circle cx="0" cy="0" r="14" fill="url(#heroGoldBezel)" stroke="#000" strokeWidth="1" />
+            <circle cx="0" cy="0" r="8" fill="#1E2333" />
+
+            {/* Trotteuse centrale en acier bleui avec balayage continu */}
+            <g ref={secondHandRef}>
+              <line x1="0" y1="40" x2="0" y2="-200" stroke="url(#heroBluedSteel)" strokeWidth="1.8" strokeLinecap="round" />
+              <circle cx="0" cy="30" r="6" fill="none" stroke="#2563EB" strokeWidth="2" />
+              <line x1="0" y1="-200" x2="0" y2="-215" stroke="#FDE047" strokeWidth="1.5" />
+            </g>
+
+            {/* Coiffe centrale miroir dorée */}
+            <circle cx="0" cy="0" r="5" fill="#E2B44F" stroke="#FFFFFF" strokeWidth="1" />
           </g>
-
-          {/* Aiguille des Minutes */}
-          <g ref={minuteHandRef} className="origin-[250px_250px] transition-transform duration-75 ease-out">
-            <path d="M 250 250 L 244 250 L 249.5 75 L 250 70 Z" fill="url(#heroDauphineLight)" />
-            <path d="M 250 250 L 256 250 L 250.5 75 L 250 70 Z" fill="url(#heroDauphineDark)" />
-            <path d="M 246 250 L 254 250 L 252 278 L 248 278 Z" fill="#8C6D1F" />
-          </g>
-
-          {/* 7. CANON DE CENTRE & VIS D'AXE POLIE */}
-          <circle cx="250" cy="250" r="14" fill="url(#heroGoldBezel)" stroke="#000" strokeWidth="1" />
-          <circle cx="250" cy="250" r="8" fill="#1E2333" />
-
-          {/* 8. TROTTEUSE CENTRALE EN ACIER BLEUI AVEC BALAYAGE CHRONOMÉTRIQUE CONTINU */}
-          <g ref={secondHandRef} className="origin-[250px_250px]">
-            <line x1="250" y1="290" x2="250" y2="50" stroke="url(#heroBluedSteel)" strokeWidth="1.8" strokeLinecap="round" />
-            <circle cx="250" cy="280" r="6" fill="none" stroke="#2563EB" strokeWidth="2" />
-            <line x1="250" y1="50" x2="250" y2="35" stroke="#FDE047" strokeWidth="1.5" />
-          </g>
-
-          {/* Coiffe centrale dorée miroir */}
-          <circle cx="250" cy="250" r="5" fill="#E2B44F" stroke="#FFFFFF" strokeWidth="1" />
         </svg>
       </div>
 
@@ -246,13 +250,6 @@ export default function LuxuryHeroClock() {
           <span suppressHydrationWarning>{mounted ? digitalTime : '--:--:--'}</span>
         </div>
       </div>
-
-      <style jsx global>{`
-        @keyframes balanceSpin {
-          0% { transform: rotate(-28deg); }
-          100% { transform: rotate(28deg); }
-        }
-      `}</style>
     </motion.div>
   );
 }
