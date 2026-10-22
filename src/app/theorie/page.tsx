@@ -375,7 +375,7 @@ export default function TheoriePage() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-24 space-y-16">
 
         {/* --- BREADCRUMB & MANUFACTURE BADGE --- */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800/80 pb-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-700 pb-4">
           <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-mono">
             <Link href="/" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">HorloLearn</Link>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600" />
@@ -410,7 +410,7 @@ export default function TheoriePage() {
 
           {/* 3 Sceaux d'Excellence */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto text-left pt-4 font-mono">
-            <div className="p-4 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm dark:shadow-none flex items-center gap-3.5 backdrop-blur-md">
+            <div className="p-4 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm dark:shadow-none flex items-center gap-3.5 backdrop-blur-md">
               <div className="w-11 h-11 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 flex items-center justify-center text-xl text-amber-600 dark:text-amber-400 font-bold">
                 📚
               </div>
@@ -420,7 +420,7 @@ export default function TheoriePage() {
               </div>
             </div>
 
-            <div className="p-4 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm dark:shadow-none flex items-center gap-3.5 backdrop-blur-md">
+            <div className="p-4 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm dark:shadow-none flex items-center gap-3.5 backdrop-blur-md">
               <div className="w-11 h-11 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 flex items-center justify-center text-xl text-emerald-600 dark:text-emerald-400 font-bold">
                 🇨🇭
               </div>
@@ -430,7 +430,7 @@ export default function TheoriePage() {
               </div>
             </div>
 
-            <div className="p-4 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm dark:shadow-none flex items-center gap-3.5 backdrop-blur-md">
+            <div className="p-4 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm dark:shadow-none flex items-center gap-3.5 backdrop-blur-md">
               <div className="w-11 h-11 rounded-xl bg-sky-50 dark:bg-sky-500/10 border border-sky-200 dark:border-sky-500/30 flex items-center justify-center text-xl text-sky-600 dark:text-sky-400 font-bold">
                 ⚡
               </div>
@@ -444,7 +444,7 @@ export default function TheoriePage() {
 
         {/* --- SECTION SHOWCASE : LES 4 GRANDS LABORATOIRES D'ÉLITE --- */}
         <section className="space-y-6 pt-4">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800/80 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-700 pb-4">
             <div>
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
                 ⭐ Laboratoires Interactifs & Complications
@@ -467,7 +467,7 @@ export default function TheoriePage() {
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700/60 flex items-center justify-center shadow-inner">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700/60 flex items-center justify-center shadow-inner">
                       {lab.icon}
                     </div>
                     <span className={`text-[10px] font-mono font-bold uppercase tracking-wider px-3 py-1 rounded-full border ${lab.badgeColor}`}>
@@ -485,7 +485,7 @@ export default function TheoriePage() {
                   </div>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
+                <div className="pt-6 mt-6 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
                   <span>Accéder à l&apos;espace interactif</span>
                   <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform" />
                 </div>
@@ -516,7 +516,7 @@ export default function TheoriePage() {
               placeholder="Rechercher un composant, une formule, un échappement, une manufacture..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-20 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 shadow-sm focus:outline-none focus:border-amber-500 dark:focus:border-amber-500/60 focus:ring-1 focus:ring-amber-500/40 transition text-sm font-sans"
+              className="w-full pl-12 pr-20 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0D121F] text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 shadow-sm focus:outline-none focus:border-amber-500 dark:focus:border-amber-500/60 focus:ring-1 focus:ring-amber-500/40 transition text-sm font-sans"
             />
             {searchTerm && (
               <button
@@ -535,7 +535,7 @@ export default function TheoriePage() {
               className={`px-4 py-2 rounded-xl transition-all ${
                 activeFilter === 'all'
                   ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-                  : 'bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm dark:shadow-none'
+                  : 'bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm dark:shadow-none'
               }`}
             >
               Tous les traités ({totalCoursesCount})
@@ -546,7 +546,7 @@ export default function TheoriePage() {
               className={`px-4 py-2 rounded-xl transition-all ${
                 activeFilter === 'mecanismes'
                   ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-                  : 'bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm dark:shadow-none'
+                  : 'bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm dark:shadow-none'
               }`}
             >
               ⚙️ Organes Fondamentaux (6)
@@ -557,7 +557,7 @@ export default function TheoriePage() {
               className={`px-4 py-2 rounded-xl transition-all ${
                 activeFilter === 'architecture'
                   ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-                  : 'bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm dark:shadow-none'
+                  : 'bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm dark:shadow-none'
               }`}
             >
               📐 Architecture & Plans (3)
@@ -568,7 +568,7 @@ export default function TheoriePage() {
               className={`px-4 py-2 rounded-xl transition-all ${
                 activeFilter === 'complications'
                   ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-                  : 'bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm dark:shadow-none'
+                  : 'bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm dark:shadow-none'
               }`}
             >
               💎 Complications & Atelier (4)
@@ -579,7 +579,7 @@ export default function TheoriePage() {
               className={`px-4 py-2 rounded-xl transition-all ${
                 activeFilter === 'patrimoine'
                   ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-                  : 'bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm dark:shadow-none'
+                  : 'bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm dark:shadow-none'
               }`}
             >
               🏛️ Histoire & Manufactures (3)
@@ -592,7 +592,7 @@ export default function TheoriePage() {
               {filteredPillars.map((pillar) => (
                 <div key={pillar.id} className="space-y-6">
                   {/* En-tête de Pilier */}
-                  <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/80 pb-4">
+                  <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-4">
                     <div className="flex items-center gap-3.5">
                       <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl font-bold shadow-sm">
                         {pillar.icon}
@@ -610,7 +610,7 @@ export default function TheoriePage() {
                       </div>
                     </div>
 
-                    <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 text-xs font-mono hidden sm:inline-block">
+                    <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-xs font-mono hidden sm:inline-block">
                       {pillar.courses.length} leçon{pillar.courses.length > 1 ? 's' : ''}
                     </span>
                   </div>
@@ -623,7 +623,7 @@ export default function TheoriePage() {
                         href={course.slug}
                         className="group block h-full no-underline"
                       >
-                        <div className="h-full bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800/90 rounded-2xl p-6 hover:border-amber-500/50 hover:bg-slate-50 dark:hover:bg-slate-900 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between backdrop-blur-sm">
+                        <div className="h-full bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700 hover:border-amber-500/60 dark:hover:border-amber-400/80 hover:bg-slate-50/50 dark:hover:bg-[#131929] shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.5)] hover:shadow-xl dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.7)] transition-all duration-300 rounded-2xl p-6 flex flex-col justify-between">
                           <div>
                             {/* Numéro du module + Badge */}
                             <div className="flex items-center justify-between mb-4">
@@ -647,7 +647,7 @@ export default function TheoriePage() {
                           </div>
 
                           {/* Footer carte */}
-                          <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between font-mono text-xs">
+                          <div className="pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between font-mono text-xs">
                             <span className="text-slate-500">
                               ⏱️ {course.readTime}
                             </span>
@@ -663,7 +663,7 @@ export default function TheoriePage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 bg-white dark:bg-slate-900/50 rounded-3xl border border-slate-200 dark:border-slate-800 max-w-xl mx-auto space-y-4 shadow-sm">
+            <div className="text-center py-16 bg-white dark:bg-slate-900/50 rounded-3xl border border-slate-200 dark:border-slate-700 max-w-xl mx-auto space-y-4 shadow-sm">
               <p className="text-slate-600 dark:text-slate-400 text-sm">
                 Aucun traité trouvé pour « <span className="font-bold text-slate-900 dark:text-white">{searchTerm}</span> ».
               </p>
@@ -681,7 +681,7 @@ export default function TheoriePage() {
         </section>
 
         {/* --- DOCUMENTS & RÉFÉRENCES ACADÉMIQUES OFFICIELLES --- */}
-        <section className="p-8 sm:p-10 rounded-3xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl backdrop-blur-md">
+        <section className="p-8 sm:p-10 rounded-3xl bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-xl backdrop-blur-md">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2">
               <h3 className="text-xl font-serif font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -717,7 +717,7 @@ export default function TheoriePage() {
         </section>
 
         {/* --- PASSERELLES VERS L'ATELIER PRATIQUE --- */}
-        <section className="pt-6 border-t border-slate-200 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-4 font-mono text-xs">
+        <section className="pt-6 border-t border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-4 font-mono text-xs">
           <Link
             href="/pratique"
             className="flex items-center gap-2 text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors group"
