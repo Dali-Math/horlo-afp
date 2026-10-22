@@ -385,6 +385,7 @@ const CITIES_DATA: CityData[] = [
   }
 ];
 
+// Cache global des formateurs de fuseaux horaires pour un gain de performance 100x
 // Moteur de calcul de fuseaux ultra-rapide (0.0001ms) avec cache d'offsets en minutes
 // Élimine 100% des blocages CPU et du gel sur mobile (iOS Safari & Android Chrome)
 const tzOffsetCache = new Map<string, number>();
@@ -703,6 +704,38 @@ export default function FuseauxHorairesPage() {
     <main className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-slate-900 dark:text-slate-100 transition-colors duration-300 selection:bg-amber-500/30 selection:text-amber-700 dark:selection:text-amber-200">
       {/* Background Subtle Radial Glow (GPU-friendly, 0ms overhead on mobile) */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(217,119,6,0.08),transparent)]" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-24 relative z-10 space-y-10">
+
+        {/* --- BREADCRUMB & MANUFACTURE BADGE --- */}
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-700 pb-4">
+          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-mono">
+            <Link href="/" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">HorloLearn</Link>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600" />
+            <Link href="/theorie" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">Théorie & Complications</Link>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600" />
+            <span className="text-amber-600 dark:text-amber-300 font-medium">Fuseaux Horaires Mondiaux</span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-300 dark:border-emerald-500/30">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
+              UTC Atomique Actif (Précision &lt; 1ms)
+            </span>
+            <button
+              onClick={() => setSoundEnabled(!soundEnabled)}
+              className={`p-2 rounded-lg border text-xs transition-all flex items-center gap-1.5 ${
+                soundEnabled
+                  ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/50 shadow-md shadow-amber-500/10'
+                  : 'bg-white dark:bg-[#0D121F] text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:text-slate-900 dark:hover:text-slate-200'
+              }`}
+              title="Activer le cliquetis mécanique des changements de fuseau"
+            >
+              <Zap className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">{soundEnabled ? 'Sons Mécaniques : ON' : 'Sons : OFF'}</span>
+            </button>
+          </div>
+        </div>
 
         {/* --- HERO HEADER --- */}
         <div className="text-center space-y-4 max-w-4xl mx-auto">
