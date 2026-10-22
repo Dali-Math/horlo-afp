@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
   Wrench,
@@ -20,7 +19,6 @@ import {
   RotateCcw,
   BookOpen,
   Compass,
-  Play,
   Layers,
   Zap
 } from 'lucide-react';
@@ -131,54 +129,6 @@ const PRACTICAL_MODULES: PracticalModule[] = [
   }
 ];
 
-// Galerie d'Atelier Photos
-const WORKSHOP_GALLERY = [
-  {
-    src: '/images/atelier-horloger.jpg',
-    title: 'L\'Établi du Maître Horloger',
-    subtitle: 'Atmosphère feutrée, accoudoirs ergonomiques et lumière du nord'
-  },
-  {
-    src: '/images/outils-horlogers.jpg',
-    title: 'Arsenal des Outils de Précision',
-    subtitle: 'Brucelles antimagnétiques Dumont et tournevis calibrés'
-  },
-  {
-    src: '/images/mouvement-chronographe.jpg',
-    title: 'Complications & Rouages Complexes',
-    subtitle: 'Ajustement micrométrique de la bascule et roue à colonnes'
-  },
-  {
-    src: '/images/tournevis_horlogerie.jpg',
-    title: 'Affûtage sur Pierre d\'Arkansas',
-    subtitle: 'Taille des biseaux pour épouser parfaitement les fentes de vis'
-  },
-  {
-    src: '/images/remontage3.jpg',
-    title: 'Pose du Rouage & Ponts',
-    subtitle: 'Contrôle des ébats sous loupe binoculaire'
-  },
-  {
-    src: '/images/remontage5.jpg',
-    title: 'Échappement & Levées d\'Ancre',
-    subtitle: 'Application précise de l\'huile thixotrope Moebius 9415'
-  }
-];
-
-// Documentaires Vidéo YouTube
-const WORKSHOP_VIDEOS = [
-  {
-    id: 'JIc1kIVpSBo',
-    title: 'Fabrication & Gestes d\'Atelier — Mouvement Mécanique Suisse',
-    tag: 'Documentaire de Référence'
-  },
-  {
-    id: 'feKWzl-yKso',
-    title: 'L\'Art de l\'Horlogerie Suisse — Transmission & Bienfacture',
-    tag: 'Haute Horlogerie'
-  }
-];
-
 // Citations & Maximes d'Établi
 const WORKBENCH_QUOTES = [
   {
@@ -233,7 +183,7 @@ export default function PratiquePage() {
         />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-24 relative z-10 space-y-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-24 relative z-10 space-y-16">
 
         {/* --- FIL D'ARIANE & BADGE ÉTABLI SUISSE --- */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
@@ -269,7 +219,7 @@ export default function PratiquePage() {
 
           <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg max-w-3xl mx-auto font-light leading-relaxed">
             De la dépose rigoureuse du balancier-spiral à la lubrification micrométrique Moebius et au réglage de marche au vibrographe.
-            Découvrez les protocoles officiels des manufactures suisses et entraînez vos réflexes d&apos;établi pour les examens AFP &amp; CFC.
+            Découvrez les protocoles officiels des manufactures suisses et préparez vos examens d&apos;établi AFP &amp; CFC.
           </p>
 
           {/* 4 Indicateurs de Légitimité Horlogère */}
@@ -389,88 +339,7 @@ export default function PratiquePage() {
         </section>
 
         {/* ========================================================================= */}
-        {/* SECTION 2: GALERIE PHOTOGRAPHIQUE & VIDÉOTHÈQUE D'ATELIER                 */}
-        {/* ========================================================================= */}
-        <section className="space-y-8 pt-4">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-            <div>
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#E2B44F]">
-                📷 Immersion Visuelle en Manufacture
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 dark:text-white mt-1">
-                La Galerie d&apos;Établi &amp; les Gestes d&apos;Exception
-              </h2>
-            </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
-              Photographies d&apos;ateliers suisses et documentaires de référence
-            </p>
-          </div>
-
-          {/* Grille de 6 Photos Haute Définition */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {WORKSHOP_GALLERY.map((img, idx) => (
-              <div
-                key={idx}
-                className="group relative aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 dark:border-[#E2B44F]/30 bg-slate-900 shadow-md hover:border-[#E2B44F] transition-all duration-500"
-              >
-                <Image
-                  src={img.src}
-                  alt={img.title}
-                  fill
-                  unoptimized
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
-                <div className="absolute inset-0 ring-0 group-hover:ring-2 group-hover:ring-[#E2B44F] group-hover:ring-inset transition-all duration-500 rounded-2xl" />
-
-                <div className="absolute bottom-0 left-0 right-0 p-5 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300 space-y-1">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#E2B44F] font-bold">Atelier Suisse</span>
-                  <h3 className="text-base sm:text-lg font-serif font-bold text-white leading-tight">
-                    {img.title}
-                  </h3>
-                  <p className="text-xs text-slate-300 font-light opacity-0 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2">
-                    {img.subtitle}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* 2 Documentaires Vidéo YouTube Intégrés */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-6">
-            {WORKSHOP_VIDEOS.map((vid, idx) => (
-              <div
-                key={vid.id}
-                className="bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-[#E2B44F]/30 rounded-3xl p-5 shadow-md hover:border-[#E2B44F] transition-all duration-300 group space-y-4"
-              >
-                <div className="relative aspect-video rounded-2xl overflow-hidden bg-black border border-slate-200 dark:border-slate-800 shadow-inner">
-                  <iframe
-                    src={`https://www.youtube.com/embed/${vid.id}?rel=0&modestbranding=1&color=white`}
-                    title={vid.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="absolute inset-0 w-full h-full"
-                  />
-                </div>
-
-                <div className="flex items-center justify-between pt-1">
-                  <div>
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-50 dark:bg-[#E2B44F]/10 text-amber-800 dark:text-[#E2B44F] border border-amber-200 dark:border-[#E2B44F]/30">
-                      {vid.tag}
-                    </span>
-                    <h4 className="text-sm sm:text-base font-serif font-bold text-slate-900 dark:text-white mt-1 group-hover:text-[#E2B44F] transition-colors">
-                      {vid.title}
-                    </h4>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ========================================================================= */}
-        {/* SECTION 3: CITATIONS ROTATIVES DES MAÎTRES DE L'ÉTABLI                    */}
+        {/* SECTION 2: CITATIONS ROTATIVES DES MAÎTRES DE L'ÉTABLI                    */}
         {/* ========================================================================= */}
         <section className="relative py-16 px-6 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-[#E2B44F]/30 rounded-3xl shadow-md overflow-hidden text-center">
           <div className="max-w-4xl mx-auto space-y-6">
@@ -508,7 +377,7 @@ export default function PratiquePage() {
         </section>
 
         {/* ========================================================================= */}
-        {/* SECTION 4: SIMULATEUR D'ÉTABLI — 36 CARTES MÉMOIRE CALIBRE ETA 6497      */}
+        {/* SECTION 3: SIMULATEUR D'ÉTABLI — 36 CARTES MÉMOIRE CALIBRE ETA 6497      */}
         {/* ========================================================================= */}
         <section className="bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-[#E2B44F]/40 rounded-3xl p-6 sm:p-10 shadow-xl space-y-8">
           <div className="text-center max-w-3xl mx-auto space-y-3">
