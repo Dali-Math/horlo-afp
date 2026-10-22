@@ -142,7 +142,7 @@ export default function YesNoGame() {
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-blue-100 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
         {gameState === 'welcome' && (
-          <div className="bg-white rounded-2xl shadow-2xl p-8 text-center border border-indigo-200">
+          <div className="bg-white rounded-2xl shadow-2xl p-5 sm:p-8 text-center border border-indigo-200">
             <div className="mb-6">
               <div className="text-6xl mb-4">🎯</div>
               <h1 className="text-4xl font-bold text-indigo-900 mb-2">Quiz Vrai/Faux Horlogerie</h1>
@@ -187,7 +187,7 @@ export default function YesNoGame() {
         )}
 
         {gameState === 'playing' && currentQuestion && (
-          <div className="bg-white rounded-2xl shadow-2xl p-8 border border-indigo-200">
+          <div className="bg-white rounded-2xl shadow-2xl p-5 sm:p-8 border border-indigo-200">
             <div className="mb-6 text-center">
               <div className="flex justify-between items-center mb-4">
                 <div className="text-lg font-medium text-slate-600">👤 {playerName}</div>
@@ -217,7 +217,7 @@ export default function YesNoGame() {
             </div>
 
             <div className="mb-8">
-              <div className="bg-slate-50 rounded-lg p-6 mb-6">
+              <div className="bg-slate-50 rounded-lg p-4 sm:p-6 mb-6">
                 <h2 className="text-xl font-semibold text-slate-800 leading-relaxed">{currentQuestion.question}</h2>
               </div>
 
@@ -260,7 +260,7 @@ export default function YesNoGame() {
         )}
 
         {gameState === 'gameOver' && (
-          <div className="bg-white rounded-2xl shadow-2xl p-8 text-center border border-indigo-200">
+          <div className="bg-white rounded-2xl shadow-2xl p-5 sm:p-8 text-center border border-indigo-200">
             <div className="mb-6">
               <div className="text-6xl mb-4">{score.wrongAnswers >= 3 ? '💥' : '🎉'}</div>
               <h2 className="text-3xl font-bold text-slate-800 mb-4">
@@ -268,9 +268,9 @@ export default function YesNoGame() {
               </h2>
               <p className="text-lg text-slate-600 mb-6">Bien joué {playerName} !</p>
             </div>
-            <div className="bg-slate-50 rounded-lg p-6 mb-6">
+            <div className="bg-slate-50 rounded-lg p-4 sm:p-6 mb-6">
               <h3 className="text-xl font-semibold text-slate-800 mb-4">📊 Vos résultats</h3>
-              <div className="grid grid-cols-3 gap-4 text-center">
+              <div className="grid grid-cols-1 min-[420px]:grid-cols-3 gap-3 sm:gap-4 text-center">
                 <div className="bg-white rounded-lg p-4 shadow">
                   <div className="text-2xl font-bold text-green-600">{score.correctAnswers}</div>
                   <div className="text-sm text-slate-600">Bonnes</div>
