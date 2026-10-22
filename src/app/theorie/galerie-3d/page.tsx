@@ -3,7 +3,6 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
   Layers,
@@ -22,8 +21,7 @@ import {
   Pause,
   Maximize2,
   Minimize2,
-  Crosshair,
-  Sparkles as SparklesIcon
+  Crosshair
 } from 'lucide-react';
 
 export interface MovementPart {
@@ -482,7 +480,7 @@ export default function Galerie3DPage() {
                 {/* ============================================================== */}
                 <svg
                   viewBox="0 0 500 500"
-                  className="w-[360px] sm:w-[460px] h-[360px] sm:h-[460px] drop-shadow-2xl overflow-visible"
+                  className="w-[280px] min-[380px]:w-[340px] sm:w-[460px] h-[280px] min-[380px]:h-[340px] sm:h-[460px] max-w-full drop-shadow-2xl overflow-visible"
                 >
                   <defs>
                     {/* Motif Perlage Suisse (overlapping engine-turned circles) */}
