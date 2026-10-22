@@ -309,17 +309,17 @@ export default function QuizCertificationPage() {
     // Barème suisse : Note = 1 + (Points / Total) * 5
     const swissGrade = Number((1 + (correctCount / EXAM_QUESTIONS.length) * 5).toFixed(1));
 
-    let mention = 'Échec (Non validé)';
+    let mention = 'À approfondir — Continuez votre entraînement !';
     let mentionColor = 'text-rose-500';
 
     if (swissGrade >= 5.5) {
-      mention = 'Mention Très Bien — Excellence Horlogère Suisse';
+      mention = 'Mention Très Bien — Excellente Maîtrise des Notions';
       mentionColor = 'text-amber-500';
     } else if (swissGrade >= 5.0) {
-      mention = 'Mention Bien — Très Bon Niveau d’Atelier';
+      mention = 'Mention Bien — Solide Compréhension d’Atelier';
       mentionColor = 'text-emerald-500';
     } else if (swissGrade >= 4.0) {
-      mention = 'Examen Réussi — Compétences Validées';
+      mention = 'Auto-Évaluation Validée — Bonnes Bases Acquises';
       mentionColor = 'text-blue-500';
     }
 
@@ -367,16 +367,16 @@ export default function QuizCertificationPage() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-bold uppercase tracking-wider mb-3">
-                <Award className="w-3.5 h-3.5 text-amber-500" />
-                <span>🇨🇭 Certification Officielle d’Apprentissage</span>
+                <BookOpen className="w-3.5 h-3.5 text-amber-500" />
+                <span>🇨🇭 Entraînement & Auto-Évaluation Pédagogique</span>
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-                Grand Examen Blanc CFC / AFP Horlogerie
+                Grand Test de Révision Horlogère
               </h1>
 
               <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
-                Testez vos connaissances réelles selon le barème officiel suisse (noté sur 6.0). 20 questions techniques de haut niveau couvrant la cinématique, l’échappement à ancre, la métrologie et le rhabillage d’atelier.
+                Un outil bénévole et gratuit créé pour aider les élèves, apprentis AFP/CFC et passionnés à réviser leurs cours, évaluer leurs acquis et progresser dans la maîtrise de l’art horloger suisse.
               </p>
             </div>
 
@@ -385,7 +385,7 @@ export default function QuizCertificationPage() {
                 <Clock className="w-6 h-6 text-amber-400 animate-pulse" />
                 <div>
                   <div className="text-[10px] uppercase font-mono tracking-widest text-slate-400">
-                    Temps Restant
+                    Chronomètre Indicatif
                   </div>
                   <div className="text-2xl font-mono font-extrabold text-amber-400">
                     {formatTime(timeLeft)}
@@ -403,45 +403,45 @@ export default function QuizCertificationPage() {
           /* --- ÉCRAN D'ACCUEIL : SAISIE DU CANDIDAT --- */
           <div className="p-8 sm:p-12 rounded-3xl bg-white dark:bg-[#0f1422] border-2 border-slate-200 dark:border-slate-600 shadow-xl max-w-2xl mx-auto text-center space-y-6">
             <div className="w-16 h-16 rounded-3xl bg-amber-500/15 border border-amber-500/30 text-amber-500 flex items-center justify-center mx-auto shadow-inner">
-              <ShieldCheck className="w-8 h-8" />
+              <Compass className="w-8 h-8" />
             </div>
 
             <div className="space-y-2">
               <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
-                Prêt pour l’Épreuve Certifiante ?
+                Tester Mes Connaissances d’Établi
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
-                Entrez votre nom et prénom. En cas de réussite (note ≥ 4.0 / 6.0), votre Attestation Officielle HorloLearn sera générée avec votre score et prête pour votre CV.
+                Entrez votre prénom ou pseudo pour générer votre bilan de révision personnalisé avec le corrigé complet et vos points forts par matière.
               </p>
             </div>
 
             <form onSubmit={handleStartExam} className="space-y-4 max-w-md mx-auto text-left">
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
-                  Nom & Prénom du Candidat :
+                  Votre Prénom ou Nom d’élève / passionné :
                 </label>
                 <input
                   type="text"
                   required
                   value={candidateName}
                   onChange={(e) => setCandidateName(e.target.value)}
-                  placeholder="Ex: Mohamed Ali Mathlouthi"
+                  placeholder="Ex: Marc, Thomas ou Dali"
                   className="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-600 text-sm focus:outline-none focus:border-amber-500"
                 />
               </div>
 
               <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400 space-y-1.5">
-                <div className="font-bold text-slate-800 dark:text-slate-200">Conditions d’examen :</div>
-                <div>⏱️ Durée : 25 minutes chrono</div>
-                <div>📊 Évaluation : 20 questions réparties sur 5 domaines techniques</div>
-                <div>🇨🇭 Seuil de réussite suisse : Note 4.0 / 6.0 (50% de bonnes réponses)</div>
+                <div className="font-bold text-slate-800 dark:text-slate-200">Format de l’auto-évaluation :</div>
+                <div>⏱️ 20 questions réparties sur 5 domaines d’atelier</div>
+                <div>📊 Évaluation indicative sur l’échelle suisse (1.0 à 6.0) pour vous situer</div>
+                <div>🤝 Projet bénévole d’entraide : aucun diplôme officiel n’est délivré</div>
               </div>
 
               <button
                 type="submit"
                 className="w-full py-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-base shadow-xl shadow-amber-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
               >
-                <span>Démarrer l’Examen Horloger</span>
+                <span>Commencer l’Entraînement</span>
                 <ChevronRight className="w-5 h-5" />
               </button>
             </form>
@@ -576,22 +576,22 @@ export default function QuizCertificationPage() {
             </div>
           </div>
         ) : (
-          /* --- RÉSULTATS & ATTESTATION OFFICIELLE HORLOLEARN --- */
+          /* --- RÉSULTATS & BILAN PERSONNEL D'AUTO-ÉVALUATION --- */
           <div className="space-y-10">
             {/* Bannière de Résultat */}
             <div className="p-8 rounded-3xl bg-white dark:bg-[#0f1422] border-2 border-slate-200 dark:border-slate-600 shadow-xl text-center space-y-4">
               <span className={`text-xs font-extrabold uppercase tracking-widest px-3 py-1 rounded-full ${
                 results.isPassed ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/15 text-rose-600 border border-rose-500/30'
               }`}>
-                {results.isPassed ? 'Examen Réussi avec Succès' : 'Seuil de Réussite Non Atteint'}
+                {results.isPassed ? 'Auto-Évaluation Réussie' : 'Objectif d’Entraînement Non Atteint'}
               </span>
 
               <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
-                Note Officielle : <span className={results.mentionColor}>{results.swissGrade} / 6.0</span>
+                Note Indicative : <span className={results.mentionColor}>{results.swissGrade} / 6.0</span>
               </h2>
 
               <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">
-                {results.mention} • {results.correctCount} réponses exactes sur {results.total} ({results.percentage}%)
+                {results.mention} • {results.correctCount} bonnes réponses sur {results.total} ({results.percentage}%)
               </p>
 
               <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
@@ -600,79 +600,89 @@ export default function QuizCertificationPage() {
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all"
                 >
                   <Printer className="w-4 h-4" />
-                  <span>Imprimer / Télécharger l’Attestation PDF</span>
+                  <span>Imprimer / Télécharger ma Fiche de Bilan PDF</span>
                 </button>
                 <button
                   onClick={handleRestart}
                   className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs sm:text-sm border border-slate-300 dark:border-slate-700 hover:border-amber-500"
                 >
                   <RotateCcw className="w-4 h-4" />
-                  <span>Repasser l’Épreuve</span>
+                  <span>Refaire le Test de Révision</span>
                 </button>
               </div>
             </div>
 
-            {/* --- LE DIPLÔME OFFICIEL HORLOLEARN (IMPRIMABLE) --- */}
+            {/* --- FICHE DE SYNTHÈSE & BILAN PERSONNEL DE RÉVISION (IMPRIMABLE) --- */}
             <div
               id="certificate"
-              className="p-8 sm:p-12 rounded-3xl bg-gradient-to-b from-amber-50 via-white to-amber-50 text-slate-950 border-4 border-amber-500 shadow-2xl relative overflow-hidden"
+              className="p-8 sm:p-12 rounded-3xl bg-gradient-to-b from-amber-50/70 via-white to-amber-50/70 dark:from-slate-900 dark:via-[#0f1422] dark:to-slate-900 text-slate-950 dark:text-white border-2 border-amber-500/40 shadow-2xl relative overflow-hidden print:bg-white print:text-black print:border-amber-600"
             >
-              {/* Filigrane armoiries horlogères */}
+              {/* Filigrane discret */}
               <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
                 <Award className="w-[500px] h-[500px]" />
               </div>
 
               <div className="text-center space-y-6 relative z-10">
-                <div className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-700">
+                <div className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
                   <span>🇨🇭</span>
-                  <span>Haute Horlogerie Suisse • Convention Patronale</span>
+                  <span>HorloLearn • Plateforme d’Entraînement & de Partage Horloger</span>
                   <span>🇨🇭</span>
                 </div>
 
                 <div className="space-y-1">
-                  <h3 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 font-serif">
-                    Attestation d’Excellence Horlogère
+                  <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white font-serif">
+                    Fiche de Synthèse & Bilan d’Auto-Évaluation
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 uppercase tracking-widest">
-                    Certificat de Maîtrise Théorique & Pratique d’Atelier
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                    Révision Pédagogique des Fondamentaux Horlogers
                   </p>
                 </div>
 
-                <p className="text-sm italic text-slate-600">
-                  Il est certifié par la présente que l’apprenant(e) :
+                <p className="text-sm italic text-slate-600 dark:text-slate-300">
+                  Bilan personnel établi pour l’apprenant(e) :
                 </p>
 
-                <div className="text-3xl sm:text-4xl font-extrabold text-amber-900 font-serif border-b-2 border-amber-300 pb-2 inline-block px-8">
+                <div className="text-2xl sm:text-3xl font-extrabold text-amber-700 dark:text-amber-400 font-serif border-b-2 border-amber-400/40 pb-2 inline-block px-8">
                   {candidateName}
                 </div>
 
-                <p className="text-xs sm:text-sm text-slate-700 max-w-lg mx-auto leading-relaxed">
-                  a satisfait avec succès aux exigences de l’examen blanc officiel portant sur les 5 piliers de la profession horlogère (cinématique des rouages, échappement suisse, métrologie, lubrification Moebius et diagnostic de pannes).
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-xl mx-auto leading-relaxed">
+                  Session d’entraînement couvrant les 5 domaines fondamentaux de l’horlogerie : cinématique des rouages, échappement suisse, métrologie d’atelier, lubrification Moebius et diagnostic de pannes.
                 </p>
 
                 {/* Score & Mention */}
-                <div className="p-4 rounded-2xl bg-amber-100/60 border border-amber-300 inline-block px-8 space-y-1">
-                  <div className="text-xs uppercase font-bold text-amber-800">
-                    Note Fédérale Obtenue
+                <div className="p-4 rounded-2xl bg-amber-500/10 dark:bg-amber-500/5 border border-amber-500/30 inline-block px-8 space-y-1">
+                  <div className="text-xs uppercase font-bold text-amber-700 dark:text-amber-400">
+                    Note Indicative d’Atelier
                   </div>
-                  <div className="text-3xl font-extrabold text-slate-950 font-mono">
+                  <div className="text-3xl font-extrabold text-slate-900 dark:text-white font-mono">
                     {results.swissGrade} / 6.0
                   </div>
-                  <div className="text-xs font-bold text-amber-900">{results.mention}</div>
+                  <div className="text-xs font-bold text-amber-700 dark:text-amber-400">{results.mention}</div>
                 </div>
 
-                {/* Signatures */}
-                <div className="pt-8 grid grid-cols-2 gap-8 text-left text-xs border-t border-amber-200">
+                {/* Avertissement / Disclaimer en toute transparence */}
+                <div className="max-w-xl mx-auto p-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-[11px] text-slate-600 dark:text-slate-400 text-left space-y-1">
+                  <div className="flex items-center gap-2 font-bold text-slate-800 dark:text-slate-200">
+                    <ShieldCheck className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                    <span>Transparence & Vocation Pédagogique</span>
+                  </div>
+                  <p>
+                    HorloLearn est une plateforme bénévole et indépendante d’aide aux étudiants et passionnés. Ce bilan personnel est un outil d’apprentissage et de révision indicatif. Il ne remplace en aucun cas un examen d'État et ne délivre aucun diplôme ou certification officielle.
+                  </p>
+                </div>
+
+                {/* Pied de page du bilan */}
+                <div className="pt-6 grid grid-cols-2 gap-8 text-left text-xs border-t border-slate-200 dark:border-slate-700">
                   <div>
-                    <div className="font-bold text-slate-900">Délivré à Genève, Suisse</div>
-                    <div className="text-slate-500">Date : {new Date().toLocaleDateString('fr-CH')}</div>
-                    <div className="font-mono text-[10px] text-slate-400 mt-1">ID Validation : HL-CFC-{Date.now().toString().slice(-8)}</div>
+                    <div className="font-bold text-slate-800 dark:text-slate-200">Établi le : {new Date().toLocaleDateString('fr-CH')}</div>
+                    <div className="text-slate-500 dark:text-slate-400 text-[11px]">Session d’entraînement #{Date.now().toString().slice(-6)}</div>
                   </div>
 
-                  <div className="text-right space-y-1">
-                    <div className="font-bold text-slate-900">HorloLearn Genève</div>
-                    <div className="text-xs italic text-amber-800 font-serif">Direction Pédagogique</div>
-                    <div className="text-[10px] text-slate-400">Plateforme de Référence AFP / CFC</div>
+                  <div className="text-right space-y-0.5">
+                    <div className="font-bold text-slate-800 dark:text-slate-200">HorloLearn Suisse</div>
+                    <div className="text-[11px] text-amber-600 dark:text-amber-400 font-serif">Projet d’Entraide & Passion Horlogère</div>
+                    <div className="text-[10px] text-slate-400">www.horlolearn.ch</div>
                   </div>
                 </div>
               </div>
