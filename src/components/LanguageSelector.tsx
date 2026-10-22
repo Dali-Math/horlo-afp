@@ -146,7 +146,7 @@ export default function LanguageSelector() {
   const activeLanguageObj = LANGUAGES.find(l => l.code === currentLang) || LANGUAGES[0];
 
   return (
-    <div className="relative inline-block text-left" ref={dropdownRef}>
+    <div className="relative inline-block text-left notranslate" translate="no" ref={dropdownRef}>
       {/* Conteneur caché pour le gadget Google Translate */}
       <div id="google_translate_element" className="hidden" style={{ display: 'none' }} />
 
@@ -154,13 +154,14 @@ export default function LanguageSelector() {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-[#E2B44F] border border-slate-700 hover:border-[#E2B44F]/50 transition-all duration-200 text-xs font-mono shadow-sm group"
+        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-[#E2B44F] border border-slate-700 hover:border-[#E2B44F]/50 transition-all duration-200 text-xs font-mono shadow-sm group notranslate"
+        translate="no"
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <Globe className="w-3.5 h-3.5 text-[#E2B44F] group-hover:rotate-45 transition-transform duration-300" />
+        <Globe className="w-3.5 h-3.5 text-[#E2B44F] group-hover:rotate-45 transition-transform duration-300 flex-shrink-0" />
         <span className="text-sm leading-none">{activeLanguageObj.flag}</span>
-        <span className="font-bold tracking-wider">{activeLanguageObj.short}</span>
+        <span className="font-bold tracking-wider notranslate" translate="no">{activeLanguageObj.short}</span>
         <ChevronDown className={`w-3 h-3 text-slate-400 group-hover:text-[#E2B44F] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
