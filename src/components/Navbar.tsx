@@ -1,17 +1,21 @@
 // src/components/Navbar.tsx
 "use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown } from "lucide-react";
-import { useState, useRef } from "react";
-import LanguageSelector from "./LanguageSelector";
+import { Menu, X, Search } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import LanguageSelector from "@/components/LanguageSelector";
 
-export default function Navbar() {
+interface NavbarProps {
+  onSearchClick?: () => void;
+}
+
+export default function Navbar({ onSearchClick }: NavbarProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [theorieOpen, setTheorieOpen] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const navLinks = [
     { href: "/pratique", label: "Pratique" },
@@ -23,21 +27,17 @@ export default function Navbar() {
     { href: "/culture", label: "Culture" },
     { href: "/evenements", label: "Événements" },
     { href: "/communaute", label: "Communauté" },
+    { href: "/fuseaux-horaires", label: "Fuseaux Horaires" },
+    { href: "/actualites", label: "Actualités" },
   ];
 
-  const handleMouseEnter = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setTheorieOpen(true);
-  };
-
-  const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => setTheorieOpen(false), 250);
-  };
-
   return (
-    <nav className="flex flex-wrap items-center justify-between px-6 md:px-12 py-4 bg-[#0A0A0A] text-white border-b border-gray-800 relative z-50">
+    <nav className="flex flex-wrap items-center justify-between px-6 md:px-12 py-4 bg-white dark:bg-[#0A0A0A] text-slate-900 dark:text-white border-b border-gray-200 dark:border-gray-800 relative z-50 transition-colors duration-300">
       {/* Logo */}
-      <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
+      <Link
+        href="/"
+        className="flex items-center gap-3 hover:opacity-90 transition-opacity"
+      >
         <Image
           src="/logos/Logo.jpg"
           alt="HorloLearn Logo"
@@ -47,7 +47,7 @@ export default function Navbar() {
           priority
         />
         <div className="flex flex-col">
-          <span className="text-lg md:text-xl font-bold text-white">
+          <span className="text-lg md:text-xl font-bold text-slate-900 dark:text-white">
             Horlo<span className="text-[#E2B44F]">Learn</span>
           </span>
           <span className="text-xs text-[#E2B44F] leading-tight">
@@ -58,47 +58,17 @@ export default function Navbar() {
 
       {/* Liens desktop */}
       <div className="hidden lg:flex items-center gap-6 text-sm font-medium relative">
-        {/* Bloc Théorie avec sous-menu fluide */}
-        <div
-          className="relative"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+        <Link
+          href="/theorie"
+          className={`flex items-center transition-colors ${
+            pathname.startsWith("/theorie")
+              ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
+              : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
+          }`}
         >
-          <Link
-            href="/theorie"
-            className={`flex items-center gap-1 transition-colors ${
-              pathname.startsWith("/theorie")
-                ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
-                : "hover:text-[#E2B44F]"
-            }`}
-          >
-            Théorie{" "}
-            <ChevronDown
-              className={`w-4 h-4 mt-0.5 transition-transform duration-200 ${
-                theorieOpen ? "rotate-180 text-[#E2B44F]" : ""
-              }`}
-            />
-          </Link>
+          Théorie
+        </Link>
 
-          {/* Sous-menu stable */}
-          {theorieOpen && (
-            <div
-              className="absolute top-full left-0 mt-2 w-56 bg-[#111] border border-[#E2B44F33] rounded-lg shadow-lg
-              transition-all duration-200 ease-out opacity-100 translate-y-0 z-50"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <Link
-                href="/theorie/lecture-de-plan"
-                className="block px-4 py-3 text-sm hover:bg-[#E2B44F22] hover:text-[#E2B44F] transition-colors"
-              >
-                Lecture de Plan
-              </Link>
-            </div>
-          )}
-        </div>
-
-        {/* Autres liens */}
         {navLinks.map(({ href, label }) => (
           <Link
             key={href}
@@ -106,7 +76,7 @@ export default function Navbar() {
             className={`transition-colors duration-200 ${
               pathname === href
                 ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
-                : "hover:text-[#E2B44F]"
+                : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
             }`}
           >
             {label}
@@ -114,53 +84,73 @@ export default function Navbar() {
         ))}
       </div>
 
-      {/* Actions Droite : Sélecteur de Langue + Bouton menu mobile */}
-      <div className="flex items-center gap-3">
+      {/* Actions Droite (Desktop) */}
+      <div className="hidden lg:flex items-center gap-3">
+        {/* 🔍 Bouton de recherche */}
+        {onSearchClick && (
+          <button
+            onClick={onSearchClick}
+            className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+          >
+            <Search className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+            <span className="hidden sm:inline text-sm text-gray-700 dark:text-gray-300">
+              Rechercher...
+            </span>
+            <kbd className="hidden lg:inline px-2 py-0.5 text-xs bg-white dark:bg-gray-900 rounded border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400">
+              Ctrl K
+            </kbd>
+          </button>
+        )}
+
+        {/* 🌐 Sélecteur de langue */}
         <LanguageSelector />
 
+        {/* 🌓 Bascule Thème Clair / Sombre */}
+        <ThemeToggle />
+      </div>
+
+      {/* Actions Mobile (Droite) */}
+      <div className="lg:hidden flex items-center gap-2.5">
+        <LanguageSelector />
+        <ThemeToggle />
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="lg:hidden p-2 text-white hover:text-[#E2B44F] transition-colors"
+          className="p-2 text-slate-900 dark:text-white hover:text-[#E2B44F] transition-colors"
           aria-label="Toggle menu"
+          aria-controls="mobile-menu"
+          aria-expanded={mobileMenuOpen}
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
-      {/* Menu mobile/tablette */}
+      {/* Menu mobile */}
       {mobileMenuOpen && (
-        <div className="lg:hidden w-full mt-4 pb-4 border-t border-gray-800 pt-4 bg-[#0A0A0A] rounded-lg">
+        <div
+          id="mobile-menu"
+          className="lg:hidden w-full mt-4 pb-4 border-t border-gray-200 dark:border-gray-800 pt-4 bg-white dark:bg-[#0A0A0A] rounded-lg"
+        >
           <div className="flex flex-col space-y-3">
-            {/* Bloc Théorie dans mobile */}
-            <details className="group">
-              <summary
-                className={`flex justify-between items-center py-2 px-2 rounded cursor-pointer ${
-                  pathname.startsWith("/theorie")
-                    ? "text-[#E2B44F] font-semibold bg-gray-900 border-l-4 border-[#E2B44F]"
-                    : "text-gray-300 hover:text-[#E2B44F] hover:bg-gray-900"
-                }`}
-              >
-                Théorie
-                <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180 text-[#E2B44F]" />
-              </summary>
-              <Link
-                href="/theorie/lecture-de-plan"
-                className="pl-6 py-2 text-gray-400 hover:text-[#E2B44F] transition-colors block"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                ↳ Lecture de Plan
-              </Link>
-            </details>
+            <Link
+              href="/theorie"
+              className={`py-2 px-2 rounded ${
+                pathname.startsWith("/theorie")
+                  ? "text-[#E2B44F] font-semibold bg-gray-100 dark:bg-gray-900 border-l-4 border-[#E2B44F]"
+                  : "text-slate-700 dark:text-gray-300 hover:text-[#E2B44F] hover:bg-gray-100 dark:hover:bg-gray-900"
+              }`}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Théorie
+            </Link>
 
-            {/* Autres liens */}
             {navLinks.map(({ href, label }) => (
               <Link
                 key={href}
                 href={href}
                 className={`py-2 px-2 rounded ${
                   pathname === href
-                    ? "text-[#E2B44F] font-semibold bg-gray-900 border-l-4 border-[#E2B44F]"
-                    : "text-gray-300 hover:text-[#E2B44F] hover:bg-gray-900"
+                    ? "text-[#E2B44F] font-semibold bg-gray-100 dark:bg-gray-900 border-l-4 border-[#E2B44F]"
+                    : "text-slate-700 dark:text-gray-300 hover:text-[#E2B44F] hover:bg-gray-100 dark:hover:bg-gray-900"
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
