@@ -224,47 +224,81 @@ export default function HorloLearnHome() {
       <ThematiquesSection thematiques={thematiques} />
       <ActualitesSection actualites={actualites} />
 
-      {/* Newsletter */}
-      <FadeInSection id="contribuer" className="py-20 px-4 bg-slate-100/80 dark:bg-slate-900/30 transition-colors duration-300">
-        <div className="max-w-4xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="relative bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 dark:from-amber-500/20 dark:via-orange-500/20 dark:to-amber-500/20 rounded-3xl p-12 border border-amber-500/30 overflow-hidden text-center shadow-lg"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-500/10 to-transparent animate-pulse" />
-            
-            <div className="relative z-10">
-              <Globe className="w-12 h-12 text-amber-500 dark:text-amber-400 mx-auto mb-6" />
-              
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-white">
-                Restez Informé
-              </h2>
-              
-              <p className="text-lg mb-8 max-w-2xl mx-auto text-slate-600 dark:text-gray-300">
-                Recevez chaque semaine : nouvelles ressources partagées, astuces d'atelier et actualités horlogères
-              </p>
+      {/* --- LE CERCLE DES PASSIONNÉS HORLOGERS --- */}
+      <FadeInSection id="contribuer" className="py-24 px-4 relative overflow-hidden bg-slate-50/60 dark:bg-[#07090E]/80 transition-colors duration-300 border-t border-slate-200/60 dark:border-slate-800/60">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-amber-500/5 blur-[160px] pointer-events-none rounded-full" />
 
-              <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                <input
-                  type="email"
-                  placeholder="Votre email"
-                  className="flex-1 rounded-lg px-6 py-4 text-slate-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-amber-500 transition-colors backdrop-blur-sm bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-amber-500/30"
-                />
-                <button className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg font-semibold hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 whitespace-nowrap text-white">
-                  S'Abonner
-                </button>
+        <div className="max-w-4xl mx-auto relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative rounded-3xl p-8 sm:p-14 border border-amber-500/30 dark:border-amber-500/30 bg-white dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-900/90 dark:to-slate-950 shadow-xl dark:shadow-[0_0_50px_rgba(212,175,55,0.12)] text-center overflow-hidden"
+          >
+            {/* Liseré supérieur or brossé */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent" />
+
+            <div className="relative z-10 space-y-6">
+              {/* Badge d'authenticité */}
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-300 text-xs font-mono font-bold uppercase tracking-widest">
+                <span>✦ PROJET INDÉPENDANT & PASSIONNÉ · SUISSE ✦</span>
               </div>
 
-              <div className="flex items-center justify-center gap-6 mt-6 text-sm text-slate-500 dark:text-gray-400">
-                <span className="flex items-center">
-                  <Share2 className="w-4 h-4 mr-2 text-amber-400" />
+              {/* Titre Serif de prestige */}
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-slate-900 dark:text-white tracking-tight">
+                Rejoindre le{' '}
+                <span className="bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 bg-clip-text text-transparent">
+                  Cercle des Passionnés
+                </span>
+              </h2>
+
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
+                Suivez l&apos;évolution de HorloLearn et soyez prévenu des nouveaux cours, quiz interactifs et guides partagés sur le site. Un espace d&apos;apprentissage libre et gratuit, créé par un passionné pour tous les amoureux d&apos;horlogerie.
+              </p>
+
+              {/* Les 3 piliers d'authenticité */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl mx-auto py-2 text-left sm:text-center text-xs font-mono text-slate-600 dark:text-slate-400">
+                <div className="flex items-center sm:justify-center gap-1.5">
+                  <span className="text-amber-500 font-bold">✓</span>
+                  <span>100% Libre & Gratuit</span>
+                </div>
+                <div className="flex items-center sm:justify-center gap-1.5">
+                  <span className="text-amber-500 font-bold">✓</span>
+                  <span>Animé par la passion</span>
+                </div>
+                <div className="flex items-center sm:justify-center gap-1.5">
+                  <span className="text-amber-500 font-bold">✓</span>
+                  <span>Zéro spam, juste les nouveautés</span>
+                </div>
+              </div>
+
+              {/* Formulaire simple et direct */}
+              <form onSubmit={(e) => e.preventDefault()} className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto pt-2">
+                <input
+                  type="email"
+                  placeholder="Votre adresse email"
+                  required
+                  className="flex-1 rounded-xl px-5 py-4 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/50 backdrop-blur-sm bg-slate-50 dark:bg-black/60 border border-slate-300 dark:border-amber-500/30 transition-all font-mono"
+                />
+                <button
+                  type="submit"
+                  className="px-7 py-4 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold rounded-xl shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 transition-all duration-300 text-sm whitespace-nowrap font-mono flex items-center justify-center gap-2 group"
+                >
+                  <span>Rejoindre</span>
+                  <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+                </button>
+              </form>
+
+              {/* Mentions de respect */}
+              <div className="flex items-center justify-center gap-6 pt-2 text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                <span className="flex items-center gap-1.5">
+                  <Share2 className="w-3.5 h-3.5 text-amber-500" />
                   Flux RSS disponible
                 </span>
-                <span className="flex items-center">
-                  <Radio className="w-4 h-4 mr-2 text-green-400" />
-                  Notifications activables
+                <span className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  Désinscription libre en 1 clic
                 </span>
               </div>
             </div>
