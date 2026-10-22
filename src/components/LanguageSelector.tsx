@@ -14,6 +14,7 @@ export interface Language {
 export const LANGUAGES: Language[] = [
   { code: 'fr', label: 'Français', flag: '🇫🇷', short: 'FR' },
   { code: 'en', label: 'English', flag: '🇬🇧', short: 'EN' },
+  { code: 'zh-CN', label: '中文 (Chinois)', flag: '🇨🇳', short: 'ZH' },
   { code: 'de', label: 'Deutsch', flag: '🇩🇪', short: 'DE' },
   { code: 'it', label: 'Italiano', flag: '🇮🇹', short: 'IT' },
 ];
@@ -82,7 +83,7 @@ export default function LanguageSelector() {
           new window.google.translate.TranslateElement(
             {
               pageLanguage: 'fr',
-              includedLanguages: 'fr,en,de,it',
+              includedLanguages: 'fr,en,zh-CN,de,it',
               autoDisplay: false,
               layout: window.google.translate.TranslateElement.InlineLayout?.SIMPLE || 0,
             },
