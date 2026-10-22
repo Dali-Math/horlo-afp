@@ -1,7 +1,7 @@
 /* Import Google Fonts - Atelier Horloger Theme */
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Inter:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -27,6 +27,11 @@
   }
 }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
@@ -41,11 +46,7 @@ body {
   }
 }
 
-/* ========================================
-   ANIMATIONS - Swiss Watchmaking Theme
-   ======================================== */
-
-/* Fade In Up - Utilisé pour timeline et sections */
+/* Custom animations for Swiss watchmaking theme */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -57,7 +58,6 @@ body {
   }
 }
 
-/* Fade In Simple */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -67,19 +67,6 @@ body {
   }
 }
 
-/* Fade In with slight translation */
-@keyframes fadeInSmooth {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Slide In Left */
 @keyframes slideInLeft {
   from {
     opacity: 0;
@@ -91,7 +78,6 @@ body {
   }
 }
 
-/* Glow Effect - Or horloger */
 @keyframes glow {
   0%, 100% {
     box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
@@ -100,145 +86,6 @@ body {
     box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
   }
 }
-
-/* Carousel Animation - Logos défilants */
-@keyframes carousel {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-/* Marquee footer : Titre + icônes défilent ensemble (linéaire droite → gauche) */
-@keyframes marquee-footer {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%); /* Seamless avec duplication */
-  }
-}
-
-/* ========================================
-   ANIMATION LOGOS DÉFILANTS - Footer
-   ======================================== */
-
-/* Animation scroll logos (défilement horizontal continu) */
-@keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-/* Animation normale (30 secondes) */
-.animate-scroll {
-  animation: scroll 30s linear infinite;
-}
-
-/* Animation rapide (20 secondes) */
-.animate-scroll-fast {
-  animation: scroll 20s linear infinite;
-}
-
-/* Animation lente (40 secondes) */
-.animate-scroll-slow {
-  animation: scroll 40s linear infinite;
-}
-
-/* Pause au hover (survol souris) */
-.animate-scroll:hover,
-.animate-scroll-fast:hover,
-.animate-scroll-slow:hover {
-  animation-play-state: paused;
-}
-
-/* ========================================
-   ANIMATIONS ROUES DENTÉES - Page Rouage
-   ======================================== */
-
-/* Rotation lente (sens horaire) - 40 secondes */
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 40s linear infinite;
-  transform-origin: center;
-}
-
-/* Rotation lente inverse (sens anti-horaire) - 50 secondes */
-@keyframes spin-slow-reverse {
-  from {
-    transform: rotate(360deg);
-  }
-  to {
-    transform: rotate(0deg);
-  }
-}
-
-.animate-spin-slow-reverse {
-  animation: spin-slow-reverse 50s linear infinite;
-  transform-origin: center;
-}
-
-/* Rotation moyenne inverse - 25 secondes */
-@keyframes spin-reverse {
-  from {
-    transform: rotate(360deg);
-  }
-  to {
-    transform: rotate(0deg);
-  }
-}
-
-.animate-spin-reverse {
-  animation: spin-reverse 25s linear infinite;
-  transform-origin: center;
-}
-
-/* Rotation rapide (sens horaire) - 15 secondes */
-@keyframes spin-fast {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin-fast {
-  animation: spin-fast 15s linear infinite;
-  transform-origin: center;
-}
-
-/* Pause animation au hover de la section */
-.gear-container:hover svg {
-  animation-play-state: paused;
-}
-
-/* Effet 3D sur les roues dentées */
-.gear-3d {
-  filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5));
-  transition: filter 0.3s ease;
-}
-
-.gear-3d:hover {
-  filter: drop-shadow(4px 8px 12px rgba(251, 146, 60, 0.4));
-}
-
-/* ========================================
-   ANIMATION UTILITY CLASSES
-   ======================================== */
 
 .animate-fade-in {
   animation: fadeIn 1s ease-out;
@@ -252,54 +99,20 @@ body {
   animation: fadeIn 1s ease-out 0.6s both;
 }
 
-.animate-fadeIn {
-  animation: fadeInSmooth 0.3s ease-out;
+/* Animation infinite carousel logos */
+@keyframes carousel {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
-
 .animate-carousel {
   animation: carousel 24s linear infinite;
 }
 
-.animate-marquee-footer {
-  animation: marquee-footer linear infinite;
-  width: 200%; /* Double pour loop sans saut */
-  display: flex;
-  align-items: center;
-  gap: 1.5rem; /* Gap uniforme pour titre/icônes */
-}
-
-/* ========================================
-   TIMELINE ANIMATIONS - Page Histoire
-   ======================================== */
-
-.timeline-item {
-  animation: fadeInUp 0.6s ease-out forwards;
-  opacity: 0;
-}
-
-.timeline-item:nth-child(1) { animation-delay: 0.1s; }
-.timeline-item:nth-child(2) { animation-delay: 0.2s; }
-.timeline-item:nth-child(3) { animation-delay: 0.3s; }
-.timeline-item:nth-child(4) { animation-delay: 0.4s; }
-.timeline-item:nth-child(5) { animation-delay: 0.5s; }
-.timeline-item:nth-child(6) { animation-delay: 0.6s; }
-.timeline-item:nth-child(7) { animation-delay: 0.7s; }
-.timeline-item:nth-child(8) { animation-delay: 0.8s; }
-
-/* Hover Effects - Cards & Timeline */
-.hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(251, 146, 60, 0.15);
-}
-
-/* ========================================
-   SCROLLBAR - Thème sombre doré
-   ======================================== */
-
+/* Scrollbar styling - thème sombre doré */
 ::-webkit-scrollbar {
   width: 12px;
 }
@@ -317,20 +130,13 @@ body {
   background: linear-gradient(180deg, #f7d070, #d4af37);
 }
 
-/* ========================================
-   SELECTION STYLING
-   ======================================== */
-
+/* Selection styling */
 ::selection {
   background-color: rgba(212, 175, 55, 0.3);
   color: inherit;
 }
 
-/* ========================================
-   CUSTOM UTILITIES - Atelier Horloger
-   ======================================== */
-
-/* Gold accents */
+/* Atelier horloger - Gold accents */
 .gold-border {
   border: 1px solid var(--gold);
 }
@@ -339,227 +145,38 @@ body {
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
 }
 
-/* ========================================
-   RESPONSIVE BEHAVIOR
-   ======================================== */
-
-/* Pause au hover (tout s'arrête : titre + icônes) */
-.marquee-container:hover .animate-marquee-footer {
-  animation-play-state: paused;
+/* ========================================================================= */
+/* MASQUER LE BANDEAU GOOGLE TRANSLATE (HAUTE HORLOGERIE ÉPURÉE)             */
+/* ========================================================================= */
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+iframe.goog-te-banner-frame,
+iframe.VIpgJd-ZVi9od-ORHb-OEVmcb,
+iframe[class*="VIpgJd"],
+.VIpgJd-ZVi9od-ORHb,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.goog-te-gadget,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0px !important;
+  width: 0px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  border: none !important;
 }
 
-/* Mobile optimizations */
-@media (max-width: 768px) {
-  .animate-marquee-footer {
-    animation-duration: 45s; /* Plus lent pour lisibilité (texte + icônes) */
-    gap: 1rem; /* Gap réduit */
-  }
-  
-  /* Icônes + titre plus petits */
-  .animate-marquee-footer img {
-    width: 60px !important;
-    height: 40px !important;
-  }
-  
-  .animate-marquee-footer span {
-    font-size: 0.875rem !important; /* Titre plus petit mobile */
-  }
-
-  /* Timeline responsive */
-  .timeline-item {
-    animation-delay: 0s !important; /* Pas de délai stagéré sur mobile */
-  }
-
-  /* Animations roues plus rapides sur mobile pour économiser batterie */
-  .animate-spin-slow {
-    animation-duration: 60s;
-  }
-  
-  .animate-spin-reverse {
-    animation-duration: 35s;
-  }
-  
-  .animate-spin-fast {
-    animation-duration: 25s;
-  }
-
-  .animate-spin-slow-reverse {
-    animation-duration: 70s;
-  }
-
-  /* Logos défilants plus lents sur mobile */
-  .animate-scroll {
-    animation-duration: 40s;
-  }
-  
-  .animate-scroll-fast {
-    animation-duration: 30s;
-  }
+body, html {
+  top: 0px !important;
+  position: static !important;
+  margin-top: 0px !important;
 }
 
-/* ========================================
-   SMOOTH TRANSITIONS GLOBALES
-   ======================================== */
-
-* {
-  scroll-behavior: smooth;
-}
-
-/* Transitions pour liens et boutons */
-a, button {
-  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-}
-
-/* ========================================
-   ACCESSIBILITY - Reduced Motion
-   ======================================== */
-
-/* Réduire mouvement pour préférence accessibilité */
-@media (prefers-reduced-motion: reduce) {
-  .animate-spin-slow,
-  .animate-spin-reverse,
-  .animate-spin-fast,
-  .animate-spin-slow-reverse,
-  .animate-carousel,
-  .animate-marquee-footer,
-  .animate-scroll,
-  .animate-scroll-fast,
-  .animate-scroll-slow,
-  .timeline-item {
-    animation: none !important;
-    opacity: 1 !important;
-  }
-
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* ========================================
-   PERFORMANCE OPTIMIZATIONS
-   ======================================== */
-
-/* GPU Acceleration pour animations fluides */
-.animate-spin-slow,
-.animate-spin-reverse,
-.animate-spin-fast,
-.animate-spin-slow-reverse,
-.animate-scroll,
-.animate-scroll-fast,
-.animate-scroll-slow {
-  will-change: transform;
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-/* Optimisation des rendus SVG */
-svg {
-  shape-rendering: geometricPrecision;
-}
-
-/* Anti-aliasing amélioré pour les roues */
-.gear-smooth {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-html, body {
-  height: 100%;
-  min-height: 100vh;
-  overflow-x: hidden;
-  background: var(--background);
-  color: var(--foreground);
-}
-
-#__next, main, .hl-container {
-  min-height: 100vh;
-  overflow: visible;
-}
-
-section {
-  position: relative;
-  overflow: visible;
-}
-/* Correction - restaure la grille matériaux */
-.materials-section {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
-  gap: 2rem !important;
-  place-items: stretch;
-}
-.sidebar-item {
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  color: #bfd3f8;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.sidebar-item:hover,
-.sidebar-item.active {
-  background: #204483;
-  color: #fff;
-}
-img, video {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-/* Correction bouton "remonter en haut" */
-.back-to-top {
-  position: fixed !important;
-  bottom: 2rem;
-  right: 2rem;
-  z-index: 50;
-}
-
-html, body {
-  position: relative !important;
-  height: auto !important;
-  min-height: 100vh !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  scroll-behavior: smooth;
-}
-
-@keyframes gradient {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient 8s ease infinite;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.nav-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 50;
-  transition: background 0.4s ease;
+.goog-text-highlight {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
