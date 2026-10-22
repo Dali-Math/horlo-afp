@@ -1,19 +1,18 @@
+// src/components/Navbar.tsx
 "use client";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, Search } from "lucide-react";
-import { useState } from "react"; // <-- MODIFIÉ : useRef a été supprimé car il n'était pas utilisé
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { Menu, X, ChevronDown } from "lucide-react";
+import { useState, useRef } from "react";
+import LanguageSelector from "./LanguageSelector";
 
-interface NavbarProps {
-  onSearchClick?: () => void;
-}
-
-export default function Navbar({ onSearchClick }: NavbarProps) {
+export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  // La gestion du sous-menu/caret/flèche n'est plus utile
+  const [theorieOpen, setTheorieOpen] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const navLinks = [
     { href: "/pratique", label: "Pratique" },
     { href: "/quiz", label: "Quiz" },
@@ -24,17 +23,21 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
     { href: "/culture", label: "Culture" },
     { href: "/evenements", label: "Événements" },
     { href: "/communaute", label: "Communauté" },
-    { href: "/fuseaux-horaires", label: "Fuseaux Horaires" }, // <-- LIEN AJOUTÉ PRÉCÉDEMMENT
-    { href: "/actualites", label: "Actualités" },
   ];
 
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setTheorieOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => setTheorieOpen(false), 250);
+  };
+
   return (
-    <nav className="flex flex-wrap items-center justify-between px-6 md:px-12 py-4 bg-white dark:bg-[#0A0A0A] text-slate-900 dark:text-white border-b border-gray-200 dark:border-gray-800 relative z-50 transition-colors duration-300">
+    <nav className="flex flex-wrap items-center justify-between px-6 md:px-12 py-4 bg-[#0A0A0A] text-white border-b border-gray-800 relative z-50">
       {/* Logo */}
-      <Link
-        href="/"
-        className="flex items-center gap-3 hover:opacity-90 transition-opacity"
-      >
+      <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
         <Image
           src="/logos/Logo.jpg"
           alt="HorloLearn Logo"
@@ -44,28 +47,56 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
           priority
         />
         <div className="flex flex-col">
-          <span className="text-lg md:text-xl font-bold text-slate-900 dark:text-white">
+          <span className="text-lg md:text-xl font-bold text-white">
             Horlo<span className="text-[#E2B44F]">Learn</span>
           </span>
           <span className="text-xs text-[#E2B44F] leading-tight">
-            Culture & savoir-faire horloger
+            Culture &amp; savoir-faire horloger
           </span>
         </div>
       </Link>
 
       {/* Liens desktop */}
       <div className="hidden lg:flex items-center gap-6 text-sm font-medium relative">
-        {/* Bloc Théorie sans flèche ni sous-menu */}
-        <Link
-          href="/theorie"
-          className={`flex items-center transition-colors ${
-            pathname.startsWith("/theorie")
-              ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
-              : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
-          }`}
+        {/* Bloc Théorie avec sous-menu fluide */}
+        <div
+          className="relative"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
-          Théorie
-        </Link>
+          <Link
+            href="/theorie"
+            className={`flex items-center gap-1 transition-colors ${
+              pathname.startsWith("/theorie")
+                ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
+                : "hover:text-[#E2B44F]"
+            }`}
+          >
+            Théorie{" "}
+            <ChevronDown
+              className={`w-4 h-4 mt-0.5 transition-transform duration-200 ${
+                theorieOpen ? "rotate-180 text-[#E2B44F]" : ""
+              }`}
+            />
+          </Link>
+
+          {/* Sous-menu stable */}
+          {theorieOpen && (
+            <div
+              className="absolute top-full left-0 mt-2 w-56 bg-[#111] border border-[#E2B44F33] rounded-lg shadow-lg
+              transition-all duration-200 ease-out opacity-100 translate-y-0 z-50"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <Link
+                href="/theorie/lecture-de-plan"
+                className="block px-4 py-3 text-sm hover:bg-[#E2B44F22] hover:text-[#E2B44F] transition-colors"
+              >
+                Lecture de Plan
+              </Link>
+            </div>
+          )}
+        </div>
 
         {/* Autres liens */}
         {navLinks.map(({ href, label }) => (
@@ -75,7 +106,7 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
             className={`transition-colors duration-200 ${
               pathname === href
                 ? "text-[#E2B44F] font-semibold border-b-2 border-[#E2B44F]"
-                : "hover:text-[#E2B44F] text-slate-700 dark:text-gray-300"
+                : "hover:text-[#E2B44F]"
             }`}
           >
             {label}
@@ -83,72 +114,53 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
         ))}
       </div>
 
-      {/* Boutons à droite (Desktop) */}
-      <div className="hidden lg:flex items-center gap-3">
-        {/* 🔍 Bouton de recherche */}
-        {onSearchClick && (
-          <button
-            onClick={onSearchClick}
-            className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-          >
-            <Search className="w-4 h-4 text-gray-700 dark:text-gray-300" />
-            <span className="hidden sm:inline text-sm text-gray-700 dark:text-gray-300">
-              Rechercher...
-            </span>
-            <kbd className="hidden lg:inline px-2 py-0.5 text-xs bg-white dark:bg-gray-900 rounded border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400">
-              Ctrl K
-            </kbd>
-          </button>
-        )}
+      {/* Actions Droite : Sélecteur de Langue + Bouton menu mobile */}
+      <div className="flex items-center gap-3">
+        <LanguageSelector />
 
-        <ThemeToggle />
-      </div>
-
-      {/* Bouton menu mobile */}
-      <div className="lg:hidden flex items-center gap-3">
-        <ThemeToggle />
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 text-slate-900 dark:text-white hover:text-[#E2B44F] transition-colors"
+          className="lg:hidden p-2 text-white hover:text-[#E2B44F] transition-colors"
           aria-label="Toggle menu"
-          aria-controls="mobile-menu" // <-- AJOUTÉ : Améliore l'accessibilité
-          aria-expanded={mobileMenuOpen} // <-- AJOUTÉ : Indique l'état du menu aux lecteurs d'écran
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
-      {/* Menu mobile */}
+      {/* Menu mobile/tablette */}
       {mobileMenuOpen && (
-        <div
-          id="mobile-menu" // <-- AJOUTÉ : L'ID correspond à aria-controls du bouton
-          className="lg:hidden w-full mt-4 pb-4 border-t border-gray-200 dark:border-gray-800 pt-4 bg-white dark:bg-[#0A0A0A] rounded-lg"
-        >
+        <div className="lg:hidden w-full mt-4 pb-4 border-t border-gray-800 pt-4 bg-[#0A0A0A] rounded-lg">
           <div className="flex flex-col space-y-3">
-            <div className="flex flex-col">
-              <div className="flex items-center">
-                <Link
-                  href="/theorie"
-                  className={`flex-1 py-2 px-2 rounded ${
-                    pathname.startsWith("/theorie")
-                      ? "text-[#E2B44F] font-semibold bg-gray-100 dark:bg-gray-900 border-l-4 border-[#E2B44F]"
-                      : "text-slate-700 dark:text-gray-300 hover:text-[#E2B44F] hover:bg-gray-100 dark:hover:bg-gray-900"
-                  }`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Théorie
-                </Link>
-              </div>
-            </div>
+            {/* Bloc Théorie dans mobile */}
+            <details className="group">
+              <summary
+                className={`flex justify-between items-center py-2 px-2 rounded cursor-pointer ${
+                  pathname.startsWith("/theorie")
+                    ? "text-[#E2B44F] font-semibold bg-gray-900 border-l-4 border-[#E2B44F]"
+                    : "text-gray-300 hover:text-[#E2B44F] hover:bg-gray-900"
+                }`}
+              >
+                Théorie
+                <ChevronDown className="w-4 h-4 transition-transform group-open:rotate-180 text-[#E2B44F]" />
+              </summary>
+              <Link
+                href="/theorie/lecture-de-plan"
+                className="pl-6 py-2 text-gray-400 hover:text-[#E2B44F] transition-colors block"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                ↳ Lecture de Plan
+              </Link>
+            </details>
 
+            {/* Autres liens */}
             {navLinks.map(({ href, label }) => (
               <Link
                 key={href}
                 href={href}
                 className={`py-2 px-2 rounded ${
                   pathname === href
-                    ? "text-[#E2B44F] font-semibold bg-gray-100 dark:bg-gray-900 border-l-4 border-[#E2B44F]"
-                    : "text-slate-700 dark:text-gray-300 hover:text-[#E2B44F] hover:bg-gray-100 dark:hover:bg-gray-900"
+                    ? "text-[#E2B44F] font-semibold bg-gray-900 border-l-4 border-[#E2B44F]"
+                    : "text-gray-300 hover:text-[#E2B44F] hover:bg-gray-900"
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
