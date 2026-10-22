@@ -52,8 +52,8 @@ function Tooltip({ canton, position, onClose }: TooltipProps) {
       transition={{ duration: 0.25 }}
       className="absolute z-50 bg-[#1A1A1A] border border-[#E2B44F] rounded-lg p-4 shadow-2xl w-64 max-w-xs"
       style={{
-        left: Math.min(position.x, window.innerWidth - 250),
-        top: position.y,
+        left: typeof window !== 'undefined' ? Math.max(135, Math.min(position.x, window.innerWidth - 135)) : position.x,
+        top: Math.max(120, position.y),
         transform: "translate(-50%, -110%)",
       }}
     >
