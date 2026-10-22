@@ -1711,7 +1711,7 @@ export default function FuseauxHorairesPage() {
                           <h3 className="text-lg font-serif font-bold text-white flex items-center gap-1.5 mt-0.5">
                             {city.name}
                             {city.isManufactureHub && (
-                              <Award className="w-3.5 h-3.5 text-amber-400" title="Pôle de manufacture horlogère" />
+                              <span title="Pôle de manufacture horlogère"><Award className="w-3.5 h-3.5 text-amber-400" /></span>
                             )}
                           </h3>
                           <p className="text-xs text-slate-400">{city.country}</p>
