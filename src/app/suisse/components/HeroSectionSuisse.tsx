@@ -5,16 +5,14 @@ export default function HeroSectionSuisse() {
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-black text-white overflow-hidden">
       
-      {/* Swiss Flag Banner Video */}
-      <div className="absolute top-12 left-1/2 -translate-x-1/2 z-20 mx-auto w-[700px] h-[180px] border-2 border-[#d10032] rounded-lg overflow-hidden shadow-lg bg-black">
+      {/* Swiss Flag Banner Video (100% responsive sur mobile & tablette) */}
+      <div className="absolute top-8 sm:top-12 left-1/2 -translate-x-1/2 z-20 mx-auto w-[92%] sm:w-[580px] md:w-[700px] h-[100px] sm:h-[140px] md:h-[180px] max-w-[700px] border-2 border-[#d10032] rounded-lg overflow-hidden shadow-lg bg-black">
         <video
           autoPlay
           loop
           muted
           playsInline
           className="w-full h-full object-cover rounded-lg"
-          width={700}
-          height={180}
         >
           <source src="/videos/swiss-flag-banner.mp4" type="video/mp4" />
           Votre navigateur ne supporte pas la vidéo.
@@ -31,12 +29,12 @@ export default function HeroSectionSuisse() {
         transition={{ duration: 1, ease: "easeOut" }}
         className="relative z-10 text-center px-6 max-w-5xl mx-auto"
       >
-        {/* Gold animated title */}
+        {/* Gold animated title (ajusté pour mobile & tablette) */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-light mb-8 tracking-wide"
+          className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-light mb-6 sm:mb-8 tracking-wide pt-28 sm:pt-36 md:pt-16"
         >
           <span className="bg-gradient-to-r from-[#D4AF37] via-[#F4E5B8] to-[#D4AF37] bg-clip-text text-transparent">
             L'Horlogerie Suisse
