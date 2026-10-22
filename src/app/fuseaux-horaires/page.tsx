@@ -507,7 +507,7 @@ export default function FuseauxHorairesPage() {
   const [activeTab, setActiveTab] = useState<'cottier' | 'planisphere' | 'scrubber' | 'complications'>('cottier');
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
   const [selectedCityId, setSelectedCityId] = useState<string>('geneve');
-  const [isDeadBeat, setIsDeadBeat] = useState<boolean>(false); // false = sweeping hand, true = dead-beat
+  const [isDeadBeat, setIsDeadBeat] = useState<boolean>(false);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedRegion, setSelectedRegion] = useState<string>('all');
@@ -616,7 +616,6 @@ export default function FuseauxHorairesPage() {
     const utcMinutes = effectiveDate.getUTCMinutes();
     const utcSeconds = effectiveDate.getUTCSeconds();
     const totalUtcHours = utcHours + utcMinutes / 60 + utcSeconds / 3600;
-    // At 12:00 UTC, sun is at 0 deg longitude
     let lng = -(totalUtcHours - 12) * 15;
     while (lng < -180) lng += 360;
     while (lng > 180) lng -= 360;
@@ -628,7 +627,6 @@ export default function FuseauxHorairesPage() {
     const startOfYear = new Date(effectiveDate.getFullYear(), 0, 0);
     const diff = effectiveDate.getTime() - startOfYear.getTime();
     const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-    // Dec = -23.44 * cos(2*pi/365 * (N + 10))
     const rad = (2 * Math.PI / 365) * (dayOfYear + 10);
     return -23.44 * Math.cos(rad);
   }, [effectiveDate]);
@@ -646,19 +644,15 @@ export default function FuseauxHorairesPage() {
   }, [selectedRegion, searchQuery]);
 
   // Cottier Dial Rotation Angles
-  // When a city is selected, the city ring rotates so that the selected city is at 12 o'clock (-90 deg from center-right)
   const cityRingRotation = useMemo(() => {
     const cityIndex = selectedCity.cottierIndex;
-    // 24 cities -> 15 deg each.
     return -cityIndex * 15;
   }, [selectedCity]);
 
-  // The 24-hour disc rotates counter-clockwise based on UTC time (1 turn = 24h = 360 deg)
   const hour24DiscRotation = useMemo(() => {
     const utcHours = effectiveDate.getUTCHours();
     const utcMins = effectiveDate.getUTCMinutes();
     const totalUtcHours = utcHours + utcMins / 60;
-    // Counter-clockwise rotation: - (totalUtcHours * 15 deg)
     return -totalUtcHours * 15;
   }, [effectiveDate]);
 
@@ -679,7 +673,6 @@ export default function FuseauxHorairesPage() {
     if (isDeadBeat) {
       return selectedCityInfo.second * 6;
     }
-    // Smooth angle with milliseconds
     const s = selectedCityInfo.second;
     const ms = effectiveDate.getMilliseconds();
     return (s * 6) + (ms * 0.006);
@@ -696,22 +689,22 @@ export default function FuseauxHorairesPage() {
 
   if (!mounted) {
     return (
-      <main className="min-h-screen bg-[#07090E] text-slate-100 flex items-center justify-center p-6">
+      <main className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-slate-900 dark:text-slate-100 flex items-center justify-center p-6 transition-colors duration-300">
         <div className="flex flex-col items-center gap-4 text-center">
           <div className="w-16 h-16 rounded-full border-2 border-amber-500/40 border-t-amber-400 animate-spin flex items-center justify-center shadow-lg shadow-amber-500/20">
-            <Compass className="w-8 h-8 text-amber-400 animate-pulse" />
+            <Compass className="w-8 h-8 text-amber-500 animate-pulse" />
           </div>
-          <h2 className="text-xl font-serif text-amber-200 tracking-wider">Initialisation du Calibre Heures du Monde...</h2>
-          <p className="text-xs text-slate-400 font-mono">Synchronisation des 24 méridiens & temps atomique UTC</p>
+          <h2 className="text-xl font-serif text-amber-700 dark:text-amber-200 tracking-wider">Initialisation du Calibre Heures du Monde...</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">Synchronisation des 24 méridiens & temps atomique UTC</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#07090E] text-slate-100 selection:bg-amber-500/30 selection:text-amber-200">
-      {/* Background Subtle Radial Glows */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <main className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-slate-900 dark:text-slate-100 transition-colors duration-300 selection:bg-amber-500/30 selection:text-amber-700 dark:selection:text-amber-200">
+      {/* Background Subtle Radial Glows (dark mode only for atmospheric depth) */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 hidden dark:block">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-amber-500/10 via-amber-700/5 to-transparent blur-[140px]" />
         <div className="absolute top-1/3 -left-40 w-[600px] h-[600px] bg-blue-600/5 blur-[160px]" />
         <div className="absolute bottom-10 right-0 w-[500px] h-[500px] bg-amber-500/5 blur-[150px]" />
@@ -720,26 +713,26 @@ export default function FuseauxHorairesPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-24 relative z-10 space-y-10">
 
         {/* --- BREADCRUMB & MANUFACTURE BADGE --- */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
-          <div className="flex items-center gap-2 text-xs text-slate-400 font-mono">
-            <Link href="/" className="hover:text-amber-400 transition-colors">HorloLearn</Link>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
-            <Link href="/theorie" className="hover:text-amber-400 transition-colors">Théorie & Complications</Link>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
-            <span className="text-amber-300 font-medium">Fuseaux Horaires Mondiaux</span>
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800/80 pb-4">
+          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-mono">
+            <Link href="/" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">HorloLearn</Link>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600" />
+            <Link href="/theorie" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">Théorie & Complications</Link>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600" />
+            <span className="text-amber-600 dark:text-amber-300 font-medium">Fuseaux Horaires Mondiaux</span>
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-300 dark:border-emerald-500/30">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
               UTC Atomique Actif (Précision &lt; 1ms)
             </span>
             <button
               onClick={() => setSoundEnabled(!soundEnabled)}
               className={`p-2 rounded-lg border text-xs transition-all flex items-center gap-1.5 ${
                 soundEnabled
-                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 shadow-md shadow-amber-500/10'
-                  : 'bg-slate-900/60 text-slate-400 border-slate-800 hover:text-slate-200'
+                  ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/50 shadow-md shadow-amber-500/10'
+                  : 'bg-white dark:bg-slate-900/60 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
               title="Activer le cliquetis mécanique des changements de fuseau"
             >
@@ -751,14 +744,14 @@ export default function FuseauxHorairesPage() {
 
         {/* --- HERO HEADER --- */}
         <div className="text-center space-y-4 max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono tracking-widest uppercase">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-mono tracking-widest uppercase shadow-sm">
             <Award className="w-3.5 h-3.5" />
             Complication Haute Horlogerie Suisse · Brevet Louis Cottier 1931
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight">
-            Fuseaux Horaires & <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500 bg-clip-text text-transparent">Heures du Monde</span>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-slate-900 dark:text-white tracking-tight">
+            Fuseaux Horaires & <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-200 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent">Heures du Monde</span>
           </h1>
-          <p className="text-slate-300 text-base sm:text-lg max-w-3xl mx-auto font-light leading-relaxed">
+          <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg max-w-3xl mx-auto font-light leading-relaxed">
             Maîtrisez les 24 méridiens de la Terre à travers le prisme de la Haute Horlogerie.
             De l&apos;anneau tournant universel de Louis Cottier à la cartographie solaire en temps réel,
             explorez la mécanique du voyage et les calibres GMT de manufacture.
@@ -767,66 +760,66 @@ export default function FuseauxHorairesPage() {
 
         {/* --- LIVE UTC & GENEVA TICKER BAR --- */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 font-mono">
-          <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4 flex flex-col justify-between backdrop-blur-md">
-            <div className="flex items-center justify-between text-xs text-slate-400">
+          <div className="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex flex-col justify-between backdrop-blur-md shadow-sm dark:shadow-none">
+            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
               <span>TEMPS UTC / GMT</span>
-              <Globe className="w-4 h-4 text-sky-400" />
+              <Globe className="w-4 h-4 text-sky-500 dark:text-sky-400" />
             </div>
-            <div className="text-2xl sm:text-3xl font-bold text-sky-300 mt-2">
+            <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-sky-300 mt-2">
               {currentTime.toUTCString().slice(17, 25)}
             </div>
-            <div className="text-[11px] text-slate-500 mt-1">Méridien 0° de Greenwich</div>
+            <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Méridien 0° de Greenwich</div>
           </div>
 
-          <div className="bg-slate-900/70 border border-amber-500/30 rounded-xl p-4 flex flex-col justify-between backdrop-blur-md bg-gradient-to-br from-amber-500/5 to-transparent">
-            <div className="flex items-center justify-between text-xs text-amber-300">
+          <div className="bg-white dark:bg-slate-900/70 border border-amber-500/30 rounded-xl p-4 flex flex-col justify-between backdrop-blur-md bg-gradient-to-br from-amber-500/5 to-transparent shadow-sm dark:shadow-none">
+            <div className="flex items-center justify-between text-xs text-amber-700 dark:text-amber-300">
               <span>RÉFÉRENCE GENÈVE (CET)</span>
-              <Clock className="w-4 h-4 text-amber-400" />
+              <Clock className="w-4 h-4 text-amber-500" />
             </div>
-            <div className="text-2xl sm:text-3xl font-bold text-amber-300 mt-2">
+            <div className="text-2xl sm:text-3xl font-bold text-amber-600 dark:text-amber-300 mt-2">
               {genevaInfo.formattedTime}
             </div>
-            <div className="text-[11px] text-amber-400/80 mt-1">Manufactures Suisses · UTC+1</div>
+            <div className="text-[11px] text-amber-700/80 dark:text-amber-400/80 mt-1">Manufactures Suisses · UTC+1</div>
           </div>
 
-          <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4 flex flex-col justify-between backdrop-blur-md">
-            <div className="flex items-center justify-between text-xs text-slate-400">
+          <div className="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex flex-col justify-between backdrop-blur-md shadow-sm dark:shadow-none">
+            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
               <span>VILLE SÉLECTIONNÉE</span>
-              <MapPin className="w-4 h-4 text-emerald-400" />
+              <MapPin className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
             </div>
-            <div className="text-2xl sm:text-3xl font-bold text-emerald-300 mt-2 truncate">
+            <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-emerald-300 mt-2 truncate">
               {selectedCity.name}
             </div>
-            <div className="text-[11px] text-slate-500 mt-1 truncate">
+            <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-1 truncate">
               {selectedCityInfo.formattedTime} ({selectedCity.offsetHours >= 0 ? `+${selectedCity.offsetHours}` : selectedCity.offsetHours}h)
             </div>
           </div>
 
-          <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4 flex flex-col justify-between backdrop-blur-md">
-            <div className="flex items-center justify-between text-xs text-slate-400">
+          <div className="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex flex-col justify-between backdrop-blur-md shadow-sm dark:shadow-none">
+            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
               <span>ZÉNITH SOLAIRE UTC</span>
-              <Sun className="w-4 h-4 text-amber-400" />
+              <Sun className="w-4 h-4 text-amber-500" />
             </div>
-            <div className="text-2xl sm:text-3xl font-bold text-amber-400 mt-2">
+            <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-amber-400 mt-2">
               {sunLongitude >= 0 ? `+${sunLongitude.toFixed(1)}°` : `${sunLongitude.toFixed(1)}°`}
             </div>
-            <div className="text-[11px] text-slate-500 mt-1">
+            <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-1">
               Déclinaison : {solarDeclination >= 0 ? `+${solarDeclination.toFixed(1)}°` : `${solarDeclination.toFixed(1)}°`}
             </div>
           </div>
         </div>
 
         {/* --- NAVIGATION TABS --- */}
-        <div className="flex flex-wrap items-center justify-center gap-2 border-b border-slate-800/80 pb-2">
+        <div className="flex flex-wrap items-center justify-center gap-2 border-b border-slate-200 dark:border-slate-800/80 pb-2">
           <button
             onClick={() => setActiveTab('cottier')}
             className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-medium text-sm transition-all ${
               activeTab === 'cottier'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow-lg shadow-amber-500/10'
-                : 'bg-slate-900/40 text-slate-400 border border-slate-800/80 hover:text-slate-200 hover:bg-slate-800/40'
+                ? 'bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/50 shadow-md'
+                : 'bg-white dark:bg-slate-900/40 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800/80 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/40'
             }`}
           >
-            <Compass className="w-4 h-4 text-amber-400" />
+            <Compass className="w-4 h-4 text-amber-500" />
             Horloge Cottier 24 Villes
           </button>
 
@@ -834,11 +827,11 @@ export default function FuseauxHorairesPage() {
             onClick={() => setActiveTab('planisphere')}
             className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-medium text-sm transition-all ${
               activeTab === 'planisphere'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow-lg shadow-amber-500/10'
-                : 'bg-slate-900/40 text-slate-400 border border-slate-800/80 hover:text-slate-200 hover:bg-slate-800/40'
+                ? 'bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/50 shadow-md'
+                : 'bg-white dark:bg-slate-900/40 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800/80 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/40'
             }`}
           >
-            <Globe className="w-4 h-4 text-amber-400" />
+            <Globe className="w-4 h-4 text-amber-500" />
             Planisphère & Terminator Solaire
           </button>
 
@@ -846,11 +839,11 @@ export default function FuseauxHorairesPage() {
             onClick={() => setActiveTab('scrubber')}
             className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-medium text-sm transition-all ${
               activeTab === 'scrubber'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow-lg shadow-amber-500/10'
-                : 'bg-slate-900/40 text-slate-400 border border-slate-800/80 hover:text-slate-200 hover:bg-slate-800/40'
+                ? 'bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/50 shadow-md'
+                : 'bg-white dark:bg-slate-900/40 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800/80 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/40'
             }`}
           >
-            <Sliders className="w-4 h-4 text-amber-400" />
+            <Sliders className="w-4 h-4 text-amber-500" />
             Scrubber 24h & Planificateur Mondial
           </button>
 
@@ -858,11 +851,11 @@ export default function FuseauxHorairesPage() {
             onClick={() => setActiveTab('complications')}
             className={`flex items-center gap-2.5 px-5 py-3 rounded-xl font-medium text-sm transition-all ${
               activeTab === 'complications'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow-lg shadow-amber-500/10'
-                : 'bg-slate-900/40 text-slate-400 border border-slate-800/80 hover:text-slate-200 hover:bg-slate-800/40'
+                ? 'bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/50 shadow-md'
+                : 'bg-white dark:bg-slate-900/40 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800/80 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/40'
             }`}
           >
-            <Layers className="w-4 h-4 text-amber-400" />
+            <Layers className="w-4 h-4 text-amber-500" />
             Architecture GMT vs World Time
           </button>
         </div>
@@ -873,7 +866,7 @@ export default function FuseauxHorairesPage() {
         {activeTab === 'cottier' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* WATCH DISPLAY (7 cols) */}
-            <div className="lg:col-span-7 bg-gradient-to-b from-slate-900/90 to-[#0A0D14] border border-slate-800/90 rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center relative shadow-2xl overflow-hidden backdrop-blur-xl">
+            <div className="lg:col-span-7 bg-white dark:bg-gradient-to-b dark:from-slate-900/90 dark:to-[#0A0D14] border border-slate-200 dark:border-slate-800/90 rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center relative shadow-lg dark:shadow-2xl overflow-hidden backdrop-blur-xl">
               {/* Subtle watch background radial ring */}
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(217,119,6,0.06)_0%,transparent_70%)] pointer-events-none" />
 
@@ -882,7 +875,7 @@ export default function FuseauxHorairesPage() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handlePusherJump}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/40 text-amber-300 hover:bg-amber-500/20 text-xs font-mono transition-all shadow-md active:scale-95"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/40 text-amber-700 dark:text-amber-300 hover:bg-amber-500/20 text-xs font-mono transition-all shadow-sm active:scale-95"
                     title="Actionner le poussoir de fuseau à 10 heures"
                   >
                     <RotateCw className="w-3.5 h-3.5" />
@@ -895,8 +888,8 @@ export default function FuseauxHorairesPage() {
                     onClick={() => setIsDeadBeat(!isDeadBeat)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-mono border transition-all ${
                       isDeadBeat
-                        ? 'bg-sky-500/20 text-sky-300 border-sky-500/50'
-                        : 'bg-slate-800/60 text-slate-300 border-slate-700 hover:text-white'
+                        ? 'bg-sky-500/20 text-sky-700 dark:text-sky-300 border-sky-500/50'
+                        : 'bg-slate-100 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white'
                     }`}
                     title="Alterner entre trotteuse continue 4Hz et seconde morte indépendante"
                   >
@@ -909,10 +902,9 @@ export default function FuseauxHorairesPage() {
               <div className="relative w-full max-w-[480px] aspect-square flex items-center justify-center select-none">
                 <svg
                   viewBox="0 0 500 500"
-                  className="w-full h-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
+                  className="w-full h-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.4)] dark:drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
                 >
                   <defs>
-                    {/* Metal bezel gradient */}
                     <linearGradient id="bezelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stopColor="#4A5568" />
                       <stop offset="25%" stopColor="#CBD5E0" />
@@ -921,7 +913,6 @@ export default function FuseauxHorairesPage() {
                       <stop offset="100%" stopColor="#1A202C" />
                     </linearGradient>
 
-                    {/* Gold Rose Outer Rim */}
                     <linearGradient id="goldRim" x1="0%" y1="100%" x2="100%" y2="0%">
                       <stop offset="0%" stopColor="#78350F" />
                       <stop offset="50%" stopColor="#D97706" />
@@ -929,33 +920,22 @@ export default function FuseauxHorairesPage() {
                       <stop offset="100%" stopColor="#92400E" />
                     </linearGradient>
 
-                    {/* Central Dial Guilloché pattern */}
                     <radialGradient id="dialSunburst" cx="50%" cy="50%" r="50%">
                       <stop offset="0%" stopColor="#1E293B" />
                       <stop offset="70%" stopColor="#0F172A" />
                       <stop offset="100%" stopColor="#070A0F" />
                     </radialGradient>
 
-                    {/* Day ring ivory gradient */}
                     <linearGradient id="dayRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stopColor="#FFFBEB" />
                       <stop offset="100%" stopColor="#FEF3C7" />
                     </linearGradient>
 
-                    {/* Night ring deep navy gradient */}
                     <linearGradient id="nightRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stopColor="#020617" />
                       <stop offset="100%" stopColor="#0F172A" />
                     </linearGradient>
 
-                    {/* Blued steel hand gradient */}
-                    <linearGradient id="bluedSteel" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#1D4ED8" />
-                      <stop offset="50%" stopColor="#3B82F6" />
-                      <stop offset="100%" stopColor="#1E3A8A" />
-                    </linearGradient>
-
-                    {/* Gold faceted hand */}
                     <linearGradient id="goldHand" x1="0%" y1="0%" x2="100%" y2="0%">
                       <stop offset="0%" stopColor="#D97706" />
                       <stop offset="50%" stopColor="#FEF08A" />
@@ -980,22 +960,20 @@ export default function FuseauxHorairesPage() {
                     );
                   })}
 
-                  {/* 2. ROTATING CITY RING (R = 195 to 235) */}
-                  {/* Rotates so that the selected city is always at 12 o'clock (-90 deg from 3 o'clock) */}
+                  {/* 2. ROTATING CITY RING */}
                   <g
                     transform={`rotate(${cityRingRotation}, 250, 250)`}
                     style={{ transition: 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
                   >
                     <circle cx="250" cy="250" r="232" fill="#0A0E17" stroke="#1E293B" strokeWidth="1" />
                     {CITIES_DATA.map((city) => {
-                      const angleDeg = city.cottierIndex * 15 - 90; // 0 index at top (12 o'clock)
+                      const angleDeg = city.cottierIndex * 15 - 90;
                       const rad = (angleDeg * Math.PI) / 180;
                       const textRadius = 212;
                       const tx = 250 + textRadius * Math.cos(rad);
                       const ty = 250 + textRadius * Math.sin(rad);
                       const isCitySelected = city.id === selectedCity.id;
 
-                      // City text rotated radially
                       let rotationAngle = angleDeg + 90;
                       if (angleDeg > 0 && angleDeg < 180) {
                         rotationAngle += 180;
@@ -1007,7 +985,6 @@ export default function FuseauxHorairesPage() {
                           onClick={() => handleSelectCity(city.id)}
                           className="cursor-pointer group"
                         >
-                          {/* Radial indicator tick */}
                           <line
                             x1={250 + 228 * Math.cos(rad)}
                             y1={250 + 228 * Math.sin(rad)}
@@ -1017,7 +994,6 @@ export default function FuseauxHorairesPage() {
                             strokeWidth={isCitySelected ? 2 : 1}
                           />
 
-                          {/* City Name */}
                           <text
                             x={tx}
                             y={ty}
@@ -1043,16 +1019,13 @@ export default function FuseauxHorairesPage() {
                     })}
                   </g>
 
-                  {/* 3. 24-HOUR ROTATING CONCENTRIC DISC (R = 158 to 195) */}
-                  {/* Rotates counter-clockwise according to UTC hours */}
+                  {/* 3. 24-HOUR ROTATING CONCENTRIC DISC */}
                   <g
                     transform={`rotate(${hour24DiscRotation}, 250, 250)`}
                     style={{ transition: 'transform 0.4s linear' }}
                   >
-                    {/* Ring background */}
                     <circle cx="250" cy="250" r="192" fill="#020617" stroke="#334155" strokeWidth="1" />
 
-                    {/* Semi-Circle Day (06:00 to 18:00) */}
                     <path
                       d="M 250,58 A 192,192 0 0,1 250,442 L 250,392 A 142,142 0 0,0 250,108 Z"
                       fill="url(#dayRingGrad)"
@@ -1060,7 +1033,6 @@ export default function FuseauxHorairesPage() {
                       strokeWidth="0.5"
                     />
 
-                    {/* Semi-Circle Night (18:00 to 06:00) */}
                     <path
                       d="M 250,442 A 192,192 0 0,1 250,58 L 250,108 A 142,142 0 0,0 250,392 Z"
                       fill="url(#nightRingGrad)"
@@ -1068,10 +1040,8 @@ export default function FuseauxHorairesPage() {
                       strokeWidth="0.5"
                     />
 
-                    {/* 24-Hour Numbers & Symbols */}
                     {Array.from({ length: 24 }).map((_, idx) => {
-                      const h = idx + 1; // 1 to 24
-                      // In Cottier watches, 12 is at the top of the day side, 24 at night side
+                      const h = idx + 1;
                       const angle = (idx * 15) - 90;
                       const rad = (angle * Math.PI) / 180;
                       const rNum = 167;
@@ -1081,7 +1051,6 @@ export default function FuseauxHorairesPage() {
 
                       return (
                         <g key={h}>
-                          {/* Radial separation lines */}
                           <line
                             x1={250 + 145 * Math.cos(rad)}
                             y1={250 + 145 * Math.sin(rad)}
@@ -1109,10 +1078,9 @@ export default function FuseauxHorairesPage() {
                     })}
                   </g>
 
-                  {/* 4. CENTRAL MANUFACTURE DIAL (R = 142) */}
+                  {/* 4. CENTRAL MANUFACTURE DIAL */}
                   <circle cx="250" cy="250" r="142" fill="url(#dialSunburst)" stroke="url(#goldRim)" strokeWidth="2.5" />
 
-                  {/* Guilloché concentric ripples */}
                   {[25, 45, 65, 85, 105, 125].map(r => (
                     <circle
                       key={r}
@@ -1127,7 +1095,6 @@ export default function FuseauxHorairesPage() {
                     />
                   ))}
 
-                  {/* Hour markers (12 Roman / baton indices) */}
                   {Array.from({ length: 12 }).map((_, i) => {
                     const ang = i * 30 - 90;
                     const rad = (ang * Math.PI) / 180;
@@ -1149,7 +1116,6 @@ export default function FuseauxHorairesPage() {
                     );
                   })}
 
-                  {/* Central Inscription */}
                   <text
                     x="250"
                     y="180"
@@ -1174,7 +1140,6 @@ export default function FuseauxHorairesPage() {
                     GENÈVE · WORLD TIME
                   </text>
 
-                  {/* Selected city name displayed inside dial */}
                   <rect x="180" y="300" width="140" height="22" rx="4" fill="#0B132B" stroke="#3B82F6" strokeWidth="0.8" />
                   <text
                     x="250"
@@ -1189,7 +1154,6 @@ export default function FuseauxHorairesPage() {
                   </text>
 
                   {/* 5. WATCH HANDS */}
-                  {/* A) Louis Cottier Open Ring Hour Hand */}
                   <g transform={`rotate(${localHourAngle}, 250, 250)`}>
                     <path
                       d="M 247,250 L 247,190 A 14,14 0 1,1 253,190 L 253,250 Z"
@@ -1200,7 +1164,6 @@ export default function FuseauxHorairesPage() {
                     <circle cx="250" cy="180" r="7" fill="#0F172A" stroke="url(#goldHand)" strokeWidth="2.5" />
                   </g>
 
-                  {/* B) Faceted Dauphine Minute Hand */}
                   <g transform={`rotate(${localMinuteAngle}, 250, 250)`}>
                     <polygon
                       points="246,250 250,140 254,250 250,265"
@@ -1211,7 +1174,6 @@ export default function FuseauxHorairesPage() {
                     <line x1="250" y1="250" x2="250" y2="142" stroke="#FFFBEB" strokeWidth="0.8" />
                   </g>
 
-                  {/* C) Flame-Blued Central Seconds Hand with circular counterbalance */}
                   <g
                     transform={`rotate(${localSecondAngle}, 250, 250)`}
                     style={{ transition: isDeadBeat ? 'transform 0.1s cubic-bezier(0.4, 2, 0.6, 1)' : 'none' }}
@@ -1221,18 +1183,16 @@ export default function FuseauxHorairesPage() {
                     <circle cx="250" cy="128" r="2.5" fill="#EF4444" />
                   </g>
 
-                  {/* Central Ruby & Polished Cap */}
                   <circle cx="250" cy="250" r="8" fill="#991B1B" stroke="#D97706" strokeWidth="1.5" />
                   <circle cx="250" cy="250" r="3.5" fill="#FEF08A" />
 
-                  {/* Red Local Reference Marker at 12 o'clock */}
                   <polygon points="250,22 245,10 255,10" fill="#EF4444" />
                 </svg>
               </div>
 
               {/* Bottom Quick-City Bar */}
               <div className="w-full mt-6 flex flex-wrap items-center justify-center gap-2 z-10">
-                <span className="text-xs text-slate-400 font-mono mr-1">Villes Rapides :</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-mono mr-1">Villes Rapides :</span>
                 {['geneve', 'london', 'newyork', 'tokyo', 'dubai', 'hongkong'].map(cid => {
                   const c = CITIES_DATA.find(x => x.id === cid)!;
                   const isSelected = selectedCity.id === cid;
@@ -1243,7 +1203,7 @@ export default function FuseauxHorairesPage() {
                       className={`px-3 py-1 rounded-lg text-xs font-mono transition-all ${
                         isSelected
                           ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
-                          : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700/60'
+                          : 'bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700/60'
                       }`}
                     >
                       {c.name}
@@ -1256,42 +1216,42 @@ export default function FuseauxHorairesPage() {
             {/* SIDE CONTROL & TECHNICAL DECK (5 cols) */}
             <div className="lg:col-span-5 space-y-6">
               {/* Active City Master Card */}
-              <div className="bg-slate-900/90 border border-amber-500/30 rounded-2xl p-6 shadow-xl backdrop-blur-xl relative overflow-hidden">
+              <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-amber-500/30 rounded-2xl p-6 shadow-md dark:shadow-xl backdrop-blur-xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
 
                 <div className="flex items-start justify-between">
                   <div>
-                    <span className="text-xs font-mono text-amber-400 tracking-wider uppercase">
+                    <span className="text-xs font-mono text-amber-600 dark:text-amber-400 tracking-wider uppercase font-semibold">
                       Fuseau Actif ({selectedCity.offsetHours >= 0 ? `UTC+${selectedCity.offsetHours}` : `UTC${selectedCity.offsetHours}`})
                     </span>
-                    <h2 className="text-3xl font-serif font-bold text-white mt-1">
+                    <h2 className="text-3xl font-serif font-bold text-slate-900 dark:text-white mt-1">
                       {selectedCity.name}
                     </h2>
-                    <p className="text-sm text-slate-400">{selectedCity.country}</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">{selectedCity.country}</p>
                   </div>
 
                   <span className={`px-3 py-1 rounded-full text-xs font-mono font-medium flex items-center gap-1.5 ${
                     selectedCityInfo.isDay
-                      ? 'bg-amber-500/10 text-amber-300 border border-amber-500/30'
-                      : 'bg-blue-500/10 text-blue-300 border border-blue-500/30'
+                      ? 'bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/30'
+                      : 'bg-blue-50 text-blue-800 border border-blue-200 dark:bg-blue-500/10 dark:text-blue-300 dark:border-blue-500/30'
                   }`}>
                     {selectedCityInfo.isDay ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
                     {selectedCityInfo.sunStatus}
                   </span>
                 </div>
 
-                <div className="mt-6 p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2 font-mono">
-                  <div className="flex items-center justify-between text-xs text-slate-400">
+                <div className="mt-6 p-4 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-2 font-mono">
+                  <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                     <span>Heure Locale Exacte :</span>
-                    <span className="text-lg font-bold text-amber-300">{selectedCityInfo.formattedTime}</span>
+                    <span className="text-lg font-bold text-amber-600 dark:text-amber-300">{selectedCityInfo.formattedTime}</span>
                   </div>
-                  <div className="flex items-center justify-between text-xs text-slate-400">
+                  <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                     <span>Date Locale :</span>
-                    <span className="text-slate-200">{selectedCityInfo.formattedDate}</span>
+                    <span className="text-slate-800 dark:text-slate-200 font-medium">{selectedCityInfo.formattedDate}</span>
                   </div>
-                  <div className="flex items-center justify-between text-xs text-slate-400">
+                  <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                     <span>Écart avec Genève :</span>
-                    <span className="text-emerald-400 font-semibold">
+                    <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
                       {selectedCity.offsetHours - 1 > 0
                         ? `+${selectedCity.offsetHours - 1}h d'avance`
                         : selectedCity.offsetHours - 1 < 0
@@ -1302,44 +1262,44 @@ export default function FuseauxHorairesPage() {
                 </div>
 
                 {/* Economic / Workshop Status */}
-                <div className="mt-4 space-y-3 text-xs text-slate-300">
+                <div className="mt-4 space-y-3 text-xs text-slate-600 dark:text-slate-300">
                   <div className="flex items-center gap-2">
-                    <span className={`w-2.5 h-2.5 rounded-full ${selectedCityInfo.isWorkshopOpen ? 'bg-emerald-400' : 'bg-slate-600'}`} />
+                    <span className={`w-2.5 h-2.5 rounded-full ${selectedCityInfo.isWorkshopOpen ? 'bg-emerald-500' : 'bg-slate-400 dark:bg-slate-600'}`} />
                     <span className="font-medium">
                       Ateliers Horlogers :{' '}
-                      <span className={selectedCityInfo.isWorkshopOpen ? 'text-emerald-300' : 'text-slate-400'}>
+                      <span className={selectedCityInfo.isWorkshopOpen ? 'text-emerald-600 dark:text-emerald-300 font-semibold' : 'text-slate-500 dark:text-slate-400'}>
                         {selectedCityInfo.isWorkshopOpen ? 'En pleine activité (08h00 - 17h30)' : 'Fermés / Période de repos'}
                       </span>
                     </span>
                   </div>
 
-                  <div className="flex items-start gap-2 text-slate-400">
-                    <Info className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-2 text-slate-500 dark:text-slate-400">
+                    <Info className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
                     <span>{selectedCity.hubDescription}</span>
                   </div>
 
-                  <div className="flex items-center gap-2 text-slate-400 font-mono text-[11px]">
-                    <Activity className="w-3.5 h-3.5 text-sky-400" />
+                  <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-mono text-[11px]">
+                    <Activity className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />
                     <span>Marché / Bourse : {selectedCity.stockMarket}</span>
                   </div>
                 </div>
               </div>
 
               {/* How Louis Cottier Invention Works */}
-              <div className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 space-y-4">
-                <div className="flex items-center gap-2 text-amber-300 font-serif font-bold text-base">
-                  <ShieldCheck className="w-5 h-5 text-amber-400" />
+              <div className="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-sm dark:shadow-none">
+                <div className="flex items-center gap-2 text-slate-900 dark:text-amber-300 font-serif font-bold text-base">
+                  <ShieldCheck className="w-5 h-5 text-amber-500" />
                   Comment lire l&apos;Horloge Universelle Cottier ?
                 </div>
-                <div className="text-xs text-slate-300 space-y-2.5 leading-relaxed">
+                <div className="text-xs text-slate-600 dark:text-slate-300 space-y-2.5 leading-relaxed">
                   <p>
-                    <strong className="text-white">1. Heure Locale (Centre) :</strong> L&apos;aiguille des heures ajourée et l&apos;aiguille des minutes indiquent l&apos;heure de la ville placée au sommet (12 heures).
+                    <strong className="text-slate-900 dark:text-white">1. Heure Locale (Centre) :</strong> L&apos;aiguille des heures ajourée et l&apos;aiguille des minutes indiquent l&apos;heure de la ville placée au sommet (12 heures).
                   </p>
                   <p>
-                    <strong className="text-white">2. Heures Mondiales Instantanées :</strong> Pour connaître l&apos;heure de n&apos;importe laquelle des 23 autres villes, regardez simplement le chiffre sur la bague 24h qui fait face au nom de la ville ! Les minutes restent strictement identiques partout.
+                    <strong className="text-slate-900 dark:text-white">2. Heures Mondiales Instantanées :</strong> Pour connaître l&apos;heure de n&apos;importe laquelle des 23 autres villes, regardez simplement le chiffre sur la bague 24h qui fait face au nom de la ville ! Les minutes restent strictement identiques partout.
                   </p>
                   <p>
-                    <strong className="text-white">3. Disque Jour / Nuit :</strong> Le fond champagne indique les heures diurnes (06h à 18h), tandis que le fond bleu nuit signale la nuit (18h à 06h).
+                    <strong className="text-slate-900 dark:text-white">3. Disque Jour / Nuit :</strong> Le fond champagne indique les heures diurnes (06h à 18h), tandis que le fond bleu nuit signale la nuit (18h à 06h).
                   </p>
                 </div>
               </div>
@@ -1352,42 +1312,40 @@ export default function FuseauxHorairesPage() {
         {/* ========================================================================= */}
         {activeTab === 'planisphere' && (
           <div className="space-y-6">
-            <div className="bg-gradient-to-b from-slate-900/90 to-[#0A0D14] border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl relative overflow-hidden">
+            <div className="bg-white dark:bg-gradient-to-b dark:from-slate-900/90 dark:to-[#0A0D14] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-md dark:shadow-2xl backdrop-blur-xl relative overflow-hidden">
               <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <div>
-                  <h2 className="text-2xl font-serif font-bold text-white flex items-center gap-2">
-                    <Globe className="w-6 h-6 text-amber-400" />
+                  <h2 className="text-2xl font-serif font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <Globe className="w-6 h-6 text-amber-500" />
                     Planisphère Mondial & Terminator Jour / Nuit
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
                     Visualisation de l&apos;onde d&apos;obscurité terrestre calculée selon la déclinaison solaire et l&apos;heure UTC actuelle.
                   </p>
                 </div>
 
                 <div className="flex items-center gap-3 text-xs font-mono">
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/30">
-                    <Sun className="w-3.5 h-3.5 text-amber-400" />
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/30">
+                    <Sun className="w-3.5 h-3.5 text-amber-500" />
                     Zénith : {sunLongitude.toFixed(1)}° Longitude
                   </div>
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-300 border border-blue-500/30">
-                    <Moon className="w-3.5 h-3.5 text-blue-400" />
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 dark:bg-blue-500/10 dark:text-blue-300 dark:border-blue-500/30">
+                    <Moon className="w-3.5 h-3.5 text-blue-500 dark:text-blue-400" />
                     Nadir : {((sunLongitude + 180) % 360 - 180).toFixed(1)}°
                   </div>
                 </div>
               </div>
 
               {/* --- SVG WORLD MAP WITH REALISTIC CONTINENTS & TERMINATOR --- */}
-              <div className="relative w-full aspect-[2/1] bg-[#070B14] rounded-xl border border-slate-800/80 overflow-hidden shadow-inner">
+              <div className="relative w-full aspect-[2/1] bg-[#070B14] rounded-xl border border-slate-300 dark:border-slate-800/80 overflow-hidden shadow-inner">
                 <svg viewBox="0 0 1000 500" className="w-full h-full">
                   <defs>
-                    {/* Night shadow gradient */}
                     <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
                       <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.8" />
                       <stop offset="40%" stopColor="#F59E0B" stopOpacity="0.2" />
                       <stop offset="100%" stopColor="#F59E0B" stopOpacity="0" />
                     </radialGradient>
 
-                    {/* Night atmospheric shadow */}
                     <linearGradient id="nightTerminator" x1="0%" y1="0%" x2="100%" y2="0%">
                       <stop offset="0%" stopColor="#020617" stopOpacity="0.85" />
                       <stop offset="50%" stopColor="#0B132B" stopOpacity="0.6" />
@@ -1395,10 +1353,10 @@ export default function FuseauxHorairesPage() {
                     </linearGradient>
                   </defs>
 
-                  {/* 1. Longitude & Latitude Grids (every 15 deg = 1h) */}
+                  {/* 1. Longitude & Latitude Grids */}
                   {Array.from({ length: 25 }).map((_, i) => {
                     const x = (i * 1000) / 24;
-                    const isPrime = i === 12; // Greenwich Prime Meridian
+                    const isPrime = i === 12;
                     return (
                       <line
                         key={i}
@@ -1413,41 +1371,29 @@ export default function FuseauxHorairesPage() {
                     );
                   })}
 
-                  {/* Equator & Tropics */}
                   <line x1="0" y1="250" x2="1000" y2="250" stroke="#334155" strokeWidth="1" strokeDasharray="4,4" />
-                  <line x1="0" y1="185" x2="1000" y2="185" stroke="#1E293B" strokeWidth="0.6" strokeDasharray="2,4" /> {/* Cancer */}
-                  <line x1="0" y1="315" x2="1000" y2="315" stroke="#1E293B" strokeWidth="0.6" strokeDasharray="2,4" /> {/* Capricorne */}
+                  <line x1="0" y1="185" x2="1000" y2="185" stroke="#1E293B" strokeWidth="0.6" strokeDasharray="2,4" />
+                  <line x1="0" y1="315" x2="1000" y2="315" stroke="#1E293B" strokeWidth="0.6" strokeDasharray="2,4" />
 
                   {/* 2. Stylized Vector Continents */}
                   <g fill="#162033" stroke="#223354" strokeWidth="1">
-                    {/* Europe & North Africa */}
                     <path d="M 460,110 L 510,105 L 535,130 L 525,160 L 500,180 L 470,195 L 450,180 L 460,140 Z" />
-                    {/* Africa */}
                     <path d="M 470,200 L 540,205 L 560,250 L 550,330 L 510,380 L 485,380 L 460,300 L 450,225 Z" />
-                    {/* Asia */}
                     <path d="M 535,100 L 640,90 L 760,105 L 820,135 L 780,210 L 720,240 L 670,250 L 600,210 L 545,150 Z" />
-                    {/* India */}
                     <path d="M 660,210 L 700,220 L 685,280 L 665,250 Z" />
-                    {/* North America */}
                     <path d="M 120,90 L 250,85 L 290,140 L 260,200 L 220,230 L 170,180 L 130,130 Z" />
-                    {/* South America */}
                     <path d="M 270,260 L 340,270 L 360,320 L 320,410 L 290,430 L 275,340 Z" />
-                    {/* Australia */}
                     <path d="M 780,310 L 870,305 L 880,360 L 820,380 L 775,350 Z" />
                   </g>
 
-                  {/* 3. Real-Time Solar Night Mask (Terminator Shadow) */}
-                  {/* Sun position mapped to SVG coordinates: sunX in [0, 1000], sunY in [0, 500] */}
+                  {/* 3. Real-Time Solar Night Mask */}
                   {(() => {
                     const sunX = ((sunLongitude + 180) / 360) * 1000;
                     const sunY = ((90 - solarDeclination) / 180) * 500;
-
-                    // Night covers the hemisphere opposite to sunX: width = 500px centered around (sunX + 500) % 1000
                     const nightCenterX = (sunX + 500) % 1000;
 
                     return (
                       <g>
-                        {/* Night shading band across map */}
                         <rect
                           x={nightCenterX - 250 < 0 ? 0 : nightCenterX - 250}
                           y="0"
@@ -1474,7 +1420,6 @@ export default function FuseauxHorairesPage() {
                           />
                         )}
 
-                        {/* Sun Zenith Marker */}
                         <g transform={`translate(${sunX}, ${sunY})`}>
                           <circle r="28" fill="url(#sunGlow)" />
                           <circle r="8" fill="#F59E0B" stroke="#FEF08A" strokeWidth="2" />
@@ -1488,7 +1433,6 @@ export default function FuseauxHorairesPage() {
 
                   {/* 4. Interactive City Pins on Map */}
                   {CITIES_DATA.map((city) => {
-                    // Map lat (-90 to +90) and lng (-180 to +180) to [0, 1000] x [0, 500]
                     const cx = ((city.lng + 180) / 360) * 1000;
                     const cy = ((90 - city.lat) / 180) * 500;
                     const isSelected = city.id === selectedCity.id;
@@ -1510,7 +1454,6 @@ export default function FuseauxHorairesPage() {
                           strokeWidth="1.5"
                           className="transition-transform group-hover:scale-150"
                         />
-                        {/* City Label */}
                         <text
                           x="0"
                           y={isSelected ? -10 : -7}
@@ -1530,7 +1473,7 @@ export default function FuseauxHorairesPage() {
               </div>
 
               {/* Map Legend */}
-              <div className="mt-6 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-slate-400 border-t border-slate-800/80 pt-4">
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-slate-600 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800/80 pt-4">
                 <div className="flex items-center gap-6">
                   <div className="flex items-center gap-2">
                     <span className="w-3 h-3 rounded-full bg-amber-400" />
@@ -1560,14 +1503,14 @@ export default function FuseauxHorairesPage() {
         {activeTab === 'scrubber' && (
           <div className="space-y-8">
             {/* Scrubber Control Center */}
-            <div className="bg-gradient-to-b from-slate-900/90 to-[#0A0D14] border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl space-y-6">
+            <div className="bg-white dark:bg-gradient-to-b dark:from-slate-900/90 dark:to-[#0A0D14] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-md dark:shadow-2xl backdrop-blur-xl space-y-6">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-2xl font-serif font-bold text-white flex items-center gap-2">
-                    <Sliders className="w-6 h-6 text-amber-400" />
+                  <h2 className="text-2xl font-serif font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <Sliders className="w-6 h-6 text-amber-500" />
                     Simulateur Temporel & Planificateur 24 Heures
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
                     Glissez le curseur pour simuler n&apos;importe quelle heure de la journée et synchroniser vos ateliers et visioconférences mondiales.
                   </p>
                 </div>
@@ -1584,8 +1527,8 @@ export default function FuseauxHorairesPage() {
                     }}
                     className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all border ${
                       isLive
-                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 shadow-lg shadow-emerald-500/10'
-                        : 'bg-amber-500/20 text-amber-300 border-amber-500/50'
+                        ? 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border-emerald-500/50 shadow-sm'
+                        : 'bg-amber-500/20 text-amber-800 dark:text-amber-300 border-amber-500/50'
                     }`}
                   >
                     {isLive ? '● Mode Temps Réel (Live)' : 'Mode Simulation Glissante'}
@@ -1594,10 +1537,10 @@ export default function FuseauxHorairesPage() {
                   {!isLive && (
                     <button
                       onClick={() => setIsSimPlaying(!isSimPlaying)}
-                      className="p-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 hover:text-white hover:bg-slate-700 transition-all"
+                      className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
                       title={isSimPlaying ? 'Mettre en pause' : 'Défilement automatique'}
                     >
-                      {isSimPlaying ? <Pause className="w-4 h-4 text-amber-400" /> : <Play className="w-4 h-4 text-amber-400" />}
+                      {isSimPlaying ? <Pause className="w-4 h-4 text-amber-500" /> : <Play className="w-4 h-4 text-amber-500" />}
                     </button>
                   )}
                 </div>
@@ -1606,11 +1549,11 @@ export default function FuseauxHorairesPage() {
               {/* Slider Component */}
               <div className="space-y-3 pt-2">
                 <div className="flex items-center justify-between font-mono text-xs">
-                  <span className="text-slate-400">00:00 (Minuit)</span>
-                  <span className="text-amber-300 text-base font-bold bg-amber-500/10 px-3 py-1 rounded-md border border-amber-500/30">
+                  <span className="text-slate-500 dark:text-slate-400">00:00 (Minuit)</span>
+                  <span className="text-amber-700 dark:text-amber-300 text-base font-bold bg-amber-50 dark:bg-amber-500/10 px-3 py-1 rounded-md border border-amber-200 dark:border-amber-500/30">
                     Heure Simulée : {String(Math.floor(scrubberMinutes / 60)).padStart(2, '0')}:{String(scrubberMinutes % 60).padStart(2, '0')}
                   </span>
-                  <span className="text-slate-400">23:45 (Fin de Journée)</span>
+                  <span className="text-slate-500 dark:text-slate-400">23:45 (Fin de Journée)</span>
                 </div>
 
                 <input
@@ -1623,7 +1566,7 @@ export default function FuseauxHorairesPage() {
                     setIsLive(false);
                     setScrubberMinutes(parseInt(e.target.value, 10));
                   }}
-                  className="w-full h-3 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 hover:accent-amber-400 transition-all"
+                  className="w-full h-3 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 hover:accent-amber-400 transition-all"
                 />
 
                 <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
@@ -1640,7 +1583,7 @@ export default function FuseauxHorairesPage() {
                         setIsLive(false);
                         setScrubberMinutes(quick.mins);
                       }}
-                      className="px-2.5 py-1 rounded-md bg-slate-800/80 hover:bg-slate-700 text-[11px] font-mono text-slate-300 border border-slate-700/60 transition-all"
+                      className="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-[11px] font-mono text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60 transition-all"
                     >
                       {quick.label}
                     </button>
@@ -1649,19 +1592,19 @@ export default function FuseauxHorairesPage() {
               </div>
 
               {/* Search & Continent Filters */}
-              <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-800/80">
+              <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-200 dark:border-slate-800/80">
                 <div className="flex items-center gap-2">
-                  <Search className="w-4 h-4 text-slate-400" />
+                  <Search className="w-4 h-4 text-slate-400 dark:text-slate-500" />
                   <input
                     type="text"
                     placeholder="Filtrer une ville, pays ou manufacture..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500/50 w-64"
+                    className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500/50 w-64"
                   />
                 </div>
 
-                <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono">
                   {[
                     { id: 'all', label: 'Toutes les villes (24)' },
                     { id: 'europe', label: 'Europe' },
@@ -1675,8 +1618,8 @@ export default function FuseauxHorairesPage() {
                       onClick={() => setSelectedRegion(tab.id)}
                       className={`px-3 py-1 rounded-lg transition-all ${
                         selectedRegion === tab.id
-                          ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-medium'
-                          : 'bg-slate-800/40 text-slate-400 hover:text-slate-200'
+                          ? 'bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/40 font-medium'
+                          : 'bg-slate-100 dark:bg-slate-800/40 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                       }`}
                     >
                       {tab.label}
@@ -1698,53 +1641,55 @@ export default function FuseauxHorairesPage() {
                     onClick={() => handleSelectCity(city.id)}
                     className={`p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between ${
                       isSelected
-                        ? 'bg-gradient-to-br from-amber-500/15 via-slate-900 to-slate-950 border-amber-500/60 shadow-lg shadow-amber-500/10'
-                        : 'bg-slate-900/60 border-slate-800/90 hover:border-slate-700 hover:bg-slate-900/90'
+                        ? 'bg-gradient-to-br from-amber-500/15 via-amber-50/50 to-white dark:from-amber-500/15 dark:via-slate-900 dark:to-slate-950 border-amber-500 shadow-md'
+                        : 'bg-white dark:bg-slate-900/60 border-slate-200 dark:border-slate-800/90 hover:border-slate-300 dark:hover:border-slate-700 shadow-sm dark:shadow-none'
                     }`}
                   >
                     <div>
                       <div className="flex items-start justify-between">
                         <div>
-                          <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+                          <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                             {city.offsetHours >= 0 ? `UTC+${city.offsetHours}` : `UTC${city.offsetHours}`}
                           </span>
-                          <h3 className="text-lg font-serif font-bold text-white flex items-center gap-1.5 mt-0.5">
+                          <h3 className="text-lg font-serif font-bold text-slate-900 dark:text-white flex items-center gap-1.5 mt-0.5">
                             {city.name}
                             {city.isManufactureHub && (
-                              <span title="Pôle de manufacture horlogère"><Award className="w-3.5 h-3.5 text-amber-400" /></span>
+                              <span title="Pôle de manufacture horlogère">
+                                <Award className="w-3.5 h-3.5 text-amber-500" />
+                              </span>
                             )}
                           </h3>
-                          <p className="text-xs text-slate-400">{city.country}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">{city.country}</p>
                         </div>
 
                         <span className={`p-1.5 rounded-lg text-xs ${
-                          info.isDay ? 'bg-amber-500/10 text-amber-300' : 'bg-blue-500/10 text-blue-300'
+                          info.isDay ? 'bg-amber-50 text-amber-800 dark:bg-amber-500/10 dark:text-amber-300' : 'bg-blue-50 text-blue-800 dark:bg-blue-500/10 dark:text-blue-300'
                         }`}>
                           {info.isDay ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
                         </span>
                       </div>
 
                       <div className="my-3 font-mono">
-                        <div className="text-2xl font-bold text-amber-300">
+                        <div className="text-2xl font-bold text-amber-600 dark:text-amber-300">
                           {info.formattedTime}
                         </div>
-                        <div className="text-[11px] text-slate-500">
+                        <div className="text-[11px] text-slate-400 dark:text-slate-500">
                           {info.formattedDate}
                         </div>
                       </div>
                     </div>
 
-                    <div className="space-y-2 pt-2 border-t border-slate-800/60 text-[11px]">
+                    <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800/60 text-[11px]">
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-400">Ateliers :</span>
-                        <span className={info.isWorkshopOpen ? 'text-emerald-400 font-medium' : 'text-slate-500'}>
+                        <span className="text-slate-500 dark:text-slate-400">Ateliers :</span>
+                        <span className={info.isWorkshopOpen ? 'text-emerald-600 dark:text-emerald-400 font-medium' : 'text-slate-400 dark:text-slate-500'}>
                           {info.isWorkshopOpen ? 'Ouvert (Activité)' : 'Fermé (Nuit/Repos)'}
                         </span>
                       </div>
 
-                      <div className="flex items-center justify-between text-slate-400 font-mono">
+                      <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 font-mono">
                         <span>Delta Genève :</span>
-                        <span className="text-slate-200">
+                        <span className="text-slate-800 dark:text-slate-200 font-medium">
                           {city.offsetHours - 1 > 0
                             ? `+${city.offsetHours - 1}h`
                             : city.offsetHours - 1 < 0
@@ -1768,96 +1713,96 @@ export default function FuseauxHorairesPage() {
             {/* 3 Core Watchmaking Architectures */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Card 1: Louis Cottier World Time */}
-              <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4 hover:border-amber-500/40 transition-all flex flex-col justify-between">
+              <div className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 hover:border-amber-500/40 transition-all flex flex-col justify-between shadow-sm dark:shadow-none">
                 <div>
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-3">
                     <Compass className="w-5 h-5" />
                   </div>
-                  <span className="text-xs font-mono text-amber-400 uppercase tracking-wider">Brevet Suisse 1931</span>
-                  <h3 className="text-xl font-serif font-bold text-white mt-1">
+                  <span className="text-xs font-mono text-amber-600 dark:text-amber-400 uppercase tracking-wider font-semibold">Brevet Suisse 1931</span>
+                  <h3 className="text-xl font-serif font-bold text-slate-900 dark:text-white mt-1">
                     Heures du Monde (Louis Cottier)
                   </h3>
-                  <p className="text-xs text-slate-300 leading-relaxed mt-2">
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mt-2">
                     Invention géniale de l&apos;horloger genevois Louis Cottier. Deux disques concentriques : un anneau des 24 villes et un disque 24h tournant en sens anti-horaire.
                   </p>
-                  <ul className="mt-4 space-y-2 text-xs text-slate-400 list-disc list-inside">
+                  <ul className="mt-4 space-y-2 text-xs text-slate-500 dark:text-slate-400 list-disc list-inside">
                     <li>Roue des heures couplée à une étoile à 24 dents.</li>
                     <li>Correction d&apos;heure par poussoir à 10h sans toucher aux minutes.</li>
                     <li>Lecture simultanée des 24 fuseaux à 360°.</li>
                   </ul>
                 </div>
 
-                <div className="pt-4 border-t border-slate-800 text-xs font-mono text-amber-300">
+                <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-xs font-mono text-amber-700 dark:text-amber-300">
                   Exemples : Patek Philippe 5130/5230, Vacheron Traditionnelle.
                 </div>
               </div>
 
               {/* Card 2: True GMT / Dual Time */}
-              <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4 hover:border-amber-500/40 transition-all flex flex-col justify-between">
+              <div className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 hover:border-amber-500/40 transition-all flex flex-col justify-between shadow-sm dark:shadow-none">
                 <div>
-                  <div className="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-sky-50 dark:bg-sky-500/10 border border-sky-200 dark:border-sky-500/30 flex items-center justify-center text-sky-600 dark:text-sky-400 mb-3">
                     <Clock className="w-5 h-5" />
                   </div>
-                  <span className="text-xs font-mono text-sky-400 uppercase tracking-wider">Aviation & Transatlantique 1954</span>
-                  <h3 className="text-xl font-serif font-bold text-white mt-1">
+                  <span className="text-xs font-mono text-sky-600 dark:text-sky-400 uppercase tracking-wider font-semibold">Aviation & Transatlantique 1954</span>
+                  <h3 className="text-xl font-serif font-bold text-slate-900 dark:text-white mt-1">
                     GMT / Dual Time (Calibre Flyer)
                   </h3>
-                  <p className="text-xs text-slate-300 leading-relaxed mt-2">
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mt-2">
                     Créé pour les pilotes de la Pan Am (Rolex GMT-Master 6542). Une aiguille flèche supplémentaire fait un tour en 24 heures face à une lunette bicolore.
                   </p>
-                  <ul className="mt-4 space-y-2 text-xs text-slate-400 list-disc list-inside">
+                  <ul className="mt-4 space-y-2 text-xs text-slate-500 dark:text-slate-400 list-disc list-inside">
                     <li>Roue 24h à 48 dents (démultiplication 2:1 sur la roue des heures).</li>
                     <li>Aiguille locale sautante par cran d&apos;une heure via la couronne.</li>
                     <li>La lunette tournante 24 clics offre un 3e fuseau instantané.</li>
                   </ul>
                 </div>
 
-                <div className="pt-4 border-t border-slate-800 text-xs font-mono text-sky-300">
+                <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-xs font-mono text-sky-600 dark:text-sky-300">
                   Exemples : Rolex Calibre 3285, Tudor Black Bay GMT, Grand Seiko 9R66.
                 </div>
               </div>
 
               {/* Card 3: UTC, TAI & Équation du Temps */}
-              <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 space-y-4 hover:border-amber-500/40 transition-all flex flex-col justify-between">
+              <div className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 hover:border-amber-500/40 transition-all flex flex-col justify-between shadow-sm dark:shadow-none">
                 <div>
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-3">
                     <Globe className="w-5 h-5" />
                   </div>
-                  <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider">Astronomie & Précision</span>
-                  <h3 className="text-xl font-serif font-bold text-white mt-1">
+                  <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-wider font-semibold">Astronomie & Précision</span>
+                  <h3 className="text-xl font-serif font-bold text-slate-900 dark:text-white mt-1">
                     UTC vs Temps Solaire Vrai
                   </h3>
-                  <p className="text-xs text-slate-300 leading-relaxed mt-2">
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mt-2">
                     La Terre n&apos;orbite pas à vitesse constante (ellipse de Kepler). Le vrai midi solaire oscille de -14 min à +16 min par rapport au temps moyen.
                   </p>
-                  <ul className="mt-4 space-y-2 text-xs text-slate-400 list-disc list-inside">
+                  <ul className="mt-4 space-y-2 text-xs text-slate-500 dark:text-slate-400 list-disc list-inside">
                     <li>Temps Moyen : 24h égales conventionnelles de 86&apos;400 secondes.</li>
                     <li>Équation du Temps : complication à came réniforme reproduisant l&apos;analemme.</li>
                     <li>UTC : basé sur les horloges atomiques au Césium 133 avec secondes intercalaires.</li>
                   </ul>
                 </div>
 
-                <div className="pt-4 border-t border-slate-800 text-xs font-mono text-emerald-300">
+                <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-xs font-mono text-emerald-600 dark:text-emerald-300">
                   Référence : BIPM Sèvres & Conférence de Washington 1884.
                 </div>
               </div>
             </div>
 
             {/* --- QUIZ D'ATELIER HAUTE HORLOGERIE (4 QUESTIONS) --- */}
-            <div className="bg-gradient-to-b from-slate-900/90 to-[#0A0D14] border border-amber-500/30 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+            <div className="bg-white dark:bg-gradient-to-b dark:from-slate-900/90 dark:to-[#0A0D14] border border-slate-200 dark:border-amber-500/30 rounded-2xl p-6 sm:p-8 shadow-md dark:shadow-2xl space-y-6">
+              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
                 <div>
-                  <div className="inline-flex items-center gap-1.5 text-xs font-mono text-amber-400 uppercase tracking-wider">
+                  <div className="inline-flex items-center gap-1.5 text-xs font-mono text-amber-700 dark:text-amber-400 uppercase tracking-wider font-semibold">
                     <Award className="w-4 h-4" />
                     Validation des Connaissances
                   </div>
-                  <h2 className="text-2xl font-serif font-bold text-white mt-1">
+                  <h2 className="text-2xl font-serif font-bold text-slate-900 dark:text-white mt-1">
                     Quiz d&apos;Atelier : Fuseaux Horaires & Complications
                   </h2>
                 </div>
 
                 {showResults && (
-                  <div className="px-4 py-2 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 font-mono text-sm font-bold">
+                  <div className="px-4 py-2 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-800 dark:text-amber-300 font-mono text-sm font-bold">
                     Score : {quizScore} / {QUIZ_QUESTIONS.length}
                   </div>
                 )}
@@ -1869,28 +1814,28 @@ export default function FuseauxHorairesPage() {
                   const isAnswered = userAnswer !== undefined;
 
                   return (
-                    <div key={q.id} className="p-5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-3">
+                    <div key={q.id} className="p-5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-3">
                       <div className="flex items-start gap-3">
-                        <span className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-300 flex items-center justify-center text-xs font-mono font-bold flex-shrink-0 mt-0.5">
+                        <span className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-300 flex items-center justify-center text-xs font-mono font-bold flex-shrink-0 mt-0.5">
                           {idx + 1}
                         </span>
-                        <h4 className="text-sm font-medium text-white leading-relaxed">
+                        <h4 className="text-sm font-medium text-slate-900 dark:text-white leading-relaxed">
                           {q.question}
                         </h4>
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
                         {q.options.map((opt, optIdx) => {
-                          let btnStyle = 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700';
+                          let btnStyle = 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700';
 
                           if (isAnswered && showResults) {
                             if (optIdx === q.correct) {
-                              btnStyle = 'bg-emerald-500/20 border-emerald-500/60 text-emerald-300 font-medium';
+                              btnStyle = 'bg-emerald-50 text-emerald-800 border-emerald-500 dark:bg-emerald-500/20 dark:border-emerald-500/60 dark:text-emerald-300 font-medium';
                             } else if (userAnswer === optIdx) {
-                              btnStyle = 'bg-rose-500/20 border-rose-500/60 text-rose-300';
+                              btnStyle = 'bg-rose-50 text-rose-800 border-rose-400 dark:bg-rose-500/20 dark:border-rose-500/60 dark:text-rose-300';
                             }
                           } else if (userAnswer === optIdx) {
-                            btnStyle = 'bg-amber-500/20 border-amber-500/60 text-amber-300 font-medium';
+                            btnStyle = 'bg-amber-500/20 border-amber-500/60 text-amber-800 dark:text-amber-300 font-medium';
                           }
 
                           return (
@@ -1901,7 +1846,7 @@ export default function FuseauxHorairesPage() {
                               }}
                               className={`p-3 rounded-lg border text-left text-xs transition-all flex items-start gap-2 ${btnStyle}`}
                             >
-                              <span className="font-mono text-slate-500 mt-0.5">{String.fromCharCode(65 + optIdx)}.</span>
+                              <span className="font-mono text-slate-400 dark:text-slate-500 mt-0.5">{String.fromCharCode(65 + optIdx)}.</span>
                               <span>{opt}</span>
                             </button>
                           );
@@ -1909,10 +1854,10 @@ export default function FuseauxHorairesPage() {
                       </div>
 
                       {showResults && (
-                        <div className="mt-3 p-3 rounded-lg bg-slate-900/80 border border-slate-800 text-xs text-slate-300 flex items-start gap-2">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                        <div className="mt-3 p-3 rounded-lg bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 flex items-start gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
                           <div>
-                            <strong className="text-amber-300">Explication didactique : </strong>
+                            <strong className="text-amber-700 dark:text-amber-300">Explication didactique : </strong>
                             {q.explanation}
                           </div>
                         </div>
@@ -1922,13 +1867,13 @@ export default function FuseauxHorairesPage() {
                 })}
               </div>
 
-              <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-800">
                 <button
                   onClick={() => {
                     setSelectedAnswers({});
                     setShowResults(false);
                   }}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white text-xs font-mono transition-all"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs font-mono transition-all"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   Réinitialiser le Quiz
@@ -1937,7 +1882,7 @@ export default function FuseauxHorairesPage() {
                 <button
                   onClick={() => setShowResults(true)}
                   disabled={Object.keys(selectedAnswers).length === 0}
-                  className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-mono font-bold text-xs transition-all shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-mono font-bold text-xs transition-all shadow-md dark:shadow-lg dark:shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span>Vérifier mes Réponses</span>
                   <ArrowRight className="w-4 h-4" />
@@ -1948,21 +1893,21 @@ export default function FuseauxHorairesPage() {
         )}
 
         {/* --- BOTTOM QUICK NAVIGATION TO OTHER MASTERPIECES --- */}
-        <div className="pt-8 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-4">
+        <div className="pt-8 border-t border-slate-200 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-4">
           <Link
             href="/theorie/complications"
-            className="flex items-center gap-2 text-xs font-mono text-amber-300 hover:text-amber-200 transition-colors group"
+            className="flex items-center gap-2 text-xs font-mono text-amber-600 dark:text-amber-300 hover:text-amber-700 dark:hover:text-amber-200 transition-colors group"
           >
-            <ArrowRight className="w-4 h-4 rotate-180 text-amber-400 group-hover:-translate-x-1 transition-transform" />
+            <ArrowRight className="w-4 h-4 rotate-180 text-amber-500 group-hover:-translate-x-1 transition-transform" />
             <span>Tourbillon, Répétition & Calendriers</span>
           </Link>
 
           <Link
             href="/pratique/reglage"
-            className="flex items-center gap-2 text-xs font-mono text-amber-300 hover:text-amber-200 transition-colors group"
+            className="flex items-center gap-2 text-xs font-mono text-amber-600 dark:text-amber-300 hover:text-amber-700 dark:hover:text-amber-200 transition-colors group"
           >
             <span>Simulateur de Chronocomparateur Suisse</span>
-            <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-4 h-4 text-amber-500 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
