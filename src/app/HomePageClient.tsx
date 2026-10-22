@@ -122,7 +122,7 @@ export default function HorloLearnHome() {
               transition={{ delay: 0.3 }}
               className="inline-flex items-center px-4 py-2 rounded-full mb-8 bg-amber-500/10 border border-amber-500/20"
             >
-              <Sparkles className="w-5 h-5 text-amber-600 dark:text-amber-400 mr-2" />
+              <Watch className="w-4 h-4 text-amber-600 dark:text-amber-400 mr-2" />
               <span className="text-amber-600 dark:text-amber-400 font-semibold text-sm">L'horlogerie suisse accessible à tous</span>
             </motion.div>
 
