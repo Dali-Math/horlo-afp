@@ -1,1318 +1,512 @@
-"use client";
+// src/app/pratique/huilage/page.tsx
+'use client';
 
-import Link from "next/link";
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
-  ChevronRight,
+  Droplet,
+  CheckCircle2,
   AlertTriangle,
-  Lightbulb,
+  Layers,
   Wrench,
-  CheckCircle,
+  Clock,
   BookOpen,
   Eye,
-  DollarSign,
+  SlidersHorizontal,
   Award,
-  Clock,
-  Zap,
-  Thermometer,
-  Sun,
-  Moon,
-} from "lucide-react";
-import { useState, useEffect } from "react";
+  Zap
+} from 'lucide-react';
+
+interface LubePoint {
+  id: string;
+  name: string;
+  category: 'échappement' | 'balancier' | 'rouage' | 'barillet' | 'remontoir';
+  oil: string;
+  oilColor: string;
+  toolColor: string;
+  toolName: string;
+  dosage: string;
+  instructions: string;
+  warning: string;
+}
+
+const LUBE_POINTS: LubePoint[] = [
+  {
+    id: 'incabloc',
+    name: 'Pivots de Balancier & Amortisseurs Incabloc',
+    category: 'balancier',
+    oil: 'Moebius 9010 (Synthétique Fluide)',
+    oilColor: 'bg-amber-400 text-slate-950',
+    toolColor: 'bg-black text-white border-slate-600',
+    toolName: 'Pique-huile Noir (0.06 mm) ou automatique',
+    dosage: 'Micro-goutte couvrant 2/3 de la pierre contre-pivot',
+    instructions:
+      'Démonter la lyre Incabloc, déposer la goutte d’huile au centre exact du contre-pivot poli. Poser le rubis percé : un ménisque circulaire régulier doit apparaître sans jamais toucher le chaton.',
+    warning: 'Si l’huile déborde sur le chaton, nettoyer immédiatement à la benzine et recommencer.'
+  },
+  {
+    id: 'levees',
+    name: 'Levées d’Ancre & Impulsion d’Échappement',
+    category: 'échappement',
+    oil: 'Moebius 9415 (Spéciale Échappement)',
+    oilColor: 'bg-rose-500 text-white',
+    toolColor: 'bg-rose-600 text-white',
+    toolName: 'Pique-huile Rouge (0.15 mm)',
+    dosage: 'Demi-goutte étalée sur 3 dents de la roue',
+    instructions:
+      'Déposer une infime quantité de Moebius 9415 sur le plan d’impulsion d’une dent de roue d’échappement. Actionner doucement l’ancre pour faire passer 5 dents. Répéter sur 3 dents réparties.',
+    warning: 'INTERDICTION ABSOLUE : Ne jamais huiler la tige d’ancre, le dard, la fourchette ou les pivots d’ancre !'
+  },
+  {
+    id: 'seconde',
+    name: 'Pivots Rapides (Roue de Seconde & Roue d’Échappement)',
+    category: 'rouage',
+    oil: 'Moebius 9010',
+    oilColor: 'bg-amber-400 text-slate-950',
+    toolColor: 'bg-rose-600 text-white',
+    toolName: 'Pique-huile Rouge (0.15 mm)',
+    dosage: '1/3 du réservoir du rubis',
+    instructions:
+      'Amener la pointe du pique-huile chargé au centre du rubis huilier. Laisser la capillarité aspirer la goutte sans appuyer sur le pivot.',
+    warning: 'Ne pas huiler à sec sans avoir contrôlé la propreté du trou de rubis.'
+  },
+  {
+    id: 'centre',
+    name: 'Pivots Lents (Roue de Centre & Grande Moyenne)',
+    category: 'rouage',
+    oil: 'Moebius HP-1300 (Haute Pression)',
+    oilColor: 'bg-blue-500 text-white',
+    toolColor: 'bg-blue-600 text-white',
+    toolName: 'Pique-huile Bleu (0.25 mm)',
+    dosage: '1/2 du réservoir du rubis',
+    instructions:
+      'Ces mobiles subissent un fort couple moteur transmis par le barillet. Utiliser une huile visqueuse résistante au cisaillement.',
+    warning: 'Une huile trop fluide (type 9010) serait expulsée en quelques semaines.'
+  },
+  {
+    id: 'barillet',
+    name: 'Tambour de Barillet & Ressort Moteur',
+    category: 'barillet',
+    oil: 'Moebius 8200 / Klüber P125 (Graisse Barillet)',
+    oilColor: 'bg-emerald-600 text-white',
+    toolColor: 'bg-emerald-600 text-white',
+    toolName: 'Pique-huile Vert (0.35 mm) ou spatule',
+    dosage: 'Film ultra-fin sur la lame et parois',
+    instructions:
+      'Appliquer une fine trace le long du ressort déroulé. Pour les calibres automatiques, déposer 3 touches de graisse freinante (Moebius 8217) sur la paroi interne du tambour.',
+    warning: 'Un excès de graisse étouffera le ressort et fera chuter l’amplitude de 40°.'
+  },
+  {
+    id: 'remontoir',
+    name: 'Mécanisme de Remontage & Tirette / Bascule',
+    category: 'remontoir',
+    oil: 'Moebius 9501 / 9504 (Graisse Synthétique)',
+    oilColor: 'bg-purple-600 text-white',
+    toolColor: 'bg-emerald-600 text-white',
+    toolName: 'Pique-huile Vert (0.35 mm)',
+    dosage: 'Micro-touche sur chaque friction métal/métal',
+    instructions:
+      'Graisser la gorge du pignon coulant, les dentures bréguez (dents de loup) du pignon de remontoir et la goupille de tirette.',
+    warning: 'Éviter de faire déborder la graisse vers le cadran ou le pont de minuterie.'
+  }
+];
 
 export default function HuilagePage() {
-  const [activeSection, setActiveSection] = useState<string>("introduction");
-  const [darkMode, setDarkMode] = useState<boolean>(true);
+  const [selectedPoint, setSelectedPoint] = useState<LubePoint>(LUBE_POINTS[0]);
+  const [filterCategory, setFilterCategory] = useState<string>('all');
 
-  // Visualisateur de viscosité
-  const [temperature, setTemperature] = useState(20);
-  const huiles = [
-    { nom: "Mobius 9010", couleur: "bg-blue-500", base: 10 },
-    { nom: "Mobius 9020", couleur: "bg-green-500", base: 20 },
-    { nom: "Mobius 9415", couleur: "bg-yellow-500", base: 15 },
-    { nom: "Mobius 8200", couleur: "bg-red-500", base: 900 },
+  const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: number | null }>({
+    0: null,
+    1: null,
+    2: null
+  });
+
+  const questions = [
+    {
+      question: 'Quelle est la quantité idéale d’huile à appliquer sur un pivot de balancier ?',
+      options: [
+        'Une goutte épaisse pour être certain qu’elle dure des années',
+        'Une micro-goutte couvrant précisément les 2/3 de la pierre contre-pivot',
+        'Plusieurs gouttes débordant sur le chaton pour lubrifier le ressort lyre',
+        'Aucune huile : le balancier doit tourner totalement à sec'
+      ],
+      correct: 1
+    },
+    {
+      question: 'Pourquoi faut-il utiliser différentes huiles (9010, HP-1300, 9415) selon les zones du mouvement ?',
+      options: [
+        'Par simple habitude esthétique d’atelier',
+        'Pour créer des reflets de différentes couleurs sous le fond saphir',
+        'Parce que les vitesses de rotation et les pressions varient considérablement selon les mobiles',
+        'Pour économiser le prix des flacons de synthèse'
+      ],
+      correct: 2
+    },
+    {
+      question: 'Quelle est la conséquence immédiate d’un excès d’huile sur les levées de l’ancre ?',
+      options: [
+        'Une meilleure amplitude et une marche plus rapide',
+        'L’huile migre vers le dard et le spiral, créant un collage et l’arrêt du calibre',
+        'Aucune conséquence : l’excès s’évapore naturellement sans résidu',
+        'Le boîtier devient étanche à 300 mètres'
+      ],
+      correct: 1
+    }
   ];
 
-  const calculateViscosite = (base: number, temp: number) => {
-    const difference = temp - 20;
-    if (difference > 0) {
-      return Math.round(base * (1 - difference * 0.02));
-    } else {
-      return Math.round(base * (1 - difference * 0.04));
-    }
+  const handleAnswer = (questionIndex: number, answerIndex: number) => {
+    setQuizAnswers({ ...quizAnswers, [questionIndex]: answerIndex });
   };
 
-  const sections = [
-    { id: "introduction", title: "Introduction", icon: BookOpen },
-    { id: "importance", title: "Pourquoi le huilage est-il crucial ?", icon: AlertTriangle },
-    { id: "anatomie", title: "Anatomie d'un point de lubrification", icon: Eye },
-    { id: "types-huiles", title: "Les types d'huiles et leurs applications", icon: Lightbulb },
-    { id: "outils", title: "Outils du professionnel", icon: Wrench },
-    { id: "technique", title: "Technique pas à pas", icon: CheckCircle },
-    { id: "signes", title: "Signes visuels à reconnaître", icon: Eye },
-    { id: "erreurs", title: "Erreurs courantes", icon: AlertTriangle },
-    { id: "maintenance", title: "Plan de maintenance", icon: Clock },
-    { id: "economie", title: "Considérations économiques", icon: DollarSign },
-    { id: "normes", title: "Normes industrielles", icon: Award },
-    { id: "checklist", title: "Checklist pratique", icon: CheckCircle },
-  ];
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const sectionElements = sections.map(s => document.getElementById(s.id));
-      const scrollPosition = window.scrollY + 200;
-      for (let i = 0; i < sectionElements.length; i++) {
-        const element = sectionElements[i];
-        if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(sectionElements[i]?.id || "");
-            break;
-          }
-        }
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [darkMode]);
+  const filteredPoints = LUBE_POINTS.filter(
+    (pt) => filterCategory === 'all' || pt.category === filterCategory
+  );
 
   return (
-    <div className={`min-h-screen py-8 px-4 ${
-      darkMode 
-        ? "bg-[#0a0a0a] text-white" 
-        : "bg-gradient-to-br from-slate-50 to-blue-50 text-slate-900"
-    }`}>
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#07090e] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+      {/* --- HERO HEADER --- */}
+      <section className="relative pt-12 pb-10 border-b border-slate-200 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/40 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link
             href="/pratique"
-            className={`inline-flex items-center gap-2 transition-all duration-300 group ${
-              darkMode 
-                ? "text-[#E2B44F] hover:text-white" 
-                : "text-amber-600 hover:text-amber-800"
-            }`}
+            className="inline-flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline mb-4"
           >
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            Retour à la pratique
+            <ArrowLeft className="w-4 h-4" />
+            <span>Retour à l’Atelier Pratique</span>
           </Link>
 
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className={`p-2 rounded-lg transition-all duration-300 ${
-              darkMode
-                ? "bg-[#1a1a1a] border border-gray-700 text-[#E2B44F] hover:bg-[#2a2a2a]"
-                : "bg-white border border-slate-200 text-amber-600 hover:bg-amber-50"
-            }`}
-            aria-label="Basculer le mode sombre"
-          >
-            {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </button>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-bold uppercase tracking-wider mb-3">
+                <Droplet className="w-3.5 h-3.5 text-amber-500" />
+                <span>🇨🇭 Protocole Officiel Moebius Suisse</span>
+              </div>
+
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                Huilage & Lubrification d’Établi
+              </h1>
+
+              <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
+                Le secret de la longévité et de l’amplitude d’une montre suisse réside dans la micro-goutte. Explorez le plan de lubrification officiel, le code couleur des pique-huiles et les gestes de précision exigés aux examens CFC.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-700 dark:text-amber-300 max-w-xs font-medium">
+              💡 <strong>Règle d’Or Horlogère :</strong> « Trop d’huile est pire que pas assez d’huile. » Moins c’est étalé, plus c’est parfait.
+            </div>
+          </div>
         </div>
+      </section>
 
-        <h1 className={`text-4xl md:text-6xl font-bold mb-12 text-center font-serif tracking-tight ${
-          darkMode ? "text-[#E2B44F]" : "text-amber-600"
-        }`}>
-          Huilage & Lubrification Horlogère
-        </h1>
+      {/* --- PLAN INTERACTIF DE LUBRIFICATION --- */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+        <section className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Droplet className="w-5 h-5 text-amber-500" />
+                <span>Plan de Lubrification par Organe Mécanique</span>
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Sélectionnez un point de graissage pour afficher le lubrifiant, la taille du pique-huile et la procédure exacte.
+              </p>
+            </div>
 
-        <nav className={`mb-12 p-6 sticky top-4 z-10 rounded-xl shadow-xl ${
-          darkMode
-            ? "bg-[#1a1a1a] border border-gray-800"
-            : "bg-white/60 backdrop-blur-xl border border-slate-200"
-        }`}>
-          <h2 className={`text-xl font-semibold mb-4 flex items-center gap-2 ${
-            darkMode ? "text-[#E2B44F]" : "text-amber-600"
-          }`}>
-            <BookOpen className="w-5 h-5" />
-            Plan du cours
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-            {sections.map((section) => {
-              const Icon = section.icon;
-              return (
+            {/* Filtres par catégorie */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+              {[
+                { id: 'all', label: 'Tous les organes' },
+                { id: 'balancier', label: 'Balancier / Incabloc' },
+                { id: 'échappement', label: 'Échappement' },
+                { id: 'rouage', label: 'Train de rouage' },
+                { id: 'barillet', label: 'Barillet' },
+                { id: 'remontoir', label: 'Remontoir' }
+              ].map((f) => (
                 <button
-                  key={section.id}
-                  onClick={() => scrollToSection(section.id)}
-                  className={`flex items-center gap-2 text-left p-3 rounded-lg transition-all duration-300 ${
-                    darkMode
-                      ? `hover:bg-[#2a2a2a] ${
-                          activeSection === section.id
-                            ? "bg-[#2a2a2a] text-[#E2B44F]"
-                            : "text-gray-300"
-                        }`
-                      : `hover:bg-amber-100 ${
-                          activeSection === section.id
-                            ? "bg-amber-100 text-amber-600"
-                            : "text-slate-700"
-                        }`
+                  key={f.id}
+                  onClick={() => setFilterCategory(f.id)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                    filterCategory === f.id
+                      ? 'bg-amber-500 text-slate-950 font-bold shadow'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-amber-500'
                   }`}
                 >
-                  <ChevronRight className="w-4 h-4" />
-                  <Icon className="w-4 h-4" />
-                  <span className="text-sm">{section.title}</span>
+                  {f.label}
                 </button>
-              );
-            })}
-          </div>
-        </nav>
-
-        <section id="introduction" className="mb-12 scroll-mt-24">
-          <div className={`aspect-video w-full overflow-hidden shadow-2xl rounded-2xl transition-all duration-300 ${
-            darkMode
-              ? "bg-black border border-[#E2B44F]/30 hover:border-[#E2B44F]"
-              : "bg-white border border-slate-200 hover:border-amber-500/60"
-          }`}>
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/ARb8Vo4refs?si=nRyWBeHLpwyreJgg"
-              title="Techniques de lubrification horlogère"
-              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full"
-            ></iframe>
-          </div>
-          <p className={`text-sm mt-3 italic text-center ${
-            darkMode ? "text-gray-400" : "text-slate-600"
-          }`}>
-            Durée : 12 min | Niveau : Intermédiaire | Outils nécessaires : huilier, loupe binoculaire
-          </p>
-        </section>
-
-        <section id="importance" className={`mb-12 p-6 md:p-8 rounded-2xl scroll-mt-24 ${
-          darkMode
-            ? "bg-[#1a1a1a] border border-gray-800"
-            : "bg-white border border-slate-200"
-        }`}>
-          <h2 className={`text-3xl font-bold mb-6 flex items-center gap-3 font-serif ${
-            darkMode ? "text-[#E2B44F]" : "text-amber-600"
-          }`}>
-            <AlertTriangle className="w-7 h-7" />
-            Pourquoi le huilage est-il crucial ?
-          </h2>
-          <div className={`leading-relaxed space-y-6 ${
-            darkMode ? "text-gray-300" : "text-slate-700"
-          }`}>
-            <p className="text-lg">
-              Le huilage représente{" "}
-              <strong className={`font-semibold ${
-                darkMode ? "text-[#E2B44F]" : "text-amber-600"
-              }`}>
-                30% de la précision
-              </strong>{" "}
-              et{" "}
-              <strong className={`font-semibold ${
-                darkMode ? "text-[#E2B44F]" : "text-amber-600"
-              }`}>
-                50% de la longévité
-              </strong>{" "}
-              d'un mouvement mécanique. Un mouvement non huilé voit son amortissement augmenter de{" "}
-              <strong>40% en 6 mois</strong>.
-            </p>
-            <div className={`p-5 rounded-lg border-l-4 my-6 ${
-              darkMode
-                ? "bg-[#0a0a0a] border-[#E2B44F]"
-                : "bg-neutral-100 border-amber-600"
-            }`}>
-              <h3 className={`font-bold mb-2 flex items-center gap-2 ${
-                darkMode ? "text-white" : "text-slate-900"
-              }`}>
-                <Zap className={`w-5 h-5 ${
-                  darkMode ? "text-[#E2B44F]" : "text-amber-600"
-                }`} />
-                Impact réel sur la précision
-              </h3>
-              <p className={darkMode ? "text-gray-300" : "text-slate-700"}>
-                Une montre révisée avec un huilage optimal gagne/perd{" "}
-                <strong>±2 secondes/jour</strong>. La même montre avec un huilage défaillant peut
-                atteindre <strong>+30 à +60 secondes/jour</strong>. C'est un facteur 15x sur la
-                précision !
-              </p>
-            </div>
-            <div className={`p-5 rounded-lg border-l-4 my-6 ${
-              darkMode
-                ? "bg-[#0a0a0a] border-[#E2B44F]"
-                : "bg-neutral-100 border-amber-600"
-            }`}>
-              <h3 className={`font-bold mb-2 flex items-center gap-2 ${
-                darkMode ? "text-white" : "text-slate-900"
-              }`}>
-                <Lightbulb className={`w-5 h-5 ${
-                  darkMode ? "text-[#E2B44F]" : "text-amber-600"
-                }`} />
-                Saviez-vous ?
-              </h3>
-              <p className={darkMode ? "text-gray-300" : "text-slate-700"}>
-                Une montre mécanique contient en moyenne{" "}
-                <strong>15 à 30 points de lubrification</strong> distincts, chacun nécessitant une
-                huile de viscosité spécifique. Le calibre Rolex 3135 a exactement 31 points de
-                huilage !
-              </p>
-            </div>
-            <p>
-              Les frottements dans un mouvement non lubrifié génèrent de la chaleur, usent les pivots
-              et les rubis, et provoquent une dérive de précision de{" "}
-              <strong>+15 à +30 secondes par jour</strong>. Le huilage crée un film de seulement{" "}
-              <strong>0,001 à 0,01 mm</strong> entre les surfaces, suffisant pour transformer un
-              frottement sec (coefficient 0,3) en frottement fluide (coefficient 0,03).
-            </p>
-          </div>
-        </section>
-
-        <section id="anatomie" className="mb-12 scroll-mt-24">
-          <h2 className={`text-3xl font-bold mb-6 font-serif flex items-center gap-3 ${
-            darkMode ? "text-[#E2B44F]" : "text-amber-600"
-          }`}>
-            <Eye className="w-7 h-7" />
-            Anatomie d'un point de lubrification
-          </h2>
-          <div className={`p-6 rounded-2xl ${
-            darkMode
-              ? "bg-[#1a1a1a] border border-gray-800"
-              : "bg-white border border-slate-200"
-          }`}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className={`text-xl font-bold mb-3 ${
-                  darkMode ? "text-[#E2B44F]" : "text-amber-600"
-                }`}>
-                  Structure d'un pivot huilé
-                </h3>
-                <ul className={`space-y-3 text-sm ${
-                  darkMode ? "text-gray-300" : "text-slate-700"
-                }`}>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className={`w-4 h-4 mt-0.5 ${
-                      darkMode ? "text-[#E2B44F]" : "text-amber-600"
-                    }`} />
-                    <span>
-                      <strong>1. Le ménisque :</strong> Film d'huile visible, forme demi-sphérique
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className={`w-4 h-4 mt-0.5 ${
-                      darkMode ? "text-[#E2B44F]" : "text-amber-600"
-                    }`} />
-                    <span>
-                      <strong>2. Le pivot :</strong> Axe en acier trempé, poli miroir
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className={`w-4 h-4 mt-0.5 ${
-                      darkMode ? "text-[#E2B44F]" : "text-amber-600"
-                    }`} />
-                    <span>
-                      <strong>3. Le rubis :</strong> Roulement en corindon synthétique
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle className={`w-4 h-4 mt-0.5 ${
-                      darkMode ? "text-[#E2B44F]" : "text-amber-600"
-                    }`} />
-                    <span>
-                      <strong>4. L'huile :</strong> Film de 0.001mm entre les surfaces
-                    </span>
-                  </li>
-                </ul>
-              </div>
-              <div className={`p-4 rounded-lg border ${
-                darkMode
-                  ? "bg-[#0a0a0a] border-gray-700"
-                  : "bg-neutral-100 border-slate-200"
-              }`}>
-                <h4 className={`font-bold mb-2 ${
-                  darkMode ? "text-white" : "text-slate-900"
-                }`}>
-                  Visualisation du film lubrifiant
-                </h4>
-                <div className={`space-y-2 text-xs ${
-                  darkMode ? "text-gray-400" : "text-slate-600"
-                }`}>
-                  <div className="flex justify-between">
-                    <span>Pivot</span>
-                    <span className={darkMode ? "text-[#E2B44F]" : "text-amber-600"}>
-                      Ø 0.10-0.15 mm
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Film d'huile</span>
-                    <span className={darkMode ? "text-[#E2B44F]" : "text-amber-600"}>
-                      0.001 mm
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Rubis</span>
-                    <span className={darkMode ? "text-[#E2B44F]" : "text-amber-600"}>
-                      Ø 0.20-0.25 mm
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Ménisque visible</span>
-                    <span className={darkMode ? "text-[#E2B44F]" : "text-amber-600"}>
-                      Ø 0.5 mm
-                    </span>
-                  </div>
-                </div>
-                <p className={`mt-4 text-xs ${
-                  darkMode ? "text-gray-500" : "text-slate-500"
-                }`}>
-                  *Ces dimensions sont au centième de millimètre près
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="types-huiles" className="mb-12 scroll-mt-24">
-          <h2 className={`text-3xl font-bold mb-6 font-serif ${
-            darkMode ? "text-[#E2B44F]" : "text-amber-600"
-          }`}>
-            Les types d'huiles et leurs applications
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className={`p-6 rounded-2xl transition-all hover:border-opacity-40 ${
-              darkMode
-                ? "bg-[#1a1a1a] border border-gray-800 hover:border-[#E2B44F]/30"
-                : "bg-white border border-slate-200 hover:border-amber-500/40"
-            }`}>
-              <h3 className={`text-xl font-bold mb-3 ${
-                darkMode ? "text-[#E2B44F]" : "text-amber-600"
-              }`}>
-                Huiles synthétiques (modernes)
-              </h3>
-              <ul className={`space-y-2 text-sm ${
-                darkMode ? "text-gray-300" : "text-slate-700"
-              }`}>
-                <li>
-                  <strong>9010 (Mobius) :</strong> Pivots rapides, viscosité 10 cSt - Roulements,
-                  rotor automatique
-                </li>
-                <li>
-                  <strong>9020 :</strong> Pivots moyens, viscosité 20 cSt - Roue de centre, roue des
-                  secondes
-                </li>
-                <li>
-                  <strong>9415 (spécial échappement) :</strong> Haute pression, 15 cSt - Dents
-                  d'échappement, palette
-                </li>
-                <li>
-                  <strong>8200 :</strong> Haute viscosité, 800-1000 cSt - Barillet, ressort de
-                  remontoir
-                </li>
-              </ul>
-            </div>
-            <div className={`p-6 rounded-2xl transition-all hover:border-opacity-40 ${
-              darkMode
-                ? "bg-[#1a1a1a] border border-gray-800 hover:border-[#E2B44F]/30"
-                : "bg-white border border-slate-200 hover:border-amber-500/40"
-            }`}>
-              <h3 className={`text-xl font-bold mb-3 ${
-                darkMode ? "text-[#E2B44F]" : "text-amber-600"
-              }`}>
-                Graisses (zones à forte pression)
-              </h3>
-              <ul className={`space-y-2 text-sm ${
-                darkMode ? "text-gray-300" : "text-slate-700"
-              }`}>
-                <li>
-                  <strong>8300 (Mobius) :</strong> Graisse lithium pour barillets - Résiste à 30
-                  kg/cm²
-                </li>
-                <li>
-                  <strong>KLUBER P125 :</strong> Paliers de rotor automatique - Très haute adhérence
-                </li>
-                <li>
-                  <strong>HP1300 :</strong> Roue à canon, canon de roue de réglage - Pression modérée
-                </li>
-              </ul>
+              ))}
             </div>
           </div>
 
-          {/* VISUALISATEUR DE VISCOSITÉ INTÉGRÉ */}
-          <div className={`p-6 rounded-2xl mt-6 ${
-            darkMode
-              ? "bg-[#1a1a1a] border border-gray-800"
-              : "bg-white border border-slate-200"
-          }`}>
-            <h3 className={`text-xl font-bold mb-4 flex items-center gap-2 ${
-              darkMode ? "text-[#E2B44F]" : "text-amber-600"
-            }`}>
-              <Thermometer className="w-6 h-6" />
-              Impact de la température sur les huiles
-            </h3>
-
-            <div className="mb-6">
-              <label className={`block mb-2 ${
-                darkMode ? "text-gray-300" : "text-slate-700"
-              }`}>
-                Température : {temperature}°C
-              </label>
-              <input
-                type="range"
-                min="0"
-                max="40"
-                value={temperature}
-                onChange={(e) => setTemperature(Number(e.target.value))}
-                className={`w-full h-2 rounded-lg appearance-none cursor-pointer ${
-                  darkMode ? "bg-gray-700" : "bg-slate-200"
-                }`}
-              />
-              <div className={`flex justify-between text-xs mt-1 ${
-                darkMode ? "text-gray-400" : "text-slate-500"
-              }`}>
-                <span>0°C (Hiver)</span>
-                <span>20°C (Idéal)</span>
-                <span>40°C (Été)</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {huiles.map((huile) => {
-                const viscosite = calculateViscosite(huile.base, temperature);
-                const variation = (((viscosite - huile.base) / huile.base) * 100).toFixed(0);
+          {/* Grille Interactive : Liste des points + Fiche Focus */}
+          <div className="grid lg:grid-cols-12 gap-8 items-start">
+            {/* Liste des points de lubrification */}
+            <div className="lg:col-span-5 space-y-3">
+              {filteredPoints.map((pt) => {
+                const isSelected = selectedPoint.id === pt.id;
 
                 return (
-                  <div
-                    key={huile.nom}
-                    className={`p-4 rounded-lg ${
-                      darkMode ? "bg-[#0a0a0a]" : "bg-neutral-100"
+                  <button
+                    key={pt.id}
+                    onClick={() => setSelectedPoint(pt)}
+                    className={`w-full p-4 rounded-2xl border-2 text-left transition-all flex items-center justify-between ${
+                      isSelected
+                        ? 'border-amber-500 bg-amber-500/10 dark:bg-[#141a2b] shadow-md ring-1 ring-amber-400/40'
+                        : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0f1422] hover:border-amber-500/40 text-slate-700 dark:text-slate-300'
                     }`}
                   >
-                    <div className="flex justify-between items-center mb-2">
-                      <span className={`font-bold ${
-                        darkMode ? "text-white" : "text-slate-900"
-                      }`}>
-                        {huile.nom}
-                      </span>
-                      <span className={`${huile.couleur} text-white text-xs px-2 py-1 rounded`}>
-                        {viscosite} cSt
-                      </span>
+                    <div className="space-y-1 pr-3">
+                      <div className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                        {pt.category}
+                      </div>
+                      <div className="text-sm font-extrabold text-slate-900 dark:text-white leading-snug">
+                        {pt.name}
+                      </div>
+                      <div className="text-[11px] text-slate-500 truncate">{pt.oil}</div>
                     </div>
-                    <div className={`w-full rounded-full h-2 ${
-                      darkMode ? "bg-gray-700" : "bg-slate-200"
-                    }`}>
-                      <div
-                        className={`${huile.couleur} h-2 rounded-full transition-all duration-500`}
-                        style={{ width: `${Math.min(100, (viscosite / huile.base) * 100)}%` }}
-                      ></div>
-                    </div>
-                    <p className={`text-xs mt-1 ${
-                      darkMode ? "text-gray-400" : "text-slate-500"
-                    }`}>
-                      {variation > "0" ? "+" : ""}
-                      {variation}% vs 20°C
-                    </p>
-                  </div>
+
+                    <div
+                      className={`w-3.5 h-3.5 rounded-full flex-shrink-0 ${
+                        isSelected ? 'bg-amber-500 ring-4 ring-amber-500/20' : 'bg-slate-300 dark:bg-slate-700'
+                      }`}
+                    />
+                  </button>
                 );
               })}
             </div>
 
-            <div className={`mt-6 p-4 rounded-lg border ${
-              darkMode
-                ? "bg-[#0a0a0a] border-[#E2B44F]/30"
-                : "bg-neutral-100 border-amber-500/30"
-            }`}>
-              <h4 className={`font-bold mb-2 ${
-                darkMode ? "text-[#E2B44F]" : "text-amber-600"
-              }`}>
-                Impact sur la précision (estimation)
-              </h4>
-              <p className={`text-sm ${
-                darkMode ? "text-gray-300" : "text-slate-700"
-              }`}>
-                À {temperature}°C :{" "}
-                <strong className={`${
-                  darkMode ? "text-white" : "text-slate-900"
-                }`}>
-                  {temperature > 25
-                    ? "La montre avance"
-                    : temperature < 15
-                    ? "La montre retarde"
-                    : "Précision optimale"}
-                </strong>{" "}
-                de ±{Math.abs(temperature - 20) * 0.5} s/j
-              </p>
+            {/* Fiche Technique Focus Haute Horlogerie */}
+            <div className="lg:col-span-7 p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#0f1422] border-2 border-slate-200 dark:border-slate-600 shadow-xl dark:shadow-2xl dark:shadow-black/70 ring-1 ring-slate-900/5 dark:ring-white/10 space-y-6">
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-slate-700/80">
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-wider text-amber-500 font-mono">
+                    Fiche Technique de Graissage
+                  </span>
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white mt-0.5">
+                    {selectedPoint.name}
+                  </h3>
+                </div>
+
+                <span className={`px-3 py-1 rounded-full text-xs font-bold shadow-sm ${selectedPoint.oilColor}`}>
+                  {selectedPoint.oil}
+                </span>
+              </div>
+
+              {/* Outil & Dosage */}
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-700">
+                  <div className="text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">
+                    Pique-Huile Recommandé :
+                  </div>
+                  <div className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-amber-500 flex-shrink-0" />
+                    <span>{selectedPoint.toolName}</span>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-700">
+                  <div className="text-xs font-bold uppercase text-slate-500 dark:text-slate-400 mb-1">
+                    Dosage Prescrit :
+                  </div>
+                  <div className="text-sm font-extrabold text-slate-900 dark:text-white">
+                    {selectedPoint.dosage}
+                  </div>
+                </div>
+              </div>
+
+              {/* Procédure pas-à-pas */}
+              <div className="space-y-2">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                  Procédure d’application à l’établi :
+                </h4>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed p-4 rounded-2xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-700">
+                  {selectedPoint.instructions}
+                </p>
+              </div>
+
+              {/* Avertissement / Piège critique */}
+              <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/80 text-rose-700 dark:text-rose-300 text-xs flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 flex-shrink-0 text-rose-500 mt-0.5" />
+                <div>
+                  <strong className="font-bold">Erreur fatale à éviter : </strong>
+                  <span>{selectedPoint.warning}</span>
+                </div>
+              </div>
             </div>
           </div>
+        </section>
 
-          <div className={`p-6 rounded-2xl mt-6 ${
-            darkMode
-              ? "bg-[#1a1a1a] border border-gray-800"
-              : "bg-white border border-slate-200"
-          }`}>
-            <h3 className={`text-xl font-bold mb-3 ${
-              darkMode ? "text-[#E2B44F]" : "text-amber-600"
-            }`}>
-              Tableau de compatibilité complet
+        {/* --- LE GUIDE VISUEL DES PIQUE-HUILES HORLOGERS --- */}
+        <section className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#0f1422] border-2 border-slate-200 dark:border-slate-600 shadow-md ring-1 ring-slate-900/5 dark:ring-white/10 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+                Le Code Couleur Officiel des Pique-Huiles
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                La taille de la goutte dépend de la largeur de la spatule capillaire.
+              </p>
+            </div>
+            <span className="text-xs font-mono text-amber-500 font-bold px-3 py-1 rounded-xl bg-amber-500/10 border border-amber-500/30">
+              Standard Bergeon & Horotec
+            </span>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              {
+                color: 'bg-black text-white',
+                label: 'Noir — 0.06 mm (Extra Fin)',
+                use: 'Pivots balancier, antichocs Incabloc, micro-pierres',
+                oil: 'Moebius 9010'
+              },
+              {
+                color: 'bg-rose-600 text-white',
+                label: 'Rouge — 0.15 mm (Fin)',
+                use: 'Levées d’ancre, roue d’échappement, pivots seconde',
+                oil: 'Moebius 9415 / 9010'
+              },
+              {
+                color: 'bg-blue-600 text-white',
+                label: 'Bleu — 0.25 mm (Moyen)',
+                use: 'Roue de centre, grande moyenne, tigeron',
+                oil: 'Moebius HP-1300'
+              },
+              {
+                color: 'bg-emerald-600 text-white',
+                label: 'Vert — 0.35 mm (Large)',
+                use: 'Lame de ressort de barillet, minuterie, pignon coulant',
+                oil: 'Moebius 8200 / 9501'
+              }
+            ].map((tool, idx) => (
+              <div
+                key={idx}
+                className="p-4 rounded-2xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-700 space-y-2"
+              >
+                <div className="flex items-center gap-2">
+                  <span className={`w-4 h-4 rounded-full ${tool.color} flex-shrink-0 shadow-sm`} />
+                  <span className="text-xs font-bold text-slate-900 dark:text-white">{tool.label}</span>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-snug">{tool.use}</p>
+                <div className="text-[11px] font-mono text-amber-600 dark:text-amber-400 font-bold">
+                  {tool.oil}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* --- VIDÉO TUTORIEL DE LUBRIFICATION --- */}
+        <section className="grid lg:grid-cols-12 gap-8 items-start">
+          <div className="lg:col-span-7 space-y-4">
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-amber-500" />
+              <span>Démonstration Pratique : Le Geste du Huileur</span>
             </h3>
-            <div className="overflow-x-auto">
-              <table className={`w-full text-sm text-left ${
-                darkMode ? "text-gray-300" : "text-slate-700"
-              }`}>
-                <thead className={`text-xs uppercase ${
-                  darkMode
-                    ? "text-[#E2B44F] bg-[#0a0a0a]"
-                    : "text-amber-600 bg-neutral-100"
-                }`}>
-                  <tr>
-                    <th className="px-4 py-3">Composant</th>
-                    <th className="px-4 py-3">Vitesse</th>
-                    <th className="px-4 py-3">Pression</th>
-                    <th className="px-4 py-3">Huile recommandée</th>
-                    <th className="px-4 py-3">Quantité</th>
-                    <th className="px-4 py-3">Durée de vie</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className={`border-b ${
-                    darkMode ? "border-gray-800" : "border-slate-200"
-                  }`}>
-                    <td className={`px-4 py-3 font-medium ${
-                      darkMode ? "text-white" : "text-slate-900"
-                    }`}>
-                      Barillet
-                    </td>
-                    <td className="px-4 py-3">1 tour/8h</td>
-                    <td className="px-4 py-3">Élevée (30kg/cm²)</td>
-                    <td className="px-4 py-3">Mobius 8200</td>
-                    <td className="px-4 py-3">2-3 mg</td>
-                    <td className="px-4 py-3">5-7 ans</td>
-                  </tr>
-                  <tr className={`border-b ${
-                    darkMode ? "border-gray-800" : "border-slate-200"
-                  }`}>
-                    <td className={`px-4 py-3 font-medium ${
-                      darkMode ? "text-white" : "text-slate-900"
-                    }`}>
-                      Roue de centre
-                    </td>
-                    <td className="px-4 py-3">1 tour/heure</td>
-                    <td className="px-4 py-3">Moyenne</td>
-                    <td className="px-4 py-3">Mobius 9020</td>
-                    <td className="px-4 py-3">0.5-1 mg</td>
-                    <td className="px-4 py-3">4-6 ans</td>
-                  </tr>
-                  <tr className={`border-b ${
-                    darkMode ? "border-gray-800" : "border-slate-200"
-                  }`}>
-                    <td className={`px-4 py-3 font-medium ${
-                      darkMode ? "text-white" : "text-slate-900"
-                    }`}>
-                      Échappement
-                    </td>
-                    <td className="px-4 py-3">5 Hz / 18 000 A/h</td>
-                    <td className="px-4 py-3">Très élevée</td>
-                    <td className="px-4 py-3">Mobius 9415</td>
-                    <td className="px-4 py-3">0.1-0.2 mg</td>
-                    <td className="px-4 py-3">3-5 ans</td>
-                  </tr>
-                  <tr className={`border-b ${
-                    darkMode ? "border-gray-800" : "border-slate-200"
-                  }`}>
-                    <td className={`px-4 py-3 font-medium ${
-                      darkMode ? "text-white" : "text-slate-900"
-                    }`}>
-                      Rotor auto
-                    </td>
-                    <td className="px-4 py-3">500-1000 tours/min</td>
-                    <td className="px-4 py-3">Faible</td>
-                    <td className="px-4 py-3">Mobius 9010</td>
-                    <td className="px-4 py-3">1-2 mg</td>
-                    <td className="px-4 py-3">5-7 ans</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
 
-        <section id="outils" className="mb-12 scroll-mt-24">
-          <h2 className={`text-3xl font-bold mb-6 font-serif ${
-            darkMode ? "text-[#E2B44F]" : "text-amber-600"
-          }`}>
-            Outils du professionnel
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className={`p-6 rounded-2xl transition-all text-center ${
-              darkMode
-                ? "bg-[#1a1a1a] border border-gray-800 hover:border-[#E2B44F]/30"
-                : "bg-white border border-slate-200 hover:border-amber-500/40"
-            }`}>
-              <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${
-                darkMode ? "bg-[#E2B44F]/10" : "bg-amber-100"
-              }`}>
-                <Wrench className={`w-10 h-10 ${
-                  darkMode ? "text-[#E2B44F]" : "text-amber-600"
-                }`} />
-              </div>
-              <h3 className={`text-lg font-bold mb-2 ${
-                darkMode ? "text-[#E2B44F]" : "text-amber-600"
-              }`}>
-                Huilier manuel
-              </h3>
-              <p className={`text-sm ${
-                darkMode ? "text-gray-400" : "text-slate-600"
-              }`}>
-                Corps en laiton, pointe capillaire 0.15-0.25mm. Permet de déposer des quantités
-                précises au micron près. Nettoyage à l'alcool après chaque utilisation.
-              </p>
-            </div>
-            <div className={`p-6 rounded-2xl transition-all text-center ${
-              darkMode
-                ? "bg-[#1a1a1a] border border-gray-800 hover:border-[#E2B44F]/30"
-                : "bg-white border border-slate-200 hover:border-amber-500/40"
-            }`}>
-              <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${
-                darkMode ? "bg-[#E2B44F]/10" : "bg-amber-100"
-              }`}>
-                <Lightbulb className={`w-10 h-10 ${
-                  darkMode ? "text-[#E2B44F]" : "text-amber-600"
-                }`} />
-              </div>
-              <h3 className={`text-lg font-bold mb-2 ${
-                darkMode ? "text-[#E2B44F]" : "text-amber-600"
-              }`}>
-                Loupe binoculaire
-              </h3>
-              <p className={`text-sm ${
-                darkMode ? "text-gray-400" : "text-slate-600"
-              }`}>
-                Grossissement x10 à x20. Indispensable pour visualiser le ménisque d'huile.
-                Éclairage LED intégré recommandé pour éviter les ombres.
-              </p>
-            </div>
-            <div className={`p-6 rounded-2xl transition-all text-center ${
-              darkMode
-                ? "bg-[#1a1a1a] border border-gray-800 hover:border-[#E2B44F]/30"
-                : "bg-white border border-slate-200 hover:border-amber-500/40"
-            }`}>
-              <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${
-                darkMode ? "bg-[#E2B44F]/10" : "bg-amber-100"
-              }`}>
-                <CheckCircle className={`w-10 h-10 ${
-                  darkMode ? "text-[#E2B44F]" : "text-amber-600"
-                }`} />
-              </div>
-              <h3 className={`text-lg font-bold mb-2 ${
-                darkMode ? "text-[#E2B44F]" : "text-amber-600"
-              }`}>
-                Papier absorbant
-              </h3>
-              <p className={`text-sm ${
-                darkMode ? "text-gray-400" : "text-slate-600"
-              }`}>
-                Pour retirer l'excès d'huile sans laisser de fibres. Papier de soie horlogère ou
-                buvard qualité supérieure uniquement.
-              </p>
+            <div className="aspect-video w-full bg-black rounded-3xl overflow-hidden shadow-xl border-2 border-slate-200 dark:border-slate-700">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/ARb8Vo4refs"
+                title="Techniques de lubrification horlogère"
+                frameBorder="0"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              />
             </div>
           </div>
-        </section>
 
-        <section id="technique" className={`mb-12 p-6 md:p-8 rounded-2xl scroll-mt-24 ${
-          darkMode
-            ? "bg-[#1a1a1a] border border-gray-800"
-            : "bg-white border border-slate-200"
-        }`}>
-          <h2 className={`text-3xl font-bold mb-6 font-serif ${
-            darkMode ? "text-[#E2B44F]" : "text-amber-600"
-          }`}>
-            Technique pas à pas
-          </h2>
-          <div className="space-y-6">
-            <div className={`p-5 rounded-lg border-l-4 ${
-              darkMode
-                ? "bg-[#0a0a0a] border-[#E2B44F]"
-                : "bg-neutral-100 border-amber-600"
-            }`}>
-              <h3 className={`font-bold mb-2 ${
-                darkMode ? "text-white" : "text-slate-900"
-              }`}>
-                Étape 1 : Préparation du mouvement
-              </h3>
-              <p className={darkMode ? "text-gray-300" : "text-slate-700"}>
-                Nettoyer tous les pivots à la benzine horlogère, séchage à l'air chaud (max 50°C).
-                Vérifier l'absence de poussière sous loupe x10. <strong>Temps : 30-45 min</strong>{" "}
-                pour un mouvement complet. Un résidu de poussière = usure prématurée.
-              </p>
-            </div>
-            <div className={`p-5 rounded-lg border-l-4 ${
-              darkMode
-                ? "bg-[#0a0a0a] border-[#E2B44F]"
-                : "bg-neutral-100 border-amber-600"
-            }`}>
-              <h3 className={`font-bold mb-2 ${
-                darkMode ? "text-white" : "text-slate-900"
-              }`}>
-                Étape 2 : Chargement du huilier
-              </h3>
-              <p className={darkMode ? "text-gray-300" : "text-slate-700"}>
-                Tremper la pointe capillaire à <strong>1mm maximum</strong> dans l'huile. Retirer et
-                attendre 3 secondes que la goutte se stabilise par tension superficielle.{" "}
-                <strong>Ne jamais</strong> remplir plus de 2mm la pointe pour éviter l'écoulement
-                intempestif.
-              </p>
-            </div>
-            <div className={`p-5 rounded-lg border-l-4 ${
-              darkMode
-                ? "bg-[#0a0a0a] border-[#E2B44F]"
-                : "bg-neutral-100 border-amber-600"
-            }`}>
-              <h3 className={`font-bold mb-2 ${
-                darkMode ? "text-white" : "text-slate-900"
-              }`}>
-                Étape 3 : Application sur le pivot
-              </h3>
-              <p className={darkMode ? "text-gray-300" : "text-slate-700"}>
-                Approcher la pointe à <strong>0.5mm du pivot</strong>. Laisser la goutte toucher le
-                pivot par capillarité - <strong>ne jamais frotter</strong>. Le ménisque doit être
-                visible en 3 secondes. Si besoin, retirer l'excès immédiatement avec un pointe de
-                buvard.
-              </p>
-            </div>
-            <div className={`p-5 rounded-lg border-l-4 ${
-              darkMode
-                ? "bg-[#0a0a0a] border-[#E2B44F]"
-                : "bg-neutral-100 border-amber-600"
-            }`}>
-              <h3 className={`font-bold mb-2 ${
-                darkMode ? "text-white" : "text-slate-900"
-              }`}>
-                Étape 4 : Vérification finale
-              </h3>
-              <p className={darkMode ? "text-gray-300" : "text-slate-700"}>
-                Sous loupe x10-x15, vérifier que l'huile forme un ménisque{" "}
-                <strong>régulier, brillant, sans bulles</strong>. Diamètre idéal : 0.4-0.6mm. Si le
-                ménisque est trop grand (&gt;1mm), retirer immédiatement avec du buvard. Un ménisque
-                trop petit (&lt;0.3mm) signifie une quantité insuffisante.
-              </p>
-            </div>
-          </div>
-        </section>
+          <div className="lg:col-span-5 p-6 rounded-3xl bg-white dark:bg-[#0f1422] border-2 border-slate-200 dark:border-slate-600 shadow-md space-y-4">
+            <h4 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Award className="w-4 h-4 text-amber-500" />
+              <span>Contrôle Qualité sous Binoculaire</span>
+            </h4>
 
-        <section id="signes" className="mb-12 scroll-mt-24">
-          <h2 className={`text-3xl font-bold mb-6 font-serif flex items-center gap-3 ${
-            darkMode ? "text-[#E2B44F]" : "text-amber-600"
-          }`}>
-            <Eye className="w-7 h-7" />
-            Signes visuels à reconnaître
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className={`p-6 rounded-2xl border ${
-              darkMode
-                ? "bg-green-900/20 border-green-700/50"
-                : "bg-green-100 border-green-500/50"
-            }`}>
-              <h3 className={`text-xl font-bold mb-3 ${
-                darkMode ? "text-green-400" : "text-green-700"
-              }`}>
-                ✓ Bon huilage
-              </h3>
-              <ul className={`space-y-2 text-sm ${
-                darkMode ? "text-gray-300" : "text-slate-700"
-              }`}>
-                <li>• Ménisque brillant et régulier, forme parfaite</li>
-                <li>• Diamètre entre 0.4 et 0.6mm</li>
-                <li>• Absence de bulles d'air</li>
-                <li>• Huile centrée sur le pivot, pas sur le rubis</li>
-                <li>• Pas de traces d'huile sur les ponts voisins</li>
-              </ul>
-            </div>
-            <div className={`p-6 rounded-2xl border ${
-              darkMode
-                ? "bg-red-900/20 border-red-700/50"
-                : "bg-red-100 border-red-500/50"
-            }`}>
-              <h3 className={`text-xl font-bold mb-3 ${
-                darkMode ? "text-red-400" : "text-red-700"
-              }`}>
-                ✗ Mauvais huilage
-              </h3>
-              <ul className={`space-y-2 text-sm ${
-                darkMode ? "text-gray-300" : "text-slate-700"
-              }`}>
-                <li>• Ménisque plat ou irrégulier</li>
-                <li>• Diamètre &gt;1mm (excès) ou &lt;0.3mm (insuffisance)</li>
-                <li>• Bulles d'air piégées = contamination</li>
-                <li>• Huile qui déborde sur le pont = risque de migration</li>
-                <li>• Aspect terne ou granuleux = huile séchée</li>
-              </ul>
-            </div>
-          </div>
-          <div className={`p-6 rounded-xl border mt-6 ${
-            darkMode
-              ? "bg-[#1a1a1a] border-gray-800"
-              : "bg-white border-slate-200"
-          }`}>
-            <h3 className={`text-lg font-bold mb-3 ${
-              darkMode ? "text-[#E2B44F]" : "text-amber-600"
-            }`}>
-              Diagnostic visuel rapide
-            </h3>
-            <p className={`text-sm ${
-              darkMode ? "text-gray-300" : "text-slate-700"
-            }`}>
-              Un horloger expérimenté évalue la qualité d'un huilage en{" "}
-              <strong>3 secondes</strong> par pivot. Cette rapidité vient de milliers d'heures de
-              pratique. La clarté du ménisque est le critère n°1.
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              En manufacture genevoise, chaque point de lubrification est contrôlé sous microscope binoculaire avec un éclairage rasant à 45°.
             </p>
-          </div>
-        </section>
 
-        <section id="erreurs" className="mb-12 scroll-mt-24">
-          <h2 className={`text-3xl font-bold mb-6 font-serif ${
-            darkMode ? "text-[#E2B44F]" : "text-amber-600"
-          }`}>
-            Erreurs courantes et leurs conséquences
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className={`p-6 rounded-xl border ${
-              darkMode
-                ? "bg-red-900/20 border-red-700/50"
-                : "bg-red-100 border-red-500/50"
-            }`}>
-              <h3 className={`text-xl font-bold mb-3 flex items-center gap-2 ${
-                darkMode ? "text-red-400" : "text-red-700"
-              }`}>
-                <AlertTriangle className="w-5 h-5" />
-                Excès d'huile (le plus fréquent)
-              </h3>
-              <ul className={`space-y-2 text-sm ${
-                darkMode ? "text-gray-300" : "text-slate-700"
-              }`}>
-                <li>• <strong>Conséquence immédiate :</strong> Migration vers le spiral → gain de +10 à +30 s/j</li>
-                <li>• <strong>À moyen terme :</strong> Attirance des poussières → usure accélérée x3</li>
-                <li>• <strong>À long terme :</strong> Risque de blocage complet du balancier</li>
-                <li>• <strong>Coût de réparation :</strong> 300-500€ si migration sur spiral</li>
-              </ul>
-            </div>
-            <div className={`p-6 rounded-xl border ${
-              darkMode
-                ? "bg-red-900/20 border-red-700/50"
-                : "bg-red-100 border-red-500/50"
-            }`}>
-              <h3 className={`text-xl font-bold mb-3 flex items-center gap-2 ${
-                darkMode ? "text-red-400" : "text-red-700"
-              }`}>
-                <AlertTriangle className="w-5 h-5" />
-                Huile inadaptée
-              </h3>
-              <ul className={`space-y-2 text-sm ${
-                darkMode ? "text-gray-300" : "text-slate-700"
-              }`}>
-                <li>• <strong>Trop fluide :</strong> Fuite rapide, séchement en 1-2 ans au lieu de 5-7</li>
-                <li>• <strong>Trop épaisse :</strong> Surconsommation de remontoir (-30% d'autonomie)</li>
-                <li>• <strong>Mélange de types :</strong> Polymérisation prématurée, résines collantes</li>
-                <li>• <strong>Coût :</strong> Révision complète obligatoire (200-400€)</li>
-              </ul>
-            </div>
-          </div>
-          <div className={`p-6 rounded-xl border mt-6 ${
-            darkMode
-              ? "bg-[#1a1a1a] border-gray-800"
-              : "bg-white border-slate-200"
-          }`}>
-            <h3 className={`text-lg font-bold mb-3 ${
-              darkMode ? "text-[#E2B44F]" : "text-amber-600"
-            }`}>
-              Témoignage d'un master horloger
-            </h3>
-            <blockquote className={`italic border-l-4 pl-4 ${
-              darkMode ? "text-gray-300 border-[#E2B44F]" : "text-slate-700 border-amber-600"
-            }`}>
-              "J'ai vu des montres de 20 000€ devenir imprécises à +5 min/jour juste à cause d'un excès d'huile sur le pivot du balancier. La lubrification est le test ultime de la patience du horloger. Moins c'est mieux, mais il faut juste ce qu'il faut."
-              <footer className={`text-sm mt-2 ${
-                darkMode ? "text-gray-400" : "text-slate-500"
-              }`}>
-                - Jean-Marc, 35 ans d'expérience, Biel/Bienne
-              </footer>
-            </blockquote>
-          </div>
-        </section>
-
-        <section id="maintenance" className={`mb-12 p-6 md:p-8 rounded-xl border scroll-mt-24 ${
-          darkMode
-            ? "bg-[#1a1a1a] border-gray-800"
-            : "bg-white border-slate-200"
-        }`}>
-          <h2 className={`text-3xl font-bold mb-6 font-serif ${
-            darkMode ? "text-[#E2B44F]" : "text-amber-600"
-          }`}>
-            Plan de maintenance recommandé
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className={`text-center p-6 rounded-lg border ${
-              darkMode
-                ? "bg-[#0a0a0a] border-gray-700"
-                : "bg-neutral-100 border-slate-200"
-            }`}>
-              <div className={`text-4xl font-bold mb-2 ${
-                darkMode ? "text-[#E2B44F]" : "text-amber-600"
-              }`}>
-                3-5 ans
-              </div>
-              <div className={darkMode ? "text-gray-300" : "text-slate-700"}>
-                <p className={`font-semibold mb-1 ${
-                  darkMode ? "text-white" : "text-slate-900"
-                }`}>
-                  Montres de tous les jours
-                </p>
-                <p className="text-sm">
-                  Révision complète avec changement de tous les lubrifiants. Inspection des usures. Conditions : chaleur, humidité, poussière.
-                </p>
-              </div>
-            </div>
-            <div className={`text-center p-6 rounded-lg border ${
-              darkMode
-                ? "bg-[#0a0a0a] border-gray-700"
-                : "bg-neutral-100 border-slate-200"
-            }`}>
-              <div className={`text-4xl font-bold mb-2 ${
-                darkMode ? "text-[#E2B44F]" : "text-amber-600"
-              }`}>
-                5-7 ans
-              </div>
-              <div className={darkMode ? "text-gray-300" : "text-slate-700"}>
-                <p className={`font-semibold mb-1 ${
-                  darkMode ? "text-white" : "text-slate-900"
-                }`}>
-                  Montres occasionnelles
-                </p>
-                <p className="text-sm">
-                  Révision complète. Les huiles synthétiques résistent mieux au temps. Stockage dans un environnement stable.
-                </p>
-              </div>
-            </div>
-            <div className={`text-center p-6 rounded-lg border ${
-              darkMode
-                ? "bg-red-900/20 border-red-700/30"
-                : "bg-red-100 border-red-500/30"
-            }`}>
-              <div className={`text-4xl font-bold mb-2 ${
-                darkMode ? "text-red-400" : "text-red-600"
-              }`}>
-                +7 ans
-              </div>
-              <div className={darkMode ? "text-gray-300" : "text-slate-700"}>
-                <p className={`font-semibold mb-1 ${
-                  darkMode ? "text-red-400" : "text-red-600"
-                }`}>
-                  ZONE DE RISQUE
-                </p>
-                <p className="text-sm">
-                  Huiles séchées → usure mécanique irréversible. Coûts de réparation majeurs. Risque de casse de pivots.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className={`p-5 rounded-lg mt-6 border ${
-            darkMode
-              ? "bg-[#0a0a0a] border-[#E2B44F]/30"
-              : "bg-neutral-100 border-amber-500/30"
-          }`}>
-            <h3 className={`font-bold mb-2 ${
-              darkMode ? "text-[#E2B44F]" : "text-amber-600"
-            }`}>
-              Indicateurs d'un huilage à revoir
-            </h3>
-            <ul className={`grid grid-cols-1 md:grid-cols-2 gap-2 text-sm ${
-              darkMode ? "text-gray-300" : "text-slate-700"
-            }`}>
-              <li>• Perturbation de la marche (±15 s/j ou plus)</li>
-              <li>• Réserve de marche diminuée (-20% d'autonomie)</li>
-              <li>• Remontoir plus dur ou grincant</li>
-              <li>• Bruits anormaux (cliquetis, frottements secs)</li>
-              <li>• Condensation sous le verre (signe de séchage)</li>
-              <li>• Montre non portée depuis &gt;3 ans</li>
+            <ul className="space-y-2.5 text-xs text-slate-600 dark:text-slate-300">
+              <li className="flex items-start gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0" />
+                <span><strong>Ménisque régulier :</strong> L’huile ne doit jamais former de bavure ou de pont vers une platine.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0" />
+                <span><strong>Épilation préalable :</strong> Les pierres doivent être nettoyées sous solvant et traitées à l’épilame (Fixodrop) pour empêcher la migration.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0" />
+                <span><strong>Durabilité :</strong> Une lubrification synthétique de qualité assure un fonctionnement parfait de 5 à 7 ans.</span>
+              </li>
             </ul>
           </div>
         </section>
 
-        <section id="economie" className="mb-12 scroll-mt-24">
-          <h2 className={`text-3xl font-bold mb-6 font-serif flex items-center gap-3 ${
-            darkMode ? "text-[#E2B44F]" : "text-amber-600"
-          }`}>
-            <DollarSign className="w-7 h-7" />
-            Considérations économiques
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className={`p-6 rounded-xl border ${
-              darkMode
-                ? "bg-[#1a1a1a] border-gray-800"
-                : "bg-white border-slate-200"
-            }`}>
-              <h3 className={`text-xl font-bold mb-3 ${
-                darkMode ? "text-[#E2B44F]" : "text-amber-600"
-              }`}>
-                Coûts de la révision (France/Suisse 2024)
-              </h3>
-              <ul className={`space-y-2 text-sm ${
-                darkMode ? "text-gray-300" : "text-slate-700"
-              }`}>
-                <li className="flex justify-between">
-                  <span>Révision simple (ETA 2824)</span>
-                  <span className={darkMode ? "text-[#E2B44F] font-bold" : "text-amber-600 font-bold"}>
-                    250-350€
-                  </span>
-                </li>
-                <li className="flex justify-between">
-                  <span>Révision complète (calibre manufacture)</span>
-                  <span className={darkMode ? "text-[#E2B44F] font-bold" : "text-amber-600 font-bold"}>
-                    500-800€
-                  </span>
-                </li>
-                <li className="flex justify-between">
-                  <span>Changement uniquement des huiles</span>
-                  <span className={darkMode ? "text-red-400" : "text-red-600"}>
-                    Non recommandé
-                  </span>
-                </li>
-                <li className="flex justify-between">
-                  <span>Réparation pivot + spiral (excès d'huile)</span>
-                  <span className={darkMode ? "text-red-400 font-bold" : "text-red-600 font-bold"}>
-                    400-600€
-                  </span>
-                </li>
-              </ul>
-            </div>
-            <div className={`p-6 rounded-xl border ${
-              darkMode
-                ? "bg-[#1a1a1a] border-gray-800"
-                : "bg-white border-slate-200"
-            }`}>
-              <h3 className={`text-xl font-bold mb-3 ${
-                darkMode ? "text-[#E2B44F]" : "text-amber-600"
-              }`}>
-                Retour sur investissement
-              </h3>
-              <div className={`p-4 rounded-lg ${
-                darkMode ? "bg-[#0a0a0a]" : "bg-neutral-100"
-              }`}>
-                <p className={`text-sm mb-2 ${
-                  darkMode ? "text-gray-300" : "text-slate-700"
-                }`}>
-                  Une révision préventive coûte <strong>3 fois moins</strong> qu'une réparation corrective. Sur 10 ans :
+        {/* --- MINI-QUIZ D'ÉVALUATION DU HUILAGE --- */}
+        <section className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#0f1422] border-2 border-slate-200 dark:border-slate-600 shadow-md space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+              Mini-Quiz : Testez vos connaissances de lubrification
+            </h3>
+            <span className="text-xs font-bold text-amber-500">3 Questions d’Atelier</span>
+          </div>
+
+          <div className="space-y-6">
+            {questions.map((q, qIndex) => (
+              <div
+                key={qIndex}
+                className="p-5 rounded-2xl bg-slate-50 dark:bg-[#141a2b] border border-slate-200 dark:border-slate-700"
+              >
+                <p className="text-sm sm:text-base font-bold text-slate-900 dark:text-white mb-3">
+                  {qIndex + 1}. {q.question}
                 </p>
-                <ul className={`space-y-1 text-xs ${
-                  darkMode ? "text-gray-400" : "text-slate-500"
-                }`}>
-                  <li>• 2 révisions préventives : 600-800€</li>
-                  <li>• 1 réparation + révision : 1200-1500€</li>
-                  <li>• <strong>Économie : 50-60%</strong></li>
-                </ul>
+
+                <div className="grid sm:grid-cols-2 gap-2.5">
+                  {q.options.map((option, oIndex) => {
+                    const isSelected = quizAnswers[qIndex] === oIndex;
+                    const isCorrect = oIndex === q.correct;
+                    const showResult = quizAnswers[qIndex] !== null;
+
+                    let btnStyle =
+                      'w-full text-left p-3 rounded-xl transition-all text-xs sm:text-sm font-semibold border ';
+
+                    if (showResult) {
+                      if (isCorrect) {
+                        btnStyle +=
+                          'bg-emerald-500 text-slate-950 border-emerald-400 font-bold shadow-md';
+                      } else if (isSelected && !isCorrect) {
+                        btnStyle +=
+                          'bg-rose-500/20 text-rose-700 dark:text-rose-300 border-rose-500';
+                      } else {
+                        btnStyle +=
+                          'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400 opacity-60';
+                      }
+                    } else {
+                      btnStyle +=
+                        'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400';
+                    }
+
+                    return (
+                      <button
+                        key={oIndex}
+                        onClick={() => handleAnswer(qIndex, oIndex)}
+                        disabled={showResult}
+                        className={btnStyle}
+                      >
+                        {option}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </section>
-
-        <section id="normes" className="mb-12 scroll-mt-24">
-          <h2 className={`text-3xl font-bold mb-6 font-serif flex items-center gap-3 ${
-            darkMode ? "text-[#E2B44F]" : "text-amber-600"
-          }`}>
-            <Award className="w-7 h-7" />
-            Normes et certifications industrielles
-          </h2>
-          <div className={`p-6 rounded-xl border ${
-            darkMode
-              ? "bg-[#1a1a1a] border-gray-800"
-              : "bg-white border-slate-200"
-          }`}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className={`font-bold mb-2 ${
-                  darkMode ? "text-[#E2B44F]" : "text-amber-600"
-                }`}>
-                  ISO 3159 (montres chronométriques)
-                </h3>
-                <p className={`text-sm mb-4 ${
-                  darkMode ? "text-gray-300" : "text-slate-700"
-                }`}>
-                  Spécifie les conditions de lubrification pour le contrôle chronométrique. Un mauvais huilage empêche la certification.
-                </p>
-                
-                <h3 className={`font-bold mb-2 ${
-                  darkMode ? "text-[#E2B44F]" : "text-amber-600"
-                }`}>
-                  Normes Rolex
-                </h3>
-                <p className={`text-sm ${
-                  darkMode ? "text-gray-300" : "text-slate-700"
-                }`}>
-                  31 points de lubrification distincts, chacun avec une huile spécifique et une procédure validée. Tout écart invalide la garantie.
-                </p>
-              </div>
-              <div className={`p-4 rounded-lg ${
-                darkMode ? "bg-[#0a0a0a]" : "bg-neutral-100"
-              }`}>
-                <h3 className={`font-bold mb-2 ${
-                  darkMode ? "text-white" : "text-slate-900"
-                }`}>
-                  Labels de qualité
-                </h3>
-                <ul className={`space-y-1 text-xs ${
-                  darkMode ? "text-gray-400" : "text-slate-500"
-                }`}>
-                  <li>• <strong>Poinçon de Genève :</strong> Vérification du huilage lors du marquage</li>
-                  <li>• <strong>COSC :</strong> Montre testée avec ses huiles d'origine</li>
-                  <li>• <strong>Qualité Fleurier :</strong> Contrôle de la migration des huiles</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="checklist" className={`mb-8 p-6 md:p-8 rounded-xl border scroll-mt-24 ${
-          darkMode
-            ? "bg-[#1a1a1a] border-gray-800"
-            : "bg-white border-slate-200"
-        }`}>
-          <h2 className={`text-3xl font-bold mb-6 font-serif flex items-center gap-3 ${
-            darkMode ? "text-[#E2B44F]" : "text-amber-600"
-          }`}>
-            <CheckCircle className="w-7 h-7" />
-            Checklist pratique : Avez-vous tout vérifié ?
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className={`font-bold mb-3 ${
-                darkMode ? "text-white" : "text-slate-900"
-              }`}>
-                Avant le huilage
-              </h3>
-              <ul className={`space-y-2 text-sm ${
-                darkMode ? "text-gray-300" : "text-slate-700"
-              }`}>
-                <li className="flex items-start gap-2">
-                  <span className={darkMode ? "text-[#E2B44F]" : "text-amber-600"}>□</span>
-                  <span>Mouvement nettoyé à la benzine et séché</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className={darkMode ? "text-[#E2B44F]" : "text-amber-600"}>□</span>
-                  <span>Loupe binoculaire x15 prête et éclairée</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className={darkMode ? "text-[#E2B44F]" : "text-amber-600"}>□</span>
-                  <span>Huile du type correcte (vérifier le cSt)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className={darkMode ? "text-[#E2B44F]" : "text-amber-600"}>□</span>
-                  <span>Huilier propre, pointe capillaire intacte</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className={darkMode ? "text-[#E2B44F]" : "text-amber-600"}>□</span>
-                  <span>Papier absorbant à portée de main</span>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className={`font-bold mb-3 ${
-                darkMode ? "text-white" : "text-slate-900"
-              }`}>
-                Après le huilage
-              </h3>
-              <ul className={`space-y-2 text-sm ${
-                darkMode ? "text-gray-300" : "text-slate-700"
-              }`}>
-                <li className="flex items-start gap-2">
-                  <span className={darkMode ? "text-[#E2B44F]" : "text-amber-600"}>□</span>
-                  <span>Ménisque de 0.4-0.6mm, brillant et régulier</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className={darkMode ? "text-[#E2B44F]" : "text-amber-600"}>□</span>
-                  <span>Pas d'huile sur les ponts alentours</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className={darkMode ? "text-[#E2B44F]" : "text-amber-600"}>□</span>
-                  <span>Pas de bulles d'air dans le ménisque</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className={darkMode ? "text-[#E2B44F]" : "text-amber-600"}>□</span>
-                  <span>Rotation libre du pivot testée</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className={darkMode ? "text-[#E2B44F]" : "text-amber-600"}>□</span>
-                  <span>Date de révision notée sur la fiche</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className={`mt-6 p-4 rounded-lg border ${
-            darkMode
-              ? "bg-[#0a0a0a] border-[#E2B44F]/30"
-              : "bg-neutral-100 border-amber-500/30"
-          }`}>
-            <p className={`text-sm text-center ${
-              darkMode ? "text-gray-300" : "text-slate-600"
-            }`}>
-              Cette checklist peut être imprimée et utilisée en atelier. Chaque point est critique pour la qualité finale.
-            </p>
-          </div>
-        </section>
-
-        <section className={`mb-8 p-6 rounded-xl border ${
-          darkMode
-            ? "bg-[#1a1a1a] border-gray-800"
-            : "bg-white border-slate-200"
-        }`}>
-          <h2 className={`text-2xl font-bold mb-4 font-serif ${
-            darkMode ? "text-[#E2B44F]" : "text-amber-600"
-          }`}>
-            Pour aller plus loin
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <h3 className={`font-bold mb-1 ${
-                darkMode ? "text-white" : "text-slate-900"
-              }`}>
-                Livres de référence
-              </h3>
-              <ul className={`space-y-1 ${
-                darkMode ? "text-gray-300" : "text-slate-700"
-              }`}>
-                <li>• "La pratique de la lubrification horlogère" - Michel Diederich</li>
-                <li>• "Techniques du graissage en horlogerie" - FH (Fondation Haute Horlogerie)</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className={`font-bold mb-1 ${
-                darkMode ? "text-white" : "text-slate-900"
-              }`}>
-                Fournisseurs certifiés
-              </h3>
-              <ul className={`space-y-1 ${
-                darkMode ? "text-gray-300" : "text-slate-700"
-              }`}>
-                <li>• Mobius Lubricants (Suisse) - Référence mondiale</li>
-                <li>• Bergeon (Suisse) - Outils et huiles spécialisés</li>
-                <li>• Moebius (Allemagne) - Huiles synthétiques haut de gamme</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <footer className={`text-center text-sm border-t pt-6 ${
-          darkMode ? "text-gray-500 border-gray-800" : "text-slate-500 border-slate-200"
-        }`}>
-          <p>HorloLearn - Cours de horlogerie en ligne | Dernière mise à jour : Novembre 2024</p>
-          <p className="mt-1">
-            Temps de lecture estimé : 20 minutes | Niveau : Intermédiaire | Certificat disponible
-          </p>
-        </footer>
-      </div>
+      </main>
     </div>
   );
 }
