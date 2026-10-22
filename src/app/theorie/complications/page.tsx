@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
   Award,
@@ -551,8 +550,8 @@ export default function ComplicationsPage() {
                 </div>
 
                 {/* Cadran d'Affichage QP */}
-                <div className="p-8 rounded-3xl bg-gradient-to-b from-slate-900 to-[#0f1422] text-white border-2 border-amber-500/40 text-center space-y-6">
-                  <div className="grid grid-cols-3 gap-4">
+                <div className="p-4 sm:p-8 rounded-3xl bg-gradient-to-b from-slate-900 to-[#0f1422] text-white border-2 border-amber-500/40 text-center space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                     <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
                       <div className="text-[10px] uppercase font-bold text-slate-400">Jour du Mois</div>
                       <div className="text-4xl font-mono font-extrabold text-amber-400 mt-1">{qpDay}</div>
