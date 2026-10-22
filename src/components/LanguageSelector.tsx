@@ -30,7 +30,6 @@ export default function LanguageSelector() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Initialisation et détection du cookie googtrans
   useEffect(() => {
     // 1. Lire la langue stockée dans les cookies ou localStorage
     const getSavedLanguage = () => {
@@ -51,7 +50,32 @@ export default function LanguageSelector() {
 
     setCurrentLang(getSavedLanguage());
 
-    // 2. Charger le script Google Translate de façon propre
+    // 2. Observer pour supprimer instantanément le bandeau Google Translate
+    const hideGoogleBanner = () => {
+      if (document.body.style.top && document.body.style.top !== '0px') {
+        document.body.style.top = '0px';
+      }
+      if (document.documentElement.style.top && document.documentElement.style.top !== '0px') {
+        document.documentElement.style.top = '0px';
+      }
+      const banners = document.querySelectorAll(
+        '.goog-te-banner-frame, iframe.goog-te-banner-frame, iframe[class*="VIpgJd"], .VIpgJd-ZVi9od-ORHb-OEVmcb, .VIpgJd-ZVi9od-ORHb'
+      );
+      banners.forEach(b => {
+        const el = b as HTMLElement;
+        el.style.setProperty('display', 'none', 'important');
+        el.style.setProperty('visibility', 'hidden', 'important');
+        el.style.setProperty('height', '0px', 'important');
+        el.style.setProperty('opacity', '0', 'important');
+      });
+    };
+
+    hideGoogleBanner();
+    const observer = new MutationObserver(hideGoogleBanner);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['style', 'class'], childList: true });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
+
+    // 3. Charger le script Google Translate de façon propre
     if (!window.googleTranslateElementInit) {
       window.googleTranslateElementInit = () => {
         if (window.google && window.google.translate) {
@@ -77,14 +101,18 @@ export default function LanguageSelector() {
       }
     }
 
-    // 3. Fermer le dropdown en cliquant à l'extérieur
+    // 4. Fermer le dropdown en cliquant à l'extérieur
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   // Changer de langue
@@ -94,7 +122,6 @@ export default function LanguageSelector() {
     setIsOpen(false);
 
     if (langCode === 'fr') {
-      // Effacer le cookie pour revenir à la langue native
       document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
       const domainParts = window.location.hostname.split('.');
@@ -103,7 +130,6 @@ export default function LanguageSelector() {
         document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${rootDomain};`;
       }
     } else {
-      // Définir le cookie de traduction Google
       const cookieValue = `/fr/${langCode}`;
       document.cookie = `googtrans=${cookieValue}; path=/;`;
       document.cookie = `googtrans=${cookieValue}; path=/; domain=${window.location.hostname};`;
@@ -114,7 +140,6 @@ export default function LanguageSelector() {
       }
     }
 
-    // Recharger doucement la page pour appliquer la traduction
     window.location.reload();
   };
 
@@ -179,23 +204,42 @@ export default function LanguageSelector() {
           </div>
         </div>
       )}
-      {/* Styles globaux pour masquer le bandeau Google Translate et préserver l'esthétique */}
+
+      {/* Styles globaux pour éliminer définitivement le bandeau Google Translate */}
       <style jsx global>{`
         .goog-te-banner-frame,
+        .goog-te-banner-frame.skiptranslate,
+        iframe.goog-te-banner-frame,
+        iframe.VIpgJd-ZVi9od-ORHb-OEVmcb,
+        iframe[class*="VIpgJd"],
+        .VIpgJd-ZVi9od-ORHb,
+        .VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
         .goog-te-gadget,
         #goog-gt-tt,
         .goog-te-balloon-frame,
         .goog-tooltip,
         .goog-tooltip:hover {
           display: none !important;
+          visibility: hidden !important;
+          height: 0px !important;
+          width: 0px !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+          border: none !important;
         }
-        body {
+        body, html {
           top: 0px !important;
           position: static !important;
+          margin-top: 0px !important;
+          transform: none !important;
         }
         .goog-text-highlight {
           background-color: transparent !important;
           border: none !important;
+          box-shadow: none !important;
+        }
+        font {
+          background-color: transparent !important;
           box-shadow: none !important;
         }
       `}</style>
