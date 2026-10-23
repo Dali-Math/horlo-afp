@@ -241,15 +241,15 @@ export default function IntroductionMontreMecaniquePage() {
   const [barrelTurns, setBarrelTurns] = useState(7);
   const [gearRatio, setGearRatio] = useState(6);
 
-  // Quiz State
+  // Quiz State (Stepper Compact)
+  const [currentQuizIdx, setCurrentQuizIdx] = useState(0);
   const [userAnswers, setUserAnswers] = useState<Record<number, number>>({});
-  const [showResults, setShowResults] = useState(false);
+  const [quizFinished, setQuizFinished] = useState(false);
 
   const calculatedPowerReserve = Math.round(barrelTurns * gearRatio);
 
-  const handleSelectAnswer = (qIndex: number, optionIndex: number) => {
-    if (showResults) return;
-    setUserAnswers(prev => ({ ...prev, [qIndex]: optionIndex }));
+  const handleSelectQuizAnswer = (optionIndex: number) => {
+    setUserAnswers(prev => ({ ...prev, [currentQuizIdx]: optionIndex }));
   };
 
   const calculateScore = () => {
@@ -264,7 +264,8 @@ export default function IntroductionMontreMecaniquePage() {
 
   const resetQuiz = () => {
     setUserAnswers({});
-    setShowResults(false);
+    setCurrentQuizIdx(0);
+    setQuizFinished(false);
   };
 
   const activeOrganData = ORGANS[selectedOrgan];
@@ -849,120 +850,201 @@ export default function IntroductionMontreMecaniquePage() {
         </section>
 
         {/* =================================================================== */}
-        {/* 7. QUIZ INTERACTIF DE CERTIFICATION CFC / AFP */}
+        {/* 7. QUIZ DE VALIDATION THÉORIQUE (FORMAT STEPPER COMPACT) */}
         {/* =================================================================== */}
-        <section className="space-y-6">
-          <div className="space-y-2">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#8A6A3B] dark:text-[#D4B483] font-bold">
-              Chapitre 5 · Contrôle des Connaissances
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
-              Quiz de Validation Théorique (Format Examen Suisse)
-            </h2>
-            <p className="text-sm text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
-              Testez votre assimilation des 5 grands organes et des principes cinématiques fondamentaux avant de passer aux modules suivants.
-            </p>
+        <section className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span className="text-xs font-mono uppercase tracking-widest text-[#8A6A3B] dark:text-[#D4B483] font-bold">
+                Contrôle des Connaissances
+              </span>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+                Quiz de Validation Rapide (Format Examen Suisse)
+              </h2>
+            </div>
+
+            {/* Mini Progress Pills */}
+            <div className="flex items-center gap-1.5">
+              {QUIZ_QUESTIONS.map((_, idx) => {
+                const ans = userAnswers[idx];
+                const isCurrent = currentQuizIdx === idx && !quizFinished;
+                let bg = "bg-neutral-200 dark:bg-neutral-800 text-neutral-500";
+                if (ans !== undefined) {
+                  bg = ans === QUIZ_QUESTIONS[idx].correctAnswer
+                    ? "bg-emerald-500 text-white font-bold"
+                    : "bg-rose-500 text-white font-bold";
+                } else if (isCurrent) {
+                  bg = "bg-[#B08D57] text-neutral-950 font-bold ring-2 ring-[#B08D57]/40";
+                }
+
+                return (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => {
+                      setCurrentQuizIdx(idx);
+                      setQuizFinished(false);
+                    }}
+                    className={`w-7 h-7 rounded-lg text-[11px] font-mono transition-all cursor-pointer flex items-center justify-center ${bg}`}
+                  >
+                    {idx + 1}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          <div className="space-y-6">
-            {QUIZ_QUESTIONS.map((q, qIdx) => {
-              const selectedOpt = userAnswers[qIdx];
-              const isAnswered = selectedOpt !== undefined;
-              const isCorrect = isAnswered && selectedOpt === q.correctAnswer;
-
-              return (
-                <div
-                  key={qIdx}
-                  className="p-6 sm:p-7 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] shadow-sm space-y-4"
-                >
-                  <div className="flex items-start gap-3">
-                    <span className="w-7 h-7 rounded-full bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
-                      Q{qIdx + 1}
+          {/* MAIN QUIZ CARD (Compact Stepper) */}
+          <div className="p-6 sm:p-7 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] shadow-sm">
+            {!quizFinished ? (
+              <div className="space-y-5">
+                {/* Question Header */}
+                <div className="flex items-center justify-between gap-4 border-b border-neutral-100 dark:border-neutral-800 pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-md font-mono font-bold text-xs bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] border border-[#B08D57]/20">
+                      Question {currentQuizIdx + 1} / {QUIZ_QUESTIONS.length}
                     </span>
-                    <h3 className="text-sm sm:text-base font-semibold text-neutral-900 dark:text-neutral-100 leading-snug">
-                      {q.question}
-                    </h3>
+                    <span className="text-xs font-mono text-neutral-400">
+                      {userAnswers[currentQuizIdx] !== undefined ? "✓ Réponse enregistrée" : "Choisissez une option"}
+                    </span>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                    {q.options.map((opt, optIdx) => {
-                      let btnStyle = "border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 text-neutral-700 dark:text-neutral-300 bg-neutral-50/50 dark:bg-neutral-900/40";
-
-                      if (isAnswered) {
-                        if (optIdx === q.correctAnswer && showResults) {
-                          btnStyle = "border-emerald-500 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 font-bold";
-                        } else if (selectedOpt === optIdx) {
-                          btnStyle = showResults
-                            ? "border-rose-500 bg-rose-500/10 text-rose-800 dark:text-rose-300 font-bold"
-                            : "border-[#B08D57] bg-[#B08D57]/10 text-neutral-900 dark:text-neutral-100 font-bold";
-                        }
-                      }
-
-                      return (
-                        <button
-                          key={optIdx}
-                          type="button"
-                          onClick={() => handleSelectAnswer(qIdx, optIdx)}
-                          className={`p-4 rounded-xl border text-left text-xs transition-all cursor-pointer flex items-center justify-between gap-2 ${btnStyle}`}
-                        >
-                          <span>{opt}</span>
-                          {showResults && optIdx === q.correctAnswer && (
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {showResults && (
-                    <div className={`p-4 rounded-xl text-xs leading-relaxed border ${
-                      isCorrect
-                        ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-900/40 text-emerald-900 dark:text-emerald-200"
-                        : "bg-rose-50/50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-900/40 text-rose-900 dark:text-rose-200"
-                    }`}>
-                      <span className="font-bold block mb-1">
-                        {isCorrect ? "✅ Réponse correcte !" : "❌ Explication technique :"}
-                      </span>
-                      {q.explanation}
-                    </div>
-                  )}
+                  <span className="text-xs font-mono text-neutral-500 font-semibold">
+                    Score : {calculateScore()} / {Object.keys(userAnswers).length}
+                  </span>
                 </div>
-              );
-            })}
 
-            {/* Barre de Validation du Quiz */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 rounded-2xl bg-neutral-100 dark:bg-[#1A1D24] border border-neutral-200 dark:border-neutral-800">
-              <div className="text-xs font-mono text-neutral-600 dark:text-neutral-400">
-                {Object.keys(userAnswers).length} / {QUIZ_QUESTIONS.length} questions répondues
-              </div>
+                {/* Question Title */}
+                <h3 className="text-sm sm:text-base font-semibold text-neutral-900 dark:text-neutral-100 leading-snug">
+                  {QUIZ_QUESTIONS[currentQuizIdx].question}
+                </h3>
 
-              <div className="flex items-center gap-3">
-                {showResults ? (
-                  <div className="flex items-center gap-4">
-                    <span className="text-sm font-mono font-bold text-neutral-900 dark:text-neutral-100">
-                      Score final : <strong className="text-[#8A6A3B] dark:text-[#D4B483]">{calculateScore()} / {QUIZ_QUESTIONS.length}</strong>
+                {/* Options Grid (2x2) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {QUIZ_QUESTIONS[currentQuizIdx].options.map((opt, optIdx) => {
+                    const selected = userAnswers[currentQuizIdx];
+                    const isSelected = selected === optIdx;
+                    const isAnswered = selected !== undefined;
+                    const isOptionCorrect = optIdx === QUIZ_QUESTIONS[currentQuizIdx].correctAnswer;
+
+                    let btnStyle = "border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 bg-neutral-50/60 dark:bg-neutral-900/40 text-neutral-700 dark:text-neutral-300";
+
+                    if (isAnswered) {
+                      if (isOptionCorrect) {
+                        btnStyle = "border-emerald-500 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 font-semibold";
+                      } else if (isSelected) {
+                        btnStyle = "border-rose-500 bg-rose-500/10 text-rose-800 dark:text-rose-300 font-semibold";
+                      } else {
+                        btnStyle = "opacity-50 border-neutral-200 dark:border-neutral-800";
+                      }
+                    }
+
+                    return (
+                      <button
+                        key={optIdx}
+                        type="button"
+                        onClick={() => handleSelectQuizAnswer(optIdx)}
+                        className={`p-3.5 rounded-xl border text-left text-xs transition-all cursor-pointer flex items-center justify-between gap-2 ${btnStyle}`}
+                      >
+                        <span className="leading-snug">{opt}</span>
+                        {isAnswered && isOptionCorrect && (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Feedback & Explanation Box */}
+                {userAnswers[currentQuizIdx] !== undefined && (
+                  <div className={`p-3.5 rounded-xl text-xs leading-relaxed border ${
+                    userAnswers[currentQuizIdx] === QUIZ_QUESTIONS[currentQuizIdx].correctAnswer
+                      ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-900/40 text-emerald-900 dark:text-emerald-200"
+                      : "bg-rose-50/50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-900/40 text-rose-900 dark:text-rose-200"
+                  }`}>
+                    <span className="font-bold block mb-0.5">
+                      {userAnswers[currentQuizIdx] === QUIZ_QUESTIONS[currentQuizIdx].correctAnswer
+                        ? "✅ Exact !"
+                        : "❌ Explication technique :"}
                     </span>
-                    <button
-                      type="button"
-                      onClick={resetQuiz}
-                      className="px-4 py-2 rounded-xl text-xs font-mono font-semibold bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors cursor-pointer flex items-center gap-1.5"
-                    >
-                      <RefreshCw className="w-3.5 h-3.5" />
-                      Recommencer
-                    </button>
+                    {QUIZ_QUESTIONS[currentQuizIdx].explanation}
                   </div>
-                ) : (
+                )}
+
+                {/* Stepper Controls */}
+                <div className="flex items-center justify-between pt-3 border-t border-neutral-100 dark:border-neutral-800">
                   <button
                     type="button"
-                    disabled={Object.keys(userAnswers).length < QUIZ_QUESTIONS.length}
-                    onClick={() => setShowResults(true)}
-                    className="px-6 py-2.5 rounded-xl text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 hover:bg-[#9c7b48] disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md cursor-pointer"
+                    disabled={currentQuizIdx === 0}
+                    onClick={() => setCurrentQuizIdx(prev => prev - 1)}
+                    className="px-3.5 py-1.5 rounded-lg text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
                   >
-                    Valider mes réponses
+                    ← Précédent
                   </button>
-                )}
+
+                  <div className="flex items-center gap-2">
+                    {currentQuizIdx < QUIZ_QUESTIONS.length - 1 ? (
+                      <button
+                        type="button"
+                        onClick={() => setCurrentQuizIdx(prev => prev + 1)}
+                        className="px-4 py-1.5 rounded-lg text-xs font-mono font-semibold bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 transition-all cursor-pointer"
+                      >
+                        Suivant →
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setQuizFinished(true)}
+                        className="px-4 py-1.5 rounded-lg text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 hover:bg-[#9c7b48] transition-all shadow-sm cursor-pointer"
+                      >
+                        Voir le Bilan Final ✓
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
+            ) : (
+              /* Summary / Result View */
+              <div className="text-center py-6 space-y-4">
+                <div className="w-14 h-14 rounded-full bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] mx-auto flex items-center justify-center font-serif text-2xl font-bold">
+                  {calculateScore()} / {QUIZ_QUESTIONS.length}
+                </div>
+
+                <div className="space-y-1">
+                  <h3 className="text-lg font-serif font-bold text-neutral-900 dark:text-neutral-100">
+                    {calculateScore() >= 4
+                      ? "Félicitations ! Notions théoriques validées."
+                      : "Bon début d'apprentissage !"}
+                  </h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 max-w-md mx-auto">
+                    {calculateScore() >= 4
+                      ? "Vous maîtrisez parfaitement les 5 grands organes et la chaîne cinématique. Vous êtes prêt pour le Module 02 sur le Barillet."
+                      : "Prenez le temps de revoir les phases de l'échappement et le calcul d'isochronisme avant de poursuivre."}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-center gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCurrentQuizIdx(0);
+                      setQuizFinished(false);
+                    }}
+                    className="px-4 py-2 rounded-xl text-xs font-mono font-semibold bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
+                  >
+                    Revoir mes réponses
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={resetQuiz}
+                    className="px-4 py-2 rounded-xl text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 hover:bg-[#9c7b48] transition-all cursor-pointer shadow-sm"
+                  >
+                    Recommencer le quiz
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </section>
 
