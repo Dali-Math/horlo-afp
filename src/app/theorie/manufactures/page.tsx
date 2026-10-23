@@ -101,7 +101,44 @@ const styles = `
   }
 `;
 
-const MANUFACTURES_DATA = [
+interface Manufacture {
+  id: string;
+  name: string;
+  year: string;
+  founder: string;
+  location: string;
+  region: string;
+  regionLabel: string;
+  category: string;
+  group: string;
+  motto: string;
+  seal: string;
+  signatureCaliber: string;
+  iconicModel: string;
+  img: string;
+  altImg?: string;
+  desc: string;
+  keyInnovations: string[];
+  isHolyTrinity?: boolean;
+}
+
+interface Certification {
+  name: string;
+  creation: string;
+  scope: string;
+  precision: string;
+  finishing: string;
+  badge: string;
+}
+
+interface QuizQuestion {
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  explanation: string;
+}
+
+const MANUFACTURES_DATA: Manufacture[] = [
   {
     "id": "patek-philippe",
     "name": "Patek Philippe",
@@ -344,7 +381,7 @@ const MANUFACTURES_DATA = [
   }
 ];
 
-const CERTIFICATIONS = [
+const CERTIFICATIONS: Certification[] = [
   {
     "name": "Poinçon de Genève",
     "creation": "1886 (Loi cantonale genevoise)",
@@ -387,7 +424,7 @@ const CERTIFICATIONS = [
   }
 ];
 
-const QUIZ_QUESTIONS = [
+const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     "question": "1. Quelle manufacture historique est créditée de la création de la première montre de plongée moderne (la Fifty Fathoms) en 1953 ?",
     "options": [
@@ -446,12 +483,12 @@ const QUIZ_QUESTIONS = [
 ];
 
 export default function MonographiesManufactures() {
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [activeFilter, setActiveFilter] = useState<string>('all');
 
   // Stepper Quiz state (~280px tall)
-  const [currentQuizIdx, setCurrentQuizIdx] = useState(0);
-  const [userAnswers, setUserAnswers] = useState({});
-  const [quizFinished, setQuizFinished] = useState(false);
+  const [currentQuizIdx, setCurrentQuizIdx] = useState<number>(0);
+  const [userAnswers, setUserAnswers] = useState<Record<number, number>>({});
+  const [quizFinished, setQuizFinished] = useState<boolean>(false);
 
   const handleSelectQuizAnswer = (optIdx: number) => {
     if (userAnswers[currentQuizIdx] !== undefined) return;
