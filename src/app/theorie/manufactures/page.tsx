@@ -116,7 +116,7 @@ interface Manufacture {
   signatureCaliber: string;
   iconicModel: string;
   img: string;
-  altImg?: string;
+  fallbackImg: string;
   desc: string;
   keyInnovations: string[];
   isHolyTrinity?: boolean;
@@ -153,8 +153,8 @@ const MANUFACTURES_DATA: Manufacture[] = [
     "seal": "Poinçon Patek Philippe (PP Seal)",
     "signatureCaliber": "Calibre 240 (Micro-rotor 22K) & Calibre 89 (33 complications)",
     "iconicModel": "Nautilus 5711, Calatrava 96, Grandmaster Chime 6300",
-    "img": "/imgs/Patek_Philippe_Rose_Gold_Grand_Complications_Watch.jpg",
-    "altImg": "/imgs/Patek-Philippe-Nautilus-Luxury-Swiss-Watch-Blue-Dial.jpg",
+    "img": "/theorie/manufactures/imgs/patek-philippe.jpg",
+    "fallbackImg": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&q=80",
     "desc": "Symbole suprême de l'horlogerie aristocratique genevoise, Patek Philippe allie indépendance capitalistique totale et excellence artisanale. Ses pièces détiennent les records absolus aux enchères mondiales.",
     "keyInnovations": [
       "1845 : Invention du remontage et mise à l'heure sans clé par la couronne (Adrien Philippe)",
@@ -178,8 +178,8 @@ const MANUFACTURES_DATA: Manufacture[] = [
     "seal": "Haute Horlogerie du Brassus",
     "signatureCaliber": "Calibre 2120 (rotor périphérique) & Calibre 4401 (chronographe flyback)",
     "iconicModel": "Royal Oak 1972, Royal Oak Offshore, Code 11.59",
-    "img": "/imgs/audemars_piguet_royal_oak_rose_gold_black_dial_luxury_swiss_watch.jpg",
-    "altImg": "/imgs/audemars_piguet_royal_oak_skeleton_artistic.jpg",
+    "img": "/theorie/manufactures/imgs/audemars-piguet.jpg",
+    "fallbackImg": "https://images.unsplash.com/photo-1547996160-71dfabb1d355?auto=format&fit=crop&w=1200&q=80",
     "desc": "Doyenne de la Vallée de Joux restée aux mains des familles fondatrices depuis 1875. Pionnière des sonneries, des quantièmes perpétuels et créatrice du segment sport-chic en acier de luxe.",
     "keyInnovations": [
       "1892 : Premier mouvement de montre-bracelet à répétition minutes au monde",
@@ -203,8 +203,8 @@ const MANUFACTURES_DATA: Manufacture[] = [
     "seal": "Poinçon de Genève (100% de la production mécanique)",
     "signatureCaliber": "Calibre 1731 (Répétition minutes ultra-plate) & Calibre 57260 (57 complications)",
     "iconicModel": "Patrimony, Overseas, Historiques 222, Les Cabinotiers",
-    "img": "/imgs/Vacheron_Constantin_Tourbillon_Green_Dial_Luxury_Swiss_Watch.jpg",
-    "altImg": "/imgs/vacheron_constantin_tourbillon_extraordinary.jpg",
+    "img": "/theorie/manufactures/imgs/vacheron-constantin.jpg",
+    "fallbackImg": "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=1200&q=80",
     "desc": "La plus ancienne manufacture horlogère au monde en activité ininterrompue depuis 1755. Référence absolue pour ses Cabinotiers d'art, ses finitions main intégrales et son savoir-faire séculaire.",
     "keyInnovations": [
       "1755 : Jean-Marc Vacheron réalise la première montre avec coq de balancier ajouré",
@@ -228,8 +228,8 @@ const MANUFACTURES_DATA: Manufacture[] = [
     "seal": "Chronomètre Superlatif (-2/+2 sec/jour après emboîtage)",
     "signatureCaliber": "Calibre 3135 / 3235 (Échappement Chronergy) & Calibre 4130 / 4131",
     "iconicModel": "Submariner, Daytona, Datejust, GMT-Master II, Day-Date",
-    "img": "/imgs/rolex_submariner_gold_luxury_swiss_watch_product_photo.jpg",
-    "altImg": "/imgs/rolex-submariner-date-luxury-watch-professional-studio.jpg",
+    "img": "/theorie/manufactures/imgs/rolex.jpg",
+    "fallbackImg": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=80",
     "desc": "La manufacture la plus influente et reconnue du monde. Pionnière absolue de l'étanchéité, du remontage automatique et des montres d'exploration extrême portées du sommet de l'Everest aux fosses abyssales.",
     "keyInnovations": [
       "1926 : Boîtier Oyster, premier boîtier de montre-bracelet étanche avec couronne vissée",
@@ -252,8 +252,8 @@ const MANUFACTURES_DATA: Manufacture[] = [
     "seal": "Contrôle 1 000 Heures (1 000 Hours Control)",
     "signatureCaliber": "Calibre 101 (plus petit mouvement mécanique au monde, 0,98 g) & Calibre 822",
     "iconicModel": "Reverso (1931), Polaris, Master Ultra Thin, Pendule Atmos",
-    "img": "/imgs/jaeger_lecoultre_reverso_blue_dial_luxury_watch.jpg",
-    "altImg": "/imgs/Jaeger-LeCoultre-Reverso-Green-Dial-Luxury-Swiss-Watch-Product-Shot.jpg",
+    "img": "/theorie/manufactures/imgs/jaeger-lecoultre.jpg",
+    "fallbackImg": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=80",
     "desc": "Surnommée « La Grande Maison », elle a historiquement fourni des calibres d'exception à Patek Philippe, Audemars Piguet, Vacheron Constantin et Cartier. Elle maîtrise sous un même toit plus de 180 savoir-faire.",
     "keyInnovations": [
       "1844 : Invention du Millionomètre, premier instrument capable de mesurer le micron",
@@ -276,8 +276,8 @@ const MANUFACTURES_DATA: Manufacture[] = [
     "seal": "Master Chronometer METAS (15 000 gauss & 0/+5 s/j)",
     "signatureCaliber": "Calibre 321 (Chrono roue à colonnes) & Calibre Co-Axial Master Chronometer 8900",
     "iconicModel": "Speedmaster Professional Moonwatch, Seamaster Diver 300M, Constellation",
-    "img": "/imgs/omega_speedmaster_professional_moonwatch_luxury_swiss_watch.jpg",
-    "altImg": "/imgs/Omega_Seamaster_Chronograph_Luxury_Watch_White_Background.jpg",
+    "img": "/theorie/manufactures/imgs/omega.jpg",
+    "fallbackImg": "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?auto=format&fit=crop&w=1200&q=80",
     "desc": "Chronométreur officiel des Jeux Olympiques depuis 1932. Choisi par la NASA en 1965 après les tests les plus rigoureux de l'histoire aérospatiale, équipant Neil Armstrong et Buzz Aldrin sur la Lune en 1969.",
     "keyInnovations": [
       "1894 : Calibre 19 lignes « Omega », donnant son nom définitif à la marque pour sa perfection",
@@ -300,8 +300,8 @@ const MANUFACTURES_DATA: Manufacture[] = [
     "seal": "Manufacture de Haute Horlogerie du Brassus",
     "signatureCaliber": "Calibre 1315 (3 barillets, 120 heures de réserve de marche) & Calibre 6918B",
     "iconicModel": "Fifty Fathoms (1953), Villeret, Métiers d'Art Shakudō",
-    "img": "/imgs/blancpain_fifty_fathoms_luxury_swiss_dive_watch_product_shot.jpg",
-    "altImg": "/imgs/blancpain_fifty_fathoms_bathyscaphe_luxury_watch.jpg",
+    "img": "/theorie/manufactures/imgs/blancpain.jpg",
+    "fallbackImg": "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=1200&q=80",
     "desc": "La plus ancienne marque horlogère enregistrée au monde. Créatrice de l'archétype moderne de la montre de plongée et fervente protectrice exclusive de l'art mécanique traditionnel.",
     "keyInnovations": [
       "1735 : Enregistrement de Jehan-Jacques Blancpain au registre officiel des horlogers de Villeret",
@@ -324,7 +324,8 @@ const MANUFACTURES_DATA: Manufacture[] = [
     "seal": "Certificat Probus Scafusia",
     "signatureCaliber": "Calibre 52000 (remontage Pellaton 7 jours) & Calibre 89000",
     "iconicModel": "Big Pilot, Portugieser, Da Vinci, Aquatimer, Ingenieur",
-    "img": "/imgs/IWC_Schaffhausen_Headquarters_Historic_Building_Switzerland.jpg",
+    "img": "/theorie/manufactures/imgs/iwc-schaffhausen.jpg",
+    "fallbackImg": "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?auto=format&fit=crop&w=1200&q=80",
     "desc": "Fondée par un ingénieur américain sur le cours d'eau du Rhin afin d'exploiter l'énergie hydroélectrique. Pionnière des montres d'aviateurs avec cage intérieure en fer doux antimagnétique.",
     "keyInnovations": [
       "1884 : Montres de poche à affichage digital mécanique Pallweber (heures et minutes sautantes)",
@@ -347,7 +348,8 @@ const MANUFACTURES_DATA: Manufacture[] = [
     "seal": "Signature secrète Breguet & Guillochage main",
     "signatureCaliber": "Calibre 584Q & Calibre Tourbillon 558",
     "iconicModel": "Classique Tourbillon, Reine de Naples, Type XX Aéronavale",
-    "img": "/imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg",
+    "img": "/theorie/manufactures/imgs/breguet.jpg",
+    "fallbackImg": "https://images.unsplash.com/photo-1518131665421-2e55ef9c8172?auto=format&fit=crop&w=1200&q=80",
     "desc": "Incontournable génie de l'histoire horlogère universelle. Abraham-Louis Breguet a inventé le tourbillon, le spiral à courbe terminale Breguet, l'antichoc pare-chute et la montre à souscription.",
     "keyInnovations": [
       "1780 : Perfectionnement du remontage automatique à masselotte (montres perpétuelles)",
@@ -370,7 +372,8 @@ const MANUFACTURES_DATA: Manufacture[] = [
     "seal": "Conception Zéro Compromis",
     "signatureCaliber": "Calibre RM 27 (Tourbillon Rafael Nadal suspendu par câbles)",
     "iconicModel": "RM 011 Chrono Flyback, RM 027 Tourbillon Nadal, RM UP-01 Ferrari (1,75 mm)",
-    "img": "/imgs/richard_mille_carbon_ultra_light.jpg",
+    "img": "/theorie/manufactures/imgs/richard-mille.jpg",
+    "fallbackImg": "https://images.unsplash.com/photo-1594534475808-b18fc33b045e?auto=format&fit=crop&w=1200&q=80",
     "desc": "Révolution contemporaine de la haute horlogerie technique. Application des composites carbone TPT, des platines en titane grade 5 sablées et d'architectures suspendues résistant à des accélérations supérieures à 12 000 G.",
     "keyInnovations": [
       "2001 : Lancement de la RM 001 avec platine en titane et indicateur de couple de barillet",
@@ -484,6 +487,7 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
 
 export default function MonographiesManufactures() {
   const [activeFilter, setActiveFilter] = useState<string>('all');
+  const [imgFailed, setImgFailed] = useState<Record<string, boolean>>({});
 
   // Stepper Quiz state (~280px tall)
   const [currentQuizIdx, setCurrentQuizIdx] = useState<number>(0);
@@ -684,94 +688,103 @@ export default function MonographiesManufactures() {
 
             {/* Grid of Monographies */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {filteredManufactures.map((m) => (
-                <div key={m.id} className="vitrine-card flex flex-col justify-between group">
-                  {/* Photo Header */}
-                  <div className="relative h-56 w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
-                    <img
-                      src={m.img}
-                      alt={m.name}
-                      className="w-full h-full object-cover card-img-zoom"
-                      loading="lazy"
-                    />
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 shadow-md">
-                      Fondée en {m.year}
+              {filteredManufactures.map((m) => {
+                const currentImgSrc = imgFailed[m.id] ? m.fallbackImg : m.img;
+
+                return (
+                  <div key={m.id} className="vitrine-card flex flex-col justify-between group">
+                    {/* Photo Header */}
+                    <div className="relative h-56 w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                      <img
+                        src={currentImgSrc}
+                        alt={m.name}
+                        onError={() => {
+                          if (!imgFailed[m.id]) {
+                            setImgFailed((prev) => ({ ...prev, [m.id]: true }));
+                          }
+                        }}
+                        className="w-full h-full object-cover card-img-zoom"
+                        loading="lazy"
+                      />
+                      <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 shadow-md">
+                        Fondée en {m.year}
+                      </div>
+
+                      <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-mono bg-black/75 text-white backdrop-blur-sm border border-white/10">
+                        📍 {m.location}
+                      </div>
+
+                      <div className="absolute bottom-3 left-3 px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-neutral-900/90 text-yellow-300 backdrop-blur-sm border border-yellow-500/20">
+                        {m.category}
+                      </div>
                     </div>
 
-                    <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-mono bg-black/75 text-white backdrop-blur-sm border border-white/10">
-                      📍 {m.location}
-                    </div>
+                    {/* Body Content */}
+                    <div className="p-6 flex-1 flex flex-col justify-between space-y-5">
+                      <div className="space-y-3">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <h3 className="text-2xl font-serif font-bold group-hover:text-[#B08D57] transition-colors">
+                              {m.name}
+                            </h3>
+                            <div className="text-xs font-mono text-neutral-500 dark:text-neutral-400">
+                              Fondateur(s) : <strong className="text-neutral-800 dark:text-neutral-200">{m.founder}</strong>
+                            </div>
+                          </div>
 
-                    <div className="absolute bottom-3 left-3 px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-neutral-900/90 text-yellow-300 backdrop-blur-sm border border-yellow-500/20">
-                      {m.category}
-                    </div>
-                  </div>
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded gold-badge flex-shrink-0">
+                            {m.group}
+                          </span>
+                        </div>
 
-                  {/* Body Content */}
-                  <div className="p-6 flex-1 flex flex-col justify-between space-y-5">
-                    <div className="space-y-3">
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <h3 className="text-2xl font-serif font-bold group-hover:text-[#B08D57] transition-colors">
-                            {m.name}
-                          </h3>
-                          <div className="text-xs font-mono text-neutral-500 dark:text-neutral-400">
-                            Fondateur(s) : <strong className="text-neutral-800 dark:text-neutral-200">{m.founder}</strong>
+                        {/* Motto */}
+                        <div className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border-l-2 border-[#B08D57] text-xs italic text-neutral-600 dark:text-neutral-300">
+                          {m.motto}
+                        </div>
+
+                        <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed font-sans">
+                          {m.desc}
+                        </p>
+
+                        {/* Technical Specs */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-neutral-100 dark:border-neutral-800/60 text-xs font-mono">
+                          <div className="p-2.5 rounded-lg bg-neutral-100/60 dark:bg-neutral-800/40">
+                            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Sceau d&apos;Excellence</span>
+                            <span className="font-semibold text-neutral-800 dark:text-neutral-200 text-[11px]">{m.seal}</span>
+                          </div>
+
+                          <div className="p-2.5 rounded-lg bg-neutral-100/60 dark:bg-neutral-800/40">
+                            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Calibre Signature</span>
+                            <span className="font-semibold text-neutral-800 dark:text-neutral-200 text-[11px] truncate block">{m.signatureCaliber}</span>
                           </div>
                         </div>
 
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded gold-badge flex-shrink-0">
-                          {m.group}
-                        </span>
-                      </div>
-
-                      {/* Motto */}
-                      <div className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 border-l-2 border-[#B08D57] text-xs italic text-neutral-600 dark:text-neutral-300">
-                        {m.motto}
-                      </div>
-
-                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed font-sans">
-                        {m.desc}
-                      </p>
-
-                      {/* Technical Specs */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-neutral-100 dark:border-neutral-800/60 text-xs font-mono">
-                        <div className="p-2.5 rounded-lg bg-neutral-100/60 dark:bg-neutral-800/40">
-                          <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Sceau d&apos;Excellence</span>
-                          <span className="font-semibold text-neutral-800 dark:text-neutral-200 text-[11px]">{m.seal}</span>
-                        </div>
-
-                        <div className="p-2.5 rounded-lg bg-neutral-100/60 dark:bg-neutral-800/40">
-                          <span className="text-[10px] text-neutral-400 uppercase tracking-wider block">Calibre Signature</span>
-                          <span className="font-semibold text-neutral-800 dark:text-neutral-200 text-[11px] truncate block">{m.signatureCaliber}</span>
+                        {/* Key Innovations */}
+                        <div className="space-y-1.5 pt-2">
+                          <span className="text-[11px] font-mono font-bold text-[#B08D57] uppercase tracking-wider flex items-center gap-1.5">
+                            <Sparkles className="w-3.5 h-3.5" />
+                            <span>Innovations &amp; Brevets Majeurs</span>
+                          </span>
+                          <ul className="space-y-1 text-xs text-neutral-600 dark:text-neutral-400">
+                            {m.keyInnovations.map((inno, iIdx) => (
+                              <li key={iIdx} className="flex items-start gap-2">
+                                <span className="text-[#B08D57] font-bold">•</span>
+                                <span className="leading-tight">{inno}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       </div>
 
-                      {/* Key Innovations */}
-                      <div className="space-y-1.5 pt-2">
-                        <span className="text-[11px] font-mono font-bold text-[#B08D57] uppercase tracking-wider flex items-center gap-1.5">
-                          <Sparkles className="w-3.5 h-3.5" />
-                          <span>Innovations &amp; Brevets Majeurs</span>
-                        </span>
-                        <ul className="space-y-1 text-xs text-neutral-600 dark:text-neutral-400">
-                          {m.keyInnovations.map((inno, iIdx) => (
-                            <li key={iIdx} className="flex items-start gap-2">
-                              <span className="text-[#B08D57] font-bold">•</span>
-                              <span className="leading-tight">{inno}</span>
-                            </li>
-                          ))}
-                        </ul>
+                      {/* Iconic Models pill */}
+                      <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800 text-xs font-mono flex items-center justify-between text-neutral-500">
+                        <span>Modèles Cultes :</span>
+                        <strong className="text-neutral-900 dark:text-neutral-100">{m.iconicModel}</strong>
                       </div>
-                    </div>
-
-                    {/* Iconic Models pill */}
-                    <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800 text-xs font-mono flex items-center justify-between text-neutral-500">
-                      <span>Modèles Cultes :</span>
-                      <strong className="text-neutral-900 dark:text-neutral-100">{m.iconicModel}</strong>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
 
