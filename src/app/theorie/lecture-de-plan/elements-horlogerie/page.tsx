@@ -136,30 +136,30 @@ export default function ElementsHorlogeriePage() {
 
         {/* Sub-Nav Modules Selector */}
         <div className="border-t border-neutral-100 dark:border-neutral-800/60 overflow-x-auto no-scrollbar">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center gap-2 py-2 text-xs">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 flex gap-2 py-2">
             <Link
               href="/theorie/lecture-de-plan/types-lignes"
               className="px-4 py-1.5 rounded-lg font-mono text-xs font-semibold transition-all text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
             >
-              01. Types de Lignes (ISO 128-2)
+              1. Types de Lignes
             </Link>
             <Link
               href="/theorie/lecture-de-plan/elements-horlogerie"
               className="px-4 py-1.5 rounded-lg font-mono text-xs font-semibold transition-all bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 shadow-sm"
             >
-              02. Éléments d&apos;Horlogerie (NIHS)
+              2. Éléments d&apos;Horlogerie
             </Link>
             <Link
               href="/theorie/lecture-de-plan/symboles-normalises"
               className="px-4 py-1.5 rounded-lg font-mono text-xs font-semibold transition-all text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
             >
-              03. Symboles &amp; Finitions (ISO 21920)
+              3. Symboles Normalisés
             </Link>
             <Link
               href="/theorie/lecture-de-plan/vues-techniques"
               className="px-4 py-1.5 rounded-lg font-mono text-xs font-semibold transition-all text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
             >
-              04. Vues &amp; Projections (ISO 128-3)
+              4. Vues Techniques
             </Link>
           </div>
         </div>
