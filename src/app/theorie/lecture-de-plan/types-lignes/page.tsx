@@ -6,6 +6,8 @@ import Link from "next/link";
 export default function TypesLignesPage() {
   const [isDark, setIsDark] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
+  const [lineFilter, setLineFilter] = useState<"all" | "continu" | "interrompu" | "mixte">("all");
+  const [selectedLineRow, setSelectedLineRow] = useState<string>("04.2");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -206,54 +208,219 @@ export default function TypesLignesPage() {
                 </div>
               </div>
 
-              {/* Normative Reference Table */}
-              <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/50 overflow-hidden shadow-sm">
-                <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-800/80 flex items-center justify-between">
-                  <span className="font-serif font-bold text-sm text-neutral-900 dark:text-neutral-100">Tableau des Types de Traits Normalisés ISO 128-2 (Atelier Horloger)</span>
-                  <span className="text-xs font-mono text-[#8A6A3B] dark:text-[#D4B483]">Groupe standard : 0.5 mm / 0.25 mm</span>
+              {/* Tableau Normalisé des Lignes Techniques (ISO 128-2) */}
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-serif font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-[#8A6A3B] dark:text-[#D4B483]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                      </svg>
+                      <span>Tableau Normalisé des Lignes Techniques (ISO 128-2)</span>
+                    </h2>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+                      Synthèse officielle pour les examens théoriques de l&apos;apprentissage AFP / CFC horloger en Suisse.
+                    </p>
+                  </div>
+
+                  {/* Filter Pills */}
+                  <div className="flex items-center gap-1 bg-neutral-100 dark:bg-[#15171D] p-1 rounded-xl border border-neutral-300 dark:border-neutral-800 text-xs font-mono">
+                    <button
+                      type="button"
+                      onClick={() => setLineFilter("all")}
+                      className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+                        lineFilter === "all"
+                          ? "bg-[#B08D57] text-neutral-950 shadow-sm"
+                          : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                      }`}
+                    >
+                      Tous
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setLineFilter("continu")}
+                      className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                        lineFilter === "continu"
+                          ? "bg-[#B08D57] text-neutral-950 font-bold shadow-sm"
+                          : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                      }`}
+                    >
+                      Continus
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setLineFilter("interrompu")}
+                      className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                        lineFilter === "interrompu"
+                          ? "bg-[#B08D57] text-neutral-950 font-bold shadow-sm"
+                          : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                      }`}
+                    >
+                      Interrompus
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setLineFilter("mixte")}
+                      className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                        lineFilter === "mixte"
+                          ? "bg-[#B08D57] text-neutral-950 font-bold shadow-sm"
+                          : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
+                      }`}
+                    >
+                      Mixtes
+                    </button>
+                  </div>
                 </div>
-                <table className="w-full text-xs text-left">
-                  <thead className="bg-neutral-50 dark:bg-neutral-800/60 text-neutral-500 font-mono border-b border-neutral-200 dark:border-neutral-800">
-                    <tr>
-                      <th className="p-3.5">Désignation ISO</th>
-                      <th className="p-3.5">Aspect Graphique</th>
-                      <th className="p-3.5 text-center">Largeur d (mm)</th>
-                      <th className="p-3.5">Applications Horlogères Principales</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800/60 font-sans">
-                    <tr>
-                      <td className="p-3.5 font-semibold text-neutral-900 dark:text-neutral-100 font-mono">01.2 Trait continu fort</td>
-                      <td className="p-3.5"><div className="w-28 h-1 bg-neutral-900 dark:bg-neutral-100 rounded"></div></td>
-                      <td className="p-3.5 text-center font-mono font-bold text-neutral-900 dark:text-neutral-100">0.50 mm</td>
-                      <td className="p-3.5 text-neutral-600 dark:text-neutral-400">Contours et arêtes visibles des ponts, platines, tigerons, têtes de vis et mobiles.</td>
-                    </tr>
-                    <tr>
-                      <td className="p-3.5 font-semibold text-neutral-900 dark:text-neutral-100 font-mono">01.1 Trait continu fin</td>
-                      <td className="p-3.5"><div className="w-28 h-0.5 bg-neutral-500 rounded"></div></td>
-                      <td className="p-3.5 text-center font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483]">0.25 mm</td>
-                      <td className="p-3.5 text-neutral-600 dark:text-neutral-400">Lignes de cote, lignes de rappel, hachures de coupe, fonds de filets des vis, cercles primitifs.</td>
-                    </tr>
-                    <tr>
-                      <td className="p-3.5 font-semibold text-neutral-900 dark:text-neutral-100 font-mono">02.1 Trait interrompu fin</td>
-                      <td className="p-3.5"><div className="w-28 border-b-2 border-dashed border-neutral-500"></div></td>
-                      <td className="p-3.5 text-center font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483]">0.25 mm</td>
-                      <td className="p-3.5 text-neutral-600 dark:text-neutral-400">Contours cachés : logements de rubis sous pont, taraudages borgnes, portée arrière d&apos;arbre.</td>
-                    </tr>
-                    <tr>
-                      <td className="p-3.5 font-semibold text-neutral-900 dark:text-neutral-100 font-mono">04.1 Trait mixte fin</td>
-                      <td className="p-3.5"><div className="w-28 text-neutral-500 font-mono text-xs tracking-tighter">── · ── · ── · ──</div></td>
-                      <td className="p-3.5 text-center font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483]">0.25 mm</td>
-                      <td className="p-3.5 text-neutral-600 dark:text-neutral-400">Axes de révolution (balancier, roue d&apos;échappement, barillet), plans de symétrie, trajectoires.</td>
-                    </tr>
-                    <tr>
-                      <td className="p-3.5 font-semibold text-neutral-900 dark:text-neutral-100 font-mono">04.2 Trait mixte avec bouts forts</td>
-                      <td className="p-3.5"><div className="w-28 flex items-center"><span className="w-4 h-1 bg-neutral-900 dark:bg-neutral-100"></span><span className="flex-1 text-center font-mono text-xs">· ── ·</span><span className="w-4 h-1 bg-neutral-900 dark:bg-neutral-100"></span></div></td>
-                      <td className="p-3.5 text-center font-mono font-bold text-neutral-900 dark:text-neutral-100">0.50 / 0.25</td>
-                      <td className="p-3.5 text-neutral-600 dark:text-neutral-400">Tracés des plans de coupe (ex: Coupe A-A traversant le rouage et l&apos;échappement).</td>
-                    </tr>
-                  </tbody>
-                </table>
+
+                <div className="overflow-x-auto rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] shadow-sm">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-[#191C23] font-mono text-neutral-500 dark:text-neutral-400">
+                        <th className="p-4">Code ISO</th>
+                        <th className="p-4">Type de Trait</th>
+                        <th className="p-4">Rendu Graphique</th>
+                        <th className="p-4 text-center">Épaisseur Standard</th>
+                        <th className="p-4 text-center">Haute Précision</th>
+                        <th className="p-4">Exemples d&apos;Application Horlogère</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
+                      {/* 01.2 */}
+                      {(lineFilter === "all" || lineFilter === "continu") && (
+                        <tr
+                          onClick={() => setSelectedLineRow("01.2")}
+                          className={`transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-800/40 cursor-pointer ${
+                            selectedLineRow === "01.2" ? "bg-[#B08D57]/10" : ""
+                          }`}
+                        >
+                          <td className="p-4 font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483]">01.2</td>
+                          <td className="p-4">
+                            <div className="font-semibold text-neutral-900 dark:text-neutral-100">Trait continu fort</div>
+                            <div className="text-[10px] font-mono text-neutral-500 dark:text-neutral-400 mt-0.5">2d (Épais)</div>
+                          </td>
+                          <td className="p-4">
+                            <div className="w-32 py-1">
+                              <div className="w-full h-1 bg-neutral-900 dark:bg-neutral-100 rounded-sm"></div>
+                            </div>
+                          </td>
+                          <td className="p-4 text-center font-mono font-bold text-neutral-900 dark:text-neutral-100">0.50 mm</td>
+                          <td className="p-4 text-center font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483]">0.35 mm</td>
+                          <td className="p-4 text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xs">
+                            Arêtes et contours visibles des platines, ponts, coqs et masses oscillantes
+                          </td>
+                        </tr>
+                      )}
+
+                      {/* 01.1 */}
+                      {(lineFilter === "all" || lineFilter === "continu") && (
+                        <tr
+                          onClick={() => setSelectedLineRow("01.1")}
+                          className={`transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-800/40 cursor-pointer ${
+                            selectedLineRow === "01.1" ? "bg-[#B08D57]/10" : ""
+                          }`}
+                        >
+                          <td className="p-4 font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483]">01.1</td>
+                          <td className="p-4">
+                            <div className="font-semibold text-neutral-900 dark:text-neutral-100">Trait continu fin</div>
+                            <div className="text-[10px] font-mono text-neutral-500 dark:text-neutral-400 mt-0.5">1d (Fin)</div>
+                          </td>
+                          <td className="p-4">
+                            <div className="w-32 py-1">
+                              <div className="w-full h-0.5 bg-neutral-500 dark:bg-neutral-400 rounded-sm"></div>
+                            </div>
+                          </td>
+                          <td className="p-4 text-center font-mono font-bold text-neutral-900 dark:text-neutral-100">0.25 mm</td>
+                          <td className="p-4 text-center font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483]">0.18 mm</td>
+                          <td className="p-4 text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xs">
+                            Lignes de cote, lignes d&apos;attache et lignes de rappel
+                          </td>
+                        </tr>
+                      )}
+
+                      {/* 02.1 */}
+                      {(lineFilter === "all" || lineFilter === "interrompu") && (
+                        <tr
+                          onClick={() => setSelectedLineRow("02.1")}
+                          className={`transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-800/40 cursor-pointer ${
+                            selectedLineRow === "02.1" ? "bg-[#B08D57]/10" : ""
+                          }`}
+                        >
+                          <td className="p-4 font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483]">02.1</td>
+                          <td className="p-4">
+                            <div className="font-semibold text-neutral-900 dark:text-neutral-100">Trait interrompu fin</div>
+                            <div className="text-[10px] font-mono text-neutral-500 dark:text-neutral-400 mt-0.5">1d (Fin)</div>
+                          </td>
+                          <td className="p-4">
+                            <div className="w-32 py-1">
+                              <div className="w-full border-b-2 border-dashed border-amber-500 dark:border-amber-400"></div>
+                            </div>
+                          </td>
+                          <td className="p-4 text-center font-mono font-bold text-neutral-900 dark:text-neutral-100">0.25 mm</td>
+                          <td className="p-4 text-center font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483]">0.18 mm</td>
+                          <td className="p-4 text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xs">
+                            Contours et arêtes cachés (noyures de rubis sous un pont)
+                          </td>
+                        </tr>
+                      )}
+
+                      {/* 04.1 */}
+                      {(lineFilter === "all" || lineFilter === "mixte") && (
+                        <tr
+                          onClick={() => setSelectedLineRow("04.1")}
+                          className={`transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-800/40 cursor-pointer ${
+                            selectedLineRow === "04.1" ? "bg-[#B08D57]/10" : ""
+                          }`}
+                        >
+                          <td className="p-4 font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483]">04.1</td>
+                          <td className="p-4">
+                            <div className="font-semibold text-neutral-900 dark:text-neutral-100">Trait mixte fin (trait-point)</div>
+                            <div className="text-[10px] font-mono text-neutral-500 dark:text-neutral-400 mt-0.5">1d (Fin)</div>
+                          </td>
+                          <td className="p-4">
+                            <div className="w-32 py-1 text-sky-600 dark:text-sky-400 font-mono text-[11px] tracking-tight">
+                              ── · ── · ── · ──
+                            </div>
+                          </td>
+                          <td className="p-4 text-center font-mono font-bold text-neutral-900 dark:text-neutral-100">0.25 mm</td>
+                          <td className="p-4 text-center font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483]">0.18 mm</td>
+                          <td className="p-4 text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xs">
+                            Axes de révolution des mobiles (balancier, roue d&apos;échappement, barillet)
+                          </td>
+                        </tr>
+                      )}
+
+                      {/* 04.2 */}
+                      {(lineFilter === "all" || lineFilter === "mixte") && (
+                        <tr
+                          onClick={() => setSelectedLineRow("04.2")}
+                          className={`transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-800/40 cursor-pointer ${
+                            selectedLineRow === "04.2" ? "bg-[#B08D57]/10" : ""
+                          }`}
+                        >
+                          <td className="p-4 font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483]">04.2</td>
+                          <td className="p-4">
+                            <div className="font-semibold text-neutral-900 dark:text-neutral-100">Trait mixte avec extrémités fortes</div>
+                            <div className="text-[10px] font-mono text-neutral-500 dark:text-neutral-400 mt-0.5">2d aux bouts / 1d au centre</div>
+                          </td>
+                          <td className="p-4">
+                            <div className="w-32 py-1 flex items-center">
+                              <span className="w-4 h-1 bg-rose-500 rounded-xs"></span>
+                              <span className="flex-1 text-center font-mono text-[11px] text-rose-500 dark:text-rose-400">· ── ·</span>
+                              <span className="w-4 h-1 bg-rose-500 rounded-xs"></span>
+                            </div>
+                          </td>
+                          <td className="p-4 text-center font-mono font-bold text-neutral-900 dark:text-neutral-100">0.50 / 0.25 mm</td>
+                          <td className="p-4 text-center font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483]">0.35 / 0.18 mm</td>
+                          <td className="p-4 text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xs">
+                            Indication des plans de coupe A-A traversant le rouage ou l&apos;échappement
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               {/* Workshop Rule Box */}
@@ -271,6 +438,7 @@ export default function TypesLignesPage() {
           {/* =================================================================== */}
           {activeTab === 1 && (
             <div id="module1" className="space-y-12">
+              {/* Header */}
               <div className="border-b border-neutral-200 dark:border-neutral-800 pb-8 space-y-3">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] border border-[#B08D57]/30">
                   <span>⚙ Fédération Horlogère Suisse · Normes NIHS</span>
@@ -283,8 +451,9 @@ export default function TypesLignesPage() {
                 </p>
               </div>
 
+              {/* 4 Standard Components Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* 1. Vis miniature */}
+                {/* 1. Visserie Miniature S (NIHS 06-10) */}
                 <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/50 space-y-4">
                   <div className="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-3">
                     <h3 className="font-serif font-bold text-base text-neutral-900 dark:text-neutral-100">1. Visserie Miniature Horlogère (NIHS 06-10 / 06-25)</h3>
@@ -293,11 +462,16 @@ export default function TypesLignesPage() {
                   <svg viewBox="0 0 360 160" className="w-full h-auto select-none font-mono">
                     <rect width="360" height="160" fill="#181A1E" rx="8"/>
                     <line x1="20" y1="80" x2="340" y2="80" stroke="#4B5563" strokeWidth="1" strokeDasharray="8 3 2 3"/>
+                    {/* Screw head cylindrical with flat slot */}
                     <rect x="50" y="35" width="70" height="90" fill="#334155" stroke="#CBD5E1" strokeWidth="2" rx="2"/>
+                    {/* Slot (fente de tournevis) */}
                     <rect x="50" y="65" width="25" height="30" fill="#0F172A" stroke="#B08D57" strokeWidth="1.5"/>
+                    {/* Cylindrical body with threads */}
                     <rect x="120" y="55" width="160" height="50" fill="#475569" stroke="#CBD5E1" strokeWidth="2"/>
+                    {/* Thread lines (fond de filet fin ISO) */}
                     <line x1="120" y1="60" x2="270" y2="60" stroke="#B08D57" strokeWidth="1" strokeDasharray="2 2"/>
                     <line x1="120" y1="100" x2="270" y2="100" stroke="#B08D57" strokeWidth="1" strokeDasharray="2 2"/>
+                    {/* Labels */}
                     <text x="85" y="25" fill="#E2E8F0" fontSize="10" textAnchor="middle">Tête (D)</text>
                     <text x="62" y="112" fill="#B08D57" fontSize="9">Fente (n)</text>
                     <text x="195" y="48" fill="#D4B483" fontSize="10" textAnchor="middle">Filetage S 0.80 à S 1.40</text>
@@ -308,7 +482,7 @@ export default function TypesLignesPage() {
                   </p>
                 </div>
 
-                {/* 2. Rubis */}
+                {/* 2. Pierres Synthétiques / Rubis (NIHS 30-01) */}
                 <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/50 space-y-4">
                   <div className="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-3">
                     <h3 className="font-serif font-bold text-base text-neutral-900 dark:text-neutral-100">2. Coussinets en Rubis Synthétique (NIHS 30-01)</h3>
@@ -317,7 +491,9 @@ export default function TypesLignesPage() {
                   <svg viewBox="0 0 360 160" className="w-full h-auto select-none font-mono">
                     <rect width="360" height="160" fill="#181A1E" rx="8"/>
                     <line x1="20" y1="80" x2="340" y2="80" stroke="#4B5563" strokeWidth="1" strokeDasharray="8 3 2 3"/>
+                    {/* Ruby cross section */}
                     <path d="M 100 40 L 260 40 L 260 65 L 240 65 L 240 120 L 100 120 Z" fill="#BE123C" fillOpacity="0.8" stroke="#FB7185" strokeWidth="2"/>
+                    {/* Olivage reservoir for oil */}
                     <ellipse cx="170" cy="80" rx="30" ry="12" fill="#181A1E" stroke="#FDE047" strokeWidth="1.5"/>
                     <circle cx="170" cy="80" r="4" fill="#38BDF8"/>
                     <text x="170" y="32" fill="#FB7185" fontSize="10" fontWeight="bold" textAnchor="middle">RUBIS CHASSÉ D&apos;UN PONT</text>
@@ -329,7 +505,7 @@ export default function TypesLignesPage() {
                   </p>
                 </div>
 
-                {/* 3. Pivots */}
+                {/* 3. Pivots et Tigerons (NIHS 20-02) */}
                 <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/50 space-y-4">
                   <div className="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-3">
                     <h3 className="font-serif font-bold text-base text-neutral-900 dark:text-neutral-100">3. Pivots de Mobiles &amp; Arbres (NIHS 20-02)</h3>
@@ -338,9 +514,13 @@ export default function TypesLignesPage() {
                   <svg viewBox="0 0 360 160" className="w-full h-auto select-none font-mono">
                     <rect width="360" height="160" fill="#181A1E" rx="8"/>
                     <line x1="20" y1="80" x2="340" y2="80" stroke="#4B5563" strokeWidth="1" strokeDasharray="8 3 2 3"/>
+                    {/* Shaft body */}
                     <rect x="40" y="45" width="160" height="70" fill="#334155" stroke="#CBD5E1" strokeWidth="2"/>
+                    {/* Shoulder (assiette) */}
                     <path d="M 200 45 L 230 65 L 230 95 L 200 115 Z" fill="#475569" stroke="#CBD5E1" strokeWidth="1.5"/>
+                    {/* Polished cylindrical pivot */}
                     <rect x="230" y="70" width="75" height="20" fill="#94A3B8" stroke="#38BDF8" strokeWidth="2"/>
+                    {/* Rounded tip */}
                     <path d="M 305 70 A 10 10 0 0 1 305 90 Z" fill="#38BDF8"/>
                     <text x="120" y="35" fill="#E2E8F0" fontSize="10" textAnchor="middle">Tige Ø 0.80 mm</text>
                     <text x="215" y="135" fill="#F59E0B" fontSize="9" textAnchor="middle">Assiette de portée</text>
@@ -351,7 +531,7 @@ export default function TypesLignesPage() {
                   </p>
                 </div>
 
-                {/* 4. Dentures */}
+                {/* 4. Dentures Cycloïdales Horlogères (NIHS 20-25) */}
                 <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/50 space-y-4">
                   <div className="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-3">
                     <h3 className="font-serif font-bold text-base text-neutral-900 dark:text-neutral-100">4. Profil d&apos;Engrenage Cycloïdal (NIHS 20-25)</h3>
@@ -359,7 +539,9 @@ export default function TypesLignesPage() {
                   </div>
                   <svg viewBox="0 0 360 160" className="w-full h-auto select-none font-mono">
                     <rect width="360" height="160" fill="#181A1E" rx="8"/>
+                    {/* Pitch circle (trait mixte fin) */}
                     <line x1="20" y1="90" x2="340" y2="90" stroke="#B08D57" strokeWidth="1.2" strokeDasharray="10 3 2 3"/>
+                    {/* Tooth profile */}
                     <path d="M 60 130 L 100 130 L 100 90 Q 115 50 130 50 Q 145 50 160 90 L 160 130 L 200 130 L 200 90 Q 215 50 230 50 Q 245 50 260 90 L 260 130 L 300 130" fill="none" stroke="#10B981" strokeWidth="2.5"/>
                     <text x="180" y="40" fill="#10B981" fontSize="10" fontWeight="bold" textAnchor="middle">Courbe ogivale épicycloïdale</text>
                     <text x="300" y="82" fill="#D4B483" fontSize="9" textAnchor="end">Cercle primitif (d)</text>
@@ -378,6 +560,7 @@ export default function TypesLignesPage() {
           {/* =================================================================== */}
           {activeTab === 2 && (
             <div id="module2" className="space-y-12">
+              {/* Header */}
               <div className="border-b border-neutral-200 dark:border-neutral-800 pb-8 space-y-3">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] border border-[#B08D57]/30">
                   <span>✨ Normes ISO 21920 (Remplace ISO 1302) &amp; ISO 13715</span>
@@ -390,20 +573,27 @@ export default function TypesLignesPage() {
                 </p>
               </div>
 
+              {/* Symbols Anatomy CAD Box */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 <div className="lg:col-span-6 p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/50 space-y-4">
                   <h3 className="font-serif font-bold text-base text-neutral-900 dark:text-neutral-100">Anatomie du Symbole de Rugosité (ISO 21920)</h3>
                   <svg viewBox="0 0 380 180" className="w-full h-auto select-none font-mono">
                     <rect width="380" height="180" fill="#181A1E" rx="8"/>
+                    {/* Triangle base */}
                     <polyline points="60,130 110,40 180,40" fill="none" stroke="#B08D57" strokeWidth="2.5" />
                     <polyline points="60,130 85,85" fill="none" stroke="#B08D57" strokeWidth="2.5" />
+                    {/* Bar closing triangle = Material removal mandatory */}
                     <line x1="60" y1="85" x2="110" y2="85" stroke="#B08D57" strokeWidth="2" />
+
+                    {/* Labels around the symbol */}
                     <text x="195" y="38" fill="#38BDF8" fontSize="12" fontWeight="bold">Ra 0.4</text>
                     <text x="195" y="55" fill="#94A3B8" fontSize="10">Procédé : Rectification / Lapidage</text>
                     <text x="195" y="72" fill="#CBD5E1" fontSize="10">Longueur de base : 0.8 mm</text>
+                    
                     <circle cx="85" cy="85" r="3" fill="#E2E8F0" />
                     <line x1="85" y1="85" x2="30" y2="40" stroke="#94A3B8" strokeWidth="1" strokeDasharray="2 2"/>
                     <text x="25" y="30" fill="#E2E8F0" fontSize="10">Enlèvement de matière obligatoire</text>
+
                     <rect x="30" y="145" width="320" height="24" fill="#252830" rx="4"/>
                     <text x="190" y="161" fill="#D4B483" fontSize="10" textAnchor="middle">Surface usinée (Tournage, Fraisage, Roulage)</text>
                   </svg>
@@ -417,12 +607,17 @@ export default function TypesLignesPage() {
                   <h3 className="font-serif font-bold text-base text-neutral-900 dark:text-neutral-100">Cotation des Arêtes &amp; Bavures (ISO 13715)</h3>
                   <svg viewBox="0 0 380 180" className="w-full h-auto select-none font-mono">
                     <rect width="380" height="180" fill="#181A1E" rx="8"/>
+                    {/* Part edge corner */}
                     <polyline points="80,140 80,60 180,60" fill="none" stroke="#E2E8F0" strokeWidth="3" />
+                    
+                    {/* ISO 13715 symbol */}
                     <line x1="80" y1="60" x2="40" y2="20" stroke="#B08D57" strokeWidth="1.5" />
                     <polyline points="40,20 20,40" fill="none" stroke="#B08D57" strokeWidth="1.5" />
                     <polyline points="40,20 80,20" fill="none" stroke="#B08D57" strokeWidth="1.5" />
+                    
                     <text x="90" y="24" fill="#F43F5E" fontSize="12" fontWeight="bold">- 0.05</text>
                     <text x="180" y="24" fill="#94A3B8" fontSize="10">Arête cassée (Biseau/Chanfrein)</text>
+
                     <rect x="30" y="100" width="320" height="65" fill="#252830" rx="4"/>
                     <text x="45" y="118" fill="#10B981" fontSize="10">Signe - (moins) : Arête abattue / chanfreinée</text>
                     <text x="45" y="135" fill="#F43F5E" fontSize="10">Signe + (plus) : Bavure résiduelle permise</text>
@@ -434,7 +629,7 @@ export default function TypesLignesPage() {
                 </div>
               </div>
 
-              {/* Swiss Finishes Table */}
+              {/* Swiss Finishes Table (Décoration d'Atelier) */}
               <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/50 overflow-hidden shadow-sm">
                 <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-800/80 flex items-center justify-between">
                   <span className="font-serif font-bold text-sm text-neutral-900 dark:text-neutral-100">Finition &amp; États de Surface Horlogers de Référence</span>
@@ -485,6 +680,7 @@ export default function TypesLignesPage() {
           {/* =================================================================== */}
           {activeTab === 3 && (
             <div id="module3" className="space-y-12">
+              {/* Header */}
               <div className="border-b border-neutral-200 dark:border-neutral-800 pb-8 space-y-3">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] border border-[#B08D57]/30">
                   <span>📐 Norme Internationale ISO 128-3:2020</span>
@@ -497,6 +693,7 @@ export default function TypesLignesPage() {
                 </p>
               </div>
 
+              {/* Projection Cube Unfolded Diagram */}
               <div className="p-6 rounded-2xl border border-neutral-700/60 bg-[#181A1E] text-[#E0E2E6] space-y-4">
                 <div className="flex flex-wrap items-center justify-between text-xs font-mono border-b border-neutral-800 pb-3">
                   <span className="text-neutral-400 flex items-center gap-2">
@@ -505,6 +702,7 @@ export default function TypesLignesPage() {
                   </span>
                   <div className="flex items-center gap-2 text-[#D4B483]">
                     <span>SYMBOLE NORMALISÉ :</span>
+                    {/* Official Cone symbol */}
                     <svg width="45" height="18" viewBox="0 0 50 20" className="inline">
                       <polygon points="5,5 25,2 25,18 5,15" fill="none" stroke="#D4B483" strokeWidth="1.2"/>
                       <circle cx="38" cy="10" r="7" fill="none" stroke="#D4B483" strokeWidth="1.2"/>
@@ -515,25 +713,26 @@ export default function TypesLignesPage() {
 
                 <div className="w-full overflow-x-auto flex justify-center py-6">
                   <svg viewBox="0 0 760 360" className="w-full max-w-[700px] h-auto select-none font-mono">
+                    {/* Grid lines between views */}
                     <line x1="280" y1="20" x2="280" y2="340" stroke="#334155" strokeWidth="1" strokeDasharray="4 4"/>
                     <line x1="480" y1="20" x2="480" y2="340" stroke="#334155" strokeWidth="1" strokeDasharray="4 4"/>
                     <line x1="40" y1="130" x2="720" y2="130" stroke="#334155" strokeWidth="1" strokeDasharray="4 4"/>
                     <line x1="40" y1="250" x2="720" y2="250" stroke="#334155" strokeWidth="1" strokeDasharray="4 4"/>
 
-                    {/* VUE DE DESSOUS */}
+                    {/* 1. VUE DE DESSOUS (Placée AU-DESSUS de la vue de face) */}
                     <g transform="translate(300, 30)">
                       <rect width="160" height="80" fill="#242832" stroke="#64748B" strokeWidth="1.5" rx="4"/>
                       <circle cx="80" cy="40" r="20" fill="#1E222A" stroke="#94A3B8" strokeWidth="1"/>
                       <text x="80" y="44" fill="#94A3B8" fontSize="10" textAnchor="middle">VUE DE DESSOUS</text>
                     </g>
 
-                    {/* VUE DE DROITE */}
+                    {/* 2. VUE DE DROITE (Placée À GAUCHE de la vue de face) */}
                     <g transform="translate(100, 140)">
                       <rect width="160" height="90" fill="#242832" stroke="#64748B" strokeWidth="1.5" rx="4"/>
                       <text x="80" y="49" fill="#94A3B8" fontSize="10" textAnchor="middle">VUE DE DROITE</text>
                     </g>
 
-                    {/* VUE DE FACE */}
+                    {/* 3. VUE DE FACE (Vue principale au centre) */}
                     <g transform="translate(300, 140)">
                       <rect width="160" height="90" fill="#2E3442" stroke="#B08D57" strokeWidth="2.5" rx="4"/>
                       <circle cx="80" cy="45" r="25" fill="#181A1E" stroke="#38BDF8" strokeWidth="1.5"/>
@@ -542,13 +741,13 @@ export default function TypesLignesPage() {
                       <text x="80" y="75" fill="#E2E8F0" fontSize="9" textAnchor="middle">(Vue Principale)</text>
                     </g>
 
-                    {/* VUE DE GAUCHE */}
+                    {/* 4. VUE DE GAUCHE (Placée À DROITE de la vue de face) */}
                     <g transform="translate(500, 140)">
                       <rect width="160" height="90" fill="#242832" stroke="#64748B" strokeWidth="1.5" rx="4"/>
                       <text x="80" y="49" fill="#94A3B8" fontSize="10" textAnchor="middle">VUE DE GAUCHE</text>
                     </g>
 
-                    {/* VUE DE DESSUS */}
+                    {/* 5. VUE DE DESSUS (Placée EN DESSOUS de la vue de face) */}
                     <g transform="translate(300, 260)">
                       <rect width="160" height="80" fill="#242832" stroke="#64748B" strokeWidth="1.5" rx="4"/>
                       <text x="80" y="44" fill="#94A3B8" fontSize="10" textAnchor="middle">VUE DE DESSUS</text>
