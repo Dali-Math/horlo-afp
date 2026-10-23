@@ -467,10 +467,10 @@ export default function BalancierSpiralPage() {
                   <strong>T :</strong> Période d&apos;une oscillation complète en secondes (1 oscillation = 2 alternances).
                 </p>
                 <p>
-                  <strong>I :</strong> Moment d&apos;inertie du balancier ($I = m \cdot r^2$ en $\text{g}\cdot\text{cm}^2$).
+                  <strong>I :</strong> Moment d&apos;inertie du balancier (I = m · r² en g · cm²).
                 </p>
                 <p>
-                  <strong>C_s :</strong> Constante de couple de rappel élastique du spiral (en $\text{mN}\cdot\text{mm/rad}$).
+                  <strong>C_s :</strong> Constante de couple de rappel élastique du spiral (en mN · mm/rad).
                 </p>
               </div>
 
@@ -490,7 +490,7 @@ export default function BalancierSpiralPage() {
 
               <div className="space-y-2 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
                 <p>
-                  <strong>E :</strong> Module d&apos;élasticité d&apos;Young de l&apos;alliage ($\approx 200&apos;000\text{ N/mm}^2$).
+                  <strong>E :</strong> Module d&apos;élasticité d&apos;Young de l&apos;alliage (~200&apos;000 N/mm²).
                 </p>
                 <p>
                   <strong>b &amp; L :</strong> Hauteur de lame (b) et longueur active développée (L).
