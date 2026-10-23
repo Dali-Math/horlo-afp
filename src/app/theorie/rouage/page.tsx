@@ -1388,11 +1388,11 @@ export default function RouagePage() {
         {/* =================================================================== */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-neutral-200 dark:border-neutral-800">
           <Link
-            href="/theorie/barillet-ressort-moteur"
+            href="/theorie/remontage"
             className="inline-flex items-center gap-2 text-xs font-mono text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>← Module 02 : Le Barillet &amp; Ressort Moteur</span>
+            <span>← Le Remontage &amp; Mise à l&apos;Heure</span>
           </Link>
 
           <Link
