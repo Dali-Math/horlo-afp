@@ -4,33 +4,12 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
 export default function TypesLignesPage() {
-  const [isDark, setIsDark] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
   const [lineFilter, setLineFilter] = useState<"all" | "continu" | "interrompu" | "mixte">("all");
   const [selectedLineRow, setSelectedLineRow] = useState<string>("04.2");
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const hasDark = document.documentElement.classList.contains("dark");
-      setIsDark(hasDark);
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const nextDark = !isDark;
-    setIsDark(nextDark);
-    if (typeof window !== "undefined") {
-      if (nextDark) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    }
-  };
-
   return (
-    <div className={isDark ? "dark" : ""}>
-      <div className="bg-[#FDFCFB] text-neutral-900 dark:bg-[#121316] dark:text-neutral-100 antialiased selection:bg-[#B08D57]/20 selection:text-[#8A6A3B] dark:selection:text-[#D4B483] min-h-screen pb-24 transition-colors duration-200">
+    <div className="bg-[#FDFCFB] text-neutral-900 dark:bg-[#121316] dark:text-neutral-100 antialiased selection:bg-[#B08D57]/20 selection:text-[#8A6A3B] dark:selection:text-[#D4B483] min-h-screen pb-24 transition-colors duration-200">
         
         {/* TOP APP BAR */}
         <header className="border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-[#15161A]/80 backdrop-blur-md sticky top-0 z-40">
@@ -52,17 +31,6 @@ export default function TypesLignesPage() {
             </div>
 
             <div className="flex items-center gap-3">
-              {/* Dark Mode Toggle Button */}
-              <button
-                id="themeToggle"
-                onClick={toggleTheme}
-                type="button"
-                className="px-3 py-1.5 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-xs font-mono font-medium flex items-center gap-2 transition-colors cursor-pointer"
-              >
-                <span>{isDark ? "☀️" : "🌙"}</span>
-                <span>{isDark ? "Mode Clair" : "Mode Sombre"}</span>
-              </button>
-
               <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] font-semibold border border-[#B08D57]/20">
                 RÉFÉRENTIEL SUISSE CPIH / SEFRI
               </span>
@@ -787,6 +755,5 @@ export default function TypesLignesPage() {
 
         </main>
       </div>
-    </div>
   );
 }
