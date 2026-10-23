@@ -358,7 +358,7 @@ export default function ElementsHorlogeriePage() {
               </div>
 
               <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                Les pivots subissent le <strong>roulage</strong> au disque de métal dur ou brunissage pour obtenir un état de surface miroir ($Ra &lt; 0{,}05\ \mu\text{m}$) assurant un rendement mécanique maximal.
+                Les pivots subissent le <strong>roulage</strong> au disque de métal dur ou brunissage pour obtenir un état de surface miroir (Ra &lt; 0.05 µm) assurant un rendement mécanique maximal.
               </p>
             </div>
 
