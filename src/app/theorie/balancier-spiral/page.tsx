@@ -1,1199 +1,995 @@
-// app/theorie/balancier-spiral/page.tsx
-'use client';
+"use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence, useAnimation } from 'framer-motion';
-import { 
-  ChevronLeft, Gauge, Zap, Settings, TrendingUp, Clock, Play, Pause, RotateCw, 
-  Thermometer, Magnet, CheckCircle, XCircle, Award, Trophy, BookOpen, Layers, Activity,
-  Calendar, Users, Microscope, Target, Sliders, Info, RotateCcw, Loader2
-} from 'lucide-react';
-import Link from 'next/link';
-import Image from 'next/image';
+import React, { useState } from "react";
+import Link from "next/link";
+import {
+  Settings2,
+  Clock,
+  ShieldCheck,
+  CheckCircle2,
+  ChevronRight,
+  ArrowRight,
+  ArrowLeft,
+  RefreshCw,
+  Activity,
+  Layers,
+  Cog,
+  Info,
+  BookOpen,
+  Sparkles,
+  Sliders,
+  Flame,
+  Award,
+  Zap,
+  Target
+} from "lucide-react";
 
-// Composant 3D interactif du balancier
-const Anatomie3DBalancier = () => {
-  const [partieActive, setPartieActive] = useState<string | null>(null);
-  const controles = useAnimation();
-  
-  // Définition de l'animation pour éviter la duplication
-  const animationOscillation = {
-    rotate: [0, 15, 0, -15, 0],
-    transition: {
-      duration: 0.125,
-      repeat: Infinity,
-      ease: "linear",
-      repeatDelay: 0
-    }
-  };
+interface ComponentDetail {
+  id: string;
+  name: string;
+  role: string;
+  technicalRule: string;
+  material: string;
+  tolerances: string;
+}
 
-  const composants = useMemo(() => [
-    {
-      id: 'serge',
-      nom: 'Serge (Jante)',
-      desc: 'Anneau périphérique qui concentre 90% de la masse à l\'extérieur pour maximiser le moment d\'inertie',
-      specs: 'Ø 10-12mm • CuBe ou Silicium',
-      position: { x: 0, y: 0, rotate: 0 }
-    },
-    {
-      id: 'bras',
-      nom: 'Bras du balancier',
-      desc: 'Relient la serge au moyeu. Forme optimisée pour rigidité et compensation thermique',
-      specs: 'Forme en S ou droite • Titane ou acier',
-      position: { x: 0, y: 0, rotate: -45 }
-    },
-    {
-      id: 'spiral',
-      nom: 'Spiral de Breguet',
-      desc: 'Spire externe relevée pour développement concentrique parfait. Antimagnétique Nivarox',
-      specs: '0.04mm épaisseur • 13 spires • Nivarox',
-      position: { x: 0, y: 0, rotate: 0 }
-    },
-    {
-      id: 'plateau',
-      nom: 'Plateau double',
-      desc: 'Fixé sur l\'axe, porte la cheville qui interagit avec la fourchette de l\'échappement',
-      specs: 'Acier trempé • Diamanté',
-      position: { x: 0, y: 0, rotate: 0 }
-    }
-  ], []);
-
-  // Animation d'oscillation du balancier
-  useEffect(() => {
-    controles.start(animationOscillation);
-  }, [controles, animationOscillation]);
-
-  return (
-    <div className="relative bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl h-96 overflow-hidden border border-slate-700">
-      {/* Fond technique avec grille */}
-      <div className="absolute inset-0 opacity-10">
-        <svg className="w-full h-full">
-          <defs>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" stroke="currentColor" strokeWidth="1" fill="none"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" className="text-slate-600"/>
-        </svg>
-      </div>
-
-      {/* Composants 3D */}
-      <motion.div
-        className="absolute inset-0 flex items-center justify-center"
-        animate={controles}
-      >
-        {composants.map((comp, i) => (
-          <motion.div
-            key={comp.id}
-            className="absolute cursor-pointer"
-            style={{ left: '50%', top: '50%' }}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: i * 0.2, type: "spring" }}
-            whileHover={{ scale: 1.2, zIndex: 10 }}
-            onClick={() => setPartieActive(comp.id)}
-          >
-            {/* Représentation SVG du composant */}
-            <svg width="120" height="120" viewBox="0 0 120 120" className="drop-shadow-2xl">
-              <circle cx="60" cy="60" r="45" 
-                fill="none" 
-                stroke={partieActive === comp.id ? "#3B82F6" : "#64748B"}
-                strokeWidth={partieActive === comp.id ? "4" : "2"}
-                className="transition-all duration-300"
-              />
-              {comp.id === 'serge' && (
-                <circle cx="60" cy="60" r="40" fill="url(#metalGradient)" opacity="0.8"/>
-              )}
-              {comp.id === 'bras' && (
-                <line x1="60" y1="60" x2="100" y2="100" stroke="#94A3B8" strokeWidth="3"/>
-              )}
-              {comp.id === 'spiral' && (
-                <path d="M60 60 Q70 50, 60 40 Q50 30, 60 20" stroke="#EAB308" strokeWidth="2" fill="none"/>
-              )}
-              <defs>
-                <radialGradient id="metalGradient">
-                  <stop offset="0%" stopColor="#E2E8F0"/>
-                  <stop offset="100%" stopColor="#64748B"/>
-                </radialGradient>
-              </defs>
-            </svg>
-            
-            {/* Label flottant */}
-            <motion.div
-              className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black/80 text-white px-3 py-1 rounded-full text-xs whitespace-nowrap"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: partieActive === comp.id ? 1 : 0 }}
-            >
-              {comp.nom}
-            </motion.div>
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {/* Panneau d'informations */}
-      <AnimatePresence>
-        {partieActive && (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
-            className="absolute right-4 top-4 w-80 bg-slate-900/95 backdrop-blur-md rounded-xl p-6 border border-slate-600"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-bold text-lg text-white">
-                {composants.find(c => c.id === partieActive)?.nom}
-              </h3>
-              <button
-                onClick={() => setPartieActive(null)}
-                className="text-slate-400 hover:text-white"
-              >
-                <XCircle className="w-5 h-5" />
-              </button>
-            </div>
-            <p className="text-sm text-slate-300 mb-3">
-              {composants.find(c => c.id === partieActive)?.desc}
-            </p>
-            <div className="bg-slate-800 rounded-lg p-3">
-              <p className="text-xs text-slate-400">
-                {composants.find(c => c.id === partieActive)?.specs}
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Contrôles */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-slate-900/90 backdrop-blur-md rounded-full p-2 border border-slate-600">
-        <button
-          onClick={() => controles.start(animationOscillation)} // CORRIGÉ : ajout de l'argument
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-sm font-medium transition-colors flex items-center gap-2"
-        >
-          <Play className="w-4 h-4" /> Osciller
-        </button>
-        <button
-          onClick={() => controles.stop()}
-          className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-full text-sm font-medium transition-colors flex items-center gap-2"
-        >
-          <Pause className="w-4 h-4" /> Pause
-        </button>
-      </div>
-    </div>
-  );
-};
-
-// Simulateur de fréquence interactive
-const SimulateurFrequence = () => {
-  const [frequence, setFrequence] = useState(4); // Hz
-  const [enMarche, setEnMarche] = useState(true);
-  const controles = useAnimation();
-
-  useEffect(() => {
-    if (enMarche) {
-      controles.start({
-        rotate: [0, 15, 0, -15, 0],
-        transition: {
-          duration: 1 / (frequence * 2),
-          repeat: Infinity,
-          ease: "linear"
-        }
-      });
-    } else {
-      controles.stop();
-    }
-  }, [frequence, enMarche, controles]);
-
-  return (
-    <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 border border-slate-700">
-      <h3 className="text-2xl font-bold text-white mb-6 flex items-center">
-        <Activity className="w-8 h-8 mr-3 text-blue-500" />
-        Simulateur de fréquence
-      </h3>
-
-      {/* Visualisation */}
-      <div className="relative h-64 mb-6 bg-black/30 rounded-xl overflow-hidden">
-        <motion.div
-          className="absolute top-1/2 left-1/2 w-32 h-32 -mt-16 -ml-16"
-          animate={controles}
-        >
-          <div className="w-full h-full border-4 border-blue-500 rounded-full shadow-lg shadow-blue-500/20 flex items-center justify-center">
-            <div className="w-2 h-16 bg-gradient-to-t from-blue-600 to-blue-400 rounded-full"></div>
-          </div>
-        </motion.div>
-        
-        {/* Mesures */}
-        <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm rounded-lg p-4">
-          <div className="text-sm text-slate-400">Fréquence</div>
-          <div className="text-2xl font-bold text-white">{frequence} Hz</div>
-          <div className="text-sm text-slate-400">{frequence * 2} batt./sec</div>
-        </div>
-      </div>
-
-      {/* Contrôles */}
-      <div className="grid md:grid-cols-3 gap-4">
-        <div>
-          <label className="text-sm text-slate-400 mb-2 block">Fréquence (Hz)</label>
-          <input
-            type="range"
-            min="2.5"
-            max="5"
-            step="0.5"
-            value={frequence}
-            onChange={(e) => setFrequence(parseFloat(e.target.value))}
-            className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer slider"
-          />
-          <div className="flex justify-between text-xs text-slate-500 mt-1">
-            <span>2.5</span>
-            <span>4.0</span>
-            <span>5.0</span>
-          </div>
-        </div>
-
-        <div className="bg-slate-800 rounded-lg p-4">
-          <label className="text-sm text-slate-400 block">Alternances/heure</label>
-          <div className="text-xl font-bold text-blue-400">{frequence * 7200}</div>
-        </div>
-
-        <div className="bg-slate-800 rounded-lg p-4">
-          <label className="text-sm text-slate-400 block">Période (ms)</label>
-          <div className="text-xl font-bold text-green-400">{Math.round(1000 / (frequence * 2))}</div>
-        </div>
-      </div>
-
-      <button
-        onClick={() => setEnMarche(!enMarche)}
-        className={`mt-6 w-full py-3 rounded-lg font-bold transition-colors flex items-center justify-center gap-2 ${
-          enMarche 
-            ? 'bg-red-600 hover:bg-red-700 text-white' 
-            : 'bg-green-600 hover:bg-green-700 text-white'
-        }`}
-      >
-        {enMarche ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-        {enMarche ? 'Arrêter' : 'Démarrer'} l'oscillation
-      </button>
-    </div>
-  );
-};
-
-// Timeline historique
-const TimelineHistorique = () => {
-  const evenements = [
-    {
-      annee: '1675',
-      titre: 'Invention par Huygens',
-      desc: 'Christiaan Huygens invente le balancier-spiral, remplaçant le balancier sans ressort ou le pendule.',
-      icon: Award,
-      couleur: 'text-amber-500'
-    },
-    {
-      annee: '1795',
-      titre: 'Spiral Breguet par Abraham-Louis Breguet',
-      desc: 'Invention du spiral relevé (Breguet) pour améliorer l\'isochronisme par développement concentrique.',
-      icon: Users,
-      couleur: 'text-purple-500'
-    },
-    {
-      annee: '1931',
-      titre: 'Invar puis Nivarox',
-      desc: 'Découverte d\'alliages à faible coefficient thermique (Invar 36% Ni), puis Nivarox (Ni-Cr-Co).',
-      icon: Thermometer,
-      couleur: 'text-blue-500'
-    },
-    {
-      annee: '2000',
-      titre: 'Spiral silicium',
-      desc: 'Patek Philippe introduit le spiral Silinvar en silicium monocristallin (totalement antimagnétique).',
-      icon: Microscope,
-      couleur: 'text-green-500'
-    },
-    {
-      annee: '2017',
-      titre: 'Oscillateur monolithique',
-      desc: 'TAG Heuer présente l\'oscillateur monolithique (balancier et spiral d\'une pièce) pour 500 Hz.',
-      icon: Zap,
-      couleur: 'text-red-500'
-    }
-  ];
-
-  const [etapeActive, setEtapeActive] = useState<number | null>(null);
-
-  return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700">
-      <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 flex items-center">
-        <Calendar className="w-8 h-8 mr-3 text-blue-600" />
-        Histoire du balancier-spiral
-      </h2>
-
-      <div className="relative">
-        {/* Ligne du temps */}
-        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-600 to-purple-600"></div>
-
-        {evenements.map((evt, i) => {
-          const Icon = evt.icon;
-          return (
-            <motion.div
-              key={evt.annee}
-              className="relative flex items-start mb-8"
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.2 }}
-            >
-              {/* Point sur la ligne */}
-              <div className={`absolute left-6 w-4 h-4 ${evt.couleur} bg-current rounded-full ring-4 ring-white dark:ring-slate-800 z-10`}></div>
-
-              {/* Contenu */}
-              <div className="ml-16 flex-1">
-                <button
-                  onClick={() => setEtapeActive(etapeActive === i ? null : i)}
-                  className="text-left w-full"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <Icon className={`w-6 h-6 mr-3 ${evt.couleur}`} />
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                        {evt.annee} - {evt.titre}
-                      </h3>
-                    </div>
-                    <motion.div
-                      animate={{ rotate: etapeActive === i ? 180 : 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <Info className="w-5 h-5 text-slate-400" />
-                    </motion.div>
-                  </div>
-                  <p className="text-sm text-slate-500 mt-1">{evt.desc}</p>
-                </button>
-
-                <AnimatePresence>
-                  {etapeActive === i && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="mt-4 bg-slate-50 dark:bg-slate-900 rounded-lg p-4"
-                    >
-                      <p className="text-sm text-slate-700 dark:text-slate-300">
-                        <strong>Impact :</strong> {evt.annee === '1675' && 'Révolutionne la précision horlogère, passant de ±15 min/jour à ±1 min/jour.'}
-                        {evt.annee === '1795' && 'Améliore l\'isochronisme de 30%, crucial pour les montres de poche.'}
-                        {evt.annee === '1931' && 'Réduit la variation de marche due à la température de 95%.'}
-                        {evt.annee === '2000' && 'Supprime totalement les effets du magnétisme sur le spiral.'}
-                        {evt.annee === '2017' && 'Ouvre la voie aux montres mécaniques à très haute fréquence.'}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
-// Données du quiz enrichies
-const quizData = [
+const REGULATOR_COMPONENTS: ComponentDetail[] = [
   {
-    question: "Quelle est la fonction principale du balancier-spiral ?",
-    options: ["Stocker l'énergie", "Régler la vitesse et assurer la précision", "Afficher l'heure", "Transmettre l'énergie"],
-    correctAnswer: 1,
-    explanation: "Le balancier-spiral est l'organe réglant de la montre. Il oscille à fréquence constante et détermine la vitesse à laquelle l'énergie est libérée, assurant ainsi la précision.",
-    image: "/images/balancier-spiral-fonction.png"
+    id: "serge",
+    name: "La Serge & les Bras du Balancier",
+    role: "Volant d'inertie circulaire qui emmagasine l'énergie cinétique à chaque alternance. Son moment d'inertie I = m·r² dicte la résistance aux perturbations extérieures et garantit la stabilité de marche.",
+    technicalRule: "L'équilibrage dynamique (poise) doit être parfait au millième de milligramme : tout balourd périphérique engendre un écart de marche immédiat entre les positions verticales.",
+    material: "Alliage Glucydur (Cuivre-Béryllium) amagnétique et à faible coefficient de dilatation thermique (ou Maillechort doré / Or 18k).",
+    tolerances: "Faux-rond et faux-plat < 0.002 mm · Équilibrage dynamique au laser"
   },
   {
-    question: "Quelle est la fréquence d'oscillation la plus courante pour un balancier moderne ?",
-    options: ["18'000 A/h", "21'600 A/h", "28'800 A/h", "36'000 A/h"],
-    correctAnswer: 2,
-    explanation: "La fréquence de 28'800 alternances par heure (4 Hz) est la plus répandue. Cela correspond à 8 battements par seconde, offrant un bon compromis entre précision et consommation d'énergie.",
-    image: "/images/frequence-28800.png"
+    id: "axe",
+    name: "L'Axe de Balancier & ses Pivots Roulés",
+    role: "Axe central en acier trempé supportant le balancier, le double plateau et la virole du spiral. Ses deux pivots coniques microscopiques reposent dans les paliers antichocs.",
+    technicalRule: "Les pivots de balancier sont roulés au disque de métal dur pour obtenir un écrouissage de surface et une rugosité Ra < 0.05 µm. Leur diamètre minuscule (0.07 à 0.09 mm) minimise le rayon de frottement.",
+    material: "Acier trempable 20AP (1.1248) trempé et revenu à 60-62 HRC.",
+    tolerances: "Diamètre des pivots : 0.080 mm (+0 / -0.002 mm) · Fini poli bloqué"
   },
   {
-    question: "De quel matériau moderne est fabriqué le spiral antimagnétique ?",
-    options: ["Acier trempé", "Nivaflex (Ni-Cr-Co-Ti-Be)", "Laiton", "Rubis"],
-    correctAnswer: 1,
-    explanation: "Le Nivaflex et le Nivarox (alliages Ni-Cr-Co-Ti-Be) ont remplacé l'acier classique. Ils sont antimagnétiques, insensibles aux variations de température et ne nécessitent pas de compensation.",
-    image: "/images/spiral-nivarox.png"
+    id: "plateau",
+    name: "Le Double Plateau & la Cheville d'Impulsion",
+    role: "Organe de liaison entre le balancier et l'ancre suisse. Le grand plateau porte la cheville de plateau (rubis d'impulsion) et le petit plateau présente la creusure de passage pour le dard de sécurité.",
+    technicalRule: "La cheville de plateau demi-cylindrique (ellipse) doit être chassée avec un angle rigoureusement perpendiculaire et scellée à la gomme-laque ou chassée serrée dans son logement.",
+    material: "Plateaux en acier doux ou laiton. Cheville en rubis synthétique (corindon rouge taillé et poli).",
+    tolerances: "Ébat de sécurité du dard dans la creusure : 0.02 à 0.03 mm"
   },
   {
-    question: "Comment agit-on pour régler l'avance ou le retard d'une montre ?",
-    options: ["On change le ressort", "On déplace la raquette pour modifier la longueur active du spiral", "On change le balancier", "On ajuste l'échappement"],
-    correctAnswer: 1,
-    explanation: "Le réglage se fait via la raquette (ou système de réglage fin). En la déplaçant, on modifie la longueur active du spiral, ce qui change sa fréquence d'oscillation et donc l'avance/retard de la montre.",
-    image: "/images/reglage-raquette.png"
+    id: "spiral",
+    name: "Le Spiral Horloger & sa Virole",
+    role: "Ressort de rappel élastique enroulé en spirale d'Archimède. Il développe un couple de rappel rigoureusement proportionnel à l'angle d'oscillation, ramenant sans cesse le balancier vers son point mort.",
+    technicalRule: "Sa fixation intérieure s'effectue sur une virole fendue ou circulaire emmanchée sur l'axe, tandis que son extrémité extérieure est goupillée ou collée au piton fixé au coq.",
+    material: "Alliage Nivarox I / Anisochron (Fe-Ni autocompensateur thermique) ou Silicium monocristallin (Silinvar / Syloxi).",
+    tolerances: "Épaisseur de lame : 0.025 mm (calibrée au dixième de micron près)"
   },
   {
-    question: "Qu'est-ce qui caractérise un spiral Breguet ?",
-    options: ["Il est plat", "Sa spire externe est relevée pour assurer un développement concentrique", "Il est en silicium", "Il n'a pas de courbe terminale"],
-    correctAnswer: 1,
-    explanation: "Le spiral Breguet possède une courbe terminale relevée (spire externe) qui permet un développement concentrique du spiral lors de l'oscillation, améliorant ainsi la précision et l'isochronisme.",
-    image: "/images/spiral-breguet.png"
-  },
-  {
-    question: "Qu'est-ce que l'amplitude dans un balancier-spiral ?",
-    options: ["La vitesse de rotation", "L'angle maximal d'oscillation", "La masse du balancier", "La longueur du spiral"],
-    correctAnswer: 1,
-    explanation: "L'amplitude est l'angle maximal parcouru par le balancier depuis sa position d'équilibre. Une amplitude idéale est entre 270° et 330° pour la plupart des montres.",
-    image: "/images/amplitude-balancier.png"
-  },
-  {
-    question: "Quel matériau est utilisé pour les balanciers haut de gamme modernes ?",
-    options: ["Acier inoxydable", "Glucydur (Cuivre-Béryllium)", "Laiton", "Plastique"],
-    correctAnswer: 1,
-    explanation: "Le Glucydur (alliage CuBe) est le standard moderne : antimagnétique, faible dilatation thermique, excellente stabilité dans le temps.",
-    image: "/images/balancier-glucydur.png"
-  },
-  {
-    question: "Qu'est-ce que l'isochronisme ?",
-    options: ["La régularité quelle que soit l'amplitude", "La résistance au magnétisme", "La précision absolue", "La durée de vie du spiral"],
-    correctAnswer: 0,
-    explanation: "L'isochronisme est la propriété du balancier-spiral à osciller à la même fréquence quelle que soit l'amplitude, garantissant une précision constante.",
-    image: "/images/isochronisme.png"
-  },
-  {
-    question: "Pourquoi le silicium est-il révolutionnaire pour les spiraux ?",
-    options: ["Plus brillant", "Totalement antimagnétique et insensible à la température", "Moins cher", "Plus traditionnel"],
-    correctAnswer: 1,
-    explanation: "Le silicium monocristallin est totalement antimagnétique, insensible aux variations de température, et ne nécessite aucun lubrifiant, améliorant considérablement la précision et la fiabilité.",
-    image: "/images/spiral-silicium.png"
-  },
-  {
-    question: "Quel est le défaut d'un spiral plat par rapport au spiral Breguet ?",
-    options: ["Moins esthétique", "Prix plus élevé", "Développement non concentrique aux grandes amplitudes", "Moins résistant"],
-    correctAnswer: 2,
-    explanation: "Le spiral plat peut avoir un développement non concentrique aux grandes amplitudes, ce qui affecte l'isochronisme. Le spiral Breguet avec sa spire relevée corrige ce défaut.",
-    image: "/images/spiral-plat-vs-breguet.png"
+    id: "antichoc",
+    name: "Le Système Antichoc (Incabloc / Kif)",
+    role: "Palier élastique protégeant les pivots de balancier contre les chocs axiaux et radiaux en autorisant un léger déplacement contrôlé du chaton porte-pierre avant que la portée de l'axe ne vienne en butée sur le bâti.",
+    technicalRule: "Le ressort lyre en acier trempé maintient le contre-pivot sous une pré-tension calibrée. Lors d'un choc, le cône de l'axe absorbe l'énergie sur le corps rigide du coq et non sur le pivot.",
+    material: "Corps en laiton doré, pierre percée et contre-pivot en rubis synthétique olivé, ressort lyre en acier ressort.",
+    tolerances: "Centrage automatique parfait après déformation à < 0.001 mm"
   }
 ];
 
-// Comparateur de matériaux interactif
-const ComparateurMateriaux = () => {
-  const materiaux = [
-    {
-      nom: 'Acier traditionnel',
-      periode: '1880-1930',
-      avantages: ['Bon marché', 'Facile à usiner'],
-      inconvenients: ['Magnétique', 'Corrodable', 'Sensibilité thermique'],
-      precision: 65,
-      couleur: 'bg-slate-500'
-    },
-    {
-      nom: 'Glucydur (CuBe)',
-      periode: '1931-Auj.',
-      avantages: ['Antimagnétique', 'Stable thermiquement', 'Durable'],
-      inconvenients: ['Coût élevé', 'Procédé complexe'],
-      precision: 85,
-      couleur: 'bg-blue-500'
-    },
-    {
-      nom: 'Silicium (Si)',
-      periode: '2000-Auj.',
-      avantages: ['Parfaitement isochrone', 'Antimagnétique total', 'Sans lubrification'],
-      inconvenients: ['Très fragile', 'Coût très élevé'],
-      precision: 95,
-      couleur: 'bg-purple-500'
-    }
-  ];
+const REGULATION_SYSTEMS = [
+  {
+    system: "Réglage par Raquette (Traditionnel)",
+    principle: "Deux goupilles de raquette enserrent la dernière spire du spiral. En déplaçant la raquette, on modifie la longueur active libre L du spiral.",
+    physics: "Période T ∝ √L. Raccourcir le spiral augmente la fréquence (la montre avance) ; l'allonger la ralentit (la montre retarde).",
+    pros: "Ajustement rapide et aisé à l'établi sans toucher au balancier (système ETACHRON ou raquette col de cygne).",
+    cons: "Le jeu inévitable entre les goupilles de raquette et le spiral perturbe la concentricité et altère l'isochronisme aux faibles amplitudes.",
+    manufacture: "ETA 2824-2, Sellita SW200, Valjoux 7750, calibres écoles Unitas",
+    color: "#60A5FA"
+  },
+  {
+    system: "Balancier à Inertie Variable (Spiral Libre)",
+    principle: "Le spiral est entièrement libre (aucun contact de raquette, longueur fixe). Le réglage de marche se fait en modifiant le moment d'inertie I du balancier via des masselottes.",
+    physics: "Période T ∝ √I. Rapprocher les masselottes du centre diminue l'inertie (la montre avance) ; les éloigner l'augmente (la montre retarde).",
+    pros: "Isochronisme exceptionnel, respect absolu de la respiration du spiral, insensibilité totale aux chocs du quotidien.",
+    cons: "Exige des outils spécifiques de manufacture et un réglage par paires symétriques sous binoculaire.",
+    manufacture: "Patek Philippe Gyromax · Rolex Microstella · Omega Co-Axial Si14 · Audemars Piguet",
+    color: "#E2B44F"
+  }
+];
 
-  const [materiauActif, setMateriauActif] = useState(1);
+const QUIZ_QUESTIONS = [
+  {
+    question: "Quelle est la conséquence physique directe de la formule d'isochronisme T = 2π·√(I / Cs) dans un balancier-spiral idéal ?",
+    options: [
+      "La durée d'une oscillation dépend uniquement de la force du barillet",
+      "La période d'oscillation est totalement indépendante de l'amplitude du balancier",
+      "La fréquence d'oscillation double lorsque la température augmente",
+      "Le balancier effectue toujours 10 alternances par seconde"
+    ],
+    correctAnswer: 1,
+    explanation: "C'est la définition fondamentale de l'isochronisme : la période T ne dépend que de l'inertie I du balancier et de la raideur Cs du spiral. Que le balancier oscille à 180° ou à 300°, le temps mis pour faire un aller-retour reste strictement identique."
+  },
+  {
+    question: "Pourquoi l'épaisseur (e) de la lame du spiral est-elle la cote la plus sensible de toute la montre mécanique (Cs ∝ e³) ?",
+    options: [
+      "Parce qu'elle rouille plus vite que les autres pièces",
+      "Parce que son influence est élevée au cube : une variation de seulement 1% sur l'épaisseur modifie la marche de plus de 40 minutes par jour !",
+      "Parce que le spiral ne peut pas être fabriqué en acier",
+      "Parce que l'épaisseur détermine la couleur bleutée du métal"
+    ],
+    correctAnswer: 1,
+    explanation: "Dans la formule du couple élastique Cs = (E · b · e³) / (12 · L), l'épaisseur e intervient à la puissance 3. Une microscopique variation de 0.0002 mm (un cinquième de micron !) altère considérablement la raideur du spiral et crée des écarts de marche majeurs."
+  },
+  {
+    question: "Quel problème géométrique capital la « courbe terminale relevée Breguet » permet-elle de résoudre par rapport à un spiral plat ?",
+    options: [
+      "Elle empêche le ressort de se magnétiser",
+      "Elle permet au spiral de se développer de façon parfaitement concentrique, maintenant son centre de gravité sur l'axe de pivotement",
+      "Elle remplace la cheville de plateau en rubis",
+      "Elle supprime le besoin d'huile sur l'échappement"
+    ],
+    correctAnswer: 1,
+    explanation: "Un spiral plat se dilate de manière asymétrique en poussant latéralement sur l'axe de balancier en position verticale. La courbe relevée Breguet (théorisée par Phillips) force les spires à s'ouvrir concentriquement, annulant les frottements asymétriques sur les pivots."
+  },
+  {
+    question: "Quelle est la différence fondamentale entre un réglage par raquette et un balancier à inertie variable (comme le Gyromax ou Microstella) ?",
+    options: [
+      "La raquette agit sur la longueur active du spiral, tandis que l'inertie variable modifie le volant d'inertie du balancier avec un spiral libre",
+      "L'inertie variable utilise une pile électrique dissimulée dans le balancier",
+      "La raquette n'est utilisée que sur les pendules de cheminée",
+      "L'inertie variable double la taille du barillet"
+    ],
+    correctAnswer: 0,
+    explanation: "Sur un balancier à inertie variable, le spiral est 'libre' sans aucune goupille perturbatrice : on visse ou dévisse de petites masselottes sur la serge pour modifier l'inertie I, ce qui offre une régularité chronométrique et une stabilité aux chocs très supérieures."
+  },
+  {
+    question: "Comment le système pare-choc Incabloc protège-t-il les pivots de balancier (diamètre ~0.08 mm) contre la casse lors d'une chute ?",
+    options: [
+      "En déconnectant automatiquement le barillet",
+      "En autorisant le chaton porte-pierre à s'effacer sous un ressort lyre, permettant à la partie épaisse de l'axe de venir en butée sur le bâti",
+      "En bloquant instantanément l'aiguille des secondes",
+      "En entourant le balancier d'un coussin en caoutchouc"
+    ],
+    correctAnswer: 1,
+    explanation: "Lors d'un choc, le chaton en rubis glisse sur les plans inclinés du logement contre la pression du ressort lyre. La portée conique robuste de l'axe de balancier vient alors porter directement contre le coq rigide, absorbant 95% de l'impact sans briser les pivots fins."
+  }
+];
 
-  return (
-    <div className="bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 rounded-2xl p-8">
-      <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center">
-        <Layers className="w-8 h-8 mr-3 text-blue-600" />
-        Évolution des matériaux
-      </h2>
+export default function BalancierSpiralPage() {
+  const [selectedComp, setSelectedComp] = useState(0);
 
-      <div className="grid md:grid-cols-3 gap-4 mb-8">
-        {materiaux.map((mat, i) => (
-          <motion.button
-            key={mat.nom}
-            className={`p-6 rounded-xl border-2 transition-all ${
-              materiauActif === i 
-                ? 'border-blue-500 bg-white dark:bg-slate-800 shadow-xl scale-105' 
-                : 'border-slate-300 dark:border-slate-700 bg-white/60 dark:bg-slate-800/60'
-            }`}
-            whileHover={{ scale: 1.05 }}
-            onClick={() => setMateriauActif(i)}
-          >
-            <div className={`w-full h-2 ${mat.couleur} rounded-full mb-3`}></div>
-            <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-1">{mat.nom}</h3>
-            <p className="text-xs text-slate-500 mb-3">{mat.periode}</p>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{mat.precision}%</div>
-            <div className="text-xs text-slate-400">Précision</div>
-          </motion.button>
-        ))}
-      </div>
+  // Regulation Simulator State
+  const [balanceInertiaOffset, setBalanceInertiaOffset] = useState(0); // in µg·cm² (-10 to +10)
+  const [springActiveLengthOffset, setSpringActiveLengthOffset] = useState(0); // in % (-5% to +5%)
+  const [baseFrequency, setBaseFrequency] = useState(4); // 4 Hz = 28'800 A/h default
 
-      {/* Détail du matériau sélectionné */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={materiauActif}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700"
-        >
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-bold text-lg text-slate-900 dark:text-white mb-3">
-                {materiaux[materiauActif].nom}
-              </h4>
-              <div className="space-y-2">
-                <div className="text-sm">
-                  <span className="text-green-600 font-semibold">✓ Avantages :</span>
-                  <ul className="ml-4 text-slate-700 dark:text-slate-300">
-                    {materiaux[materiauActif].avantages.map((av, i) => (
-                      <li key={i}>• {av}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="text-sm">
-                  <span className="text-red-600 font-semibold">✗ Inconvénients :</span>
-                  <ul className="ml-4 text-slate-700 dark:text-slate-300">
-                    {materiaux[materiauActif].inconvenients.map((inc, i) => (
-                      <li key={i}>• {inc}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center justify-center">
-              <div className="relative w-48 h-48">
-                <svg className="w-full h-full transform -rotate-90">
-                  <circle
-                    cx="96"
-                    cy="96"
-                    r="88"
-                    fill="none"
-                    stroke="#e5e7eb"
-                    strokeWidth="16"
-                  />
-                  <circle
-                    cx="96"
-                    cy="96"
-                    r="88"
-                    fill="none"
-                    stroke={materiauActif === 0 ? '#64748b' : materiauActif === 1 ? '#3b82f6' : '#8b5cf6'}
-                    strokeWidth="16"
-                    strokeDasharray={`${2 * Math.PI * 88}`}
-                    strokeDashoffset={`${2 * Math.PI * 88 * (100 - materiaux[materiauActif].precision) / 100}`}
-                    strokeLinecap="round"
-                  />
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-3xl font-bold text-slate-900 dark:text-white">
-                    {materiaux[materiauActif].precision}%
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-    </div>
+  // Quiz Stepper State
+  const [currentQuizIdx, setCurrentQuizIdx] = useState(0);
+  const [userAnswers, setUserAnswers] = useState<Record<number, number>>({});
+  const [quizFinished, setQuizFinished] = useState(false);
+
+  // Calculated daily rate offset in seconds / day:
+  // Reducing length -> faster (+s/d). Increasing inertia -> slower (-s/d).
+  const calculatedDailyRate = Math.round(
+    -springActiveLengthOffset * 18 - balanceInertiaOffset * 4.5
   );
-};
 
-// Composant principal de la page
-export default function BalancierSpiral() {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [score, setScore] = useState(0);
-  const [quizCompleted, setQuizCompleted] = useState(false);
-  const [showResults, setShowResults] = useState(false);
+  const calculatedAh = baseFrequency * 7200;
+  const calculatedAmplitude = Math.max(220, Math.min(315, 290 - Math.abs(calculatedDailyRate) * 0.4));
 
-  const handleAnswerClick = (index: number) => {
-    if (selectedAnswer === null) {
-      setSelectedAnswer(index);
-      if (index === quizData[currentQuestion].correctAnswer) {
-        setScore(score + 1);
-      }
-    }
+  const handleSelectQuizAnswer = (optionIndex: number) => {
+    setUserAnswers(prev => ({ ...prev, [currentQuizIdx]: optionIndex }));
   };
 
-  const handleNextQuestion = () => {
-    if (currentQuestion < quizData.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-      setSelectedAnswer(null);
-    } else {
-      setQuizCompleted(true);
-      setShowResults(true);
-    }
+  const calculateScore = () => {
+    let score = 0;
+    QUIZ_QUESTIONS.forEach((q, idx) => {
+      if (userAnswers[idx] === q.correctAnswer) {
+        score++;
+      }
+    });
+    return score;
   };
 
   const resetQuiz = () => {
-    setCurrentQuestion(0);
-    setSelectedAnswer(null);
-    setScore(0);
-    setQuizCompleted(false);
-    setShowResults(false);
+    setUserAnswers({});
+    setCurrentQuizIdx(0);
+    setQuizFinished(false);
   };
 
-  const pourcentageScore = Math.round((score / quizData.length) * 100);
+  const activeComp = REGULATOR_COMPONENTS[selectedComp];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
-      {/* Header */}
-      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link href="/theorie" className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
-            <ChevronLeft className="w-5 h-5 mr-1" />
-            Retour à la théorie
-          </Link>
+    <div className="bg-[#FDFCFB] text-neutral-900 dark:bg-[#121316] dark:text-neutral-100 antialiased selection:bg-[#B08D57]/20 selection:text-[#8A6A3B] dark:selection:text-[#D4B483] min-h-screen pb-24 transition-colors duration-200">
+      
+      {/* =================================================================== */}
+      {/* TOP APP BAR & BREADCRUMB */}
+      {/* =================================================================== */}
+      <header className="border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-[#15161A]/80 backdrop-blur-md sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400 overflow-x-auto no-scrollbar">
+            <Link href="/" className="font-bold text-neutral-900 dark:text-neutral-100 tracking-wider hover:opacity-80 transition-opacity whitespace-nowrap">
+              HORLOLEARN
+            </Link>
+            <span className="opacity-40">/</span>
+            <Link href="/theorie" className="hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors whitespace-nowrap">
+              Théorie
+            </Link>
+            <span className="opacity-40">/</span>
+            <span className="text-neutral-500 dark:text-neutral-400 whitespace-nowrap">Pilier I</span>
+            <span className="opacity-40">/</span>
+            <span className="font-medium text-neutral-900 dark:text-neutral-100 whitespace-nowrap">
+              Le Balancier-Spiral &amp; Régulation
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="hidden sm:inline-flex text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] font-semibold border border-[#B08D57]/20">
+              SEFRI · CPIH / FET
+            </span>
+          </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Hero avec balancier animé */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
-          <span className="inline-block px-6 py-3 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 rounded-full text-sm font-bold mb-6 flex items-center justify-center mx-auto w-fit">
-            <Gauge className="w-5 h-5 mr-2" />
-            Organe réglant • Maître du tempo
-          </span>
-          
-          <h1 className="text-5xl md:text-6xl font-bold text-slate-900 dark:text-white mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Le Balancier-Spiral
+      {/* =================================================================== */}
+      {/* MAIN CONTAINER */}
+      {/* =================================================================== */}
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-16">
+
+        {/* 1. HERO SECTION & NORMATIVE BADGES */}
+        <section className="space-y-4 border-b border-neutral-200 dark:border-neutral-800 pb-10">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] border border-[#B08D57]/30">
+              Module 05 · Haute Chronométrie &amp; Isochronisme
+            </span>
+            <span className="px-3 py-1 rounded-full text-xs font-mono font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+              Niveau : CFC Horloger Praticien &amp; Rhabilleur
+            </span>
+            <span className="px-3 py-1 rounded-full text-xs font-mono font-medium bg-purple-500/10 text-purple-700 dark:text-purple-400 border border-purple-500/20">
+              35 min de lecture · Laboratoire de Marche
+            </span>
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-tight">
+            Le Balancier-Spiral : Cœur Chronométrique &amp; Lois de l&apos;Isochronisme
           </h1>
-          
-          <p className="text-xl text-slate-600 dark:text-slate-300 max-w-4xl mx-auto mb-8">
-            Découvrez le cœur oscillant de la montre mécanique : un système qui bat 8 fois par seconde avec une précision extrême
+
+          <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-300 max-w-4xl leading-relaxed">
+            Véritable métronome mécanique du calibre, le couple <strong>balancier-spiral</strong> bat jour et nuit 
+            à une fréquence inaltérable (jusqu&apos;à 28&apos;800 alternances par heure). De la célèbre <strong>courbe terminale Breguet</strong> 
+            aux spiraux en <strong>silicium amagnétique</strong> et aux balanciers à inertie variable 
+            (<strong>Gyromax</strong>, <strong>Microstella</strong>), plongez au cœur de la science horlogère suisse de la précision.
           </p>
+        </section>
 
-          {/* Animation balancier dans le hero */}
-          <motion.div
-            className="inline-block mb-8"
-            animate={{ rotate: [-15, 15, -15] }}
-            transition={{ duration: 0.25, repeat: Infinity, ease: "linear" }}
-          >
-            <div className="w-32 h-32 border-8 border-blue-600 rounded-full flex items-center justify-center shadow-2xl shadow-blue-600/30">
-              <div className="w-1 h-24 bg-gradient-to-t from-blue-900 to-blue-400 rounded-full"></div>
-            </div>
-          </motion.div>
-        </motion.div>
-
-        {/* Anatomie 3D */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 flex items-center">
-            <Layers className="w-8 h-8 mr-3 text-blue-600" />
-            Anatomie interactive du balancier
-          </h2>
-          <Anatomie3DBalancier />
-        </motion.section>
-
-        {/* Principe et fonction */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 md:p-12 mb-16 border border-slate-200 dark:border-slate-700"
-        >
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-6">
-                Principe de l'oscillateur mécanique
-              </h2>
-              <div className="space-y-6 text-lg text-slate-700 dark:text-slate-300">
-                <p>
-                  Le <strong>balancier-spiral</strong> est le <span className="bg-gradient-to-r from-yellow-200 to-yellow-100 dark:from-yellow-900/50 dark:to-yellow-800/50 px-2 py-1 rounded font-bold">métronome de la montre</span>. 
-                  Il bat le tempo avec une régularité exceptionnelle, garantissant la précision du mouvement.
-                </p>
-                <p>
-                  Ce système combine deux forces : l'<strong>inertie du balancier</strong> (masse en rotation) 
-                  et la <strong>rigidité du spiral</strong> (force de rappel élastique).
-                </p>
-                <p className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-600 p-4 rounded-r-lg">
-                  <strong>💡 Loi de Hooke appliquée :</strong> La période d'oscillation ne dépend que de la rigidité du spiral 
-                  et du moment d'inertie du balancier, pas de l'amplitude (en théorie).
-                </p>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 border border-slate-700">
-                <h3 className="text-white font-bold mb-4">Cycle d'oscillation</h3>
-                <svg viewBox="0 0 200 100" className="w-full">
-                  <motion.path
-                    d="M20 50 Q100 20 180 50"
-                    stroke="#3B82F6"
-                    strokeWidth="3"
-                    fill="none"
-                    animate={{ d: ["M20 50 Q100 20 180 50", "M20 50 Q100 80 180 50", "M20 50 Q100 20 180 50"] }}
-                    transition={{ duration: 0.25, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                  <circle cx="20" cy="50" r="4" fill="#10B981" />
-                  <circle cx="180" cy="50" r="4" fill="#EF4444" />
-                </svg>
-                <div className="flex justify-between text-white text-sm mt-4">
-                  <span>Position d'équilibre</span>
-                  <span>Amplitude max</span>
-                </div>
-              </div>
-            </div>
+        {/* =================================================================== */}
+        {/* 2. ANATOMIE INTERACTIVE DE L'ORGANE RÉGULATEUR (SCHÉMA CAD SVG) */}
+        {/* =================================================================== */}
+        <section className="space-y-6">
+          <div className="space-y-2">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#8A6A3B] dark:text-[#D4B483] font-bold">
+              Chapitre 1 · Anatomie &amp; Composants Micrométriques
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+              Architecture d&apos;Établi : L&apos;Oscillateur &amp; le Système Antichoc
+            </h2>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
+              Explorez les 5 constituants essentiels du système oscillateur. Cliquez sur chaque élément pour découvrir 
+              ses règles de tolérance d&apos;atelier et son comportement physique.
+            </p>
           </div>
-        </motion.section>
 
-        {/* Simulateur de fréquence */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 flex items-center">
-            <Activity className="w-8 h-8 mr-3 text-green-600" />
-            Simulateur interactif de fréquence
-          </h2>
-          <SimulateurFrequence />
-        </motion.section>
-
-        {/* Le balancier en détail */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 md:p-12 mb-16 border border-slate-200 dark:border-slate-700"
-        >
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-8 flex items-center">
-            <Target className="w-8 h-8 mr-3 text-purple-600" />
-            Anatomie détaillée du balancier
-          </h2>
-
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Schéma technique avec zones cliquables */}
-            <div className="relative">
-              <div className="bg-slate-900 rounded-2xl p-8 border border-slate-700">
-                <svg viewBox="0 0 200 200" className="w-full h-80">
-                  {/* Serge */}
-                  <motion.circle
-                    cx="100" cy="100" r="70"
-                    fill="none"
-                    stroke="#94A3B8"
-                    strokeWidth="8"
-                    className="cursor-pointer"
-                    whileHover={{ strokeWidth: 12, stroke: "#3B82F6" }}
-                  />
-                  {/* Bras */}
-                  <motion.line
-                    x1="100" y1="100" x2="170" y2="170"
-                    stroke="#64748B" strokeWidth="4"
-                    className="cursor-pointer"
-                    whileHover={{ strokeWidth: 6, stroke: "#10B981" }}
-                  />
-                  {/* Spiral */}
-                  <motion.path
-                    d="M100 30 Q120 50, 100 70 Q80 90, 100 110 Q120 130, 100 150"
-                    stroke="#EAB308" strokeWidth="2" fill="none"
-                    className="cursor-pointer"
-                    whileHover={{ strokeWidth: 4, stroke: "#F59E0B" }}
-                  />
-                </svg>
-              </div>
-              <p className="text-sm text-slate-500 text-center mt-4">Survolez les zones pour voir les détails</p>
-            </div>
-
-            {/* Matériaux modernes */}
-            <div>
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Matériaux révolutionnaires</h3>
-              
-              <div className="space-y-4">
-                {[
-                  {
-                    mat: 'Glucydur (CuBe)',
-                    desc: 'Alliage Cuivre-Béryllium. Antimagnétique, faible dilatation thermique, résistant.',
-                    periode: '1950 - Aujourd\'hui',
-                    icon: <Thermometer className="w-5 h-5 text-blue-500" />
-                  },
-                  {
-                    mat: 'Titane Grade 5',
-                    desc: 'Alliage Ti-Al6-V4. Ultra-léger, excellente résistance aux chocs.',
-                    periode: '2000 - Aujourd\'hui',
-                    icon: <Zap className="w-5 h-5 text-green-500" />
-                  },
-                  {
-                    mat: 'Silicium monocristallin',
-                    desc: 'Produit par photolithographie. Totalement antimagnétique, parfaitement isochrone.',
-                    periode: '2010 - Aujourd\'hui',
-                    icon: <Magnet className="w-5 h-5 text-purple-500" />
-                  },
-                  {
-                    mat: 'Oscillateur monolithique',
-                    desc: 'Balancier et spiral d\'une seule pièce. Fréquences records (500 Hz).',
-                    periode: '2017 - Future',
-                    icon: <Award className="w-5 h-5 text-red-500" />
-                  }
-                ].map((item, i) => (
-                  <motion.div
-                    key={item.mat}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-xl p-5 border border-slate-200 dark:border-slate-700"
-                  >
-                    <div className="flex items-center mb-2">
-                      {item.icon}
-                      <h4 className="font-bold text-lg text-slate-900 dark:text-white ml-2">{item.mat}</h4>
-                    </div>
-                    <p className="text-sm text-slate-700 dark:text-slate-300 mb-2">{item.desc}</p>
-                    <p className="text-xs text-slate-500">{item.periode}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Timeline historique */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
-          <TimelineHistorique />
-        </motion.section>
-
-        {/* Comparateur de matériaux */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-16"
-        >
-          <ComparateurMateriaux />
-        </motion.section>
-
-        {/* Fréquences d'oscillation */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 md:p-12 mb-16 border border-slate-200 dark:border-slate-700"
-        >
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-8 flex items-center">
-            <TrendingUp className="w-8 h-8 mr-3 text-green-600" />
-            Fréquences d'oscillation : le choix de la précision
-          </h2>
-
-          <div className="grid md:grid-cols-4 gap-6 mb-8">
-            {[
-              { hz: '2.5 Hz', a_h: '18\'000', desc: 'Traditionnel', usage: 'Montres vintage' },
-              { hz: '3 Hz', a_h: '21\'600', desc: 'Classique', usage: 'ETA 6497, Valjoux 7750' },
-              { hz: '4 Hz', a_h: '28\'800', desc: 'Standard moderne', usage: 'Majorité des montres actuelles' },
-              { hz: '5 Hz', a_h: '36\'000', desc: 'Haute fréquence', usage: 'Zenith El Primero' }
-            ].map((freq, i) => (
-              <motion.div
-                key={freq.hz}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-800 dark:to-slate-900 rounded-xl p-6 border border-blue-200 dark:border-slate-700 text-center"
+          {/* SÉLECTEUR D'ÉLÉMENTS */}
+          <div className="flex flex-wrap gap-2 border-b border-neutral-200 dark:border-neutral-800 pb-3">
+            {REGULATOR_COMPONENTS.map((comp, idx) => (
+              <button
+                key={comp.id}
+                type="button"
+                onClick={() => setSelectedComp(idx)}
+                className={`px-4 py-2 rounded-xl font-mono text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
+                  selectedComp === idx
+                    ? "bg-[#B08D57] text-neutral-950 font-bold shadow-md scale-[1.02]"
+                    : "bg-neutral-100 dark:bg-neutral-800/60 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                }`}
               >
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1">{freq.hz}</div>
-                <div className="text-sm text-slate-600 dark:text-slate-400 mb-2">{freq.a_h} A/h</div>
-                <div className="text-xs text-slate-500">{freq.desc}</div>
-                <div className="text-xs text-slate-500 mt-2">{freq.usage}</div>
-              </motion.div>
+                <span>{comp.name}</span>
+              </button>
             ))}
           </div>
 
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-            <h4 className="font-bold text-lg text-slate-900 dark:text-white mb-3 flex items-center">
-              <CheckCircle className="w-5 h-5 mr-2 text-green-600" />
-              Formule de conversion
-            </h4>
-            <div className="font-mono text-sm bg-white dark:bg-slate-800 p-4 rounded-lg">
-              <p>Fréquence (Hz) = Alternances/heure ÷ 7 200</p>
-              <p>Battements/seconde = Fréquence (Hz) × 2</p>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Vocabulaire technique */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 md:p-12 mb-16 border border-slate-200 dark:border-slate-700"
-        >
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-8 flex items-center">
-            <BookOpen className="w-8 h-8 mr-3 text-purple-600" />
-            Vocabulaire technique du maître horloger
-          </h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { terme: 'Amplitude', def: 'Angle maximal en degrés depuis la position d\'équilibre (270-330° idéal)', icon: Gauge },
-              { terme: 'Isochronisme', def: 'Régularité de la fréquence quelle que soit l\'amplitude d\'oscillation', icon: Activity },
-              { terme: 'Raquette', def: 'Levier de réglage qui modifie la longueur active du spiral', icon: Sliders },
-              { terme: 'Virole', def: 'Pièce qui serre l\'extrémité interne du spiral sur l\'axe', icon: Settings },
-              { terme: 'Dérive thermique', def: 'Variation de fréquence due à la température (compensée par Nivarox)', icon: Thermometer },
-              { terme: 'Free-sprung', def: 'Système sans raquette, réglage par masselottes sur le balancier', icon: Target },
-              { terme: 'Piton', def: 'Point d\'attache du spiral externe sur le coq', icon: Info },
-              { terme: 'Col de cygne', def: 'Courbe terminale du spiral Breguet relevée', icon: RotateCw },
-              { terme: 'Moment d\'inertie', def: 'Résistance à l\'accélération angulaire (J = mr²)', icon: Zap }
-            ].map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={item.terme}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 rounded-xl p-5 border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-shadow"
-                >
-                  <div className="flex items-start">
-                    <Icon className="w-6 h-6 mr-3 text-blue-500 flex-shrink-0 mt-1" />
-                    <div>
-                      <h4 className="font-bold text-slate-900 dark:text-white mb-2">{item.terme}</h4>
-                      <p className="text-sm text-slate-700 dark:text-slate-300">{item.def}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.section>
-
-        {/* Quiz premium */}
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 md:p-12 mb-16 border border-slate-700"
-        >
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-4xl font-bold text-white flex items-center">
-              <Trophy className="w-8 h-8 mr-3 text-yellow-500" />
-              Masterclass Quiz
-            </h2>
-            <div className="text-white text-sm bg-slate-700 px-4 py-2 rounded-full">
-              Expert Level
-            </div>
-          </div>
-
-          {!quizCompleted ? (
-            <>
-              {/* Barre de progression premium */}
-              <div className="mb-8">
-                <div className="flex justify-between items-center mb-2 text-white">
-                  <span className="text-sm font-medium">
-                    Question {currentQuestion + 1} / {quizData.length}
-                  </span>
-                  <span className="text-sm font-medium">
-                    Score : {score} pts
-                  </span>
-                </div>
-                <div className="w-full bg-slate-700 rounded-full h-3">
-                  <motion.div
-                    className="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${((currentQuestion + 1) / quizData.length) * 100}%` }}
-                    transition={{ duration: 0.5 }}
-                  />
-                </div>
-              </div>
-
-              {/* Question avec image */}
-              <motion.div
-                key={currentQuestion}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="mb-8"
-              >
-                {quizData[currentQuestion].image && (
-                  <div className="w-full h-48 bg-slate-700 rounded-xl mb-6 overflow-hidden flex items-center justify-center">
-                    <Image
-                      src={quizData[currentQuestion].image}
-                      alt="Illustration technique"
-                      width={300}
-                      height={200}
-                      className="object-cover"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
-                    <div className="absolute text-slate-400 text-sm flex items-center gap-2">
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Chargement...
-                    </div>
-                  </div>
-                )}
-                <h3 className="text-2xl font-bold text-white mb-8">
-                  {quizData[currentQuestion].question}
-                </h3>
-              </motion.div>
-
-              {/* Options */}
-              <div className="grid md:grid-cols-2 gap-4 mb-8">
-                {quizData[currentQuestion].options.map((option, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={() => handleAnswerClick(index)}
-                    disabled={selectedAnswer !== null}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className={`p-5 rounded-xl border-2 text-left transition-all ${
-                      selectedAnswer === null
-                        ? 'bg-slate-800 border-slate-600 hover:border-blue-500 hover:bg-slate-700'
-                        : index === quizData[currentQuestion].correctAnswer
-                        ? 'bg-green-900/30 border-green-500'
-                        : selectedAnswer === index
-                        ? 'bg-red-900/30 border-red-500'
-                        : 'bg-slate-800 border-slate-600 opacity-50'
-                    }`}
-                  >
-                    <div className="flex items-start">
-                      <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center mr-4 flex-shrink-0 ${
-                        selectedAnswer === null
-                          ? 'border-slate-500'
-                          : index === quizData[currentQuestion].correctAnswer
-                          ? 'border-green-500 bg-green-500'
-                          : selectedAnswer === index
-                          ? 'border-red-500 bg-red-500'
-                          : 'border-slate-500'
-                      }`}>
-                        {selectedAnswer !== null && (
-                          <CheckCircle className={`w-5 h-5 ${
-                            index === quizData[currentQuestion].correctAnswer || selectedAnswer === index
-                              ? 'text-white'
-                              : 'text-slate-500'
-                          }`} />
-                        )}
-                      </div>
-                      <div>
-                        <span className={`font-semibold ${
-                          selectedAnswer === null
-                            ? 'text-white'
-                            : index === quizData[currentQuestion].correctAnswer
-                            ? 'text-green-400'
-                            : selectedAnswer === index
-                            ? 'text-red-400'
-                            : 'text-slate-400'
-                        }`}>
-                          {String.fromCharCode(65 + index)}.
-                        </span>
-                        <p className={`ml-3 text-white mt-1 ${
-                          selectedAnswer === index && index !== quizData[currentQuestion].correctAnswer
-                            ? 'line-through opacity-60'
-                            : ''
-                        }`}>{option}</p>
-                      </div>
-                    </div>
-                  </motion.button>
-                ))}
-              </div>
-
-              {/* Explication et bouton suivant */}
-              <AnimatePresence>
-                {selectedAnswer !== null && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                  >
-                    <div className="bg-blue-900/30 border border-blue-500 rounded-xl p-6 mb-6">
-                      <div className="flex items-start">
-                        {selectedAnswer === quizData[currentQuestion].correctAnswer ? 
-                          <CheckCircle className="w-6 h-6 text-green-500 mr-3 flex-shrink-0 mt-1" /> :
-                          <XCircle className="w-6 h-6 text-red-500 mr-3 flex-shrink-0 mt-1" />
-                        }
-                        <div>
-                          <h4 className={`font-bold text-lg mb-2 ${
-                            selectedAnswer === quizData[currentQuestion].correctAnswer ? 'text-green-400' : 'text-red-400'
-                          }`}>
-                            {selectedAnswer === quizData[currentQuestion].correctAnswer ? 'Exact !' : 'Presque...'}
-                          </h4>
-                          <p className="text-slate-300">{quizData[currentQuestion].explanation}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <motion.button
-                      onClick={handleNextQuestion}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-2 text-lg"
-                    >
-                      {currentQuestion < quizData.length - 1 ? 
-                        <>Question suivante <Trophy className="w-5 h-5" /></> : 
-                        <>Voir les résultats <Award className="w-5 h-5" /></>
-                      }
-                    </motion.button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </>
-          ) : (
-            // Résultats finaux
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-center"
-            >
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: "spring" }}
-                className="w-40 h-40 mx-auto mb-8 bg-gradient-to-br from-yellow-500 to-blue-600 rounded-full flex items-center justify-center shadow-2xl"
-              >
-                <span className="text-5xl font-bold text-white">{pourcentageScore}%</span>
-              </motion.div>
-
-              <h3 className="text-4xl font-bold text-white mb-4">
-                {pourcentageScore >= 80 ? 'Maître Horloger !' : 
-                 pourcentageScore >= 60 ? 'Expert Confirmé' : 
-                 'Apprenti Horloger'}
-              </h3>
-              
-              <p className="text-xl text-slate-300 mb-8">
-                Score final : {score} / {quizData.length} ({pourcentageScore}%)
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                <button
-                  onClick={resetQuiz}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition-all flex items-center gap-2"
-                >
-                  <RotateCcw className="w-5 h-5" />
-                  Recommencer
-                </button>
-                <Link 
-                  href="/theorie"
-                  className="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-8 rounded-xl transition-colors flex items-center gap-2"
-                >
-                  <BookOpen className="w-5 h-5" />
-                  Autres leçons
-                </Link>
-              </div>
-
-              {/* Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="inline-flex items-center gap-3 bg-slate-800 rounded-full px-6 py-3 border border-slate-600"
-              >
-                <Award className={`w-6 h-6 ${
-                  pourcentageScore >= 80 ? 'text-yellow-500' : 
-                  pourcentageScore >= 60 ? 'text-blue-500' : 'text-slate-500'
-                }`} />
-                <span className="text-white font-medium">
-                  {pourcentageScore >= 80 ? 'Badge Maître Horloger obtenu !' : 
-                   pourcentageScore >= 60 ? 'Badge Expert obtenu !' : 
-                   'Continuez votre apprentissage !'}
+          {/* FICHE TECHNIQUE DE LA PIÈCE SÉLECTIONNÉE */}
+          <div className="p-6 sm:p-8 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-4">
+              <div>
+                <span className="text-xs font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483] uppercase">
+                  Composant Chronométrique n°0{selectedComp + 1}
                 </span>
-              </motion.div>
-            </motion.div>
-          )}
-        </motion.section>
+                <h3 className="text-xl sm:text-2xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+                  {activeComp.name}
+                </h3>
+              </div>
+
+              <span className="text-xs font-mono px-3 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300">
+                {activeComp.tolerances}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs sm:text-sm">
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <h4 className="font-mono font-bold uppercase text-neutral-500 text-xs">Rôle dans la Régulation</h4>
+                  <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed font-medium">
+                    {activeComp.role}
+                  </p>
+                </div>
+
+                <div className="space-y-1">
+                  <h4 className="font-mono font-bold uppercase text-neutral-500 text-xs">Matériau Horloger Normalisé</h4>
+                  <p className="text-neutral-600 dark:text-neutral-400 font-mono text-xs">
+                    {activeComp.material}
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="p-4 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-300 dark:border-amber-900/40 text-amber-900 dark:text-amber-200 text-xs space-y-1">
+                  <span className="font-bold flex items-center gap-1.5 text-xs text-amber-800 dark:text-amber-300">
+                    💡 Règle d&apos;Établi du Maître Régleur :
+                  </span>
+                  <p className="leading-relaxed">
+                    {activeComp.technicalRule}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* DESSIN TECHNIQUE VECTORIEL CAD (BALANCIER-SPIRAL ÉCLATÉ & ANTICHOC) */}
+          <div className="p-6 rounded-3xl border border-neutral-700/60 bg-[#15171D] text-[#E0E2E6] space-y-4">
+            <div className="flex flex-wrap items-center justify-between text-xs font-mono border-b border-neutral-800 pb-3">
+              <span className="text-neutral-400 flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#B08D57]"></span>
+                VUE VECTORIELLE TECHNIQUE DU BALANCIER-SPIRAL &amp; ANTICHOC INCABLOC
+              </span>
+              <span className="text-neutral-400">PLAN AXIAL DE RÉGULATION (ÉCHELLE 20:1)</span>
+            </div>
+
+            <div className="w-full overflow-x-auto py-4 flex justify-center">
+              <svg viewBox="0 0 760 260" className="w-full max-w-[720px] h-auto select-none font-mono">
+                {/* Patterns */}
+                <defs>
+                  <linearGradient id="glucydur-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#F59E0B" />
+                    <stop offset="100%" stopColor="#D97706" />
+                  </linearGradient>
+                </defs>
+
+                {/* Center Axis of Revolution */}
+                <line x1="380" y1="15" x2="380" y2="245" stroke="#60A5FA" strokeWidth="1.2" strokeDasharray="14 3 3 3" />
+                <text x="390" y="25" fill="#60A5FA" fontSize="10" fontWeight="bold">AXE DE BALANCIER</text>
+
+                {/* 1. Upper Incabloc Shock Absorber on Cock (Coq) */}
+                <rect x="350" y="30" width="60" height="24" rx="4" fill="#1C1F26" stroke="#94A3B8" strokeWidth="1.5" />
+                {/* Lyre Spring */}
+                <path d="M 360 38 Q 380 32 400 38 Q 380 44 360 38" fill="none" stroke="#F59E0B" strokeWidth="1.5" />
+                {/* Cap jewel (Contre-pivot rubis) */}
+                <circle cx="380" cy="42" r="5" fill="#EF4444" />
+                <text x="420" y="45" fill="#94A3B8" fontSize="10">Antichoc Incabloc (Haut)</text>
+
+                {/* 2. Balance Staff (Axe de Balancier en Acier) */}
+                {/* Upper conical pivot */}
+                <line x1="380" y1="47" x2="380" y2="65" stroke="#E2E8F0" strokeWidth="2.5" />
+                {/* Balance Seat (Portée de balancier) */}
+                <rect x="365" y="105" width="30" height="15" fill="#E2E8F0" stroke="#CBD5E1" strokeWidth="1" />
+                {/* Lower conical pivot */}
+                <line x1="380" y1="195" x2="380" y2="225" stroke="#E2E8F0" strokeWidth="2.5" />
+
+                {/* 3. Balance Wheel Rim (Serge Glucydur en coupe) */}
+                {/* Left rim section */}
+                <rect x="130" y="100" width="28" height="25" rx="3" fill="url(#glucydur-grad)" stroke="#B45309" strokeWidth="1.5" />
+                {/* Masselotte Microstella on left */}
+                <circle cx="144" cy="94" r="5" fill="#FDE047" stroke="#CA8A04" strokeWidth="1" />
+                {/* Left arm */}
+                <line x1="158" y1="112" x2="365" y2="112" stroke="#F59E0B" strokeWidth="3" />
+
+                {/* Right rim section */}
+                <rect x="602" y="100" width="28" height="25" rx="3" fill="url(#glucydur-grad)" stroke="#B45309" strokeWidth="1.5" />
+                {/* Masselotte Microstella on right */}
+                <circle cx="616" cy="94" r="5" fill="#FDE047" stroke="#CA8A04" strokeWidth="1" />
+                {/* Right arm */}
+                <line x1="395" y1="112" x2="602" y2="112" stroke="#F59E0B" strokeWidth="3" />
+
+                {/* 4. Hairspring (Spiral avec Courbe Breguet Relevée) */}
+                {/* Collet / Virole on staff */}
+                <rect x="370" y="70" width="20" height="12" rx="2" fill="#64748B" />
+                {/* Spiral flat coils */}
+                <path d="M 370 76 C 340 76 310 82 280 82 C 240 82 220 74 190 74" fill="none" stroke="#38BDF8" strokeWidth="1.8" />
+                <path d="M 390 76 C 420 76 450 82 480 82 C 520 82 540 74 570 74" fill="none" stroke="#38BDF8" strokeWidth="1.8" />
+                {/* Overcoil Breguet (Courbe relevée passant au-dessus) */}
+                <path d="M 190 74 Q 185 62 200 62 L 320 62 Q 340 62 345 52" fill="none" stroke="#60A5FA" strokeWidth="2" strokeDasharray="4 2" />
+                {/* Piton */}
+                <rect x="340" y="47" width="10" height="10" fill="#E2E8F0" />
+                <text x="210" y="58" fill="#60A5FA" fontSize="10" fontWeight="bold">Courbe Breguet (Relevée)</text>
+
+                {/* 5. Double Roller (Double Plateau en bas) */}
+                {/* Large roller */}
+                <rect x="360" y="150" width="40" height="10" rx="2" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="1" />
+                {/* Ruby Impulse Pin (Cheville de plateau) */}
+                <rect x="390" y="158" width="6" height="16" rx="2" fill="#EF4444" />
+                {/* Small roller with crescent (Creusure) */}
+                <rect x="368" y="162" width="24" height="8" rx="1" fill="#CBD5E1" />
+                <text x="402" y="172" fill="#EF4444" fontSize="10" fontWeight="bold">Cheville (Ellipse)</text>
+
+                {/* 6. Lower Incabloc on Mainplate (Platine) */}
+                <rect x="350" y="215" width="60" height="24" rx="4" fill="#1C1F26" stroke="#94A3B8" strokeWidth="1.5" />
+                <circle cx="380" cy="227" r="5" fill="#EF4444" />
+                <text x="420" y="230" fill="#94A3B8" fontSize="10">Antichoc Incabloc (Bas)</text>
+              </svg>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between text-xs text-neutral-400 pt-2 border-t border-neutral-800">
+              <span>🟡 Serge en Glucydur équilibrée dynamiquement</span>
+              <span>🔵 Spiral Nivarox / Silicium à courbe terminale Breguet</span>
+              <span>🔴 Double plateau avec cheville de rubis &amp; antichocs Incabloc</span>
+            </div>
+          </div>
+        </section>
+
+        {/* =================================================================== */}
+        {/* 3. LA PHYSIQUE DE L'ISOCHRONISME : FORMULES FONDAMENTALES */}
+        {/* =================================================================== */}
+        <section className="space-y-6">
+          <div className="space-y-2">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#8A6A3B] dark:text-[#D4B483] font-bold">
+              Chapitre 2 · Physique &amp; Métrologie
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+              Les Lois Mathématiques de l&apos;Isochronisme Horloger
+            </h2>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
+              La régularité d&apos;une montre ne dépend pas du hasard : elle découle de la formule harmonique de Christian Huygens 
+              qui relie le moment d&apos;inertie du balancier au couple de rappel élastique du spiral.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="p-6 sm:p-7 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] space-y-4 shadow-sm">
+              <span className="text-xs font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483] uppercase tracking-wider block">
+                Formule 1 · Période d&apos;Oscillation Propre
+              </span>
+
+              <div className="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/60 dark:border-neutral-800 text-center font-mono font-bold text-xl sm:text-2xl text-neutral-900 dark:text-neutral-100">
+                T = 2π · √(I / C_s)
+              </div>
+
+              <div className="space-y-2 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                <p>
+                  <strong>T :</strong> Période d&apos;une oscillation complète en secondes (1 oscillation = 2 alternances).
+                </p>
+                <p>
+                  <strong>I :</strong> Moment d&apos;inertie du balancier ($I = m \cdot r^2$ en $\text{g}\cdot\text{cm}^2$).
+                </p>
+                <p>
+                  <strong>C_s :</strong> Constante de couple de rappel élastique du spiral (en $\text{mN}\cdot\text{mm/rad}$).
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-xs">
+                ✓ <strong>Propriété d&apos;isochronisme :</strong> L&apos;amplitude de rotation (de 180° à 310°) ne figure nulle part dans l&apos;équation ! La durée d&apos;oscillation reste constante quelle que soit l&apos;ampleur du battement.
+              </div>
+            </div>
+
+            <div className="p-6 sm:p-7 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] space-y-4 shadow-sm">
+              <span className="text-xs font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483] uppercase tracking-wider block">
+                Formule 2 · Couple Élastique du Spiral
+              </span>
+
+              <div className="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200/60 dark:border-neutral-800 text-center font-mono font-bold text-xl sm:text-2xl text-[#8A6A3B] dark:text-[#D4B483]">
+                C_s = (E · b · e³) / (12 · L)
+              </div>
+
+              <div className="space-y-2 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                <p>
+                  <strong>E :</strong> Module d&apos;élasticité d&apos;Young de l&apos;alliage ($\approx 200&apos;000\text{ N/mm}^2$).
+                </p>
+                <p>
+                  <strong>b &amp; L :</strong> Hauteur de lame (b) et longueur active développée (L).
+                </p>
+                <p className="text-rose-600 dark:text-rose-400 font-bold">
+                  <strong>e³ :</strong> Épaisseur de la lame au CUBE !
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-800 dark:text-rose-300 text-xs">
+                ⚠️ <strong>Alerte de manufacture :</strong> L&apos;épaisseur e étant au cube, une variation infinitésimale de <strong>0.0002 mm</strong> (un cinquième de micron !) modifie la marche de la montre de plus de <strong>40 minutes par jour</strong>.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =================================================================== */}
+        {/* 4. LA COURBE TERMINALE BREGUET & LES COURBES DE PHILLIPS */}
+        {/* =================================================================== */}
+        <section className="space-y-6">
+          <div className="space-y-2">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#8A6A3B] dark:text-[#D4B483] font-bold">
+              Chapitre 3 · Géométrie Supérieure
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+              La Courbe Terminale Breguet &amp; les Équations d&apos;Édouard Phillips
+            </h2>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
+              Découvrez comment l&apos;élévation de la dernière spire au-dessus du plan annule le déplacement du centre de gravité 
+              et élimine les erreurs de position verticale.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="p-6 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] space-y-4">
+              <h3 className="font-serif font-bold text-lg text-neutral-900 dark:text-neutral-100">
+                1. Le Problème du Spiral Plat d&apos;Archimède
+              </h3>
+              <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                Sur un spiral plat standard, l&apos;extrémité extérieure est fixée rigidement au piton. 
+                Lorsqu&apos;il s&apos;ouvre et se ferme, le spiral ne respire pas de manière symétrique : 
+                son <strong>centre de gravité s&apos;écarte continuellement de l&apos;axe de rotation</strong>.
+              </p>
+              <div className="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-800/50 text-xs text-neutral-600 dark:text-neutral-400 space-y-2">
+                <span className="font-bold text-rose-600 dark:text-rose-400 block">Défaut chronométrique induit :</span>
+                <p>
+                  En position verticale (montre portée au poignet), le poids excentré du spiral agit comme un balourd perturbateur 
+                  qui accélère ou freine les oscillations selon l&apos;angle de position (différence de marche pouvant atteindre 15 à 20 sec/jour).
+                </p>
+              </div>
+            </div>
+
+            <div className="p-6 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] space-y-4">
+              <h3 className="font-serif font-bold text-lg text-neutral-900 dark:text-neutral-100">
+                2. La Révolution de la Courbe Breguet (1795) &amp; Phillips (1860)
+              </h3>
+              <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                Abraham-Louis Breguet a l&apos;intuition géniale de relever la spire finale au-dessus du plan et de la cintrer vers l&apos;intérieur. 
+                Soixante ans plus tard, le mathématicien <strong>Édouard Phillips</strong> démontre par le calcul différentiel 
+                les conditions exactes que doit respecter cette courbe pour maintenir le centre de gravité rigoureusement fixe sur l&apos;axe.
+              </p>
+              <div className="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-300 dark:border-emerald-900/40 text-emerald-900 dark:text-emerald-200 text-xs space-y-2">
+                <span className="font-bold block">Résultat Chronométrique :</span>
+                <p>
+                  Développement 100% concentrique, suppression des poussées latérales sur les pivots et isochronisme parfait 
+                  dans toutes les positions de l&apos;espace.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =================================================================== */}
+        {/* 5. PHILOSOPHIE DE RÉGLAGE : RAQUETTE VS INERTIE VARIABLE */}
+        {/* =================================================================== */}
+        <section className="space-y-6">
+          <div className="space-y-2">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#8A6A3B] dark:text-[#D4B483] font-bold">
+              Chapitre 4 · Réglage &amp; Chronométrie
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+              Systèmes de Réglage : Raquette vs Balancier à Inertie Variable
+            </h2>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
+              Deux grandes écoles s&apos;opposent en horlogerie suisse pour ajuster la marche quotidienne d&apos;un calibre : 
+              agir sur la longueur active du spiral ou modifier l&apos;inertie du balancier.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {REGULATION_SYSTEMS.map((sys, idx) => (
+              <div
+                key={idx}
+                className="p-6 sm:p-7 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] space-y-4 shadow-sm"
+              >
+                <div className="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-3">
+                  <h3 className="font-serif font-bold text-lg text-neutral-900 dark:text-neutral-100">
+                    {sys.system}
+                  </h3>
+                  <span className="w-3 h-3 rounded-full" style={{ backgroundColor: sys.color }}></span>
+                </div>
+
+                <div className="space-y-3 text-xs leading-relaxed">
+                  <div>
+                    <span className="font-mono font-bold text-neutral-500 block uppercase text-[10px]">Principe Mécanique</span>
+                    <p className="text-neutral-700 dark:text-neutral-300 font-medium">{sys.principle}</p>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800/60 font-mono text-[11px] text-neutral-800 dark:text-neutral-200">
+                    {sys.physics}
+                  </div>
+
+                  <div>
+                    <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 block uppercase text-[10px]">Avantages Clés</span>
+                    <p className="text-neutral-600 dark:text-neutral-400">{sys.pros}</p>
+                  </div>
+
+                  <div>
+                    <span className="font-mono font-bold text-rose-600 dark:text-rose-400 block uppercase text-[10px]">Limites Techniques</span>
+                    <p className="text-neutral-600 dark:text-neutral-400">{sys.cons}</p>
+                  </div>
+
+                  <div className="pt-2 border-t border-neutral-100 dark:border-neutral-800 text-[11px] font-mono text-[#8A6A3B] dark:text-[#D4B483]">
+                    Exemples : {sys.manufacture}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* =================================================================== */}
+        {/* 6. LABORATOIRE & SIMULATEUR D'ISOCHRONISME ET DE RÉGLAGE */}
+        {/* =================================================================== */}
+        <section className="space-y-6">
+          <div className="space-y-2">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#8A6A3B] dark:text-[#D4B483] font-bold">
+              Chapitre 5 · Pratique d&apos;Établi &amp; Chronocomparateur
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+              Simulateur de Réglage Chronométrique (Avance / Retard)
+            </h2>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
+              Expérimentez en direct le réglage d&apos;un calibre comme sur un chronocomparateur d&apos;établi (Witschi). 
+              Ajustez les masselottes d&apos;inertie ou la raquette et observez l&apos;impact immédiat sur la marche en secondes/jour.
+            </p>
+          </div>
+
+          <div className="p-6 sm:p-8 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] shadow-sm space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              
+              {/* Sliders d'Ajustement */}
+              <div className="lg:col-span-2 space-y-6">
+                
+                {/* 1. Inertie (Masselottes) */}
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs font-mono">
+                    <span className="text-neutral-600 dark:text-neutral-400">Position des Masselottes d&apos;Inertie (Gyromax / Microstella) :</span>
+                    <span className="font-bold text-neutral-900 dark:text-neutral-100">{balanceInertiaOffset > 0 ? `+${balanceInertiaOffset}` : balanceInertiaOffset} µg·cm²</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="-10"
+                    max="10"
+                    step="1"
+                    value={balanceInertiaOffset}
+                    onChange={(e) => setBalanceInertiaOffset(parseFloat(e.target.value))}
+                    className="w-full accent-[#B08D57] cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] font-mono text-neutral-400">
+                    <span>Vers l&apos;intérieur (Accélère la marche)</span>
+                    <span>Neutre</span>
+                    <span>Vers l&apos;extérieur (Ralentit la marche)</span>
+                  </div>
+                </div>
+
+                {/* 2. Longueur active (Raquette) */}
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs font-mono">
+                    <span className="text-neutral-600 dark:text-neutral-400">Déplacement de la Raquette (Longueur active L) :</span>
+                    <span className="font-bold text-neutral-900 dark:text-neutral-100">{springActiveLengthOffset > 0 ? `+${springActiveLengthOffset}` : springActiveLengthOffset} %</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="-5"
+                    max="5"
+                    step="0.5"
+                    value={springActiveLengthOffset}
+                    onChange={(e) => setSpringActiveLengthOffset(parseFloat(e.target.value))}
+                    className="w-full accent-[#B08D57] cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] font-mono text-neutral-400">
+                    <span>-5% Raccourci (Avance)</span>
+                    <span>0% Neutre</span>
+                    <span>+5% Allongé (Retard)</span>
+                  </div>
+                </div>
+
+                {/* Sélecteur Fréquence de Base */}
+                <div className="space-y-2 pt-2 border-t border-neutral-100 dark:border-neutral-800">
+                  <span className="text-xs font-mono text-neutral-500 block">Fréquence nominale du calibre :</span>
+                  <div className="flex gap-2">
+                    {[
+                      { hz: 2.5, label: "2.5 Hz (18'000 A/h)" },
+                      { hz: 3.0, label: "3.0 Hz (21'600 A/h)" },
+                      { hz: 4.0, label: "4.0 Hz (28'800 A/h)" },
+                      { hz: 5.0, label: "5.0 Hz (36'000 A/h)" }
+                    ].map((f) => (
+                      <button
+                        key={f.hz}
+                        type="button"
+                        onClick={() => setBaseFrequency(f.hz)}
+                        className={`px-3 py-1.5 rounded-xl font-mono text-xs transition-all cursor-pointer ${
+                          baseFrequency === f.hz
+                            ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 font-bold"
+                            : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400"
+                        }`}
+                      >
+                        {f.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Cadran Witschi Simulé (Live Output) */}
+              <div className="p-6 rounded-3xl bg-neutral-900 text-white dark:bg-[#181A1F] border border-neutral-700/60 flex flex-col justify-between space-y-4 shadow-lg font-mono">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-xs border-b border-neutral-800 pb-2">
+                    <span className="text-neutral-400">CHRONOCOMPARATEUR</span>
+                    <span className="text-emerald-400 flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                      EN LIGNE
+                    </span>
+                  </div>
+
+                  <div>
+                    <span className="text-[11px] text-neutral-400 block">Marche Journalière (Rate) :</span>
+                    <div className="flex items-baseline gap-2">
+                      <span className={`text-3xl sm:text-4xl font-bold ${
+                        Math.abs(calculatedDailyRate) <= 4
+                          ? "text-emerald-400"
+                          : Math.abs(calculatedDailyRate) <= 15
+                          ? "text-amber-400"
+                          : "text-rose-400"
+                      }`}>
+                        {calculatedDailyRate > 0 ? `+${calculatedDailyRate}` : calculatedDailyRate}
+                      </span>
+                      <span className="text-xs text-neutral-400">sec / jour</span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-neutral-800 text-xs">
+                    <div>
+                      <span className="text-neutral-500 text-[10px] block">Amplitude :</span>
+                      <span className="font-bold text-neutral-200">{calculatedAmplitude}°</span>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500 text-[10px] block">Repère (Beat error) :</span>
+                      <span className="font-bold text-neutral-200">0.1 ms</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-neutral-800 text-[11px] text-neutral-400">
+                  Norme Chronomètre Suisse (COSC) : <strong>-4 à +6 s/j</strong>
+                  <div className="mt-1">
+                    {Math.abs(calculatedDailyRate) <= 5 ? (
+                      <span className="text-emerald-400 font-bold">✓ Conforme Certification COSC</span>
+                    ) : (
+                      <span className="text-amber-400 font-bold">⚠️ Réglage hors tolérance COSC</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =================================================================== */}
+        {/* 7. QUIZ INTERACTIF COMPACT D'ATELIER (FORMAT STEPPER 1 QUESTION) */}
+        {/* =================================================================== */}
+        <section className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span className="text-xs font-mono uppercase tracking-widest text-[#8A6A3B] dark:text-[#D4B483] font-bold">
+                Contrôle des Connaissances
+              </span>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+                Quiz de Validation Rapide : Balancier-Spiral &amp; Régulation
+              </h2>
+            </div>
+
+            {/* Mini Progress Pills */}
+            <div className="flex items-center gap-1.5">
+              {QUIZ_QUESTIONS.map((_, idx) => {
+                const ans = userAnswers[idx];
+                const isCurrent = currentQuizIdx === idx && !quizFinished;
+                let bg = "bg-neutral-200 dark:bg-neutral-800 text-neutral-500";
+                if (ans !== undefined) {
+                  bg = ans === QUIZ_QUESTIONS[idx].correctAnswer
+                    ? "bg-emerald-500 text-white font-bold"
+                    : "bg-rose-500 text-white font-bold";
+                } else if (isCurrent) {
+                  bg = "bg-[#B08D57] text-neutral-950 font-bold ring-2 ring-[#B08D57]/40";
+                }
+
+                return (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => {
+                      setCurrentQuizIdx(idx);
+                      setQuizFinished(false);
+                    }}
+                    className={`w-7 h-7 rounded-lg text-[11px] font-mono transition-all cursor-pointer flex items-center justify-center ${bg}`}
+                  >
+                    {idx + 1}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* MAIN QUIZ CARD (Compact Stepper) */}
+          <div className="p-6 sm:p-7 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] shadow-sm">
+            {!quizFinished ? (
+              <div className="space-y-5">
+                {/* Question Header */}
+                <div className="flex items-center justify-between gap-4 border-b border-neutral-100 dark:border-neutral-800 pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-md font-mono font-bold text-xs bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] border border-[#B08D57]/20">
+                      Question {currentQuizIdx + 1} / {QUIZ_QUESTIONS.length}
+                    </span>
+                    <span className="text-xs font-mono text-neutral-400">
+                      {userAnswers[currentQuizIdx] !== undefined ? "✓ Réponse enregistrée" : "Choisissez une option"}
+                    </span>
+                  </div>
+
+                  <span className="text-xs font-mono text-neutral-500 font-semibold">
+                    Score : {calculateScore()} / {Object.keys(userAnswers).length}
+                  </span>
+                </div>
+
+                {/* Question Title */}
+                <h3 className="text-sm sm:text-base font-semibold text-neutral-900 dark:text-neutral-100 leading-snug">
+                  {QUIZ_QUESTIONS[currentQuizIdx].question}
+                </h3>
+
+                {/* Options Grid (2x2) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {QUIZ_QUESTIONS[currentQuizIdx].options.map((opt, optIdx) => {
+                    const selected = userAnswers[currentQuizIdx];
+                    const isSelected = selected === optIdx;
+                    const isAnswered = selected !== undefined;
+                    const isOptionCorrect = optIdx === QUIZ_QUESTIONS[currentQuizIdx].correctAnswer;
+
+                    let btnStyle = "border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 bg-neutral-50/60 dark:bg-neutral-900/40 text-neutral-700 dark:text-neutral-300";
+
+                    if (isAnswered) {
+                      if (isOptionCorrect) {
+                        btnStyle = "border-emerald-500 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 font-semibold";
+                      } else if (isSelected) {
+                        btnStyle = "border-rose-500 bg-rose-500/10 text-rose-800 dark:text-rose-300 font-semibold";
+                      } else {
+                        btnStyle = "opacity-50 border-neutral-200 dark:border-neutral-800";
+                      }
+                    }
+
+                    return (
+                      <button
+                        key={optIdx}
+                        type="button"
+                        onClick={() => handleSelectQuizAnswer(optIdx)}
+                        className={`p-3.5 rounded-xl border text-left text-xs transition-all cursor-pointer flex items-center justify-between gap-2 ${btnStyle}`}
+                      >
+                        <span className="leading-snug">{opt}</span>
+                        {isAnswered && isOptionCorrect && (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Feedback & Explanation Box */}
+                {userAnswers[currentQuizIdx] !== undefined && (
+                  <div className={`p-3.5 rounded-xl text-xs leading-relaxed border ${
+                    userAnswers[currentQuizIdx] === QUIZ_QUESTIONS[currentQuizIdx].correctAnswer
+                      ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-900/40 text-emerald-900 dark:text-emerald-200"
+                      : "bg-rose-50/50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-900/40 text-rose-900 dark:text-rose-200"
+                  }`}>
+                    <span className="font-bold block mb-0.5">
+                      {userAnswers[currentQuizIdx] === QUIZ_QUESTIONS[currentQuizIdx].correctAnswer
+                        ? "✅ Exact !"
+                        : "❌ Explication technique :"}
+                    </span>
+                    {QUIZ_QUESTIONS[currentQuizIdx].explanation}
+                  </div>
+                )}
+
+                {/* Stepper Controls */}
+                <div className="flex items-center justify-between pt-3 border-t border-neutral-100 dark:border-neutral-800">
+                  <button
+                    type="button"
+                    disabled={currentQuizIdx === 0}
+                    onClick={() => setCurrentQuizIdx(prev => prev - 1)}
+                    className="px-3.5 py-1.5 rounded-lg text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  >
+                    ← Précédent
+                  </button>
+
+                  <div className="flex items-center gap-2">
+                    {currentQuizIdx < QUIZ_QUESTIONS.length - 1 ? (
+                      <button
+                        type="button"
+                        onClick={() => setCurrentQuizIdx(prev => prev + 1)}
+                        className="px-4 py-1.5 rounded-lg text-xs font-mono font-semibold bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 transition-all cursor-pointer"
+                      >
+                        Suivant →
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setQuizFinished(true)}
+                        className="px-4 py-1.5 rounded-lg text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 hover:bg-[#9c7b48] transition-all shadow-sm cursor-pointer"
+                      >
+                        Voir le Bilan Final ✓
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Summary / Result View */
+              <div className="text-center py-6 space-y-4">
+                <div className="w-14 h-14 rounded-full bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] mx-auto flex items-center justify-center font-serif text-2xl font-bold">
+                  {calculateScore()} / {QUIZ_QUESTIONS.length}
+                </div>
+
+                <div className="space-y-1">
+                  <h3 className="text-lg font-serif font-bold text-neutral-900 dark:text-neutral-100">
+                    {calculateScore() >= 4
+                      ? "Félicitations ! Théorie Chronométrique Validée."
+                      : "Bon travail ! Quelques notions d'isochronisme à revoir."}
+                  </h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 max-w-md mx-auto">
+                    {calculateScore() >= 4
+                      ? "Vous maîtrisez l'isochronisme, la courbe Breguet, l'Incabloc et les balanciers à inertie variable. Prêt pour les traités suivants !"
+                      : "Prenez le temps de revoir la formule d'inertie et l'influence de l'épaisseur au cube du spiral avant de passer aux examens."}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-center gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCurrentQuizIdx(0);
+                      setQuizFinished(false);
+                    }}
+                    className="px-4 py-2 rounded-xl text-xs font-mono font-semibold bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
+                  >
+                    Revoir mes réponses
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={resetQuiz}
+                    className="px-4 py-2 rounded-xl text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 hover:bg-[#9c7b48] transition-all cursor-pointer shadow-sm"
+                  >
+                    Recommencer le quiz
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* =================================================================== */}
+        {/* BOTTOM NAVIGATION BAR */}
+        {/* =================================================================== */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+          <Link
+            href="/theorie/echappement-ancre"
+            className="inline-flex items-center gap-2 text-xs font-mono text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>← Module 04 : L&apos;Échappement à Ancre Suisse</span>
+          </Link>
+
+          <Link
+            href="/theorie/remontage"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-mono text-xs font-bold bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 transition-opacity shadow-sm"
+          >
+            <span>Module 06 : Remontage &amp; Mécanisme de Tirette</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
       </main>
     </div>
   );
