@@ -40,6 +40,17 @@ interface PracticalModule {
 
 const PRACTICAL_MODULES: PracticalModule[] = [
   {
+    step: 'Étape 00 · Micromécanique Horlogère',
+    badge: 'IFAGE · Schaublin 70',
+    title: 'Tournage & Micromécanique',
+    description: 'Programme officiel IFAGE Genève : tour d\'outilleur Schaublin 70, chariotage, dressage au centième, affûtage des 5 burins d\'horloger, et trempe de l\'acier Böhler K720.',
+    iconName: 'Compass',
+    tools: ['Tour Schaublin 70', 'Pinces W-12', 'Chariot croisé 0.01mm', 'Burins d\'horloger', 'Chalumeau & Bain d\'huile'],
+    href: '/pratique/micromecanique',
+    cta: 'Accéder au module complet',
+    highlight: 'Programme officiel IFAGE Genève'
+  },
+  {
     step: 'Étape 01 · Fondations',
     badge: 'ETA 6497-1',
     title: 'Démontage du Mouvement',
