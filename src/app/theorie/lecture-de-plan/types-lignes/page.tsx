@@ -1,816 +1,835 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { ChevronLeft, CheckCircle, XCircle, Book } from 'lucide-react';
-import Link from 'next/link';
+import React, { useState } from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  HelpCircle,
+  Info,
+  Ruler,
+  Sparkles,
+  Layers,
+  Compass,
+  Eye,
+  BookOpen,
+  Award,
+  ChevronRight
+} from "lucide-react";
 
-interface LineTypeExplanation {
+interface LineDefinition {
   id: string;
+  code: string;
   name: string;
-  designation: string;
-  width: string;
-  usage: string;
-  example: string;
-  priority: number;
+  typeCategory: "continu" | "interrompu" | "mixte";
+  widthStandard: string;
+  widthPrecision: string;
+  ratio: string;
+  description: string;
+  applications: string[];
+  rules: string;
+  color: string;
 }
 
-const lineTypesData: LineTypeExplanation[] = [
+const LINE_DEFINITIONS: LineDefinition[] = [
   {
-    id: 'continu-fort',
-    name: 'Continu fort',
-    designation: 'Trait plein épais',
-    width: '0.5 - 0.7 mm',
-    usage: 'Contours et arêtes visibles sur une vue donnée',
-    example: 'Contour extérieur d\'une platine, bords visibles d\'un pont',
-    priority: 1
+    id: "01.2",
+    code: "01.2",
+    name: "Trait continu fort",
+    typeCategory: "continu",
+    widthStandard: "0.50 mm",
+    widthPrecision: "0.35 mm",
+    ratio: "2d (Épais)",
+    description: "Ligne fondamentale délimitant les contours extérieurs vus et les arêtes visibles des composants.",
+    applications: [
+      "Arêtes et contours visibles des platines, ponts, coqs et masses oscillantes",
+      "Contours extérieurs des vis, chatons et piliers",
+      "Limites des gorges et assiettes visibles"
+    ],
+    rules: "Doit toujours prédominer visuellement. Sa largeur est exactement le double (2d) de celle du trait fin.",
+    color: "#E2E8F0"
   },
   {
-    id: 'continu-fin',
-    name: 'Continu fin',
-    designation: 'Trait plein mince',
-    width: '0.25 - 0.35 mm',
-    usage: 'Lignes de cote, lignes d\'attache, hachures, arêtes fictives',
-    example: 'Cotation d\'un diamètre, hachures de coupe, lignes de repère',
-    priority: 3
+    id: "01.1",
+    code: "01.1",
+    name: "Trait continu fin",
+    typeCategory: "continu",
+    widthStandard: "0.25 mm",
+    widthPrecision: "0.18 mm",
+    ratio: "1d (Fin)",
+    description: "Ligne fine utilisée pour la géométrie d'aide, la cotation, les hachures et les éléments d'assemblage secondaires.",
+    applications: [
+      "Lignes de cote, lignes d'attache et lignes de rappel",
+      "Hachures de coupe des métaux (laiton, maillechort, acier)",
+      "Fonds de filets des vis et taraudages (norme NIHS 06-10)",
+      "Cercles primitifs d'engrenages et cercles de perçage"
+    ],
+    rules: "Ne doit jamais couper un chiffre de cote. Les hachures doivent être inclinées à 45° ou 135° par rapport à l'axe.",
+    color: "#94A3B8"
   },
   {
-    id: 'interrompu-fort',
-    name: 'Interrompu fort',
-    designation: 'Trait discontinu épais',
-    width: '0.5 - 0.7 mm',
-    usage: 'Contours et arêtes cachées (non visibles sur la vue)',
-    example: 'Alésage caché dans une platine, trou borgne non visible',
-    priority: 2
+    id: "02.1",
+    code: "02.1",
+    name: "Trait interrompu fin",
+    typeCategory: "interrompu",
+    widthStandard: "0.25 mm",
+    widthPrecision: "0.18 mm",
+    ratio: "1d (Fin)",
+    description: "Tirets réguliers révélant les volumes, perçages et cavités masqués sous la surface visible.",
+    applications: [
+      "Contours et arêtes cachés (noyures de rubis sous un pont)",
+      "Trous borgnes de goupilles de centrage et de pieds de cadran",
+      "Passages d'axes intérieurs et taraudages cachés"
+    ],
+    rules: "Règle suisse d'angle vif : les tirets doivent impérativement se toucher aux angles (jamais de vide à l'arête).",
+    color: "#F59E0B"
   },
   {
-    id: 'interrompu-fin',
-    name: 'Interrompu fin',
-    designation: 'Trait discontinu mince',
-    width: '0.25 - 0.35 mm',
-    usage: 'Contours cachés secondaires, constructions géométriques cachées',
-    example: 'Arêtes cachées non prioritaires, détails internes secondaires',
-    priority: 4
+    id: "04.1",
+    code: "04.1",
+    name: "Trait mixte fin (trait-point)",
+    typeCategory: "mixte",
+    widthStandard: "0.25 mm",
+    widthPrecision: "0.18 mm",
+    ratio: "1d (Fin)",
+    description: "Alternance stricte d'un trait long et d'un point définissant l'axe de symétrie ou de rotation.",
+    applications: [
+      "Axes de révolution des mobiles (balancier, roue d'échappement, barillet)",
+      "Plans de symétrie des ponts et découpes",
+      "Trajectoires géométriques des centres de pivots"
+    ],
+    rules: "Doit débuter et se terminer par un élément long (tiret), dépassant de 2 à 3 mm du contour de la pièce.",
+    color: "#60A5FA"
   },
   {
-    id: 'mixte-fin',
-    name: 'Mixte fin',
-    designation: 'Trait mixte mince (tiret-point)',
-    width: '0.25 - 0.35 mm',
-    usage: 'Axes de symétrie, axes de révolution, traces de plans de symétrie',
-    example: 'Axe d\'un balancier, plan de symétrie d\'une platine',
-    priority: 5
-  },
-  {
-    id: 'mixte-fort',
-    name: 'Mixte fort',
-    designation: 'Trait mixte épais (tiret-point)',
-    width: '0.5 - 0.7 mm',
-    usage: 'Surfaces faisant l\'objet de spécifications particulières (traitement de surface)',
-    example: 'Zone à polir, surface à rectifier, indication de traitement thermique',
-    priority: 6
-  },
-  {
-    id: 'mixte-deux-tirets',
-    name: 'Mixte fin à deux tirets',
-    designation: 'Trait mixte à double tiret',
-    width: '0.25 - 0.35 mm',
-    usage: 'Contours de pièces voisines, positions intermédiaires de pièces mobiles',
-    example: 'Position alternative d\'un levier, pièce adjacente en transparence',
-    priority: 7
-  },
-  {
-    id: 'main-levee',
-    name: 'Continu fin à main levée',
-    designation: 'Trait ondulé ou zigzag',
-    width: '0.25 - 0.35 mm',
-    usage: 'Limites de vues partielles, coupes interrompues, sections brisées',
-    example: 'Limite de vue partielle sur un mouvement, coupe locale',
-    priority: 8
-  }
-];
-
-interface QuizQuestion {
-  id: number;
-  question: string;
-  options: string[];
-  correctAnswer: number;
-  explanation: string;
-}
-
-const quizData: QuizQuestion[] = [
-  {
-    id: 1,
-    question: "Quelle norme ISO définit les types de lignes en dessin technique ?",
-    options: ["ISO 128-1", "ISO 128-2", "ISO 128-3", "ISO 1302"],
-    correctAnswer: 1,
-    explanation: "La norme ISO 128-2 établit les types de traits utilisés dans les dessins techniques, leurs désignations et configurations."
-  },
-  {
-    id: 2,
-    question: "Quel type de trait utilise-t-on pour les contours visibles ?",
-    options: ["Continu fin", "Interrompu fort", "Continu fort", "Mixte fin"],
-    correctAnswer: 2,
-    explanation: "Le trait continu fort (épais) est utilisé pour représenter les contours et arêtes visibles sur une vue donnée."
-  },
-  {
-    id: 3,
-    question: "Quel est le rapport minimal entre la largeur d'un trait fort et d'un trait fin ?",
-    options: ["1:1", "2:1", "3:1", "4:1"],
-    correctAnswer: 1,
-    explanation: "Selon ISO 128-2, le rapport entre la largeur d'un trait fort et d'un trait fin ne doit pas être inférieur à 2:1."
-  },
-  {
-    id: 4,
-    question: "Quel trait représente les arêtes cachées ?",
-    options: ["Continu fort", "Interrompu fort", "Mixte fin", "Continu fin"],
-    correctAnswer: 1,
-    explanation: "Le trait interrompu fort (discontinu épais) représente les contours et arêtes cachées, non visibles sur la vue."
-  },
-  {
-    id: 5,
-    question: "Quel trait utilise-t-on pour les axes de symétrie ?",
-    options: ["Continu fin", "Interrompu fin", "Mixte fin", "Mixte fort"],
-    correctAnswer: 2,
-    explanation: "Le trait mixte fin (tiret-point mince) est utilisé pour les axes de symétrie, axes de révolution et plans de coupe."
-  },
-  {
-    id: 6,
-    question: "En cas de superposition, quel trait a la priorité absolue ?",
-    options: ["Trait mixte fin", "Trait interrompu fort", "Trait continu fort", "Trait continu fin"],
-    correctAnswer: 2,
-    explanation: "Le trait continu fort a la priorité absolue lors de superpositions : 1. Continu fort, 2. Interrompu fort, 3. Mixte fin."
-  },
-  {
-    id: 7,
-    question: "Quel trait indique une surface nécessitant un traitement particulier ?",
-    options: ["Continu fort", "Mixte fort", "Interrompu fort", "Continu fin"],
-    correctAnswer: 1,
-    explanation: "Le trait mixte fort indique les surfaces faisant l'objet de spécifications particulières (traitement de surface, polissage, etc.)."
-  },
-  {
-    id: 8,
-    question: "Quelle largeur typique pour un trait fort à l'encre ?",
-    options: ["0.18 mm", "0.35 mm", "0.5 - 0.7 mm", "1.4 mm"],
-    correctAnswer: 2,
-    explanation: "La largeur typique d'un trait fort à l'encre est de 0.5 à 0.7 mm selon la taille et le type de dessin."
-  },
-  {
-    id: 9,
-    question: "Quel trait représente les pièces voisines ou positions alternatives ?",
-    options: ["Mixte fin", "Mixte fin à deux tirets", "Interrompu fin", "Continu fin"],
-    correctAnswer: 1,
-    explanation: "Le trait mixte fin à deux tirets représente les contours de pièces voisines ou les positions intermédiaires de pièces mobiles."
-  },
-  {
-    id: 10,
-    question: "Quel trait utilise-t-on pour les lignes de cote ?",
-    options: ["Continu fort", "Continu fin", "Interrompu fin", "Mixte fin"],
-    correctAnswer: 1,
-    explanation: "Le trait continu fin est utilisé pour les lignes de cote, lignes d'attache, hachures et lignes de repère."
-  },
-  {
-    id: 11,
-    question: "Combien de largeurs de trait existe-t-il selon ISO 128-2 ?",
-    options: ["Une seule", "Deux (fort et fin)", "Trois", "Quatre"],
-    correctAnswer: 1,
-    explanation: "Il existe deux largeurs de trait : fort (épais) et fin (mince), avec un rapport minimal de 2:1."
-  },
-  {
-    id: 12,
-    question: "Quel trait limite une vue partielle ou une coupe interrompue ?",
-    options: ["Continu fort", "Interrompu fin", "Continu fin à main levée ou zigzag", "Mixte fin"],
-    correctAnswer: 2,
-    explanation: "Le trait continu fin à main levée (ondulé) ou en zigzag indique les limites de vues partielles ou de coupes interrompues."
-  },
-  {
-    id: 13,
-    question: "Les traits forts peuvent-ils se croiser entre eux ?",
-    options: ["Oui, toujours", "Non, jamais", "Seulement à 90°", "Seulement sur les axes"],
-    correctAnswer: 1,
-    explanation: "Règle importante : les traits forts ne se croisent JAMAIS entre eux. En cas de superposition, on applique l'ordre de priorité."
-  },
-  {
-    id: 14,
-    question: "Quelle est la longueur typique d'un tiret court selon ISO 128-2 ?",
-    options: ["1.5d", "3d", "6d", "12d"],
-    correctAnswer: 1,
-    explanation: "Selon ISO 128-2, un tiret court mesure environ 3d (où d = largeur du trait), un tiret long mesure 12d."
-  },
-  {
-    id: 15,
-    question: "Peut-on omettre les traits cachés sur un plan horloger ?",
-    options: ["Non, jamais", "Oui, s'ils ne sont pas nécessaires à la définition", "Seulement en vue de face", "Seulement pour les petites pièces"],
-    correctAnswer: 1,
-    explanation: "Oui, lorsque les parties cachées ne sont pas nécessaires à la définition, elles peuvent être omises pour alléger et faciliter la lecture du plan."
+    id: "04.2",
+    code: "04.2",
+    name: "Trait mixte avec extrémités fortes",
+    typeCategory: "mixte",
+    widthStandard: "0.50 / 0.25 mm",
+    widthPrecision: "0.35 / 0.18 mm",
+    ratio: "2d aux bouts / 1d au centre",
+    description: "Tracé indiquant le parcours exact d'un plan sécant de coupe, avec renforts aux changements de plan.",
+    applications: [
+      "Indication des plans de coupe A-A traversant le rouage ou l'échappement",
+      "Décrochements à angle droit des coupes brisées à plans parallèles"
+    ],
+    rules: "Les segments forts aux extrémités portent les flèches perpendiculaires du sens de regard et les lettres majuscules d'identification.",
+    color: "#F43F5E"
   }
 ];
 
 export default function TypesLignesPage() {
-  const [selectedLine, setSelectedLine] = useState<string | null>(null);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedLineId, setSelectedLineId] = useState<string>("01.2");
+  const [filterCategory, setFilterCategory] = useState<"all" | "continu" | "interrompu" | "mixte">("all");
+  const [activeQuizIndex, setActiveQuizIndex] = useState<number>(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [showExplanation, setShowExplanation] = useState(false);
-  const [score, setScore] = useState(0);
-  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [isAnswerSubmitted, setIsAnswerSubmitted] = useState<boolean>(false);
 
-  const handleLineClick = (lineId: string) => {
-    setSelectedLine(lineId);
-  };
+  const selectedLine = LINE_DEFINITIONS.find((l) => l.id === selectedLineId) || LINE_DEFINITIONS[0];
 
-  const handleAnswerSelect = (answerIndex: number) => {
-    if (selectedAnswer === null) {
-      setSelectedAnswer(answerIndex);
-      setShowExplanation(true);
-      if (answerIndex === quizData[currentQuestion].correctAnswer) {
-        setScore(score + 1);
-      }
+  const filteredLines = LINE_DEFINITIONS.filter((l) => {
+    if (filterCategory === "all") return true;
+    return l.typeCategory === filterCategory;
+  });
+
+  const quizQuestions = [
+    {
+      question: "En dessin horloger haute précision (échelle 5:1 ou 10:1), quel groupe de traits est préconisé selon la norme ISO 128-2 ?",
+      options: [
+        "0.70 mm (fort) et 0.35 mm (fin)",
+        "0.35 mm (fort) et 0.18 mm (fin)",
+        "0.50 mm (fort) et 0.10 mm (fin)",
+        "0.25 mm sans distinction de trait"
+      ],
+      correctIndex: 1,
+      explanation: "Pour éviter l'écrasement visuel des micro-détails (fentes de vis, gorges d'huilage), le groupe 0.35 / 0.18 mm est le standard suisse de haute horlogerie."
+    },
+    {
+      question: "Quelle règle impérative régit l'intersection d'un trait interrompu (arête cachée) avec un contour vu ?",
+      options: [
+        "Un espace blanc obligatoire de 1 mm doit séparer les deux traits.",
+        "Le tiret doit toucher exactement le contour ou l'angle sans laisser d'espace vide.",
+        "On remplace le trait interrompu par une croix fine.",
+        "Le trait interrompu doit dépasser de 2 mm le contour vu."
+      ],
+      correctIndex: 1,
+      explanation: "C'est la règle d'angle vif de l'école horlogère : les tirets doivent impérativement se toucher à la rencontre pour lever toute ambiguïté géométrique."
+    },
+    {
+      question: "Quelle ligne est normalisée pour représenter le fond de filet d'une vis micrométrique (NIHS 06-10) ?",
+      options: [
+        "Trait continu fort (01.2)",
+        "Trait mixte fin (04.1)",
+        "Trait continu fin (01.1)",
+        "Trait interrompu fort"
+      ],
+      correctIndex: 2,
+      explanation: "Le sommet du filet de la vis est en trait fort (01.2), tandis que le fond de filet est tracé en trait continu fin (01.1)."
     }
+  ];
+
+  const handleSelectAnswer = (index: number) => {
+    if (isAnswerSubmitted) return;
+    setSelectedAnswer(index);
   };
 
-  const handleNextQuestion = () => {
-    if (currentQuestion < quizData.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-      setSelectedAnswer(null);
-      setShowExplanation(false);
-    } else {
-      setQuizCompleted(true);
-    }
+  const handleValidateQuiz = () => {
+    setIsAnswerSubmitted(true);
   };
 
-  const resetQuiz = () => {
-    setCurrentQuestion(0);
+  const handleNextQuiz = () => {
     setSelectedAnswer(null);
-    setShowExplanation(false);
-    setScore(0);
-    setQuizCompleted(false);
+    setIsAnswerSubmitted(false);
+    setActiveQuizIndex((prev) => (prev + 1) % quizQuestions.length);
   };
-
-  const selectedLineData = lineTypesData.find(l => l.id === selectedLine);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
-      {/* Header */}
-      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link href="/theorie/lecture-de-plan" className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium">
-            <ChevronLeft className="w-5 h-5 mr-1" />
-            Retour
+    <div className="min-h-screen bg-[#0E1015] text-[#E0E2E6] selection:bg-[#B08D57]/30 selection:text-[#D4B483] pb-24">
+      {/* 1. BREADCRUMB & HEADER BAR */}
+      <div className="border-b border-neutral-800 bg-[#12141A]/90 backdrop-blur-md sticky top-0 z-30">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+          <nav className="flex items-center gap-2 text-xs text-neutral-400">
+            <Link href="/" className="hover:text-neutral-200 transition-colors">
+              Accueil
+            </Link>
+            <span className="opacity-40">/</span>
+            <Link href="/theorie" className="hover:text-neutral-200 transition-colors">
+              Théorie
+            </Link>
+            <span className="opacity-40">/</span>
+            <Link href="/theorie/lecture-de-plan" className="hover:text-neutral-200 transition-colors">
+              Lecture de Plan
+            </Link>
+            <span className="opacity-40">/</span>
+            <span className="text-[#D4B483] font-medium">Types de Lignes (ISO 128-2)</span>
+          </nav>
+
+          <Link
+            href="/theorie/lecture-de-plan"
+            className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-neutral-400 hover:text-[#D4B483] transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Sommaire Plan</span>
           </Link>
         </div>
-      </header>
+      </div>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Title Section */}
-        <div className="text-center mb-12">
-          <div className="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm font-medium mb-4">
-            Les normes
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 pt-10 space-y-12">
+        {/* 2. HERO INTRODUCING ISO 128-2 STANDARD */}
+        <div className="border-b border-neutral-800 pb-10 space-y-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-[#B08D57]/15 text-[#D4B483] border border-[#B08D57]/30 flex items-center gap-1.5">
+              <Ruler className="w-3.5 h-3.5 text-[#D4B483]" />
+              Norme ISO 128-2:2020
+            </span>
+            <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-neutral-800 text-neutral-300 border border-neutral-700">
+              Référentiel Horloger Suisse CPIH / SEFRI
+            </span>
+            <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-sky-950/40 text-sky-300 border border-sky-800/50">
+              Microtechnique de Précision
+            </span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">
-            Types de Lignes (ISO 128-2)
+
+          <h1 className="text-3xl sm:text-5xl font-serif font-bold text-neutral-100 tracking-tight">
+            Types de Lignes &amp; Épaisseurs Normalisées
           </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
-            Comprendre et maîtriser les différents types de traits utilisés en dessin technique
+
+          <p className="text-base sm:text-lg text-neutral-300 max-w-4xl leading-relaxed">
+            En dessin technique d&apos;horlogerie, la lisibilité d&apos;un composant miniature dépend d&apos;une hiérarchie graphique rigoureuse.
+            Chaque trait obéit à un rapport géométrique strict de{" "}
+            <span className="text-[#D4B483] font-mono font-bold">1 : 2</span> entre le trait fin ($d$) et le trait fort ($2d$).
+            Ce contraste permet à l&apos;opérateur de distinguer instantanément la matière réelle, les arêtes cachées et les axes de pivotement.
           </p>
+
+          {/* Quick metric highlights */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+            <div className="p-4 rounded-xl border border-neutral-800 bg-[#16181F] space-y-1">
+              <div className="text-xs font-mono text-neutral-400 uppercase tracking-wider">Rapport Normatif</div>
+              <div className="text-2xl font-mono font-bold text-[#D4B483]">1 : 2 (d / 2d)</div>
+              <div className="text-xs text-neutral-400">Deux largeurs associées par dessin</div>
+            </div>
+
+            <div className="p-4 rounded-xl border border-neutral-800 bg-[#16181F] space-y-1">
+              <div className="text-xs font-mono text-neutral-400 uppercase tracking-wider">Groupe Horlogerie Fine</div>
+              <div className="text-2xl font-mono font-bold text-sky-400">0.35 / 0.18 mm</div>
+              <div className="text-xs text-neutral-400">Échappements, rubis, roues miniatures</div>
+            </div>
+
+            <div className="p-4 rounded-xl border border-neutral-800 bg-[#16181F] space-y-1">
+              <div className="text-xs font-mono text-neutral-400 uppercase tracking-wider">Groupe Standard</div>
+              <div className="text-2xl font-mono font-bold text-emerald-400">0.50 / 0.25 mm</div>
+              <div className="text-xs text-neutral-400">Platines, ponts d&apos;ensemble et boîtes</div>
+            </div>
+          </div>
         </div>
 
-        {/* Interactive Schema Section */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Schéma Interactif</h2>
-          <p className="text-slate-600 dark:text-slate-400 mb-8">Cliquez sur chaque type de ligne pour afficher son explication et utilisation.</p>
-          
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 border border-slate-200 dark:border-slate-700">
-            <svg viewBox="0 0 800 700" className="w-full h-auto">
-              <text x="400" y="30" textAnchor="middle" fontSize="20" fontWeight="bold" fill="#1e40af" className="dark:fill-blue-400">Types de Lignes ISO 128-2</text>
-              
-              {/* Continu fort */}
-              <g onClick={() => handleLineClick('continu-fort')} className="cursor-pointer hover:opacity-80 transition-opacity">
-                <rect x="50" y="60" width="700" height="60" fill="#3b82f6" fillOpacity="0.05" stroke="#3b82f6" strokeWidth="1" rx="4"/>
-                <line x1="200" y1="90" x2="600" y2="90" stroke="#1e40af" strokeWidth="4"/>
-                <text x="100" y="95" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Continu fort</text>
-              </g>
+        {/* 3. INTERACTIVE CAD BLUEPRINT VIEWER (SVG) */}
+        <section className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-neutral-100 flex items-center gap-2">
+                <Compass className="w-5 h-5 text-[#D4B483]" />
+                Plan CAD Interactif : Coupe Partielle d&apos;un Pont &amp; Logement de Rubis
+              </h2>
+              <p className="text-xs text-neutral-400 mt-1">
+                Cliquez sur les types de lignes ci-dessous ou survolez le dessin pour inspecter leur application en microtechnique.
+              </p>
+            </div>
 
-              {/* Continu fin */}
-              <g onClick={() => handleLineClick('continu-fin')} className="cursor-pointer hover:opacity-80 transition-opacity">
-                <rect x="50" y="130" width="700" height="60" fill="#10b981" fillOpacity="0.05" stroke="#10b981" strokeWidth="1" rx="4"/>
-                <line x1="200" y1="160" x2="600" y2="160" stroke="#047857" strokeWidth="1.5"/>
-                <text x="100" y="165" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Continu fin</text>
-              </g>
-
-              {/* Interrompu fort */}
-              <g onClick={() => handleLineClick('interrompu-fort')} className="cursor-pointer hover:opacity-80 transition-opacity">
-                <rect x="50" y="200" width="700" height="60" fill="#f59e0b" fillOpacity="0.05" stroke="#f59e0b" strokeWidth="1" rx="4"/>
-                <line x1="200" y1="230" x2="600" y2="230" stroke="#d97706" strokeWidth="4" strokeDasharray="20,8"/>
-                <text x="100" y="235" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Interrompu fort</text>
-              </g>
-
-              {/* Interrompu fin */}
-              <g onClick={() => handleLineClick('interrompu-fin')} className="cursor-pointer hover:opacity-80 transition-opacity">
-                <rect x="50" y="270" width="700" height="60" fill="#8b5cf6" fillOpacity="0.05" stroke="#8b5cf6" strokeWidth="1" rx="4"/>
-                <line x1="200" y1="300" x2="600" y2="300" stroke="#6d28d9" strokeWidth="1.5" strokeDasharray="15,6"/>
-                <text x="100" y="305" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Interrompu fin</text>
-              </g>
-
-              {/* Mixte fin */}
-              <g onClick={() => handleLineClick('mixte-fin')} className="cursor-pointer hover:opacity-80 transition-opacity">
-                <rect x="50" y="340" width="700" height="60" fill="#ec4899" fillOpacity="0.05" stroke="#ec4899" strokeWidth="1" rx="4"/>
-                <line x1="200" y1="370" x2="600" y2="370" stroke="#be185d" strokeWidth="1.5" strokeDasharray="30,5,5,5"/>
-                <text x="100" y="375" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Mixte fin</text>
-              </g>
-
-              {/* Mixte fort */}
-              <g onClick={() => handleLineClick('mixte-fort')} className="cursor-pointer hover:opacity-80 transition-opacity">
-                <rect x="50" y="410" width="700" height="60" fill="#06b6d4" fillOpacity="0.05" stroke="#06b6d4" strokeWidth="1" rx="4"/>
-                <line x1="200" y1="440" x2="600" y2="440" stroke="#0891b2" strokeWidth="4" strokeDasharray="30,5,5,5"/>
-                <text x="100" y="445" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Mixte fort</text>
-              </g>
-
-              {/* Mixte fin à deux tirets */}
-              <g onClick={() => handleLineClick('mixte-deux-tirets')} className="cursor-pointer hover:opacity-80 transition-opacity">
-                <rect x="50" y="480" width="700" height="60" fill="#ef4444" fillOpacity="0.05" stroke="#ef4444" strokeWidth="1" rx="4"/>
-                <line x1="200" y1="510" x2="600" y2="510" stroke="#dc2626" strokeWidth="1.5" strokeDasharray="30,5,8,5,8,5"/>
-                <text x="100" y="515" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Mixte 2 tirets</text>
-              </g>
-
-              {/* Main levée */}
-              <g onClick={() => handleLineClick('main-levee')} className="cursor-pointer hover:opacity-80 transition-opacity">
-                <rect x="50" y="550" width="700" height="60" fill="#a855f7" fillOpacity="0.05" stroke="#a855f7" strokeWidth="1" rx="4"/>
-                <path d="M 200 580 Q 250 575 300 580 T 400 580 T 500 580 T 600 580" stroke="#7c3aed" strokeWidth="1.5" fill="none"/>
-                <text x="100" y="585" fontSize="14" fontWeight="bold" fill="#1e293b" className="dark:fill-slate-100">Main levée</text>
-              </g>
-
-              {/* Légende */}
-              <text x="400" y="650" textAnchor="middle" fontSize="12" fill="#64748b" className="dark:fill-slate-400">Cliquez sur une ligne pour voir les détails</text>
-            </svg>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono text-neutral-400">Ligne active :</span>
+              <span className="px-2.5 py-1 rounded bg-[#B08D57]/20 border border-[#B08D57]/40 text-[#D4B483] font-mono text-xs font-bold">
+                {selectedLine.code} - {selectedLine.name}
+              </span>
+            </div>
           </div>
 
-          {/* Explanation Panel */}
-          {selectedLineData && (
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl p-6 border-l-4 border-blue-600 dark:border-blue-400">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{selectedLineData.name}</h3>
-              <p className="text-sm text-blue-800 dark:text-blue-400 font-semibold mb-3">Priorité de tracé : {selectedLineData.priority}</p>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Désignation :</p>
-                  <p className="text-slate-700 dark:text-slate-300 mb-3">{selectedLineData.designation}</p>
-                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Largeur typique :</p>
-                  <p className="text-slate-700 dark:text-slate-300">{selectedLineData.width}</p>
+          <div className="p-5 sm:p-7 rounded-2xl border border-neutral-800 bg-[#15171D] space-y-6">
+            {/* SVG Canvas */}
+            <div className="w-full overflow-x-auto flex justify-center py-2 bg-[#0B0D11] rounded-xl border border-neutral-800/80 p-4 shadow-inner">
+              <svg viewBox="0 0 820 260" className="w-full max-w-[800px] h-auto select-none font-mono">
+                {/* Patterns */}
+                <defs>
+                  <pattern id="grid-pattern" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1D2028" strokeWidth="0.6" />
+                  </pattern>
+                  <pattern id="hatch-pattern" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                    <line
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="8"
+                      stroke={selectedLineId === "01.1" ? "#60A5FA" : "#64748B"}
+                      strokeWidth={selectedLineId === "01.1" ? "1.5" : "0.9"}
+                    />
+                  </pattern>
+                </defs>
+
+                {/* Grid Background */}
+                <rect width="820" height="260" fill="url(#grid-pattern)" rx="8" />
+
+                {/* Title inside CAD canvas */}
+                <text x="30" y="32" fill="#71717A" fontSize="10" letterSpacing="1">
+                  ÉCHELLE 10:1 · MATIÈRE : LAITON HORLOGER CuZn39Pb2 · TOLÉRANCE GÉNÉRALE ISO 2768-m
+                </text>
+
+                {/* --- 1. AXIS OF SYMMETRY / REVOLUTION (Type 04.1 Trait mixte fin) --- */}
+                <g
+                  className="cursor-pointer transition-opacity"
+                  onClick={() => setSelectedLineId("04.1")}
+                  opacity={selectedLineId === "04.1" ? 1 : 0.8}
+                >
+                  <line
+                    x1="60"
+                    y1="130"
+                    x2="760"
+                    y2="130"
+                    stroke={selectedLineId === "04.1" ? "#38BDF8" : "#60A5FA"}
+                    strokeWidth={selectedLineId === "04.1" ? "2.5" : "1.2"}
+                    strokeDasharray="18 4 3 4"
+                  />
+                  <text x="765" y="133" fill="#60A5FA" fontSize="10" fontWeight="bold">
+                    AXE 04.1
+                  </text>
+                </g>
+
+                {/* --- 2. HATCHED CUT BODY (Trait fin 01.1 & Trait fort 01.2) --- */}
+                {/* Upper body */}
+                <polygon
+                  points="140,50 500,50 500,90 640,90 640,130 140,130"
+                  fill="url(#hatch-pattern)"
+                  stroke={selectedLineId === "01.2" ? "#38BDF8" : "#E2E8F0"}
+                  strokeWidth={selectedLineId === "01.2" ? "3.5" : "2.4"}
+                  className="cursor-pointer"
+                  onClick={() => setSelectedLineId("01.2")}
+                />
+                {/* Lower body symmetrical */}
+                <polygon
+                  points="140,210 500,210 500,170 640,170 640,130 140,130"
+                  fill="url(#hatch-pattern)"
+                  stroke={selectedLineId === "01.2" ? "#38BDF8" : "#E2E8F0"}
+                  strokeWidth={selectedLineId === "01.2" ? "3.5" : "2.4"}
+                  className="cursor-pointer"
+                  onClick={() => setSelectedLineId("01.2")}
+                />
+
+                {/* --- 3. RUBY JEWEL BEARING HOUSING (Noyure & Chaton) --- */}
+                <rect
+                  x="280"
+                  y="90"
+                  width="110"
+                  height="80"
+                  fill="#881337"
+                  fillOpacity="0.4"
+                  stroke={selectedLineId === "01.2" ? "#38BDF8" : "#F43F5E"}
+                  strokeWidth="1.8"
+                />
+                <circle cx="335" cy="130" r="14" fill="#0B0D11" stroke="#FDE047" strokeWidth="1.2" />
+                <circle cx="335" cy="130" r="3" fill="#38BDF8" />
+
+                {/* --- 4. HIDDEN CONTOURS (Type 02.1 Trait interrompu fin) --- */}
+                {/* Blind hole under bridge */}
+                <g
+                  className="cursor-pointer"
+                  onClick={() => setSelectedLineId("02.1")}
+                >
+                  <line
+                    x1="220"
+                    y1="50"
+                    x2="220"
+                    y2="105"
+                    stroke={selectedLineId === "02.1" ? "#F59E0B" : "#FBBF24"}
+                    strokeWidth={selectedLineId === "02.1" ? "2.5" : "1.5"}
+                    strokeDasharray="6 3"
+                  />
+                  <line
+                    x1="250"
+                    y1="50"
+                    x2="250"
+                    y2="105"
+                    stroke={selectedLineId === "02.1" ? "#F59E0B" : "#FBBF24"}
+                    strokeWidth={selectedLineId === "02.1" ? "2.5" : "1.5"}
+                    strokeDasharray="6 3"
+                  />
+                  <line
+                    x1="220"
+                    y1="105"
+                    x2="250"
+                    y2="105"
+                    stroke={selectedLineId === "02.1" ? "#F59E0B" : "#FBBF24"}
+                    strokeWidth={selectedLineId === "02.1" ? "2.5" : "1.5"}
+                    strokeDasharray="6 3"
+                  />
+                  <text x="180" y="85" fill="#FBBF24" fontSize="9" fontWeight="bold">
+                    02.1 Caché
+                  </text>
+                </g>
+
+                {/* --- 5. CUTTING PLANE TRACE (Type 04.2 Trait mixte bouts forts) --- */}
+                <g
+                  className="cursor-pointer"
+                  onClick={() => setSelectedLineId("04.2")}
+                >
+                  {/* Left thick end */}
+                  <line
+                    x1="100"
+                    y1="130"
+                    x2="135"
+                    y2="130"
+                    stroke={selectedLineId === "04.2" ? "#38BDF8" : "#F43F5E"}
+                    strokeWidth="4"
+                  />
+                  {/* Right thick end */}
+                  <line
+                    x1="645"
+                    y1="130"
+                    x2="680"
+                    y2="130"
+                    stroke={selectedLineId === "04.2" ? "#38BDF8" : "#F43F5E"}
+                    strokeWidth="4"
+                  />
+                  {/* Arrow indicating view direction */}
+                  <polygon points="115,120 115,108 111,114" fill="#F43F5E" />
+                  <line x1="115" y1="120" x2="115" y2="105" stroke="#F43F5E" strokeWidth="1.5" />
+                  <text x="110" y="98" fill="#F43F5E" fontSize="12" fontWeight="bold">
+                    A
+                  </text>
+
+                  <polygon points="665,120 665,108 661,114" fill="#F43F5E" />
+                  <line x1="665" y1="120" x2="665" y2="105" stroke="#F43F5E" strokeWidth="1.5" />
+                  <text x="660" y="98" fill="#F43F5E" fontSize="12" fontWeight="bold">
+                    A
+                  </text>
+                </g>
+
+                {/* --- 6. DIMENSIONING LINES (Type 01.1 Trait continu fin) --- */}
+                <g
+                  className="cursor-pointer"
+                  onClick={() => setSelectedLineId("01.1")}
+                >
+                  {/* Leader extension lines */}
+                  <line x1="140" y1="45" x2="140" y2="20" stroke="#94A3B8" strokeWidth="0.8" />
+                  <line x1="500" y1="45" x2="500" y2="20" stroke="#94A3B8" strokeWidth="0.8" />
+                  {/* Dimension line with arrows */}
+                  <line x1="145" y1="26" x2="495" y2="26" stroke="#94A3B8" strokeWidth="0.8" />
+                  <polygon points="140,26 148,24 148,28" fill="#94A3B8" />
+                  <polygon points="500,26 492,24 492,28" fill="#94A3B8" />
+                  {/* Dimension label */}
+                  <rect x="290" y="18" width="60" height="15" fill="#15171D" />
+                  <text x="320" y="29" fill="#D4B483" fontSize="10" fontWeight="bold" textAnchor="middle">
+                    14.50 ±0.01
+                  </text>
+                </g>
+              </svg>
+            </div>
+
+            {/* Quick selector buttons below the blueprint */}
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-2">
+              {LINE_DEFINITIONS.map((line) => {
+                const isSelected = line.id === selectedLineId;
+                return (
+                  <button
+                    key={line.id}
+                    onClick={() => setSelectedLineId(line.id)}
+                    className={`p-2.5 rounded-xl border text-left transition-all ${
+                      isSelected
+                        ? "bg-[#B08D57]/20 border-[#B08D57] text-white shadow-sm"
+                        : "bg-[#181B22] border-neutral-800 text-neutral-400 hover:border-neutral-700 hover:text-neutral-200"
+                    }`}
+                  >
+                    <div className="font-mono text-xs font-bold text-[#D4B483]">{line.code}</div>
+                    <div className="text-xs font-medium truncate mt-0.5">{line.name}</div>
+                    <div className="text-[11px] font-mono text-neutral-400 mt-1">{line.ratio}</div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Focus Card of the Selected Line */}
+            <div className="p-4 sm:p-5 rounded-xl border border-neutral-800 bg-[#1A1D24] space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-800 pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full" style={{ backgroundColor: selectedLine.color }} />
+                  <h3 className="font-serif font-bold text-base text-neutral-100">
+                    {selectedLine.code} · {selectedLine.name}
+                  </h3>
                 </div>
-                <div>
-                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Usage :</p>
-                  <p className="text-slate-700 dark:text-slate-300 mb-3">{selectedLineData.usage}</p>
-                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Exemple horlogerie :</p>
-                  <p className="text-slate-700 dark:text-slate-300">{selectedLineData.example}</p>
+                <div className="flex items-center gap-3 text-xs font-mono">
+                  <span className="text-neutral-400">
+                    Standard : <strong className="text-neutral-200">{selectedLine.widthStandard}</strong>
+                  </span>
+                  <span className="text-neutral-400">
+                    Haute Précision : <strong className="text-[#D4B483]">{selectedLine.widthPrecision}</strong>
+                  </span>
+                </div>
+              </div>
+
+              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
+                {selectedLine.description}
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+                <div className="p-3 rounded-lg bg-[#14161C] border border-neutral-800 space-y-1.5">
+                  <span className="text-xs font-mono font-semibold text-[#D4B483] uppercase flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    Applications en Atelier Horloger :
+                  </span>
+                  <ul className="text-xs text-neutral-400 space-y-1 list-disc pl-4">
+                    {selectedLine.applications.map((app, idx) => (
+                      <li key={idx}>{app}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="p-3 rounded-lg bg-[#14161C] border border-neutral-800 space-y-1.5">
+                  <span className="text-xs font-mono font-semibold text-rose-400 uppercase flex items-center gap-1.5">
+                    <Info className="w-3.5 h-3.5" />
+                    Règle d&apos;Exécution Critique :
+                  </span>
+                  <p className="text-xs text-neutral-300 leading-relaxed">
+                    {selectedLine.rules}
+                  </p>
                 </div>
               </div>
             </div>
-          )}
-        </section>
-
-        {/* Mémo Technique */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Mémo Technique : Erreurs & Bonnes Pratiques</h2>
-          
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Erreurs */}
-            <div className="bg-red-50 dark:bg-red-950/30 rounded-xl p-6 border border-red-200 dark:border-red-800">
-              <h3 className="text-xl font-bold text-red-900 dark:text-red-300 mb-4 flex items-center">
-                <XCircle className="w-6 h-6 mr-2" />
-                Erreurs fréquentes
-              </h3>
-              <ul className="space-y-3 text-slate-700 dark:text-slate-300">
-                <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
-                  <span>Utiliser un trait continu fin pour les contours visibles.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
-                  <span>Confondre trait interrompu (caché) et trait mixte (axe).</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
-                  <span>Ne pas respecter le rapport 2:1 entre traits fort et fin.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
-                  <span>Laisser se croiser deux traits forts.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
-                  <span>Dessiner tous les traits cachés, même non nécessaires.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2">•</span>
-                  <span>Oublier l'ordre de priorité lors de superpositions.</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Bonnes pratiques */}
-            <div className="bg-green-50 dark:bg-green-950/30 rounded-xl p-6 border border-green-200 dark:border-green-800">
-              <h3 className="text-xl font-bold text-green-900 dark:text-green-300 mb-4 flex items-center">
-                <CheckCircle className="w-6 h-6 mr-2" />
-                Bonnes pratiques
-              </h3>
-              <ul className="space-y-3 text-slate-700 dark:text-slate-300">
-                <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                  <span>Toujours utiliser trait continu fort pour contours visibles.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                  <span>Respecter l'ordre de priorité : 1. Fort, 2. Interrompu, 3. Mixte.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                  <span>Maintenir un rapport constant 2:1 (fort/fin) sur tout le plan.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                  <span>Omettre les traits cachés non essentiels pour clarifier le dessin.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                  <span>Utiliser traits mixtes fins pour tous les axes de symétrie.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                  <span>Vérifier la cohérence des types de traits sur toutes les vues.</span>
-                </li>
-              </ul>
-            </div>
           </div>
         </section>
 
-        {/* Quiz Section */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Quiz : Teste tes connaissances</h2>
-          
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-200 dark:border-slate-700">
-            {!quizCompleted ? (
-              <>
-                <div className="mb-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                      Question {currentQuestion + 1} sur {quizData.length}
-                    </span>
-                    <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                      Score: {score}/{quizData.length}
-                    </span>
-                  </div>
-                  <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-                    <div 
-                      className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${((currentQuestion + 1) / quizData.length) * 100}%` }}
-                    ></div>
-                  </div>
-                </div>
+        {/* 4. COMPLETE NORMATIVE TABLE (SWISS ISO 128-2) */}
+        <section className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-neutral-100 flex items-center gap-2">
+                <Layers className="w-5 h-5 text-[#D4B483]" />
+                Tableau Normalisé des Lignes Techniques (ISO 128-2)
+              </h2>
+              <p className="text-xs text-neutral-400 mt-1">
+                Synthèse officielle pour les examens théoriques de l&apos;apprentissage AFP / CFC horloger en Suisse.
+              </p>
+            </div>
 
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
-                  {quizData[currentQuestion].question}
-                </h3>
+            {/* Filter Pills */}
+            <div className="flex items-center gap-1 bg-[#15171D] p-1 rounded-xl border border-neutral-800 text-xs">
+              {(
+                [
+                  { id: "all", label: "Tous" },
+                  { id: "continu", label: "Continus" },
+                  { id: "interrompu", label: "Interrompus" },
+                  { id: "mixte", label: "Mixtes" }
+                ] as const
+              ).map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setFilterCategory(tab.id)}
+                  className={`px-3 py-1 rounded-lg font-mono transition-colors ${
+                    filterCategory === tab.id
+                      ? "bg-[#B08D57] text-neutral-950 font-bold"
+                      : "text-neutral-400 hover:text-neutral-200"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-                <div className="space-y-3 mb-6">
-                  {quizData[currentQuestion].options.map((option, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleAnswerSelect(index)}
-                      disabled={selectedAnswer !== null}
-                      className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
-                        selectedAnswer === null
-                          ? 'border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/30'
-                          : index === quizData[currentQuestion].correctAnswer
-                          ? 'border-green-500 dark:border-green-600 bg-green-50 dark:bg-green-950/30'
-                          : selectedAnswer === index
-                          ? 'border-red-500 dark:border-red-600 bg-red-50 dark:bg-red-950/30'
-                          : 'border-slate-200 dark:border-slate-700 opacity-50'
-                      }`}
-                    >
-                      <div className="flex items-center">
-                        <span className="font-semibold mr-3 text-slate-700 dark:text-slate-300">
-                          {String.fromCharCode(65 + index)}.
-                        </span>
-                        <span className="text-slate-800 dark:text-slate-200">{option}</span>
-                        {selectedAnswer !== null && index === quizData[currentQuestion].correctAnswer && (
-                          <CheckCircle className="w-5 h-5 ml-auto text-green-600 dark:text-green-400" />
+          <div className="overflow-x-auto rounded-2xl border border-neutral-800 bg-[#15171D] shadow-sm">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="border-b border-neutral-800 bg-[#191C23] font-mono text-neutral-400">
+                  <th className="p-3.5">Code ISO</th>
+                  <th className="p-3.5">Type de Trait</th>
+                  <th className="p-3.5">Rendu Graphique</th>
+                  <th className="p-3.5 text-center">Épaisseur Standard</th>
+                  <th className="p-3.5 text-center">Haute Précision</th>
+                  <th className="p-3.5">Exemples d&apos;Application Horlogère</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-neutral-800">
+                {filteredLines.map((line) => (
+                  <tr
+                    key={line.id}
+                    className={`transition-colors hover:bg-neutral-800/40 cursor-pointer ${
+                      selectedLineId === line.id ? "bg-[#B08D57]/10" : ""
+                    }`}
+                    onClick={() => setSelectedLineId(line.id)}
+                  >
+                    <td className="p-3.5 font-mono font-bold text-[#D4B483]">{line.code}</td>
+                    <td className="p-3.5 font-medium text-neutral-200">
+                      <div>{line.name}</div>
+                      <div className="text-[10px] font-mono text-neutral-500 mt-0.5">{line.ratio}</div>
+                    </td>
+                    <td className="p-3.5">
+                      <div className="w-32 py-1">
+                        {line.id === "01.2" && <div className="w-full h-1 bg-neutral-200 rounded-sm" />}
+                        {line.id === "01.1" && <div className="w-full h-0.5 bg-neutral-400" />}
+                        {line.id === "02.1" && (
+                          <div className="w-full border-b-2 border-dashed border-amber-400" />
                         )}
-                        {selectedAnswer === index && index !== quizData[currentQuestion].correctAnswer && (
-                          <XCircle className="w-5 h-5 ml-auto text-red-600 dark:text-red-400" />
+                        {line.id === "04.1" && (
+                          <div className="w-full text-sky-400 font-mono text-[11px] tracking-tight">
+                            ── · ── · ── · ──
+                          </div>
+                        )}
+                        {line.id === "04.2" && (
+                          <div className="w-full flex items-center">
+                            <span className="w-4 h-1 bg-rose-500 rounded-xs" />
+                            <span className="flex-1 text-center font-mono text-[11px] text-rose-400">· ── ·</span>
+                            <span className="w-4 h-1 bg-rose-500 rounded-xs" />
+                          </div>
                         )}
                       </div>
+                    </td>
+                    <td className="p-3.5 text-center font-mono font-semibold text-neutral-300">
+                      {line.widthStandard}
+                    </td>
+                    <td className="p-3.5 text-center font-mono font-bold text-[#D4B483]">
+                      {line.widthPrecision}
+                    </td>
+                    <td className="p-3.5 text-neutral-400 max-w-xs leading-relaxed">
+                      {line.applications[0]}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* 5. WORKSHOP RULES DEEP DIVES */}
+        <section className="space-y-4">
+          <h2 className="text-xl sm:text-2xl font-serif font-bold text-neutral-100 flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-[#D4B483]" />
+            Règles d&apos;Atelier &amp; Conventions Suisses
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Rule 1 */}
+            <div className="p-5 rounded-2xl border border-neutral-800 bg-[#15171D] space-y-3">
+              <div className="flex items-center gap-2 text-[#D4B483] font-mono text-xs font-bold uppercase">
+                <span className="w-2 h-2 rounded-full bg-[#B08D57]" />
+                Règle n°1 : Priorité des Traits
+              </div>
+              <h3 className="font-serif font-bold text-base text-neutral-100">
+                Ordre de Superposition
+              </h3>
+              <p className="text-xs text-neutral-400 leading-relaxed">
+                Lorsque deux lignes coïncident sur une même vue de dessin, l&apos;ordre de priorité impératif est le suivant :
+              </p>
+              <ol className="text-xs text-neutral-300 space-y-1.5 list-decimal pl-4 font-mono">
+                <li><strong className="text-neutral-100">Trait fort 01.2</strong> (contours vus)</li>
+                <li><strong className="text-amber-400">Trait interrompu 02.1</strong> (contours cachés)</li>
+                <li><strong className="text-rose-400">Trait mixte 04.2</strong> (plan de coupe)</li>
+                <li><strong className="text-sky-400">Trait mixte fin 04.1</strong> (axe de symétrie)</li>
+                <li><strong className="text-neutral-400">Trait continu fin 01.1</strong> (lignes de rappel)</li>
+              </ol>
+            </div>
+
+            {/* Rule 2 */}
+            <div className="p-5 rounded-2xl border border-neutral-800 bg-[#15171D] space-y-3">
+              <div className="flex items-center gap-2 text-[#D4B483] font-mono text-xs font-bold uppercase">
+                <span className="w-2 h-2 rounded-full bg-[#B08D57]" />
+                Règle n°2 : Angles Vifs Cachés
+              </div>
+              <h3 className="font-serif font-bold text-base text-neutral-100">
+                Intersections sans vide
+              </h3>
+              <p className="text-xs text-neutral-400 leading-relaxed">
+                Les tirets d&apos;un trait interrompu (02.1) doivent obligatoirement <strong>se toucher aux angles</strong>.
+                Un sommet d&apos;arête ne doit jamais tomber dans un intervalle blanc, ce qui créerait une confusion visuelle quant à la limite physique de la pièce.
+              </p>
+              <div className="p-2.5 rounded-lg bg-[#0E1015] border border-neutral-800 text-[11px] font-mono text-amber-300">
+                ✓ Correct : L&apos;angle est formé par deux tirets continus.
+                <br />
+                ✗ Faux : L&apos;angle tombe dans un vide d&apos;espacement.
+              </div>
+            </div>
+
+            {/* Rule 3 */}
+            <div className="p-5 rounded-2xl border border-neutral-800 bg-[#15171D] space-y-3">
+              <div className="flex items-center gap-2 text-[#D4B483] font-mono text-xs font-bold uppercase">
+                <span className="w-2 h-2 rounded-full bg-[#B08D57]" />
+                Règle n°3 : Axes de Révolution
+              </div>
+              <h3 className="font-serif font-bold text-base text-neutral-100">
+                Dépassement Calibré
+              </h3>
+              <p className="text-xs text-neutral-400 leading-relaxed">
+                Les axes de symétrie et de rotation (04.1) doivent dépasser de <strong>2 à 3 mm</strong> au-delà du contour de la pièce.
+                L&apos;intersection de deux axes perpendiculaires (centre d&apos;un rubis ou d&apos;un perçage de pied) doit toujours être matérialisée par le croisement de deux éléments longs (tirets), jamais par un point ou un vide.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 6. INTERACTIVE KNOWLEDGE CHECK / QUIZ */}
+        <section className="space-y-4">
+          <div className="p-6 rounded-2xl border border-neutral-800 bg-[#15171D] space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-800 pb-4">
+              <div className="flex items-center gap-2">
+                <Award className="w-5 h-5 text-[#D4B483]" />
+                <h3 className="font-serif font-bold text-lg text-neutral-100">
+                  Validation des Connaissances Horlogères
+                </h3>
+              </div>
+              <span className="text-xs font-mono px-3 py-1 rounded bg-[#B08D57]/15 text-[#D4B483] border border-[#B08D57]/30">
+                Question {activeQuizIndex + 1} / {quizQuestions.length}
+              </span>
+            </div>
+
+            <div className="space-y-4">
+              <p className="text-sm sm:text-base font-medium text-neutral-200">
+                {quizQuestions[activeQuizIndex].question}
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {quizQuestions[activeQuizIndex].options.map((option, idx) => {
+                  const isSelected = selectedAnswer === idx;
+                  const isCorrect = idx === quizQuestions[activeQuizIndex].correctIndex;
+
+                  let cardStyle = "border-neutral-800 bg-[#1A1D24] text-neutral-300 hover:border-neutral-700";
+                  if (isSelected && !isAnswerSubmitted) {
+                    cardStyle = "border-[#B08D57] bg-[#B08D57]/15 text-white";
+                  } else if (isAnswerSubmitted) {
+                    if (isCorrect) {
+                      cardStyle = "border-emerald-500 bg-emerald-950/30 text-emerald-200";
+                    } else if (isSelected && !isCorrect) {
+                      cardStyle = "border-rose-500 bg-rose-950/30 text-rose-200";
+                    }
+                  }
+
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => handleSelectAnswer(idx)}
+                      disabled={isAnswerSubmitted}
+                      className={`p-3.5 rounded-xl border text-left text-xs font-mono transition-all flex items-start gap-2.5 ${cardStyle}`}
+                    >
+                      <span className="w-5 h-5 rounded-full flex items-center justify-center bg-neutral-800 text-neutral-400 text-[10px] font-bold flex-shrink-0 mt-0.5">
+                        {String.fromCharCode(65 + idx)}
+                      </span>
+                      <span className="leading-relaxed">{option}</span>
                     </button>
-                  ))}
-                </div>
+                  );
+                })}
+              </div>
 
-                {showExplanation && (
-                  <div className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-600 dark:border-blue-400 p-4 mb-6 rounded">
-                    <p className="text-slate-700 dark:text-slate-300">
-                      <strong>Explication :</strong> {quizData[currentQuestion].explanation}
-                    </p>
+              {/* Feedback box */}
+              {isAnswerSubmitted && (
+                <div
+                  className={`p-4 rounded-xl border text-xs space-y-1.5 ${
+                    selectedAnswer === quizQuestions[activeQuizIndex].correctIndex
+                      ? "border-emerald-500/50 bg-emerald-950/20 text-emerald-300"
+                      : "border-rose-500/50 bg-rose-950/20 text-rose-300"
+                  }`}
+                >
+                  <div className="font-bold font-mono">
+                    {selectedAnswer === quizQuestions[activeQuizIndex].correctIndex
+                      ? "✓ Réponse Correcte !"
+                      : "✗ Réponse Incorrecte"}
                   </div>
-                )}
+                  <p className="text-neutral-300 leading-relaxed">
+                    {quizQuestions[activeQuizIndex].explanation}
+                  </p>
+                </div>
+              )}
 
-                {selectedAnswer !== null && (
+              {/* Action Buttons */}
+              <div className="flex items-center justify-between pt-2">
+                {!isAnswerSubmitted ? (
                   <button
-                    onClick={handleNextQuestion}
-                    className="w-full bg-blue-600 dark:bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+                    onClick={handleValidateQuiz}
+                    disabled={selectedAnswer === null}
+                    className="px-5 py-2 rounded-xl bg-[#B08D57] hover:bg-[#C29E68] disabled:opacity-40 text-neutral-950 font-mono text-xs font-bold transition-all shadow-sm"
                   >
-                    {currentQuestion < quizData.length - 1 ? 'Question suivante' : 'Voir les résultats'}
+                    Vérifier la Réponse
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleNextQuiz}
+                    className="px-5 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-100 font-mono text-xs font-semibold transition-all inline-flex items-center gap-1.5"
+                  >
+                    <span>Question Suivante</span>
+                    <ChevronRight className="w-4 h-4" />
                   </button>
                 )}
-              </>
-            ) : (
-              <div className="text-center">
-                <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Quiz terminé !</h3>
-                <p className="text-xl text-slate-700 dark:text-slate-300 mb-6">
-                  Votre score : <span className="font-bold text-blue-600 dark:text-blue-400">{score}/{quizData.length}</span>
-                  {' '}({Math.round((score / quizData.length) * 100)}%)
-                </p>
-                <div className="mb-6">
-                  {score === quizData.length && (
-                    <p className="text-green-600 dark:text-green-400 font-semibold text-lg">🎉 Parfait ! Tu maîtrises les types de lignes !</p>
-                  )}
-                  {score >= quizData.length * 0.8 && score < quizData.length && (
-                    <p className="text-blue-600 dark:text-blue-400 font-semibold text-lg">👏 Excellent travail ! Quelques révisions et ce sera parfait !</p>
-                  )}
-                  {score >= quizData.length * 0.6 && score < quizData.length * 0.8 && (
-                    <p className="text-yellow-600 dark:text-yellow-400 font-semibold text-lg">💪 Bon résultat ! Continue de t'entraîner !</p>
-                  )}
-                  {score < quizData.length * 0.6 && (
-                    <p className="text-orange-600 dark:text-orange-400 font-semibold text-lg">📚 Révise les notions et réessaie !</p>
-                  )}
-                </div>
-                <button
-                  onClick={resetQuiz}
-                  className="bg-blue-600 dark:bg-blue-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
-                >
-                  Recommencer le quiz
-                </button>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Video Section */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Vidéo : Types de Traits en Dessin Technique</h2>
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 border border-slate-200 dark:border-slate-700">
-            <div className="aspect-video">
-              <iframe 
-                width="100%" 
-                height="100%" 
-                src="https://www.youtube.com/embed/LhrEIU0KLrU" 
-                title="Dessin Technique : Les principaux types de traits utilisés" 
-                frameBorder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowFullScreen
-                className="rounded-lg"
-              ></iframe>
-            </div>
-          </div>
-        </section>
-
-        {/* Context Section */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Contexte & Origines de la Norme</h2>
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-200 dark:border-slate-700">
-            <div className="flex items-start mb-6">
-              <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-lg mr-4">
-                <Book className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div className="flex-1">
-                <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
-                  La norme <strong className="text-blue-600 dark:text-blue-400">ISO 128-2:2020</strong> établit les types de traits utilisés dans les dessins techniques (schémas, plans, cartes), leurs désignations et leurs configurations, ainsi que les règles générales pour le tracé de traits. Elle remplace l'ancienne norme ISO 128 de 1982.
-                </p>
-                <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
-                  Cette norme définit <strong>deux largeurs de trait</strong> principales : <strong>fort (épais)</strong> et <strong>fin (mince)</strong>, avec un rapport minimal de <strong>2:1</strong>. Les largeurs recommandées sont : 0.18, 0.25, 0.35, 0.5, 0.7, 1, 1.4 et 2 mm.
-                </p>
-                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                  En horlogerie, le respect strict de ces conventions est essentiel pour garantir la lisibilité des plans techniques de mouvements, où la précision dimensionnelle et la clarté des spécifications sont cruciales pour l'usinage de composants miniatures.
-                </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Table: Types de traits */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Types de Traits : Récapitulatif Complet</h2>
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-700">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-slate-100 dark:bg-slate-900">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Type de trait</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Désignation</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Largeur</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Applications principales</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Continu fort</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Trait plein épais</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.5 - 0.7 mm</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Contours visibles, arêtes vues</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Continu fin</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Trait plein mince</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.25 - 0.35 mm</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Lignes de cote, hachures, lignes d'attache</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Interrompu fort</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Trait discontinu épais</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.5 - 0.7 mm</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Contours cachés, arêtes non visibles</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Interrompu fin</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Trait discontinu mince</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.25 - 0.35 mm</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Contours cachés secondaires</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Mixte fin</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Tiret-point mince</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.25 - 0.35 mm</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Axes de symétrie, plans de coupe</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Mixte fort</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Tiret-point épais</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.5 - 0.7 mm</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Surfaces avec spécifications particulières</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Mixte fin 2 tirets</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Double tiret-point</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.25 - 0.35 mm</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Pièces voisines, positions alternatives</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Continu fin main levée</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Trait ondulé/zigzag</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">0.25 - 0.35 mm</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Limites de vues partielles, coupes interrompues</td>
-                  </tr>
-                </tbody>
-              </table>
+        {/* 7. NEXT / PREVIOUS MODULE NAVIGATION */}
+        <div className="border-t border-neutral-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <Link
+            href="/theorie/lecture-de-plan"
+            className="w-full sm:w-auto p-4 rounded-xl border border-neutral-800 hover:border-neutral-700 bg-[#15171D] hover:bg-[#181B22] text-left transition-all group flex items-center gap-3"
+          >
+            <ArrowLeft className="w-5 h-5 text-neutral-400 group-hover:text-[#D4B483] transition-colors" />
+            <div>
+              <div className="text-[11px] font-mono text-neutral-400">Précédent</div>
+              <div className="text-xs font-semibold text-neutral-200 group-hover:text-[#D4B483] transition-colors">
+                Index Lecture de Plan
+              </div>
             </div>
-          </div>
-        </section>
+          </Link>
 
-        {/* Table: Ordre de priorité */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Ordre de Priorité des Traits</h2>
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-700">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-slate-100 dark:bg-slate-900">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Priorité</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Type de trait</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold text-slate-900 dark:text-slate-100">Règle en cas de superposition</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 font-bold text-blue-600 dark:text-blue-400 text-lg">1</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Continu fort</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Priorité absolue, masque tous les autres traits</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 font-bold text-blue-600 dark:text-blue-400 text-lg">2</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Interrompu fort</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Priorité sur les traits mixtes et fins</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 font-bold text-blue-600 dark:text-blue-400 text-lg">3</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Continu fin</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Priorité sur les traits mixtes</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 font-bold text-blue-600 dark:text-blue-400 text-lg">4</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Interrompu fin</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Priorité secondaire</td>
-                  </tr>
-                  <tr className="hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors">
-                    <td className="px-6 py-4 font-bold text-blue-600 dark:text-blue-400 text-lg">5</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Mixte fin</td>
-                    <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Priorité faible, souvent masqué</td>
-                  </tr>
-                </tbody>
-              </table>
+          <Link
+            href="/theorie/lecture-de-plan/elements-horlogerie"
+            className="w-full sm:w-auto p-4 rounded-xl border border-neutral-800 hover:border-neutral-700 bg-[#15171D] hover:bg-[#181B22] text-right transition-all group flex items-center justify-end gap-3"
+          >
+            <div>
+              <div className="text-[11px] font-mono text-neutral-400">Module Suivant (02)</div>
+              <div className="text-xs font-semibold text-neutral-200 group-hover:text-[#D4B483] transition-colors">
+                Éléments d&apos;Horlogerie (NIHS)
+              </div>
             </div>
-          </div>
-          <div className="mt-4 bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-600 dark:border-amber-500 p-4 rounded">
-            <p className="text-slate-700 dark:text-slate-300">
-              <strong>Règle importante :</strong> Les traits forts ne se croisent jamais entre eux ! En cas de superposition, toujours appliquer l'ordre de priorité ci-dessus.
-            </p>
-          </div>
-        </section>
-
-        {/* Quote */}
-        <section className="mb-16">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-2xl p-8 text-white text-center">
-            <blockquote className="text-2xl font-serif italic mb-4">
-              "La maîtrise des types de lignes est la base de tout dessin technique précis."
-            </blockquote>
-            <p className="text-blue-100 dark:text-blue-200">— Principe fondamental ISO 128-2</p>
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">Questions fréquentes (FAQ)</h2>
-          
-          <div className="space-y-4">
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
-                Quelle est la différence entre un trait continu fort et un trait continu fin ?
-                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
-                <p className="text-slate-700 dark:text-slate-300">
-                  Le <strong>trait continu fort</strong> (épais, 0.5-0.7 mm) représente les contours et arêtes visibles. Le <strong>trait continu fin</strong> (mince, 0.25-0.35 mm) est utilisé pour les lignes de cote, hachures et lignes d'attache. Le rapport entre les deux doit être d'au moins 2:1.
-                </p>
-              </div>
-            </details>
-
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
-                Pourquoi les traits forts ne peuvent-ils jamais se croiser ?
-                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
-                <p className="text-slate-700 dark:text-slate-300">
-                  C'est une règle fondamentale de clarté : si deux traits forts (contours visibles) se croisent, cela signifie que deux arêtes vues se superposent exactement, ce qui est physiquement impossible ou crée une ambiguïté. Dans ce cas, on doit choisir la vue qui évite cette superposition ou appliquer l'ordre de priorité.
-                </p>
-              </div>
-            </details>
-
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
-                Quand doit-on omettre les traits cachés ?
-                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
-                <p className="text-slate-700 dark:text-slate-300">
-                  Les traits cachés (interrompus) peuvent être omis lorsqu'ils ne sont <strong>pas nécessaires à la définition de la pièce</strong>. Ceci permet d'alléger le dessin et de faciliter la lecture. En horlogerie, on privilégie les coupes pour montrer les détails internes plutôt que de multiplier les traits cachés.
-                </p>
-              </div>
-            </details>
-
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
-                Comment distinguer un axe (mixte fin) d'une arête cachée (interrompu) ?
-                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
-                <p className="text-slate-700 dark:text-slate-300">
-                  Le <strong>trait mixte fin</strong> (tiret-point) représente un élément <strong>théorique</strong> (axe de symétrie, plan de coupe) qui n'existe pas physiquement sur la pièce. Le <strong>trait interrompu</strong> représente une arête ou un contour <strong>réel mais caché</strong> derrière une surface opaque. La configuration est différente : tiret-point vs tirets réguliers.
-                </p>
-              </div>
-            </details>
-
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex justify-between items-center">
-                Quelles largeurs de trait choisir pour un plan A4 ?
-                <span className="text-blue-600 dark:text-blue-400 group-open:rotate-180 transition-transform">▼</span>
-              </summary>
-              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
-                <p className="text-slate-700 dark:text-slate-300">
-                  Pour un plan format A4, les largeurs recommandées sont : <strong>trait fort = 0.5 mm</strong> et <strong>trait fin = 0.25 mm</strong> (rapport 2:1). Pour des formats plus grands (A3, A2), on peut utiliser trait fort = 0.7 mm et trait fin = 0.35 mm. L'important est de maintenir le rapport 2:1 et d'être constant sur tout le plan.
-                </p>
-              </div>
-            </details>
-          </div>
-        </section>
-
-        {/* CTA */}
-        <section className="text-center">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-2xl p-8 text-white inline-block">
-            <p className="text-lg mb-4">📘 Tu veux aller plus loin ?</p>
-            <a 
-              href="https://www.iso.org/standard/69129.html" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-block bg-white text-blue-600 dark:text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 dark:hover:bg-blue-100 transition-colors"
-            >
-              Consulter la norme ISO 128-2 complète
-            </a>
-          </div>
-        </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-slate-900 dark:bg-slate-950 text-white py-8 mt-16 border-t border-slate-800 dark:border-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-slate-400 dark:text-slate-500">© 2025 HorloLearn - Passion & Découverte Horlogère Suisse</p>
+            <ArrowRight className="w-5 h-5 text-[#D4B483] group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
-      </footer>
+      </main>
     </div>
   );
 }
