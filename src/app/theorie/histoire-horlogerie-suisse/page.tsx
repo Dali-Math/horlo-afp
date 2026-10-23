@@ -1,381 +1,554 @@
-"use client";
+'use client';
 
-import React, { useState, useMemo } from "react";
-import Link from "next/link";
+import React, { useState } from 'react';
+import Link from 'next/link';
 import {
-  BookOpen,
-  Calendar,
-  Compass,
+  ArrowLeft,
+  ArrowRight,
   CheckCircle2,
-  Clock,
-  ExternalLink,
-  ChevronRight,
-  ShieldCheck,
-  Activity,
-  Award,
   Sparkles,
   MapPin,
-  Search,
-  SlidersHorizontal,
-  X,
-  Crown,
-  Building2,
-  Landmark,
-  ArrowRight,
-  ArrowLeft
-} from "lucide-react";
+  ChevronRight
+} from 'lucide-react';
 
-interface Horloger {
-  id: string;
-  nom: string;
-  anneeFondation: string;
-  periode: string; // "xviii", "xix", "xx"
-  periodeLabel: string;
-  ville: string;
-  canton: string;
-  bio: string;
-  innovationMajeure: string;
-  impactAtelier: string;
-  citation?: string;
-  imageUrl: string;
-}
-
-const HORLOGERS_DATA: Horloger[] = [
-  {
-    id: "breguet",
-    nom: "Abraham-Louis Breguet",
-    anneeFondation: "1775",
-    periode: "xviii",
-    periodeLabel: "XVIIIe Siècle",
-    ville: "Neuchâtel / Paris",
-    canton: "Neuchâtel",
-    bio: "Considéré universellement comme le plus grand génie de l'histoire horlogère. Né à Neuchâtel, il révolutionne la technique et l'esthétique classique : inventeur du Tourbillon (brevet 1801), du ressort spiral à courbe terminale Breguet, du système antichoc Pare-Chute (1790) et de la première montre-bracelet de l'histoire pour la reine de Naples (1810).",
-    innovationMajeure: "Le Tourbillon (1801) & la Courbe terminale du Spiral Breguet",
-    impactAtelier: "Les équations de Phillips et la courbe Breguet restent la référence absolue de l'isochronisme en haute horlogerie.",
-    citation: "« J'ai réussi à compenser par le mouvement circulaire de la cage les anomalies provenant des positions diverses du centre de gravité. »",
-    imageUrl: "/images/horlogers/breguet.jpg"
-  },
-  {
-    id: "perrelet",
-    nom: "Abraham-Louis Perrelet",
-    anneeFondation: "1770",
-    periode: "xviii",
-    periodeLabel: "XVIIIe Siècle",
-    ville: "Le Locle",
-    canton: "Neuchâtel",
-    bio: "Maître horloger émérite du Locle, Perrelet invente en 1770 la montre à secousses automatique. En intégrant une masse oscillante intérieure munie de butées élastiques, la montre s'arme toute seule au rythme de la marche du porteur. Il est également l'inventeur du podomètre moderne.",
-    innovationMajeure: "La Montre à Remontage Automatique à Secousses (1770)",
-    impactAtelier: "Père fondateur du principe du rotor automatique à 360° qui équipe aujourd'hui plus de 80% des montres mécaniques mondiales.",
-    citation: "« Une montre perpétuelle qui puise sa force dans les simples mouvements du corps humain. »",
-    imageUrl: "/images/horlogers/perrelet.jpg"
-  },
-  {
-    id: "lecoultre",
-    nom: "Antoine LeCoultre",
-    anneeFondation: "1833",
-    periode: "xix",
-    periodeLabel: "XIXe Siècle",
-    ville: "Le Sentier, Vallée de Joux",
-    canton: "Vaud",
-    bio: "Artisan autodidacte visionnaire de la Vallée de Joux, il fonde la manufacture qui deviendra Jaeger-LeCoultre. En 1844, il invente le « Millionomètre », le premier instrument de mesure mécanique au monde capable d'évaluer le micromètre (millième de millimètre), propulsant l'horlogerie dans l'ère de l'interchangeabilité absolue.",
-    innovationMajeure: "Le Millionomètre (1844) & le Système de Remontoir à Bascule (1847)",
-    impactAtelier: "A permis la standardisation microscopique des pignons et a fait de la Vallée de Joux la Mecque des calibres compliqués.",
-    citation: "« La précision ne se devine pas, elle se mesure au millième de millimètre. »",
-    imageUrl: "/images/horlogers/lecoultre.jpg"
-  },
-  {
-    id: "patek",
-    nom: "Antoni Patek & Adrien Philippe",
-    anneeFondation: "1839",
-    periode: "xix",
-    periodeLabel: "XIXe Siècle",
-    ville: "Genève",
-    canton: "Genève",
-    bio: "Rencontre historique entre l'aristocrate polonais Antoni Patek et l'ingénieux horloger français Adrien Philippe, inventeur en 1842 du système de remontoir et de mise à l'heure au pendant sans clé. Fournisseurs des cours royales (Reine Victoria) et dépositaires d'une tradition ininterrompue de très haute complication.",
-    innovationMajeure: "Remontoir et Mise à l'Heure par la Couronne (sans clé) & Balancier Gyromax",
-    impactAtelier: "Suppression définitive des clés de montre ; création des montres à répétition minutes et quantième perpétuel les plus réputées au monde.",
-    citation: "« Jamais vous ne posséderez complètement une Patek Philippe, vous en êtes juste le gardien pour les générations futures. »",
-    imageUrl: "/images/horlogers/patek.jpg"
-  },
-  {
-    id: "tissot",
-    nom: "Charles-Félicien & Charles-Émile Tissot",
-    anneeFondation: "1853",
-    periode: "xix",
-    periodeLabel: "XIXe Siècle",
-    ville: "Le Locle",
-    canton: "Neuchâtel",
-    bio: "Père et fils créent au Locle un comptoir d'établissage audacieux qui s'impose rapidement comme pionnier de l'exportation mondiale. Tissot conçoit en 1853 la toute première montre de poche de série à double fuseau horaire, puis conquiert la cour des Tsars de Russie avant d'innover avec la première montre amagnétique en 1930.",
-    innovationMajeure: "Première Montre de Poche à Deux Fuseaux Horaires (1853) & Antimagnétisme (1930)",
-    impactAtelier: "Démocratisation industrielle du savoir-faire suisse et mise au point de chaînes d'assemblage de haute précision.",
-    citation: "« De notre atelier du Locle jusqu'aux confins du monde, porter le temps suisse avec fierté. »",
-    imageUrl: "/images/horlogers/tissot.jpg"
-  },
-  {
-    id: "heuer",
-    nom: "Charles-Édouard Heuer",
-    anneeFondation: "1860",
-    periode: "xix",
-    periodeLabel: "XIXe Siècle",
-    ville: "Saint-Imier",
-    canton: "Berne (Jura bernois)",
-    bio: "Pionnier incontournable du chronométrage sportif et de la vitesse mécanique. En 1887, il brevète le fameux « pignon oscillant », une pièce maîtresse qui simplifie radicalement l'embrayage du chronographe et qui est toujours utilisée par les calibres contemporains majeurs (ETA 7750).",
-    innovationMajeure: "Brevet du Pignon Oscillant (1887) & Chronographe de Bord Mikrograph au 1/100e",
-    impactAtelier: "Architecture d'embrayage direct du chronographe moderne, omniprésente dans tous les ateliers de rhabillage.",
-    citation: "« La maîtrise de la fraction de seconde sépare l'ordinaire de la légende. »",
-    imageUrl: "/images/horlogers/heuer.jpg"
-  },
-  {
-    id: "favre-jacot",
-    nom: "Georges Favre-Jacot",
-    anneeFondation: "1865",
-    periode: "xix",
-    periodeLabel: "XIXe Siècle",
-    ville: "Le Locle",
-    canton: "Neuchâtel",
-    bio: "À seulement 22 ans, ce jeune entrepreneur génial révolutionne à jamais l'horlogerie mondiale en créant la première « manufacture intégrée » sous verrières au Locle (la manufacture Zenith). En regroupant tous les métiers de l'ébauche sous un seul toit, il rationalise la production et remporte plus de 2'330 prix d'observatoire de chronométrie.",
-    innovationMajeure: "Concept de Manufacture Horlogère Intégrée & Calibre El Primero 36'000 A/h",
-    impactAtelier: "Remplacement de l'artisanat dispersé par l'unité de production industrielle moderne, modèle repris dans le monde entier.",
-    citation: "« Rassembler sous un même ciel de verre tous les talents pour atteindre le zénith de la précision. »",
-    imageUrl: "/images/horlogers/favre-jacot.jpg"
-  },
-  {
-    id: "audemars",
-    nom: "Jules-Louis Audemars & Edward-Auguste Piguet",
-    anneeFondation: "1875",
-    periode: "xix",
-    periodeLabel: "XIXe Siècle",
-    ville: "Le Brassus, Vallée de Joux",
-    canton: "Vaud",
-    bio: "Deux amis d'enfance unissent leur génie au Brassus pour concevoir les garde-temps les plus compliqués de l'époque (répétitions minutes, chronographes à rattrapante, calendriers perpétuels). En 1972, Audemars Piguet crée avec Gérald Genta la Royal Oak, inventant le concept de montre de sport de luxe en acier.",
-    innovationMajeure: "Montres de Haute Complication Ultra-Plates & Naissance de la Royal Oak (1972)",
-    impactAtelier: "Excellence de l'anglage manuel des ponts et finitions haute horlogerie au sommet de la hiérarchie suisse.",
-    citation: "« Pour briser les règles, il faut d'abord les maîtriser à la perfection. »",
-    imageUrl: "/images/horlogers/audemars-piguet.png"
-  },
-  {
-    id: "breitling",
-    nom: "Léon Breitling",
-    anneeFondation: "1884",
-    periode: "xix",
-    periodeLabel: "XIXe Siècle",
-    ville: "Saint-Imier",
-    canton: "Berne (Jura bernois)",
-    bio: "Spécialiste exclusif des chronographes et des instruments scientifiques de bord. La manufacture invente le premier poussoir indépendant à 2h (1915), puis le second poussoir de remise à zéro en 1934, fixant définitivement la commande moderne du chronographe avant de créer la légendaire Navitimer à règle à calcul circulaire en 1952.",
-    innovationMajeure: "Création des Deux Poussoirs Indépendants de Chronographe (1915 / 1934)",
-    impactAtelier: "Standardisation ergonomique universelle des boîtes et des commandes de chronographe à deux poussoirs.",
-    citation: "« Les instruments des pionniers qui ont conquis le ciel et les océans. »",
-    imageUrl: "/images/horlogers/breitling.jpg"
-  },
-  {
-    id: "wilsdorf",
-    nom: "Hans Wilsdorf",
-    anneeFondation: "1905",
-    periode: "xx",
-    periodeLabel: "XXe Siècle",
-    ville: "Bienne / Genève",
-    canton: "Genève / Berne",
-    bio: "Fondateur visionnaire de Rolex et de Tudor. Il pressent dès 1905 l'avènement inéluctable de la montre-bracelet et dépose en 1926 le brevet de la boîte Oyster étanche (avec couronne vissée), prouvée par la traversée de la Manche de Mercedes Gleitze en 1927. En 1931, il met au point le rotor Perpetual à rotation bidirectionnelle 360°.",
-    innovationMajeure: "Boîtier Oyster Étanche (1926) & Rotor Automatique Perpetual 360° (1931)",
-    impactAtelier: "Généralisation des joints toriques, couronnes vissées hermétiques et normes de chronométrie moderne Superlative Chronometer.",
-    citation: "« Une montre doit résister aux éléments et accompagner l'homme dans toutes ses conquêtes extrêmes. »",
-    imageUrl: "/images/horlogers/wilsdorf.jpg"
+// =====================================================================
+// STYLES CSS VITRINE SUISSE HAUTE HORLOGERIE
+// =====================================================================
+const styles = `
+  :root {
+    --bg-primary: #fafbfc;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f8f9fa;
+    --bg-dark: #0f1117;
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-muted: #6b7280;
+    --border-color: #e5e7eb;
+    --shadow-light: rgba(0,0,0,0.04);
+    --shadow-medium: rgba(0,0,0,0.08);
+    --shadow-strong: rgba(0,0,0,0.15);
+    --gold-primary: #d4af37;
+    --gold-secondary: #c59b27;
+    --gold-tertiary: #dfba53;
+    --gradient-gold: linear-gradient(135deg, #d4af37 0%, #ffd700 50%, #dfba53 100%);
+    --gradient-luxury: linear-gradient(135deg, #111827 0%, #1f2937 50%, #374151 100%);
   }
-];
 
-interface TimelineMilestone {
-  year: string;
-  century: string;
-  title: string;
-  location: string;
-  keyActors: string;
-  summary: string;
-  technicalImpact: string;
-  quote?: string;
-}
+  .dark {
+    --bg-primary: #07090e;
+    --bg-secondary: #0f1422;
+    --bg-tertiary: #161c2e;
+    --bg-dark: #07090e;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+    --border-color: #1f293d;
+    --shadow-light: rgba(0,0,0,0.3);
+    --shadow-medium: rgba(0,0,0,0.5);
+    --shadow-strong: rgba(0,0,0,0.7);
+  }
 
-const HISTORIC_TIMELINE_DATA: TimelineMilestone[] = [
+  .hero-vitrine {
+    background: var(--gradient-luxury);
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+  }
+
+  .hero-vitrine::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(212,175,55,0.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .vitrine-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .vitrine-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px var(--shadow-medium);
+    border-color: rgba(212,175,55,0.45);
+  }
+
+  .card-img-zoom {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .vitrine-card:hover .card-img-zoom {
+    transform: scale(1.06);
+  }
+
+  .timeline-badge {
+    background: linear-gradient(135deg, #d4af37 0%, #ffd700 100%);
+    color: #111827;
+    font-weight: 800;
+  }
+
+  .gold-badge {
+    color: #b08d57;
+    background: rgba(176, 141, 87, 0.1);
+    border: 1px solid rgba(176, 141, 87, 0.25);
+  }
+`;
+
+// =====================================================================
+// DONNÉES HISTORIQUES HAUTE HORLOGERIE SUISSE (TOUTES LES PHOTOS RESTAURÉES)
+// =====================================================================
+
+const timelineData = [
   {
     year: "1541",
-    century: "xvi",
-    title: "L'Édit Somptuaire de Calvin & la Naissance de l'Horlogerie",
-    location: "Genève",
-    keyActors: "Jean Calvin & les Maîtres Orfèvres Genevois",
-    summary: "À Genève, le réformateur Jean Calvin bannit strictement le port de bijoux et parures ostentatoires. Privés de débouchés, les orfèvres et joailliers genevois convertissent leur savoir-faire de précision dans la fabrication de montres, considérées comme des objets scientifiques et d'utilité morale. En 1601 est fondée la première Corporation des Horlogers de Genève.",
-    technicalImpact: "L'orfèvrerie et la gravure sur métaux précieux fusionnent pour donner naissance à la micro-mécanique d'art helvétique.",
-    quote: "« La montre n'est point une parure coupable, mais un instrument probe qui rappelle à l'homme la fuite inexorable de ses heures terrestres. »"
+    title: "Jean Calvin & la Naissance de l'Horlogerie Genevoise",
+    desc: "En bannissant le port d'objets ornementaux et de bijoux superflus, Jean Calvin oblige les maîtres orfèvres et joailliers genevois à se reconvertir dans l'art de l'horlogerie, considérée comme un instrument d'utilité morale et scientifique. En 1601, Genève crée la première corporation horlogère au monde.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg",
+    canton: "Genève",
+    impact: "Acte Fondateur"
   },
   {
-    year: "1675",
-    century: "xvii",
-    title: "L'Invention du Ressort Spiral par Christian Huygens",
-    location: "La Haye / Paris (Adopté immédiatement en Suisse)",
-    keyActors: "Christian Huygens & Isaac Thuret",
-    summary: "Avant 1675, le balancier oscillait librement sans force de rappel élastique (système foliot), engendrant des écarts de marche colossaux de 30 à 60 minutes par jour. Huygens invente le ressort spiral réglant : le balancier devient un oscillateur harmonique isochrone d'une régularité stupéfiante.",
-    technicalImpact: "La précision passe d'une heure à quelques secondes par jour, rendant enfin possible l'apparition de l'aiguille des minutes et des secondes sur les cadrans.",
-    quote: "« Le ressort spiral donne une âme propre et un battement harmonieux à la matière inerte. »"
+    year: "1685",
+    title: "La Révocation de l'Édit de Nantes & l'Arc Jurassien",
+    desc: "L'afflux massif de réfugiés huguenots français fuyant les persécutions religieuses apporte capitaux, savoir-faire horloger de pointe et réseaux commerciaux internationaux, essaimant dans les vallées jurassiennes neuchâteloises et vaudoises.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/la_chaux_de_fonds_swiss_watchmaking_cityscape_unesco_heritage.jpg",
+    canton: "Arc Jurassien",
+    impact: "Expansion Révolutionnaire"
   },
   {
-    year: "1705",
-    century: "xviii",
-    title: "Daniel Jeanrichard & l'Établissage dans l'Arc Jurassien",
-    location: "La Sagne / Le Locle / La Chaux-de-Fonds",
-    keyActors: "Daniel Jeanrichard (1665-1741)",
-    summary: "Durant les longs hivers glaciaux où la terre est gelée, Jeanrichard forme les familles montagnardes à fabriquer chacune un composant spécifique à la ferme (rouages, ressorts, ponts, boîtes). Ce mode d'organisation décentralisé et agile s'appelle « l'Établissage ». L'établisseur centralise les pièces au printemps pour l'assemblage et la vente.",
-    technicalImpact: "Naissance de la formidable puissance industrielle de l'Arc Jurassien qui deviendra le premier producteur de montres au monde.",
-    quote: "« Que chaque foyer de nos montagnes devienne un atelier de très haute précision. »"
-  },
-  {
-    year: "1770",
-    century: "xviii",
-    title: "Abraham-Louis Perrelet & la Montre Automatique",
-    location: "Le Locle (Montagnes Neuchâteloises)",
-    keyActors: "Abraham-Louis Perrelet",
-    summary: "Maître horloger au Locle, Perrelet crée la première montre de poche automatique à secousses. Équipée d'un poids oscillant intérieur monté sur ressorts d'amortissement, la montre s'arme toute seule lors de la marche de son propriétaire.",
-    technicalImpact: "Ancêtre direct de la masse oscillante automatique moderne à 360° qui motorise l'horlogerie contemporaine.",
-    quote: "« Une montre perpétuelle qui se remonte elle-même par le simple mouvement du corps en marchant. »"
+    year: "1740",
+    title: "La Vallée de Joux : Le Berceau Mondial des Grandes Complications",
+    desc: "Isolés durant les longs et rudes mois d'hiver, les paysans combiers transforment leurs fermes en ateliers sous les combles baignés de lumière. Ils développent une virtuosité inégalée dans la miniaturisation des répétitions minutes, chronographes et calendriers perpétuels.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Vallee_de_Joux_Swiss_Alps_Landscape_Lake_Forest.jpg",
+    canton: "Vaud",
+    impact: "Sanctuaire des Complications"
   },
   {
     year: "1801",
-    century: "xix",
-    title: "Le Brevet Impérial du Tourbillon (7 Messidor an IX)",
-    location: "Neuchâtel / Paris",
-    keyActors: "Abraham-Louis Breguet",
-    summary: "Breguet dépose le brevet d'un mécanisme révolutionnaire enfermant le balancier, le spiral et l'échappement dans une cage mobile tournant à 1 tour/minute. Cette giration continue brasse les positions verticales et neutralise les altérations de marche dues à la gravité terrestre.",
-    technicalImpact: "Le Tourbillon devient le symbole suprême de la virtuosité technique et de la noblesse chronométrique suisse.",
-    quote: "« J'ai réussi à compenser par le mouvement circulaire de la cage les anomalies provenant des positions diverses du centre de gravité. »"
+    title: "Abraham-Louis Breguet et l'Invention du Tourbillon",
+    desc: "Le génie neuchâtelois Abraham-Louis Breguet dépose le brevet du régulateur à Tourbillon le 7 messidor an IX. En plaçant l'ensemble balancier-spiral-échappement dans une cage mobile effectuant un tour par minute, il neutralise les effets néfastes de la gravité terrestre.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg",
+    canton: "Neuchâtel / Paris",
+    impact: "Chef-d'œuvre de Physique"
   },
   {
-    year: "1865",
-    century: "xix",
-    title: "Georges Favre-Jacot Fonde la Première Manufacture Moderne",
-    location: "Le Locle",
-    keyActors: "Georges Favre-Jacot (Zenith)",
-    summary: "À 22 ans, Favre-Jacot rompt avec l'artisanat dispersé en bâtissant de vastes ateliers illuminés de verrières au Locle. Il regroupe sous un même toit tous les corps de métiers de l'ébauche, standardise l'outillage et invente la manufacture moderne.",
-    technicalImpact: "Interchangeabilité industrielle absolue des composants et suprématie dans les concours d'observatoire chronométrique.",
-    quote: "« Rassembler tous les métiers du temps sous le soleil du Locle pour atteindre l'absolu de la précision. »"
+    year: "1848",
+    title: "L'Industrialisation Horlogère et l'Épopée Omega",
+    desc: "Louis Brandt fonde à La Chaux-de-Fonds l'atelier précurseur d'Omega. Avec l'adoption précoce de pièces interchangeables et de calibres industrialisés standardisés de haute précision, la Suisse surpasse définitivement la production britannique.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Omega_Seamaster_Chronograph_Luxury_Watch_White_Background.jpg",
+    canton: "Bienne / Neuchâtel",
+    impact: "Industrialisation Précise"
   },
   {
-    year: "1926",
-    century: "xx",
-    title: "L'Oyster de Rolex & la Victoire de l'Étanchéité",
-    location: "Bienne / Genève",
-    keyActors: "Hans Wilsdorf & Mercedes Gleitze",
-    summary: "Rolex brevète la boîte Oyster, premier boîtier monobloc étanche à l'eau et à la poussière grâce à son fond et sa couronne vissés hermétiques. Le 7 octobre 1927, Mercedes Gleitze traverse la Manche à la nage avec la montre au cou : après plus de 10 heures d'immersion dans l'eau glacée, la montre fonctionne parfaitement.",
-    technicalImpact: "Naissance de la montre-bracelet sportive moderne et généralisation des standards d'étanchéité sous-marine.",
-    quote: "« Après plus de 10 heures d'immersion dans l'eau glaciale de la Manche, la montre conservait une précision parfaite. »"
-  },
-  {
-    year: "1969",
-    century: "xx",
-    title: "L'Année Mythique : El Primero & la Déferlante du Quartz",
-    location: "Le Locle / Tokyo",
-    keyActors: "Zenith Manufacture, Charles Vermot & Seiko",
-    summary: "Le 10 janvier 1969, Zenith présente El Primero, premier chronographe automatique au monde battant à la haute fréquence de 36'000 A/h (mesure au 1/10e de seconde). Mais fin 1969, la montre à quartz japonaise déclenche la crise la plus dévastatrice de l'histoire horlogère suisse (les effectifs passent de 90'000 à 30'000 artisans).",
-    technicalImpact: "L'horloger Charles Vermot sauve héroïquement le patrimoine en cachant clandestinement les étampes et plans du mouvement El Primero dans les greniers de la manufacture pour empêcher leur destruction.",
-    quote: "« On ne détruit pas le travail de toute une vie et le génie des anciens. »"
-  },
-  {
-    year: "1983",
-    century: "xx",
-    title: "La Renaissance Héroïque Suisse & la Révolution Swatch",
-    location: "Bienne / Neuchâtel",
-    keyActors: "Nicolas G. Hayek & Ernst Thomke",
-    summary: "Nicolas G. Hayek lance la Swatch (montre en plastique suisse ultra-précise composée de seulement 51 pièces soudées aux ultrasons). Le succès commercial planétaire foudroyant de la Swatch génère les capitaux nécessaires pour sauver, regrouper (Swatch Group) et relancer les joyaux mécaniques historiques (Omega, Blancpain, Breguet).",
-    technicalImpact: "Résurrection mondiale de la passion pour la haute horlogerie mécanique traditionnelle suisse.",
-    quote: "« La Suisse ne vend pas seulement un instrument pour lire l'heure, elle vend une part d'éternité et d'émotion humaine. »"
-  },
-  {
-    year: "XXIe Siècle",
-    century: "xxi",
-    title: "L'Ère du Silicium & la Haute Horlogerie du Futur",
-    location: "CSEM Neuchâtel / Genève / Vallée de Joux",
-    keyActors: "CSEM, Patek Philippe, Rolex, Breguet, Ulysse Nardin",
-    summary: "L'introduction du Silicium monocristallin (DRIE) dans les spiraux et roues d'échappement élimine le besoin de lubrification sur les palettes et rend les calibres totalement insensibles aux champs magnétiques des smartphones et ordinateurs.",
-    technicalImpact: "Précision chronométrique supérieure, réserves de marche de 70h à 14 jours, et consécration du label Swiss Made au sommet du luxe mondial.",
-    quote: "« L'alliance suprême entre la patience séculaire de l'établi et la physique quantique des semi-conducteurs. »"
+    year: "1886",
+    title: "Le Poinçon de Genève & l'Apogée Réglementaire",
+    desc: "Création légale par le Grand Conseil genevois du Poinçon de Genève, label officiel d'État certifiant l'origine, la bienfacture, la précision chronométrique et les finitions manuelles d'excellence des garde-temps conçus sur le territoire cantonal.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Biel-Bienne-Switzerland-Cite-du-Temps-Omega-Swatch-Headquarters.jpg",
+    canton: "Genève",
+    impact: "Label d'État Suprême"
   }
 ];
 
-interface CradleRegion {
-  name: string;
-  canton: string;
-  title: string;
-  description: string;
-  iconicBrands: string[];
-  unescoBadge?: string;
-}
-
-const CRADLES_DATA: CradleRegion[] = [
+const regions = [
   {
-    name: "Genève & les Cabinotiers",
-    canton: "Genève",
-    title: "Le Berceau Historique & la Haute Joaillerie",
-    description: "Dès le XVIe siècle sous Calvin, Genève devient le foyer des maîtres cabinotiers qui travaillaient dans les « cabinets » sous les toits pour capter la lumière limpide du nord. C'est la capitale du Poinçon de Genève (loi cantonale de 1886 certifiant la perfection des finitions manuelles).",
-    iconicBrands: ["Patek Philippe", "Vacheron Constantin", "Rolex", "Chopard", "F.P. Journe"]
+    name: "Genève",
+    canton: "Genève (GE)",
+    desc: "Capitale historique de la haute horlogerie et de la joaillerie, Genève abrite les sièges mythiques de Patek Philippe, Vacheron Constantin et Rolex, ainsi que le prestigieux Poinçon de Genève.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg",
+    specialty: "Haute Joaillerie & Poinçon de Genève",
+    elevation: "375 m"
+  },
+  {
+    name: "Vallée de Joux",
+    canton: "Vaud (VD)",
+    desc: "Nichée à 1 000 mètres d'altitude, cette vallée sauvage est le sanctuaire absolu des grandes complications mécaniques : sonneries, tourbillons et calendriers astronomiques signés Audemars Piguet, Jaeger-LeCoultre et Breguet.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Vallee_de_Joux_Audemars_Piguet_Museum_Swiss_Alps_Landscape.jpg",
+    specialty: "Grandes Complications & Tourbillons",
+    elevation: "1 000 m"
+  },
+  {
+    name: "Neuchâtel",
+    canton: "Neuchâtel (NE)",
+    desc: "Berceau de la chronométrie de marine, de la recherche scientifique et de l'innovation microtechnique. Historiquement célèbre pour les concours de précision de son Observatoire cantonal.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Neuchatel_Switzerland_historic_city_lake_architecture_watchmaking_clock_tower.jpg",
+    specialty: "Chronométrie Marine & Observatoire",
+    elevation: "487 m"
+  },
+  {
+    name: "Bienne (Biel)",
+    canton: "Berne (BE)",
+    desc: "Capitale industrielle bilingue du temps. Cité de production colossale abritant le siège mondial de Swatch Group, les manufactures Omega et les ateliers de fabrication des calibres Rolex.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Bienne_Switzerland_Old_Town_Square_Watchmaking_City.jpg",
+    specialty: "Production Industrielle & Métrologie",
+    elevation: "434 m"
   },
   {
     name: "La Chaux-de-Fonds & Le Locle",
-    canton: "Neuchâtel",
-    title: "L'Urbanisme Horloger (Patrimoine Mondial UNESCO)",
-    description: "Villes jumelles d'altitude entièrement conçues au XIXe siècle pour et par l'horlogerie après de gigantesques incendies. Les rues rectilignes et les façades ont été calculées pour apporter un ensoleillement maximal aux ateliers familiaux d'horlogers.",
-    iconicBrands: ["Zenith", "Tissot", "Ulysse Nardin", "Girard-Perregaux", "TAG Heuer"],
-    unescoBadge: "Inscrit à l'UNESCO en 2009"
+    canton: "Neuchâtel (NE)",
+    desc: "Villes jumelles inscrites au Patrimoine Mondial de l'UNESCO pour leur urbanisme horloger unique, bâti en damier avec de hautes fenêtres orientées pour optimiser l'ensoleillement des établis.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/la_chaux_de_fonds_swiss_watchmaking_cityscape_unesco_heritage.jpg",
+    specialty: "Urbanisme Horloger UNESCO",
+    elevation: "991 m"
   },
   {
-    name: "La Vallée de Joux",
-    canton: "Vaud",
-    title: "Le Sanctuaire des Grandes Complications",
-    description: "Nichée à 1'000 mètres d'altitude, cette vallée austère et magique est le sanctuaire mondial des complications reines : répétitions minutes, tourbillons, calendriers perpétuels et chronographes à rattrapante. L'anglage manuel y atteint des sommets inégalés.",
-    iconicBrands: ["Audemars Piguet", "Jaeger-LeCoultre", "Breguet", "Blancpain", "Philippe Dufour"]
-  },
-  {
-    name: "Bienne & le Jura Bernois",
-    canton: "Berne",
-    title: "La Métropole Industrielle & la Haute Précision",
-    description: "Bienne est la plus grande ville horlogère bilingue au monde. Elle abrite les sièges mondiaux de Rolex (manufacture des mouvements), d'Omega et de la holding Swatch Group, combinant gigantisme technologique et certification METAS.",
-    iconicBrands: ["Rolex (Bienne)", "Omega", "Longines (Saint-Imier)", "Breitling", "Swatch Group"]
+    name: "Schaffhouse (Schaffhausen)",
+    canton: "Schaffhouse (SH)",
+    desc: "Cité rhénane incarnant l'alliance magistrale entre l'esprit d'ingénierie américain apporté par F.A. Jones et la rigueur artisanale suisse, créant le style iconique d'IWC.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Schaffhausen_Switzerland_Fronwagplatz_city_square.jpg",
+    specialty: "Ingénierie & Montres d'Aviation",
+    elevation: "403 m"
   }
 ];
 
-interface OldestManufacture {
-  brand: string;
-  foundationYear: string;
-  founder: string;
-  city: string;
-  recordBadge: string;
-}
-
-const OLDEST_MANUFACTURES: OldestManufacture[] = [
+const manufactures = [
   {
+    name: "Patek Philippe",
+    year: "1839",
+    location: "Plan-les-Ouates, Genève",
+    desc: "Doyenne indépendante et familiale de la haute horlogerie genevoise. Synonyme de perfection mécanique intemporelle, détentrice de records absolus d'enchères avec ses Calibres 89 et Henry Graves.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Patek_Philippe_Rose_Gold_Grand_Complications_Watch.jpg",
+    seal: "Poinçon Patek Philippe"
+  },
+  {
+    name: "Audemars Piguet",
+    year: "1875",
+    location: "Le Brassus, Vallée de Joux",
+    desc: "Toujours entre les mains des familles fondatrices au Brassus. Créatrice de la légendaire Royal Oak en 1972 et pionnière continue dans les squelettes d'art et mécanismes diaphane.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/audemars_piguet_royal_oak_rose_gold_black_dial_luxury_swiss_watch.jpg",
+    seal: "Haute Horlogerie du Brassus"
+  },
+  {
+    name: "Vacheron Constantin",
+    year: "1755",
+    location: "Plan-les-Ouates, Genève",
+    desc: "La plus ancienne manufacture horlogère au monde en activité ininterrompue depuis plus de 270 ans. Devise éternelle : 'Faire mieux si possible, ce qui est toujours possible'.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Vacheron_Constantin_Tourbillon_Green_Dial_Luxury_Swiss_Watch.jpg",
+    seal: "Poinçon de Genève"
+  },
+  {
+    name: "Jaeger-LeCoultre",
+    year: "1833",
+    location: "Le Sentier, Vallée de Joux",
+    desc: "Surnommée 'La Grande Maison' de la Vallée de Joux, ayant créé plus de 1 200 calibres et 400 brevets, dont la mythique Reverso réversible et les pendules Atmos à mouvement quasi perpétuel.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/jaeger_lecoultre_reverso_blue_dial_luxury_watch.jpg",
+    seal: "Contrôle 1 000 Heures"
+  },
+  {
+    name: "Omega",
+    year: "1848",
+    location: "Bienne, Berne",
+    desc: "Pionnière de la précision chronométrique certifiée Master Chronometer (METAS). Choisie par la NASA en 1965, la Speedmaster est la première et seule montre portée sur la Lune en 1969.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Omega_Seamaster_Chronograph_Luxury_Watch_White_Background.jpg",
+    seal: "Master Chronometer METAS"
+  },
+  {
+    name: "Rolex",
+    year: "1905",
+    location: "Les Acacias, Genève",
+    desc: "Icône universelle de la robustesse et de la fiabilité. Inventrice du premier boîtier véritablement étanche au monde en 1926 (Oyster) et du premier rotor automatique à 360° en 1931 (Perpetual).",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/rolex_submariner_gold_luxury_swiss_watch_product_photo.jpg",
+    seal: "Chronomètre Superlatif"
+  },
+  {
+    name: "IWC Schaffhausen",
+    year: "1868",
+    location: "Schaffhouse",
+    desc: "Fondée par l'ingénieur bostonien Florentine Ariosto Jones sur les rives du Rhin, réputée pour ses montres d'aviateurs robustes et ses calendriers perpétuels synchronisés d'une rare élégance.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/IWC_Schaffhausen_Headquarters_Historic_Building_Switzerland.jpg",
+    seal: "Probus Scafusia"
+  },
+  {
+    name: "Blancpain",
+    year: "1735",
+    location: "Le Brassus / Paudex",
+    desc: "La plus ancienne marque horlogère enregistrée au monde. Créatrice en 1953 de la Fifty Fathoms, première montre de plongée militaire moderne dotée d'une lunette tournante unidirectionnelle.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/blancpain_fifty_fathoms_luxury_swiss_dive_watch_product_shot.jpg",
+    seal: "Haute Horlogerie Traditionnelle"
+  }
+];
+
+const premiumBrands = [
+  {
+    name: "Bulgari Haute Horlogerie",
+    specialty: "Records Mondiaux d'Extra-Plat (Octo Finissimo)",
+    desc: "Manufacture établie à Neuchâtel et au Sentier, réputée pour ses exploits techniques de miniaturisation battant 9 records mondiaux d'extra-plat consécutifs en tourbillon, répétition minutes et chronographe automatique.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Biel-Bienne-Switzerland-Cite-du-Temps-Omega-Swatch-Headquarters.jpg"
+  },
+  {
+    name: "Richard Mille",
+    specialty: "Haute Technologie Aérospatiale & Formule 1",
+    desc: "Ateliers situés aux Breuleux dans le Jura suisse, pionniers dans l'utilisation du carbone TPT, du graphène et des alliages titane-aluminium pour créer des garde-temps ultra-légers résistant à des chocs de plus de 10 000 G.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg"
+  },
+  {
+    name: "Ulysse Nardin",
+    specialty: "Chronométrie Marine & Révolution Silicium (Freak)",
+    desc: "Manufacture du Locle fondée en 1846, légendaire fournisseur de plus de 50 marines nationales en chronomètres de bord. En 2001, elle révolutionne l'horlogerie mondiale en introduisant le premier échappement en silicium sur la Freak.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Vallee_de_Joux_Swiss_Alps_Landscape_Lake_Forest.jpg"
+  }
+];
+
+const mechanisms = [
+  {
+    name: "Régulateur à Tourbillon",
+    complexity: "Suprême (4 étoiles)",
+    desc: "Cage mobile effectuant une révolution complète par minute pour annuler l'écart de marche gravitationnel en position verticale. Véritable sommet de la virtuosité horlogère suisse.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg"
+  },
+  {
+    name: "Tourbillon Carrousel",
+    complexity: "Exceptionnelle (5 étoiles)",
+    desc: "Système dynamique complexe où le train d'engrenage et la plateforme réglante tournent de manière autonome via deux chaînes cinématiques indépendantes.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_carrousel_macro_mechanism.jpg"
+  },
+  {
+    name: "Grande Complication",
+    complexity: "Maximale (Chef-d'œuvre)",
+    desc: "Association magistrale d'au moins trois complications reines : répétition minutes à timbres cathédrale, chronographe à rattrapante et calendrier perpétuel avec phases de lune.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_complication_macro.jpg"
+  },
+  {
+    name: "Mouvement & Rotor Automatique",
+    complexity: "Haute Précision Industrielle",
+    desc: "Système de remontage bidirectionnel sur roulement à billes synthétique avec masse oscillante en or massif ou tungstène, convertissant les mouvements du poignet en énergie motrice.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/patek-philippe-swiss-luxury-watch-movement-gears-close-up.jpeg"
+  },
+  {
+    name: "Chronographe à Rattrapante",
+    complexity: "Haute Horlogerie Chronométrique",
+    desc: "Mécanisme doté d'une seconde aiguille trotteuse capable de s'arrêter pour mesurer un temps intermédiaire puis de 'rattraper' instantanément la trotteuse principale.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_complication_macro_mechanism.jpg"
+  },
+  {
+    name: "Calendrier Perpétuel Squelette",
+    complexity: "Maîtrise Temporelle Absolue",
+    desc: "Mécanisme astronomique calculant mécaniquement la durée variable des mois (28, 30, 31 jours) et les années bissextiles sans correction manuelle jusqu'en 2100.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_mechanism_render_macro_photograph.jpg"
+  }
+];
+
+const heritageWatches = [
+  {
+    name: "Patek Philippe Henry Graves Supercomplication",
+    year: "1933",
+    value: "24 000 000 $ USD",
+    desc: "Montre de poche mécanique la plus complexe jamais réalisée à la main sans assistance informatique : 24 complications, carte du ciel de New York et carillon de Westminster.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/vintage_gold_pocket_watch_historical_timepiece_wooden_table.jpg"
+  },
+  {
+    name: "Rolex 'Bao Dai' Triple Calendar Moonphase 6062",
+    year: "1952",
+    value: "5 060 000 $ USD",
+    desc: "Pièce unique commandée par le dernier empereur du Vietnam à Genève. Boîtier en or jaune 18 carats avec cadran noir laqué et index sertis de cinq diamants taille brillant.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/vintage_swiss_heritage_pocket_watch_gold_chain.jpg"
+  },
+  {
+    name: "Patek Philippe Chronographe Acier Réf. 130",
+    year: "1927",
+    value: "4 987 000 $ USD",
+    desc: "L'un des rarissimes chronographes monopoussoirs d'avant-guerre en acier inoxydable préservé dans un état de conservation parfait, véritable graal des collectionneurs mondiaux.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/vintage_swiss_hirt_chronometer_gold_pocket_watch_historical.jpg"
+  },
+  {
+    name: "A. Lange & Söhne Pour le Mérite Tourbillon",
+    year: "1994",
+    value: "1 250 000 $ USD",
+    desc: "Montre-bracelet d'exception intégrant une transmission fusée-chaîne miniature et un tourbillon pour garantir une force motrice constante et une précision parfaite.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_carrousel_macro_mechanism.jpg"
+  },
+  {
+    name: "Breguet Marie-Antoinette N° 160",
+    year: "1827",
+    value: "Estimée > 30 000 000 $ USD",
+    desc: "Commandée en 1783 pour la reine Marie-Antoinette sans limite de temps ni de budget. Elle renfermait toutes les complications connues de l'époque sous un cadran en cristal de roche.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg"
+  },
+  {
+    name: "Patek Philippe Chronomètre Henry Graves",
+    year: "1928",
+    value: "2 800 000 $ USD",
+    desc: "Chronomètre de poche en platine certifié par l'Observatoire de Genève, affichant une régularité de marche stupéfiante inférieure à 0,2 seconde par jour.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_complication_macro.jpg"
+  }
+];
+
+const innovations = [
+  {
+    title: "Première Montre de Plongée Moderne (Fifty Fathoms)",
     brand: "Blancpain",
-    foundationYear: "1735",
-    founder: "Jehan-Jacques Blancpain",
-    city: "Villeret (Jura bernois)",
-    recordBadge: "Plus ancienne marque horlogère enregistrée au monde"
+    year: "1953",
+    desc: "Conçue pour les nageurs de combat, créant les critères universels de la montre de plongée : lunette tournante verrouillable, double joint torique et aiguilles luminescentes.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/blancpain_fifty_fathoms_luxury_swiss_dive_watch_product_shot.jpg",
+    impact: "Standard Militaire Mondial"
   },
   {
-    brand: "Vacheron Constantin",
-    foundationYear: "1755",
-    founder: "Jean-Marc Vacheron",
-    city: "Genève",
-    recordBadge: "Plus ancienne manufacture en activité ininterrompue depuis sa fondation"
+    title: "Premier Calibre Quartz Suisse (Projet Beta 21)",
+    brand: "Centre Électronique Horloger (CEH)",
+    year: "1969",
+    desc: "Développé collectivement à Neuchâtel par 20 manufactures suisses pour rivaliser avec la montée en puissance de l'électronique asiatique et affirmer la recherche suisse.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Vallee_de_Joux_Swiss_Alps_Landscape_Lake_Forest.jpg",
+    impact: "Prouesse Technologique"
   },
   {
-    brand: "Breguet",
-    foundationYear: "1775",
-    founder: "Abraham-Louis Breguet",
-    city: "Paris / Vallée de Joux",
-    recordBadge: "Père spirituel de la haute horlogerie et inventeur du Tourbillon"
+    title: "Régulateur à Tourbillon Portatif",
+    brand: "Abraham-Louis Breguet",
+    year: "1801",
+    desc: "Compensation active de la gravité terrestre par rotation continue de l'échappement, inventé et breveté par Breguet, devenu la signature suprême de la Haute Horlogerie.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/luxury_swiss_watch_tourbillon_mechanism_macro.jpg",
+    impact: "Fondateur & Éternel"
   },
   {
+    title: "Silicium dans l'Échappement & Spiraux Spiromax",
+    brand: "Patek Philippe & CSEM",
+    year: "2005",
+    desc: "L'application du silicium monocristallin insensible au magnétisme, inoxydable et sans besoin de lubrification huileuse, révolutionnant la fiabilité et la chronométrie moderne.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Patek_Philippe_luxury_Swiss_watch_elegant_design_product_photography.jpg",
+    impact: "Révolution Matériaux"
+  },
+  {
+    title: "Première Montre-Bracelet de Haute Joaillerie",
     brand: "Patek Philippe",
-    foundationYear: "1839",
-    founder: "Antoni Patek & Adrien Philippe",
-    city: "Genève",
-    recordBadge: "Référence universelle absolue des grandes complications de collection"
+    year: "1868",
+    desc: "Créée pour la comtesse Koscowicz de Hongrie, transformant la montre de poche masculine en un bijou d'exception porté au poignet, inaugurant l'ère moderne de la montre-bracelet.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/vintage_gold_pocket_watch_historical_timepiece_wooden_table.jpg",
+    impact: "Révolution des Usages"
+  },
+  {
+    title: "Mécanismes Diaphane & Haute Architecture Squelette",
+    brand: "Audemars Piguet",
+    year: "2000",
+    desc: "Ajourage virtuose des platines et des ponts réduits à l'extrême limite structurelle, transformant le calibre mécanique en une sculpture tridimensionnelle en apesanteur.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/audemars_piguet_royal_oak_skeleton_artistic.jpg",
+    impact: "Art Architectural Pur"
   }
 ];
+
+const territories = [
+  {
+    region: "Vallée de Joux",
+    coords: "46.6° N, 6.2° E",
+    altitude: "1 000 m",
+    desc: "Écrin montagnard sauvage de l'excellence horlogère helvétique, alliant rigueur climatique et perfection technique des complications majeures.",
+    image: "/theorie/histoire-horlogerie-suisse/imgs/vallee_de_joux_swiss_jura_lakes_landscape.jpg",
+    expertise: "Tourbillons, Répétitions Minutes, Calendriers Perpétuels"
+  },
+  {
+    region: "Neuchâtel",
+    coords: "47.0° N, 6.9° E",
+    altitude: "487 m",
+    desc: "Bordant son lac historique, Neuchâtel est la terre sacrée des chronomètres de marine, de l'astronomie de précision et des instituts de recherche microtechnique.",
+    image: "/theorie/histoire-horlogerie-suisse/imgs/neuchatel-switzerland-city-lake-view-historic-watchmaking-region.jpg",
+    expertise: "Chronomètres d'Observatoire, Silicium, Plongée"
+  },
+  {
+    region: "Genève",
+    coords: "46.2° N, 6.1° E",
+    altitude: "375 m",
+    desc: "Cité internationale de la haute horlogerie et de la joaillerie, abritant les plus célèbres ateliers de maîtres artisans graveurs et émailleurs.",
+    image: "/theorie/histoire-horlogerie-suisse/imgs/geneva_luxury_watchmaking_craftsman_at_work.jpg",
+    expertise: "Poinçon de Genève, Émaillage Grand Feu, Sertissage"
+  },
+  {
+    region: "La Chaux-de-Fonds",
+    coords: "47.1° N, 6.8° E",
+    altitude: "991 m",
+    desc: "Capitale mondiale de la production horlogère au XIXe siècle, classée UNESCO pour son architecture unique au service de la lumière des horlogers.",
+    image: "/theorie/histoire-horlogerie-suisse/imgs/la_chaux_de_fonds_swiss_watchmaking_cityscape_unesco_heritage.jpg",
+    expertise: "Manufactures Intégrées, Échappements, Boîtes d'Art"
+  }
+];
+
+const collections = [
+  {
+    name: "Patek Philippe Grand Complication",
+    price: "À partir de 250 000 CHF",
+    desc: "Apogée de l'art mécanique genevois, associant répétition minutes, calendrier perpétuel instantané et tourbillon dans un boîtier d'or rose ou de platine poli main.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/patek_philippe_grand_complications_rose_gold.jpg",
+    uniqueness: "Pièces Rares de Collection"
+  },
+  {
+    name: "Patek Philippe Diamond Haute Joaillerie",
+    price: "À partir de 500 000 CHF",
+    desc: "Fusion magistrale entre haute horlogerie mécanique et art joaillier de précision, pavée des plus purs diamants certifiés Top Wesselton.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/patek_philippe_diamond_jewelry_luxury.jpg",
+    uniqueness: "Haute Joaillerie Helvétique"
+  },
+  {
+    name: "Vacheron Constantin Tourbillon Extraordinaire",
+    price: "À partir de 200 000 CHF",
+    desc: "Calibre manufacture doté de la croix de Malte emblématique, affichant des finitions anglage main et Côtes de Genève d'une pureté absolue.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/vacheron_constantin_tourbillon_extraordinary.jpg",
+    uniqueness: "Poinçon de Genève Certifié"
+  },
+  {
+    name: "Audemars Piguet Royal Oak Squelette",
+    price: "À partir de 150 000 CHF",
+    desc: "Boîtier octogonal iconique en or rose avec vis hexagonales en or blanc, révélant un mouvement ajouré d'une rare virtuosité tridimensionnelle.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/audemars_piguet_royal_oak_skeleton_artistic.jpg",
+    uniqueness: "Design Iconique Majeur"
+  },
+  {
+    name: "Richard Mille Carbone & Titane Ultra Léger",
+    price: "À partir de 800 000 CHF",
+    desc: "L'horlogerie de l'extrême inspirée des monocoques de Formule 1 : boîtier en carbone TPT et platine en titane grade 5 sablé sous vide.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/richard_mille_carbon_ultra_light.jpg",
+    uniqueness: "Performance Ultra-Légère"
+  },
+  {
+    name: "Patek Philippe Émail Grand Feu Miniature",
+    price: "À partir de 180 000 CHF",
+    desc: "Cadrans uniques peints à la main par les derniers maîtres émailleurs suisses et cuits à plus de 800°C dans des fours traditionnels.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/patek_philippe_enamel_art_dial.jpg",
+    uniqueness: "Art Rare en Voie de Disparition"
+  }
+];
+
+const masterGallery = [
+  {
+    title: "L'Atelier des Maîtres Horlogers",
+    category: "Savoir-Faire Artisanal",
+    desc: "Établis en bois massif, loupes d'horloger et silence studieux où s'opère la magie de l'anglage et du réglage micrométrique.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/swiss_luxury_watchmaking_atelier_craftsmen_watches.jpg"
+  },
+  {
+    title: "L'Outillage de Haute Précision",
+    category: "Métrologie & Outillage",
+    desc: "Brucelles en laiton anti-magnétique, tournevis dynamométriques et huiliers miniatures indispensables au travail au 1/100e de millimètre.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/swiss_watchmaking_precision_tools_elegant_layout.jpg"
+  },
+  {
+    title: "Omega Speedmaster Moonwatch",
+    category: "Légende Spatiale (1969)",
+    desc: "La seule montre qualifiée par la NASA pour toutes les missions spatiales habitées, portée lors du premier pas sur la Lune le 21 juillet 1969.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/omega_speedmaster_professional_moonwatch_luxury_swiss_watch.jpg"
+  },
+  {
+    title: "Patek Philippe Nautilus Réf. 5711",
+    category: "Icône Sport-Chic (1976)",
+    desc: "Dessinée par Gérald Genta avec sa lunette octogonale adoucie inspirée d'un hublot de transatlantique et son cadran bleu strié.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Patek-Philippe-Nautilus-Luxury-Swiss-Watch-Blue-Dial.jpg"
+  },
+  {
+    title: "Jaeger-LeCoultre Reverso Tribute",
+    category: "Art Déco & Réversibilité (1931)",
+    desc: "Boîtier réversible breveté pour protéger le cadran des chocs lors des matches de polo des officiers britanniques en Inde.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/Jaeger-LeCoultre-Reverso-Green-Dial-Luxury-Swiss-Watch-Product-Shot.jpg"
+  },
+  {
+    title: "Chronomètre de Poche Longines Or 18K",
+    category: "Patrimoine du XIXe Siècle",
+    desc: "Témoin de l'apogée de Saint-Imier, orné de gravures guillochées à la main et d'un échappement à ancre suisse de haute précision.",
+    img: "/theorie/histoire-horlogerie-suisse/imgs/vintage_swiss_longines_gold_pocket_watch.jpg"
+  }
+];
+
+// =====================================================================
+// QUESTIONS DE QUIZ FORMAT EXAMEN OFFICIEL SUISSE
+// =====================================================================
 
 interface QuizQuestion {
   question: string;
@@ -386,29 +559,29 @@ interface QuizQuestion {
 
 const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
-    question: "1. Quel événement historique majeur survenu à Genève en 1541 est considéré comme le point de départ de l'horlogerie suisse ?",
+    question: "1. Quel événement survenu à Genève en 1541 est reconnu comme le point de départ de l'horlogerie suisse ?",
     options: [
       "La création du premier chronomètre de marine par l'Observatoire de Genève",
-      "L'Édit somptuaire de Jean Calvin interdisant le port de bijoux, contraignant les orfèvres à se reconvertir dans la montre",
-      "La découverte de gisements de quartz dans le canton du Valais",
-      "Le rachat des manufactures genevoises par la couronne d'Angleterre"
+      "L'Édit somptuaire de Jean Calvin interdisant les bijoux, obligeant les orfèvres à se reconvertir dans la montre",
+      "La découverte fortuite de gisements de quartz dans les Alpes valaisannes",
+      "Le rachat des ateliers genevois par la couronne d'Angleterre"
     ],
     correctAnswer: 1,
-    explanation: "En 1541, le réformateur protestant Jean Calvin bannit les bijoux et ornements ostentatoires à Genève. Privés de leur gagne-pain, les maîtres orfèvres et émailleurs genevois unissent leur talent aux réfugiés huguenots français et mettent leur immense savoir-faire au service de la montre, considérée comme un objet utile et moral. En 1601 naît la première corporation horlogère au monde."
+    explanation: "En 1541, le réformateur Jean Calvin bannit les bijoux et ornements ostentatoires à Genève. Privés de débouchés, les orfèvres et émailleurs genevois unissent leur talent aux réfugiés huguenots français pour fabriquer des montres, considérées comme des objets scientifiques et d'utilité morale. En 1601 naît la première corporation horlogère au monde."
   },
   {
-    question: "2. Qu'appelle-t-on le système de « l'établissage » structuré par Daniel Jeanrichard dans les montagnes neuchâteloises au début du XVIIIe siècle ?",
+    question: "2. Qu'appelle-t-on le système de « l'établissage » initié par Daniel Jeanrichard dans les montagnes neuchâteloises ?",
     options: [
-      "L'obligation légale pour chaque apprenti d'acheter son propre établi d'ébénisterie",
-      "Une organisation décentralisée où les familles paysannes fabriquent chacune à domicile un composant précis durant l'hiver avant assemblage central",
-      "Une taxe douanière imposée sur les montres exportées vers la France",
-      "Une technique de trempe des aciers dans l'huile de lin"
+      "L'obligation pour chaque apprenti d'acheter son propre établi d'ébénisterie",
+      "Une organisation décentralisée où les paysans des fermes isolées fabriquent chacun une pièce spécifique en hiver avant assemblage central",
+      "Une taxe douanière sur les montres exportées vers la France",
+      "Une méthode de polissage des pivots au tour à pivoter"
     ],
     correctAnswer: 1,
-    explanation: "L'établissage est la grande innovation sociale et logistique jurassienne. Durant les rudes mois d'hiver où la terre était gelée, Daniel Jeanrichard forma les paysans des fermes isolées à fabriquer un composant spécifique (roues, ressorts, ponts, boîtes). L'établisseur centralisait ensuite les pièces au printemps pour le finissage et la commercialisation, créant une puissance de production inégalée."
+    explanation: "L'établissage est la grande innovation productive jurassienne. Durant les rudes mois d'hiver où la terre était gelée, Daniel Jeanrichard forma les familles paysannes à fabriquer à domicile un composant précis (rouages, ressorts, ponts, boîtes). L'établisseur centralisait ensuite les pièces au printemps pour l'assemblage et la vente, créant une puissance de production inégalée."
   },
   {
-    question: "3. Quelle invention majeure Abraham-Louis Breguet a-t-il brevetée en 1801 pour neutraliser les effets néfastes de la pesanteur ?",
+    question: "3. Quelle invention majeure Abraham-Louis Breguet a-t-il brevetée en 1801 pour neutraliser les effets de la pesanteur terrestre ?",
     options: [
       "Le ressort moteur en alliage Nivaflex inoxydable",
       "Le Tourbillon, enfermant l'échappement et le balancier dans une cage tournante effectuant 1 tour par minute",
@@ -427,7 +600,7 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
       "Un voyage au pôle Nord avec l'explorateur Roald Amundsen"
     ],
     correctAnswer: 1,
-    explanation: "Le 7 octobre 1927, la jeune nageuse britannique Mercedes Gleitze traverse la Manche à la nage avec une Rolex Oyster au cou. Après plus de 10 heures d'immersion dans les eaux glaciales, la montre ressortit intacte avec une précision chronométrique parfaite, prouvant au monde entier l'efficacité révolutionnaire du boîtier étanche et de la couronne vissée."
+    explanation: "Le 7 octobre 1927, la jeune nageuse britannique Mercedes Gleitze traverse la Manche à la nage avec une Rolex Oyster au cou. Après plus de 10 heures passées dans les eaux glaciales, la montre ressortit dans un état de marche et d'étanchéité irréprochables, prouvant au monde entier l'efficacité révolutionnaire du boîtier étanche et de la couronne vissée."
   },
   {
     question: "5. Pourquoi les villes du Locle et de La Chaux-de-Fonds ont-elles été inscrites au Patrimoine Mondial de l'UNESCO en 2009 ?",
@@ -442,30 +615,12 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
   }
 ];
 
-export default function HistoireHorlogerieSuissePage() {
-  const [activeCentury, setActiveCentury] = useState<string>("all");
-  const [selectedHorloger, setSelectedHorloger] = useState<Horloger | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-
-  // Quiz State
+export default function HistoireHorlogerieSuisse() {
+  // Quiz state (Compact Stepper ~280px tall)
   const [currentQuizIdx, setCurrentQuizIdx] = useState<number>(0);
   const [userAnswers, setUserAnswers] = useState<{ [key: number]: number }>({});
   const [quizFinished, setQuizFinished] = useState<boolean>(false);
 
-  // Filter horlogers
-  const filteredHorlogers = useMemo(() => {
-    return HORLOGERS_DATA.filter((h) => {
-      const matchEra = activeCentury === "all" || h.periode === activeCentury;
-      const matchQuery =
-        searchQuery.trim() === "" ||
-        h.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        h.ville.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        h.innovationMajeure.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchEra && matchQuery;
-    });
-  }, [activeCentury, searchQuery]);
-
-  // Quiz handlers
   const handleSelectQuizAnswer = (optIdx: number) => {
     if (userAnswers[currentQuizIdx] !== undefined) return;
     setUserAnswers((prev) => ({
@@ -491,649 +646,907 @@ export default function HistoireHorlogerieSuissePage() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors">
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+    <>
+      <style>{styles}</style>
 
-        {/* =================================================================== */}
-        {/* HERO HEADER */}
-        {/* =================================================================== */}
-        <section className="space-y-4 text-center sm:text-left border-b border-neutral-200 dark:border-neutral-800 pb-8">
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-            <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-[#B08D57]/15 text-[#8A6A3B] dark:text-[#D4B483] border border-[#B08D57]/30">
-              🇨🇭 Patrimoine Mondial UNESCO
-            </span>
-            <span className="px-3 py-1 rounded-full text-xs font-mono bg-neutral-200/80 dark:bg-neutral-800/80 text-neutral-700 dark:text-neutral-300">
-              Module 14 — Histoire &amp; Patrimoine
-            </span>
-            <span className="px-3 py-1 rounded-full text-xs font-mono bg-neutral-200/80 dark:bg-neutral-800/80 text-neutral-700 dark:text-neutral-300">
-              SEFRI · Convention Patronale CPIH
-            </span>
-            <span className="px-3 py-1 rounded-full text-xs font-mono bg-neutral-200/80 dark:bg-neutral-800/80 text-neutral-700 dark:text-neutral-300">
-              Label Swiss Made
-            </span>
-          </div>
+      <div className="min-h-screen bg-neutral-50 dark:bg-[#07090e] text-neutral-900 dark:text-neutral-100 transition-colors">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-16">
 
-          <div className="space-y-3">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight text-neutral-950 dark:text-neutral-50">
-              La Grande Épopée de l&apos;Horlogerie Suisse
-            </h1>
-            <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
-              Une vitrine muséale d&apos;exception célébrant cinq siècles de génie, d&apos;ingéniosité montagnarde et de persévérance helvétique : des orfèvres calvinistes de 1541 aux manufactures intégrées de l&apos;Arc Jurassien et à la haute horlogerie contemporaine.
-            </p>
-          </div>
+          {/* Top Breadcrumb */}
+          <div className="flex items-center justify-between">
+            <Link
+              href="/theorie"
+              className="inline-flex items-center gap-2 text-xs font-mono font-bold text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>← Retour à l&apos;Espace Théorie</span>
+            </Link>
 
-          {/* Key Heritage Metrics */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4">
-            <div className="p-3.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-center space-y-0.5">
-              <span className="text-2xl font-serif font-bold text-[#8A6A3B] dark:text-[#D4B483]">1541</span>
-              <span className="text-[11px] font-mono text-neutral-500 block uppercase">Naissance à Genève</span>
-            </div>
-            <div className="p-3.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-center space-y-0.5">
-              <span className="text-2xl font-serif font-bold text-[#8A6A3B] dark:text-[#D4B483]">2009</span>
-              <span className="text-[11px] font-mono text-neutral-500 block uppercase">Patrimoine UNESCO</span>
-            </div>
-            <div className="p-3.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-center space-y-0.5">
-              <span className="text-2xl font-serif font-bold text-[#8A6A3B] dark:text-[#D4B483]">N°1</span>
-              <span className="text-[11px] font-mono text-neutral-500 block uppercase">Exportateur Mondial</span>
-            </div>
-            <div className="p-3.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-center space-y-0.5">
-              <span className="text-2xl font-serif font-bold text-[#8A6A3B] dark:text-[#D4B483]">500+</span>
-              <span className="text-[11px] font-mono text-neutral-500 block uppercase">Ans de Savoir-Faire</span>
-            </div>
-          </div>
-        </section>
-
-        {/* =================================================================== */}
-        {/* SECTION 1: LA VITRINE DES PÈRES FONDATEURS & MAÎTRES HORLOGERS */}
-        {/* =================================================================== */}
-        <section className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="space-y-1">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#B08D57]">
-                Galerie des Maîtres d&apos;Établi
-              </span>
-              <h2 className="text-xl sm:text-2xl font-serif font-bold">
-                Les Pères Fondateurs de l&apos;Horlogerie Helvétique
-              </h2>
-            </div>
-            <span className="text-xs font-mono text-neutral-500">
-              Portraits historiques authentiques &amp; innovations majeures
-            </span>
-          </div>
-
-          {/* Filter Bar & Search */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm">
-            <div className="flex flex-wrap items-center gap-1.5">
-              {[
-                { id: "all", label: "Tous les Maîtres" },
-                { id: "xviii", label: "XVIIIe (Pionniers)" },
-                { id: "xix", label: "XIXe (Manufactures)" },
-                { id: "xx", label: "XXe (Ère Moderne)" }
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveCentury(tab.id)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all cursor-pointer ${
-                    activeCentury === tab.id
-                      ? "bg-[#B08D57] text-neutral-950 font-bold shadow-sm"
-                      : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
-            <div className="relative">
-              <Search className="w-3.5 h-3.5 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Rechercher par nom, ville, brevet..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 pr-3 py-1.5 rounded-lg text-xs font-mono bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 w-full sm:w-64 focus:outline-none focus:border-[#B08D57]"
-              />
+            <div className="flex items-center gap-2 text-xs font-mono text-neutral-400">
+              <span>Théorie</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+              <span className="text-[#B08D57] font-semibold">Histoire Horlogère Suisse</span>
             </div>
           </div>
 
-          {/* Horlogers Photo Showcase Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filteredHorlogers.map((horloger) => (
-              <div
-                key={horloger.id}
-                onClick={() => setSelectedHorloger(horloger)}
-                className="group rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-hidden shadow-sm hover:border-[#B08D57]/60 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
-              >
-                <div>
-                  {/* Portrait Container */}
-                  <div className="relative w-full h-56 bg-neutral-100 dark:bg-neutral-950 overflow-hidden border-b border-neutral-100 dark:border-neutral-800">
+          {/* =================================================================== */}
+          {/* HERO VITRINE SUISSE */}
+          {/* =================================================================== */}
+          <section className="hero-vitrine p-8 sm:p-12 lg:p-16 text-white text-center sm:text-left space-y-8 shadow-2xl">
+            <div className="max-w-4xl space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-mono text-yellow-300">
+                <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
+                <span>500 Ans d&apos;Excellence Helvétique & Haute Précision</span>
+              </div>
+
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold tracking-tight text-white leading-tight">
+                L&apos;Histoire de l&apos;Horlogerie Suisse
+              </h1>
+
+              <p className="text-base sm:text-lg text-neutral-300 font-sans leading-relaxed max-w-3xl">
+                Un voyage d&apos;exception à travers 5 siècles d&apos;ingéniosité, de rigueur montagnarde et de passion pour la bienfacture absolue. Découvrez les manufactures mythiques, les terroirs jurassiens et les chefs-d&apos;œuvre mécaniques qui ont fait de la Suisse le maître incontesté du temps mondial.
+              </p>
+            </div>
+
+            {/* 4 Stats Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t border-white/10">
+              <div className="p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 text-center">
+                <div className="text-2xl sm:text-3xl font-serif font-bold text-yellow-400">500+</div>
+                <div className="text-xs text-neutral-300 font-mono mt-1">Années de Tradition</div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 text-center">
+                <div className="text-2xl sm:text-3xl font-serif font-bold text-yellow-400">50+</div>
+                <div className="text-xs text-neutral-300 font-mono mt-1">Manufactures Mythiques</div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 text-center">
+                <div className="text-2xl sm:text-3xl font-serif font-bold text-yellow-400">6</div>
+                <div className="text-xs text-neutral-300 font-mono mt-1">Régions Horlogères</div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 text-center">
+                <div className="text-2xl sm:text-3xl font-serif font-bold text-yellow-400">∞</div>
+                <div className="text-xs text-neutral-300 font-mono mt-1">Passion & Perfection</div>
+              </div>
+            </div>
+          </section>
+
+          {/* =================================================================== */}
+          {/* SECTION 1 : CHRONOLOGIE DE L'EXCELLENCE */}
+          {/* =================================================================== */}
+          <section className="space-y-8" id="timeline">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-4">
+              <div>
+                <span className="text-xs font-mono tracking-widest text-[#B08D57] uppercase font-bold">
+                  Frise Chronologique
+                </span>
+                <h2 className="text-2xl sm:text-4xl font-serif font-bold mt-1">
+                  Chronologie de l&apos;Excellence Horlogère
+                </h2>
+              </div>
+              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 max-w-md font-sans">
+                De la Réforme calviniste de 1541 aux labels d&apos;État les plus stricts de la planète.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {timelineData.map((item, index) => (
+                <div key={index} className="vitrine-card flex flex-col justify-between group">
+                  <div className="relative h-48 w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
                     <img
-                      src={horloger.imageUrl}
-                      alt={horloger.nom}
-                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                      src={item.img}
+                      alt={item.title}
+                      className="w-full h-full object-cover card-img-zoom"
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-transparent to-transparent opacity-80" />
-
-                    <div className="absolute bottom-3 left-3 right-3 text-white space-y-0.5">
-                      <div className="text-[10px] font-mono uppercase tracking-wider text-[#D4B483] font-bold">
-                        {horloger.periodeLabel} · Fondé en {horloger.anneeFondation}
-                      </div>
-                      <h3 className="font-serif font-bold text-lg text-white leading-tight">
-                        {horloger.nom}
-                      </h3>
-                      <div className="flex items-center gap-1 text-[11px] font-mono text-neutral-300">
-                        <MapPin className="w-3 h-3 text-[#B08D57]" />
-                        <span>{horloger.ville}</span>
-                      </div>
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-mono font-bold timeline-badge shadow-md">
+                      {item.year}
+                    </div>
+                    <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-mono bg-black/60 text-white backdrop-blur-sm">
+                      {item.canton}
                     </div>
                   </div>
 
-                  {/* Body Content */}
-                  <div className="p-4 space-y-3">
-                    <p className="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-3 leading-relaxed">
-                      {horloger.bio}
-                    </p>
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
+                    <div className="space-y-2">
+                      <div className="text-[11px] font-mono font-bold text-[#B08D57] uppercase tracking-wider">
+                        {item.impact}
+                      </div>
+                      <h3 className="text-base font-serif font-bold group-hover:text-[#B08D57] transition-colors leading-snug">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
 
-                    <div className="p-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-800 text-[11px] font-mono space-y-0.5">
-                      <strong className="text-neutral-900 dark:text-neutral-100 block">
-                        Innovation Majeure :
-                      </strong>
-                      <span className="text-[#8A6A3B] dark:text-[#D4B483] font-semibold">
-                        {horloger.innovationMajeure}
+          {/* =================================================================== */}
+          {/* SECTION 2 : TERRITOIRES DE L'HORLOGERIE */}
+          {/* =================================================================== */}
+          <section className="space-y-8" id="regions">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-4">
+              <div>
+                <span className="text-xs font-mono tracking-widest text-[#B08D57] uppercase font-bold">
+                  Géographie & Terroirs
+                </span>
+                <h2 className="text-2xl sm:text-4xl font-serif font-bold mt-1">
+                  Les Territoires de l&apos;Horlogerie Suisse
+                </h2>
+              </div>
+              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 max-w-md font-sans">
+                L&apos;Arc Jurassien, Genève et les cantons alémaniques : cartographie des savoir-faire d&apos;exception.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {regions.map((region, index) => (
+                <div key={index} className="vitrine-card flex flex-col justify-between group">
+                  <div className="relative h-48 w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                    <img
+                      src={region.img}
+                      alt={region.name}
+                      className="w-full h-full object-cover card-img-zoom"
+                      loading="lazy"
+                    />
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-mono font-bold bg-neutral-900/80 text-white backdrop-blur-sm border border-white/20">
+                      📍 {region.canton}
+                    </div>
+                    <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded text-[10px] font-mono bg-black/60 text-yellow-300 backdrop-blur-sm">
+                      Alt. {region.elevation}
+                    </div>
+                  </div>
+
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-serif font-bold group-hover:text-[#B08D57] transition-colors">
+                        {region.name}
+                      </h3>
+                      <div className="text-xs font-mono text-[#B08D57] font-semibold">
+                        ⚙️ Spécialité : {region.specialty}
+                      </div>
+                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                        {region.desc}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* =================================================================== */}
+          {/* SECTION 3 : LES MANUFACTURES LÉGENDAIRES */}
+          {/* =================================================================== */}
+          <section className="space-y-8" id="manufactures">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-4">
+              <div>
+                <span className="text-xs font-mono tracking-widest text-[#B08D57] uppercase font-bold">
+                  Maisons Historiques
+                </span>
+                <h2 className="text-2xl sm:text-4xl font-serif font-bold mt-1">
+                  Les Manufactures Légendaires
+                </h2>
+              </div>
+              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 max-w-md font-sans">
+                Les maisons mythiques qui ont forgé les plus grands chefs-d&apos;œuvre mécaniques du monde.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {manufactures.map((manufacture, index) => (
+                <div key={index} className="vitrine-card p-5 flex flex-col sm:flex-row gap-5 items-center group">
+                  <div className="w-full sm:w-40 h-40 flex-shrink-0 overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-800 relative">
+                    <img
+                      src={manufacture.img}
+                      alt={manufacture.name}
+                      className="w-full h-full object-cover card-img-zoom"
+                      loading="lazy"
+                    />
+                    <div className="absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#B08D57] text-black">
+                      {manufacture.year}
+                    </div>
+                  </div>
+
+                  <div className="flex-1 space-y-2 text-center sm:text-left">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                      <h3 className="text-lg font-serif font-bold group-hover:text-[#B08D57] transition-colors">
+                        {manufacture.name}
+                      </h3>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full gold-badge self-center sm:self-auto">
+                        {manufacture.seal}
                       </span>
                     </div>
+
+                    <div className="text-xs font-mono text-neutral-500 dark:text-neutral-400 flex items-center justify-center sm:justify-start gap-1">
+                      <MapPin className="w-3 h-3 text-[#B08D57]" />
+                      <span>{manufacture.location}</span>
+                    </div>
+
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      {manufacture.desc}
+                    </p>
                   </div>
                 </div>
+              ))}
+            </div>
+          </section>
 
-                <div className="px-4 pb-4 pt-1 flex items-center justify-between text-[11px] font-mono text-neutral-400 border-t border-neutral-100 dark:border-neutral-800/80">
-                  <span>En savoir plus</span>
-                  <ChevronRight className="w-4 h-4 text-[#B08D57] group-hover:translate-x-1 transition-transform" />
-                </div>
+          {/* =================================================================== */}
+          {/* SECTION 4 : MARQUES PREMIUM D'EXCEPTION */}
+          {/* =================================================================== */}
+          <section className="space-y-8" id="premium">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-4">
+              <div>
+                <span className="text-xs font-mono tracking-widest text-[#B08D57] uppercase font-bold">
+                  Haute Créativité
+                </span>
+                <h2 className="text-2xl sm:text-4xl font-serif font-bold mt-1">
+                  Marques Premium d&apos;Exception
+                </h2>
               </div>
-            ))}
-          </div>
-        </section>
+              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 max-w-md font-sans">
+                L&apos;avant-garde helvétique : records d&apos;extra-plat, carbone aérospatial et chronométrie silicium.
+              </p>
+            </div>
 
-        {/* =================================================================== */}
-        {/* HORLOGER DETAIL MODAL POPUP */}
-        {/* =================================================================== */}
-        {selectedHorloger && (
-          <div
-            className="fixed inset-0 z-50 bg-neutral-950/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
-            onClick={() => setSelectedHorloger(null)}
-          >
-            <div
-              className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-8 space-y-6"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-[#B08D57]/40 shrink-0">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {premiumBrands.map((brand, index) => (
+                <div key={index} className="vitrine-card flex flex-col justify-between group">
+                  <div className="relative h-48 w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
                     <img
-                      src={selectedHorloger.imageUrl}
-                      alt={selectedHorloger.nom}
-                      className="w-full h-full object-cover object-top"
+                      src={brand.img}
+                      alt={brand.name}
+                      className="w-full h-full object-cover card-img-zoom"
+                      loading="lazy"
                     />
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-mono font-bold bg-neutral-900/80 text-white backdrop-blur-sm border border-white/20">
+                      ★ {brand.name}
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-xs font-mono text-[#8A6A3B] dark:text-[#D4B483] font-bold uppercase block">
-                      {selectedHorloger.periodeLabel} · {selectedHorloger.canton}
-                    </span>
-                    <h3 className="text-2xl font-serif font-bold text-neutral-950 dark:text-neutral-50">
-                      {selectedHorloger.nom}
+
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
+                    <div className="space-y-2">
+                      <h3 className="text-base font-serif font-bold group-hover:text-[#B08D57] transition-colors">
+                        {brand.name}
+                      </h3>
+                      <div className="text-xs font-mono text-[#B08D57] font-semibold">
+                        ⚡ {brand.specialty}
+                      </div>
+                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                        {brand.desc}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* =================================================================== */}
+          {/* SECTION 5 : MÉCANISMES D'EXCEPTION */}
+          {/* =================================================================== */}
+          <section className="space-y-8" id="mechanisms">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-4">
+              <div>
+                <span className="text-xs font-mono tracking-widest text-[#B08D57] uppercase font-bold">
+                  Micro-Mécanique & Haute Complication
+                </span>
+                <h2 className="text-2xl sm:text-4xl font-serif font-bold mt-1">
+                  Mécanismes d&apos;Exception
+                </h2>
+              </div>
+              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 max-w-md font-sans">
+                Photographies macroscopiques des calibres et des complications reines de l&apos;horlogerie helvétique.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {mechanisms.map((mech, index) => (
+                <div key={index} className="vitrine-card flex flex-col justify-between group">
+                  <div className="relative h-52 w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                    <img
+                      src={mech.img}
+                      alt={mech.name}
+                      className="w-full h-full object-cover card-img-zoom"
+                      loading="lazy"
+                    />
+                    <div className="absolute bottom-3 left-3 px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-black/75 text-yellow-300 backdrop-blur-sm border border-yellow-500/30">
+                      {mech.complexity}
+                    </div>
+                  </div>
+
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-2">
+                    <h3 className="text-base font-serif font-bold group-hover:text-[#B08D57] transition-colors">
+                      {mech.name}
                     </h3>
-                    <div className="text-xs font-mono text-neutral-500 mt-0.5">
-                      Fondation : {selectedHorloger.anneeFondation} · {selectedHorloger.ville}
-                    </div>
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      {mech.desc}
+                    </p>
                   </div>
                 </div>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedHorloger(null)}
-                  className="p-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors cursor-pointer"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="space-y-3 text-xs sm:text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                <p>{selectedHorloger.bio}</p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
-                <div className="p-3.5 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 space-y-1">
-                  <strong className="text-neutral-400 uppercase text-[10px] block">Brevet &amp; Invention Clé</strong>
-                  <span className="text-neutral-900 dark:text-neutral-100 font-bold block">
-                    {selectedHorloger.innovationMajeure}
-                  </span>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 space-y-1">
-                  <strong className="text-neutral-400 uppercase text-[10px] block">Héritage Technique sur l&apos;Établi</strong>
-                  <span className="text-[#8A6A3B] dark:text-[#D4B483] font-bold block">
-                    {selectedHorloger.impactAtelier}
-                  </span>
-                </div>
-              </div>
-
-              {selectedHorloger.citation && (
-                <div className="p-4 rounded-xl bg-[#B08D57]/5 border-l-4 border-[#B08D57] text-xs italic text-neutral-700 dark:text-neutral-300 font-serif">
-                  {selectedHorloger.citation}
-                </div>
-              )}
-
-              <div className="pt-2 flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => setSelectedHorloger(null)}
-                  className="px-5 py-2 rounded-xl text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 hover:bg-[#9c7b48] transition-colors cursor-pointer"
-                >
-                  Fermer la fiche
-                </button>
-              </div>
+              ))}
             </div>
-          </div>
-        )}
+          </section>
 
-        {/* =================================================================== */}
-        {/* SECTION 2: LA GRANDE FRISE CHRONOLOGIQUE MUSÉALE (1541 - AUJOURD'HUI) */}
-        {/* =================================================================== */}
-        <section className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div className="space-y-1">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#B08D57]">
-                Chronologie Vivante
-              </span>
-              <h2 className="text-xl sm:text-2xl font-serif font-bold">
-                L&apos;Épopée Helvétique du Temps : Cinq Siècles de Jalons Majeurs
-              </h2>
+          {/* =================================================================== */}
+          {/* SECTION 6 : MONTRES HÉRITAGE */}
+          {/* =================================================================== */}
+          <section className="space-y-8" id="heritage">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-4">
+              <div>
+                <span className="text-xs font-mono tracking-widest text-[#B08D57] uppercase font-bold">
+                  Trésors Historiques & Enchères Records
+                </span>
+                <h2 className="text-2xl sm:text-4xl font-serif font-bold mt-1">
+                  Montres Héritage d&apos;Exception
+                </h2>
+              </div>
+              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 max-w-md font-sans">
+                Les garde-temps les plus précieux et vénérés de l&apos;histoire de l&apos;humanité.
+              </p>
             </div>
-            <span className="text-xs font-mono text-neutral-500">
-              10 Événements Fondateurs
-            </span>
-          </div>
 
-          {/* Timeline Connector Container */}
-          <div className="relative pl-6 sm:pl-8 border-l-2 border-[#B08D57]/40 space-y-8 my-4">
-            {HISTORIC_TIMELINE_DATA.map((item, idx) => (
-              <div key={idx} className="relative group">
-                {/* Gold Milestone Pill on Vertical Line */}
-                <div className="absolute -left-[35px] sm:-left-[43px] top-1.5 w-6 h-6 rounded-full bg-[#B08D57] border-4 border-neutral-50 dark:border-neutral-950 shadow-md flex items-center justify-center text-[10px] text-neutral-950 font-bold" />
-
-                {/* Milestone Card */}
-                <div className="p-6 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm space-y-4 hover:border-[#B08D57]/60 transition-all">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="text-2xl sm:text-3xl font-serif font-bold text-[#8A6A3B] dark:text-[#D4B483]">
-                      {item.year}
-                    </span>
-                    <div className="flex items-center gap-1.5 text-xs font-mono px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
-                      <MapPin className="w-3.5 h-3.5 text-[#B08D57]" />
-                      <span>{item.location}</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {heritageWatches.map((watch, index) => (
+                <div key={index} className="vitrine-card flex flex-col justify-between group">
+                  <div className="relative h-52 w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                    <img
+                      src={watch.img}
+                      alt={watch.name}
+                      className="w-full h-full object-cover card-img-zoom"
+                      loading="lazy"
+                    />
+                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded text-xs font-mono font-bold bg-neutral-900/80 text-white backdrop-blur-sm">
+                      {watch.year}
+                    </div>
+                    <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 shadow-md">
+                      {watch.value}
                     </div>
                   </div>
 
-                  <div className="space-y-1">
-                    <h3 className="text-lg sm:text-xl font-serif font-bold text-neutral-950 dark:text-neutral-50">
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-2">
+                    <h3 className="text-base font-serif font-bold group-hover:text-[#B08D57] transition-colors leading-snug">
+                      {watch.name}
+                    </h3>
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      {watch.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* =================================================================== */}
+          {/* SECTION 7 : INNOVATIONS RÉVOLUTIONNAIRES */}
+          {/* =================================================================== */}
+          <section className="space-y-8" id="innovations">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-4">
+              <div>
+                <span className="text-xs font-mono tracking-widest text-[#B08D57] uppercase font-bold">
+                  Ruptures Technologiques
+                </span>
+                <h2 className="text-2xl sm:text-4xl font-serif font-bold mt-1">
+                  Innovations Révolutionnaires
+                </h2>
+              </div>
+              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 max-w-md font-sans">
+                Les jalons d&apos;ingénierie qui ont redéfini la chronométrie et l&apos;usage mondial du temps.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {innovations.map((inno, index) => (
+                <div key={index} className="vitrine-card flex flex-col justify-between group">
+                  <div className="relative h-48 w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                    <img
+                      src={inno.img}
+                      alt={inno.title}
+                      className="w-full h-full object-cover card-img-zoom"
+                      loading="lazy"
+                    />
+                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-[#B08D57] text-black">
+                      {inno.brand} ({inno.year})
+                    </div>
+                    <div className="absolute bottom-3 right-3 px-2.5 py-0.5 rounded text-[10px] font-mono bg-black/70 text-white backdrop-blur-sm">
+                      {inno.impact}
+                    </div>
+                  </div>
+
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-2">
+                    <h3 className="text-base font-serif font-bold group-hover:text-[#B08D57] transition-colors leading-snug">
+                      {inno.title}
+                    </h3>
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      {inno.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* =================================================================== */}
+          {/* SECTION 8 : TERRITOIRES & ATELIERS D'ART */}
+          {/* =================================================================== */}
+          <section className="space-y-8" id="territories">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-4">
+              <div>
+                <span className="text-xs font-mono tracking-widest text-[#B08D57] uppercase font-bold">
+                  Ateliers des Cimes
+                </span>
+                <h2 className="text-2xl sm:text-4xl font-serif font-bold mt-1">
+                  Territoires & Ateliers d&apos;Exception
+                </h2>
+              </div>
+              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 max-w-md font-sans">
+                Coordonnées GPS et altitudes des foyers suisses de bienfacture horlogère.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {territories.map((ter, index) => (
+                <div key={index} className="vitrine-card p-5 flex flex-col sm:flex-row gap-5 items-center group">
+                  <div className="w-full sm:w-44 h-44 flex-shrink-0 overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-800 relative">
+                    <img
+                      src={ter.image}
+                      alt={ter.region}
+                      className="w-full h-full object-cover card-img-zoom"
+                      loading="lazy"
+                    />
+                    <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded text-[10px] font-mono bg-black/70 text-yellow-300">
+                      Alt. {ter.altitude}
+                    </div>
+                  </div>
+
+                  <div className="flex-1 space-y-2 text-center sm:text-left">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                      <h3 className="text-lg font-serif font-bold group-hover:text-[#B08D57] transition-colors">
+                        {ter.region}
+                      </h3>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+                        🌐 {ter.coords}
+                      </span>
+                    </div>
+
+                    <div className="text-xs font-mono text-[#B08D57] font-semibold">
+                      Spécialité : {ter.expertise}
+                    </div>
+
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      {ter.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* =================================================================== */}
+          {/* SECTION 9 : COLLECTIONS D'EXCEPTION */}
+          {/* =================================================================== */}
+          <section className="space-y-8" id="collections">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-4">
+              <div>
+                <span className="text-xs font-mono tracking-widest text-[#B08D57] uppercase font-bold">
+                  Haute Haute Horlogerie
+                </span>
+                <h2 className="text-2xl sm:text-4xl font-serif font-bold mt-1">
+                  Collections d&apos;Exception
+                </h2>
+              </div>
+              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 max-w-md font-sans">
+                Les pièces les plus exclusives produites par les maîtres horlogers suisses : prix, unicité et virtuosité.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {collections.map((col, index) => (
+                <div key={index} className="vitrine-card flex flex-col justify-between group">
+                  <div className="relative h-56 w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                    <img
+                      src={col.img}
+                      alt={col.name}
+                      className="w-full h-full object-cover card-img-zoom"
+                      loading="lazy"
+                    />
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 shadow-md">
+                      {col.price}
+                    </div>
+                    <div className="absolute bottom-3 right-3 px-2.5 py-0.5 rounded text-[10px] font-mono bg-black/70 text-yellow-300 backdrop-blur-sm">
+                      {col.uniqueness}
+                    </div>
+                  </div>
+
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-2">
+                    <h3 className="text-base font-serif font-bold group-hover:text-[#B08D57] transition-colors leading-snug">
+                      {col.name}
+                    </h3>
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      {col.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* =================================================================== */}
+          {/* SECTION 10 : GALERIE DES MAÎTRES & OUTILS DE HAUTE PRÉCISION */}
+          {/* =================================================================== */}
+          <section className="space-y-8" id="master-gallery">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-4">
+              <div>
+                <span className="text-xs font-mono tracking-widest text-[#B08D57] uppercase font-bold">
+                  Artisanat & Métrologie
+                </span>
+                <h2 className="text-2xl sm:text-4xl font-serif font-bold mt-1">
+                  Galerie des Maîtres & Outils de Haute Précision
+                </h2>
+              </div>
+              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 max-w-md font-sans">
+                Au cœur des ateliers suisses : les gestes séculaires, l&apos;outillage d&apos;art et les pièces d&apos;anthologie.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {masterGallery.map((item, index) => (
+                <div key={index} className="vitrine-card flex flex-col justify-between group">
+                  <div className="relative h-56 w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                    <img
+                      src={item.img}
+                      alt={item.title}
+                      className="w-full h-full object-cover card-img-zoom"
+                      loading="lazy"
+                    />
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-neutral-900/85 text-[#B08D57] backdrop-blur-sm border border-[#B08D57]/30">
+                      {item.category}
+                    </div>
+                  </div>
+
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-2">
+                    <h3 className="text-base font-serif font-bold group-hover:text-[#B08D57] transition-colors leading-snug">
                       {item.title}
                     </h3>
-                    <div className="text-xs font-mono text-neutral-500">
-                      Figures clés : {item.keyActors}
-                    </div>
-                  </div>
-
-                  <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
-                    {item.summary}
-                  </p>
-
-                  <div className="p-3.5 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-800 text-xs font-mono space-y-1">
-                    <span className="text-[10px] uppercase font-bold text-[#8A6A3B] dark:text-[#D4B483] flex items-center gap-1.5">
-                      <Compass className="w-3.5 h-3.5" />
-                      <span>Héritage Technique sur l&apos;Établi Moderne :</span>
-                    </span>
-                    <p className="text-neutral-800 dark:text-neutral-200 font-medium">
-                      {item.technicalImpact}
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                      {item.desc}
                     </p>
                   </div>
-
-                  {item.quote && (
-                    <div className="pt-2 text-xs italic text-neutral-500 font-serif border-t border-neutral-100 dark:border-neutral-800">
-                      {item.quote}
-                    </div>
-                  )}
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* =================================================================== */}
-        {/* SECTION 3: LES 4 BERCEAUX HORLOGERS & URBANISME UNESCO */}
-        {/* =================================================================== */}
-        <section className="space-y-6">
-          <div className="space-y-1">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#B08D57]">
-              Géographie Horlogère Helvétique
-            </span>
-            <h2 className="text-xl sm:text-2xl font-serif font-bold">
-              L&apos;Arc Jurassien : Les 4 Berceaux de la Haute Précision
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {CRADLES_DATA.map((cradle, idx) => (
-              <div
-                key={idx}
-                className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-sm flex flex-col justify-between space-y-4"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="px-2.5 py-1 rounded text-xs font-mono font-bold bg-[#B08D57]/15 text-[#8A6A3B] dark:text-[#D4B483]">
-                      Canton de {cradle.canton}
-                    </span>
-                    {cradle.unescoBadge && (
-                      <span className="px-2.5 py-1 rounded text-[11px] font-mono font-bold bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-500/30">
-                        {cradle.unescoBadge}
-                      </span>
-                    )}
-                  </div>
-
-                  <div>
-                    <h3 className="font-serif font-bold text-lg text-neutral-950 dark:text-neutral-50">
-                      {cradle.name}
-                    </h3>
-                    <div className="text-xs font-mono text-[#8A6A3B] dark:text-[#D4B483] mt-0.5">
-                      {cradle.title}
-                    </div>
-                  </div>
-
-                  <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                    {cradle.description}
-                  </p>
-                </div>
-
-                <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800 space-y-1.5">
-                  <span className="text-[10px] font-mono text-neutral-400 uppercase font-bold block">
-                    Manufactures Emblématiques :
-                  </span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {cradle.iconicBrands.map((brand, bIdx) => (
-                      <span
-                        key={bIdx}
-                        className="px-2 py-0.5 rounded text-[11px] font-mono bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300"
-                      >
-                        {brand}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* =================================================================== */}
-        {/* SECTION 4: LES DOYENNES DE L'ART HORLOGER SUISSE */}
-        {/* =================================================================== */}
-        <section className="space-y-6">
-          <div className="text-center max-w-xl mx-auto space-y-1">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#B08D57]">
-              Patrimoine Ininterrompu
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold">
-              Les Doyennes de l&apos;Art Horloger Suisse
-            </h2>
-            <p className="text-xs text-neutral-500">
-              Des manufactures pluriséculaires perpétuant sans discontinuer les plus hauts gestes d&apos;art
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {OLDEST_MANUFACTURES.map((mfg, idx) => (
-              <div
-                key={idx}
-                className="p-5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm text-center flex flex-col justify-between space-y-3"
-              >
-                <div className="space-y-1.5">
-                  <div className="text-2xl font-serif font-bold text-[#8A6A3B] dark:text-[#D4B483]">
-                    {mfg.foundationYear}
-                  </div>
-                  <h3 className="font-serif font-bold text-base text-neutral-950 dark:text-neutral-50">
-                    {mfg.brand}
-                  </h3>
-                  <div className="text-[11px] font-mono text-neutral-500">
-                    {mfg.city}
-                  </div>
-                </div>
-
-                <div className="p-2 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-100 dark:border-neutral-800 text-[10px] font-mono text-neutral-600 dark:text-neutral-400">
-                  {mfg.recordBadge}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* =================================================================== */}
-        {/* SECTION 5: COMPACT STEPPER QUIZ (SWISS EXAM FORMAT) */}
-        {/* =================================================================== */}
-        <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#B08D57]">
-                Évaluation Certifiée
-              </span>
-              <h2 className="text-xl sm:text-2xl font-serif font-bold">
-                Quiz de Validation Historique (Format Examen Suisse)
-              </h2>
+              ))}
             </div>
-            <span className="text-xs font-mono text-neutral-500">
-              5 Questions · Réponse unique
-            </span>
-          </div>
+          </section>
 
-          {/* Compact Stepper Container */}
-          <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-5 sm:p-6 shadow-sm">
-            {!quizFinished ? (
-              <div className="space-y-5">
-                {/* Stepper Header with Pills & Score */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-neutral-100 dark:border-neutral-800">
-                  <div className="flex items-center gap-1.5">
-                    {QUIZ_QUESTIONS.map((_, qIdx) => {
-                      const isCurrent = currentQuizIdx === qIdx;
-                      const isAnswered = userAnswers[qIdx] !== undefined;
-                      const isCorrect = userAnswers[qIdx] === QUIZ_QUESTIONS[qIdx].correctAnswer;
+          {/* =================================================================== */}
+          {/* SECTION 11 : CARACTÉRISTIQUES & PILIERS DU LABEL SWISS MADE */}
+          {/* =================================================================== */}
+          <section className="p-8 sm:p-12 rounded-3xl bg-neutral-900 text-white shadow-2xl space-y-8" id="premium-features">
+            <div className="text-center max-w-2xl mx-auto space-y-2">
+              <span className="text-xs font-mono tracking-widest text-[#B08D57] uppercase font-bold">
+                Le Standard Mondial Ultime
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold">
+                Les 4 Piliers Fondamentaux du Swiss Made
+              </h2>
+              <p className="text-xs sm:text-sm text-neutral-400 font-sans">
+                Encadré par l&apos;Ordonnance fédérale suisse réglant l&apos;utilisation du nom « Suisse » pour les montres.
+              </p>
+            </div>
 
-                      let pillStyle = "bg-neutral-100 dark:bg-neutral-800 text-neutral-500 border-neutral-200 dark:border-neutral-700";
-                      if (isAnswered) {
-                        pillStyle = isCorrect
-                          ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 font-bold"
-                          : "bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/30 font-bold";
-                      } else if (isCurrent) {
-                        pillStyle = "bg-[#B08D57] text-neutral-950 font-bold border-[#B08D57]";
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
+              <div className="p-6 rounded-2xl bg-neutral-800/80 border border-neutral-700 space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-[#B08D57]/20 text-[#B08D57] flex items-center justify-center font-bold">
+                  🏆
+                </div>
+                <h3 className="font-serif font-bold text-base text-yellow-400">Précision Absolue</h3>
+                <p className="text-xs text-neutral-300 leading-relaxed">
+                  Chronomètres certifiés par le COSC (-4/+6 sec/jour) et par METAS (Master Chronometer 0/+5 sec/jour sous 15 000 gauss).
+                </p>
+              </div>
+
+              <div className="p-6 rounded-2xl bg-neutral-800/80 border border-neutral-700 space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-[#B08D57]/20 text-[#B08D57] flex items-center justify-center font-bold">
+                  💎
+                </div>
+                <h3 className="font-serif font-bold text-base text-yellow-400">Matériaux Nobles</h3>
+                <p className="text-xs text-neutral-300 leading-relaxed">
+                  Or 18 carats (750‰), Platine 950, Titane grade 5, Glaces saphir inrayables traitées antireflet et céramiques haute technologie.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-2xl bg-neutral-800/80 border border-neutral-700 space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-[#B08D57]/20 text-[#B08D57] flex items-center justify-center font-bold">
+                  ⚙️
+                </div>
+                <h3 className="font-serif font-bold text-base text-yellow-400">Bienfacture & Finitions</h3>
+                <p className="text-xs text-neutral-300 leading-relaxed">
+                  Anglages manuels polis au bois de sureau, Côtes de Genève circulaires, perlage minutieux des platines et vis bleuies au feu.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-2xl bg-neutral-800/80 border border-neutral-700 space-y-3">
+                <div className="w-10 h-10 rounded-xl bg-[#B08D57]/20 text-[#B08D57] flex items-center justify-center font-bold">
+                  🛡️
+                </div>
+                <h3 className="font-serif font-bold text-base text-yellow-400">Héritage Perpétuel</h3>
+                <p className="text-xs text-neutral-300 leading-relaxed">
+                  Garantie de réparabilité et de réfection de pièces pour les montres anciennes, transmises de génération en génération.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* =================================================================== */}
+          {/* SECTION 12 : COMPACT STEPPER QUIZ (~280px tall) */}
+          {/* =================================================================== */}
+          <section className="space-y-4" id="quiz-section">
+            <div className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3">
+              <div>
+                <span className="text-[10px] font-mono tracking-widest text-[#B08D57] uppercase font-bold">
+                  Évaluation Théorique
+                </span>
+                <h2 className="text-xl sm:text-2xl font-serif font-bold mt-0.5">
+                  Quiz de Validation : Histoire Horlogère Suisse
+                </h2>
+              </div>
+
+              <span className="text-xs font-mono px-2.5 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 font-medium">
+                Format Examen Suisse
+              </span>
+            </div>
+
+            {/* Compact Quiz Card (height ~280px) */}
+            <div className="p-5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm min-h-[260px] flex flex-col justify-between">
+              {!quizFinished ? (
+                <div className="space-y-4">
+                  {/* Stepper Header Pills */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-semibold text-neutral-500 dark:text-neutral-400">
+                      Question {currentQuizIdx + 1} sur {QUIZ_QUESTIONS.length}
+                    </span>
+
+                    {/* Step pills 1 to 5 */}
+                    <div className="flex items-center gap-1.5">
+                      {QUIZ_QUESTIONS.map((_, idx) => {
+                        const isAnswered = userAnswers[idx] !== undefined;
+                        const isCurrent = currentQuizIdx === idx;
+                        const isCorrect = userAnswers[idx] === QUIZ_QUESTIONS[idx].correctAnswer;
+
+                        return (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => setCurrentQuizIdx(idx)}
+                            className={`w-7 h-7 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center justify-center ${
+                              isCurrent
+                                ? 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 ring-2 ring-[#B08D57]'
+                                : isAnswered
+                                ? isCorrect
+                                  ? 'bg-emerald-500 text-white'
+                                  : 'bg-rose-500 text-white'
+                                : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700'
+                            }`}
+                          >
+                            {idx + 1}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Question Text */}
+                  <h3 className="text-sm sm:text-base font-serif font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
+                    {QUIZ_QUESTIONS[currentQuizIdx].question}
+                  </h3>
+
+                  {/* Options Grid (Compact 2x2 on sm) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {QUIZ_QUESTIONS[currentQuizIdx].options.map((option, optIdx) => {
+                      const isSelected = userAnswers[currentQuizIdx] === optIdx;
+                      const hasAnswered = userAnswers[currentQuizIdx] !== undefined;
+                      const isCorrect = optIdx === QUIZ_QUESTIONS[currentQuizIdx].correctAnswer;
+
+                      let btnStyle = 'bg-neutral-50 dark:bg-neutral-800/60 border-neutral-200 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 hover:border-neutral-400 dark:hover:border-neutral-600';
+
+                      if (hasAnswered) {
+                        if (isCorrect) {
+                          btnStyle = 'bg-emerald-500/10 border-emerald-500 text-emerald-700 dark:text-emerald-400 font-semibold';
+                        } else if (isSelected) {
+                          btnStyle = 'bg-rose-500/10 border-rose-500 text-rose-700 dark:text-rose-400';
+                        } else {
+                          btnStyle = 'opacity-40 border-transparent text-neutral-400';
+                        }
                       }
 
                       return (
                         <button
-                          key={qIdx}
+                          key={optIdx}
                           type="button"
-                          onClick={() => setCurrentQuizIdx(qIdx)}
-                          className={`w-7 h-7 rounded-lg text-xs font-mono border transition-all cursor-pointer flex items-center justify-center ${pillStyle}`}
+                          disabled={hasAnswered}
+                          onClick={() => handleSelectQuizAnswer(optIdx)}
+                          className={`w-full text-left p-2.5 rounded-xl border text-xs leading-relaxed transition-all cursor-pointer flex items-start gap-2 ${btnStyle}`}
                         >
-                          {qIdx + 1}
+                          <span className="w-5 h-5 rounded-md bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 font-mono text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+                            {String.fromCharCode(65 + optIdx)}
+                          </span>
+                          <span className="flex-1">{option}</span>
                         </button>
                       );
                     })}
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-md font-mono font-bold text-xs bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] border border-[#B08D57]/20">
-                      Question {currentQuizIdx + 1} / {QUIZ_QUESTIONS.length}
-                    </span>
-                    <span className="text-xs font-mono text-neutral-500 font-semibold">
-                      Score : {calculateScore()} / {Object.keys(userAnswers).length}
-                    </span>
+                  {/* Explanation feedback */}
+                  {userAnswers[currentQuizIdx] !== undefined && (
+                    <div className="p-3 rounded-xl bg-[#B08D57]/10 border border-[#B08D57]/20 text-xs text-neutral-700 dark:text-neutral-300 flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-[#B08D57] flex-shrink-0 mt-0.5" />
+                      <p className="leading-relaxed">
+                        <strong className="text-neutral-900 dark:text-neutral-100 font-semibold">Explication : </strong>
+                        {QUIZ_QUESTIONS[currentQuizIdx].explanation}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Stepper Controls */}
+                  <div className="flex items-center justify-between pt-3 border-t border-neutral-100 dark:border-neutral-800">
+                    <button
+                      type="button"
+                      disabled={currentQuizIdx === 0}
+                      onClick={() => setCurrentQuizIdx((prev) => prev - 1)}
+                      className="px-3.5 py-1.5 rounded-lg text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                    >
+                      ← Précédent
+                    </button>
+
+                    <div className="flex items-center gap-2">
+                      {currentQuizIdx < QUIZ_QUESTIONS.length - 1 ? (
+                        <button
+                          type="button"
+                          onClick={() => setCurrentQuizIdx((prev) => prev + 1)}
+                          className="px-4 py-1.5 rounded-lg text-xs font-mono font-semibold bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 transition-all cursor-pointer"
+                        >
+                          Suivant →
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setQuizFinished(true)}
+                          className="px-4 py-1.5 rounded-lg text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 hover:bg-[#9c7b48] transition-all shadow-sm cursor-pointer"
+                        >
+                          Voir le Bilan Final ✓
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-
-                {/* Question Title */}
-                <h3 className="text-sm sm:text-base font-semibold text-neutral-900 dark:text-neutral-100 leading-snug">
-                  {QUIZ_QUESTIONS[currentQuizIdx].question}
-                </h3>
-
-                {/* Options Grid (2x2) */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {QUIZ_QUESTIONS[currentQuizIdx].options.map((opt, optIdx) => {
-                    const selected = userAnswers[currentQuizIdx];
-                    const isSelected = selected === optIdx;
-                    const isAnswered = selected !== undefined;
-                    const isOptionCorrect = optIdx === QUIZ_QUESTIONS[currentQuizIdx].correctAnswer;
-
-                    let btnStyle = "border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 bg-neutral-50/60 dark:bg-neutral-900/40 text-neutral-700 dark:text-neutral-300";
-
-                    if (isAnswered) {
-                      if (isOptionCorrect) {
-                        btnStyle = "border-emerald-500 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 font-semibold";
-                      } else if (isSelected) {
-                        btnStyle = "border-rose-500 bg-rose-500/10 text-rose-800 dark:text-rose-300 font-semibold";
-                      } else {
-                        btnStyle = "opacity-50 border-neutral-200 dark:border-neutral-800";
-                      }
-                    }
-
-                    return (
-                      <button
-                        key={optIdx}
-                        type="button"
-                        onClick={() => handleSelectQuizAnswer(optIdx)}
-                        className={`p-3.5 rounded-xl border text-left text-xs transition-all cursor-pointer flex items-center justify-between gap-2 ${btnStyle}`}
-                      >
-                        <span className="leading-snug">{opt}</span>
-                        {isAnswered && isOptionCorrect && (
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Feedback Box */}
-                {userAnswers[currentQuizIdx] !== undefined && (
-                  <div className={`p-3.5 rounded-xl text-xs leading-relaxed border ${
-                    userAnswers[currentQuizIdx] === QUIZ_QUESTIONS[currentQuizIdx].correctAnswer
-                      ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-900/40 text-emerald-900 dark:text-emerald-200"
-                      : "bg-rose-50/50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-900/40 text-rose-900 dark:text-rose-200"
-                  }`}>
-                    <span className="font-bold block mb-0.5">
-                      {userAnswers[currentQuizIdx] === QUIZ_QUESTIONS[currentQuizIdx].correctAnswer
-                        ? "✓ Réponse exacte !"
-                        : "✗ Explication historique :"}
-                    </span>
-                    {QUIZ_QUESTIONS[currentQuizIdx].explanation}
+              ) : (
+                /* Result View */
+                <div className="text-center py-6 space-y-4">
+                  <div className="w-14 h-14 rounded-full bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] mx-auto flex items-center justify-center font-serif text-2xl font-bold">
+                    {calculateScore()} / {QUIZ_QUESTIONS.length}
                   </div>
-                )}
 
-                {/* Stepper Controls */}
-                <div className="flex items-center justify-between pt-3 border-t border-neutral-100 dark:border-neutral-800">
-                  <button
-                    type="button"
-                    disabled={currentQuizIdx === 0}
-                    onClick={() => setCurrentQuizIdx(prev => prev - 1)}
-                    className="px-3.5 py-1.5 rounded-lg text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-                  >
-                    ← Précédent
-                  </button>
+                  <div className="space-y-1">
+                    <h3 className="text-lg font-serif font-bold text-neutral-900 dark:text-neutral-100">
+                      {calculateScore() >= 4
+                        ? "Félicitations ! Histoire Horlogère Suisse Validée."
+                        : "Bon travail ! Quelques révisions historiques conseillées."}
+                    </h3>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 max-w-md mx-auto">
+                      {calculateScore() >= 4
+                        ? "Vous maîtrisez les grandes époques fondatrices, l'impact de Calvin, l'établissage jurassien, le Tourbillon de Breguet et l'urbanisme UNESCO."
+                        : "Prenez le temps de relire la frise chronologique et les innovations révolutionnaires avant de poursuivre."}
+                    </p>
+                  </div>
 
-                  <div className="flex items-center gap-2">
-                    {currentQuizIdx < QUIZ_QUESTIONS.length - 1 ? (
-                      <button
-                        type="button"
-                        onClick={() => setCurrentQuizIdx(prev => prev + 1)}
-                        className="px-4 py-1.5 rounded-lg text-xs font-mono font-semibold bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 transition-all cursor-pointer"
-                      >
-                        Suivant →
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setQuizFinished(true)}
-                        className="px-4 py-1.5 rounded-lg text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 hover:bg-[#9c7b48] transition-all shadow-sm cursor-pointer"
-                      >
-                        Voir le Bilan Final ✓
-                      </button>
-                    )}
+                  <div className="flex items-center justify-center gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCurrentQuizIdx(0);
+                        setQuizFinished(false);
+                      }}
+                      className="px-4 py-2 rounded-xl text-xs font-mono font-semibold bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
+                    >
+                      Revoir mes réponses
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={resetQuiz}
+                      className="px-4 py-2 rounded-xl text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 hover:bg-[#9c7b48] transition-all cursor-pointer shadow-sm"
+                    >
+                      Recommencer le quiz
+                    </button>
                   </div>
                 </div>
-              </div>
-            ) : (
-              /* Summary / Result View */
-              <div className="text-center py-6 space-y-4">
-                <div className="w-14 h-14 rounded-full bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] mx-auto flex items-center justify-center font-serif text-2xl font-bold">
-                  {calculateScore()} / {QUIZ_QUESTIONS.length}
-                </div>
+              )}
+            </div>
+          </section>
 
-                <div className="space-y-1">
-                  <h3 className="text-lg font-serif font-bold text-neutral-900 dark:text-neutral-100">
-                    {calculateScore() >= 4
-                      ? "Félicitations ! Histoire de l'Horlogerie Suisse Validée."
-                      : "Bon travail ! Quelques révisions historiques conseillées."}
-                  </h3>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 max-w-md mx-auto">
-                    {calculateScore() >= 4
-                      ? "Vous maîtrisez les grandes époques fondatrices, l'impact de Calvin, l'établissage jurassien, le Tourbillon de Breguet et l'urbanisme UNESCO."
-                      : "Prenez le temps de relire la frise chronologique et les fiches des maîtres horlogers avant de poursuivre."}
-                  </p>
-                </div>
+          {/* =================================================================== */}
+          {/* NAVIGATION INTER-MODULES */}
+          {/* =================================================================== */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+            <Link
+              href="/theorie"
+              className="inline-flex items-center gap-2 text-xs font-mono text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>← Sommaire Général de la Théorie</span>
+            </Link>
 
-                <div className="flex items-center justify-center gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setCurrentQuizIdx(0);
-                      setQuizFinished(false);
-                    }}
-                    className="px-4 py-2 rounded-xl text-xs font-mono font-semibold bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
-                  >
-                    Revoir mes réponses
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={resetQuiz}
-                    className="px-4 py-2 rounded-xl text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 hover:bg-[#9c7b48] transition-all cursor-pointer shadow-sm"
-                  >
-                    Recommencer le quiz
-                  </button>
-                </div>
-              </div>
-            )}
+            <Link
+              href="/theorie/introduction-montre-mecanique"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-mono text-xs font-bold bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 transition-opacity shadow-sm"
+            >
+              <span>Module 01 : Introduction à la Montre Mécanique</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
-        </section>
 
-        {/* =================================================================== */}
-        {/* BOTTOM NAVIGATION BAR */}
-        {/* =================================================================== */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-neutral-200 dark:border-neutral-800">
-          <Link
-            href="/theorie"
-            className="inline-flex items-center gap-2 text-xs font-mono text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>← Sommaire Général de la Théorie</span>
-          </Link>
+          {/* =================================================================== */}
+          {/* GRAND FOOTER HAUTE HORLOGERIE */}
+          {/* =================================================================== */}
+          <footer className="mt-16 pt-12 pb-8 border-t border-neutral-200 dark:border-neutral-800 text-xs text-neutral-500 dark:text-neutral-400">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+              <div className="space-y-3">
+                <h4 className="font-serif font-bold text-sm text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+                  <span>🇨🇭</span>
+                  <span>Haute Horlogerie Suisse</span>
+                </h4>
+                <p className="leading-relaxed text-[11px]">
+                  La référence absolue et mondiale de l&apos;art mécanique et de la haute précision depuis plus de 500 ans de transmission artisanale continue.
+                </p>
+              </div>
 
-          <Link
-            href="/theorie/introduction-montre-mecanique"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-mono text-xs font-bold bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 transition-opacity shadow-sm"
-          >
-            <span>Module 01 : Introduction à la Montre Mécanique</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
+              <div className="space-y-3">
+                <h4 className="font-serif font-bold text-sm text-neutral-900 dark:text-neutral-100">
+                  Valeurs Fondamentales
+                </h4>
+                <ul className="space-y-1.5 text-[11px]">
+                  <li>• Précision Chronométrique COSC & METAS</li>
+                  <li>• Bienfacture & Anglage Manuel</li>
+                  <li>• Tradition Séculaire Jurassienne</li>
+                  <li>• Innovation Continue en Matériaux Rares</li>
+                </ul>
+              </div>
 
-      </main>
-    </div>
+              <div className="space-y-3">
+                <h4 className="font-serif font-bold text-sm text-neutral-900 dark:text-neutral-100">
+                  Grandes Manufactures
+                </h4>
+                <ul className="space-y-1.5 text-[11px]">
+                  <li>• Patek Philippe (Genève)</li>
+                  <li>• Audemars Piguet (Le Brassus)</li>
+                  <li>• Vacheron Constantin (Genève)</li>
+                  <li>• Jaeger-LeCoultre (Le Sentier)</li>
+                  <li>• Omega (Bienne) & Rolex (Genève)</li>
+                </ul>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="font-serif font-bold text-sm text-neutral-900 dark:text-neutral-100">
+                  Savoir-Faire Mondial
+                </h4>
+                <p className="leading-relaxed text-[11px]">
+                  Classé au patrimoine immatériel de l&apos;UNESCO, l&apos;art horloger suisse et la mécanique d&apos;art incarnent l&apos;apogée de l&apos;ingénierie et de l&apos;élégance perpétuelle.
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800 text-center font-mono text-[10px] text-neutral-400">
+              © HorloLearn — Espace Théorie Horlogère Suisse • Tous droits réservés
+            </div>
+          </footer>
+
+        </main>
+      </div>
+    </>
   );
 }
