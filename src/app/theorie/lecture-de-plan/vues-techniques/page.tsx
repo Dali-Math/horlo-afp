@@ -408,71 +408,87 @@ export default function VuesTechniquesPage() {
 
               {/* Schéma vectoriel des 6 vues */}
               <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-950 text-white shadow-sm flex flex-col items-center justify-center font-mono">
-                <svg viewBox="0 0 720 380" className="w-full max-w-[680px] h-auto select-none">
+                <svg viewBox="0 0 880 380" className="w-full max-w-[860px] h-auto select-none">
                   {/* Projection alignment lines */}
-                  <line x1="260" y1="20" x2="260" y2="360" stroke="#334155" strokeWidth="1" strokeDasharray="3 3" />
-                  <line x1="460" y1="20" x2="460" y2="360" stroke="#334155" strokeWidth="1" strokeDasharray="3 3" />
-                  <line x1="40" y1="130" x2="680" y2="130" stroke="#334155" strokeWidth="1" strokeDasharray="3 3" />
-                  <line x1="40" y1="250" x2="680" y2="250" stroke="#334155" strokeWidth="1" strokeDasharray="3 3" />
+                  <line x1="250" y1="20" x2="250" y2="360" stroke="#334155" strokeWidth="1" strokeDasharray="3 3" />
+                  <line x1="420" y1="20" x2="420" y2="360" stroke="#334155" strokeWidth="1" strokeDasharray="3 3" />
+                  <line x1="460" y1="135" x2="460" y2="245" stroke="#334155" strokeWidth="1" strokeDasharray="3 3" />
+                  <line x1="630" y1="135" x2="630" y2="245" stroke="#334155" strokeWidth="1" strokeDasharray="3 3" />
+                  <line x1="670" y1="135" x2="670" y2="245" stroke="#334155" strokeWidth="1" strokeDasharray="3 3" />
+                  <line x1="840" y1="135" x2="840" y2="245" stroke="#334155" strokeWidth="1" strokeDasharray="3 3" />
+                  <line x1="20" y1="144" x2="860" y2="144" stroke="#334155" strokeWidth="1" strokeDasharray="3 3" />
+                  <line x1="20" y1="236" x2="860" y2="236" stroke="#334155" strokeWidth="1" strokeDasharray="3 3" />
 
                   {/* 1. VUE DE DESSOUS (En haut) */}
                   <g
                     onClick={() => setSelectedViewId("dessous")}
                     className="cursor-pointer group"
-                    transform="translate(270, 25)"
+                    transform="translate(250, 26)"
                   >
-                    <rect width="180" height="90" fill={selectedViewId === "dessous" ? "#2B3240" : "#1A1D24"} stroke={selectedViewId === "dessous" ? "#D4B483" : "#475569"} strokeWidth="1.5" rx="6" />
-                    <text x="90" y="35" fill="#F1F5F9" fontSize="11" fontWeight="bold" textAnchor="middle">VUE DE DESSOUS</text>
-                    <text x="90" y="55" fill="#94A3B8" fontSize="9" textAnchor="middle">Placée AU-DESSUS</text>
-                    <circle cx="90" cy="72" r="8" fill="none" stroke="#38BDF8" strokeWidth="1.5" />
+                    <rect width="170" height="92" fill={selectedViewId === "dessous" ? "#2B3240" : "#1A1D24"} stroke={selectedViewId === "dessous" ? "#D4B483" : "#475569"} strokeWidth="1.5" rx="6" />
+                    <text x="85" y="35" fill="#F1F5F9" fontSize="11" fontWeight="bold" textAnchor="middle">VUE DE DESSOUS</text>
+                    <text x="85" y="55" fill="#94A3B8" fontSize="9" textAnchor="middle">Placée AU-DESSUS</text>
+                    <circle cx="85" cy="72" r="8" fill="none" stroke="#38BDF8" strokeWidth="1.5" />
                   </g>
 
                   {/* 2. VUE DE DROITE (À gauche) */}
                   <g
                     onClick={() => setSelectedViewId("droite")}
                     className="cursor-pointer group"
-                    transform="translate(60, 140)"
+                    transform="translate(40, 144)"
                   >
-                    <rect width="180" height="95" fill={selectedViewId === "droite" ? "#2B3240" : "#1A1D24"} stroke={selectedViewId === "droite" ? "#D4B483" : "#475569"} strokeWidth="1.5" rx="6" />
-                    <text x="90" y="40" fill="#F1F5F9" fontSize="11" fontWeight="bold" textAnchor="middle">VUE DE DROITE</text>
-                    <text x="90" y="60" fill="#94A3B8" fontSize="9" textAnchor="middle">Placée À GAUCHE</text>
-                    <line x1="40" y1="75" x2="140" y2="75" stroke="#F59E0B" strokeWidth="1.5" />
+                    <rect width="170" height="92" fill={selectedViewId === "droite" ? "#2B3240" : "#1A1D24"} stroke={selectedViewId === "droite" ? "#D4B483" : "#475569"} strokeWidth="1.5" rx="6" />
+                    <text x="85" y="38" fill="#F1F5F9" fontSize="11" fontWeight="bold" textAnchor="middle">VUE DE DROITE</text>
+                    <text x="85" y="58" fill="#94A3B8" fontSize="9" textAnchor="middle">Placée À GAUCHE</text>
+                    <line x1="45" y1="72" x2="125" y2="72" stroke="#F59E0B" strokeWidth="1.5" />
                   </g>
 
                   {/* 3. VUE DE FACE (Au centre) */}
                   <g
                     onClick={() => setSelectedViewId("face")}
                     className="cursor-pointer group"
-                    transform="translate(270, 140)"
+                    transform="translate(250, 144)"
                   >
-                    <rect width="180" height="95" fill={selectedViewId === "face" ? "#2B3240" : "#222733"} stroke={selectedViewId === "face" ? "#B08D57" : "#64748B"} strokeWidth="2" rx="6" />
-                    <text x="90" y="40" fill="#D4B483" fontSize="12" fontWeight="bold" textAnchor="middle">VUE DE FACE</text>
-                    <text x="90" y="60" fill="#E2E8F0" fontSize="10" textAnchor="middle">Vue Principale Centrée</text>
-                    <circle cx="90" cy="78" r="10" fill="#B08D57" opacity="0.3" stroke="#B08D57" strokeWidth="1.5" />
+                    <rect width="170" height="92" fill={selectedViewId === "face" ? "#2B3240" : "#222733"} stroke={selectedViewId === "face" ? "#B08D57" : "#64748B"} strokeWidth="2" rx="6" />
+                    <text x="85" y="38" fill="#D4B483" fontSize="12" fontWeight="bold" textAnchor="middle">VUE DE FACE</text>
+                    <text x="85" y="58" fill="#E2E8F0" fontSize="10" textAnchor="middle">Vue Principale Centrée</text>
+                    <circle cx="85" cy="74" r="10" fill="#B08D57" opacity="0.3" stroke="#B08D57" strokeWidth="1.5" />
                   </g>
 
                   {/* 4. VUE DE GAUCHE (À droite) */}
                   <g
                     onClick={() => setSelectedViewId("gauche")}
                     className="cursor-pointer group"
-                    transform="translate(480, 140)"
+                    transform="translate(460, 144)"
                   >
-                    <rect width="180" height="95" fill={selectedViewId === "gauche" ? "#2B3240" : "#1A1D24"} stroke={selectedViewId === "gauche" ? "#D4B483" : "#475569"} strokeWidth="1.5" rx="6" />
-                    <text x="90" y="40" fill="#F1F5F9" fontSize="11" fontWeight="bold" textAnchor="middle">VUE DE GAUCHE</text>
-                    <text x="90" y="60" fill="#94A3B8" fontSize="9" textAnchor="middle">Placée À DROITE</text>
-                    <line x1="40" y1="75" x2="140" y2="75" stroke="#F59E0B" strokeWidth="1.5" />
+                    <rect width="170" height="92" fill={selectedViewId === "gauche" ? "#2B3240" : "#1A1D24"} stroke={selectedViewId === "gauche" ? "#D4B483" : "#475569"} strokeWidth="1.5" rx="6" />
+                    <text x="85" y="38" fill="#F1F5F9" fontSize="11" fontWeight="bold" textAnchor="middle">VUE DE GAUCHE</text>
+                    <text x="85" y="58" fill="#94A3B8" fontSize="9" textAnchor="middle">Placée À DROITE</text>
+                    <line x1="45" y1="72" x2="125" y2="72" stroke="#F59E0B" strokeWidth="1.5" />
                   </g>
 
-                  {/* 5. VUE DE DESSUS (En bas) */}
+                  {/* 5. VUE ARRIÈRE (À l'extrême droite) */}
+                  <g
+                    onClick={() => setSelectedViewId("arriere")}
+                    className="cursor-pointer group"
+                    transform="translate(670, 144)"
+                  >
+                    <rect width="170" height="92" fill={selectedViewId === "arriere" ? "#2B3240" : "#1A1D24"} stroke={selectedViewId === "arriere" ? "#D4B483" : "#475569"} strokeWidth="1.5" rx="6" />
+                    <text x="85" y="38" fill="#F1F5F9" fontSize="11" fontWeight="bold" textAnchor="middle">VUE ARRIÈRE</text>
+                    <text x="85" y="58" fill="#94A3B8" fontSize="9" textAnchor="middle">Placée À L&apos;EXTRÊME DROITE</text>
+                    <rect x="70" y="66" width="30" height="14" fill="none" stroke="#A855F7" strokeWidth="1.5" strokeDasharray="3 2" />
+                  </g>
+
+                  {/* 6. VUE DE DESSUS (En bas) */}
                   <g
                     onClick={() => setSelectedViewId("dessus")}
                     className="cursor-pointer group"
-                    transform="translate(270, 260)"
+                    transform="translate(250, 262)"
                   >
-                    <rect width="180" height="90" fill={selectedViewId === "dessus" ? "#2B3240" : "#1A1D24"} stroke={selectedViewId === "dessus" ? "#D4B483" : "#475569"} strokeWidth="1.5" rx="6" />
-                    <text x="90" y="35" fill="#F1F5F9" fontSize="11" fontWeight="bold" textAnchor="middle">VUE DE DESSUS</text>
-                    <text x="90" y="55" fill="#94A3B8" fontSize="9" textAnchor="middle">Placée EN DESSOUS</text>
-                    <rect x="75" y="65" width="30" height="15" fill="none" stroke="#10B981" strokeWidth="1.5" />
+                    <rect width="170" height="92" fill={selectedViewId === "dessus" ? "#2B3240" : "#1A1D24"} stroke={selectedViewId === "dessus" ? "#D4B483" : "#475569"} strokeWidth="1.5" rx="6" />
+                    <text x="85" y="35" fill="#F1F5F9" fontSize="11" fontWeight="bold" textAnchor="middle">VUE DE DESSUS</text>
+                    <text x="85" y="55" fill="#94A3B8" fontSize="9" textAnchor="middle">Placée EN DESSOUS</text>
+                    <rect x="70" y="66" width="30" height="14" fill="none" stroke="#10B981" strokeWidth="1.5" />
                   </g>
                 </svg>
               </div>
