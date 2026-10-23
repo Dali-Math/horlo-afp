@@ -77,7 +77,7 @@ export default function MicromecaniqueModulePage() {
       treatment: "Trempe à l'huile + Revenu Bleu à 290°C (~56 HRC)",
       desc: "Outil fondamental servant à marquer le centre des futurs perçages sur platines sans déraper. Comprend le moletage croisé, le méplat de frappe des initiales (4x5 mm) et la pointe conique à 60° (tolérance pointe Ø 2.3 ± 100 μm).",
       renderSvg: () => (
-        <svg viewBox="0 0 750 200" className="w-full h-auto blueprint-bg rounded-xl p-3 border border-slate-800 font-mono">
+        <svg viewBox="0 0 750 200" className="w-full h-auto blueprint-bg rounded-xl p-3 border border-slate-300 dark:border-slate-800 font-mono">
           <line x1="20" y1="100" x2="730" y2="100" stroke="#F59E0B" strokeDasharray="10,3,2,3" strokeWidth="1.5"/>
           <rect x="180" y="70" width="260" height="60" fill="#334155" stroke="#CBD5E1" strokeWidth="2"/>
           <pattern id="p-knurl-1" width="8" height="8" patternUnits="userSpaceOnUse">
@@ -120,7 +120,7 @@ export default function MicromecaniqueModulePage() {
       treatment: "Trempe pointe + Revenu Bleu à 290°C",
       desc: "Outil de traçage de haute précision comportant un cône effilé long de 25 mm à angle aigu de 28°, un moletage de préhension de 76 mm, et deux gorges de dégagement de 1.0 mm.",
       renderSvg: () => (
-        <svg viewBox="0 0 750 160" className="w-full h-auto blueprint-bg rounded-xl p-3 border border-slate-800 font-mono">
+        <svg viewBox="0 0 750 160" className="w-full h-auto blueprint-bg rounded-xl p-3 border border-slate-300 dark:border-slate-800 font-mono">
           <line x1="20" y1="80" x2="730" y2="80" stroke="#F59E0B" strokeDasharray="10,3,2,3" strokeWidth="1.5"/>
           <rect x="70" y="65" width="460" height="30" fill="#334155" stroke="#CBD5E1" strokeWidth="2"/>
           <pattern id="p-knurl-2" width="8" height="8" patternUnits="userSpaceOnUse">
@@ -152,7 +152,7 @@ export default function MicromecaniqueModulePage() {
       treatment: "Polymère auto-lubrifiant (aucun traitement thermique)",
       desc: "Outil d'emboîtage doux permettant de chasser les aiguilles de montre sans rayer le vernis ni la luminescence.",
       renderSvg: () => (
-        <svg viewBox="0 0 750 160" className="w-full h-auto blueprint-bg rounded-xl p-3 border border-slate-800 font-mono">
+        <svg viewBox="0 0 750 160" className="w-full h-auto blueprint-bg rounded-xl p-3 border border-slate-300 dark:border-slate-800 font-mono">
           <line x1="20" y1="80" x2="730" y2="80" stroke="#F59E0B" strokeDasharray="10,3,2,3" strokeWidth="1.5"/>
           <rect x="80" y="50" width="460" height="60" rx="3" fill="#0284C7" fillOpacity="0.25" stroke="#38BDF8" strokeWidth="2"/>
           <polygon points="540,50 635,62 635,98 540,110" fill="#0284C7" fillOpacity="0.35" stroke="#38BDF8" strokeWidth="2"/>
@@ -178,7 +178,7 @@ export default function MicromecaniqueModulePage() {
       treatment: "Polissage d'établi soigné",
       desc: "Outil multifonction servant à vérifier les ébats de rouage et nettoyer les pignons sans marquer les ponts anglés.",
       renderSvg: () => (
-        <svg viewBox="0 0 750 150" className="w-full h-auto blueprint-bg rounded-xl p-3 border border-slate-800 font-mono">
+        <svg viewBox="0 0 750 150" className="w-full h-auto blueprint-bg rounded-xl p-3 border border-slate-300 dark:border-slate-800 font-mono">
           <line x1="20" y1="75" x2="730" y2="75" stroke="#F59E0B" strokeDasharray="10,3,2,3" strokeWidth="1.5"/>
           <rect x="80" y="50" width="470" height="50" fill="#0284C7" fillOpacity="0.25" stroke="#38BDF8" strokeWidth="2"/>
           <polygon points="550,50 655,70 655,80 550,100" fill="#0284C7" fillOpacity="0.35" stroke="#38BDF8" strokeWidth="2"/>
@@ -202,7 +202,7 @@ export default function MicromecaniqueModulePage() {
       treatment: "Finition Poli Glacé N5 sur faces d'appui",
       desc: "S'insère dans le bloc d'emboîtage pour soutenir la platine lors du chassage des fournitures sans déformer les ponts.",
       renderSvg: () => (
-        <svg viewBox="0 0 750 180" className="w-full h-auto blueprint-bg rounded-xl p-3 border border-slate-800 font-mono">
+        <svg viewBox="0 0 750 180" className="w-full h-auto blueprint-bg rounded-xl p-3 border border-slate-300 dark:border-slate-800 font-mono">
           <line x1="20" y1="90" x2="730" y2="90" stroke="#F59E0B" strokeDasharray="10,3,2,3" strokeWidth="1.5"/>
           <rect x="200" y="65" width="120" height="50" fill="#CA8A04" stroke="#713F12" strokeWidth="2"/>
           <rect x="320" y="35" width="160" height="110" fill="#EAB308" stroke="#713F12" strokeWidth="2.5"/>
@@ -317,7 +317,7 @@ export default function MicromecaniqueModulePage() {
   const isCurAnswered = userAnswers[currentQuestionIdx] !== undefined;
 
   return (
-    <div className="min-h-screen bg-[#080C15] text-slate-200 antialiased selection:bg-amber-500/30 selection:text-amber-200">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#080C15] text-slate-800 dark:text-slate-200 antialiased selection:bg-amber-500/30 selection:text-amber-800 dark:selection:text-amber-200 transition-colors duration-300">
       
       {/* Blueprint Grid Styles */}
       <style jsx global>{`
@@ -328,6 +328,13 @@ export default function MicromecaniqueModulePage() {
             linear-gradient(90deg, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
           background-size: 20px 20px;
         }
+        :global(html:not(.dark)) .blueprint-bg {
+          background-color: #f8fafc;
+          background-image: 
+            linear-gradient(rgba(14, 165, 233, 0.12) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(14, 165, 233, 0.12) 1px, transparent 1px);
+          background-size: 20px 20px;
+        }
         @keyframes spinClockwise { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes spinCounterClockwise { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
         .lathe-spin-cw { animation: spinClockwise 1.2s linear infinite; }
@@ -335,13 +342,13 @@ export default function MicromecaniqueModulePage() {
       `}</style>
 
       {/* Top Banner */}
-      <div className="bg-[#0c1322] border-b border-slate-800 py-3 px-4 sticky top-0 z-40 backdrop-blur-md bg-opacity-90">
+      <div className="bg-white/95 dark:bg-[#0c1322]/90 border-b border-slate-200 dark:border-slate-800 py-3 px-4 sticky top-0 z-40 backdrop-blur-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between text-xs font-mono">
-          <Link href="/pratique" className="text-slate-400 hover:text-amber-400 flex items-center gap-1.5 transition-colors">
+          <Link href="/pratique" className="text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 flex items-center gap-1.5 transition-colors">
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Retour aux Modules Pratiques</span>
           </Link>
-          <span className="text-amber-400 uppercase tracking-wider font-semibold flex items-center gap-2">
+          <span className="text-amber-700 dark:text-amber-400 uppercase tracking-wider font-semibold flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             Haute Horlogerie Suisse · Module 2 · Micromécanique & Tournage Schaublin 70
           </span>
@@ -352,49 +359,49 @@ export default function MicromecaniqueModulePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
         
         {/* Hero Section */}
-        <div className="relative rounded-3xl bg-gradient-to-b from-[#10192e] to-[#080C15] p-8 sm:p-12 border border-slate-800 shadow-2xl overflow-hidden">
+        <div className="relative rounded-3xl bg-gradient-to-b from-white to-slate-50 dark:from-[#10192e] dark:to-[#080C15] p-8 sm:p-12 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-2xl overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl -z-10"></div>
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7">
-              <span className="px-3.5 py-1.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 text-xs font-mono uppercase tracking-widest inline-flex items-center gap-2 mb-4">
+              <span className="px-3.5 py-1.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30 text-xs font-mono uppercase tracking-widest inline-flex items-center gap-2 mb-4">
                 <Compass className="w-3.5 h-3.5 text-amber-400" />
                 Atelier d'Usinage Horloger de Précision
               </span>
-              <h1 className="text-3xl sm:text-5xl font-sans font-bold tracking-tight font-bold text-white leading-tight">
+              <h1 className="text-3xl sm:text-5xl font-sans font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
                 La Pratique Rigoureuse du Tournage <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600">
                   Micromécanique Horlogère
                 </span>
               </h1>
-              <p className="mt-4 text-slate-300 text-sm sm:text-base leading-relaxed font-light">
+              <p className="mt-4 text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed font-light">
                 Standards d'excellence des écoles d'horlogerie suisses. Maîtrisez le <strong>Tour d'outilleur Schaublin 70</strong>, les <strong>gestes d'établi réels</strong> au centième de millimètre, le traitement thermique de l'acier <strong>Böhler K720</strong>, et l'usinage des 5 pièces maîtresses.
               </p>
 
               <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
-                <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-                  <span className="text-slate-400 text-[10px] uppercase block">Hauteur de centre</span>
+                <div className="p-3 rounded-xl bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
+                  <span className="text-slate-500 dark:text-slate-400 text-[10px] uppercase block">Hauteur de centre</span>
                   <span className="text-amber-300 font-bold text-sm">70.00 mm</span>
                 </div>
-                <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-                  <span className="text-slate-400 text-[10px] uppercase block">Pinces Schaublin</span>
+                <div className="p-3 rounded-xl bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
+                  <span className="text-slate-500 dark:text-slate-400 text-[10px] uppercase block">Pinces Schaublin</span>
                   <span className="text-cyan-300 font-bold text-sm">Type W-12</span>
                 </div>
-                <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-                  <span className="text-slate-400 text-[10px] uppercase block">Précision tambour</span>
+                <div className="p-3 rounded-xl bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
+                  <span className="text-slate-500 dark:text-slate-400 text-[10px] uppercase block">Précision tambour</span>
                   <span className="text-emerald-300 font-bold text-sm">0.01 mm</span>
                 </div>
-                <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-                  <span className="text-slate-400 text-[10px] uppercase block">Acier d'outillage</span>
+                <div className="p-3 rounded-xl bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
+                  <span className="text-slate-500 dark:text-slate-400 text-[10px] uppercase block">Acier d'outillage</span>
                   <span className="text-rose-300 font-bold text-sm">Böhler K720</span>
                 </div>
               </div>
             </div>
 
             {/* Quick Lathe Console Simulator */}
-            <div className="lg:col-span-5 bg-slate-900/90 rounded-2xl p-6 border border-slate-800 shadow-xl space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <span className="text-xs font-mono text-slate-400 flex items-center gap-2">
+            <div className="lg:col-span-5 bg-white dark:bg-slate-900/90 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+                <span className="text-xs font-mono text-slate-600 dark:text-slate-400 flex items-center gap-2">
                   <Sliders className="w-3.5 h-3.5 text-amber-400" />
                   Pupitre Schaublin 70 Mi-CF
                 </span>
@@ -404,7 +411,7 @@ export default function MicromecaniqueModulePage() {
               </div>
 
               {/* Digital Tachometer & Chuck Visual */}
-              <div className="flex items-center justify-between p-4 rounded-xl bg-slate-950 border border-slate-800">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
                 <div>
                   <span className="text-[10px] font-mono text-slate-500 uppercase block">Fréquence de Broche</span>
                   <span className="text-3xl font-mono font-bold text-emerald-400 tracking-wider">
@@ -429,7 +436,7 @@ export default function MicromecaniqueModulePage() {
 
               {/* Slider for Target Speed */}
               <div className="space-y-1">
-                <div className="flex justify-between text-xs font-mono text-slate-400">
+                <div className="flex justify-between text-xs font-mono text-slate-600 dark:text-slate-400">
                   <span>Consigne Vitesse :</span>
                   <span className="text-amber-400 font-bold">{targetRpm} tr/min</span>
                 </div>
@@ -462,14 +469,14 @@ export default function MicromecaniqueModulePage() {
                 </button>
                 <button
                   onClick={() => setDirection(d => d === 'ccw' ? 'cw' : 'ccw')}
-                  className="py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 font-mono text-xs font-bold border border-slate-700 transition-colors flex items-center justify-center gap-1"
+                  className="py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-amber-300 font-mono text-xs font-bold border border-slate-300 dark:border-slate-700 transition-colors flex items-center justify-center gap-1"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   {direction === 'ccw' ? 'SENS CCW' : 'SENS CW'}
                 </button>
               </div>
 
-              <div className="text-[11px] font-mono text-slate-500 text-center">
+              <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 text-center">
                 Sens standard d'usinage horloger : <strong>Anti-horaire (CCW)</strong> vers l'opérateur.
               </div>
             </div>
@@ -479,24 +486,24 @@ export default function MicromecaniqueModulePage() {
         {/* Section 01 : Le Tour Schaublin 70 & Photo Réelle d'Atelier */}
         <section id="machine" className="scroll-mt-28 pt-6">
 {/* 01. LE TOUR SCHAUBLIN 70 EN ATELIER */}
-    <div className="rounded-3xl border border-slate-800/80 bg-gradient-to-b from-slate-900/90 to-slate-950/90 p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+    <div className="rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-gradient-to-b dark:from-slate-900/90 dark:to-slate-950/90 p-6 sm:p-8 backdrop-blur-xl shadow-sm dark:shadow-2xl space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div className="flex items-center gap-4">
           <span className="px-3.5 py-1.5 rounded-xl bg-amber-500/10 text-amber-400 font-extrabold text-sm border border-amber-500/30">01</span>
           <div>
             <span className="text-xs font-bold text-amber-400 uppercase tracking-widest block">ÉQUIPEMENT D'ATELIER HAUTE PRÉCISION</span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Le Tour d'Outilleur Schaublin 70 en Atelier</h2>
-            <p className="text-sm text-slate-300 mt-1">Poupée porte-broche W-12, chariot croisé aux centièmes et configuration réelle d'établi</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Le Tour d'Outilleur Schaublin 70 en Atelier</h2>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">Poupée porte-broche W-12, chariot croisé aux centièmes et configuration réelle d'établi</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1.5 rounded-full bg-slate-800 text-xs font-semibold text-slate-300 border border-slate-700">Standard Suisse</span>
+          <span className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">Standard Suisse</span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         {/* Photo réelle en Base64 */}
-        <div className="lg:col-span-6 relative rounded-2xl overflow-hidden border border-slate-700/80 shadow-2xl group bg-slate-900 aspect-[16/11]">
+        <div className="lg:col-span-6 relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700/80 shadow-sm dark:shadow-2xl group bg-slate-100 dark:bg-slate-900 aspect-[16/11]">
           <img 
             src="/images/micromecanique/schaublin_tournage_main.jpg" 
             alt="Tour Schaublin 70 en action dans l'atelier d'horlogerie" 
@@ -515,32 +522,32 @@ export default function MicromecaniqueModulePage() {
 
         {/* 3 Cartes explicatives */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="p-5 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-slate-700 transition-colors space-y-2">
+          <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors space-y-2">
             <div className="flex items-center gap-2.5 text-amber-400 font-bold text-base">
               <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
               1. Poupée Porte-Broche pour Pinces W-12
             </div>
-            <p className="text-sm text-slate-200 leading-relaxed">
-              La broche du Schaublin 70 est cémentée, trempée et rectifiée. Elle reçoit les pinces W-12 à tirant arrière. Alésage intérieur de 12 mm autorisant un passage de barre utile jusqu'à <strong className="text-white">Ø 8.2 mm</strong>. Vitesse de démarrage : <strong className="text-white">800 tr/min</strong> en rotation anti-horaire.
+            <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+              La broche du Schaublin 70 est cémentée, trempée et rectifiée. Elle reçoit les pinces W-12 à tirant arrière. Alésage intérieur de 12 mm autorisant un passage de barre utile jusqu'à <strong className="text-slate-900 dark:text-white">Ø 8.2 mm</strong>. Vitesse de démarrage : <strong className="text-slate-900 dark:text-white">800 tr/min</strong> en rotation anti-horaire.
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-slate-700 transition-colors space-y-2">
+          <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors space-y-2">
             <div className="flex items-center gap-2.5 text-cyan-400 font-bold text-base">
               <span className="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
               2. Chariot Croisé &amp; Tambours Micrométriques
             </div>
-            <p className="text-sm text-slate-200 leading-relaxed">
+            <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
               Coulisse longitudinale (course 60 mm) et latérale (course 65 mm). Les tambours divisés offrent une <strong className="text-cyan-300">lecture directe au 0.01 mm</strong> (un centième de millimètre). Le chariot orientable à 360° permet de charioter les cônes de précision (ex: cône 60° du pointeau).
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-slate-950/70 border border-slate-800 hover:border-slate-700 transition-colors space-y-2">
+          <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors space-y-2">
             <div className="flex items-center gap-2.5 text-emerald-400 font-bold text-base">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
               3. Contre-Poupée (Hauteur de pointe H = 70.00 mm)
             </div>
-            <p className="text-sm text-slate-200 leading-relaxed">
+            <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
               Course 45 mm, alésage intérieur cône Schaublin 2°. Reçoit la pointe fixe trempée 60° indispensable pour centrer le burin sous la loupe d'horloger ou le mandrin Albrecht pour les perçages axiaux.
             </p>
           </div>
@@ -557,10 +564,10 @@ export default function MicromecaniqueModulePage() {
          PROCÉDURE D'USINAGE : GUIDE DE RÉGLAGE ET TOURNAGE DE PRÉCISION
          (Conforme au protocole d'établi Schaublin 70 · Étapes 1 à 11)
          ========================================== */}
-    <div id="procedure-usinage" className="rounded-3xl border border-slate-800/80 bg-gradient-to-b from-slate-900/95 to-slate-950/95 p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-8">
+    <div id="procedure-usinage" className="rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-gradient-to-b dark:from-slate-900/95 dark:to-slate-950/95 p-6 sm:p-8 backdrop-blur-xl shadow-sm dark:shadow-2xl space-y-8">
       
       {/* En-tête du protocole */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-extrabold text-lg shadow-inner">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -570,10 +577,10 @@ export default function MicromecaniqueModulePage() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold text-xs uppercase tracking-wider border border-amber-500/30">PROTOCOLE D'ATELIER · SCHAUBLIN 70</span>
-              <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-semibold text-xs border border-slate-700">Précision au 0.01 mm</span>
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs border border-slate-200 dark:border-slate-700">Précision au 0.01 mm</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Procédure d'Usinage au Centième</h2>
-            <p className="text-sm text-slate-300 mt-1">Guide méthodologique pas-à-pas : réglage machine, prise d'origine et dressage de face</p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Procédure d'Usinage au Centième</h2>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">Guide méthodologique pas-à-pas : réglage machine, prise d'origine et dressage de face</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -587,14 +594,14 @@ export default function MicromecaniqueModulePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         
         {/* ÉTAPE 1 : PRÉPARATION */}
-        <div className="p-6 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-amber-500/40 transition-all space-y-4 shadow-lg flex flex-col justify-between">
+        <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 hover:border-amber-500/40 transition-all space-y-4 shadow-sm dark:shadow-lg flex flex-col justify-between">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 font-bold text-xs border border-amber-500/20 uppercase tracking-wider">Étape 1</span>
               <span className="text-xs text-slate-400 font-mono">Banc &amp; Porte-outil</span>
             </div>
-            <h3 className="text-lg font-bold text-white">Préparation Machine</h3>
-            <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Préparation Machine</h3>
+            <ul className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 shrink-0"></span>
                 <span><strong>Chariot croisé :</strong> Plaqué fermement contre le banc du tour.</span>
@@ -613,21 +620,21 @@ export default function MicromecaniqueModulePage() {
               </li>
             </ul>
           </div>
-          <div className="pt-3 border-t border-slate-800/80 text-[11px] font-mono text-amber-300 flex items-center justify-between">
+          <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 text-[11px] font-mono text-amber-700 dark:text-amber-300 flex items-center justify-between">
             <span>Repère : Coulisse à 10</span>
             <span>H = 70.00 mm</span>
           </div>
         </div>
 
         {/* ÉTAPE 2 & 3 : POSITIONNEMENT */}
-        <div className="p-6 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition-all space-y-4 shadow-lg flex flex-col justify-between">
+        <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 hover:border-cyan-500/40 transition-all space-y-4 shadow-sm dark:shadow-lg flex flex-col justify-between">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-400 font-bold text-xs border border-cyan-500/20 uppercase tracking-wider">Étapes 2 &amp; 3</span>
               <span className="text-xs text-slate-400 font-mono">Pince W-12</span>
             </div>
-            <h3 className="text-lg font-bold text-white">Positionnement Pièce</h3>
-            <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Positionnement Pièce</h3>
+            <ul className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-2 shrink-0"></span>
                 <span><strong>Sortie de barre :</strong> Sortir la pièce brute de <strong>10 mm</strong> de la pince W-12.</span>
@@ -642,21 +649,21 @@ export default function MicromecaniqueModulePage() {
               </li>
             </ul>
           </div>
-          <div className="pt-3 border-t border-slate-800/80 text-[11px] font-mono text-cyan-300 flex items-center justify-between">
+          <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 text-[11px] font-mono text-cyan-700 dark:text-cyan-300 flex items-center justify-between">
             <span>Sortie : 10.0 mm</span>
             <span>Garde active</span>
           </div>
         </div>
 
         {/* ÉTAPE 4 À 6 : ORIGINE */}
-        <div className="p-6 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/40 transition-all space-y-4 shadow-lg flex flex-col justify-between">
+        <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/40 transition-all space-y-4 shadow-sm dark:shadow-lg flex flex-col justify-between">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 font-bold text-xs border border-emerald-500/20 uppercase tracking-wider">Étapes 4 à 6</span>
               <span className="text-xs text-slate-400 font-mono">Mise à Zéro</span>
             </div>
-            <h3 className="text-lg font-bold text-white">Prise d'Origine</h3>
-            <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Prise d'Origine</h3>
+            <ul className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0"></span>
                 <span><strong>Centrage vertical :</strong> Avancer le burin au milieu avec la coulisse verticale.</span>
@@ -671,21 +678,21 @@ export default function MicromecaniqueModulePage() {
               </li>
             </ul>
           </div>
-          <div className="pt-3 border-t border-slate-800/80 text-[11px] font-mono text-emerald-300 flex items-center justify-between">
+          <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 text-[11px] font-mono text-emerald-700 dark:text-emerald-300 flex items-center justify-between">
             <span>Tangentage latéral</span>
             <span>Vernier à 0.00</span>
           </div>
         </div>
 
         {/* ÉTAPE 7 : DRESSAGE DE FACE */}
-        <div className="p-6 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-yellow-500/40 transition-all space-y-4 shadow-lg flex flex-col justify-between">
+        <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 hover:border-yellow-500/40 transition-all space-y-4 shadow-sm dark:shadow-lg flex flex-col justify-between">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="px-2.5 py-1 rounded-lg bg-yellow-500/10 text-yellow-400 font-bold text-xs border border-yellow-500/20 uppercase tracking-wider">Étape 7</span>
               <span className="text-xs text-slate-400 font-mono">Passe 0.10 mm</span>
             </div>
-            <h3 className="text-lg font-bold text-white">Dressage de Face</h3>
-            <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Dressage de Face</h3>
+            <ul className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 mt-2 shrink-0"></span>
                 <span><strong>Avance axiale :</strong> Avancer de <strong>10 centièmes</strong> (0.10 mm) avec la coulisse latérale.</span>
@@ -700,7 +707,7 @@ export default function MicromecaniqueModulePage() {
               </li>
             </ul>
           </div>
-          <div className="pt-3 border-t border-slate-800/80 text-[11px] font-mono text-yellow-300 flex items-center justify-between">
+          <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 text-[11px] font-mono text-yellow-700 dark:text-yellow-300 flex items-center justify-between">
             <span>Passe : +10 centièmes</span>
             <span>Finition N5</span>
           </div>
@@ -712,15 +719,15 @@ export default function MicromecaniqueModulePage() {
            ENCADRÉ D'ALERTE : DIAGNOSTIC DE LA FACE USINÉE
            (Reproduit exactement les 2 schémas diagnostiques du document)
            ============================================== */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-slate-950 border-2 border-amber-500/40 space-y-6 shadow-2xl relative overflow-hidden">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+      <div className="p-6 sm:p-8 rounded-3xl bg-amber-500/5 dark:bg-slate-950 border-2 border-amber-400 dark:border-amber-500/40 space-y-6 shadow-sm dark:shadow-2xl relative overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-extrabold text-base border border-amber-500/30">
               ⚠
             </div>
             <div>
-              <h3 className="text-xl font-extrabold text-white tracking-tight">Diagnostic de la Face Usinée</h3>
-              <p className="text-xs text-slate-400">Contrôle visuel du centre de la pièce après la passe de dressage</p>
+              <h3 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">Diagnostic de la Face Usinée</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400">Contrôle visuel du centre de la pièce après la passe de dressage</p>
             </div>
           </div>
           <span className="text-xs font-semibold px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30">
@@ -731,7 +738,7 @@ export default function MicromecaniqueModulePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* CAS 1 : SURPLUS AU CENTRE (Téton) */}
-          <div className="p-6 rounded-2xl bg-[#140D04] border border-amber-500/40 space-y-5 flex flex-col justify-between shadow-xl">
+          <div className="p-6 rounded-2xl bg-amber-50 dark:bg-[#140D04] border border-amber-300 dark:border-amber-500/40 space-y-5 flex flex-col justify-between shadow-sm dark:shadow-xl">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="px-3 py-1 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
@@ -744,39 +751,39 @@ export default function MicromecaniqueModulePage() {
 
               {/* Schéma vectoriel fidèle au croquis du document */}
               <div className="flex items-center justify-center py-4">
-                <div className="w-40 h-40 rounded-2xl bg-[#1E1408] border-2 border-amber-500/40 flex items-center justify-center relative shadow-inner">
+                <div className="w-40 h-40 rounded-2xl bg-amber-100 dark:bg-[#1E1408] border-2 border-amber-400 dark:border-amber-500/40 flex items-center justify-center relative shadow-inner">
                   {/* Face carrée avec téton central en relief */}
-                  <div className="w-24 h-24 rounded-xl border border-amber-400/50 bg-[#2A1C0B] flex items-center justify-center relative">
+                  <div className="w-24 h-24 rounded-xl border border-amber-400/50 bg-amber-200 dark:bg-[#2A1C0B] flex items-center justify-center relative">
                     {/* Téton central visible */}
                     <circle cx="0" cy="0" r="8" fill="#F59E0B" />
                     <div className="w-6 h-6 rounded-full bg-amber-400 border-2 border-white shadow-lg animate-pulse"></div>
                   </div>
                   {/* Badge Surplus */}
-                  <div className="absolute bottom-2 left-2 right-2 text-center text-[11px] font-mono font-bold text-amber-300 bg-black/60 py-0.5 rounded">
+                  <div className="absolute bottom-2 left-2 right-2 text-center text-[11px] font-mono font-bold text-amber-800 dark:text-amber-300 bg-white/90 dark:bg-black/60 py-0.5 rounded">
                     Téton résiduel
                   </div>
                 </div>
               </div>
 
               <div className="text-center space-y-1">
-                <span className="text-base font-extrabold text-amber-300 block">Burin Trop Bas</span>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <span className="text-base font-extrabold text-amber-800 dark:text-amber-300 block">Burin Trop Bas</span>
+                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                   L'arête passe sous l'axe géométrique horizontal de la broche, laissant un cylindre central non coupé.
                 </p>
               </div>
             </div>
 
             {/* Action corrective avec flèche horaire */}
-            <div className="p-3.5 rounded-xl bg-amber-950/50 border border-amber-500/40 text-center space-y-1">
-              <div className="flex items-center justify-center gap-2 text-amber-300 font-extrabold text-sm sm:text-base">
+            <div className="p-3.5 rounded-xl bg-amber-100/90 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-500/40 text-center space-y-1">
+              <div className="flex items-center justify-center gap-2 text-amber-800 dark:text-amber-300 font-extrabold text-sm sm:text-base">
                 <span className="text-lg">↻</span> Tourner sens horaire
               </div>
-              <span className="text-[11px] text-amber-200/80 block">Visser la vis de réglage pour remonter le burin vers l'axe 70.00 mm</span>
+              <span className="text-[11px] text-amber-900/80 dark:text-amber-200/80 block">Visser la vis de réglage pour remonter le burin vers l'axe 70.00 mm</span>
             </div>
           </div>
 
           {/* CAS 2 : TROU AU CENTRE (Dépression) */}
-          <div className="p-6 rounded-2xl bg-[#14060A] border border-rose-500/40 space-y-5 flex flex-col justify-between shadow-xl">
+          <div className="p-6 rounded-2xl bg-rose-50 dark:bg-[#14060A] border border-rose-300 dark:border-rose-500/40 space-y-5 flex flex-col justify-between shadow-sm dark:shadow-xl">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="px-3 py-1 rounded-lg text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
@@ -789,35 +796,35 @@ export default function MicromecaniqueModulePage() {
 
               {/* Schéma vectoriel fidèle au croquis du document */}
               <div className="flex items-center justify-center py-4">
-                <div className="w-40 h-40 rounded-2xl bg-[#1E090F] border-2 border-rose-500/40 flex items-center justify-center relative shadow-inner">
+                <div className="w-40 h-40 rounded-2xl bg-rose-100 dark:bg-[#1E090F] border-2 border-rose-400 dark:border-rose-500/40 flex items-center justify-center relative shadow-inner">
                   {/* Face carrée avec creux conique au centre */}
-                  <div className="w-24 h-24 rounded-xl border border-rose-400/50 bg-[#2A0D15] flex items-center justify-center relative">
+                  <div className="w-24 h-24 rounded-xl border border-rose-400/50 bg-rose-200 dark:bg-[#2A0D15] flex items-center justify-center relative">
                     {/* Dépression centrale */}
-                    <div className="w-7 h-7 rounded-full bg-[#0D0407] border-2 border-rose-500/80 shadow-inner flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-full bg-rose-300 dark:bg-[#0D0407] border-2 border-rose-500 shadow-inner flex items-center justify-center">
                       <div className="w-2 h-2 rounded-full bg-black"></div>
                     </div>
                   </div>
                   {/* Badge Trou */}
-                  <div className="absolute bottom-2 left-2 right-2 text-center text-[11px] font-mono font-bold text-rose-300 bg-black/60 py-0.5 rounded">
+                  <div className="absolute bottom-2 left-2 right-2 text-center text-[11px] font-mono font-bold text-rose-800 dark:text-rose-300 bg-white/90 dark:bg-black/60 py-0.5 rounded">
                     Cuvette conique
                   </div>
                 </div>
               </div>
 
               <div className="text-center space-y-1">
-                <span className="text-base font-extrabold text-rose-300 block">Burin Trop Haut</span>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <span className="text-base font-extrabold text-rose-800 dark:text-rose-300 block">Burin Trop Haut</span>
+                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                   L'arête dépasse l'axe horizontal et le bec de l'outil creuse une dépression en fin de passe de dressage.
                 </p>
               </div>
             </div>
 
             {/* Action corrective avec flèche anti-horaire */}
-            <div className="p-3.5 rounded-xl bg-rose-950/50 border border-rose-500/40 text-center space-y-1">
-              <div className="flex items-center justify-center gap-2 text-rose-300 font-extrabold text-sm sm:text-base">
+            <div className="p-3.5 rounded-xl bg-rose-100/90 dark:bg-rose-950/50 border border-rose-300 dark:border-rose-500/40 text-center space-y-1">
+              <div className="flex items-center justify-center gap-2 text-rose-800 dark:text-rose-300 font-extrabold text-sm sm:text-base">
                 <span className="text-lg">↺</span> Tourner sens anti-horaire
               </div>
-              <span className="text-[11px] text-rose-200/80 block">Dévisser la vis de réglage pour abaisser le burin vers l'axe 70.00 mm</span>
+              <span className="text-[11px] text-rose-900/80 dark:text-rose-200/80 block">Dévisser la vis de réglage pour abaisser le burin vers l'axe 70.00 mm</span>
             </div>
           </div>
 
@@ -827,55 +834,55 @@ export default function MicromecaniqueModulePage() {
       {/* ==============================================
            ÉTAPE 8 À 11 : FINITION & RETRAIT
            ============================================== */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-slate-950/80 border border-slate-800 space-y-6 shadow-xl">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+      <div className="p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-6 shadow-sm dark:shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
           <div>
             <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest block">ÉTAPE 8 À 11</span>
-            <h3 className="text-xl font-extrabold text-white tracking-tight mt-1">Finition, Tangentage Longitudinal &amp; Retrait Sécurisé</h3>
+            <h3 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">Finition, Tangentage Longitudinal &amp; Retrait Sécurisé</h3>
           </div>
-          <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+          <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
             Calibration Finale au 0.01 mm
           </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
           
-          <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
+          <div className="p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-2 shadow-sm">
             <div className="flex items-center gap-2 text-amber-300 font-bold">
               <span className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-mono">8</span>
               <span>Blocage Origine</span>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               Mettre le vernier latéral rigoureusement à <strong>0</strong>, puis bloquer fermement la manivelle de coulisse.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
+          <div className="p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-2 shadow-sm">
             <div className="flex items-center gap-2 text-cyan-300 font-bold">
               <span className="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs font-mono">9</span>
               <span>Avance de 50 Centièmes</span>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               Vérifier que le burin n'est pas en contact avec la matière, puis <strong>avancer de 50 centièmes</strong> (0.50 mm) avec la coulisse latérale.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
+          <div className="p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-2 shadow-sm">
             <div className="flex items-center gap-2 text-emerald-300 font-bold">
               <span className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-mono">10</span>
               <span>Tangentage Vertical</span>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               Venir tangenter avec la coulisse verticale jusqu'à observer un <strong>léger trait</strong> sur la matière, bloquer la manivelle et calibrer à <strong>0</strong>.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
+          <div className="p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-2 shadow-sm">
             <div className="flex items-center gap-2 text-purple-300 font-bold">
               <span className="w-6 h-6 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs font-mono">11</span>
               <span>Recul de Sécurité</span>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               <strong>Reculer de 50 centièmes</strong> (-0.50 mm) avec la coulisse latérale. La machine est prête pour le chariotage longitudinal.
             </p>
           </div>
@@ -889,36 +896,36 @@ export default function MicromecaniqueModulePage() {
   
 
     <section id="gestes-techniques" className="scroll-mt-28 pt-6 space-y-10">
-      <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
+      <div className="flex items-center gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
         <span className="px-3.5 py-1.5 rounded-xl bg-cyan-500/10 text-cyan-400 font-extrabold text-sm border border-cyan-500/30">02</span>
         <div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Planches Techniques &amp; Métrologie de Précision</h2>
-          <p className="text-sm text-slate-300 mt-1">Contrôle au Projecteur de Profil 20:1 &amp; Règles Cinématiques d'Atelier Horloger (Normes ISO 128)</p>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Planches Techniques &amp; Métrologie de Précision</h2>
+          <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">Contrôle au Projecteur de Profil 20:1 &amp; Règles Cinématiques d'Atelier Horloger (Normes ISO 128)</p>
         </div>
       </div>
 
       <div className="space-y-10 mt-8">
     {/* PLANCHE 1 : DESSIN CAD D'INGÉNIERIE HORLOGÈRE 20:1 */}
-    <div className="rounded-3xl border border-slate-800/80 bg-gradient-to-b from-slate-900/90 to-slate-950/90 p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+    <div className="rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-gradient-to-b dark:from-slate-900/90 dark:to-slate-950/90 p-6 sm:p-8 backdrop-blur-xl shadow-sm dark:shadow-2xl space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div className="flex items-center gap-4">
           <span className="px-3.5 py-1.5 rounded-xl bg-cyan-500/10 text-cyan-400 font-extrabold text-sm border border-cyan-500/30">02</span>
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold text-xs uppercase tracking-wider border border-cyan-500/30">PLANCHE 01 · PROJECTION OPTIQUE 20:1</span>
-              <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-semibold text-xs border border-slate-700">Norme ISO 128</span>
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs border border-slate-200 dark:border-slate-700">Norme ISO 128</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Géométrie d'Attaque du Burin Carré 80° sur Éventail</h2>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Géométrie d'Attaque du Burin Carré 80° sur Éventail</h2>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1.5 rounded-full bg-slate-800 text-xs font-semibold text-slate-300 border border-slate-700">Projecteur Marcel Aubert</span>
+          <span className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">Projecteur Marcel Aubert</span>
           <span className="px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-300 text-xs font-bold border border-amber-500/30">Tournage Manuel</span>
         </div>
       </div>
 
       {/* Grand écran CAD avec lignes de repère fines et cotations techniques */}
-      <div className="rounded-2xl border border-slate-800 bg-[#040813] p-4 sm:p-6 shadow-2xl cad-grid overflow-hidden">
+      <div className="rounded-2xl border border-slate-300 dark:border-slate-800 bg-[#040813] p-4 sm:p-6 shadow-md dark:shadow-2xl cad-grid overflow-hidden">
         <svg viewBox="0 0 920 480" className="w-full h-auto select-none" style={{ fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif' }}>
           <defs>
             <linearGradient id="p1SteelPiece" x1="0" y1="0" x2="1" y2="1">
@@ -1030,42 +1037,42 @@ export default function MicromecaniqueModulePage() {
 
       {/* 4 Règles d'Or d'Atelier ultra claires et lisibles */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
+        <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-2 shadow-sm">
           <div className="font-bold text-amber-400 flex items-center gap-2 text-sm">
             <span className="w-2 h-2 rounded-full bg-amber-400"></span>
             1. Appui rigide
           </div>
-          <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
             Burin plaqué fermement contre l'éventail à <strong>moins de 1.0 mm</strong> de la pièce pour interdire tout basculement.
           </p>
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
+        <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-2 shadow-sm">
           <div className="font-bold text-amber-400 flex items-center gap-2 text-sm">
             <span className="w-2 h-2 rounded-full bg-amber-400"></span>
             2. Hauteur au centre
           </div>
-          <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
             Arête tranchante calée au centième à l'axe horizontal (<strong>H = 70.00 mm</strong>) pour garantir une dépouille positive.
           </p>
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
+        <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-2 shadow-sm">
           <div className="font-bold text-cyan-400 flex items-center gap-2 text-sm">
             <span className="w-2 h-2 rounded-full bg-cyan-400"></span>
             3. Angle 90° à 95°
           </div>
-          <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
             Face losange inclinée pour obtenir un copeau régulier sous forme d'un <strong>ruban soyeux continu</strong>.
           </p>
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
+        <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-2 shadow-sm">
           <div className="font-bold text-emerald-400 flex items-center gap-2 text-sm">
             <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
             4. Pierre d'Arkansas
           </div>
-          <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">
             Finition au grain ultra-fin à l'huile pour supprimer tout morfil et obtenir un <strong>état poli glacé N5</strong>.
           </p>
         </div>
@@ -1074,25 +1081,25 @@ export default function MicromecaniqueModulePage() {
 {/* ==========================================
          PLANCHE 2 : CINÉMATIQUE CHARIOT CROISÉ
          ========================================== */}
-    <div className="rounded-3xl border border-slate-800/80 bg-gradient-to-b from-slate-900/90 to-slate-950/90 p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+    <div className="rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-gradient-to-b dark:from-slate-900/90 dark:to-slate-950/90 p-6 sm:p-8 backdrop-blur-xl shadow-sm dark:shadow-2xl space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div className="flex items-center gap-4">
           <span className="px-3.5 py-1.5 rounded-xl bg-cyan-500/10 text-cyan-400 font-extrabold text-sm border border-cyan-500/30">03</span>
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold text-xs uppercase tracking-wider border border-cyan-500/30">PLANCHE 02 · CINÉMATIQUE SUR CHARIOT CROISÉ</span>
-              <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-semibold text-xs border border-slate-700">Schaublin 70</span>
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs border border-slate-200 dark:border-slate-700">Schaublin 70</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Chariotage Longitudinal Z &amp; Dressage Radial X au Centième</h2>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Chariotage Longitudinal Z &amp; Dressage Radial X au Centième</h2>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1.5 rounded-full bg-slate-800 text-xs font-semibold text-slate-300 border border-slate-700">Tambours au 0.01 mm</span>
+          <span className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">Tambours au 0.01 mm</span>
           <span className="px-3 py-1.5 rounded-full bg-cyan-500/10 text-cyan-300 text-xs font-bold border border-cyan-500/30">Précision Outilleur</span>
         </div>
       </div>
 
-      <div className="cad-grid rounded-2xl p-6 sm:p-8 border border-slate-800 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div className="cad-grid rounded-2xl p-6 sm:p-8 border border-slate-300 dark:border-slate-800 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         {/* Technical Vector Drawing of Cross-Slide Assembly */}
         <div className="lg:col-span-8 overflow-x-auto">
           <svg viewBox="0 0 760 360" className="w-full min-w-[620px] h-auto select-none" style={{ fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif' }}>
@@ -1200,33 +1207,33 @@ export default function MicromecaniqueModulePage() {
         </div>
 
         {/* Fiche Angles ISO */}
-        <div className="lg:col-span-4 p-6 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-4 shadow-xl">
-          <div className="border-b border-slate-800 pb-3">
-            <h3 className="text-base font-bold text-cyan-400">Angles du Burin Couteau (5x5)</h3>
-            <span className="text-xs text-slate-400 block mt-0.5">Normes ISO d'affûtage d'outilleur</span>
+        <div className="lg:col-span-4 p-6 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm dark:shadow-xl">
+          <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+            <h3 className="text-base font-bold text-cyan-600 dark:text-cyan-400">Angles du Burin Couteau (5x5)</h3>
+            <span className="text-xs text-slate-500 dark:text-slate-400 block mt-0.5">Normes ISO d'affûtage d'outilleur</span>
           </div>
 
           <div className="space-y-2.5 text-sm">
-            <div className="flex justify-between items-center p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
-              <span className="text-slate-300">Dépouille latérale (α₁) :</span>
+            <div className="flex justify-between items-center p-2.5 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-slate-700 dark:text-slate-300">Dépouille latérale (α₁) :</span>
               <span className="text-cyan-300 font-extrabold text-base">6.0°</span>
             </div>
-            <div className="flex justify-between items-center p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
-              <span className="text-slate-300">Dépouille frontale (α₂) :</span>
+            <div className="flex justify-between items-center p-2.5 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-slate-700 dark:text-slate-300">Dépouille frontale (α₂) :</span>
               <span className="text-cyan-300 font-extrabold text-base">6.0°</span>
             </div>
-            <div className="flex justify-between items-center p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
-              <span className="text-slate-300">Angle de taillant (β) :</span>
+            <div className="flex justify-between items-center p-2.5 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-slate-700 dark:text-slate-300">Angle de taillant (β) :</span>
               <span className="text-amber-300 font-extrabold text-base">76° à 80°</span>
             </div>
-            <div className="flex justify-between items-center p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
-              <span className="text-slate-300">Angle de coupe (γ) :</span>
+            <div className="flex justify-between items-center p-2.5 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm">
+              <span className="text-slate-700 dark:text-slate-300">Angle de coupe (γ) :</span>
               <span className="text-emerald-300 font-extrabold text-base">4° à 8°</span>
             </div>
           </div>
 
-          <p className="text-xs text-slate-300 leading-relaxed border-t border-slate-800 pt-3">
-            L'angle de taillant <strong className="text-white">β ≈ 78°</strong> assure la robustesse indispensable pour usiner l'acier Böhler K720 sans risquer l'ébrèchement au centième.
+          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-200 dark:border-slate-800 pt-3">
+            L'angle de taillant <strong className="text-slate-900 dark:text-white">β ≈ 78°</strong> assure la robustesse indispensable pour usiner l'acier Böhler K720 sans risquer l'ébrèchement au centième.
           </p>
         </div>
       </div>
@@ -1235,27 +1242,27 @@ export default function MicromecaniqueModulePage() {
     {/* ==========================================
          PLANCHE 3 : LOI FONDAMENTALE DU CENTRAGE
          ========================================== */}
-    <div className="rounded-3xl border border-slate-800/80 bg-gradient-to-b from-slate-900/90 to-slate-950/90 p-6 sm:p-8 backdrop-blur-xl shadow-2xl space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+    <div className="rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-gradient-to-b dark:from-slate-900/90 dark:to-slate-950/90 p-6 sm:p-8 backdrop-blur-xl shadow-sm dark:shadow-2xl space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div className="flex items-center gap-4">
           <span className="px-3.5 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-400 font-extrabold text-sm border border-emerald-500/30">04</span>
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold text-xs uppercase tracking-wider border border-emerald-500/30">PLANCHE 03 · PROJECTION OPTIQUE DE CONTRÔLE</span>
-              <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-semibold text-xs border border-slate-700">Grossissement 20:1</span>
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs border border-slate-200 dark:border-slate-700">Grossissement 20:1</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Loi Fondamentale du Centrage : Les 3 Conditions Comparées</h2>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Loi Fondamentale du Centrage : Les 3 Conditions Comparées</h2>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1.5 rounded-full bg-slate-800 text-xs font-semibold text-slate-300 border border-slate-700">Contrôle au Réticule</span>
+          <span className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">Contrôle au Réticule</span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         
         {/* CONDITION 1 : JUSTE (H = 70.00 mm) */}
-        <div className="rounded-2xl border-2 border-emerald-500/40 bg-[#071322] p-5 flex flex-col justify-between space-y-4 shadow-xl">
+        <div className="rounded-2xl border-2 border-emerald-400 dark:border-emerald-500/40 bg-emerald-50/80 dark:bg-[#071322] p-5 flex flex-col justify-between space-y-4 shadow-sm dark:shadow-xl">
           <div className="flex items-center justify-between border-b border-emerald-500/30 pb-3">
             <span className="px-3 py-1 rounded-lg text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
               1. HAUTEUR JUSTE (70.00 mm)
@@ -1300,30 +1307,30 @@ export default function MicromecaniqueModulePage() {
 
           {/* Données métriques */}
           <div className="space-y-2 text-sm">
-            <div className="flex justify-between text-slate-300 border-b border-slate-800 pb-1.5">
+            <div className="flex justify-between text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-1.5">
               <span>Hauteur de pointe :</span>
               <span className="text-emerald-400 font-extrabold">70.00 mm (Exacte)</span>
             </div>
-            <div className="flex justify-between text-slate-300 border-b border-slate-800 pb-1.5">
+            <div className="flex justify-between text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-1.5">
               <span>Dépouille effective :</span>
-              <span className="text-white font-extrabold">α = 6° (Nominale)</span>
+              <span className="text-slate-900 dark:text-white font-extrabold">α = 6° (Nominale)</span>
             </div>
-            <div className="flex justify-between text-slate-300 border-b border-slate-800 pb-1.5">
+            <div className="flex justify-between text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-1.5">
               <span>Téton de centre :</span>
               <span className="text-emerald-400 font-extrabold">0.00 mm (Nul)</span>
             </div>
-            <div className="flex justify-between text-slate-300 border-b border-slate-800 pb-1.5">
+            <div className="flex justify-between text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-1.5">
               <span>Finition d'état :</span>
               <span className="text-amber-300 font-extrabold">Poli Glacé N5</span>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed pt-1">
+            <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed pt-1">
               L'arête tranche rigoureusement sur le plan horizontal. Coupe douce, ruban continu sans à-coups, face parfaitement plane.
             </p>
           </div>
         </div>
 
         {/* CONDITION 2 : TROP HAUT (H > 70.00 mm) */}
-        <div className="rounded-2xl border-2 border-rose-500/40 bg-[#160A11] p-5 flex flex-col justify-between space-y-4 shadow-xl">
+        <div className="rounded-2xl border-2 border-rose-400 dark:border-rose-500/40 bg-rose-50/80 dark:bg-[#160A11] p-5 flex flex-col justify-between space-y-4 shadow-sm dark:shadow-xl">
           <div className="flex items-center justify-between border-b border-rose-500/30 pb-3">
             <span className="px-3 py-1 rounded-lg text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
               2. TROP HAUT (H &gt; 70 mm)
@@ -1373,30 +1380,30 @@ export default function MicromecaniqueModulePage() {
 
           {/* Données métriques */}
           <div className="space-y-2 text-sm">
-            <div className="flex justify-between text-slate-300 border-b border-slate-800 pb-1.5">
+            <div className="flex justify-between text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-1.5">
               <span>Hauteur de pointe :</span>
               <span className="text-rose-400 font-extrabold">&gt; 70.00 mm (+0.35 mm)</span>
             </div>
-            <div className="flex justify-between text-slate-300 border-b border-slate-800 pb-1.5">
+            <div className="flex justify-between text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-1.5">
               <span>Dépouille effective :</span>
               <span className="text-rose-400 font-extrabold">α ≤ 0° (Annulée !)</span>
             </div>
-            <div className="flex justify-between text-slate-300 border-b border-slate-800 pb-1.5">
+            <div className="flex justify-between text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-1.5">
               <span>Téton de centre :</span>
               <span className="text-rose-400 font-extrabold">Volumineux (&gt; 1 mm)</span>
             </div>
-            <div className="flex justify-between text-slate-300 border-b border-slate-800 pb-1.5">
+            <div className="flex justify-between text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-1.5">
               <span>Conséquence :</span>
               <span className="text-amber-400 font-extrabold">Écrouissage sans coupe</span>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed pt-1">
+            <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed pt-1">
               L'angle de dépouille s'annule : le dos du burin talonne contre la pièce. Le métal est refoulé, s'échauffe violemment et laisse un gros téton central au dressage.
             </p>
           </div>
         </div>
 
         {/* CONDITION 3 : TROP BAS (H < 70.00 mm) */}
-        <div className="rounded-2xl border-2 border-amber-500/40 bg-[#160E06] p-5 flex flex-col justify-between space-y-4 shadow-xl">
+        <div className="rounded-2xl border-2 border-amber-400 dark:border-amber-500/40 bg-amber-50/80 dark:bg-[#160E06] p-5 flex flex-col justify-between space-y-4 shadow-sm dark:shadow-xl">
           <div className="flex items-center justify-between border-b border-amber-500/30 pb-3">
             <span className="px-3 py-1 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
               3. TROP BAS (H &lt; 70 mm)
@@ -1442,23 +1449,23 @@ export default function MicromecaniqueModulePage() {
 
           {/* Données métriques */}
           <div className="space-y-2 text-sm">
-            <div className="flex justify-between text-slate-300 border-b border-slate-800 pb-1.5">
+            <div className="flex justify-between text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-1.5">
               <span>Hauteur de pointe :</span>
               <span className="text-amber-400 font-extrabold">&lt; 70.00 mm (-0.40 mm)</span>
             </div>
-            <div className="flex justify-between text-slate-300 border-b border-slate-800 pb-1.5">
+            <div className="flex justify-between text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-1.5">
               <span>Dépouille effective :</span>
               <span className="text-amber-400 font-extrabold">Excessive (&gt; 14°)</span>
             </div>
-            <div className="flex justify-between text-slate-300 border-b border-slate-800 pb-1.5">
+            <div className="flex justify-between text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-1.5">
               <span>Risque pièce :</span>
               <span className="text-rose-400 font-extrabold">Happing &amp; Flexion</span>
             </div>
-            <div className="flex justify-between text-slate-300 border-b border-slate-800 pb-1.5">
+            <div className="flex justify-between text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-1.5">
               <span>Risque taillant :</span>
               <span className="text-rose-400 font-extrabold">Ébrèchement pointe</span>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed pt-1">
+            <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed pt-1">
               L'angle de coupe devient trop aigu : la rotation happe le burin vers le bas. Vibrations destructrices (broutement), flexion de la pièce et ébrèchement du taillant.
             </p>
           </div>
@@ -1471,21 +1478,21 @@ export default function MicromecaniqueModulePage() {
       </div>
 
       {/* Section Traitement Thermique & Photo Réelle Base64 */}
-      <div className="mt-12 p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-6 shadow-2xl">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+      <div className="mt-12 p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 space-y-6 shadow-sm dark:shadow-2xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
           <div>
             <span className="text-xs font-bold text-rose-400 uppercase tracking-widest block">
               MÉTALLURGIE D'ATELIER (Acier Böhler K720)
             </span>
-            <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight mt-1">Chauffe au Chalumeau &amp; Trempe Martensitique</h3>
+            <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-1">Chauffe au Chalumeau &amp; Trempe Martensitique</h3>
           </div>
-          <div className="text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+          <div className="text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
             Protocole HL-OUT-98110 &amp; HL-OUT-98100
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-5 relative rounded-2xl overflow-hidden border border-slate-700 shadow-xl group bg-slate-900 aspect-[16/11]">
+          <div className="lg:col-span-5 relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-xl group bg-slate-100 dark:bg-slate-900 aspect-[16/11]">
             <img 
               src="/images/micromecanique/schaublin_tournage_main.jpg" 
               alt="Chauffe au chalumeau d'un pointeau d'horloger au rouge cerise avec bain d'huile et plateau à bleuir" 
@@ -1499,46 +1506,46 @@ export default function MicromecaniqueModulePage() {
           </div>
 
           <div className="lg:col-span-7 space-y-4 text-sm">
-            <div className="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
+            <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
               <span className="text-amber-400 font-bold block text-sm tracking-wide">
                 NUANCIER DES COULEURS DE REVENU DE L'ACIER AU CARBONE (K720)
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
-                <div className="p-2.5 rounded-xl bg-yellow-950/40 border border-yellow-600/30">
+                <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-yellow-950/40 border border-amber-200 dark:border-yellow-600/30">
                   <span className="text-yellow-400 font-bold block text-sm">220°C · Jaune Paille</span>
-                  <span className="text-slate-300 text-xs">Burins, lames de coupe</span>
+                  <span className="text-slate-600 dark:text-slate-300 text-xs">Burins, lames de coupe</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-amber-950/40 border border-amber-600/30">
+                <div className="p-2.5 rounded-xl bg-amber-100/60 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-600/30">
                   <span className="text-amber-400 font-bold block text-sm">250°C · Brun-Ocre</span>
-                  <span className="text-slate-300 text-xs">Ciseaux, poinçons</span>
+                  <span className="text-slate-600 dark:text-slate-300 text-xs">Ciseaux, poinçons</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-purple-950/40 border border-purple-600/30">
+                <div className="p-2.5 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-600/30">
                   <span className="text-purple-400 font-bold block text-sm">270°C · Pourpre</span>
-                  <span className="text-slate-300 text-xs">Tarauds, forets</span>
+                  <span className="text-slate-600 dark:text-slate-300 text-xs">Tarauds, forets</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-blue-950/70 border-2 border-cyan-400 shadow-lg">
+                <div className="p-2.5 rounded-xl bg-cyan-50 dark:bg-blue-950/70 border-2 border-cyan-500 dark:border-cyan-400 shadow-sm">
                   <span className="text-cyan-300 font-bold block text-sm">290°C · Bleu Horloger</span>
-                  <span className="text-white text-xs font-bold">Pointeaux (56 HRC)</span>
+                  <span className="text-cyan-900 dark:text-white text-xs font-bold">Pointeaux (56 HRC)</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-sky-950/40 border border-sky-600/30">
+                <div className="p-2.5 rounded-xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-600/30">
                   <span className="text-sky-400 font-bold block text-sm">310°C · Bleu Clair</span>
-                  <span className="text-slate-300 text-xs">Ressorts hélicoïdaux</span>
+                  <span className="text-slate-600 dark:text-slate-300 text-xs">Ressorts hélicoïdaux</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-700">
-                  <span className="text-slate-300 font-bold block text-sm">330°C · Gris Cendre</span>
+                <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+                  <span className="text-slate-700 dark:text-slate-300 font-bold block text-sm">330°C · Gris Cendre</span>
                   <span className="text-slate-400 text-xs">Perte de trempe</span>
                 </div>
               </div>
             </div>
 
-            <div className="p-5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2.5">
+            <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-2.5 shadow-sm">
               <span className="text-rose-400 font-bold block text-sm">
                 LES 3 PHASES DE LA TREMPE MARTENSITIQUE D'ATELIER :
               </span>
-              <ol className="list-decimal list-inside space-y-1.5 text-slate-200 text-sm leading-relaxed">
-                <li><strong className="text-white">Austénitisation :</strong> Chauffer la pointe à 790°C-820°C (rouge cerise franc) au chalumeau.</li>
-                <li><strong className="text-white">Trempe à l'huile :</strong> Immersion 100% verticale dans l'huile minérale pour proscrire tout voile.</li>
-                <li><strong className="text-white">Revenu bleu :</strong> Blanchir à l'Arkansas puis chauffer sur plaque en laiton au bleu horloger (290°C).</li>
+              <ol className="list-decimal list-inside space-y-1.5 text-slate-700 dark:text-slate-200 text-sm leading-relaxed">
+                <li><strong className="text-slate-900 dark:text-white">Austénitisation :</strong> Chauffer la pointe à 790°C-820°C (rouge cerise franc) au chalumeau.</li>
+                <li><strong className="text-slate-900 dark:text-white">Trempe à l'huile :</strong> Immersion 100% verticale dans l'huile minérale pour proscrire tout voile.</li>
+                <li><strong className="text-slate-900 dark:text-white">Revenu bleu :</strong> Blanchir à l'Arkansas puis chauffer sur plaque en laiton au bleu horloger (290°C).</li>
               </ol>
             </div>
           </div>
@@ -1547,22 +1554,22 @@ export default function MicromecaniqueModulePage() {
     </section>
 
     <section id="cinematique" className="space-y-6">
-          <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
+          <div className="flex items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
             <span className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-bold flex items-center justify-center border border-amber-500/30">03</span>
             <div>
-              <h2 className="text-2xl font-sans font-bold tracking-tight font-bold text-white">Calculateur Cinématique d'Atelier</h2>
+              <h2 className="text-2xl font-sans font-bold tracking-tight text-slate-900 dark:text-white">Calculateur Cinématique d'Atelier</h2>
               <p className="text-xs text-slate-400 font-mono">Formule fondamentale : n = (1000 · Vc) / (π · d)</p>
             </div>
           </div>
 
-          <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-sm dark:shadow-xl">
             <div className="lg:col-span-6 space-y-4">
               <div>
                 <label className="text-xs font-mono uppercase text-slate-400 block mb-1">Matière usinée</label>
                 <select
                   value={selectedMaterial}
                   onChange={(e) => setSelectedMaterial(e.target.value as any)}
-                  className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs font-mono text-slate-200"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-xs font-mono text-slate-800 dark:text-slate-200"
                 >
                   <option value="k720">Acier Böhler K720 (90MnCrV8)</option>
                   <option value="laiton">Laiton horloger MS 58 (CuZn39Pb3)</option>
@@ -1577,13 +1584,13 @@ export default function MicromecaniqueModulePage() {
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => setToolMaterial('hss')}
-                    className={`p-2.5 rounded-lg text-xs font-mono font-bold border transition-all ${toolMaterial === 'hss' ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-slate-950 text-slate-400 border-slate-800'}`}
+                    className={`p-2.5 rounded-lg text-xs font-mono font-bold border transition-all ${toolMaterial === 'hss' ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40 shadow-sm' : 'bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800'}`}
                   >
                     Acier Rapide (HSS)
                   </button>
                   <button
                     onClick={() => setToolMaterial('carbide')}
-                    className={`p-2.5 rounded-lg text-xs font-mono font-bold border transition-all ${toolMaterial === 'carbide' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' : 'bg-slate-950 text-slate-400 border-slate-800'}`}
+                    className={`p-2.5 rounded-lg text-xs font-mono font-bold border transition-all ${toolMaterial === 'carbide' ? 'bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 border-cyan-500/40 shadow-sm' : 'bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800'}`}
                   >
                     Carbure de Tungstène
                   </button>
@@ -1606,14 +1613,14 @@ export default function MicromecaniqueModulePage() {
                 />
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] font-mono text-slate-400">
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-[11px] font-mono text-slate-600 dark:text-slate-400">
                 <span className="text-amber-400 font-bold block mb-1">Lubrification recommandée :</span>
                 {currentMat.lub}
               </div>
             </div>
 
             {/* Calculated Result Display */}
-            <div className="lg:col-span-6 p-6 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between space-y-4">
+            <div className="lg:col-span-6 p-6 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex flex-col justify-between space-y-4 shadow-inner">
               <div>
                 <span className="text-xs font-mono uppercase text-slate-500 block">Vitesse de coupe admise (Vc)</span>
                 <span className="text-2xl font-mono font-bold text-amber-400">{activeVc} m/min</span>
@@ -1626,7 +1633,7 @@ export default function MicromecaniqueModulePage() {
                 </div>
               </div>
 
-              <div className="text-xs font-mono text-slate-400 border-t border-slate-800 pt-3">
+              <div className="text-xs font-mono text-slate-600 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800 pt-3">
                 Réglage Schaublin 70 conseillé :
                 <span className="text-amber-300 font-bold ml-2">
                   {calculatedRpm > 2500 ? "Broche max (2'400 tr/min)" : calculatedRpm < 400 ? "400 tr/min (Poulie lente)" : `~${Math.round(calculatedRpm / 100) * 100} tr/min`}
@@ -1638,10 +1645,10 @@ export default function MicromecaniqueModulePage() {
 
         {/* Section 04 : Les 5 Projets d'Usinage d'Atelier */}
         <section id="projets" className="space-y-6">
-          <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
+          <div className="flex items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
             <span className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-bold flex items-center justify-center border border-amber-500/30">04</span>
             <div>
-              <h2 className="text-2xl font-sans font-bold tracking-tight font-bold text-white">Les 5 Pièces de Fabrication d'Atelier Horloger</h2>
+              <h2 className="text-2xl font-sans font-bold tracking-tight text-slate-900 dark:text-white">Les 5 Pièces de Fabrication d'Atelier Horloger</h2>
               <p className="text-xs text-slate-400 font-mono">Curriculum complet d'apprentissage du tournage horloger de précision</p>
             </div>
           </div>
@@ -1652,7 +1659,7 @@ export default function MicromecaniqueModulePage() {
               <button
                 key={p.num}
                 onClick={() => setActiveProject(p.num)}
-                className={`px-4 py-2.5 rounded-xl font-mono text-xs font-bold border transition-all ${activeProject === p.num ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-lg' : 'bg-slate-900 text-slate-400 border-slate-800 hover:bg-slate-800'}`}
+                className={`px-4 py-2.5 rounded-xl font-mono text-xs font-bold border transition-all ${activeProject === p.num ? 'bg-amber-500/20 text-amber-800 dark:text-amber-300 border-amber-500/40 shadow-sm' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
               >
                 P{p.num} · {p.title}
               </button>
@@ -1660,21 +1667,21 @@ export default function MicromecaniqueModulePage() {
           </div>
 
           {/* Project Detail Card */}
-          <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-6 shadow-sm dark:shadow-xl">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
               <div>
                 <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider block">
                   {curProject.code}
                 </span>
-                <h3 className="text-xl font-sans font-bold tracking-tight font-bold text-white">{curProject.title}</h3>
+                <h3 className="text-xl font-sans font-bold tracking-tight text-slate-900 dark:text-white">{curProject.title}</h3>
               </div>
               <div className="text-xs font-mono text-right">
-                <span className="text-slate-400 block">Matière : <strong className="text-slate-200">{curProject.material}</strong></span>
+                <span className="text-slate-400 block">Matière : <strong className="text-slate-800 dark:text-slate-200">{curProject.material}</strong></span>
                 <span className="text-slate-400 block">Traitement : <strong className="text-rose-400">{curProject.treatment}</strong></span>
               </div>
             </div>
 
-            <p className="text-slate-300 text-xs sm:text-sm font-sans leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-sans leading-relaxed">
               {curProject.desc}
             </p>
 
@@ -1684,13 +1691,13 @@ export default function MicromecaniqueModulePage() {
             </div>
 
             {/* Machining Steps */}
-            <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+            <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3">
               <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider block">
                 Protocole d'Usinage Étape par Étape :
               </span>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono text-slate-300">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono text-slate-700 dark:text-slate-300">
                 {curProject.steps.map((st, i) => (
-                  <div key={i} className="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800/80 flex items-start gap-2">
+                  <div key={i} className="p-2.5 rounded-lg bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 flex items-start gap-2 shadow-sm">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 shrink-0"></span>
                     <span>{st}</span>
                   </div>
@@ -1702,11 +1709,11 @@ export default function MicromecaniqueModulePage() {
 
         {/* Section 05 : Quiz d'Évaluation Pratique Stepper Compact */}
         <section id="quiz-compact" className="space-y-6">
-          <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
+          <div className="flex items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
             <span className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-bold flex items-center justify-center border border-amber-500/30">05</span>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-2xl font-sans font-bold tracking-tight font-bold text-white">Quiz d'Évaluation Pratique · Micromécanique & Tournage</h2>
+                <h2 className="text-2xl font-sans font-bold tracking-tight text-slate-900 dark:text-white">Quiz d'Évaluation Pratique · Micromécanique & Tournage</h2>
                 <span className="px-2.5 py-0.5 rounded text-[10px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold uppercase">
                   10 Questions
                 </span>
@@ -1716,10 +1723,10 @@ export default function MicromecaniqueModulePage() {
           </div>
 
           {/* Compact Stepper Container */}
-          <div className="p-6 sm:p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-6">
+          <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl space-y-6">
             
             {/* Top Stepper Header with Progress Dots */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-3">
                 <span className="text-xs font-mono uppercase text-slate-400 font-bold">
                   Question <strong className="text-amber-400 text-sm">{currentQuestionIdx + 1}</strong> / 10
@@ -1744,7 +1751,7 @@ export default function MicromecaniqueModulePage() {
                   if (isAnswered) {
                     dotClass += isCorrect ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40" : "bg-rose-500/20 text-rose-400 border border-rose-500/40";
                   } else {
-                    dotClass += "bg-slate-950 text-slate-500 border border-slate-800 hover:border-slate-700";
+                    dotClass += "bg-slate-100 dark:bg-slate-950 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700";
                   }
 
                   return (
@@ -1762,7 +1769,7 @@ export default function MicromecaniqueModulePage() {
 
             {/* Question Body Area */}
             <div className="space-y-4 min-h-[180px]">
-              <h3 className="text-base sm:text-lg font-sans font-bold tracking-tight font-bold text-white leading-relaxed">
+              <h3 className="text-base sm:text-lg font-sans font-bold tracking-tight text-slate-900 dark:text-white leading-relaxed">
                 {curQ.q}
               </h3>
 
@@ -1772,14 +1779,14 @@ export default function MicromecaniqueModulePage() {
                   let btnStyle = "p-3.5 rounded-xl border text-xs font-mono text-left transition-all ";
                   
                   if (!isCurAnswered) {
-                    btnStyle += "bg-slate-950 border-slate-800 hover:border-amber-500/40 hover:bg-slate-900 text-slate-300";
+                    btnStyle += "bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 hover:border-amber-500/40 hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300";
                   } else {
                     if (oIdx === curQ.answer) {
-                      btnStyle += "bg-emerald-950/40 border-emerald-500 text-emerald-300 font-bold";
+                      btnStyle += "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 text-emerald-800 dark:text-emerald-300 font-bold";
                     } else if (userAnswers[currentQuestionIdx] === oIdx) {
-                      btnStyle += "bg-rose-950/40 border-rose-500 text-rose-300";
+                      btnStyle += "bg-rose-50 dark:bg-rose-950/40 border-rose-500 text-rose-800 dark:text-rose-300";
                     } else {
-                      btnStyle += "bg-slate-950/40 border-slate-900 text-slate-600 opacity-60";
+                      btnStyle += "bg-slate-100/50 dark:bg-slate-950/40 border-slate-200 dark:border-slate-900 text-slate-400 dark:text-slate-600 opacity-60";
                     }
                   }
 
@@ -1791,7 +1798,7 @@ export default function MicromecaniqueModulePage() {
                       className={btnStyle}
                     >
                       <div className="flex items-center gap-2">
-                        <span className="w-5 h-5 rounded-md bg-slate-900 flex items-center justify-center text-[10px] text-slate-400 border border-slate-800">
+                        <span className="w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-900 flex items-center justify-center text-[10px] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800">
                           {String.fromCharCode(65 + oIdx)}
                         </span>
                         <span>{opt}</span>
@@ -1803,7 +1810,7 @@ export default function MicromecaniqueModulePage() {
 
               {/* Explanation Feedback Box */}
               {isCurAnswered && (
-                <div className={`p-4 rounded-xl text-xs font-mono border ${userAnswers[currentQuestionIdx] === curQ.answer ? 'bg-emerald-950/30 border-emerald-500/30 text-emerald-300' : 'bg-rose-950/30 border-rose-500/30 text-rose-300'}`}>
+                <div className={`p-4 rounded-xl text-xs font-mono border ${userAnswers[currentQuestionIdx] === curQ.answer ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-500/30 text-emerald-900 dark:text-emerald-300' : 'bg-rose-50 dark:bg-rose-950/30 border-rose-300 dark:border-rose-500/30 text-rose-900 dark:text-rose-300'}`}>
                   <div className="flex items-center gap-2 font-bold mb-1">
                     {userAnswers[currentQuestionIdx] === curQ.answer ? (
                       <>
@@ -1817,7 +1824,7 @@ export default function MicromecaniqueModulePage() {
                       </>
                     )}
                   </div>
-                  <p className="text-slate-300 font-sans text-xs leading-relaxed">
+                  <p className="text-slate-700 dark:text-slate-300 font-sans text-xs leading-relaxed">
                     {curQ.explanation}
                   </p>
                 </div>
@@ -1825,11 +1832,11 @@ export default function MicromecaniqueModulePage() {
             </div>
 
             {/* Navigation Buttons (Précédente / Suivante) */}
-            <div className="flex items-center justify-between border-t border-slate-800 pt-4">
+            <div className="flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-4">
               <button
                 disabled={currentQuestionIdx === 0}
                 onClick={() => setCurrentQuestionIdx(i => Math.max(0, i - 1))}
-                className="px-4 py-2 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-700 text-slate-400 disabled:opacity-30 disabled:cursor-not-allowed font-mono text-xs flex items-center gap-1.5 transition-all"
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-400 disabled:opacity-30 disabled:cursor-not-allowed font-mono text-xs flex items-center gap-1.5 transition-all"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Précédente
@@ -1857,18 +1864,18 @@ export default function MicromecaniqueModulePage() {
             {/* Score Summary Modal */}
             {showResultModal && (
               <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-                <div className="max-w-md w-full rounded-3xl bg-slate-900 border border-slate-800 p-6 space-y-4 text-center">
+                <div className="max-w-md w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 space-y-4 text-center shadow-2xl">
                   <div className="w-16 h-16 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto border border-amber-500/30">
                     <Award className="w-8 h-8" />
                   </div>
                   
-                  <h3 className="text-2xl font-sans font-bold tracking-tight font-bold text-white">Bilan de l'Évaluation Pratique</h3>
+                  <h3 className="text-2xl font-sans font-bold tracking-tight text-slate-900 dark:text-white">Bilan de l'Évaluation Pratique</h3>
                   
                   <div className="text-4xl font-mono font-bold text-amber-400">
                     {score} <span className="text-lg text-slate-500">/ 10</span>
                   </div>
 
-                  <p className="text-xs font-sans text-slate-300 leading-relaxed">
+                  <p className="text-xs font-sans text-slate-600 dark:text-slate-300 leading-relaxed">
                     {score >= 8 
                       ? "Excellente maîtrise des fondamentaux du tournage Schaublin 70 et de la métallurgie horlogère." 
                       : score >= 5 
@@ -1883,7 +1890,7 @@ export default function MicromecaniqueModulePage() {
                         setCurrentQuestionIdx(0);
                         setShowResultModal(false);
                       }}
-                      className="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs font-bold transition-all"
+                      className="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white font-mono text-xs font-bold border border-slate-300 dark:border-transparent transition-all"
                     >
                       Recommencer
                     </button>
@@ -1904,7 +1911,7 @@ export default function MicromecaniqueModulePage() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-20 border-t border-slate-800 py-8 px-4 text-center text-xs font-mono text-slate-500">
+      <footer className="mt-20 border-t border-slate-200 dark:border-slate-800 py-8 px-4 text-center text-xs font-mono text-slate-500">
         HorloLearn · Haute Horlogerie Suisse · Référentiel Technique & Pratique de Micromécanique Horlogère
       </footer>
 
