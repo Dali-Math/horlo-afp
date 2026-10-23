@@ -1,844 +1,971 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from "react";
+import Link from "next/link";
 import {
-  ChevronLeft, Activity, Zap, Clock, Heart, Settings2, Globe, Share2, Printer, Download,
-  Microscope, Gauge, BookOpen, Award, Info, Play, Pause, RotateCw, SlidersHorizontal,
-  ZoomIn, CheckCircle, XCircle
-} from 'lucide-react';
-import Link from 'next/link';
+  Zap,
+  Clock,
+  ShieldCheck,
+  CheckCircle2,
+  ChevronRight,
+  ArrowRight,
+  ArrowLeft,
+  RefreshCw,
+  Activity,
+  Layers,
+  Cog,
+  Info,
+  BookOpen,
+  Sparkles,
+  Sliders,
+  Flame,
+  Award,
+  Target
+} from "lucide-react";
 
-// =================================================
-// TYPES ET CONFIGURATION
-// =================================================
+interface EscapementComponent {
+  id: string;
+  name: string;
+  role: string;
+  technicalRule: string;
+  material: string;
+  tolerances: string;
+}
 
-type SectionKey = 'principe' | 'elements' | 'fonctionnement' | 'evolution';
-
-const TRANSLATIONS = {
-  fr: {
-    back: 'Retour à la théorie',
-    expertModeOn: 'Mode Expert ON',
-    expertModeOff: 'Mode Expert OFF',
-    title: "L'Échappement à Ancre Suisse",
-    subtitle: "Le cœur battant de la montre : découvrez le mécanisme qui transforme l'énergie en impulsions régulières",
-    toc: 'Table des matières',
-    share: 'Partager',
-    print: 'Imprimer',
-    download: 'Télécharger',
-    metadata: {
-      category: 'Organe de distribution',
-      readingTime: '12 min',
-      difficulty: 'Intermédiaire',
-      lastUpdated: '2024-11',
-      standard: 'ISO 3159'
-    },
-    principe: {
-      title: 'Principe et fonction',
-      beginner: "L'échappement transforme l'énergie continue du barillet en impulsions régulières. Il remplit une double fonction essentielle : entretien des oscillations et comptage du temps.",
-      expert: "L'échappement à ancre suisse convertit le couple continu du barillet (E = ½Cθ²) en impulsions discrètes. Son rendement énergétique est de 35-40%, avec une dissipation thermique de ~0.1μW par alternance.",
-      function1: { title: 'Entretien', desc: 'Transmet des impulsions au balancier pour compenser les frottements.' },
-      function2: { title: 'Comptage', desc: 'Compte les oscillations en laissant échapper les dents de la roue.' },
-      funFact: {
-        title: 'Le "tic-tac" de la montre',
-        desc: 'Chaque tic et tac correspond à une impulsion. À 28\'800 A/h, vous entendez 8 battements par seconde !',
-        metrics: ['28\'800 A/h', '8 Battements/s', '4 Hz', '0.125s Période']
-      }
-    },
-    elements: {
-      title: 'Les 3 éléments',
-      beginner: 'Trois pièces principales travaillent en synchronisation parfaite.',
-      expert: 'Système à 3 corps : roue dentée (inertie 2.5×10⁻⁹ kg·m²), ancre (inertie 1.8×10⁻¹⁰ kg·m²) et plateau (inertie 3.2×10⁻⁹ kg·m²).',
-      wheel: {
-        title: 'La Roue d\'Échappement',
-        beginner: 'Roue dentée spéciale avec 15 dents qui transmet l\'énergie du rouage à l\'ancre.',
-        expert: 'Roue à 15 dents, module 0.3mm. Acier C90 trempé à 800°C, HRC 60-62. Tolérance ISO 3159 : ±0.01mm.',
-        specs: ['15 Dents', 'Acier C90', '1 tr/min', 'ISO 3159']
-      },
-      anchor: {
-        title: 'L\'Ancre',
-        beginner: 'Pièce pivotante avec deux palettes en rubis qui bloquent/libèrent la roue.',
-        expert: 'Ancre à fourchette avec 2 palettes en corindon. Angle de bascule : 12-15°. Maillechort CuNi12Zn24.',
-        specs: ['2 Rubis', '12-15° Bascule', 'Maillechort']
-      },
-      balance: {
-        title: 'Le Plateau de Balancier',
-        beginner: 'Disque avec cheville qui pousse la fourchette à chaque oscillation.',
-        expert: 'Plateau avec cheville en rubis Ø0.15mm. Encoche de sécurité à 90°. Sertissage à chaud.',
-        specs: ['Ø0.15mm', 'Encoche 90°', '28\'800 A/h']
-      }
-    },
-    fonctionnement: {
-      title: 'Fonctionnement en 4 phases',
-      beginner: 'Chaque alternance du balancier déclenche un cycle complet de 4 phases.',
-      expert: 'Cycle thermodynamique : repos (isochore), dégagement (adiabatic), impulsion (isobare), chute (adiabatic). Rendement : 38%.',
-      phases: [
-        { name: 'Repos', desc: 'Tirage actif, roue bloquée par une palette.', expert: 'Énergie potentielle stockée. Force de contact : 0.02N.' },
-        { name: 'Dégagement', desc: 'La cheville pousse la fourchette, libérant une dent.', expert: 'Travail de dégagement : W = 2μJ. Accélération : 150 rad/s².' },
-        { name: 'Impulsion', desc: 'La dent pousse la palette, transférant l\'énergie au balancier.', expert: 'Impulsion de 0.5μJ durant 2ms. Couple : 0.3μN·m.' },
-        { name: 'Chute', desc: 'L\'ancre bascule, la palette opposée bloque la roue.', expert: 'Perte d\'énergie par choc : 0.1μJ. Coeff. d\'amortissement : ζ = 0.02.' }
-      ],
-      data: {
-        title: '⚡ Données chiffrées',
-        items: ['Durée: 0.125s', 'Angle: 52°', 'Arc libre: 270-300°', 'Amplitude: 320-330°']
-      }
-    },
-    evolution: {
-      title: 'Évolution et types d\'échappements',
-      beginner: 'Découvrez les différents types d\'échappements et leur histoire.',
-      expert: 'Analyse comparative : levier suisse (38%), co-axial (45%), détente (48%).',
-      types: [
-        { name: 'Échappement à ancre suisse', precision: '±2-5 s/j', maintenance: '3-5 ans', cost: '€50-200', reliability: 95, complexity: 3 },
-        { name: 'Échappement Co-Axial', precision: '±1-3 s/j', maintenance: '8-10 ans', cost: '€500-1500', reliability: 90, complexity: 9 },
-        { name: 'Échappement à détente', precision: '±0.1-0.5 s/j', maintenance: '1-2 ans', cost: '€1000-3000', reliability: 70, complexity: 8 },
-        { name: 'Échappement à force constante', precision: '±0.05 s/j', maintenance: '2-3 ans', cost: '€5000+', reliability: 60, complexity: 10 }
-      ],
-      timeline: [
-        { year: '1750', event: 'Échappement à verge (1ère méch.)' },
-        { year: '1820', event: 'Échappement cylindre (Breguet)' },
-        { year: '1867', event: 'Échappement à ancre suisse' },
-        { year: '1974', event: 'Révolution quartz' },
-        { year: '1999', event: 'Échappement co-axial (Omega)' },
-        { year: '2013', event: 'Échappement en silicium' }
-      ]
-    },
-    quiz: {
-      title: 'Quiz : Testez vos connaissances',
-      beginner: 'Cinq questions pour valider votre compréhension.',
-      expert: 'Quiz technique avec calculs et normes ISO.',
-      progress: 'Question {current} sur {total}',
-      score: 'Score : {score}/{total}',
-      time: 'Temps',
-      questions: [
-        {
-          question: "Quelle est la fonction principale de l'échappement ?",
-          options: ["Stocker l'énergie", "Transformer l'énergie continue en impulsions", "Afficher l'heure", "Remonter le ressort"],
-          correct: 1,
-          explanation: {
-            beginner: "L'échappement convertit l'énergie continue du barillet en impulsions régulières qui entretiennent le balancier.",
-            expert: "Fonction de distribution : convertit E_cont = ½Cθ² en impulsions discrètes ΔE = 0.5μJ à 4Hz."
-          }
-        },
-        {
-          question: "Combien de dents a la roue d'échappement standard ?",
-          options: ["12 dents", "15 dents", "18 dents", "20 dents"],
-          correct: 1,
-          explanation: {
-            beginner: "La roue d'échappement suisse standard compte 15 dents, permettant une division optimale du temps.",
-            expert: "15 dents (module 0.3mm). Formule : z = T_balancier / T_roue = 0.5s / 0.033s ≈ 15."
-          }
-        },
-        {
-          question: "Quelle est la fréquence la plus courante ?",
-          options: ["18'000 A/h", "21'600 A/h", "28'800 A/h", "36'000 A/h"],
-          correct: 2,
-          explanation: {
-            beginner: "28'800 alternances par heure (4 Hz) est le standard moderne, offrant un bon compromis précision/consommation.",
-            expert: "28'800 A/h = 4Hz. Période T = 1/(2f) = 0.125s. Q factor optimal entre 300-500."
-          }
-        },
-        {
-          question: "Quel matériau pour les palettes ?",
-          options: ["Acier trempé", "Rubis synthétique", "Saphir", "Diamant"],
-          correct: 1,
-          explanation: {
-            beginner: "Les palettes sont en rubis synthétique (corindon) pour minimiser les frottements et l'usure.",
-            expert: "Corindon Al₂O₃ (9 Mohs). Coefficient de frottement μ = 0.1 avec huile de synthèse. Usure < 1μm/an."
-          }
-        },
-        {
-          question: "Qu'est-ce que le 'tirage' ?",
-          options: ["La force du ressort", "Action qui maintient l'ancre en repos", "Le bruit du tic-tac", "La vitesse du balancier"],
-          correct: 1,
-          explanation: {
-            beginner: "Le tirage est la force qui maintient l'ancre appuyée contre sa butée pendant le repos.",
-            expert: "Force de contact F = 0.02N. Pression surfacique p = F/A = 200MPa sur la palette de 0.1mm²."
-          }
-        }
-      ]
-    }
+const ESCAPEMENT_COMPONENTS: EscapementComponent[] = [
+  {
+    id: "roue",
+    name: "La Roue d'Échappement (15 Dents à Talon)",
+    role: "Dernier mobile du rouage de transmission. Ses dents biseautées spécifiques comportent un plan de repos, un plan d'impulsion et un talon, permettant un double verrouillage et une poussée dynamique.",
+    technicalRule: "Les faces de repos et d'impulsion des dents doivent présenter un poli miroir absolu pour réduire les frottements de glissement avec les palettes en rubis.",
+    material: "Acier trempable 20AP trempé et poli bloqué, ou Silicium monocristallin (DRIE) ultra-léger et amagnétique.",
+    tolerances: "Faux-rond et faux-plat < 0.003 mm · Épaisseur des dents : 0.08 mm"
+  },
+  {
+    id: "ancre",
+    name: "L'Ancre Suisse (Corps & Baguette)",
+    role: "Pièce basculante intermédiaire transformant la rotation continue en va-et-vient. Elle supporte les deux palettes en rubis et se prolonge par une baguette terminée par la fourchette.",
+    technicalRule: "L'équilibrage de l'ancre autour de son axe de pivotement doit être rigoureux pour éviter tout déséquilibre en position verticale.",
+    material: "Acier trempé 20AP bleui thermiquement ou Maillechort doré haute précision.",
+    tolerances: "Pivots coniques polis Ra < 0.05 µm · Diamètre : 0.080 mm"
+  },
+  {
+    id: "palettes",
+    name: "Les Palettes en Rubis (Entrée & Sortie)",
+    role: "Pierres précieuses taillées avec précision insérées dans les bras de l'ancre. La palette d'entrée verrouille la roue par l'extérieur ; la palette de sortie la verrouille par l'intérieur.",
+    technicalRule: "Chaque palette possède un plan de repos (angle de tirage 12° à 14°) et un plan d'impulsion incliné. Elles sont fixées et réglées à la gomme-laque chauffée sur réchaud d'établi.",
+    material: "Corindon synthétique monocristallin Al₂O₃ rouge taillé et poli au diamant.",
+    tolerances: "Orientation angulaire des plans au demi-degré près (± 0.5°)"
+  },
+  {
+    id: "fourchette",
+    name: "La Fourchette & le Dard de Sécurité",
+    role: "L'extrémité active de l'ancre. L'encoche reçoit la cheville de plateau pour transmettre l'impulsion. Le dard central et les deux cornes latérales assurent la sécurité anti-renversement.",
+    technicalRule: "Le dard est une fine goupille chassée qui vient effleurer la creusure du petit plateau avec un ébat de sécurité strict de 0.02 mm.",
+    material: "Fourchette en acier poli ; dard en laiton doré ou acier trempé.",
+    tolerances: "Ébat de dard : 0.015 à 0.025 mm · Ébat des cornes : 0.03 mm"
+  },
+  {
+    id: "plateau",
+    name: "Le Double Plateau & la Cheville d'Impulsion",
+    role: "Monté sur l'axe de balancier. Le grand plateau porte la cheville en rubis (ellipse) ; le petit plateau comporte la creusure (encoche) laissant passer le dard.",
+    technicalRule: "La cheville en rubis demi-cylindrique doit être parfaitement d'équerre avec le plateau et son plan plat orienté exactement dans l'axe de symétrie.",
+    material: "Plateaux en acier doux ou laiton ; cheville en rubis synthétique poli miroir.",
+    tolerances: "Ajustement serré glissant sur l'axe de balancier"
   }
-};
+];
 
-// =================================================
-// COMPOSANTS RÉUTILISABLES
-// =================================================
+const KINEMATIC_PHASES = [
+  {
+    phaseNumber: "01",
+    title: "Le Repos (Verrouillage Statique)",
+    summary: "La roue d'échappement est bloquée. Le balancier est totalement libre.",
+    description: "Une dent de la roue d'échappement appuie fermement sur le plan de repos d'une des palettes de l'ancre. Le rouage est immobilisé. Pendant ce temps, le balancier parcourt librement son arc supplémentaire d'oscillation sans aucune perturbation.",
+    keyDetail: "L'ancre est fermement maintenue contre sa butée par l'angle de tirage.",
+    color: "#60A5FA"
+  },
+  {
+    phaseNumber: "02",
+    title: "Le Dégagement (Levée de Repos)",
+    summary: "La cheville de plateau pénètre dans la fourchette et déverrouille l'ancre.",
+    description: "Au retour de son oscillation, la cheville de plateau heurte la corne de la fourchette. L'ancre commence à pivoter. La dent de roue recule très légèrement (recul dynamique géométrique) pour quitter le plan de repos.",
+    keyDetail: "Consomme une infime fraction de l'énergie cinétique du balancier (~1° à 2° de levée de repos).",
+    color: "#A855F7"
+  },
+  {
+    phaseNumber: "03",
+    title: "L'Impulsion (Transfert d'Énergie)",
+    summary: "La force motrice pousse l'ancre qui redonne de l'énergie au balancier.",
+    description: "Sitôt libérée du repos, la dent pousse violemment sur le plan d'impulsion incliné de la palette. L'ancre bascule vivement et sa fourchette donne une vigoureuse impulsion à la cheville de plateau, entretenant l'oscillation du balancier.",
+    keyDetail: "C'est l'unique moment où le balancier reçoit de l'énergie mécanique du barillet.",
+    color: "#10B981"
+  },
+  {
+    phaseNumber: "04",
+    title: "La Chute (Le Choc Acoustique)",
+    summary: "La dent quitte la palette et la roue fait un saut libre (le fameux 'tic-tac').",
+    description: "La dent quitte le bec de fuite de la palette. La roue d'échappement accélère librement sur un angle minuscule (angle de chute de 1° à 2°) avant qu'une autre dent ne vienne heurter le plan de repos de la palette opposée.",
+    keyDetail: "Le bruit caractéristique du tic-tac provient du choc de la dent tombant sur la face de repos du rubis.",
+    color: "#F43F5E"
+  },
+  {
+    phaseNumber: "05",
+    title: "Le Tirage (Sécurité de Maintien)",
+    summary: "L'angle de tirage plaque l'ancre contre sa goupille de limitation.",
+    description: "Dès que la nouvelle dent touche la face de repos, l'inclinaison géométrique (angle de tirage de 12° à 14°) engendre une force centripète qui attire et plaque l'ancre contre sa goupille de limitation.",
+    keyDetail: "Empêche tout déverrouillage accidentel de l'ancre lors des secousses ou mouvements brusques du bras.",
+    color: "#E2B44F"
+  }
+];
 
-const SectionCard = ({ title, children, icon: Icon }: any) => (
-  <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 lg:p-8 mb-6 transition-transform hover:scale-[1.01]">
-    <div className="flex items-center justify-between mb-6">
-      <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
-        {Icon && <Icon className="w-7 h-7 text-blue-600 dark:text-blue-400" />}
-        {title}
-      </h2>
-      <Info className="w-5 h-5 text-slate-500" />
-    </div>
-    {children}
-  </div>
-);
+const LIFT_ANGLES_DATA = [
+  { calibre: "ETA 2824-2 / 2836-2 / 2834-2", liftAngle: "52°", freq: "4 Hz (28'800 A/h)", type: "Standard Suisse d'industrie" },
+  { calibre: "ETA 2892A2 / Omega 1120", liftAngle: "51°", freq: "4 Hz (28'800 A/h)", type: "Automatique extra-plat" },
+  { calibre: "Valjoux 7750 / 7751 / 7753", liftAngle: "52°", freq: "4 Hz (28'800 A/h)", type: "Chronographe automatique" },
+  { calibre: "Rolex Calibre 3135 / 3235", liftAngle: "52° / 53°", freq: "4 Hz (28'800 A/h)", type: "Superlative Chronometer" },
+  { calibre: "Patek Philippe 240 / 324 SC", liftAngle: "54° / 51°", freq: "3 Hz / 4 Hz", type: "Haute Horlogerie extra-plat" },
+  { calibre: "Omega Co-Axial Calibre 2500 / 8500", liftAngle: "38° / 38°", freq: "3.5 Hz / 4 Hz", type: "Échappement Co-Axial spécifique" }
+];
 
-const MetricCard = ({ value, label }: any) => (
-  <div className="bg-white/60 dark:bg-slate-900/50 p-3 rounded-lg text-center transition-transform hover:scale-105">
-    <div className="font-mono font-bold text-purple-600 dark:text-purple-400 text-lg">{value}</div>
-    <div className="text-slate-600 dark:text-slate-400 text-xs mt-1">{label}</div>
-  </div>
-);
+const QUIZ_QUESTIONS = [
+  {
+    question: "Dans le cycle de l'échappement à ancre suisse, à quel moment exact le balancier reçoit-il l'énergie motrice pour entretenir ses oscillations ?",
+    options: [
+      "Pendant la phase de repos",
+      "Pendant la phase d'impulsion, lorsque la dent glisse sur le plan d'impulsion de la palette",
+      "Pendant la chute libre de la roue d'échappement",
+      "Pendant tout l'arc supplémentaire"
+    ],
+    correctAnswer: 1,
+    explanation: "C'est l'essence même de l'échappement : durant la phase d'impulsion, la dent de la roue pousse le plan incliné de la palette, ce qui fait basculer la fourchette qui transmet une poussée dynamique à la cheville de plateau du balancier."
+  },
+  {
+    question: "Quel est le rôle crucial de l'angle de tirage (12° à 14°) taillé sur les plans de repos des palettes en rubis ?",
+    options: [
+      "Augmenter la réserve de marche du barillet",
+      "Plaquer activement l'ancre contre sa goupille de limitation sous la poussée de la dent, empêchant le déverrouillage lors des chocs",
+      "Éviter de devoir huiler la roue d'échappement",
+      "Permettre à la trotteuse de sauter seconde par seconde"
+    ],
+    correctAnswer: 1,
+    explanation: "L'angle de tirage est la sécurité dynamique fondamentale : sous la pression continue de la roue d'échappement, la composante de force plaque fermement l'ancre contre sa butée. Sans tirage, la moindre secousse ferait sauter l'ancre et bloquerait la montre."
+  },
+  {
+    question: "Quelle sécurité empêche l'ancre de basculer (renversement) lorsque le balancier parcourt son arc supplémentaire en dehors de la fourchette ?",
+    options: [
+      "Le ressort de barillet",
+      "Le dard qui vient buter contre la périphérie du petit plateau si l'ancre tente de basculer",
+      "La virole du spiral",
+      "Le rochet de remontoir"
+    ],
+    correctAnswer: 1,
+    explanation: "Le dard est la sécurité statique par excellence : situé sous la fourchette, il fait face au petit plateau du balancier avec un jeu infime (0.02 mm). Si un choc pousse l'ancre, le dard vient buter contre le pourtour du petit plateau et bloque le basculement accidentel."
+  },
+  {
+    question: "Pourquoi est-il impératif de renseigner l'Angle de Levée (Lift Angle, ex: 52°) exact sur un chronocomparateur d'établi (Witschi) ?",
+    options: [
+      "Pour mesurer la réserve de marche en heures",
+      "Parce que le microphone calcule l'amplitude d'oscillation du balancier à partir de la durée séparant le 1er et le 3e choc acoustique",
+      "Pour remonter automatiquement le ressort moteur",
+      "Pour calculer le poids du balancier en grammes"
+    ],
+    correctAnswer: 1,
+    explanation: "Le chronocomparateur écoute 3 bruits : 1er choc (cheville dans fourchette), 2e choc (dent sur plan d'impulsion), 3e choc (dent tombant sur le repos). L'appareil calcule la vitesse angulaire et donc l'amplitude exacte à partir de l'angle de levée programmé."
+  },
+  {
+    question: "Quelle est la règle d'or d'atelier suisse pour la lubrification de l'échappement à ancre avec la graisse Moebius 9415 ?",
+    options: [
+      "Huiler généreusement l'axe et les pivots de l'ancre",
+      "Déposer une micro-goutte de graisse 9415 uniquement sur les plans d'impulsion des palettes (ou 2-3 dents de roue) ; ne jamais huiler les pivots d'ancre, le dard ou la cheville !",
+      "Huiler le dard et les cornes de fourchette pour adoucir le contact",
+      "Immerger l'ancre complète dans de l'huile minérale"
+    ],
+    correctAnswer: 1,
+    explanation: "La graisse thixotropique Moebius 9415 ne doit être appliquée que sur les plans d'impulsion des palettes en rubis. Les pivots d'ancre travaillent à sec (l'huile les collerait par capillarité), et le dard ou la cheville doivent rester rigoureusement propres et secs !"
+  }
+];
 
-// =================================================
-// COMPOSANT PRINCIPAL
-// =================================================
+export default function EchappementAncrePage() {
+  const [selectedComp, setSelectedComp] = useState(0);
+  const [selectedPhase, setSelectedPhase] = useState(0);
 
-export default function EchappementAncre() {
-  const [expertMode, setExpertMode] = useState(false);
-  const [activeSection, setActiveSection] = useState('principe');
-  const [showTOC, setShowTOC] = useState(false);
-  const [progress, setProgress] = useState(0);
+  // Lift Angle Calculator State
+  const [selectedLiftAngle, setSelectedLiftAngle] = useState(52); // ETA 2824 standard
+  const [measuredContactTimeMs, setMeasuredContactTimeMs] = useState(6.2); // ms on Witschi
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrolled = window.scrollY;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(Math.min(100, Math.max(0, (scrolled / maxScroll) * 100)));
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // Quiz Stepper State
+  const [currentQuizIdx, setCurrentQuizIdx] = useState(0);
+  const [userAnswers, setUserAnswers] = useState<Record<number, number>>({});
+  const [quizFinished, setQuizFinished] = useState(false);
 
-  const t = TRANSLATIONS.fr;
+  // Simplified amplitude estimate: Amplitude ≈ (LiftAngle / ContactTime) * Constant
+  const calculatedAmplitudeDeg = Math.round(Math.min(325, Math.max(180, (selectedLiftAngle / measuredContactTimeMs) * 34.5)));
+
+  const handleSelectQuizAnswer = (optionIndex: number) => {
+    setUserAnswers(prev => ({ ...prev, [currentQuizIdx]: optionIndex }));
+  };
+
+  const calculateScore = () => {
+    let score = 0;
+    QUIZ_QUESTIONS.forEach((q, idx) => {
+      if (userAnswers[idx] === q.correctAnswer) {
+        score++;
+      }
+    });
+    return score;
+  };
+
+  const resetQuiz = () => {
+    setUserAnswers({});
+    setCurrentQuizIdx(0);
+    setQuizFinished(false);
+  };
+
+  const activeComp = ESCAPEMENT_COMPONENTS[selectedComp];
+  const activePhase = KINEMATIC_PHASES[selectedPhase];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
-      {/* Barre de progression */}
-      <div className="fixed top-0 left-0 right-0 h-1 bg-slate-200 dark:bg-slate-700 z-50">
-        <div className="h-full bg-gradient-to-r from-blue-600 to-purple-600 transition-all" style={{ width: `${progress}%` }} />
-      </div>
+    <div className="bg-[#FDFCFB] text-neutral-900 dark:bg-[#121316] dark:text-neutral-100 antialiased selection:bg-[#B08D57]/20 selection:text-[#8A6A3B] dark:selection:text-[#D4B483] min-h-screen pb-24 transition-colors duration-200">
+      
+      {/* =================================================================== */}
+      {/* TOP APP BAR & BREADCRUMB */}
+      {/* =================================================================== */}
+      <header className="border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-[#15161A]/80 backdrop-blur-md sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400 overflow-x-auto no-scrollbar">
+            <Link href="/" className="font-bold text-neutral-900 dark:text-neutral-100 tracking-wider hover:opacity-80 transition-opacity whitespace-nowrap">
+              HORLOLEARN
+            </Link>
+            <span className="opacity-40">/</span>
+            <Link href="/theorie" className="hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors whitespace-nowrap">
+              Théorie
+            </Link>
+            <span className="opacity-40">/</span>
+            <span className="text-neutral-500 dark:text-neutral-400 whitespace-nowrap">Pilier I</span>
+            <span className="opacity-40">/</span>
+            <span className="font-medium text-neutral-900 dark:text-neutral-100 whitespace-nowrap">
+              L&apos;Échappement à Ancre Suisse
+            </span>
+          </div>
 
-      {/* En-tête */}
-      <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link href="/theorie" className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium">
-                <ChevronLeft className="w-5 h-5 mr-1" />
-                {t.back}
-              </Link>
-              <span className="text-slate-400">|</span>
-              <span className="text-sm text-slate-600 dark:text-slate-400">{t.metadata.standard}</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setExpertMode(!expertMode)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                  expertMode 
-                    ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30' 
-                    : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
-                }`}
-              >
-                <Microscope className="w-4 h-4" />
-                {expertMode ? t.expertModeOn : t.expertModeOff}
-              </button>
-              <button onClick={() => setShowTOC(!showTOC)} className="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
-                <SlidersHorizontal className="w-5 h-5" />
-              </button>
-              <div className="hidden lg:flex items-center gap-2">
-                <button className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" title={t.share}>
-                  <Share2 className="w-5 h-5" />
-                </button>
-                <button className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" title={t.print}>
-                  <Printer className="w-5 h-5" />
-                </button>
-                <button className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" title={t.download}>
-                  <Download className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="hidden sm:inline-flex text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] font-semibold border border-[#B08D57]/20">
+              SEFRI · CPIH / FET
+            </span>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-12">
-        {/* Hero */}
-        <div className="text-center mb-12 lg:mb-16 transition-transform hover:scale-[1.01]">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium mb-4">
-            <Award className="w-4 h-4" />
-            {t.metadata.category}
+      {/* =================================================================== */}
+      {/* MAIN CONTAINER */}
+      {/* =================================================================== */}
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-16">
+
+        {/* 1. HERO SECTION & NORMATIVE BADGES */}
+        <section className="space-y-4 border-b border-neutral-200 dark:border-neutral-800 pb-10">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] border border-[#B08D57]/30">
+              Module 04 · Organe Distributeur &amp; Sécurités
+            </span>
+            <span className="px-3 py-1 rounded-full text-xs font-mono font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300">
+              Niveau : CFC Horloger Praticien &amp; Rhabilleur
+            </span>
+            <span className="px-3 py-1 rounded-full text-xs font-mono font-medium bg-purple-500/10 text-purple-700 dark:text-purple-400 border border-purple-500/20">
+              30 min de lecture · Cinématique &amp; Ébats d&apos;Atelier
+            </span>
           </div>
-          <h1 className="text-4xl lg:text-6xl font-bold text-slate-900 dark:text-white mb-4">
-            {t.title}
+
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-tight">
+            L&apos;Échappement à Ancre Suisse : Cinématique en 5 Phases &amp; Sécurités
           </h1>
-          <p className="text-lg lg:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto mb-6">
-            {t.subtitle}
+
+          <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-300 max-w-4xl leading-relaxed">
+            Considéré comme l&apos;un des mécanismes les plus ingénieux de l&apos;histoire des techniques, 
+            l&apos;<strong>échappement à ancre suisse</strong> assure le lien critique entre le rouage et le balancier. 
+            Découvrez sa cinématique rigoureuse décomposée en <strong>5 phases immuables</strong> (repos, dégagement, impulsion, chute, tirage), 
+            ses sécurités vitales (dard, cornes, creusure) et la métrologie de l&apos;<strong>angle de levée</strong>.
           </p>
-          <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-500">
-            <span className="flex items-center gap-1"><BookOpen className="w-4 h-4" />{t.metadata.readingTime}</span>
-            <span className="flex items-center gap-1"><Gauge className="w-4 h-4" />{expertMode ? 'Expert' : t.metadata.difficulty}</span>
-            <span className="flex items-center gap-1"><Clock className="w-4 h-4" />{t.metadata.lastUpdated}</span>
-            <span className="flex items-center gap-1"><Award className="w-4 h-4" />{t.metadata.standard}</span>
-          </div>
-        </div>
+        </section>
 
-        {/* Table des matières */}
-        {showTOC && (
-          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur rounded-xl p-6 mb-8 border border-slate-200 dark:border-slate-700 shadow-lg">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-              <SlidersHorizontal className="w-5 h-4" />
-              {t.toc}
-            </h3>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-2">
-              {(['principe', 'elements', 'fonctionnement', 'evolution'] as const).map((id) => (
-                <button
-                  key={id}
-                  onClick={() => {
-                    setActiveSection(id);
-                    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className={`flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
-                    activeSection === id
-                      ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
-                      : 'hover:bg-slate-100 dark:hover:bg-slate-900/50'
-                  }`}
-                >
-                  {id === 'principe' && <Activity className="w-4 h-4" />}
-                  {id === 'elements' && <Settings2 className="w-4 h-4" />}
-                  {id === 'fonctionnement' && <Clock className="w-4 h-4" />}
-                  {id === 'evolution' && <Zap className="w-4 h-4" />}
-                  {t[id].title || id}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Contenu */}
-        <div className="space-y-6 lg:space-y-8">
-
-          {/* Section 1 : Principe */}
-          <SectionCard title={t.principe.title} icon={Activity}>
-            <p className="text-slate-700 dark:text-slate-300 mb-6">
-              {expertMode ? t.principe.expert : t.principe.beginner}
+        {/* =================================================================== */}
+        {/* 2. ANATOMIE MICROMÉTRIQUE DE L'ÉCHAPPEMENT (VUE CAD SVG) */}
+        {/* =================================================================== */}
+        <section className="space-y-6">
+          <div className="space-y-2">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#8A6A3B] dark:text-[#D4B483] font-bold">
+              Chapitre 1 · Anatomie d&apos;Établi
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+              Les Composants Clés de l&apos;Échappement à Ancre
+            </h2>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
+              Cliquez sur chaque pièce pour analyser son rôle, ses exigences de finition et ses tolérances micrométriques.
             </p>
-            
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
-              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-blue-200 dark:border-slate-600 transition-transform hover:scale-[1.02]">
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-3">
-                  <Activity className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-                  {t.principe.function1.title}
+          </div>
+
+          {/* SÉLECTEUR DE COMPOSANTS */}
+          <div className="flex flex-wrap gap-2 border-b border-neutral-200 dark:border-neutral-800 pb-3">
+            {ESCAPEMENT_COMPONENTS.map((comp, idx) => (
+              <button
+                key={comp.id}
+                type="button"
+                onClick={() => setSelectedComp(idx)}
+                className={`px-4 py-2 rounded-xl font-mono text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
+                  selectedComp === idx
+                    ? "bg-[#B08D57] text-neutral-950 font-bold shadow-md scale-[1.02]"
+                    : "bg-neutral-100 dark:bg-neutral-800/60 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                }`}
+              >
+                <span>{comp.name.split(" (")[0]}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* FICHE TECHNIQUE DU COMPOSANT SÉLECTIONNÉ */}
+          <div className="p-6 sm:p-8 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-200 dark:border-neutral-800 pb-4">
+              <div>
+                <span className="text-xs font-mono font-bold text-[#8A6A3B] dark:text-[#D4B483] uppercase">
+                  Composant d&apos;Échappement n°0{selectedComp + 1}
+                </span>
+                <h3 className="text-xl sm:text-2xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+                  {activeComp.name}
                 </h3>
-                <p className="text-slate-700 dark:text-slate-300">{t.principe.function1.desc}</p>
-                {expertMode && (
-                  <div className="mt-3 p-3 bg-blue-100/50 dark:bg-blue-900/30 rounded-lg">
-                    <p className="text-sm text-blue-800 dark:text-blue-200">
-                      <strong>Formule :</strong> E_impulsion = ½ × I × ω² × (1 - cos θ)
-                    </p>
-                  </div>
-                )}
               </div>
 
-              <div className="bg-gradient-to-br from-purple-50 to-violet-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-purple-200 dark:border-slate-600 transition-transform hover:scale-[1.02]">
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-3">
-                  <Clock className="w-7 h-7 text-purple-600 dark:text-purple-400" />
-                  {t.principe.function2.title}
+              <span className="text-xs font-mono px-3 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300">
+                {activeComp.tolerances}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs sm:text-sm">
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <h4 className="font-mono font-bold uppercase text-neutral-500 text-xs">Fonction Cinématique</h4>
+                  <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed font-medium">
+                    {activeComp.role}
+                  </p>
+                </div>
+
+                <div className="space-y-1">
+                  <h4 className="font-mono font-bold uppercase text-neutral-500 text-xs">Matériau Horloger Normalisé</h4>
+                  <p className="text-neutral-600 dark:text-neutral-400 font-mono text-xs">
+                    {activeComp.material}
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="p-4 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-300 dark:border-amber-900/40 text-amber-900 dark:text-amber-200 text-xs space-y-1">
+                  <span className="font-bold flex items-center gap-1.5 text-xs text-amber-800 dark:text-amber-300">
+                    💡 Règle d&apos;Établi du Maître Horloger :
+                  </span>
+                  <p className="leading-relaxed">
+                    {activeComp.technicalRule}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* DESSIN TECHNIQUE VECTORIEL CAD (ÉCHAPPEMENT EN POSITION) */}
+          <div className="p-6 rounded-3xl border border-neutral-700/60 bg-[#15171D] text-[#E0E2E6] space-y-4">
+            <div className="flex flex-wrap items-center justify-between text-xs font-mono border-b border-neutral-800 pb-3">
+              <span className="text-neutral-400 flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#B08D57]"></span>
+                GÉOMÉTRIE VECTORIELLE D&apos;ENGAGEMENT DE L&apos;ANCRE SUISSE (ÉCHELLE 30:1)
+              </span>
+              <span className="text-neutral-400">PLAN CINÉMATIQUE INTERACTIF</span>
+            </div>
+
+            <div className="w-full overflow-x-auto py-4 flex justify-center">
+              <svg viewBox="0 0 760 280" className="w-full max-w-[720px] h-auto select-none font-mono">
+                {/* 1. Escape Wheel (Roue d'échappement - Left) */}
+                <g transform="translate(180, 140)">
+                  <circle cx="0" cy="0" r="95" fill="none" stroke="#64748B" strokeWidth="0.8" strokeDasharray="3 3" />
+                  <circle cx="0" cy="0" r="16" fill="#1E293B" stroke="#CBD5E1" strokeWidth="1.5" />
+                  <circle cx="0" cy="0" r="4" fill="#60A5FA" />
+                  {/* Wheel teeth with club feet */}
+                  {[0, 24, 48, 72, 96, 120, 144, 168, 192, 216, 240, 264, 288, 312, 336].map((deg) => (
+                    <g key={deg} transform={`rotate(${deg})`}>
+                      <line x1="0" y1="-16" x2="0" y2="-90" stroke="#CBD5E1" strokeWidth="1.5" />
+                      {/* Club tooth profile */}
+                      <path d="M 0 -90 L 12 -96 L 15 -84 L 0 -86 Z" fill="#E2E8F0" stroke="#94A3B8" strokeWidth="0.8" />
+                    </g>
+                  ))}
+                  <text x="-60" y="-105" fill="#60A5FA" fontSize="11" fontWeight="bold">Roue d&apos;Échappement (15 dents)</text>
+                </g>
+
+                {/* 2. Anchor Body & Arms (Ancre Suisse - Center) */}
+                <g transform="translate(390, 140)">
+                  {/* Anchor staff center */}
+                  <circle cx="0" cy="0" r="10" fill="#1E293B" stroke="#CBD5E1" strokeWidth="1.5" />
+                  <circle cx="0" cy="0" r="3" fill="#E2E8F0" />
+
+                  {/* Left Arm (Palette d'entrée) */}
+                  <path d="M 0 0 L -85 -55 L -105 -50 L -95 -30 Z" fill="#334155" stroke="#CBD5E1" strokeWidth="1.2" />
+                  {/* Entry Ruby Jewel (Palette d'entrée en rubis rouge) */}
+                  <polygon points="-115,-58 -92,-48 -100,-35 -123,-45" fill="#EF4444" stroke="#DC2626" strokeWidth="1" />
+                  <text x="-160" y="-62" fill="#EF4444" fontSize="10" fontWeight="bold">Palette d&apos;Entrée</text>
+
+                  {/* Right Arm (Palette de sortie) */}
+                  <path d="M 0 0 L -85 55 L -105 50 L -95 30 Z" fill="#334155" stroke="#CBD5E1" strokeWidth="1.2" />
+                  {/* Exit Ruby Jewel (Palette de sortie en rubis rouge) */}
+                  <polygon points="-115,58 -92,48 -100,35 -123,45" fill="#EF4444" stroke="#DC2626" strokeWidth="1" />
+                  <text x="-160" y="70" fill="#EF4444" fontSize="10" fontWeight="bold">Palette de Sortie</text>
+
+                  {/* Fork Lever (Baguette & Fourchette vers la droite) */}
+                  <line x1="0" y1="0" x2="110" y2="0" stroke="#CBD5E1" strokeWidth="3" />
+                  {/* Fork Horns (Cornes) */}
+                  <path d="M 100 -18 L 125 -15 L 115 0 L 125 15 L 100 18" fill="none" stroke="#E2E8F0" strokeWidth="2.5" />
+                  {/* Dart (Dard de sécurité au milieu) */}
+                  <line x1="108" y1="0" x2="132" y2="0" stroke="#F59E0B" strokeWidth="2.5" strokeLinecap="round" />
+                  <text x="75" y="-25" fill="#F59E0B" fontSize="10" fontWeight="bold">Dard &amp; Cornes</text>
+                </g>
+
+                {/* Banking pins (Goupilles de limitation) */}
+                <circle cx="390" cy="95" r="4" fill="#94A3B8" />
+                <circle cx="390" cy="185" r="4" fill="#94A3B8" />
+                <text x="400" y="98" fill="#94A3B8" fontSize="9">Butée</text>
+                <text x="400" y="188" fill="#94A3B8" fontSize="9">Butée</text>
+
+                {/* 3. Double Roller on Balance Axis (Plateau du Balancier - Right) */}
+                <g transform="translate(560, 140)">
+                  {/* Balance axis */}
+                  <circle cx="0" cy="0" r="6" fill="#60A5FA" />
+                  {/* Large roller rim */}
+                  <circle cx="0" cy="0" r="42" fill="none" stroke="#64748B" strokeWidth="1.5" />
+                  {/* Small roller with crescent (Creusure) */}
+                  <circle cx="0" cy="0" r="22" fill="#1E293B" stroke="#94A3B8" strokeWidth="1.5" />
+                  {/* Crescent notch (Creusure face au dard) */}
+                  <path d="M -22 -8 A 10 10 0 0 1 -22 8 Z" fill="#0F172A" />
+
+                  {/* Impulse Pin / Ellipse (Cheville de plateau en rubis) */}
+                  <path d="M -35 -5 A 6 6 0 0 1 -35 5 Z" fill="#EF4444" stroke="#DC2626" strokeWidth="1" />
+                  <text x="-30" y="-48" fill="#EF4444" fontSize="10" fontWeight="bold">Cheville de Plateau</text>
+                  <text x="10" y="60" fill="#94A3B8" fontSize="9">Axe de Balancier</text>
+                </g>
+              </svg>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between text-xs text-neutral-400 pt-2 border-t border-neutral-800">
+              <span>🔴 Palettes et cheville en Corindon synthétique (Rubis poli miroir)</span>
+              <span>🟡 Sécurités : Dard centré face à la creusure du petit plateau</span>
+              <span>📐 Butées de limitation : définissent l&apos;angle total de levée de l&apos;ancre</span>
+            </div>
+          </div>
+        </section>
+
+        {/* =================================================================== */}
+        {/* 3. LA CINÉMATIQUE RIGOUREUSE EN 5 PHASES */}
+        {/* =================================================================== */}
+        <section className="space-y-6">
+          <div className="space-y-2">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#8A6A3B] dark:text-[#D4B483] font-bold">
+              Chapitre 2 · Décomposition Cinématique
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+              Le Cycle en 5 Phases d&apos;une Alternance Horlogère
+            </h2>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
+              À chaque demi-oscillation du balancier, l&apos;échappement parcourt 5 étapes successives d&apos;une précision 
+              absolue pour libérer une dent et transmettre l&apos;énergie d&apos;entretien.
+            </p>
+          </div>
+
+          {/* SÉLECTEUR DE PHASE */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 border-b border-neutral-200 dark:border-neutral-800 pb-3">
+            {KINEMATIC_PHASES.map((p, pIdx) => (
+              <button
+                key={p.phaseNumber}
+                type="button"
+                onClick={() => setSelectedPhase(pIdx)}
+                className={`p-3 rounded-xl font-mono text-xs font-semibold transition-all cursor-pointer text-left border ${
+                  selectedPhase === pIdx
+                    ? "border-[#B08D57] bg-[#B08D57]/10 text-neutral-900 dark:text-neutral-100 font-bold shadow-sm"
+                    : "border-neutral-200 dark:border-neutral-800 text-neutral-500 hover:border-neutral-300 dark:hover:border-neutral-700"
+                }`}
+              >
+                <div className="text-[10px] text-neutral-400 uppercase">Phase {p.phaseNumber}</div>
+                <div className="font-bold text-xs truncate">{p.title.split(" (")[0]}</div>
+              </button>
+            ))}
+          </div>
+
+          {/* FICHE DÉTAILLÉE DE LA PHASE */}
+          <div className="p-6 sm:p-8 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] shadow-sm space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-neutral-100 dark:border-neutral-800 pb-4">
+              <div className="flex items-center gap-3">
+                <span className="w-8 h-8 rounded-full bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] font-mono font-bold flex items-center justify-center text-sm">
+                  {activePhase.phaseNumber}
+                </span>
+                <h3 className="text-xl sm:text-2xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+                  {activePhase.title}
                 </h3>
-                <p className="text-slate-700 dark:text-slate-300">{t.principe.function2.desc}</p>
-                {expertMode && (
-                  <div className="mt-3 p-3 bg-purple-100/50 dark:bg-purple-900/30 rounded-lg">
-                    <p className="text-sm text-purple-800 dark:text-purple-200">
-                      <strong>ISO 3159 :</strong> Tolérance de marche ±0.05 s/j pour chronomètre
-                    </p>
-                  </div>
-                )}
+              </div>
+
+              <span className="text-xs font-mono px-3 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300">
+                {activePhase.summary}
+              </span>
+            </div>
+
+            <p className="text-sm text-neutral-700 dark:text-neutral-300 leading-relaxed font-medium">
+              {activePhase.description}
+            </p>
+
+            <div className="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200/60 dark:border-neutral-800 text-xs flex items-center gap-2">
+              <span className="font-bold text-[#8A6A3B] dark:text-[#D4B483]">Point clé d&apos;atelier :</span>
+              <span className="text-neutral-600 dark:text-neutral-400">{activePhase.keyDetail}</span>
+            </div>
+          </div>
+        </section>
+
+        {/* =================================================================== */}
+        {/* 4. LES 3 SÉCURITÉS FONDAMENTALES & ÉBATS */}
+        {/* =================================================================== */}
+        <section className="space-y-6">
+          <div className="space-y-2">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#8A6A3B] dark:text-[#D4B483] font-bold">
+              Chapitre 3 · Prévention du Renversement
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+              Les 3 Sécurités de l&apos;Échappement à Ancre Suisse
+            </h2>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
+              Le pire cauchemar d&apos;un échappement est le <strong>renversement</strong> : un basculement prématuré de l&apos;ancre 
+              sous l&apos;effet d&apos;un choc alors que la cheville est à l&apos;extérieur. Trois barrières de sécurité interconnectées empêchent ce désastre.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-6 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] space-y-3 shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold">
+                1
+              </div>
+              <h3 className="font-serif font-bold text-base text-neutral-900 dark:text-neutral-100">
+                Le Dard &amp; le Petit Plateau
+              </h3>
+              <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                <strong>Sécurité permanente :</strong> Pendant tout l&apos;arc supplémentaire où la cheville est absente, 
+                le dard vient frôler la tranche circulaire du petit plateau. Si l&apos;ancre tente de basculer, le dard bute immédiatement sur le métal.
+              </p>
+              <div className="text-[11px] font-mono text-neutral-500 pt-2 border-t border-neutral-100 dark:border-neutral-800">
+                Ébat de dard : <strong>0.02 mm</strong>
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border-l-4 border-purple-600">
-              <div className="flex items-start gap-4">
-                <Heart className="w-8 h-8 text-purple-600 dark:text-purple-400 mt-1" />
-                <div className="flex-1">
-                  <h4 className="font-bold text-slate-900 dark:text-white mb-2">
-                    {t.principe.funFact.title}
-                  </h4>
-                  <p className="text-slate-700 dark:text-slate-300 mb-4">
-                    {t.principe.funFact.desc}
-                  </p>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {t.principe.funFact.metrics.map((metric: string, i: number) => (
-                      <MetricCard key={i} value={metric.split(' ')[0]} label={metric.split(' ')[1]} />
+            <div className="p-6 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] space-y-3 shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-sky-500/10 flex items-center justify-center text-sky-600 dark:text-sky-400 font-bold">
+                2
+              </div>
+              <h3 className="font-serif font-bold text-base text-neutral-900 dark:text-neutral-100">
+                Les Cornes &amp; la Cheville
+              </h3>
+              <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                <strong>Sécurité de transition :</strong> Au moment précis où la creusure se présente face au dard, 
+                le dard ne peut plus bloquer. Ce sont alors les cornes de fourchette qui viennent buter contre la cheville de plateau si un choc intervient.
+              </p>
+              <div className="text-[11px] font-mono text-neutral-500 pt-2 border-t border-neutral-100 dark:border-neutral-800">
+                Ébat de corne : <strong>0.03 mm</strong>
+              </div>
+            </div>
+
+            <div className="p-6 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] space-y-3 shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold">
+                3
+              </div>
+              <h3 className="font-serif font-bold text-base text-neutral-900 dark:text-neutral-100">
+                L&apos;Angle de Tirage
+              </h3>
+              <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                <strong>Sécurité statique dynamique :</strong> L&apos;inclinaison des faces de repos (12° à 14°) transforme la force 
+                de la roue d&apos;échappement en un couple qui plaque continuellement l&apos;ancre contre sa goupille de limitation.
+              </p>
+              <div className="text-[11px] font-mono text-neutral-500 pt-2 border-t border-neutral-100 dark:border-neutral-800">
+                Angle de tirage : <strong>12° à 14°</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =================================================================== */}
+        {/* 5. MÉTROLOGIE : L'ANGLE DE LEVÉE SUR CHRONOCOMPARATEUR */}
+        {/* =================================================================== */}
+        <section className="space-y-6">
+          <div className="space-y-2">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#8A6A3B] dark:text-[#D4B483] font-bold">
+              Chapitre 4 · Diagnostic &amp; Contrôle Chronométrique
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+              L&apos;Angle de Levée (Lift Angle) &amp; Mesure d&apos;Amplitude Witschi
+            </h2>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 max-w-3xl leading-relaxed">
+              L&apos;angle de levée du balancier est le paramètre fondamental que l&apos;horloger doit obligatoirement renseigner 
+              sur son chronocomparateur pour obtenir une mesure exacte de l&apos;amplitude.
+            </p>
+          </div>
+
+          <div className="p-6 sm:p-8 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] shadow-sm space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              
+              <div className="lg:col-span-2 space-y-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-mono font-semibold text-neutral-600 dark:text-neutral-400">
+                    Sélectionnez le calibre horloger suisse :
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {LIFT_ANGLES_DATA.map((row, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setSelectedLiftAngle(parseInt(row.liftAngle))}
+                        className={`p-3 rounded-xl border text-left text-xs font-mono transition-all cursor-pointer ${
+                          selectedLiftAngle === parseInt(row.liftAngle)
+                            ? "border-[#B08D57] bg-[#B08D57]/10 text-neutral-900 dark:text-neutral-100 font-bold"
+                            : "border-neutral-200 dark:border-neutral-800 text-neutral-500 hover:border-neutral-300"
+                        }`}
+                      >
+                        <div className="font-bold text-neutral-900 dark:text-neutral-100">{row.calibre}</div>
+                        <div className="text-[11px] text-[#8A6A3B] dark:text-[#D4B483]">Angle de levée : {row.liftAngle}</div>
+                      </button>
                     ))}
                   </div>
                 </div>
+
+                <div className="space-y-2 pt-2">
+                  <div className="flex justify-between text-xs font-mono">
+                    <span className="text-neutral-600 dark:text-neutral-400">Temps de passage acoustique mesuré par le micro (ms) :</span>
+                    <span className="font-bold text-neutral-900 dark:text-neutral-100">{measuredContactTimeMs} ms</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="4.5"
+                    max="9.0"
+                    step="0.1"
+                    value={measuredContactTimeMs}
+                    onChange={(e) => setMeasuredContactTimeMs(parseFloat(e.target.value))}
+                    className="w-full accent-[#B08D57] cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] font-mono text-neutral-400">
+                    <span>4.5 ms (balancier ultra-rapide / haute amplitude)</span>
+                    <span>6.2 ms (standard 280°)</span>
+                    <span>9.0 ms (faible amplitude)</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </SectionCard>
 
-          {/* Section 2 : Éléments */}
-          <SectionCard title={t.elements.title} icon={Settings2}>
-            <p className="text-slate-700 dark:text-slate-300 mb-6">
-              {expertMode ? t.elements.expert : t.elements.beginner}
-            </p>
+              {/* Rendu Écran Witschi */}
+              <div className="p-6 rounded-3xl bg-neutral-900 text-white dark:bg-[#181A1F] border border-neutral-700/60 flex flex-col justify-between space-y-4 shadow-lg font-mono">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-xs border-b border-neutral-800 pb-2">
+                    <span className="text-neutral-400">CHRONOCOMPARATEUR</span>
+                    <span className="text-emerald-400 flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                      MESURE ACOUSTIQUE
+                    </span>
+                  </div>
 
-            {/* Roue d'échappement */}
-            <div className="bg-gradient-to-br from-orange-50 to-amber-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-orange-200 dark:border-slate-600 mb-4 transition-transform hover:scale-[1.01]">
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">1. {t.elements.wheel.title}</h3>
-                <ZoomIn className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-              </div>
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
-                {expertMode ? t.elements.wheel.expert : t.elements.wheel.beginner}
-              </p>
-              <div className="grid md:grid-cols-4 gap-3">
-                {t.elements.wheel.specs.map((spec: string, i: number) => (
-                  <MetricCard key={i} value={spec.split(' ')[0]} label={spec.split(' ')[1]} />
-                ))}
-              </div>
-            </div>
-
-            {/* Ancre */}
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-green-200 dark:border-slate-600 mb-4 transition-transform hover:scale-[1.01]">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">2. {t.elements.anchor.title}</h3>
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
-                {expertMode ? t.elements.anchor.expert : t.elements.anchor.beginner}
-              </p>
-              <div className="grid md:grid-cols-3 gap-3">
-                {t.elements.anchor.specs.map((spec: string, i: number) => (
-                  <MetricCard key={i} value={spec.split(' ')[0]} label={spec.split(' ')[1] || spec.split(' ')[2]} />
-                ))}
-              </div>
-            </div>
-
-            {/* Plateau */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-700 dark:to-slate-800 rounded-xl p-6 border border-blue-200 dark:border-slate-600 transition-transform hover:scale-[1.01]">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">3. {t.elements.balance.title}</h3>
-              <p className="text-slate-700 dark:text-slate-300 mb-4">
-                {expertMode ? t.elements.balance.expert : t.elements.balance.beginner}
-              </p>
-              <div className="grid md:grid-cols-3 gap-3">
-                {t.elements.balance.specs.map((spec: string, i: number) => (
-                  <MetricCard key={i} value={spec.split(' ')[0]} label={spec.split(' ')[1]} />
-                ))}
-              </div>
-            </div>
-          </SectionCard>
-
-          {/* Section 3 : Fonctionnement */}
-          <SectionCard title={t.fonctionnement.title} icon={Clock}>
-            <p className="text-slate-700 dark:text-slate-300 mb-6">
-              {expertMode ? t.fonctionnement.expert : t.fonctionnement.beginner}
-            </p>
-
-            {/* Simulateur 2D */}
-            <EscapementSimulator2D />
-
-            <p className="text-slate-700 dark:text-slate-300 mt-6 mb-4">
-              {t.fonctionnement.title}
-            </p>
-
-            <div className="space-y-4">
-              {t.fonctionnement.phases.map((phase: any, i: number) => (
-                <div
-                  key={i}
-                  className={`bg-slate-50 dark:bg-slate-900 p-6 rounded-xl border-l-4 transition-transform hover:translate-x-2 ${
-                    i === 0 ? 'border-blue-600' : i === 1 ? 'border-green-600' : i === 2 ? 'border-purple-600' : 'border-orange-600'
-                  }`}
-                >
-                  <div className="flex items-start">
-                    <div className={`${
-                      i === 0 ? 'bg-blue-600' : i === 1 ? 'bg-green-600' : i === 2 ? 'bg-purple-600' : 'bg-orange-600'
-                    } text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0`}>
-                      {i + 1}
+                  <div>
+                    <span className="text-[11px] text-neutral-400 block">Amplitude Calculée :</span>
+                    <div className="flex items-baseline gap-2">
+                      <span className={`text-3xl sm:text-4xl font-bold ${
+                        calculatedAmplitudeDeg >= 260 && calculatedAmplitudeDeg <= 310
+                          ? "text-emerald-400"
+                          : "text-amber-400"
+                      }`}>
+                        {calculatedAmplitudeDeg}°
+                      </span>
                     </div>
-                    <div>
-                      <h4 className="font-bold text-slate-900 dark:text-white mb-2">{phase.name}</h4>
-                      <p className="text-slate-700 dark:text-slate-300">{phase.desc}</p>
-                      {expertMode && (
-                        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{phase.expert}</p>
-                      )}
+                  </div>
+
+                  <div className="space-y-1 text-xs pt-2 border-t border-neutral-800">
+                    <div className="flex justify-between">
+                      <span className="text-neutral-500">Angle de levée réglé :</span>
+                      <span className="font-bold text-[#D4B483]">{selectedLiftAngle}°</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-neutral-500">Durée d&apos;impulsion :</span>
+                      <span className="text-neutral-300">{measuredContactTimeMs} ms</span>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
 
-            {/* Données techniques */}
-            <div className="mt-6 bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-600 p-6 rounded-r-lg">
-              <h4 className="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                <Gauge className="w-5 h-5" />
-                {t.fonctionnement.data.title}
-              </h4>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {t.fonctionnement.data.items.map((item: string, i: number) => (
-                  <div key={i} className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400 text-sm">{item.split(':')[0]}</span>
-                    <span className="font-mono text-slate-900 dark:text-white font-bold">{item.split(':')[1]}</span>
-                  </div>
-                ))}
+                <div className="text-[11px] text-neutral-400 border-t border-neutral-800 pt-2">
+                  Plage optimale d&apos;atelier : <strong>270° à 310°</strong> (position horizontale).
+                </div>
               </div>
             </div>
-          </SectionCard>
+          </div>
+        </section>
 
-          {/* Section 4 : Évolution */}
-          <SectionCard title={t.evolution.title} icon={Zap}>
-            <p className="text-slate-700 dark:text-slate-300 mb-6">
-              {expertMode ? t.evolution.expert : t.evolution.beginner}
+        {/* =================================================================== */}
+        {/* 6. LUBRIFICATION D'ATELIER : MOEBIUS 9415 */}
+        {/* =================================================================== */}
+        <section className="space-y-6">
+          <div className="space-y-2">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#8A6A3B] dark:text-[#D4B483] font-bold">
+              Chapitre 5 · Pratique d&apos;Établi
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+              La Lubrification Thixotropique : Moebius 9415
+            </h2>
+          </div>
+
+          <div className="p-6 sm:p-8 rounded-3xl border border-sky-300 dark:border-sky-900/50 bg-sky-50/50 dark:bg-sky-950/20 text-sky-900 dark:text-sky-200 space-y-4">
+            <div className="flex items-center gap-2 font-bold text-sm text-sky-800 dark:text-sky-300">
+              <Sparkles className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+              <span>Pourquoi la graisse Moebius 9415 est-elle irremplaçable sur l&apos;ancre ?</span>
+            </div>
+
+            <p className="text-xs sm:text-sm leading-relaxed text-sky-800 dark:text-sky-300/90">
+              L&apos;échappement subit des accélérations foudroyantes et des chocs à répétition (jusqu&apos;à 8 impacts par seconde). 
+              Une huile classique serait immédiatement éjectée par la force centrifuge. 
+              La graisse <strong>Moebius 9415</strong> est dotée de propriétés <strong>thixotropiques</strong> : 
+              elle reste solide et gélifiée au repos, mais se liquéfie instantanément au moment où la dent frotte sur la palette, 
+              avant de se figer à nouveau dès la fin du contact !
             </p>
 
-            {/* Comparaison interactive */}
-            <EscapementComparison expertMode={expertMode} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 text-xs">
+              <div className="p-4 rounded-xl bg-white/70 dark:bg-sky-900/30 border border-sky-200 dark:border-sky-800/50 space-y-1">
+                <span className="font-bold text-emerald-700 dark:text-emerald-300 block">✓ Ce qu&apos;il faut huiler :</span>
+                <p className="text-sky-800 dark:text-sky-200 leading-relaxed">
+                  Déposer une micro-quantité de Moebius 9415 sur le plan d&apos;impulsion de la palette de sortie, 
+                  puis faire tourner la roue d&apos;échappement pour répartir le film sur 2 à 3 dents seulement.
+                </p>
+              </div>
 
-            {/* Timeline */}
-            <div className="mt-8">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Évolution historique</h3>
-              <div className="relative">
-                <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-blue-600" />
-                {t.evolution.timeline.map((item: any, i: number) => (
-                  <div
-                    key={i}
-                    className="relative pl-10 pb-6 transition-transform hover:translate-x-2"
+              <div className="p-4 rounded-xl bg-white/70 dark:bg-sky-900/30 border border-sky-200 dark:border-sky-800/50 space-y-1">
+                <span className="font-bold text-rose-700 dark:text-rose-300 block">❌ Ce qui doit rester STRICTEMENT SEC :</span>
+                <p className="text-sky-800 dark:text-sky-200 leading-relaxed">
+                  Ne JAMAIS huiler les pivots de l&apos;ancre (ils travaillent à sec !), ni les cornes de fourchette, 
+                  ni le dard, ni la cheville de plateau. L&apos;huile y créerait un collage par capillarité qui détruirait l&apos;amplitude.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =================================================================== */}
+        {/* 7. QUIZ INTERACTIF COMPACT D'ATELIER (FORMAT STEPPER 1 QUESTION) */}
+        {/* =================================================================== */}
+        <section className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span className="text-xs font-mono uppercase tracking-widest text-[#8A6A3B] dark:text-[#D4B483] font-bold">
+                Contrôle des Connaissances
+              </span>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-neutral-900 dark:text-neutral-100">
+                Quiz de Validation Rapide : L&apos;Échappement à Ancre Suisse
+              </h2>
+            </div>
+
+            {/* Mini Progress Pills */}
+            <div className="flex items-center gap-1.5">
+              {QUIZ_QUESTIONS.map((_, idx) => {
+                const ans = userAnswers[idx];
+                const isCurrent = currentQuizIdx === idx && !quizFinished;
+                let bg = "bg-neutral-200 dark:bg-neutral-800 text-neutral-500";
+                if (ans !== undefined) {
+                  bg = ans === QUIZ_QUESTIONS[idx].correctAnswer
+                    ? "bg-emerald-500 text-white font-bold"
+                    : "bg-rose-500 text-white font-bold";
+                } else if (isCurrent) {
+                  bg = "bg-[#B08D57] text-neutral-950 font-bold ring-2 ring-[#B08D57]/40";
+                }
+
+                return (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => {
+                      setCurrentQuizIdx(idx);
+                      setQuizFinished(false);
+                    }}
+                    className={`w-7 h-7 rounded-lg text-[11px] font-mono transition-all cursor-pointer flex items-center justify-center ${bg}`}
                   >
-                    <div className="absolute left-3 w-3 h-3 bg-blue-600 rounded-full ring-4 ring-white dark:ring-slate-900" />
-                    <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg">
-                      <div className="font-bold text-blue-600 dark:text-blue-400">{item.year}</div>
-                      <p className="text-slate-700 dark:text-slate-300">{item.event}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                    {idx + 1}
+                  </button>
+                );
+              })}
             </div>
-          </SectionCard>
-
-          {/* Section 5 : Quiz */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 lg:p-8">
-            <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-              <Award className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-              {t.quiz.title}
-            </h2>
-            <p className="text-slate-700 dark:text-slate-300 mb-6">
-              {expertMode ? t.quiz.expert : t.quiz.beginner}
-            </p>
-            {/* Correction ici : passage de la prop 't' */}
-            <QuizComponent questions={t.quiz.questions} expertMode={expertMode} t={t} />
           </div>
 
-          {/* Section 6 : Ressources */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 lg:p-8">
-            <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-              <BookOpen className="w-7 h-7 text-blue-600 dark:text-blue-400" />
-              Ressources et références
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Ouvrages de référence</h3>
-                <div className="space-y-3 text-slate-700 dark:text-slate-300">
-                  <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg transition-transform hover:scale-[1.02]">
-                    <BookOpen className="w-4 h-4 mt-1 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium">"The Theory of Horology"</p>
-                      <p className="text-sm text-slate-500">Swiss Federation of Watchmaking Schools</p>
-                    </div>
+          {/* MAIN QUIZ CARD (Compact Stepper) */}
+          <div className="p-6 sm:p-7 rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#15171D] shadow-sm">
+            {!quizFinished ? (
+              <div className="space-y-5">
+                {/* Question Header */}
+                <div className="flex items-center justify-between gap-4 border-b border-neutral-100 dark:border-neutral-800 pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-md font-mono font-bold text-xs bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] border border-[#B08D57]/20">
+                      Question {currentQuizIdx + 1} / {QUIZ_QUESTIONS.length}
+                    </span>
+                    <span className="text-xs font-mono text-neutral-400">
+                      {userAnswers[currentQuizIdx] !== undefined ? "✓ Réponse enregistrée" : "Choisissez une option"}
+                    </span>
                   </div>
-                  <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg transition-transform hover:scale-[1.02]">
-                    <BookOpen className="w-4 h-4 mt-1 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium">"Watchmaking"</p>
-                      <p className="text-sm text-slate-500">George Daniels</p>
-                    </div>
+
+                  <span className="text-xs font-mono text-neutral-500 font-semibold">
+                    Score : {calculateScore()} / {Object.keys(userAnswers).length}
+                  </span>
+                </div>
+
+                {/* Question Title */}
+                <h3 className="text-sm sm:text-base font-semibold text-neutral-900 dark:text-neutral-100 leading-snug">
+                  {QUIZ_QUESTIONS[currentQuizIdx].question}
+                </h3>
+
+                {/* Options Grid (2x2) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {QUIZ_QUESTIONS[currentQuizIdx].options.map((opt, optIdx) => {
+                    const selected = userAnswers[currentQuizIdx];
+                    const isSelected = selected === optIdx;
+                    const isAnswered = selected !== undefined;
+                    const isOptionCorrect = optIdx === QUIZ_QUESTIONS[currentQuizIdx].correctAnswer;
+
+                    let btnStyle = "border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 bg-neutral-50/60 dark:bg-neutral-900/40 text-neutral-700 dark:text-neutral-300";
+
+                    if (isAnswered) {
+                      if (isOptionCorrect) {
+                        btnStyle = "border-emerald-500 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 font-semibold";
+                      } else if (isSelected) {
+                        btnStyle = "border-rose-500 bg-rose-500/10 text-rose-800 dark:text-rose-300 font-semibold";
+                      } else {
+                        btnStyle = "opacity-50 border-neutral-200 dark:border-neutral-800";
+                      }
+                    }
+
+                    return (
+                      <button
+                        key={optIdx}
+                        type="button"
+                        onClick={() => handleSelectQuizAnswer(optIdx)}
+                        className={`p-3.5 rounded-xl border text-left text-xs transition-all cursor-pointer flex items-center justify-between gap-2 ${btnStyle}`}
+                      >
+                        <span className="leading-snug">{opt}</span>
+                        {isAnswered && isOptionCorrect && (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Feedback & Explanation Box */}
+                {userAnswers[currentQuizIdx] !== undefined && (
+                  <div className={`p-3.5 rounded-xl text-xs leading-relaxed border ${
+                    userAnswers[currentQuizIdx] === QUIZ_QUESTIONS[currentQuizIdx].correctAnswer
+                      ? "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-900/40 text-emerald-900 dark:text-emerald-200"
+                      : "bg-rose-50/50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-900/40 text-rose-900 dark:text-rose-200"
+                  }`}>
+                    <span className="font-bold block mb-0.5">
+                      {userAnswers[currentQuizIdx] === QUIZ_QUESTIONS[currentQuizIdx].correctAnswer
+                        ? "✅ Exact !"
+                        : "❌ Explication technique :"}
+                    </span>
+                    {QUIZ_QUESTIONS[currentQuizIdx].explanation}
+                  </div>
+                )}
+
+                {/* Stepper Controls */}
+                <div className="flex items-center justify-between pt-3 border-t border-neutral-100 dark:border-neutral-800">
+                  <button
+                    type="button"
+                    disabled={currentQuizIdx === 0}
+                    onClick={() => setCurrentQuizIdx(prev => prev - 1)}
+                    className="px-3.5 py-1.5 rounded-lg text-xs font-mono text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  >
+                    ← Précédent
+                  </button>
+
+                  <div className="flex items-center gap-2">
+                    {currentQuizIdx < QUIZ_QUESTIONS.length - 1 ? (
+                      <button
+                        type="button"
+                        onClick={() => setCurrentQuizIdx(prev => prev + 1)}
+                        className="px-4 py-1.5 rounded-lg text-xs font-mono font-semibold bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 transition-all cursor-pointer"
+                      >
+                        Suivant →
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setQuizFinished(true)}
+                        className="px-4 py-1.5 rounded-lg text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 hover:bg-[#9c7b48] transition-all shadow-sm cursor-pointer"
+                      >
+                        Voir le Bilan Final ✓
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Normes techniques</h3>
-                <div className="space-y-3 text-slate-700 dark:text-slate-300">
-                  <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg transition-transform hover:scale-[1.02]">
-                    <Award className="w-4 h-4 mt-1 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium">ISO 3159</p>
-                      <p className="text-sm text-slate-500">Chronomètres de montre-bracelet</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg transition-transform hover:scale-[1.02]">
-                    <Award className="w-4 h-4 mt-1 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium">NIHS 95-10</p>
-                      <p className="text-sm text-slate-500">Échappements à ancre suisses</p>
-                    </div>
-                  </div>
+            ) : (
+              /* Summary / Result View */
+              <div className="text-center py-6 space-y-4">
+                <div className="w-14 h-14 rounded-full bg-[#B08D57]/10 text-[#8A6A3B] dark:text-[#D4B483] mx-auto flex items-center justify-center font-serif text-2xl font-bold">
+                  {calculateScore()} / {QUIZ_QUESTIONS.length}
+                </div>
+
+                <div className="space-y-1">
+                  <h3 className="text-lg font-serif font-bold text-neutral-900 dark:text-neutral-100">
+                    {calculateScore() >= 4
+                      ? "Félicitations ! Cinématique de l'Échappement Validée."
+                      : "Bon travail ! Quelques révisions conseillées."}
+                  </h3>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 max-w-md mx-auto">
+                    {calculateScore() >= 4
+                      ? "Vous maîtrisez les 5 phases cinématiques, les sécurités de dard et l'angle de levée. Prêt pour le Module 05 sur le Balancier-Spiral !"
+                      : "Prenez le temps de revoir les phases de dégagement et de tirage ainsi que l'ébat de dard avant de poursuivre."}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-center gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCurrentQuizIdx(0);
+                      setQuizFinished(false);
+                    }}
+                    className="px-4 py-2 rounded-xl text-xs font-mono font-semibold bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
+                  >
+                    Revoir mes réponses
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={resetQuiz}
+                    className="px-4 py-2 rounded-xl text-xs font-mono font-bold bg-[#B08D57] text-neutral-950 hover:bg-[#9c7b48] transition-all cursor-pointer shadow-sm"
+                  >
+                    Recommencer le quiz
+                  </button>
                 </div>
               </div>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <button className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
-                <Download className="w-4 h-4" /> Fiche technique (PDF)
-              </button>
-              <button className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors font-medium">
-                <Download className="w-4 h-4" /> Diagrammes CAO (DXF)
-              </button>
-              <button className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium">
-                <Download className="w-4 h-4" /> Normes ISO (ZIP)
-              </button>
-            </div>
+            )}
           </div>
+        </section>
 
-          {/* Footer */}
-          <div className="text-center text-sm text-slate-500 dark:text-slate-400 pt-6 border-t border-slate-200 dark:border-slate-700">
-            <p>
-              <strong>Horlogerie Reference</strong> v1.0.0 | 
-              <button className="mx-2 text-blue-600 dark:text-blue-400 hover:underline">CC BY-NC-SA 4.0</button> | 
-              <button className="text-blue-600 dark:text-blue-400 hover:underline">Citer cette page</button>
-            </p>
-            <p className="mt-1">DOI: 10.12345/horology.escapement.2024</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// =================================================
-// COMPOSANTS SECONDAIRES
-// =================================================
-
-function EscapementSimulator2D() {
-  const [isRunning, setIsRunning] = useState(false);
-  const [phase, setPhase] = useState(0);
-
-  useEffect(() => {
-    if (!isRunning) return;
-    const timer = setInterval(() => setPhase((p) => (p + 1) % 4), 125);
-    return () => clearInterval(timer);
-  }, [isRunning]);
-
-  const phaseColors = ['bg-blue-600', 'bg-green-600', 'bg-purple-600', 'bg-orange-600'];
-
-  return (
-    <div className="relative h-64 bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl overflow-hidden flex items-center justify-center">
-      <div className="text-center text-white">
-        <div className={`w-24 h-24 mx-auto mb-4 rounded-full ${phaseColors[phase]} flex items-center justify-center shadow-lg shadow-current/50 transition-all`}>
-          <span className="text-2xl font-bold">{phase + 1}</span>
-        </div>
-        <div className="text-lg font-medium mb-2">{['Repos', 'Dégagement', 'Impulsion', 'Chute'][phase]}</div>
-        <div className="text-sm text-slate-400 mb-4">Phase du cycle d'échappement</div>
-        <button
-          onClick={() => setIsRunning(!isRunning)}
-          className={`px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 mx-auto ${
-            isRunning ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'
-          }`}
-        >
-          {isRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-          {isRunning ? 'Arrêter' : 'Démarrer'}
-        </button>
-      </div>
-      <div className="absolute top-3 right-3 bg-black/50 text-white px-3 py-1 rounded-full text-xs font-mono">
-        28'800 A/h
-      </div>
-    </div>
-  );
-}
-
-function EscapementComparison({ expertMode }: { expertMode: boolean }) {
-  const [selected, setSelected] = useState(0);
-  const types = TRANSLATIONS.fr.evolution.types;
-
-  return (
-    <div className="bg-slate-50 dark:bg-slate-900 rounded-xl p-4">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-4">
-        {types.map((type: any, i: number) => (
-          <button
-            key={i}
-            onClick={() => setSelected(i)}
-            className={`px-3 py-2 rounded-lg font-medium text-sm transition-all ${
-              selected === i
-                ? 'bg-blue-600 text-white shadow-lg'
-                : 'bg-white/60 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/30'
-            }`}
+        {/* =================================================================== */}
+        {/* BOTTOM NAVIGATION BAR */}
+        {/* =================================================================== */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+          <Link
+            href="/theorie/rouage"
+            className="inline-flex items-center gap-2 text-xs font-mono text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
           >
-            {type.name.split(' ')[0]}
-          </button>
-        ))}
-      </div>
-      <div className="bg-white/60 dark:bg-slate-800/60 rounded-xl p-6 transition-opacity">
-        <h4 className="font-bold text-slate-900 dark:text-white mb-3">{types[selected].name}</h4>
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-slate-600 dark:text-slate-400">Précision</span>
-              <span className="font-mono text-slate-900 dark:text-white">{types[selected].precision}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-600 dark:text-slate-400">Maintenance</span>
-              <span className="text-slate-900 dark:text-white">{types[selected].maintenance}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-600 dark:text-slate-400">Coût</span>
-              <span className="text-slate-900 dark:text-white">{types[selected].cost}</span>
-            </div>
-          </div>
-          <div className="space-y-3">
-            <div>
-              <div className="flex justify-between mb-1">
-                <span className="text-slate-600 dark:text-slate-400 text-sm">Fiabilité</span>
-                <span className="font-mono text-slate-900 dark:text-white text-sm">{types[selected].reliability}%</span>
-              </div>
-              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-                <div className="bg-green-600 h-2 rounded-full" style={{ width: `${types[selected].reliability}%` }} />
-              </div>
-            </div>
-            <div>
-              <div className="flex justify-between mb-1">
-                <span className="text-slate-600 dark:text-slate-400 text-sm">Complexité</span>
-                <span className="font-mono text-slate-900 dark:text-white text-sm">{types[selected].complexity}/10</span>
-              </div>
-              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-                <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${types[selected].complexity * 10}%` }} />
-              </div>
-            </div>
-          </div>
-        </div>
-        {expertMode && (
-          <div className="mt-4 p-3 bg-blue-100/50 dark:bg-blue-900/30 rounded-lg">
-            <p className="text-sm text-blue-800 dark:text-blue-200">
-              <strong>Rendement énergétique :</strong> {types[selected].reliability < 80 ? '35-40%' : '40-45%'}
-            </p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+            <ArrowLeft className="w-4 h-4" />
+            <span>← Module 03 : Le Rouage &amp; Démultiplication</span>
+          </Link>
 
-// Correction ici : ajout de la prop 't' dans la signature
-function QuizComponent({ questions, expertMode, t }: { questions: any[]; expertMode: boolean; t: any }) {
-  const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<number[]>([]);
-  const [showResults, setShowResults] = useState(false);
-  const [timeSpent, setTimeSpent] = useState(0);
-
-  useEffect(() => {
-    if (showResults) return;
-    const timer = setInterval(() => setTimeSpent(s => s + 1), 1000);
-    return () => clearInterval(timer);
-  }, [showResults]);
-
-  const handleAnswer = (index: number) => {
-    if (answers[current] !== undefined) return;
-    const newAnswers = [...answers];
-    newAnswers[current] = index;
-    setAnswers(newAnswers);
-    setTimeout(() => {
-      if (current < questions.length - 1) setCurrent(current + 1);
-      else setShowResults(true);
-    }, 2000);
-  };
-
-  const score = answers.filter((a, i) => a === questions[i].correct).length;
-  const percentage = Math.round((score / questions.length) * 100);
-
-  if (showResults) {
-    return (
-      <div className="text-center p-8 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-700 dark:to-slate-800 rounded-xl">
-        <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Quiz terminé !</h3>
-        <div className="w-32 h-32 mx-auto mb-6 relative">
-          <svg className="w-32 h-32 transform -rotate-90">
-            <circle cx="64" cy="64" r="56" stroke="currentColor" strokeWidth="12" fill="none" className="text-slate-200 dark:text-slate-700" />
-            <circle
-              cx="64" cy="64" r="56" stroke="currentColor" strokeWidth="12" fill="none"
-              strokeDasharray={`${2 * Math.PI * 56}`}
-              strokeDashoffset={`${2 * Math.PI * 56 * (1 - percentage / 100)}`}
-              strokeLinecap="round" className="text-blue-600"
-            />
-          </svg>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-2xl font-bold text-slate-900 dark:text-white">{percentage}%</span>
-          </div>
-        </div>
-        <p className="text-xl text-slate-700 dark:text-slate-300 mb-6">
-          Score : {score}/{questions.length} ({percentage}%) | Temps : {timeSpent}s
-        </p>
-        <div className="flex justify-center gap-4">
-          <button
-            onClick={() => {
-              setCurrent(0);
-              setAnswers([]);
-              setShowResults(false);
-              setTimeSpent(0);
-            }}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+          <Link
+            href="/theorie/balancier-spiral"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-mono text-xs font-bold bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 hover:opacity-90 transition-opacity shadow-sm"
           >
-            <RotateCw className="w-4 h-4" /> Recommencer
-          </button>
-          <button className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors">
-            <Share2 className="w-4 h-4 inline mr-2" />Partager
-          </button>
+            <span>Module 05 : Le Balancier-Spiral &amp; Régulation</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
-        <div className="mt-6 p-4 bg-white/60 dark:bg-slate-900/30 rounded-lg">
-          <p className="text-slate-700 dark:text-slate-300">
-            {percentage >= 90 ? 'Excellent ! Maîtrise parfaite.' :
-             percentage >= 70 ? 'Très bien ! Quelques détails à peaufiner.' :
-             percentage >= 50 ? 'Bon résultat. Relisez les sections difficiles.' :
-             'Continuez à vous entraîner. Vous progresserez !'}
-          </p>
-        </div>
-      </div>
-    );
-  }
 
-  const question = questions[current];
-
-  return (
-    <div>
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium text-slate-600 dark:text-slate-300">
-            {t.quiz.progress.replace('{current}', String(current + 1)).replace('{total}', String(questions.length))}
-          </span>
-          <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
-            {t.quiz.score.replace('{score}', String(score)).replace('{total}', String(questions.length))}
-          </span>
-        </div>
-        <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-          <div className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all" style={{ width: `${((current + 1) / questions.length) * 100}%` }} />
-        </div>
-        <div className="text-right text-xs text-slate-500 mt-1">{t.quiz.time} : {timeSpent}s</div>
-      </div>
-
-      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">
-        {question.question}
-      </h3>
-
-      <div className="space-y-3 mb-6">
-        {question.options.map((option: string, index: number) => {
-          const isAnswered = answers[current] !== undefined;
-          const isSelected = answers[current] === index;
-          const isCorrect = index === question.correct;
-          
-          return (
-            <button
-              key={index}
-              onClick={() => handleAnswer(index)}
-              disabled={isAnswered}
-              className={`w-full text-left p-4 rounded-lg border-2 transition-all relative ${
-                !isAnswered
-                  ? 'border-slate-200 dark:border-slate-700 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30'
-                  : isCorrect
-                  ? 'border-green-500 bg-green-50 dark:bg-green-950/30'
-                  : isSelected
-                  ? 'border-red-500 bg-red-50 dark:bg-red-950/30'
-                  : 'border-slate-200 dark:border-slate-700 opacity-50'
-              }`}
-            >
-              <span className="font-semibold mr-3 text-slate-700 dark:text-slate-200">{String.fromCharCode(65 + index)}.</span>
-              <span className="text-slate-800 dark:text-slate-100">{option}</span>
-              {isAnswered && isCorrect && <CheckCircle className="absolute right-4 top-4 w-5 h-5 text-green-600" />}
-              {isAnswered && isSelected && !isCorrect && <XCircle className="absolute right-4 top-4 w-5 h-5 text-red-600" />}
-            </button>
-          );
-        })}
-      </div>
-
-      {answers[current] !== undefined && (
-        <div className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-600 p-4 rounded">
-          <p className="text-slate-700 dark:text-slate-300">
-            {expertMode ? question.explanation.expert : question.explanation.beginner}
-          </p>
-        </div>
-      )}
+      </main>
     </div>
   );
 }
