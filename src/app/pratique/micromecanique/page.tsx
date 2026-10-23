@@ -65,13 +65,13 @@ export default function MicromecaniqueModulePage() {
   const activeVc = toolMaterial === 'hss' ? currentMat.vc_hss : currentMat.vc_carbide;
   const calculatedRpm = Math.round((1000 * activeVc) / (Math.PI * diameter));
 
-  // --- 3. 5 IFAGE Projects State ---
+  // --- 3. 5 Workshop Projects State ---
   const [activeProject, setActiveProject] = useState<number>(1);
 
   const projects = [
     {
       num: 1,
-      code: "IFAG-98110-001-F1-A",
+      code: "HL-OUT-98110-A",
       title: "Pointeau d'Horloger (Centreur)",
       material: "Acier au Carbone Böhler K720 Ø 4.5 mm x 80 mm",
       treatment: "Trempe à l'huile + Revenu Bleu à 290°C (~56 HRC)",
@@ -114,7 +114,7 @@ export default function MicromecaniqueModulePage() {
     },
     {
       num: 2,
-      code: "IFAG-98100-001-F1-A",
+      code: "HL-OUT-98100-A",
       title: "Pointe à Tracer d'Atelier",
       material: "Acier au Carbone Böhler K720 Ø 3.0 mm x 130 mm",
       treatment: "Trempe pointe + Revenu Bleu à 290°C",
@@ -146,7 +146,7 @@ export default function MicromecaniqueModulePage() {
     },
     {
       num: 3,
-      code: "IFAG-98200-001 & 003",
+      code: "HL-OUT-98200",
       title: "Pousse-Aiguille Horloger (Alésé)",
       material: "Polycarbonate technique Ø 5.0 mm x 100 mm",
       treatment: "Polymère auto-lubrifiant (aucun traitement thermique)",
@@ -172,7 +172,7 @@ export default function MicromecaniqueModulePage() {
     },
     {
       num: 4,
-      code: "IFAG-98210-001",
+      code: "HL-OUT-98210",
       title: "Cheville Plastique d'Établi à Fente",
       material: "Polycarbonate transparent Ø 5.0 mm x 100 mm",
       treatment: "Polissage d'établi soigné",
@@ -196,7 +196,7 @@ export default function MicromecaniqueModulePage() {
     },
     {
       num: 5,
-      code: "IFAG-98050-001-F1-A",
+      code: "HL-OUT-98050-A",
       title: "Enclume - Bloc 6497 (ETA / Unitas)",
       material: "Laiton de décolletage CuZn39Pb3 (MS 58) Ø 7.9 mm x 11.5 mm",
       treatment: "Finition Poli Glacé N5 sur faces d'appui",
@@ -284,7 +284,7 @@ export default function MicromecaniqueModulePage() {
       explanation: "Le revenu bleu horloger à 290°C confère le compromis idéal de dureté (~56 HRC) et de ténacité élastique pour résister aux chocs."
     },
     {
-      q: "Quel est l'angle de pointe d'extrémité du pointeau d'horloger (Plan IFAG-98110-001) ?",
+      q: "Quel est l'angle de pointe d'extrémité du pointeau d'horloger (Plan HL-OUT-98110) ?",
       options: ["30°", "60° (orientation chariot à 30°)", "90°", "120°"],
       answer: 1,
       explanation: "L'angle au sommet normalisé du pointeau est de 60°. Le chariot supérieur est incliné à 30° par rapport à l'axe de broche."
@@ -343,7 +343,7 @@ export default function MicromecaniqueModulePage() {
           </Link>
           <span className="text-amber-400 uppercase tracking-wider font-semibold flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            IFAGE Genève · Module 2 · Micromécanique Horlogère (Schaublin 70)
+            Haute Horlogerie Suisse · Module 2 · Micromécanique & Tournage Schaublin 70
           </span>
         </div>
       </div>
@@ -368,7 +368,7 @@ export default function MicromecaniqueModulePage() {
                 </span>
               </h1>
               <p className="mt-4 text-slate-300 text-sm sm:text-base leading-relaxed font-light">
-                Programme officiel inspiré du curriculum <strong>IFAGE Genève</strong>. Maîtrisez le <strong>Tour d'outilleur Schaublin 70</strong>, les <strong>gestes d'établi réels</strong> au centième de millimètre, le traitement thermique de l'acier <strong>Böhler K720</strong>, et l'usinage des 5 pièces maîtresses.
+                Standards d'excellence des écoles d'horlogerie suisses. Maîtrisez le <strong>Tour d'outilleur Schaublin 70</strong>, les <strong>gestes d'établi réels</strong> au centième de millimètre, le traitement thermique de l'acier <strong>Böhler K720</strong>, et l'usinage des 5 pièces maîtresses.
               </p>
 
               <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
@@ -527,27 +527,27 @@ export default function MicromecaniqueModulePage() {
           </div>
         </section>
 
-        {/* Section 02 : Schémas & Gestes Normalisés IFAGE */}
+        {/* Section 02 : Schémas & Gestes Normalisés d'Atelier */}
         <section id="gestes-techniques" className="space-y-8">
           <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
             <span className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-bold flex items-center justify-center border border-amber-500/30">02</span>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-2xl font-cinzel font-bold text-white">Schémas Techniques & Gestes Normalisés IFAGE</h2>
+                <h2 className="text-2xl font-cinzel font-bold text-white">Schémas Techniques & Gestes Normalisés d'Atelier</h2>
                 <span className="px-2.5 py-0.5 rounded text-[10px] font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold uppercase">
                   Dessins Techniques Précis
                 </span>
               </div>
-              <p className="text-xs text-slate-400 font-mono">Figures officielles de l'École d'Horlogerie de Genève (Source Mr Guillermet / IFAGE)</p>
+              <p className="text-xs text-slate-400 font-mono">Règles géométriques et cinématiques du tournage d'outilleur (Standards Horlogers Suisses)</p>
             </div>
           </div>
 
-          {/* Blueprint 1 : Burin à main sur éventail (Page 24 IFAGE) */}
+          {/* Blueprint 1 : Burin à main sur éventail */}
           <div className="p-6 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
               <div>
                 <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider block">
-                  FIGURE 1 (D'après Page 24 IFAGE)
+                  FIGURE 1 · GÉOMÉTRIE DE COUPE AU BURIN SUR ÉVENTAIL
                 </span>
                 <h3 className="text-lg font-cinzel font-bold text-white">Positionnement du Burin à Main sur l'Éventail</h3>
               </div>
@@ -644,18 +644,18 @@ export default function MicromecaniqueModulePage() {
                   <text x="600" y="112" fill="#CBD5E1" fontSize="11">• Arête coupante rigoureusement à l'axe</text>
                   <text x="600" y="134" fill="#CBD5E1" fontSize="11">• Éventail réglé au plus près (&lt; 1 mm)</text>
                   <text x="600" y="156" fill="#38BDF8" fontSize="11">• Formation d'un ruban continu sans choc</text>
-                  <text x="600" y="178" fill="#94A3B8" fontSize="10">Source : IFAGE Genève (Prog. Officiel Horlogerie)</text>
+                  <text x="600" y="178" fill="#94A3B8" fontSize="10">Standards d'Atelier · Haute Horlogerie Suisse</text>
                 </g>
               </svg>
             </div>
           </div>
 
-          {/* Blueprint 2 : Burin couteau sur chariot croisé (Page 21 IFAGE) */}
+          {/* Blueprint 2 : Burin couteau sur chariot croisé */}
           <div className="p-6 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
               <div>
                 <span className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider block">
-                  FIGURE 2 (D'après Page 21 IFAGE · Mr Guillermet)
+                  FIGURE 2 · CHARIOTAGE & DRESSAGE SUR CHARIOT CROISÉ
                 </span>
                 <h3 className="text-lg font-cinzel font-bold text-white">Utilisation du Burin Couteau sur Chariot Croisé</h3>
               </div>
@@ -731,12 +731,12 @@ export default function MicromecaniqueModulePage() {
             </div>
           </div>
 
-          {/* Blueprint 3 : Centrage JUSTE vs TROP HAUT vs TROP BAS (Page 18 IFAGE) */}
+          {/* Blueprint 3 : Centrage JUSTE vs TROP HAUT vs TROP BAS */}
           <div className="p-6 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
               <div>
                 <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider block">
-                  FIGURE 3 (D'après Page 18 IFAGE)
+                  FIGURE 3 · LOI DU CENTRAGE : JUSTE vs TROP HAUT vs TROP BAS
                 </span>
                 <h3 className="text-lg font-cinzel font-bold text-white">Centrage du Burin : JUSTE vs TROP HAUT vs TROP BAS</h3>
               </div>
@@ -823,7 +823,7 @@ export default function MicromecaniqueModulePage() {
                 <h3 className="text-lg font-cinzel font-bold text-white">Chauffe au Chalumeau & Trempe Martensitique</h3>
               </div>
               <div className="text-xs font-mono text-slate-400">
-                Protocole pour Pointeau (IFAG-98110) et Pointe à Tracer (IFAG-98100)
+                Protocole pour Pointeau (HL-OUT-98110) et Pointe à Tracer (HL-OUT-98100)
               </div>
             </div>
 
@@ -879,7 +879,7 @@ export default function MicromecaniqueModulePage() {
 
                 <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
                   <span className="text-rose-400 font-bold block text-xs">
-                    LES 3 PHASES DE TREMPE D'ATELIER IFAGE :
+                    LES 3 PHASES DE LA TREMPE MARTENSITIQUE D'ATELIER :
                   </span>
                   <ol className="list-decimal list-inside space-y-1 text-slate-300 font-sans text-xs">
                     <li><strong>Austénitisation :</strong> Chauffer la pointe à 790°C-820°C (couleur rouge cerise) au chalumeau sans surchauffer le corps.</li>
@@ -983,12 +983,12 @@ export default function MicromecaniqueModulePage() {
           </div>
         </section>
 
-        {/* Section 04 : Les 5 Projets d'Usinage IFAGE */}
+        {/* Section 04 : Les 5 Projets d'Usinage d'Atelier */}
         <section id="projets" className="space-y-6">
           <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
             <span className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-bold flex items-center justify-center border border-amber-500/30">04</span>
             <div>
-              <h2 className="text-2xl font-cinzel font-bold text-white">Les 5 Pièces de Fabrication d'Atelier (Plans IFAGE)</h2>
+              <h2 className="text-2xl font-cinzel font-bold text-white">Les 5 Pièces de Fabrication d'Atelier Horloger</h2>
               <p className="text-xs text-slate-400 font-mono">Curriculum complet d'apprentissage du tournage horloger de précision</p>
             </div>
           </div>
@@ -1053,7 +1053,7 @@ export default function MicromecaniqueModulePage() {
             <span className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-bold flex items-center justify-center border border-amber-500/30">05</span>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-2xl font-cinzel font-bold text-white">Quiz d'Évaluation Pratique · Type IFAGE</h2>
+                <h2 className="text-2xl font-cinzel font-bold text-white">Quiz d'Évaluation Pratique · Micromécanique & Tournage</h2>
                 <span className="px-2.5 py-0.5 rounded text-[10px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold uppercase">
                   10 Questions
                 </span>
@@ -1209,7 +1209,7 @@ export default function MicromecaniqueModulePage() {
                     <Award className="w-8 h-8" />
                   </div>
                   
-                  <h3 className="text-2xl font-cinzel font-bold text-white">Bilan du Quiz IFAGE</h3>
+                  <h3 className="text-2xl font-cinzel font-bold text-white">Bilan de l'Évaluation Pratique</h3>
                   
                   <div className="text-4xl font-mono font-bold text-amber-400">
                     {score} <span className="text-lg text-slate-500">/ 10</span>
@@ -1252,7 +1252,7 @@ export default function MicromecaniqueModulePage() {
 
       {/* Footer */}
       <footer className="mt-20 border-t border-slate-800 py-8 px-4 text-center text-xs font-mono text-slate-500">
-        HorloLearn · Haute Horlogerie Suisse · Programme de Micromécanique inspiré du curriculum officiel IFAGE Genève
+        HorloLearn · Haute Horlogerie Suisse · Référentiel Technique & Pratique de Micromécanique Horlogère
       </footer>
 
     </div>
