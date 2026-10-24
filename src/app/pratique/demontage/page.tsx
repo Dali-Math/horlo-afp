@@ -3,7 +3,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
   Wrench,
@@ -17,10 +16,13 @@ import {
   ChevronLeft,
   Sliders,
   Droplet,
-  Layers
+  Layers,
+  Sparkles,
+  Compass,
+  Check
 } from 'lucide-react';
 
-interface StepDetail {
+export interface StepDetail {
   number: number;
   title: string;
   side: 'Ponts (Mouvement)' | 'Cadran (Affichage)' | 'Organe Régulateur';
@@ -32,7 +34,7 @@ interface StepDetail {
   moebiusOil?: string;
 }
 
-const DISASSEMBLY_STEPS: StepDetail[] = [
+export const DISASSEMBLY_STEPS: StepDetail[] = [
   {
     number: 1,
     title: 'Mise sur Porte-Mouvement & Désarment du Barillet',
@@ -224,11 +226,229 @@ const DISASSEMBLY_STEPS: StepDetail[] = [
   }
 ];
 
-export default function DemontagePage() {
-  const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
-  const [direction, setDirection] = useState<'disassembly' | 'assembly'>('disassembly');
+export const ASSEMBLY_STEPS: StepDetail[] = [
+  {
+    number: 1,
+    title: 'Remontage & Huilage des Antichocs Incabloc (Platine & Coq)',
+    side: 'Organe Régulateur',
+    screwdriver: { name: 'Pique-huile fin N° 30102-1', colorClass: 'bg-cyan-500 text-slate-950 font-bold', diam: 'Pointe 0.15 mm' },
+    tweezer: 'Brucelles Dumont N° 5 fines & Papier de soie',
+    actionProtocol: [
+      'Nettoyer le contre-pivot en rubis plat et la pierre percée sertie à l’essence C / benzine rectifiée.',
+      'DÉPÔT DE LA GOUTTE D’OR : Sur la face plane du contre-pivot, déposer une goutte d’huile synthétique Moebius 9010 occupant exactement 2/3 du diamètre du rubis.',
+      'Repositionner délicatement la pierre percée par-dessus sans faire éclater le ménisque d’huile.',
+      'Replacer le chaton dans le bloc Incabloc de platine et refermer avec douceur les deux branches de la lyre.',
+      'Répéter l’opération identique sur le bloc Incabloc du Coq (balancier).'
+    ],
+    atelierWarning: 'DOSAGE ULTRA-CRITIQUE : Si le volume d’huile dépasse 2/3 du rubis, le ménisque casse et l’huile diffuse sur la platine par capillarité. Le pivot tournera à sec sous 30 jours.',
+    remontageTip: 'Contrôler la goutte d’huile par transparence à la loupe 10x : elle doit former un cercle parfait au centre sans bavure.',
+    moebiusOil: 'Moebius 9010 (Goutte calibrée aux 2/3 du diamètre du contre-pivot)'
+  },
+  {
+    number: 2,
+    title: 'Assemblage du Mécanisme de Remontoir & Graissage',
+    side: 'Cadran (Affichage)',
+    screwdriver: { name: 'Tournevis Rouge', colorClass: 'bg-red-500 text-white', diam: '1.20 mm' },
+    tweezer: 'Brucelles Dumont N° 3',
+    actionProtocol: [
+      'Graisser la gorge du pignon coulant et le carré de la tige de remontoir avec la graisse thixotrope Moebius 9504.',
+      'Positionner le pignon de remontoir et le pignon coulant (dents de loup face à face) dans le dégagement de platine.',
+      'Enfiler la tige de remontoir pour aligner et maintenir les pignons.',
+      'Installer la tirette côté cadran et engager la vis de tirette côté ponts (serrage modéré, 1 tour).',
+      'Placer la bascule dans la gorge du coulant, puis poser le ressort de bascule en le maintenant fermement du doigt pendant le vissage.'
+    ],
+    atelierWarning: 'MAINTIEN OBLIGATOIRE DU RESSORT : Ne relâchez jamais le ressort de bascule tant que sa vis n’est pas complètement serrée sous peine de projection violente.',
+    remontageTip: 'Actionner la tige en va-et-vient (remontage / mise à l’heure) : le passage doit être franc, sec et parfaitement franc.',
+    moebiusOil: 'Graisse Moebius 9504 sur la gorge du coulant, les dents de loup et les crans de tirette'
+  },
+  {
+    number: 3,
+    title: 'Mise en Place de la Roue de Centre & Chassage de la Chaussée',
+    side: 'Cadran (Affichage)',
+    screwdriver: { name: 'Presse-chaussée / Outil Presto', colorClass: 'bg-amber-500 text-slate-950 font-bold', diam: 'Poussoir creux' },
+    tweezer: 'Brucelles Dumont N° 1 ou N° 3',
+    actionProtocol: [
+      'Huiler la portée du canon de centre de la platine avec de l’huile épaisse Moebius HP-1300.',
+      'Insérer la roue de centre (grande moyenne) par le côté ponts dans son coussinet de platine.',
+      'Retourner le mouvement côté cadran en prenant appui SOUS le pivot de la roue de centre avec un faux-axe en laiton ou un tasseau.',
+      'Déposer une micro-touche de Moebius HP-1300 sur l’arbre où vient frotter la lanterne de chaussée.',
+      'Enfoncer la chaussée bien perpendiculairement jusqu’au déclic caractéristique de retenue.'
+    ],
+    atelierWarning: 'APPUI OBLIGATOIRE SOUS LE PIVOT : Chasser la chaussée sans soutien inférieur plie immédiatement la planche de roue de centre et brise son pivot.',
+    remontageTip: 'Tester le couple de friction (gras de chaussée) en tournant la tige en position mise à l’heure : la rotation doit être douce, ferme et continue.',
+    moebiusOil: 'Moebius HP-1300 sur la portée de centre et l’encoche de lanterne de chaussée'
+  },
+  {
+    number: 4,
+    title: 'Assemblage de la Minuterie & Clinquant Côté Cadran',
+    side: 'Cadran (Affichage)',
+    screwdriver: { name: 'Tournevis Noir', colorClass: 'bg-slate-900 text-white border border-slate-700', diam: '1.00 mm' },
+    tweezer: 'Brucelles Dumont N° 3',
+    actionProtocol: [
+      'Déposer une micro-goutte de Moebius HP-1300 sur l’axe fixe de la roue de minuterie.',
+      'Poser la roue de minuterie et visser le couvre-minuterie fermement.',
+      'Graisser très légèrement le canon extérieur de la chaussée avec de la Moebius 9504.',
+      'Enfiler la roue des heures par-dessus le canon de chaussée et engrener avec le pignon de minuterie.',
+      'Déposer la rondelle clinquant bombée en cuivre sur la roue des heures pour absorber le jeu axial.'
+    ],
+    atelierWarning: 'ZÉRO HUILE SUR LES DENTS : Ne jamais huiler la denture de la roue des heures ni celle de la minuterie, seules les portées d’axe doivent être lubrifiées.',
+    remontageTip: 'Vérifier la liberté de rotation de la roue des heures et la planéité du clinquant.',
+    moebiusOil: 'Moebius HP-1300 sur l’axe de minuterie & Moebius 9504 sur le canon de chaussée'
+  },
+  {
+    number: 5,
+    title: 'Pose des Mobiles de Rouage (Train Cinématique)',
+    side: 'Ponts (Mouvement)',
+    screwdriver: { name: 'Pose manuelle aux brucelles', colorClass: 'bg-slate-400 text-slate-900 font-bold', diam: 'Brucelles fines' },
+    tweezer: 'Brucelles Dumont N° 3 fines',
+    actionProtocol: [
+      'Retourner le calibre côté ponts sur le porte-pièce d’établi.',
+      'Poser la roue moyenne en engageant son pignon dans la denture de la roue de centre.',
+      'Présenter la roue des secondes (9h) et descendre avec précaution son long pivot à travers le tube central de platine.',
+      'Poser la roue d’échappement en engrenant son pignon avec la serpe de la roue des secondes.',
+      'S’assurer visuellement que les 3 roues reposent bien à plat dans leurs portées respectives.'
+    ],
+    atelierWarning: 'AXE DE SECONDE ULTRA-VULNÉRABLE : Le pivot de seconde mesure Ø 0.12 mm. Ne jamais forcer ni poser la roue de travers, la moindre contrainte tord l’axe.',
+    remontageTip: 'Contrôler à la loupe que les ailes de pignons ne sont pas coincées sous la denture des roues adjacentes.',
+    moebiusOil: 'La lubrification des pierres de rouage s’effectue après la pose et le vissage du pont'
+  },
+  {
+    number: 6,
+    title: 'Pose du Pont de Rouage & Guidage des 3 Pivots',
+    side: 'Ponts (Mouvement)',
+    screwdriver: { name: 'Tournevis Rouge', colorClass: 'bg-red-500 text-white', diam: '1.20 mm' },
+    tweezer: 'Brucelles Dumont N° 3 & Cheville de sureau taillée en coin',
+    actionProtocol: [
+      'Présenter le pont de rouage au-dessus des 3 mobiles sans appuyer.',
+      'Avec la cheville de sureau, guider le pivot de la roue moyenne dans son rubis, puis celui de la roue des secondes, et enfin celui de la roue d’échappement.',
+      'Le pont doit descendre seul et sans résistance sur ses pieds de positionnement.',
+      'Visser progressivement les 3 vis de pont de rouage de manière équilibrée.',
+      'CONTRÔLE DU RECUL DE ROUAGE : Effleurer la roue moyenne ; le train de rouage doit tourner avec vélocité et présenter un retour arrière net.'
+    ],
+    atelierWarning: 'INTERDICTION DE FORCER : Si le pont ne descend pas de lui-même à plat, un pivot est hors de sa pierre. Serrer une vis écraserait net le pivot !',
+    remontageTip: 'Le retour arrière (recul franc de la roue d’échappement) prouve l’absence totale de friction et l’alignement parfait des ébats.',
+    moebiusOil: 'Déposer la Moebius 9010 dans les creusures des rubis de rouage (1/2 à 2/3 du réservoir)'
+  },
+  {
+    number: 7,
+    title: 'Pose du Tambour de Barillet & Pont de Barillet',
+    side: 'Ponts (Mouvement)',
+    screwdriver: { name: 'Tournevis Rouge', colorClass: 'bg-red-500 text-white', diam: '1.20 mm' },
+    tweezer: 'Brucelles Dumont N° 1 ou Laiton',
+    actionProtocol: [
+      'Lubrifier la portée inférieure de l’arbre de barillet dans la platine avec de la Moebius HP-1300.',
+      'Installer le tambour de barillet complet dans son logement.',
+      'Poser le pont de barillet en engageant la portée supérieure de l’arbre dans la pierre du pont.',
+      'Visser les 2 vis de fixation du pont de barillet.',
+      'Vérifier l’ébat de hauteur du barillet (norme NIHS : 0.05 à 0.08 mm) et la liberté d’action du cliquet.'
+    ],
+    atelierWarning: 'Vérifiez la position du ressort de cliquet avant de rabattre le pont pour ne pas le pincer ou le tordre.',
+    remontageTip: 'Vérifier l’engrènement fluide entre la denture du tambour de barillet et le pignon de la roue de centre.',
+    moebiusOil: 'Moebius HP-1300 sur les deux portées (supérieure et inférieure) de l’arbre de barillet'
+  },
+  {
+    number: 8,
+    title: 'Montage de la Roue de Couronne & Rochet (Attention Pas à Gauche)',
+    side: 'Ponts (Mouvement)',
+    screwdriver: { name: 'Tournevis Violet / Rouge', colorClass: 'bg-purple-500 text-white', diam: '1.40 à 1.60 mm' },
+    tweezer: 'Brucelles Dumont N° 1',
+    actionProtocol: [
+      'Lubrifier la face inférieure de la bague intermédiaire avec de la Moebius HP-1300.',
+      'Poser la bague et la roue de couronne sur le pont de barillet.',
+      'ATTENTION SENS INVERSÉ (PAS À GAUCHE) : Visser la vis de roue de couronne EN SENS ANTI-HORAIRE pour la serrer.',
+      'Poser le rochet sur le carré de l’arbre de barillet.',
+      'Visser la vis de rochet (pas standard à droite) avec le tournevis violet 1.40 mm.',
+      'Armer de 2 clics : le train de rouage doit s’emballer immédiatement avec un sifflement régulier.'
+    ],
+    atelierWarning: 'DANGER CASSE DE VIS : La vis de roue de couronne a un PAS À GAUCHE. Visser dans le sens habituel des aiguilles d’une montre casse instantanément la tête de vis dans le pont !',
+    remontageTip: 'Le sifflement du train d’engrenage après 2 clics d’armage confirme que toute la chaîne cinématique est parfaitement libre.',
+    moebiusOil: 'Moebius HP-1300 sous la roue de couronne et sur la portée du rochet'
+  },
+  {
+    number: 9,
+    title: 'Lubrification Méthodique de l’Établi (Les 25 Points d’Huile)',
+    side: 'Ponts (Mouvement)',
+    screwdriver: { name: 'Huiliers 4 Godets & Piques-huiles 30102', colorClass: 'bg-cyan-500 text-slate-950 font-bold', diam: 'Piques-huiles 1 & 2' },
+    tweezer: 'Brucelles Dumont N° 3 & Loupe d’atelier 10x',
+    actionProtocol: [
+      'Huiler à la Moebius HP-1300 les pierres de barillet et de roue de centre (haute pression, rotation lente).',
+      'Huiler à la Moebius 9010 les pierres de roue moyenne, roue des secondes et roue d’échappement (haute vitesse, faible couple).',
+      'Retourner le calibre et huiler les pierres inférieures correspondantes côté platine.',
+      'RÈGLE D’OR SUISSE : Le ménisque d’huile doit occuper rigoureusement entre 1/2 et 2/3 de la creusure du rubis.',
+      'Essuyer le pique-huile sur une tranche de moelle de sureau propre entre chaque dépose.'
+    ],
+    atelierWarning: 'INTERDICTION FORMELLE : Ne jamais huiler les ailes des pignons ni la serpe des roues. L’huile attire la poussière et fige le rouage.',
+    remontageTip: 'Vérifier la concentricité de chaque ménisque d’huile à la loupe 10x par réflexion lumineuse.',
+    moebiusOil: 'Moebius HP-1300 (rouage lent/barillet) & Moebius 9010 (rouage rapide/échappement)'
+  },
+  {
+    number: 10,
+    title: 'Pose de l’Ancre Suisse & Lubrification Spécifique des Levées',
+    side: 'Ponts (Mouvement)',
+    screwdriver: { name: 'Tournevis Jaune ou Blanc', colorClass: 'bg-yellow-400 text-slate-900 font-bold', diam: '0.80 mm' },
+    tweezer: 'Brucelles Dumont N° 3 fines',
+    actionProtocol: [
+      'Prendre l’ancre par la tige de fourchette et engager délicatement le pivot inférieur dans sa pierre de platine.',
+      'Poser le pont d’ancre bien perpendiculairement et engager le pivot supérieur dans sa pierre.',
+      'Visser les 2 vis de pont d’ancre de manière symétrique et mesurée.',
+      'TEST DU SAUT D’ANCRE : Effleurer la fourchette avec un poil de pinceau ; l’ancre doit sauter d’une touche à l’autre par l’action motrice du rouage armé.',
+      'LUBRIFICATION DES PALETTES : Déposer une infime trace de graisse thixotrope Moebius 9415 sur le plan d’impulsion de 2 à 3 dents de la roue d’échappement uniquement.'
+    ],
+    atelierWarning: 'PIVOTS D’ANCRE À SEC : Les pivots d’ancre NE SONT JAMAIS HUILÉS. Tout lubrifiant sur les pivots d’ancre altère la liberté de battement et fait boiter le mouvement.',
+    remontageTip: 'Faire osciller l’ancre 5 à 6 fois manuellement pour que la graisse Moebius 9415 se liquéfie à l’impact et tapisse les deux levées de rubis.',
+    moebiusOil: 'Moebius 9415 (graisse thixotrope spécifique sur les plans d’impulsion des palettes uniquement)'
+  },
+  {
+    number: 11,
+    title: 'Pose de l’Organe Régulateur (Balancier-Spiral & Coq)',
+    side: 'Organe Régulateur',
+    screwdriver: { name: 'Tournevis Noir', colorClass: 'bg-slate-900 text-white border border-slate-700', diam: '1.00 mm' },
+    tweezer: 'Brucelles Dumont N° 3',
+    actionProtocol: [
+      'Saisir le Coq par la table avec des brucelles fermes sans jamais toucher au spiral Nivarox.',
+      'Présenter le balancier verticalement et faire descendre le pivot inférieur dans le bloc Incabloc de platine.',
+      'Orienter la cheville de plateau pour qu’elle pénètre au cœur des cornes de la fourchette d’ancre.',
+      'Rabattre le Coq à plat sur son plot de positionnement sans aucune contrainte axiale sur le spiral.',
+      'Serrer la vis de Coq fermement avec le tournevis noir 1.00 mm.',
+      'CONTRÔLE SPONTANÉ DU DÉPART : Le balancier doit démarrer immédiatement avec une amplitude ample et symétrique.'
+    ],
+    atelierWarning: 'ZONE SUPRÊME DE PRUDENCE : Si le spiral touche la serpe du balancier ou le dessous du pont, la montre avancera de plusieurs heures par jour. Vérifier la planéité des spires.',
+    remontageTip: 'Contrôler que la lame du spiral respire librement et de façon parfaitement centrée entre les goupilles de raquette.',
+    moebiusOil: 'Contre-pivots Incabloc déjà huilés à l’étape 01'
+  },
+  {
+    number: 12,
+    title: 'Remise de la Tige de Remontoir, Armage & Diagnostic Acoustique COSC',
+    side: 'Ponts (Mouvement)',
+    screwdriver: { name: 'Tournevis Noir & Vibrographe Witschi', colorClass: 'bg-emerald-500 text-slate-950 font-bold', diam: '1.00 mm' },
+    tweezer: 'Brucelles Dumont N° 3',
+    actionProtocol: [
+      'Réinsérer la tige de remontoir dans son canon et resserrer la vis de tirette d’un tour complet.',
+      'Procéder à l’armage complet du ressort moteur (environ 28 à 30 tours de couronne).',
+      'Déposer le calibre sur le microphone piézoélectrique du vibrographe Witschi Chronoscope.',
+      'Vérifier la marche diurne instantanée (tolérance : -4 à +6 s/j selon critères chronométriques).',
+      'Vérifier l’angle d’amplitude du balancier (270° à 315° à plat) et l’erreur de repère (beat error < 0.6 ms).',
+      'Mesurer sur les 5 positions d’examen : CH, CB, 6H, 9H, 3H.'
+    ],
+    atelierWarning: 'REPÈRE HORS TOLÉRANCE : Si l’erreur de repère dépasse 0.6 ms, pivoter avec infinie délicatesse le porte-piton mobile avant de toucher à la flèche de raquette.',
+    remontageTip: 'Laisser stabiliser le mouvement 20 à 30 minutes avant de porter le jugement définitif pour permettre la dispersion optimale des huiles Moebius.',
+    moebiusOil: 'Contrôle final d’absence de projection d’huile sous lumière UV'
+  }
+];
 
-  const currentStep = DISASSEMBLY_STEPS[currentStepIndex];
+export default function DemontagePage() {
+  const [direction, setDirection] = useState<'disassembly' | 'assembly'>('disassembly');
+  const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
+
+  const steps = direction === 'disassembly' ? DISASSEMBLY_STEPS : ASSEMBLY_STEPS;
+  const currentStep = steps[currentStepIndex] || steps[0];
+
+  const handleSwitchDirection = (newDirection: 'disassembly' | 'assembly') => {
+    setDirection(newDirection);
+    setCurrentStepIndex(0);
+  };
+
+  const isDisassembly = direction === 'disassembly';
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#07090e] text-slate-900 dark:text-slate-100 transition-colors duration-300">
@@ -251,35 +471,51 @@ export default function DemontagePage() {
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-                Simulateur Séquentiel de Démontage & Remontage
+                {isDisassembly ? (
+                  <>
+                    Simulateur de Démontage Méthodique <br />
+                    <span className="text-amber-500">Ordre Chronologique Strict (1 à 12)</span>
+                  </>
+                ) : (
+                  <>
+                    Protocole de Remontage & Lubrification <br />
+                    <span className="text-emerald-500">Rigueur Inverse & Huilage Moebius (1 à 12)</span>
+                  </>
+                )}
               </h1>
 
               <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
-                Le cheminement d’établi rigoureux enseigné dans les écoles d’horlogerie suisses (AFP & CFC). Maîtrisez l’ordre précis des opérations, le tournevis exact à chaque vis et les gestes de sécurité vitaux.
+                {isDisassembly
+                  ? 'Le cheminement d’établi rigoureux enseigné dans les écoles d’horlogerie suisses (AFP & CFC). Maîtrisez l’ordre précis de dépose, le tournevis exact à chaque vis et la sécurisation immédiate du spiral.'
+                  : 'La reconstruction méthodique du calibre dans l’ordre rigoureusement inverse. Appliquez les 25 points de lubrification Moebius spécifiques (9010, HP-1300, 9415, 9504), le contrôle des ébats et le diagnostic final au vibrographe COSC.'}
               </p>
             </div>
 
             {/* Bascule Mode Démontage vs Mode Remontage */}
-            <div className="flex p-1.5 rounded-2xl bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex-shrink-0">
+            <div className="flex p-1.5 rounded-2xl bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex-shrink-0 shadow-lg">
               <button
-                onClick={() => setDirection('disassembly')}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-                  direction === 'disassembly'
-                    ? 'bg-amber-500 text-slate-950 shadow-md'
+                type="button"
+                onClick={() => handleSwitchDirection('disassembly')}
+                className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 ${
+                  isDisassembly
+                    ? 'bg-amber-500 text-slate-950 shadow-md font-extrabold scale-105'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                1. Séquence Démontage (1 à 12)
+                <RotateCcw className="w-4 h-4" />
+                <span>1. Séquence Démontage (1 à 12)</span>
               </button>
               <button
-                onClick={() => setDirection('assembly')}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-                  direction === 'assembly'
-                    ? 'bg-emerald-500 text-slate-950 shadow-md'
+                type="button"
+                onClick={() => handleSwitchDirection('assembly')}
+                className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 ${
+                  !isDisassembly
+                    ? 'bg-emerald-500 text-slate-950 shadow-md font-extrabold scale-105'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
-                2. Ordre Remontage & Huilage
+                <Droplet className="w-4 h-4" />
+                <span>2. Ordre Remontage & Huilage</span>
               </button>
             </div>
           </div>
@@ -288,16 +524,39 @@ export default function DemontagePage() {
 
       {/* --- CORPS DU SIMULATEUR --- */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+        
+        {/* Bandeau d'état du Mode Actif */}
+        <div className={`p-4 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-xs ${
+          isDisassembly 
+            ? 'bg-amber-500/10 border-amber-500/30 text-amber-800 dark:text-amber-300' 
+            : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-800 dark:text-emerald-300'
+        }`}>
+          <div className="flex items-center gap-2.5">
+            <span className={`w-3 h-3 rounded-full animate-pulse ${isDisassembly ? 'bg-amber-500' : 'bg-emerald-500'}`} />
+            <span className="font-bold uppercase tracking-wider">
+              {isDisassembly ? 'Mode Actif : Dépose Méthodique du Calibre' : 'Mode Actif : Reconstitution, Huilage des 25 Points & Diagnostic COSC'}
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span>Étape sélectionnée : <strong className="text-slate-900 dark:text-white font-sans">{currentStepIndex + 1} / 12</strong></span>
+            <span className="hidden md:inline text-slate-400">•</span>
+            <span className="hidden md:inline">Côté : <strong className="text-slate-900 dark:text-white">{currentStep.side}</strong></span>
+          </div>
+        </div>
+
         {/* Barre de navigation des 12 étapes */}
         <div className="p-4 rounded-3xl bg-white dark:bg-[#0f1422] border-2 border-slate-200 dark:border-slate-800 shadow-md flex items-center justify-between gap-4 overflow-x-auto">
           <div className="flex items-center gap-1.5 min-w-max">
-            {DISASSEMBLY_STEPS.map((s, idx) => (
+            {steps.map((s, idx) => (
               <button
                 key={s.number}
+                type="button"
                 onClick={() => setCurrentStepIndex(idx)}
                 className={`w-10 h-10 rounded-2xl text-xs font-bold transition-all flex flex-col items-center justify-center ${
                   currentStepIndex === idx
-                    ? 'bg-amber-500 text-slate-950 scale-105 shadow-md shadow-amber-500/25 font-extrabold'
+                    ? isDisassembly
+                      ? 'bg-amber-500 text-slate-950 scale-105 shadow-md shadow-amber-500/25 font-extrabold'
+                      : 'bg-emerald-500 text-slate-950 scale-105 shadow-md shadow-emerald-500/25 font-extrabold'
                     : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
                 }`}
               >
@@ -308,17 +567,23 @@ export default function DemontagePage() {
 
           <div className="flex items-center gap-2 flex-shrink-0">
             <button
+              type="button"
               onClick={() => setCurrentStepIndex((prev) => Math.max(0, prev - 1))}
               disabled={currentStepIndex === 0}
-              className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 disabled:opacity-30 hover:border-amber-500 border border-transparent"
+              className={`p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 disabled:opacity-30 border border-transparent ${
+                isDisassembly ? 'hover:border-amber-500' : 'hover:border-emerald-500'
+              }`}
               title="Étape Précédente"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
-              onClick={() => setCurrentStepIndex((prev) => Math.min(DISASSEMBLY_STEPS.length - 1, prev + 1))}
-              disabled={currentStepIndex === DISASSEMBLY_STEPS.length - 1}
-              className="p-2.5 rounded-xl bg-amber-500 text-slate-950 disabled:opacity-30 font-bold hover:bg-amber-400"
+              type="button"
+              onClick={() => setCurrentStepIndex((prev) => Math.min(steps.length - 1, prev + 1))}
+              disabled={currentStepIndex === steps.length - 1}
+              className={`p-2.5 rounded-xl text-slate-950 disabled:opacity-30 font-bold ${
+                isDisassembly ? 'bg-amber-500 hover:bg-amber-400' : 'bg-emerald-500 hover:bg-emerald-400'
+              }`}
               title="Étape Suivante"
             >
               <ChevronRight className="w-5 h-5" />
@@ -332,8 +597,10 @@ export default function DemontagePage() {
           <div className="lg:col-span-8 p-6 sm:p-10 rounded-3xl bg-white dark:bg-[#0c101b] border-2 border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
             <div className="space-y-2 border-b border-slate-200 dark:border-slate-800 pb-5">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-xs font-mono font-extrabold px-3 py-1 rounded-full bg-amber-500 text-slate-950">
-                  ÉTAPE {currentStep.number < 10 ? `0${currentStep.number}` : currentStep.number} / 12
+                <span className={`text-xs font-mono font-extrabold px-3 py-1 rounded-full text-slate-950 ${
+                  isDisassembly ? 'bg-amber-500' : 'bg-emerald-500'
+                }`}>
+                  {isDisassembly ? 'DÉMONTAGE' : 'REMONTAGE & HUILAGE'} • ÉTAPE {currentStep.number < 10 ? `0${currentStep.number}` : currentStep.number} / 12
                 </span>
                 <span className="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                   Côté : {currentStep.side}
@@ -356,7 +623,11 @@ export default function DemontagePage() {
                     key={idx}
                     className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex items-start gap-3.5 text-xs sm:text-sm"
                   >
-                    <span className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">
+                    <span className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5 ${
+                      isDisassembly
+                        ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400'
+                        : 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+                    }`}>
                       {idx + 1}
                     </span>
                     <span className="text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
@@ -382,7 +653,7 @@ export default function DemontagePage() {
               <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-xs space-y-1.5">
                 <div className="font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-                  <span>Consigne de Remontage & Finition</span>
+                  <span>Consigne de Remontage & Contrôle Qualité</span>
                 </div>
                 <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
                   {currentStep.remontageTip}
@@ -394,7 +665,9 @@ export default function DemontagePage() {
           {/* Panneau Latéral : Outillage Spécifique Requis pour cette Étape */}
           <div className="lg:col-span-4 space-y-6">
             <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#0f1422] border-2 border-slate-200 dark:border-slate-800 shadow-xl space-y-5">
-              <div className="text-xs uppercase font-extrabold tracking-widest text-amber-600 dark:text-amber-400 flex items-center gap-2">
+              <div className={`text-xs uppercase font-extrabold tracking-widest flex items-center gap-2 ${
+                isDisassembly ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'
+              }`}>
                 <Wrench className="w-4 h-4" />
                 <span>Outils Exacts à Préparer</span>
               </div>
@@ -422,10 +695,18 @@ export default function DemontagePage() {
 
               {/* Huilage Associé si présent */}
               {currentStep.moebiusOil && (
-                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-1.5">
-                  <div className="text-[10px] uppercase font-bold text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+                <div className={`p-4 rounded-2xl border space-y-1.5 ${
+                  isDisassembly
+                    ? 'bg-amber-500/10 border-amber-500/30'
+                    : 'bg-cyan-500/10 border-cyan-500/30'
+                }`}>
+                  <div className={`text-[10px] uppercase font-bold flex items-center gap-1.5 ${
+                    isDisassembly
+                      ? 'text-amber-700 dark:text-amber-400'
+                      : 'text-cyan-700 dark:text-cyan-400'
+                  }`}>
                     <Droplet className="w-3.5 h-3.5" />
-                    <span>Lubrification au Remontage :</span>
+                    <span>Lubrification & Spécification Moebius :</span>
                   </div>
                   <div className="font-bold text-slate-900 dark:text-white text-xs">
                     {currentStep.moebiusOil}
@@ -435,8 +716,13 @@ export default function DemontagePage() {
 
               {/* Bouton de progression rapide */}
               <button
-                onClick={() => setCurrentStepIndex((prev) => (prev + 1) % DISASSEMBLY_STEPS.length)}
-                className="w-full py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2"
+                type="button"
+                onClick={() => setCurrentStepIndex((prev) => (prev + 1) % steps.length)}
+                className={`w-full py-3.5 rounded-2xl text-slate-950 font-bold text-xs sm:text-sm shadow-lg transition-all flex items-center justify-center gap-2 ${
+                  isDisassembly
+                    ? 'bg-amber-500 hover:bg-amber-400 shadow-amber-500/20'
+                    : 'bg-emerald-500 hover:bg-emerald-400 shadow-emerald-500/20'
+                }`}
               >
                 <span>Valider & Passer à l’Étape Suivante</span>
                 <ChevronRight className="w-4 h-4" />
