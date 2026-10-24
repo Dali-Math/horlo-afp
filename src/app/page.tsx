@@ -1,136 +1,41 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
+import React from 'react';
+import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import {
+  Compass,
   BookOpen,
   Wrench,
-  Brain,
-  Clock,
-  FileText,
-  Headphones,
   Award,
-  Calendar,
-  Users,
-  Play,
-  Compass,
-  ArrowRight,
   ChevronRight,
-  Sparkles,
-  Layers,
-  ShieldCheck,
+  ArrowRight,
   CheckCircle2,
-  MapPin,
-  Activity,
-  Flame,
+  Clock,
+  Zap,
   Globe,
-  Zap
-} from "lucide-react";
-import { motion } from "framer-motion";
+  Layers,
+  Brain,
+  Users
+} from 'lucide-react';
+import { motion } from 'framer-motion';
 
-/* 🇨🇭 Logo HorloLearn */
-function SwissLogo() {
-  return (
-    <div className="flex items-center gap-3">
-      <div className="relative w-8 h-8 md:w-10 md:h-10 rounded-sm shadow-md overflow-hidden flag-wave">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-3.5 h-1 bg-white absolute"></div>
-          <div className="w-1 h-3.5 bg-white absolute"></div>
-        </div>
-      </div>
-      <div className="flex items-baseline">
-        <span
-          className="text-[1.55rem] md:text-[1.75rem] font-serif italic font-semibold bg-gradient-to-br from-[#C6A04D] via-[#E5C469] to-[#A87927] bg-clip-text text-transparent"
-          style={{
-            textShadow:
-              "0 0 4px rgba(230,200,110,0.3), 0 0 10px rgba(255,230,160,0.25)",
-            letterSpacing: "0.5px",
-          }}
-        >
-          Horlo
-        </span>
-        <span
-          className="ml-1 text-[1.55rem] md:text-[1.75rem] font-sans font-semibold text-slate-800 dark:text-slate-100"
-          style={{
-            letterSpacing: "0.5px",
-          }}
-        >
-          Learn
-        </span>
-      </div>
-      <style jsx>{`
-        .flag-wave {
-          background: linear-gradient(90deg, #b91c1c 0%, #dc2626 50%, #b91c1c 100%);
-          animation: wave 2.3s ease-in-out infinite;
-          transform-origin: left center;
-        }
-        @keyframes wave {
-          0% {
-            transform: perspective(250px) rotateY(0deg);
-          }
-          25% {
-            transform: perspective(250px) rotateY(6deg);
-          }
-          50% {
-            transform: perspective(250px) rotateY(0deg);
-          }
-          75% {
-            transform: perspective(250px) rotateY(-6deg);
-          }
-          100% {
-            transform: perspective(250px) rotateY(0deg);
-          }
-        }
-      `}</style>
+// Horloge interactive Haute Horlogerie Suisse (rendue côté client uniquement pour éviter les écarts d'hydratation)
+const LuxuryHeroClock = dynamic(() => import('@/components/LuxuryHeroClock'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full max-w-[620px] h-[480px] rounded-3xl bg-slate-900/60 border border-amber-500/20 animate-pulse flex items-center justify-center">
+      <span className="text-amber-400 font-mono text-xs tracking-widest">
+        CHRONOMÈTRE SUISSE HAUTE HORLOGERIE...
+      </span>
     </div>
-  );
-}
+  ),
+});
 
-/* ✅ Barre de navigation */
-function Header() {
-  return (
-    <header className="sticky top-0 z-30 bg-white/90 dark:bg-[#0B1220]/90 backdrop-blur border-b border-slate-200 dark:border-slate-800 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
-        <SwissLogo />
-        <nav className="hidden md:flex items-center gap-6 text-sm text-slate-700 dark:text-slate-200 font-medium">
-          <Link href="/theorie" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
-            Théorie
-          </Link>
-          <Link href="/pratique" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
-            Pratique
-          </Link>
-          <Link href="/theorie/technologies" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors flex items-center gap-1">
-            <Zap className="w-3.5 h-3.5 text-cyan-500" /> Technologies
-          </Link>
-          <Link href="/fuseaux-horaires" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors flex items-center gap-1">
-            <Globe className="w-3.5 h-3.5 text-emerald-500" /> Fuseaux
-          </Link>
-          <Link href="/outils" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
-            Outils
-          </Link>
-          <Link href="/ressources" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
-            Ressources
-          </Link>
-          <Link href="/communaute" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
-            Communauté
-          </Link>
-        </nav>
-        <Link
-          href="/quiz"
-          className="px-3.5 py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-mono font-bold hover:bg-amber-400 transition shadow-sm"
-        >
-          Quiz & Évaluation
-        </Link>
-      </div>
-    </header>
-  );
-}
-
-/* ✅ Section héros */
+/* 👑 Section Héros avec la Montre Haute Horlogerie Suisse */
 function Hero() {
   return (
-    <section className="relative overflow-hidden pt-8 pb-14 md:py-20">
+    <section className="relative overflow-hidden pt-6 pb-14 md:py-16">
       <div className="absolute inset-0 -z-10 bg-gradient-to-br from-slate-50 via-slate-100 to-amber-50/20 dark:from-[#07090E] dark:via-[#0D1322] dark:to-slate-950" />
       <div
         className="absolute inset-0 -z-10 opacity-40 dark:opacity-30 pointer-events-none"
@@ -139,21 +44,23 @@ function Hero() {
             "radial-gradient(ellipse 650px 300px at 15% 20%, rgba(212,175,55,0.15), transparent 60%), radial-gradient(ellipse 600px 300px at 85% 15%, rgba(6,182,212,0.12), transparent 60%)",
         }}
       />
-      <div className="max-w-7xl mx-auto px-4 md:px-6 grid md:grid-cols-2 gap-10 items-center">
-        <div className="space-y-6">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        
+        {/* Colonne Gauche (5 colonnes) */}
+        <div className="lg:col-span-5 space-y-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30">
             <span className="w-3.5 h-3.5 rounded bg-red-600 text-white flex items-center justify-center text-[10px] font-black leading-none">🇨🇭</span>
-            Référentiel Pédagogique Suisse • 70 Modules Interactifs
+            Référentiel Pédagogique Suisse • 70 Modules
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-black font-serif tracking-tight text-slate-900 dark:text-white leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black font-serif tracking-tight text-slate-900 dark:text-white leading-tight">
             L&apos;Art du Temps & <br />
             <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-200 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent">
               Haute Horlogerie Suisse
             </span>
           </h1>
 
-          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 font-light leading-relaxed max-w-xl">
+          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 font-light leading-relaxed">
             Du premier battement de balancier aux grandes complications et au silicium. Une encyclopédie vivante, structurée et interactive conçue pour transmettre l&apos;excellence micromécanique suisse au monde entier.
           </p>
 
@@ -173,7 +80,7 @@ function Hero() {
             </Link>
           </div>
 
-          <div className="flex items-center gap-4 text-xs font-mono text-slate-500 dark:text-slate-400 pt-2">
+          <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-500 dark:text-slate-400 pt-2">
             <span className="flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> Accès 100% Libre
             </span>
@@ -186,54 +93,17 @@ function Hero() {
           </div>
         </div>
 
-        {/* Bloc vitrine */}
-        <div className="relative group rounded-3xl overflow-hidden bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-8 space-y-6 text-white">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-red-500" />
-              <span className="w-3 h-3 rounded-full bg-amber-500" />
-              <span className="w-3 h-3 rounded-full bg-emerald-500" />
-            </div>
-            <span className="text-xs font-mono text-amber-400 font-bold">
-              HorloLearn • Calibre Virtuel
-            </span>
-          </div>
-
-          <div className="space-y-3">
-            <span className="text-xs font-mono uppercase tracking-widest text-slate-400">
-              Corpus Pédagogique Mondial
-            </span>
-            <div className="text-2xl sm:text-3xl font-serif font-bold text-white">
-              70 Modules de Formation & Simulateurs d&apos;Atelier
-            </div>
-            <p className="text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
-              Découvrez la cinématique des calibres ETA 6497-1 et 2824-2, la dépose de balancier-spiral, le protocole de huilage Moebius et les 15 plus prestigieuses manufactures suisses.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 pt-2 font-mono text-xs">
-            <Link
-              href="/theorie/galerie-3d"
-              className="p-3.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition flex items-center justify-between"
-            >
-              <span>Écorché 3D des Calibres</span>
-              <ChevronRight className="w-4 h-4 text-amber-400" />
-            </Link>
-            <Link
-              href="/theorie/complications"
-              className="p-3.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition flex items-center justify-between"
-            >
-              <span>Grandes Complications</span>
-              <ChevronRight className="w-4 h-4 text-amber-400" />
-            </Link>
-          </div>
+        {/* Colonne Droite (7 colonnes) : Montre interactive & complications astronomiques réelles */}
+        <div className="lg:col-span-7 flex justify-center items-center">
+          <LuxuryHeroClock />
         </div>
+
       </div>
     </section>
   );
 }
 
-/* ✅ Carrousel de rubriques */
+/* ✅ Carrousel défilant de rubriques */
 function Carousel() {
   const items = [
     { name: "Théorie Fondamentale", href: "/theorie" },
@@ -281,26 +151,69 @@ function GuidedPathwaysSection() {
       {/* Header de section */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
-          <Compass className="w-3.5 h-3.5 text-emerald-500 animate-spin" style={{ animationDuration: '8s' }} />
-          Guide Universel d&apos;Apprentissage • Choisissez Votre Niveau
+          <Compass className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          Guide Universel d&apos;Apprentissage • Choisissez votre Niveau
         </div>
-
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-serif tracking-tight text-slate-900 dark:text-white">
+        <h2 className="text-3xl md:text-5xl font-extrabold font-serif text-slate-900 dark:text-white leading-tight">
           Par où commencer ? <br />
-          <span className="bg-gradient-to-r from-emerald-600 via-amber-500 to-cyan-500 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-amber-500 dark:from-emerald-400 dark:via-teal-300 dark:to-amber-300 bg-clip-text text-transparent">
             Votre Parcours Horloger Méthodique
           </span>
         </h2>
-
-        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 font-light leading-relaxed">
+        <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 font-light leading-relaxed">
           Pour rendre l&apos;horlogerie suisse accessible au monde entier sans se perdre dans le jargon, nous avons structuré nos 70 modules en 3 parcours progressifs clairs.
         </p>
       </div>
 
-      {/* Grille des 3 Parcours */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* ⭐ CARTE VITRINE REPOSITIONNÉE : 70 MODULES & SIMULATEURS D'ATELIER */}
+      <div className="relative group rounded-3xl overflow-hidden bg-slate-900 border border-slate-800 shadow-2xl p-6 sm:p-8 space-y-6 text-white max-w-5xl mx-auto">
+        <div className="flex flex-wrap items-center justify-between border-b border-slate-800 pb-4 gap-2">
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-red-500" />
+            <span className="w-3 h-3 rounded-full bg-amber-500" />
+            <span className="w-3 h-3 rounded-full bg-emerald-500" />
+            <span className="text-xs font-mono text-amber-400 font-bold ml-2">
+              HorloLearn • Calibre Virtuel & Laboratoire
+            </span>
+          </div>
+          <span className="text-xs font-mono uppercase tracking-widest text-slate-400">
+            Corpus Pédagogique Mondial
+          </span>
+        </div>
+
+        <div className="grid md:grid-cols-12 gap-6 items-center">
+          <div className="md:col-span-7 space-y-3">
+            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white">
+              70 Modules de Formation & Simulateurs d&apos;Atelier
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
+              Découvrez la cinématique des calibres ETA 6497-1 et 2824-2, la dépose de balancier-spiral, le protocole de huilage Moebius et les 15 plus prestigieuses manufactures suisses.
+            </p>
+          </div>
+
+          <div className="md:col-span-5 flex flex-col sm:flex-row md:flex-col gap-3 font-mono text-xs">
+            <Link
+              href="/theorie/galerie-3d"
+              className="p-3.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-amber-500/50 transition flex items-center justify-between group/link"
+            >
+              <span className="font-semibold text-slate-100">Écorché 3D des Calibres</span>
+              <ChevronRight className="w-4 h-4 text-amber-400 group-hover/link:translate-x-1 transition-transform" />
+            </Link>
+            <Link
+              href="/theorie/complications"
+              className="p-3.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-amber-500/50 transition flex items-center justify-between group/link"
+            >
+              <span className="font-semibold text-slate-100">Grandes Complications</span>
+              <ChevronRight className="w-4 h-4 text-amber-400 group-hover/link:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Les 3 Cartes de Parcours Progressifs */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         
-        {/* PARCOURS 1 : DÉBUTANT CURIEUX */}
+        {/* PARCOURS 1 : DÉCOUVERTE */}
         <div className="group rounded-3xl bg-white dark:bg-[#0D121F] border-2 border-emerald-500/30 hover:border-emerald-500 p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between space-y-6">
           <div className="space-y-5">
             <div className="flex items-center justify-between">
@@ -528,7 +441,7 @@ function ExploreGrid() {
   ];
 
   return (
-    <section className="max-w-7xl mx-auto px-4 md:px-6 py-14 md:py-20">
+    <section className="max-w-7xl mx-auto px-4 md:px-6 py-14 md:py-20 border-t border-slate-200 dark:border-slate-800/80">
       <div className="text-center mb-10 space-y-2">
         <h2 className="text-3xl md:text-5xl font-extrabold font-serif text-slate-900 dark:text-white">
           Explorer Tout le Corpus HorloLearn
@@ -538,7 +451,7 @@ function ExploreGrid() {
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {cards.map((c, idx) => (
+        {cards.map((c) => (
           <Link
             key={c.href}
             href={c.href}
@@ -569,13 +482,13 @@ function ExploreGrid() {
 /* ✅ Section Partenaires */
 function PartnersSection() {
   const partners = [
-    { src: "/images/partners/rolex.png", alt: "Rolex" },
-    { src: "/images/partners/patek.png", alt: "Patek Philippe" },
-    { src: "/images/partners/audemars.png", alt: "Audemars Piguet" },
-    { src: "/images/partners/vacheron.png", alt: "Vacheron Constantin" },
-    { src: "/images/partners/chopard.png", alt: "Chopard" },
-    { src: "/images/partners/piaget.png", alt: "Piaget" },
-    { src: "/images/partners/muller.png", alt: "Franck Muller" },
+    { alt: "Rolex" },
+    { alt: "Patek Philippe" },
+    { alt: "Audemars Piguet" },
+    { alt: "Vacheron Constantin" },
+    { alt: "Chopard" },
+    { alt: "Jaeger-LeCoultre" },
+    { alt: "Breguet" },
   ];
 
   return (
@@ -618,7 +531,6 @@ function PartnersSection() {
 export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-slate-900 dark:text-slate-100 transition-colors duration-300 selection:bg-amber-500/30 selection:text-amber-600 dark:selection:text-amber-200">
-      <Header />
       <Hero />
       <Carousel />
       <GuidedPathwaysSection />
