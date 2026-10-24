@@ -3,7 +3,6 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   Wrench,
   Calculator,
@@ -190,7 +189,35 @@ export default function OutilsPage() {
       </section>
 
       {/* --- CONTENU DU MODULE ACTIF --- */}
+      
+      {/* --- CONTENU DU MODULE ACTIF --- */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+        
+        {/* ⭐ BANNIÈRE VEDETTE CHRONOCOMPARATEUR WITSCHI */}
+        <div className="relative group rounded-3xl overflow-hidden bg-gradient-to-br from-[#060D12] via-[#0D1520] to-[#0A101D] border-2 border-emerald-500/40 p-6 sm:p-8 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-3 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-mono font-bold uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Innovation Exclusive • Mesure Acoustique en Direct</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white">
+              Chronocomparateur Witschi Acoustique &amp; Virtuel
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
+              Posez votre montre mécanique contre le microphone de votre ordinateur ou téléphone. L&apos;algorithme filtre les bruits, capte le cliquetis de l&apos;échappement et mesure la marche (+/- s/j), l&apos;amplitude et le repère (Beat Error) en direct avec affichage oscilloscope thermique Witschi !
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row md:flex-col gap-3 shrink-0 w-full md:w-auto font-mono text-xs">
+            <Link
+              href="/outils/chronocomparateur"
+              className="px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2"
+            >
+              <span>Lancer le Chronocomparateur</span>
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+
         {/* ========================================================================= */}
         {/* ONGLET 1 : LES 3 CALCULATEURS EN TEMPS RÉEL */}
         {/* ========================================================================= */}
