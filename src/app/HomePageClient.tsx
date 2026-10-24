@@ -110,8 +110,9 @@ export default function HorloLearnHome() {
 
       {/* Hero Section */}
       <section id="accueil" className="relative min-h-screen flex items-center justify-center px-4 pt-20">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           <motion.div
+            className="lg:col-span-5"
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -184,7 +185,7 @@ export default function HorloLearnHome() {
           </motion.div>
 
                     {/* Horloge interactive Haute Horlogerie Suisse */}
-          <div className="flex justify-center items-center">
+          <div className="lg:col-span-7 flex justify-center items-center">
             <LuxuryHeroClock />
           </div>
         </div>
