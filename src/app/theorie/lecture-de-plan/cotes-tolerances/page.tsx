@@ -702,6 +702,31 @@ export default function CotesEtTolerancesPage() {
           </div>
         </section>
 
+        {/* ⭐ ACCÈS DIRECT AU CALCULATEUR D'ÉBATS D'ÉTABLI */}
+        <div className="mb-10 p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-amber-950/60 via-slate-900 to-slate-950 border-2 border-amber-500/40 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0 text-amber-400 text-xl font-bold">
+              ⚙️
+            </div>
+            <div>
+              <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                <span>Besoin de calculer un ébat ou un ajustement pour votre établi ?</span>
+                <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-mono uppercase tracking-wider">Outil Direct</span>
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 font-light mt-0.5">
+                Calculez en direct le jeu axial, le jeu de trou pivot/rubis et le serrage Seitz pour 24 organes horlogers avec notre Calculateur d&apos;Ébats.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/outils/ebats-ajustements"
+            className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs font-mono uppercase transition shadow-lg shadow-amber-500/20 shrink-0 inline-flex items-center gap-2"
+          >
+            <span>Ouvrir le Calculateur d&apos;Ébats</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
         {/* NAVIGATION PRO PAR ONGLETS FLUIDES */}
         <div className="sticky top-20 z-30 mb-10 -mx-4 px-4 sm:mx-0 sm:px-0">
           <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md flex items-center gap-1.5 overflow-x-auto scrollbar-none">
