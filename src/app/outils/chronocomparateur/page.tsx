@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import {
   Mic,
@@ -19,7 +19,9 @@ import {
   Compass,
   Play,
   Square,
-  HelpCircle
+  Smartphone,
+  HelpCircle,
+  Radio
 } from 'lucide-react';
 
 interface WatchPreset {
@@ -42,10 +44,16 @@ export default function ChronocomparateurPage() {
 
   // Paramètres de mesure
   const [selectedPreset, setSelectedPreset] = useState<number>(0);
-  const [gainThreshold, setGainThreshold] = useState<number>(0.12);
+  const [gainThreshold, setGainThreshold] = useState<number>(0.035); // Seuil adapté mobile
+  const [micBoost, setMicBoost] = useState<number>(15); // Préamplification logicielle (x15 par défaut pour mobile)
   const [liftAngle, setLiftAngle] = useState<number>(52);
   const [isListening, setIsListening] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Retour visuel en direct (VU-mètre et pulsation de battement)
+  const [audioLevel, setAudioLevel] = useState<number>(0); // 0 à 100%
+  const [beatDetectedFlash, setBeatDetectedFlash] = useState<boolean>(false);
+  const [isCalibrating, setIsCalibrating] = useState<boolean>(false);
 
   // Valeurs mesurées ou simulées
   const [rate, setRate] = useState<number>(2); // s/jour
@@ -62,6 +70,7 @@ export default function ChronocomparateurPage() {
   // Références Canvas & Audio
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const animationFrameRef = useRef<number | null>(null);
 
@@ -70,148 +79,17 @@ export default function ChronocomparateurPage() {
 
   const currPreset = PRESETS[selectedPreset];
 
-  // =========================================================================
-  // DÉMARRAGE DU MICROPHONE RÉEL (WEB AUDIO API)
-  // =========================================================================
-  const startMicrophone = async () => {
-    try {
-      setErrorMessage(null);
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: false,
-          noiseSuppression: false,
-          autoGainControl: false,
-        },
-      });
-
-      streamRef.current = stream;
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      const audioCtx = new AudioCtx();
-      audioCtxRef.current = audioCtx;
-
-      const source = audioCtx.createMediaStreamSource(stream);
-
-      // Filtre passe-bande 3500 Hz - 7000 Hz pour isoler les clics métalliques
-      const filter = audioCtx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.value = 5000;
-      filter.Q.value = 3.0;
-
-      const analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 1024;
-      analyser.smoothingTimeConstant = 0.2;
-
-      source.connect(filter);
-      filter.connect(analyser);
-
-      setIsListening(true);
-
-      const bufferLength = analyser.fftSize;
-      const dataArray = new Float32Array(bufferLength);
-
-      let lastPeak = performance.now();
-      let intervals: number[] = [];
-      const expectedInterval = (3600 / currPreset.bph) * 1000; // ms entre 2 battements
-
-      const analyzeAudio = () => {
-        if (!analyser) return;
-        analyser.getFloatTimeDomainData(dataArray);
-
-        // Détection de crête acoustique (choc ancre/dent)
-        let maxVal = 0;
-        for (let i = 0; i < bufferLength; i++) {
-          const v = Math.abs(dataArray[i]);
-          if (v > maxVal) maxVal = v;
-        }
-
-        const now = performance.now();
-        if (maxVal > gainThreshold && now - lastPeak > expectedInterval * 0.5) {
-          const interval = now - lastPeak;
-          lastPeak = now;
-
-          if (interval > expectedInterval * 0.7 && interval < expectedInterval * 1.4) {
-            intervals.push(interval);
-            if (intervals.length > 20) intervals.shift();
-
-            // Calcul de la marche (Rate s/j)
-            const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
-            const diffMsPerBeat = avgInterval - expectedInterval;
-            const beatsPerDay = currPreset.bph * 24;
-            const calculatedRate = Math.round((diffMsPerBeat * beatsPerDay) / 1000);
-            setRate(calculatedRate);
-
-            // Calcul du Beat Error (ms)
-            if (intervals.length >= 2) {
-              const diffEvenOdd = Math.abs(intervals[intervals.length - 1] - intervals[intervals.length - 2]);
-              setBeatError(Number((diffEvenOdd / 2).toFixed(1)));
-            }
-
-            // Estimation de l'amplitude (fonction inverse du temps de montée)
-            const estimatedAmp = Math.min(325, Math.max(220, Math.round(275 + (0.25 - maxVal) * 60)));
-            setAmplitude(estimatedAmp);
-
-            setDetectedBeats(prev => prev + 1);
-
-            // Ajout du point sur l'oscilloscope
-            addOscilloscopePoint(calculatedRate, diffMsPerBeat);
-          }
-        }
-
-        animationFrameRef.current = requestAnimationFrame(analyzeAudio);
-      };
-
-      analyzeAudio();
-    } catch (err: unknown) {
-      console.error(err);
-      setErrorMessage(
-        'Impossible d\'accéder au microphone. Veuillez autoriser l\'accès dans votre navigateur pour mesurer la marche de votre montre.'
-      );
-      setIsListening(false);
+  // Ajustement dynamique du gain de préamplification en temps réel
+  useEffect(() => {
+    if (gainNodeRef.current) {
+      gainNodeRef.current.gain.value = micBoost;
     }
-  };
-
-  const stopMicrophone = () => {
-    if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(t => t.stop());
-      streamRef.current = null;
-    }
-    if (audioCtxRef.current) {
-      audioCtxRef.current.close();
-      audioCtxRef.current = null;
-    }
-    setIsListening(false);
-  };
+  }, [micBoost]);
 
   // =========================================================================
   // OSCILLOSCOPE GRAPHIQUE (DÉFILEMENT THERMIQUE WITSCHI)
   // =========================================================================
-  const addOscilloscopePoint = (rateVal: number, beatErrorOffset: number) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const centerY = canvas.height / 2;
-    // Décalage vertical proportionnel à la marche
-    const yShift = (rateVal / 30) * 45;
-    const separation = Math.max(3, beatErrorOffset * 8);
-
-    const y1 = centerY + yShift - separation / 2;
-    const y2 = centerY + yShift + separation / 2;
-
-    pointsRef.current.push({ x: canvas.width - 15, y1, y2 });
-
-    // Déplacement des anciens points vers la gauche (vitesse d'enregistrement)
-    pointsRef.current.forEach(p => {
-      p.x -= 3;
-    });
-
-    // Nettoyage des points sortis de l'écran
-    pointsRef.current = pointsRef.current.filter(p => p.x > 10);
-
-    drawCanvas();
-  };
-
-  const drawCanvas = () => {
+  const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -263,6 +141,233 @@ export default function ChronocomparateurPage() {
     });
 
     ctx.shadowBlur = 0;
+  }, []);
+
+  const addOscilloscopePoint = useCallback((rateVal: number, beatErrorOffset: number) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const centerY = canvas.height / 2;
+    // Décalage vertical proportionnel à la marche
+    const yShift = (rateVal / 30) * 45;
+    const separation = Math.max(3, beatErrorOffset * 8);
+
+    const y1 = centerY + yShift - separation / 2;
+    const y2 = centerY + yShift + separation / 2;
+
+    pointsRef.current.push({ x: canvas.width - 15, y1, y2 });
+
+    // Déplacement des anciens points vers la gauche
+    pointsRef.current.forEach(p => {
+      p.x -= 3;
+    });
+
+    // Nettoyage des points sortis de l'écran
+    pointsRef.current = pointsRef.current.filter(p => p.x > 10);
+
+    drawCanvas();
+  }, [drawCanvas]);
+
+  // =========================================================================
+  // DÉMARRAGE DU MICROPHONE RÉEL (OPTIMISÉ SMARTPHONE & PC)
+  // =========================================================================
+  const startMicrophone = async () => {
+    try {
+      setErrorMessage(null);
+
+      // 1. Accès au microphone avec fallback universel pour iOS Safari / Android
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: false,
+            noiseSuppression: false,
+            autoGainControl: false,
+          },
+        });
+      } catch (errConstraint) {
+        console.warn('Contraintes audio strictes rejetées par le mobile, fallback standard...', errConstraint);
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
+      }
+
+      streamRef.current = stream;
+
+      // 2. Initialisation AudioContext compatible WebKit
+      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const audioCtx = new AudioCtx();
+      audioCtxRef.current = audioCtx;
+
+      // CRITIQUE MOBILE (iOS / Android) : reprise explicite de l'AudioContext suspendu
+      if (audioCtx.state === 'suspended') {
+        await audioCtx.resume();
+      }
+
+      const source = audioCtx.createMediaStreamSource(stream);
+
+      // 3. Préamplificateur logiciel (GainNode) indispensable pour capter le cliquetis d'une montre sur smartphone
+      const gainNode = audioCtx.createGain();
+      gainNode.gain.value = micBoost;
+      gainNodeRef.current = gainNode;
+
+      // 4. Filtre passe-bande adapté aux smartphones (fréquences des chocs métalliques d'échappement : 2500 - 4500 Hz)
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 3200; // Centré sur 3.2 kHz (les micros de téléphone filtrent au-delà de 4 kHz)
+      filter.Q.value = 1.0;          // Largeur équilibrée pour capter le choc sans distorsion
+
+      // 5. Analyseur FFT
+      const analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 1024;
+      analyser.smoothingTimeConstant = 0.15;
+
+      // Chaîne audio : Source -> Filtre Passe-Bande -> Préampli Gain -> Analyseur
+      source.connect(filter);
+      filter.connect(gainNode);
+      gainNode.connect(analyser);
+
+      setIsListening(true);
+
+      const bufferLength = analyser.fftSize;
+      const dataArray = new Float32Array(bufferLength);
+      const byteDataArray = new Uint8Array(bufferLength);
+
+      let lastPeak = performance.now();
+      let intervals: number[] = [];
+      const expectedInterval = (3600 / currPreset.bph) * 1000; // ms entre 2 battements (ex: 125 ms pour 28800 A/h)
+      let lastLevelUpdate = performance.now();
+
+      const analyzeAudio = () => {
+        if (!analyser) return;
+
+        // Lecture multi-plateforme (Float ou Byte avec fallback)
+        if (typeof analyser.getFloatTimeDomainData === 'function') {
+          analyser.getFloatTimeDomainData(dataArray);
+        } else {
+          analyser.getByteTimeDomainData(byteDataArray);
+          for (let i = 0; i < bufferLength; i++) {
+            dataArray[i] = (byteDataArray[i] - 128) / 128;
+          }
+        }
+
+        // Détection de crête acoustique instantanée
+        let maxVal = 0;
+        for (let i = 0; i < bufferLength; i++) {
+          const v = Math.abs(dataArray[i]);
+          if (v > maxVal) maxVal = v;
+        }
+
+        // Mise à jour du VU-mètre visuel (toutes les 50ms pour la fluidité)
+        const now = performance.now();
+        if (now - lastLevelUpdate > 50) {
+          lastLevelUpdate = now;
+          const pct = Math.min(100, Math.round(maxVal * 120));
+          setAudioLevel(pct);
+        }
+
+        // Détection d'un choc mécanique au-delà du seuil
+        if (maxVal > gainThreshold && now - lastPeak > expectedInterval * 0.45) {
+          const interval = now - lastPeak;
+          lastPeak = now;
+
+          // Flash visuel sur le bouton / VU-mètre
+          setBeatDetectedFlash(true);
+          setTimeout(() => setBeatDetectedFlash(false), 90);
+
+          // Si l'intervalle est proche de la cadence attendue
+          let effectiveInterval = interval;
+          if (interval > expectedInterval * 0.65 && interval < expectedInterval * 1.5) {
+            effectiveInterval = interval;
+          } else if (interval >= expectedInterval * 1.5 && interval < expectedInterval * 2.5) {
+            // Un battement a été sauté à cause du bruit ou mouvement -> compensation
+            effectiveInterval = interval / 2;
+          } else {
+            // Hors plage acceptable, on attend le battement suivant
+            effectiveInterval = 0;
+          }
+
+          if (effectiveInterval > 0) {
+            intervals.push(effectiveInterval);
+            if (intervals.length > 25) intervals.shift();
+
+            // Calcul de la marche (Rate s/j)
+            const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+            const diffMsPerBeat = avgInterval - expectedInterval;
+            const beatsPerDay = currPreset.bph * 24;
+            const calculatedRate = Math.round((diffMsPerBeat * beatsPerDay) / 1000);
+            
+            // Filtrage des valeurs aberrantes
+            if (Math.abs(calculatedRate) < 120) {
+              setRate(calculatedRate);
+            }
+
+            // Calcul du Beat Error (ms)
+            if (intervals.length >= 2) {
+              const diffEvenOdd = Math.abs(intervals[intervals.length - 1] - intervals[intervals.length - 2]);
+              setBeatError(Number((diffEvenOdd / 2).toFixed(1)));
+            }
+
+            // Estimation de l'amplitude
+            const estimatedAmp = Math.min(320, Math.max(220, Math.round(270 + (maxVal - gainThreshold) * 70)));
+            setAmplitude(estimatedAmp);
+
+            setDetectedBeats(prev => prev + 1);
+
+            // Ajout du point sur l'oscilloscope thermique
+            addOscilloscopePoint(calculatedRate, diffMsPerBeat);
+          }
+        }
+
+        animationFrameRef.current = requestAnimationFrame(analyzeAudio);
+      };
+
+      analyzeAudio();
+    } catch (err: unknown) {
+      console.error('Erreur accès micro:', err);
+      setErrorMessage(
+        'Impossible d\'accéder au microphone. Sur smartphone (iPhone / Android), assurez-vous d\'avoir autorisé l\'accès au micro dans votre navigateur (icône cadenas ou réglages du site).'
+      );
+      setIsListening(false);
+    }
+  };
+
+  const stopMicrophone = () => {
+    if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(t => t.stop());
+      streamRef.current = null;
+    }
+    if (audioCtxRef.current) {
+      audioCtxRef.current.close();
+      audioCtxRef.current = null;
+    }
+    gainNodeRef.current = null;
+    setIsListening(false);
+    setAudioLevel(0);
+  };
+
+  // =========================================================================
+  // ÉTALONNAGE AUTOMATIQUE DU BRUIT AMBIANT (1-CLIC)
+  // =========================================================================
+  const autoCalibrate = () => {
+    if (!isListening) return;
+    setIsCalibrating(true);
+    let maxAmbient = 0;
+    const start = performance.now();
+
+    const sample = () => {
+      if (performance.now() - start < 800) {
+        maxAmbient = Math.max(maxAmbient, audioLevel / 100);
+        requestAnimationFrame(sample);
+      } else {
+        // Seuil réglé juste au-dessus du bruit de la pièce
+        const calibrated = Math.min(0.2, Math.max(0.02, maxAmbient * 1.4 + 0.015));
+        setGainThreshold(Number(calibrated.toFixed(3)));
+        setIsCalibrating(false);
+      }
+    };
+    requestAnimationFrame(sample);
   };
 
   // Initialisation du canvas et boucle du simulateur
@@ -276,7 +381,6 @@ export default function ChronocomparateurPage() {
         let currentBeatError = simBeatErrorOffset;
 
         if (simKnock) {
-          // Rebatement : dispersion chaotique
           currentRate += (Math.random() - 0.5) * 50;
           currentBeatError += Math.random() * 2;
         }
@@ -292,13 +396,13 @@ export default function ChronocomparateurPage() {
     return () => {
       if (simInterval) clearInterval(simInterval);
     };
-  }, [activeTab, simRateOffset, simBeatErrorOffset, simAmplitudeSlider, simKnock]);
+  }, [activeTab, simRateOffset, simBeatErrorOffset, simAmplitudeSlider, simKnock, drawCanvas, addOscilloscopePoint]);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-slate-900 dark:text-slate-100 py-10 px-4 md:px-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-slate-900 dark:text-slate-100 py-8 px-4 md:px-8">
       
       {/* Navigation retour */}
-      <div className="max-w-6xl mx-auto mb-8 flex flex-wrap items-center justify-between gap-4">
+      <div className="max-w-6xl mx-auto mb-6 flex flex-wrap items-center justify-between gap-4">
         <Link
           href="/outils"
           className="inline-flex items-center gap-2 text-xs font-mono text-slate-600 dark:text-slate-400 hover:text-amber-500 transition"
@@ -309,24 +413,24 @@ export default function ChronocomparateurPage() {
 
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30">
           <span>🇨🇭</span>
-          <span>Banc Acoustique d&apos;Atelier • Conforme NIHS & COSC</span>
+          <span>Banc Acoustique d&apos;Atelier • Conforme NIHS &amp; COSC</span>
         </div>
       </div>
 
       {/* Titre & Entête */}
-      <div className="max-w-6xl mx-auto text-center space-y-3 mb-10">
+      <div className="max-w-6xl mx-auto text-center space-y-3 mb-8">
         <h1 className="text-3xl md:text-5xl font-black font-serif tracking-tight text-slate-900 dark:text-white">
           Chronocomparateur Witschi <br />
           <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-amber-500 dark:from-emerald-400 dark:via-teal-300 dark:to-amber-300 bg-clip-text text-transparent">
-            Acoustique Réel & Simulateur
+            Acoustique Réel &amp; Simulateur
           </span>
         </h1>
         <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 font-light max-w-2xl mx-auto">
-          Approchez votre montre mécanique du microphone de votre ordinateur ou téléphone pour mesurer en direct sa marche (+/- s/j), son amplitude et son repère.
+          Approchez votre montre mécanique du microphone de votre téléphone ou ordinateur pour mesurer en direct sa marche (+/- s/j), son amplitude et son repère.
         </p>
 
         {/* Sélecteur de Mode */}
-        <div className="inline-flex p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mt-4">
+        <div className="inline-flex p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mt-2">
           <button
             onClick={() => {
               if (isListening) stopMicrophone();
@@ -359,30 +463,40 @@ export default function ChronocomparateurPage() {
         </div>
       </div>
 
+      {/* BANNIÈRE CONSEIL SPÉCIALE SMARTPHONE */}
+      {activeTab === 'real' && (
+        <div className="max-w-5xl mx-auto mb-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-3 text-xs text-emerald-900 dark:text-emerald-200">
+          <Smartphone className="w-6 h-6 shrink-0 text-emerald-500 animate-pulse" />
+          <div className="leading-relaxed">
+            <strong>Astuce Smartphone :</strong> Plaquez le fond de boîte ou la couronne de votre montre contre le trou du micro inférieur de votre téléphone (à côté du port de charge) ou utilisez le micro de vos écouteurs. Restez dans un endroit silencieux.
+          </div>
+        </div>
+      )}
+
       {/* BOÎTIER DE MESURE CHRONOCOMPARATEUR (LOOK WITSCHI CLASSIQUE) */}
-      <div className="max-w-5xl mx-auto rounded-3xl bg-[#0D1520] border-2 border-slate-800 shadow-2xl p-6 md:p-8 space-y-6">
+      <div className="max-w-5xl mx-auto rounded-3xl bg-[#0D1520] border-2 border-slate-800 shadow-2xl p-5 md:p-8 space-y-6">
         
         {/* ÉCRAN DE MESURE NUMÉRIQUE (AFFICHEURS LED VERTS) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-2xl bg-[#050D0A] border border-emerald-950">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 p-4 rounded-2xl bg-[#050D0A] border border-emerald-950">
           
           {/* MARCHE (RATE) */}
-          <div className="p-4 rounded-xl bg-black/40 border border-emerald-900/30 text-center">
-            <div className="text-[11px] font-mono text-slate-400 uppercase tracking-widest mb-1">
+          <div className="p-3 md:p-4 rounded-xl bg-black/40 border border-emerald-900/30 text-center">
+            <div className="text-[10px] md:text-[11px] font-mono text-slate-400 uppercase tracking-widest mb-1">
               Marche (Rate)
             </div>
-            <div className={`text-3xl md:text-4xl font-mono font-bold ${
+            <div className={`text-2xl md:text-4xl font-mono font-bold ${
               Math.abs(rate) <= 5 ? 'text-[#00FF66]' : Math.abs(rate) <= 15 ? 'text-amber-400' : 'text-red-400'
             }`}>
-              {rate >= 0 ? `+${rate}` : rate} <span className="text-base font-normal">s/j</span>
+              {rate >= 0 ? `+${rate}` : rate} <span className="text-sm md:text-base font-normal">s/j</span>
             </div>
           </div>
 
           {/* AMPLITUDE */}
-          <div className="p-4 rounded-xl bg-black/40 border border-emerald-900/30 text-center">
-            <div className="text-[11px] font-mono text-slate-400 uppercase tracking-widest mb-1">
+          <div className="p-3 md:p-4 rounded-xl bg-black/40 border border-emerald-900/30 text-center">
+            <div className="text-[10px] md:text-[11px] font-mono text-slate-400 uppercase tracking-widest mb-1">
               Amplitude
             </div>
-            <div className={`text-3xl md:text-4xl font-mono font-bold ${
+            <div className={`text-2xl md:text-4xl font-mono font-bold ${
               amplitude >= 260 && amplitude <= 315 ? 'text-[#00FF66]' : 'text-amber-400'
             }`}>
               {amplitude}°
@@ -390,23 +504,23 @@ export default function ChronocomparateurPage() {
           </div>
 
           {/* REPÈRE (BEAT ERROR) */}
-          <div className="p-4 rounded-xl bg-black/40 border border-emerald-900/30 text-center">
-            <div className="text-[11px] font-mono text-slate-400 uppercase tracking-widest mb-1">
+          <div className="p-3 md:p-4 rounded-xl bg-black/40 border border-emerald-900/30 text-center">
+            <div className="text-[10px] md:text-[11px] font-mono text-slate-400 uppercase tracking-widest mb-1">
               Repère (Beat Error)
             </div>
-            <div className={`text-3xl md:text-4xl font-mono font-bold ${
+            <div className={`text-2xl md:text-4xl font-mono font-bold ${
               beatError <= 0.4 ? 'text-[#00FF66]' : beatError <= 0.8 ? 'text-amber-400' : 'text-red-400'
             }`}>
-              {beatError.toFixed(1)} <span className="text-base font-normal">ms</span>
+              {beatError.toFixed(1)} <span className="text-sm md:text-base font-normal">ms</span>
             </div>
           </div>
 
           {/* FRÉQUENCE / ALTERNANCES */}
-          <div className="p-4 rounded-xl bg-black/40 border border-emerald-900/30 text-center">
-            <div className="text-[11px] font-mono text-slate-400 uppercase tracking-widest mb-1">
+          <div className="p-3 md:p-4 rounded-xl bg-black/40 border border-emerald-900/30 text-center">
+            <div className="text-[10px] md:text-[11px] font-mono text-slate-400 uppercase tracking-widest mb-1">
               Fréquence
             </div>
-            <div className="text-2xl md:text-3xl font-mono font-bold text-[#00FF66]">
+            <div className="text-xl md:text-3xl font-mono font-bold text-[#00FF66]">
               {currPreset.bph} <span className="text-xs font-normal">A/h</span>
             </div>
             <div className="text-[10px] font-mono text-slate-400 mt-1">
@@ -425,19 +539,40 @@ export default function ChronocomparateurPage() {
             className="w-full h-56 md:h-64 block bg-[#050D0A]"
           />
 
-          {/* État en direct au bas de l'écran */}
-          <div className="absolute bottom-2 left-4 right-4 flex items-center justify-between text-[11px] font-mono text-slate-400 bg-[#050D0A]/80 px-3 py-1 rounded border border-emerald-900/30">
-            <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${isListening || activeTab === 'sim' ? 'bg-[#00FF66] animate-pulse' : 'bg-slate-600'}`} />
-              <span>
+          {/* BARRE D'ÉTAT TEMPS RÉEL + VU-MÈTRE INTÉGRÉ */}
+          <div className="absolute bottom-2 left-2 right-2 md:left-4 md:right-4 flex flex-col sm:flex-row sm:items-center justify-between text-[11px] font-mono text-slate-300 bg-[#050D0A]/90 px-3 py-1.5 rounded border border-emerald-900/40 gap-2">
+            <div className="flex items-center gap-3">
+              <span className={`w-2.5 h-2.5 rounded-full transition-all duration-75 ${
+                beatDetectedFlash
+                  ? 'bg-emerald-300 ring-4 ring-emerald-400 shadow-[0_0_10px_#00FF66]'
+                  : isListening || activeTab === 'sim'
+                  ? 'bg-[#00FF66]'
+                  : 'bg-slate-600'
+              }`} />
+              <span className="truncate">
                 {activeTab === 'real'
                   ? isListening
-                    ? `MICROPHONE ACTIF • ${detectedBeats} CHOCS DÉTECTÉS`
+                    ? `MICRO ACTIF • ${detectedBeats} BATTEMENTS CAPTÉS`
                     : 'MICROPHONE EN ATTENTE • CLIQUEZ SUR DÉMARRER'
                   : 'MODE SIMULATEUR D\'ÉTABLI ACTIF'}
               </span>
             </div>
-            <span>Échelle : 1s/div • 0.1ms/div</span>
+
+            {/* VU-Mètre Signal Micro en direct */}
+            {activeTab === 'real' && isListening && (
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="text-[10px] text-slate-400">Signal :</span>
+                <div className="w-24 md:w-32 h-2.5 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                  <div
+                    className={`h-full rounded-full transition-all duration-75 ${
+                      audioLevel > 60 ? 'bg-amber-400' : 'bg-[#00FF66]'
+                    }`}
+                    style={{ width: `${Math.max(4, audioLevel)}%` }}
+                  />
+                </div>
+                <span className="text-[10px] text-emerald-400 font-bold">{audioLevel}%</span>
+              </div>
+            )}
           </div>
 
           {/* Overlay bouton démarrer en mode micro */}
@@ -449,12 +584,12 @@ export default function ChronocomparateurPage() {
               <div className="space-y-1">
                 <h3 className="text-lg font-serif font-bold text-white">Prêt à écouter votre montre mécanique</h3>
                 <p className="text-xs text-slate-400 max-w-md">
-                  Posez le fond de boîte ou la couronne de votre montre tout près du micro de vos écouteurs ou de votre ordinateur.
+                  Posez le fond de boîte ou la couronne de votre montre contre le micro de votre smartphone ou de vos écouteurs.
                 </p>
               </div>
               <button
                 onClick={startMicrophone}
-                className="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono text-xs font-bold transition shadow-lg shadow-emerald-500/20 flex items-center gap-2"
+                className="px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono text-xs font-bold transition shadow-lg shadow-emerald-500/20 flex items-center gap-2 active:scale-95"
               >
                 <Play className="w-4 h-4 fill-current" />
                 <span>Démarrer l&apos;Écoute Acoustique</span>
@@ -467,78 +602,126 @@ export default function ChronocomparateurPage() {
         {errorMessage && (
           <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs flex items-center gap-3">
             <AlertTriangle className="w-5 h-5 shrink-0 text-red-400" />
-            <span>{errorMessage}</span>
+            <div className="space-y-1">
+              <span className="font-bold block">Accès Microphone Requis :</span>
+              <span>{errorMessage}</span>
+            </div>
           </div>
         )}
 
-        {/* CONTRÔLES MODE RÉEL */}
+        {/* CONTRÔLES MODE RÉEL (OPTIMISÉS SMARTPHONE) */}
         {activeTab === 'real' && (
-          <div className="grid md:grid-cols-3 gap-6 pt-2">
+          <div className="space-y-6 pt-2">
             
-            {/* Choix du calibre / alternances */}
-            <div className="space-y-2">
-              <label className="text-xs font-mono text-slate-300 font-semibold block">
-                Calibre / Fréquence Cible :
-              </label>
-              <select
-                value={selectedPreset}
-                onChange={e => {
-                  const idx = parseInt(e.target.value);
-                  setSelectedPreset(idx);
-                  setLiftAngle(PRESETS[idx].liftAngle);
-                }}
-                className="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-slate-200 focus:border-emerald-500 outline-none"
-              >
-                {PRESETS.map((p, idx) => (
-                  <option key={idx} value={idx}>
-                    {p.name} ({p.bph} A/h)
-                  </option>
-                ))}
-              </select>
+            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+              {/* Choix du calibre / alternances */}
+              <div className="space-y-2">
+                <label className="text-xs font-mono text-slate-300 font-semibold block">
+                  Calibre / Alternances :
+                </label>
+                <select
+                  value={selectedPreset}
+                  onChange={e => {
+                    const idx = parseInt(e.target.value);
+                    setSelectedPreset(idx);
+                    setLiftAngle(PRESETS[idx].liftAngle);
+                  }}
+                  className="w-full px-3 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-slate-200 focus:border-emerald-500 outline-none"
+                >
+                  {PRESETS.map((p, idx) => (
+                    <option key={idx} value={idx}>
+                      {p.name} ({p.bph} A/h)
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Préamplification logicielle (Mic Boost) */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs font-mono text-slate-300">
+                  <span>Amplification Micro :</span>
+                  <span className="text-emerald-400 font-bold">x{micBoost}</span>
+                </div>
+                <input
+                  type="range"
+                  min="1"
+                  max="35"
+                  step="1"
+                  value={micBoost}
+                  onChange={e => setMicBoost(parseInt(e.target.value))}
+                  className="w-full accent-emerald-500 cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] font-mono text-slate-500">
+                  <span>x1 (Standard)</span>
+                  <span>x15 (Mobile)</span>
+                  <span>x35 (Max)</span>
+                </div>
+              </div>
+
+              {/* Seuil de déclenchement (Threshold) */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs font-mono text-slate-300">
+                  <span>Seuil Déclenchement :</span>
+                  <span className="text-emerald-400 font-bold">{gainThreshold.toFixed(3)}</span>
+                </div>
+                <input
+                  type="range"
+                  min="0.005"
+                  max="0.12"
+                  step="0.005"
+                  value={gainThreshold}
+                  onChange={e => setGainThreshold(parseFloat(e.target.value))}
+                  className="w-full accent-emerald-500 cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] font-mono text-slate-500">
+                  <span>Sensible</span>
+                  <span>Filtré</span>
+                </div>
+              </div>
+
+              {/* Angle de levée (Lift Angle) */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs font-mono text-slate-300">
+                  <span>Angle de Levée :</span>
+                  <span className="text-emerald-400 font-bold">{liftAngle}°</span>
+                </div>
+                <input
+                  type="range"
+                  min="36"
+                  max="60"
+                  step="1"
+                  value={liftAngle}
+                  onChange={e => setLiftAngle(parseInt(e.target.value))}
+                  className="w-full accent-emerald-500 cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] font-mono text-slate-500">
+                  <span>36° (Vintage)</span>
+                  <span>52° (Standard)</span>
+                </div>
+              </div>
             </div>
 
-            {/* Seuil de sensibilité micro */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs font-mono text-slate-300">
-                <span>Sensibilité Micro :</span>
-                <span className="text-emerald-400 font-bold">{gainThreshold.toFixed(2)}</span>
-              </div>
-              <input
-                type="range"
-                min="0.03"
-                max="0.4"
-                step="0.01"
-                value={gainThreshold}
-                onChange={e => setGainThreshold(parseFloat(e.target.value))}
-                className="w-full accent-emerald-500 cursor-pointer"
-              />
-              <div className="flex justify-between text-[10px] font-mono text-slate-500">
-                <span>Plus Sensible</span>
-                <span>Filtre Bruit Ambiant</span>
-              </div>
-            </div>
+            {/* Boutons d'action : Étalonnage 1-clic + Arrêt */}
+            {isListening && (
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                <button
+                  onClick={autoCalibrate}
+                  disabled={isCalibrating}
+                  className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 text-xs font-mono font-bold transition flex items-center gap-2"
+                >
+                  <Radio className={`w-3.5 h-3.5 ${isCalibrating ? 'animate-spin' : ''}`} />
+                  <span>{isCalibrating ? 'Étalonnage en cours...' : 'Auto-Étalonnage du Bruit'}</span>
+                </button>
 
-            {/* Angle de levée (Lift Angle) */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs font-mono text-slate-300">
-                <span>Angle de Levée (Lift Angle) :</span>
-                <span className="text-emerald-400 font-bold">{liftAngle}°</span>
+                <button
+                  onClick={stopMicrophone}
+                  className="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-mono text-xs font-bold transition flex items-center gap-2 shadow-lg shadow-red-600/20 active:scale-95"
+                >
+                  <Square className="w-4 h-4 fill-current" />
+                  <span>Arrêter la Mesure</span>
+                </button>
               </div>
-              <input
-                type="range"
-                min="36"
-                max="60"
-                step="1"
-                value={liftAngle}
-                onChange={e => setLiftAngle(parseInt(e.target.value))}
-                className="w-full accent-emerald-500 cursor-pointer"
-              />
-              <div className="flex justify-between text-[10px] font-mono text-slate-500">
-                <span>36° (Vintage)</span>
-                <span>52° (Standard ETA)</span>
-                <span>60°</span>
-              </div>
-            </div>
+            )}
 
           </div>
         )}
@@ -618,7 +801,7 @@ export default function ChronocomparateurPage() {
               {/* Amplitude & Rebatement */}
               <div className="space-y-2">
                 <div className="flex justify-between text-xs font-mono">
-                  <span className="text-slate-300 font-semibold">3. Amplitude & Armage :</span>
+                  <span className="text-slate-300 font-semibold">3. Amplitude &amp; Armage :</span>
                   <span className="text-emerald-400 font-bold">{simAmplitudeSlider}°</span>
                 </div>
                 <input
@@ -644,19 +827,6 @@ export default function ChronocomparateurPage() {
               </div>
 
             </div>
-          </div>
-        )}
-
-        {/* Bouton d'action principal */}
-        {activeTab === 'real' && isListening && (
-          <div className="flex justify-center pt-2">
-            <button
-              onClick={stopMicrophone}
-              className="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-mono text-xs font-bold transition flex items-center gap-2 shadow-lg shadow-red-600/20"
-            >
-              <Square className="w-4 h-4 fill-current" />
-              <span>Arrêter la Mesure</span>
-            </button>
           </div>
         )}
 
