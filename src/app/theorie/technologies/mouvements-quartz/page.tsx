@@ -1,578 +1,686 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { ChevronLeft, CheckCircle2, XCircle, AlertCircle, Zap, Timer, Battery, TrendingDown } from 'lucide-react';
+import Link from "next/link";
+import { useState } from "react";
+import {
+  ArrowLeft,
+  Zap,
+  Clock,
+  Battery,
+  Award,
+  CheckCircle2,
+  XCircle,
+  RotateCcw,
+  Sparkles,
+  Layers,
+  Cpu,
+  History,
+  TrendingDown,
+  TrendingUp,
+  AlertTriangle
+} from "lucide-react";
+
+type QuizQuestion = {
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  explanation: string;
+};
+
+type ComparisonItem = {
+  id: string;
+  title: string;
+  quartz: string;
+  mecanique: string;
+  winner: "quartz" | "mecanique";
+  details: string;
+};
+
+const COMPARISONS: ComparisonItem[] = [
+  {
+    "id": "precision",
+    "title": "Précision Temporelle",
+    "quartz": "±15 secondes / mois",
+    "mecanique": "±3 à 10 secondes / jour",
+    "winner": "quartz",
+    "details": "Le quartz est environ 100 fois plus précis qu'une montre mécanique standard. Même le standard le plus rigoureux de chronomètre suisse (COSC : -4/+6 s/jour) accumule en quelques jours l'écart qu'un quartz standard met un an à atteindre."
+  },
+  {
+    "id": "cout",
+    "title": "Coût de Fabrication",
+    "quartz": "50 - 500 CHF (standard)",
+    "mecanique": "500 - 50'000+ CHF",
+    "winner": "quartz",
+    "details": "Un mouvement à quartz standard est hautement automatisé et coûte 10 à 100 fois moins cher à usiner qu'un calibre mécanique comprenant plus d'une centaine de minuscules composants taillés et polis au micron."
+  },
+  {
+    "id": "entretien",
+    "title": "Fréquence d'Entretien",
+    "quartz": "Pile tous les 2 à 5 ans",
+    "mecanique": "Rhabillage tous les 3 à 5 ans",
+    "winner": "quartz",
+    "details": "L'entretien d'une montre à quartz se résume généralement à un remplacement de pile et de joints (30-50 CHF). Une montre mécanique requiert un démontage intégral, nettoyage, huilage minutieux aux huiles synthétiques et réglage (300-1000 CHF)."
+  },
+  {
+    "id": "emotion",
+    "title": "Valeur Émotionnelle & Âme",
+    "quartz": "Production industrielle de série",
+    "mecanique": "Artisanat d'art & Savoir-faire",
+    "winner": "mecanique",
+    "details": "Une montre mécanique incarne plus de 400 ans d'histoire et d'artisanat. L'animation visuelle du balancier oscillant, le tic-tac discret et les finitions manuelles (anglage, Côtes de Genève, soleillage) lui confèrent une dimension artistique et intemporelle."
+  },
+  {
+    "id": "durabilite",
+    "title": "Pérennité & Réparabilité",
+    "quartz": "Composants électroniques sujets à obsolescence",
+    "mecanique": "Réparable à l'infini par un horloger",
+    "winner": "mecanique",
+    "details": "Une montre mécanique centenaire peut toujours être réparée en réusinant une pièce au tour d'horloger. En revanche, un circuit intégré ou une bobine de quartz d'il y a 40 ans dont le fabricant a disparu peut rendre le garde-temps irréparable."
+  }
+];
+
+const QUIZ_QUESTIONS: QuizQuestion[] = [
+  {
+    "question": "Pourquoi le quartz oscille-t-il précisément à 32'768 Hz ?",
+    "options": [
+      "C'est la fréquence naturelle du quartz",
+      "Parce que 32'768 = 2¹⁵, facile à diviser pour obtenir 1 Hz",
+      "Pour minimiser la consommation électrique",
+      "C'est un choix arbitraire de Seiko"
+    ],
+    "correctAnswer": 1,
+    "explanation": "32'768 = 2¹⁵. Cette puissance de 2 permet de diviser facilement la fréquence par 15 diviseurs binaires successifs (flip-flops) pour obtenir exactement 1 Hz (1 impulsion/seconde). C'est un compromis optimal entre précision micromécanique et consommation électrique."
+  },
+  {
+    "question": "Quelle montre a déclenché la 'Crise du Quartz' en 1969 ?",
+    "options": [
+      "Casio F-91W",
+      "Seiko Astron",
+      "Timex Quartz",
+      "Omega Constellation"
+    ],
+    "correctAnswer": 1,
+    "explanation": "La Seiko Astron 35SQ, commercialisée le 25 décembre 1969 à Tokyo, fut la première montre-bracelet à quartz au monde. Son prix initial de 450'000 yens (équivalent d'une voiture Toyota) n'empêcha pas le déferlement de cette révolution technologique."
+  },
+  {
+    "question": "Quelle est la précision annuelle certifiée du calibre Grand Seiko 9F ?",
+    "options": [
+      "±5 secondes/an",
+      "±10 secondes/an",
+      "±15 secondes/an",
+      "±30 secondes/an"
+    ],
+    "correctAnswer": 1,
+    "explanation": "Le calibre 9F de Grand Seiko, développé en 1993, atteint une précision hors normes de ±10 secondes par an (certaines éditions spéciales atteignent ±5s/an), soit environ 120 fois plus précis qu'un chronomètre mécanique standard."
+  },
+  {
+    "question": "Combien d'emplois l'horlogerie suisse a-t-elle perdus durant la crise du quartz (1970-1985) ?",
+    "options": [
+      "Environ 10'000 emplois",
+      "Environ 25'000 emplois",
+      "Environ 50'000 emplois",
+      "Environ 80'000 emplois"
+    ],
+    "correctAnswer": 2,
+    "explanation": "Entre 1970 et 1985, les effectifs de l'industrie horlogère suisse se sont effondrés d'environ 90'000 à moins de 30'000 travailleurs (soit environ 50'000 à 60'000 emplois perdus) et plus de la moitié des manufactures suisses ont fermé leurs portes."
+  }
+];
 
 export default function MouvementsQuartzPage() {
-  const [selectedComparison, setSelectedComparison] = useState<string>('');
-  const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: string }>({});
-  const [showResults, setShowResults] = useState(false);
+  // Quiz States
+  const [currentQIdx, setCurrentQIdx] = useState<number>(0);
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [score, setScore] = useState<number>(0);
+  const [showExplanation, setShowExplanation] = useState<boolean>(false);
+  const [quizFinished, setQuizFinished] = useState<boolean>(false);
 
-  const comparisons = [
-    {
-      id: 'precision',
-      title: 'Précision',
-      quartz: '±15 secondes/mois',
-      mecanique: '±3 à 10 secondes/jour',
-      winner: 'quartz',
-      details: 'Le quartz est 100 fois plus précis qu\'une montre mécanique standard. Un chronomètre COSC mécanique atteint ±5s/jour, tandis qu\'un quartz standard offre ±15s/mois.'
-    },
-    {
-      id: 'prix',
-      title: 'Prix',
-      quartz: '50-500 CHF (standard)',
-      mecanique: '500-50\'000+ CHF',
-      winner: 'quartz',
-      details: 'Un mouvement quartz coûte 10 à 100 fois moins cher à produire qu\'un mouvement mécanique comparable. La technologie est mature et standardisée.'
-    },
-    {
-      id: 'entretien',
-      title: 'Entretien',
-      quartz: 'Pile tous les 2-5 ans',
-      mecanique: 'Révision tous les 3-5 ans',
-      winner: 'quartz',
-      details: 'Changement de pile : 30-50 CHF. Révision mécanique complète : 300-1000 CHF selon complexité. Le quartz nécessite un entretien minimal.'
-    },
-    {
-      id: 'emotion',
-      title: 'Valeur Émotionnelle',
-      quartz: 'Faible (production masse)',
-      mecanique: 'Forte (savoir-faire)',
-      winner: 'mecanique',
-      details: 'Une montre mécanique incarne des siècles de tradition horlogère, un savoir-faire artisanal transmis de génération en génération. Le quartz, aussi précis soit-il, n\'a pas cette âme.'
-    },
-    {
-      id: 'durabilite',
-      title: 'Durabilité',
-      quartz: 'Circuit peut vieillir',
-      mecanique: 'Réparable indéfiniment',
-      winner: 'mecanique',
-      details: 'Une montre mécanique bien entretenue traverse les générations. Un circuit quartz peut devenir obsolète ou irréparable après 20-30 ans si pièces indisponibles.'
-    },
-  ];
-
-  const quizData = [
-    {
-      question: "Pourquoi le quartz oscille-t-il précisément à 32'768 Hz ?",
-      options: [
-        "C'est la fréquence naturelle du quartz",
-        "Parce que 32'768 = 2¹⁵, facile à diviser pour obtenir 1 Hz",
-        "Pour minimiser la consommation électrique",
-        "C'est un choix arbitraire de Seiko"
-      ],
-      correct: 1,
-      explanation: "32'768 = 2¹⁵. Cette puissance de 2 permet de diviser facilement la fréquence par 15 diviseurs binaires successifs pour obtenir exactement 1 Hz (1 impulsion/seconde). C'est un compromis optimal entre précision et consommation."
-    },
-    {
-      question: "Quelle montre a déclenché la 'Crise du Quartz' en 1969 ?",
-      options: [
-        "Casio F-91W",
-        "Seiko Astron",
-        "Timex Quartz",
-        "Omega Constellation"
-      ],
-      correct: 1,
-      explanation: "La Seiko Astron, lancée le 25 décembre 1969, fut la première montre-bracelet à quartz commercialisée au monde. Son prix initial de 1'250 USD (équivalent d'une Toyota Corolla) n'empêcha pas son succès."
-    },
-    {
-      question: "Quelle est la précision annuelle du calibre Grand Seiko 9F ?",
-      options: [
-        "±5 secondes/an",
-        "±10 secondes/an",
-        "±15 secondes/an",
-        "±30 secondes/an"
-      ],
-      correct: 1,
-      explanation: "Le calibre 9F de Grand Seiko, lancé en 1993, atteint une précision de ±10 secondes par an, soit environ 120 fois plus précis qu'un mouvement mécanique standard. C'est l'apogée du quartz haute horlogerie."
-    },
-    {
-      question: "Combien d'emplois l'horlogerie suisse a-t-elle perdus durant la crise du quartz ?",
-      options: [
-        "10'000",
-        "25'000",
-        "50'000",
-        "100'000"
-      ],
-      correct: 2,
-      explanation: "Entre 1970 et 1985, l'horlogerie suisse a perdu environ 50'000 emplois (passant de 90'000 à 30'000 emplois) et vu la fermeture de nombreuses manufactures face à la concurrence des montres quartz japonaises bon marché."
-    },
-  ];
-
-  const handleQuizAnswer = (questionIndex: number, optionIndex: number) => {
-    if (!showResults) {
-      setQuizAnswers(prev => ({ ...prev, [questionIndex]: optionIndex.toString() }));
+  const handleSelectOption = (idx: number) => {
+    if (showExplanation) return;
+    setSelectedOption(idx);
+    setShowExplanation(true);
+    if (idx === QUIZ_QUESTIONS[currentQIdx].correctAnswer) {
+      setScore((prev) => prev + 1);
     }
   };
 
-  const calculateScore = () => {
-    let correct = 0;
-    quizData.forEach((q, index) => {
-      if (parseInt(quizAnswers[index]) === q.correct) correct++;
-    });
-    return correct;
+  const handleNextQuestion = () => {
+    if (currentQIdx < QUIZ_QUESTIONS.length - 1) {
+      setCurrentQIdx((prev) => prev + 1);
+      setSelectedOption(null);
+      setShowExplanation(false);
+    } else {
+      setQuizFinished(true);
+    }
+  };
+
+  const handleRestartQuiz = () => {
+    setCurrentQIdx(0);
+    setSelectedOption(null);
+    setScore(0);
+    setShowExplanation(false);
+    setQuizFinished(false);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-cyan-50 dark:from-slate-950 dark:to-slate-900">
-      {/* HEADER */}
-      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-4 py-4">
-          <Link 
-            href="/theorie/technologies" 
-            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium"
-          >
-            <ChevronLeft className="w-5 h-5 mr-1" />
-            Retour aux Technologies
-          </Link>
-        </div>
-      </header>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
+      
+      {/* ESPACE DE DÉGAGEMENT HAUT : Évite toute superposition sous la navbar capsule flottante */}
+      <div className="pt-8 sm:pt-10 md:pt-12" />
 
-      {/* HERO */}
-      <section className="bg-gradient-to-br from-cyan-600 via-blue-600 to-indigo-600 text-white">
-        <div className="max-w-5xl mx-auto px-4 py-12 md:py-16">
-          <div className="mb-6">
-            <span className="inline-block bg-cyan-100 text-cyan-900 text-sm font-medium px-4 py-1.5 rounded-full">
-              Révolution Électronique
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+
+        {/* HERO SECTION DE HAUTE HORLOGERIE */}
+        <section className="text-center max-w-4xl mx-auto mb-12 sm:mb-16">
+          
+          {/* Breadcrumb Navigation */}
+          <nav className="flex items-center justify-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400 mb-4 flex-wrap">
+            <Link
+              href="/theorie"
+              className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+            >
+              Théorie
+            </Link>
+            <span>›</span>
+            <Link
+              href="/theorie/technologies"
+              className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+            >
+              Technologies Modernes
+            </Link>
+            <span>›</span>
+            <span className="text-slate-800 dark:text-slate-200 font-semibold">
+              Mouvements à Quartz
             </span>
+          </nav>
+
+          {/* Badge Horlogerie Suisse */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-cyan-500/10 border border-cyan-500/30 text-cyan-800 dark:text-cyan-300 mb-5 shadow-sm max-w-full">
+            <Zap className="w-4 h-4 text-cyan-600 dark:text-cyan-400 shrink-0" />
+            <span className="truncate">Révolution Électronique & Haute Fréquence Piézoélectrique</span>
           </div>
 
-          <div className="flex items-start gap-4 mb-6">
-            <Zap className="w-16 h-16 text-cyan-300" />
-            <div className="flex-1">
-              <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-                Mouvements à Quartz
-              </h1>
-            </div>
-          </div>
+          {/* Grand Titre */}
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4 font-serif px-2">
+            Mouvements à Quartz
+          </h1>
 
-          <p className="text-lg md:text-xl text-cyan-50 leading-relaxed max-w-4xl mb-8">
-            Les mouvements à quartz ont révolutionné l'horlogerie dans les années 1970 grâce à la précision exceptionnelle 
-            du cristal de quartz piézoélectrique. Oscillant à 32'768 Hz, ils offrent une précision mensuelle de ±15 secondes, 
-            détrônant temporairement la suprématie de l'horlogerie mécanique suisse.
+          {/* Sous-titre */}
+          <p className="text-sm sm:text-base md:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto mb-8 font-normal">
+            Comprenez comment un diapason de dioxyde de silicium oscillant à{" "}
+            <span className="font-semibold text-slate-900 dark:text-amber-300">32&apos;768 Hz</span> a bouleversé l&apos;horlogerie mondiale, déclenché la crise de 1970 et forcé la Renaissance de la Haute Horlogerie suisse.
           </p>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4">
-              <div className="text-3xl font-bold mb-1">32'768</div>
-              <div className="text-xs font-medium opacity-80">Hz (vibrations/sec)</div>
+          {/* Ruban de Métriques Rapides */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto">
+            <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+              <div className="text-2xl font-black text-cyan-600 dark:text-cyan-400 font-mono">32&apos;768</div>
+              <div className="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-0.5">Hz (2¹⁵ vibrations/s)</div>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4">
-              <div className="text-3xl font-bold mb-1">±15s</div>
-              <div className="text-xs font-medium opacity-80">Précision mensuelle</div>
+            <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+              <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">±15s</div>
+              <div className="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-0.5">Précision / Mois</div>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4">
-              <div className="text-3xl font-bold mb-1">2-5</div>
-              <div className="text-xs font-medium opacity-80">Ans (durée pile)</div>
+            <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+              <div className="text-2xl font-black text-amber-600 dark:text-amber-400 font-mono">2 - 5</div>
+              <div className="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-0.5">Ans d&apos;Autonomie Pile</div>
             </div>
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4">
-              <div className="text-3xl font-bold mb-1">75%</div>
-              <div className="text-xs font-medium opacity-80">Production mondiale</div>
+            <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+              <div className="text-2xl font-black text-purple-600 dark:text-purple-400 font-mono">75%</div>
+              <div className="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-0.5">Production Mondiale</div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CONTENU */}
-      <article className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
-        {/* SECTION 1: DÉFINITION */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            Qu'est-ce qu'un Mouvement à Quartz ?
-          </h2>
-
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 border border-slate-200 dark:border-slate-700">
-            <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
-              Un <strong className="text-slate-900 dark:text-slate-100">mouvement à quartz</strong> utilise les propriétés 
-              piézoélectriques d'un cristal de quartz pour générer des oscillations électroniques ultra-précises à une 
-              fréquence de <strong className="text-slate-900 dark:text-slate-100">32'768 Hz</strong> (2¹⁵).
-            </p>
-            <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
-              Alimenté par une pile bouton (lithium), un circuit électronique compte ces oscillations et envoie des 
-              impulsions électriques à un moteur pas-à-pas qui fait avancer les aiguilles. Cette technologie offre une 
-              <strong className="text-slate-900 dark:text-slate-100"> précision 100 fois supérieure</strong> aux montres mécaniques traditionnelles.
-            </p>
-            <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
-              Inventé par Seiko et commercialisé en 1969 avec l'Astron, le quartz a déclenché la "crise du quartz" qui 
-              a failli anéantir l'horlogerie mécanique suisse dans les années 1970-80.
+        {/* SECTION 1 : QU'EST-CE QU'UN MOUVEMENT À QUARTZ ? */}
+        <section className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mb-12">
+          <div className="max-w-3xl mb-8">
+            <span className="text-xs font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-400 block mb-1">
+              Fondements Physiques
+            </span>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+              Qu&apos;est-ce qu&apos;un Mouvement à Quartz ?
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">
+              Un <strong>mouvement à quartz</strong> utilise les propriétés piézoélectriques d&apos;un cristal de quartz synthétique taillé en forme de minuscule diapason. Alimenté par une pile bouton (lithium ou oxyde d&apos;argent), un circuit électronique stimule le cristal qui vibre à une fréquence ultra-stable de <strong>32&apos;768 Hz</strong>. Cette régularité permet une précision <strong>100 fois supérieure</strong> à celle des calibres mécaniques traditionnels.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all">
-              <div className="bg-cyan-100 dark:bg-cyan-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <Zap className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+              <div className="w-10 h-10 rounded-xl bg-cyan-100 dark:bg-cyan-950 flex items-center justify-center text-cyan-600 dark:text-cyan-400 mb-3 font-bold">
+                <Zap className="w-5 h-5" />
               </div>
-              <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Effet Piézoélectrique</h4>
-              <p className="text-slate-700 dark:text-slate-300 text-sm">
-                Le quartz génère une tension électrique lorsqu'il est comprimé, et se déforme sous tension électrique
+              <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1.5">Effet Piézoélectrique</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Le quartz (SiO₂) se déforme lorsqu&apos;il reçoit une tension électrique, et produit inversement un signal lorsqu&apos;il est comprimé.
               </p>
             </div>
 
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all">
-              <div className="bg-blue-100 dark:bg-blue-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <Timer className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+            <div className="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+              <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-3 font-bold">
+                <Clock className="w-5 h-5" />
               </div>
-              <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Précision Absolue</h4>
-              <p className="text-slate-700 dark:text-slate-300 text-sm">
-                Oscillation stable à 32'768 Hz permet une précision de ±15 secondes par mois
+              <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1.5">Précision Absolue</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Oscillation constante à 32&apos;768 Hz garantissant un écart standard inférieur à ±15 secondes par mois dans un environnement normal.
               </p>
             </div>
 
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all">
-              <div className="bg-green-100 dark:bg-green-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <Battery className="w-6 h-6 text-green-600 dark:text-green-400" />
+            <div className="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+              <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-3 font-bold">
+                <Battery className="w-5 h-5" />
               </div>
-              <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Autonomie Longue</h4>
-              <p className="text-slate-700 dark:text-slate-300 text-sm">
-                Une pile bouton alimente le mouvement pendant 2 à 5 ans sans intervention
+              <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1.5">Autonomie Continue</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                Une pile bouton compacte assure une marche ininterrompue de 2 à 5 ans sans nécessiter aucun remontage manuel ni automatique.
               </p>
             </div>
           </div>
         </section>
 
-        {/* SECTION 2: FONCTIONNEMENT */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            Fonctionnement du Quartz Piézoélectrique
-          </h2>
+        {/* SECTION 2 : FONCTIONNEMENT TECHNIQUE & LE SECRET DES 32'768 HZ */}
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12 items-start">
+          
+          <div className="lg:col-span-7 bg-white dark:bg-slate-900 p-6 sm:p-7 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 block mb-1">
+              Cinématique & Électronique
+            </span>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-4">
+              La Chaîne de Fonctionnement
+            </h2>
 
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Effet Piézoélectrique</h3>
-              <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
-                Le <strong className="text-slate-900 dark:text-slate-100">quartz</strong> (dioxyde de silicium SiO₂) 
-                possède une propriété physique unique : lorsqu'on lui applique une tension électrique, il se déforme. 
-                Inversement, si on le comprime, il génère une tension électrique.
-              </p>
-              <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                Un circuit électronique alimenté par pile crée un champ électrique qui fait vibrer le cristal de quartz 
-                à sa <strong className="text-slate-900 dark:text-slate-100">fréquence de résonance naturelle : 32'768 Hz</strong> 
-                (oscillations par seconde).
-              </p>
-            </div>
-
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Circuit Électronique</h3>
-              <ul className="space-y-3 text-slate-700 dark:text-slate-300">
-                <li className="flex items-start">
-                  <span className="text-cyan-600 dark:text-cyan-400 mr-2 flex-shrink-0">•</span>
-                  <span><strong className="text-slate-900 dark:text-slate-100">Oscillateur</strong> : fait vibrer le quartz à 32'768 Hz</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-cyan-600 dark:text-cyan-400 mr-2 flex-shrink-0">•</span>
-                  <span><strong className="text-slate-900 dark:text-slate-100">Diviseur de fréquence</strong> : divise par 32'768 pour obtenir 1 Hz</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-cyan-600 dark:text-cyan-400 mr-2 flex-shrink-0">•</span>
-                  <span><strong className="text-slate-900 dark:text-slate-100">Moteur pas-à-pas</strong> : fait avancer l'aiguille d'un cran par seconde</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-cyan-600 dark:text-cyan-400 mr-2 flex-shrink-0">•</span>
-                  <span><strong className="text-slate-900 dark:text-slate-100">Démultiplication</strong> : engrenages pour minutes et heures</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-950/30 dark:to-blue-950/30 border-l-4 border-cyan-600 dark:border-cyan-400 p-6 rounded-r-lg">
-            <h4 className="text-lg font-bold text-cyan-900 dark:text-cyan-300 mb-3 flex items-center">
-              <AlertCircle className="w-5 h-5 mr-2" />
-              Pourquoi 32'768 Hz ?
-            </h4>
-            <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-              32'768 = 2¹⁵. Cette puissance de 2 permet de diviser facilement par 15 étages de diviseurs binaires pour 
-              obtenir exactement 1 Hz (1 impulsion par seconde). C'est un compromis optimal entre précision et consommation énergétique : 
-              fréquence assez élevée pour être précise, mais pas trop pour épuiser rapidement la pile.
-            </p>
-          </div>
-        </section>
-
-        {/* SECTION 3: COMPARAISON INTERACTIVE */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6 text-center">
-            Quartz vs Mécanique : Le Duel
-          </h2>
-
-          <p className="text-lg text-slate-700 dark:text-slate-300 mb-6 text-center leading-relaxed">
-            Cliquez sur chaque critère pour comparer en détail les deux technologies :
-          </p>
-
-          <div className="grid gap-4">
-            {comparisons.map((comp) => (
-              <div key={comp.id}>
-                <div
-                  onClick={() => setSelectedComparison(selectedComparison === comp.id ? '' : comp.id)}
-                  className={`bg-white dark:bg-slate-800 rounded-xl border-2 p-6 cursor-pointer transition-all ${
-                    selectedComparison === comp.id
-                      ? 'border-cyan-600 dark:border-cyan-400 shadow-lg'
-                      : 'border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-cyan-400 dark:hover:border-cyan-500'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-xl font-bold text-slate-900 dark:text-white">{comp.title}</h4>
-                    {selectedComparison === comp.id && (
-                      <CheckCircle2 className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
-                    )}
-                  </div>
-                  
-                  <div className="grid md:grid-cols-2 gap-4 mt-4">
-                    <div className={`p-4 rounded-lg ${comp.winner === 'quartz' ? 'bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800' : 'bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700'}`}>
-                      <p className="text-sm font-bold text-cyan-700 dark:text-cyan-400 mb-1">⚡ Quartz</p>
-                      <p className="text-slate-900 dark:text-slate-100 font-semibold">{comp.quartz}</p>
-                    </div>
-                    <div className={`p-4 rounded-lg ${comp.winner === 'mecanique' ? 'bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800' : 'bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700'}`}>
-                      <p className="text-sm font-bold text-orange-700 dark:text-orange-400 mb-1">⚙️ Mécanique</p>
-                      <p className="text-slate-900 dark:text-slate-100 font-semibold">{comp.mecanique}</p>
-                    </div>
-                  </div>
+            <div className="space-y-4 text-xs sm:text-sm">
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex items-start gap-3.5">
+                <span className="w-7 h-7 rounded-lg bg-cyan-500 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">1</span>
+                <div>
+                  <h4 className="font-bold text-slate-900 dark:text-white">Alimentation & Oscillateur</h4>
+                  <p className="text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">
+                    La pile bouton alimente un circuit intégré qui injecte des impulsions électriques dans le cristal de quartz sous vide, le maintenant en résonance continue à 32&apos;768 Hz.
+                  </p>
                 </div>
+              </div>
 
-                {selectedComparison === comp.id && (
-                  <div className="mt-3 bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-950/30 dark:to-blue-950/30 rounded-xl p-6 border-l-4 border-cyan-600 dark:border-cyan-400">
-                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                      {comp.details}
-                    </p>
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex items-start gap-3.5">
+                <span className="w-7 h-7 rounded-lg bg-cyan-500 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">2</span>
+                <div>
+                  <h4 className="font-bold text-slate-900 dark:text-white">Diviseur Binaire de Fréquence (Flip-Flops)</h4>
+                  <p className="text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">
+                    Le signal haute fréquence passe par 15 diviseurs binaires successifs (2¹⁵ = 32&apos;768). À chaque étage, la fréquence est divisée par deux pour aboutir exactement à <strong>1 Hz</strong> (une impulsion par seconde).
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex items-start gap-3.5">
+                <span className="w-7 h-7 rounded-lg bg-cyan-500 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">3</span>
+                <div>
+                  <h4 className="font-bold text-slate-900 dark:text-white">Moteur Pas-à-Pas (Type Lavet)</h4>
+                  <p className="text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">
+                    L&apos;impulsion de 1 Hz alimente une bobine micromécanique qui inverse son champ magnétique et fait faire un demi-tour au rotor aimanté à chaque seconde, produisant le saut franc caractéristique de la trotteuse.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex items-start gap-3.5">
+                <span className="w-7 h-7 rounded-lg bg-cyan-500 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">4</span>
+                <div>
+                  <h4 className="font-bold text-slate-900 dark:text-white">Rouage de Démultiplication Horloger</h4>
+                  <p className="text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">
+                    Un rouage miniature d&apos;engrenages démultiplie la rotation de la roue des secondes pour entraîner la roue des minutes (1 tour/h) et la roue des heures (1 tour/12h).
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-5 bg-gradient-to-br from-amber-500/10 via-slate-100 to-cyan-500/10 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-7 rounded-2xl border border-amber-500/30 dark:border-amber-500/30 shadow-md">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 mb-2">
+              <Sparkles className="w-4 h-4" />
+              <span>Le Secret Mathématique</span>
+            </div>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 font-serif">
+              Pourquoi 32&apos;768 Hz ?
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
+              Le nombre <strong>32&apos;768</strong> n&apos;a pas été choisi par hasard : c&apos;est exactement <strong>2¹⁵</strong> (2 multiplié par lui-même 15 fois).
+            </p>
+
+            <div className="p-3.5 rounded-xl bg-white/80 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 mb-4 font-mono text-xs text-center text-slate-800 dark:text-slate-200">
+              32&apos;768 Hz ÷ 2¹⁵ = 1.000000 Hz
+            </div>
+
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              En microélectronique binaire, diviser une fréquence par 2 est une opération ultra-simple ne nécessitant qu&apos;une bascule logique (flip-flop). 32&apos;768 Hz représente l&apos;équilibre physique parfait :
+            </p>
+            <ul className="mt-3 space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-500 font-bold">✓</span>
+                <span>Assez haut pour être inaudible à l&apos;oreille humaine (&gt; 20 kHz)</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-500 font-bold">✓</span>
+                <span>Assez haut pour garantir une immunité aux chocs mécaniques</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-emerald-500 font-bold">✓</span>
+                <span>Assez bas pour consommer moins d&apos;un microampère de courant</span>
+              </li>
+            </ul>
+          </div>
+
+        </section>
+
+        {/* SECTION 3 : LE DUEL : QUARTZ VS MÉCANIQUE */}
+        <section className="mb-12">
+          <div className="text-center max-w-2xl mx-auto mb-8">
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 block mb-1">
+              Analyse Comparative
+            </span>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+              Quartz vs Mécanique : Le Face-à-Face
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
+              Comparatif technique des points forts respectifs des calibres à résonateur et des mouvements à ancre suisse.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {COMPARISONS.map((item) => (
+              <div
+                key={item.id}
+                className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-base font-bold text-slate-900 dark:text-white">{item.title}</h4>
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                        item.winner === "quartz"
+                          ? "bg-cyan-100 text-cyan-800 dark:bg-cyan-950 dark:text-cyan-300"
+                          : "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
+                      }`}
+                    >
+                      Avantage {item.winner === "quartz" ? "⚡ Quartz" : "⚙️ Mécanique"}
+                    </span>
                   </div>
-                )}
+                  <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
+                    <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+                      <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block">⚡ Quartz</span>
+                      <span className="font-bold text-cyan-700 dark:text-cyan-400">{item.quartz}</span>
+                    </div>
+                    <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+                      <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block">⚙️ Mécanique</span>
+                      <span className="font-bold text-amber-700 dark:text-amber-400">{item.mecanique}</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    {item.details}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* SECTION 4: CRISE DU QUARTZ */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            La Crise du Quartz (1970-1985)
-          </h2>
-
-          <div className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30 rounded-2xl p-8 mb-6 border-l-4 border-red-600 dark:border-red-400">
-            <div className="flex items-start mb-4">
-              <TrendingDown className="w-8 h-8 text-red-600 dark:text-red-400 mr-4 flex-shrink-0" />
-              <h3 className="text-2xl font-bold text-red-900 dark:text-red-300">
-                L'Effondrement de l'Horlogerie Suisse
-              </h3>
+        {/* SECTION 4 : LA CRISE DU QUARTZ & LA RENAISSANCE SUISSE */}
+        <section className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mb-12">
+          <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-rose-700 dark:text-rose-400 block mb-1">
+                Histoire Horlogère
+              </span>
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+                La Crise du Quartz (1970–1985) & La Renaissance Suisse
+              </h2>
             </div>
-            <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
-              En <strong className="text-slate-900 dark:text-slate-100">1969</strong>, Seiko commercialise l'Astron, 
-              première montre-bracelet à quartz au monde. Son prix astronomique (1'250 USD, équivalent d'une Toyota Corolla) 
-              n'empêche pas son succès. La précision ±5 secondes/mois révolutionne l'horlogerie.
-            </p>
-            <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
-              Dans les années 1970, la production de masse fait chuter les prix. Des montres quartz précises à 20 USD 
-              inondent le marché. L'horlogerie suisse, dominée par le mécanique coûteux, s'effondre : 
-              <strong className="text-slate-900 dark:text-slate-100"> 50'000 emplois perdus</strong>, nombreuses faillites 
-              (passant de 90'000 à 30'000 emplois entre 1970 et 1985).
-            </p>
-            <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-              Paradoxalement, cette crise force l'horlogerie suisse à se repositionner sur le 
-              <strong className="text-slate-900 dark:text-slate-100"> luxe et l'émotion</strong> plutôt que la précision pure. 
-              Renaissance dans les années 1990 avec retour du mécanique haut de gamme et stratégie marketing axée sur 
-              le savoir-faire artisanal.
-            </p>
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300 border border-rose-300/40">
+              Choc Historique
+            </span>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
-              <p className="text-sm font-bold text-red-700 dark:text-red-400 mb-2">📉 Emplois Perdus</p>
-              <p className="text-3xl font-bold text-slate-900 dark:text-white mb-1">50'000</p>
-              <p className="text-sm text-slate-600 dark:text-slate-400">Entre 1970 et 1985</p>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+              <h4 className="font-bold text-slate-900 dark:text-white mb-2">1. L&apos;Onde de Choc (1969)</h4>
+              <p>
+                Le 25 décembre 1969, Seiko dévoile l&apos;Astron 35SQ à Tokyo. Dès le début des années 70, la production de masse à bas coût inonde le marché avec des montres d&apos;une précision diabolique vendues quelques dollars.
+              </p>
             </div>
-            <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
-              <p className="text-sm font-bold text-orange-700 dark:text-orange-400 mb-2">🏭 Manufactures Fermées</p>
-              <p className="text-3xl font-bold text-slate-900 dark:text-white mb-1">1'000+</p>
-              <p className="text-sm text-slate-600 dark:text-slate-400">Faillites en cascade</p>
+
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+              <h4 className="font-bold text-slate-900 dark:text-white mb-2">2. Le Séisme Helvétique</h4>
+              <p>
+                Les manufactures suisses, fidèles au calibre mécanique traditionnel, subissent une débâcle sans précédent : plus de 50&apos;000 emplois horlogers perdus (passant de 90&apos;000 à 30&apos;000) et des centaines d&apos;ateliers fermés.
+              </p>
             </div>
-            <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
-              <p className="text-sm font-bold text-green-700 dark:text-green-400 mb-2">📈 Renaissance</p>
-              <p className="text-3xl font-bold text-slate-900 dark:text-white mb-1">1990s</p>
-              <p className="text-sm text-slate-600 dark:text-slate-400">Retour du mécanique</p>
+
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+              <h4 className="font-bold text-slate-900 dark:text-white mb-2">3. La Renaissance dans le Luxe</h4>
+              <p>
+                Sous l&apos;impulsion de Nicolas Hayek (fondation de la Swatch en 1983) et le repositionnement des grandes maisons sur l&apos;artisanat d&apos;exception, l&apos;horlogerie suisse s&apos;est réinventée en objet d&apos;émotion et de prestige.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
+            <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/40">
+              <div className="text-xl font-bold text-rose-700 dark:text-rose-400">-50&apos;000</div>
+              <div className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 mt-0.5">Emplois perdus en Suisse</div>
+            </div>
+            <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/40">
+              <div className="text-xl font-bold text-rose-700 dark:text-rose-400">~60%</div>
+              <div className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 mt-0.5">Des ateliers fermés</div>
+            </div>
+            <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/40">
+              <div className="text-xl font-bold text-emerald-700 dark:text-emerald-400">N°1 Mondial</div>
+              <div className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 mt-0.5">En valeur exportée aujourd&apos;hui</div>
             </div>
           </div>
         </section>
 
-        {/* SECTION 5: GRAND SEIKO */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6 text-center">
-            Grand Seiko : L'Excellence Quartz Japonaise
-          </h2>
-
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-2xl p-8 text-white mb-6">
-            <h3 className="text-2xl font-bold mb-4 text-blue-100 dark:text-blue-200">
-              Calibre 9F : Quand le Quartz Devient Haute Horlogerie
-            </h3>
-            <p className="text-lg leading-relaxed text-blue-100 dark:text-blue-200 mb-4">
-              Lancé en 1993, le calibre <strong>9F</strong> de Grand Seiko redéfinit le quartz haut de gamme. 
-              Contrairement au quartz standard produit en masse, chaque composant est assemblé et réglé à la main 
-              par des horlogers experts formés pendant des années.
-            </p>
+        {/* SECTION 5 : GRAND SEIKO CALIBRE 9F */}
+        <section className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-white to-amber-50/50 dark:from-slate-900 dark:to-slate-900 border border-amber-300 dark:border-amber-500/30 shadow-md mb-12">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 mb-2">
+            <Award className="w-4 h-4" />
+            <span>Sommet de la Précision Mondiale</span>
           </div>
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2 font-serif">
+            Grand Seiko Calibre 9F : Quand le Quartz Devient Haute Horlogerie
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-6 max-w-3xl leading-relaxed">
+            Créé en 1993, le calibre 9F prouve qu&apos;un mouvement à quartz peut rivaliser avec les plus grands calibres mécaniques en matière d&apos;artisanat et de noblesse mécanique.
+          </p>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
-              <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Performances Exceptionnelles</h4>
-              <ul className="space-y-3 text-slate-700 dark:text-slate-300">
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 mr-2 flex-shrink-0 mt-0.5" />
-                  <span><strong className="text-slate-900 dark:text-slate-100">Précision ±10 sec/an</strong> : 120× plus précis que mécanique</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs sm:text-sm">
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+              <h4 className="font-bold text-amber-700 dark:text-amber-400 mb-3 flex items-center gap-2">
+                <span>⚡</span> Performances Hors Normes
+              </h4>
+              <ul className="space-y-2 text-slate-700 dark:text-slate-300">
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-500 font-bold">•</span>
+                  <span><strong>Précision ±10 sec/an :</strong> cristaux de quartz vieillis pendant 3 mois et thermo-compensés 540 fois par jour.</span>
                 </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 mr-2 flex-shrink-0 mt-0.5" />
-                  <span><strong className="text-slate-900 dark:text-slate-100">Démarrage instantané</strong> : aiguille saute à 12h en 0,1 seconde</span>
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-500 font-bold">•</span>
+                  <span><strong>Double impulsion par seconde :</strong> moteur à couple élevé capable d&apos;animer des aiguilles lourdes et massives.</span>
                 </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 mr-2 flex-shrink-0 mt-0.5" />
-                  <span><strong className="text-slate-900 dark:text-slate-100">Aiguille morte</strong> : battement par seconde sans tremblement</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 mr-2 flex-shrink-0 mt-0.5" />
-                  <span><strong className="text-slate-900 dark:text-slate-100">Couple moteur 5×</strong> : aiguilles épaisses possibles</span>
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-500 font-bold">•</span>
+                  <span><strong>Saut de date instantané :</strong> changement de date en 1/2000ème de seconde via levier à ressort.</span>
                 </li>
               </ul>
             </div>
 
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
-              <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Finitions Haute Horlogerie</h4>
-              <ul className="space-y-3 text-slate-700 dark:text-slate-300">
-                <li className="flex items-start">
-                  <span className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0">•</span>
-                  <span>Ponts perlés et anglés à la main</span>
+            <div className="p-4 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+              <h4 className="font-bold text-amber-700 dark:text-amber-400 mb-3 flex items-center gap-2">
+                <span>🛠️</span> Finitions Haute Horlogerie
+              </h4>
+              <ul className="space-y-2 text-slate-700 dark:text-slate-300">
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-500 font-bold">•</span>
+                  <span><strong>Assemblage 100% Manuel :</strong> chaque calibre est monté et ajusté par un maître horloger au studio Shinshu.</span>
                 </li>
-                <li className="flex items-start">
-                  <span className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0">•</span>
-                  <span>Rotor moteur ajusté individuellement</span>
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-500 font-bold">•</span>
+                  <span><strong>Décoration traditionnelle :</strong> ponts dorés perlés et anglages soignés visibles sous fond saphir.</span>
                 </li>
-                <li className="flex items-start">
-                  <span className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0">•</span>
-                  <span>Double quartz vieilli 3 mois pour stabilité</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0">•</span>
-                  <span>Assemblage 100% manuel (non automatisé)</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0">•</span>
-                  <span>Pile durée 50 ans théorique (record)</span>
+                <li className="flex items-start gap-2">
+                  <span className="text-amber-500 font-bold">•</span>
+                  <span><strong>Cabine scellée (Super Sealed Cabin) :</strong> protège le rouage de la poussière lors du changement de pile pour 50 ans.</span>
                 </li>
               </ul>
             </div>
           </div>
         </section>
 
-        {/* SECTION 6: QUIZ */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            Testez vos Connaissances
-          </h2>
+        {/* SECTION 6 : TESTEZ VOS CONNAISSANCES (QUIZ) */}
+        <section className="max-w-3xl mx-auto mb-16">
+          <div className="text-center mb-8">
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 block mb-1">
+              Auto-Évaluation
+            </span>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+              Quiz : Maîtrisez-vous la Technologie Quartz ?
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
+              4 questions officielles pour valider votre compréhension de l&apos;oscillateur piézoélectrique.
+            </p>
+          </div>
 
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-200 dark:border-slate-700">
-            <div className="mb-6">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                  Progression : {Object.keys(quizAnswers).length} / {quizData.length}
-                </span>
-                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                  {showResults && `Score : ${calculateScore()} / ${quizData.length}`}
-                </span>
-              </div>
-              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-                <div
-                  className="bg-cyan-600 dark:bg-cyan-500 h-2 rounded-full transition-all"
-                  style={{ width: `${(Object.keys(quizAnswers).length / quizData.length) * 100}%` }}
-                />
-              </div>
-            </div>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-xl relative overflow-hidden">
+            {!quizFinished ? (
+              <>
+                <div className="mb-6">
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 mb-2">
+                    <span>
+                      Question {currentQIdx + 1} sur {QUIZ_QUESTIONS.length}
+                    </span>
+                    <span className="text-amber-600 dark:text-amber-400">
+                      Score : {score} / {QUIZ_QUESTIONS.length}
+                    </span>
+                  </div>
+                  <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2">
+                    <div
+                      className="bg-amber-500 h-2 rounded-full transition-all duration-300"
+                      style={{
+                        width: `${((currentQIdx + 1) / QUIZ_QUESTIONS.length) * 100}%`,
+                      }}
+                    />
+                  </div>
+                </div>
 
-            {quizData.map((q, qIndex) => (
-              <div key={qIndex} className="mb-8 last:mb-0">
-                <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
-                  Question {qIndex + 1} : {q.question}
-                </h4>
-                <div className="space-y-3 mb-4">
-                  {q.options.map((option, oIndex) => {
-                    const isSelected = quizAnswers[qIndex] === oIndex.toString();
-                    const isCorrect = oIndex === q.correct;
-                    const showAnswer = showResults && isSelected;
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-6 leading-relaxed">
+                  {QUIZ_QUESTIONS[currentQIdx].question}
+                </h3>
+
+                <div className="space-y-3 mb-6">
+                  {QUIZ_QUESTIONS[currentQIdx].options.map((opt, optIdx) => {
+                    const isSelected = selectedOption === optIdx;
+                    const isCorrect = optIdx === QUIZ_QUESTIONS[currentQIdx].correctAnswer;
+
+                    let btnStyle =
+                      "bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-amber-400";
+
+                    if (showExplanation) {
+                      if (isCorrect) {
+                        btnStyle =
+                          "border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-bold";
+                      } else if (isSelected) {
+                        btnStyle =
+                          "border-2 border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200 font-medium";
+                      } else {
+                        btnStyle =
+                          "border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900/40 text-slate-400 dark:text-slate-600 opacity-50";
+                      }
+                    }
 
                     return (
                       <button
-                        key={oIndex}
-                        onClick={() => handleQuizAnswer(qIndex, oIndex)}
-                        disabled={showResults}
-                        className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
-                          showAnswer && isCorrect
-                            ? 'border-green-500 dark:border-green-600 bg-green-50 dark:bg-green-950/30'
-                            : showAnswer && !isCorrect
-                            ? 'border-red-500 dark:border-red-600 bg-red-50 dark:bg-red-950/30'
-                            : isSelected
-                            ? 'border-cyan-600 dark:border-cyan-400 bg-cyan-50 dark:bg-cyan-950/30'
-                            : 'border-slate-200 dark:border-slate-700 hover:border-cyan-400 dark:hover:border-cyan-500 hover:bg-cyan-50 dark:hover:bg-cyan-950/30'
-                        }`}
+                        key={optIdx}
+                        disabled={showExplanation}
+                        onClick={() => handleSelectOption(optIdx)}
+                        className={`w-full text-left p-3.5 rounded-xl border transition-all text-xs sm:text-sm font-medium flex items-center justify-between ${btnStyle}`}
                       >
-                        <span className="text-slate-900 dark:text-slate-100">{option}</span>
-                        {showAnswer && isCorrect && (
-                          <CheckCircle2 className="inline-block ml-2 w-5 h-5 text-green-600 dark:text-green-400" />
-                        )}
-                        {showAnswer && !isCorrect && (
-                          <XCircle className="inline-block ml-2 w-5 h-5 text-red-600 dark:text-red-400" />
+                        <div className="flex items-center gap-3">
+                          <span className="w-6 h-6 rounded-md bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-xs font-bold font-mono text-slate-600 dark:text-slate-400">
+                            {["A", "B", "C", "D"][optIdx]}
+                          </span>
+                          <span>{opt}</span>
+                        </div>
+                        {showExplanation && (
+                          <span>
+                            {isCorrect ? (
+                              <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                            ) : isSelected ? (
+                              <XCircle className="w-5 h-5 text-rose-500" />
+                            ) : null}
+                          </span>
                         )}
                       </button>
                     );
                   })}
                 </div>
-                {showResults && quizAnswers[qIndex] !== undefined && (
-                  <div className="bg-cyan-50 dark:bg-cyan-950/30 border-l-4 border-cyan-600 dark:border-cyan-400 p-4 rounded-r-lg">
-                    <p className="text-sm text-slate-700 dark:text-slate-300">
-                      <strong className="text-cyan-900 dark:text-cyan-300">Explication :</strong> {q.explanation}
-                    </p>
+
+                {showExplanation && (
+                  <div
+                    className={`p-4 rounded-xl border text-xs sm:text-sm mb-6 transition-all ${
+                      selectedOption === QUIZ_QUESTIONS[currentQIdx].correctAnswer
+                        ? "border-emerald-300 dark:border-emerald-800 bg-emerald-50/80 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200"
+                        : "border-rose-300 dark:border-rose-800 bg-rose-50/80 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200"
+                    }`}
+                  >
+                    <div className="font-bold mb-1">
+                      {selectedOption === QUIZ_QUESTIONS[currentQIdx].correctAnswer
+                        ? "✓ Excellente réponse !"
+                        : "✕ Réponse incorrecte"}
+                    </div>
+                    <div>{QUIZ_QUESTIONS[currentQIdx].explanation}</div>
                   </div>
                 )}
-              </div>
-            ))}
 
-            {Object.keys(quizAnswers).length === quizData.length && !showResults && (
-              <button
-                onClick={() => setShowResults(true)}
-                className="w-full bg-cyan-600 dark:bg-cyan-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-cyan-700 dark:hover:bg-cyan-600 transition-colors"
-              >
-                Voir les Résultats
-              </button>
-            )}
-
-            {showResults && (
-              <div className="mt-6 p-6 bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-950/30 dark:to-blue-950/30 rounded-xl">
-                <p className="text-center text-xl font-bold text-slate-900 dark:text-white">
-                  {calculateScore() === quizData.length
-                    ? '🎉 Parfait ! Vous maîtrisez la révolution quartz !'
-                    : calculateScore() >= quizData.length / 2
-                    ? '👍 Bon travail ! Continuez à apprendre !'
-                    : '📚 Relisez le cours pour mieux comprendre !'}
+                {showExplanation && (
+                  <div className="flex justify-end">
+                    <button
+                      onClick={handleNextQuestion}
+                      className="px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-400 dark:text-slate-950 transition-all shadow-md"
+                    >
+                      {currentQIdx === QUIZ_QUESTIONS.length - 1
+                        ? "Voir les résultats 🏆"
+                        : "Question suivante →"}
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="text-center py-6">
+                <div className="text-5xl mb-3">
+                  {score === 4 ? "🎉" : score >= 2 ? "👏" : "📚"}
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">
+                  Quiz Terminé !
+                </h3>
+                <p className="text-lg font-bold text-amber-600 dark:text-amber-400 mb-2">
+                  {score} / {QUIZ_QUESTIONS.length}
                 </p>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto mb-6">
+                  {score === 4
+                    ? "Score Parfait ! Vous maîtrisez parfaitement la physique du quartz et l'histoire horlogère suisse."
+                    : score >= 2
+                    ? "Bon résultat ! Relisez les détails sur la fréquence 32'768 Hz pour atteindre la perfection."
+                    : "Prenez le temps de relire la fiche théorique et réessayez pour progresser !"}
+                </p>
+                <button
+                  onClick={handleRestartQuiz}
+                  className="px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-400 dark:text-slate-950 transition-all shadow-md inline-flex items-center gap-2"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  <span>Recommencer le quiz</span>
+                </button>
               </div>
             )}
           </div>
         </section>
 
-        {/* NAVIGATION */}
-        <div className="mt-16 pt-8 border-t border-slate-200 dark:border-slate-700">
-          <Link 
-            href="/theorie/technologies" 
-            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium text-lg"
-          >
-            <ChevronLeft className="w-5 h-5 mr-1" />
-            Retour aux Technologies
-          </Link>
-        </div>
-      </article>
-
-      {/* FOOTER */}
-      <footer className="bg-slate-900 dark:bg-slate-950 text-slate-300 py-8 mt-16">
-        <div className="max-w-5xl mx-auto px-4 text-center">
-          <p className="text-sm">
-            © 2025 HorloLearn - Formation en Horlogerie Suisse
-          </p>
-        </div>
-      </footer>
+      </main>
     </div>
   );
 }
