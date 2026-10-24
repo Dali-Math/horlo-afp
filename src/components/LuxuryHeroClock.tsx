@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 
 export default function LuxuryHeroClock() {
   const [mounted, setMounted] = useState(false);
+  const [isDark, setIsDark] = useState(true);
   const [digitalTime, setDigitalTime] = useState('--:--:--');
   const [siderealTime, setSiderealTime] = useState('--:--:--');
   const [currentDate, setCurrentDate] = useState(24);
@@ -23,6 +24,32 @@ export default function LuxuryHeroClock() {
   useEffect(() => {
     setMounted(true);
     let animationFrameId: number;
+
+    // Détection du thème initial et observation en temps réel du changement de mode (sombre / clair)
+    const checkTheme = () => {
+      if (typeof document !== 'undefined') {
+        const hasDark = document.documentElement.classList.contains('dark');
+        setIsDark(hasDark);
+      }
+    };
+
+    checkTheme();
+
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.attributeName === 'class') {
+          checkTheme();
+        }
+      }
+    });
+
+    if (typeof document !== 'undefined') {
+      observer.observe(document.documentElement, { attributes: true });
+    }
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleMedia = () => checkTheme();
+    mediaQuery.addEventListener('change', handleMedia);
 
     // Calcul astronomique de la phase lunaire réelle (Cycle synodique 29.53058867 jours)
     const computeMoonPhase = () => {
@@ -103,7 +130,7 @@ export default function LuxuryHeroClock() {
       setDigitalTime(now.toLocaleTimeString('fr-FR'));
       setCurrentDate(now.getDate());
 
-      // Approximation Heure Sidérale de Genève (UTC + ~4.2 minutes d'avance sidérale)
+      // Heure Sidérale de Genève (UTC + ~4.2 minutes d'avance sidérale)
       const utcSeconds = now.getUTCHours() * 3600 + now.getUTCMinutes() * 60 + now.getUTCSeconds();
       const siderealOffset = 4.38 * 3600; // Constante méridien de référence
       const totalSidereal = (utcSeconds + siderealOffset) % 86400;
@@ -121,6 +148,8 @@ export default function LuxuryHeroClock() {
     return () => {
       cancelAnimationFrame(animationFrameId);
       clearInterval(timer);
+      observer.disconnect();
+      mediaQuery.removeEventListener('change', handleMedia);
     };
   }, []);
 
@@ -129,7 +158,7 @@ export default function LuxuryHeroClock() {
       
       {/* 1. SPHÈRE CÉLESTE & ASTROLABE EN ARRIÈRE-PLAN (Gravure or discrète) */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-35 dark:opacity-45 overflow-visible">
-        <svg viewBox="0 0 700 700" className="w-full h-full max-w-[680px]">
+        <svg viewBox="0 0 700 700" className="w-full h-full max-w-[740px]">
           <circle cx="350" cy="350" r="320" fill="none" stroke="#D4AF37" strokeWidth="0.8" strokeDasharray="2,4" />
           <circle cx="350" cy="350" r="280" fill="none" stroke="#D4AF37" strokeWidth="1.2" />
           <circle cx="350" cy="350" r="240" fill="none" stroke="#9C7723" strokeWidth="0.8" strokeDasharray="4,8" />
@@ -156,16 +185,16 @@ export default function LuxuryHeroClock() {
       {/* 2. AGENCEMENT DU GARDE-TEMPS & DE LA COMPLICATION CÉLESTE */}
       <div className="relative z-10 w-full flex flex-col xl:flex-row items-center justify-center gap-6 lg:gap-8">
         
-        {/* LE GARDE-TEMPS COMPLET DE MANUFACTURE */}
+        {/* LE GARDE-TEMPS COMPLET DE MANUFACTURE AGRANDI */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative flex justify-center items-center scale-95 sm:scale-100 drop-shadow-[0_25px_45px_rgba(0,0,0,0.9)]"
+          className="relative flex justify-center items-center drop-shadow-[0_30px_60px_rgba(0,0,0,0.85)]"
         >
           <svg
             viewBox="0 0 560 680"
-            className="w-full h-full max-w-[340px] sm:max-w-[380px] lg:max-w-[420px] overflow-visible"
+            className="w-full h-full max-w-[360px] sm:max-w-[430px] md:max-w-[470px] lg:max-w-[490px] xl:max-w-[480px] 2xl:max-w-[530px] overflow-visible transition-all duration-300"
             role="img"
             aria-label={mounted ? `Chronomètre Haute Horlogerie Suisse. Il est ${digitalTime}` : 'Garde-Temps HorloLearn'}
           >
@@ -208,23 +237,66 @@ export default function LuxuryHeroClock() {
                 <stop offset="100%" stopColor="#0A101D" />
               </radialGradient>
 
-              {/* Bracelet en Cuir d'Alligator cousu main */}
-              <pattern id="celAlligator" width="28" height="24" patternUnits="userSpaceOnUse">
-                <rect width="28" height="24" fill="#12151D" />
-                <path d="M0,0 L28,0 L26,22 L0,24 Z" fill="#0E1017" stroke="#1C212E" strokeWidth="1" />
-                <path d="M4,4 Q14,2 24,5 Q23,19 13,20 Q3,18 4,4 Z" fill="#151922" stroke="#252C3D" strokeWidth="0.5" />
+              {/* BRACELETS ALLIGATOR HAUTE VISIBILITÉ ADAPTATIFS */}
+              
+              {/* Mode Sombre : Bleu Nuit Saphir Royal */}
+              <pattern id="celAlligatorDark" width="30" height="26" patternUnits="userSpaceOnUse">
+                <rect width="30" height="26" fill="#182235" />
+                <path d="M0,0 L30,0 L28,24 L0,26 Z" fill="#141C2B" stroke="#26344F" strokeWidth="1.2" />
+                <path d="M4,4 Q15,2 26,5 Q25,20 14,21 Q3,19 4,4 Z" fill="#1C273C" stroke="#36496C" strokeWidth="0.8" />
+                <line x1="5" y1="5" x2="25" y2="6" stroke="#485F8A" strokeWidth="0.6" opacity="0.5" />
               </pattern>
 
-              <linearGradient id="celStrapFadeTop" x1="0%" y1="100%" x2="0%" y2="0%">
-                <stop offset="0%" stopColor="#030712" stopOpacity="0" />
-                <stop offset="70%" stopColor="#030712" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#030712" stopOpacity="1" />
+              {/* Mode Clair : Noir Ébène Manufacture Intense */}
+              <pattern id="celAlligatorLight" width="30" height="26" patternUnits="userSpaceOnUse">
+                <rect width="30" height="26" fill="#12151D" />
+                <path d="M0,0 L30,0 L28,24 L0,26 Z" fill="#0E1017" stroke="#1C212E" strokeWidth="1.2" />
+                <path d="M4,4 Q15,2 26,5 Q25,20 14,21 Q3,19 4,4 Z" fill="#181E2A" stroke="#283345" strokeWidth="0.8" />
+                <line x1="5" y1="5" x2="25" y2="6" stroke="#323F55" strokeWidth="0.6" opacity="0.5" />
+              </pattern>
+
+              {/* Galbe et Éclairage 3D du cuir */}
+              <linearGradient id="celStrapLightingDark" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#0A0E17" stopOpacity="0.75" />
+                <stop offset="8%" stopColor="#2D3B54" stopOpacity="0.6" />
+                <stop offset="25%" stopColor="#1E283A" stopOpacity="0" />
+                <stop offset="75%" stopColor="#1E283A" stopOpacity="0" />
+                <stop offset="92%" stopColor="#2D3B54" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#0A0E17" stopOpacity="0.75" />
               </linearGradient>
 
-              <linearGradient id="celStrapFadeBottom" x1="0%" y1="0%" x2="0%" y2="100%">
+              <linearGradient id="celStrapLightingLight" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#0A0E17" stopOpacity="0.4" />
+                <stop offset="8%" stopColor="#3B4861" stopOpacity="0.6" />
+                <stop offset="25%" stopColor="#1E283A" stopOpacity="0" />
+                <stop offset="75%" stopColor="#1E283A" stopOpacity="0" />
+                <stop offset="92%" stopColor="#3B4861" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#0A0E17" stopOpacity="0.4" />
+              </linearGradient>
+
+              {/* Estompages progressifs doux */}
+              <linearGradient id="celStrapFadeTopDark" x1="0%" y1="100%" x2="0%" y2="0%">
                 <stop offset="0%" stopColor="#030712" stopOpacity="0" />
-                <stop offset="70%" stopColor="#030712" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#030712" stopOpacity="1" />
+                <stop offset="80%" stopColor="#030712" stopOpacity="0.35" />
+                <stop offset="100%" stopColor="#030712" stopOpacity="0.85" />
+              </linearGradient>
+
+              <linearGradient id="celStrapFadeBottomDark" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#030712" stopOpacity="0" />
+                <stop offset="80%" stopColor="#030712" stopOpacity="0.35" />
+                <stop offset="100%" stopColor="#030712" stopOpacity="0.85" />
+              </linearGradient>
+
+              <linearGradient id="celStrapFadeTopLight" x1="0%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
+                <stop offset="80%" stopColor="#FFFFFF" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.9" />
+              </linearGradient>
+
+              <linearGradient id="celStrapFadeBottomLight" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
+                <stop offset="80%" stopColor="#FFFFFF" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.9" />
               </linearGradient>
 
               {/* Cadran Guilloché Clous de Paris */}
@@ -244,19 +316,47 @@ export default function LuxuryHeroClock() {
               </linearGradient>
             </defs>
 
-            {/* 1. BRACELET CUIR D'ALLIGATOR */}
-            <g opacity="0.95">
+            {/* 1. BRACELET CUIR D'ALLIGATOR ADAPTATIF ET SURPIQÛRES OR */}
+            <g opacity="0.98">
               {/* Brin supérieur */}
-              <path d="M 195,150 L 195,20 L 365,20 L 365,150 Z" fill="url(#celAlligator)" />
-              <path d="M 195,150 L 195,20 L 365,20 L 365,150 Z" fill="url(#celStrapFadeTop)" />
-              <line x1="205" y1="150" x2="205" y2="40" stroke="#D4AF37" strokeWidth="1.5" strokeDasharray="5,4" opacity="0.6" />
-              <line x1="355" y1="150" x2="355" y2="40" stroke="#D4AF37" strokeWidth="1.5" strokeDasharray="5,4" opacity="0.6" />
+              <path 
+                d="M 195,150 L 195,15 L 365,15 L 365,150 Z" 
+                fill={isDark ? "url(#celAlligatorDark)" : "url(#celAlligatorLight)"} 
+              />
+              <path 
+                d="M 195,150 L 195,15 L 365,15 L 365,150 Z" 
+                fill={isDark ? "url(#celStrapLightingDark)" : "url(#celStrapLightingLight)"} 
+              />
+              <path 
+                d="M 195,150 L 195,15 L 365,15 L 365,150 Z" 
+                fill={isDark ? "url(#celStrapFadeTopDark)" : "url(#celStrapFadeTopLight)"} 
+              />
+              {/* Liserés de tranche lustrés */}
+              <line x1="195" y1="150" x2="195" y2="15" stroke={isDark ? "#38496B" : "#2A3447"} strokeWidth="1.6" />
+              <line x1="365" y1="150" x2="365" y2="15" stroke={isDark ? "#38496B" : "#2A3447"} strokeWidth="1.6" />
+              {/* Surpiqûres sellier au fil d'or */}
+              <line x1="205" y1="150" x2="205" y2="25" stroke={isDark ? "#F5D78E" : "#D4AF37"} strokeWidth="1.8" strokeDasharray="5,4" opacity="0.9" />
+              <line x1="355" y1="150" x2="355" y2="25" stroke={isDark ? "#F5D78E" : "#D4AF37"} strokeWidth="1.8" strokeDasharray="5,4" opacity="0.9" />
 
               {/* Brin inférieur */}
-              <path d="M 195,490 L 195,660 L 365,660 L 365,490 Z" fill="url(#celAlligator)" />
-              <path d="M 195,490 L 195,660 L 365,660 L 365,490 Z" fill="url(#celStrapFadeBottom)" />
-              <line x1="205" y1="490" x2="205" y2="640" stroke="#D4AF37" strokeWidth="1.5" strokeDasharray="5,4" opacity="0.6" />
-              <line x1="355" y1="490" x2="355" y2="640" stroke="#D4AF37" strokeWidth="1.5" strokeDasharray="5,4" opacity="0.6" />
+              <path 
+                d="M 195,490 L 195,665 L 365,665 L 365,490 Z" 
+                fill={isDark ? "url(#celAlligatorDark)" : "url(#celAlligatorLight)"} 
+              />
+              <path 
+                d="M 195,490 L 195,665 L 365,665 L 365,490 Z" 
+                fill={isDark ? "url(#celStrapLightingDark)" : "url(#celStrapLightingLight)"} 
+              />
+              <path 
+                d="M 195,490 L 195,665 L 365,665 L 365,490 Z" 
+                fill={isDark ? "url(#celStrapFadeBottomDark)" : "url(#celStrapFadeBottomLight)"} 
+              />
+              {/* Liserés de tranche lustrés */}
+              <line x1="195" y1="490" x2="195" y2="665" stroke={isDark ? "#38496B" : "#2A3447"} strokeWidth="1.6" />
+              <line x1="365" y1="490" x2="365" y2="665" stroke={isDark ? "#38496B" : "#2A3447"} strokeWidth="1.6" />
+              {/* Surpiqûres sellier au fil d'or */}
+              <line x1="205" y1="490" x2="205" y2="655" stroke={isDark ? "#F5D78E" : "#D4AF37"} strokeWidth="1.8" strokeDasharray="5,4" opacity="0.9" />
+              <line x1="355" y1="490" x2="355" y2="655" stroke={isDark ? "#F5D78E" : "#D4AF37"} strokeWidth="1.8" strokeDasharray="5,4" opacity="0.9" />
             </g>
 
             {/* 2. CORNES SCULPTÉES DU BOÎTIER (LUGS) */}
@@ -297,8 +397,6 @@ export default function LuxuryHeroClock() {
               {/* 5. CADRAN GUILLOCHÉ CLOUS DE PARIS */}
               <circle cx="280" cy="320" r="172" fill="url(#celClous)" />
               <circle cx="280" cy="320" r="172" fill="none" stroke="#1D2436" strokeWidth="1.5" />
-
-              {/* Rehaut Satiné pour les Index */}
               <circle cx="280" cy="320" r="152" fill="none" stroke="#141824" strokeWidth="26" opacity="0.85" />
               <circle cx="280" cy="320" r="165" fill="none" stroke="#D4AF37" strokeWidth="0.8" opacity="0.4" />
               <circle cx="280" cy="320" r="139" fill="none" stroke="#D4AF37" strokeWidth="0.8" opacity="0.3" />
@@ -495,10 +593,10 @@ export default function LuxuryHeroClock() {
           className="w-full sm:w-64 lg:w-72 flex flex-col gap-3.5 z-20"
         >
           {/* Module Phase de Lune Réaliste */}
-          <div className="p-4 rounded-2xl bg-slate-900/90 dark:bg-slate-950/90 border border-amber-500/35 backdrop-blur-md shadow-2xl transition-all duration-300 hover:border-amber-400">
-            <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 mb-2">
-              <span className="text-amber-400 font-bold flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+          <div className="p-4 rounded-2xl bg-white/90 dark:bg-slate-950/90 border border-slate-200 dark:border-amber-500/35 backdrop-blur-md shadow-xl transition-all duration-300 hover:border-amber-400">
+            <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400 mb-2">
+              <span className="text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400 animate-pulse" />
                 COMPLICATION ASTRONOMIQUE
               </span>
               <span>29.53 JOURS</span>
@@ -534,7 +632,7 @@ export default function LuxuryHeroClock() {
 
             <div className="mt-3 flex items-center justify-between text-xs">
               <span className="font-serif font-bold text-slate-800 dark:text-white">Phase de Lune Réelle</span>
-              <span className="font-mono text-[11px] text-amber-500 dark:text-amber-300 font-semibold">
+              <span className="font-mono text-[11px] text-amber-600 dark:text-amber-300 font-semibold">
                 {mounted ? moonPhaseInfo.name : 'Calcul en cours...'}
               </span>
             </div>
@@ -544,10 +642,10 @@ export default function LuxuryHeroClock() {
           </div>
 
           {/* Équation du Temps */}
-          <div className="p-3.5 rounded-xl bg-slate-900/80 dark:bg-slate-950/80 border border-amber-500/20 backdrop-blur-md">
-            <div className="flex items-center justify-between text-[10px] font-mono text-slate-400">
+          <div className="p-3.5 rounded-xl bg-white/80 dark:bg-slate-950/80 border border-slate-200 dark:border-amber-500/20 backdrop-blur-md shadow-sm">
+            <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400">
               <span>ÉQUATION DU TEMPS</span>
-              <span className="text-amber-400 font-bold">+14 MIN</span>
+              <span className="text-amber-600 dark:text-amber-400 font-bold">+14 MIN</span>
             </div>
             <div className="text-xs font-serif text-slate-700 dark:text-slate-200 mt-1">
               Écart Temps Vrai &amp; Temps Moyen
@@ -555,10 +653,10 @@ export default function LuxuryHeroClock() {
           </div>
 
           {/* Heure Sidérale & Contrôle Genève */}
-          <div className="p-3.5 rounded-xl bg-slate-900/80 dark:bg-slate-950/80 border border-amber-500/20 backdrop-blur-md">
-            <div className="flex items-center justify-between text-[10px] font-mono text-slate-400">
+          <div className="p-3.5 rounded-xl bg-white/80 dark:bg-slate-950/80 border border-slate-200 dark:border-amber-500/20 backdrop-blur-md shadow-sm">
+            <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400">
               <span>HEURE SIDÉRALE GENÈVE</span>
-              <span className="text-amber-400 font-bold font-mono">
+              <span className="text-amber-600 dark:text-amber-400 font-bold font-mono">
                 {mounted ? siderealTime : '--:--:--'}
               </span>
             </div>
@@ -568,9 +666,9 @@ export default function LuxuryHeroClock() {
           </div>
 
           {/* Badge Certification Diurne */}
-          <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-between text-xs font-mono text-amber-500 dark:text-amber-300">
+          <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-between text-xs font-mono text-amber-600 dark:text-amber-300">
             <span className="flex items-center gap-1.5">
-              <span className="text-amber-400">✦</span> CHRONOMÈTRE OFFICIEL
+              <span className="text-amber-500 dark:text-amber-400">✦</span> CHRONOMÈTRE OFFICIEL
             </span>
             <span className="font-bold">{mounted ? digitalTime : '--:--:--'}</span>
           </div>
