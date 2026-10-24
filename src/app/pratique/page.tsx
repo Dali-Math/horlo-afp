@@ -293,6 +293,7 @@ export default function PratiquePage() {
                   {/* Top Bar: Icone + Badge */}
                   <div className="flex items-center justify-between">
                     <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-[#E2B44F]/10 border border-amber-200 dark:border-[#E2B44F]/30 flex items-center justify-center text-[#E2B44F] group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                      {m.iconName === 'Compass' && <Compass className="w-6 h-6" />}
                       {m.iconName === 'Wrench' && <Wrench className="w-6 h-6" />}
                       {m.iconName === 'Layers' && <Layers className="w-6 h-6" />}
                       {m.iconName === 'Zap' && <Zap className="w-6 h-6" />}
