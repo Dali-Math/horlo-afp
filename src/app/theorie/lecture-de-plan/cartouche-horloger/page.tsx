@@ -520,7 +520,7 @@ export default function CartoucheHorlogerPage() {
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-3">
-            Le Cartouche <span className="text-amber-600 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-amber-200 dark:via-amber-400 dark:to-amber-500">Horloger</span>
+            Le Cartouche <span className="text-amber-600 dark:text-amber-400 font-serif">Horloger</span>
           </h1>
 
           <p className="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
@@ -549,14 +549,14 @@ export default function CartoucheHorlogerPage() {
                       onClick={() => setActiveTab(tab.id as TabType)}
                       className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 border ${
                         isActive
-                          ? "bg-white dark:bg-gradient-to-r dark:from-amber-500/20 dark:to-blue-600/30 border-amber-500/80 text-amber-700 dark:text-amber-200 shadow-md"
-                          : "border-transparent text-slate-700 dark:text-slate-400 hover:text-slate-950 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60"
+                          ? "bg-white text-slate-900 border-amber-500 shadow-sm dark:bg-slate-800 dark:text-amber-300 dark:border-amber-400 dark:shadow-[0_4px_18px_rgba(245,158,11,0.25)] font-bold"
+                          : "border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium"
                       }`}
                     >
                       <Icon className={`w-4 h-4 ${tab.color}`} />
                       <span>{tab.label}</span>
                       {tab.count && (
-                        <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-amber-400/20 text-amber-700 dark:text-amber-300 font-mono font-bold">
+                        <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-mono font-bold ${isActive ? "bg-amber-100 text-amber-900 dark:bg-amber-400/20 dark:text-amber-300" : "bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400"}`}
                           {tab.count}
                         </span>
                       )}
