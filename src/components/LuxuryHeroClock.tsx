@@ -230,15 +230,25 @@ export default function LuxuryHeroClock() {
             <circle cx="0" cy="0" r="14" fill="url(#heroGoldBezel)" stroke="#000" strokeWidth="1" />
             <circle cx="0" cy="0" r="8" fill="#1E2333" />
 
-            {/* Trotteuse centrale en acier bleui avec balayage continu */}
-            <g ref={secondHandRef}>
-              <line x1="0" y1="40" x2="0" y2="-200" stroke="url(#heroBluedSteel)" strokeWidth="1.8" strokeLinecap="round" />
-              <circle cx="0" cy="30" r="6" fill="none" stroke="#2563EB" strokeWidth="2" />
-              <line x1="0" y1="-200" x2="0" y2="-215" stroke="#FDE047" strokeWidth="1.5" />
+            {/* Trotteuse centrale Haute Horlogerie complète et parfaitement visible */}
+            <g ref={secondHandRef} style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))' }}>
+              {/* Tige continue or éclatant du contrepoids arrière jusqu'à la pointe */}
+              <line x1="0" y1="46" x2="0" y2="-216" stroke="#FDE047" strokeWidth="1.8" strokeLinecap="round" />
+
+              {/* Pointe effilée haute précision pour le chemin de fer */}
+              <polygon points="-1.5,-208 0,-218 1.5,-208" fill="#FDE047" />
+
+              {/* Bague circulaire d'équilibrage du contrepoids arrière */}
+              <circle cx="0" cy="30" r="6" fill="#141721" stroke="#FDE047" strokeWidth="1.8" />
+              <circle cx="0" cy="30" r="2.5" fill="#E2B44F" />
+
+              {/* Queue effilée du contrepoids */}
+              <polygon points="-1,42 0,50 1,42" fill="#FDE047" />
             </g>
 
-            {/* Coiffe centrale miroir dorée */}
-            <circle cx="0" cy="0" r="5" fill="#E2B44F" stroke="#FFFFFF" strokeWidth="1" />
+            {/* Coiffe centrale miroir dorée & cabochon rubis */}
+            <circle cx="0" cy="0" r="5.5" fill="#E2B44F" stroke="#FDE047" strokeWidth="1.2" />
+            <circle cx="0" cy="0" r="2" fill="#E11D48" />
           </g>
         </svg>
       </div>
