@@ -556,7 +556,7 @@ export default function CartoucheHorlogerPage() {
                       <Icon className={`w-4 h-4 ${tab.color}`} />
                       <span>{tab.label}</span>
                       {tab.count && (
-                        <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-mono font-bold ${isActive ? "bg-amber-100 text-amber-900 dark:bg-amber-400/20 dark:text-amber-300" : "bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400"}`}
+                        <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-mono font-bold ${isActive ? "bg-amber-100 text-amber-900 dark:bg-amber-400/20 dark:text-amber-300" : "bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400"}`}>
                           {tab.count}
                         </span>
                       )}
