@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Wrench,
   Clock,
@@ -11,20 +11,110 @@ import {
   FileText,
   Award,
   Hammer,
-  ShieldCheck,
-  CheckCircle2,
   ChevronRight,
   ArrowRight,
-  ExternalLink,
-  RotateCcw,
-  BookOpen,
   Compass,
   Layers,
-  Zap
+  Zap,
+  CheckCircle2,
+  Sliders,
+  ShieldCheck,
+  Sparkles,
+  Gauge
 } from 'lucide-react';
 import Flashcards6497 from '@/components/Flashcards6497';
 
 // --- DATA STRUCTURES ---
+
+interface StationData {
+  id: number;
+  category: string;
+  badge: string;
+  difficulty: string;
+  title: string;
+  desc: string;
+  icon: string;
+  tools: string[];
+  rules: string[];
+  ctaText: string;
+  ctaHref: string;
+  accentColor: 'amber' | 'cyan' | 'emerald' | 'purple';
+}
+
+const WORKBENCH_STATIONS: Record<number, StationData> = {
+  1: {
+    id: 1,
+    category: "Poste 01 · Rhabillage & Calibre",
+    badge: "ETA 6497-1 Unitas",
+    difficulty: "Niveau : Fondations AFP & CFC",
+    title: "Démontage & Dépose Méthodique",
+    desc: "La dépose d'un calibre horloger exige la rigueur absolue de l'ordre inverse. On désarme toujours le barillet avant toute intervention, puis on extrait immédiatement l'organe réglant (balancier-spiral) pour préserver ses pivots microscopiques de tout choc.",
+    icon: "⚙️",
+    tools: ["Tournevis Bergeon 30081", "Brucelles Dumont N°3 & N°5", "Porte-pièce berceau"],
+    rules: [
+      "Désarmement complet du barillet avec tournevis et cheville de sureau avant dépose",
+      "Dépose du coq en soulevant verticalement sans faire pivoter le spiral",
+      "Ébats axiaux de rouage obligatoirement vérifiés : 0.02 à 0.04 mm"
+    ],
+    ctaText: "Consulter le Protocole de Démontage",
+    ctaHref: "/pratique/demontage",
+    accentColor: "amber"
+  },
+  2: {
+    id: 2,
+    category: "Poste 02 · Micro-Lubrification d'Élite",
+    badge: "Moebius 4 Godets",
+    difficulty: "Niveau : Précision Micrométrique",
+    title: "Cartographie des 25 Points de Lubrification",
+    desc: "En Haute Horlogerie suisse, une mauvaise huile est pire que pas d'huile. L'horloger dispose de 4 godets codés par couleur : les huiles fluides synthétiques pour les pivots ultra-rapides, les huiles épaisses pour les fortes pressions et la graisse thixotrope pour l'échappement.",
+    icon: "💧",
+    tools: ["Huiliers 4 godets Bergeon", "Piques-huiles 30102", "Moebius 9010 / HP-1300 / 9415"],
+    rules: [
+      "Volume de goutte rigoureux : entre 1/2 et 2/3 du réservoir de rubis",
+      "Interdiction totale de lubrifier les dents de la roue d'ancre (uniquement levées)",
+      "Nettoyage préalable absolu à la benzine rectifiée et cheville de sureau"
+    ],
+    ctaText: "Consulter la Cartographie de Huilage",
+    ctaHref: "/pratique/huilage",
+    accentColor: "cyan"
+  },
+  3: {
+    id: 3,
+    category: "Poste 03 · Banc Chronométrique COSC",
+    badge: "Witschi Chronoscope",
+    difficulty: "Niveau : Maîtrise COSC",
+    title: "Analyse Acoustique au Vibrographe Witschi",
+    desc: "Le vibrographe capte les micro-chocs de l'échappement suisse (bruit de levée, impulsion, chute) et calcule la marche diurne instantanée en secondes par jour, l'angle d'amplitude du balancier et l'erreur de repère (beat error).",
+    icon: "⏱️",
+    tools: ["Vibrographe Witschi", "Clé de raquette micrométrique", "Loupe d'horloger 10x"],
+    rules: [
+      "Repère impératif : inférieur à 0.6 ms (au-delà, la montre boite)",
+      "Amplitude saine : comprise entre 270° et 315° à plat à armage complet",
+      "Contrôle sur 5 positions d'examen : CH, CB, 6H, 9H, 3H"
+    ],
+    ctaText: "Consulter le Protocole de Réglage",
+    ctaHref: "/pratique/reglage",
+    accentColor: "emerald"
+  },
+  4: {
+    id: 4,
+    category: "Poste 04 · Micromécanique & Outillage",
+    badge: "Schaublin 70 & Outils",
+    difficulty: "Niveau : Usinage d'Horloger",
+    title: "Tour d'Outilleur Schaublin 70 & Burins",
+    desc: "Le tour d'horloger Schaublin 70 est l'emblème des manufactures suisses. Il permet de tourner des tiges de remontoir, axes de balancier et vis sur mesure au centième de millimètre (0.01 mm) dans des aciers trempables Böhler K720.",
+    icon: "📐",
+    tools: ["Tour Schaublin 70", "Pinces W-12", "Pierre Arkansas", "Chalumeau"],
+    rules: [
+      "Largeur de panne de tournevis exactement égale à la fente de vis (zéro jeu)",
+      "Lubrification de coupe obligatoire au pétrole horloger",
+      "Trempe à 780°C rouge cerise puis revenu au jaune paille (230°C)"
+    ],
+    ctaText: "Consulter le Module Micromécanique",
+    ctaHref: "/pratique/micromecanique",
+    accentColor: "purple"
+  }
+};
 
 interface PracticalModule {
   step: string;
@@ -34,21 +124,19 @@ interface PracticalModule {
   iconName: string;
   tools: string[];
   href: string;
-  cta: string;
-  highlight: string;
+  phase: 'A' | 'B' | 'C';
 }
 
 const PRACTICAL_MODULES: PracticalModule[] = [
   {
     step: 'Étape 00 · Micromécanique Horlogère',
-    badge: 'IFAGE · Schaublin 70',
+    badge: 'Schaublin 70',
     title: 'Tournage & Micromécanique',
-    description: 'Programme officiel IFAGE Genève : tour d\'outilleur Schaublin 70, chariotage, dressage au centième, affûtage des 5 burins d\'horloger, et trempe de l\'acier Böhler K720.',
+    description: 'Standards des écoles suisses : tour d\'outilleur Schaublin 70, chariotage, dressage au centième, affûtage des 5 burins et trempe K720.',
     iconName: 'Compass',
-    tools: ['Tour Schaublin 70', 'Pinces W-12', 'Chariot croisé 0.01mm', 'Burins d\'horloger', 'Chalumeau & Bain d\'huile'],
+    tools: ['Tour Schaublin 70', 'Pinces W-12', 'Chariot croisé 0.01mm', 'Burins'],
     href: '/pratique/micromecanique',
-    cta: 'Accéder au module complet',
-    highlight: 'Programme officiel IFAGE Genève'
+    phase: 'A'
   },
   {
     step: 'Étape 01 · Fondations',
@@ -58,19 +146,7 @@ const PRACTICAL_MODULES: PracticalModule[] = [
     iconName: 'Wrench',
     tools: ['Tournevis Bergeon', 'Brucelles Dumont N°3', 'Porte-pièce berceau'],
     href: '/pratique/demontage',
-    cta: 'Consulter le protocole',
-    highlight: 'Ordre de dépose strict'
-  },
-  {
-    step: 'Étape 02 · Rigueur Inverse',
-    badge: 'ETA 6497-1',
-    title: 'Remontage & Assemblage',
-    description: 'Reconstitution méthodique du calibre : mise en place du barillet, engrènement du rouage, contrôle des ébats axiaux et sécurité du cliquet.',
-    iconName: 'Layers',
-    tools: ['Brucelles N°3 & N°5', 'Cheville de sureau', 'Pique-huile fin'],
-    href: '/pratique/remontage',
-    cta: 'Consulter le protocole',
-    highlight: 'Contrôle des ébats'
+    phase: 'A'
   },
   {
     step: 'Étape 03 · Cœur Vivant',
@@ -80,19 +156,27 @@ const PRACTICAL_MODULES: PracticalModule[] = [
     iconName: 'Zap',
     tools: ['Tournevis N°0.80', 'Brucelles fines N°5', 'Papier de soie'],
     href: '/pratique/demontage-balancier',
-    cta: 'Consulter le protocole',
-    highlight: 'Protection du spiral'
+    phase: 'A'
+  },
+  {
+    step: 'Étape 02 · Rigueur Inverse',
+    badge: 'ETA 6497-1',
+    title: 'Remontage & Assemblage',
+    description: 'Reconstitution méthodique du calibre : mise en place du barillet, engrènement du rouage, contrôle des ébats axiaux et sécurité du cliquet.',
+    iconName: 'Layers',
+    tools: ['Brucelles N°3 & N°5', 'Cheville de sureau', 'Pique-huile fin'],
+    href: '/pratique/remontage',
+    phase: 'B'
   },
   {
     step: 'Étape 04 · Micrométrie',
-    badge: 'Moebius Suisse',
+    badge: 'Moebius 25 Points',
     title: 'Huilage & Lubrification',
     description: 'Cartographie officielle des 25 points d\'huile : Moebius 9010 pour pivots rapides, HP-1300 pour barillet et 9415 spécifique pour les levées d\'ancre.',
     iconName: 'Droplet',
     tools: ['Huiliers 4 godets', 'Piques-huiles Bergeon', 'Moebius 9010 / HP-1300 / 9415'],
     href: '/pratique/huilage',
-    cta: 'Consulter la cartographie',
-    highlight: 'Goutte au 2/3 de pierre'
+    phase: 'B'
   },
   {
     step: 'Étape 05 · Chronométrie',
@@ -100,21 +184,19 @@ const PRACTICAL_MODULES: PracticalModule[] = [
     title: 'Réglage & Précision',
     description: 'Diagnostic acoustique au vibrographe : mesure de la marche diurne (s/j), calcul du repère (beat error < 0.6 ms) et analyse d\'amplitude sur 5 positions.',
     iconName: 'Clock',
-    tools: ['Vibrographe Witschi', 'Clé de raquette micrométrique', 'Loupe d\'horloger 10x'],
+    tools: ['Vibrographe Witschi', 'Clé de raquette micrométrique', 'Loupe 10x'],
     href: '/pratique/reglage',
-    cta: 'Consulter le protocole',
-    highlight: 'Repère & Amplitude'
+    phase: 'C'
   },
   {
     step: 'Étape 06 · Arsenal d\'Établi',
-    badge: 'Bergeon & Horotec',
+    badge: 'Bergeon 30081',
     title: 'Outils & Équipement',
     description: 'Entretien et préparation de l\'outillage d\'élite : affûtage des pannes de tournevis sur pierre d\'Arkansas, pâte Rodico, potences et loupes d\'établi.',
     iconName: 'Hammer',
     tools: ['Tournevis 30081', 'Pierre Arkansas', 'Pâte Rodico 6033'],
     href: '/pratique/outils',
-    cta: 'Explorer l\'arsenal',
-    highlight: 'Affûtage des pannes'
+    phase: 'C'
   },
   {
     step: 'Étape 07 · Plans d\'Usine',
@@ -124,42 +206,39 @@ const PRACTICAL_MODULES: PracticalModule[] = [
     iconName: 'FileText',
     tools: ['Plans officiels ETA', 'Nomenclature des pièces', 'Couples cN.m'],
     href: '/pratique/fiches',
-    cta: 'Consulter les plans',
-    highlight: 'Éclatés originaux'
+    phase: 'C'
   },
   {
     step: 'Étape 08 · Filières d\'État',
-    badge: 'Convention Patronale',
+    badge: 'Conventions CP',
     title: 'Certifications AFP & CFC',
     description: 'Les exigences fédérales suisses de la formation professionnelle : critères d\'examen d\'établi, grilles d\'évaluation et passerelles de carrière.',
     iconName: 'Award',
     tools: ['Critères de certification', 'Grilles d\'examen CP', 'orientation.ch'],
     href: '/pratique/certifications',
-    cta: 'Découvrir la filière',
-    highlight: 'Diplômes suisses'
+    phase: 'C'
   }
 ];
 
-// Citations & Maximes d'Établi
 const WORKBENCH_QUOTES = [
   {
-    text: 'À l\'établi, chaque centième de millimètre sépare la perfection de l\'échec. La patience et la douceur du geste sont les premières vertus de l\'horloger.',
-    author: 'Enseignement Traditionnel des Manufactures Suisses'
+    text: "À l'établi, chaque centième de millimètre sépare la perfection de l'échec. La patience et la douceur du geste sont les premières vertus de l'horloger.",
+    author: "Enseignement Traditionnel des Manufactures Suisses"
   },
   {
-    text: 'Ne forcez jamais un rouage. Si un pivot ou un pont résiste, arrêtez-vous : la mécanique parle à qui sait écouter le métal.',
-    author: 'Maxime des Cabinotiers Genevois'
+    text: "Ne forcez jamais un rouage. Si un pivot ou un pont résiste, arrêtez-vous : la mécanique parle à qui sait écouter le métal.",
+    author: "Maxime des Cabinotiers Genevois"
   },
   {
-    text: 'La propreté absolue d\'un composant et la justesse d\'une goutte d\'huile confèrent au garde-temps son battement pour les siècles à venir.',
-    author: 'Règle d\'Or de la Lubrification d\'Atelier'
+    text: "La propreté absolue d'un composant et la justesse d'une goutte d'huile confèrent au garde-temps son battement pour les siècles à venir.",
+    author: "Règle d'Or de la Lubrification d'Atelier"
   }
 ];
 
 export default function PratiquePage() {
+  const [selectedStationId, setSelectedStationId] = useState<number>(1);
   const [quoteIndex, setQuoteIndex] = useState(0);
 
-  // Rotation des citations
   useEffect(() => {
     const timer = setInterval(() => {
       setQuoteIndex((prev) => (prev + 1) % WORKBENCH_QUOTES.length);
@@ -167,54 +246,39 @@ export default function PratiquePage() {
     return () => clearInterval(timer);
   }, []);
 
+  const activeStation = WORKBENCH_STATIONS[selectedStationId] || WORKBENCH_STATIONS[1];
+
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-slate-900 dark:text-slate-100 transition-colors duration-300 selection:bg-[#E2B44F]/30 selection:text-amber-800 dark:selection:text-[#F4E5B8]">
-
-      {/* Particules Dorées & Halo Lumineux d'Atelier (Atmosphère Haute Horlogerie) */}
+      
+      {/* HALO LUMINEUX & ATMOSPHÈRE HAUTE HORLOGERIE */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 hidden dark:block">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-gradient-to-b from-[#E2B44F]/15 via-[#D4AF37]/5 to-transparent blur-[140px]" />
         <div className="absolute top-1/3 -right-40 w-[600px] h-[600px] bg-[#E2B44F]/5 blur-[160px]" />
         <div className="absolute bottom-1/4 -left-40 w-[600px] h-[600px] bg-[#D4AF37]/5 blur-[150px]" />
-
-        {/* Particules animées */}
-        <motion.div
-          animate={{ y: [-15, 15, -15], opacity: [0.2, 0.5, 0.2] }}
-          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-36 left-1/5 w-2 h-2 rounded-full bg-[#E2B44F] blur-[1px]"
-        />
-        <motion.div
-          animate={{ y: [15, -15, 15], opacity: [0.15, 0.45, 0.15] }}
-          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-          className="absolute top-1/2 right-1/4 w-2.5 h-2.5 rounded-full bg-[#F4E5B8] blur-[1px]"
-        />
-        <motion.div
-          animate={{ y: [-20, 20, -20], opacity: [0.1, 0.4, 0.1] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-          className="absolute bottom-1/3 left-1/3 w-1.5 h-1.5 rounded-full bg-[#E2B44F] blur-[1px]"
-        />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-24 relative z-10 space-y-16">
-
-        {/* --- FIL D'ARIANE & BADGE ÉTABLI SUISSE --- */}
+        
+        {/* --- FIL D'ARIANE & BADGE SUISSE --- */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-mono">
             <Link href="/" className="hover:text-[#E2B44F] transition-colors">HorloLearn</Link>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600" />
             <span className="text-[#E2B44F] font-medium">Pratique Horlogère</span>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600" />
-            <span className="text-slate-700 dark:text-slate-300">Atelier &amp; Gestes d&apos;Établi</span>
+            <span className="text-slate-700 dark:text-slate-300">Établi du Maître Horloger</span>
           </div>
 
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-bold bg-[#E2B44F]/10 text-amber-800 dark:text-[#E2B44F] border border-[#E2B44F]/30 shadow-sm">
               <span className="w-2 h-2 rounded-full bg-[#E2B44F] animate-pulse" />
-              🇨🇭 Normes Fédérales NIHS &amp; COSC · Ateliers d&apos;Élite
+              🇨🇭 Normes Fédérales NIHS &amp; COSC · Standards Établi Suisse
             </span>
           </div>
         </div>
 
-        {/* --- HERO HEADER CINÉMATIQUE HAUTE HORLOGERIE --- */}
+        {/* --- HERO HEADER CINÉMATIQUE --- */}
         <div className="text-center max-w-4xl mx-auto space-y-6">
           <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#E2B44F]/10 border border-[#E2B44F]/30 text-amber-800 dark:text-[#E2B44F] text-xs font-mono tracking-widest uppercase shadow-sm">
             <Wrench className="w-4 h-4 text-[#E2B44F]" />
@@ -229,139 +293,483 @@ export default function PratiquePage() {
           </h1>
 
           <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg max-w-3xl mx-auto font-light leading-relaxed">
-            De la dépose rigoureuse du balancier-spiral à la lubrification micrométrique Moebius et au réglage de marche au vibrographe.
-            Découvrez les protocoles officiels des manufactures suisses et préparez vos examens d&apos;établi AFP &amp; CFC.
+            Prenez place à l&apos;établi horloger. Explorez les postes interactifs de manufacture, maîtrisez les protocoles officiels de dépose, le dosage micrométrique des huiles Moebius et le diagnostic acoustique au vibrographe Witschi.
           </p>
 
-          {/* 4 Indicateurs de Légitimité Horlogère */}
+          {/* 4 Indicateurs Clés */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto text-left pt-2 font-mono">
-            <div className="p-4 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700/80 rounded-2xl shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)]">
-              <div className="text-xs text-slate-500 dark:text-slate-400">Protocoles d&apos;Établi</div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">8 Modules</div>
-              <div className="text-[11px] text-[#E2B44F] mt-0.5">Démontage à la Certification</div>
+            <div className="p-4 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+              <div className="text-xs text-slate-500 dark:text-slate-400">Postes d&apos;Établi</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">4 Pôles</div>
+              <div className="text-[11px] text-[#E2B44F] mt-0.5">Rhabillage à l&apos;Usinage</div>
             </div>
 
-            <div className="p-4 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700/80 rounded-2xl shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)]">
-              <div className="text-xs text-slate-500 dark:text-slate-400">Calibres de Référence</div>
+            <div className="p-4 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+              <div className="text-xs text-slate-500 dark:text-slate-400">Calibres Écoles</div>
               <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">ETA 6497 &amp; 2824</div>
               <div className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-0.5">Unitas &amp; Automatique</div>
             </div>
 
-            <div className="p-4 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700/80 rounded-2xl shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)]">
+            <div className="p-4 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
               <div className="text-xs text-slate-500 dark:text-slate-400">Points de Huilage</div>
               <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">25 Points</div>
               <div className="text-[11px] text-cyan-600 dark:text-cyan-400 mt-0.5">Moebius 9010 / HP-1300 / 9415</div>
             </div>
 
-            <div className="p-4 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700/80 rounded-2xl shadow-sm dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)]">
-              <div className="text-xs text-slate-500 dark:text-slate-400">Simulateur d&apos;Examen</div>
+            <div className="p-4 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+              <div className="text-xs text-slate-500 dark:text-slate-400">Simulateur d&apos;Atelier</div>
               <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">36 Cartes</div>
-              <div className="text-[11px] text-amber-600 dark:text-amber-400 mt-0.5">Questions Clés d&apos;Atelier</div>
+              <div className="text-[11px] text-amber-600 dark:text-amber-400 mt-0.5">Questions Clés d&apos;Examen</div>
             </div>
           </div>
         </div>
 
         {/* ========================================================================= */}
-        {/* SECTION 1: LES 8 MODULES D'ATELIER (GRILLE HAUTE HORLOGERIE 4x2)          */}
+        {/* SECTION VEDETTE : L'ÉTABLI VIRTUEL DU MAÎTRE HORLOGER (INTERACTIF)        */}
         {/* ========================================================================= */}
-        <section className="space-y-6 pt-4">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+        <section className="rounded-3xl border-2 border-amber-500/30 bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+          
+          {/* En-tête du Banc d'Établi */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-5 border-b border-slate-200 dark:border-slate-800">
             <div>
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#E2B44F]">
-                ⚙️ Parcours Pratique d&apos;Atelier
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 dark:text-white mt-1">
-                Les 8 Protocoles de Manufacture
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#E2B44F]">
+                  Banc de Démonstration d&apos;Atelier Interactif
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-slate-900 dark:text-white mt-1">
+                Sélectionnez un Poste de Travail sur l&apos;Établi
               </h2>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
-              Sélectionnez une étape pour accéder à la fiche d&apos;établi détaillée
-            </p>
+            <div className="flex items-center gap-2 font-mono text-xs text-slate-500 dark:text-slate-400">
+              <span>Poste Actif :</span>
+              <span className="px-2.5 py-1 rounded-md bg-[#E2B44F]/20 text-amber-800 dark:text-[#E2B44F] font-bold border border-[#E2B44F]/40">
+                {activeStation.badge}
+              </span>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {PRACTICAL_MODULES.map((m, idx) => (
-              <Link
-                key={idx}
-                href={m.href}
-                className="group relative flex flex-col justify-between p-7 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-700/80 hover:border-[#E2B44F] dark:hover:border-[#E2B44F] rounded-3xl shadow-sm hover:shadow-2xl hover:shadow-[#E2B44F]/10 dark:hover:shadow-[#E2B44F]/15 transition-all duration-300 transform hover:-translate-y-1.5"
-              >
-                {/* Lueur dorée d'accent */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-[#E2B44F]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-3xl" />
+          {/* GRILLE : TAPIS D'ÉTABLI (GAUCHE) & FICHE TECHNIQUE DYNAMIQUE (DROITE) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            
+            {/* TAPIS D'ÉTABLI HORLOGER (7 COLS) */}
+            <div className="lg:col-span-7 bg-slate-900 rounded-2xl p-6 border border-slate-800 relative flex flex-col justify-between min-h-[460px] shadow-inner text-white">
+              
+              <div className="text-[11px] font-mono text-slate-400 flex items-center justify-between mb-4">
+                <span>TAPIS D&apos;ÉTABLI BERGEON · CH-2400 LE LOCLE</span>
+                <span className="text-emerald-400">● Température régulée 21°C</span>
+              </div>
 
-                <div className="relative z-10 space-y-4">
-                  {/* Top Bar: Icone + Badge */}
-                  <div className="flex items-center justify-between">
-                    <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-[#E2B44F]/10 border border-amber-200 dark:border-[#E2B44F]/30 flex items-center justify-center text-[#E2B44F] group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                      {m.iconName === 'Compass' && <Compass className="w-6 h-6" />}
-                      {m.iconName === 'Wrench' && <Wrench className="w-6 h-6" />}
-                      {m.iconName === 'Layers' && <Layers className="w-6 h-6" />}
-                      {m.iconName === 'Zap' && <Zap className="w-6 h-6" />}
-                      {m.iconName === 'Droplet' && <Droplet className="w-6 h-6" />}
-                      {m.iconName === 'Clock' && <Clock className="w-6 h-6" />}
-                      {m.iconName === 'Hammer' && <Hammer className="w-6 h-6" />}
-                      {m.iconName === 'FileText' && <FileText className="w-6 h-6" />}
-                      {m.iconName === 'Award' && <Award className="w-6 h-6" />}
-                    </div>
-
-                    <span className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-[11px] font-mono font-bold">
-                      {m.badge}
+              {/* 4 Postes interactifs disposés sur l'établi */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10 my-auto">
+                
+                {/* 1. PORTE-CALIBRE ETA 6497 */}
+                <button
+                  type="button"
+                  onClick={() => setSelectedStationId(1)}
+                  className={`p-5 rounded-2xl text-left transition-all hover:scale-[1.02] shadow-xl group ${
+                    selectedStationId === 1
+                      ? 'bg-slate-950 border-2 border-[#E2B44F]'
+                      : 'bg-slate-950/70 border border-slate-800 hover:border-slate-700'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-2xl">⚙️</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/40 font-bold">
+                      ETA 6497
                     </span>
                   </div>
-
-                  {/* Étape + Titre */}
-                  <div>
-                    <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#E2B44F]">
-                      {m.step}
-                    </span>
-                    <h3 className="text-xl font-serif font-bold text-slate-900 dark:text-white mt-1 group-hover:text-[#E2B44F] transition-colors">
-                      {m.title}
-                    </h3>
-                  </div>
-
-                  {/* Description */}
-                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-light">
-                    {m.description}
+                  <h3 className="text-sm sm:text-base font-serif font-bold text-white group-hover:text-[#E2B44F] transition-colors">
+                    Rhabillage &amp; Montage
+                  </h3>
+                  <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">
+                    Démontage ordonné, contrôle des ébats et dépose délicate du balancier.
                   </p>
+                  <div className="mt-3 text-[10px] font-mono text-[#E2B44F] flex items-center gap-1 font-bold">
+                    <span>Examiner le poste</span> <span>→</span>
+                  </div>
+                </button>
+
+                {/* 2. BLOC HUILIER 4 COULEURS */}
+                <button
+                  type="button"
+                  onClick={() => setSelectedStationId(2)}
+                  className={`p-5 rounded-2xl text-left transition-all hover:scale-[1.02] shadow-xl group ${
+                    selectedStationId === 2
+                      ? 'bg-slate-950 border-2 border-cyan-400'
+                      : 'bg-slate-950/70 border border-slate-800 hover:border-slate-700'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-2xl">💧</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 font-bold">
+                      Moebius 4G
+                    </span>
+                  </div>
+                  <h3 className="text-sm sm:text-base font-serif font-bold text-white group-hover:text-cyan-400 transition-colors">
+                    Micro-Lubrification
+                  </h3>
+                  <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">
+                    Cartographie des 25 points : 9010 (rapide), HP-1300 (force) et 9415 (ancre).
+                  </p>
+                  <div className="mt-3 text-[10px] font-mono text-cyan-400 flex items-center gap-1 font-bold">
+                    <span>Examiner le poste</span> <span>→</span>
+                  </div>
+                </button>
+
+                {/* 3. VIBROGRAPHE WITSCHI */}
+                <button
+                  type="button"
+                  onClick={() => setSelectedStationId(3)}
+                  className={`p-5 rounded-2xl text-left transition-all hover:scale-[1.02] shadow-xl group ${
+                    selectedStationId === 3
+                      ? 'bg-slate-950 border-2 border-emerald-400'
+                      : 'bg-slate-950/70 border border-slate-800 hover:border-slate-700'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-2xl">⏱️</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 font-bold">
+                      Witschi COSC
+                    </span>
+                  </div>
+                  <h3 className="text-sm sm:text-base font-serif font-bold text-white group-hover:text-emerald-400 transition-colors">
+                    Diagnostic &amp; Réglage
+                  </h3>
+                  <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">
+                    Analyse acoustique en 5 positions : marche, repère (&lt;0.6ms) et amplitude.
+                  </p>
+                  <div className="mt-3 text-[10px] font-mono text-emerald-400 flex items-center gap-1 font-bold">
+                    <span>Examiner le poste</span> <span>→</span>
+                  </div>
+                </button>
+
+                {/* 4. TOUR SCHAUBLIN 70 */}
+                <button
+                  type="button"
+                  onClick={() => setSelectedStationId(4)}
+                  className={`p-5 rounded-2xl text-left transition-all hover:scale-[1.02] shadow-xl group ${
+                    selectedStationId === 4
+                      ? 'bg-slate-950 border-2 border-purple-400'
+                      : 'bg-slate-950/70 border border-slate-800 hover:border-slate-700'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-2xl">📐</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-400/40 font-bold">
+                      Schaublin 70
+                    </span>
+                  </div>
+                  <h3 className="text-sm sm:text-base font-serif font-bold text-white group-hover:text-purple-400 transition-colors">
+                    Micromécanique &amp; Outils
+                  </h3>
+                  <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">
+                    Tournage au centième, affûtage Arkansas des pannes et acier Böhler K720.
+                  </p>
+                  <div className="mt-3 text-[10px] font-mono text-purple-400 flex items-center gap-1 font-bold">
+                    <span>Examiner le poste</span> <span>→</span>
+                  </div>
+                </button>
+
+              </div>
+
+              <div className="text-[10px] font-mono text-slate-400 text-center mt-4">
+                ✦ Cliquez sur l&apos;un des 4 postes pour charger sa fiche technique officielle ✦
+              </div>
+            </div>
+
+            {/* PANNEAU TECHNIQUE DE DÉTAIL DYNAMIQUE (5 COLS) */}
+            <div className="lg:col-span-5 rounded-2xl bg-slate-950 text-white p-6 sm:p-7 border border-[#E2B44F]/30 flex flex-col justify-between shadow-2xl relative">
+              
+              <div>
+                <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
+                  <span className="text-xs font-mono font-bold uppercase text-[#E2B44F] tracking-wider">
+                    {activeStation.category}
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                    {activeStation.difficulty}
+                  </span>
                 </div>
 
-                {/* Bottom : Outils + CTA */}
-                <div className="relative z-10 pt-5 mt-4 border-t border-slate-100 dark:border-slate-800 space-y-4">
-                  {/* Tools badges */}
-                  <div className="flex flex-wrap gap-1.5">
-                    {m.tools.map((t, tIdx) => (
-                      <span
-                        key={tIdx}
-                        className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800/80 text-[10px] font-mono text-slate-600 dark:text-slate-400 border border-slate-200/80 dark:border-slate-700/60"
-                      >
-                        {t}
-                      </span>
+                <h3 className="font-serif text-2xl font-bold text-white mb-2">
+                  {activeStation.title}
+                </h3>
+
+                <p className="text-xs text-slate-300 leading-relaxed font-light mb-5">
+                  {activeStation.desc}
+                </p>
+
+                {/* WIDGET TECHNIQUE SPÉCIFIQUE AU POSTE ACTIF */}
+                <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 mb-5 font-mono text-xs">
+                  {selectedStationId === 1 && (
+                    <>
+                      <div className="flex justify-between items-center text-[11px] text-amber-300 pb-2 border-b border-slate-800">
+                        <span>Ordre de dépose chronologique :</span>
+                        <span className="font-bold">6 Organes</span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-1.5 pt-2 text-[10px] text-center">
+                        <div className="p-1.5 rounded bg-slate-950 border border-slate-800 text-slate-300">1. Balancier</div>
+                        <div className="p-1.5 rounded bg-slate-950 border border-slate-800 text-slate-300">2. Ancre</div>
+                        <div className="p-1.5 rounded bg-slate-950 border border-slate-800 text-slate-300">3. Rouage</div>
+                        <div className="p-1.5 rounded bg-slate-950 border border-slate-800 text-slate-300">4. Barillet</div>
+                        <div className="p-1.5 rounded bg-slate-950 border border-slate-800 text-slate-300">5. Remontoir</div>
+                        <div className="p-1.5 rounded bg-slate-950 border border-slate-800 text-slate-300">6. Platine</div>
+                      </div>
+                    </>
+                  )}
+
+                  {selectedStationId === 2 && (
+                    <div className="grid grid-cols-3 gap-2 text-center text-[10px]">
+                      <div className="p-2 rounded bg-slate-950 border border-rose-500/40 text-rose-300">
+                        <span className="font-bold block">Moebius 9010</span>
+                        <span className="text-[9px] text-slate-400">Pivots rapides (4 Hz)</span>
+                      </div>
+                      <div className="p-2 rounded bg-slate-950 border border-blue-500/40 text-blue-300">
+                        <span className="font-bold block">Moebius HP-1300</span>
+                        <span className="text-[9px] text-slate-400">Barillet &amp; Roue centre</span>
+                      </div>
+                      <div className="p-2 rounded bg-slate-950 border border-amber-500/40 text-amber-300">
+                        <span className="font-bold block">Moebius 9415</span>
+                        <span className="text-[9px] text-slate-400">Palettes d&apos;ancre</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedStationId === 3 && (
+                    <div className="rounded-lg p-3 font-mono text-emerald-400 border border-emerald-500/40 bg-[#021208]">
+                      <div className="flex justify-between items-center text-[10px] border-b border-emerald-500/30 pb-1 mb-2">
+                        <span>WITSCHI CHRONOSCOPE S1</span>
+                        <span>CAL: 18&apos;000 A/h</span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                        <div>
+                          <span className="text-[9px] text-emerald-500/70 block">MARCHE</span>
+                          <strong className="text-sm">+1.8 s/j</strong>
+                        </div>
+                        <div>
+                          <span className="text-[9px] text-emerald-500/70 block">AMPLITUDE</span>
+                          <strong className="text-sm">288°</strong>
+                        </div>
+                        <div>
+                          <span className="text-[9px] text-emerald-500/70 block">REPÈRE</span>
+                          <strong className="text-sm">0.1 ms</strong>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedStationId === 4 && (
+                    <div className="grid grid-cols-2 gap-2 text-center text-[10px]">
+                      <div className="p-2 rounded bg-slate-950 border border-purple-500/30 text-purple-300 text-left">
+                        <span className="font-bold block text-white">Tour Schaublin 70</span>
+                        <span className="text-[9px] text-slate-400">Pinces W-12 · Précision 0.01 mm</span>
+                      </div>
+                      <div className="p-2 rounded bg-slate-950 border border-purple-500/30 text-purple-300 text-left">
+                        <span className="font-bold block text-white">Affûtage Arkansas</span>
+                        <span className="text-[9px] text-slate-400">Pannes biseautées sans jeu</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* 3 Gestes d'Or du Maître */}
+                <div className="space-y-2 mb-6">
+                  <span className="text-[11px] font-mono font-bold text-[#E2B44F] uppercase tracking-wider block">
+                    ⚡ Gestes d&apos;Or &amp; Tolérances d&apos;Examen :
+                  </span>
+                  <ul className="text-xs text-slate-300 space-y-1.5 font-mono">
+                    {activeStation.rules.map((rule, idx) => (
+                      <li key={idx} className="flex items-start gap-1.5 text-emerald-400">
+                        <span>✓</span>
+                        <span className="text-slate-300">{rule}</span>
+                      </li>
                     ))}
-                  </div>
-
-                  {/* Bouton CTA */}
-                  <div className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 group-hover:bg-[#E2B44F] text-slate-800 dark:text-slate-200 group-hover:text-slate-950 border border-slate-200 dark:border-slate-700 group-hover:border-[#E2B44F] text-xs font-mono font-bold transition-all duration-300">
-                    <span>{m.cta}</span>
-                    <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform" />
-                  </div>
+                  </ul>
                 </div>
-              </Link>
-            ))}
+              </div>
+
+              {/* Bouton CTA vers la page dédiée */}
+              <div className="pt-4 border-t border-slate-800">
+                <Link
+                  href={activeStation.ctaHref}
+                  className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 hover:from-amber-400 hover:to-yellow-200 text-slate-950 font-bold font-serif text-xs tracking-wider uppercase transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2"
+                >
+                  <span>{activeStation.ctaText}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+            </div>
+
           </div>
+
         </section>
 
         {/* ========================================================================= */}
-        {/* SECTION 2: CITATIONS ROTATIVES DES MAÎTRES DE L'ÉTABLI                    */}
+        {/* SECTION : LES 8 PROTOCOLES DE MANUFACTURE (PHASÉS CHRONOLOGIQUEMENT)       */}
         {/* ========================================================================= */}
-        <section className="relative py-16 px-6 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-[#E2B44F]/30 rounded-3xl shadow-md overflow-hidden text-center">
-          <div className="max-w-4xl mx-auto space-y-6">
+        <section className="space-y-10">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+            <div>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#E2B44F]">
+                📚 Programme Complet d&apos;Atelier
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 dark:text-white mt-1">
+                Les 8 Protocoles Officiels de l&apos;Établi Suisse
+              </h2>
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+              Fiches d&apos;établi complètes conformes aux grilles d&apos;évaluation AFP &amp; CFC
+            </p>
+          </div>
+
+          {/* PHASE A : DÉMONTAGE & PRÉPARATION */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <span className="px-3.5 py-1 rounded-md bg-[#E2B44F]/10 text-amber-800 dark:text-[#E2B44F] font-mono text-xs font-bold border border-[#E2B44F]/30">
+                PHASE A · Démontage, Balancier &amp; Sécurité
+              </span>
+              <span className="text-xs font-mono text-slate-400">3 Protocoles</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {PRACTICAL_MODULES.filter(m => m.phase === 'A').map((m, idx) => (
+                <Link
+                  key={idx}
+                  href={m.href}
+                  className="group p-6 rounded-2xl bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 hover:border-[#E2B44F] dark:hover:border-[#E2B44F] transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex justify-between items-center mb-3">
+                      <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-[#E2B44F]/10 text-[#E2B44F] flex items-center justify-center font-bold">
+                        {m.iconName === 'Compass' && <Compass className="w-5 h-5" />}
+                        {m.iconName === 'Wrench' && <Wrench className="w-5 h-5" />}
+                        {m.iconName === 'Zap' && <Zap className="w-5 h-5" />}
+                      </div>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                        {m.badge}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-mono text-[#E2B44F] font-bold uppercase">{m.step}</span>
+                    <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-[#E2B44F] transition-colors mt-0.5">
+                      {m.title}
+                    </h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 font-light leading-relaxed">
+                      {m.description}
+                    </p>
+                  </div>
+                  <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-mono text-[#E2B44F] font-bold">
+                    <span>Consulter le protocole</span>
+                    <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* PHASE B : REMONTAGE & LUBRIFICATION */}
+          <div className="space-y-4 pt-4">
+            <div className="flex items-center gap-3">
+              <span className="px-3.5 py-1 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 font-mono text-xs font-bold border border-cyan-500/30">
+                PHASE B · Assemblage &amp; Lubrification Moebius
+              </span>
+              <span className="text-xs font-mono text-slate-400">2 Protocoles</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {PRACTICAL_MODULES.filter(m => m.phase === 'B').map((m, idx) => (
+                <Link
+                  key={idx}
+                  href={m.href}
+                  className="group p-6 rounded-2xl bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 hover:border-cyan-400 dark:hover:border-cyan-400 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex justify-between items-center mb-3">
+                      <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-bold">
+                        {m.iconName === 'Layers' && <Layers className="w-5 h-5" />}
+                        {m.iconName === 'Droplet' && <Droplet className="w-5 h-5" />}
+                      </div>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                        {m.badge}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-mono text-cyan-600 dark:text-cyan-400 font-bold uppercase">{m.step}</span>
+                    <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors mt-0.5">
+                      {m.title}
+                    </h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 font-light leading-relaxed">
+                      {m.description}
+                    </p>
+                  </div>
+                  <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-mono text-cyan-600 dark:text-cyan-400 font-bold">
+                    <span>Consulter le protocole</span>
+                    <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* PHASE C : CHRONOMÉTRIE, OUTILLAGE & CERTIFICATION */}
+          <div className="space-y-4 pt-4">
+            <div className="flex items-center gap-3">
+              <span className="px-3.5 py-1 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-mono text-xs font-bold border border-emerald-500/30">
+                PHASE C · Chronométrie, Outillage &amp; Diplômes
+              </span>
+              <span className="text-xs font-mono text-slate-400">4 Protocoles</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {PRACTICAL_MODULES.filter(m => m.phase === 'C').map((m, idx) => (
+                <Link
+                  key={idx}
+                  href={m.href}
+                  className="group p-6 rounded-2xl bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 hover:border-emerald-400 dark:hover:border-emerald-400 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex justify-between items-center mb-3">
+                      <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+                        {m.iconName === 'Clock' && <Clock className="w-5 h-5" />}
+                        {m.iconName === 'Hammer' && <Hammer className="w-5 h-5" />}
+                        {m.iconName === 'FileText' && <FileText className="w-5 h-5" />}
+                        {m.iconName === 'Award' && <Award className="w-5 h-5" />}
+                      </div>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                        {m.badge}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold uppercase">{m.step}</span>
+                    <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors mt-0.5">
+                      {m.title}
+                    </h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 font-light leading-relaxed">
+                      {m.description}
+                    </p>
+                  </div>
+                  <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-mono text-emerald-600 dark:text-emerald-400 font-bold">
+                    <span>Consulter le protocole</span>
+                    <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+        </section>
+
+        {/* ========================================================================= */}
+        {/* SECTION CITATIONS ROTATIVES DES MAÎTRES DE L'ÉTABLI                       */}
+        {/* ========================================================================= */}
+        <section className="relative py-14 px-6 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-[#E2B44F]/30 rounded-3xl shadow-md text-center overflow-hidden">
+          <div className="max-w-4xl mx-auto space-y-5">
             <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#E2B44F]">
-              ⚡ Philosophie de l&apos;Établi &amp; Savoir-Être
+              ⚡ Philosophie de l&apos;Établi &amp; Savoir-Être Horloger
             </span>
 
-            <div className="min-h-[140px] flex flex-col justify-center">
-              <blockquote className="space-y-4">
-                <p className="text-xl sm:text-2xl lg:text-3xl font-serif italic text-slate-900 dark:text-[#F4E5B8] leading-relaxed">
+            <div className="min-h-[120px] flex flex-col justify-center">
+              <blockquote className="space-y-3">
+                <p className="text-xl sm:text-2xl font-serif italic text-slate-900 dark:text-[#F4E5B8] leading-relaxed">
                   « {WORKBENCH_QUOTES[quoteIndex].text} »
                 </p>
                 <footer className="text-xs sm:text-sm font-mono text-[#E2B44F] font-bold">
@@ -370,11 +778,11 @@ export default function PratiquePage() {
               </blockquote>
             </div>
 
-            {/* Pagination dots */}
-            <div className="flex justify-center gap-2 pt-4">
+            <div className="flex justify-center gap-2 pt-2">
               {WORKBENCH_QUOTES.map((_, i) => (
                 <button
                   key={i}
+                  type="button"
                   onClick={() => setQuoteIndex(i)}
                   className={`h-2 rounded-full transition-all duration-300 ${
                     i === quoteIndex
@@ -389,7 +797,7 @@ export default function PratiquePage() {
         </section>
 
         {/* ========================================================================= */}
-        {/* SECTION 3: SIMULATEUR D'ÉTABLI — 36 CARTES MÉMOIRE CALIBRE ETA 6497      */}
+        {/* SECTION SIMULATEUR D'ÉTABLI — 36 CARTES MÉMOIRE CALIBRE ETA 6497          */}
         {/* ========================================================================= */}
         <section className="bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-[#E2B44F]/40 rounded-3xl p-6 sm:p-10 shadow-xl space-y-8">
           <div className="text-center max-w-3xl mx-auto space-y-3">
@@ -404,7 +812,6 @@ export default function PratiquePage() {
             </p>
           </div>
 
-          {/* Composant Flashcards ETA 6497 */}
           <div className="rounded-2xl overflow-hidden">
             <Flashcards6497 />
           </div>
