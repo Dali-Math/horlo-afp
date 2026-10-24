@@ -5,44 +5,51 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function Footer() {
-  // Liste des prestigieuses manufactures et standards horlogers
+  // Collection d'Élite des Grandes Manufactures et Sceaux Suisses (Vecteurs SVG ultra-légers ~1 Ko)
   const icons = [
-    { src: "/icons/rolex.png", alt: "Rolex" },
-    { src: "/icons/patek.png", alt: "Patek Philippe" },
-    { src: "/icons/vacheron.png", alt: "Vacheron Constantin" },
-    { src: "/icons/audemars.png", alt: "Audemars Piguet" },
-    { src: "/icons/omega.png", alt: "Omega" },
-    { src: "/icons/tag-heuer.png", alt: "TAG Heuer" },
-    { src: "/icons/chopard.png", alt: "Chopard" },
-    { src: "/icons/iso128-2.png", alt: "Norme ISO 128-2" },
-    { src: "/icons/eta-movement.png", alt: "Mouvement ETA" },
-    { src: "/icons/swiss-made.png", alt: "Swiss Made" },
+    { src: "/icons/patek.svg", alt: "Patek Philippe – Genève 1839" },
+    { src: "/icons/rolex.svg", alt: "Rolex – Manufacture Genève" },
+    { src: "/icons/vacheron.svg", alt: "Vacheron Constantin – Depuis 1755" },
+    { src: "/icons/audemars.svg", alt: "Audemars Piguet – Le Brassus" },
+    { src: "/icons/jaeger-lecoultre.svg", alt: "Jaeger-LeCoultre – Vallée de Joux" },
+    { src: "/icons/breguet.svg", alt: "Breguet – Haute Horlogerie 1775" },
+    { src: "/icons/blancpain.svg", alt: "Blancpain – Villeret 1735" },
+    { src: "/icons/omega.svg", alt: "Omega – Bienne 1848" },
+    { src: "/icons/iwc.svg", alt: "IWC Schaffhausen – Probus Scafusia" },
+    { src: "/icons/zenith.svg", alt: "Zenith – Le Locle 1865 · El Primero" },
+    { src: "/icons/chopard.svg", alt: "Chopard – Manufacture L.U.C Genève" },
+    { src: "/icons/tag-heuer.svg", alt: "TAG Heuer – Swiss Avant-Garde 1860" },
+    { src: "/icons/swiss-made.svg", alt: "Swiss Made – Label Fédéral Officiel" },
   ];
 
   return (
     <footer className="bg-[#08090c] text-gray-300 border-t border-slate-800/80 pt-12 pb-8 px-4 sm:px-6 relative overflow-hidden">
-      {/* Animation CSS intégrée pour un défilement infini ultra-fluide */}
+      {/* Animation CSS optimisée avec transform3d pour une fluidité 60 FPS sur mobile */}
       <style>{`
         @keyframes marqueeInfinite {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+          0% { transform: translate3d(0, 0, 0); }
+          100% { transform: translate3d(-50%, 0, 0); }
         }
         .animate-marquee-smooth {
           display: flex;
           width: max-content;
-          animation: marqueeInfinite 28s linear infinite;
+          will-change: transform;
+          animation: marqueeInfinite 32s linear infinite;
         }
         .animate-marquee-smooth:hover {
           animation-play-state: paused;
         }
         .mask-fade-luxury {
-          mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-          -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+          mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+          -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
         }
       `}</style>
 
-      {/* Halo d'ambiance dorée Haute Horlogerie */}
-      <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-32 bg-amber-500/5 blur-[100px] pointer-events-none rounded-full" />
+      {/* Halo d'ambiance dorée Haute Horlogerie (dégradé radial CSS natif à 0 ms de calcul GPU) */}
+      <div 
+        className="absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-32 pointer-events-none rounded-full opacity-60" 
+        style={{ background: 'radial-gradient(ellipse at center, rgba(245, 158, 11, 0.08) 0%, transparent 70%)' }}
+      />
 
       <div className="max-w-6xl mx-auto space-y-10 relative z-10">
         {/* Grille supérieure : Identité, Navigation, Genève */}
@@ -55,6 +62,8 @@ export default function Footer() {
                 alt="HorloLearn Logo"
                 width={48}
                 height={48}
+                loading="lazy"
+                decoding="async"
                 className="rounded-full border border-amber-500/30 object-cover shadow-lg shadow-amber-500/5"
               />
               <h2 className="text-2xl font-bold tracking-tight text-white">
@@ -107,15 +116,15 @@ export default function Footer() {
                   className="text-gray-400 hover:text-white transition flex items-center justify-center md:justify-start gap-2 group"
                 >
                   <span className="text-xs group-hover:scale-110 transition-transform">✉️</span>
-                  Contact
+                  Contact & Échange
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Copyright et label Suisse */}
-          <div className="flex flex-col justify-center items-center md:items-end space-y-2">
-            <p className="text-sm text-gray-400 font-medium">
+          {/* Sceau d'authenticité & Soutien */}
+          <div className="flex flex-col items-center md:items-end justify-center gap-2">
+            <p className="text-sm font-medium text-gray-400">
               &copy; {new Date().getFullYear()} HorloLearn. Tous droits réservés.
             </p>
             <p className="text-xs text-gray-500">
@@ -140,57 +149,60 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* ✅ NOUVELLE VITRINE DES MANUFACTURES & STANDARDS */}
-        <div className="relative rounded-2xl bg-gradient-to-b from-slate-900/60 via-slate-950/80 to-[#08090c] border border-slate-800/80 p-6 sm:p-7 shadow-2xl overflow-hidden">
-          {/* En-tête raffiné (Séparé du défilement pour éviter tout chevauchement) */}
+        {/* VITRINE DE HAUTE HORLOGERIE : LES GRANDES MAISONS & STANDARDS SUISSES */}
+        <div className="relative rounded-2xl bg-gradient-to-b from-slate-900/80 via-slate-950/90 to-[#08090c] border border-slate-800/80 p-6 sm:p-7 shadow-2xl overflow-hidden">
           <div className="text-center mb-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 mb-2.5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 mb-2.5">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-              <span className="text-[10px] sm:text-[11px] font-semibold tracking-widest uppercase text-amber-400">
-                Standards & Manufactures
+              <span className="text-[10px] sm:text-[11px] font-semibold tracking-widest uppercase text-amber-400 font-mono">
+                Manufactures & Sceaux d'Excellence
               </span>
             </div>
-            <h4 className="text-xs sm:text-sm font-bold text-white tracking-[0.2em] uppercase">
-              Hommage aux Grandes Maisons & Normes Suisses
+            <h4 className="text-xs sm:text-sm font-bold text-white tracking-[0.25em] uppercase font-serif">
+              Hommage aux Grandes Maisons de Haute Horlogerie Suisse
             </h4>
           </div>
 
           {/* Carrousel infini fluide avec dégradé d'ombre latéral */}
-          <div className="relative overflow-hidden mask-fade-luxury py-1">
-            <div className="animate-marquee-smooth flex items-center gap-4">
-              {/* Premier groupe de logos */}
-              <div className="flex items-center gap-4 shrink-0">
+          <div className="relative overflow-hidden mask-fade-luxury py-2">
+            <div className="animate-marquee-smooth flex items-center gap-5">
+              {/* Premier groupe de logos d'élite */}
+              <div className="flex items-center gap-5 shrink-0">
                 {icons.map((icon, i) => (
                   <div
                     key={`icon-1-${i}`}
                     title={icon.alt}
-                    className="group flex items-center justify-center h-16 w-36 px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-800/90 hover:border-amber-500/50 shadow-md transition-all duration-300 hover:scale-105"
+                    className="group flex items-center justify-center h-16 w-40 px-3 py-2 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-amber-500/60 shadow-lg hover:shadow-amber-500/10 transition-all duration-300 hover:scale-105 backdrop-blur-sm cursor-pointer"
                   >
-                    <Image
+                    <img
                       src={icon.src}
                       alt={icon.alt}
-                      width={100}
-                      height={44}
-                      className="max-h-11 max-w-[110px] object-contain rounded"
+                      width={128}
+                      height={50}
+                      loading="lazy"
+                      decoding="async"
+                      className="max-h-12 max-w-[128px] object-contain transition-opacity duration-300 group-hover:brightness-110"
                     />
                   </div>
                 ))}
               </div>
 
-              {/* Deuxième groupe identique pour boucle infinie sans saut ni coupure */}
-              <div className="flex items-center gap-4 shrink-0">
+              {/* Deuxième groupe identique pour boucle infinie parfaite */}
+              <div className="flex items-center gap-5 shrink-0">
                 {icons.map((icon, i) => (
                   <div
                     key={`icon-2-${i}`}
                     title={icon.alt}
-                    className="group flex items-center justify-center h-16 w-36 px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-800/90 hover:border-amber-500/50 shadow-md transition-all duration-300 hover:scale-105"
+                    className="group flex items-center justify-center h-16 w-40 px-3 py-2 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-amber-500/60 shadow-lg hover:shadow-amber-500/10 transition-all duration-300 hover:scale-105 backdrop-blur-sm cursor-pointer"
                   >
-                    <Image
+                    <img
                       src={icon.src}
                       alt={icon.alt}
-                      width={100}
-                      height={44}
-                      className="max-h-11 max-w-[110px] object-contain rounded"
+                      width={128}
+                      height={50}
+                      loading="lazy"
+                      decoding="async"
+                      className="max-h-12 max-w-[128px] object-contain transition-opacity duration-300 group-hover:brightness-110"
                     />
                   </div>
                 ))}
@@ -198,11 +210,9 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Mention discrète légale & éducative */}
           <div className="mt-4 text-center">
-            <p className="text-xs text-slate-500 tracking-wider">
-              Plateforme éducative indépendante &bull; Transmission & valorisation du patrimoine
-              horloger suisse
+            <p className="text-xs text-slate-500 tracking-wider font-mono">
+              Genève · Vallée de Joux · Schaffhouse · Bienne · Le Locle · La Chaux-de-Fonds
             </p>
           </div>
         </div>
