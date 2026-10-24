@@ -87,6 +87,15 @@ const ELITE_LABORATORIES = [
     icon: <Globe className="w-6 h-6 text-emerald-500 dark:text-emerald-400" />,
     color: 'border-emerald-500/40 hover:border-emerald-500 bg-white dark:bg-gradient-to-br dark:from-emerald-500/10 dark:via-slate-900 dark:to-slate-950',
     badgeColor: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
+  },
+  {
+    title: 'Technologies Modernes, Quartz & Connectées',
+    badge: 'Microélectronique & Silicium',
+    description: 'Explorez la physique du quartz 32\'768 Hz, le circuit diviseur binaire, le moteur Lavet, les procédés plasma DRIE et l\'hybridation connectée des manufactures suisses.',
+    href: '/theorie/technologies',
+    icon: <Zap className="w-6 h-6 text-cyan-500 dark:text-cyan-400" />,
+    color: 'border-cyan-500/40 hover:border-cyan-500 bg-white dark:bg-gradient-to-br dark:from-cyan-500/10 dark:via-slate-900 dark:to-slate-950',
+    badgeColor: 'bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border-cyan-500/30'
   }
 ];
 
@@ -170,8 +179,8 @@ const PILLARS: PillarSection[] = [
   {
     id: 'architecture',
     pillarNumber: 'Pilier II',
-    title: 'Architecture du Calibre, Matériaux & Plans',
-    subtitle: 'De la métallurgie des alliages aux plans de coupe d\'atelier conformes aux normes NIHS.',
+    title: 'Architecture du Calibre, Matériaux & Technologies',
+    subtitle: 'De la métallurgie des alliages aux plans de coupe d\'atelier et aux technologies électroniques et silicium.',
     icon: '📐',
     courses: [
       {
@@ -206,6 +215,17 @@ const PILLARS: PillarSection[] = [
         tag: 'Culture & Métallurgie',
         tagType: 'culture',
         readTime: '40 min de lecture'
+      },
+      {
+        id: 'technologies',
+        slug: '/theorie/technologies',
+        moduleNumber: 'Module 10',
+        titre: 'Technologies Modernes, Quartz & Connectées',
+        description: 'Mouvements à quartz 32\'768 Hz, résonateurs piézoélectriques, microélectronique, montres connectées et matériaux innovants.',
+        icon: <Zap className="w-6 h-6 text-cyan-500 dark:text-cyan-400" />,
+        tag: 'Innovation · Quartz & Smart',
+        tagType: 'avance',
+        readTime: '30 min de lecture'
       }
     ]
   },
@@ -217,9 +237,7 @@ const PILLARS: PillarSection[] = [
     icon: '💎',
     courses: [
       {
-        id: 'complications-card',
-        slug: '/theorie/complications',
-        moduleNumber: 'Module 10',
+        id: 'complications-card', slug: '/theorie/complications', moduleNumber: 'Module 11',
         titre: 'Grandes Complications Horlogères',
         description: 'Chronographe à roue à colonnes, quantième perpétuel à came de 48 mois, répétition minutes à timbres et tourbillon régulateur.',
         icon: <Watch className="w-6 h-6 text-purple-500 dark:text-purple-400" />,
@@ -228,9 +246,7 @@ const PILLARS: PillarSection[] = [
         readTime: '50 min de lecture'
       },
       {
-        id: 'galerie-3d-card',
-        slug: '/theorie/galerie-3d',
-        moduleNumber: 'Module 11',
+        id: 'galerie-3d-card', slug: '/theorie/galerie-3d', moduleNumber: 'Module 12',
         titre: 'Écorché Éclaté 3D & Cinématique des Calibres',
         description: 'Désossez les calibres ETA 6497-1 et 2824-2 en 3D interactive. Fiches techniques, tolérances d\'ébats et protocoles Moebius.',
         icon: <Layers className="w-6 h-6 text-amber-500" />,
@@ -239,9 +255,7 @@ const PILLARS: PillarSection[] = [
         readTime: '45 min d\'exploration'
       },
       {
-        id: 'entretien-card',
-        slug: '/theorie/entretien',
-        moduleNumber: 'Module 12',
+        id: 'entretien-card', slug: '/theorie/entretien', moduleNumber: 'Module 13',
         titre: 'Entretien, Révision & Diagnostic d\'Atelier',
         description: 'Protocole de révision complète : dégraissage ultrasons, contrôle d\'usure des pivots, ré-emboîtage étanche et contrôle de marche.',
         icon: <Wrench className="w-6 h-6 text-blue-500 dark:text-blue-400" />,
@@ -250,9 +264,7 @@ const PILLARS: PillarSection[] = [
         readTime: '40 min de lecture'
       },
       {
-        id: 'restauration-card',
-        slug: '/theorie/restauration',
-        moduleNumber: 'Module 13',
+        id: 'restauration-card', slug: '/theorie/restauration', moduleNumber: 'Module 14',
         titre: 'Atelier de Restauration & Rhabillage',
         description: 'Le protocole pas-à-pas des maîtres horlogers : diagnostic sous cloche, bouchonnage de platine, roulage des pivots au tour Jacot.',
         icon: <Settings2 className="w-6 h-6 text-sky-500 dark:text-sky-400" />,
@@ -270,9 +282,7 @@ const PILLARS: PillarSection[] = [
     icon: '🏛️',
     courses: [
       {
-        id: 'histoire-card',
-        slug: '/theorie/histoire-horlogerie-suisse',
-        moduleNumber: 'Module 14',
+        id: 'histoire-card', slug: '/theorie/histoire-horlogerie-suisse', moduleNumber: 'Module 15',
         titre: 'Histoire de l\'Horlogerie Suisse',
         description: 'Des huguenots genevois aux fermes jurassiennes : l\'établissage, la révolution industrielle, la crise du quartz et la suprématie mondiale.',
         icon: <Book className="w-6 h-6 text-amber-600 dark:text-amber-400" />,
@@ -281,9 +291,7 @@ const PILLARS: PillarSection[] = [
         readTime: '30 min de lecture'
       },
       {
-        id: 'manufactures-card',
-        slug: '/theorie/manufactures',
-        moduleNumber: 'Module 15',
+        id: 'manufactures-card', slug: '/theorie/manufactures', moduleNumber: 'Module 16',
         titre: 'Monographies des Grandes Manufactures',
         description: 'Patek Philippe, Rolex, Audemars Piguet, Vacheron Constantin : histoires fondatrices, brevets majeurs et savoir-faire d\'exception.',
         icon: <Building2 className="w-6 h-6 text-amber-600 dark:text-amber-400" />,
@@ -292,9 +300,7 @@ const PILLARS: PillarSection[] = [
         readTime: '45 min de lecture'
       },
       {
-        id: 'fuseaux-card',
-        slug: '/fuseaux-horaires',
-        moduleNumber: 'Module 16',
+        id: 'fuseaux-card', slug: '/fuseaux-horaires', moduleNumber: 'Module 17',
         titre: 'Fuseaux Horaires & Heures du Monde Cottier',
         description: 'L\'art de maîtriser les 24 méridiens : mécanisme universel de Louis Cottier (1931), calibres GMT et cartographie solaire en temps réel.',
         icon: <Globe className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />,
@@ -417,7 +423,7 @@ export default function TheoriePage() {
               </div>
               <div>
                 <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">Corpus Pédagogique</div>
-                <div className="text-sm font-bold text-slate-900 dark:text-white">16 Traités d&apos;Établi</div>
+                <div className="text-sm font-bold text-slate-900 dark:text-white">{TOTAL_COURSES_COUNT} Traités d&apos;Établi</div>
               </div>
             </div>
 
@@ -464,7 +470,7 @@ export default function TheoriePage() {
               <Link
                 key={idx}
                 href={lab.href}
-                className={`group p-6 sm:p-8 rounded-3xl border ${lab.color} transition-all duration-300 shadow-sm dark:shadow-xl hover:shadow-2xl flex flex-col justify-between`}
+                className={`group p-6 sm:p-8 rounded-3xl border ${lab.color} transition-all duration-300 shadow-sm dark:shadow-xl hover:shadow-2xl flex flex-col justify-between ${idx === 4 ? "md:col-span-2" : ""}`}
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -499,7 +505,7 @@ export default function TheoriePage() {
         <section className="space-y-8 pt-6">
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-              📖 Corpus Complet des 16 Modules Académiques
+              📖 Corpus Complet des {TOTAL_COURSES_COUNT} Modules Académiques
             </span>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 dark:text-white">
               Les 4 Piliers Fondamentaux de la Théorie Horlogère
@@ -563,7 +569,7 @@ export default function TheoriePage() {
                   : 'bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm dark:shadow-none'
               }`}
             >
-              📐 Architecture & Plans (3)
+              📐 Architecture & Technologies (4)
             </button>
 
             <button
