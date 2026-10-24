@@ -22,7 +22,7 @@ import {
   Check
 } from 'lucide-react';
 
-export interface StepDetail {
+interface StepDetail {
   number: number;
   title: string;
   side: 'Ponts (Mouvement)' | 'Cadran (Affichage)' | 'Organe Régulateur';
@@ -34,7 +34,7 @@ export interface StepDetail {
   moebiusOil?: string;
 }
 
-export const DISASSEMBLY_STEPS: StepDetail[] = [
+const DISASSEMBLY_STEPS: StepDetail[] = [
   {
     number: 1,
     title: 'Mise sur Porte-Mouvement & Désarment du Barillet',
@@ -226,7 +226,7 @@ export const DISASSEMBLY_STEPS: StepDetail[] = [
   }
 ];
 
-export const ASSEMBLY_STEPS: StepDetail[] = [
+const ASSEMBLY_STEPS: StepDetail[] = [
   {
     number: 1,
     title: 'Remontage & Huilage des Antichocs Incabloc (Platine & Coq)',
