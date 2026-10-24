@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <defs>
+    <linearGradient id="silverIWC" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#CBD5E1"/>
+    </linearGradient>
+  </defs>
+  <text x="100" y="36" text-anchor="middle" fill="url(#silverIWC)" font-family="'Times New Roman', 'Georgia', serif" font-size="34" font-weight="bold" letter-spacing="3">IWC</text>
+  <text x="100" y="54" text-anchor="middle" fill="#FFFFFF" font-family="'Montserrat', sans-serif" font-size="10" font-weight="700" letter-spacing="4">SCHAFFHAUSEN</text>
+  <text x="100" y="68" text-anchor="middle" fill="#E2B44F" font-family="'Times New Roman', serif" font-size="7.5" font-style="italic" letter-spacing="2">Probus Scafusia · 1868</text>
+</svg>

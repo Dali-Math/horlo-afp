@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <defs>
+    <linearGradient id="starGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="50%" stop-color="#FCE588"/>
+      <stop offset="100%" stop-color="#E2B44F"/>
+    </linearGradient>
+  </defs>
+  <!-- Guiding 5-point Star -->
+  <g transform="translate(100, 20) scale(0.9)">
+    <polygon points="0,-12 3,-3 12,-3 5,3 8,11 0,6 -8,11 -5,3 -12,-3 -3,-3" fill="url(#starGold)"/>
+  </g>
+  <text x="100" y="53" text-anchor="middle" fill="#FFFFFF" font-family="'Montserrat', sans-serif" font-size="18" font-weight="800" letter-spacing="4">ZENITH</text>
+  <text x="100" y="67" text-anchor="middle" fill="#94A3B8" font-family="'Montserrat', sans-serif" font-size="7" font-weight="500" letter-spacing="3">LE LOCLE · 1865 · EL PRIMERO</text>
+</svg>

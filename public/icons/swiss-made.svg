@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <defs>
+    <linearGradient id="swissRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EF4444"/>
+      <stop offset="100%" stop-color="#B91C1C"/>
+    </linearGradient>
+    <linearGradient id="goldSeal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCE588"/>
+      <stop offset="100%" stop-color="#D4AF37"/>
+    </linearGradient>
+  </defs>
+  <!-- Sceau fédéral avec croix suisse -->
+  <g transform="translate(100, 20)">
+    <rect x="-14" y="-12" width="28" height="24" rx="5" fill="url(#swissRed)" stroke="url(#goldSeal)" stroke-width="1.5"/>
+    <!-- Swiss Cross -->
+    <rect x="-3" y="-8" width="6" height="16" fill="#FFFFFF"/>
+    <rect x="-8" y="-3" width="16" height="6" fill="#FFFFFF"/>
+  </g>
+  <text x="100" y="53" text-anchor="middle" fill="#FFFFFF" font-family="'Montserrat', sans-serif" font-size="16" font-weight="900" letter-spacing="3.5">SWISS MADE</text>
+  <text x="100" y="67" text-anchor="middle" fill="url(#goldSeal)" font-family="'Montserrat', sans-serif" font-size="7.5" font-weight="700" letter-spacing="3">LABEL FÉDÉRAL OFFICIEL</text>
+</svg>

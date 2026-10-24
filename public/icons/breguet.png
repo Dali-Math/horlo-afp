@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <defs>
+    <linearGradient id="goldB" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE89E"/>
+      <stop offset="50%" stop-color="#E2B44F"/>
+      <stop offset="100%" stop-color="#AA7C11"/>
+    </linearGradient>
+  </defs>
+  <!-- Aiguille Breguet à pomme évidée -->
+  <g transform="translate(100, 20)">
+    <circle cx="-16" cy="0" r="1.5" fill="url(#goldB)"/>
+    <line x1="-14" y1="0" x2="3" y2="0" stroke="url(#goldB)" stroke-width="1.5"/>
+    <circle cx="8" cy="0" r="5" fill="none" stroke="url(#goldB)" stroke-width="1.5"/>
+    <polygon points="13,-1 18,0 13,1" fill="url(#goldB)"/>
+  </g>
+  <text x="100" y="53" text-anchor="middle" fill="#FFFFFF" font-family="'Times New Roman', 'Baskerville', serif" font-size="20" font-style="italic" font-weight="bold" letter-spacing="2">Breguet</text>
+  <text x="100" y="67" text-anchor="middle" fill="url(#goldB)" font-family="'Montserrat', sans-serif" font-size="7.5" font-weight="500" letter-spacing="3.5">DEPUIS 1775</text>
+</svg>

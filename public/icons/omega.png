@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <defs>
+    <linearGradient id="redOmega" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF5252"/>
+      <stop offset="100%" stop-color="#C62828"/>
+    </linearGradient>
+  </defs>
+  <!-- Greek Omega Symbol -->
+  <g transform="translate(100, 22)">
+    <path d="M-8,8 L-14,8 Q-13,6 -10,3 Q-13,-2 -11,-7 Q-8,-12 0,-12 Q8,-12 11,-7 Q13,-2 10,3 Q13,6 14,8 L8,8 Q7,4 5,2 Q8,-2 6,-6 Q4,-9 0,-9 Q-4,-9 -6,-6 Q-8,-2 -5,2 Q-7,4 -8,8 Z" fill="url(#redOmega)"/>
+  </g>
+  <text x="100" y="54" text-anchor="middle" fill="#FFFFFF" font-family="'Montserrat', 'Arial', sans-serif" font-size="19" font-weight="800" letter-spacing="4">OMEGA</text>
+  <text x="100" y="68" text-anchor="middle" fill="#94A3B8" font-family="'Montserrat', sans-serif" font-size="7" font-weight="600" letter-spacing="3.5">SWISS MADE · 1848</text>
+</svg>
