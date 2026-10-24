@@ -14,14 +14,10 @@ import {
   BookOpen,
   Award,
   ListChecks,
-  ChevronDown,
-  ChevronUp,
   X,
-  Sparkles,
   Layers,
   ShieldCheck,
-  Zap,
-  Info
+  Zap
 } from "lucide-react";
 
 // --- DATA TYPES ---
@@ -311,13 +307,11 @@ const FAQ_DATA = [
 const NORMES_DATA: Record<string, {
   title: string;
   subtitle: string;
-  description: string;
   sections: { id: string; title: string; content: string }[];
 }> = {
   "7200": {
     title: "ISO 7200:2004",
     subtitle: "Cartouches d'inscription",
-    description: "Spécification des champs de données pour les cartouches et têtes de documents techniques",
     sections: [
       {
         id: "presentation",
@@ -344,7 +338,6 @@ const NORMES_DATA: Record<string, {
   "5457": {
     title: "ISO 5457:1999",
     subtitle: "Formats de dessin & éléments graphiques",
-    description: "Spécification des formats, marges et disposition des éléments d'annotation",
     sections: [
       {
         id: "presentation",
@@ -359,7 +352,7 @@ const NORMES_DATA: Record<string, {
       {
         id: "projection",
         title: "Méthode de projection et orientation",
-        content: "Spécification de l'orientation du plan, des repères de coupe, des coordonnées de grille alphanuémriques (A-B-C-D / 1-2-3-4) et du symbole de projection du premier dièdre (Méthode E européenne)."
+        content: "Spécification de l'orientation du plan, des repères de coupe, des coordonnées de grille alphanumériques (A-B-C-D / 1-2-3-4) et du symbole de projection du premier dièdre (Méthode E européenne)."
       }
     ]
   }
@@ -374,7 +367,7 @@ export default function CartoucheHorlogerPage() {
   const [checklistMode, setChecklistMode] = useState<boolean>(false);
   const [checkedPracticeIndices, setCheckedPracticeIndices] = useState<Set<number>>(new Set());
   const [activeErrorModalIndex, setActiveErrorModalIndex] = useState<number | null>(null);
-  
+
   // Quiz states
   const [quizIndex, setQuizIndex] = useState<number>(0);
   const [quizScore, setQuizScore] = useState<number>(0);
@@ -482,144 +475,147 @@ export default function CartoucheHorlogerPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070B14] text-slate-100 font-sans selection:bg-amber-500/30 selection:text-amber-200">
+    <main className="relative min-h-screen bg-slate-50 dark:bg-[#07090E] text-slate-900 dark:text-slate-100 transition-colors duration-300 pt-6 sm:pt-8 md:pt-10 pb-20 overflow-x-hidden selection:bg-amber-500/30 selection:text-amber-800 dark:selection:text-amber-200">
       
-      {/* HEADER / TOP BAR */}
-      <header className="sticky top-0 z-40 bg-[#070B14]/90 backdrop-blur-md border-b border-slate-800/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+      {/* AMBIENT BACKGROUND GLOW IN DARK MODE */}
+      <div
+        className="fixed inset-0 pointer-events-none z-0 hidden dark:block opacity-40"
+        style={{
+          backgroundImage: `
+            radial-gradient(ellipse 650px 380px at 50% -10%, rgba(245, 158, 11, 0.12), transparent 70%),
+            radial-gradient(ellipse 450px 450px at 0% 35%, rgba(37, 99, 235, 0.08), transparent 70%),
+            radial-gradient(ellipse 450px 450px at 100% 80%, rgba(245, 158, 11, 0.06), transparent 70%)
+          `
+        }}
+      />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* TOP BREADCRUMB & METADATA BAR (CLEARS THE FLOATING SITE NAVBAR WITH AMPLE MARGIN) */}
+        <div className="flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800/80 pb-4 mb-6">
           <Link
             href="/theorie/lecture-de-plan"
-            className="flex items-center gap-2 text-xs sm:text-sm text-slate-400 hover:text-amber-400 transition-colors"
+            className="flex items-center gap-1.5 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-medium"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Théorie / Lecture de plan</span>
           </Link>
 
-          <div className="flex items-center gap-3">
-            <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-slate-800 text-slate-300 border border-slate-700">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               ISO 7200 &amp; ISO 5457
             </span>
-            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/30">
+            <span className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30">
               Haute Horlogerie
             </span>
           </div>
         </div>
-      </header>
 
-      {/* HERO SECTION */}
-      <section className="relative pt-8 pb-6 px-4 sm:px-6 lg:px-8 border-b border-slate-800/60 overflow-hidden text-center">
-        <div className="absolute inset-0 pointer-events-none opacity-20">
-          <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-b from-amber-500/30 via-blue-600/20 to-transparent blur-3xl rounded-full" />
-        </div>
-
-        <div className="max-w-4xl mx-auto relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/30 mb-3">
-            <FileText className="w-3.5 h-3.5" />
+        {/* HERO TITLE & INTRO */}
+        <section className="text-center max-w-4xl mx-auto mb-8 sm:mb-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30 mb-3">
+            <FileText className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
             Métrologie &amp; Normalisation Horlogère
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-3">
-            Le Cartouche <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 bg-clip-text text-transparent">Horloger</span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-3">
+            Le Cartouche <span className="text-amber-600 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-amber-200 dark:via-amber-400 dark:to-amber-500">Horloger</span>
           </h1>
 
-          <p className="text-xs sm:text-sm md:text-base text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Structure normalisée selon <strong className="text-slate-200">ISO 7200</strong> et <strong className="text-slate-200">ISO 5457</strong> :
+          <p className="text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            Structure normalisée selon <strong className="text-slate-800 dark:text-slate-200 font-semibold">ISO 7200</strong> et <strong className="text-slate-800 dark:text-slate-200 font-semibold">ISO 5457</strong> :
             les 14 champs d&apos;inscription, schémas interactifs, tableaux de matériaux et finitions, mémo de contrôle qualité et évaluation formative.
           </p>
 
-          {/* 7 TABS SWITCHER */}
+          {/* 7 TABS CONTROLLER (HORIZONTAL TOUCH SCROLL ON MOBILE) */}
           <div className="mt-8 flex justify-center">
-            <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 bg-slate-900/90 rounded-2xl border border-slate-800 shadow-2xl backdrop-blur-xl">
-              {[
-                { id: "champs", label: "14 Champs ISO", count: "14", icon: Layers, color: "text-amber-400" },
-                { id: "cartouche", label: "Schéma Interactif", icon: Grid, color: "text-sky-400" },
-                { id: "tableaux", label: "Tableaux Techniques", icon: FileText, color: "text-emerald-400" },
-                { id: "memo", label: "Mémo & Pièges", icon: ListChecks, color: "text-rose-400" },
-                { id: "quiz", label: "Quiz Interactif", icon: Award, color: "text-purple-400" },
-                { id: "faq", label: "FAQ Atelier", icon: HelpCircle, color: "text-cyan-400" },
-                { id: "normes", label: "Normes ISO", icon: BookOpen, color: "text-yellow-400" }
-              ].map((tab) => {
-                const Icon = tab.icon;
-                const isActive = activeTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id as TabType)}
-                    className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 border ${
-                      isActive
-                        ? "bg-gradient-to-r from-amber-500/20 to-blue-600/30 border-amber-500/80 text-amber-200 shadow-lg"
-                        : "border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/60"
-                    }`}
-                  >
-                    <Icon className={`w-4 h-4 ${tab.color}`} />
-                    <span>{tab.label}</span>
-                    {tab.count && (
-                      <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-amber-400/20 text-amber-300 font-mono font-bold">
-                        {tab.count}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
+            <div className="w-full sm:w-auto overflow-x-auto no-scrollbar py-1">
+              <div className="flex items-center justify-start sm:justify-center gap-1.5 p-1.5 bg-slate-200/80 dark:bg-slate-900/90 rounded-2xl border border-slate-300 dark:border-slate-800 shadow-sm dark:shadow-2xl backdrop-blur-xl min-w-max">
+                {[
+                  { id: "champs", label: "14 Champs ISO", count: "14", icon: Layers, color: "text-amber-600 dark:text-amber-400" },
+                  { id: "cartouche", label: "Schéma Interactif", icon: Grid, color: "text-sky-600 dark:text-sky-400" },
+                  { id: "tableaux", label: "Tableaux Techniques", icon: FileText, color: "text-emerald-600 dark:text-emerald-400" },
+                  { id: "memo", label: "Mémo & Pièges", icon: ListChecks, color: "text-rose-600 dark:text-rose-400" },
+                  { id: "quiz", label: "Quiz Interactif", icon: Award, color: "text-purple-600 dark:text-purple-400" },
+                  { id: "faq", label: "FAQ Atelier", icon: HelpCircle, color: "text-cyan-600 dark:text-cyan-400" },
+                  { id: "normes", label: "Normes ISO", icon: BookOpen, color: "text-yellow-600 dark:text-yellow-400" }
+                ].map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id as TabType)}
+                      className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 border ${
+                        isActive
+                          ? "bg-white dark:bg-gradient-to-r dark:from-amber-500/20 dark:to-blue-600/30 border-amber-500/80 text-amber-700 dark:text-amber-200 shadow-md"
+                          : "border-transparent text-slate-700 dark:text-slate-400 hover:text-slate-950 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60"
+                      }`}
+                    >
+                      <Icon className={`w-4 h-4 ${tab.color}`} />
+                      <span>{tab.label}</span>
+                      {tab.count && (
+                        <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-amber-400/20 text-amber-700 dark:text-amber-300 font-mono font-bold">
+                          {tab.count}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* MAIN CONTAINER */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-        {/* ==================================================== */}
-        {/* TAB 1: 14 CHAMPS ISO 7200                            */}
-        {/* ==================================================== */}
+        {/* TAB 1: 14 CHAMPS ISO 7200 */}
         {activeTab === "champs" && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
             {/* KPI Summary Cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-mono font-bold">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+              <div className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex items-center space-x-3 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400 font-mono font-bold text-base">
                   14
                 </div>
                 <div>
-                  <div className="text-xl font-bold font-mono text-white">14</div>
-                  <div className="text-xs text-slate-400 font-medium">Champs ISO 7200</div>
+                  <div className="text-xl sm:text-2xl font-bold font-mono text-slate-900 dark:text-white">14</div>
+                  <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">Champs ISO 7200</div>
                 </div>
               </div>
 
-              <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 font-mono font-bold">
+              <div className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex items-center space-x-3 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-600 dark:text-red-400 font-mono font-bold text-base">
                   11
                 </div>
                 <div>
-                  <div className="text-xl font-bold font-mono text-white">11</div>
-                  <div className="text-xs text-slate-400 font-medium">Obligatoires (O)</div>
+                  <div className="text-xl sm:text-2xl font-bold font-mono text-slate-900 dark:text-white">11</div>
+                  <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">Obligatoires (O)</div>
                 </div>
               </div>
 
-              <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 font-mono font-bold">
+              <div className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex items-center space-x-3 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-600 dark:text-blue-400 font-mono font-bold text-base">
                   3
                 </div>
                 <div>
-                  <div className="text-xl font-bold font-mono text-white">3</div>
-                  <div className="text-xs text-slate-400 font-medium">Conditionnels (C)</div>
+                  <div className="text-xl sm:text-2xl font-bold font-mono text-slate-900 dark:text-white">3</div>
+                  <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">Conditionnels (C)</div>
                 </div>
               </div>
 
-              <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 font-mono font-bold">
+              <div className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex items-center space-x-3 shadow-sm">
+                <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-600 dark:text-purple-400 font-mono font-bold text-base">
                   7
                 </div>
                 <div>
-                  <div className="text-xl font-bold font-mono text-white">7</div>
-                  <div className="text-xs text-slate-400 font-medium">Catégories d&apos;info</div>
+                  <div className="text-xl sm:text-2xl font-bold font-mono text-slate-900 dark:text-white">7</div>
+                  <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">Catégories d&apos;info</div>
                 </div>
               </div>
             </div>
 
             {/* Filter & Search Bar */}
-            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+            <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between shadow-sm">
               <div className="relative flex-1">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
@@ -627,7 +623,7 @@ export default function CartoucheHorlogerPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Rechercher un champ (ex: Matériau, Échelle, Dessinateur, 2768...)"
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-800/80 border border-slate-700/80 rounded-xl text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 transition-colors"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-100 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700/80 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 transition-colors"
                 />
               </div>
 
@@ -647,8 +643,8 @@ export default function CartoucheHorlogerPage() {
                     onClick={() => setSelectedCategory(category)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                       selectedCategory === category
-                        ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                        : "bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700"
+                        ? "bg-amber-500 text-slate-950 dark:bg-amber-500/20 dark:text-amber-300 border border-amber-500/40"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700"
                     }`}
                   >
                     {category}
@@ -668,39 +664,39 @@ export default function CartoucheHorlogerPage() {
                       setSelectedCellId(champ.id);
                       setActiveTab("cartouche");
                     }}
-                    className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-amber-500/40 cursor-pointer transition-all hover:-translate-y-1 group"
+                    className="p-5 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-amber-500/50 cursor-pointer transition-all hover:-translate-y-1 group shadow-sm"
                   >
                     <div className="flex items-start justify-between gap-2 mb-3">
                       <span
                         className={`text-[11px] px-2.5 py-0.5 rounded font-mono font-bold ${
                           isOblig
-                            ? "bg-red-500/10 text-red-400 border border-red-500/30"
-                            : "bg-blue-500/10 text-blue-400 border border-blue-500/30"
+                            ? "bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30"
+                            : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30"
                         }`}
                       >
                         {champ.obligation}
                       </span>
-                      <span className="text-[11px] font-medium bg-slate-800 text-slate-400 px-2 py-0.5 rounded">
+                      <span className="text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded">
                         {champ.category}
                       </span>
                     </div>
 
-                    <h3 className="text-base font-bold text-white group-hover:text-amber-300 transition-colors mb-1.5">
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-300 transition-colors mb-1.5">
                       {champ.name}
                     </h3>
 
-                    <p className="text-xs text-slate-400 mb-3 leading-relaxed">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mb-3 leading-relaxed">
                       {champ.description}
                     </p>
 
-                    <div className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 text-xs font-mono mb-2">
+                    <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-xs font-mono mb-2">
                       <div className="text-[10px] text-slate-500">Exemple concret :</div>
-                      <div className="text-amber-300 font-semibold">{champ.example}</div>
+                      <div className="text-amber-700 dark:text-amber-300 font-semibold">{champ.example}</div>
                     </div>
 
-                    <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-800/80">
+                    <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800/80">
                       <span>Longueur max :</span>
-                      <span className="font-mono text-slate-300">{champ.characters}</span>
+                      <span className="font-mono text-slate-700 dark:text-slate-300 font-medium">{champ.characters}</span>
                     </div>
                   </div>
                 );
@@ -709,29 +705,27 @@ export default function CartoucheHorlogerPage() {
           </motion.div>
         )}
 
-        {/* ==================================================== */}
-        {/* TAB 2: CARTOUCHE INTERACTIF                          */}
-        {/* ==================================================== */}
+        {/* TAB 2: CARTOUCHE INTERACTIF */}
         {activeTab === "cartouche" && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 lg:p-8">
+            <div className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-7 shadow-sm">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h2 className="text-xl sm:text-2xl font-bold text-white">Schéma Haute Horlogerie du Cartouche</h2>
-                    <span className="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-md border border-slate-700 font-mono">170 mm max</span>
+                    <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Schéma Haute Horlogerie du Cartouche</h2>
+                    <span className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2.5 py-1 rounded-md border border-slate-300 dark:border-slate-700 font-mono">170 mm max</span>
                   </div>
-                  <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
                     Sélectionnez une cellule pour visualiser sa fiche descriptive et ses critères de tolérance d&apos;atelier.
                   </p>
                 </div>
 
                 <div className="flex items-center gap-3 text-xs">
-                  <span className="flex items-center gap-1.5 text-slate-300">
+                  <span className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium">
                     <span className="w-3.5 h-3.5 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-[9px]">O</span>
                     Obligatoire
                   </span>
-                  <span className="flex items-center gap-1.5 text-slate-300">
+                  <span className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-medium">
                     <span className="w-3.5 h-3.5 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-[9px]">C</span>
                     Conditionnel
                   </span>
@@ -740,10 +734,10 @@ export default function CartoucheHorlogerPage() {
 
               {/* 6-COLUMN SCHEMATIC GRID */}
               <div className="overflow-x-auto pb-2">
-                <div className="min-w-[720px] bg-slate-950 p-4 rounded-xl border-2 border-slate-800 shadow-2xl">
-                  <div className="text-[11px] text-slate-400 font-mono mb-3 flex items-center justify-between px-1">
+                <div className="min-w-[700px] bg-slate-100 dark:bg-slate-950 p-4 rounded-xl border-2 border-slate-300 dark:border-slate-800 shadow-inner">
+                  <div className="text-[11px] text-slate-600 dark:text-slate-400 font-mono mb-3 flex items-center justify-between px-1 font-semibold">
                     <span>POSITION : COIN INFÉRIEUR DROIT DU PLAN (ISO 5457)</span>
-                    <span className="text-amber-400 font-bold">LARGEUR CADRE : 170 mm</span>
+                    <span className="text-amber-600 dark:text-amber-400 font-bold">LARGEUR CADRE : 170 mm</span>
                   </div>
 
                   <div className="grid grid-cols-6 gap-2 text-xs font-mono">
@@ -752,48 +746,48 @@ export default function CartoucheHorlogerPage() {
                       onClick={() => setSelectedCellId("entreprise")}
                       className={`col-span-4 p-3 rounded-lg border cursor-pointer transition-all ${
                         selectedCellId === "entreprise"
-                          ? "border-amber-400 bg-amber-500/10 ring-2 ring-amber-400/50"
-                          : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                          ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 ring-2 ring-amber-400/50"
+                          : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-amber-500"
                       }`}
                     >
-                      <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 mb-1">
                         <span>NOM ENTREPRISE / LOGO</span>
                         <span className="w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-[9px]">O</span>
                       </div>
-                      <div className="font-bold text-white text-sm">Manufacture Horlogère SA</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Raison sociale officielle</div>
+                      <div className="font-bold text-slate-900 dark:text-white text-sm">Manufacture Horlogère SA</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Raison sociale officielle</div>
                     </div>
 
                     <div
                       onClick={() => setSelectedCellId("format")}
                       className={`col-span-1 p-3 rounded-lg border cursor-pointer transition-all ${
                         selectedCellId === "format"
-                          ? "border-amber-400 bg-amber-500/10 ring-2 ring-amber-400/50"
-                          : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                          ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 ring-2 ring-amber-400/50"
+                          : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-amber-500"
                       }`}
                     >
-                      <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 mb-1">
                         <span>FORMAT</span>
                         <span className="w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-[9px]">O</span>
                       </div>
-                      <div className="font-bold text-white text-sm">A4</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">ISO 5457</div>
+                      <div className="font-bold text-slate-900 dark:text-white text-sm">A4</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">ISO 5457</div>
                     </div>
 
                     <div
                       onClick={() => setSelectedCellId("indice")}
                       className={`col-span-1 p-3 rounded-lg border cursor-pointer transition-all ${
                         selectedCellId === "indice"
-                          ? "border-amber-400 bg-amber-500/10 ring-2 ring-amber-400/50"
-                          : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                          ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 ring-2 ring-amber-400/50"
+                          : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-amber-500"
                       }`}
                     >
-                      <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 mb-1">
                         <span>INDICE</span>
                         <span className="w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-[9px]">O</span>
                       </div>
-                      <div className="font-bold text-amber-400 text-sm">B</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Révision</div>
+                      <div className="font-bold text-amber-600 dark:text-amber-400 text-sm">B</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Révision</div>
                     </div>
 
                     {/* Row 2 */}
@@ -801,32 +795,32 @@ export default function CartoucheHorlogerPage() {
                       onClick={() => setSelectedCellId("titre")}
                       className={`col-span-4 p-3 rounded-lg border cursor-pointer transition-all ${
                         selectedCellId === "titre"
-                          ? "border-amber-400 bg-amber-500/10 ring-2 ring-amber-400/50"
-                          : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                          ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 ring-2 ring-amber-400/50"
+                          : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-amber-500"
                       }`}
                     >
-                      <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 mb-1">
                         <span>TITRE DU DESSIN</span>
                         <span className="w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-[9px]">O</span>
                       </div>
-                      <div className="font-bold text-amber-300 text-sm">Platine Calibre 2824-2</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Désignation claire du composant</div>
+                      <div className="font-bold text-amber-600 dark:text-amber-300 text-sm">Platine Calibre 2824-2</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Désignation claire du composant</div>
                     </div>
 
                     <div
                       onClick={() => setSelectedCellId("numero-piece")}
                       className={`col-span-2 p-3 rounded-lg border cursor-pointer transition-all ${
                         selectedCellId === "numero-piece"
-                          ? "border-amber-400 bg-amber-500/10 ring-2 ring-amber-400/50"
-                          : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                          ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 ring-2 ring-amber-400/50"
+                          : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-amber-500"
                       }`}
                     >
-                      <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 mb-1">
                         <span>NUMÉRO DE PIÈCE</span>
                         <span className="w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-[9px]">O</span>
                       </div>
-                      <div className="font-bold text-white text-sm">P-2824-001-A</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Référence FAO/ERP</div>
+                      <div className="font-bold text-slate-900 dark:text-white text-sm">P-2824-001-A</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Référence FAO/ERP</div>
                     </div>
 
                     {/* Row 3 */}
@@ -834,48 +828,48 @@ export default function CartoucheHorlogerPage() {
                       onClick={() => setSelectedCellId("materiau")}
                       className={`col-span-2 p-3 rounded-lg border cursor-pointer transition-all ${
                         selectedCellId === "materiau"
-                          ? "border-amber-400 bg-amber-500/10 ring-2 ring-amber-400/50"
-                          : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                          ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 ring-2 ring-amber-400/50"
+                          : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-amber-500"
                       }`}
                     >
-                      <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 mb-1">
                         <span>MATÉRIAU</span>
                         <span className="w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-[9px]">O</span>
                       </div>
-                      <div className="font-bold text-white text-xs">Maillechort CuNi18Zn20</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Nuance normalisée</div>
+                      <div className="font-bold text-slate-900 dark:text-white text-xs">Maillechort CuNi18Zn20</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Nuance normalisée</div>
                     </div>
 
                     <div
                       onClick={() => setSelectedCellId("traitement")}
                       className={`col-span-2 p-3 rounded-lg border cursor-pointer transition-all ${
                         selectedCellId === "traitement"
-                          ? "border-amber-400 bg-amber-500/10 ring-2 ring-amber-400/50"
-                          : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                          ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 ring-2 ring-amber-400/50"
+                          : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-amber-500"
                       }`}
                     >
-                      <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 mb-1">
                         <span>TRAITEMENT SURFACE</span>
                         <span className="w-4 h-4 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-[9px]">C</span>
                       </div>
-                      <div className="font-bold text-sky-300 text-xs">Rhodiage 2µm</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Galvanoplastie</div>
+                      <div className="font-bold text-sky-600 dark:text-sky-300 text-xs">Rhodiage 2µm</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Galvanoplastie</div>
                     </div>
 
                     <div
                       onClick={() => setSelectedCellId("masse")}
                       className={`col-span-2 p-3 rounded-lg border cursor-pointer transition-all ${
                         selectedCellId === "masse"
-                          ? "border-amber-400 bg-amber-500/10 ring-2 ring-amber-400/50"
-                          : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                          ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 ring-2 ring-amber-400/50"
+                          : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-amber-500"
                       }`}
                     >
-                      <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 mb-1">
                         <span>MASSE</span>
                         <span className="w-4 h-4 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-[9px]">C</span>
                       </div>
-                      <div className="font-bold text-sky-300 text-xs">0.45 g</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Poids fini usiné</div>
+                      <div className="font-bold text-sky-600 dark:text-sky-300 text-xs">0.45 g</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Poids fini usiné</div>
                     </div>
 
                     {/* Row 4 */}
@@ -883,51 +877,51 @@ export default function CartoucheHorlogerPage() {
                       onClick={() => setSelectedCellId("echelle")}
                       className={`col-span-2 p-3 rounded-lg border cursor-pointer transition-all ${
                         selectedCellId === "echelle"
-                          ? "border-amber-400 bg-amber-500/10 ring-2 ring-amber-400/50"
-                          : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                          ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 ring-2 ring-amber-400/50"
+                          : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-amber-500"
                       }`}
                     >
-                      <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 mb-1">
                         <span>ÉCHELLE</span>
                         <span className="w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-[9px]">O</span>
                       </div>
-                      <div className="font-bold text-white text-sm">2:1</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Agrandissement horloger</div>
+                      <div className="font-bold text-slate-900 dark:text-white text-sm">2:1</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Agrandissement horloger</div>
                     </div>
 
                     <div
                       onClick={() => setSelectedCellId("projection")}
                       className={`col-span-2 p-3 rounded-lg border cursor-pointer transition-all ${
                         selectedCellId === "projection"
-                          ? "border-amber-400 bg-amber-500/10 ring-2 ring-amber-400/50"
-                          : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                          ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 ring-2 ring-amber-400/50"
+                          : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-amber-500"
                       }`}
                     >
-                      <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 mb-1">
                         <span>MÉTHODE PROJECTION</span>
                         <span className="w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-[9px]">O</span>
                       </div>
-                      <div className="font-bold text-white text-xs flex items-center gap-1.5">
+                      <div className="font-bold text-slate-900 dark:text-white text-xs flex items-center gap-1.5">
                         <span>Méthode E (Europe)</span>
                         <span className="text-[11px] font-mono">◎⌸</span>
                       </div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Symbole normalisé</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Symbole normalisé</div>
                     </div>
 
                     <div
                       onClick={() => setSelectedCellId("tolerance-generale")}
                       className={`col-span-2 p-3 rounded-lg border cursor-pointer transition-all ${
                         selectedCellId === "tolerance-generale"
-                          ? "border-amber-400 bg-amber-500/10 ring-2 ring-amber-400/50"
-                          : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                          ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 ring-2 ring-amber-400/50"
+                          : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-amber-500"
                       }`}
                     >
-                      <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 mb-1">
                         <span>TOLÉRANCE GÉNÉRALE</span>
                         <span className="w-4 h-4 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-[9px]">C</span>
                       </div>
-                      <div className="font-bold text-sky-300 text-xs">ISO 2768-m</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Précision moyenne</div>
+                      <div className="font-bold text-sky-600 dark:text-sky-300 text-xs">ISO 2768-m</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Précision moyenne</div>
                     </div>
 
                     {/* Row 5 */}
@@ -935,88 +929,90 @@ export default function CartoucheHorlogerPage() {
                       onClick={() => setSelectedCellId("dessinateur")}
                       className={`col-span-2 p-3 rounded-lg border cursor-pointer transition-all ${
                         selectedCellId === "dessinateur"
-                          ? "border-amber-400 bg-amber-500/10 ring-2 ring-amber-400/50"
-                          : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                          ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 ring-2 ring-amber-400/50"
+                          : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-amber-500"
                       }`}
                     >
-                      <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 mb-1">
                         <span>DESSINATEUR</span>
                         <span className="w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-[9px]">O</span>
                       </div>
-                      <div className="font-bold text-white text-xs">J. Dupont</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Bureau technique DAO</div>
+                      <div className="font-bold text-slate-900 dark:text-white text-xs">J. Dupont</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Bureau technique DAO</div>
                     </div>
 
                     <div
                       onClick={() => setSelectedCellId("verificateur")}
                       className={`col-span-2 p-3 rounded-lg border cursor-pointer transition-all ${
                         selectedCellId === "verificateur"
-                          ? "border-amber-400 bg-amber-500/10 ring-2 ring-amber-400/50"
-                          : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                          ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 ring-2 ring-amber-400/50"
+                          : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-amber-500"
                       }`}
                     >
-                      <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 mb-1">
                         <span>VÉRIFICATEUR</span>
                         <span className="w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-[9px]">O</span>
                       </div>
-                      <div className="font-bold text-white text-xs">M. Martin</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Visa contrôle qualité</div>
+                      <div className="font-bold text-slate-900 dark:text-white text-xs">M. Martin</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Visa contrôle qualité</div>
                     </div>
 
                     <div
                       onClick={() => setSelectedCellId("date")}
                       className={`col-span-2 p-3 rounded-lg border cursor-pointer transition-all ${
                         selectedCellId === "date"
-                          ? "border-amber-400 bg-amber-500/10 ring-2 ring-amber-400/50"
-                          : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                          ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 ring-2 ring-amber-400/50"
+                          : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-amber-500"
                       }`}
                     >
-                      <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
+                      <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 mb-1">
                         <span>DATE</span>
                         <span className="w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-[9px]">O</span>
                       </div>
-                      <div className="font-bold text-white text-xs">17.10.2025</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Format JJ.MM.AAAA</div>
+                      <div className="font-bold text-slate-900 dark:text-white text-xs">17.10.2025</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Format JJ.MM.AAAA</div>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* INSPECTOR CARD */}
-              <div className="mt-6 p-5 rounded-xl bg-slate-950/80 border border-amber-500/30">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+              <div className="mt-6 p-5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-300 dark:border-amber-500/30">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
                   <div className="flex items-center gap-3">
                     <span
                       className={`px-2.5 py-0.5 rounded text-xs font-bold font-mono ${
                         currentCellData.obligation === "Obligatoire"
-                          ? "bg-red-500/20 text-red-400 border border-red-500/40"
-                          : "bg-blue-500/20 text-blue-400 border border-blue-500/40"
+                          ? "bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/40"
+                          : "bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/40"
                       }`}
                     >
                       {currentCellData.obligation} ({currentCellData.obligation === "Obligatoire" ? "O" : "C"})
                     </span>
-                    <h3 className="text-lg font-bold text-white">{currentCellData.name}</h3>
-                    <span className="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded">
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">{currentCellData.name}</h3>
+                    <span className="text-xs bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 px-2 py-0.5 rounded font-medium">
                       {currentCellData.category}
                     </span>
                   </div>
-                  <div className="text-xs font-mono text-amber-400">Longueur max : {currentCellData.characters}</div>
+                  <div className="text-xs font-mono text-amber-600 dark:text-amber-400 font-semibold">
+                    Longueur max : {currentCellData.characters}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                   <div>
-                    <div className="text-xs text-slate-400 font-semibold mb-1">Description ISO 7200</div>
-                    <p className="text-sm text-slate-200">{currentCellData.description}</p>
+                    <div className="text-xs text-slate-500 dark:text-slate-400 font-semibold mb-1">Description ISO 7200</div>
+                    <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200">{currentCellData.description}</p>
                   </div>
                   <div>
-                    <div className="text-xs text-slate-400 font-semibold mb-1">Exemple Horloger</div>
-                    <p className="text-sm text-amber-300 font-mono bg-slate-900 p-2 rounded border border-slate-800">
+                    <div className="text-xs text-slate-500 dark:text-slate-400 font-semibold mb-1">Exemple Horloger</div>
+                    <p className="text-xs sm:text-sm text-amber-700 dark:text-amber-300 font-mono bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-slate-800">
                       {currentCellData.example}
                     </p>
                   </div>
                   <div>
-                    <div className="text-xs text-slate-400 font-semibold mb-1">Règle de rigueur atelier</div>
-                    <p className="text-sm text-slate-300">{currentCellData.rule}</p>
+                    <div className="text-xs text-slate-500 dark:text-slate-400 font-semibold mb-1">Règle de rigueur atelier</div>
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300">{currentCellData.rule}</p>
                   </div>
                 </div>
               </div>
@@ -1024,15 +1020,13 @@ export default function CartoucheHorlogerPage() {
           </motion.div>
         )}
 
-        {/* ==================================================== */}
-        {/* TAB 3: TABLEAUX TECHNIQUES                           */}
-        {/* ==================================================== */}
+        {/* TAB 3: TABLEAUX TECHNIQUES */}
         {activeTab === "tableaux" && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 sm:p-8">
+            <div className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-7 shadow-sm">
               <div className="text-center max-w-2xl mx-auto mb-6">
-                <h2 className="text-2xl font-bold text-white">Tableaux Techniques Horlogers</h2>
-                <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Tableaux Techniques Horlogers</h2>
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
                   Données normées des formats de plan ISO 5457, des nuances métallurgiques horlogères et des finitions de surface.
                 </p>
               </div>
@@ -1050,7 +1044,7 @@ export default function CartoucheHorlogerPage() {
                     className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
                       activeSubTable === st.id
                         ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
-                        : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
                     }`}
                   >
                     {st.label}
@@ -1063,17 +1057,17 @@ export default function CartoucheHorlogerPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse text-xs sm:text-sm">
                     <thead>
-                      <tr className="border-b border-slate-700 bg-slate-800/80 text-slate-300 font-semibold">
+                      <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-semibold">
                         <th className="p-3">Format</th>
                         <th className="p-3">Dimensions</th>
                         <th className="p-3">Marge du cadre</th>
                         <th className="p-3">Usage horloger typique</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800 font-mono text-slate-300">
+                    <tbody className="divide-y divide-slate-200 dark:divide-slate-800 font-mono text-slate-700 dark:text-slate-300">
                       {FORMATS_DATA.map((f) => (
-                        <tr key={f.format} className="hover:bg-slate-800/40">
-                          <td className="p-3 font-bold text-amber-400">{f.format}</td>
+                        <tr key={f.format} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                          <td className="p-3 font-bold text-amber-600 dark:text-amber-400">{f.format}</td>
                           <td className="p-3">{f.dimensions}</td>
                           <td className="p-3">{f.marge}</td>
                           <td className="p-3 font-sans">{f.usage}</td>
@@ -1089,18 +1083,18 @@ export default function CartoucheHorlogerPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse text-xs sm:text-sm">
                     <thead>
-                      <tr className="border-b border-slate-700 bg-slate-800/80 text-slate-300 font-semibold">
+                      <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-semibold">
                         <th className="p-3">Nom</th>
                         <th className="p-3">Désignation ISO</th>
                         <th className="p-3">Composition</th>
                         <th className="p-3">Usage &amp; Propriétés horlogères</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800 text-slate-300">
+                    <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
                       {MATERIAUX_DATA.map((m) => (
-                        <tr key={m.nom} className="hover:bg-slate-800/40">
-                          <td className="p-3 font-bold text-amber-400">{m.nom}</td>
-                          <td className="p-3 font-mono text-emerald-400">{m.designation}</td>
+                        <tr key={m.nom} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                          <td className="p-3 font-bold text-amber-600 dark:text-amber-400">{m.nom}</td>
+                          <td className="p-3 font-mono text-emerald-600 dark:text-emerald-400">{m.designation}</td>
                           <td className="p-3 font-mono">{m.composition}</td>
                           <td className="p-3">{m.usage}</td>
                         </tr>
@@ -1115,17 +1109,17 @@ export default function CartoucheHorlogerPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse text-xs sm:text-sm">
                     <thead>
-                      <tr className="border-b border-slate-700 bg-slate-800/80 text-slate-300 font-semibold">
+                      <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-semibold">
                         <th className="p-3">Traitement</th>
                         <th className="p-3">Description technique</th>
                         <th className="p-3">Objectif fonctionnel</th>
                         <th className="p-3">Pièces concernées</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800 text-slate-300">
+                    <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
                       {TRAITEMENTS_DATA.map((t) => (
-                        <tr key={t.traitement} className="hover:bg-slate-800/40">
-                          <td className="p-3 font-bold text-sky-400">{t.traitement}</td>
+                        <tr key={t.traitement} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                          <td className="p-3 font-bold text-sky-600 dark:text-sky-400">{t.traitement}</td>
                           <td className="p-3">{t.description}</td>
                           <td className="p-3">{t.objectif}</td>
                           <td className="p-3">{t.application}</td>
@@ -1137,38 +1131,36 @@ export default function CartoucheHorlogerPage() {
               )}
 
               {/* 4 Practical Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pt-6 border-t border-slate-800">
-                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800">
-                  <div className="text-xs font-semibold text-amber-400 mb-1">📐 Formats recommandés</div>
-                  <div className="text-xs text-slate-300">Format A4 pour composants unitaires et A3 pour sous-ensembles ou platines complètes.</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                  <div className="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1">📐 Formats recommandés</div>
+                  <div className="text-xs text-slate-600 dark:text-slate-300">Format A4 pour composants unitaires et A3 pour sous-ensembles ou platines complètes.</div>
                 </div>
-                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800">
-                  <div className="text-xs font-semibold text-emerald-400 mb-1">⚙️ Matériaux standards</div>
-                  <div className="text-xs text-slate-300">Privilégiez le Maillechort CuNi18Zn20 pour la stabilité des ponts et l&apos;Acier inox pour les axes.</div>
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                  <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">⚙️ Matériaux standards</div>
+                  <div className="text-xs text-slate-600 dark:text-slate-300">Privilégiez le Maillechort CuNi18Zn20 pour la stabilité des ponts et l'Acier inox pour les axes.</div>
                 </div>
-                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800">
-                  <div className="text-xs font-semibold text-sky-400 mb-1">✨ Finitions de prestige</div>
-                  <div className="text-xs text-slate-300">Rhodiage systématique pour protéger le laiton et Côtes de Genève pour la signature visuelle.</div>
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                  <div className="text-xs font-semibold text-sky-600 dark:text-sky-400 mb-1">✨ Finitions de prestige</div>
+                  <div className="text-xs text-slate-600 dark:text-slate-300">Rhodiage systématique pour protéger le laiton et Côtes de Genève pour la signature visuelle.</div>
                 </div>
-                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800">
-                  <div className="text-xs font-semibold text-purple-400 mb-1">🎯 Tolérances critiques</div>
-                  <div className="text-xs text-slate-300">ISO 2768-m par défaut ; réglez en ISO 2768-f pour les ajustements de pivots micrométriques.</div>
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+                  <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">🎯 Tolérances critiques</div>
+                  <div className="text-xs text-slate-600 dark:text-slate-300">ISO 2768-m par défaut ; réglez en ISO 2768-f pour les ajustements de pivots micrométriques.</div>
                 </div>
               </div>
             </div>
           </motion.div>
         )}
 
-        {/* ==================================================== */}
-        {/* TAB 4: MÉMO TECHNIQUE & PIÈGES                       */}
-        {/* ==================================================== */}
+        {/* TAB 4: MÉMO TECHNIQUE & PIÈGES */}
         {activeTab === "memo" && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 sm:p-8">
+            <div className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-7 shadow-sm">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
                 <div>
-                  <h2 className="text-2xl font-bold text-white">Mémo Technique &amp; Contrôle Qualité</h2>
-                  <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Mémo Technique &amp; Contrôle Qualité</h2>
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
                     Les 6 pièges récurrents et les 6 règles d&apos;or pour un cartouche 100% conforme ISO 7200.
                   </p>
                 </div>
@@ -1178,7 +1170,7 @@ export default function CartoucheHorlogerPage() {
                     setChecklistMode(!checklistMode);
                     setCheckedPracticeIndices(new Set());
                   }}
-                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all ${
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all shadow-sm ${
                     checklistMode
                       ? "bg-amber-600 hover:bg-amber-500 text-white"
                       : "bg-emerald-600 hover:bg-emerald-500 text-white"
@@ -1191,8 +1183,8 @@ export default function CartoucheHorlogerPage() {
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* 6 Erreurs */}
-                <div className="p-5 rounded-xl bg-rose-950/20 border border-rose-900/40">
-                  <div className="flex items-center gap-2 text-rose-400 font-bold text-sm sm:text-base mb-4">
+                <div className="p-5 rounded-xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/40">
+                  <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400 font-bold text-sm sm:text-base mb-4">
                     <AlertTriangle className="w-5 h-5" />
                     <span>6 Erreurs Fréquentes (Cliquez pour la solution)</span>
                   </div>
@@ -1202,18 +1194,18 @@ export default function CartoucheHorlogerPage() {
                       <div
                         key={idx}
                         onClick={() => setActiveErrorModalIndex(idx)}
-                        className="p-3 rounded-lg bg-slate-900/90 border border-rose-900/30 hover:border-rose-500 cursor-pointer transition-all flex items-center justify-between text-xs sm:text-sm"
+                        className="p-3 rounded-lg bg-white dark:bg-slate-900/90 border border-rose-200 dark:border-rose-900/30 hover:border-rose-500 cursor-pointer transition-all flex items-center justify-between text-xs sm:text-sm shadow-sm"
                       >
-                        <span className="text-slate-200">{idx + 1}. {item.erreur}</span>
-                        <span className="text-rose-400 text-xs font-semibold">Conseil →</span>
+                        <span className="text-slate-800 dark:text-slate-200">{idx + 1}. {item.erreur}</span>
+                        <span className="text-rose-600 dark:text-rose-400 text-xs font-semibold">Conseil →</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* 6 Bonnes Pratiques */}
-                <div className="p-5 rounded-xl bg-emerald-950/20 border border-emerald-900/40">
-                  <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm sm:text-base mb-4">
+                <div className="p-5 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/40">
+                  <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold text-sm sm:text-base mb-4">
                     <ShieldCheck className="w-5 h-5" />
                     <span>6 Bonnes Pratiques (Cochez au contrôle)</span>
                   </div>
@@ -1225,16 +1217,16 @@ export default function CartoucheHorlogerPage() {
                         <div
                           key={idx}
                           onClick={() => toggleChecklistPractice(idx)}
-                          className="p-3 rounded-lg bg-slate-900/90 border border-emerald-900/30 hover:border-emerald-500 cursor-pointer transition-all flex items-center justify-between text-xs sm:text-sm"
+                          className="p-3 rounded-lg bg-white dark:bg-slate-900/90 border border-emerald-200 dark:border-emerald-900/30 hover:border-emerald-500 cursor-pointer transition-all flex items-center justify-between text-xs sm:text-sm shadow-sm"
                         >
-                          <span className={isChecked ? "line-through text-slate-500" : "text-slate-200"}>
+                          <span className={isChecked ? "line-through text-slate-400 dark:text-slate-500" : "text-slate-800 dark:text-slate-200"}>
                             {idx + 1}. {practice}
                           </span>
                           <div
                             className={`w-5 h-5 rounded flex items-center justify-center border text-xs font-bold transition-all ${
                               isChecked
                                 ? "bg-emerald-500 border-emerald-400 text-white"
-                                : "border-slate-700 bg-slate-800 text-transparent"
+                                : "border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-transparent"
                             }`}
                           >
                             ✓
@@ -1247,16 +1239,16 @@ export default function CartoucheHorlogerPage() {
               </div>
 
               {/* Conseils d'expert */}
-              <div className="mt-8 p-6 rounded-2xl bg-slate-950 border border-amber-500/20">
-                <div className="flex items-center gap-2 text-amber-400 font-bold text-base mb-4">
+              <div className="mt-8 p-6 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-amber-500/30">
+                <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-bold text-base mb-4">
                   <Zap className="w-5 h-5" />
                   <span>Conseils d&apos;Expert &amp; Rigueur Horlogère</span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs sm:text-sm">
                   <div className="space-y-2">
-                    <div className="font-semibold text-white">🎯 Avant de dessiner :</div>
-                    <ul className="space-y-1.5 text-slate-300 list-disc list-inside">
+                    <div className="font-semibold text-slate-900 dark:text-white">🎯 Avant de dessiner :</div>
+                    <ul className="space-y-1.5 text-slate-600 dark:text-slate-300 list-disc list-inside">
                       <li>Préparez tous les champs du cartouche au gabarit DAO</li>
                       <li>Vérifiez les normes ISO applicables au projet</li>
                       <li>Choisissez le bon format normalisé (A4 ou A3)</li>
@@ -1265,8 +1257,8 @@ export default function CartoucheHorlogerPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <div className="font-semibold text-white">✅ Avant de finaliser :</div>
-                    <ul className="space-y-1.5 text-slate-300 list-disc list-inside">
+                    <div className="font-semibold text-slate-900 dark:text-white">✅ Avant de finaliser :</div>
+                    <ul className="space-y-1.5 text-slate-600 dark:text-slate-300 list-disc list-inside">
                       <li>Contrôlez l&apos;intégralité des 11 champs obligatoires</li>
                       <li>Mettez impérativement à jour l&apos;indice de révision</li>
                       <li>Vérifiez la position en bas à droite selon ISO 5457</li>
@@ -1279,36 +1271,34 @@ export default function CartoucheHorlogerPage() {
           </motion.div>
         )}
 
-        {/* ==================================================== */}
-        {/* TAB 5: QUIZ INTERACTIF                               */}
-        {/* ==================================================== */}
+        {/* TAB 5: QUIZ INTERACTIF */}
         {activeTab === "quiz" && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-            <div className="max-w-3xl mx-auto bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-8">
+            <div className="max-w-3xl mx-auto bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
               {!quizCompleted ? (
                 <>
                   <div className="flex items-center justify-between mb-6">
                     <div>
-                      <span className="text-xs font-mono text-amber-400 uppercase tracking-wider">Évaluation Théorique</span>
-                      <h2 className="text-xl sm:text-2xl font-bold text-white">Quiz Cartouche Horloger</h2>
+                      <span className="text-xs font-mono text-amber-600 dark:text-amber-400 uppercase tracking-wider font-semibold">Évaluation Théorique</span>
+                      <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Quiz Cartouche Horloger</h2>
                     </div>
                     <div className="text-right">
-                      <div className="text-xs text-slate-400">Score actuel</div>
-                      <div className="text-lg font-mono font-bold text-amber-400">{quizScore} / {QUIZ_DATA.length}</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">Score actuel</div>
+                      <div className="text-lg font-mono font-bold text-amber-600 dark:text-amber-400">{quizScore} / {QUIZ_DATA.length}</div>
                     </div>
                   </div>
 
-                  <div className="w-full h-2 bg-slate-800 rounded-full mb-6 overflow-hidden">
+                  <div className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full mb-6 overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-amber-500 to-amber-300 transition-all duration-300"
+                      className="h-full bg-gradient-to-r from-amber-500 to-amber-400 transition-all duration-300"
                       style={{ width: `${((quizIndex + 1) / QUIZ_DATA.length) * 100}%` }}
                     />
                   </div>
 
-                  <div className="text-xs text-slate-400 font-mono mb-2">
+                  <div className="text-xs text-slate-500 dark:text-slate-400 font-mono mb-2">
                     Question {quizIndex + 1} sur {QUIZ_DATA.length}
                   </div>
-                  <h3 className="text-lg sm:text-xl font-bold text-white mb-6">
+                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-6">
                     {QUIZ_DATA[quizIndex].question}
                   </h3>
 
@@ -1318,10 +1308,10 @@ export default function CartoucheHorlogerPage() {
                         key={idx}
                         onClick={() => handleQuizAnswer(idx)}
                         disabled={quizFeedback !== null}
-                        className="w-full text-left p-3.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 text-xs sm:text-sm text-slate-200 hover:text-white transition-all flex items-center justify-between group disabled:opacity-50"
+                        className="w-full text-left p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700/80 text-xs sm:text-sm text-slate-800 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white transition-all flex items-center justify-between group shadow-sm disabled:opacity-50"
                       >
                         <span>{option}</span>
-                        <span className="w-6 h-6 rounded-full border border-slate-600 group-hover:border-amber-400 flex items-center justify-center text-xs font-mono text-slate-400">
+                        <span className="w-6 h-6 rounded-full border border-slate-300 dark:border-slate-600 group-hover:border-amber-500 flex items-center justify-center text-xs font-mono text-slate-500 dark:text-slate-400">
                           {String.fromCharCode(65 + idx)}
                         </span>
                       </button>
@@ -1332,8 +1322,8 @@ export default function CartoucheHorlogerPage() {
                     <div
                       className={`mt-4 p-4 rounded-xl border text-xs sm:text-sm ${
                         quizFeedback.isCorrect
-                          ? "bg-emerald-950/40 border-emerald-500/40 text-emerald-300"
-                          : "bg-rose-950/40 border-rose-500/40 text-rose-300"
+                          ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/40 text-emerald-800 dark:text-emerald-300"
+                          : "bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-500/40 text-rose-800 dark:text-rose-300"
                       }`}
                     >
                       <div className="font-bold mb-1">
@@ -1345,16 +1335,16 @@ export default function CartoucheHorlogerPage() {
                 </>
               ) : (
                 <div className="text-center py-8 space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto text-2xl font-bold">
+                  <div className="w-16 h-16 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto text-2xl font-bold">
                     🏆
                   </div>
-                  <h3 className="text-2xl font-bold text-white">Félicitations, Quiz Terminé !</h3>
-                  <p className="text-slate-300 text-sm">
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Félicitations, Quiz Terminé !</h3>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm">
                     Votre score final est de <strong>{quizScore} sur {QUIZ_DATA.length}</strong> ({Math.round((quizScore / QUIZ_DATA.length) * 100)}%).
                   </p>
                   <button
                     onClick={resetQuiz}
-                    className="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition-colors"
+                    className="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition-colors shadow-md"
                   >
                     Recommencer le Quiz
                   </button>
@@ -1364,14 +1354,12 @@ export default function CartoucheHorlogerPage() {
           </motion.div>
         )}
 
-        {/* ==================================================== */}
-        {/* TAB 6: FAQ ATELIER                                   */}
-        {/* ==================================================== */}
+        {/* TAB 6: FAQ ATELIER */}
         {activeTab === "faq" && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 max-w-4xl mx-auto">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-white">Questions Fréquentes d&apos;Atelier &amp; CFC</h2>
-              <p className="text-xs sm:text-sm text-slate-400 mt-1">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Questions Fréquentes d&apos;Atelier &amp; CFC</h2>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
                 Éclaircissements techniques sur la cotation, les échelles et les règles d&apos;entreprise.
               </p>
             </div>
@@ -1380,16 +1368,16 @@ export default function CartoucheHorlogerPage() {
               {FAQ_DATA.map((item) => {
                 const isOpen = expandedFaqIds.has(item.id);
                 return (
-                  <div key={item.id} className="rounded-xl bg-slate-900/80 border border-slate-800 overflow-hidden">
+                  <div key={item.id} className="rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
                     <button
                       onClick={() => toggleFaq(item.id)}
-                      className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 hover:bg-slate-800/40 transition-colors"
+                      className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 hover:bg-slate-50 dark:hover:bg-slate-850 transition-colors"
                     >
-                      <span className="text-sm sm:text-base font-bold text-white">{item.question}</span>
-                      <span className="text-amber-400 text-lg font-bold">{isOpen ? "−" : "+"}</span>
+                      <span className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">{item.question}</span>
+                      <span className="text-amber-600 dark:text-amber-400 text-lg font-bold">{isOpen ? "−" : "+"}</span>
                     </button>
                     {isOpen && (
-                      <div className="p-4 sm:p-5 pt-0 text-xs sm:text-sm text-slate-300 border-t border-slate-800/60 leading-relaxed bg-slate-950/40">
+                      <div className="p-4 sm:p-5 pt-0 text-xs sm:text-sm text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-800/60 leading-relaxed bg-slate-50 dark:bg-slate-950/40">
                         {item.answer}
                       </div>
                     )}
@@ -1400,16 +1388,14 @@ export default function CartoucheHorlogerPage() {
           </motion.div>
         )}
 
-        {/* ==================================================== */}
-        {/* TAB 7: NORMES ISO                                    */}
-        {/* ==================================================== */}
+        {/* TAB 7: NORMES ISO */}
         {activeTab === "normes" && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 max-w-5xl mx-auto">
-            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 sm:p-8">
+            <div className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                 <div>
-                  <h2 className="text-2xl font-bold text-white">Textes des Normes Officielles</h2>
-                  <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Textes des Normes Officielles</h2>
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
                     Consultation des articles normatifs applicables aux dessins d&apos;horlogerie.
                   </p>
                 </div>
@@ -1419,8 +1405,8 @@ export default function CartoucheHorlogerPage() {
                     onClick={() => setCurrentNorme("7200")}
                     className={`px-4 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all ${
                       currentNorme === "7200"
-                        ? "bg-amber-500 text-slate-950"
-                        : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                        ? "bg-amber-500 text-slate-950 shadow-sm"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
                     }`}
                   >
                     ISO 7200:2004
@@ -1429,8 +1415,8 @@ export default function CartoucheHorlogerPage() {
                     onClick={() => setCurrentNorme("5457")}
                     className={`px-4 py-1.5 rounded-lg text-xs font-semibold font-mono transition-all ${
                       currentNorme === "5457"
-                        ? "bg-amber-500 text-slate-950"
-                        : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                        ? "bg-amber-500 text-slate-950 shadow-sm"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
                     }`}
                   >
                     ISO 5457:1999
@@ -1439,10 +1425,10 @@ export default function CartoucheHorlogerPage() {
               </div>
 
               <div className="flex justify-between items-center mb-4 text-xs">
-                <div className="text-slate-400">
+                <div className="text-slate-500 dark:text-slate-400 font-medium">
                   {NORMES_DATA[currentNorme].title} — {NORMES_DATA[currentNorme].subtitle}
                 </div>
-                <button onClick={toggleAllNormeSections} className="text-amber-400 hover:underline font-medium">
+                <button onClick={toggleAllNormeSections} className="text-amber-600 dark:text-amber-400 hover:underline font-semibold">
                   Tout déplier / replier
                 </button>
               </div>
@@ -1451,16 +1437,16 @@ export default function CartoucheHorlogerPage() {
                 {NORMES_DATA[currentNorme].sections.map((sec) => {
                   const isOpen = expandedNormeSections.has(sec.id);
                   return (
-                    <div key={sec.id} className="rounded-xl bg-slate-950/60 border border-slate-800 overflow-hidden">
+                    <div key={sec.id} className="rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
                       <button
                         onClick={() => toggleNormeSection(sec.id)}
-                        className="w-full p-4 text-left flex items-center justify-between hover:bg-slate-800/40 transition-colors"
+                        className="w-full p-4 text-left flex items-center justify-between hover:bg-slate-100 dark:hover:bg-slate-800/40 transition-colors"
                       >
-                        <span className="text-sm font-bold text-amber-300">{sec.title}</span>
-                        <span className="text-slate-400 font-mono text-sm">{isOpen ? "▲" : "▼"}</span>
+                        <span className="text-sm font-bold text-amber-700 dark:text-amber-300 font-serif">{sec.title}</span>
+                        <span className="text-slate-500 dark:text-slate-400 font-mono text-sm">{isOpen ? "▲" : "▼"}</span>
                       </button>
                       {isOpen && (
-                        <div className="p-4 pt-0 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800/40 whitespace-pre-line">
+                        <div className="p-4 pt-0 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-200 dark:border-slate-800/40 whitespace-pre-line">
                           {sec.content.replace(/\\n/g, "\n")}
                         </div>
                       )}
@@ -1472,7 +1458,7 @@ export default function CartoucheHorlogerPage() {
           </motion.div>
         )}
 
-      </main>
+      </div>
 
       {/* ERROR SOLUTION MODAL */}
       <AnimatePresence>
@@ -1482,32 +1468,32 @@ export default function CartoucheHorlogerPage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-slate-900 border border-rose-500/40 rounded-2xl max-w-md w-full p-6 shadow-2xl relative"
+              className="bg-white dark:bg-slate-900 border border-rose-300 dark:border-rose-500/40 rounded-2xl max-w-md w-full p-6 shadow-2xl relative"
             >
               <button
                 onClick={() => setActiveErrorModalIndex(null)}
-                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 dark:hover:text-white"
               >
                 <X className="w-5 h-5" />
               </button>
 
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center justify-center">
                   <AlertTriangle className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="text-xs font-mono text-rose-400 font-bold">
+                  <span className="text-xs font-mono text-rose-600 dark:text-rose-400 font-bold">
                     Erreur #{activeErrorModalIndex + 1}
                   </span>
-                  <h4 className="text-base font-bold text-white leading-tight">
+                  <h4 className="text-base font-bold text-slate-900 dark:text-white leading-tight">
                     {ERREURS_DATA[activeErrorModalIndex].erreur}
                   </h4>
                 </div>
               </div>
 
-              <div className="p-4 rounded-xl bg-rose-950/30 border border-rose-900/50">
-                <div className="text-xs font-semibold text-rose-300 mb-1">💡 Comment l&apos;éviter :</div>
-                <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
+              <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50">
+                <div className="text-xs font-semibold text-rose-700 dark:text-rose-300 mb-1">💡 Comment l&apos;éviter :</div>
+                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
                   {ERREURS_DATA[activeErrorModalIndex].solution}
                 </p>
               </div>
@@ -1515,7 +1501,7 @@ export default function CartoucheHorlogerPage() {
               <div className="mt-5 text-right">
                 <button
                   onClick={() => setActiveErrorModalIndex(null)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition-colors"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white text-xs font-semibold transition-colors"
                 >
                   Fermer
                 </button>
@@ -1524,6 +1510,6 @@ export default function CartoucheHorlogerPage() {
           </div>
         )}
       </AnimatePresence>
-    </div>
+    </main>
   );
 }
