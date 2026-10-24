@@ -267,6 +267,32 @@ export default function ReglagePage() {
 
       {/* --- SECTION PRINCIPALE : LE CHRONOCOMPARATEUR INTERACTIF --- */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        {/* ⭐ Bannière d'accès direct au Chronocomparateur Acoustique Réel */}
+        <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-emerald-950/70 via-slate-900 to-slate-950 border-2 border-emerald-500/40 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0 text-emerald-400">
+              <Volume2 className="w-6 h-6 animate-pulse" />
+            </div>
+            <div>
+              <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                <span>Vous possédez une montre mécanique ?</span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono uppercase tracking-wider">Direct Micro</span>
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 font-light mt-0.5">
+                Mesurez la marche réelle (+/- s/j), le repère et l&apos;amplitude de votre montre via le microphone de votre appareil avec notre Chronocomparateur Witschi acoustique.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/outils/chronocomparateur"
+            className="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs font-mono uppercase transition shadow-lg shadow-emerald-500/20 shrink-0 inline-flex items-center gap-2"
+          >
+            <span>Lancer la Mesure Acoustique</span>
+            <Compass className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
         <section className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#0f1422] border-2 border-slate-200 dark:border-slate-600 shadow-xl dark:shadow-2xl dark:shadow-black/70 ring-1 ring-slate-900/5 dark:ring-white/10 space-y-8">
           {/* En-tête de l'appareil */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-700/80">
