@@ -193,6 +193,32 @@ export default function OutilsPage() {
       {/* --- CONTENU DU MODULE ACTIF --- */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
         
+
+        {/* ⭐ BANNIÈRE CALCULATEUR D'ÉBATS & AJUSTEMENTS */}
+        <div className="relative group rounded-3xl overflow-hidden bg-gradient-to-br from-[#120F08] via-[#1D170B] to-[#141009] border-2 border-amber-500/40 p-6 sm:p-8 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-3 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs font-mono font-bold uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span>Outil Quotidien d&apos;Établi • Précision au Micron (0.001 mm)</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white">
+              Calculateur d&apos;Ébats &amp; Ajustements d&apos;Atelier
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
+              Vérifiez vos jeux axiaux (hauteur entre pierres), jeux de trous (pivot vs rubis) et serrages de chassage Seitz (H7/p6). Intègre le tableau officiel de tolérances pour les 24 organes de calibres suisses (NIHS 91-10).
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row md:flex-col gap-3 shrink-0 w-full md:w-auto font-mono text-xs">
+            <Link
+              href="/outils/ebats-ajustements"
+              className="px-6 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2"
+            >
+              <span>Lancer le Calculateur d&apos;Ébats</span>
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+
         {/* ⭐ BANNIÈRE VEDETTE CHRONOCOMPARATEUR WITSCHI */}
         <div className="relative group rounded-3xl overflow-hidden bg-gradient-to-br from-[#060D12] via-[#0D1520] to-[#0A101D] border-2 border-emerald-500/40 p-6 sm:p-8 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-3 max-w-2xl">
