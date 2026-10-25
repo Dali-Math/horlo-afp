@@ -1,167 +1,223 @@
+// src/components/Navbar.tsx
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, Search, X } from "lucide-react";
-import LanguageSelector from "@/components/LanguageSelector";
+import { Menu, X, Search } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import LanguageSelector from "@/components/LanguageSelector";
 
 interface NavbarProps {
   onSearchClick?: () => void;
 }
 
-const PRIMARY_LINKS = [
-  { href: "/theorie", label: "Théorie" },
-  { href: "/pratique", label: "Pratique" },
-  { href: "/outils", label: "Outils" },
-  { href: "/suisse", label: "Suisse" },
-  { href: "/quiz", label: "Quiz" },
-  { href: "/actualites", label: "Actualités" },
-];
-
-const SECONDARY_LINKS = [
-  { href: "/ressources", label: "Ressources" },
-  { href: "/podcasts", label: "Podcasts" },
-  { href: "/culture", label: "Culture" },
-  { href: "/evenements", label: "Événements" },
-  { href: "/communaute", label: "Communauté" },
-  { href: "/fuseaux-horaires", label: "Fuseaux horaires" },
-];
-
 export default function Navbar({ onSearchClick }: NavbarProps) {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const isActive = (href: string): boolean =>
-    pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
+  // Groupes thématiques structurés pour le Ruban Capsule Haute Horlogerie
+  const navSections = [
+    {
+      title: "Académie",
+      links: [
+        { href: "/theorie", label: "Théorie" },
+        { href: "/pratique", label: "Pratique" },
+        { href: "/quiz", label: "Quiz" },
+      ],
+    },
+    {
+      title: "Atelier",
+      links: [
+        { href: "/outils", label: "Outils" },
+        { href: "/ressources", label: "Ressources" },
+        { href: "/fuseaux-horaires", label: "Fuseaux" },
+      ],
+    },
+    {
+      title: "Patrimoine",
+      links: [
+        { href: "/suisse", label: "🇨🇭 Suisse" },
+        { href: "/podcasts", label: "Podcasts" },
+        { href: "/culture", label: "Culture" },
+      ],
+    },
+    {
+      title: "Cercle",
+      links: [
+        { href: "/evenements", label: "Événements" },
+        { href: "/communaute", label: "Communauté" },
+        { href: "/actualites", label: "Actualités" },
+      ],
+    },
+  ];
+
+  const isLinkActive = (href: string) => {
+    if (href === "/theorie") {
+      return pathname.startsWith("/theorie");
+    }
+    return pathname === href;
+  };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-hl bg-[color:var(--hl-bg)]/94 backdrop-blur-xl">
-      <div className="hl-container">
-        <div className="flex h-[72px] items-center justify-between gap-4">
+    <header className="sticky top-3 sm:top-4 z-50 px-3 sm:px-5 lg:px-8 max-w-[1720px] mx-auto w-full transition-all duration-300">
+      <nav className="w-full bg-white/90 dark:bg-[#07090E]/95 text-slate-900 dark:text-white border border-gray-200/80 dark:border-amber-500/25 rounded-2xl backdrop-blur-xl shadow-xl dark:shadow-[0_10px_35px_rgba(0,0,0,0.7)] transition-colors duration-300">
+        <div className="px-3 sm:px-5 lg:px-7 py-2 sm:py-2.5 flex items-center justify-between gap-2 xl:gap-4">
+          
+          {/* Logo HorloLearn Officiel */}
           <Link
             href="/"
-            className="group flex shrink-0 items-center gap-3 notranslate"
+            className="flex items-center gap-2.5 hover:opacity-90 transition-opacity flex-shrink-0 notranslate"
             translate="no"
-            onClick={() => setOpen(false)}
           >
             <Image
               src="/logos/Logo.jpg"
-              alt="HorloLearn"
-              width={38}
-              height={38}
+              alt="HorloLearn Logo"
+              width={36}
+              height={36}
+              className="rounded-full flex-shrink-0 ring-1 ring-amber-500/30"
               priority
-              className="rounded-full border border-[var(--hl-line)] object-cover grayscale-[12%] transition group-hover:grayscale-0"
             />
-            <div className="leading-none">
-              <div className="font-serif text-[21px] tracking-[-0.02em] text-[var(--hl-ink)]">
-                Horlo<span className="text-hl-metal">Learn</span>
-              </div>
-              <div className="mt-1 font-mono text-[8px] uppercase tracking-[0.22em] text-hl-muted">
-                Culture horlogère suisse
-              </div>
+            <div className="flex flex-col">
+              <span className="text-base sm:text-lg font-bold text-slate-900 dark:text-white notranslate tracking-tight font-serif" translate="no">
+                Horlo<span className="text-[#E2B44F]">Learn</span>
+              </span>
+              <span className="text-[9px] text-[#E2B44F] leading-tight hidden sm:block whitespace-nowrap tracking-wider uppercase font-mono">
+                Culture &amp; Savoir-Faire
+              </span>
             </div>
           </Link>
 
-          <nav className="hidden lg:flex h-full items-center gap-6 xl:gap-8" aria-label="Navigation principale">
-            {PRIMARY_LINKS.map((link) => {
-              const active = isActive(link.href);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`relative flex h-full items-center text-[13px] transition-colors ${
-                    active
-                      ? "text-[var(--hl-ink)]"
-                      : "text-hl-muted hover:text-[var(--hl-ink)]"
-                  }`}
-                >
-                  {link.label}
-                  <span
-                    className={`absolute bottom-0 left-0 h-px transition-all ${
-                      active ? "w-full bg-[var(--hl-metal)]" : "w-0 bg-[var(--hl-metal)]"
-                    }`}
-                  />
-                </Link>
-              );
-            })}
-          </nav>
+          {/* PROPOSITION 1 : Le Ruban Capsule & Glassmorphism Flottant (Écrans larges & Laptops) */}
+          <div className="hidden xl:flex items-center p-1 rounded-full bg-slate-100/90 dark:bg-slate-900/85 border border-slate-200/80 dark:border-amber-500/25 shadow-lg shadow-black/5 dark:shadow-[0_4px_25px_rgba(0,0,0,0.5)] backdrop-blur-xl max-w-full overflow-x-auto no-scrollbar">
+            {navSections.map((section, sIdx) => (
+              <React.Fragment key={section.title}>
+                {sIdx > 0 && (
+                  <span className="w-px h-3.5 bg-slate-300 dark:bg-slate-800 mx-1 flex-shrink-0" />
+                )}
+                {section.links.map(({ href, label }) => {
+                  const active = isLinkActive(href);
+                  return (
+                    <Link
+                      key={href}
+                      href={href}
+                      className={`px-2.5 2xl:px-3 py-1 2xl:py-1.5 rounded-full text-[11px] 2xl:text-xs font-medium whitespace-nowrap transition-all duration-200 flex items-center gap-1.5 flex-shrink-0 ${
+                        active
+                          ? "bg-gradient-to-r from-amber-500/20 via-amber-400/15 to-amber-500/20 border border-amber-500/40 text-amber-700 dark:text-amber-300 font-semibold shadow-sm"
+                          : "text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-300 hover:bg-slate-200/60 dark:hover:bg-slate-800/60"
+                      }`}
+                    >
+                      {active && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400 animate-pulse flex-shrink-0" />
+                      )}
+                      <span>{label}</span>
+                    </Link>
+                  );
+                })}
+              </React.Fragment>
+            ))}
+          </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Actions Droite Desktop (Recherche + Langue + Thème) */}
+          <div className="hidden xl:flex items-center gap-2 2xl:gap-3 flex-shrink-0">
+            {/* 🔍 Bouton de recherche compact */}
             {onSearchClick && (
               <button
-                type="button"
                 onClick={onSearchClick}
-                className="inline-flex h-10 w-10 items-center justify-center border border-hl bg-transparent text-hl-muted transition hover:border-[var(--hl-line-strong)] hover:text-[var(--hl-ink)]"
-                aria-label="Rechercher"
-                title="Rechercher — Ctrl K"
+                className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg hover:border-amber-500/50 transition-colors text-xs notranslate cursor-pointer"
+                translate="no"
+                title="Rechercher (Ctrl K)"
               >
-                <Search className="h-4 w-4" />
+                <Search className="w-3.5 h-3.5 text-gray-700 dark:text-gray-300 flex-shrink-0" />
+                <span className="hidden 2xl:inline text-xs text-gray-700 dark:text-gray-300 notranslate" translate="no">
+                  Recherche
+                </span>
+                <kbd className="px-1.5 py-0.5 text-[10px] bg-white dark:bg-slate-950 rounded border border-gray-300 dark:border-gray-700 text-gray-500 font-mono">
+                  ⌘K
+                </kbd>
               </button>
             )}
 
-            <div className="hidden sm:block">
-              <LanguageSelector />
-            </div>
+            {/* 🌐 Sélecteur de langue */}
+            <LanguageSelector />
+
+            {/* 🌓 Bascule Thème Clair / Sombre */}
+            <ThemeToggle />
+          </div>
+
+          {/* Actions Droite Mobile/Tablette (Recherche + Langue + Thème + Menu) */}
+          <div className="xl:hidden flex items-center gap-1.5 sm:gap-2">
+            {onSearchClick && (
+              <button
+                onClick={onSearchClick}
+                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-gray-700 dark:text-gray-300 hover:text-[#E2B44F] border border-slate-200 dark:border-slate-800 cursor-pointer"
+                aria-label="Rechercher"
+              >
+                <Search className="w-4 h-4" />
+              </button>
+            )}
+
+            <LanguageSelector />
             <ThemeToggle />
 
             <button
-              type="button"
-              onClick={() => setOpen((value) => !value)}
-              className="inline-flex h-10 w-10 items-center justify-center border border-hl text-[var(--hl-ink)] lg:hidden"
-              aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
-              aria-expanded={open}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-slate-900 dark:text-white hover:text-[#E2B44F] transition-colors rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 cursor-pointer"
+              aria-label="Menu Principal"
             >
-              {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
+
         </div>
-      </div>
 
-      {open && (
-        <div className="border-t border-hl bg-[var(--hl-surface)] lg:hidden">
-          <div className="hl-container py-7">
-            <div className="mb-7 flex items-center justify-between border-b border-hl pb-4">
-              <span className="hl-kicker">Sommaire HorloLearn</span>
-              <div className="sm:hidden">
-                <LanguageSelector />
+        {/* TIROIR MOBILE & TABLETTE DÉROULANT AVEC STRUCTURE DES 4 PÔLES */}
+        {mobileMenuOpen && (
+          <div className="xl:hidden border-t border-slate-200/80 dark:border-amber-500/20 bg-white/95 dark:bg-[#07090E]/98 px-4 py-5 space-y-5 rounded-b-2xl">
+            {navSections.map((section, idx) => (
+              <div key={section.title} className="space-y-2">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-[#E2B44F] font-bold flex items-center gap-2">
+                  <span>0{idx + 1}.</span>
+                  <span>{section.title}</span>
+                  <span className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {section.links.map(({ href, label }) => {
+                    const active = isLinkActive(href);
+                    return (
+                      <Link
+                        key={href}
+                        href={href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`px-3 py-2 rounded-xl text-xs text-center font-medium transition-all ${
+                          active
+                            ? "bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold border border-amber-500/40"
+                            : "bg-slate-100 dark:bg-slate-900/80 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800"
+                        }`}
+                      >
+                        {label}
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            ))}
 
-            <div className="grid grid-cols-1 gap-0 sm:grid-cols-2">
-              {PRIMARY_LINKS.map((link, index) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="group flex items-center justify-between border-b border-hl py-4 sm:odd:pr-6 sm:even:pl-6"
-                >
-                  <span className="flex items-baseline gap-3">
-                    <span className="font-mono text-[10px] text-hl-metal">0{index + 1}</span>
-                    <span className="font-serif text-xl text-[var(--hl-ink)]">{link.label}</span>
-                  </span>
-                  <span className="text-hl-muted transition group-hover:translate-x-1 group-hover:text-hl-metal">→</span>
-                </Link>
-              ))}
-            </div>
-
-            <div className="mt-7 flex flex-wrap gap-x-5 gap-y-3">
-              {SECONDARY_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="font-mono text-[10px] uppercase tracking-[0.12em] text-hl-muted transition hover:text-hl-metal"
-                >
-                  {link.label}
-                </Link>
-              ))}
+            {/* Bouton CTA d'action mobile */}
+            <div className="pt-2">
+              <Link
+                href="/theorie"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2"
+              >
+                <span>Entrer dans l'Atelier</span>
+                <span>→</span>
+              </Link>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </nav>
     </header>
   );
 }
