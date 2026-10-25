@@ -272,7 +272,24 @@ const PRACTICAL_MODULES: PracticalModule[] = [
     href: '/pratique/rhabillage'
   },
   {
-    step: 'Étape 08 · Plans d\'Usine',
+    step: 'Étape 08 · Habillage d\'Atelier',
+    badge: 'NIHS 91-10 & 92-20',
+    title: 'Posages & Emboîtages d\'Atelier',
+    description: 'Cadrage, chassage des aiguilles, chasse aux poussières en lumière rasante 45°, découpe micrométrique de tige et étanchéité Proofmaster.',
+    icon: '🪚',
+    iconBg: 'bg-amber-500/10',
+    iconBorder: 'border-amber-500/30',
+    iconColor: 'text-amber-500 dark:text-amber-400',
+    stepColor: 'text-amber-600 dark:text-amber-400',
+    hoverBorder: 'hover:border-amber-400 dark:hover:border-amber-400',
+    hoverText: 'group-hover:text-amber-600 dark:group-hover:text-amber-400',
+    hoverShadow: 'hover:shadow-amber-500/10',
+    btnHover: 'group-hover:bg-amber-400 group-hover:text-slate-950 group-hover:border-amber-400',
+    tools: ['Protecteur Mylar', 'Poire HEPA', 'Proofmaster'],
+    href: '/pratique/emboitage'
+  },
+  {
+    step: 'Étape 09 · Plans d\'Usine',
     badge: 'Plans ETA & Valjoux',
     title: 'Fiches Techniques & Nomenclatures',
     description: 'Plans officiels complets des calibres suisses de référence : éclatés techniques ETA 6497-1 et ETA 2824-2, nomenclature et couples de serrage.',
@@ -289,7 +306,7 @@ const PRACTICAL_MODULES: PracticalModule[] = [
     href: '/pratique/fiches'
   },
   {
-    step: 'Étape 09 · Filières d\'État',
+    step: 'Étape 10 · Filières d\'État',
     badge: 'Convention Patronale',
     title: 'Certifications AFP & CFC',
     description: 'Les exigences fédérales suisses de la formation professionnelle : critères d\'examen d\'établi, grilles d\'évaluation et passerelles de carrière.',
