@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -12,6 +12,8 @@ import {
   ShieldCheck,
   AlertTriangle,
   ZoomIn,
+  ZoomOut,
+  Maximize2,
   X,
   ChevronRight,
   Sparkles,
@@ -242,6 +244,35 @@ function DialProtectionSVG() {
   <circle cx="28" cy="257" r="4" fill="#facc15"/>
   <text x="40" y="256" fill="#fef08a" fontSize="8.5" fontFamily="monospace" fontWeight="bold">INTERDICTION ABSOLUE : TOUCHER LE CADRAN AUX BRUCELLES MÉTALLIQUES</text>
   <text x="40" y="266" fill="#94a3b8" fontSize="7.5" fontFamily="sans-serif">Toujours interposer un film protecteur. Une micro-rayure sur un cadran laqué est irréversible.</text>
+</svg>
+  );
+}
+
+function GrazingBeamSVG() {
+  return (
+<svg viewBox="0 0 400 200" className="w-full h-auto rounded-xl bg-[#090d16]" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="lightBeamModal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.8"/>
+      <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.05"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="200" fill="#090d16"/>
+  <rect x="30" y="140" width="340" height="14" rx="2" fill="#1e293b" stroke="#475569" strokeWidth="1"/>
+  <text x="200" y="170" fill="#64748b" fontSize="10" fontFamily="monospace" textAnchor="middle">Surface Vernie du Cadran</text>
+  <path d="M40,30 L110,65 L90,105 L20,70 Z" fill="#334155" stroke="#f59e0b" strokeWidth="1.2"/>
+  <circle cx="95" cy="85" r="10" fill="#f59e0b"/>
+  <text x="55" y="25" fill="#f59e0b" fontSize="9" fontFamily="sans-serif" fontWeight="bold">Lampe 45°</text>
+  <polygon points="105,85 360,140 180,140" fill="url(#lightBeamModal)"/>
+  <circle cx="240" cy="138" r="3" fill="#ffffff" filter="drop-shadow(0 0 3px #f59e0b)"/>
+  <ellipse cx="255" cy="141" rx="12" ry="2" fill="#000000" opacity="0.8"/>
+  <path d="M240,120 L240,132" stroke="#38bdf8" strokeWidth="1.2"/>
+  <text x="240" y="112" fill="#38bdf8" fontSize="9" fontFamily="monospace" textAnchor="middle">Micro-fibre révélée</text>
+  <text x="280" y="155" fill="#ef4444" fontSize="8" fontFamily="sans-serif">Ombre portée nette</text>
+  <circle cx="240" cy="40" r="14" fill="#1e293b" stroke="#94a3b8" strokeWidth="1.2"/>
+  <circle cx="240" cy="40" r="6" fill="#0284c7"/>
+  <path d="M240,58 L240,110" stroke="#94a3b8" strokeWidth="1" strokeDasharray="3,3"/>
+  <text x="265" y="44" fill="#e2e8f0" fontSize="9" fontFamily="sans-serif">Regard Loupe 4x</text>
 </svg>
   );
 }
@@ -561,6 +592,7 @@ interface StepData {
   standard: string;
   masterTip: string;
   trapAlert: string;
+  schemaType: string;
 }
 
 const STEPS_DATA: StepData[] = [
@@ -573,7 +605,8 @@ const STEPS_DATA: StepData[] = [
     torques: "1.2 cNm max",
     standard: "NIHS 91-10",
     masterTip: "Ne bloquez JAMAIS la première vis à fond ! Approchez la première vis sans forcer, approchez la seconde vis, contrôlez le centrage parfait du guichet de date autour du disque, puis appliquez le serrage final alternatif.",
-    trapAlert: "Serrer la vis avec un tournevis trop large ou forcer le couple : le pied en cuivre se sectionne net à la base ou l'émail saute sur la face visible du cadran. Zéro éliminatoire immédiat aux examens !"
+    trapAlert: "Serrer la vis avec un tournevis trop large ou forcer le couple : le pied en cuivre se sectionne net à la base ou l'émail saute sur la face visible du cadran. Zéro éliminatoire immédiat aux examens !",
+    schemaType: "dial_feet"
   },
   {
     id: 2,
@@ -584,7 +617,8 @@ const STEPS_DATA: StepData[] = [
     torques: "Chassage progressif sans à-coup",
     standard: "NIHS 91-10 (G1, G2, G3, G4)",
     masterTip: "Avant de poser la première aiguille, faites tourner la tige en position mise à l'heure jusqu'au saut franc de la date. Stoppez net ! Posez alors l'aiguille des heures pointant rigoureusement sur 12h00, puis l'aiguille des minutes. Votre date sautera ainsi précisément à 00:00 (tolérance : 23h55 – 00:05).",
-    trapAlert: "Chasser une aiguille sans protecteur de cadran en Mylar, ou laisser l'aiguille des minutes frotter les index appliqués ou la face interne du saphir. Baisse d'amplitude fatale et rayure irrémédiable."
+    trapAlert: "Chasser une aiguille sans protecteur de cadran en Mylar, ou laisser l'aiguille des minutes frotter les index appliqués ou la face interne du saphir. Baisse d'amplitude fatale et rayure irrémédiable.",
+    schemaType: "hands_clearance"
   },
   {
     id: 3,
@@ -595,7 +629,8 @@ const STEPS_DATA: StepData[] = [
     torques: "Pression douce par tamponnement",
     standard: "Protocole Salle Blanche Horlogère",
     masterTip: "L'éclairage zénithal (par le dessus) crée des reflets qui masquent les poussières. En inclinant la lumière à 45° en faisceau rasant sur fond sombre, chaque micro-fibre projette une ombre portée nette et diffuse la lumière, devenant visible comme une étoile dans la nuit !",
-    trapAlert: "Utiliser une bombe d'air comprimé industrielle (projette des micro-gouttelettes d'huile propulseur) ou un chiffon synthétique (crée de l'électricité statique attirant les particules)."
+    trapAlert: "Utiliser une bombe d'air comprimé industrielle (projette des micro-gouttelettes d'huile propulseur) ou un chiffon synthétique (crée de l'électricité statique attirant les particules).",
+    schemaType: "grazing_beam"
   },
   {
     id: 4,
@@ -606,7 +641,8 @@ const STEPS_DATA: StepData[] = [
     torques: "Friction contrôlée",
     standard: "ISO 22810 & NIHS 92-20",
     masterTip: "Avant d'insérer le mouvement, placez la carrure vide sous la lumière rasante pour inspecter la face intérieure de la glace. Une trace de doigt ou un dépôt gras laissé par une brucelle métallique ne pourra plus être nettoyé une fois le mouvement en place sans redémonter tout l'ensemble !",
-    trapAlert: "Graisser le joint de glace Hytrel / Téflon : le joint de glace se monte STRICTEMENT À SEC ! L'adjonction de graisse détruit la friction d'emmanchement et la glace saute sous la pression de l'eau !"
+    trapAlert: "Graisser le joint de glace Hytrel / Téflon : le joint de glace se monte STRICTEMENT À SEC ! L'adjonction de graisse détruit la friction d'emmanchement et la glace saute sous la pression de l'eau !",
+    schemaType: "gaskets_casing"
   },
   {
     id: 5,
@@ -617,7 +653,8 @@ const STEPS_DATA: StepData[] = [
     torques: "1.8 à 2.2 cNm (Serrage en croix)",
     standard: "Directives ETA / Valjoux",
     masterTip: "Les vis de boîte sont microscopiques : déposez une tête d'épingle de Rodico frais sur la panne de votre tournevis. La vis y adhère parfaitement, vous permettant de la guider dans le trou taraudé de la platine sans risque de la faire tomber dans le balancier-spiral.",
-    trapAlert: "Serrer une bride à fond sans approcher la seconde : le calibre se met en biais par rapport au tube de carrure, ce qui fait frotter la tige de remontoir dans le tube et fausse le remontage."
+    trapAlert: "Serrer une bride à fond sans approcher la seconde : le calibre se met en biais par rapport au tube de carrure, ce qui fait frotter la tige de remontoir dans le tube et fausse le remontage.",
+    schemaType: "case_assembly"
   },
   {
     id: 6,
@@ -628,7 +665,8 @@ const STEPS_DATA: StepData[] = [
     torques: "Formule : X = A - B (Jeu : 0.20 mm)",
     standard: "Norme Métrologique NIHS",
     masterTip: "Après découpe à la pince carbure, ébavurez impérativement l'amorce de filet sur une pierre d'Arkansas en faisant tourner la tige à 45°. Si le filet n'est pas chanfreiné, il refoule le taraudage de la couronne au vissage !",
-    trapAlert: "Utiliser de la Loctite 270 (verte) ou Loctite 243 (bleue) : elles soudent la tige dans la couronne et rendent tout démontage futur impossible sans casser la tige nette !"
+    trapAlert: "Utiliser de la Loctite 270 (verte) ou Loctite 243 (bleue) : elles soudent la tige dans la couronne et rendent tout démontage futur impossible sans casser la tige nette !",
+    schemaType: "stem_cutting"
   },
   {
     id: 7,
@@ -639,7 +677,8 @@ const STEPS_DATA: StepData[] = [
     torques: "Cycles -0.5 bar / +5.0 bar",
     standard: "NIHS 92-20 & ISO 22810",
     masterTip: "Commencez TOUJOURS par le test sous dépression (vide -0.5 bar). Si la boîte fuit, la dépression écarte légèrement le joint sans aucun danger pour le calibre, alertant immédiatement l'appareil sans introduire d'humidité.",
-    trapAlert: "Omettre le test de condensation thermique : une montre peut passer le test de pression d'air tout en contenant de l'air humide emprisonné lors de l'emboîtage qui embuera au moindre froid !"
+    trapAlert: "Omettre le test de condensation thermique : une montre peut passer le test de pression d'air tout en contenant de l'air humide emprisonné lors de l'emboîtage qui embuera au moindre froid !",
+    schemaType: "waterproof_testing"
   }
 ];
 
@@ -675,6 +714,92 @@ const EXAM_CRITERIA: ExamCriterion[] = [
 export default function PosageEmboitagePage() {
   const [activeStep, setActiveStep] = useState<number>(1);
   const [activeTab, setActiveTab] = useState<"steps" | "stem" | "dust" | "clearance" | "exam">("steps");
+
+  // State: Loupe 10x Inspection Modal
+  const [loupeModal, setLoupeModal] = useState<{
+    isOpen: boolean;
+    stepId: number;
+    title: string;
+    standard: string;
+    schemaType: string;
+    zoomLevel: number; // 1, 2, 5, 10
+  }>({
+    isOpen: false,
+    stepId: 1,
+    title: "Contrôle, Cadrage & Fixation du Cadran",
+    standard: "NIHS 91-10",
+    schemaType: "dial_feet",
+    zoomLevel: 1
+  });
+
+  const openLoupe = (step: StepData) => {
+    setLoupeModal({
+      isOpen: true,
+      stepId: step.id,
+      title: step.title,
+      standard: step.standard,
+      schemaType: step.schemaType,
+      zoomLevel: 1
+    });
+  };
+
+  const openHeroLoupe = () => {
+    setLoupeModal({
+      isOpen: true,
+      stepId: 0,
+      title: "Coupe Transversale Complète d'Emboîtage",
+      standard: "NIHS 92-20 & ISO 22810",
+      schemaType: "case_assembly",
+      zoomLevel: 1
+    });
+  };
+
+  const closeLoupe = () => {
+    setLoupeModal(prev => ({ ...prev, isOpen: false }));
+  };
+
+  // Keyboard navigation for loupe modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!loupeModal.isOpen) return;
+      if (e.key === "Escape") closeLoupe();
+      if (e.key === "+" || e.key === "=") {
+        setLoupeModal(prev => ({ ...prev, zoomLevel: Math.min(10, prev.zoomLevel === 1 ? 2 : prev.zoomLevel === 2 ? 5 : 10) }));
+      }
+      if (e.key === "-") {
+        setLoupeModal(prev => ({ ...prev, zoomLevel: Math.max(1, prev.zoomLevel === 10 ? 5 : prev.zoomLevel === 5 ? 2 : 1) }));
+      }
+      if (e.key === "0") {
+        setLoupeModal(prev => ({ ...prev, zoomLevel: 1 }));
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [loupeModal.isOpen]);
+
+  // Helper to render schema by key inside modal and step card
+  const renderSchemaComponent = (type: string) => {
+    switch (type) {
+      case "dial_feet":
+        return <DialFeetSVG />;
+      case "hands_clearance":
+        return <HandsClearanceSVG />;
+      case "dial_protection":
+        return <DialProtectionSVG />;
+      case "grazing_beam":
+        return <GrazingBeamSVG />;
+      case "gaskets_casing":
+        return <GasketsCasingSVG />;
+      case "case_assembly":
+        return <CaseAssemblySVG />;
+      case "stem_cutting":
+        return <StemCuttingSVG />;
+      case "waterproof_testing":
+        return <WaterproofTestingSVG />;
+      default:
+        return <CaseAssemblySVG />;
+    }
+  };
 
   // State: Stem Cutting Simulator
   const [overhangA, setOverhangA] = useState<number>(4.50);
@@ -893,18 +1018,36 @@ export default function PosageEmboitagePage() {
               </div>
             </div>
 
-            {/* Right Blueprint Preview */}
-            <div className="lg:col-span-5 bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xl">
+            {/* Right Blueprint Preview with LOUPE 10X button */}
+            <div className="lg:col-span-5 bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xl relative group">
               <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 mb-3 text-xs font-mono">
                 <span className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
                   <Compass className="w-4 h-4 text-amber-500" />
                   COUPE TECHNIQUE D'EMBOÎTAGE
                 </span>
-                <span className="text-amber-500 font-semibold">Vue 10x</span>
+                <button
+                  onClick={openHeroLoupe}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500 hover:text-white border border-amber-500/20 text-xs font-mono font-bold transition shadow-sm"
+                  title="Examiner à la loupe d'atelier 10x"
+                >
+                  <ZoomIn className="w-3.5 h-3.5" />
+                  <span>Loupe 10x</span>
+                </button>
               </div>
-              <div className="overflow-hidden rounded-xl bg-slate-950 p-1">
+
+              <div
+                onClick={openHeroLoupe}
+                className="overflow-hidden rounded-xl bg-slate-950 p-1 cursor-zoom-in group-hover:ring-2 group-hover:ring-amber-500/40 transition duration-300 relative"
+              >
                 <CaseAssemblySVG />
+                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="px-3 py-1.5 rounded-lg bg-amber-500 text-white font-mono text-xs font-bold shadow-lg flex items-center gap-1.5">
+                    <ZoomIn className="w-4 h-4" />
+                    <span>Agrandir à la Loupe 10x</span>
+                  </span>
+                </div>
               </div>
+
               <p className="text-[11px] text-center text-slate-500 dark:text-slate-400 mt-2 font-mono">
                 Coupe transversale : Glace saphir, joint Hytrel, cercle, brides, tube & couronne.
               </p>
@@ -928,7 +1071,7 @@ export default function PosageEmboitagePage() {
                 Les 7 Gestes Sacramentels de l'Emboîteur
               </h2>
               <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
-                Sélectionnez une étape ci-dessous pour découvrir son schéma technique vectoriel, ses tolérances suisses et les astuces du maître.
+                Sélectionnez une étape ci-dessous. Chaque schéma technique vectoriel peut être examiné à la loupe d'atelier 10x.
               </p>
             </div>
 
@@ -1021,28 +1164,54 @@ export default function PosageEmboitagePage() {
 
                     </div>
 
-                    {/* Technical SVG Blueprint */}
-                    <div className="lg:col-span-5 bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-inner space-y-3">
+                    {/* Technical SVG Blueprint with LOUPE 10X button */}
+                    <div className="lg:col-span-5 bg-slate-950 p-5 rounded-2xl border border-slate-800 shadow-inner space-y-3 relative group">
                       <div className="flex items-center justify-between text-xs font-mono text-slate-400 pb-2 border-b border-slate-800">
-                        <span>PLAN TECHNIQUE VECTORIEL 0{current.id}</span>
-                        <span className="text-amber-400 font-bold">{current.standard}</span>
+                        <span className="font-semibold text-slate-300">PLAN TECHNIQUE VECTORIEL 0{current.id}</span>
+                        
+                        {/* Prominent Loupe 10x button */}
+                        <button
+                          onClick={() => openLoupe(current)}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500 text-white font-mono text-xs font-bold hover:bg-amber-600 transition shadow-md"
+                          title="Examiner ce schéma à la loupe d'atelier 10x"
+                        >
+                          <ZoomIn className="w-4 h-4" />
+                          <span>Loupe 10x</span>
+                        </button>
                       </div>
                       
-                      <div className="overflow-hidden rounded-xl">
-                        {current.id === 1 && <DialFeetSVG />}
-                        {current.id === 2 && <HandsClearanceSVG />}
-                        {current.id === 3 && (
-                          <div className="space-y-3">
-                            <DialProtectionSVG />
-                            <p className="text-[11px] font-mono text-slate-400 text-center">
-                              Film protecteur Mylar Bergeon 6938 & Tasseaux Delrin à chasser.
-                            </p>
-                          </div>
-                        )}
-                        {current.id === 4 && <GasketsCasingSVG />}
-                        {current.id === 5 && <CaseAssemblySVG />}
-                        {current.id === 6 && <StemCuttingSVG />}
-                        {current.id === 7 && <WaterproofTestingSVG />}
+                      {/* Clickable Schema with Zoom cursor & Overlay */}
+                      <div
+                        onClick={() => openLoupe(current)}
+                        className="overflow-hidden rounded-xl cursor-zoom-in relative group/zoom transition duration-300"
+                        title="Cliquez pour agrandir ce schéma à la loupe 10x"
+                      >
+                        {renderSchemaComponent(current.schemaType)}
+
+                        {/* Hover Overlay informing the apprentice */}
+                        <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover/zoom:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-4 text-center">
+                          <span className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-xl">
+                            <ZoomIn className="w-6 h-6" />
+                          </span>
+                          <span className="text-white font-bold font-mono text-sm">
+                            Examiner à la Loupe d'Atelier 10x
+                          </span>
+                          <span className="text-slate-300 text-xs font-mono">
+                            Zoom micrométrique haute résolution · Cotes et directives
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Micro-legend */}
+                      <div className="pt-2 flex items-center justify-between text-[11px] font-mono text-slate-400 border-t border-slate-800/80">
+                        <span>Norme : {current.standard}</span>
+                        <button
+                          onClick={() => openLoupe(current)}
+                          className="text-amber-400 hover:text-amber-300 underline flex items-center gap-1"
+                        >
+                          <Maximize2 className="w-3 h-3" />
+                          <span>Agrandir plein écran</span>
+                        </button>
                       </div>
 
                     </div>
@@ -1070,17 +1239,26 @@ export default function PosageEmboitagePage() {
                 </p>
               </div>
 
-              <button
-                onClick={() => {
-                  setOverhangA(4.50);
-                  setThreadDepthB(2.20);
-                  setActualCut(2.30);
-                }}
-                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-mono font-bold hover:text-amber-500 transition border border-slate-200 dark:border-slate-700 flex items-center gap-2 self-start md:self-auto"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>Réinitialiser Cotes Étalon</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => openLoupe(STEPS_DATA[5])}
+                  className="px-3.5 py-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500 hover:text-white text-xs font-mono font-bold transition border border-amber-500/30 flex items-center gap-1.5"
+                >
+                  <ZoomIn className="w-4 h-4" />
+                  <span>Schéma de Coupe 10x</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setOverhangA(4.50);
+                    setThreadDepthB(2.20);
+                    setActualCut(2.30);
+                  }}
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-mono font-bold hover:text-amber-500 transition border border-slate-200 dark:border-slate-700 flex items-center gap-2"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Réinitialiser</span>
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -1450,13 +1628,22 @@ export default function PosageEmboitagePage() {
                 </p>
               </div>
 
-              <button
-                onClick={trigger12hRotation}
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-white font-mono text-xs font-bold shadow-md hover:from-amber-600 hover:to-amber-700 transition flex items-center gap-2 self-start md:self-auto"
-              >
-                <Clock className="w-4 h-4" />
-                <span>Simuler Tour 12 Heures</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => openLoupe(STEPS_DATA[1])}
+                  className="px-3.5 py-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500 hover:text-white text-xs font-mono font-bold transition border border-amber-500/30 flex items-center gap-1.5"
+                >
+                  <ZoomIn className="w-4 h-4" />
+                  <span>Gardes NIHS 10x</span>
+                </button>
+                <button
+                  onClick={trigger12hRotation}
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-white font-mono text-xs font-bold shadow-md hover:from-amber-600 hover:to-amber-700 transition flex items-center gap-2"
+                >
+                  <Clock className="w-4 h-4" />
+                  <span>Simuler Tour 12 Heures</span>
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -1686,6 +1873,125 @@ export default function PosageEmboitagePage() {
         )}
 
       </main>
+
+      {/* ==================== LOUPE D'ATELIER 10X FULLSCREEN MODAL ==================== */}
+      {loupeModal.isOpen && (
+        <div
+          onClick={closeLoupe}
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 transition-all duration-300 cursor-pointer"
+          title="Cliquer à l'extérieur pour fermer"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-5xl bg-[#0a0e17] border border-amber-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] cursor-default"
+          >
+            
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-slate-800 bg-[#0d1322]">
+              <div className="flex items-center gap-3">
+                <span className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center font-mono font-bold text-base shadow-inner">
+                  🔍
+                </span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] uppercase font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                      LOUPE D'INSPECTION 10X
+                    </span>
+                    <span className="text-xs font-mono text-slate-400">
+                      Norme : {loupeModal.standard}
+                    </span>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-bold text-white tracking-wide mt-0.5">
+                    {loupeModal.stepId > 0 ? `Étape 0${loupeModal.stepId} : ` : ""}{loupeModal.title}
+                  </h3>
+                </div>
+              </div>
+
+              {/* Zoom Controls & Close Button */}
+              <div className="flex items-center space-x-2">
+                <div className="hidden sm:flex items-center space-x-1 bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs font-mono">
+                  <span className="px-2 text-slate-400 text-[11px]">Zoom :</span>
+                  {[1, 2, 5, 10].map(level => (
+                    <button
+                      key={level}
+                      onClick={() => setLoupeModal(prev => ({ ...prev, zoomLevel: level }))}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition ${
+                        loupeModal.zoomLevel === level
+                          ? "bg-amber-500 text-white shadow"
+                          : "text-slate-400 hover:text-white hover:bg-slate-800"
+                      }`}
+                    >
+                      {level}x
+                    </button>
+                  ))}
+                </div>
+
+                <div className="h-6 w-px bg-slate-800 hidden sm:block" />
+
+                <button
+                  onClick={closeLoupe}
+                  className="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition text-lg"
+                  title="Fermer la loupe (Échap)"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body: Scalable SVG Canvas with millimeter technical grid */}
+            <div className="p-6 overflow-auto flex-1 flex flex-col items-center justify-center bg-[#060911] relative min-h-[380px]">
+              
+              {/* Technical Millimeter Grid Pattern */}
+              <div
+                className="w-full flex items-center justify-center transition-transform duration-300 origin-center"
+                style={{ transform: `scale(${loupeModal.zoomLevel === 10 ? 1.45 : loupeModal.zoomLevel === 5 ? 1.25 : loupeModal.zoomLevel === 2 ? 1.10 : 1.0})` }}
+              >
+                <div className="w-full max-w-3xl drop-shadow-2xl">
+                  {renderSchemaComponent(loupeModal.schemaType)}
+                </div>
+              </div>
+
+              {/* Zoom indicator and touch controls pill */}
+              <div className="absolute bottom-4 left-3 right-3 sm:left-4 sm:right-auto px-3.5 py-2 rounded-xl bg-slate-900/95 border border-slate-700/80 text-xs font-mono text-slate-300 flex items-center justify-between sm:justify-start gap-3 shadow-xl backdrop-blur z-10">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Grossissement : <strong className="text-amber-400">{loupeModal.zoomLevel}x</strong></span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  {[1, 2, 5, 10].map(level => (
+                    <button
+                      key={level}
+                      onClick={() => setLoupeModal(prev => ({ ...prev, zoomLevel: level }))}
+                      className={`px-2 py-1 rounded-lg text-[11px] font-bold transition ${
+                        loupeModal.zoomLevel === level
+                          ? "bg-amber-500 text-white shadow"
+                          : "bg-slate-800 text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      {level}x
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer: Workbench Micro Directives */}
+            <div className="px-6 py-4 bg-[#0a0f1d] border-t border-slate-800 text-xs font-mono text-slate-300 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-slate-400">
+                <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>Examen micro-mécanique officiel : Chaque trait, tolérance et cote respecte la norme suisse.</span>
+              </div>
+              <button
+                onClick={closeLoupe}
+                className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-mono text-xs font-bold transition shadow"
+              >
+                Retour à l'Établi
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
       {/* ==================== BENCH TOOLS & CHEMICAL FASTENERS LEXICON ==================== */}
       <section className="py-16 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
