@@ -1,4 +1,3 @@
-
 "use client";
 
 import { ThemeProvider as NextThemesProvider } from "next-themes";
@@ -9,7 +8,14 @@ export default function ThemeProvider({
   ...props
 }: ThemeProviderProps) {
   return (
-    <NextThemesProvider attribute="class" defaultTheme="dark" {...props}>
+    <NextThemesProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      storageKey="horlolearn-theme"
+      disableTransitionOnChange
+      {...props}
+    >
       {children}
     </NextThemesProvider>
   );
