@@ -1,541 +1,255 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
-import {
-  Compass,
-  BookOpen,
-  Wrench,
-  Award,
-  ChevronRight,
-  ArrowRight,
-  CheckCircle2,
-  Clock,
-  Zap,
-  Globe,
-  Layers,
-  Brain,
-  Users
-} from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ArrowRight, BookOpen, Gauge, Gem, Wrench, Watch, Globe2, Layers3 } from 'lucide-react';
 
-// Horloge interactive Haute Horlogerie Suisse (rendue côté client uniquement pour éviter les écarts d'hydratation)
-const LuxuryHeroClock = dynamic(() => import('@/components/LuxuryHeroClock'), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full max-w-[620px] h-[480px] rounded-3xl bg-slate-900/60 border border-amber-500/20 animate-pulse flex items-center justify-center">
-      <span className="text-amber-400 font-mono text-xs tracking-widest">
-        CHRONOMÈTRE SUISSE HAUTE HORLOGERIE...
-      </span>
-    </div>
-  ),
-});
+const gateways = [
+  {
+    index: '01',
+    title: 'Comprendre la mécanique',
+    text: 'Du barillet au balancier-spiral : les organes, les forces et la cinématique qui donnent vie à une montre mécanique.',
+    href: '/theorie',
+    meta: 'Théorie · mécanismes · normes',
+    icon: BookOpen,
+  },
+  {
+    index: '02',
+    title: 'Observer le geste',
+    text: 'Démontage, remontage, huilage, contrôle et diagnostic : une approche d’établi pour mieux lire le mouvement.',
+    href: '/pratique',
+    meta: 'Pratique · ETA 6497 · atelier',
+    icon: Wrench,
+  },
+  {
+    index: '03',
+    title: 'Mesurer & vérifier',
+    text: 'Simulateurs, calculateurs et outils interactifs pour explorer les phénomènes de précision horlogère.',
+    href: '/outils',
+    meta: 'Outils · métrologie · simulation',
+    icon: Gauge,
+  },
+  {
+    index: '04',
+    title: 'Découvrir la Suisse horlogère',
+    text: 'Territoires, manufactures, patrimoine et culture : replacer la technique dans son histoire et son paysage.',
+    href: '/suisse',
+    meta: 'Patrimoine · manufactures · culture',
+    icon: Globe2,
+  },
+];
 
-/* 👑 Section Héros avec la Montre Haute Horlogerie Suisse */
-function Hero() {
+const selected = [
+  {
+    number: 'I',
+    title: 'L’échappement suisse',
+    text: 'Ancre, levées, tirage, sécurité, lubrification et diagnostic vibrographique dans une lecture d’atelier.',
+    href: '/pratique/echappement',
+    note: 'NIHS · ISO 3159 · Moebius 9415',
+  },
+  {
+    number: 'II',
+    title: 'ETA / Unitas 6497',
+    text: 'Un calibre pédagogique emblématique pour comprendre l’ordre du démontage, le rouage et les organes réglants.',
+    href: '/pratique/demontage',
+    note: 'Démontage · remontage · observation',
+  },
+  {
+    number: 'III',
+    title: 'Lecture de plan horloger',
+    text: 'Cartouche, lignes, vues, cotation et tolérances pour apprendre à lire une documentation technique avec précision.',
+    href: '/theorie/lecture-de-plan',
+    note: 'ISO · cartouche · tolérances',
+  },
+];
+
+const figures = [
+  ['17+', 'dossiers théoriques'],
+  ['ETA 6497', 'calibre de référence'],
+  ['NIHS / ISO', 'repères techniques'],
+  ['Libre', 'accès aux ressources'],
+];
+
+export default function HomePage() {
   return (
-    <section className="relative overflow-hidden pt-6 pb-14 md:py-16">
-      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-slate-50 via-slate-100 to-amber-50/20 dark:from-[#07090E] dark:via-[#0D1322] dark:to-slate-950" />
-      <div
-        className="absolute inset-0 -z-10 opacity-40 dark:opacity-30 pointer-events-none"
-        style={{
-          backgroundImage:
-            "radial-gradient(ellipse 650px 300px at 15% 20%, rgba(212,175,55,0.15), transparent 60%), radial-gradient(ellipse 600px 300px at 85% 15%, rgba(6,182,212,0.12), transparent 60%)",
-        }}
-      />
-      <div className="max-w-7xl mx-auto px-4 md:px-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-        
-        {/* Colonne Gauche (5 colonnes) */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30">
-            <span className="w-3.5 h-3.5 rounded bg-red-600 text-white flex items-center justify-center text-[10px] font-black leading-none">🇨🇭</span>
-            Référentiel Pédagogique Suisse • 70 Modules
+    <div className="hl-page">
+      <section className="border-b border-hl">
+        <div className="hl-container grid min-h-[72vh] items-center gap-12 py-16 lg:grid-cols-[1.08fr_.92fr] lg:py-24">
+          <div className="max-w-4xl">
+            <div className="hl-kicker">HorloLearn · Passion & découverte</div>
+            <h1 className="hl-editorial-title mt-6 max-w-4xl text-[clamp(3.5rem,8vw,7.5rem)] text-[var(--hl-ink)]">
+              Lire le temps.
+              <span className="block text-hl-metal">Comprendre le mouvement.</span>
+            </h1>
+            <p className="mt-8 max-w-2xl text-base leading-8 text-hl-muted sm:text-lg">
+              Une bibliothèque collaborative consacrée à la culture horlogère suisse : mécanique, gestes d’atelier,
+              matériaux, plans, histoire et outils interactifs réunis dans un même espace.
+            </p>
+
+            <div className="mt-10 flex flex-wrap gap-4">
+              <Link
+                href="/theorie"
+                className="inline-flex items-center gap-3 border border-[var(--hl-ink)] bg-[var(--hl-ink)] px-5 py-3 text-xs font-medium uppercase tracking-[0.12em] text-[var(--hl-bg)] transition hover:opacity-85"
+              >
+                Explorer la bibliothèque
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/pratique"
+                className="inline-flex items-center gap-3 border border-hl px-5 py-3 text-xs font-medium uppercase tracking-[0.12em] text-[var(--hl-ink)] transition hover:border-[var(--hl-metal)] hover:text-hl-metal"
+              >
+                Voir l’atelier
+              </Link>
+            </div>
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black font-serif tracking-tight text-slate-900 dark:text-white leading-tight">
-            L&apos;Art du Temps & <br />
-            <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-200 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent">
-              Haute Horlogerie Suisse
-            </span>
-          </h1>
+          <div className="relative mx-auto w-full max-w-[560px]">
+            <div className="aspect-square border border-hl bg-[var(--hl-surface)] p-6 sm:p-10">
+              <div className="flex h-full flex-col justify-between">
+                <div className="flex items-start justify-between border-b border-hl pb-5">
+                  <div>
+                    <div className="hl-kicker">Planche 09</div>
+                    <div className="mt-2 font-serif text-2xl">Organe réglant</div>
+                  </div>
+                  <Watch className="h-6 w-6 text-hl-metal" />
+                </div>
 
-          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 font-light leading-relaxed">
-            Du premier battement de balancier aux grandes complications et au silicium. Une encyclopédie vivante, structurée et interactive conçue pour transmettre l&apos;excellence micromécanique suisse au monde entier.
-          </p>
+                <div className="relative mx-auto flex aspect-square w-[76%] items-center justify-center">
+                  <div className="absolute inset-[8%] rounded-full border border-[var(--hl-line-strong)]" />
+                  <div className="absolute inset-[21%] rounded-full border border-[var(--hl-line)]" />
+                  <div className="absolute h-[58%] w-px bg-[var(--hl-line-strong)]" />
+                  <div className="absolute w-[58%] h-px bg-[var(--hl-line-strong)]" />
+                  <div className="h-5 w-5 rounded-full border border-[var(--hl-metal)] bg-[var(--hl-bg)]" />
+                  <div className="absolute left-[5%] top-1/2 h-px w-[28%] -translate-y-1/2 bg-[var(--hl-metal)]" />
+                  <div className="absolute right-[7%] top-[22%] h-2.5 w-2.5 rounded-full bg-[var(--hl-ruby)]" />
+                </div>
 
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <a
-              href="#parcours"
-              className="px-6 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono font-bold text-xs shadow-lg shadow-amber-500/20 transition-all flex items-center gap-2"
-            >
-              <span>Choisir Mon Parcours Guidé</span>
-              <ArrowRight className="w-4 h-4" />
-            </a>
-            <Link
-              href="/theorie"
-              className="px-6 py-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 font-mono font-semibold text-xs hover:border-amber-500 transition-all shadow-sm"
-            >
-              Explorer les 17 Traités
-            </Link>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-500 dark:text-slate-400 pt-2">
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> Accès 100% Libre
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> Standards NIHS & ISO
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" /> Référentiel CP Suisse
-            </span>
+                <div className="grid grid-cols-2 gap-x-5 gap-y-3 border-t border-hl pt-5 font-mono text-[10px] uppercase tracking-[0.11em] text-hl-muted">
+                  <div className="flex justify-between gap-3"><span>Levée</span><strong className="text-hl-metal">50°–52°</strong></div>
+                  <div className="flex justify-between gap-3"><span>Tirage</span><strong className="text-hl-metal">12°–15°</strong></div>
+                  <div className="flex justify-between gap-3"><span>Repère</span><strong className="text-hl-metal">&lt; 0.6 ms</strong></div>
+                  <div className="flex justify-between gap-3"><span>Lubrifiant</span><strong className="text-hl-metal">9415</strong></div>
+                </div>
+              </div>
+            </div>
+            <div className="absolute -bottom-4 -left-4 hidden border border-hl bg-[var(--hl-bg)] px-4 py-3 font-mono text-[9px] uppercase tracking-[0.15em] text-hl-muted sm:block">
+              Documentation interactive
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Colonne Droite (7 colonnes) : Montre interactive & complications astronomiques réelles */}
-        <div className="lg:col-span-7 flex justify-center items-center">
-          <LuxuryHeroClock />
-        </div>
-
-      </div>
-    </section>
-  );
-}
-
-/* ✅ Carrousel défilant de rubriques */
-function Carousel() {
-  const items = [
-    { name: "Théorie Fondamentale", href: "/theorie" },
-    { name: "Pratique & Démontage", href: "/pratique" },
-    { name: "Technologies & Quartz", href: "/theorie/technologies" },
-    { name: "Fuseaux Horaires Cottier", href: "/fuseaux-horaires" },
-    { name: "Manufactures Suisses", href: "/theorie/manufactures" },
-    { name: "Écorchés Calibres 3D", href: "/theorie/galerie-3d" },
-    { name: "Quiz & Certifications", href: "/quiz" },
-    { name: "Outils & Calculateurs", href: "/outils" },
-    { name: "Histoire de l'Horlogerie", href: "/theorie/histoire-horlogerie-suisse" }
-  ];
-
-  return (
-    <section className="py-4 bg-white/80 dark:bg-slate-900/80 border-y border-slate-200 dark:border-slate-800 overflow-hidden">
-      <div className="overflow-hidden">
-        <div
-          className="flex gap-4 animate-[scroll_35s_linear_infinite]"
-          style={{
-            maskImage:
-              "linear-gradient(90deg, transparent, black 10%, black 90%, transparent)",
-          }}
-        >
-          {items.concat(items).map((it, i) => (
-            <Link
-              key={i}
-              href={it.href}
-              className="shrink-0 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition text-xs font-mono font-medium shadow-sm"
-            >
-              {it.name}
-            </Link>
+      <section className="border-b border-hl bg-[var(--hl-surface)]">
+        <div className="hl-container grid grid-cols-2 divide-x divide-y divide-[var(--hl-line)] sm:grid-cols-4 sm:divide-y-0">
+          {figures.map(([value, label]) => (
+            <div key={label} className="px-4 py-7 text-center sm:px-6 sm:py-8">
+              <div className="font-serif text-2xl text-[var(--hl-ink)] sm:text-3xl">{value}</div>
+              <div className="mt-2 font-mono text-[9px] uppercase tracking-[0.15em] text-hl-muted">{label}</div>
+            </div>
           ))}
         </div>
-      </div>
-      <style>{`@keyframes scroll { from {transform: translateX(0);} to {transform: translateX(-50%);} }`}</style>
-    </section>
-  );
-}
+      </section>
 
-/* 🧭 ACTION 1 : SECTION DU PARCOURS GUIDÉ MONDIAL */
-function GuidedPathwaysSection() {
-  return (
-    <section id="parcours" className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24 space-y-12 scroll-mt-20">
-      
-      {/* Header de section */}
-      <div className="text-center max-w-3xl mx-auto space-y-4">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
-          <Compass className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-          Guide Universel d&apos;Apprentissage • Choisissez votre Niveau
-        </div>
-        <h2 className="text-3xl md:text-5xl font-extrabold font-serif text-slate-900 dark:text-white leading-tight">
-          Par où commencer ? <br />
-          <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-amber-500 dark:from-emerald-400 dark:via-teal-300 dark:to-amber-300 bg-clip-text text-transparent">
-            Votre Parcours Horloger Méthodique
-          </span>
-        </h2>
-        <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 font-light leading-relaxed">
-          Pour rendre l&apos;horlogerie suisse accessible au monde entier sans se perdre dans le jargon, nous avons structuré nos 70 modules en 3 parcours progressifs clairs.
-        </p>
-      </div>
-
-      {/* ⭐ CARTE VITRINE REPOSITIONNÉE : 70 MODULES & SIMULATEURS D'ATELIER */}
-      <div className="relative group rounded-3xl overflow-hidden bg-slate-900 border border-slate-800 shadow-2xl p-6 sm:p-8 space-y-6 text-white max-w-5xl mx-auto">
-        <div className="flex flex-wrap items-center justify-between border-b border-slate-800 pb-4 gap-2">
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-red-500" />
-            <span className="w-3 h-3 rounded-full bg-amber-500" />
-            <span className="w-3 h-3 rounded-full bg-emerald-500" />
-            <span className="text-xs font-mono text-amber-400 font-bold ml-2">
-              HorloLearn • Calibre Virtuel & Laboratoire
-            </span>
-          </div>
-          <span className="text-xs font-mono uppercase tracking-widest text-slate-400">
-            Corpus Pédagogique Mondial
-          </span>
-        </div>
-
-        <div className="grid md:grid-cols-12 gap-6 items-center">
-          <div className="md:col-span-7 space-y-3">
-            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white">
-              70 Modules de Formation & Simulateurs d&apos;Atelier
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
-              Découvrez la cinématique des calibres ETA 6497-1 et 2824-2, la dépose de balancier-spiral, le protocole de huilage Moebius et les 15 plus prestigieuses manufactures suisses.
+      <section className="hl-container py-20 sm:py-28">
+        <div className="grid gap-12 lg:grid-cols-[.7fr_1.3fr]">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <div className="hl-kicker">Bibliothèque</div>
+            <h2 className="hl-editorial-title mt-5 text-5xl sm:text-6xl">Quatre portes d’entrée.</h2>
+            <p className="mt-6 max-w-md text-sm leading-7 text-hl-muted">
+              Choisissez une approche. La technique, le geste, la mesure et la culture se croisent ensuite naturellement.
             </p>
           </div>
 
-          <div className="md:col-span-5 flex flex-col sm:flex-row md:flex-col gap-3 font-mono text-xs">
-            <Link
-              href="/theorie/galerie-3d"
-              className="p-3.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-amber-500/50 transition flex items-center justify-between group/link"
-            >
-              <span className="font-semibold text-slate-100">Écorché 3D des Calibres</span>
-              <ChevronRight className="w-4 h-4 text-amber-400 group-hover/link:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              href="/theorie/complications"
-              className="p-3.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-amber-500/50 transition flex items-center justify-between group/link"
-            >
-              <span className="font-semibold text-slate-100">Grandes Complications</span>
-              <ChevronRight className="w-4 h-4 text-amber-400 group-hover/link:translate-x-1 transition-transform" />
-            </Link>
+          <div className="border-t border-hl">
+            {gateways.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="group grid gap-6 border-b border-hl py-8 transition lg:grid-cols-[70px_1fr_160px] lg:items-center"
+                >
+                  <div className="font-mono text-[11px] text-hl-metal">{item.index}</div>
+                  <div>
+                    <div className="flex items-center gap-3">
+                      <Icon className="h-5 w-5 text-hl-muted" />
+                      <h3 className="font-serif text-2xl tracking-[-0.02em] text-[var(--hl-ink)] sm:text-3xl">{item.title}</h3>
+                    </div>
+                    <p className="mt-3 max-w-2xl text-sm leading-7 text-hl-muted">{item.text}</p>
+                  </div>
+                  <div className="flex items-center justify-between gap-4 lg:block lg:text-right">
+                    <div className="font-mono text-[9px] uppercase tracking-[0.11em] text-hl-muted">{item.meta}</div>
+                    <ArrowRight className="mt-3 ml-auto h-4 w-4 text-hl-metal transition group-hover:translate-x-1" />
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Les 3 Cartes de Parcours Progressifs */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
-        {/* PARCOURS 1 : DÉCOUVERTE */}
-        <div className="group rounded-3xl bg-white dark:bg-[#0D121F] border-2 border-emerald-500/30 hover:border-emerald-500 p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between space-y-6">
-          <div className="space-y-5">
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
-                Niveau 1 • Découverte (15-30 min)
-              </span>
-              <span className="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center font-bold text-xs">
-                01
-              </span>
-            </div>
-
-            <div className="space-y-2">
-              <h3 className="text-2xl font-serif font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                L&apos;Éveil du Temps & les Fondations
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-light leading-relaxed">
-                Idéal si vous découvrez l&apos;horlogerie. Comprenez enfin comment une montre fonctionne sans aucune pile et pourquoi la Suisse est devenue la capitale mondiale du temps.
+      <section className="bg-[#0b0d10] text-[#f2eee6]">
+        <div className="hl-container py-20 sm:py-28">
+          <div className="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
+            <div>
+              <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#c2a36d]">Sélection éditoriale</div>
+              <h2 className="mt-5 font-serif text-5xl font-normal tracking-[-0.025em] sm:text-6xl">À ouvrir sur l’établi.</h2>
+              <p className="mt-6 max-w-md text-sm leading-7 text-[#aaa49a]">
+                Trois dossiers pour entrer immédiatement dans la précision mécanique et la lecture technique.
               </p>
             </div>
 
-            {/* Étapes reliées à vos vraies pages existantes */}
-            <div className="space-y-2.5 pt-2">
-              <div className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">
-                Modules clés à explorer :
-              </div>
-              
-              <Link
-                href="/theorie/introduction-montre-mecanique"
-                className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 hover:bg-emerald-500/10 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/40 transition flex items-center justify-between text-xs"
-              >
-                <div>
-                  <div className="font-bold text-slate-900 dark:text-white">1. Comment Fonctionne une Montre ?</div>
-                  <div className="text-[11px] text-slate-500">Les 5 grands organes cinématiques</div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-emerald-500" />
-              </Link>
-
-              <Link
-                href="/theorie/histoire-horlogerie-suisse"
-                className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 hover:bg-emerald-500/10 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/40 transition flex items-center justify-between text-xs"
-              >
-                <div>
-                  <div className="font-bold text-slate-900 dark:text-white">2. Pourquoi la Suisse ?</div>
-                  <div className="text-[11px] text-slate-500">Calvin, le Jura & l&apos;UNESCO</div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-emerald-500" />
-              </Link>
+            <div className="border-t border-[#2a2f36]">
+              {selected.map((item) => (
+                <Link key={item.href} href={item.href} className="group grid gap-5 border-b border-[#2a2f36] py-8 sm:grid-cols-[45px_1fr_140px] sm:items-center">
+                  <div className="font-serif text-xl text-[#c2a36d]">{item.number}</div>
+                  <div>
+                    <h3 className="font-serif text-2xl tracking-[-0.02em] sm:text-3xl">{item.title}</h3>
+                    <p className="mt-3 max-w-2xl text-sm leading-7 text-[#aaa49a]">{item.text}</p>
+                  </div>
+                  <div className="flex items-center justify-between sm:block sm:text-right">
+                    <span className="font-mono text-[9px] uppercase tracking-[0.11em] text-[#8f8a81]">{item.note}</span>
+                    <ArrowRight className="mt-3 ml-auto h-4 w-4 text-[#c2a36d] transition group-hover:translate-x-1" />
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
+        </div>
+      </section>
 
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-            <Link
-              href="/theorie/introduction-montre-mecanique"
-              className="w-full inline-flex items-center justify-between px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-bold transition shadow-md"
-            >
-              <span>Commencer par l&apos;Introduction</span>
-              <ArrowRight className="w-4 h-4" />
+      <section className="hl-container py-20 sm:py-28">
+        <div className="grid gap-10 border-y border-hl py-12 lg:grid-cols-3 lg:items-center">
+          <div className="lg:col-span-2">
+            <div className="hl-kicker">Horlogerie suisse</div>
+            <h2 className="hl-editorial-title mt-4 text-4xl sm:text-5xl">Une culture de précision, ouverte à tous.</h2>
+            <p className="mt-5 max-w-3xl text-sm leading-7 text-hl-muted">
+              HorloLearn rassemble des ressources pour comprendre, observer et partager l’horlogerie. Le site n’est pas un centre de formation : c’est une bibliothèque collaborative et indépendante consacrée au savoir horloger.
+            </p>
+          </div>
+          <div className="flex gap-4 lg:justify-end">
+            <Link href="/suisse" className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.12em] text-[var(--hl-ink)] hover:text-hl-metal">
+              Découvrir le patrimoine <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
 
-        {/* PARCOURS 2 : PASSIONNÉ & CULTURE */}
-        <div className="group rounded-3xl bg-white dark:bg-[#0D121F] border-2 border-amber-500/30 hover:border-amber-500 p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between space-y-6">
-          <div className="space-y-5">
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30">
-                Niveau 2 • Passionné & Culture (1-2h)
-              </span>
-              <span className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-500 flex items-center justify-center font-bold text-xs">
-                02
-              </span>
-            </div>
-
-            <div className="space-y-2">
-              <h3 className="text-2xl font-serif font-bold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
-                Manufactures & Complications
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-light leading-relaxed">
-                Pour les amateurs avertis et collectionneurs. Plongez dans l&apos;histoire des maisons légendaires, le tourbillon régulateur, les fuseaux horaires et les nouveaux calibres en silicium.
-              </p>
-            </div>
-
-            {/* Étapes reliées à vos vraies pages existantes */}
-            <div className="space-y-2.5 pt-2">
-              <div className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">
-                Modules clés à explorer :
+        <div className="mt-14 grid gap-6 sm:grid-cols-3">
+          {[
+            [Gem, 'Matériaux', 'Aciers, alliages, rubis, silicium et matières employées dans le mouvement.'],
+            [Layers3, 'Plans & architecture', 'Lire une construction, une coupe et les relations entre les organes.'],
+            [Watch, 'Mécanismes', 'Observer comment l’énergie devient une mesure régulière du temps.'],
+          ].map(([Icon, title, text]) => {
+            const C = Icon as typeof Gem;
+            return (
+              <div key={title as string} className="border-t border-hl pt-5">
+                <C className="h-5 w-5 text-hl-metal" />
+                <h3 className="mt-5 font-serif text-2xl">{title as string}</h3>
+                <p className="mt-3 text-sm leading-7 text-hl-muted">{text as string}</p>
               </div>
-              
-              <Link
-                href="/theorie/manufactures"
-                className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 hover:bg-amber-500/10 border border-slate-200 dark:border-slate-800 hover:border-amber-500/40 transition flex items-center justify-between text-xs"
-              >
-                <div>
-                  <div className="font-bold text-slate-900 dark:text-white">1. Les 15 Grandes Manufactures</div>
-                  <div className="text-[11px] text-slate-500">Patek, Rolex, AP, Vacheron, JLC...</div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-amber-500" />
-              </Link>
-
-              <Link
-                href="/theorie/complications"
-                className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 hover:bg-amber-500/10 border border-slate-200 dark:border-slate-800 hover:border-amber-500/40 transition flex items-center justify-between text-xs"
-              >
-                <div>
-                  <div className="font-bold text-slate-900 dark:text-white">2. Musée des Grandes Complications</div>
-                  <div className="text-[11px] text-slate-500">Tourbillon, Quantième & Sonnerie</div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-amber-500" />
-              </Link>
-
-              <Link
-                href="/fuseaux-horaires"
-                className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 hover:bg-amber-500/10 border border-slate-200 dark:border-slate-800 hover:border-amber-500/40 transition flex items-center justify-between text-xs"
-              >
-                <div>
-                  <div className="font-bold text-slate-900 dark:text-white">3. Heures du Monde Cottier</div>
-                  <div className="text-[11px] text-slate-500">Cartographie solaire des 24 méridiens</div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-amber-500" />
-              </Link>
-            </div>
-          </div>
-
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-            <Link
-              href="/theorie/manufactures"
-              className="w-full inline-flex items-center justify-between px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono text-xs font-bold transition shadow-md"
-            >
-              <span>Découvrir les Manufactures</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
+            );
+          })}
         </div>
-
-        {/* PARCOURS 3 : ÉTABLI & RHABILLAGE */}
-        <div className="group rounded-3xl bg-white dark:bg-[#0D121F] border-2 border-cyan-500/30 hover:border-cyan-500 p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between space-y-6">
-          <div className="space-y-5">
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/30">
-                Niveau 3 • Apprenti d&apos;Atelier (CFC / AFP)
-              </span>
-              <span className="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-500 flex items-center justify-center font-bold text-xs">
-                03
-              </span>
-            </div>
-
-            <div className="space-y-2">
-              <h3 className="text-2xl font-serif font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
-                Établi, Démontage & Tolérances
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-light leading-relaxed">
-                Pour les élèves horlogers et restaurateurs. Maîtrisez la cinématique de l&apos;échappement à ancre en 5 phases, les tolérances NIHS H7/g6, le démontage virtuel et le huilage Moebius.
-              </p>
-            </div>
-
-            {/* Étapes reliées à vos vraies pages existantes */}
-            <div className="space-y-2.5 pt-2">
-              <div className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider">
-                Modules clés à explorer :
-              </div>
-              
-              <Link
-                href="/theorie/echappement-ancre"
-                className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 hover:bg-cyan-500/10 border border-slate-200 dark:border-slate-800 hover:border-cyan-500/40 transition flex items-center justify-between text-xs"
-              >
-                <div>
-                  <div className="font-bold text-slate-900 dark:text-white">1. L&apos;Échappement à Ancre Suisse</div>
-                  <div className="text-[11px] text-slate-500">Repos, tirage, chute & levées</div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-cyan-500" />
-              </Link>
-
-              <Link
-                href="/theorie/lecture-de-plan"
-                className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 hover:bg-cyan-500/10 border border-slate-200 dark:border-slate-800 hover:border-cyan-500/40 transition flex items-center justify-between text-xs"
-              >
-                <div>
-                  <div className="font-bold text-slate-900 dark:text-white">2. Lecture de Plans Horlogers</div>
-                  <div className="text-[11px] text-slate-500">Normes NIHS & Tolérances H7/g6</div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-cyan-500" />
-              </Link>
-
-              <Link
-                href="/pratique/demontage"
-                className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 hover:bg-cyan-500/10 border border-slate-200 dark:border-slate-800 hover:border-cyan-500/40 transition flex items-center justify-between text-xs"
-              >
-                <div>
-                  <div className="font-bold text-slate-900 dark:text-white">3. Simulateur de Démontage</div>
-                  <div className="text-[11px] text-slate-500">Calibre ETA 6497 pas à pas</div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-cyan-500" />
-              </Link>
-            </div>
-          </div>
-
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-            <Link
-              href="/pratique"
-              className="w-full inline-flex items-center justify-between px-5 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-mono text-xs font-bold transition shadow-md"
-            >
-              <span>Accéder à l&apos;Atelier Pratique</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-
-      </div>
-    </section>
-  );
-}
-
-/* ✅ Grille Explore */
-function ExploreGrid() {
-  const cards = [
-    { name: "Théorie Fondamentale", href: "/theorie", icon: BookOpen, desc: "17 traités d'établi conformes aux référentiels suisses CP / CFC" },
-    { name: "Pratique d'Atelier", href: "/pratique", icon: Wrench, desc: "Simulateurs de démontage, huilage Moebius et réglage de marche" },
-    { name: "Technologies & Quartz", href: "/theorie/technologies", icon: Zap, desc: "Fréquence 32'768 Hz, silicium DRIE et montres connectées" },
-    { name: "Fuseaux Horaires Cottier", href: "/fuseaux-horaires", icon: Globe, desc: "Cartographie solaire en temps réel et mécanisme universel 1931" },
-    { name: "Grandes Manufactures", href: "/theorie/manufactures", icon: Award, desc: "Monographies des 15 maisons légendaires de Haute Horlogerie" },
-    { name: "Écorché Éclaté 3D", href: "/theorie/galerie-3d", icon: Layers, desc: "Désossez les calibres ETA 6497-1 et 2824-2 en 3D interactive" },
-    { name: "Quiz & Certifications", href: "/quiz", icon: Brain, desc: "Évaluez vos compétences d'établi et validez vos acquis" },
-    { name: "Outils & Calculateurs", href: "/outils", icon: Clock, desc: "Calculs de rouage, tables Bergeon et tolérances d'ébats" },
-    { name: "Communauté & Entraide", href: "/communaute", icon: Users, desc: "Échangez entre passionnés, apprentis et maîtres horlogers" }
-  ];
-
-  return (
-    <section className="max-w-7xl mx-auto px-4 md:px-6 py-14 md:py-20 border-t border-slate-200 dark:border-slate-800/80">
-      <div className="text-center mb-10 space-y-2">
-        <h2 className="text-3xl md:text-5xl font-extrabold font-serif text-slate-900 dark:text-white">
-          Explorer Tout le Corpus HorloLearn
-        </h2>
-        <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 font-light">
-          Accédez directement aux 9 grandes rubriques de l&apos;Académie
-        </p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {cards.map((c) => (
-          <Link
-            key={c.href}
-            href={c.href}
-            className="group relative rounded-2xl bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-amber-500/60 dark:hover:border-amber-400/80 transition-all overflow-hidden flex flex-col justify-between"
-          >
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 shadow-sm">
-                  {c.icon ? <c.icon className="w-6 h-6" /> : null}
-                </div>
-                <ArrowRight className="w-5 h-5 text-amber-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-              </div>
-              <h3 className="text-xl font-bold font-serif text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
-                {c.name}
-              </h3>
-              <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-light leading-relaxed">
-                {c.desc}
-              </p>
-            </div>
-            <div className="h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ✅ Section Partenaires */
-function PartnersSection() {
-  const partners = [
-    { alt: "Rolex" },
-    { alt: "Patek Philippe" },
-    { alt: "Audemars Piguet" },
-    { alt: "Vacheron Constantin" },
-    { alt: "Chopard" },
-    { alt: "Jaeger-LeCoultre" },
-    { alt: "Breguet" },
-  ];
-
-  return (
-    <section className="relative bg-[#0A0A0A] py-16 md:py-20 overflow-hidden border-t border-slate-800">
-      <div className="text-center mb-10 relative z-10 space-y-2">
-        <span className="text-xs font-mono font-bold uppercase tracking-widest text-amber-400">
-          Excellence & Patrimoine
-        </span>
-        <h2
-          className="text-2xl md:text-4xl font-serif font-bold text-[#E2B44F]"
-          style={{ textShadow: "0 0 15px rgba(226,180,79,0.5)" }}
-        >
-          Inspiré par les Maîtres Cabinotiers Suisses
-        </h2>
-      </div>
-      <motion.div
-        className="flex items-center justify-around gap-20 px-8 relative z-10"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
-      >
-        {[...partners, ...partners].map((p, i) => (
-          <div
-            key={i}
-            className="grayscale hover:grayscale-0 transition-all duration-500 opacity-70 hover:opacity-100 shrink-0"
-          >
-            <span className="text-lg font-serif font-bold text-slate-300 tracking-wider">
-              {p.alt}
-            </span>
-          </div>
-        ))}
-      </motion.div>
-      <p className="text-center text-slate-500 mt-8 text-xs font-mono relative z-10">
-        Ressources académiques ouvertes pour la formation horlogère internationale.
-      </p>
-    </section>
-  );
-}
-
-/* ✅ Page principale */
-export default function Home() {
-  return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-slate-900 dark:text-slate-100 transition-colors duration-300 selection:bg-amber-500/30 selection:text-amber-600 dark:selection:text-amber-200">
-      <Hero />
-      <Carousel />
-      <GuidedPathwaysSection />
-      <ExploreGrid />
-      <PartnersSection />
+      </section>
     </div>
   );
 }
