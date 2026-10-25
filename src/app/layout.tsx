@@ -3,16 +3,26 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { SITE } from "@/lib/seo";
 import dynamic from "next/dynamic";
-import { Playfair_Display, Inter } from 'next/font/google'
+import { Playfair_Display, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
 import ThemeProvider from "@/components/ThemeProvider";
 import ClientLayout from "@/components/ClientLayout";
-import 'swiper/css';
+import "swiper/css";
 
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: false });
-const playfair = Playfair_Display({ subsets: ['latin'] })
-const inter = Inter({ subsets: ['latin'] })
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-editorial",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "HorloLearn – Passion & Découverte Horlogère Suisse",
@@ -51,7 +61,7 @@ export const metadata: Metadata = {
     "ai:topic":
       "Horlogerie suisse, mécanique de précision, culture horlogère, ETA 6497",
     "ai:author": "Équipe HorloLearn",
-    "color-scheme": "dark light",
+    "color-scheme": "light dark",
   },
 };
 
@@ -101,10 +111,10 @@ export default function RootLayout({
 
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className="bg-gray-50 text-slate-900 dark:bg-gray-900 dark:text-slate-100 transition-colors duration-300">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+      <body className={`${playfair.variable} ${inter.variable} bg-hl text-[var(--hl-ink)]`}>
+        <ThemeProvider>
           <ClientLayout>
-            <main className="min-h-screen overflow-visible relative">{children}</main>
+            <main className="relative min-h-screen overflow-visible">{children}</main>
           </ClientLayout>
           <ScrollToTop />
           <Analytics />
