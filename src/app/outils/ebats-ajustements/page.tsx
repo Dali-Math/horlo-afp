@@ -414,19 +414,19 @@ export default function EbatsAjustementsPage() {
   }, [currentCategory, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-[#070A10] text-slate-100 font-sans antialiased py-8 px-4 md:px-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#070A10] text-slate-900 dark:text-slate-100 font-sans antialiased py-8 px-4 md:px-8 transition-colors duration-300">
       
       {/* Navigation Retour */}
       <div className="max-w-7xl mx-auto mb-6 flex flex-wrap items-center justify-between gap-4">
         <Link
           href="/outils"
-          className="inline-flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-amber-400 transition"
+          className="inline-flex items-center gap-2 text-xs font-mono text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Retour aux Outils d&apos;Établi</span>
         </Link>
 
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border border-emerald-500/30">
           <span>🇨🇭</span>
           <span>Norme Horlogère Suisse NIHS 91-10 • 24 Organes Référencés</span>
         </div>
@@ -434,14 +434,14 @@ export default function EbatsAjustementsPage() {
 
       {/* Titre & Entête */}
       <div className="max-w-4xl mx-auto text-center space-y-3 mb-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider">
-          <Wrench className="w-3.5 h-3.5" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-400 text-xs font-mono font-bold uppercase tracking-wider">
+          <Wrench className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
           <span>Précision d&apos;Atelier au Micron (0.001 mm)</span>
         </div>
-        <h1 className="text-3xl md:text-5xl font-black font-serif tracking-tight text-white">
+        <h1 className="text-3xl md:text-5xl font-black font-serif tracking-tight text-slate-900 dark:text-white">
           Calculateur d&apos;Ébats &amp; d&apos;Ajustements
         </h1>
-        <p className="text-sm md:text-base text-slate-300 font-light max-w-2xl mx-auto">
+        <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 font-light max-w-2xl mx-auto">
           L&apos;outil d&apos;établi quotidien pour mesurer et ajuster les jeux axiaux, les jeux de trous de rubis et les serrages de chassage à la potence Seitz.
         </p>
 
@@ -452,7 +452,7 @@ export default function EbatsAjustementsPage() {
             className={`px-5 py-2.5 rounded-xl font-mono text-xs font-bold transition flex items-center gap-2 ${
               activeTab === 'axial'
                 ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800 shadow-sm'
             }`}
           >
             <span>1. Ébat de Hauteur (Axial)</span>
@@ -462,7 +462,7 @@ export default function EbatsAjustementsPage() {
             className={`px-5 py-2.5 rounded-xl font-mono text-xs font-bold transition flex items-center gap-2 ${
               activeTab === 'radial'
                 ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800 shadow-sm'
             }`}
           >
             <span>2. Ébat de Trou (Pivot vs Rubis)</span>
@@ -472,7 +472,7 @@ export default function EbatsAjustementsPage() {
             className={`px-5 py-2.5 rounded-xl font-mono text-xs font-bold transition flex items-center gap-2 ${
               activeTab === 'chassage'
                 ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800 shadow-sm'
             }`}
           >
             <span>3. Chassage &amp; Serrage (Seitz)</span>
@@ -485,25 +485,25 @@ export default function EbatsAjustementsPage() {
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
           
           {/* Formulaire de saisie */}
-          <div className="lg:col-span-6 p-6 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-5 shadow-xl">
-            <div className="border-b border-slate-800 pb-3 flex items-center justify-between">
-              <h2 className="text-base font-bold text-white font-serif flex items-center gap-2">
+          <div className="lg:col-span-6 p-6 rounded-3xl bg-white dark:bg-[#0D121F] border-2 border-slate-200 dark:border-slate-800 space-y-5 shadow-xl dark:shadow-2xl">
+            <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex items-center justify-between">
+              <h2 className="text-base font-bold text-slate-900 dark:text-white font-serif flex items-center gap-2">
                 <span>📏 Ébat de Hauteur d&apos;Axe</span>
               </h2>
-              <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/30">
+              <span className="text-[10px] font-mono text-amber-800 dark:text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/30">
                 Jeu Entre-Pierres
               </span>
             </div>
 
             {/* Choix du Mobile étendu */}
             <div className="space-y-1.5">
-              <label className="text-xs font-mono text-slate-300 font-semibold block">
+              <label className="text-xs font-mono text-slate-700 dark:text-slate-300 font-semibold block">
                 Sélectionner le Mobile Horloger :
               </label>
               <select
                 value={axialPresetKey}
                 onChange={e => setAxialPresetKey(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs font-mono text-slate-200 outline-none focus:border-amber-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs font-mono text-slate-900 dark:text-slate-200 outline-none focus:border-amber-500 focus:bg-white dark:focus:bg-slate-900 transition"
               >
                 <optgroup label="Échappement & Organe Réglant">
                   <option value="balancier">Balancier sous Antichoc (10 à 20 µm)</option>
@@ -539,7 +539,7 @@ export default function EbatsAjustementsPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-mono text-slate-300 block">
+                <label className="text-xs font-mono text-slate-700 dark:text-slate-300 block">
                   Distance Entre Pierres (H) :
                 </label>
                 <div className="relative">
@@ -548,15 +548,15 @@ export default function EbatsAjustementsPage() {
                     value={axialPlatines}
                     step="0.005"
                     onChange={e => setAxialPlatines(parseFloat(e.target.value) || 0)}
-                    className="w-full pl-3 pr-10 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm font-mono text-white outline-none focus:border-amber-500"
+                    className="w-full pl-3 pr-10 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-sm font-mono text-slate-900 dark:text-white outline-none focus:border-amber-500 focus:bg-white dark:focus:bg-slate-900 transition"
                   />
-                  <span className="absolute right-3 top-2.5 text-xs font-mono text-slate-500">mm</span>
+                  <span className="absolute right-3 top-2.5 text-xs font-mono text-slate-400 dark:text-slate-500">mm</span>
                 </div>
-                <span className="text-[10px] font-mono text-slate-500 block">Mesure platine / pont</span>
+                <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 block">Mesure platine / pont</span>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-mono text-slate-300 block">
+                <label className="text-xs font-mono text-slate-700 dark:text-slate-300 block">
                   Longueur d&apos;Arbre (L) :
                 </label>
                 <div className="relative">
@@ -565,19 +565,19 @@ export default function EbatsAjustementsPage() {
                     value={axialArbre}
                     step="0.005"
                     onChange={e => setAxialArbre(parseFloat(e.target.value) || 0)}
-                    className="w-full pl-3 pr-10 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm font-mono text-white outline-none focus:border-amber-500"
+                    className="w-full pl-3 pr-10 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-sm font-mono text-slate-900 dark:text-white outline-none focus:border-amber-500 focus:bg-white dark:focus:bg-slate-900 transition"
                   />
-                  <span className="absolute right-3 top-2.5 text-xs font-mono text-slate-500">mm</span>
+                  <span className="absolute right-3 top-2.5 text-xs font-mono text-slate-400 dark:text-slate-500">mm</span>
                 </div>
-                <span className="text-[10px] font-mono text-slate-500 block">Mesure entre épaulements</span>
+                <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 block">Mesure entre épaulements</span>
               </div>
             </div>
 
             {/* Curseur rapide d'ajustement fin */}
-            <div className="space-y-2 pt-2 border-t border-slate-800">
+            <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-800">
               <div className="flex justify-between text-xs font-mono">
-                <span className="text-slate-400">Ajustement rapide au dixième de micron :</span>
-                <span className="text-amber-400 font-bold">{axialArbre.toFixed(3)} mm</span>
+                <span className="text-slate-600 dark:text-slate-400">Ajustement rapide au dixième de micron :</span>
+                <span className="text-amber-700 dark:text-amber-400 font-bold">{axialArbre.toFixed(3)} mm</span>
               </div>
               <input
                 type="range"
@@ -592,21 +592,21 @@ export default function EbatsAjustementsPage() {
           </div>
 
           {/* Résultat et diagnostic Seitz */}
-          <div className="lg:col-span-6 p-6 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-5 shadow-xl flex flex-col justify-between">
+          <div className="lg:col-span-6 p-6 rounded-3xl bg-white dark:bg-[#0D121F] border-2 border-slate-200 dark:border-slate-800 space-y-5 shadow-xl dark:shadow-2xl flex flex-col justify-between">
             <div>
-              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block mb-2">
+              <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-widest block mb-2">
                 RÉSULTAT DU CONTRÔLE D&apos;ÉBAT :
               </span>
 
-              <div className="p-5 rounded-2xl bg-[#050A12] border border-slate-800 text-center space-y-2">
-                <div className="text-xs font-mono text-slate-400 uppercase">Ébat Axial Mesuré</div>
+              <div className="p-5 rounded-2xl bg-slate-100 dark:bg-[#050A12] border border-slate-200 dark:border-slate-800 text-center space-y-2 shadow-inner">
+                <div className="text-xs font-mono text-slate-600 dark:text-slate-400 uppercase">Ébat Axial Mesuré</div>
                 <div
                   className={`text-4xl lg:text-5xl font-mono font-black ${
                     axialResult.status === 'ok'
-                      ? 'text-emerald-400'
+                      ? 'text-emerald-600 dark:text-emerald-400'
                       : axialResult.status === 'tight'
-                      ? 'text-amber-400'
-                      : 'text-red-500'
+                      ? 'text-amber-600 dark:text-amber-400'
+                      : 'text-red-600 dark:text-red-500'
                   }`}
                 >
                   {axialResult.ebatUm >= 0 ? `+${axialResult.ebatUm}` : axialResult.ebatUm}{' '}
@@ -615,10 +615,10 @@ export default function EbatsAjustementsPage() {
                 <div
                   className={`inline-block px-3 py-1 rounded-full text-xs font-mono font-bold ${
                     axialResult.status === 'ok'
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                      ? 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/40'
                       : axialResult.status === 'tight'
-                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                      : 'bg-red-500/20 text-red-300 border border-red-500/40'
+                      ? 'bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/40'
+                      : 'bg-red-500/15 text-red-800 dark:text-red-300 border border-red-500/40'
                   }`}
                 >
                   {axialResult.badgeText}
@@ -626,22 +626,22 @@ export default function EbatsAjustementsPage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-black/40 border border-slate-800 space-y-3 font-mono text-xs">
-              <div className="flex items-center justify-between text-slate-400">
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-slate-800 space-y-3 font-mono text-xs">
+              <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
                 <span>Plage tolérée sur calibre :</span>
-                <strong className="text-white">
+                <strong className="text-slate-900 dark:text-white">
                   {(axialResult.preset.min / 1000).toFixed(3)} à {(axialResult.preset.max / 1000).toFixed(3)} mm ({axialResult.preset.min} à {axialResult.preset.max} µm)
                 </strong>
               </div>
 
-              <div className="border-t border-slate-800/80 pt-2.5">
-                <span className="text-[10px] text-amber-400 block uppercase mb-1">Action d&apos;Atelier Conseillée :</span>
-                <p className="text-slate-300 font-sans leading-relaxed">{axialResult.instruction}</p>
+              <div className="border-t border-slate-200 dark:border-slate-800/80 pt-2.5">
+                <span className="text-[10px] text-amber-800 dark:text-amber-400 block uppercase font-bold mb-1">Action d&apos;Atelier Conseillée :</span>
+                <p className="text-slate-700 dark:text-slate-300 font-sans leading-relaxed">{axialResult.instruction}</p>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-950 border border-amber-500/20 flex items-center justify-between">
-                <span className="text-slate-400">Ajustement Potence Seitz :</span>
-                <span className="text-amber-400 font-bold">{axialResult.seitzText}</span>
+              <div className="p-3 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-amber-500/20 flex items-center justify-between shadow-sm">
+                <span className="text-slate-600 dark:text-slate-400">Ajustement Potence Seitz :</span>
+                <span className="text-amber-800 dark:text-amber-400 font-bold">{axialResult.seitzText}</span>
               </div>
             </div>
           </div>
@@ -652,68 +652,68 @@ export default function EbatsAjustementsPage() {
       {/* MODULE 2 : ÉBAT DE TROU (PIVOT VS RUBIS) */}
       {activeTab === 'radial' && (
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
-          <div className="lg:col-span-6 p-6 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-5 shadow-xl">
-            <div className="border-b border-slate-800 pb-3 flex items-center justify-between">
-              <h2 className="text-base font-bold text-white font-serif flex items-center gap-2">
+          <div className="lg:col-span-6 p-6 rounded-3xl bg-white dark:bg-[#0D121F] border-2 border-slate-200 dark:border-slate-800 space-y-5 shadow-xl dark:shadow-2xl">
+            <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex items-center justify-between">
+              <h2 className="text-base font-bold text-slate-900 dark:text-white font-serif flex items-center gap-2">
                 <span>🔘 Ébat de Trou (Radial / Sideshake)</span>
               </h2>
-              <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/30">
+              <span className="text-[10px] font-mono text-amber-800 dark:text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/30">
                 Jeu Pivot / Rubis
               </span>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-mono text-slate-300 block mb-1">Diamètre du Pivot d&apos;Arbre (Ø Pivot) :</label>
+                <label className="text-xs font-mono text-slate-700 dark:text-slate-300 block mb-1">Diamètre du Pivot d&apos;Arbre (Ø Pivot) :</label>
                 <div className="relative">
                   <input
                     type="number"
                     value={radPivot}
                     step="0.001"
                     onChange={e => setRadPivot(parseFloat(e.target.value) || 0)}
-                    className="w-full pl-3 pr-10 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm font-mono text-white outline-none focus:border-amber-500"
+                    className="w-full pl-3 pr-10 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-sm font-mono text-slate-900 dark:text-white outline-none focus:border-amber-500 focus:bg-white dark:focus:bg-slate-900 transition"
                   />
-                  <span className="absolute right-3 top-2.5 text-xs font-mono text-slate-500">mm</span>
+                  <span className="absolute right-3 top-2.5 text-xs font-mono text-slate-400 dark:text-slate-500">mm</span>
                 </div>
-                <span className="text-[10px] font-mono text-slate-500">Mesure au palmer micrométrique d&apos;établi</span>
+                <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">Mesure au palmer micrométrique d&apos;établi</span>
               </div>
 
               <div>
-                <label className="text-xs font-mono text-slate-300 block mb-1">Diamètre du Trou de Rubis (Ø Trou) :</label>
+                <label className="text-xs font-mono text-slate-700 dark:text-slate-300 block mb-1">Diamètre du Trou de Rubis (Ø Trou) :</label>
                 <div className="relative">
                   <input
                     type="number"
                     value={radHole}
                     step="0.001"
                     onChange={e => setRadHole(parseFloat(e.target.value) || 0)}
-                    className="w-full pl-3 pr-10 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm font-mono text-white outline-none focus:border-amber-500"
+                    className="w-full pl-3 pr-10 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-sm font-mono text-slate-900 dark:text-white outline-none focus:border-amber-500 focus:bg-white dark:focus:bg-slate-900 transition"
                   />
-                  <span className="absolute right-3 top-2.5 text-xs font-mono text-slate-500">mm</span>
+                  <span className="absolute right-3 top-2.5 text-xs font-mono text-slate-400 dark:text-slate-500">mm</span>
                 </div>
-                <span className="text-[10px] font-mono text-slate-500">Référence du rubis chassé</span>
+                <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">Référence du rubis chassé</span>
               </div>
 
               <div>
-                <label className="text-xs font-mono text-slate-300 block mb-1">Lubrifiant Recommandé :</label>
-                <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-emerald-400">
+                <label className="text-xs font-mono text-slate-700 dark:text-slate-300 block mb-1">Lubrifiant Recommandé :</label>
+                <div className="p-3 rounded-xl bg-emerald-50 dark:bg-slate-950 border border-emerald-200 dark:border-slate-800 text-xs font-mono text-emerald-800 dark:text-emerald-400 font-medium">
                   Moebius 9010 (Huile fine synthétique) · Goutte à 1/2 du trou
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="lg:col-span-6 p-6 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-5 shadow-xl flex flex-col justify-between">
+          <div className="lg:col-span-6 p-6 rounded-3xl bg-white dark:bg-[#0D121F] border-2 border-slate-200 dark:border-slate-800 space-y-5 shadow-xl dark:shadow-2xl flex flex-col justify-between">
             <div>
-              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block mb-2">JEU DIAMÉTRAL RÉSULTANT :</span>
-              <div className="p-5 rounded-2xl bg-[#050A12] border border-slate-800 text-center space-y-2">
-                <div className="text-xs font-mono text-slate-400 uppercase">Jeu Radial (Ø Trou - Ø Pivot)</div>
+              <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-widest block mb-2">JEU DIAMÉTRAL RÉSULTANT :</span>
+              <div className="p-5 rounded-2xl bg-slate-100 dark:bg-[#050A12] border border-slate-200 dark:border-slate-800 text-center space-y-2 shadow-inner">
+                <div className="text-xs font-mono text-slate-600 dark:text-slate-400 uppercase">Jeu Radial (Ø Trou - Ø Pivot)</div>
                 <div
                   className={`text-4xl lg:text-5xl font-mono font-black ${
                     radialResult.status === 'ok'
-                      ? 'text-emerald-400'
+                      ? 'text-emerald-600 dark:text-emerald-400'
                       : radialResult.status === 'tight'
-                      ? 'text-amber-400'
-                      : 'text-red-500'
+                      ? 'text-amber-600 dark:text-amber-400'
+                      : 'text-red-600 dark:text-red-500'
                   }`}
                 >
                   {radialResult.diffUm >= 0 ? `+${radialResult.diffUm}` : radialResult.diffUm}{' '}
@@ -722,10 +722,10 @@ export default function EbatsAjustementsPage() {
                 <div
                   className={`inline-block px-3 py-1 rounded-full text-xs font-mono font-bold ${
                     radialResult.status === 'ok'
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                      ? 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/40'
                       : radialResult.status === 'tight'
-                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                      : 'bg-red-500/20 text-red-300 border border-red-500/40'
+                      ? 'bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/40'
+                      : 'bg-red-500/15 text-red-800 dark:text-red-300 border border-red-500/40'
                   }`}
                 >
                   {radialResult.badgeText}
@@ -733,9 +733,9 @@ export default function EbatsAjustementsPage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-black/40 border border-slate-800 space-y-2 font-mono text-xs">
-              <span className="text-[10px] text-amber-400 block uppercase">Analyse Mécanique :</span>
-              <p className="text-slate-300 font-sans leading-relaxed">{radialResult.desc}</p>
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-slate-800 space-y-2 font-mono text-xs">
+              <span className="text-[10px] text-amber-800 dark:text-amber-400 block uppercase font-bold">Analyse Mécanique :</span>
+              <p className="text-slate-700 dark:text-slate-300 font-sans leading-relaxed">{radialResult.desc}</p>
             </div>
           </div>
         </div>
@@ -744,59 +744,59 @@ export default function EbatsAjustementsPage() {
       {/* MODULE 3 : CHASSAGE & SERRAGE */}
       {activeTab === 'chassage' && (
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
-          <div className="lg:col-span-6 p-6 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-5 shadow-xl">
-            <div className="border-b border-slate-800 pb-3 flex items-center justify-between">
-              <h2 className="text-base font-bold text-white font-serif flex items-center gap-2">
+          <div className="lg:col-span-6 p-6 rounded-3xl bg-white dark:bg-[#0D121F] border-2 border-slate-200 dark:border-slate-800 space-y-5 shadow-xl dark:shadow-2xl">
+            <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex items-center justify-between">
+              <h2 className="text-base font-bold text-slate-900 dark:text-white font-serif flex items-center gap-2">
                 <span>🔨 Serrage de Chassage (Press-Fit)</span>
               </h2>
-              <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/30">
+              <span className="text-[10px] font-mono text-amber-800 dark:text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/30">
                 Ajustement H7/p6
               </span>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-mono text-slate-300 block mb-1">Diamètre du Trou de Platine (Alésage) :</label>
+                <label className="text-xs font-mono text-slate-700 dark:text-slate-300 block mb-1">Diamètre du Trou de Platine (Alésage) :</label>
                 <div className="relative">
                   <input
                     type="number"
                     value={fitHole}
                     step="0.005"
                     onChange={e => setFitHole(parseFloat(e.target.value) || 0)}
-                    className="w-full pl-3 pr-10 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm font-mono text-white outline-none focus:border-amber-500"
+                    className="w-full pl-3 pr-10 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-sm font-mono text-slate-900 dark:text-white outline-none focus:border-amber-500 focus:bg-white dark:focus:bg-slate-900 transition"
                   />
-                  <span className="absolute right-3 top-2.5 text-xs font-mono text-slate-500">mm</span>
+                  <span className="absolute right-3 top-2.5 text-xs font-mono text-slate-400 dark:text-slate-500">mm</span>
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-mono text-slate-300 block mb-1">Diamètre Extérieur de la Pièce (Rubis/Canon) :</label>
+                <label className="text-xs font-mono text-slate-700 dark:text-slate-300 block mb-1">Diamètre Extérieur de la Pièce (Rubis/Canon) :</label>
                 <div className="relative">
                   <input
                     type="number"
                     value={fitPart}
                     step="0.005"
                     onChange={e => setFitPart(parseFloat(e.target.value) || 0)}
-                    className="w-full pl-3 pr-10 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm font-mono text-white outline-none focus:border-amber-500"
+                    className="w-full pl-3 pr-10 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-sm font-mono text-slate-900 dark:text-white outline-none focus:border-amber-500 focus:bg-white dark:focus:bg-slate-900 transition"
                   />
-                  <span className="absolute right-3 top-2.5 text-xs font-mono text-slate-500">mm</span>
+                  <span className="absolute right-3 top-2.5 text-xs font-mono text-slate-400 dark:text-slate-500">mm</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="lg:col-span-6 p-6 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-5 shadow-xl flex flex-col justify-between">
+          <div className="lg:col-span-6 p-6 rounded-3xl bg-white dark:bg-[#0D121F] border-2 border-slate-200 dark:border-slate-800 space-y-5 shadow-xl dark:shadow-2xl flex flex-col justify-between">
             <div>
-              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block mb-2">VALEUR DE SERRAGE :</span>
-              <div className="p-5 rounded-2xl bg-[#050A12] border border-slate-800 text-center space-y-2">
-                <div className="text-xs font-mono text-slate-400 uppercase">Serrage d&apos;Ajustement</div>
+              <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-widest block mb-2">VALEUR DE SERRAGE :</span>
+              <div className="p-5 rounded-2xl bg-slate-100 dark:bg-[#050A12] border border-slate-200 dark:border-slate-800 text-center space-y-2 shadow-inner">
+                <div className="text-xs font-mono text-slate-600 dark:text-slate-400 uppercase">Serrage d&apos;Ajustement</div>
                 <div
                   className={`text-4xl lg:text-5xl font-mono font-black ${
                     chassageResult.status === 'ok'
-                      ? 'text-emerald-400'
+                      ? 'text-emerald-600 dark:text-emerald-400'
                       : chassageResult.status === 'weak'
-                      ? 'text-amber-400'
-                      : 'text-red-500'
+                      ? 'text-amber-600 dark:text-amber-400'
+                      : 'text-red-600 dark:text-red-500'
                   }`}
                 >
                   {chassageResult.fitUm >= 0 ? `+${chassageResult.fitUm}` : chassageResult.fitUm}{' '}
@@ -805,10 +805,10 @@ export default function EbatsAjustementsPage() {
                 <div
                   className={`inline-block px-3 py-1 rounded-full text-xs font-mono font-bold ${
                     chassageResult.status === 'ok'
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                      ? 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/40'
                       : chassageResult.status === 'weak'
-                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                      : 'bg-red-500/20 text-red-300 border border-red-500/40'
+                      ? 'bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/40'
+                      : 'bg-red-500/15 text-red-800 dark:text-red-300 border border-red-500/40'
                   }`}
                 >
                   {chassageResult.badgeText}
@@ -816,23 +816,23 @@ export default function EbatsAjustementsPage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-black/40 border border-slate-800 space-y-2 font-mono text-xs">
-              <span className="text-[10px] text-amber-400 block uppercase">Consigne de Chassage Seitz :</span>
-              <p className="text-slate-300 font-sans leading-relaxed">{chassageResult.desc}</p>
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-black/40 border border-slate-200 dark:border-slate-800 space-y-2 font-mono text-xs">
+              <span className="text-[10px] text-amber-800 dark:text-amber-400 block uppercase font-bold">Consigne de Chassage Seitz :</span>
+              <p className="text-slate-700 dark:text-slate-300 font-sans leading-relaxed">{chassageResult.desc}</p>
             </div>
           </div>
         </div>
       )}
 
       {/* TABLEAU RÉCAPITULATIF OFFICIEL COMPLET (24 ORGANES) */}
-      <div className="max-w-7xl mx-auto p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-5">
+      <div className="max-w-7xl mx-auto p-6 rounded-3xl bg-white dark:bg-[#0D121F] border-2 border-slate-200 dark:border-slate-800 shadow-xl dark:shadow-2xl space-y-5">
         
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
           <div>
-            <h3 className="text-lg font-bold text-white font-serif flex items-center gap-2">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white font-serif flex items-center gap-2">
               <span>📋 Référentiel Officiel Exhaustif des Tolérances Suisses (NIHS)</span>
             </h3>
-            <p className="text-xs text-slate-400 font-light mt-0.5">
+            <p className="text-xs text-slate-600 dark:text-slate-400 font-light mt-0.5">
               Tableau complet d&apos;atelier couvrant les 24 organes clés : Organe Réglant, Rouage, Barillet, Remontoir, Automatique et Complications.
             </p>
           </div>
@@ -844,9 +844,9 @@ export default function EbatsAjustementsPage() {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Rechercher (ex: chaussée, masse, tige, Incabloc)..."
-              className="w-full pl-3 pr-8 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs font-mono text-slate-200 outline-none focus:border-amber-500"
+              className="w-full pl-3 pr-8 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs font-mono text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 outline-none focus:border-amber-500 focus:bg-white dark:focus:bg-slate-900 transition"
             />
-            <Search className="w-3.5 h-3.5 text-slate-500 absolute right-3 top-2.5" />
+            <Search className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 absolute right-3 top-2.5" />
           </div>
         </div>
 
@@ -866,8 +866,8 @@ export default function EbatsAjustementsPage() {
               onClick={() => setCurrentCategory(c.id)}
               className={`px-3 py-1.5 rounded-lg transition ${
                 currentCategory === c.id
-                  ? 'bg-amber-500 text-slate-950 font-bold'
-                  : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-sm'
+                  : 'bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
               }`}
             >
               {c.label}
@@ -876,10 +876,10 @@ export default function EbatsAjustementsPage() {
         </div>
 
         {/* Tableau */}
-        <div className="overflow-x-auto rounded-xl border border-slate-800/80">
+        <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800/80">
           <table className="w-full text-left font-mono text-xs">
             <thead>
-              <tr className="bg-slate-950 border-b border-slate-800 text-slate-400 uppercase text-[10px]">
+              <tr className="bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 uppercase text-[10px]">
                 <th className="py-3 px-3">Organe / Mobile Horloger</th>
                 <th className="px-3">Ébat Axial (Hauteur)</th>
                 <th className="px-3">Ébat Radial (Trou/Jeu)</th>
@@ -887,28 +887,28 @@ export default function EbatsAjustementsPage() {
                 <th className="px-3">Procédure &amp; Contrôle d&apos;Établi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 text-slate-300 bg-slate-900/40">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800/60 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900/40">
               {filteredTable.map((item, idx) => (
-                <tr key={idx} className="hover:bg-slate-800/60 transition">
-                  <td className="py-3 px-3 font-bold text-amber-400">
+                <tr key={idx} className="hover:bg-amber-50/60 dark:hover:bg-slate-800/60 transition">
+                  <td className="py-3 px-3 font-bold text-amber-800 dark:text-amber-400">
                     {item.name}
-                    <span className="block text-[10px] text-slate-500 font-normal uppercase">
+                    <span className="block text-[10px] text-slate-400 dark:text-slate-500 font-normal uppercase">
                       {item.cat}
                     </span>
                   </td>
-                  <td className="px-3 text-white font-semibold">{item.axial}</td>
-                  <td className="px-3 text-emerald-400">{item.radial}</td>
-                  <td className="px-3 text-blue-300 font-medium">{item.oil}</td>
-                  <td className="px-3 text-slate-300 font-sans text-[11px] leading-snug">{item.method}</td>
+                  <td className="px-3 text-slate-900 dark:text-white font-semibold">{item.axial}</td>
+                  <td className="px-3 text-emerald-700 dark:text-emerald-400 font-medium">{item.radial}</td>
+                  <td className="px-3 text-blue-700 dark:text-blue-300 font-medium">{item.oil}</td>
+                  <td className="px-3 text-slate-600 dark:text-slate-300 font-sans text-[11px] leading-snug">{item.method}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-slate-400 pt-1 gap-2">
+        <div className="flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400 pt-1 gap-2">
           <span>Affichage de {filteredTable.length} organe(s) horloger(s) sur 24</span>
-          <span className="text-amber-400">Sources : NIHS 91-10, ETA Technical Communications, Bergeon Seitz Manual</span>
+          <span className="text-amber-800 dark:text-amber-400 font-medium">Sources : NIHS 91-10, ETA Technical Communications, Bergeon Seitz Manual</span>
         </div>
       </div>
 
