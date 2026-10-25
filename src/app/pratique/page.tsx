@@ -255,9 +255,26 @@ const PRACTICAL_MODULES: PracticalModule[] = [
     href: '/pratique/outils'
   },
   {
-    step: 'Étape 07 · Plans d\'Usine',
-    badge: 'Plans ETA',
-    title: 'Fiches Techniques & Éclatés',
+    step: 'Étape 07 · Calibres Rois',
+    badge: '2824 · 7750 · 6497',
+    title: 'Rhabillage des 3 Calibres Rois',
+    description: 'Protocoles chronologiques officiels, couples de serrage en cNm, cartographie des 5 huiles Moebius, schémas techniques et loupe 10x.',
+    icon: '⚙️',
+    iconBg: 'bg-amber-500/10',
+    iconBorder: 'border-amber-500/30',
+    iconColor: 'text-amber-500 dark:text-amber-400',
+    stepColor: 'text-amber-600 dark:text-amber-400',
+    hoverBorder: 'hover:border-amber-400 dark:hover:border-amber-400',
+    hoverText: 'group-hover:text-amber-600 dark:group-hover:text-amber-400',
+    hoverShadow: 'hover:shadow-amber-500/10',
+    btnHover: 'group-hover:bg-amber-400 group-hover:text-slate-950 group-hover:border-amber-400',
+    tools: ['ETA 2824-2', 'Valjoux 7750', 'Unitas 6497-1'],
+    href: '/pratique/rhabillage'
+  },
+  {
+    step: 'Étape 08 · Plans d\'Usine',
+    badge: 'Plans ETA & Valjoux',
+    title: 'Fiches Techniques & Nomenclatures',
     description: 'Plans officiels complets des calibres suisses de référence : éclatés techniques ETA 6497-1 et ETA 2824-2, nomenclature et couples de serrage.',
     icon: '📄',
     iconBg: 'bg-emerald-500/10',
@@ -272,7 +289,7 @@ const PRACTICAL_MODULES: PracticalModule[] = [
     href: '/pratique/fiches'
   },
   {
-    step: 'Étape 08 · Filières d\'État',
+    step: 'Étape 09 · Filières d\'État',
     badge: 'Convention Patronale',
     title: 'Certifications AFP & CFC',
     description: 'Les exigences fédérales suisses de la formation professionnelle : critères d\'examen d\'établi, grilles d\'évaluation et passerelles de carrière.',
