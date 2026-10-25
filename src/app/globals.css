@@ -156,7 +156,6 @@ h3[data-editorial="true"] {
   isolation: isolate;
 }
 
-/* Les anciennes cartes SaaS deviennent des surfaces éditoriales plus sobres. */
 .hl-site-content [class*="rounded-3xl"],
 .hl-site-content [class*="rounded-2xl"] {
   border-radius: 0.45rem !important;
@@ -174,13 +173,49 @@ h3[data-editorial="true"] {
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.26) !important;
 }
 
-/* Neutralise la majorité des grands fonds marketing sans toucher aux SVG/canvas. */
 .hl-site-content section[class*="bg-gradient-to-"],
 .hl-site-content div[class*="bg-gradient-to-"]:not([class*="bg-clip-text"]) {
   background-image: none !important;
 }
 
-/* Unifie les surfaces claires héritées. */
+/* Lune de la page d'accueil : exception au nettoyage des anciens gradients. */
+.hl-site-content div[class*="w-16 h-16 rounded-full bg-gradient-to-tr from-[#8C6D1F]"] {
+  background-color: #d4b260 !important;
+  background-image:
+    radial-gradient(circle at 31% 30%, rgba(104, 76, 35, 0.58) 0 7%, transparent 7.8%),
+    radial-gradient(circle at 67% 34%, rgba(105, 77, 37, 0.44) 0 5.5%, transparent 6.3%),
+    radial-gradient(circle at 54% 64%, rgba(92, 67, 34, 0.40) 0 8.5%, transparent 9.3%),
+    radial-gradient(circle at 28% 68%, rgba(122, 91, 47, 0.38) 0 4.5%, transparent 5.3%),
+    radial-gradient(circle at 73% 73%, rgba(111, 81, 39, 0.32) 0 3.8%, transparent 4.6%),
+    radial-gradient(circle at 45% 48%, rgba(255, 247, 211, 0.42) 0 2%, transparent 2.8%),
+    radial-gradient(circle at 62% 38%, #fff1bf 0%, #f2dda0 31%, #d6b869 58%, #aa813e 80%, #79552c 100%) !important;
+  border-color: rgba(232, 199, 121, 0.62) !important;
+  box-shadow:
+    inset -8px -6px 13px rgba(74, 48, 23, 0.34),
+    inset 4px 4px 9px rgba(255, 248, 215, 0.32),
+    0 0 10px rgba(238, 207, 132, 0.28),
+    0 0 26px rgba(214, 177, 92, 0.34) !important;
+  overflow: hidden;
+}
+
+.hl-site-content div[class*="w-16 h-16 rounded-full bg-gradient-to-tr from-[#8C6D1F]"]::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 9999px;
+  background: radial-gradient(ellipse 78% 118% at 112% 50%, transparent 0 69%, rgba(3, 5, 8, 0.25) 76%, rgba(3, 5, 8, 0.78) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.hl-site-content div[class*="w-16 h-16 rounded-full bg-gradient-to-tr from-[#8C6D1F]"] > span {
+  z-index: 1;
+  background-color: rgba(102, 73, 33, 0.36) !important;
+  border: 1px solid rgba(255, 239, 190, 0.10);
+  box-shadow: inset 1px 1px 2px rgba(57, 38, 18, 0.34);
+  opacity: 0.72;
+}
+
 .hl-site-content [class~="bg-white"],
 .hl-site-content [class*="bg-white/"] {
   background-color: var(--hl-surface) !important;
@@ -198,7 +233,6 @@ h3[data-editorial="true"] {
   border-color: var(--hl-line) !important;
 }
 
-/* Unifie les couleurs de texte les plus fréquentes en mode clair. */
 .hl-site-content [class~="text-slate-900"],
 .hl-site-content [class~="text-gray-900"],
 .hl-site-content [class~="text-slate-800"] {
@@ -214,7 +248,6 @@ h3[data-editorial="true"] {
   color: var(--hl-muted) !important;
 }
 
-/* Le doré devient le métal chaud commun de HorloLearn. */
 .hl-site-content [class*="text-amber-"],
 .hl-site-content [class*="text-yellow-"] {
   color: var(--hl-metal) !important;
@@ -224,7 +257,6 @@ h3[data-editorial="true"] {
   border-color: color-mix(in srgb, var(--hl-metal) 48%, var(--hl-line)) !important;
 }
 
-/* Adaptation sombre pour les vieilles surfaces hardcodées Tailwind. */
 .dark .hl-site-content [class*="dark:bg-slate-900"],
 .dark .hl-site-content [class*="dark:bg-gray-900"],
 .dark .hl-site-content [class*="dark:bg-[#0D121F]"],
@@ -253,7 +285,6 @@ h3[data-editorial="true"] {
   color: var(--hl-muted) !important;
 }
 
-/* Une hiérarchie typographique plus éditoriale sur les pages anciennes. */
 .hl-site-content h1,
 .hl-site-content h2 {
   letter-spacing: -0.025em;
@@ -355,7 +386,6 @@ html.dark .horlo-editorial-page .editorial-workshop-tabs button.active {
   color: var(--hl-bg) !important;
 }
 
-/* Les planches techniques restent volontairement noir atelier dans les deux thèmes. */
 html.dark .horlo-editorial-page .editorial-hero-plate,
 html.dark .horlo-editorial-page .editorial-drawing,
 html.dark .horlo-editorial-page .editorial-feature,
@@ -365,7 +395,6 @@ html.dark .horlo-editorial-page .editorial-modal-viewport {
   color-scheme: dark;
 }
 
-/* Animations sobres */
 @keyframes fadeInUp {
   from {
     opacity: 0;
