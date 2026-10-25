@@ -216,6 +216,78 @@ h3[data-editorial="true"] {
   opacity: 0.72;
 }
 
+/* Carte vitrine "70 Modules" : claire en mode clair, bleu nuit en mode sombre. */
+.hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] {
+  background: var(--hl-surface) !important;
+  color: var(--hl-ink) !important;
+  border-color: var(--hl-line) !important;
+}
+
+.hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] > div:first-child {
+  border-color: var(--hl-line) !important;
+}
+
+.hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] h3[class*="text-white"] {
+  color: var(--hl-ink) !important;
+}
+
+.hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] p[class*="text-slate-300"],
+.hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] span[class*="text-slate-400"] {
+  color: var(--hl-muted) !important;
+}
+
+.hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] a[class*="bg-slate-800"] {
+  background: var(--hl-bg-soft) !important;
+  border-color: var(--hl-line) !important;
+  color: var(--hl-ink) !important;
+}
+
+.hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] a[class*="bg-slate-800"]:hover {
+  background: var(--hl-surface-strong) !important;
+  border-color: color-mix(in srgb, var(--hl-metal) 55%, var(--hl-line)) !important;
+}
+
+.hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] a[class*="bg-slate-800"] span[class*="text-slate-100"] {
+  color: var(--hl-ink) !important;
+}
+
+html.dark .hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: #1e293b !important;
+}
+
+html.dark .hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] > div:first-child {
+  border-color: #1e293b !important;
+}
+
+html.dark .hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] h3[class*="text-white"] {
+  color: #ffffff !important;
+}
+
+html.dark .hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] p[class*="text-slate-300"] {
+  color: #cbd5e1 !important;
+}
+
+html.dark .hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] span[class*="text-slate-400"] {
+  color: #94a3b8 !important;
+}
+
+html.dark .hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] a[class*="bg-slate-800"] {
+  background: rgba(30, 41, 59, 0.9) !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark .hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] a[class*="bg-slate-800"]:hover {
+  background: #334155 !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+}
+
+html.dark .hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*="text-white"] a[class*="bg-slate-800"] span[class*="text-slate-100"] {
+  color: #f1f5f9 !important;
+}
+
 .hl-site-content [class~="bg-white"],
 .hl-site-content [class*="bg-white/"] {
   background-color: var(--hl-surface) !important;
