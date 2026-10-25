@@ -20,14 +20,12 @@ import {
   ChevronRight,
   Search,
   Copy,
-  Printer,
   Check,
   Hammer,
   Gauge,
   Clock,
   Zap,
-  FileText,
-  ArrowRight
+  Award
 } from 'lucide-react';
 
 // --- TYPES ---
@@ -54,7 +52,7 @@ interface TorqueItem {
 
 export default function OutilsPage() {
   const [activeTab, setActiveTab] = useState<
-    'diagnostic' | 'couples' | 'amplitude' | 'calculateurs' | 'fiche' | 'brucelles'
+    'diagnostic' | 'couples' | 'amplitude' | 'calculateurs' | 'cosc' | 'brucelles'
   >('diagnostic');
 
   // =========================================================================
@@ -404,7 +402,64 @@ export default function OutilsPage() {
   }, [barrelTurns, ratioWheel]);
 
   // =========================================================================
-  // 5. BRUCELLES DUMONT SUISSE DATA
+  // 5. CONTRÔLE OFFICIEL COSC (NORME ISO 3159)
+  // =========================================================================
+  const [coscCh, setCoscCh] = useState<number>(1.5);
+  const [coscCb, setCoscCb] = useState<number>(2.0);
+  const [cosc6h, setCosc6h] = useState<number>(3.5);
+  const [cosc9h, setCosc9h] = useState<number>(2.5);
+  const [cosc3h, setCosc3h] = useState<number>(1.0);
+
+  const coscResults = useMemo(() => {
+    const positions = [coscCh, coscCb, cosc6h, cosc9h, cosc3h];
+    const m = positions.reduce((a, b) => a + b, 0) / 5;
+    const variations = [
+      Math.abs(coscCb - coscCh),
+      Math.abs(cosc6h - coscCb),
+      Math.abs(cosc9h - cosc6h),
+      Math.abs(cosc3h - cosc9h)
+    ];
+    const v = variations.reduce((a, b) => a + b, 0) / 4;
+    const maxVal = Math.max(...positions);
+    const minVal = Math.min(...positions);
+    const vmax = maxVal - minVal;
+    const d = cosc6h - coscCh;
+    const p = Math.max(...positions.map((val) => Math.abs(val - m)));
+
+    const okM = m >= -4.0 && m <= 6.0;
+    const okV = v <= 2.0;
+    const okVmax = vmax <= 10.0;
+    const okD = d >= -6.0 && d <= 8.0;
+    const okP = p <= 10.0;
+    const allOk = okM && okV && okVmax && okD && okP;
+
+    return { m, v, vmax, d, p, okM, okV, okVmax, okD, okP, allOk };
+  }, [coscCh, coscCb, cosc6h, cosc9h, cosc3h]);
+
+  const applyCoscPreset = (type: 'chronometre' | 'ecart' | 'refuse') => {
+    if (type === 'chronometre') {
+      setCoscCh(1.5);
+      setCoscCb(2.0);
+      setCosc6h(3.5);
+      setCosc9h(2.5);
+      setCosc3h(1.0);
+    } else if (type === 'ecart') {
+      setCoscCh(0.0);
+      setCoscCb(1.0);
+      setCosc6h(9.5);
+      setCosc9h(7.0);
+      setCosc3h(6.0);
+    } else {
+      setCoscCh(-6.5);
+      setCoscCb(-5.0);
+      setCosc6h(7.5);
+      setCosc9h(4.0);
+      setCosc3h(-2.0);
+    }
+  };
+
+  // =========================================================================
+  // 6. BRUCELLES DUMONT SUISSE DATA
   // =========================================================================
   const BRUCELLES_DATA = [
     {
@@ -470,7 +525,7 @@ export default function OutilsPage() {
               <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
                 Le banc de travail numérique conçu pour rester ouvert sur votre écran pendant vos révisions. 
                 Diagnostic de pannes par symptômes, couples de serrage en cNm, jauge de rebatement Witschi, 
-                calculateur d&apos;ébats et fiche suiveuse d&apos;atelier A4.
+                contrôle chronométrique officiel COSC (ISO 3159) et métrologie d&apos;atelier.
               </p>
             </div>
 
@@ -500,7 +555,7 @@ export default function OutilsPage() {
               { id: 'couples', label: '2. Couples de Serrage', sub: 'cNm & Tournevis' },
               { id: 'amplitude', label: '3. Amplitude & Rebatement', sub: 'Analyse Witschi' },
               { id: 'calculateurs', label: '4. Métrologie Express', sub: 'Lignes, Hz & Réserve' },
-              { id: 'fiche', label: '5. Fiche Atelier A4', sub: 'Service Sheet Prêt' },
+              { id: 'cosc', label: '5. Contrôle COSC', sub: 'Norme ISO 3159' },
               { id: 'brucelles', label: '6. Brucelles Dumont', sub: 'N° 1 à 5 & Laiton' }
             ].map((tab) => (
               <button
@@ -667,7 +722,7 @@ export default function OutilsPage() {
                   <option value="all">Tous les Organes Suisses (Standard NIHS)</option>
                   <option value="eta2824">ETA 2824-2 / SW200 (Automatique)</option>
                   <option value="valjoux7750">Valjoux 7750 (Chronographe)</option>
-                  <option value="eta6497">ETA 6497-1 / Unitas (Manuel 16½''')</option>
+                  <option value="eta6497">ETA 6497-1 / Unitas (Manuel 16½ lignes)</option>
                   <option value="rolex3135">Rolex Calibre 3135 / 3235</option>
                 </select>
               </div>
@@ -909,8 +964,8 @@ export default function OutilsPage() {
 
               <div className="mt-6 pt-4 border-t border-slate-200 dark:border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-mono">
                 <span>Correction d&apos;angle : <code>Amp_réelle = Amp_mesurée × sin(θ_réel/2) / sin(θ_étalon/2)</code></span>
-                <button onClick={() => setActiveTab('fiche')} className="text-amber-500 hover:underline">
-                  Transférer vers Fiche Atelier ➔
+                <button onClick={() => setActiveTab('cosc')} className="text-amber-500 hover:underline">
+                  Vérifier Normes COSC ➔
                 </button>
               </div>
 
@@ -976,7 +1031,7 @@ export default function OutilsPage() {
                 </div>
 
                 <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] font-mono text-amber-700 dark:text-amber-400">
-                  Exemple : Un calibre 16½&apos;&apos;&apos; (ETA 6497 Unitas) équivaut à 36.60 mm.
+                  Exemple : Un calibre 16½ lignes (ETA 6497 Unitas) équivaut à 36.60 mm.
                 </div>
               </div>
 
@@ -1120,193 +1175,303 @@ export default function OutilsPage() {
         )}
 
         {/* ========================================================================= */}
-        {/* POSTE 5 : FICHE D'ATELIER IMPRIMABLE A4 */}
+        {/* POSTE 5 : CONTRÔLE OFFICIEL COSC (NORME ISO 3159) */}
         {/* ========================================================================= */}
-        {activeTab === 'fiche' && (
-          <div className="space-y-6">
+        {activeTab === 'cosc' && (
+          <div className="bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-200 dark:border-white/10 p-6 shadow-sm transition-colors space-y-6">
             
-            <div className="no-print bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-200 dark:border-white/10 p-4 shadow-sm transition-colors flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-200 dark:border-white/10 pb-6">
               <div>
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-amber-500" />
-                  <span>Fiche Suiveuse d&apos;Intervention d&apos;Atelier</span>
+                <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-red-600/10 border border-red-600/30 text-red-600 dark:text-red-400 text-xs font-mono uppercase tracking-wider mb-2">
+                  <span>🇨🇭 Standard Officiel Suisse • ISO 3159 Catégorie 1</span>
+                </div>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <span>🏛️</span> Contrôle Chronométrique COSC (5 Positions)
                 </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Remplissez les champs ci-dessous puis cliquez sur Imprimer pour joindre la fiche à la boîte de la montre.
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  Testez vos relevés de marche (s/j) par rapport aux 5 critères éliminatoires du Contrôle Officiel Suisse des Chronomètres.
                 </p>
               </div>
 
-              <button
-                onClick={() => {
-                  if (typeof window !== 'undefined') window.print();
-                }}
-                className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-mono text-xs font-bold shadow-md shadow-amber-500/20 flex items-center gap-2 transition-all"
-              >
-                <Printer className="w-4 h-4" />
-                <span>Imprimer la Fiche A4</span>
-              </button>
+              {/* Quick Presets */}
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-mono text-slate-400">Préréglages :</span>
+                <button
+                  onClick={() => applyCoscPreset('chronometre')}
+                  className="px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 transition-all"
+                >
+                  Calibre Certifié (+2.2 s/j)
+                </button>
+                <button
+                  onClick={() => applyCoscPreset('ecart')}
+                  className="px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 transition-all"
+                >
+                  Chute Verticale (+7 s/j)
+                </button>
+                <button
+                  onClick={() => applyCoscPreset('refuse')}
+                  className="px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30 hover:bg-red-500/20 transition-all"
+                >
+                  Hors Normes (-6.5 s/j)
+                </button>
+              </div>
             </div>
 
-            {/* FICHE A4 HORLOGÈRE */}
-            <div
-              id="printable-fiche"
-              className="bg-white text-slate-900 p-8 sm:p-12 rounded-2xl border border-slate-300 shadow-xl max-w-4xl mx-auto font-sans"
-            >
+            {/* 2 Columns Layout : Inputs vs Official Criteria Table */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               
-              <div className="flex justify-between items-start border-b-2 border-slate-900 pb-6">
+              {/* Column 1 : 5 Positions Relevés Witschi */}
+              <div className="space-y-4 bg-slate-50 dark:bg-black/20 p-5 rounded-2xl border border-slate-200 dark:border-white/5">
+                <span className="text-xs font-mono uppercase tracking-wider text-slate-400 block mb-2 font-bold">
+                  Marches Diurnes Mesurées (s/j) :
+                </span>
+
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl font-bold font-serif tracking-wider">HORLOLEARN</span>
-                    <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-black text-white rounded">ATELIER SUISSE</span>
+                  <div className="flex justify-between text-xs font-mono mb-1">
+                    <span className="text-slate-600 dark:text-slate-400 font-bold">1. CH (Cadran Haut / Plat) :</span>
+                    <span className="font-bold text-amber-500">{(coscCh >= 0 ? '+' : '') + coscCh.toFixed(1)} s/j</span>
                   </div>
-                  <p className="text-xs text-slate-600 mt-1 uppercase tracking-widest font-mono">
-                    Fiche Technique d&apos;Intervention &amp; Contrôle Chronométrique
-                  </p>
+                  <input
+                    type="range"
+                    min="-20"
+                    max="25"
+                    step="0.5"
+                    value={coscCh}
+                    onChange={(e) => setCoscCh(parseFloat(e.target.value))}
+                    className="w-full accent-amber-500"
+                  />
                 </div>
-                <div className="text-right text-xs font-mono text-slate-500">
-                  <div>Date : <span className="font-bold text-slate-900">25.10.2026</span></div>
-                  <div>Dossier N° : <span className="font-bold text-slate-900">HL-2026-0842</span></div>
-                  <div>Statut : <span className="text-emerald-700 font-bold uppercase">Révision Achevée</span></div>
+
+                <div>
+                  <div className="flex justify-between text-xs font-mono mb-1">
+                    <span className="text-slate-600 dark:text-slate-400 font-bold">2. CB (Cadran Bas / Plat) :</span>
+                    <span className="font-bold text-amber-500">{(coscCb >= 0 ? '+' : '') + coscCb.toFixed(1)} s/j</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="-20"
+                    max="25"
+                    step="0.5"
+                    value={coscCb}
+                    onChange={(e) => setCoscCb(parseFloat(e.target.value))}
+                    className="w-full accent-amber-500"
+                  />
+                </div>
+
+                <div>
+                  <div className="flex justify-between text-xs font-mono mb-1">
+                    <span className="text-slate-600 dark:text-slate-400 font-bold">3. 6H (Couronne Bas / Pendu) :</span>
+                    <span className="font-bold text-blue-500">{(cosc6h >= 0 ? '+' : '') + cosc6h.toFixed(1)} s/j</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="-20"
+                    max="25"
+                    step="0.5"
+                    value={cosc6h}
+                    onChange={(e) => setCosc6h(parseFloat(e.target.value))}
+                    className="w-full accent-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <div className="flex justify-between text-xs font-mono mb-1">
+                    <span className="text-slate-600 dark:text-slate-400 font-bold">4. 9H (Couronne Gauche / Pendu) :</span>
+                    <span className="font-bold text-blue-500">{(cosc9h >= 0 ? '+' : '') + cosc9h.toFixed(1)} s/j</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="-20"
+                    max="25"
+                    step="0.5"
+                    value={cosc9h}
+                    onChange={(e) => setCosc9h(parseFloat(e.target.value))}
+                    className="w-full accent-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <div className="flex justify-between text-xs font-mono mb-1">
+                    <span className="text-slate-600 dark:text-slate-400 font-bold">5. 3H (Couronne Haut / Pendu) :</span>
+                    <span className="font-bold text-blue-500">{(cosc3h >= 0 ? '+' : '') + cosc3h.toFixed(1)} s/j</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="-20"
+                    max="25"
+                    step="0.5"
+                    value={cosc3h}
+                    onChange={(e) => setCosc3h(parseFloat(e.target.value))}
+                    className="w-full accent-blue-500"
+                  />
+                </div>
+
+                <div className="p-3 rounded-xl bg-slate-200/50 dark:bg-white/5 text-[11px] font-mono text-slate-500 mt-4">
+                  Norme ISO 3159 : Mesures relevées après stabilisation thermique à 23°C (&plusmn;1°C).
                 </div>
               </div>
 
-              <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono">
-                <div>
-                  <span className="text-[10px] uppercase text-slate-400 block">Marque</span>
-                  <input
-                    type="text"
-                    defaultValue="Omega"
-                    className="font-bold text-slate-900 border-b border-dashed border-slate-300 w-full focus:outline-none py-1 bg-transparent"
-                  />
+              {/* Column 2 : Results & 5 Official Criteria Table */}
+              <div className="lg:col-span-2 space-y-6 flex flex-col justify-between">
+                
+                {/* Global Verdict Banner */}
+                <div
+                  className={`p-5 rounded-2xl border transition-all flex flex-col sm:flex-row justify-between sm:items-center gap-3 ${
+                    coscResults.allOk
+                      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
+                      : 'bg-red-500/10 border-red-500/30 text-red-600 dark:text-red-400'
+                  }`}
+                >
+                  <div>
+                    <span className="text-[10px] font-mono uppercase tracking-widest block">
+                      Verdict Métrologique Officiel
+                    </span>
+                    <h3 className="text-xl font-bold mt-0.5">
+                      {coscResults.allOk ? 'CONFORME AU TITRE DE CHRONOMÈTRE' : 'HORS CRITÈRES CHRONOMÉTRIQUES COSC'}
+                    </h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
+                      {coscResults.allOk
+                        ? "Le mouvement respecte l'ensemble des 5 critères d'isochronisme et de marche diurne de la norme ISO 3159."
+                        : "Un ou plusieurs écarts dépassent les tolérances officielles de l'observatoire suisse. Retouche de raquette ou équilibrage requis."}
+                    </p>
+                  </div>
+                  <div
+                    className={`px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider self-start sm:self-auto shrink-0 shadow-md ${
+                      coscResults.allOk
+                        ? 'bg-emerald-500 text-slate-950 shadow-emerald-500/20'
+                        : 'bg-red-500 text-white shadow-red-500/20'
+                    }`}
+                  >
+                    {coscResults.allOk ? '100% CONFORME' : 'NON-CONFORME'}
+                  </div>
                 </div>
-                <div>
-                  <span className="text-[10px] uppercase text-slate-400 block">Modèle / Réf.</span>
-                  <input
-                    type="text"
-                    defaultValue="Speedmaster Professional"
-                    className="font-bold text-slate-900 border-b border-dashed border-slate-300 w-full focus:outline-none py-1 bg-transparent"
-                  />
-                </div>
-                <div>
-                  <span className="text-[10px] uppercase text-slate-400 block">Calibre</span>
-                  <input
-                    type="text"
-                    defaultValue="Calibre 1861 (Lemania)"
-                    className="font-bold text-slate-900 border-b border-dashed border-slate-300 w-full focus:outline-none py-1 bg-transparent"
-                  />
-                </div>
-                <div>
-                  <span className="text-[10px] uppercase text-slate-400 block">N° de Série</span>
-                  <input
-                    type="text"
-                    defaultValue="48291054"
-                    className="font-bold text-slate-900 border-b border-dashed border-slate-300 w-full focus:outline-none py-1 bg-transparent"
-                  />
-                </div>
-              </div>
 
-              {/* Contrôle Witschi 5 Positions */}
-              <div className="mt-8">
-                <h3 className="text-xs font-bold uppercase tracking-wider font-mono bg-slate-100 p-2 border-l-4 border-slate-900">
-                  Contrôle Chronométrique Witschi (5 Positions)
-                </h3>
-                <div className="mt-3 overflow-x-auto">
-                  <table className="w-full text-left text-xs font-mono border-collapse">
+                {/* The Official 5 Criteria Table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs font-mono">
                     <thead>
-                      <tr className="border-b border-slate-300 text-slate-500">
-                        <th className="py-2">Position NIHS</th>
-                        <th className="py-2">Marche Avant</th>
-                        <th className="py-2">Amplitude Avant</th>
-                        <th className="py-2">Marche Finale</th>
-                        <th className="py-2">Amplitude Finale</th>
-                        <th className="py-2">Repère Final</th>
+                      <tr className="border-b border-slate-200 dark:border-white/10 text-slate-400 uppercase text-[10px] tracking-wider">
+                        <th className="py-2.5 px-3">Critère Officiel ISO 3159</th>
+                        <th className="py-2.5 px-3">Tolérance Maximale</th>
+                        <th className="py-2.5 px-3">Valeur Calculée</th>
+                        <th className="py-2.5 px-3 text-right">Statut</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-200">
-                      <tr>
-                        <td className="py-2 font-bold">CH (Cadran Haut)</td>
-                        <td className="py-2 text-red-600">+18 s/j</td>
-                        <td className="py-2 text-red-600">210°</td>
-                        <td className="py-2 text-emerald-600 font-bold">+2 s/j</td>
-                        <td className="py-2 text-emerald-600 font-bold">298°</td>
-                        <td className="py-2">0.1 ms</td>
+                    <tbody className="divide-y divide-slate-100 dark:divide-white/5">
+                      
+                      <tr className="hover:bg-slate-50 dark:hover:bg-white/5">
+                        <td className="py-3 px-3">
+                          <strong className="text-slate-900 dark:text-white block">1. Marche Diurne Moyenne (M)</strong>
+                          <span className="text-[10px] text-slate-400">Moyenne arithmétique des 5 positions</span>
+                        </td>
+                        <td className="py-3 px-3 font-bold text-amber-500">-4.0 à +6.0 s/j</td>
+                        <td className={`py-3 px-3 font-bold ${coscResults.okM ? 'text-emerald-500' : 'text-red-500'}`}>
+                          {(coscResults.m >= 0 ? '+' : '') + coscResults.m.toFixed(1)} s/j
+                        </td>
+                        <td className="py-3 px-3 text-right">
+                          <span
+                            className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                              coscResults.okM ? 'bg-emerald-500/20 text-emerald-500' : 'bg-red-500/20 text-red-500'
+                            }`}
+                          >
+                            {coscResults.okM ? 'VALIDE' : 'HORS TOLÉRANCE'}
+                          </span>
+                        </td>
                       </tr>
-                      <tr>
-                        <td className="py-2 font-bold">CB (Cadran Bas)</td>
-                        <td className="py-2 text-red-600">+16 s/j</td>
-                        <td className="py-2 text-red-600">205°</td>
-                        <td className="py-2 text-emerald-600 font-bold">+1 s/j</td>
-                        <td className="py-2 text-emerald-600 font-bold">295°</td>
-                        <td className="py-2">0.1 ms</td>
+
+                      <tr className="hover:bg-slate-50 dark:hover:bg-white/5">
+                        <td className="py-3 px-3">
+                          <strong className="text-slate-900 dark:text-white block">2. Variation Moyenne (V)</strong>
+                          <span className="text-[10px] text-slate-400">Écart moyen d&apos;une position à l&apos;autre</span>
+                        </td>
+                        <td className="py-3 px-3 font-bold text-amber-500">&le; 2.0 s/j</td>
+                        <td className={`py-3 px-3 font-bold ${coscResults.okV ? 'text-emerald-500' : 'text-red-500'}`}>
+                          {coscResults.v.toFixed(1)} s/j
+                        </td>
+                        <td className="py-3 px-3 text-right">
+                          <span
+                            className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                              coscResults.okV ? 'bg-emerald-500/20 text-emerald-500' : 'bg-red-500/20 text-red-500'
+                            }`}
+                          >
+                            {coscResults.okV ? 'VALIDE' : 'HORS TOLÉRANCE'}
+                          </span>
+                        </td>
                       </tr>
-                      <tr>
-                        <td className="py-2 font-bold">6H (Couronne Bas)</td>
-                        <td className="py-2 text-red-600">+24 s/j</td>
-                        <td className="py-2 text-red-600">175°</td>
-                        <td className="py-2 text-emerald-600 font-bold">+3 s/j</td>
-                        <td className="py-2 text-emerald-600 font-bold">262°</td>
-                        <td className="py-2">0.2 ms</td>
+
+                      <tr className="hover:bg-slate-50 dark:hover:bg-white/5">
+                        <td className="py-3 px-3">
+                          <strong className="text-slate-900 dark:text-white block">3. Plus Grand Écart entre Positions (Vmax)</strong>
+                          <span className="text-[10px] text-slate-400">Différence absolue Max - Min</span>
+                        </td>
+                        <td className="py-3 px-3 font-bold text-amber-500">&le; 10.0 s/j</td>
+                        <td className={`py-3 px-3 font-bold ${coscResults.okVmax ? 'text-emerald-500' : 'text-red-500'}`}>
+                          {coscResults.vmax.toFixed(1)} s/j
+                        </td>
+                        <td className="py-3 px-3 text-right">
+                          <span
+                            className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                              coscResults.okVmax ? 'bg-emerald-500/20 text-emerald-500' : 'bg-red-500/20 text-red-500'
+                            }`}
+                          >
+                            {coscResults.okVmax ? 'VALIDE' : 'HORS TOLÉRANCE'}
+                          </span>
+                        </td>
                       </tr>
-                      <tr>
-                        <td className="py-2 font-bold">9H (Couronne Gauche)</td>
-                        <td className="py-2 text-red-600">+22 s/j</td>
-                        <td className="py-2 text-red-600">180°</td>
-                        <td className="py-2 text-emerald-600 font-bold">+4 s/j</td>
-                        <td className="py-2 text-emerald-600 font-bold">265°</td>
-                        <td className="py-2">0.2 ms</td>
+
+                      <tr className="hover:bg-slate-50 dark:hover:bg-white/5">
+                        <td className="py-3 px-3">
+                          <strong className="text-slate-900 dark:text-white block">4. Différence Plat / Pendu (D)</strong>
+                          <span className="text-[10px] text-slate-400">Marche en 6H moins marche en CH</span>
+                        </td>
+                        <td className="py-3 px-3 font-bold text-amber-500">-6.0 à +8.0 s/j</td>
+                        <td className={`py-3 px-3 font-bold ${coscResults.okD ? 'text-emerald-500' : 'text-red-500'}`}>
+                          {(coscResults.d >= 0 ? '+' : '') + coscResults.d.toFixed(1)} s/j
+                        </td>
+                        <td className="py-3 px-3 text-right">
+                          <span
+                            className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                              coscResults.okD ? 'bg-emerald-500/20 text-emerald-500' : 'bg-red-500/20 text-red-500'
+                            }`}
+                          >
+                            {coscResults.okD ? 'VALIDE' : 'HORS TOLÉRANCE'}
+                          </span>
+                        </td>
                       </tr>
-                      <tr>
-                        <td className="py-2 font-bold">3H (Couronne Haut)</td>
-                        <td className="py-2 text-red-600">+19 s/j</td>
-                        <td className="py-2 text-red-600">182°</td>
-                        <td className="py-2 text-emerald-600 font-bold">+2 s/j</td>
-                        <td className="py-2 text-emerald-600 font-bold">260°</td>
-                        <td className="py-2">0.2 ms</td>
+
+                      <tr className="hover:bg-slate-50 dark:hover:bg-white/5">
+                        <td className="py-3 px-3">
+                          <strong className="text-slate-900 dark:text-white block">5. Plus Grande Reprise de Marche (P)</strong>
+                          <span className="text-[10px] text-slate-400">Écart maximal par rapport à la moyenne M</span>
+                        </td>
+                        <td className="py-3 px-3 font-bold text-amber-500">&le; 10.0 s/j</td>
+                        <td className={`py-3 px-3 font-bold ${coscResults.okP ? 'text-emerald-500' : 'text-red-500'}`}>
+                          {coscResults.p.toFixed(1)} s/j
+                        </td>
+                        <td className="py-3 px-3 text-right">
+                          <span
+                            className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                              coscResults.okP ? 'bg-emerald-500/20 text-emerald-500' : 'bg-red-500/20 text-red-500'
+                            }`}
+                          >
+                            {coscResults.okP ? 'VALIDE' : 'HORS TOLÉRANCE'}
+                          </span>
+                        </td>
                       </tr>
+
                     </tbody>
                   </table>
                 </div>
-              </div>
 
-              {/* Opérations & Lubrification */}
-              <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="text-xs font-bold uppercase tracking-wider font-mono bg-slate-100 p-2 border-l-4 border-slate-900">
-                    Travaux Effectués à l&apos;Établi
-                  </h3>
-                  <ul className="mt-2 space-y-1.5 text-xs text-slate-700">
-                    <li className="flex items-center gap-2"><span>☑</span> Démontage complet mouvement &amp; rouages</li>
-                    <li className="flex items-center gap-2"><span>☑</span> Nettoyage ultrasons 4 bains (Elma)</li>
-                    <li className="flex items-center gap-2"><span>☑</span> Remplacement du ressort de barillet</li>
-                    <li className="flex items-center gap-2"><span>☑</span> Épilation et centrage du spiral</li>
-                    <li className="flex items-center gap-2"><span>☑</span> Changement des joints de couronne &amp; fond</li>
-                    <li className="flex items-center gap-2"><span>☑</span> Épreuve d&apos;étanchéité à sec (3 bar)</li>
-                  </ul>
+                {/* Practical Workshop Tip */}
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-600 dark:text-slate-400 flex items-start gap-3">
+                  <span className="text-amber-500 text-base">💡</span>
+                  <div>
+                    <strong className="text-slate-900 dark:text-white block">Conseil d&apos;Établi de l&apos;Horloger :</strong>
+                    Si la différence Plat / Pendu (D) dépasse +8 s/j, le balancier subit un défaut d&apos;équilibrage dynamique (balourd) ou les goupilles de raquette ne sont pas parfaitement parallèles.
+                  </div>
                 </div>
 
-                <div>
-                  <h3 className="text-xs font-bold uppercase tracking-wider font-mono bg-slate-100 p-2 border-l-4 border-slate-900">
-                    Charte de Lubrification Appliquée
-                  </h3>
-                  <ul className="mt-2 space-y-1.5 text-xs text-slate-700 font-mono">
-                    <li>• Moebius 9010 : Pivots rapides &amp; antichocs balancier</li>
-                    <li>• Moebius HP1300 : Paliers de barillet &amp; roue de centre</li>
-                    <li>• Moebius 9415 : Levées d&apos;ancre (palettes)</li>
-                    <li>• Moebius 9504 / Graisse : Tige de remontoir &amp; tigerie</li>
-                    <li>• Fomblin : Joints toriques d&apos;étanchéité</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="mt-12 pt-6 border-t border-slate-300 flex justify-between items-end text-xs font-mono">
-                <div>
-                  <span className="text-slate-400 block text-[10px] uppercase">Intervenant</span>
-                  <span className="font-bold text-slate-900">Horloger d&apos;Atelier • HorloLearn</span>
-                </div>
-                <div className="text-right">
-                  <span className="text-slate-400 block text-[10px] uppercase">Garantie d&apos;Atelier</span>
-                  <span className="font-bold text-slate-900">12 Mois sur Rhabillage &amp; Étanchéité</span>
-                </div>
               </div>
 
             </div>
