@@ -373,6 +373,220 @@ html.dark .hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*
 }
 
 /* ------------------------------------------------------------------------- */
+/* Accueil — sommaire éditorial du corpus                                    */
+/* Transforme la grille de 9 cartes en composition type catalogue.           */
+/* ------------------------------------------------------------------------- */
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div.text-center {
+  text-align: left !important;
+  margin-bottom: 2.25rem !important;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--hl-line);
+  display: grid;
+  gap: 0.7rem;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div.text-center h2 {
+  max-width: 760px;
+  font-size: clamp(2.4rem, 5vw, 5.6rem) !important;
+  line-height: 0.92 !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.045em !important;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div.text-center p {
+  max-width: 620px;
+  font-family: var(--font-sans), Inter, sans-serif;
+  font-size: 0.78rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--hl-metal) !important;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] {
+  gap: 1px !important;
+  padding: 1px;
+  background: var(--hl-line);
+  border: 0 !important;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a {
+  position: relative;
+  min-height: 235px;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: var(--hl-surface) !important;
+  box-shadow: none !important;
+  transition: background-color 220ms ease, color 220ms ease, transform 220ms ease !important;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:hover {
+  background: var(--hl-surface-strong) !important;
+  transform: translateY(-2px);
+  z-index: 2;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a::before {
+  position: absolute;
+  top: 1.3rem;
+  right: 1.6rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: clamp(2.8rem, 5vw, 5.4rem);
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: -0.08em;
+  color: color-mix(in srgb, var(--hl-metal) 15%, transparent);
+  pointer-events: none;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(1)::before { content: "01"; }
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(2)::before { content: "02"; }
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(3)::before { content: "03"; }
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(4)::before { content: "04"; }
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(5)::before { content: "05"; }
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(6)::before { content: "06"; }
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(7)::before { content: "07"; }
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(8)::before { content: "08"; }
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(9)::before { content: "09"; }
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a > div[class*="p-6"] {
+  min-height: 100%;
+  padding: 1.8rem 2rem 2.1rem !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a > div[class*="p-6"] > div.flex {
+  position: absolute;
+  top: 1.55rem;
+  left: 1.75rem;
+  right: 1.75rem;
+  margin: 0 !important;
+  align-items: flex-start;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a > div[class*="p-6"] > div.flex > div {
+  padding: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--hl-metal) !important;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a > div[class*="p-6"] > div.flex svg {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  stroke-width: 1.35;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a h3 {
+  position: relative;
+  z-index: 2;
+  max-width: 88%;
+  margin-top: 5.8rem;
+  font-size: clamp(1.45rem, 2.2vw, 2.15rem) !important;
+  line-height: 1.02 !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.025em !important;
+  color: var(--hl-ink) !important;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a p {
+  position: relative;
+  z-index: 2;
+  max-width: 34rem;
+  margin-top: 0.9rem !important;
+  font-size: 0.82rem !important;
+  line-height: 1.65 !important;
+  color: var(--hl-muted) !important;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a > div:last-child {
+  display: none !important;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a .lucide-arrow-right {
+  opacity: 1 !important;
+  color: var(--hl-metal) !important;
+  transform: rotate(-45deg);
+}
+
+/* Une pièce sombre donne du rythme à la composition, comme une double page de catalogue. */
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(1) {
+  background: #101318 !important;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(1) h3 {
+  color: #f3efe7 !important;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(1) p {
+  color: #b9b3aa !important;
+}
+
+.hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(1)::before {
+  color: rgba(218, 193, 142, 0.15);
+}
+
+html.dark .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a {
+  background: #101318 !important;
+}
+
+html.dark .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:hover {
+  background: #151a20 !important;
+}
+
+html.dark .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(1) {
+  background: #17130d !important;
+}
+
+html.dark .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a h3 {
+  color: #f1ede5 !important;
+}
+
+html.dark .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a p {
+  color: #aaa49a !important;
+}
+
+@media (min-width: 1024px) {
+  .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div.text-center {
+    grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.55fr);
+    align-items: end;
+  }
+
+  .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div.text-center p {
+    justify-self: end;
+    text-align: right;
+    padding-bottom: 0.45rem;
+  }
+
+  .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] {
+    display: grid !important;
+    grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+  }
+
+  .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(1) { grid-column: span 7; min-height: 330px; }
+  .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(2) { grid-column: span 5; min-height: 330px; }
+  .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(3) { grid-column: span 4; }
+  .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(4) { grid-column: span 4; }
+  .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(5) { grid-column: span 4; }
+  .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(6) { grid-column: span 5; min-height: 285px; }
+  .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(7) { grid-column: span 7; min-height: 285px; }
+  .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(8) { grid-column: span 5; min-height: 255px; }
+  .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(9) { grid-column: span 7; min-height: 255px; }
+
+  .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(1) h3,
+  .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(2) h3,
+  .hl-site-content section[class*="py-14"][class*="md:py-20"][class*="border-t"] > div[class*="lg:grid-cols-3"][class*="gap-6"] > a:nth-child(7) h3 {
+    font-size: clamp(2rem, 3vw, 3.2rem) !important;
+    max-width: 76%;
+  }
+}
+
+/* ------------------------------------------------------------------------- */
 /* Page Échappement — pont complet vers le thème HorloLearn                 */
 /* ------------------------------------------------------------------------- */
 .horlo-editorial-page {
