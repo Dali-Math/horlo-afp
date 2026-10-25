@@ -1452,144 +1452,536 @@ const WORKSHOPS: { key: WorkshopKey; label: string }[] = [
   { key: "oiling", label: "3. Lubrification 9415" },
 ];
 
+
+function EditorialHeroMechanism(): React.JSX.Element {
+  return (
+    <svg viewBox="0 0 1180 380" className="editorial-hero-svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="editorialSteel" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#d7dad5" />
+          <stop offset="0.5" stopColor="#777c77" />
+          <stop offset="1" stopColor="#343835" />
+        </linearGradient>
+        <radialGradient id="editorialGold" cx="40%" cy="35%" r="70%">
+          <stop offset="0" stopColor="#d8ba88" />
+          <stop offset="0.55" stopColor="#9d7b4d" />
+          <stop offset="1" stopColor="#4e3e2a" />
+        </radialGradient>
+      </defs>
+      <rect width="1180" height="380" fill="#101211" />
+      <g opacity="0.14" stroke="#8c918b" strokeWidth="0.6">
+        <path d="M0 50H1180M0 100H1180M0 150H1180M0 200H1180M0 250H1180M0 300H1180M0 350H1180" />
+        <path d="M50 0V380M100 0V380M150 0V380M200 0V380M250 0V380M300 0V380M350 0V380M400 0V380M450 0V380M500 0V380M550 0V380M600 0V380M650 0V380M700 0V380M750 0V380M800 0V380M850 0V380M900 0V380M950 0V380M1000 0V380M1050 0V380M1100 0V380M1150 0V380" />
+      </g>
+      <line x1="110" y1="190" x2="1070" y2="190" stroke="#666b66" strokeWidth="1" strokeDasharray="5 8" />
+      <g transform="translate(245 190)">
+        <circle r="94" fill="none" stroke="#98784f" strokeWidth="2" />
+        <circle r="34" fill="url(#editorialGold)" stroke="#b5915b" />
+        <circle r="8" fill="#0b0d0c" />
+        <g stroke="#9d7e53" strokeWidth="5">
+          <line x1="0" y1="-82" x2="0" y2="82" />
+          <line x1="-82" y1="0" x2="82" y2="0" />
+        </g>
+        <g fill="#b4915f" stroke="#d0b27f">
+          <path d="M0 -101 l16 -24 12 28 -13 11z" /><path d="M70 -72 l28 -8 -3 31 -17 1z" />
+          <path d="M102 0 l23 15 -26 17 -13 -12z" /><path d="M70 72 l10 28 -31 -3 -1 -17z" />
+          <path d="M0 101 l-16 24 -12 -28 13 -11z" /><path d="M-70 72 l-28 8 3 -31 17 -1z" />
+          <path d="M-102 0 l-23 -15 26 -17 13 12z" /><path d="M-70 -72 l-10 -28 31 3 1 17z" />
+        </g>
+        <text x="0" y="145" textAnchor="middle" fill="#d9dbd6" fontSize="14" letterSpacing="1.5">ROUE D’ANCRE</text>
+      </g>
+      <g transform="translate(590 190)">
+        <circle r="13" fill="url(#editorialSteel)" /><circle r="4" fill="#111" />
+        <path d="M-5 -8 L-155 -78 L-165 -58 L-18 7 Z" fill="#777c77" stroke="#b5bab5" />
+        <path d="M-5 8 L-155 78 L-165 58 L-18 -7 Z" fill="#777c77" stroke="#b5bab5" />
+        <path d="M8 -8 L120 -30 L142 -16 L112 0 L142 16 L120 30 L8 8 Z" fill="#6a6f6a" stroke="#b0b4af" />
+        <polygon points="-174,-82 -145,-74 -151,-48 -182,-58" fill="#8f1730" stroke="#d7a4ae" />
+        <polygon points="-174,82 -145,74 -151,48 -182,58" fill="#8f1730" stroke="#d7a4ae" />
+        <rect x="93" y="-2" width="40" height="4" fill="#bd965d" />
+        <text x="0" y="145" textAnchor="middle" fill="#d9dbd6" fontSize="14" letterSpacing="1.5">ANCRE SUISSE</text>
+      </g>
+      <g transform="translate(950 190)">
+        <circle r="98" fill="none" stroke="#6b706c" strokeWidth="5" />
+        <line x1="-95" y1="0" x2="95" y2="0" stroke="#666c67" strokeWidth="4" />
+        <circle r="45" fill="#1d211f" stroke="#777d78" />
+        <path d="M-45 0 A45 45 0 0 1 -23 -39 L-5 -20 A23 23 0 0 0 -5 20 L-23 39 Z" fill="#0e100f" stroke="#aa8655" />
+        <ellipse cx="-60" cy="0" rx="7" ry="10" fill="#8f1730" stroke="#e1b1ba" />
+        <circle r="13" fill="url(#editorialSteel)" />
+        <text x="0" y="145" textAnchor="middle" fill="#d9dbd6" fontSize="14" letterSpacing="1.5">DOUBLE PLATEAU</text>
+      </g>
+    </svg>
+  );
+}
+
+function EditorialLoupeModal({ step, onClose }: LoupeProps): React.JSX.Element | null {
+  const [zoom, setZoom] = useState<number>(1);
+  const viewportRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setZoom(1);
+  }, [step]);
+
+  useEffect(() => {
+    if (!step) return;
+    const onKey = (event: KeyboardEvent): void => {
+      if (event.key === "Escape") onClose();
+      if (event.key === "1") setZoom(1);
+      if (event.key === "2") setZoom(2);
+      if (event.key === "5") setZoom(5);
+      if (event.key === "0") setZoom(10);
+    };
+    window.addEventListener("keydown", onKey);
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previous;
+    };
+  }, [step, onClose]);
+
+  useEffect(() => {
+    const vp = viewportRef.current;
+    if (!vp) return;
+    const raf = requestAnimationFrame(() => {
+      vp.scrollLeft = (vp.scrollWidth - vp.clientWidth) / 2;
+      vp.scrollTop = (vp.scrollHeight - vp.clientHeight) / 2;
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [zoom, step]);
+
+  if (!step) return null;
+  const Svg = step.Svg;
+  const factor = ZOOM_WIDTH[zoom] ?? 1;
+
+  return (
+    <div
+      className="editorial-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label={step.loupeTitle}
+      onClick={(event) => {
+        if (event.currentTarget === event.target) onClose();
+      }}
+    >
+      <div className="editorial-modal-inner">
+        <div className="editorial-modal-bar">
+          <div>
+            <span>Inspection technique</span>
+            <strong>{step.loupeTitle}</strong>
+          </div>
+          <div className="editorial-modal-actions">
+            {ZOOM_LEVELS.map((z) => (
+              <button key={z} type="button" onClick={() => setZoom(z)} className={zoom === z ? "active" : ""}>
+                {z}×
+              </button>
+            ))}
+            <button type="button" onClick={onClose} aria-label="Fermer" className="close">×</button>
+          </div>
+        </div>
+        <div ref={viewportRef} className="editorial-modal-viewport">
+          <div className="editorial-modal-canvas" style={{ width: `${factor * 100}%`, maxWidth: factor === 1 ? 980 : "none" }}>
+            <Svg />
+          </div>
+        </div>
+        <div className="editorial-modal-foot">
+          <span>{step.standard}</span>
+          <span>Grossissement {zoom}× · Échap pour fermer</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const SECTION_IDS = ["anatomie", "cycle", "securite", "reglage", "lubrification", "vibro", "controle"] as const;
+const SHORT_TITLES = [
+  "Anatomie & terminologie",
+  "Cycle cinématique",
+  "Tirage & sécurités",
+  "Balancier-spiral",
+  "Moebius 9415",
+  "Diagnostic acoustique",
+  "Contrôle ISO 3159",
+] as const;
+const DISPLAY_TITLES: Record<number, string> = {
+  1: "Anatomie & terminologie micrométrique",
+  2: "Le cycle en trois temps",
+  3: "Tirage, dard & cornes",
+  4: "Balancier-spiral & réglage",
+  5: "Moebius 9415 · dosage micrométrique",
+  6: "Lire le tic-tac",
+  7: "Contrôle chronométrique",
+};
+const NOTE_LABELS: Record<number, string[]> = {
+  1: ["A", "B", "C", "D"],
+  2: ["I", "II", "III"],
+  3: ["I", "II", "III"],
+  4: ["I", "II", "III", "IV"],
+  5: ["I", "II", "!"],
+  6: ["T1", "T2", "T3", "Σ"],
+  7: ["I", "!"],
+};
+
 export default function EchappementPage(): React.JSX.Element {
   const [loupeStep, setLoupeStep] = useState<MasterStep | null>(null);
   const [workshop, setWorkshop] = useState<WorkshopKey>("kinematic");
+  const [activeSection, setActiveSection] = useState<number>(0);
   const closeLoupe = useCallback((): void => setLoupeStep(null), []);
 
+  useEffect(() => {
+    const update = (): void => {
+      let current = 0;
+      SECTION_IDS.forEach((id, index) => {
+        const element = document.getElementById(id);
+        if (element && element.getBoundingClientRect().top < 180) current = index;
+      });
+      setActiveSection(current);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0b0f17] text-slate-900 dark:text-slate-100">
-      <section className="relative overflow-hidden border-b border-slate-200 dark:border-slate-800 bg-gradient-to-b from-white to-slate-100 dark:from-[#111827] dark:to-[#0b0f17] py-10 sm:py-14">
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link href="/pratique" className="inline-flex items-center gap-2 text-xs font-mono text-slate-600 dark:text-slate-400 hover:text-amber-700 dark:hover:text-amber-400 mb-6">
-            <ArrowLeft className="w-4 h-4" />
-            Retour aux modules pratiques
+    <div className="horlo-editorial-page">
+      <header className="editorial-header">
+        <div className="editorial-wrap editorial-topbar">
+          <Link href="/pratique" className="editorial-brand" aria-label="Retour aux modules pratiques">
+            HorloLearn <span>/ Pratique</span>
           </Link>
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-500/10 border border-amber-300 dark:border-amber-500/30 text-amber-800 dark:text-amber-400 text-xs font-mono font-medium mb-4">
-              <Sparkles className="w-3.5 h-3.5" />
-              Étape 09 · Organes réglants · NIHS & ISO 3159
+          <nav className="editorial-navcenter" aria-label="Navigation rapide">
+            <a href="#anatomie">Anatomie</a>
+            <a href="#reglage">Réglage</a>
+            <a href="#controle">Contrôle</a>
+          </nav>
+          <div className="editorial-topmeta">Dossier technique · 09</div>
+        </div>
+      </header>
+
+      <section className="editorial-hero">
+        <div className="editorial-wrap">
+          <Link href="/pratique" className="editorial-back">
+            <ArrowLeft className="w-4 h-4" /> Retour aux modules pratiques
+          </Link>
+          <div className="editorial-kicker">Organes réglants · NIHS & ISO 3159</div>
+          <div className="editorial-hero-grid">
+            <div>
+              <h1>L’échappement suisse <em>& le balancier-spiral</em></h1>
             </div>
-            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
-              L’échappement suisse & le balancier-spiral
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-amber-400 dark:from-amber-400 dark:to-amber-200">
-                Le cœur battant de la montre
-              </span>
-            </h1>
-            <p className="mt-4 text-base sm:text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
-              Le savoir d’établi pour comprendre et contrôler l’échappement : le cycle en 3 temps, le tirage et les sécurités, le réglage du balancier-spiral, la lubrification à la Moebius 9415 et la lecture du vibrographe.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-2.5 font-mono text-xs">
-              {["Levée 50°-52°", "Tirage 12°-15°", "Moebius 9415", "Repère < 0.6 ms"].map((b) => (
-                <span key={b} className="px-3 py-1 rounded-md bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300">{b}</span>
-              ))}
-              <span className="px-3 py-1 rounded-md bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-300 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-400">Loupe 10x sur chaque schéma</span>
+            <div className="editorial-hero-copy">
+              <p className="editorial-lead">Le savoir d’établi pour comprendre le cœur battant de la montre, du dégagement au contrôle chronométrique.</p>
+              <div className="editorial-hero-facts">
+                <div className="editorial-fact"><small>Angle de levée</small><strong>50°–52°</strong></div>
+                <div className="editorial-fact"><small>Tirage</small><strong>12°–15°</strong></div>
+                <div className="editorial-fact"><small>Lubrification</small><strong>9415</strong></div>
+                <div className="editorial-fact"><small>Repère</small><strong>&lt; 0,6 ms</strong></div>
+              </div>
             </div>
           </div>
+          <button type="button" className="editorial-hero-plate" onClick={() => setLoupeStep(STEPS[0])} aria-label="Agrandir le schéma de l’échappement">
+            <span className="editorial-plate-label">Architecture fonctionnelle · échappement à ancre suisse</span>
+            <span className="editorial-plate-caption">Cliquez pour inspection</span>
+            <EditorialHeroMechanism />
+          </button>
         </div>
       </section>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
-        {STEPS.map((s) => {
-          const Svg = s.Svg;
-          return (
-            <section key={s.id} id={`step${s.id}`} className="bg-white dark:bg-[#111827] rounded-3xl border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-sm dark:shadow-xl">
-              <div className="flex flex-col lg:flex-row gap-8 items-start">
-                <div className="lg:w-1/2 space-y-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-400 border border-amber-300 dark:border-amber-500/30">
-                      ÉTAPE {String(s.id).padStart(2, "0")}
-                    </span>
-                    <span className="text-xs font-mono text-slate-500 dark:text-slate-400">{s.tag}</span>
+      <div className="editorial-wrap editorial-content">
+        <aside>
+          <nav className="editorial-toc" aria-label="Sommaire technique">
+            <div className="editorial-toc-head">Sommaire technique</div>
+            {SECTION_IDS.map((id, index) => (
+              <a key={id} href={`#${id}`} className={activeSection === index ? "active" : ""}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <span>{SHORT_TITLES[index]}</span>
+              </a>
+            ))}
+            <a href="#ateliers"><span>08</span><span>Bancs interactifs</span></a>
+          </nav>
+        </aside>
+
+        <main className="editorial-main">
+          {STEPS.map((step, index) => {
+            const Svg = step.Svg;
+            const isFeature = step.id === 2 || step.id === 6;
+            const labels = NOTE_LABELS[step.id] ?? [];
+            return (
+              <section key={step.id} id={SECTION_IDS[index]} className={isFeature ? "editorial-feature" : "editorial-chapter"}>
+                <div className="editorial-chapter-head">
+                  <div className="editorial-chapter-no">{String(step.id).padStart(2, "0")}</div>
+                  <div>
+                    <div className="editorial-eyebrow">{step.tag}</div>
+                    <h2>{DISPLAY_TITLES[step.id] ?? step.title}</h2>
+                    <p className="editorial-intro">{step.intro}</p>
                   </div>
-                  <h2 className="text-2xl font-bold tracking-tight">{s.title}</h2>
-                  <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">{s.intro}</p>
-                  <div className="space-y-3 pt-1">
-                    {s.cards.map((c) => (
-                      <div key={c.title} className={`p-3.5 rounded-xl bg-slate-50 dark:bg-[#0b0f17] border ${ACCENT_BORDER[c.accent]}`}>
-                        <div className="flex items-center justify-between gap-2">
-                          <h3 className={`text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 ${ACCENT_TEXT[c.accent]}`}>
-                            {c.accent === "red" && <AlertTriangle className="w-3.5 h-3.5" />}
-                            {c.title}
-                          </h3>
-                          {c.badge && (
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 whitespace-nowrap">{c.badge}</span>
+                </div>
+
+                <div className={isFeature ? "editorial-feature-grid" : "editorial-chapter-body"}>
+                  <div className="editorial-notes">
+                    {step.cards.map((card, cardIndex) => (
+                      <div key={card.title} className={`editorial-note ${card.accent === "red" ? "danger" : ""}`}>
+                        <div className="editorial-note-n">{labels[cardIndex] ?? String(cardIndex + 1).padStart(2, "0")}</div>
+                        <div>
+                          <h3>{card.title}</h3>
+                          {card.badge && <div className="editorial-note-badge">{card.badge}</div>}
+                          {card.body && <p>{card.body}</p>}
+                          {card.list && (
+                            <ul>
+                              {card.list.map((item) => <li key={item}>{item}</li>)}
+                            </ul>
                           )}
                         </div>
-                        {c.body && <p className="text-xs text-slate-700 dark:text-slate-300 mt-1.5 leading-relaxed">{c.body}</p>}
-                        {c.list && (
-                          <ul className="text-xs text-red-800 dark:text-red-300/90 mt-1.5 space-y-1 list-disc list-inside">
-                            {c.list.map((li) => (
-                              <li key={li}>{li}</li>
-                            ))}
-                          </ul>
-                        )}
                       </div>
                     ))}
                   </div>
+
+                  <button type="button" className="editorial-drawing" onClick={() => setLoupeStep(step)} aria-label={`Agrandir : ${step.loupeTitle}`}>
+                    <div className="editorial-drawing-header"><span>Planche {String.fromCharCode(64 + step.id)}.{String(step.id).padStart(2, "0")}</span><strong>{step.standard}</strong></div>
+                    <div className="editorial-drawing-svg"><Svg /></div>
+                    <div className="editorial-drawing-footer"><span>Inspection 1× · 2× · 5× · 10×</span><span>{step.caption}</span></div>
+                  </button>
                 </div>
-                <div className="lg:w-1/2 w-full flex flex-col items-center lg:sticky lg:top-24">
-                  <div className="w-full p-2 bg-slate-100 dark:bg-[#070a10] rounded-2xl border border-slate-200 dark:border-slate-800">
-                    <button type="button" onClick={() => setLoupeStep(s)} className="block w-full cursor-zoom-in" aria-label={`Agrandir : ${s.loupeTitle}`}>
-                      <Svg />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setLoupeStep(s)}
-                      className="mt-3 w-full py-2.5 px-4 rounded-xl bg-amber-50 dark:bg-amber-500/10 hover:bg-amber-100 dark:hover:bg-amber-500/20 border border-amber-300 dark:border-amber-500/30 text-amber-800 dark:text-amber-400 font-mono text-xs font-bold flex items-center justify-center gap-2 transition"
-                    >
-                      <ZoomIn className="w-4 h-4" />
-                      Ouvrir dans la loupe d’atelier 10x
-                    </button>
+
+                {step.id === 7 && (
+                  <div className="editorial-chrono-block">
+                    <div className="editorial-bench-heading">
+                      <div><small>Lecture des positions</small><h3>Contrôle sur cinq positions</h3></div>
+                      <p>Comparaison visuelle des positions utilisées dans ce dossier.</p>
+                    </div>
+                    <div className="editorial-chrono">
+                      <div className="editorial-chrono-row"><div className="editorial-chrono-pos">CH</div><div><strong>Cadran haut</strong><p>Position horizontale · observation du comportement du pivotement.</p></div><div className="editorial-chrono-val">290°–315°</div></div>
+                      <div className="editorial-chrono-row"><div className="editorial-chrono-pos">CB</div><div><strong>Cadran bas</strong><p>Deuxième référence horizontale pour comparaison.</p></div><div className="editorial-chrono-val">Δ &lt; 5 s/j</div></div>
+                      <div className="editorial-chrono-row"><div className="editorial-chrono-pos">6H</div><div><strong>Verticale bas</strong><p>Observation de la chute d’amplitude en position verticale.</p></div><div className="editorial-chrono-val">250°–275°</div></div>
+                      <div className="editorial-chrono-row"><div className="editorial-chrono-pos">9H</div><div><strong>Verticale gauche</strong><p>Comparaison de l’effet de la gravité sur l’organe réglant.</p></div><div className="editorial-chrono-val">Contrôle</div></div>
+                      <div className="editorial-chrono-row"><div className="editorial-chrono-pos">3H</div><div><strong>Verticale droite</strong><p>Comparaison avec 9H et 6H pour lire les écarts de position.</p></div><div className="editorial-chrono-val">Contrôle</div></div>
+                    </div>
                   </div>
-                  <p className="text-[11px] font-mono text-slate-500 dark:text-slate-400 mt-2 text-center">{s.caption}</p>
-                </div>
-              </div>
-            </section>
-          );
-        })}
+                )}
+              </section>
+            );
+          })}
 
-        <section id="ateliers" className="pt-8 border-t border-slate-200 dark:border-slate-800">
-          <div className="text-center max-w-2xl mx-auto mb-8">
-            <span className="text-xs uppercase font-mono font-bold px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-500/10 text-amber-800 dark:text-amber-400 border border-amber-300 dark:border-amber-500/30">
-              Pratique à l’établi
-            </span>
-            <h2 className="text-3xl font-extrabold mt-3 tracking-tight">Les 3 simulateurs d’atelier</h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">Observez la cinématique, réglez marche et repère, puis entraînez votre dosage de 9415.</p>
-          </div>
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {WORKSHOPS.map((w) => (
-              <button
-                key={w.key}
-                type="button"
-                onClick={() => setWorkshop(w.key)}
-                className={`px-5 py-2.5 rounded-xl font-mono text-xs font-bold border transition ${
-                  workshop === w.key
-                    ? "bg-amber-500 text-slate-950 border-amber-400 shadow-lg shadow-amber-500/20"
-                    : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700"
-                }`}
-              >
-                {w.label}
-              </button>
-            ))}
-          </div>
-          <div className="bg-white dark:bg-[#111827] rounded-3xl border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-sm dark:shadow-2xl">
-            {workshop === "kinematic" && <KinematicWorkshop />}
-            {workshop === "vibrograph" && <VibrographWorkshop />}
-            {workshop === "oiling" && <OilingWorkshop />}
-          </div>
-        </section>
+          <section id="ateliers" className="editorial-workshops-section">
+            <div className="editorial-bench-heading">
+              <div><small>Pratique à l’établi</small><h3>Trois bancs interactifs</h3></div>
+              <p>Observer la cinématique, lire un vibrographe et travailler le dosage de la 9415.</p>
+            </div>
+            <div className="editorial-workshop-tabs">
+              {WORKSHOPS.map((item) => (
+                <button key={item.key} type="button" onClick={() => setWorkshop(item.key)} className={workshop === item.key ? "active" : ""}>
+                  {item.label}
+                </button>
+              ))}
+            </div>
+            <div className="editorial-workshop">
+              {workshop === "kinematic" && <KinematicWorkshop />}
+              {workshop === "vibrograph" && <VibrographWorkshop />}
+              {workshop === "oiling" && <OilingWorkshop />}
+            </div>
+          </section>
+        </main>
+      </div>
 
-        <footer className="pt-10 pb-6 border-t border-slate-200 dark:border-slate-800 text-center text-xs font-mono text-slate-500 space-y-2">
-          <p className="flex items-center justify-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-            Échappement suisse & balancier-spiral · Module pratique AFP / CFC
-          </p>
-          <p>Références : normes NIHS, ISO 3159, lubrifiants Moebius</p>
-        </footer>
-      </main>
+      <footer className="editorial-footer">
+        <div className="editorial-wrap editorial-foot">
+          <div><strong>HorloLearn</strong><p>Culture horlogère · documentation ouverte et collaborative.</p></div>
+          <div className="editorial-foot-right">Échappement suisse · dossier technique 09<br />NIHS · ISO 3159 · Moebius 9415</div>
+        </div>
+      </footer>
 
-      <LoupeModal step={loupeStep} onClose={closeLoupe} />
+      <EditorialLoupeModal step={loupeStep} onClose={closeLoupe} />
+
+      <style jsx global>{`
+        :root {
+          --he-paper: #f3f0e8;
+          --he-paper-2: #ebe7de;
+          --he-ink: #111312;
+          --he-muted: #666860;
+          --he-line: #cbc5b9;
+          --he-metal: #a98555;
+          --he-metal-dark: #6e5739;
+          --he-ruby: #8f1730;
+          --he-dark: #101211;
+          --he-dark-2: #181b19;
+          --he-white: #fbfaf6;
+        }
+        html { scroll-behavior: smooth; }
+        .horlo-editorial-page {
+          min-height: 100vh;
+          background: var(--he-paper);
+          color: var(--he-ink);
+          font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+          -webkit-font-smoothing: antialiased;
+        }
+        .horlo-editorial-page *, .editorial-modal * { box-sizing: border-box; }
+        .horlo-editorial-page a { color: inherit; text-decoration: none; }
+        .editorial-wrap { width: min(1320px, calc(100% - 64px)); margin: 0 auto; }
+
+        .editorial-header { position: sticky; top: 0; z-index: 40; background: rgba(243,240,232,.92); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(17,19,18,.12); }
+        .editorial-topbar { height: 72px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
+        .editorial-brand { font-size: 14px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+        .editorial-brand span { font-weight: 400; color: var(--he-muted); }
+        .editorial-navcenter { display: flex; gap: 28px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #4f514c; }
+        .editorial-navcenter a:hover { color: var(--he-ink); }
+        .editorial-topmeta { text-align: right; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--he-muted); }
+
+        .editorial-hero { padding: 56px 0 54px; border-bottom: 1px solid var(--he-line); }
+        .editorial-back { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 28px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--he-muted); transition: color .2s ease; }
+        .editorial-back:hover { color: var(--he-ink); }
+        .editorial-kicker { display: flex; align-items: center; gap: 14px; font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--he-metal-dark); }
+        .editorial-kicker:before { content: ""; width: 46px; height: 1px; background: var(--he-metal); }
+        .editorial-hero-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(360px, .7fr); gap: 72px; align-items: end; margin-top: 28px; }
+        .editorial-hero h1 { font-family: Baskerville, "Iowan Old Style", "Times New Roman", serif; font-weight: 400; font-size: clamp(56px, 7vw, 108px); line-height: .88; letter-spacing: -.045em; margin: 0; max-width: 900px; }
+        .editorial-hero h1 em { font-style: italic; color: var(--he-metal-dark); }
+        .editorial-hero-copy { padding-bottom: 9px; }
+        .editorial-lead { font-family: Baskerville, "Iowan Old Style", "Times New Roman", serif; font-size: 24px; line-height: 1.42; margin: 0 0 34px; color: #343632; }
+        .editorial-hero-facts { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--he-line); border-bottom: 1px solid var(--he-line); }
+        .editorial-fact { padding: 18px 0; border-right: 1px solid var(--he-line); }
+        .editorial-fact:nth-child(2n) { padding-left: 20px; border-right: 0; }
+        .editorial-fact small { display: block; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--he-muted); margin-bottom: 6px; }
+        .editorial-fact strong { font-family: Baskerville, "Times New Roman", serif; font-size: 25px; font-weight: 400; }
+        .editorial-hero-plate { border: 1px solid #242724; padding: 0; margin-top: 64px; width: 100%; min-height: 360px; position: relative; overflow: hidden; background: var(--he-dark); color: white; text-align: left; cursor: zoom-in; }
+        .editorial-hero-plate:after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px), linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px); background-size: 40px 40px; pointer-events: none; }
+        .editorial-plate-label, .editorial-plate-caption { position: absolute; z-index: 2; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; }
+        .editorial-plate-label { top: 24px; left: 28px; color: #bdbdb5; }
+        .editorial-plate-caption { right: 28px; bottom: 22px; color: #8f918c; }
+        .editorial-hero-svg { display: block; width: 100%; height: auto; }
+
+        .editorial-content { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 60px; padding: 64px 0 100px; }
+        .editorial-toc { position: sticky; top: 110px; border-top: 1px solid var(--he-ink); }
+        .editorial-toc-head { padding: 15px 0 14px; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--he-muted); border-bottom: 1px solid var(--he-line); }
+        .editorial-toc a { display: grid; grid-template-columns: 32px 1fr; gap: 8px; padding: 14px 0; border-bottom: 1px solid var(--he-line); font-size: 12px; line-height: 1.3; color: #5f615c; transition: .2s; }
+        .editorial-toc a span:first-child { font-family: Baskerville, serif; font-size: 17px; color: #9b8870; }
+        .editorial-toc a.active, .editorial-toc a:hover { color: var(--he-ink); padding-left: 5px; }
+        .editorial-main { min-width: 0; }
+
+        .editorial-chapter, .editorial-feature { scroll-margin-top: 110px; }
+        .editorial-chapter { padding: 0 0 92px; margin: 0 0 86px; border-bottom: 1px solid var(--he-line); }
+        .editorial-chapter-head { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 32px; margin-bottom: 42px; }
+        .editorial-chapter-no { font-family: Baskerville, "Times New Roman", serif; font-size: 72px; line-height: .8; color: #c0aa8d; font-weight: 400; }
+        .editorial-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .17em; text-transform: uppercase; color: var(--he-metal-dark); margin-bottom: 12px; }
+        .editorial-chapter h2, .editorial-feature h2 { font-family: Baskerville, "Iowan Old Style", "Times New Roman", serif; font-weight: 400; font-size: clamp(38px, 4.1vw, 64px); line-height: 1; letter-spacing: -.03em; margin: 0 0 20px; }
+        .editorial-intro { font-family: Baskerville, "Times New Roman", serif; font-size: 21px; line-height: 1.55; color: #3b3d38; max-width: 850px; margin: 0; }
+        .editorial-chapter-body { display: grid; grid-template-columns: minmax(330px,.9fr) minmax(0,1.1fr); gap: 42px; align-items: start; }
+        .editorial-notes { border-top: 1px solid var(--he-ink); }
+        .editorial-note { display: grid; grid-template-columns: 42px 1fr; gap: 14px; padding: 20px 0; border-bottom: 1px solid var(--he-line); }
+        .editorial-note-n { font-family: Baskerville, serif; font-size: 20px; color: var(--he-metal-dark); }
+        .editorial-note h3 { font-size: 12px; line-height: 1.35; letter-spacing: .08em; text-transform: uppercase; margin: 1px 0 8px; font-weight: 700; }
+        .editorial-note p, .editorial-note li { font-size: 14px; line-height: 1.65; color: #555750; margin: 0; }
+        .editorial-note ul { padding-left: 18px; margin: 8px 0 0; }
+        .editorial-note-badge { display: inline-block; margin: 0 0 8px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: .06em; color: var(--he-metal-dark); }
+        .editorial-note.danger { border-bottom-color: #b9939c; }
+        .editorial-note.danger .editorial-note-n, .editorial-note.danger h3 { color: var(--he-ruby); }
+
+        .editorial-drawing { width: 100%; padding: 0; background: var(--he-dark); border: 1px solid #282b29; min-height: 430px; position: relative; overflow: hidden; color: white; text-align: left; cursor: zoom-in; }
+        .editorial-drawing-header { height: 48px; border-bottom: 1px solid #2d302d; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; }
+        .editorial-drawing-header span { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #a7aaa5; }
+        .editorial-drawing-header strong { font-size: 11px; font-weight: 500; letter-spacing: .08em; color: #dedfd9; }
+        .editorial-drawing-svg { padding: 12px; }
+        .editorial-drawing-svg > svg { display: block; width: 100%; height: auto; min-height: 350px; border-radius: 0 !important; box-shadow: none !important; }
+        .editorial-drawing-footer { display: flex; justify-content: space-between; gap: 20px; padding: 14px 18px 16px; border-top: 1px solid #2d302d; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: #8f928d; }
+        .editorial-drawing-footer span:last-child { text-align: right; }
+
+        .editorial-feature { background: var(--he-dark); color: #f3f2ed; margin: 0 0 92px; padding: 58px; position: relative; overflow: hidden; }
+        .editorial-feature .editorial-chapter-head { grid-template-columns: 130px 1fr; margin-bottom: 32px; }
+        .editorial-feature .editorial-chapter-no { color: #7f684b; }
+        .editorial-feature h2 { color: white; }
+        .editorial-feature .editorial-intro { color: #b7bbb4; }
+        .editorial-feature .editorial-eyebrow { color: #c6a472; }
+        .editorial-feature-grid { display: grid; grid-template-columns: .78fr 1.22fr; gap: 50px; align-items: start; }
+        .editorial-feature .editorial-notes { border-top-color: #6a6d68; }
+        .editorial-feature .editorial-note { border-bottom-color: #343735; }
+        .editorial-feature .editorial-note h3 { color: #f0efe8; }
+        .editorial-feature .editorial-note p, .editorial-feature .editorial-note li { color: #aeb1ab; }
+        .editorial-feature .editorial-note-n, .editorial-feature .editorial-note-badge { color: #c6a472; }
+        .editorial-feature .editorial-drawing { border-color: #3b3e3a; }
+
+        .editorial-chrono-block { margin-top: 58px; }
+        .editorial-bench-heading { display: flex; justify-content: space-between; gap: 40px; align-items: end; margin-bottom: 26px; }
+        .editorial-bench-heading small { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--he-metal-dark); }
+        .editorial-bench-heading h3 { font-family: Baskerville, serif; font-size: 34px; font-weight: 400; margin: 2px 0 0; }
+        .editorial-bench-heading p { max-width: 430px; margin: 0; color: var(--he-muted); font-size: 13px; line-height: 1.55; text-align: right; }
+        .editorial-chrono { border-top: 1px solid var(--he-ink); }
+        .editorial-chrono-row { display: grid; grid-template-columns: 120px 1fr 120px; gap: 24px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--he-line); }
+        .editorial-chrono-pos { font-family: Baskerville, serif; font-size: 32px; color: var(--he-metal-dark); }
+        .editorial-chrono-row strong { font-size: 13px; font-weight: 600; }
+        .editorial-chrono-row p { font-size: 13px; color: var(--he-muted); margin: 4px 0 0; line-height: 1.5; }
+        .editorial-chrono-val { text-align: right; font-family: Baskerville, serif; font-size: 19px; }
+
+        .editorial-workshops-section { scroll-margin-top: 110px; border-top: 1px solid var(--he-ink); padding-top: 26px; margin-top: 22px; }
+        .editorial-workshop-tabs { display: flex; flex-wrap: wrap; gap: 0; border-top: 1px solid var(--he-line); border-bottom: 1px solid var(--he-line); margin-bottom: 28px; }
+        .editorial-workshop-tabs button { appearance: none; background: transparent; border: 0; border-right: 1px solid var(--he-line); padding: 14px 18px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--he-muted); cursor: pointer; }
+        .editorial-workshop-tabs button.active { background: var(--he-ink); color: var(--he-white); }
+        .editorial-workshop { background: var(--he-white); border: 1px solid var(--he-line); padding: 30px; }
+        .editorial-workshop .rounded-xl, .editorial-workshop .rounded-2xl, .editorial-workshop .rounded-3xl, .editorial-workshop .rounded-lg { border-radius: 0 !important; }
+        .editorial-workshop button { border-radius: 0 !important; box-shadow: none !important; }
+        .editorial-workshop .shadow-lg, .editorial-workshop .shadow-xl, .editorial-workshop .shadow-2xl { box-shadow: none !important; }
+        .editorial-workshop .font-mono { letter-spacing: .02em; }
+
+        .editorial-footer { background: var(--he-dark); color: #d6d7d2; padding: 52px 0; }
+        .editorial-foot { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: end; }
+        .editorial-foot strong { font-size: 14px; letter-spacing: .16em; text-transform: uppercase; }
+        .editorial-foot p { font-family: Baskerville, serif; color: #969993; margin: 10px 0 0; font-size: 18px; }
+        .editorial-foot-right { font-size: 10px; letter-spacing: .13em; text-transform: uppercase; color: #858883; text-align: right; line-height: 1.8; }
+
+        .editorial-modal { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 30px; background: rgba(8,9,8,.94); }
+        .editorial-modal-inner { width: min(1200px, 96vw); max-height: 92vh; background: #111311; border: 1px solid #373a36; overflow: hidden; display: flex; flex-direction: column; }
+        .editorial-modal-bar { min-height: 62px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 10px 18px; border-bottom: 1px solid #343733; color: #d8dad5; }
+        .editorial-modal-bar span { display: block; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: #8f938d; }
+        .editorial-modal-bar strong { display: block; font-family: Baskerville, serif; font-size: 18px; font-weight: 400; margin-top: 3px; }
+        .editorial-modal-actions { display: flex; align-items: center; gap: 5px; }
+        .editorial-modal-actions button { width: 36px; height: 34px; border: 1px solid #3d403d; background: transparent; color: #a9aca6; cursor: pointer; font-size: 11px; }
+        .editorial-modal-actions button.active { background: #c4a06c; color: #111; border-color: #c4a06c; }
+        .editorial-modal-actions button.close { margin-left: 8px; font-size: 22px; }
+        .editorial-modal-viewport { flex: 1; min-height: 320px; overflow: auto; padding: 28px; background: #0a0c0b; }
+        .editorial-modal-canvas { margin: 0 auto; transition: width .25s ease; }
+        .editorial-modal-canvas > svg { width: 100%; height: auto; display: block; border-radius: 0 !important; }
+        .editorial-modal-foot { display: flex; justify-content: space-between; gap: 20px; padding: 12px 18px; border-top: 1px solid #343733; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: #7e827d; }
+
+        @media (max-width: 1050px) {
+          .editorial-hero-grid { grid-template-columns: 1fr; gap: 36px; }
+          .editorial-hero-copy { max-width: 760px; }
+          .editorial-content { grid-template-columns: 1fr; }
+          .editorial-toc { display: none; }
+          .editorial-chapter-body, .editorial-feature-grid { grid-template-columns: 1fr; }
+          .editorial-feature { padding: 42px; }
+          .editorial-chapter-head, .editorial-feature .editorial-chapter-head { grid-template-columns: 90px 1fr; }
+          .editorial-chapter-no { font-size: 58px; }
+        }
+        @media (max-width: 720px) {
+          .editorial-wrap { width: min(calc(100% - 30px), 1320px); }
+          .editorial-topbar { grid-template-columns: 1fr auto; }
+          .editorial-navcenter { display: none; }
+          .editorial-topmeta { font-size: 9px; }
+          .editorial-hero { padding-top: 38px; }
+          .editorial-hero-grid { margin-top: 20px; }
+          .editorial-hero h1 { font-size: clamp(48px, 15vw, 72px); }
+          .editorial-lead { font-size: 21px; }
+          .editorial-hero-plate { margin-top: 38px; min-height: 250px; }
+          .editorial-plate-label { top: 14px; left: 14px; }
+          .editorial-plate-caption { right: 14px; bottom: 12px; }
+          .editorial-content { padding-top: 44px; }
+          .editorial-chapter { margin-bottom: 58px; padding-bottom: 62px; }
+          .editorial-chapter-head, .editorial-feature .editorial-chapter-head { grid-template-columns: 1fr; gap: 14px; }
+          .editorial-chapter-no { font-size: 44px; }
+          .editorial-feature { margin-left: -15px; margin-right: -15px; padding: 34px 20px; }
+          .editorial-chapter-body { gap: 26px; }
+          .editorial-drawing { min-height: 360px; }
+          .editorial-drawing-svg > svg { min-height: 260px; }
+          .editorial-drawing-footer { flex-direction: column; gap: 7px; }
+          .editorial-drawing-footer span:last-child { text-align: left; }
+          .editorial-bench-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
+          .editorial-bench-heading p { text-align: left; }
+          .editorial-chrono-row { grid-template-columns: 70px 1fr; }
+          .editorial-chrono-val { grid-column: 2; text-align: left; }
+          .editorial-workshop { padding: 18px; margin-left: -15px; margin-right: -15px; }
+          .editorial-foot { grid-template-columns: 1fr; }
+          .editorial-foot-right { text-align: left; margin-top: 24px; }
+          .editorial-modal { padding: 8px; }
+          .editorial-modal-bar { align-items: flex-start; }
+          .editorial-modal-actions button:not(.close) { display: none; }
+          .editorial-modal-viewport { padding: 14px; }
+        }
+      `}</style>
     </div>
   );
 }
