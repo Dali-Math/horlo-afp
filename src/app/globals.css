@@ -265,6 +265,106 @@ h3[data-editorial="true"] {
   font-weight: 500 !important;
 }
 
+/* ------------------------------------------------------------------------- */
+/* Page Échappement — pont complet vers le thème HorloLearn                 */
+/* ------------------------------------------------------------------------- */
+.horlo-editorial-page {
+  --he-paper: var(--hl-bg);
+  --he-paper-2: var(--hl-bg-soft);
+  --he-ink: var(--hl-ink);
+  --he-muted: var(--hl-muted);
+  --he-line: var(--hl-line);
+  --he-metal: var(--hl-metal);
+  --he-metal-dark: var(--hl-metal);
+  --he-ruby: var(--hl-ruby);
+  --he-dark: #101211;
+  --he-dark-2: #181b19;
+  --he-white: var(--hl-surface-strong);
+  background: var(--hl-bg) !important;
+  color: var(--hl-ink) !important;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+html .horlo-editorial-page .editorial-header {
+  background: color-mix(in srgb, var(--hl-bg) 92%, transparent) !important;
+  border-bottom-color: var(--hl-line) !important;
+}
+
+html .horlo-editorial-page .editorial-navcenter,
+html .horlo-editorial-page .editorial-toc a,
+html .horlo-editorial-page .editorial-note p,
+html .horlo-editorial-page .editorial-note li {
+  color: var(--hl-muted) !important;
+}
+
+html .horlo-editorial-page .editorial-lead,
+html .horlo-editorial-page .editorial-intro {
+  color: color-mix(in srgb, var(--hl-ink) 78%, var(--hl-muted)) !important;
+}
+
+html .horlo-editorial-page .editorial-toc a span:first-child,
+html .horlo-editorial-page .editorial-chapter-no {
+  color: color-mix(in srgb, var(--hl-metal) 72%, var(--hl-muted)) !important;
+}
+
+html .horlo-editorial-page .editorial-workshop {
+  background: var(--hl-surface-strong) !important;
+  border-color: var(--hl-line) !important;
+}
+
+html.dark .horlo-editorial-page {
+  --he-white: var(--hl-surface);
+  --he-metal-dark: var(--hl-metal-soft);
+}
+
+html.dark .horlo-editorial-page .editorial-header {
+  background: color-mix(in srgb, var(--hl-bg) 94%, transparent) !important;
+}
+
+html.dark .horlo-editorial-page .editorial-lead,
+html.dark .horlo-editorial-page .editorial-intro {
+  color: #d4cec3 !important;
+}
+
+html.dark .horlo-editorial-page .editorial-navcenter,
+html.dark .horlo-editorial-page .editorial-toc a,
+html.dark .horlo-editorial-page .editorial-note p,
+html.dark .horlo-editorial-page .editorial-note li,
+html.dark .horlo-editorial-page .editorial-bench-heading p,
+html.dark .horlo-editorial-page .editorial-chrono-row p {
+  color: var(--hl-muted) !important;
+}
+
+html.dark .horlo-editorial-page .editorial-toc a.active,
+html.dark .horlo-editorial-page .editorial-toc a:hover,
+html.dark .horlo-editorial-page .editorial-back:hover,
+html.dark .horlo-editorial-page .editorial-chapter h2,
+html.dark .horlo-editorial-page .editorial-bench-heading h3,
+html.dark .horlo-editorial-page .editorial-chrono-row strong,
+html.dark .horlo-editorial-page .editorial-chrono-val,
+html.dark .horlo-editorial-page .editorial-fact strong {
+  color: var(--hl-ink) !important;
+}
+
+html.dark .horlo-editorial-page .editorial-workshop {
+  background: var(--hl-surface) !important;
+}
+
+html.dark .horlo-editorial-page .editorial-workshop-tabs button.active {
+  background: var(--hl-ink) !important;
+  color: var(--hl-bg) !important;
+}
+
+/* Les planches techniques restent volontairement noir atelier dans les deux thèmes. */
+html.dark .horlo-editorial-page .editorial-hero-plate,
+html.dark .horlo-editorial-page .editorial-drawing,
+html.dark .horlo-editorial-page .editorial-feature,
+html.dark .horlo-editorial-page .editorial-modal,
+html.dark .horlo-editorial-page .editorial-modal-inner,
+html.dark .horlo-editorial-page .editorial-modal-viewport {
+  color-scheme: dark;
+}
+
 /* Animations sobres */
 @keyframes fadeInUp {
   from {
