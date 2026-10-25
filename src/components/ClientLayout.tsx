@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import dynamic from "next/dynamic";
 
 const FloatingSearchButton = dynamic(() => import("./FloatingSearchButton"), { ssr: false });
 const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
@@ -15,11 +14,10 @@ interface ClientLayoutProps {
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setIsSearchOpen(true);
       }
@@ -32,12 +30,9 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   return (
     <>
       <Navbar onSearchClick={() => setIsSearchOpen(true)} />
-      {children}
+      <div className="hl-site-content">{children}</div>
       <Footer />
-      <SearchModal 
-        isOpen={isSearchOpen} 
-        onClose={() => setIsSearchOpen(false)} 
-      />
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       <FloatingSearchButton onClick={() => setIsSearchOpen(true)} />
     </>
   );
