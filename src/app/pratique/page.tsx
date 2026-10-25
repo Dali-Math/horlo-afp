@@ -238,6 +238,23 @@ const PRACTICAL_MODULES: PracticalModule[] = [
     href: '/pratique/reglage'
   },
   {
+    step: 'Focus · Organes réglants',
+    badge: 'NIHS & ISO 3159',
+    title: 'Échappement suisse & balancier-spiral',
+    description: 'Cycle en 3 temps, tirage et sécurités, balancier-spiral, lubrification Moebius 9415, diagnostic acoustique et contrôle chronométrique sur 5 positions.',
+    icon: '⚙️',
+    iconBg: 'bg-amber-500/10',
+    iconBorder: 'border-amber-500/30',
+    iconColor: 'text-amber-500 dark:text-amber-400',
+    stepColor: 'text-amber-600 dark:text-amber-400',
+    hoverBorder: 'hover:border-amber-400 dark:hover:border-amber-400',
+    hoverText: 'group-hover:text-amber-600 dark:group-hover:text-amber-400',
+    hoverShadow: 'hover:shadow-amber-500/10',
+    btnHover: 'group-hover:bg-amber-400 group-hover:text-slate-950 group-hover:border-amber-400',
+    tools: ['Levée 50°–52°', 'Moebius 9415', 'Loupe 10x'],
+    href: '/pratique/echappement'
+  },
+  {
     step: 'Étape 06 · Arsenal d\'Établi',
     badge: 'Bergeon 30081',
     title: 'Outils & Équipement',
