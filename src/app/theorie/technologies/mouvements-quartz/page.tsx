@@ -134,6 +134,10 @@ export default function MouvementsQuartzPage() {
   const [showExplanation, setShowExplanation] = useState<boolean>(false);
   const [quizFinished, setQuizFinished] = useState<boolean>(false);
 
+  // Simulateur SVG Diapason 32'768 Hz & Moteur Lavet States
+  const [lavetPulse, setLavetPulse] = useState<number>(0);
+  const [loupe10x, setLoupe10x] = useState<boolean>(false);
+
   const handleSelectOption = (idx: number) => {
     if (showExplanation) return;
     setSelectedOption(idx);
@@ -199,9 +203,12 @@ export default function MouvementsQuartzPage() {
             <span className="truncate">Révolution Électronique & Haute Fréquence Piézoélectrique</span>
           </div>
 
-          {/* Grand Titre */}
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4 font-serif px-2">
-            Mouvements à Quartz
+          {/* Grand Titre conforme /theorie */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-slate-900 dark:text-white mb-4 font-serif leading-tight px-2">
+            Mouvements à Quartz &amp; <br />
+            <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-200 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent">
+              Résonateur 32&apos;768 Hz &amp; Moteur Lavet
+            </span>
           </h1>
 
           {/* Sous-titre */}
@@ -227,6 +234,164 @@ export default function MouvementsQuartzPage() {
             <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
               <div className="text-2xl font-black text-purple-600 dark:text-purple-400 font-mono">75%</div>
               <div className="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-0.5">Production Mondiale</div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* SIMULATEUR CINÉMATIQUE SVG : DIAPASON 32'768 HZ, 2^15 & MOTEUR LAVET      */}
+        {/* ========================================================================= */}
+        <section className="mb-14 rounded-3xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+          <div className="p-6 sm:p-8 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+                <Cpu className="w-4 h-4" />
+                <span>Simulateur Électro-Mécanique SVG • Brevet Marius Lavet (1936) &amp; CEH Bêta 21</span>
+              </div>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+                Du Diapason en Quartz (32&apos;768 Hz) au Saut de 180° du Rotor Lavet
+              </h2>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => setLavetPulse((prev) => prev + 1)}
+                className="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-mono font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 transition-all"
+              >
+                ⚡ Envoyer Impulsion 1 Hz ({lavetPulse % 2 === 0 ? "Polarité + / -" : "Polarité - / +"} → Saut 180°)
+              </button>
+              <button
+                onClick={() => setLoupe10x(!loupe10x)}
+                className={`px-3.5 py-2.5 rounded-xl text-xs font-mono font-bold border transition-all ${
+                  loupe10x
+                    ? "bg-amber-500/20 border-amber-500 text-amber-600 dark:text-amber-300"
+                    : "bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300"
+                }`}
+              >
+                {loupe10x ? "Loupe 10x Active" : "Loupe 10x"}
+              </button>
+            </div>
+          </div>
+
+          <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-8 bg-slate-950 rounded-2xl border border-slate-800 p-4 overflow-hidden">
+              <div className="overflow-hidden rounded-xl bg-[#060a12] border border-slate-800/80">
+                <svg
+                  viewBox="0 0 740 350"
+                  className="w-full h-auto transition-transform duration-300"
+                  style={{
+                    transform: loupe10x ? "scale(1.38)" : "scale(1)",
+                    transformOrigin: "545px 175px"
+                  }}
+                >
+                  {/* 1. DIAPASON PIÉZOÉLECTRIQUE EN QUARTZ SiO2 (GAUCHE) */}
+                  <g transform="translate(115, 175)">
+                    <text x="0" y="-135" fill="#38bdf8" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      1. DIAPASON QUARTZ (SiO₂)
+                    </text>
+                    <rect x="-54" y="-105" width="108" height="210" rx="18" fill="#0f172a" stroke="#334155" strokeWidth="2" />
+                    {/* Socle hermétique sous vide */}
+                    <rect x="-26" y="45" width="52" height="36" rx="4" fill="#475569" stroke="#cbd5e1" strokeWidth="1.5" />
+                    {/* 2 Branches vibrantes du diapason en quartz avec électrodes d'or */}
+                    <path
+                      d="M -18 45 L -18 -72 L -8 -72 L -8 25 L 8 25 L 8 -72 L 18 -72 L 18 45 Z"
+                      fill="#bae6fd"
+                      stroke="#38bdf8"
+                      strokeWidth="2"
+                    />
+                    {/* Ondes de flexion piézoélectriques */}
+                    <path d="M -32 -55 Q -42 -35, -32 -15" fill="none" stroke="#fbbf24" strokeWidth="2" />
+                    <path d="M 32 -55 Q 42 -35, 32 -15" fill="none" stroke="#fbbf24" strokeWidth="2" />
+                    <text x="0" y="128" fill="#38bdf8" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      f₀ = 32&apos;768 Hz (2¹⁵)
+                    </text>
+                  </g>
+
+                  {/* 2. DIVISEUR BINAIRE CMOS 15 ÉTAGES (CENTRE) */}
+                  <g transform="translate(315, 175)">
+                    <text x="0" y="-135" fill="#fbbf24" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      2. DIVISEUR CMOS (15 ÉTAGES)
+                    </text>
+                    <rect x="-78" y="-85" width="156" height="170" rx="12" fill="#0f172a" stroke="#f59e0b" strokeWidth="2" />
+                    {[
+                      { stage: "Étage 1 (÷2)", hz: "16'384 Hz", y: -52 },
+                      { stage: "Étage 8 (÷256)", hz: "128 Hz", y: -15 },
+                      { stage: "Étage 14 (÷16384)", hz: "2 Hz", y: 22 },
+                      { stage: "Étage 15 (÷32768)", hz: "1.000 Hz", y: 58 }
+                    ].map((st) => (
+                      <g key={st.stage} transform={`translate(0, ${st.y})`}>
+                        <rect x="-64" y="-14" width="128" height="24" rx="5" fill="#1e293b" stroke="#475569" strokeWidth="1" />
+                        <text x="-56" y="2" fill="#cbd5e1" fontSize="8.5" fontFamily="monospace">
+                          {st.stage}
+                        </text>
+                        <text x="56" y="2" fill="#34d399" fontSize="8.5" fontWeight="bold" fontFamily="monospace" textAnchor="end">
+                          {st.hz}
+                        </text>
+                      </g>
+                    ))}
+                    <text x="0" y="128" fill="#fbbf24" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      Impulsion alternée (7.8 ms / s)
+                    </text>
+                  </g>
+
+                  {/* 3. MOTEUR PAS-À-PAS DE MARIUS LAVET (DROITE) */}
+                  <g transform="translate(555, 175)">
+                    <text x="0" y="-135" fill="#34d399" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      3. MOTEUR PAS-À-PAS LAVET
+                    </text>
+
+                    {/* Bobine de cuivre sur noyau ferromagnétique (bas) */}
+                    <rect x="-95" y="62" width="190" height="32" rx="6" fill="#b45309" stroke="#fbbf24" strokeWidth="2" />
+                    <text x="0" y="82" fill="#fef3c7" fontSize="9" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      BOBINE CUIVRE (~10&apos;000 SPIRES)
+                    </text>
+
+                    {/* Stator en Permalloy avec encoches d'asymétrie de Lavet */}
+                    <path
+                      d="M -95 62 L -95 -65 L 95 -65 L 95 62 L 62 62 L 62 -25 L -62 -25 L -62 62 Z"
+                      fill="#334155"
+                      stroke="#94a3b8"
+                      strokeWidth="2"
+                    />
+                    <circle cx="0" cy="-22" r="46" fill="#060a12" stroke="#64748b" strokeWidth="2" />
+
+                    {/* 2 Encoches d'orientation de repos (Stator Notches à 35°) */}
+                    <circle cx="-38" cy="-46" r="6" fill="#fbbf24" />
+                    <circle cx="38" cy="2" r="6" fill="#fbbf24" />
+
+                    {/* Rotor aimanté bipolaire Nord/Sud (tourne de 180° à chaque impulsion) */}
+                    <g transform={`translate(0, -22) rotate(${lavetPulse * 180 + 35})`}>
+                      <path d="M -34 0 A 34 34 0 0 1 34 0 Z" fill="#ef4444" stroke="#fecdd3" strokeWidth="1.5" />
+                      <path d="M -34 0 A 34 34 0 0 0 34 0 Z" fill="#3b82f6" stroke="#bae6fd" strokeWidth="1.5" />
+                      <circle cx="0" cy="0" r="8" fill="#f8fafc" stroke="#0f172a" strokeWidth="2" />
+                      <text x="0" y="-14" fill="#ffffff" fontSize="9.5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                        N
+                      </text>
+                      <text x="0" y="22" fill="#ffffff" fontSize="9.5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                        S
+                      </text>
+                    </g>
+
+                    <text x="0" y="128" fill="#34d399" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      Angle Rotor : {(lavetPulse * 180) % 360}° ({lavetPulse} s écoulées)
+                    </text>
+                  </g>
+                </svg>
+              </div>
+            </div>
+
+            <div className="lg:col-span-4 space-y-4">
+              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3">
+                <span className="inline-block px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
+                  Asymétrie Magnétique de Lavet
+                </span>
+                <h3 className="font-serif text-xl font-bold text-slate-900 dark:text-white">
+                  Pourquoi le Rotor tourne-t-il toujours dans le même sens ?
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  L’alésage du stator comporte <strong>deux encoches asymétriques</strong> (points jaunes sur le schéma). Au repos (sans courant), l’aimant du rotor s’incline naturellement de ~35° par rapport à l’axe magnétique de la bobine. Ainsi, chaque impulsion de 1 Hz (à polarité inversée une seconde sur deux) chasse le pôle Nord toujours dans le sens horaire de <strong>180°</strong> exactement.
+                </p>
+              </div>
             </div>
           </div>
         </section>

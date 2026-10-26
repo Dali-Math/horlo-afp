@@ -113,6 +113,10 @@ const ASSEMBLY_STEPS: AssemblyStep[] = [
 export default function RemontagePage() {
   const [activeStepIdx, setActiveStepIdx] = useState(0);
   const [loupe, setLoupe] = useState(false);
+  const [svgTab, setSvgTab] = useState<"ebat" | "moebius">("ebat");
+  const [ebatMode, setEbatMode] = useState<"bride" | "nominal" | "excessif">("nominal");
+  const [selectedOil, setSelectedOil] = useState<"9010" | "HP-1300" | "9415" | "9504" | "8217">("9010");
+  const [loupeSvg, setLoupeSvg] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: number | null }>({
     0: null,
     1: null,
@@ -326,6 +330,287 @@ export default function RemontagePage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* ========================================================================= */}
+        {/* BANC VISUEL SVG : CONTRÔLE DES ÉBATS AXIAUX & 5 LUBRIFIANTS MOEBIUS       */}
+        {/* ========================================================================= */}
+        <div className="mb-14 bg-white dark:bg-slate-900/90 rounded-3xl border-2 border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden">
+          <div className="p-6 sm:p-8 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+                <Gauge className="w-4 h-4" />
+                <span>Banc Métrologique &amp; Tribologique SVG • Loupe 10x</span>
+              </div>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+                Contrôle de l&apos;Ébat Axial (20–40 µm) &amp; Synoptique des 5 Huiles Moebius
+              </h2>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => setSvgTab("ebat")}
+                className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                  svgTab === "ebat"
+                    ? "bg-amber-500 text-slate-950 shadow-sm"
+                    : "bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                }`}
+              >
+                1. Comparateur d&apos;Ébat Axial (Seitz)
+              </button>
+              <button
+                onClick={() => setSvgTab("moebius")}
+                className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                  svgTab === "moebius"
+                    ? "bg-amber-500 text-slate-950 shadow-sm"
+                    : "bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                }`}
+              >
+                2. Carte des 5 Lubrifiants Certifiés Moebius
+              </button>
+              <button
+                onClick={() => setLoupeSvg(!loupeSvg)}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-mono font-bold border transition-all ${
+                  loupeSvg
+                    ? "bg-amber-500/20 border-amber-500 text-amber-600 dark:text-amber-300"
+                    : "bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300"
+                }`}
+              >
+                <ZoomIn className="w-4 h-4" />
+                <span>{loupeSvg ? "Loupe 10x Active" : "Loupe 10x"}</span>
+              </button>
+            </div>
+          </div>
+
+          {svgTab === "ebat" ? (
+            <div className="p-6 sm:p-8 space-y-6">
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setEbatMode("bride")}
+                  className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                    ebatMode === "bride"
+                      ? "bg-rose-500 text-white"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                  }`}
+                >
+                  ✗ Mobile Bridé : Ébat = 0.000 mm (Rubis trop chassé)
+                </button>
+                <button
+                  onClick={() => setEbatMode("nominal")}
+                  className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                    ebatMode === "nominal"
+                      ? "bg-emerald-500 text-slate-950"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                  }`}
+                >
+                  ✓ Ébat Nominal NIHS : 0.025 mm (25 µm • Liberté Parfaite)
+                </button>
+                <button
+                  onClick={() => setEbatMode("excessif")}
+                  className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                    ebatMode === "excessif"
+                      ? "bg-amber-500 text-slate-950"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                  }`}
+                >
+                  ⚠ Ébat Excessif : 0.090 mm (90 µm • Risque de frottement planche)
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div className="lg:col-span-8 bg-slate-950 rounded-2xl border border-slate-800 p-4 overflow-hidden">
+                  <div className="overflow-hidden rounded-xl bg-[#060a12] border border-slate-800/80">
+                    <svg
+                      viewBox="0 0 700 320"
+                      className="w-full h-auto transition-transform duration-300"
+                      style={{
+                        transform: loupeSvg ? "scale(1.38)" : "scale(1)",
+                        transformOrigin: "350px 140px"
+                      }}
+                    >
+                      {/* Pont de rouage supérieur (Code 110) */}
+                      <rect x="130" y="45" width="440" height="44" rx="6" fill="#d97706" stroke="#fde68a" strokeWidth="2" />
+                      <text x="220" y="71" fill="#090d16" fontSize="10" fontWeight="bold" fontFamily="monospace">
+                        PONT DE ROUAGE (CODE 110)
+                      </text>
+
+                      {/* Pierre percée rubis dans le pont (position verticale dépend de ebatMode) */}
+                      <g
+                        transform={
+                          ebatMode === "bride"
+                            ? "translate(350, 62)"
+                            : ebatMode === "nominal"
+                            ? "translate(350, 48)"
+                            : "translate(350, 32)"
+                        }
+                      >
+                        <rect x="-58" y="0" width="40" height="38" rx="3" fill="#e11d48" stroke="#fda4af" strokeWidth="1.5" />
+                        <rect x="18" y="0" width="40" height="38" rx="3" fill="#e11d48" stroke="#fda4af" strokeWidth="1.5" />
+                        {/* Ménisque Moebius 9010 dans le huilier */}
+                        <path d="M -32 0 Q 0 18, 32 0 Z" fill="rgba(16, 185, 129, 0.7)" />
+                      </g>
+
+                      {/* Axe du mobile + Portée (épaulement) + Pivot supérieur */}
+                      <g transform="translate(350, 100)">
+                        {/* Pivot supérieur engagé dans le rubis */}
+                        <rect x="-15" y="-52" width="30" height="52" fill="#cbd5e1" stroke="#64748b" strokeWidth="1.5" />
+                        {/* Portée cylindrique large de l'axe */}
+                        <rect x="-42" y="0" width="84" height="120" fill="#e2e8f0" stroke="#475569" strokeWidth="2" />
+                        {/* Planche de roue en laiton doré */}
+                        <rect x="-145" y="42" width="290" height="18" rx="3" fill="#fbbf24" stroke="#78350f" strokeWidth="1.5" />
+                      </g>
+
+                      {/* Cote de l'ébat axial entre la face inférieure du rubis et l'épaulement de l'axe */}
+                      {ebatMode === "bride" && (
+                        <g>
+                          <circle cx="350" cy="100" r="24" fill="none" stroke="#f43f5e" strokeWidth="2.5" strokeDasharray="4 2" />
+                          <text x="350" y="285" fill="#fb7185" fontSize="11" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                            ÉBAT = 0.000 MM : Portée coincée contre le rubis → Mobile bloqué !
+                          </text>
+                        </g>
+                      )}
+
+                      {ebatMode === "nominal" && (
+                        <g>
+                          <line x1="415" y1="86" x2="495" y2="86" stroke="#10b981" strokeWidth="2" />
+                          <line x1="395" y1="100" x2="495" y2="100" stroke="#10b981" strokeWidth="2" />
+                          <text x="505" y="97" fill="#34d399" fontSize="11" fontWeight="bold" fontFamily="monospace">
+                            Ébat axial = 0.025 mm (25 µm)
+                          </text>
+                          <text x="350" y="285" fill="#34d399" fontSize="11" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                            ÉBAT NOMINAL (20 à 40 µm) : Roulement libre au soufflet &amp; film d’huile stable
+                          </text>
+                        </g>
+                      )}
+
+                      {ebatMode === "excessif" && (
+                        <g>
+                          <line x1="415" y1="70" x2="495" y2="70" stroke="#fbbf24" strokeWidth="2" />
+                          <line x1="395" y1="100" x2="495" y2="100" stroke="#fbbf24" strokeWidth="2" />
+                          <text x="505" y="90" fill="#fbbf24" fontSize="11" fontWeight="bold" fontFamily="monospace">
+                            Ébat excessif = 0.090 mm (90 µm)
+                          </text>
+                          <text x="350" y="285" fill="#fbbf24" fontSize="11" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                            ÉBAT TROP GRAND : Le pivot sort à moitié du rubis, risque de touchement de roue
+                          </text>
+                        </g>
+                      )}
+                    </svg>
+                  </div>
+                </div>
+
+                <div className="lg:col-span-4 space-y-3">
+                  <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3">
+                    <h3 className="font-serif text-xl font-bold text-slate-900 dark:text-white">
+                      Réglage de l&apos;Ébat à la Potence Seitz
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                      Après serrage des vis du pont de rouage à <strong>1.8 cNm</strong>, saisissez délicatement chaque mobile aux brucelles Dumont N° 3 pour apprécier son jeu vertical (ébat de hauteur). S&apos;il est nul ou excessif, déposez le pont et corrigez l&apos;enfoncement du rubis au centième de millimètre sur la potence micrométrique Seitz.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="p-6 sm:p-8 space-y-6">
+              <div className="flex flex-wrap gap-2">
+                {(["9010", "HP-1300", "9415", "9504", "8217"] as const).map((oil) => (
+                  <button
+                    key={oil}
+                    onClick={() => setSelectedOil(oil)}
+                    className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                      selectedOil === oil
+                        ? "bg-amber-500 text-slate-950 shadow-sm"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                    }`}
+                  >
+                    Moebius {oil}
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div className="lg:col-span-8 bg-slate-950 rounded-2xl border border-slate-800 p-4 overflow-hidden">
+                  <div className="overflow-hidden rounded-xl bg-[#060a12] border border-slate-800/80">
+                    <svg viewBox="0 0 700 300" className="w-full h-auto">
+                      {/* 5 Blocs Cinématiques du Calibre ETA 6497 */}
+                      {[
+                        { id: "8217", x: 55, label: "1. Paroi Barillet", sub: "Moebius 8217 (Freinage)" },
+                        { id: "9504", x: 185, label: "2. Remontoir / Tige", sub: "Moebius 9504 (Forte Pression)" },
+                        { id: "HP-1300", x: 315, label: "3. Centre & Moyenne", sub: "Moebius HP-1300 (1260 cSt)" },
+                        { id: "9010", x: 445, label: "4. Seconde, Échap. & Bal.", sub: "Moebius 9010 (150 cSt)" },
+                        { id: "9415", x: 575, label: "5. Palettes d'Ancre", sub: "Moebius 9415 (Thixotrope)" }
+                      ].map((zone) => {
+                        const active = selectedOil === zone.id;
+                        return (
+                          <g key={zone.id} transform={`translate(${zone.x}, 135)`}>
+                            <rect
+                              x="-52"
+                              y="-75"
+                              width="104"
+                              height="150"
+                              rx="14"
+                              fill={active ? "rgba(245, 158, 11, 0.22)" : "#0f172a"}
+                              stroke={active ? "#fbbf24" : "#334155"}
+                              strokeWidth={active ? "3" : "1.5"}
+                            />
+                            <circle
+                              cx="0"
+                              cy="-15"
+                              r="26"
+                              fill={active ? "#10b981" : "#1e293b"}
+                              stroke={active ? "#a7f3d0" : "#475569"}
+                              strokeWidth="2"
+                            />
+                            <text x="0" y="-11" fill="#f8fafc" fontSize="9.5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                              {zone.id}
+                            </text>
+                            <text x="0" y="35" fill="#e2e8f0" fontSize="9" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                              {zone.label}
+                            </text>
+                            <text x="0" y="52" fill="#94a3b8" fontSize="7.5" fontFamily="monospace" textAnchor="middle">
+                              {zone.sub}
+                            </text>
+                          </g>
+                        );
+                      })}
+
+                      <text x="350" y="268" fill="#fb7185" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                        ZONES INTERDITES (100% À SEC) : Pivots d’ancre, fourchette, dard, ellipse de plateau et spires du spiral !
+                      </text>
+                    </svg>
+                  </div>
+                </div>
+
+                <div className="lg:col-span-4 space-y-3">
+                  <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2">
+                    <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
+                      Lubrifiant Certifié : Moebius {selectedOil}
+                    </span>
+                    <h3 className="font-serif text-xl font-bold text-slate-900 dark:text-white">
+                      {selectedOil === "9010" && "Synt-A-Lube 9010 — Mobiles Rapides & Incabloc"}
+                      {selectedOil === "HP-1300" && "Synt-HP-1300 — Fortes Charges & Basse Vitesse"}
+                      {selectedOil === "9415" && "Graisse 9415 — Levées d’Ancre Haute Fréquence"}
+                      {selectedOil === "9504" && "Graisse 9504 — Mécanisme de Remontoir & Mise à l’Heure"}
+                      {selectedOil === "8217" && "Graisse 8217 — Bride Glissante & Paroi de Barillet"}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                      {selectedOil === "9010" &&
+                        "Viscosité 150 cSt à 20°C. Appliquée au pique-huile noir ou rouge sur les pivots de roue de seconde (Code 227), de roue d’échappement (Code 705) et au centre des contre-pivots Incabloc du balancier."}
+                      {selectedOil === "HP-1300" &&
+                        "Viscosité 1260 cSt à 20°C. Résiste au cisaillement élevé sur les portées d’arbre de barillet (Code 195), les pivots de roue de centre (Code 200) et de grande moyenne (Code 206)."}
+                      {selectedOil === "9415" &&
+                        "Lubrifiant thixotrope : liquide sous l’impact de la dent d’échappement, il redevient gel dès que la dent quitte le plan d’impulsion de la palette rubis pour ne jamais filer."}
+                      {selectedOil === "9504" &&
+                        "Graisse bleue chargée pour les frictions métal/métal du carré de tige (Code 401), pignon coulant (Code 407), bec de sautoir de tirette (Code 445) et lanterne de chaussée."}
+                      {selectedOil === "8217" &&
+                        "Graisse de freinage spécifique pour la paroi interne du tambour de barillet afin d’assurer un déroulement régulier des spires du ressort moteur sans à-coups."}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Bloc Vidéo + FlipBook PDF */}

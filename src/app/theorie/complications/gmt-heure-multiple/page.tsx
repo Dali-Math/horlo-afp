@@ -1,323 +1,320 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from 'react';
-import Link from "next/link";
-import { Globe, ChevronRight, ArrowLeft, Plane, Clock, MapPin, Compass } from 'lucide-react';
+import React, { useState } from 'react';
+import Link from 'next/link';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Globe,
+  Plane,
+  Clock,
+  Compass,
+  ZoomIn,
+  HelpCircle
+} from 'lucide-react';
 
-const GMTHeureMultiplePage = () => {
-  const [scrollY, setScrollY] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedTimezone, setSelectedTimezone] = useState<string | null>(null);
+const GMT_ARCHITECTURES = [
+  {
+    type: '« True GMT » / Traveler GMT (Aiguille 12h Sautante)',
+    examples: 'Rolex Cal. 3186 / 3285, Omega Co-Axial 8900, Grand Seiko 9S86',
+    mechanism:
+      'En position intermédiaire de couronne (T2), le porteur fait sauter l’aiguille locale de 12 heures par pas d’exactement 1 heure grâce à une étoile à 12 dents et un sautoir, en avant ou en arrière, couplée au disque de quantième. L’aiguille 24h (heure de référence) et le balancier ne s’arrêtent jamais.',
+    verdict: 'Architecture reine pour le voyageur franchissant un fuseau horaire en vol.'
+  },
+  {
+    type: '« Office GMT » / Caller GMT (Aiguille 24h Indépendante)',
+    examples: 'ETA 2893-2, Sellita SW330-2',
+    mechanism:
+      'En position T2, la couronne déplace directement l’aiguille 24 heures par crans d’une heure dans un sens et corrige la date dans l’autre sens, tandis que l’aiguille principale de 12 heures reste solidaire de la minuterie.',
+    verdict: 'Idéal depuis son bureau pour suivre le fuseau horaire d’un interlocuteur distant.'
+  }
+];
 
-  useEffect(() => {
-    setIsVisible(true);
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+const TIMEZONES = [
+  { city: 'New York (JFK)', offset: -5 },
+  { city: 'Londres (UTC)', offset: 0 },
+  { city: 'Genève (GVA)', offset: 1 },
+  { city: 'Dubaï (DXB)', offset: 4 },
+  { city: 'Tokyo (HND)', offset: 9 },
+  { city: 'Sydney (SYD)', offset: 10 }
+];
 
-  const features = [
-    {
-      title: 'Aiguille 24 heures',
-      desc: 'Aiguille supplémentaire effectuant un tour complet en 24h pour le second fuseau horaire',
-      icon: Clock
-    },
-    {
-      title: 'Lunette bidirectionnelle',
-      desc: 'Lunette graduée sur 24h permettant de lire instantanément un troisième fuseau',
-      icon: Compass
-    },
-    {
-      title: 'Ajustement indépendant',
-      desc: 'Réglage de l\'heure locale par saut d\'1h sans perturber la précision du mouvement',
-      icon: MapPin
-    },
-    {
-      title: 'Usage aviation',
-      desc: 'Outil essentiel pour pilotes permettant le suivi simultané de plusieurs zones horaires',
-      icon: Plane
-    }
-  ];
+export default function GMTHeureMultiplePage() {
+  const [utcHour, setUtcHour] = useState<number>(14); // 14:20 UTC
+  const [localOffset, setLocalOffset] = useState<number>(1); // Genève UTC+1
+  const [bezelOffset, setBezelOffset] = useState<number>(0); // Lunette 24h
+  const [loupe10x, setLoupe10x] = useState<boolean>(false);
 
-  const timeline = [
-    { year: '1955', event: 'Invention de la GMT-Master pour Pan Am', maker: 'Rolex' },
-    { year: '1959', event: 'Première GMT avec date rapide', maker: 'Rolex GMT-Master' },
-    { year: '1983', event: 'Introduction du réglage indépendant', maker: 'Rolex GMT-Master II' },
-    { year: '2005', event: 'GMT Worldtime avec 24 fuseaux', maker: 'Patek Philippe' },
-    { year: '2020+', event: 'GMT nouvelle génération avec affichage digital', maker: 'Manufactures modernes' }
-  ];
+  const localHour24 = (utcHour + localOffset + 24) % 24;
+  const localHour12 = localHour24 % 12 || 12;
+  const thirdZoneHour24 = (utcHour + bezelOffset + 24) % 24;
 
-  const brands = [
-    { name: 'Rolex', specialty: 'Inventeur et pionnier', heritage: 'GMT-Master depuis 1955' },
-    { name: 'Omega', specialty: 'GMT Seamaster Pro', heritage: 'Depuis 1960' },
-    { name: 'Breitling', specialty: 'Aviation instruments', heritage: 'Navitimer GMT' },
-    { name: 'Patek Philippe', specialty: 'Worldtime complications', heritage: 'Haute horlogerie' },
-    { name: 'Grand Seiko', specialty: 'GMT Spring Drive', heritage: 'Excellence japonaise' }
-  ];
-
-  const timezones = [
-    { city: 'New York', offset: '-5h', color: 'bg-blue-500' },
-    { city: 'Londres', offset: '+0h', color: 'bg-green-500' },
-    { city: 'Paris', offset: '+1h', color: 'bg-purple-500' },
-    { city: 'Dubai', offset: '+4h', color: 'bg-amber-500' },
-    { city: 'Tokyo', offset: '+9h', color: 'bg-red-500' },
-    { city: 'Sydney', offset: '+11h', color: 'bg-teal-500' }
-  ];
+  // Angles horlogers en degrés (12h en haut = 0°)
+  const gmt24Angle = (utcHour / 24) * 360 + (20 / 60) * 15; // 1 tour en 24h (15°/h)
+  const local12Angle = ((localHour24 % 12) / 12) * 360 + (20 / 60) * 30; // 1 tour en 12h (30°/h)
+  const bezelRotationAngle = -bezelOffset * 15; // 15° par fuseau sur lunette 24h
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-cyan-950">
-      
-      {/* Hero avec parallax */}
-      <header 
-        className="relative overflow-hidden py-24 px-4 sm:px-6 lg:px-8"
-        style={{ transform: `translateY(${scrollY * 0.3}px)` }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-cyan-600/20 via-blue-600/20 to-indigo-600/20"></div>
-        
-        <div className="absolute top-20 right-10 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 left-20 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl"></div>
-
-        <div className="relative max-w-5xl mx-auto text-center">
-          <div className={`inline-flex items-center gap-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-6 py-3 rounded-full shadow-xl mb-8 border border-cyan-200 dark:border-cyan-800 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
-            <Globe className="text-cyan-600" size={24} />
-            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-              Complication Voyageur
-            </span>
+    <div className="min-h-screen bg-slate-50 dark:bg-[#080b12] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+      <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/85 dark:bg-[#080b12]/85 border-b border-slate-200 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 text-xs sm:text-sm font-mono">
+            <Link
+              href="/theorie"
+              className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>Théorie</span>
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            <Link
+              href="/theorie/complications"
+              className="text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+            >
+              Complications
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            <span className="font-bold text-amber-600 dark:text-amber-400">GMT &amp; Heure Universelle</span>
           </div>
 
-          <h1 className={`text-6xl md:text-8xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            GMT / Heure Multiple
-          </h1>
-          
-          <p className={`text-xl md:text-2xl text-cyan-600 dark:text-cyan-400 mb-8 font-light italic transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            Dual Time / Greenwich Mean Time
-          </p>
-
-          <p className={`text-2xl text-gray-600 dark:text-gray-300 font-light max-w-3xl mx-auto leading-relaxed transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            Le monde au poignet : maîtriser le temps sur tous les continents
-          </p>
+          <span className="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+            <Globe className="w-3.5 h-3.5" />
+            Démultiplication 24h &amp; Étoile à 12 Dents
+          </span>
         </div>
       </header>
 
-      {/* Introduction */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <section className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-200 dark:border-slate-700 p-12 mb-16">
-          <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
-            La complication <strong className="text-cyan-600 dark:text-cyan-400">GMT</strong> (Greenwich Mean Time), ou <em>Heure Multiple</em>, permet d'afficher deux ou trois fuseaux horaires simultanément. Créée à l'origine pour les pilotes et les grands voyageurs, elle s'est imposée comme une fonction incontournable des montres contemporaines.
-          </p>
-          <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-            Cette complication incarne l'esprit du voyage moderne : rester connecté avec le monde entier tout en gardant un œil sur son fuseau d'origine. Un outil devenu indispensable à l'ère de la mondialisation.
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+        {/* HERO ÉDITORIAL CONFORME /THEORIE */}
+        <section className="text-center max-w-4xl mx-auto space-y-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-mono uppercase tracking-widest">
+            <Plane className="w-3.5 h-3.5" />
+            Complication de Navigation Aérienne • 3 Fuseaux Horaires Simultanés
+          </div>
+
+          <h1 className="font-serif text-4xl sm:text-6xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
+            Complication GMT &amp; <br />
+            <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-200 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent">
+              Cinématique de la Roue 24 Heures
+            </span>
+          </h1>
+
+          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl mx-auto">
+            Née en 1954 pour les équipages long-courriers de la Pan Am, la complication GMT associe une roue des heures classique (1 tour en 12h) à une roue supplémentaire démultipliée de moitié (1 tour en 24h = 15°/heure) et un mécanisme de saut horaire par étoile à 12 dents.
           </p>
         </section>
 
-        {/* Stats principales */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          <div className="bg-gradient-to-br from-cyan-600 to-blue-700 rounded-2xl p-8 text-white shadow-2xl transform hover:scale-105 transition-all">
-            <p className="text-sm uppercase tracking-wide opacity-80 mb-2">Invention</p>
-            <p className="text-5xl font-bold mb-2">1955</p>
-            <p className="text-lg opacity-90">Rolex GMT-Master</p>
-          </div>
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-8 text-white shadow-2xl transform hover:scale-105 transition-all">
-            <p className="text-sm uppercase tracking-wide opacity-80 mb-2">Prix estimé</p>
-            <p className="text-4xl font-bold mb-2">8'000 – 50'000 CHF</p>
-            <p className="text-lg opacity-90">≈ 200 composants</p>
-          </div>
-          <div className="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl p-8 text-white shadow-2xl transform hover:scale-105 transition-all">
-            <p className="text-sm uppercase tracking-wide opacity-80 mb-2">Fuseaux max</p>
-            <p className="text-5xl font-bold mb-2">3</p>
-            <p className="text-lg opacity-90">Simultanés</p>
-          </div>
-        </div>
+        {/* ========================================================================= */}
+        {/* SIMULATEUR CINÉMATIQUE SVG : TRUE GMT, ÉTOILE 12 DENTS & LUNETTE 24H      */}
+        {/* ========================================================================= */}
+        <section className="rounded-3xl bg-white dark:bg-[#0b101b] border-2 border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+          <div className="p-6 sm:p-8 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+                <Compass className="w-4 h-4" />
+                <span>Simulateur Cinématique SVG • Saut Horaire Indépendant &amp; Lunette 24h</span>
+              </div>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+                Mécanisme « True GMT » à Étoile 12 Dents &amp; Lecture de 3 Fuseaux
+              </h2>
+            </div>
 
-        {/* Carte des fuseaux */}
-        <section className="bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-950 dark:to-slate-900 rounded-3xl p-12 mb-16 text-white shadow-2xl border border-slate-700">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-1.5 h-12 bg-gradient-to-b from-cyan-400 to-blue-600 rounded-full"></div>
-            <h2 className="text-4xl font-bold">Fuseaux Horaires Mondiaux</h2>
-          </div>
-          
-          <p className="text-xl text-gray-100 leading-relaxed mb-8">
-            Une montre GMT permet de suivre <strong className="text-cyan-400">plusieurs fuseaux simultanément</strong>, idéal pour les voyageurs fréquents et professionnels internationaux.
-          </p>
-
-          <div className="grid md:grid-cols-3 gap-4 mb-8">
-            {timezones.map((zone, index) => (
-              <div
-                key={index}
-                className="bg-slate-800/60 backdrop-blur-sm rounded-xl p-6 border border-slate-700 hover:border-cyan-500 transition-all cursor-pointer hover:scale-105"
-                onClick={() => setSelectedTimezone(zone.city)}
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => setLocalOffset((prev) => prev - 1)}
+                className="px-3.5 py-2 rounded-xl text-xs font-mono font-bold bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white hover:border-amber-500 border border-slate-300 dark:border-slate-700"
               >
-                <div className="flex items-center gap-4">
-                  <div className={`w-4 h-4 ${zone.color} rounded-full`}></div>
-                  <div className="flex-1">
-                    <p className="text-lg font-bold text-white">{zone.city}</p>
-                    <p className="text-sm text-gray-400">UTC {zone.offset}</p>
+                ↺ Saut -1h (Aiguille Locale)
+              </button>
+              <button
+                onClick={() => setLocalOffset((prev) => prev + 1)}
+                className="px-3.5 py-2 rounded-xl text-xs font-mono font-bold bg-amber-500 text-slate-950 shadow-sm"
+              >
+                ↻ Saut +1h (Étoile 12 Dents)
+              </button>
+              <button
+                onClick={() => setLoupe10x(!loupe10x)}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-mono font-bold border transition-all ${
+                  loupe10x
+                    ? 'bg-amber-500/20 border-amber-500 text-amber-600 dark:text-amber-300'
+                    : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                <ZoomIn className="w-4 h-4" />
+                <span>{loupe10x ? 'Loupe 10x Active' : 'Loupe 10x'}</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-8 bg-slate-950 rounded-2xl border border-slate-800 p-4 overflow-hidden">
+              <div className="overflow-hidden rounded-xl bg-[#060a12] border border-slate-800/80">
+                <svg
+                  viewBox="0 0 720 370"
+                  className="w-full h-auto transition-transform duration-300"
+                  style={{
+                    transform: loupe10x ? 'scale(1.38)' : 'scale(1)',
+                    transformOrigin: '515px 185px'
+                  }}
+                >
+                  {/* GAUCHE : CADRAN GMT + LUNETTE BICOLORE 24H ROTATIVE */}
+                  <g transform="translate(195, 185)">
+                    {/* Lunette bicolore Nuit (Bleu) / Jour (Rouge) graduée 24h */}
+                    <g transform={`rotate(${bezelRotationAngle})`}>
+                      <path d="M -145 0 A 145 145 0 0 1 145 0 L 115 0 A 115 115 0 0 0 -115 0 Z" fill="#1e3a8a" stroke="#60a5fa" strokeWidth="2" />
+                      <path d="M -145 0 A 145 145 0 0 0 145 0 L 115 0 A 115 115 0 0 1 -115 0 Z" fill="#991b1b" stroke="#f87171" strokeWidth="2" />
+                      <text x="0" y="-124" fill="#ffffff" fontSize="11" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                        24
+                      </text>
+                      <text x="128" y="4" fill="#ffffff" fontSize="11" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                        6
+                      </text>
+                      <text x="0" y="133" fill="#ffffff" fontSize="11" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                        12
+                      </text>
+                      <text x="-128" y="4" fill="#ffffff" fontSize="11" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                        18
+                      </text>
+                    </g>
+
+                    {/* Cadran 12h interne */}
+                    <circle cx="0" cy="0" r="112" fill="#090d16" stroke="#475569" strokeWidth="2" />
+
+                    {/* Aiguille GMT 24h Rouge à flèche luminescente */}
+                    <g transform={`rotate(${gmt24Angle})`}>
+                      <line x1="0" y1="0" x2="0" y2="-98" stroke="#ef4444" strokeWidth="3.5" />
+                      <polygon points="0,-108 -9,-90 9,-90" fill="#ef4444" stroke="#fecdd3" strokeWidth="1.5" />
+                    </g>
+
+                    {/* Aiguille des Heures Locales 12h (Dorée, sautante par pas de 30°) */}
+                    <g transform={`rotate(${local12Angle})`}>
+                      <line x1="0" y1="0" x2="0" y2="-68" stroke="#fbbf24" strokeWidth="6" strokeLinecap="round" />
+                    </g>
+
+                    {/* Aiguille des Minutes (fixée à :20) */}
+                    <g transform="rotate(120)">
+                      <line x1="0" y1="0" x2="0" y2="-92" stroke="#f8fafc" strokeWidth="4" strokeLinecap="round" />
+                    </g>
+
+                    <circle cx="0" cy="0" r="8" fill="#fbbf24" stroke="#090d16" strokeWidth="2" />
+                  </g>
+
+                  {/* DROITE : COUPE CINÉMATIQUE DE L'ÉTOILE À 12 DENTS & ROUE 24H */}
+                  <g transform="translate(525, 185)">
+                    <text x="0" y="-142" fill="#fbbf24" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      MÉCANISME DE SAUT HORAIRE (ÉTOILE 12 DENTS)
+                    </text>
+
+                    {/* Roue GMT 24h (Z = 48 dents, rapport 1:2) */}
+                    <circle cx="0" cy="0" r="102" fill="#0f172a" stroke="#ef4444" strokeWidth="2.5" strokeDasharray="6 3" />
+                    <text x="0" y="-82" fill="#f87185" fontSize="9" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      Roue 24 Heures (15° / heure)
+                    </text>
+
+                    {/* Roue des heures locales (12h) + Étoile à 12 dents */}
+                    <g transform={`rotate(${local12Angle})`}>
+                      <circle cx="0" cy="0" r="68" fill="#1e293b" stroke="#fbbf24" strokeWidth="2.5" />
+                      {Array.from({ length: 12 }).map((_, idx) => (
+                        <line
+                          key={idx}
+                          x1="0"
+                          y1="-42"
+                          x2="0"
+                          y2="-68"
+                          stroke="#fde047"
+                          strokeWidth="4"
+                          transform={`rotate(${idx * 30})`}
+                        />
+                      ))}
+                    </g>
+
+                    {/* Sautoir d'indexation horaire (maintient les sauts francs de 30°) */}
+                    <path d="M -95 95 L -42 46" stroke="#34d399" strokeWidth="6" strokeLinecap="round" />
+                    <circle cx="-42" cy="46" r="6" fill="#10b981" stroke="#ecfdf5" strokeWidth="1.5" />
+                    <text x="0" y="128" fill="#34d399" fontSize="9.5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      Sautoir d’étoile : Saut franc de 30° (= 1h locale)
+                    </text>
+                  </g>
+                </svg>
+              </div>
+            </div>
+
+            {/* PANNEAU DES 3 FUSEAUX HORAIRES */}
+            <div className="lg:col-span-4 space-y-4">
+              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4 font-mono">
+                <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30">
+                  <div className="text-[10px] text-amber-700 dark:text-amber-300 font-bold">
+                    1. HEURE LOCALE (AIGUILLE 12H SAUTANTE)
+                  </div>
+                  <div className="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">
+                    {String(localHour12).padStart(2, '0')}h20 ({localHour24 >= 12 ? 'PM' : 'AM'} • UTC{localOffset >= 0 ? `+${localOffset}` : localOffset})
                   </div>
                 </div>
+
+                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30">
+                  <div className="text-[10px] text-rose-700 dark:text-rose-300 font-bold">
+                    2. HEURE DE RÉFÉRENCE (AIGUILLE 24H ROUGE)
+                  </div>
+                  <div className="text-xl font-extrabold text-rose-600 dark:text-rose-400 mt-0.5">
+                    {String(utcHour).padStart(2, '0')}h20 UTC
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-sky-500/10 border border-sky-500/30 space-y-2">
+                  <div className="text-[10px] text-sky-700 dark:text-sky-300 font-bold">
+                    3. LUNETTE ROTATIVE 24H (UTC{bezelOffset >= 0 ? `+${bezelOffset}` : bezelOffset})
+                  </div>
+                  <div className="text-lg font-extrabold text-sky-600 dark:text-sky-400">
+                    {String(thirdZoneHour24).padStart(2, '0')}h20 sur la Lunette
+                  </div>
+                  <input
+                    type="range"
+                    min={-12}
+                    max={12}
+                    step={1}
+                    value={bezelOffset}
+                    onChange={(e) => setBezelOffset(Number(e.target.value))}
+                    className="w-full accent-sky-500 cursor-pointer"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-1.5 pt-1">
+                  {TIMEZONES.map((tz) => (
+                    <button
+                      key={tz.city}
+                      onClick={() => setLocalOffset(tz.offset)}
+                      className={`px-2.5 py-1.5 rounded-lg text-[11px] font-bold border transition-all ${
+                        localOffset === tz.offset
+                          ? 'bg-amber-500 text-slate-950 border-amber-500'
+                          : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                      }`}
+                    >
+                      {tz.city}
+                    </button>
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
-
-          <div className="bg-cyan-900/30 rounded-xl p-6 border border-cyan-700/50">
-            <p className="text-sm text-gray-300 leading-relaxed">
-              <strong className="text-cyan-400">Note :</strong> Les montres Worldtime peuvent afficher jusqu'à 24 fuseaux horaires simultanément via des disques rotatifs, tandis que les GMT classiques se limitent à 2-3 zones pour plus de lisibilité.
-            </p>
-          </div>
-        </section>
-
-        {/* Mécanisme */}
-        <section className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm rounded-3xl p-12 mb-16 shadow-xl border border-gray-200 dark:border-slate-700">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-1.5 h-12 bg-gradient-to-b from-cyan-400 to-blue-600 rounded-full"></div>
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Mécanisme & Fonctionnement</h2>
-          </div>
-          
-          <div className="space-y-6">
-            <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
-              Une montre GMT possède une <strong className="text-cyan-600">aiguille supplémentaire</strong> effectuant un tour complet du cadran en 24 heures. Celle-ci indique un second fuseau horaire sur une lunette ou un cadran gradué.
-            </p>
-            
-            <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-              Les versions plus avancées (GMT-Master II, par exemple) permettent d'ajuster indépendamment l'aiguille des heures locales par sauts d'une heure, sans perturber le mouvement ni arrêter la trotteuse. La lunette bidirectionnelle permet quant à elle de lire un troisième fuseau horaire.
-            </p>
-
-            <div className="bg-cyan-50 dark:bg-cyan-900/20 rounded-xl p-6 border border-cyan-200 dark:border-cyan-800 mt-8">
-              <h3 className="text-xl font-semibold mb-4 text-cyan-900 dark:text-cyan-300">Architecture mécanique</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                  <ChevronRight className="text-cyan-600 flex-shrink-0 mt-1" size={20} />
-                  <span><strong>Module GMT</strong> : Rouage supplémentaire démultipliant à 24h au lieu de 12h</span>
-                </li>
-                <li className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                  <ChevronRight className="text-cyan-600 flex-shrink-0 mt-1" size={20} />
-                  <span><strong>Mécanisme de saut</strong> : Permet l'ajustement par heure sans dérégler le mouvement</span>
-                </li>
-                <li className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                  <ChevronRight className="text-cyan-600 flex-shrink-0 mt-1" size={20} />
-                  <span><strong>Lunette rotative</strong> : Graduée sur 24h pour la lecture d'un troisième fuseau</span>
-                </li>
-                <li className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                  <ChevronRight className="text-cyan-600 flex-shrink-0 mt-1" size={20} />
-                  <span><strong>Affichage jour/nuit</strong> : Indique visuellement si l'heure GMT est de jour ou de nuit</span>
-                </li>
-              </ul>
             </div>
           </div>
         </section>
 
-        {/* Features */}
-        <section className="mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white text-center mb-12">
-            Caractéristiques Techniques
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <div
-                  key={index}
-                  className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow-xl border border-gray-200 dark:border-slate-700 hover:shadow-2xl transition-all hover:-translate-y-1"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="bg-gradient-to-br from-cyan-500 to-blue-600 p-3 rounded-xl">
-                      <Icon className="text-white" size={28} />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                        {feature.title}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-400">
-                        {feature.desc}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* Histoire Pan Am */}
-        <section className="bg-gradient-to-r from-cyan-900 to-blue-900 rounded-3xl p-12 text-white shadow-2xl border border-cyan-700 mb-16">
-          <h2 className="text-4xl font-bold mb-6 flex items-center gap-3">
-            <Plane size={40} />
-            L'Histoire Pan Am
-          </h2>
-          <p className="text-xl leading-relaxed mb-6">
-            En 1954, la compagnie aérienne <strong className="text-cyan-300">Pan American World Airways</strong> demande à Rolex de développer une montre permettant à ses pilotes de suivre simultanément l'heure de leur position et celle de leur base à New York.
-          </p>
-          <p className="text-lg text-gray-200 leading-relaxed">
-            Le résultat : la <strong>GMT-Master</strong>, reconnaissable à sa lunette bicolore rouge et bleue (surnommée "Pepsi"), devient instantanément l'outil officiel des pilotes long-courriers. Cette montre révolutionnaire posera les bases de toutes les complications GMT modernes.
-          </p>
-        </section>
-
-        {/* Timeline */}
-        <section className="mb-16 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm rounded-3xl p-12 shadow-xl border border-gray-200 dark:border-slate-700">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white text-center mb-12">
-            Histoire & Évolution
-          </h2>
-          <div className="space-y-6">
-            {timeline.map((item, index) => (
-              <div key={index} className="flex gap-6 group">
-                <div className="flex flex-col items-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg group-hover:scale-110 transition-transform">
-                    {item.year.slice(2, 4)}
-                  </div>
-                  {index < timeline.length - 1 && (
-                    <div className="w-0.5 flex-1 bg-gradient-to-b from-cyan-400 to-blue-600 my-2"></div>
-                  )}
-                </div>
-                <div className="flex-1 pb-8">
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{item.year}</p>
-                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-1">{item.event}</p>
-                  <p className="text-sm text-cyan-600 dark:text-cyan-400 font-medium">{item.maker}</p>
-                </div>
+        {/* COMPARATIF : TRUE GMT VS OFFICE GMT */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {GMT_ARCHITECTURES.map((arch) => (
+            <div
+              key={arch.type}
+              className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3"
+            >
+              <h3 className="font-serif text-xl font-bold text-slate-900 dark:text-white">{arch.type}</h3>
+              <div className="text-xs font-mono text-amber-600 dark:text-amber-400">{arch.examples}</div>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{arch.mechanism}</p>
+              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-800 dark:text-emerald-300 font-medium">
+                {arch.verdict}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </section>
-
-        {/* Manufactures */}
-        <section className="mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white text-center mb-12">
-            Manufactures de Prestige
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {brands.map((brand, index) => (
-              <div
-                key={index}
-                className="bg-gradient-to-br from-white to-gray-50 dark:from-slate-900 dark:to-slate-800 rounded-2xl p-6 shadow-xl border-2 border-transparent hover:border-cyan-500 transition-all hover:scale-105"
-              >
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                  {brand.name}
-                </h3>
-                <p className="text-cyan-600 dark:text-cyan-400 font-medium mb-1">
-                  {brand.specialty}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {brand.heritage}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* CTA */}
-<div className="text-center">
-  <Link href="/theorie/complications">
-    <button className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl hover:from-blue-700 hover:to-indigo-800 transition-all shadow-xl hover:shadow-2xl hover:scale-105 text-lg font-semibold">
-      <ArrowLeft size={24} />
-      Retour aux complications
-    </button>
-  </Link>
-</div>
-</main>
-      {/* Footer */}
-      <footer className="py-8 border-t border-gray-200 dark:border-slate-800 text-center text-gray-600 dark:text-gray-400">
-        <p className="text-sm">© 2025 GMT / Heure Multiple – Référence mondiale pour voyageurs</p>
-      </footer>
+      </main>
     </div>
   );
-};
-
-export default GMTHeureMultiplePage;
+}

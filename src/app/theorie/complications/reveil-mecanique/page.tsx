@@ -1,341 +1,289 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from 'react';
-import Link from "next/link";
-import { Bell, ChevronRight, ArrowLeft, AlarmClock, Volume2, Vibrate, Clock } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import Link from 'next/link';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Bell,
+  Volume2,
+  ZoomIn,
+  Play,
+  RotateCcw
+} from 'lucide-react';
 
-const ReveilMecaniquePage = () => {
-  const [scrollY, setScrollY] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isRinging, setIsRinging] = useState(false);
+const ALARM_CALIBRES = [
+  {
+    name: 'Vulcain Calibre Cricket 120 (1947)',
+    acousticSystem: 'Marteau frappant une goupille solidaire d’une membrane interne + double fond perforé',
+    powerSource: 'Double barillet (1 barillet horaire + 1 barillet de réveil remontés selon le sens de rotation de la couronne)',
+    duration: '20 à 25 secondes (~1 200 impacts à haute intensité acoustique)',
+    desc: 'Conçu avec l’aide du physicien Paul Langevin : la chambre acoustique du double fond amplifie l’onde mécanique comme le thorax d’un grillon.'
+  },
+  {
+    name: 'Jaeger-LeCoultre Calibre Memovox 825 / 956 (1956–présent)',
+    acousticSystem: 'Disque central rotatif à index triangulaire + marteau frappant un timbre suspendu ou plot de fond',
+    powerSource: '2 couronnes distinctes (2h pour armer et régler le réveil, 4h pour le mouvement horaire)',
+    duration: '18 à 20 secondes de sonnerie cristalline',
+    desc: 'Pionnier du réveil automatique à rotor à butées (bumper) puis à timbre périphérique suspendu au fond saphir.'
+  }
+];
 
-  useEffect(() => {
-    setIsVisible(true);
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+export default function ReveilMecaniquePage() {
+  const [alarmTriggered, setAlarmTriggered] = useState<boolean>(false);
+  const [loupe10x, setLoupe10x] = useState<boolean>(false);
+  const audioTimerRef = useRef<number | null>(null);
 
-  const features = [
-    {
-      title: 'Barillet indépendant',
-      desc: 'Ressort dédié au mécanisme de réveil, séparé du mouvement principal pour autonomie totale',
-      icon: Clock
-    },
-    {
-      title: 'Marteau vibrant',
-      desc: 'Système de percussion rapide frappant une cloche ou membrane pour signal sonore ou vibratoire',
-      icon: Vibrate
-    },
-    {
-      title: 'Réglage programmable',
-      desc: 'Cadran secondaire permettant de définir l\'heure de déclenchement avec précision',
-      icon: AlarmClock
-    },
-    {
-      title: 'Son harmonieux',
-      desc: 'Timbre accordé produisant un son distinctif, signature sonore de chaque manufacture',
-      icon: Volume2
+  const triggerCricketAlarm = () => {
+    setAlarmTriggered(true);
+    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const ctx = new AudioCtx();
+    const now = ctx.currentTime;
+
+    // Rafale rapide de 18 impacts métalliques type Vulcain Cricket
+    for (let i = 0; i < 18; i++) {
+      const t = now + i * 0.065;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(1950 + (i % 2) * 280, t);
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.exponentialRampToValueAtTime(0.12, t + 0.005);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.048);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.05);
     }
-  ];
 
-  const timeline = [
-    { year: '1914', event: 'Premiers réveils mécaniques de poche', maker: 'Eterna' },
-    { year: '1947', event: 'Cricket : premier réveil bracelet', maker: 'Vulcain' },
-    { year: '1956', event: 'Memovox : réveil avec date', maker: 'Jaeger-LeCoultre' },
-    { year: '1960', event: 'Adoption par présidents américains', maker: 'Vulcain Cricket' },
-    { year: '2010+', event: 'Renaissance des réveils modernes', maker: 'Manufactures contemporaines' }
-  ];
-
-  const brands = [
-    { name: 'Vulcain', specialty: 'Inventeur du Cricket', heritage: 'Depuis 1947' },
-    { name: 'Jaeger-LeCoultre', specialty: 'Memovox légendaire', heritage: 'Master Control Memovox' },
-    { name: 'Breguet', specialty: 'Réveil Type XX', heritage: 'Haute complication' },
-    { name: 'Omega', specialty: 'Seamaster Alarm', heritage: 'Réveil plongée' },
-    { name: 'Tudor', specialty: 'Advisor Alarm', heritage: 'Vintage collection' }
-  ];
-
-  const useCases = [
-    { time: '6:00', use: 'Réveil matinal quotidien', icon: '☀️' },
-    { time: '12:00', use: 'Rappel de rendez-vous important', icon: '📅' },
-    { time: '18:00', use: 'Fin de journée de travail', icon: '🏢' },
-    { time: '22:00', use: 'Rappel de prise de médicament', icon: '💊' }
-  ];
+    if (audioTimerRef.current) window.clearTimeout(audioTimerRef.current);
+    audioTimerRef.current = window.setTimeout(() => {
+      setAlarmTriggered(false);
+    }, 1350);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-red-50 to-orange-50 dark:from-slate-950 dark:via-red-950 dark:to-slate-900">
-      
-      {/* Hero avec parallax */}
-      <header 
-        className="relative overflow-hidden py-24 px-4 sm:px-6 lg:px-8"
-        style={{ transform: `translateY(${scrollY * 0.3}px)` }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-red-600/20 via-orange-600/20 to-amber-600/20"></div>
-        
-        <div className="absolute top-20 right-10 w-96 h-96 bg-red-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 left-20 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl"></div>
-
-        <div className="relative max-w-5xl mx-auto text-center">
-          <div className={`inline-flex items-center gap-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-6 py-3 rounded-full shadow-xl mb-8 border border-red-200 dark:border-red-800 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
-            <Bell className="text-red-600" size={24} />
-            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-              Complication Sonore Utilitaire
-            </span>
+    <div className="min-h-screen bg-slate-50 dark:bg-[#080b12] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+      <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/85 dark:bg-[#080b12]/85 border-b border-slate-200 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 text-xs sm:text-sm font-mono">
+            <Link
+              href="/theorie"
+              className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>Théorie</span>
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            <Link
+              href="/theorie/complications"
+              className="text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+            >
+              Complications
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            <span className="font-bold text-amber-600 dark:text-amber-400">Réveil Mécanique</span>
           </div>
 
-          <h1 className={`text-6xl md:text-8xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            Réveil Mécanique
-          </h1>
-          
-          <p className={`text-xl md:text-2xl text-red-600 dark:text-red-400 mb-8 font-light italic transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            Mechanical Alarm
-          </p>
-
-          <p className={`text-2xl text-gray-600 dark:text-gray-300 font-light max-w-3xl mx-auto leading-relaxed transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            L'ancêtre mécanique du réveil moderne : utilité et ingéniosité horlogère
-          </p>
+          <span className="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+            <Bell className="w-3.5 h-3.5" />
+            Came à Encoche Axiale &amp; Double Barillet
+          </span>
         </div>
       </header>
 
-      {/* Introduction */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <section className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-200 dark:border-slate-700 p-12 mb-16">
-          <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
-            Le <strong className="text-red-600 dark:text-red-400">réveil mécanique</strong> est une complication sonore permettant d'émettre un son vibrant à l'heure programmée. Véritable ancêtre du réveil moderne, il incarne la fusion entre utilité quotidienne et ingéniosité horlogère suisse.
-          </p>
-          <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-            Cette complication pratique transforme la montre en assistant personnel mécanique, rappelant rendez-vous et obligations avec la fiabilité d'un mouvement entièrement autonome.
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+        <section className="text-center max-w-4xl mx-auto space-y-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-mono uppercase tracking-widest">
+            <Volume2 className="w-3.5 h-3.5" />
+            Complication Acoustique Utilitaire • Vulcain Cricket (1947) &amp; JLC Memovox (1956)
+          </div>
+
+          <h1 className="font-serif text-4xl sm:text-6xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
+            Réveil Mécanique &amp; <br />
+            <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-200 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent">
+              Came à Encoche &amp; Double Fond Résonant
+            </span>
+          </h1>
+
+          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl mx-auto">
+            Le réveil mécanique associe un second barillet dédié à une came de déclenchement coaxiale à la roue des heures.
+            À l’instant où l’ergot de la roue des heures tombe dans l’encoche de la came de réveil, le levier de blocage libère le marteau de sonnerie.
           </p>
         </section>
 
-        {/* Stats principales */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          <div className="bg-gradient-to-br from-red-600 to-orange-700 rounded-2xl p-8 text-white shadow-2xl transform hover:scale-105 transition-all">
-            <p className="text-sm uppercase tracking-wide opacity-80 mb-2">Invention</p>
-            <p className="text-5xl font-bold mb-2">1947</p>
-            <p className="text-lg opacity-90">Vulcain Cricket</p>
-          </div>
-          <div className="bg-gradient-to-br from-orange-600 to-amber-700 rounded-2xl p-8 text-white shadow-2xl transform hover:scale-105 transition-all">
-            <p className="text-sm uppercase tracking-wide opacity-80 mb-2">Prix estimé</p>
-            <p className="text-4xl font-bold mb-2">8'000 – 50'000 CHF</p>
-            <p className="text-lg opacity-90">≈ 350 composants</p>
-          </div>
-          <div className="bg-gradient-to-br from-amber-600 to-red-600 rounded-2xl p-8 text-white shadow-2xl transform hover:scale-105 transition-all">
-            <p className="text-sm uppercase tracking-wide opacity-80 mb-2">Durée sonnerie</p>
-            <p className="text-5xl font-bold mb-2">20"</p>
-            <p className="text-lg opacity-90">Vibration continue</p>
-          </div>
-        </div>
-
-        {/* Démonstration interactive */}
-        <section className="bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-950 dark:to-slate-900 rounded-3xl p-12 mb-16 text-white shadow-2xl border border-slate-700">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-1.5 h-12 bg-gradient-to-b from-red-400 to-orange-600 rounded-full"></div>
-            <h2 className="text-4xl font-bold">Cas d'Usage Quotidiens</h2>
-          </div>
-          
-          <p className="text-xl text-gray-100 leading-relaxed mb-8">
-            Le réveil mécanique s'impose comme un <strong className="text-red-400">outil pratique</strong> pour tous les moments de la journée nécessitant un rappel précis.
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            {useCases.map((useCase, index) => (
-              <div
-                key={index}
-                className="bg-red-900/30 rounded-2xl p-6 border border-red-700/50 hover:border-red-500 transition-all cursor-pointer"
-                onClick={() => setIsRinging(!isRinging)}
-              >
-                <div className="flex items-center gap-4">
-                  <div className="text-4xl">{useCase.icon}</div>
-                  <div className="flex-1">
-                    <p className="text-2xl font-bold text-white mb-1">{useCase.time}</p>
-                    <p className="text-gray-300">{useCase.use}</p>
-                  </div>
-                  <Bell className={`${isRinging ? 'animate-bounce text-red-400' : 'text-red-600'}`} size={28} />
-                </div>
+        {/* ========================================================================= */}
+        {/* SIMULATEUR CINÉMATIQUE & ACOUSTIQUE SVG : CAME À ENCOCHE & MARTEAU        */}
+        {/* ========================================================================= */}
+        <section className="rounded-3xl bg-white dark:bg-[#0b101b] border-2 border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+          <div className="p-6 sm:p-8 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+                <Bell className="w-4 h-4" />
+                <span>Simulateur Cinématique &amp; Acoustique SVG • Loupe 10x</span>
               </div>
-            ))}
-          </div>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+                Chute Axiale dans la Came de Réveil &amp; Percussion du Marteau Cricket
+              </h2>
+            </div>
 
-          <div className="mt-8 bg-orange-900/20 rounded-xl p-6 border border-orange-700/50">
-            <p className="text-sm text-gray-300 leading-relaxed">
-              <strong className="text-orange-400">Astuce :</strong> Les réveils mécaniques Cricket de Vulcain étaient particulièrement prisés par les présidents américains Eisenhower et Truman pour leurs réunions diplomatiques.
-            </p>
-          </div>
-        </section>
-
-        {/* Mécanisme */}
-        <section className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm rounded-3xl p-12 mb-16 shadow-xl border border-gray-200 dark:border-slate-700">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-1.5 h-12 bg-gradient-to-b from-red-400 to-orange-600 rounded-full"></div>
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Mécanisme & Fonctionnement</h2>
-          </div>
-          
-          <div className="space-y-6">
-            <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
-              Le réveil mécanique repose sur un <strong className="text-red-600">barillet indépendant</strong> alimentant un marteau miniature frappant une cloche interne ou une membrane métallique. À l'heure réglée, un déclencheur libère le mécanisme, produisant une vibration ou un son distinctif.
-            </p>
-            
-            <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-              Certaines montres utilisent des timbres pour un son plus harmonieux et musical, tandis que d'autres misent sur la vibration pure, héritage des premières "Cricket" de Vulcain. Le son peut durer de 15 à 30 secondes selon la réserve du barillet dédié.
-            </p>
-
-            <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-6 border border-red-200 dark:border-red-800 mt-8">
-              <h3 className="text-xl font-semibold mb-4 text-red-900 dark:text-red-300">Architecture mécanique</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                  <ChevronRight className="text-red-600 flex-shrink-0 mt-1" size={20} />
-                  <span><strong>Barillet d'alarme</strong> : Ressort indépendant remontable séparément du mouvement principal</span>
-                </li>
-                <li className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                  <ChevronRight className="text-red-600 flex-shrink-0 mt-1" size={20} />
-                  <span><strong>Disque programmateur</strong> : Came rotative permettant de régler l'heure de déclenchement</span>
-                </li>
-                <li className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                  <ChevronRight className="text-red-600 flex-shrink-0 mt-1" size={20} />
-                  <span><strong>Marteau vibrant</strong> : Oscillateur rapide (≈120 coups/minute) frappant la membrane</span>
-                </li>
-                <li className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                  <ChevronRight className="text-red-600 flex-shrink-0 mt-1" size={20} />
-                  <span><strong>Membrane résonante</strong> : Disque métallique amplifiant le son ou la vibration</span>
-                </li>
-                <li className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                  <ChevronRight className="text-red-600 flex-shrink-0 mt-1" size={20} />
-                  <span><strong>Système ON/OFF</strong> : Curseur d'activation/désactivation de l'alarme</span>
-                </li>
-              </ul>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => setAlarmTriggered(false)}
+                className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                  !alarmTriggered
+                    ? 'bg-slate-900 text-white dark:bg-amber-500 dark:text-slate-950'
+                    : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                1. En Attente (Ergot sur le Plat de Came)
+              </button>
+              <button
+                onClick={triggerCricketAlarm}
+                className="px-4 py-2 rounded-xl text-xs font-mono font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-sm flex items-center gap-1.5"
+              >
+                <Play className="w-3.5 h-3.5" />
+                <span>2. Coïncidence Horaire → Chute dans l’Encoche &amp; Sonnerie</span>
+              </button>
+              <button
+                onClick={() => setLoupe10x(!loupe10x)}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-mono font-bold border transition-all ${
+                  loupe10x
+                    ? 'bg-amber-500/20 border-amber-500 text-amber-600 dark:text-amber-300'
+                    : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                <ZoomIn className="w-4 h-4" />
+                <span>{loupe10x ? 'Loupe 10x Active' : 'Loupe 10x'}</span>
+              </button>
             </div>
           </div>
-        </section>
 
-        {/* Features */}
-        <section className="mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white text-center mb-12">
-            Caractéristiques Techniques
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <div
-                  key={index}
-                  className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow-xl border border-gray-200 dark:border-slate-700 hover:shadow-2xl transition-all hover:-translate-y-1"
+          <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-8 bg-slate-950 rounded-2xl border border-slate-800 p-4 overflow-hidden">
+              <div className="overflow-hidden rounded-xl bg-[#060a12] border border-slate-800/80">
+                <svg
+                  viewBox="0 0 720 340"
+                  className="w-full h-auto transition-transform duration-300"
+                  style={{
+                    transform: loupe10x ? 'scale(1.38)' : 'scale(1)',
+                    transformOrigin: '240px 170px'
+                  }}
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="bg-gradient-to-br from-red-500 to-orange-600 p-3 rounded-xl">
-                      <Icon className="text-white" size={28} />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                        {feature.title}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-400">
-                        {feature.desc}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
+                  {/* GAUCHE : COUPE AXIALE DE LA ROUE DES HEURES ET DE LA CAME À ENCOCHE */}
+                  <g transform="translate(215, 175)">
+                    <text x="0" y="-135" fill="#fbbf24" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      1. CAME DE RÉVEIL À ENCOCHE AXIALE
+                    </text>
 
-        {/* Cricket Legend */}
-        <section className="bg-gradient-to-r from-red-900 to-orange-900 rounded-3xl p-12 text-white shadow-2xl border border-red-700 mb-16">
-          <h2 className="text-4xl font-bold mb-6 flex items-center gap-3">
-            <AlarmClock size={40} />
-            La Légende du Cricket
-          </h2>
-          <p className="text-xl leading-relaxed mb-6">
-            En 1947, <strong className="text-red-300">Vulcain</strong> révolutionne l'horlogerie avec le Cricket, premier réveil mécanique au poignet. Son nom provient de son son distinctif, rappelant le chant du grillon.
-          </p>
-          <div className="grid md:grid-cols-3 gap-6 mb-6">
-            <div className="bg-red-800/50 rounded-xl p-6 text-center">
-              <p className="text-4xl font-bold text-red-200 mb-2">1955</p>
-              <p className="text-gray-200">Offert au président Eisenhower</p>
-            </div>
-            <div className="bg-orange-800/50 rounded-xl p-6 text-center">
-              <p className="text-4xl font-bold text-orange-200 mb-2">1965</p>
-              <p className="text-gray-200">Utilisé par LBJ à la Maison Blanche</p>
-            </div>
-            <div className="bg-amber-800/50 rounded-xl p-6 text-center">
-              <p className="text-4xl font-bold text-amber-200 mb-2">2023</p>
-              <p className="text-gray-200">Rééditions modernes à succès</p>
-            </div>
-          </div>
-          <p className="text-lg text-gray-200 leading-relaxed">
-            Le Cricket devient rapidement la montre préférée des diplomates et chefs d'État, symbole de ponctualité et de sophistication mécanique.
-          </p>
-        </section>
+                    {/* Came de réveil inférieure avec encoche en V */}
+                    <path
+                      d="M -115 20 L -26 20 L 0 54 L 26 20 L 115 20 L 115 58 L -115 58 Z"
+                      fill="#0284c7"
+                      stroke="#bae6fd"
+                      strokeWidth="2"
+                    />
+                    <text x="0" y="76" fill="#38bdf8" fontSize="9.5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      Came de Réveil (Encoche réglée sur 07h00)
+                    </text>
 
-        {/* Timeline */}
-        <section className="mb-16 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm rounded-3xl p-12 shadow-xl border border-gray-200 dark:border-slate-700">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white text-center mb-12">
-            Histoire & Évolution
-          </h2>
-          <div className="space-y-6">
-            {timeline.map((item, index) => (
-              <div key={index} className="flex gap-6 group">
-                <div className="flex flex-col items-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-orange-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg group-hover:scale-110 transition-transform">
-                    {item.year.slice(2, 4)}
-                  </div>
-                  {index < timeline.length - 1 && (
-                    <div className="w-0.5 flex-1 bg-gradient-to-b from-red-400 to-orange-600 my-2"></div>
-                  )}
-                </div>
-                <div className="flex-1 pb-8">
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{item.year}</p>
-                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-1">{item.event}</p>
-                  <p className="text-sm text-red-600 dark:text-red-400 font-medium">{item.maker}</p>
-                </div>
+                    {/* Roue des heures supérieure munie de son doigt / ergot conique */}
+                    <g transform={alarmTriggered ? 'translate(0, 26)' : 'translate(-45, 0)'}>
+                      <rect x="-95" y="-32" width="190" height="24" rx="4" fill="#d97706" stroke="#fde68a" strokeWidth="2" />
+                      <polygon points="-18,-8 18,-8 0,20" fill="#fbbf24" stroke="#fef08a" strokeWidth="1.5" />
+                      <text x="0" y="-16" fill="#090d16" fontSize="9" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                        ROUE DES HEURES (ERGOT PALPEUR)
+                      </text>
+                    </g>
+
+                    <text
+                      x="0"
+                      y="118"
+                      fill={alarmTriggered ? '#34d399' : '#94a3b8'}
+                      fontSize="10"
+                      fontWeight="bold"
+                      fontFamily="monospace"
+                      textAnchor="middle"
+                    >
+                      {alarmTriggered
+                        ? 'Ergot tombé dans l’encoche → Déblocage du marteau !'
+                        : 'Ergot en appui sur le plat → Marteau verrouillé'}
+                    </text>
+                  </g>
+
+                  {/* DROITE : ÉTOILE DE SONNERIE, MARTEAU VIBRANT & MEMBRANE DOUBLE FOND */}
+                  <g transform="translate(535, 175)">
+                    <text x="0" y="-135" fill="#34d399" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      2. ROUAGE DE SONNERIE &amp; DOUBLE FOND CRICKET
+                    </text>
+
+                    {/* Roue d'échappement de réveil à dents de loup */}
+                    <circle
+                      cx="-45"
+                      cy="-10"
+                      r="46"
+                      fill="#1e293b"
+                      stroke={alarmTriggered ? '#10b981' : '#64748b'}
+                      strokeWidth="3"
+                      strokeDasharray="8 4"
+                    />
+                    <text x="-45" y="-6" fill="#e2e8f0" fontSize="8.5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      ÉTOILE
+                    </text>
+
+                    {/* Marteau oscillant à double levée */}
+                    <g transform={alarmTriggered ? 'rotate(14)' : 'rotate(0)'}>
+                      <rect x="8" y="-45" width="22" height="75" rx="5" fill="#fbbf24" stroke="#fef08a" strokeWidth="2" />
+                      <circle cx="34" cy="-25" r="10" fill="#f43f5e" stroke="#fecdd3" strokeWidth="2" />
+                    </g>
+
+                    {/* Membrane acoustique + Double fond perforé */}
+                    <line x1="62" y1="-90" x2="62" y2="80" stroke="#38bdf8" strokeWidth="4" />
+                    <line x1="82" y1="-90" x2="82" y2="80" stroke="#94a3b8" strokeWidth="4" strokeDasharray="12 8" />
+
+                    {alarmTriggered && (
+                      <g stroke="#34d399" strokeWidth="2" fill="none">
+                        <path d="M 96 -40 Q 116 0, 96 40" />
+                        <path d="M 110 -55 Q 135 0, 110 55" />
+                      </g>
+                    )}
+
+                    <text x="0" y="118" fill="#38bdf8" fontSize="9.5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      Membrane résonante + Double fond acoustique
+                    </text>
+                  </g>
+                </svg>
               </div>
-            ))}
-          </div>
-        </section>
+            </div>
 
-        {/* Manufactures */}
-        <section className="mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white text-center mb-12">
-            Manufactures de Prestige
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {brands.map((brand, index) => (
-              <div
-                key={index}
-                className="bg-gradient-to-br from-white to-gray-50 dark:from-slate-900 dark:to-slate-800 rounded-2xl p-6 shadow-xl border-2 border-transparent hover:border-red-500 transition-all hover:scale-105"
-              >
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                  {brand.name}
+            <div className="lg:col-span-4 space-y-4">
+              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+                <h3 className="font-serif text-xl font-bold text-slate-900 dark:text-white">
+                  Principe du Déclenchement Axial
                 </h3>
-                <p className="text-red-600 dark:text-red-400 font-medium mb-1">
-                  {brand.specialty}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {brand.heritage}
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  L’aiguille de réveil est solidaire d’une <strong>came munie d’une encoche en V</strong>. Tant que l’heure programmée n’est pas atteinte, le doigt de la roue des heures glisse sur la face plane de la came et repousse le ressort-levier qui bloque le marteau. À la minute exacte de coïncidence, la roue des heures s’abaisse axialement de <strong>0.25 mm</strong> dans l’encoche et libère l’ancre de sonnerie.
                 </p>
               </div>
-            ))}
+            </div>
           </div>
         </section>
 
-        {/* CTA */}
-        <div className="text-center mt-12">
-          <Link href="/theorie/complications">
-            <button className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl hover:from-blue-700 hover:to-indigo-800 transition-all shadow-xl hover:shadow-2xl">
-              <ArrowLeft size={24} />
-              Retour aux complications
-            </button>
-          </Link>
-        </div>
+        {/* LES 2 ARCHITECTURES HISTORIQUES */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {ALARM_CALIBRES.map((cal) => (
+            <div
+              key={cal.name}
+              className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3"
+            >
+              <h3 className="font-serif text-xl font-bold text-slate-900 dark:text-white">{cal.name}</h3>
+              <div className="text-xs font-mono text-amber-600 dark:text-amber-400">{cal.powerSource}</div>
+              <div className="text-xs font-mono text-emerald-600 dark:text-emerald-400">{cal.acousticSystem}</div>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{cal.desc}</p>
+            </div>
+          ))}
+        </section>
       </main>
-
-      {/* Footer */}
-      <footer className="py-8 border-t border-gray-200 dark:border-slate-800 text-center text-gray-600 dark:text-gray-400">
-        <p className="text-sm">© 2025 Réveil Mécanique – Référence mondiale en complications sonores utilitaires</p>
-      </footer>
     </div>
   );
-};
-
-export default ReveilMecaniquePage;
+}

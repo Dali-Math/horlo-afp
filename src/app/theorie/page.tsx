@@ -632,6 +632,90 @@ export default function TheoriePage() {
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
             </Link>
+
+            <Link
+              href="/theorie/restauration"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 mb-2">
+                  Bouchonnage, Jacot &amp; 295°C
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Laboratoire de Restauration &amp; Bleuissage
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Bouchonnage d&apos;un palier ovalisé, roulage au tour Jacot et bleuissage thermique.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/theorie/restauration)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
+
+            <Link
+              href="/theorie/technologies/mouvements-quartz"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 mb-2">
+                  Diapason 32&apos;768 Hz (2¹⁵)
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Simulateur Quartz &amp; Moteur Pas-à-Pas Lavet
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Diviseur CMOS 15 étages et saut de 180° du rotor aimanté dans le stator asymétrique.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/technologies/mouvements-quartz)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
+
+            <Link
+              href="/theorie/complications/gmt-heure-multiple"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/15 text-sky-600 dark:text-sky-400 mb-2">
+                  Étoile 12 Dents &amp; Roue 24h
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Simulateur « True GMT » 3 Fuseaux Horaires
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Saut indépendant de l&apos;aiguille locale par pas de 30° et lunette bicolore 24h.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/complications/gmt-heure-multiple)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
+
+            <Link
+              href="/theorie/complications/reveil-mecanique"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400 mb-2">
+                  Came à Encoche &amp; Cricket
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Simulateur Réveil Mécanique &amp; Double Fond
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Chute axiale dans l&apos;encoche de came et percussion acoustique du marteau.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/complications/reveil-mecanique)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
           </div>
         </section>
 
