@@ -1,66 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-  
-  <!-- Homepage -->
-  <url>
-    <loc>https://www.horlolearn.ch/</loc>
-    <lastmod>2025-10-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  
-  <!-- Main sections -->
-  <url>
-    <loc>https://www.horlolearn.ch/theorie</loc>
-    <lastmod>2025-10-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.horlolearn.ch/pratique</loc>
-    <lastmod>2025-10-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.horlolearn.ch/quiz</loc>
-    <lastmod>2025-10-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.horlolearn.ch/outils</loc>
-    <lastmod>2025-10-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.horlolearn.ch/ressources</loc>
-    <lastmod>2025-10-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.horlolearn.ch/podcasts</loc>
-    <lastmod>2025-10-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.horlolearn.ch/culture</loc>
-    <lastmod>2025-10-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.horlolearn.ch/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.horlolearn.ch/outils</loc><changefreq>weekly</changefreq><priority>0.95</priority></url>
+  <url><loc>https://www.horlolearn.ch/pratique</loc><changefreq>weekly</changefreq><priority>0.95</priority></url>
+  <url><loc>https://www.horlolearn.ch/theorie</loc><changefreq>weekly</changefreq><priority>0.95</priority></url>
+  <url><loc>https://www.horlolearn.ch/ressources</loc><changefreq>weekly</changefreq><priority>0.90</priority></url>
+  <url><loc>https://www.horlolearn.ch/actualites</loc><changefreq>daily</changefreq><priority>0.90</priority></url>
+  <url><loc>https://www.horlolearn.ch/quiz</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/faq</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/pratique/micromecanique</loc><changefreq>monthly</changefreq><priority>0.90</priority></url>
+  <url><loc>https://www.horlolearn.ch/pratique/echappement</loc><changefreq>monthly</changefreq><priority>0.90</priority></url>
+  <url><loc>https://www.horlolearn.ch/pratique/emboitage</loc><changefreq>monthly</changefreq><priority>0.90</priority></url>
+  <url><loc>https://www.horlolearn.ch/pratique/rhabillage</loc><changefreq>monthly</changefreq><priority>0.90</priority></url>
+  <url><loc>https://www.horlolearn.ch/pratique/huilage</loc><changefreq>monthly</changefreq><priority>0.88</priority></url>
+  <url><loc>https://www.horlolearn.ch/pratique/demontage</loc><changefreq>monthly</changefreq><priority>0.88</priority></url>
+  <url><loc>https://www.horlolearn.ch/pratique/remontage</loc><changefreq>monthly</changefreq><priority>0.88</priority></url>
+  <url><loc>https://www.horlolearn.ch/pratique/reglage</loc><changefreq>monthly</changefreq><priority>0.88</priority></url>
+  <url><loc>https://www.horlolearn.ch/pratique/fiches</loc><changefreq>monthly</changefreq><priority>0.90</priority></url>
+  <url><loc>https://www.horlolearn.ch/pratique/fiches/eta6497</loc><changefreq>monthly</changefreq><priority>0.90</priority></url>
+  <url><loc>https://www.horlolearn.ch/pratique/fiches/eta2824</loc><changefreq>monthly</changefreq><priority>0.90</priority></url>
+  <url><loc>https://www.horlolearn.ch/pratique/fiches/valjoux7750</loc><changefreq>monthly</changefreq><priority>0.90</priority></url>
+  <url><loc>https://www.horlolearn.ch/pratique/fiches/eta2892</loc><changefreq>monthly</changefreq><priority>0.90</priority></url>
+  <url><loc>https://www.horlolearn.ch/ressources/termes-techniques</loc><changefreq>monthly</changefreq><priority>0.90</priority></url>
+  <url><loc>https://www.horlolearn.ch/ressources/chronographe</loc><changefreq>monthly</changefreq><priority>0.90</priority></url>
+  <url><loc>https://www.horlolearn.ch/ressources/reglage</loc><changefreq>monthly</changefreq><priority>0.90</priority></url>
+  <url><loc>https://www.horlolearn.ch/ressources/gestes</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/outils/chronocomparateur</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/outils/ebats-ajustements</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/outils/simulateur-resonance</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/outils/chronographe-banc-pro</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/theorie/introduction-montre-mecanique</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/theorie/barillet-ressort-moteur</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/theorie/rouage</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/theorie/echappement-ancre</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/theorie/balancier-spiral</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/theorie/remontage</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/theorie/lecture-de-plan</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/theorie/lecture-de-plan/cartouche-horloger</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/theorie/lecture-de-plan/cotes-tolerances</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/theorie/complications</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/theorie/manufactures</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/theorie/histoire-horlogerie-suisse</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.horlolearn.ch/materiaux</loc><changefreq>monthly</changefreq><priority>0.80</priority></url>
+  <url><loc>https://www.horlolearn.ch/suisse</loc><changefreq>monthly</changefreq><priority>0.80</priority></url>
+  <url><loc>https://www.horlolearn.ch/culture</loc><changefreq>monthly</changefreq><priority>0.80</priority></url>
+  <url><loc>https://www.horlolearn.ch/podcasts</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://www.horlolearn.ch/fuseaux-horaires</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
 </urlset>
