@@ -602,32 +602,238 @@ export default function LuxuryHeroClock() {
               <span>29.53 JOURS</span>
             </div>
 
-            {/* Disque Lunaire en Aventurine avec Lune Or Réaliste */}
-            <div className="relative w-full h-28 rounded-xl bg-gradient-to-b from-[#060A17] to-[#0D152A] border border-amber-500/25 flex items-center justify-center overflow-hidden">
-              {/* Ciel étoilé aventurine */}
-              <div className="absolute inset-0 opacity-80 pointer-events-none">
-                {[
-                  [20, 25], [45, 65], [75, 18], [115, 55], [155, 20], [185, 70], [215, 35], [240, 60]
-                ].map(([x, y], idx) => (
-                  <span
-                    key={idx}
-                    className="absolute w-1 h-1 rounded-full bg-white opacity-70 animate-pulse"
-                    style={{ left: `${x}px`, top: `${y}px`, animationDelay: `${idx * 0.3}s` }}
-                  />
-                ))}
-              </div>
-
-              {/* Lune Dorée avec Reliefs et Cratères d'orfèvrerie */}
-              <motion.div
-                animate={{ scale: [1, 1.03, 1] }}
-                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-                className="relative w-16 h-16 rounded-full bg-gradient-to-tr from-[#8C6D1F] via-[#E6C068] to-[#FFF3D6] shadow-[0_0_25px_rgba(245,215,142,0.45)] border border-amber-300/40"
+            {/* Disque Lunaire en Aventurine avec Sphère Sélénographique 3D en Rotation */}
+            <div
+              className="relative w-full h-32 rounded-xl border border-amber-500/35 flex items-center justify-center overflow-hidden shadow-inner"
+              style={{ background: "radial-gradient(circle at 50% 50%, #0F1C3F 0%, #070D21 62%, #030611 100%)" }}
+            >
+              <svg
+                viewBox="0 0 260 120"
+                className="w-full h-full block select-none"
+                aria-label="Complication Phase de Lune 3D en rotation"
               >
-                <span className="absolute w-3.5 h-3.5 rounded-full bg-[#8C6D1F]/40 top-3 left-4" />
-                <span className="absolute w-2.5 h-2.5 rounded-full bg-[#8C6D1F]/40 top-8 left-8" />
-                <span className="absolute w-2 h-2 rounded-full bg-[#8C6D1F]/40 top-5 left-10" />
-                <span className="absolute w-1.5 h-1.5 rounded-full bg-[#8C6D1F]/30 top-10 left-3" />
-              </motion.div>
+                <defs>
+                  {/* Fond Verre Aventurine Bleu Nuit */}
+                  <radialGradient id="mpAventurineSky" cx="50%" cy="50%" r="65%">
+                    <stop offset="0%" stopColor="#132347" />
+                    <stop offset="55%" stopColor="#081026" />
+                    <stop offset="100%" stopColor="#040712" />
+                  </radialGradient>
+
+                  {/* Halo / Couronne Lunaire */}
+                  <radialGradient id="mpLunarCorona" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#FDE68A" stopOpacity="0.42" />
+                    <stop offset="45%" stopColor="#D4AF37" stopOpacity="0.18" />
+                    <stop offset="75%" stopColor="#9A7B2C" stopOpacity="0.05" />
+                    <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+                  </radialGradient>
+
+                  {/* Base Or Sélénographique de la Lune */}
+                  <radialGradient id="mpMoonBase" cx="38%" cy="34%" r="68%">
+                    <stop offset="0%" stopColor="#FFFDF7" />
+                    <stop offset="22%" stopColor="#FBF0C9" />
+                    <stop offset="52%" stopColor="#E5C578" />
+                    <stop offset="80%" stopColor="#B88E3E" />
+                    <stop offset="100%" stopColor="#6E4E1A" />
+                  </radialGradient>
+
+                  {/* Ombrage Sphérique 3D (Limb Darkening + Volume) */}
+                  <radialGradient id="mpSphere3DShade" cx="34%" cy="30%" r="70%">
+                    <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.32" />
+                    <stop offset="35%" stopColor="#FFF3C4" stopOpacity="0.06" />
+                    <stop offset="72%" stopColor="#2A1B08" stopOpacity="0.28" />
+                    <stop offset="90%" stopColor="#0E0903" stopOpacity="0.62" />
+                    <stop offset="100%" stopColor="#04060E" stopOpacity="0.88" />
+                  </radialGradient>
+
+                  {/* Ombre du Terminateur Lunaire (Lumière Cendrée réaliste) */}
+                  <linearGradient id="mpTerminatorShadow" x1="0%" y1="0%" x2="100%" y2="15%">
+                    <stop offset="0%" stopColor="#050814" stopOpacity="0.86" />
+                    <stop offset="28%" stopColor="#080D1E" stopOpacity="0.72" />
+                    <stop offset="44%" stopColor="#1A160D" stopOpacity="0.28" />
+                    <stop offset="56%" stopColor="#000000" stopOpacity="0" />
+                    <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+                  </linearGradient>
+
+                  {/* Texture des Mers Lunaires (Maria) */}
+                  <radialGradient id="mpMareShade" cx="50%" cy="50%" r="55%">
+                    <stop offset="0%" stopColor="#5C4018" stopOpacity="0.58" />
+                    <stop offset="65%" stopColor="#785622" stopOpacity="0.36" />
+                    <stop offset="100%" stopColor="#9A7234" stopOpacity="0" />
+                  </radialGradient>
+
+                  {/* Découpe Sphérique Stricte de la Lune (r = 35) */}
+                  <clipPath id="mpGlobeClip">
+                    <circle cx="130" cy="60" r="35" />
+                  </clipPath>
+
+                  {/* Motif Sélénographique Répétable (Largeur = 140px pour rotation 3D continue) */}
+                  <g id="mpLunarSurfaceTile">
+                    {/* Mers Lunaires (Maria) — Formes organiques réalistes */}
+                    {/* Mare Imbrium & Oceanus Procellarum */}
+                    <path
+                      d="M 12,34 C 22,26 38,28 44,37 C 50,46 46,62 34,68 C 21,74 9,65 7,52 C 5,42 7,38 12,34 Z"
+                      fill="url(#mpMareShade)"
+                    />
+                    <path
+                      d="M 24,52 C 34,48 48,54 52,66 C 55,76 44,86 31,84 C 19,82 15,68 18,58 Z"
+                      fill="url(#mpMareShade)"
+                    />
+                    {/* Mare Serenitatis & Mare Tranquillitatis */}
+                    <path
+                      d="M 54,36 C 65,31 77,36 80,46 C 83,56 75,66 64,65 C 53,64 47,54 50,43 Z"
+                      fill="url(#mpMareShade)"
+                    />
+                    <path
+                      d="M 72,54 C 84,50 96,57 98,68 C 99,78 88,85 77,81 C 67,77 64,62 72,54 Z"
+                      fill="url(#mpMareShade)"
+                    />
+                    {/* Mare Crisium & Mare Fecunditatis */}
+                    <ellipse cx="112" cy="46" rx="10" ry="13" transform="rotate(-14 112 46)" fill="url(#mpMareShade)" />
+                    <ellipse cx="105" cy="70" rx="12" ry="9" transform="rotate(18 105 70)" fill="url(#mpMareShade)" />
+                    <ellipse cx="128" cy="58" rx="9" ry="11" fill="url(#mpMareShade)" />
+
+                    {/* Hautes Terres & Rayons d'éjectas (Tycho / Copernicus) */}
+                    <g opacity="0.32" stroke="#FFFBEB" strokeWidth="0.45" fill="none">
+                      <line x1="62" y1="80" x2="38" y2="62" />
+                      <line x1="62" y1="80" x2="88" y2="64" />
+                      <line x1="62" y1="80" x2="52" y2="45" />
+                      <line x1="62" y1="80" x2="78" y2="92" />
+                      <line x1="38" y1="48" x2="20" y2="35" />
+                      <line x1="38" y1="48" x2="55" y2="34" />
+                    </g>
+
+                    {/* Cratères d'impact avec rebord éclairé et ombre interne 3D */}
+                    {/* Cratère Copernicus */}
+                    <circle cx="38" cy="48" r="5.2" fill="#7C5A24" fillOpacity="0.45" stroke="#FFF6D6" strokeOpacity="0.65" strokeWidth="0.7" />
+                    <circle cx="36.8" cy="47.2" r="3.8" fill="#4E3612" fillOpacity="0.45" />
+                    <circle cx="38" cy="48" r="1.1" fill="#FDE68A" fillOpacity="0.8" />
+
+                    {/* Cratère Tycho */}
+                    <circle cx="62" cy="80" r="4.5" fill="#70501E" fillOpacity="0.5" stroke="#FFFBEB" strokeOpacity="0.75" strokeWidth="0.75" />
+                    <circle cx="61.2" cy="79.3" r="3.1" fill="#432D0E" fillOpacity="0.5" />
+                    <circle cx="62" cy="80" r="0.9" fill="#FFFBEB" fillOpacity="0.9" />
+
+                    {/* Cratère Plato */}
+                    <ellipse cx="48" cy="27" rx="4.2" ry="2.8" fill="#4A3310" fillOpacity="0.55" stroke="#FDE68A" strokeOpacity="0.55" strokeWidth="0.6" />
+
+                    {/* Cratère Kepler & Aristarchus */}
+                    <circle cx="20" cy="54" r="3.2" fill="#6E4E1A" fillOpacity="0.45" stroke="#FEF3C7" strokeOpacity="0.6" strokeWidth="0.55" />
+                    <circle cx="15" cy="41" r="2.4" fill="#FFFBEB" fillOpacity="0.65" stroke="#D97706" strokeOpacity="0.4" strokeWidth="0.5" />
+
+                    {/* Cratères secondaires de la face visible / cachée */}
+                    <circle cx="86" cy="40" r="3.6" fill="#6E4E1A" fillOpacity="0.4" stroke="#FDE68A" strokeOpacity="0.5" strokeWidth="0.55" />
+                    <circle cx="94" cy="68" r="4.1" fill="#5C4018" fillOpacity="0.45" stroke="#FEF3C7" strokeOpacity="0.55" strokeWidth="0.6" />
+                    <circle cx="118" cy="36" r="3.0" fill="#6E4E1A" fillOpacity="0.42" stroke="#FDE68A" strokeOpacity="0.5" strokeWidth="0.5" />
+                    <circle cx="122" cy="76" r="3.8" fill="#5C4018" fillOpacity="0.45" stroke="#FEF3C7" strokeOpacity="0.5" strokeWidth="0.6" />
+                    <circle cx="75" cy="58" r="2.2" fill="#5C4018" fillOpacity="0.4" stroke="#FDE68A" strokeOpacity="0.45" strokeWidth="0.45" />
+                    <circle cx="104" cy="54" r="2.5" fill="#5C4018" fillOpacity="0.4" stroke="#FDE68A" strokeOpacity="0.45" strokeWidth="0.45" />
+
+                    {/* Micro-cratères et granulations d'établi */}
+                    <circle cx="29" cy="66" r="1.4" fill="#5C4018" fillOpacity="0.45" />
+                    <circle cx="55" cy="62" r="1.6" fill="#5C4018" fillOpacity="0.42" />
+                    <circle cx="69" cy="34" r="1.5" fill="#5C4018" fillOpacity="0.4" />
+                    <circle cx="82" cy="84" r="1.8" fill="#5C4018" fillOpacity="0.45" />
+                    <circle cx="110" cy="84" r="1.4" fill="#5C4018" fillOpacity="0.4" />
+                    <circle cx="132" cy="44" r="1.6" fill="#5C4018" fillOpacity="0.42" />
+                  </g>
+                </defs>
+
+                {/* 1. Ciel Aventurine & Constellations Horlogères */}
+                <rect x="0" y="0" width="260" height="120" fill="url(#mpAventurineSky)" />
+
+                {/* Lignes de constellations subtiles */}
+                <g stroke="#D4AF37" strokeOpacity="0.18" strokeWidth="0.5" fill="none">
+                  <polyline points="18,28 36,22 52,32 68,26 80,40" />
+                  <polyline points="182,30 198,20 214,28 232,18 244,34" />
+                  <polyline points="24,86 44,94 64,84" />
+                  <polyline points="192,88 212,96 234,82" />
+                </g>
+
+                {/* Étoiles & Paillettes d'Aventurine */}
+                {[
+                  [18, 28, 1.3, "0s"], [36, 22, 1.0, "0.6s"], [52, 32, 1.2, "1.3s"], [68, 26, 0.9, "0.4s"], [80, 40, 1.1, "1.8s"],
+                  [182, 30, 1.2, "0.2s"], [198, 20, 1.4, "1.1s"], [214, 28, 1.0, "0.8s"], [232, 18, 1.3, "1.5s"], [244, 34, 0.9, "0.3s"],
+                  [24, 86, 1.1, "0.9s"], [44, 94, 1.3, "1.6s"], [64, 84, 0.9, "0.5s"], [15, 60, 0.8, "1.2s"], [85, 92, 0.8, "0.7s"],
+                  [192, 88, 1.2, "1.4s"], [212, 96, 1.0, "0.1s"], [234, 82, 1.4, "1.0s"], [246, 62, 0.9, "1.7s"], [174, 72, 0.8, "0.4s"]
+                ].map(([cx, cy, r, delay], i) => (
+                  <circle key={i} cx={cx} cy={cy} r={r} fill="#FFFBEB" opacity="0.85">
+                    <animate attributeName="opacity" values="0.35;0.95;0.35" dur="3.6s" begin={String(delay)} repeatCount="indefinite" />
+                  </circle>
+                ))}
+
+                {/* 2. Anneau Astrolabe Synodique en Or 18ct (Rotation lente continue) */}
+                <g opacity="0.55">
+                  <circle cx="130" cy="60" r="46" fill="none" stroke="#D4AF37" strokeWidth="0.6" strokeDasharray="2 3" />
+                  <circle cx="130" cy="60" r="42" fill="none" stroke="#D4AF37" strokeWidth="0.4" strokeOpacity="0.6" />
+                  <g>
+                    <animateTransform
+                      attributeName="transform"
+                      type="rotate"
+                      from="0 130 60"
+                      to="360 130 60"
+                      dur="60s"
+                      repeatCount="indefinite"
+                    />
+                    {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => (
+                      <line
+                        key={deg}
+                        x1="130"
+                        y1="12"
+                        x2="130"
+                        y2={deg % 90 === 0 ? "16.5" : "14.5"}
+                        stroke="#FDE68A"
+                        strokeWidth={deg % 90 === 0 ? "1.1" : "0.6"}
+                        transform={`rotate(${deg} 130 60)`}
+                      />
+                    ))}
+                  </g>
+                </g>
+
+                {/* 3. Couronne Lumineuse Atmosphérique */}
+                <circle cx="130" cy="60" r="52" fill="url(#mpLunarCorona)" />
+
+                {/* 4. Sphère Lunaire 3D avec Rotation Sélénographique Continue */}
+                <g clipPath="url(#mpGlobeClip)">
+                  {/* Disque d'or massif poli */}
+                  <circle cx="130" cy="60" r="35" fill="url(#mpMoonBase)" />
+
+                  {/* Surface Sélénographique Défilante (Simulation 3D de la rotation axiale) */}
+                  <g>
+                    <animateTransform
+                      attributeName="transform"
+                      type="translate"
+                      from="0 0"
+                      to="-140 0"
+                      dur="22s"
+                      repeatCount="indefinite"
+                    />
+                    <use href="#mpLunarSurfaceTile" x="95" y="0" />
+                    <use href="#mpLunarSurfaceTile" x="235" y="0" />
+                  </g>
+
+                  {/* Grille de Méridiens Sélénographiques Subtils */}
+                  <ellipse cx="130" cy="60" rx="18" ry="35" fill="none" stroke="#FFFBEB" strokeOpacity="0.12" strokeWidth="0.45" />
+                  <ellipse cx="130" cy="60" rx="35" ry="14" fill="none" stroke="#FFFBEB" strokeOpacity="0.12" strokeWidth="0.45" />
+
+                  {/* Ombrage Sphérique 3D Fixe (Donne le galbe bombé d'une vraie sphère) */}
+                  <circle cx="130" cy="60" r="35" fill="url(#mpSphere3DShade)" />
+
+                  {/* Ombre Dynamique de Phase (Terminateur progressif + Lumière Cendrée) */}
+                  <rect x="95" y="25" width="70" height="70" fill="url(#mpTerminatorShadow)" />
+                </g>
+
+                {/* 5. Anneau de sertissage Or 18ct autour de la Lune + Reflet Saphir */}
+                <circle cx="130" cy="60" r="35" fill="none" stroke="#FDE68A" strokeOpacity="0.55" strokeWidth="0.9" />
+                <path
+                  d="M 103,42 A 33,33 0 0,1 154,39"
+                  fill="none"
+                  stroke="#FFFFFF"
+                  strokeOpacity="0.35"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                />
+              </svg>
             </div>
 
             <div className="mt-3 flex items-center justify-between text-xs">
