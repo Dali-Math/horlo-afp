@@ -1,56 +1,47 @@
 /* Corrections finales ciblées pour /materiaux/guide-complet uniquement. */
 
 /*
- * Sommaire : réellement fixe sous la navbar HorloLearn.
- * Pas de scroll interne : tout le menu tient dans la hauteur disponible.
+ * Le sommaire conserve son style d'origine.
+ * Seule sa position verticale est synchronisée avec la vraie navbar via
+ * --guide-toc-top, renseignée par GuideCompletRuntimeFixes.
  */
 @media (min-width: 1025px) {
   .hl-site-content:has(.toc-fixed) .toc-fixed {
     position: fixed !important;
-    top: 64px !important;
-    bottom: 0 !important;
+    top: var(--guide-toc-top, 86px) !important;
     left: 0 !important;
-    height: calc(100dvh - 64px) !important;
-    max-height: calc(100dvh - 64px) !important;
+    width: 280px !important;
+    height: calc(100vh - var(--guide-toc-top, 86px)) !important;
+    max-height: calc(100vh - var(--guide-toc-top, 86px)) !important;
     transform: none !important;
-    overflow: hidden !important;
-    overscroll-behavior: none !important;
-    padding: .9rem 1.25rem .75rem !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    padding: 2rem 1.5rem !important;
     z-index: 20 !important;
   }
 
   .hl-site-content:has(.toc-fixed) .toc-fixed h3 {
     margin-top: 0 !important;
-    margin-bottom: .7rem !important;
-    padding-bottom: .65rem !important;
-    font-size: 1.05rem !important;
-    line-height: 1.2 !important;
   }
 
-  .hl-site-content:has(.toc-fixed) .toc-fixed nav,
-  .hl-site-content:has(.toc-fixed) .toc-fixed > div {
-    max-height: none !important;
-    overflow: visible !important;
-  }
-
+  /* Retour au rythme visuel d'origine du menu. */
   .hl-site-content:has(.toc-fixed) .toc-fixed .toc-link {
-    padding: .44rem .75rem !important;
+    display: block !important;
+    padding: .75rem 1rem !important;
     margin: 0 !important;
-    font-size: .86rem !important;
-    line-height: 1.2 !important;
-    border-radius: .35rem !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    border-radius: .5rem !important;
   }
 
-  /* Sous-rubriques légèrement plus compactes, sans les supprimer. */
   .hl-site-content:has(.toc-fixed) .toc-fixed .toc-link.ml-4,
   .hl-site-content:has(.toc-fixed) .toc-fixed a[class*="ml-4"] {
-    margin-left: .7rem !important;
-    padding-top: .35rem !important;
-    padding-bottom: .35rem !important;
-    font-size: .8rem !important;
+    margin-left: 1rem !important;
+    padding-top: .75rem !important;
+    padding-bottom: .75rem !important;
+    font-size: inherit !important;
   }
 
-  /* Le contenu principal commence sous la navbar, pas sous le sommaire. */
   .hl-site-content:has(.toc-fixed) .main-content {
     padding-top: 0 !important;
   }
