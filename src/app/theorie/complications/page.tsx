@@ -753,6 +753,47 @@ export default function ComplicationsPage() {
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 Trois râteaux dentés tombent sur trois cames en colimaçon (12 pas pour les heures, 4 pas pour les quarts, 14 pas pour les minutes) pendant que le volant inertiel régule silencieusement la cadence des marteaux.
               </p>
+
+              <div className="rounded-2xl bg-[#060a12] border border-slate-800 p-3 overflow-hidden">
+                <svg viewBox="0 0 380 210" className="w-full h-auto">
+                  <g transform="translate(95, 105)">
+                    <circle cx="0" cy="0" r="56" fill="#0f172a" stroke="#f59e0b" strokeWidth="2" />
+                    <path
+                      d="M 0 -46 C 30 -44, 42 -20, 38 10 C 34 32, 12 38, -10 32 C -26 26, -32 6, -24 -14 Z"
+                      fill="#b45309"
+                      stroke="#fde68a"
+                      strokeWidth="1.5"
+                      transform={`rotate(${selectedHour * 30})`}
+                    />
+                    <circle cx="0" cy="0" r="9" fill="#090d16" stroke="#fbbf24" strokeWidth="1.5" />
+                    <text x="0" y="74" fill="#fbbf24" fontSize="9.5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      Limaçon Heures (12 pas)
+                    </text>
+                  </g>
+                  <g transform="translate(265, 105)">
+                    <circle cx="0" cy="0" r="56" fill="#0f172a" stroke="#38bdf8" strokeWidth="2" />
+                    <path
+                      d="M 0 -48 L 12 -28 L 48 0 L 28 12 L 0 48 L -12 28 L -48 0 L -28 -12 Z"
+                      fill="#0284c7"
+                      stroke="#bae6fd"
+                      strokeWidth="1.5"
+                      transform={`rotate(${selectedMinute * 6})`}
+                    />
+                    <circle cx="0" cy="0" r="22" fill="#059669" stroke="#a7f3d0" strokeWidth="1.5" />
+                    <text x="0" y="74" fill="#38bdf8" fontSize="9.5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      Quarts (4) &amp; Minutes (14)
+                    </text>
+                  </g>
+                </svg>
+              </div>
+
+              <Link
+                href="/theorie/complications/sonnerie"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline"
+              >
+                <span>Ouvrir le Simulateur Complet des 3 Limaçons &amp; Timbres</span>
+                <ChevronRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
         )}

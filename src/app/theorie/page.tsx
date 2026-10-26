@@ -548,6 +548,90 @@ export default function TheoriePage() {
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
             </Link>
+
+            <Link
+              href="/theorie/complications/sonnerie"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/15 text-sky-600 dark:text-sky-400 mb-2">
+                  Acoustique Web Audio
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Simulateur Répétition Minutes &amp; 3 Limaçons
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Limaçons des heures (12), quarts (4), minutes (14), râteaux et timbres 440/660 Hz.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/complications/sonnerie)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
+
+            <Link
+              href="/theorie/complications/fusee-chainette"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 mb-2">
+                  Couple Constant M = F × R
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Simulateur Fusée-Chaînette (0h → 48h)
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Déroulement de la chaînette Galle sur le cône rainuré et courbe de couple constant.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/complications/fusee-chainette)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
+
+            <Link
+              href="/theorie/lecture-de-plan/cotes-tolerances"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 mb-2">
+                  Norme ISO 286 &amp; NIHS
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Comparateur des Ajustements (H7/g6 • k6 • p6)
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Jeu libre pivot/rubis Moebius 9010, centrage pied de pont et chassage Seitz.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/cotes-tolerances)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
+
+            <Link
+              href="/theorie/echappement-ancre"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-purple-500/15 text-purple-600 dark:text-purple-400 mb-2">
+                  Impulsion &amp; Tirage 12°
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Laboratoire de l&apos;Échappement à Ancre Suisse
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Cycle cinématique, chemin perdu, lubrification Moebius 9415 des palettes rubis.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/echappement-ancre)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
           </div>
         </section>
 

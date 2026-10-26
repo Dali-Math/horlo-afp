@@ -1,343 +1,788 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from 'react';
-import Link from "next/link";
-import { Music, ChevronRight, ArrowLeft, Bell, Volume2, Waves, Zap } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import Link from 'next/link';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Volume2,
+  Play,
+  RotateCcw,
+  ZoomIn,
+  Sparkles,
+  CheckCircle2,
+  AlertTriangle,
+  HelpCircle,
+  Music,
+  ShieldCheck
+} from 'lucide-react';
 
-const SonneriePage = () => {
-  const [scrollY, setScrollY] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+interface StrikingType {
+  name: string;
+  trigger: string;
+  sequence: string;
+  complexity: string;
+  description: string;
+}
 
-  useEffect(() => {
-    setIsVisible(true);
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+const STRIKING_TYPES: StrikingType[] = [
+  {
+    name: 'Répétition Minutes (Sur Demande)',
+    trigger: 'Armage manuel du verrou latéral à 9h (Course ~8 mm)',
+    sequence: 'Heures (Grave) → Quarts (Double coup Aigu-Grave) → Minutes (Aigu)',
+    complexity: '300 à 400 composants dédiés',
+    description:
+      'Sonne l’heure exacte à la minute près uniquement lorsque le porteur arme le verrou latéral, qui tend le ressort du petit barillet de sonnerie.'
+  },
+  {
+    name: 'Grande Sonnerie (Automatique au Passage)',
+    trigger: 'Déclenchement automatique à chaque heure et chaque quart d’heure',
+    sequence: 'À chaque quart : sonne l’heure complète + les quarts écoulés (96 séquences / 24h)',
+    complexity: 'Barillet de sonnerie autonome indispensable',
+    description:
+      'Véritable horloge de cathédrale au poignet : elle sonne d’elle-même les heures et les quarts au passage sans intervention, tout en intégrant un bouton de répétition à la demande.'
+  },
+  {
+    name: 'Petite Sonnerie (Automatique Économe)',
+    trigger: 'Sélecteur Grande / Petite / Silence',
+    sequence: 'Heures pleines aux heures ; uniquement les quarts aux quarts (sans répéter l’heure)',
+    complexity: 'Économise ~40% de réserve de marche acoustique',
+    description:
+      'Évite de re-sonner les coups des heures lors des premier, deuxième et troisième quarts afin de préserver le barillet de sonnerie pendant la nuit.'
+  },
+  {
+    name: 'Carillon Westminster (4 Timbres & 4 Marteaux)',
+    trigger: '4 marteaux accordés sur 4 notes (Mi, Ré, Do, Sol)',
+    sequence: 'Mélodie complète de Big Ben aux quarts d’heure',
+    complexity: 'Sommet absolu de l’acoustique horlogère',
+    description:
+      'Remplace le double coup « Ding-Dong » des quarts par quatre notes mélodiques distinctes frappées sur quatre timbres cathédrale.'
+  }
+];
 
-  const features = [
-    {
-      title: 'Sonnerie des heures',
-      desc: 'Marteau frappant le timbre basse pour chaque heure écoulée avec son grave et profond',
-      icon: Bell
-    },
-    {
-      title: 'Sonnerie des quarts',
-      desc: 'Double frappe (ding-dong) sur deux timbres pour chaque quart d\'heure',
-      icon: Music
-    },
-    {
-      title: 'Sonnerie des minutes',
-      desc: 'Frappe sur timbre aigu pour chaque minute après le dernier quart',
-      icon: Volume2
-    },
-    {
-      title: 'Régulateur centrifuge',
-      desc: 'Contrôle la vitesse de frappe pour une cadence musicale régulière et harmonieuse',
-      icon: Zap
-    },
-    {
-      title: 'Accord des timbres',
-      desc: 'Ajustement manuel de chaque timbre pour obtenir la pureté sonore parfaite',
-      icon: Waves
+const CASE_MATERIALS = [
+  {
+    material: 'Or Rose 18k (5N) / Or Gris Non Rhodié',
+    speedOfSound: '3 240 m/s',
+    density: '15.2 g/cm³',
+    timbre: 'Chaleureux, riche en harmoniques paires, rondeur exceptionnelle',
+    verdict: 'Référence historique privilégiée par les maîtres sonneurs genevois et vallonniers.'
+  },
+  {
+    material: 'Titane Grade 5 (Ti-6Al-4V)',
+    speedOfSound: '6 070 m/s',
+    density: '4.43 g/cm³',
+    timbre: 'Puissance acoustique maximale (+4 à +6 dB), projection cristalline',
+    verdict: 'Faible densité et élasticité élevée : la boîte vibre comme une table d’harmonie d’épicéa.'
+  },
+  {
+    material: 'Platine 950 (Pt 950)',
+    speedOfSound: '2 680 m/s',
+    density: '21.45 g/cm³',
+    timbre: 'Feutré, grave, amortissement rapide des hautes fréquences',
+    verdict: 'Le plus grand défi acoustique : la masse très élevée du platine étouffe naturellement l’onde sonore.'
+  }
+];
+
+const QUIZ_ITEMS = [
+  {
+    q: 'À 12h59, combien de coups au total une répétition minutes traditionnelle frappe-t-elle ?',
+    options: [
+      '24 coups',
+      '32 coups (12 heures + 3×2 coups de quarts + 14 minutes)',
+      '18 coups',
+      '60 coups'
+    ],
+    answer: 1,
+    explanation:
+      'À 12h59, la montre frappe 12 coups graves (heures), puis 3 doubles coups aigu-grave (6 coups pour les 3 quarts = 45 min), puis 14 coups aigus (minutes 46 à 59), soit 12 + 6 + 14 = 32 coups.'
+  },
+  {
+    q: 'Quel est le rôle de la « Surprise » fixée sous le limaçon des minutes ?',
+    options: [
+      'Amplifier le volume sonore des timbres',
+      'Avancer brusquement d’un pas à la 60e minute pour empêcher le râteau de retomber sur le 14e pas au moment précis du changement d’heure',
+      'Remonter automatiquement le barillet principal',
+      'Bloquer le balancier pendant la sonnerie'
+    ],
+    answer: 1,
+    explanation:
+      'La surprise est une pièce libre qui saute instantanément à l’heure pile pour présenter un palier zéro au râteau des minutes et éviter qu’une répétition déclenchée à 01h59m59s ne sonne 1 heure et 59 minutes alors que l’heure passe à 2h00.'
+  },
+  {
+    q: 'Pourquoi utilise-t-on un volant régulateur inertiel centrifuge plutôt qu’un échappement à ancre de sonnerie ?',
+    options: [
+      'Parce qu’il est moins coûteux à usiner',
+      'Pour réguler la cadence des marteaux en silence absolu, sans le bourdonnement parasite d’un échappement à recul',
+      'Pour augmenter la fréquence du balancier à 36 000 A/h',
+      'Pour éviter de lubrifier les pivots'
+    ],
+    answer: 1,
+    explanation:
+      'Les deux masselottes du volant inertiel s’écartent par force centrifuge et freinent contre la paroi interne d’un tambour poli : la régulation de vitesse se fait par frottement doux, sans aucun cliquetis parasite.'
+  }
+];
+
+export default function SonneriePage() {
+  const [selectedHour, setSelectedHour] = useState<number>(7);
+  const [selectedMinute, setSelectedMinute] = useState<number>(38);
+  const [isChiming, setIsChiming] = useState<boolean>(false);
+  const [activeHammer, setActiveHammer] = useState<'none' | 'low' | 'high'>('none');
+  const [chimeStatus, setChimeStatus] = useState<string>('Prêt — Réglez l’heure ou cliquez sur le verrou d’armage à 9h');
+  const [loupe10x, setLoupe10x] = useState<boolean>(false);
+  const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({});
+
+  const timeoutsRef = useRef<number[]>([]);
+
+  // Calcul mécanique des pas des 3 limaçons
+  const hoursCount = selectedHour; // 1..12
+  const quartersCount = Math.floor(selectedMinute / 15); // 0..3
+  const minutesRemainder = selectedMinute % 15; // 0..14
+  const totalStrikes = hoursCount + quartersCount * 2 + minutesRemainder;
+
+  const clearScheduledChimes = () => {
+    timeoutsRef.current.forEach((id) => window.clearTimeout(id));
+    timeoutsRef.current = [];
+  };
+
+  const playTone = (ctx: AudioContext, freq: number, startTime: number, duration: number) => {
+    const osc = ctx.createOscillator();
+    const harm = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, startTime);
+
+    harm.type = 'triangle';
+    harm.frequency.setValueAtTime(freq * 2.756, startTime); // Partiel inharmonique de timbre métallique
+
+    gain.gain.setValueAtTime(0.0001, startTime);
+    gain.gain.exponentialRampToValueAtTime(0.24, startTime + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+    osc.connect(gain);
+    harm.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(startTime);
+    harm.start(startTime);
+    osc.stop(startTime + duration);
+    harm.stop(startTime + duration);
+  };
+
+  const triggerMinuteRepeater = () => {
+    clearScheduledChimes();
+    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const ctx = new AudioCtx();
+
+    setIsChiming(true);
+    let offsetMs = 150;
+
+    // 1. Frappe des Heures (Timbre Grave 440 Hz)
+    for (let i = 1; i <= hoursCount; i++) {
+      const t = offsetMs;
+      const id = window.setTimeout(() => {
+        setActiveHammer('low');
+        setChimeStatus(`Palpage Limaçon des Heures : Coup Grave ${i} / ${hoursCount} (440 Hz)`);
+        playTone(ctx, 440, ctx.currentTime, 0.42);
+        window.setTimeout(() => setActiveHammer('none'), 180);
+      }, t);
+      timeoutsRef.current.push(id);
+      offsetMs += 430;
     }
-  ];
 
-  const timeline = [
-    { year: '1676', event: 'Première sonnerie à heures pour horloges', maker: 'Edward Barlow' },
-    { year: '1750', event: 'Invention du minute repeater moderne', maker: 'Abraham-Louis Breguet' },
-    { year: '1892', event: 'Premier minute repeater bracelet', maker: 'Omega' },
-    { year: '1989', event: 'Calibre 89 avec grande sonnerie', maker: 'Patek Philippe' },
-    { year: '2000+', event: 'Renaissance des sonneries cathédrales', maker: 'Manufactures contemporaines' }
-  ];
+    offsetMs += 260;
 
-  const brands = [
-    { name: 'Patek Philippe', specialty: 'Maître incontesté', heritage: 'Grandmaster Chime' },
-    { name: 'Vacheron Constantin', specialty: 'Sonneries cathédrales', heritage: 'Les Cabinotiers' },
-    { name: 'Audemars Piguet', specialty: 'Sonneries ultra-plates', heritage: 'Royal Oak Concept' },
-    { name: 'Jaeger-LeCoultre', specialty: 'Sonneries innovantes', heritage: 'Reverso Répétition' },
-    { name: 'Breguet', specialty: 'Héritage du fondateur', heritage: 'Tradition 7087' }
-  ];
+    // 2. Frappe des Quarts (Double coup : Aigu 660 Hz puis Grave 440 Hz)
+    for (let q = 1; q <= quartersCount; q++) {
+      const tHigh = offsetMs;
+      const idHigh = window.setTimeout(() => {
+        setActiveHammer('high');
+        setChimeStatus(`Palpage Limaçon des Quarts : Quart ${q} / ${quartersCount} — Ding Aigu (660 Hz)`);
+        playTone(ctx, 660, ctx.currentTime, 0.34);
+        window.setTimeout(() => setActiveHammer('none'), 140);
+      }, tHigh);
+      timeoutsRef.current.push(idHigh);
+      offsetMs += 230;
 
-  const soundSequence = [
-    { time: '10:37', sequence: ['10 coups graves (heures)', '2 ding-dong (quarts)', '7 coups aigus (minutes)'] },
-    { time: '3:15', sequence: ['3 coups graves (heures)', '1 ding-dong (1 quart)', 'Pas de minutes'] },
-    { time: '12:00', sequence: ['12 coups graves (heures)', 'Pas de quarts', 'Pas de minutes'] }
-  ];
+      const tLow = offsetMs;
+      const idLow = window.setTimeout(() => {
+        setActiveHammer('low');
+        setChimeStatus(`Palpage Limaçon des Quarts : Quart ${q} / ${quartersCount} — Dong Grave (440 Hz)`);
+        playTone(ctx, 440, ctx.currentTime, 0.38);
+        window.setTimeout(() => setActiveHammer('none'), 150);
+      }, tLow);
+      timeoutsRef.current.push(idLow);
+      offsetMs += 410;
+    }
+
+    if (quartersCount > 0 && minutesRemainder > 0) {
+      offsetMs += 240;
+    }
+
+    // 3. Frappe des Minutes au-delà du dernier quart (Timbre Aigu 660 Hz)
+    for (let m = 1; m <= minutesRemainder; m++) {
+      const tMin = offsetMs;
+      const idMin = window.setTimeout(() => {
+        setActiveHammer('high');
+        setChimeStatus(`Palpage Limaçon des Minutes : Minute ${m} / ${minutesRemainder} (660 Hz)`);
+        playTone(ctx, 660, ctx.currentTime, 0.35);
+        window.setTimeout(() => setActiveHammer('none'), 140);
+      }, tMin);
+      timeoutsRef.current.push(idMin);
+      offsetMs += 340;
+    }
+
+    const endId = window.setTimeout(() => {
+      setIsChiming(false);
+      setActiveHammer('none');
+      setChimeStatus(
+        `Séquence terminée (${String(selectedHour).padStart(2, '0')}h${String(selectedMinute).padStart(2, '0')}) : ${hoursCount} H + ${quartersCount} Q + ${minutesRemainder} Min = ${totalStrikes} coups.`
+      );
+    }, offsetMs + 200);
+    timeoutsRef.current.push(endId);
+  };
+
+  const stopChiming = () => {
+    clearScheduledChimes();
+    setIsChiming(false);
+    setActiveHammer('none');
+    setChimeStatus('Sonnerie interrompue — Râteaux revenus au repos');
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-pink-50 dark:from-slate-950 dark:via-purple-950 dark:to-slate-900">
-      
-      {/* Hero avec parallax */}
-      <header 
-        className="relative overflow-hidden py-24 px-4 sm:px-6 lg:px-8"
-        style={{ transform: `translateY(${scrollY * 0.3}px)` }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-pink-600/20 to-fuchsia-600/20"></div>
-        
-        <div className="absolute top-20 left-10 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 right-20 w-80 h-80 bg-pink-500/20 rounded-full blur-3xl"></div>
-
-        <div className="relative max-w-5xl mx-auto text-center">
-          <div className={`inline-flex items-center gap-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-6 py-3 rounded-full shadow-xl mb-8 border border-purple-200 dark:border-purple-800 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
-            <Music className="text-purple-600" size={24} />
-            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-              Complication Sonore d'Exception
-            </span>
+    <div className="min-h-screen bg-slate-50 dark:bg-[#080b12] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+      {/* BARRE DE NAVIGATION STICKY */}
+      <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/85 dark:bg-[#080b12]/85 border-b border-slate-200 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 text-xs sm:text-sm font-mono">
+            <Link
+              href="/theorie"
+              className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>Théorie</span>
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            <Link
+              href="/theorie/complications"
+              className="text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+            >
+              Complications
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            <span className="font-bold text-amber-600 dark:text-amber-400">Répétition Minutes &amp; Sonneries</span>
           </div>
 
-          <h1 className={`text-6xl md:text-8xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            Sonnerie
-          </h1>
-          
-          <p className={`text-xl md:text-2xl text-purple-600 dark:text-purple-400 mb-8 font-light italic transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            Minute Repeater
-          </p>
-
-          <p className={`text-2xl text-gray-600 dark:text-gray-300 font-light max-w-3xl mx-auto leading-relaxed transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            La symphonie mécanique du temps
-          </p>
+          <span className="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+            <Volume2 className="w-3.5 h-3.5" />
+            Mécanique Acoustique &amp; Limaçons
+          </span>
         </div>
       </header>
 
-      {/* Introduction */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <section className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-200 dark:border-slate-700 p-12 mb-16">
-          <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
-            La <strong className="text-purple-600 dark:text-purple-400">sonnerie</strong>, ou <em>minute repeater</em>, est une complication fascinante capable de sonner mécaniquement les heures, quarts et minutes à la demande. Véritable symphonie horlogère, elle fait appel à un système de marteaux frappant des timbres accordés pour produire un son pur et harmonieux.
-          </p>
-          <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-            Cette complication représente l'apogée de la maîtrise horlogère : transformer l'énergie mécanique en musique du temps, avec une précision absolue et une qualité sonore comparable à un instrument miniature.
-          </p>
-        </section>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+        {/* HERO ÉDITORIAL CONFORME /THEORIE */}
+        <section className="text-center max-w-4xl mx-auto space-y-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-mono uppercase tracking-widest">
+            <Music className="w-3.5 h-3.5" />
+            Haute Complication Acoustique • Cames en Limaçon &amp; Timbres Cathédrale
+          </div>
 
-        {/* Stats principales */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          <div className="bg-gradient-to-br from-purple-600 to-fuchsia-700 rounded-2xl p-8 text-white shadow-2xl transform hover:scale-105 transition-all">
-            <p className="text-sm uppercase tracking-wide opacity-80 mb-2">Invention</p>
-            <p className="text-5xl font-bold mb-2">1750</p>
-            <p className="text-lg opacity-90">Abraham-Louis Breguet</p>
-          </div>
-          <div className="bg-gradient-to-br from-fuchsia-600 to-pink-700 rounded-2xl p-8 text-white shadow-2xl transform hover:scale-105 transition-all">
-            <p className="text-sm uppercase tracking-wide opacity-80 mb-2">Prix estimé</p>
-            <p className="text-3xl font-bold mb-2">300'000 – 3'000'000 CHF</p>
-            <p className="text-lg opacity-90">≈ 800 composants</p>
-          </div>
-          <div className="bg-gradient-to-br from-pink-600 to-purple-600 rounded-2xl p-8 text-white shadow-2xl transform hover:scale-105 transition-all">
-            <p className="text-sm uppercase tracking-wide opacity-80 mb-2">Développement</p>
-            <p className="text-5xl font-bold mb-2">5000+</p>
-            <p className="text-lg opacity-90">Heures/modèle</p>
-          </div>
-        </div>
+          <h1 className="font-serif text-4xl sm:text-6xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
+            Répétition Minutes &amp; <br />
+            <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-200 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent">
+              Mécanique Acoustique des Limaçons
+            </span>
+          </h1>
 
-        {/* Démonstration sonore */}
-        <section className="bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-950 dark:to-slate-900 rounded-3xl p-12 mb-16 text-white shadow-2xl border border-slate-700">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-1.5 h-12 bg-gradient-to-b from-purple-400 to-pink-600 rounded-full"></div>
-            <h2 className="text-4xl font-bold">Séquence Sonore</h2>
-          </div>
-          
-          <p className="text-xl text-gray-100 leading-relaxed mb-8">
-            Chaque minute repeater suit une <strong className="text-purple-400">séquence sonore codifiée</strong> permettant d'identifier l'heure exacte uniquement par l'écoute.
+          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl mx-auto">
+            Inventée à la fin du XVIIe siècle pour lire l’heure dans l’obscurité, la répétition minutes convertit la position angulaire des aiguilles en une partition acoustique.
+            Trois râteaux dentés palpent trois cames en colimaçon (heures, quarts, minutes) sous le contrôle d’un volant régulateur centrifuge silencieux.
           </p>
 
-          <div className="space-y-4">
-            {soundSequence.map((example, index) => (
-              <div key={index} className="bg-purple-900/30 rounded-2xl p-6 border border-purple-700/50">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold">
-                    {example.time}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-lg font-semibold text-purple-300">Séquence de sonnerie</p>
-                  </div>
-                </div>
-                <ul className="space-y-2 ml-20">
-                  {example.sequence.map((step, i) => (
-                    <li key={i} className="flex items-center gap-3 text-gray-200">
-                      <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                      {step}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 bg-pink-900/20 rounded-xl p-6 border border-pink-700/50">
-            <p className="text-sm text-gray-300 leading-relaxed">
-              <strong className="text-pink-400">Note :</strong> Les montres les plus sophistiquées peuvent sonner jusqu'à 36 coups (12h45) en une seule activation. Les sonneries cathédrales utilisent jusqu'à 3 timbres pour une richesse sonore exceptionnelle.
-            </p>
-          </div>
-        </section>
-
-        {/* Mécanisme */}
-        <section className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm rounded-3xl p-12 mb-16 shadow-xl border border-gray-200 dark:border-slate-700">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-1.5 h-12 bg-gradient-to-b from-purple-400 to-pink-600 rounded-full"></div>
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white">Mécanisme & Fonctionnement</h2>
-          </div>
-          
-          <div className="space-y-6">
-            <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
-              Lorsqu'on actionne le curseur ou le bouton de répétition, une séquence mécanique complexe libère l'énergie stockée dans un <strong className="text-purple-600">ressort barillet spécifique</strong>. Cette énergie alimente les marteaux, qui frappent les timbres avec une précision chronométrique.
-            </p>
-            
-            <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-              Les marteaux frappent selon un ordre précis : d'abord les heures (sons graves), puis les quarts (sons doubles), et enfin les minutes (sons aigus). L'accord acoustique des timbres, souvent réalisé à la main, confère à chaque montre son caractère sonore unique, comparable à un instrument de musique miniature.
-            </p>
-
-            <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-800 mt-8">
-              <h3 className="text-xl font-semibold mb-4 text-purple-900 dark:text-purple-300">Architecture mécanique</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                  <ChevronRight className="text-purple-600 flex-shrink-0 mt-1" size={20} />
-                  <span><strong>Ressort de répétition</strong> : Stocke l'énergie libérée par le curseur d'activation</span>
-                </li>
-                <li className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                  <ChevronRight className="text-purple-600 flex-shrink-0 mt-1" size={20} />
-                  <span><strong>Limaçons programmateurs</strong> : Cames en spirale définissant heures, quarts et minutes</span>
-                </li>
-                <li className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                  <ChevronRight className="text-purple-600 flex-shrink-0 mt-1" size={20} />
-                  <span><strong>Régulateur centrifuge</strong> : Ailettes contrôlant la vitesse de frappe (≈4 coups/seconde)</span>
-                </li>
-                <li className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                  <ChevronRight className="text-purple-600 flex-shrink-0 mt-1" size={20} />
-                  <span><strong>Timbres accordés</strong> : Lames d'acier tempéré façonnées et ajustées manuellement</span>
-                </li>
-                <li className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                  <ChevronRight className="text-purple-600 flex-shrink-0 mt-1" size={20} />
-                  <span><strong>Système de sécurité</strong> : Empêche le déclenchement pendant le remontage</span>
-                </li>
-              </ul>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2 text-left font-mono">
+            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+              <div className="text-xs text-slate-500">Limaçon des Heures</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">12 Pas</div>
+              <div className="text-[11px] text-amber-600 dark:text-amber-400">Timbre Grave (440 Hz)</div>
+            </div>
+            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+              <div className="text-xs text-slate-500">Limaçon des Quarts</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">4 Pas (0–3)</div>
+              <div className="text-[11px] text-sky-600 dark:text-sky-400">Double coup Aigu-Grave</div>
+            </div>
+            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+              <div className="text-xs text-slate-500">Limaçon des Minutes</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">4 × 14 Pas</div>
+              <div className="text-[11px] text-emerald-600 dark:text-emerald-400">Timbre Aigu (660 Hz)</div>
+            </div>
+            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+              <div className="text-xs text-slate-500">Séquence Max (12h59)</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">32 Coups</div>
+              <div className="text-[11px] text-rose-600 dark:text-rose-400">12H + 3×2Q + 14M</div>
             </div>
           </div>
         </section>
 
-        {/* Features */}
-        <section className="mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white text-center mb-12">
-            Caractéristiques Techniques
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
+        {/* ========================================================================= */}
+        {/* SIMULATEUR CINÉMATIQUE & ACOUSTIQUE SVG : 3 LIMAÇONS, RÂTEAUX & MARTEAUX */}
+        {/* ========================================================================= */}
+        <section className="rounded-3xl bg-white dark:bg-[#0b101b] border-2 border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+          <div className="p-6 sm:p-8 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+                <Volume2 className="w-4 h-4" />
+                <span>Simulateur Cinématique &amp; Acoustique SVG • Loupe 10x</span>
+              </div>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+                Palpage des 3 Limaçons, Râteaux, Volant Silencieux &amp; Timbres Cathédrale
+              </h2>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              {[
+                { h: 1, m: 0, label: '01:00 (1 coup)' },
+                { h: 4, m: 15, label: '04:15 (6 coups)' },
+                { h: 7, m: 38, label: '07:38 (19 coups)' },
+                { h: 12, m: 59, label: '12:59 (32 coups Max)' }
+              ].map((preset) => (
+                <button
+                  key={preset.label}
+                  onClick={() => {
+                    stopChiming();
+                    setSelectedHour(preset.h);
+                    setSelectedMinute(preset.m);
+                  }}
+                  className={`px-3 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                    selectedHour === preset.h && selectedMinute === preset.m
+                      ? 'bg-amber-500 text-slate-950 shadow-sm'
+                      : 'bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-amber-500'
+                  }`}
+                >
+                  {preset.label}
+                </button>
+              ))}
+
+              <button
+                onClick={() => setLoupe10x(!loupe10x)}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-mono font-bold border transition-all ${
+                  loupe10x
+                    ? 'bg-amber-500/20 border-amber-500 text-amber-600 dark:text-amber-300'
+                    : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                <ZoomIn className="w-4 h-4" />
+                <span>{loupe10x ? 'Loupe 10x Active' : 'Loupe 10x'}</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* CANVAS SVG PRINCIPAL */}
+            <div className="lg:col-span-8 bg-slate-950 rounded-2xl border border-slate-800 p-4 overflow-hidden">
+              <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-2 px-1">
+                <span>CAMES EN LIMAÇON (HEURES, QUARTS, MINUTES + SURPRISE)</span>
+                <span className="text-amber-400 font-bold">{chimeStatus}</span>
+              </div>
+
+              <div className="overflow-hidden rounded-xl bg-[#060a12] border border-slate-800/80">
+                <svg
+                  viewBox="0 0 740 390"
+                  className="w-full h-auto transition-transform duration-300"
+                  style={{
+                    transform: loupe10x ? 'scale(1.38)' : 'scale(1)',
+                    transformOrigin: '240px 195px'
+                  }}
+                >
+                  {/* 2 TIMBRES CATHÉDRALE ENROULÉS EN PÉRIPHÉRIE DU MOUVEMENT */}
+                  <circle
+                    cx="370"
+                    cy="195"
+                    r="176"
+                    fill="none"
+                    stroke={activeHammer === 'low' ? '#fbbf24' : '#475569'}
+                    strokeWidth={activeHammer === 'low' ? '4.5' : '2.5'}
+                  />
+                  <circle
+                    cx="370"
+                    cy="195"
+                    r="167"
+                    fill="none"
+                    stroke={activeHammer === 'high' ? '#38bdf8' : '#334155'}
+                    strokeWidth={activeHammer === 'high' ? '4.5' : '2'}
+                  />
+                  <text x="370" y="34" fill="#94a3b8" fontSize="9.5" fontFamily="monospace" textAnchor="middle">
+                    TIMBRES CATHÉDRALE EN ACIER TREMPÉ (EXT. GRAVE 440 HZ • INT. AIGU 660 HZ)
+                  </text>
+
+                  {/* ======================================================= */}
+                  {/* 1. LIMAÇON DES HEURES (12 PAS) — GAUCHE                 */}
+                  {/* ======================================================= */}
+                  <g transform="translate(155, 195)">
+                    <circle cx="0" cy="0" r="82" fill="#0f172a" stroke="#334155" strokeWidth="1.5" strokeDasharray="4 4" />
+                    {/* Étoile à 12 dents sous le limaçon des heures */}
+                    <circle cx="0" cy="0" r="68" fill="#1e293b" stroke="#f59e0b" strokeWidth="2" />
+                    {/* Came en colimaçon 12 pas (rayon décroissant avec l'heure) */}
+                    <path
+                      d="M 0 -64 C 42 -62, 60 -28, 56 12 C 52 44, 18 54, -12 46 C -36 38, -44 10, -34 -18 C -26 -34, -8 -36, 0 -36 Z"
+                      fill="#b45309"
+                      stroke="#fde68a"
+                      strokeWidth="2"
+                      transform={`rotate(${selectedHour * 30})`}
+                    />
+                    <circle cx="0" cy="0" r="14" fill="#090d16" stroke="#fbbf24" strokeWidth="2" />
+
+                    {/* Râteau Palpeur des Heures */}
+                    <path
+                      d={`M -65 -95 L -18 -58 L ${-10 + (12 - hoursCount) * 2.2} -24`}
+                      fill="none"
+                      stroke="#fbbf24"
+                      strokeWidth="6"
+                      strokeLinecap="round"
+                    />
+                    <circle
+                      cx={-10 + (12 - hoursCount) * 2.2}
+                      cy="-24"
+                      r="5.5"
+                      fill="#f43f5e"
+                      stroke="#fecdd3"
+                      strokeWidth="1.5"
+                    />
+
+                    <text x="0" y="102" fill="#fbbf24" fontSize="10.5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      Limaçon Heures (12 pas)
+                    </text>
+                    <text x="0" y="116" fill="#cbd5e1" fontSize="9.5" fontFamily="monospace" textAnchor="middle">
+                      Pas actif : {hoursCount} coup(s) grave(s)
+                    </text>
+                  </g>
+
+                  {/* ======================================================= */}
+                  {/* 2. LIMAÇON DES QUARTS (4 PAS) + MINUTES (4x14 PAS)      */}
+                  {/* ======================================================= */}
+                  <g transform="translate(355, 195)">
+                    <circle cx="0" cy="0" r="88" fill="#0f172a" stroke="#334155" strokeWidth="1.5" strokeDasharray="4 4" />
+
+                    {/* Limaçon des Minutes à 4 ailes de 14 pas */}
+                    <g transform={`rotate(${selectedMinute * 6})`}>
+                      <path
+                        d="M 0 -76 L 18 -46 L 76 0 L 46 18 L 0 76 L -18 46 L -76 0 L -46 -18 Z"
+                        fill="#0284c7"
+                        stroke="#bae6fd"
+                        strokeWidth="2"
+                      />
+                      {/* Pièce de Surprise sous le limaçon */}
+                      <circle cx="0" cy="0" r="46" fill="#0f172a" stroke="#38bdf8" strokeWidth="1.8" strokeDasharray="5 3" />
+                    </g>
+
+                    {/* Limaçon des Quarts (4 paliers : 0, 1, 2, 3 quarts) */}
+                    <circle cx="0" cy="0" r="32" fill="#059669" stroke="#a7f3d0" strokeWidth="2" />
+                    <circle cx="0" cy="0" r="10" fill="#090d16" stroke="#e2e8f0" strokeWidth="2" />
+
+                    {/* Râteau des Quarts (Vert Émeraude) */}
+                    <path
+                      d={`M -58 -105 L -15 -42 L 0 ${-32 + quartersCount * 5}`}
+                      fill="none"
+                      stroke="#34d399"
+                      strokeWidth="5.5"
+                      strokeLinecap="round"
+                    />
+                    {/* Râteau des Minutes (Bleu Ciel) */}
+                    <path
+                      d={`M 62 -105 L 28 -55 L ${38 - minutesRemainder * 1.4} -18`}
+                      fill="none"
+                      stroke="#38bdf8"
+                      strokeWidth="5.5"
+                      strokeLinecap="round"
+                    />
+
+                    <text x="0" y="106" fill="#38bdf8" fontSize="10.5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      Limaçons Quarts (4) &amp; Minutes (14)
+                    </text>
+                    <text x="0" y="120" fill="#cbd5e1" fontSize="9.5" fontFamily="monospace" textAnchor="middle">
+                      {quartersCount} quart(s) ({quartersCount * 2} coups) + {minutesRemainder} min
+                    </text>
+                  </g>
+
+                  {/* ======================================================= */}
+                  {/* 3. VOLANT INERTIEL SILENCIEUX & 2 MARTEAUX — DROITE     */}
+                  {/* ======================================================= */}
+                  <g transform="translate(565, 135)">
+                    <circle cx="0" cy="0" r="46" fill="#0f172a" stroke="#fbbf24" strokeWidth="2.5" />
+                    <g transform={isChiming ? 'rotate(45)' : 'rotate(0)'}>
+                      {/* 2 Masselottes centrifuges de régulation */}
+                      <path
+                        d="M -28 -12 C -34 10, -18 28, 0 24"
+                        fill="none"
+                        stroke="#fde047"
+                        strokeWidth="6"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M 28 12 C 34 -10, 18 -28, 0 -24"
+                        fill="none"
+                        stroke="#fde047"
+                        strokeWidth="6"
+                        strokeLinecap="round"
+                      />
+                      <circle cx="0" cy="0" r="9" fill="#f59e0b" />
+                    </g>
+                    <text x="0" y="-56" fill="#fde047" fontSize="9.5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      Volant Centrifuge Silencieux
+                    </text>
+                  </g>
+
+                  {/* 2 MARTEAUX EN ACIER POLI NOIR SUR TIMBRES CATHÉDRALE */}
+                  <g transform="translate(565, 255)">
+                    {/* Marteau Grave (440 Hz) */}
+                    <g transform={activeHammer === 'low' ? 'translate(-42, 0) rotate(-18)' : 'translate(-42, 0) rotate(0)'}>
+                      <rect x="-14" y="-32" width="28" height="16" rx="3" fill="#fbbf24" stroke="#fef08a" strokeWidth="1.5" />
+                      <line x1="0" y1="-16" x2="0" y2="22" stroke="#cbd5e1" strokeWidth="5" strokeLinecap="round" />
+                      <circle cx="0" cy="22" r="8" fill="#475569" stroke="#e2e8f0" strokeWidth="2" />
+                    </g>
+                    {/* Marteau Aigu (660 Hz) */}
+                    <g transform={activeHammer === 'high' ? 'translate(42, 0) rotate(18)' : 'translate(42, 0) rotate(0)'}>
+                      <rect x="-14" y="-32" width="28" height="16" rx="3" fill="#38bdf8" stroke="#bae6fd" strokeWidth="1.5" />
+                      <line x1="0" y1="-16" x2="0" y2="22" stroke="#cbd5e1" strokeWidth="5" strokeLinecap="round" />
+                      <circle cx="0" cy="22" r="8" fill="#475569" stroke="#e2e8f0" strokeWidth="2" />
+                    </g>
+
+                    <text x="-42" y="42" fill="#fbbf24" fontSize="9" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      Marteau Grave (440 Hz)
+                    </text>
+                    <text x="42" y="42" fill="#38bdf8" fontSize="9" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      Marteau Aigu (660 Hz)
+                    </text>
+                  </g>
+                </svg>
+              </div>
+            </div>
+
+            {/* PANNEAU DE CONTRÔLE HORAIRE & PARTITION ACOUSTIQUE */}
+            <div className="lg:col-span-4 space-y-5">
+              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4">
+                <div className="text-xs font-mono uppercase tracking-wider font-bold text-amber-600 dark:text-amber-400">
+                  Réglage de l’Heure à Palper
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex justify-between text-xs font-mono mb-1">
+                      <span className="text-slate-500">Heures (1 à 12)</span>
+                      <span className="font-bold text-amber-600 dark:text-amber-400">{selectedHour} h</span>
+                    </div>
+                    <input
+                      type="range"
+                      min={1}
+                      max={12}
+                      value={selectedHour}
+                      onChange={(e) => {
+                        stopChiming();
+                        setSelectedHour(Number(e.target.value));
+                      }}
+                      className="w-full accent-amber-500 cursor-pointer"
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-xs font-mono mb-1">
+                      <span className="text-slate-500">Minutes (00 à 59)</span>
+                      <span className="font-bold text-sky-600 dark:text-sky-400">
+                        {String(selectedMinute).padStart(2, '0')} min
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={0}
+                      max={59}
+                      value={selectedMinute}
+                      onChange={(e) => {
+                        stopChiming();
+                        setSelectedMinute(Number(e.target.value));
+                      }}
+                      className="w-full accent-sky-500 cursor-pointer"
+                    />
+                  </div>
+                </div>
+
+                {/* Décomposition mathématique des coups */}
+                <div className="grid grid-cols-3 gap-2 pt-2 font-mono text-center">
+                  <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30">
+                    <div className="text-[10px] text-amber-700 dark:text-amber-300">HEURES</div>
+                    <div className="text-lg font-bold text-amber-600 dark:text-amber-400">{hoursCount}</div>
+                    <div className="text-[10px] text-slate-500">Bong (440Hz)</div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30">
+                    <div className="text-[10px] text-emerald-700 dark:text-emerald-300">QUARTS</div>
+                    <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{quartersCount}</div>
+                    <div className="text-[10px] text-slate-500">{quartersCount * 2} coups</div>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-sky-500/10 border border-sky-500/30">
+                    <div className="text-[10px] text-sky-700 dark:text-sky-300">MINUTES</div>
+                    <div className="text-lg font-bold text-sky-600 dark:text-sky-400">{minutesRemainder}</div>
+                    <div className="text-[10px] text-slate-500">Bing (660Hz)</div>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-1">
+                  <button
+                    onClick={triggerMinuteRepeater}
+                    disabled={isChiming}
+                    className="flex-1 py-3.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    <Play className="w-4 h-4" />
+                    <span>Armer le Verrou ({totalStrikes} coups)</span>
+                  </button>
+                  {isChiming && (
+                    <button
+                      onClick={stopChiming}
+                      className="px-3.5 py-3.5 rounded-xl bg-rose-500 text-white font-bold text-xs flex items-center justify-center"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs space-y-1.5">
+                <div className="font-bold text-amber-700 dark:text-amber-300 flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Dispositif du « Tout-ou-Rien »</span>
+                </div>
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Si le porteur n’arme pas le verrou de sonnerie jusqu’en fin de course, le ressort du « tout-ou-rien » bloque le déclenchement des râteaux afin d’éviter une sonnerie incomplète et fausse.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* LES 4 GRANDES FAMILLES DE SONNERIES HORLOGÈRES */}
+        <section className="space-y-6">
+          <div>
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+              Typologie des Montres à Sonnerie
+            </span>
+            <h2 className="font-serif text-3xl font-bold text-slate-900 dark:text-white mt-1">
+              Répétition Minutes, Grande Sonnerie &amp; Carillon Westminster
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {STRIKING_TYPES.map((st) => (
+              <div
+                key={st.name}
+                className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <h3 className="font-serif text-xl font-bold text-slate-900 dark:text-white">{st.name}</h3>
+                  <span className="px-2.5 py-1 rounded-full text-[11px] font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+                    {st.complexity}
+                  </span>
+                </div>
+                <div className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                  <strong>Déclenchement :</strong> {st.trigger}
+                </div>
+                <div className="text-xs font-mono text-emerald-700 dark:text-emerald-400">
+                  <strong>Séquence :</strong> {st.sequence}
+                </div>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{st.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ACOUSTIQUE DES MATÉRIAUX DE BOÎTE */}
+        <section className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-sm space-y-6">
+          <div>
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+              Physique Vibratoire &amp; Lutherie Horlogère
+            </span>
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mt-1">
+              Influence de l’Alliage de la Boîte sur la Propagation Acoustique
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {CASE_MATERIALS.map((mat) => (
+              <div
+                key={mat.material}
+                className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3"
+              >
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white">{mat.material}</h3>
+                <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+                  <div className="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                    <div className="text-[10px] text-slate-500">Célérité sonore</div>
+                    <div className="font-bold text-amber-600 dark:text-amber-400">{mat.speedOfSound}</div>
+                  </div>
+                  <div className="p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                    <div className="text-[10px] text-slate-500">Masse volumique</div>
+                    <div className="font-bold text-slate-800 dark:text-slate-200">{mat.density}</div>
+                  </div>
+                </div>
+                <p className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">{mat.timbre}</p>
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{mat.verdict}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* QUIZ TECHNIQUE */}
+        <section className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-sm space-y-6">
+          <div className="flex items-center gap-2">
+            <HelpCircle className="w-5 h-5 text-amber-500" />
+            <h2 className="font-serif text-2xl font-bold text-slate-900 dark:text-white">
+              Auto-Évaluation : Mécanique des Répétitions Minutes
+            </h2>
+          </div>
+
+          <div className="space-y-6">
+            {QUIZ_ITEMS.map((item, qIdx) => {
+              const userAns = quizAnswers[qIdx];
               return (
                 <div
-                  key={index}
-                  className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow-xl border border-gray-200 dark:border-slate-700 hover:shadow-2xl transition-all hover:-translate-y-1"
+                  key={qIdx}
+                  className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3"
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="bg-gradient-to-br from-purple-500 to-pink-600 p-3 rounded-xl">
-                      <Icon className="text-white" size={28} />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                        {feature.title}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-400">
-                        {feature.desc}
-                      </p>
-                    </div>
+                  <p className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
+                    {qIdx + 1}. {item.q}
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {item.options.map((opt, oIdx) => {
+                      const selected = userAns === oIdx;
+                      const isCorrect = oIdx === item.answer;
+                      let btnStyle =
+                        'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-amber-500';
+                      if (userAns !== undefined) {
+                        if (isCorrect) {
+                          btnStyle = 'bg-emerald-500/15 border-emerald-500 text-emerald-800 dark:text-emerald-300 font-bold';
+                        } else if (selected) {
+                          btnStyle = 'bg-rose-500/15 border-rose-500 text-rose-800 dark:text-rose-300';
+                        }
+                      }
+                      return (
+                        <button
+                          key={oIdx}
+                          onClick={() => setQuizAnswers((prev) => ({ ...prev, [qIdx]: oIdx }))}
+                          className={`p-3 rounded-xl text-left text-xs sm:text-sm border transition-all ${btnStyle}`}
+                        >
+                          {opt}
+                        </button>
+                      );
+                    })}
                   </div>
+                  {userAns !== undefined && (
+                    <p className="text-xs text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                      <strong>Explication d’établi :</strong> {item.explanation}
+                    </p>
+                  )}
                 </div>
               );
             })}
           </div>
         </section>
-
-        {/* Timeline */}
-        <section className="mb-16 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm rounded-3xl p-12 shadow-xl border border-gray-200 dark:border-slate-700">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white text-center mb-12">
-            Histoire & Évolution
-          </h2>
-          <div className="space-y-6">
-            {timeline.map((item, index) => (
-              <div key={index} className="flex gap-6 group">
-                <div className="flex flex-col items-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg group-hover:scale-110 transition-transform">
-                    {item.year.slice(0, 2)}
-                  </div>
-                  {index < timeline.length - 1 && (
-                    <div className="w-0.5 flex-1 bg-gradient-to-b from-purple-400 to-pink-600 my-2"></div>
-                  )}
-                </div>
-                <div className="flex-1 pb-8">
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{item.year}</p>
-                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-1">{item.event}</p>
-                  <p className="text-sm text-purple-600 dark:text-purple-400 font-medium">{item.maker}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Manufactures */}
-        <section className="mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white text-center mb-12">
-            Manufactures de Prestige
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {brands.map((brand, index) => (
-              <div
-                key={index}
-                className="bg-gradient-to-br from-white to-gray-50 dark:from-slate-900 dark:to-slate-800 rounded-2xl p-6 shadow-xl border-2 border-transparent hover:border-purple-500 transition-all hover:scale-105"
-              >
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                  {brand.name}
-                </h3>
-                <p className="text-purple-600 dark:text-purple-400 font-medium mb-1">
-                  {brand.specialty}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {brand.heritage}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Section patrimoine acoustique */}
-        <section className="bg-gradient-to-r from-purple-900 to-pink-900 rounded-3xl p-12 text-white shadow-2xl border border-purple-700 mb-16">
-          <h2 className="text-4xl font-bold mb-6 text-center">Le Patrimoine Acoustique</h2>
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div>
-              <p className="text-5xl font-bold text-purple-300 mb-2">350+</p>
-              <p className="text-gray-200">Heures d'accord manuel</p>
-            </div>
-            <div>
-              <p className="text-5xl font-bold text-pink-300 mb-2">0.01</p>
-              <p className="text-gray-200">Millimètres de précision</p>
-            </div>
-            <div>
-              <p className="text-5xl font-bold text-fuchsia-300 mb-2">3</p>
-              <p className="text-gray-200">Années de formation maître horloger</p>
-            </div>
-          </div>
-          <p className="text-center text-gray-200 mt-8 text-lg max-w-3xl mx-auto">
-            Chaque sonnerie est unique : son timbre, sa résonance et sa musicalité sont le résultat d'un ajustement artisanal minutieux, faisant de chaque montre un instrument à part entière.
-          </p>
-        </section>
-
-        {/* CTA */}
-<div className="text-center">
-  <Link href="/theorie/complications">
-    <button className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl hover:from-blue-700 hover:to-indigo-800 transition-all shadow-xl hover:shadow-2xl hover:scale-105 text-lg font-semibold">
-      <ArrowLeft size={24} />
-      Retour aux complications
-    </button>
-  </Link>
-</div>
-</main>
-
-      {/* Footer */}
-      <footer className="py-8 border-t border-gray-200 dark:border-slate-800 text-center text-gray-600 dark:text-gray-400">
-        <p className="text-sm">© 2025 Sonnerie Minute Repeater – Référence mondiale en complications sonores</p>
-      </footer>
+      </main>
     </div>
   );
-};
-
-export default SonneriePage;
+}

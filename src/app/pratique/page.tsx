@@ -542,6 +542,27 @@ export default function PratiquePage() {
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
             </Link>
+
+            <Link
+              href="/pratique/demontage-balancier"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400 mb-2">
+                  Pivot Ø 0.09 mm &amp; Lyre
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Simulateur Lyre Incabloc &amp; Dépose du Coq
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Ouverture de la lyre en 4 étapes, extraction Rodico et levée axiale stricte 90°.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/pratique/demontage-balancier)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
           </div>
         </section>
 

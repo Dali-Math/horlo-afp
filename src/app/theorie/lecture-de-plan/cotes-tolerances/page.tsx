@@ -587,6 +587,10 @@ export default function CotesEtTolerancesPage() {
   // FAQ Accordions State
   const [openFaqIdx, setOpenFaqIdx] = useState<number | null>(0);
 
+  // Comparateur Métrologique SVG ISO 286 / NIHS States
+  const [fitMode, setFitMode] = useState<"glissant" | "incertain" | "serre">("glissant");
+  const [loupe10x, setLoupe10x] = useState<boolean>(false);
+
   // Selected tolerance helper
   const activeTolerance = TOLERANCES.find((t) => t.id === selectedTolId) || TOLERANCES[0];
 
@@ -670,14 +674,18 @@ export default function CotesEtTolerancesPage() {
             <span>Spécification Géométrique des Produits (GPS) • Précision Micrométrique</span>
           </div>
 
-          {/* Grand Titre */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4 font-serif">
-            Cotes & Tolérances Horlogères
+          {/* Grand Titre conforme /theorie */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-slate-900 dark:text-white mb-4 font-serif leading-tight">
+            Cotes &amp; Tolérances Horlogères <br />
+            <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-200 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent">
+              Métrologie ISO 286, ISO 129-1 &amp; GPS 1101
+            </span>
           </h1>
 
           {/* Sous-titre */}
           <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto mb-8 font-normal">
-            Maîtrisez les deux piliers normatifs indispensables du dessin technique : la cotation dimensionnelle{" "}
+            Maîtrisez les trois piliers normatifs indispensables du dessin technique horloger : les ajustements cylindriques{" "}
+            <span className="font-semibold text-slate-900 dark:text-amber-300">ISO 286 / NIHS</span>, la cotation dimensionnelle{" "}
             <span className="font-semibold text-slate-900 dark:text-amber-300">ISO 129-1</span> et le tolérancement géométrique GPS{" "}
             <span className="font-semibold text-slate-900 dark:text-amber-300">ISO 1101</span> au micron près.
           </p>
@@ -698,13 +706,13 @@ export default function CotesEtTolerancesPage() {
             </div>
             <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm text-center">
               <div className="text-2xl font-black text-purple-600 dark:text-purple-400 font-mono">15</div>
-              <div className="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-0.5">Questions Quiz CFC</div>
+              <div className="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-0.5">Questions Quiz NIHS</div>
             </div>
           </div>
         </section>
 
         {/* ⭐ ACCÈS DIRECT AU CALCULATEUR D'ÉBATS D'ÉTABLI */}
-        <div className="mb-10 p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-amber-950/60 via-slate-900 to-slate-950 border-2 border-amber-500/40 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="mb-10 p-5 sm:p-6 rounded-3xl bg-slate-900 text-white border-2 border-amber-500/40 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0 text-amber-400 text-xl font-bold">
               ⚙️
@@ -727,6 +735,280 @@ export default function CotesEtTolerancesPage() {
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
+
+        {/* ========================================================================= */}
+        {/* COMPARATEUR MÉTROLOGIQUE SVG DES AJUSTEMENTS HORLOGERS ISO 286 / NIHS     */}
+        {/* ========================================================================= */}
+        <section className="mb-14 rounded-3xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+          <div className="p-6 sm:p-8 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+                <Gauge className="w-4 h-4" />
+                <span>Comparateur Métrologique SVG • Norme ISO 286 &amp; NIHS (Alésage Normal H)</span>
+              </div>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+                Les 3 Ajustements Fondamentaux de l’Horloger sous Loupe 10x
+              </h2>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => setFitMode("glissant")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                  fitMode === "glissant"
+                    ? "bg-emerald-500 text-slate-950 shadow-sm"
+                    : "bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                }`}
+              >
+                1. Libre / Glissant (H7/g6 • Pivot / Rubis)
+              </button>
+              <button
+                onClick={() => setFitMode("incertain")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                  fitMode === "incertain"
+                    ? "bg-amber-500 text-slate-950 shadow-sm"
+                    : "bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                }`}
+              >
+                2. Incertain / Centrage (H7/k6 • Pied de Pont)
+              </button>
+              <button
+                onClick={() => setFitMode("serre")}
+                className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                  fitMode === "serre"
+                    ? "bg-rose-500 text-white shadow-sm"
+                    : "bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                }`}
+              >
+                3. Serré / Chassage (H7/p6 • Rubis / Platine)
+              </button>
+              <button
+                onClick={() => setLoupe10x(!loupe10x)}
+                className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold border transition-all ${
+                  loupe10x
+                    ? "bg-amber-500/20 border-amber-500 text-amber-600 dark:text-amber-300"
+                    : "bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300"
+                }`}
+              >
+                {loupe10x ? "Loupe 10x Active" : "Loupe 10x"}
+              </button>
+            </div>
+          </div>
+
+          <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* CANVAS SVG : COUPE MICRO-MÉCANIQUE + DIAGRAMME DES ZONES DE TOLÉRANCE ISO 286 */}
+            <div className="lg:col-span-8 bg-slate-950 rounded-2xl border border-slate-800 p-4 overflow-hidden">
+              <div className="overflow-hidden rounded-xl bg-[#060a12] border border-slate-800/80">
+                <svg
+                  viewBox="0 0 720 350"
+                  className="w-full h-auto transition-transform duration-300"
+                  style={{
+                    transform: loupe10x ? "scale(1.38)" : "scale(1)",
+                    transformOrigin: "215px 175px"
+                  }}
+                >
+                  <line x1="380" y1="20" x2="380" y2="330" stroke="#1e293b" strokeWidth="2" strokeDasharray="6 6" />
+
+                  {/* ========================================================= */}
+                  {/* GAUCHE : COUPE RADIALE ET AXIALE DE L'ASSEMBLAGE          */}
+                  {/* ========================================================= */}
+                  <g transform="translate(190, 175)">
+                    <text x="0" y="-140" fill="#94a3b8" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      COUPE MICRO-MÉCANIQUE DE L’ASSEMBLAGE
+                    </text>
+
+                    {fitMode === "glissant" && (
+                      <g>
+                        {/* Pierre percée en rubis synthétique (Alésage Ø 0.120 mm H7) */}
+                        <circle cx="0" cy="0" r="105" fill="#9f1239" stroke="#fda4af" strokeWidth="2.5" />
+                        <circle cx="0" cy="0" r="68" fill="#060a12" stroke="#f43f5e" strokeWidth="2" />
+                        {/* Film d'huile Moebius 9010 dans le jeu radial de 4 µm */}
+                        <circle
+                          cx="0"
+                          cy="0"
+                          r="60"
+                          fill="none"
+                          stroke="#10b981"
+                          strokeWidth="12"
+                          strokeDasharray="8 3"
+                          opacity="0.75"
+                        />
+                        {/* Pivot en acier trempé poli (Arbre Ø 0.112 mm g6) */}
+                        <circle cx="0" cy="0" r="52" fill="#cbd5e1" stroke="#f8fafc" strokeWidth="2.5" />
+
+                        <text x="0" y="4" fill="#0f172a" fontSize="11" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                          PIVOT Ø 0.112
+                        </text>
+                        <text x="0" y="128" fill="#34d399" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                          Jeu radial = +4 µm (Film d’huile Moebius 9010)
+                        </text>
+                      </g>
+                    )}
+
+                    {fitMode === "incertain" && (
+                      <g>
+                        {/* Alésage de platine laiton (Ø 0.800 mm H7) */}
+                        <circle cx="0" cy="0" r="105" fill="#b45309" stroke="#fde68a" strokeWidth="2.5" />
+                        {/* Goupille / Pied de pont en acier (Ø 0.800 mm k6 : contact juste) */}
+                        <circle cx="0" cy="0" r="65" fill="#cbd5e1" stroke="#fbbf24" strokeWidth="3" strokeDasharray="6 3" />
+
+                        <text x="0" y="4" fill="#0f172a" fontSize="10.5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                          PIED DE PONT k6
+                        </text>
+                        <text x="0" y="128" fill="#fbbf24" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                          Jeu/Serrage = ±1.5 µm (Centrage sans jeu d’entraxe)
+                        </text>
+                      </g>
+                    )}
+
+                    {fitMode === "serre" && (
+                      <g>
+                        {/* Alésage de platine laiton Ø 1.200 mm H7 */}
+                        <circle cx="0" cy="0" r="108" fill="#b45309" stroke="#fde68a" strokeWidth="2.5" />
+                        {/* Zone de compression élasto-plastique (-10 µm) */}
+                        <circle cx="0" cy="0" r="74" fill="none" stroke="#f43f5e" strokeWidth="8" strokeDasharray="4 2" />
+                        {/* Rubis synthétique chassé Ø 1.210 mm p6 */}
+                        <circle cx="0" cy="0" r="70" fill="#be123c" stroke="#fecdd3" strokeWidth="2.5" />
+                        <circle cx="0" cy="0" r="22" fill="#060a12" stroke="#fda4af" strokeWidth="1.5" />
+
+                        <text x="0" y="-36" fill="#fff1f2" fontSize="9.5" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                          RUBIS CHASSÉ Ø 1.210
+                        </text>
+                        <text x="0" y="128" fill="#fb7185" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                          Serrage = -10 µm (Chassage à la potence Seitz/Horia)
+                        </text>
+                      </g>
+                    )}
+                  </g>
+
+                  {/* ========================================================= */}
+                  {/* DROITE : DIAGRAMME NORMALISÉ DES INTERVALLES ISO 286      */}
+                  {/* ========================================================= */}
+                  <g transform="translate(415, 65)">
+                    <text x="135" y="-20" fill="#e2e8f0" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      DIAGRAMME DES ZONES DE TOLÉRANCE ISO 286
+                    </text>
+
+                    <rect x="0" y="0" width="275" height="220" rx="10" fill="#0f172a" stroke="#334155" strokeWidth="1.5" />
+
+                    {/* Ligne Zéro (Cote Nominale) */}
+                    <line x1="20" y1="115" x2="255" y2="115" stroke="#fbbf24" strokeWidth="2" strokeDasharray="5 3" />
+                    <text x="25" y="108" fill="#fbbf24" fontSize="9" fontWeight="bold" fontFamily="monospace">
+                      Ligne Zéro (Cote Nominale)
+                    </text>
+
+                    {/* Zone Alésage H7 (toujours posée sur la ligne zéro : +0 / +IT7) */}
+                    <rect x="45" y="65" width="75" height="50" fill="rgba(56, 189, 248, 0.25)" stroke="#38bdf8" strokeWidth="2" />
+                    <text x="82" y="94" fill="#bae6fd" fontSize="12" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                      H7
+                    </text>
+                    <text x="82" y="55" fill="#38bdf8" fontSize="8.5" fontFamily="monospace" textAnchor="middle">
+                      Alésage (+10 µm / 0)
+                    </text>
+
+                    {/* Zone Arbre selon fitMode (g6 en dessous, k6 à cheval, p6 au-dessus) */}
+                    {fitMode === "glissant" && (
+                      <g>
+                        <rect
+                          x="155"
+                          y="138"
+                          width="75"
+                          height="38"
+                          fill="rgba(16, 185, 129, 0.3)"
+                          stroke="#10b981"
+                          strokeWidth="2"
+                        />
+                        <text x="192" y="162" fill="#a7f3d0" fontSize="12" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                          g6
+                        </text>
+                        <text x="192" y="192" fill="#34d399" fontSize="8.5" fontFamily="monospace" textAnchor="middle">
+                          Arbre (-4 / -12 µm)
+                        </text>
+                      </g>
+                    )}
+
+                    {fitMode === "incertain" && (
+                      <g>
+                        <rect
+                          x="155"
+                          y="92"
+                          width="75"
+                          height="36"
+                          fill="rgba(245, 158, 11, 0.3)"
+                          stroke="#f59e0b"
+                          strokeWidth="2"
+                        />
+                        <text x="192" y="114" fill="#fde68a" fontSize="12" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                          k6
+                        </text>
+                        <text x="192" y="145" fill="#fbbf24" fontSize="8.5" fontFamily="monospace" textAnchor="middle">
+                          Arbre (+7 / +1 µm)
+                        </text>
+                      </g>
+                    )}
+
+                    {fitMode === "serre" && (
+                      <g>
+                        <rect
+                          x="155"
+                          y="28"
+                          width="75"
+                          height="36"
+                          fill="rgba(244, 63, 94, 0.3)"
+                          stroke="#f43f5e"
+                          strokeWidth="2"
+                        />
+                        <text x="192" y="50" fill="#fecdd3" fontSize="12" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                          p6
+                        </text>
+                        <text x="192" y="20" fill="#fb7185" fontSize="8.5" fontFamily="monospace" textAnchor="middle">
+                          Arbre (+18 / +10 µm)
+                        </text>
+                      </g>
+                    )}
+                  </g>
+                </svg>
+              </div>
+            </div>
+
+            {/* FICHE D'ANALYSE MÉTROLOGIQUE DE L'AJUSTEMENT ACTIF */}
+            <div className="lg:col-span-4 space-y-4">
+              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3">
+                <span
+                  className={`inline-block px-3 py-1 rounded-full text-xs font-mono font-bold ${
+                    fitMode === "glissant"
+                      ? "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30"
+                      : fitMode === "incertain"
+                      ? "bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30"
+                      : "bg-rose-500/15 text-rose-700 dark:text-rose-400 border border-rose-500/30"
+                  }`}
+                >
+                  {fitMode === "glissant"
+                    ? "Ajustement Avec Jeu Garanti (H7/g6)"
+                    : fitMode === "incertain"
+                    ? "Ajustement Incertain de Centrage (H7/k6)"
+                    : "Ajustement Avec Serrage Garanti (H7/p6)"}
+                </span>
+
+                <h3 className="font-serif text-xl font-bold text-slate-900 dark:text-white">
+                  {fitMode === "glissant"
+                    ? "Pivot de Mobile dans Pierre Percée Rubis"
+                    : fitMode === "incertain"
+                    ? "Pied de Pont / Goupille dans Platine"
+                    : "Chassage d’un Rubis ou Chaussée sur Axe"}
+                </h3>
+
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {fitMode === "glissant"
+                    ? "La lettre majuscule H7 indique un alésage normal (écart inférieur nul). La lettre minuscule g6 place toute la zone de tolérance de l’arbre sous la ligne zéro : il subsiste toujours un jeu fonctionnel de 6 à 12 µm pour la libre rotation et le film d’huile Moebius 9010."
+                    : fitMode === "incertain"
+                    ? "La zone de tolérance k6 de la goupille chevauche la zone H7 de l’alésage : le jeu ou le serrage reste inférieur à 2 µm, garantissant la reproductibilité parfaite des entraxes d’engrènement à chaque démontage."
+                    : "La zone p6 (ou r6) est intégralement située au-dessus de la borne supérieure de H7 : le diamètre extérieur du rubis est plus grand que le trou de la platine de ~10 µm. L’assemblage exige une potence micrométrique Seitz ou Horia."}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* NAVIGATION PRO PAR ONGLETS FLUIDES */}
         <div className="sticky top-20 z-30 mb-10 -mx-4 px-4 sm:mx-0 sm:px-0">
