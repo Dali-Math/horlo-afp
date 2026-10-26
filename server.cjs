@@ -21,7 +21,14 @@ wss.on("connection", (ws) => {
   console.log("🟢 Nouvelle connexion");
 
   ws.on("message", (msg) => {
-    const data = JSON.parse(msg);
+    let data;
+    try {
+      data = JSON.parse(msg);
+    } catch {
+      ws.send(JSON.stringify({ type: "error", message: "Invalid JSON payload" }));
+      return;
+    }
+    if (!data || typeof data !== "object") return;
     console.log("📨", data);
 
     switch (data.type) {

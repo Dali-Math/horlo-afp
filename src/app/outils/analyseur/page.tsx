@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 // Clé Gemini Gratuite de secours (si la route API n'est pas encore déployée)
-const FALLBACK_GEMINI_KEY = "AQ.Ab8RN6K8ZEMOodzLb4SH8fRumRRvfaXUfoo1KEgV2q6w-Eh0XQ";
+// Clé Gemini gérée exclusivement côté serveur (/api/analyse-montre)
 
 interface SampleWatch {
   name: string;
@@ -124,96 +124,26 @@ export default function AnalyseurPage() {
     setLoadingStepIndex(0);
 
     try {
-      // Tentative 1 : via la route API Next.js locale
-      let response: Response | null = null;
-      try {
-        response = await fetch("/api/analyse-montre", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            imageBase64: selectedImage,
-            mimeType: selectedMimeType,
-          }),
-        });
-      } catch {
-        response = null;
-      }
-
-      if (response && response.ok) {
-        const data = await response.json();
-        if (data.analysis) {
-          setAnalysisResult(data.analysis);
-          setIsAnalyzing(false);
-          return;
-        }
-      }
-
-      // Tentative 2 (Fallback direct gratuit Google Gemini Studio)
-      const cleanBase64 = selectedImage.replace(/^data:image\/[a-zA-Z+]+;base64,/, "");
-      const prompt = `Tu es un Maître Horloger suisse expert en diagnostic et expertise horlogère (Haute Horlogerie genevoise, COSC, normes NIHS).
-Analyse cette montre en détail et fournis une fiche d'expertise technique complète en Markdown soigné avec ces sections :
-# 🇨🇭 FICHE D'EXPERTISE TECHNIQUE HORLOGÈRE
-
-## 1. ⌚ Identification & Style
-* **Maison / Marque estimée :** 
-* **Modèle / Référence probable :** 
-* **Style & Catégorie :** (Chronographe de pilote, Plongeuse 300m, Habillée classique, Sport chic...)
-* **Période stylistique :** 
-
-## 2. 🛡️ Boîtier & Habillage
-* **Matériau :** (Acier 316L/904L, Or 18ct, Titane grade 5, Céramique...)
-* **Lunette :** (Fixe, cannelée, tachymétrique, céramique Cerachrom, tournante unidirectionnelle...)
-* **Couronne & Poussoirs :** (Protège-couronne, système vissé étanche...)
-* **Glace & Étanchéité estimée :** 
-
-## 3. 🎯 Cadran, Index & Aiguillage
-* **Finition du cadran :** (Soleillé, guilloché, laqué profond, squelette...)
-* **Index & Lisibilité :** (Appliques facettées, chiffres arabes, luminescence Super-LumiNova/Chromalight...)
-* **Aiguillage :** (Type bâton, glaive, dauphine, Breguet, Mercedes, flèche...)
-* **Complications / Guichets :** (Date, petite seconde, compteurs chronographe...)
-
-## 4. ⚙️ Mouvement & Calibre Estimé
-* **Type de calibre probable :** (Automatique de manufacture, Mécanique manuel, Calibre suisse haute fréquence, Quartz haute précision...)
-* **Fréquence probable :** (28'800 alt/h / 4 Hz ou 21'600 alt/h)
-* **Standards & Certifications :** (Critères COSC, Poinçon de Genève, Superlative Chronometer...)
-
-## 5. 🔍 Remarques d'Atelier & Conseils d'Entretien
-* **État esthétique perçu :** (Alignement, arêtes, finitions brossées/polies)
-* **Points de vigilance horlogère :** (Contrôle d'étanchéité NIHS, état des joints, lubrification, affleurement des aiguilles).`;
-
-      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${FALLBACK_GEMINI_KEY}`;
-      const geminiRes = await fetch(geminiUrl, {
+      // Appel sécurisé via la route API Next.js côté serveur (/api/analyse-montre)
+      const response = await fetch("/api/analyse-montre", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                { text: prompt },
-                {
-                  inline_data: {
-                    mime_type: selectedMimeType || "image/jpeg",
-                    data: cleanBase64,
-                  },
-                },
-              ],
-            },
-          ],
+          imageBase64: selectedImage,
+          mimeType: selectedMimeType,
         }),
       });
 
-      if (!geminiRes.ok) {
-        throw new Error(`Erreur Gemini (${geminiRes.status}).`);
+      if (!response.ok) {
+        throw new Error(`Erreur serveur d'analyse (${response.status}).`);
       }
 
-      const geminiData = await geminiRes.json();
-      const outputText = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-      if (!outputText) {
+      const data = await response.json();
+      if (!data.analysis) {
         throw new Error("Réponse vide du modèle de vision horlogère.");
       }
 
-      setAnalysisResult(outputText);
+      setAnalysisResult(data.analysis);
     } catch (err: any) {
       setErrorMsg(
         err?.message || "Impossible de compléter l'analyse. Veuillez vérifier l'image et réessayer."
