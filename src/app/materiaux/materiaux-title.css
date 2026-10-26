@@ -1,0 +1,34 @@
+.materials-editorial .materials-hero h1 {
+  margin: 22px 0 28px !important;
+  font-family: var(--font-editorial), "Playfair Display", Georgia, "Times New Roman", serif !important;
+  font-size: clamp(68px, 7.2vw, 120px) !important;
+  font-weight: 500 !important;
+  line-height: 0.86 !important;
+  letter-spacing: -0.052em !important;
+  color: var(--hl-ink) !important;
+  text-wrap: balance;
+}
+
+.materials-editorial .materials-hero h1 em {
+  display: inline-block;
+  font: inherit !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  color: var(--hl-metal) !important;
+  letter-spacing: -0.048em !important;
+}
+
+html.dark .materials-editorial .materials-hero h1 {
+  color: var(--hl-ink) !important;
+}
+
+html.dark .materials-editorial .materials-hero h1 em {
+  color: var(--hl-metal-soft) !important;
+}
+
+@media (max-width: 700px) {
+  .materials-editorial .materials-hero h1 {
+    font-size: clamp(58px, 17vw, 84px) !important;
+    line-height: 0.88 !important;
+  }
+}
