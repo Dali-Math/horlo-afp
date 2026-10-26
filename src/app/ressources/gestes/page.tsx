@@ -226,13 +226,13 @@ export default function PrecisionBalance() {
                   3. Stabilité Thermique (Nivarox &amp; Glucydur)
                 </h2>
                 <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-                  Un spiral en acier ancien perdait ~11 s/j par degré Celsius à cause de la chute de son module d&apos;élasticité $E$. Les spiraux <strong>Nivarox</strong> (alliage Fe-Ni-Cr-Ti-Be antiferromagnétique) inversent ce coefficient thermo-élastique pour compenser exactement la dilatation du balancier en <strong>Glucydur</strong>.
+                  Un spiral en acier ancien perdait ~11 s/j par degré Celsius à cause de la chute de son module d&apos;élasticité E. Les spiraux <strong>Nivarox</strong> (alliage Fe-Ni-Cr-Ti-Be antiferromagnétique) inversent ce coefficient thermo-élastique pour compenser exactement la dilatation du balancier en <strong>Glucydur</strong>.
                 </p>
               </div>
             </div>
             <div className="px-6 pb-6">
               <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-xs text-slate-800 dark:text-slate-200">
-                <strong className="text-amber-700 dark:text-amber-400">Norme ISO 3159 (COSC) :</strong> L&apos;erreur thermique primaire $C = (M_{38^\circ\text{C}} - M_{8^\circ\text{C}}) / 30$ ne doit jamais dépasser <strong>$\pm 0.60 \text{ s/j/}^\circ\text{C}$</strong>.
+                <strong className="text-amber-700 dark:text-amber-400">Norme ISO 3159 (COSC) :</strong> L&apos;erreur thermique primaire C = (M38°C - M8°C) / 30 ne doit jamais dépasser <strong>± 0.60 s/j/°C</strong>.
               </div>
             </div>
           </div>
@@ -291,7 +291,7 @@ export default function PrecisionBalance() {
             </div>
             <div className="px-6 pb-6">
               <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-xs text-slate-800 dark:text-slate-200">
-                <strong className="text-amber-700 dark:text-amber-400">Critères d&apos;excellence :</strong> Erreur de repère $\le 0.4 \text{ ms}$, amplitude horizontale comprise entre $275^\circ$ et $315^\circ$, et chute d&apos;amplitude en position verticale inférieure à $35^\circ$.
+                <strong className="text-amber-700 dark:text-amber-400">Critères d&apos;excellence :</strong> Erreur de repère ≤ 0.4 ms, amplitude horizontale comprise entre 275° et 315°, et chute d&apos;amplitude en position verticale inférieure à 35°.
               </div>
             </div>
           </div>
