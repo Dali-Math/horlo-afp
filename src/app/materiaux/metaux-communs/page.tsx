@@ -29,13 +29,42 @@ export default function MetauxCommunsPage() {
           padding-top: 0 !important;
         }
 
+        /* IMPORTANT : dans une iframe auto-ajustée, 100vh correspond à la
+           hauteur totale de l'iframe. On utilise donc une vraie hauteur de
+           hero afin que son contenu reste visible dès l'ouverture. */
         .hero {
-          min-height: 82vh !important;
+          min-height: 760px !important;
+          height: 760px !important;
+          max-height: 760px !important;
+        }
+
+        .hero-content {
+          position: relative !important;
+          z-index: 2 !important;
+          opacity: 1 !important;
+          transform: none !important;
+          animation: none !important;
+          margin: 0 auto !important;
+        }
+
+        .hero-background,
+        .hero-overlay {
+          height: 100% !important;
+        }
+
+        .scroll-indicator {
+          bottom: 28px !important;
         }
 
         @media (max-width: 768px) {
           .hero {
-            min-height: 72vh !important;
+            min-height: 660px !important;
+            height: 660px !important;
+            max-height: 660px !important;
+          }
+
+          .hero-content {
+            padding: 1.25rem !important;
           }
         }
       `;
@@ -61,7 +90,8 @@ export default function MetauxCommunsPage() {
       if (!image.complete) image.addEventListener('load', updateHeight, { once: true });
     });
 
-    window.setTimeout(updateHeight, 350);
+    window.setTimeout(updateHeight, 150);
+    window.setTimeout(updateHeight, 500);
     window.setTimeout(updateHeight, 1200);
   };
 
