@@ -9,6 +9,7 @@ import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
 import ThemeProvider from "@/components/ThemeProvider";
 import ClientLayout from "@/components/ClientLayout";
+import GuideCompletRuntimeFixes from "@/components/GuideCompletRuntimeFixes";
 import "swiper/css";
 
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: false });
@@ -117,6 +118,7 @@ export default function RootLayout({
           <ClientLayout>
             <main className="relative min-h-screen overflow-visible">{children}</main>
           </ClientLayout>
+          <GuideCompletRuntimeFixes />
           <ScrollToTop />
           <Analytics />
           <JsonLd data={org} />
