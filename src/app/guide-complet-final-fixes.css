@@ -1,0 +1,55 @@
+/* Corrections finales ciblées pour /materiaux/guide-complet uniquement. */
+
+/* Le sommaire reste strictement fixe sous la navbar globale. */
+@media (min-width: 1025px) {
+  .hl-site-content:has(.toc-fixed) .toc-fixed {
+    position: fixed !important;
+    top: 86px !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    transform: none !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+  }
+}
+
+/* Le bouton retour flottant bleu fait doublon avec le bouton retour du contenu. */
+.hl-site-content:has(.toc-fixed) .floating-back-btn {
+  display: none !important;
+}
+
+/* La visionneuse de référence devient un vrai bloc documentaire. */
+.hl-site-content:has(.toc-fixed) .guide-pdf-source-link {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 1rem;
+  padding: .75rem 1rem;
+  border: 1px solid var(--hl-line);
+  background: var(--hl-bg-soft);
+  color: var(--hl-ink);
+  font-size: .8rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.hl-site-content:has(.toc-fixed) .guide-pdf-source-link:hover {
+  border-color: var(--hl-metal);
+  color: var(--hl-metal);
+}
+
+.hl-site-content:has(.toc-fixed) .guide-reference-frame {
+  display: block;
+  width: 100% !important;
+  min-height: 780px;
+  background: #fff;
+  border: 1px solid var(--hl-line) !important;
+}
+
+@media (max-width: 1024px) {
+  .hl-site-content:has(.toc-fixed) .guide-reference-frame {
+    min-height: 620px;
+  }
+}
