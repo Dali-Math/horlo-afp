@@ -39,15 +39,40 @@ export default function GuideCompletRuntimeFixes() {
       return true;
     };
 
-    if (repairPdf()) return;
+    const syncTocPosition = () => {
+      const toc = document.querySelector<HTMLElement>(".toc-fixed");
+      if (!toc || window.innerWidth < 1025) return;
+
+      const navbar = document.querySelector<HTMLElement>("header.sticky");
+      let top = 0;
+
+      if (navbar) {
+        const rect = navbar.getBoundingClientRect();
+        if (rect.bottom > 0 && rect.top < window.innerHeight) {
+          top = Math.max(0, Math.round(rect.bottom + 8));
+        }
+      }
+
+      toc.style.setProperty("--guide-toc-top", `${top}px`);
+    };
+
+    repairPdf();
+    syncTocPosition();
 
     const observer = new MutationObserver(() => {
-      if (repairPdf()) observer.disconnect();
+      repairPdf();
+      syncTocPosition();
     });
 
     observer.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener("scroll", syncTocPosition, { passive: true });
+    window.addEventListener("resize", syncTocPosition);
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", syncTocPosition);
+      window.removeEventListener("resize", syncTocPosition);
+    };
   }, [pathname]);
 
   return null;
