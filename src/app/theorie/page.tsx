@@ -449,6 +449,108 @@ export default function TheoriePage() {
           </div>
         </div>
 
+        <section className="rounded-3xl bg-white dark:bg-[#0D121F] border-2 border-amber-500/40 p-6 sm:p-8 shadow-xl space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                🔬 Nouveaux Simulateurs &amp; Comparateurs Visuels SVG (Loupe 10x)
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 dark:text-white mt-1">
+                Accès Direct aux Bancs Visuels Interactifs
+              </h2>
+            </div>
+            <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
+              Curseurs micrométriques &amp; Loupe 10x
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Link
+              href="/theorie/complications/tourbillon"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 mb-2">
+                  Cage Épicycloïdale 60s
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Simulateur du Tourbillon Breguet (360°)
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Roue fixe Code 227, pignon satellite et intégration gravitationnelle 0.0 s/j.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/complications/tourbillon)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
+
+            <Link
+              href="/theorie/complications/quantieme"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-purple-500/15 text-purple-600 dark:text-purple-400 mb-2">
+                  Cycle 1 461 Jours
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Came de 48 Mois &amp; Grand Levier (QP)
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Palpage des encoches 28j, 29j bissextile, 30j et 31j et saut de minuit.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/complications/quantieme)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
+
+            <Link
+              href="/theorie/mouvements/finitions-decoratives"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 mb-2">
+                  Poinçon de Genève
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Comparateur d&apos;Anglage Main &amp; Angle Rentrant
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Brut d&apos;étampage vs Chanfrein CNC 45° vs Anglage bercé à la tige de gentiane.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/finitions-decoratives)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
+
+            <Link
+              href="/theorie/entretien/diagnostic-pannes"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400 mb-2">
+                  Binoculaire &amp; Witschi
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Comparateur d&apos;Usure &amp; Pannes Mécaniques
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Pivot maté en champignon, goupilles de raquette, spiral aimanté et dent cisaillée.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/diagnostic-pannes)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
+          </div>
+        </section>
+
         {/* --- SECTION SHOWCASE : LES 4 GRANDS LABORATOIRES D'ÉLITE --- */}
         <section className="space-y-6 pt-4">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">

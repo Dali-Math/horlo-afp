@@ -445,6 +445,106 @@ export default function PratiquePage() {
           </div>
         </div>
 
+        <section className="rounded-3xl bg-white dark:bg-[#0b101b] border-2 border-amber-500/40 p-6 sm:p-8 shadow-xl space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                🔬 Bancs Visuels SVG &amp; Comparateurs sous Binoculaire (Loupe 10x)
+              </span>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mt-1">
+                Accès Direct aux Simulateurs Visuels d&apos;Atelier
+              </h2>
+            </div>
+            <span className="text-xs font-mono text-slate-500">Cliquez pour ouvrir un banc visuel</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Link
+              href="/pratique/huilage"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 mb-2">
+                  Moebius 9010 &amp; 9415
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Comparateur du Ménisque d&apos;Huile &amp; Palettes
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Curseur micrométrique du réservoir Incabloc (20% à 92%) et goutte thixotrope sur ancre.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/pratique/huilage)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
+
+            <Link
+              href="/pratique/outils"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 mb-2">
+                  Pierre d&apos;Arkansas
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Affûtage Lame en « T » &amp; Brucelles N° 5
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Comparateur de fente de vis (ripage cam-out vs 95%) et dressage des pointes Dumont.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/pratique/outils)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
+
+            <Link
+              href="/pratique/remontage"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 mb-2">
+                  Séquenceur 6 Étapes
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Assemblage Visuel ETA 6497 (Loupe 10x)
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Inspection pas-à-pas du remontage réel avec couples en cNm et points Moebius.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/pratique/remontage)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
+
+            <Link
+              href="/pratique/fiches/eta6497"
+              className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500 transition-all group flex flex-col justify-between gap-3"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-purple-500/15 text-purple-600 dark:text-purple-400 mb-2">
+                  19 Fournitures Réelles
+                </span>
+                <h3 className="font-serif text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-500">
+                  Banc d&apos;Inspection ETA 6497 &amp; 2824
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  Photos détourées haute résolution, codes Ebauches SA et schémas cinématiques SVG.
+                </p>
+              </div>
+              <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                <span>Ouvrir (/pratique/fiches/eta6497)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
+            </Link>
+          </div>
+        </section>
+
         {/* ========================================================================= */}
         {/* SECTION VEDETTE : L'ÉTABLI VIRTUEL DU MAÎTRE HORLOGER (INTERACTIF)        */}
         {/* ========================================================================= */}

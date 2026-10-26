@@ -306,6 +306,38 @@ export default function EntretienPage() {
               Le protocole opératoire d&apos;un service complet suisse dans les règles de l&apos;art : diagnostic, déshabillage soigné, lavage technique 4 bains, épilamage oléophobe, lubrification scientifique Moebius, réglage sur chronocomparateur et métrologie de l&apos;étanchéité.
             </p>
           </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+            <Link
+              href="/theorie/entretien/diagnostic-pannes"
+              className="p-4 rounded-2xl bg-white dark:bg-neutral-900 border-2 border-amber-500/40 hover:border-amber-500 transition-all flex items-center justify-between gap-3 group"
+            >
+              <div className="text-left">
+                <div className="text-[10px] font-mono font-bold uppercase text-amber-600 dark:text-amber-400">
+                  Banc Binoculaire SVG + Loupe 10x
+                </div>
+                <div className="font-serif text-base font-bold text-neutral-950 dark:text-white group-hover:text-amber-500">
+                  Comparateur Visuel d&apos;Usure &amp; Diagnostic des Pannes
+                </div>
+              </div>
+              <ArrowRight className="w-5 h-5 text-amber-500 shrink-0" />
+            </Link>
+
+            <Link
+              href="/theorie/entretien/revision-complete"
+              className="p-4 rounded-2xl bg-white dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-800 hover:border-amber-500 transition-all flex items-center justify-between gap-3 group"
+            >
+              <div className="text-left">
+                <div className="text-[10px] font-mono font-bold uppercase text-emerald-600 dark:text-emerald-400">
+                  Protocole 10 Étapes &amp; Lavage 4 Bains
+                </div>
+                <div className="font-serif text-base font-bold text-neutral-950 dark:text-white group-hover:text-amber-500">
+                  Dossier Opératoire de Révision Complète
+                </div>
+              </div>
+              <ArrowRight className="w-5 h-5 text-amber-500 shrink-0" />
+            </Link>
+          </div>
         </section>
 
         {/* =================================================================== */}
