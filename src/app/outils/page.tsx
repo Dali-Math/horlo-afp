@@ -3,6 +3,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { CALIBRE_DB } from '@/data/calibres';
 import {
   Wrench,
   Calculator,
@@ -52,7 +53,7 @@ interface TorqueItem {
 
 export default function OutilsPage() {
   const [activeTab, setActiveTab] = useState<
-    'diagnostic' | 'couples' | 'amplitude' | 'calculateurs' | 'cosc' | 'brucelles'
+    'diagnostic' | 'couples' | 'amplitude' | 'calculateurs' | 'cosc' | 'brucelles' | 'calibres' | 'traces' | 'equivalences'
   >('diagnostic');
 
   // =========================================================================
@@ -496,6 +497,161 @@ export default function OutilsPage() {
     }
   ];
 
+
+  // =========================================================================
+  // 7. BASE DE DONNÉES DES 130+ CALIBRES & ANGLES DE LEVÉE (CALIBRE_DB)
+  // =========================================================================
+  const [calibreSearch, setCalibreSearch] = useState<string>('');
+  const [calibreFreqFilter, setCalibreFreqFilter] = useState<number | 'all'>('all');
+  const [coscWatchRef, setCoscWatchRef] = useState<string>('Chronomètre d\'Atelier');
+  const [coscCalibreRef, setCoscCalibreRef] = useState<string>('ETA 2824-2 / SW200-1');
+
+  const filteredCalibres = useMemo(() => {
+    return CALIBRE_DB.filter((c) => {
+      const matchFreq = calibreFreqFilter === 'all' || c.beatRate === calibreFreqFilter;
+      const q = calibreSearch.toLowerCase().trim();
+      const matchSearch = !q || c.name.toLowerCase().includes(q) || c.id.toLowerCase().includes(q);
+      return matchFreq && matchSearch;
+    });
+  }, [calibreSearch, calibreFreqFilter]);
+
+  // =========================================================================
+  // 8. ATLAS VISUEL DES TRACÉS WITSCHI (SCHÉMAS SVG DE DIAGNOSTIC)
+  // =========================================================================
+  const [selectedTraceId, setSelectedTraceId] = useState<string>('normal');
+
+  const WITSCHI_TRACES = [
+    {
+      id: 'normal',
+      title: '1. Marche Normale & Isochrone',
+      badge: 'SAIN (0.0 ms • 290°)',
+      badgeColor: 'bg-emerald-500/15 text-emerald-500 border-emerald-500/30',
+      rate: '+2.0 s/j',
+      amp: '290°',
+      beat: '0.1 ms',
+      symptom: 'Ligne unique continue, parfaitement rectiligne, légèrement montante (+2 s/j). Points nets et resserrés.',
+      cause: 'Échappement sain, lubrification Moebius 9415 fraîche sur les plans d\'impulsion, centrage optimal de la cheville de plateau.',
+      action: 'Aucune retouche requise. Valider le contrôle dans les 5 positions ISO 3159.',
+      points: [
+        [20, 115], [55, 112], [90, 109], [125, 106], [160, 103], [195, 100], [230, 97], [265, 94], [300, 91], [335, 88], [370, 85], [405, 82], [440, 79]
+      ],
+      secondaryPoints: [] as number[][]
+    },
+    {
+      id: 'repere',
+      title: '2. Défaut de Repère (Beat Error > 1.2 ms)',
+      badge: 'REPÈRE DÉCALÉ (1.8 ms)',
+      badgeColor: 'bg-amber-500/15 text-amber-500 border-amber-500/30',
+      rate: '+1.5 s/j',
+      amp: '280°',
+      beat: '1.8 ms',
+      symptom: 'Deux lignes parallèles nettement séparées (alternance paire et alternance impaire décalées dans le temps).',
+      cause: 'Au repos du spiral, la cheville de plateau n\'est pas alignée sur la ligne des centres Balancier-Ancre.',
+      action: 'Déplacer le porte-piton mobile (ou tourner la virole sur calibre ancien) jusqu\'à fusionner les deux lignes (< 0.3 ms).',
+      points: [
+        [20, 95], [90, 90], [160, 85], [230, 80], [300, 75], [370, 70], [440, 65]
+      ],
+      secondaryPoints: [
+        [55, 132], [125, 127], [195, 122], [265, 117], [335, 112], [405, 107]
+      ]
+    },
+    {
+      id: 'rebattement',
+      title: '3. Rebattement / Knocking (Amplitude > 330°)',
+      badge: 'CRITIQUE (> 335°)',
+      badgeColor: 'bg-red-500/15 text-red-500 border-red-500/30',
+      rate: '+85.0 s/j',
+      amp: '338°',
+      beat: '0.4 ms',
+      symptom: 'Nuage de points chaotique (« neige ») accompagné d\'une pente verticale très forte et d\'un bruit de galop métallique.',
+      cause: 'L\'amplitude dépasse 330° : la cheville de plateau fait un tour complet et vient frapper le dos extérieur des cornes d\'ancre.',
+      action: 'Vérifier la bride glissante du barillet (graisse Klüber P125) ou remplacer un ressort-moteur trop fort.',
+      points: [
+        [20, 150], [45, 135], [70, 118], [95, 102], [120, 85], [145, 70], [170, 52], [195, 38], [220, 25], [245, 145], [270, 128], [295, 110], [320, 92], [345, 74], [370, 55], [395, 38], [420, 22]
+      ],
+      secondaryPoints: [
+        [35, 165], [60, 95], [85, 142], [110, 60], [135, 125], [160, 42], [185, 115], [210, 80], [260, 65], [310, 140], [360, 95], [410, 70]
+      ]
+    },
+    {
+      id: 'roue_voilee',
+      title: '4. Roue d\'Échappement Voilée / Dent Endommagée',
+      badge: 'ONDE CYCLIQUE',
+      badgeColor: 'bg-amber-500/15 text-amber-500 border-amber-500/30',
+      rate: '-3.0 s/j',
+      amp: '245°',
+      beat: '0.3 ms',
+      symptom: 'Le tracé dessine une vague sinusoïdale régulière qui se répète exactement toutes les 5 à 7 secondes (1 tour de roue d\'échappement).',
+      cause: 'Roue d\'échappement excentrée, pivot d\'échappement tordu ou une pointe de dent d\'échappement émoussée.',
+      action: 'Inspecter les 15 dents de la roue d\'échappement sous binoculaire 20x et contrôler le faux-rond au compas aux huitièmes.',
+      points: [
+        [20, 105], [50, 88], [80, 78], [110, 88], [140, 105], [170, 122], [200, 132], [230, 122], [260, 105], [290, 88], [320, 78], [350, 88], [380, 105], [410, 122], [440, 132]
+      ],
+      secondaryPoints: [] as number[][]
+    },
+    {
+      id: 'magnetisme',
+      title: '5. Spiral Magnétisé ou Spires Collées',
+      badge: 'AVANCE BRUTALE',
+      badgeColor: 'bg-red-500/15 text-red-500 border-red-500/30',
+      rate: '+48.0 s/j',
+      amp: '235°',
+      beat: '0.5 ms',
+      symptom: 'Tracé net mais incliné à près de 45° vers le haut (avance considérable de +30 s/j à plusieurs minutes/jour).',
+      cause: 'Champ magnétique résiduel collant deux spires actives du spiral Nivarox, raccourcissant sa longueur utile L.',
+      action: 'Démagnétiser le mouvement complet (tunnel Bergeon), puis recontrôler immédiatement au Witschi.',
+      points: [
+        [20, 165], [55, 152], [90, 139], [125, 126], [160, 113], [195, 100], [230, 87], [265, 74], [300, 61], [335, 48], [370, 35], [405, 22]
+      ],
+      secondaryPoints: [] as number[][]
+    },
+    {
+      id: 'sec',
+      title: '6. Défaut d\'Huilage / Palettes d\'Ancre Sèches',
+      badge: 'FROTTEMENT SEC',
+      badgeColor: 'bg-amber-500/15 text-amber-500 border-amber-500/30',
+      rate: '-14.0 s/j',
+      amp: '195°',
+      beat: '0.6 ms',
+      symptom: 'Tracé épais, baveux et descendant (retard), avec dispersion verticale des points autour de la ligne moyenne.',
+      cause: 'Graisse thixotrope Moebius 9415 absente ou résinifiée sur les palettes de rubis, ou contre-pivots de balancier secs.',
+      action: 'Nettoyage complet de l\'échappement à l\'essence C / One-Dip et lubrification fraîche aux 5 lubrifiants Moebius.',
+      points: [
+        [20, 72], [55, 78], [90, 83], [125, 91], [160, 96], [195, 104], [230, 110], [265, 118], [300, 125], [335, 131], [370, 139], [405, 145], [440, 152]
+      ],
+      secondaryPoints: [
+        [35, 82], [70, 74], [105, 94], [140, 85], [175, 108], [210, 98], [245, 122], [280, 112], [315, 135], [350, 125], [385, 148], [420, 138]
+      ]
+    }
+  ];
+
+  const currentTrace = WITSCHI_TRACES.find((t) => t.id === selectedTraceId) || WITSCHI_TRACES[0];
+
+  // =========================================================================
+  // 9. TABLES D'INTERCHANGEABILITÉ D'ÉTABLI (PILES, ANTICHOCS, AIGUILLES)
+  // =========================================================================
+  const BATTERY_TABLE = [
+    { renata: '377', iec: 'SR626SW', dim: 'Ø 6.80 × 2.60 mm', cap: '28 mAh', calibres: 'ETA 955.412, Ronda 763, Miyota 2035 (La plus répandue)' },
+    { renata: '364', iec: 'SR621SW', dim: 'Ø 6.80 × 2.15 mm', cap: '19 mAh', calibres: 'ETA 956.032, Ronda 751 / 762, Miyota 5Y20' },
+    { renata: '371', iec: 'SR920SW', dim: 'Ø 9.50 × 2.05 mm', cap: '40 mAh', calibres: 'ETA 955.112 (Standard 11½ lignes), Ronda 715, Miyota 2115' },
+    { renata: '395', iec: 'SR927SW', dim: 'Ø 9.50 × 2.70 mm', cap: '55 mAh', calibres: 'ETA G10.211 / 251.272 (Chronographes Quartz), Ronda 5030.D' },
+    { renata: '394', iec: 'SR936SW', dim: 'Ø 9.50 × 3.60 mm', cap: '84 mAh', calibres: 'ETA 251.262, Omega 1370, Chronographes haute consommation' },
+    { renata: '321', iec: 'SR616SW', dim: 'Ø 6.80 × 1.65 mm', cap: '14.5 mAh', calibres: 'ETA 902.002, calibres extra-plats Joaillerie & Dames' },
+    { renata: '317', iec: 'SR516SW', dim: 'Ø 5.80 × 1.65 mm', cap: '10.5 mAh', calibres: 'ETA 976.001, Patek Philippe E15, Audemars Piguet Quartz' },
+    { renata: '379', iec: 'SR521SW', dim: 'Ø 5.80 × 2.15 mm', cap: '14 mAh', calibres: 'ETA 901.001, Cartier Tank Must / Panthère Quartz' }
+  ];
+
+  const HANDS_CALIBER_TABLE = [
+    { calibre: 'ETA 2824-2 / Sellita SW200-1', heures: 'Ø 1.50 mm', minutes: 'Ø 0.90 mm', secondes: 'Ø 0.25 mm', tige: '401-2824 (Filetage Ø 0.90 mm)' },
+    { calibre: 'ETA 2892-A2 / Sellita SW300-1', heures: 'Ø 1.50 mm', minutes: 'Ø 0.90 mm', secondes: 'Ø 0.25 mm', tige: '401-2892 (Filetage Ø 0.90 mm)' },
+    { calibre: 'ETA / Valjoux 7750 / SW500', heures: 'Ø 2.00 mm', minutes: 'Ø 1.20 mm', secondes: 'Ø 0.25 mm (Compteurs 0.20)', tige: '401-7750 (Filetage Ø 0.90 / 1.00 mm)' },
+    { calibre: 'ETA Unitas 6497-1 / 6498-1', heures: 'Ø 2.00 mm', minutes: 'Ø 1.15 mm', secondes: 'Ø 0.27 mm (Petite sec. 6h/9h)', tige: '401-6497 (Filetage Ø 1.20 mm)' },
+    { calibre: 'ETA / Peseux 7001 (Extra-plat)', heures: 'Ø 1.30 mm', minutes: 'Ø 0.80 mm', secondes: 'Ø 0.20 mm', tige: '401-7001 (Filetage Ø 0.90 mm)' },
+    { calibre: 'Rolex Calibre 3135 / 3235', heures: 'Ø 1.50 mm', minutes: 'Ø 0.90 mm', secondes: 'Ø 0.22 mm', tige: 'Rolex Part 3135-510' },
+    { calibre: 'Miyota 9015 / 8215', heures: 'Ø 1.52 mm', minutes: 'Ø 1.00 mm', secondes: 'Ø 0.17 mm', tige: '065-A05 (Filetage Ø 0.90 mm)' },
+    { calibre: 'Seiko NH35A / 4R35', heures: 'Ø 1.50 mm', minutes: 'Ø 0.89 mm', secondes: 'Ø 0.21 mm', tige: '351-200 (Filetage Ø 0.90 mm)' }
+  ];
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#070A10] text-slate-900 dark:text-slate-100 transition-colors duration-200">
       
@@ -556,7 +712,10 @@ export default function OutilsPage() {
               { id: 'amplitude', label: '3. Amplitude & Rebatement', sub: 'Analyse Witschi' },
               { id: 'calculateurs', label: '4. Métrologie Express', sub: 'Lignes, Hz & Réserve' },
               { id: 'cosc', label: '5. Contrôle COSC', sub: 'Norme ISO 3159' },
-              { id: 'brucelles', label: '6. Brucelles Dumont', sub: 'N° 1 à 5 & Laiton' }
+              { id: 'brucelles', label: '6. Brucelles Dumont', sub: 'N° 1 à 5 & Laiton' },
+              { id: 'calibres', label: '7. Base 130+ Calibres', sub: 'Angles de Levée & A/h' },
+              { id: 'traces', label: '8. Tracés Witschi SVG', sub: 'Atlas Visuel des Pannes' },
+              { id: 'equivalences', label: '9. Équivalences d\'Établi', sub: 'Piles Renata & Aiguilles' }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -1209,6 +1368,12 @@ export default function OutilsPage() {
                   Chute Verticale (+7 s/j)
                 </button>
                 <button
+                  onClick={() => typeof window !== 'undefined' && window.print()}
+                  className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all shadow-sm"
+                >
+                  🖨️ Imprimer Bulletin ISO 3159
+                </button>
+                <button
                   onClick={() => applyCoscPreset('refuse')}
                   className="px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30 hover:bg-red-500/20 transition-all"
                 >
@@ -1513,6 +1678,315 @@ export default function OutilsPage() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+
+        {/* ========================================================================= */}
+        {/* POSTE 7 : BASE DE DONNÉES DES 130+ CALIBRES & ANGLES DE LEVÉE */}
+        {/* ========================================================================= */}
+        {activeTab === 'calibres' && (
+          <div className="bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-200 dark:border-white/10 p-6 shadow-sm transition-colors space-y-6">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-200 dark:border-white/10 pb-6">
+              <div>
+                <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-mono uppercase tracking-wider mb-2">
+                  <span>🇨🇭 Répertoire Métrologique d&apos;Établi • {CALIBRE_DB.length} Calibres Référencés</span>
+                </div>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Chercheur d&apos;Angles de Levée (Lift Angle) &amp; Fréquences
+                </h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  Paramétrez votre chronocomparateur Witschi avec l&apos;angle de levée exact du calibre (erreur de ±6° d&apos;amplitude par degré d&apos;angle erroné).
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+                <div className="relative w-full sm:w-72">
+                  <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+                  <input
+                    type="text"
+                    value={calibreSearch}
+                    onChange={(e) => setCalibreSearch(e.target.value)}
+                    placeholder="Ex: 2892, 7750, 3135, El Primero, SW200..."
+                    className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 text-xs font-mono focus:outline-none focus:border-amber-500 text-slate-900 dark:text-white"
+                  />
+                </div>
+                <select
+                  value={calibreFreqFilter}
+                  onChange={(e) => setCalibreFreqFilter(e.target.value === 'all' ? 'all' : Number(e.target.value))}
+                  className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 text-xs font-mono font-bold text-amber-600 dark:text-amber-400"
+                >
+                  <option value="all">Toutes fréquences ({CALIBRE_DB.length})</option>
+                  <option value={18000}>18&apos;000 A/h (2.5 Hz)</option>
+                  <option value={21600}>21&apos;600 A/h (3.0 Hz)</option>
+                  <option value={25200}>25&apos;200 A/h (3.5 Hz)</option>
+                  <option value={28800}>28&apos;800 A/h (4.0 Hz)</option>
+                  <option value={36000}>36&apos;000 A/h (5.0 Hz)</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto max-h-[540px]">
+              <table className="w-full text-left text-xs font-mono">
+                <thead className="sticky top-0 bg-white dark:bg-[#0D121F] z-10">
+                  <tr className="border-b border-slate-200 dark:border-white/10 text-slate-400 uppercase text-[10px] tracking-wider">
+                    <th className="py-3 px-3">Manufacture &amp; Calibre</th>
+                    <th className="py-3 px-3">Angle de Levée</th>
+                    <th className="py-3 px-3">Fréquence</th>
+                    <th className="py-3 px-3">Amplitude Min.</th>
+                    <th className="py-3 px-3">Repère Max.</th>
+                    <th className="py-3 px-3 text-right">Action Witschi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-white/5">
+                  {filteredCalibres.map((c) => (
+                    <tr key={c.id} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                      <td className="py-3 px-3 font-bold text-slate-900 dark:text-white">{c.name}</td>
+                      <td className="py-3 px-3">
+                        <span className="px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-600 dark:text-amber-400 font-bold border border-amber-500/30">
+                          {c.liftAngle}°
+                        </span>
+                      </td>
+                      <td className="py-3 px-3 text-slate-600 dark:text-slate-300">
+                        {c.beatRate.toLocaleString()} A/h ({(c.beatRate / 7200).toFixed(1).replace('.0', '')} Hz)
+                      </td>
+                      <td className="py-3 px-3 text-emerald-600 dark:text-emerald-400 font-bold">&ge; {c.minAmplitude}°</td>
+                      <td className="py-3 px-3 text-slate-500">&le; {c.maxBeatError} ms</td>
+                      <td className="py-3 px-3 text-right">
+                        <button
+                          onClick={() => {
+                            setLiftAngle(c.liftAngle);
+                            setActiveTab('amplitude');
+                          }}
+                          className="px-3 py-1 rounded-lg bg-slate-100 dark:bg-white/10 hover:bg-amber-500 hover:text-slate-950 text-slate-700 dark:text-slate-200 font-bold transition-all text-[11px]"
+                        >
+                          Simuler ({c.liftAngle}°) ➔
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* POSTE 8 : ATLAS VISUEL DES TRACÉS WITSCHI (SCHÉMAS SVG) */}
+        {/* ========================================================================= */}
+        {activeTab === 'traces' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Sélecteur des 6 Pannes Types */}
+            <div className="bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-200 dark:border-white/10 p-5 shadow-sm space-y-3">
+              <div className="border-b border-slate-200 dark:border-white/10 pb-3">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-amber-500 font-bold">
+                  Diagnostic Acoustique &amp; Visuel
+                </span>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Atlas des Tracés au Vibrographe
+                </h2>
+              </div>
+
+              <div className="space-y-2">
+                {WITSCHI_TRACES.map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => setSelectedTraceId(t.id)}
+                    className={`w-full text-left p-3.5 rounded-xl border transition-all ${
+                      selectedTraceId === t.id
+                        ? 'bg-amber-500/15 border-amber-500 text-slate-900 dark:text-white shadow-sm'
+                        : 'bg-slate-50 dark:bg-black/20 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-amber-500/40'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <span className="font-bold text-xs">{t.title}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                      <span>Marche: <strong className="text-amber-500">{t.rate}</strong></span>
+                      <span>Amp: <strong>{t.amp}</strong></span>
+                      <span>Repère: <strong>{t.beat}</strong></span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Écran Oscilloscope Witschi SVG + Fiche Clinique */}
+            <div className="lg:col-span-2 bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-200 dark:border-white/10 p-6 shadow-sm flex flex-col justify-between space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-white/10 pb-4">
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400">
+                    Relevé Chronoscope Witschi • Papier Défilant
+                  </span>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-0.5">
+                    {currentTrace.title}
+                  </h3>
+                </div>
+                <span className={`px-3 py-1 rounded-full text-xs font-mono font-bold border ${currentTrace.badgeColor}`}>
+                  {currentTrace.badge}
+                </span>
+              </div>
+
+              {/* Écran Vectoriel SVG du Chronocomparateur */}
+              <div
+                className="w-full rounded-2xl border border-amber-500/30 overflow-hidden p-4"
+                style={{ background: '#060B14' }}
+              >
+                <div className="flex flex-wrap items-center justify-between gap-4 pb-3 mb-3 border-b border-slate-800 font-mono text-xs">
+                  <div className="flex items-center gap-4">
+                    <span className="text-slate-400">MARCHE: <strong className="text-amber-400 text-sm">{currentTrace.rate}</strong></span>
+                    <span className="text-slate-400">AMPLITUDE: <strong className="text-emerald-400 text-sm">{currentTrace.amp}</strong></span>
+                    <span className="text-slate-400">REPÈRE: <strong className="text-sky-400 text-sm">{currentTrace.beat}</strong></span>
+                  </div>
+                  <span className="text-[10px] text-slate-500 uppercase">52.0° • 28&apos;800 A/h • Position CH</span>
+                </div>
+
+                <svg viewBox="0 0 460 180" className="w-full h-44 block">
+                  {/* Grille millimétrée Witschi */}
+                  {[30, 60, 90, 120, 150].map((y) => (
+                    <line key={y} x1="0" y1={y} x2="460" y2={y} stroke="#1E293B" strokeWidth={y === 90 ? '1.2' : '0.6'} strokeDasharray={y === 90 ? '4 4' : undefined} />
+                  ))}
+                  {[60, 120, 180, 240, 300, 360, 420].map((x) => (
+                    <line key={x} x1={x} y1="0" x2={x} y2="180" stroke="#1E293B" strokeWidth="0.6" />
+                  ))}
+
+                  {/* Ligne directrice principale */}
+                  {currentTrace.points.length > 1 && (
+                    <polyline
+                      fill="none"
+                      stroke="#10B981"
+                      strokeOpacity="0.35"
+                      strokeWidth="1.5"
+                      points={currentTrace.points.map(([x, y]) => `${x},${y}`).join(' ')}
+                    />
+                  )}
+                  {currentTrace.secondaryPoints.length > 1 && (
+                    <polyline
+                      fill="none"
+                      stroke="#F59E0B"
+                      strokeOpacity="0.35"
+                      strokeWidth="1.5"
+                      points={currentTrace.secondaryPoints.map(([x, y]) => `${x},${y}`).join(' ')}
+                    />
+                  )}
+
+                  {/* Impacts acoustiques (Points lumineux Witschi) */}
+                  {currentTrace.points.map(([x, y], idx) => (
+                    <g key={`p-${idx}`}>
+                      <circle cx={x} cy={y} r="4.5" fill="#10B981" fillOpacity="0.2" />
+                      <circle cx={x} cy={y} r="2.3" fill="#34D399" />
+                    </g>
+                  ))}
+                  {currentTrace.secondaryPoints.map(([x, y], idx) => (
+                    <g key={`s-${idx}`}>
+                      <circle cx={x} cy={y} r="4.5" fill="#F59E0B" fillOpacity="0.2" />
+                      <circle cx={x} cy={y} r="2.3" fill="#FBBF24" />
+                    </g>
+                  ))}
+                </svg>
+              </div>
+
+              {/* Explication & Remède d'Établi */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono">
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                  <strong className="text-amber-600 dark:text-amber-400 uppercase block mb-1">Lecture du Tracé :</strong>
+                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{currentTrace.symptom}</p>
+                </div>
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                  <strong className="text-red-500 uppercase block mb-1">Origine Mécanique :</strong>
+                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{currentTrace.cause}</p>
+                </div>
+                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/25">
+                  <strong className="text-emerald-600 dark:text-emerald-400 uppercase block mb-1">Correction d&apos;Établi :</strong>
+                  <p className="text-slate-700 dark:text-slate-200 leading-relaxed">{currentTrace.action}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* POSTE 9 : TABLES D'ÉQUIVALENCE D'ÉTABLI (PILES RENATA & AIGUILLES) */}
+        {/* ========================================================================= */}
+        {activeTab === 'equivalences' && (
+          <div className="space-y-8">
+            {/* Table 1 : Canons d'Aiguilles & Tiges de Remontoir */}
+            <div className="bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-200 dark:border-white/10 p-6 shadow-sm space-y-4">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-amber-500 font-bold">
+                  Aiguillage &amp; Tigerie (Cotes d&apos;Ajustement)
+                </span>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Diamètres des Canons d&apos;Aiguilles (H / M / S) &amp; Références de Tiges (Code 401)
+                </h2>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs font-mono">
+                  <thead>
+                    <tr className="border-b border-slate-200 dark:border-white/10 text-slate-400 uppercase text-[10px] tracking-wider">
+                      <th className="py-3 px-3">Calibre</th>
+                      <th className="py-3 px-3">Canon Heures (H)</th>
+                      <th className="py-3 px-3">Canon Minutes (M)</th>
+                      <th className="py-3 px-3">Pivot Seconde (S)</th>
+                      <th className="py-3 px-3">Tige de Remontoir (Code 401)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-white/5">
+                    {HANDS_CALIBER_TABLE.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-white/5">
+                        <td className="py-3 px-3 font-bold text-slate-900 dark:text-white">{row.calibre}</td>
+                        <td className="py-3 px-3 text-amber-600 dark:text-amber-400 font-bold">{row.heures}</td>
+                        <td className="py-3 px-3 text-emerald-600 dark:text-emerald-400 font-bold">{row.minutes}</td>
+                        <td className="py-3 px-3 text-sky-600 dark:text-sky-400 font-bold">{row.secondes}</td>
+                        <td className="py-3 px-3 text-slate-600 dark:text-slate-300">{row.tige}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Table 2 : Correspondance des Piles Horlogères Suisses Renata (Oxyde d'Argent 1.55V) */}
+            <div className="bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-200 dark:border-white/10 p-6 shadow-sm space-y-4">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-500 font-bold">
+                  Équivalence Officielle Suisse • Oxyde d&apos;Argent 1.55V (Low Drain SW)
+                </span>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Table de Correspondance des Piles Horlogères (Renata &harr; Code IEC SR)
+                </h2>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs font-mono">
+                  <thead>
+                    <tr className="border-b border-slate-200 dark:border-white/10 text-slate-400 uppercase text-[10px] tracking-wider">
+                      <th className="py-3 px-3">Réf. Suisse Renata</th>
+                      <th className="py-3 px-3">Norme IEC (Seiko / Maxell)</th>
+                      <th className="py-3 px-3">Dimensions (Ø × Hauteur)</th>
+                      <th className="py-3 px-3">Capacité</th>
+                      <th className="py-3 px-3">Calibres Quartz Types</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-white/5">
+                    {BATTERY_TABLE.map((b, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-white/5">
+                        <td className="py-3 px-3">
+                          <span className="px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-600 dark:text-amber-400 font-bold">
+                            Renata {b.renata}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3 font-bold text-slate-900 dark:text-white">{b.iec}</td>
+                        <td className="py-3 px-3 text-slate-600 dark:text-slate-300">{b.dim}</td>
+                        <td className="py-3 px-3 text-emerald-600 dark:text-emerald-400 font-bold">{b.cap}</td>
+                        <td className="py-3 px-3 text-slate-500 dark:text-slate-400">{b.calibres}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         )}
 
