@@ -12,6 +12,7 @@ import ThemeProvider from "@/components/ThemeProvider";
 import ClientLayout from "@/components/ClientLayout";
 import GuideCompletRuntimeFixes from "@/components/GuideCompletRuntimeFixes";
 import MetauxCommunsRuntimeFixes from "@/components/MetauxCommunsRuntimeFixes";
+import MetauxCommunsThemePolish from "@/components/MetauxCommunsThemePolish";
 import "swiper/css";
 
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: false });
@@ -122,6 +123,7 @@ export default function RootLayout({
           </ClientLayout>
           <GuideCompletRuntimeFixes />
           <MetauxCommunsRuntimeFixes />
+          <MetauxCommunsThemePolish />
           <ScrollToTop />
           <Analytics />
           <JsonLd data={org} />
