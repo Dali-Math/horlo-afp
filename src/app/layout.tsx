@@ -1,6 +1,7 @@
 // app/layout.tsx
 import "./globals.css";
 import "./guide-complet-fixes.css";
+import "./guide-complet-final-fixes.css";
 import type { Metadata } from "next";
 import { SITE } from "@/lib/seo";
 import dynamic from "next/dynamic";
