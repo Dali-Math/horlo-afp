@@ -2,162 +2,212 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, CheckCircle2, XCircle, AlertCircle, Sparkles, Eye } from 'lucide-react';
+import {
+  ArrowLeft,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+  Sparkles,
+  Eye,
+  ZoomIn,
+  Sliders
+} from 'lucide-react';
 
 export default function FinitionsDecorativesPage() {
-  const [selectedTechnique, setSelectedTechnique] = useState<string>('');
+  const [selectedTechnique, setSelectedTechnique] = useState<string>('anglage');
+  const [finishingLevel, setFinishingLevel] = useState<number>(88);
+  const [loupe10x, setLoupe10x] = useState<boolean>(false);
   const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: string }>({});
   const [showResults, setShowResults] = useState(false);
 
+  const getAnglageState = (val: number) => {
+    if (val < 35) {
+      return {
+        mode: 'raw',
+        badge: 'BRUT D’ÉTAMPAGE / FRAISAGE — BAVURE NON ÉLIMINÉE',
+        color: 'text-rose-500 border-rose-500/40 bg-rose-500/10',
+        title: 'Arête vive à 90° avec bavure métallique résiduelle (Risque d’arrêt)',
+        desc: 'Sortie de presse ou d’usinage brut : une lèvre de métal écroui (bavure de 10 à 25 µm) subsiste sur l’arête supérieure et le flanc présente des stries verticales d’arrachement. Cette bavure peut se détacher en fonctionnement et bloquer un pignon.',
+        surfaceRa: 'Ra 0.80 µm (Stries brutes)',
+        interiorCorner: 'Brut / Écrasé',
+        verdict: 'INACCEPTABLE EN HORLOGERIE SOIGNÉE (DANGER DE COPEAU LIBRE)'
+      };
+    }
+    if (val <= 72) {
+      return {
+        mode: 'cnc',
+        badge: 'CHANFREIN MACHINE CNC À 45° — FINITION INDUSTRIELLE',
+        color: 'text-amber-500 border-amber-500/40 bg-amber-500/10',
+        title: 'Chanfrein plat usiné à la fraise diamant : rayon résiduel dans l’angle',
+        desc: 'La fraise rotative coupe un plan incliné strict à 45° qui élimine la bavure. Toutefois, une fraise cylindrique en rotation ne peut physiquement pas usiner un angle rentrant vif : le creux conserve obligatoirement le rayon de l’outil (R = 0.20 mm).',
+        surfaceRa: 'Ra 0.12 µm (Facettes fraise)',
+        interiorCorner: 'Rayon R = 0.20 mm (Arrondi)',
+        verdict: 'PROPRE MÉCANIQUEMENT MAIS SANS ANGLE RENTRANT ARTISANAL'
+      };
+    }
+    return {
+      mode: 'hand',
+      badge: 'HAUTE HORLOGERIE — ANGLAGE MAIN BERCÉ & ANGLE RENTRANT',
+      color: 'text-emerald-500 border-emerald-500/40 bg-emerald-500/10',
+      title: 'Anglage bercé poli miroir à la tige de gentiane & arête rentrante vive',
+      desc: 'Ouvert à la lime douce, adouci au cabron d’émeri 4/0 puis poli miroir à la cheville de bois de gentiane chargée de pâte diamant (1 µm puis 0.25 µm). Le profil est légèrement bombé (« bercé »), le flanc est étiré au trait et les deux bandeaux se rejoignent en une ligne d’angle rentrant d’une netteté chirurgicale.',
+      surfaceRa: 'Ra < 0.01 µm (Poli miroir)',
+      interiorCorner: 'Angle rentrant vif (Arête pure)',
+      verdict: 'EXCELLENCE ARTISANALE (POINÇON DE GENÈVE / FINITION MAIN)'
+    };
+  };
+
+  const anglageInfo = getAnglageState(finishingLevel);
+
   const techniques = [
+    {
+      id: 'anglage',
+      name: 'Anglage & Angle Rentrant',
+      subtitle: 'Hand Beveling & Interior Angle',
+      icon: '◇',
+      description: 'Chanfrein bercé poli miroir sur l’arête des ponts, dressé à la lime et à la tige de gentiane',
+      details: {
+        outil: 'Lime cabron, papier émeri 4/0, bois de gentiane & pâte diamant 0.25 µm',
+        finition: 'Profil légèrement bercé (convexe) poli miroir sans facettes ni ondulations',
+        angle: '45° nominal • Largeur régulière de 0.30 à 0.80 mm',
+        signature: 'Angle rentrant vif (impossible à réaliser avec une fraise rotative CNC)',
+        duree: '2 à 8 heures par pont selon le nombre d’angles rentrants et sortants'
+      },
+      avantages: ['Élimine toute bavure susceptible de se détacher', 'Empêche l’étalement capillaire des huiles', 'Preuve irréfutable du travail manuel'],
+      usages: ['Philippe Dufour (Simplicity)', 'Kari Voutilainen', 'Patek Philippe & Vacheron Constantin']
+    },
     {
       id: 'perlage',
       name: 'Perlage',
       subtitle: 'Circular Graining',
       icon: '⚪',
-      description: 'Décor de cercles imbriqués sur surfaces planes',
+      description: 'Décor de cercles concentriques se chevauchant à 50 % sur la platine et les noyures',
       details: {
-        outil: 'Bâton en bois (buis) avec pâte abrasive diamant',
-        technique: 'Rotation à 1500-3000 tr/min, pression contrôlée',
-        effet: 'Surface mate et homogène, signature de qualité',
-        duree: '30 min à 2h selon taille du mouvement',
-        zones: 'Platine, ponts, fonds de recoins',
+        outil: 'Cheville en bois de buis ou cabron abrasif monté sur perceuse sensitive',
+        technique: 'Rotation à 1 500–2 500 tr/min, pas de recouvrement strict d’un demi-diamètre',
+        effet: 'Surface satinée mate captant les micro-poussières hors des rouages',
+        duree: '30 min à 2 h selon le nombre de noyures de la platine',
+        zones: 'Platine principale, fond des noyures de barillet et dessous des ponts'
       },
-      avantages: ['Masque micro-rayures', 'Facilite inspection (poussières visibles)', 'Aspect uniforme'],
-      usages: ['Patek Philippe', 'Vacheron Constantin', 'Audemars Piguet'],
+      avantages: ['Masque les traces d’usinage', 'Révèle immédiatement toute poussière à l’inspection', 'Stabilise l’état de surface'],
+      usages: ['Patek Philippe', 'Audemars Piguet', 'A. Lange & Söhne']
     },
     {
       id: 'cotes',
       name: 'Côtes de Genève',
       subtitle: 'Geneva Stripes',
       icon: '〰️',
-      description: 'Rayures parallèles ondulées caractéristiques',
+      description: 'Ondes parallèles finement striées sur la face supérieure des ponts rhodiés ou maillechort',
       details: {
-        outil: 'Cabron (bois dur) monté sur axe rotatif',
-        technique: 'Déplacement linéaire + rotation simultanés',
-        largeur: '0,5 à 2 mm par strie',
-        effet: 'Jeu de lumière et ombres, élégance raffinée',
-        origine: 'Genève, XVIIIᵉ siècle',
+        outil: 'Meule de buis ou disque souple abrasif incliné d’un léger angle d’attaque',
+        technique: 'Translation rectiligne du chariot sous l’outil en rotation',
+        largeur: '0.8 à 2.0 mm par côte avec ligne de séparation franche',
+        effet: 'Diffraction soyeuse de la lumière changeant selon l’inclinaison du poignet',
+        origine: 'Tradition horlogère genevoise codifiée au XIXe siècle'
       },
-      avantages: ['Signature genevoise', 'Effet visuel dynamique', 'Valorisation esthétique'],
-      usages: ['Vacheron Constantin (référence)', 'Patek Philippe', 'Lange & Söhne'],
+      avantages: ['Évite l’éblouissement sous la loupe d’établi', 'Identité visuelle genevoise', 'Contraste sublime avec l’anglage poli miroir'],
+      usages: ['Vacheron Constantin', 'Patek Philippe', 'Chopard L.U.C']
     },
     {
-      id: 'anglage',
-      name: 'Anglage',
-      subtitle: 'Beveling / Chamfering',
-      icon: '◇',
-      description: 'Chanfrein poli miroir sur arêtes, fait main',
+      id: 'polinoir',
+      name: 'Poli Noir (Spéculaire)',
+      subtitle: 'Black Polishing / Specular Polish',
+      icon: '⬛',
+      description: 'Polissage plan absolu des pièces en acier (cages de tourbillon, coqs, têtes de vis)',
       details: {
-        outil: 'Lime diamant grain fin, papiers abrasifs progressifs',
-        finition: 'Polissage miroir manuel (10 000 tours/min)',
-        angle: '45° avec largeur 0,3 à 1 mm',
-        difficulte: 'Très haute ; angle constant sur toute longueur',
-        duree: '2 à 8h par pont selon complexité',
+        outil: 'Lapidaire en zinc pur parfaitement dressé et enduit de pâte diamantée',
+        technique: 'Frottement manuel en « 8 » sans aucune pression déséquilibrée',
+        effet: 'La lumière est réfléchie dans une seule direction : la pièce paraît noire d’un côté et blanche éclatante de l’autre',
+        difficulte: 'La moindre poussière sur le bloc de zinc oblige à reprendre tout le polissage à zéro',
+        duree: '3 à 6 heures pour un seul pont de cage de tourbillon en acier'
       },
-      avantages: ['Marque excellence artisanale', 'Ébavure élégante', 'Résistance corrosion'],
-      usages: ['Voutilainen (référence absolue)', 'Philippe Dufour', 'Lange & Söhne'],
+      avantages: ['Plus haut degré de finition de l’acier trempé', 'Résistance accrue à l’oxydation', 'Planéité optique au dixième de micron'],
+      usages: ['Breguet', 'Greubel Forsey', 'A. Lange & Söhne']
     },
     {
       id: 'guillochage',
-      name: 'Guillochage',
-      subtitle: 'Engine Turning',
+      name: 'Guillochage Main',
+      subtitle: 'Rose-Engine & Straight-Line Turning',
       icon: '🌀',
-      description: 'Gravure de motifs géométriques complexes',
+      description: 'Gravure au burin sur tour à guillocher manuel à cames (rosaces ou ligne droite)',
       details: {
-        machine: 'Tour à guillocher manuel (XVIIIᵉ siècle)',
-        motifs: 'Vagues, paniers, damiers, soleils, losanges',
-        application: 'Rotors, cadrans, calottes de balancier',
-        rarete: '10-15 guillocheurs actifs en Europe',
-        temps: '4 à 12h par cadran selon complexité',
+        machine: 'Tour à guillocher à rosaces ou tour à ligne droite guidé à la main',
+        motifs: 'Clous de Paris, grain d’orge, vieux panier, flammé, panier tressé',
+        application: 'Cadrans en or ou argent massif, masses oscillantes en platine ou or',
+        precision: 'Profondeur de sillon de 0.04 mm régulée uniquement par le toucher de l’artisan',
+        temps: '6 à 16 heures par cadran sans droit à l’erreur'
       },
-      avantages: ['Art ancestral unique', 'Pièces uniques', 'Valeur patrimoniale'],
-      usages: ['Breguet (pionnier 1775)', 'Voutilainen', 'Kari Voutilainen'],
+      avantages: ['Antireflet naturel sur le cadran pour une lisibilité parfaite des aiguilles', 'Chaque cadran possède le rythme vivant de la main', 'Patrimoine horloger séculaire'],
+      usages: ['Breguet (depuis 1786)', 'Kari Voutilainen', 'Andersen Genève']
     },
     {
-      id: 'satinage',
-      name: 'Satinage / Brossage',
-      subtitle: 'Satin Finish',
+      id: 'etirage',
+      name: 'Étirage des Flancs & Moulures',
+      subtitle: 'Straight-Graining & Polished Sinks',
       icon: '═',
-      description: 'Finition directionnelle mate par brossage',
+      description: 'Satinage longitudinal au trait des flancs de ponts et polissage sphérique des gouttes de rubis',
       details: {
-        types: 'Circulaire, linéaire, soleil (radial)',
-        grain: '400 à 1200 selon effet souhaité',
-        zones: 'Flancs de ponts, rotor, platine périphérique',
-        effet: 'Aspect sportif/technique, reflets directionnels',
-        methode: 'Brossage abrasif contrôlé',
+        types: 'Traits rectilignes parallèles au plan de la platine sur toute la tranche du pont',
+        grain: 'Cabron garni de papier émeri grain 600 à 1 200',
+        moulures: 'Découvertes (noyures de vis et de pierres) polies miroir au diamant sur cheville de buis',
+        effet: 'Contraste mat/miroir entre le flanc vertical étiré et l’anglage à 45° poli',
+        methode: 'Dressage rigoureusement perpendiculaire pour ne pas arrondir l’arête inférieure'
       },
-      avantages: ['Masque rayures usage', 'Aspect moderne', 'Contraste avec poli'],
-      usages: ['Audemars Piguet Royal Oak', 'Rolex (flancs boîtier)', 'Omega'],
-    },
-    {
-      id: 'soleillage',
-      name: 'Soleillage',
-      subtitle: 'Sunray Finish',
-      icon: '☀️',
-      description: 'Rayons partant du centre vers extérieur',
-      details: {
-        technique: 'Brossage rotatif avec lignes radiales',
-        effet: 'Effet soleil, dynamisme visuel',
-        application: 'Cadrans, rotors, fonds de boîtes',
-        contraste: 'Reflets changeants selon angle lumière',
-        popularite: 'Très utilisé horlogerie moderne',
-      },
-      avantages: ['Effet lumineux spectaculaire', 'Illusion de profondeur', 'Signature moderne'],
-      usages: ['Rolex (cadrans)', 'Omega Seamaster', 'Tudor'],
-    },
+      avantages: ['Supprime toutes les stries verticales d’étampage ou d’électroérosion', 'Souligne la finesse architecturale du pont', 'Exigence fondamentale du Poinçon de Genève'],
+      usages: ['Audemars Piguet', 'Roger Dubuis', 'Laurent Ferrier']
+    }
   ];
 
   const quizData = [
     {
-      question: "Quelle est la fonction première du perlage, au-delà de l'esthétique ?",
+      question: "Quelle est la fonction technique première du perlage et de l’ébavurage, au-delà de l’esthétique ?",
       options: [
-        "Augmenter la rigidité de la platine",
-        "Faciliter l'inspection en rendant les poussières visibles",
-        "Réduire le poids du mouvement",
-        "Améliorer la conductivité thermique"
+        "Augmenter la masse de la platine",
+        "Éliminer toute bavure métallique susceptible de se détacher et rendre les micro-poussières visibles à l’inspection",
+        "Modifier le rapport d’engrenage du rouage",
+        "Aimantiser les ponts en laiton"
       ],
       correct: 1,
-      explanation: "Le perlage crée une surface mate qui capte les micro-poussières et évite l'éblouissement des horlogers lors du travail sur le mouvement, facilitant ainsi l'inspection minutieuse."
+      explanation: "L’anglage et le perlage ont une origine fonctionnelle : éliminer les bavures d’usinage qui pourraient tomber dans les pignons, empêcher la corrosion et faciliter le repérage visuel des poussières."
     },
     {
-      question: "Quel est l'angle typique d'un anglage (chanfrein) en haute horlogerie ?",
+      question: "Pourquoi un « angle rentrant » vif prouve-t-il qu’un anglage a été terminé à la main ?",
       options: [
-        "30°",
-        "45°",
-        "60°",
-        "90°"
+        "Parce qu’une fraise rotative cylindrique (CNC) laisse obligatoirement son rayon d’outil au fond de l’intersection",
+        "Parce que les machines CNC ne peuvent pas incliner leur tête à 45°",
+        "Parce que le laiton ne peut pas être fraisé",
+        "Parce que l’angle rentrant est peint au pinceau"
+      ],
+      correct: 0,
+      explanation: "Une fraise en rotation possède un rayon non nul : au creux de deux chanfreins convergents, elle laisse toujours un arrondi. Seul le travail manuel à la lime, au cabron et à la tige de gentiane permet de dessiner une arête rentrante vive."
+    },
+    {
+      question: "Avec quel bois traditionnel l’horloger-angleur réalise-t-il le polissage miroir final à la pâte diamant ?",
+      options: [
+        "Le chêne vert",
+        "La tige de gentiane et le bois de buis (ou fusain)",
+        "Le pin maritime",
+        "Le bambou verni"
       ],
       correct: 1,
-      explanation: "L'anglage est traditionnellement réalisé à 45° avec une largeur de 0,3 à 1 mm. Cet angle permet un effet visuel optimal tout en conservant une bonne résistance mécanique."
+      explanation: "La tige de gentiane séchée offre une structure fibreuse dense mais tendre qui retient la pâte diamantée (0.25 µm) et épouse le profil bercé du chanfrein sans le rayer."
     },
     {
-      question: "Combien de guillocheurs professionnels sont encore actifs en Europe ?",
+      question: "En quoi consiste le « poli noir » (ou polissage spéculaire) sur un pont de tourbillon en acier ?",
       options: [
-        "Environ 100-150",
-        "Environ 50-80",
-        "Environ 10-15",
-        "Plus de 200"
+        "À appliquer un vernis noir mat sur l’acier",
+        "À chauffer l’acier à 300 °C jusqu’au bleuissement",
+        "À polir l’acier à plat sur un bloc de zinc enduit de pâte diamant jusqu’à obtenir une réflexion spéculaire pure",
+        "À sabler la pièce au corindon"
       ],
       correct: 2,
-      explanation: "On estime entre 10 et 15 le nombre de guillocheurs maîtrisant parfaitement cette technique ancestrale en Europe. C'est un métier rarissime qui demande des années d'apprentissage."
-    },
-    {
-      question: "Quelle part du temps de fabrication représentent les finitions décoratives en haute horlogerie ?",
-      options: [
-        "5 à 10%",
-        "10 à 20%",
-        "20 à 40%",
-        "50 à 60%"
-      ],
-      correct: 2,
-      explanation: "Les finitions décoratives représentent 20 à 40% du temps de fabrication d'un mouvement haut de gamme, et jusqu'à 30% de son prix selon Audemars Piguet."
-    },
+      explanation: "Sur un bloc de zinc dressé, l’acier atteint une planéité telle que tous les rayons lumineux sont réfléchis dans une direction unique : sous certains angles d’observation, la surface paraît d’un noir profond absolu."
+    }
   ];
 
   const handleQuizAnswer = (questionIndex: number, optionIndex: number) => {
     if (!showResults) {
-      setQuizAnswers(prev => ({ ...prev, [questionIndex]: optionIndex.toString() }));
+      setQuizAnswers((prev) => ({ ...prev, [questionIndex]: optionIndex.toString() }));
     }
   };
 
@@ -170,175 +220,396 @@ export default function FinitionsDecorativesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-purple-50 dark:from-slate-950 dark:to-slate-900">
-      {/* HEADER */}
-      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-4 py-4">
-          <Link 
-            href="/theorie/mouvements" 
-            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium"
+    <div className="min-h-screen bg-slate-50 dark:bg-[#07090e] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+      <section className="relative pt-12 pb-10 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Link
+            href="/theorie/mouvements"
+            className="inline-flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400 hover:underline mb-4"
           >
-            <ChevronLeft className="w-5 h-5 mr-1" />
-            Retour à Architecture du Mouvement
+            <ArrowLeft className="w-4 h-4" />
+            <span>Retour à l’Architecture du Mouvement</span>
           </Link>
-        </div>
-      </header>
 
-      {/* CONTENU */}
-      <article className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
-        {/* HERO */}
-        <div className="mb-12">
-          <div className="flex items-center mb-4">
-            <Sparkles className="w-10 h-10 text-purple-600 dark:text-purple-400 mr-3" />
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white">
-              Finitions Décoratives
+          <div className="space-y-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-bold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <span>Critères du Poinçon de Genève • Anglage Main, Poli Noir &amp; Côtes</span>
+            </div>
+
+            <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+              Finitions Décoratives &amp; <br />
+              <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-200 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent">
+                Anglage Main de Haute Horlogerie
+              </span>
             </h1>
-          </div>
-          <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
-            L'art horloger sublimé : des techniques ancestrales qui transforment la mécanique 
-            en œuvre d'art, témoignant du savoir-faire artisanal d'exception.
-          </p>
-        </div>
 
-        {/* SECTION 1: INTRODUCTION */}
-        <section className="mb-12">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 border border-slate-200 dark:border-slate-700">
-            <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-              L'Excellence au-delà de la Fonction
-            </h2>
-            <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
-              Les finitions décoratives représentent l'âme artistique de l'horlogerie de luxe. Bien qu'elles 
-              n'influencent pas directement le fonctionnement du mouvement, elles constituent un témoignage 
-              irréfutable du temps, du savoir-faire et de la passion investis dans chaque pièce.
+            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
+              Nées de la nécessité technique d’éliminer les bavures d’étampage, de protéger le métal de l’oxydation et de retenir les poussières hors du rouage, les finitions manuelles (anglage bercé à la gentiane, poli noir sur bloc de zinc, perlage et Côtes de Genève) signent l’excellence d’un calibre.
             </p>
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 p-6 rounded-xl border border-purple-200 dark:border-purple-800">
-                <div className="bg-purple-100 dark:bg-purple-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                  <Eye className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-                </div>
-                <h4 className="font-bold text-slate-900 dark:text-white mb-2">Valeur Esthétique</h4>
-                <p className="text-slate-700 dark:text-slate-300 text-sm">
-                  Sublimation visuelle transformant un mouvement technique en œuvre d'art observable
-                </p>
+          </div>
+        </div>
+      </section>
+
+      <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+        <section className="rounded-3xl bg-white dark:bg-[#0b101b] border-2 border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden">
+          <div className="p-6 sm:p-8 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+                <Sparkles className="w-4 h-4" />
+                <span>Comparateur Optique sous Binoculaire (x25) • Coupe &amp; Vue de Dessus</span>
               </div>
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 p-6 rounded-xl border border-blue-200 dark:border-blue-800">
-                <div className="bg-blue-100 dark:bg-blue-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                  <Sparkles className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                </div>
-                <h4 className="font-bold text-slate-900 dark:text-white mb-2">Signature Manufacture</h4>
-                <p className="text-slate-700 dark:text-slate-300 text-sm">
-                  Identité visuelle unique permettant de reconnaître la marque au premier coup d'œil
-                </p>
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+                Brut d’Étampage vs Chanfrein CNC 45° vs Anglage Main Bercé (Angle Rentrant)
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl">
+                Déplacez le curseur pour comparer l’arête d’un pont sous le microscope d’atelier : voyez pourquoi une fraise CNC laisse toujours un rayon arrondi, tandis que la lime et la tige de gentiane sculptent un angle rentrant vif.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setLoupe10x(!loupe10x)}
+              className={`inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold border transition-all self-start lg:self-auto ${
+                loupe10x
+                  ? 'bg-sky-500 text-slate-950 border-sky-400 shadow-md shadow-sky-500/20'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700'
+              }`}
+            >
+              <ZoomIn className="w-4 h-4" />
+              <span>Loupe 10x {loupe10x ? 'ON' : 'OFF'}</span>
+            </button>
+          </div>
+
+          <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-7 bg-slate-950 rounded-2xl border border-slate-800 p-4 sm:p-6 relative overflow-hidden">
+              <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-3">
+                <span>COUPE TRANSVERSALE DE L’ARÊTE (x25)</span>
+                <span>VUE DE DESSUS : ANGLE RENTRANT (x15)</span>
               </div>
-              <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 p-6 rounded-xl border border-amber-200 dark:border-amber-800">
-                <div className="bg-amber-100 dark:bg-amber-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                  <CheckCircle2 className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+
+              <div className="overflow-hidden rounded-xl bg-[#060a12]">
+                <svg
+                  viewBox="0 0 680 340"
+                  className="w-full h-auto transition-transform duration-300"
+                  style={{
+                    transform: loupe10x ? 'scale(1.48)' : 'scale(1)',
+                    transformOrigin: '340px 165px'
+                  }}
+                >
+                  <defs>
+                    <linearGradient id="mirrorBevel" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#f8fafc" />
+                      <stop offset="45%" stopColor="#fde047" />
+                      <stop offset="55%" stopColor="#ffffff" />
+                      <stop offset="100%" stopColor="#94a3b8" />
+                    </linearGradient>
+                  </defs>
+
+                  <line x1="340" y1="15" x2="340" y2="325" stroke="#1e293b" strokeWidth="2" strokeDasharray="5 5" />
+
+                  <g transform="translate(25, 25)">
+                    <text x="145" y="20" textAnchor="middle" fill="#94a3b8" fontSize="11" fontFamily="monospace">
+                      Profil de la Tranche du Pont
+                    </text>
+
+                    {anglageInfo.mode === 'raw' && (
+                      <g>
+                        <path
+                          d="M 35 265 L 35 95 L 225 95 L 234 78 L 228 98 L 225 265 Z"
+                          fill="#334155"
+                          stroke="#f43f5e"
+                          strokeWidth="2.5"
+                        />
+                        <circle cx="230" cy="86" r="18" fill="none" stroke="#f43f5e" strokeWidth="2" strokeDasharray="3 3" />
+                        <text x="230" y="58" textAnchor="middle" fill="#fb7185" fontSize="10" fontWeight="bold">
+                          Bavure d’étampage (15 µm)
+                        </text>
+                        <g stroke="#64748b" strokeWidth="1.5">
+                          <line x1="220" y1="115" x2="225" y2="250" />
+                          <line x1="214" y1="115" x2="218" y2="250" />
+                          <line x1="208" y1="115" x2="211" y2="250" />
+                        </g>
+                        <text x="135" y="290" textAnchor="middle" fill="#fb7185" fontSize="10" fontFamily="monospace">
+                          Flanc brut d’arrachement • Arête vive 90°
+                        </text>
+                      </g>
+                    )}
+
+                    {anglageInfo.mode === 'cnc' && (
+                      <g>
+                        <path
+                          d="M 35 265 L 35 95 L 175 95 L 225 145 L 225 265 Z"
+                          fill="#334155"
+                          stroke="#cbd5e1"
+                          strokeWidth="2"
+                        />
+                        <line x1="175" y1="95" x2="225" y2="145" stroke="#f59e0b" strokeWidth="5" />
+                        <text x="215" y="82" textAnchor="middle" fill="#fbbf24" fontSize="10" fontWeight="bold">
+                          Plan 45° plat (Fraise CNC)
+                        </text>
+                        <text x="135" y="290" textAnchor="middle" fill="#fbbf24" fontSize="10" fontFamily="monospace">
+                          Micro-stries d’outil • Arêtes latérales cassées
+                        </text>
+                      </g>
+                    )}
+
+                    {anglageInfo.mode === 'hand' && (
+                      <g>
+                        <path
+                          d="M 35 265 L 35 95 L 165 95 Q 208 102 225 152 L 225 265 Z"
+                          fill="#334155"
+                          stroke="#e2e8f0"
+                          strokeWidth="2"
+                        />
+                        <path
+                          d="M 165 95 Q 208 102 225 152"
+                          fill="none"
+                          stroke="url(#mirrorBevel)"
+                          strokeWidth="6"
+                          strokeLinecap="round"
+                        />
+                        <g stroke="#94a3b8" strokeWidth="1" opacity="0.8">
+                          <line x1="45" y1="175" x2="222" y2="175" />
+                          <line x1="45" y1="195" x2="222" y2="195" />
+                          <line x1="45" y1="215" x2="222" y2="215" />
+                          <line x1="45" y1="235" x2="222" y2="235" />
+                        </g>
+                        <text x="205" y="76" textAnchor="middle" fill="#34d399" fontSize="10" fontWeight="bold">
+                          Anglage bercé poli miroir (Gentiane)
+                        </text>
+                        <text x="135" y="290" textAnchor="middle" fill="#34d399" fontSize="10" fontFamily="monospace">
+                          Flanc étiré au trait horizontal • Reflet spéculaire
+                        </text>
+                      </g>
+                    )}
+                  </g>
+
+                  <g transform="translate(365, 25)">
+                    <text x="145" y="20" textAnchor="middle" fill="#94a3b8" fontSize="11" fontFamily="monospace">
+                      Intersection de Deux Courbes (Angle Rentrant)
+                    </text>
+
+                    {anglageInfo.mode === 'raw' && (
+                      <g>
+                        <path
+                          d="M 35 60 L 235 60 C 205 110, 165 140, 125 155 C 165 170, 205 200, 235 250 L 35 250 Z"
+                          fill="#334155"
+                          stroke="#f43f5e"
+                          strokeWidth="2.5"
+                        />
+                        <circle cx="125" cy="155" r="24" fill="none" stroke="#f43f5e" strokeWidth="2" strokeDasharray="3 3" />
+                        <text x="145" y="290" textAnchor="middle" fill="#fb7185" fontSize="10" fontFamily="monospace">
+                          Aucun chanfrein • Bavures dans le creux
+                        </text>
+                      </g>
+                    )}
+
+                    {anglageInfo.mode === 'cnc' && (
+                      <g>
+                        <path
+                          d="M 35 60 L 235 60 C 205 110, 165 140, 138 148 Q 120 155 138 162 C 165 170, 205 200, 235 250 L 35 250 Z"
+                          fill="#334155"
+                          stroke="#94a3b8"
+                          strokeWidth="1.5"
+                        />
+                        <path
+                          d="M 225 60 C 195 108, 160 135, 136 145 Q 112 155 136 165 C 160 175, 195 202, 225 250"
+                          fill="none"
+                          stroke="#f59e0b"
+                          strokeWidth="10"
+                          strokeLinecap="round"
+                        />
+                        <circle cx="124" cy="155" r="14" fill="none" stroke="#f43f5e" strokeWidth="2" />
+                        <text x="195" y="158" fill="#fbbf24" fontSize="10" fontWeight="bold">
+                          Rayon fraise R = 0.20 mm
+                        </text>
+                        <text x="145" y="290" textAnchor="middle" fill="#fbbf24" fontSize="10" fontFamily="monospace">
+                          Creux arrondi par le diamètre de la fraise CNC
+                        </text>
+                      </g>
+                    )}
+
+                    {anglageInfo.mode === 'hand' && (
+                      <g>
+                        <path
+                          d="M 35 60 L 235 60 C 200 112, 162 142, 118 155 C 162 168, 200 198, 235 250 L 35 250 Z"
+                          fill="#334155"
+                          stroke="#e2e8f0"
+                          strokeWidth="1.5"
+                        />
+                        <path
+                          d="M 235 60 C 200 112, 162 142, 118 155 L 92 155 C 145 138, 182 108, 215 60 Z"
+                          fill="url(#mirrorBevel)"
+                        />
+                        <path
+                          d="M 235 250 C 200 198, 162 168, 118 155 L 92 155 C 145 172, 182 202, 215 250 Z"
+                          fill="url(#mirrorBevel)"
+                        />
+                        <line x1="92" y1="155" x2="122" y2="155" stroke="#10b981" strokeWidth="3" />
+                        <circle cx="105" cy="155" r="22" fill="none" stroke="#10b981" strokeWidth="2" strokeDasharray="3 3" />
+                        <text x="195" y="158" fill="#34d399" fontSize="10" fontWeight="bold">
+                          Arête Rentrante Vive !
+                        </text>
+                        <text x="145" y="290" textAnchor="middle" fill="#34d399" fontSize="10" fontFamily="monospace">
+                          Intersection franche taillée main à la lime &amp; gentiane
+                        </text>
+                      </g>
+                    )}
+                  </g>
+                </svg>
+              </div>
+            </div>
+
+            <div className="lg:col-span-5 space-y-5">
+              <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold border ${anglageInfo.color}`}>
+                <span>{anglageInfo.badge}</span>
+              </div>
+
+              <h3 className="font-serif text-xl sm:text-2xl font-bold text-slate-900 dark:text-white leading-snug">
+                {anglageInfo.title}
+              </h3>
+
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                {anglageInfo.desc}
+              </p>
+
+              <div className="p-4 rounded-2xl bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 space-y-3">
+                <div className="flex items-center justify-between text-xs font-bold">
+                  <span className="text-slate-500 flex items-center gap-1.5">
+                    <Sliders className="w-3.5 h-3.5 text-amber-500" />
+                    Degré de Finition de l’Arête :
+                  </span>
+                  <span className="font-mono text-amber-600 dark:text-amber-400">{finishingLevel} %</span>
                 </div>
-                <h4 className="font-bold text-slate-900 dark:text-white mb-2">Héritage Artisanal</h4>
-                <p className="text-slate-700 dark:text-slate-300 text-sm">
-                  Transmission de techniques séculaires de maître à apprenti, patrimoine vivant
-                </p>
+                <input
+                  type="range"
+                  min={5}
+                  max={98}
+                  value={finishingLevel}
+                  onChange={(e) => setFinishingLevel(Number(e.target.value))}
+                  className="w-full accent-amber-500 cursor-pointer"
+                />
+                <div className="grid grid-cols-3 gap-2 pt-1">
+                  <button
+                    onClick={() => setFinishingLevel(15)}
+                    className="px-2 py-1.5 rounded-lg text-[11px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30"
+                  >
+                    1. Brut (Bavure)
+                  </button>
+                  <button
+                    onClick={() => setFinishingLevel(52)}
+                    className="px-2 py-1.5 rounded-lg text-[11px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30"
+                  >
+                    2. Chanfrein CNC
+                  </button>
+                  <button
+                    onClick={() => setFinishingLevel(88)}
+                    className="px-2 py-1.5 rounded-lg text-[11px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
+                  >
+                    3. Anglage Main
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                  <div className="text-[10px] font-mono text-slate-400">RUGOSITÉ DE SURFACE</div>
+                  <div className="font-bold text-slate-900 dark:text-white mt-0.5">{anglageInfo.surfaceRa}</div>
+                </div>
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                  <div className="text-[10px] font-mono text-slate-400">GÉOMÉTRIE CREUX</div>
+                  <div className="font-bold text-slate-900 dark:text-white mt-0.5">{anglageInfo.interiorCorner}</div>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs font-mono font-bold text-amber-800 dark:text-amber-300">
+                VERDICT BINOCULAIRE : {anglageInfo.verdict}
               </div>
             </div>
           </div>
-
-          <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30 border-l-4 border-amber-600 dark:border-amber-400 p-6 rounded-r-lg">
-            <h4 className="text-lg font-bold text-amber-900 dark:text-amber-300 mb-3 flex items-center">
-              <AlertCircle className="w-5 h-5 mr-2" />
-              Temps et Valeur
-            </h4>
-            <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-              Les finitions décoratives représentent <strong className="text-slate-900 dark:text-slate-100">20 à 40%</strong> du temps 
-              de fabrication d'un mouvement haut de gamme et jusqu'à <strong className="text-slate-900 dark:text-slate-100">30% de son prix</strong> 
-              selon Audemars Piguet. Ce n'est pas une dépense superflue : c'est l'expression même du luxe horloger.
-            </p>
-          </div>
         </section>
 
-        {/* SECTION 2: TECHNIQUES - INTERACTIF */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            Les Techniques Maîtresses
-          </h2>
+        <section className="space-y-6">
+          <div className="space-y-2">
+            <h2 className="font-serif text-3xl font-bold text-slate-900 dark:text-white">
+              Les 6 Techniques Maîtresses de Décoration &amp; Finition
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300">
+              Cliquez sur chaque technique pour inspecter les outils d’atelier, la granulométrie des abrasifs et les critères de contrôle.
+            </p>
+          </div>
 
-          <p className="text-lg text-slate-700 dark:text-slate-300 mb-6 leading-relaxed">
-            Six techniques principales dominent l'univers des finitions horlogères. Chacune requiert 
-            un savoir-faire spécifique transmis sur plusieurs années. Cliquez pour explorer :
-          </p>
-
-          <div className="grid gap-6">
+          <div className="grid gap-4">
             {techniques.map((tech) => (
               <div key={tech.id}>
                 <div
                   onClick={() => setSelectedTechnique(selectedTechnique === tech.id ? '' : tech.id)}
-                  className={`bg-white dark:bg-slate-800 rounded-xl border-2 p-6 cursor-pointer transition-all ${
+                  className={`bg-white dark:bg-[#0c101b] rounded-2xl border-2 p-6 cursor-pointer transition-all ${
                     selectedTechnique === tech.id
-                      ? 'border-purple-600 dark:border-purple-400 shadow-lg'
-                      : 'border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-purple-400 dark:hover:border-purple-500'
+                      ? 'border-amber-500 shadow-lg'
+                      : 'border-slate-200 dark:border-slate-800 hover:border-amber-500/50'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <span className="text-5xl mr-5">{tech.icon}</span>
+                    <div className="flex items-center gap-4">
+                      <span className="text-4xl">{tech.icon}</span>
                       <div>
-                        <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">
+                        <h3 className="font-serif text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
                           {tech.name}
-                        </h4>
-                        <p className="text-sm text-purple-600 dark:text-purple-400 font-medium mb-2">
+                        </h3>
+                        <p className="text-xs font-mono text-amber-600 dark:text-amber-400 font-bold">
                           {tech.subtitle}
                         </p>
-                        <p className="text-slate-700 dark:text-slate-300">
+                        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
                           {tech.description}
                         </p>
                       </div>
                     </div>
                     {selectedTechnique === tech.id && (
-                      <CheckCircle2 className="w-6 h-6 text-purple-600 dark:text-purple-400 flex-shrink-0 ml-4" />
+                      <CheckCircle2 className="w-6 h-6 text-amber-500 flex-shrink-0 ml-4" />
                     )}
                   </div>
                 </div>
 
                 {selectedTechnique === tech.id && (
-                  <div className="mt-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 rounded-xl p-6 border-l-4 border-purple-600 dark:border-purple-400">
-                    <h5 className="font-bold text-slate-900 dark:text-white mb-4 text-xl">
-                      Caractéristiques Techniques
-                    </h5>
-                    <div className="grid md:grid-cols-2 gap-4 mb-6">
+                  <div className="mt-3 bg-slate-100/80 dark:bg-slate-900/80 rounded-2xl p-6 border-l-4 border-amber-500 space-y-5">
+                    <div className="grid md:grid-cols-2 gap-4">
                       {Object.entries(tech.details).map(([key, value]) => (
-                        <div key={key} className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
-                          <p className="text-sm font-bold text-purple-700 dark:text-purple-400 uppercase mb-1">
-                            {key.replace(/([A-Z])/g, ' $1').trim()}
+                        <div
+                          key={key}
+                          className="bg-white dark:bg-[#0c101b] p-4 rounded-xl border border-slate-200 dark:border-slate-800"
+                        >
+                          <p className="text-[11px] font-mono font-bold text-amber-600 dark:text-amber-400 uppercase mb-1">
+                            {key}
                           </p>
-                          <p className="text-slate-700 dark:text-slate-300">{value}</p>
+                          <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300">{value}</p>
                         </div>
                       ))}
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-4">
-                      <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
-                        <h6 className="font-bold text-slate-900 dark:text-slate-100 mb-3 flex items-center">
-                          <span className="text-green-600 dark:text-green-400 mr-2">✓</span>
-                          Avantages
-                        </h6>
-                        <ul className="space-y-2">
+                      <div className="bg-white dark:bg-[#0c101b] p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                        <h4 className="font-bold text-xs uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-2">
+                          ✓ Bénéfices Techniques &amp; Optiques
+                        </h4>
+                        <ul className="space-y-1.5">
                           {tech.avantages.map((av, idx) => (
-                            <li key={idx} className="text-sm text-slate-700 dark:text-slate-300 flex items-start">
-                              <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                              {av}
+                            <li key={idx} className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 flex items-start gap-2">
+                              <span className="text-emerald-500">•</span>
+                              <span>{av}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
-                      <div className="bg-white dark:bg-slate-800 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
-                        <h6 className="font-bold text-slate-900 dark:text-slate-100 mb-3 flex items-center">
-                          <span className="text-purple-600 dark:text-purple-400 mr-2">⭐</span>
-                          Manufactures Emblématiques
-                        </h6>
-                        <ul className="space-y-2">
+                      <div className="bg-white dark:bg-[#0c101b] p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                        <h4 className="font-bold text-xs uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-2">
+                          ⭐ Références d’Exécution
+                        </h4>
+                        <ul className="space-y-1.5">
                           {tech.usages.map((usage, idx) => (
-                            <li key={idx} className="text-sm text-slate-700 dark:text-slate-300 flex items-start">
-                              <span className="text-purple-600 dark:text-purple-400 mr-2">•</span>
-                              {usage}
+                            <li key={idx} className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 flex items-start gap-2">
+                              <span className="text-amber-500">•</span>
+                              <span>{usage}</span>
                             </li>
                           ))}
                         </ul>
@@ -351,253 +622,18 @@ export default function FinitionsDecorativesPage() {
           </div>
         </section>
 
-        {/* SECTION 3: OUTILS TRADITIONNELS */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            Outils Traditionnels
+        <section className="space-y-6">
+          <h2 className="font-serif text-3xl font-bold text-slate-900 dark:text-white">
+            Quiz : Contrôle Qualité des Finitions Horlogères
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all">
-              <div className="bg-orange-100 dark:bg-orange-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <span className="text-2xl">🪚</span>
-              </div>
-              <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Lime Suisse</h4>
-              <p className="text-slate-700 dark:text-slate-300 text-sm mb-3">
-                Lime à grain diamant pour anglage et chanfreins précis. Fabriquée artisanalement 
-                en Suisse avec des grains de 400 à 8000.
-              </p>
-              <span className="inline-block px-3 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 text-xs rounded-full">
-                Outil maître
-              </span>
-            </div>
-
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all">
-              <div className="bg-brown-100 dark:bg-brown-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <span className="text-2xl">🌳</span>
-              </div>
-              <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Cabron</h4>
-              <p className="text-slate-700 dark:text-slate-300 text-sm mb-3">
-                Bâton en bois de tilleul ou buis pour Côtes de Genève. Monté sur axe rotatif 
-                et enduit de pâte diamant.
-              </p>
-              <span className="inline-block px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-xs rounded-full">
-                Technique genevoise
-              </span>
-            </div>
-
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all">
-              <div className="bg-blue-100 dark:bg-blue-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <span className="text-2xl">✨</span>
-              </div>
-              <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Polissoir</h4>
-              <p className="text-slate-700 dark:text-slate-300 text-sm mb-3">
-                Outil en acier trempé poli miroir pour finitions brillantes. Utilisé à 10 000 tr/min 
-                pour polissage final.
-              </p>
-              <span className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded-full">
-                Finition miroir
-              </span>
-            </div>
-
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all">
-              <div className="bg-purple-100 dark:bg-purple-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <span className="text-2xl">🔧</span>
-              </div>
-              <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Tour à Guillocher</h4>
-              <p className="text-slate-700 dark:text-slate-300 text-sm mb-3">
-                Machine manuelle du XVIIIᵉ siècle pour gravure de motifs géométriques. 
-                Rarissime et recherchée.
-              </p>
-              <span className="inline-block px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs rounded-full">
-                Art ancestral
-              </span>
-            </div>
-
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all">
-              <div className="bg-green-100 dark:bg-green-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <span className="text-2xl">🪵</span>
-              </div>
-              <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Bâton de Perlage</h4>
-              <p className="text-slate-700 dark:text-slate-300 text-sm mb-3">
-                Bâton en buis avec pâte abrasive diamant pour perlage circulaire. 
-                Rotation 1500-3000 tr/min.
-              </p>
-              <span className="inline-block px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs rounded-full">
-                Décor classique
-              </span>
-            </div>
-
-            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border-2 border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all">
-              <div className="bg-red-100 dark:bg-red-900/30 w-12 h-12 rounded-full flex items-center justify-center mb-4">
-                <span className="text-2xl">📏</span>
-              </div>
-              <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Papiers Abrasifs</h4>
-              <p className="text-slate-700 dark:text-slate-300 text-sm mb-3">
-                Gradation progressive de 400 à 12000 grains pour polissage miroir final. 
-                Patience et dextérité requises.
-              </p>
-              <span className="inline-block px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 text-xs rounded-full">
-                Finition progressive
-              </span>
-            </div>
-          </div>
-        </section>
-
-        {/* SECTION 4: MANUFACTURES EMBLÉMATIQUES */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            Manufactures Emblématiques
-          </h2>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30 rounded-xl p-6 border-l-4 border-amber-600 dark:border-amber-400">
-              <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Audemars Piguet</h4>
-              <p className="text-slate-700 dark:text-slate-300 mb-3 leading-relaxed">
-                Finitions satinées et polies contrastées sur Royal Oak. Maîtrise du jeu entre surfaces 
-                mates et brillantes créant un effet visuel saisissant.
-              </p>
-              <span className="inline-block px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-xs rounded-full">
-                30% du prix = finitions
-              </span>
-            </div>
-
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl p-6 border-l-4 border-blue-600 dark:border-blue-400">
-              <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Breguet</h4>
-              <p className="text-slate-700 dark:text-slate-300 mb-3 leading-relaxed">
-                Guillochage main depuis 1775. Maître incontesté du tour à guillocher, chaque cadran 
-                est une œuvre d'art unique nécessitant 8 à 12h de travail.
-              </p>
-              <span className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded-full">
-                Tradition 250 ans
-              </span>
-            </div>
-
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 rounded-xl p-6 border-l-4 border-purple-600 dark:border-purple-400">
-              <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Kari Voutilainen</h4>
-              <p className="text-slate-700 dark:text-slate-300 mb-3 leading-relaxed">
-                Anglage extrême et perlage d'exception. Considéré comme la référence absolue mondiale 
-                en matière de finitions manuelles, chaque angle est parfait.
-              </p>
-              <span className="inline-block px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs rounded-full">
-                Maître artisan
-              </span>
-            </div>
-
-            <div className="bg-gradient-to-br from-slate-50 to-gray-50 dark:from-slate-950/30 dark:to-gray-950/30 rounded-xl p-6 border-l-4 border-slate-600 dark:border-slate-400">
-              <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">A. Lange & Söhne</h4>
-              <p className="text-slate-700 dark:text-slate-300 mb-3 leading-relaxed">
-                Platine 3/4 gravée et anglée à la main. Tradition allemande de Glashütte avec 
-                finitions incomparables, notamment sur les becs d'ancre.
-              </p>
-              <span className="inline-block px-3 py-1 bg-slate-100 dark:bg-slate-900/30 text-slate-800 dark:text-slate-300 text-xs rounded-full">
-                Excellence allemande
-              </span>
-            </div>
-          </div>
-        </section>
-
-        {/* SECTION 5: VALEUR ET DISTINCTION */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            Valeur et Distinction
-          </h2>
-
-          <div className="bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-700 dark:to-pink-700 rounded-2xl p-8 text-white mb-6">
-            <h3 className="text-2xl font-bold mb-4 text-purple-100 dark:text-purple-200">
-              🎨 Au-delà de la Fonction : L'Art Horloger
-            </h3>
-            <p className="text-lg leading-relaxed text-purple-100 dark:text-purple-200 mb-4">
-              Les finitions décoratives ne contribuent pas au fonctionnement du mouvement, mais elles 
-              constituent l'essence même du luxe horloger. Elles représentent :
-            </p>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                <p className="font-bold mb-2">📜 Témoignage du Savoir-Faire</p>
-                <p className="text-sm text-purple-100 dark:text-purple-200">
-                  Chaque finition révèle des années d'apprentissage et de pratique quotidienne
-                </p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                <p className="font-bold mb-2">🏆 Signature de Manufacture</p>
-                <p className="text-sm text-purple-100 dark:text-purple-200">
-                  Identité visuelle unique permettant reconnaissance immédiate
-                </p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                <p className="font-bold mb-2">💎 Critère d'Authenticité</p>
-                <p className="text-sm text-purple-100 dark:text-purple-200">
-                  Finitions impossibles à reproduire industriellement, garantie d'origine
-                </p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                <p className="font-bold mb-2">🧬 Héritage Transmis</p>
-                <p className="text-sm text-purple-100 dark:text-purple-200">
-                  Techniques séculaires de maître à apprenti, patrimoine vivant
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-200 dark:border-slate-700">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-              Temps de Fabrication
-            </h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
-                <span className="text-slate-700 dark:text-slate-300">Perlage complet d'une platine</span>
-                <span className="font-bold text-purple-600 dark:text-purple-400">30 min - 2h</span>
-              </div>
-              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
-                <span className="text-slate-700 dark:text-slate-300">Côtes de Genève sur ponts</span>
-                <span className="font-bold text-purple-600 dark:text-purple-400">1 - 3h</span>
-              </div>
-              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
-                <span className="text-slate-700 dark:text-slate-300">Anglage manuel d'un pont complexe</span>
-                <span className="font-bold text-purple-600 dark:text-purple-400">2 - 8h</span>
-              </div>
-              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
-                <span className="text-slate-700 dark:text-slate-300">Guillochage d'un cadran</span>
-                <span className="font-bold text-purple-600 dark:text-purple-400">4 - 12h</span>
-              </div>
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-lg border-2 border-purple-300 dark:border-purple-700">
-                <span className="font-bold text-slate-900 dark:text-slate-100">Total finitions d'un mouvement haute gamme</span>
-                <span className="font-bold text-2xl text-purple-600 dark:text-purple-400">20-40%</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* SECTION 6: QUIZ */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            Testez vos Connaissances
-          </h2>
-
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-200 dark:border-slate-700">
-            <div className="mb-6">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                  Progression : {Object.keys(quizAnswers).length} / {quizData.length}
-                </span>
-                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                  {showResults && `Score : ${calculateScore()} / ${quizData.length}`}
-                </span>
-              </div>
-              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-                <div
-                  className="bg-purple-600 dark:bg-purple-500 h-2 rounded-full transition-all"
-                  style={{ width: `${(Object.keys(quizAnswers).length / quizData.length) * 100}%` }}
-                />
-              </div>
-            </div>
-
+          <div className="bg-white dark:bg-[#0c101b] rounded-3xl shadow-xl p-6 sm:p-8 border-2 border-slate-200 dark:border-slate-800 space-y-6">
             {quizData.map((q, qIndex) => (
-              <div key={qIndex} className="mb-8 last:mb-0">
-                <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
-                  Question {qIndex + 1} : {q.question}
+              <div key={qIndex} className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 space-y-3">
+                <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                  {qIndex + 1}. {q.question}
                 </h4>
-                <div className="space-y-3 mb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {q.options.map((option, oIndex) => {
                     const isSelected = quizAnswers[qIndex] === oIndex.toString();
                     const isCorrect = oIndex === q.correct;
@@ -608,32 +644,24 @@ export default function FinitionsDecorativesPage() {
                         key={oIndex}
                         onClick={() => handleQuizAnswer(qIndex, oIndex)}
                         disabled={showResults}
-                        className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                        className={`w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm transition-all ${
                           showAnswer && isCorrect
-                            ? 'border-green-500 dark:border-green-600 bg-green-50 dark:bg-green-950/30'
+                            ? 'border-emerald-500 bg-emerald-500/15 font-bold text-emerald-700 dark:text-emerald-300'
                             : showAnswer && !isCorrect
-                            ? 'border-red-500 dark:border-red-600 bg-red-50 dark:bg-red-950/30'
+                            ? 'border-rose-500 bg-rose-500/15 font-bold text-rose-700 dark:text-rose-300'
                             : isSelected
-                            ? 'border-purple-600 dark:border-purple-400 bg-purple-50 dark:bg-purple-950/30'
-                            : 'border-slate-200 dark:border-slate-700 hover:border-purple-400 dark:hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950/30'
+                            ? 'border-amber-500 bg-amber-500/15 font-bold text-amber-800 dark:text-amber-300'
+                            : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-amber-500'
                         }`}
                       >
-                        <span className="text-slate-900 dark:text-slate-100">{option}</span>
-                        {showAnswer && isCorrect && (
-                          <CheckCircle2 className="inline-block ml-2 w-5 h-5 text-green-600 dark:text-green-400" />
-                        )}
-                        {showAnswer && !isCorrect && (
-                          <XCircle className="inline-block ml-2 w-5 h-5 text-red-600 dark:text-red-400" />
-                        )}
+                        <span>{option}</span>
                       </button>
                     );
                   })}
                 </div>
                 {showResults && quizAnswers[qIndex] !== undefined && (
-                  <div className="bg-purple-50 dark:bg-purple-950/30 border-l-4 border-purple-600 dark:border-purple-400 p-4 rounded-r-lg">
-                    <p className="text-sm text-slate-700 dark:text-slate-300">
-                      <strong className="text-purple-900 dark:text-purple-300">Explication :</strong> {q.explanation}
-                    </p>
+                  <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-800 dark:text-amber-300">
+                    <strong>Explication :</strong> {q.explanation}
                   </div>
                 )}
               </div>
@@ -642,105 +670,20 @@ export default function FinitionsDecorativesPage() {
             {Object.keys(quizAnswers).length === quizData.length && !showResults && (
               <button
                 onClick={() => setShowResults(true)}
-                className="w-full bg-purple-600 dark:bg-purple-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-purple-700 dark:hover:bg-purple-600 transition-colors"
+                className="w-full bg-amber-500 text-slate-950 font-extrabold py-3.5 px-6 rounded-xl hover:bg-amber-400 transition-colors text-sm"
               >
-                Voir les Résultats
+                Vérifier mes Réponses ({Object.keys(quizAnswers).length}/{quizData.length})
               </button>
             )}
 
             {showResults && (
-              <div className="mt-6 p-6 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 rounded-xl">
-                <p className="text-center text-xl font-bold text-slate-900 dark:text-white">
-                  {calculateScore() === quizData.length
-                    ? '🎉 Parfait ! Vous maîtrisez l\'art des finitions décoratives !'
-                    : calculateScore() >= quizData.length / 2
-                    ? '👍 Bon travail ! Continuez à explorer cet art !'
-                    : '📚 Relisez le cours pour mieux comprendre !'}
-                </p>
+              <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-center font-bold text-sm text-emerald-700 dark:text-emerald-300">
+                Score obtenu : {calculateScore()} / {quizData.length}
               </div>
             )}
           </div>
         </section>
-
-        {/* FAQ */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            Questions Fréquentes
-          </h2>
-
-          <div className="space-y-4">
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center">
-                <span className="text-purple-600 dark:text-purple-400 mr-3">▼</span>
-                Les finitions décoratives influencent-elles la précision du mouvement ?
-              </summary>
-              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
-                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                  Non, les finitions décoratives n'ont aucun impact direct sur la précision ou le fonctionnement 
-                  du mouvement. Cependant, certaines finitions comme le perlage facilitent l'inspection en rendant 
-                  les poussières visibles, et l'anglage élimine les arêtes vives qui pourraient retenir des impuretés. 
-                  Leur valeur est avant tout esthétique et patrimoniale, témoignant du niveau de finition et du 
-                  savoir-faire investi dans la pièce.
-                </p>
-              </div>
-            </details>
-
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center">
-                <span className="text-purple-600 dark:text-purple-400 mr-3">▼</span>
-                Peut-on apprendre le guillochage en autodidacte ?
-              </summary>
-              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
-                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                  Théoriquement oui, mais en pratique extrêmement difficile. Les tours à guillocher manuels 
-                  ne sont plus fabriqués et les rares exemplaires disponibles coûtent des dizaines de milliers d'euros. 
-                  De plus, la technique requiert plusieurs années d'apprentissage auprès d'un maître guillocheur 
-                  pour maîtriser le geste, la pression et la régularité. On estime qu'il reste seulement 10 à 15 
-                  guillocheurs professionnels actifs en Europe. L'apprentissage traditionnel de maître à élève reste 
-                  la voie privilégiée.
-                </p>
-              </div>
-            </details>
-
-            <details className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden group border border-slate-200 dark:border-slate-700">
-              <summary className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center">
-                <span className="text-purple-600 dark:text-purple-400 mr-3">▼</span>
-                Pourquoi les Côtes de Genève sont-elles si valorisées ?
-              </summary>
-              <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
-                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                  Les Côtes de Genève sont une signature historique de l'horlogerie genevoise depuis le XVIIIᵉ siècle. 
-                  Au-delà de leur beauté visuelle (jeu de lumière créant un effet de vagues), elles témoignent d'un 
-                  savoir-faire artisanal nécessitant précision et régularité. Chaque strie doit être parfaitement 
-                  parallèle avec un espacement constant de 0,5 à 2 mm. Les manufactures prestigieuses comme 
-                  Vacheron Constantin et Patek Philippe en ont fait leur marque de fabrique, garantissant ainsi 
-                  l'authenticité et la qualité de leurs mouvements.
-                </p>
-              </div>
-            </details>
-          </div>
-        </section>
-
-        {/* NAVIGATION */}
-        <div className="mt-16 pt-8 border-t border-slate-200 dark:border-slate-700">
-          <Link 
-            href="/theorie/mouvements" 
-            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium text-lg"
-          >
-            <ChevronLeft className="w-5 h-5 mr-1" />
-            Retour à Architecture du Mouvement
-          </Link>
-        </div>
       </article>
-
-      {/* FOOTER */}
-      <footer className="bg-slate-900 dark:bg-slate-950 text-slate-300 py-8 mt-16">
-        <div className="max-w-5xl mx-auto px-4 text-center">
-          <p className="text-sm">
-            © 2025 HorloLearn - Formation en Horlogerie Suisse
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }
