@@ -65,19 +65,9 @@ export interface Post {
 // Aucune fausse annonce pré-remplie : le tableau est 100% réel et propre dès le départ
 const STORAGE_KEY = 'horlo_annonces_reelles_v1';
 const MY_POSTS_KEY = 'horlo_my_created_posts';
-const ADMIN_SESSION_KEY = 'horlo_admin_moderation_logged';
 
-// Empreinte cryptographique SHA-256 irréversible du mot de passe administrateur (Dali)
-// Le mot de passe en clair N'EXISTE PAS dans le code : impossible à trouver via l'inspecteur web (F12)
-const ADMIN_PASS_HASH = 'c19f367dbd785e7a9355ea112edccb4fc8e3ad192dc8a6a1ac0ac71621e67397';
-
-async function hashPassword(input: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(input);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-}
+// L'authentification modérateur est désormais vérifiée 100% côté serveur via /api/admin-auth
+// avec un cookie HttpOnly signé HMAC-SHA256 (aucun hash ni sessionStorage côté client).
 
 // --- FILTRE ANTI-INSULTES, RACISME ET PROPOS HAINEUX ---
 const TOXIC_PATTERNS = [
@@ -156,13 +146,12 @@ export default function CommunautePage() {
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [reportingPost, setReportingPost] = useState<Post | null>(null);
 
-  // Mode Administrateur / Modération
+  // Mode Administrateur / Modération (vérifié côté serveur via cookie HttpOnly)
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminPasswordInput, setAdminPasswordInput] = useState('');
   const [adminPasswordError, setAdminPasswordError] = useState('');
+  const [isCheckingAdmin, setIsCheckingAdmin] = useState(false);
   const [showOnlyReported, setShowOnlyReported] = useState(false);
-  const [failedAttempts, setFailedAttempts] = useState(0);
-  const [lockoutUntil, setLockoutUntil] = useState<number | null>(null);
 
   // Déclencheur secret : triple clic sur le drapeau suisse
   const lastClickRef = useRef<number>(0);
@@ -223,14 +212,11 @@ export default function CommunautePage() {
       setMyPostIds([]);
     }
 
-    try {
-      const adminLogged = sessionStorage.getItem(ADMIN_SESSION_KEY);
-      if (adminLogged === 'true') {
-        setIsAdmin(true);
-      }
-    } catch {
-      setIsAdmin(false);
-    }
+    // Vérification côté serveur du cookie HttpOnly de session modérateur
+    fetch('/api/admin-auth', { cache: 'no-store' })
+      .then((res) => (res.ok ? res.json() : { isAdmin: false }))
+      .then((data) => setIsAdmin(Boolean(data.isAdmin)))
+      .catch(() => setIsAdmin(false));
   }, []);
 
   // Détection du paramètre secret dans l'URL (?admin=true ou ?mode=admin)
@@ -442,44 +428,46 @@ export default function CommunautePage() {
     showToast('Signalements effacés. L’annonce est maintenue.', 'success');
   };
 
-  // --- CONNEXION & DÉCONNEXION ADMIN AVEC SHA-256 ET ANTI-BRUTE-FORCE ---
+  // --- CONNEXION & DÉCONNEXION ADMIN CÔTÉ SERVEUR (/api/admin-auth + COOKIE HTTP-ONLY) ---
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isCheckingAdmin) return;
     setAdminPasswordError('');
+    setIsCheckingAdmin(true);
 
-    if (lockoutUntil && Date.now() < lockoutUntil) {
-      const remainingSeconds = Math.ceil((lockoutUntil - Date.now()) / 1000);
-      setAdminPasswordError(`Accès temporairement verrouillé suite à trop d’échecs. Réessayez dans ${remainingSeconds} secondes.`);
-      return;
-    }
+    try {
+      const res = await fetch('/api/admin-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: adminPasswordInput.trim() })
+      });
 
-    const cleanInput = adminPasswordInput.trim();
-    const hashed = await hashPassword(cleanInput);
+      const data = await res.json().catch(() => ({}));
 
-    if (hashed === ADMIN_PASS_HASH) {
-      setIsAdmin(true);
-      sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
-      setIsAdminModalOpen(false);
-      setAdminPasswordInput('');
-      setFailedAttempts(0);
-      setLockoutUntil(null);
-      showToast('Mode Modérateur Dali activé avec succès.', 'success');
-    } else {
-      const nextAttempts = failedAttempts + 1;
-      setFailedAttempts(nextAttempts);
-      if (nextAttempts >= 4) {
-        const lockoutTime = Date.now() + 10 * 60 * 1000; // 10 minutes
-        setLockoutUntil(lockoutTime);
-        setAdminPasswordError('Sécurité : 4 tentatives infructueuses. Verrouillage de sécurité pendant 10 minutes.');
+      if (res.ok && data.success) {
+        setIsAdmin(true);
+        setIsAdminModalOpen(false);
+        setAdminPasswordInput('');
+        showToast('Mode Modérateur Dali activé avec succès.', 'success');
       } else {
-        setAdminPasswordError(`Mot de passe incorrect (${4 - nextAttempts} tentative${4 - nextAttempts > 1 ? 's' : ''} restante${4 - nextAttempts > 1 ? 's' : ''}).`);
+        setAdminPasswordError(
+          data.error || 'Mot de passe incorrect.'
+        );
       }
+    } catch {
+      setAdminPasswordError('Impossible de contacter le serveur de vérification.');
+    } finally {
+      setIsCheckingAdmin(false);
     }
   };
 
-  const handleAdminLogout = () => {
+  const handleAdminLogout = async () => {
+    try {
+      await fetch('/api/admin-auth', { method: 'DELETE' });
+    } catch {
+      // Ignorer erreur réseau éventuelle
+    }
     setIsAdmin(false);
-    sessionStorage.removeItem(ADMIN_SESSION_KEY);
     setShowOnlyReported(false);
     showToast('Déconnexion du mode modérateur.', 'warning');
   };
