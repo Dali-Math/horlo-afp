@@ -10,6 +10,7 @@ export default function MetauxCommunsThemePolish() {
     if (pathname !== "/materiaux/metaux-communs") return;
 
     let frameThemeObserver: MutationObserver | null = null;
+    let frameContentObserver: MutationObserver | null = null;
     let retryTimer: number | null = null;
 
     const apply = () => {
@@ -24,7 +25,28 @@ export default function MetauxCommunsThemePolish() {
         );
       };
 
+      const repairImages = () => {
+        const highTech = doc.querySelector<HTMLImageElement>(
+          'img[alt="Matériaux High-Tech"]'
+        );
+
+        if (highTech) {
+          const correctSrc = "/assets/images/materiaux_hightech_horlogerie.png";
+          const fallbackSrc = "/assets/images/innovation_horlogerie_futur.png";
+
+          if (!highTech.src.endsWith("/assets/images/materiaux_hightech_horlogerie.png")) {
+            highTech.src = correctSrc;
+          }
+
+          highTech.onerror = () => {
+            highTech.onerror = null;
+            highTech.src = fallbackSrc;
+          };
+        }
+      };
+
       syncTheme();
+      repairImages();
 
       let style = doc.getElementById("horlolearn-theme-polish") as HTMLStyleElement | null;
       if (!style) {
@@ -203,6 +225,13 @@ export default function MetauxCommunsThemePolish() {
         attributeFilter: ["class"],
       });
 
+      frameContentObserver?.disconnect();
+      frameContentObserver = new MutationObserver(repairImages);
+      frameContentObserver.observe(doc.body, {
+        childList: true,
+        subtree: true,
+      });
+
       return true;
     };
 
@@ -215,6 +244,7 @@ export default function MetauxCommunsThemePolish() {
 
     return () => {
       frameThemeObserver?.disconnect();
+      frameContentObserver?.disconnect();
       if (retryTimer !== null) window.clearTimeout(retryTimer);
     };
   }, [pathname]);
