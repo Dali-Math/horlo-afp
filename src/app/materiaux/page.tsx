@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import './materiaux-title.css';
 
 type Material = {
   id: string;
