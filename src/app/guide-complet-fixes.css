@@ -1,0 +1,276 @@
+/*
+ * Corrections ciblées pour /materiaux/guide-complet.
+ * Cette feuille ne supprime ni ne remplace le contenu existant : elle neutralise
+ * uniquement les conflits entre l'ancien prefers-color-scheme et le thème HorloLearn.
+ */
+
+/* -------------------------------------------------------------------------- */
+/* Positionnement sous la navigation globale                                  */
+/* -------------------------------------------------------------------------- */
+
+@media (min-width: 1025px) {
+  .hl-site-content:has(.toc-fixed) .toc-fixed {
+    top: 86px !important;
+    height: calc(100vh - 86px) !important;
+    z-index: 20 !important;
+    padding-top: 1.5rem !important;
+  }
+
+  .hl-site-content:has(.toc-fixed) .main-content {
+    padding-top: 1.25rem !important;
+  }
+}
+
+/* Le menu global doit toujours rester au-dessus du sommaire du guide. */
+body:has(.toc-fixed) header,
+body:has(.toc-fixed) nav[class*="sticky"],
+body:has(.toc-fixed) nav[class*="fixed"] {
+  z-index: 60;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Le thème HorloLearn devient la seule source de vérité                      */
+/* -------------------------------------------------------------------------- */
+
+html:not(.dark) body:has(.toc-fixed) {
+  background: var(--hl-bg) !important;
+  color: var(--hl-ink) !important;
+}
+
+html.dark body:has(.toc-fixed) {
+  background: var(--hl-bg) !important;
+  color: var(--hl-ink) !important;
+}
+
+html:not(.dark) .hl-site-content:has(.toc-fixed) .main-content {
+  background: var(--hl-bg) !important;
+  color: var(--hl-ink) !important;
+}
+
+html.dark .hl-site-content:has(.toc-fixed) .main-content {
+  background: var(--hl-bg) !important;
+  color: var(--hl-ink) !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Sommaire latéral                                                           */
+/* -------------------------------------------------------------------------- */
+
+html:not(.dark) .hl-site-content:has(.toc-fixed) .toc-fixed {
+  background: #17120d !important;
+  color: #f7f1e7 !important;
+  border-right-color: var(--hl-metal) !important;
+  box-shadow: 8px 0 28px rgba(31, 25, 18, 0.07) !important;
+}
+
+html.dark .hl-site-content:has(.toc-fixed) .toc-fixed {
+  background: #0d0f12 !important;
+  color: #f1ede5 !important;
+  border-right-color: var(--hl-metal) !important;
+}
+
+.hl-site-content:has(.toc-fixed) .toc-fixed h3,
+.hl-site-content:has(.toc-fixed) .toc-fixed .toc-link {
+  color: #f7f1e7 !important;
+}
+
+.hl-site-content:has(.toc-fixed) .toc-fixed .toc-link:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-left-color: var(--hl-metal) !important;
+}
+
+.hl-site-content:has(.toc-fixed) .toc-fixed .toc-link.bg-yellow-500,
+.hl-site-content:has(.toc-fixed) .toc-fixed .toc-link.dark\:bg-yellow-600 {
+  background: var(--hl-metal) !important;
+  color: #17120d !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Surfaces principales                                                       */
+/* -------------------------------------------------------------------------- */
+
+html:not(.dark) .hl-site-content:has(.toc-fixed) .section-card,
+html:not(.dark) .hl-site-content:has(.toc-fixed) .material-card,
+html:not(.dark) .hl-site-content:has(.toc-fixed) .chart-container,
+html:not(.dark) .hl-site-content:has(.toc-fixed) .comparison-table,
+html:not(.dark) .hl-site-content:has(.toc-fixed) .bento-summary,
+html:not(.dark) .hl-site-content:has(.toc-fixed) .mermaid-container {
+  background: var(--hl-surface-strong) !important;
+  color: var(--hl-ink) !important;
+  border-color: var(--hl-line) !important;
+}
+
+html.dark .hl-site-content:has(.toc-fixed) .section-card,
+html.dark .hl-site-content:has(.toc-fixed) .material-card,
+html.dark .hl-site-content:has(.toc-fixed) .chart-container,
+html.dark .hl-site-content:has(.toc-fixed) .comparison-table,
+html.dark .hl-site-content:has(.toc-fixed) .bento-summary,
+html.dark .hl-site-content:has(.toc-fixed) .mermaid-container {
+  background: var(--hl-surface) !important;
+  color: var(--hl-ink) !important;
+  border-color: var(--hl-line) !important;
+}
+
+html:not(.dark) .hl-site-content:has(.toc-fixed) .section-card,
+html:not(.dark) .hl-site-content:has(.toc-fixed) .material-card,
+html:not(.dark) .hl-site-content:has(.toc-fixed) .chart-container,
+html:not(.dark) .hl-site-content:has(.toc-fixed) .comparison-table {
+  box-shadow: 0 12px 34px rgba(31, 25, 18, 0.07) !important;
+}
+
+html.dark .hl-site-content:has(.toc-fixed) .section-card,
+html.dark .hl-site-content:has(.toc-fixed) .material-card,
+html.dark .hl-site-content:has(.toc-fixed) .chart-container,
+html.dark .hl-site-content:has(.toc-fixed) .comparison-table {
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28) !important;
+}
+
+/* Résumé exécutif : contraste explicite. */
+html:not(.dark) .hl-site-content:has(.toc-fixed) .bento-summary h3 {
+  color: var(--hl-ink) !important;
+}
+
+html:not(.dark) .hl-site-content:has(.toc-fixed) .bento-summary p,
+html:not(.dark) .hl-site-content:has(.toc-fixed) .bento-summary ul,
+html:not(.dark) .hl-site-content:has(.toc-fixed) .bento-summary li {
+  color: var(--hl-muted) !important;
+}
+
+html.dark .hl-site-content:has(.toc-fixed) .bento-summary h3 {
+  color: var(--hl-ink) !important;
+}
+
+html.dark .hl-site-content:has(.toc-fixed) .bento-summary p,
+html.dark .hl-site-content:has(.toc-fixed) .bento-summary ul,
+html.dark .hl-site-content:has(.toc-fixed) .bento-summary li {
+  color: var(--hl-muted) !important;
+}
+
+/* Les utilitaires Tailwind de l'ancienne page doivent suivre le thème du site. */
+html:not(.dark) .hl-site-content:has(.toc-fixed) [class~="text-gray-900"],
+html:not(.dark) .hl-site-content:has(.toc-fixed) [class~="text-gray-800"] {
+  color: var(--hl-ink) !important;
+}
+
+html:not(.dark) .hl-site-content:has(.toc-fixed) [class~="text-gray-700"],
+html:not(.dark) .hl-site-content:has(.toc-fixed) [class~="text-gray-600"],
+html:not(.dark) .hl-site-content:has(.toc-fixed) [class~="text-gray-500"] {
+  color: var(--hl-muted) !important;
+}
+
+html.dark .hl-site-content:has(.toc-fixed) [class*="dark:text-gray-100"] {
+  color: var(--hl-ink) !important;
+}
+
+html.dark .hl-site-content:has(.toc-fixed) [class*="dark:text-gray-300"],
+html.dark .hl-site-content:has(.toc-fixed) [class*="dark:text-gray-400"] {
+  color: var(--hl-muted) !important;
+}
+
+/* Petits panneaux gris internes. */
+html:not(.dark) .hl-site-content:has(.toc-fixed) [class~="bg-gray-50"],
+html:not(.dark) .hl-site-content:has(.toc-fixed) [class~="bg-gray-100"] {
+  background: var(--hl-bg-soft) !important;
+}
+
+html.dark .hl-site-content:has(.toc-fixed) [class*="dark:bg-gray-700"] {
+  background: var(--hl-surface-strong) !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Bento hero                                                                 */
+/* -------------------------------------------------------------------------- */
+
+.hl-site-content:has(.toc-fixed) .bento-hero {
+  background: linear-gradient(135deg, rgba(18, 15, 12, 0.72), rgba(79, 62, 42, 0.56)) !important;
+}
+
+.hl-site-content:has(.toc-fixed) .bento-hero .hero-title,
+.hl-site-content:has(.toc-fixed) .bento-hero .hero-subtitle {
+  color: #ffffff !important;
+}
+
+.hl-site-content:has(.toc-fixed) .bento-visual {
+  background: linear-gradient(135deg, var(--hl-metal), #8f7147) !important;
+  color: #ffffff !important;
+}
+
+.hl-site-content:has(.toc-fixed) .bento-visual * {
+  color: #ffffff !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Citations, tableaux et graphiques                                          */
+/* -------------------------------------------------------------------------- */
+
+.hl-site-content:has(.toc-fixed) .citation {
+  background: var(--hl-metal) !important;
+  color: #ffffff !important;
+}
+
+.hl-site-content:has(.toc-fixed) .citation:hover {
+  background: var(--hl-ink) !important;
+  color: var(--hl-bg) !important;
+}
+
+html:not(.dark) .hl-site-content:has(.toc-fixed) .comparison-table td {
+  border-bottom-color: var(--hl-line) !important;
+  color: var(--hl-ink) !important;
+}
+
+html.dark .hl-site-content:has(.toc-fixed) .comparison-table td {
+  border-bottom-color: var(--hl-line) !important;
+  color: var(--hl-ink) !important;
+}
+
+.hl-site-content:has(.toc-fixed) .comparison-table th {
+  background: #241a12 !important;
+  color: #ffffff !important;
+}
+
+html:not(.dark) .hl-site-content:has(.toc-fixed) .pull-quote {
+  background: color-mix(in srgb, var(--hl-metal) 7%, var(--hl-surface)) !important;
+  color: var(--hl-ink) !important;
+  border-left-color: var(--hl-metal) !important;
+}
+
+html.dark .hl-site-content:has(.toc-fixed) .pull-quote {
+  background: color-mix(in srgb, var(--hl-metal) 10%, var(--hl-surface)) !important;
+  color: var(--hl-ink) !important;
+  border-left-color: var(--hl-metal) !important;
+}
+
+/* Mermaid reste volontairement clair pour conserver la lisibilité des diagrammes. */
+.hl-site-content:has(.toc-fixed) .mermaid-container {
+  background: #ffffff !important;
+  border-color: #d7d0c4 !important;
+}
+
+.hl-site-content:has(.toc-fixed) .mermaid-controls {
+  background: rgba(255, 255, 255, 0.96) !important;
+}
+
+.hl-site-content:has(.toc-fixed) .mermaid-control-btn {
+  background: #ffffff !important;
+  color: #374151 !important;
+  border-color: #d1d5db !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Boutons retour                                                             */
+/* -------------------------------------------------------------------------- */
+
+.hl-site-content:has(.toc-fixed) a[href="/materiaux"] {
+  border-color: var(--hl-line) !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Responsive                                                                 */
+/* -------------------------------------------------------------------------- */
+
+@media (max-width: 1024px) {
+  .hl-site-content:has(.toc-fixed) .main-content {
+    margin-left: 0 !important;
+    padding-top: 0 !important;
+  }
+}
