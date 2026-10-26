@@ -11,6 +11,7 @@ import JsonLd from "@/components/JsonLd";
 import ThemeProvider from "@/components/ThemeProvider";
 import ClientLayout from "@/components/ClientLayout";
 import GuideCompletRuntimeFixes from "@/components/GuideCompletRuntimeFixes";
+import MetauxCommunsRuntimeFixes from "@/components/MetauxCommunsRuntimeFixes";
 import "swiper/css";
 
 const ScrollToTop = dynamic(() => import("@/components/ScrollToTop"), { ssr: false });
@@ -120,6 +121,7 @@ export default function RootLayout({
             <main className="relative min-h-screen overflow-visible">{children}</main>
           </ClientLayout>
           <GuideCompletRuntimeFixes />
+          <MetauxCommunsRuntimeFixes />
           <ScrollToTop />
           <Analytics />
           <JsonLd data={org} />
