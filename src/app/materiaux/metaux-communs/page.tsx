@@ -175,6 +175,7 @@ export default function MetauxCommunsPage() {
         .career-path h3,
         .company-card h3,
         .trend-item h3,
+        .timeline-item h3,
         .material-header h3,
         .district-specialties h4,
         .district-companies h4,
@@ -247,12 +248,15 @@ export default function MetauxCommunsPage() {
         .company-tag,
         .specialty,
         .step-number,
-        .swiss-badge {
+        .swiss-badge,
+        .timeline-materials .material-tag {
           background: var(--horlo-metal) !important;
           color: var(--horlo-accent-ink) !important;
           border-radius: 2px !important;
         }
 
+        .timeline-item { display: none !important; }
+        .timeline-item.active { display: block !important; }
         .trend-item { display: none !important; }
         .trend-item.active { display: block !important; }
         .district-info { display: none !important; }
@@ -278,7 +282,28 @@ export default function MetauxCommunsPage() {
 
     applyTheme();
 
+    const updateHeight = () => {
+      const bodyHeight = doc.body?.scrollHeight ?? 0;
+      const rootHeight = doc.documentElement?.scrollHeight ?? 0;
+      const nextHeight = Math.max(bodyHeight, rootHeight, 1200);
+      setFrameHeight(nextHeight + 8);
+    };
+
     const bindTabs = () => {
+      doc.querySelectorAll<HTMLButtonElement>('.timeline-tabs .tab-btn').forEach((button) => {
+        if (button.dataset.horlolearnBound === '1') return;
+        button.dataset.horlolearnBound = '1';
+        button.addEventListener('click', () => {
+          const id = button.dataset.period;
+          if (!id) return;
+          doc.querySelectorAll('.timeline-tabs .tab-btn').forEach((item) => item.classList.remove('active'));
+          doc.querySelectorAll('.timeline-item').forEach((item) => item.classList.remove('active'));
+          button.classList.add('active');
+          doc.getElementById(id)?.classList.add('active');
+          window.setTimeout(updateHeight, 20);
+        });
+      });
+
       doc.querySelectorAll<HTMLButtonElement>('.district-tabs .tab-btn').forEach((button) => {
         if (button.dataset.horlolearnBound === '1') return;
         button.dataset.horlolearnBound = '1';
@@ -322,13 +347,6 @@ export default function MetauxCommunsPage() {
           candidate = candidate.parentElement;
         }
       }
-    };
-
-    const updateHeight = () => {
-      const bodyHeight = doc.body?.scrollHeight ?? 0;
-      const rootHeight = doc.documentElement?.scrollHeight ?? 0;
-      const nextHeight = Math.max(bodyHeight, rootHeight, 1200);
-      setFrameHeight(nextHeight + 8);
     };
 
     bindTabs();
