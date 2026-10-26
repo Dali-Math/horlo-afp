@@ -19,7 +19,9 @@ export default function MateriauxHardNavigation() {
 
       event.preventDefault();
       event.stopPropagation();
-      window.location.assign("/materiaux/metaux-communs");
+
+      const freshUrl = `/materiaux/metaux-communs?fresh=${Date.now()}`;
+      window.location.assign(freshUrl);
     };
 
     document.addEventListener("click", handleClick, true);
