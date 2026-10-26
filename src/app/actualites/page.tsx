@@ -37,8 +37,8 @@ const INITIAL_NEWS: NewsItem[] = [
   {
     id: 'init-1',
     title: 'Exportations horlogères suisses de septembre 2026: observations et dynamique du marché',
-    link: 'https://news.google.com/search?q=horlogerie+suisse',
-    source: 'Luxury Tribune',
+    link: 'https://www.fhs.swiss/fre/statistics.html',
+    source: 'Fédération Horlogère Suisse',
     pubDate: new Date().toISOString(),
     time: 'Aujourd’hui',
     category: 'Économie & Industrie'
@@ -46,8 +46,8 @@ const INITIAL_NEWS: NewsItem[] = [
   {
     id: 'init-2',
     title: 'L’horlogerie suisse stimulée par les prix record atteints par les pièces d’exception',
-    link: 'https://news.google.com/search?q=horlogerie+suisse',
-    source: 'FashionNetwork France',
+    link: 'https://www.phillips.com/watches',
+    source: 'Phillips Watches Geneva',
     pubDate: new Date().toISOString(),
     time: 'Hier',
     category: 'Enchères & Records'
@@ -55,8 +55,8 @@ const INITIAL_NEWS: NewsItem[] = [
   {
     id: 'init-3',
     title: 'Foire du Valais & Salons : Les rendez-vous clés de l’horlogerie helvétique',
-    link: 'https://news.google.com/search?q=horlogerie+suisse',
-    source: 'Ville de Martigny',
+    link: 'https://www.gphg.org/',
+    source: 'GPHG Genève',
     pubDate: new Date().toISOString(),
     time: 'Il y a 2 jours',
     category: 'Événements & Salons'
@@ -64,7 +64,7 @@ const INITIAL_NEWS: NewsItem[] = [
   {
     id: 'init-4',
     title: 'Manufactures de la Vallée de Joux : Nouveaux développements techniques et calibres',
-    link: 'https://news.google.com/search?q=horlogerie+suisse',
+    link: 'https://www.bilan.ch/economie',
     source: 'Bilan',
     pubDate: new Date().toISOString(),
     time: 'Il y a 3 jours',
@@ -73,7 +73,7 @@ const INITIAL_NEWS: NewsItem[] = [
   {
     id: 'init-5',
     title: 'Transmission et savoir-faire : L’excellence des écoles et ateliers horlogers suisses',
-    link: 'https://news.google.com/search?q=horlogerie+suisse',
+    link: 'https://www.letemps.ch/economie/horlogerie',
     source: 'Le Temps',
     pubDate: new Date().toISOString(),
     time: 'Il y a 4 jours',
@@ -82,7 +82,7 @@ const INITIAL_NEWS: NewsItem[] = [
   {
     id: 'init-6',
     title: 'Watches and Wonders Genève : Les préparatifs de l’édition 2026 en marche',
-    link: 'https://news.google.com/search?q=horlogerie+suisse',
+    link: 'https://www.watchesandwonders.com/',
     source: 'FHH Suisse',
     pubDate: new Date().toISOString(),
     time: 'Cette semaine',
