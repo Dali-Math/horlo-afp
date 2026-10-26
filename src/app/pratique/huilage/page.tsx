@@ -133,6 +133,7 @@ export default function HuilagePage() {
   const [filterCategory, setFilterCategory] = useState<string>('all');
 
   // État du Comparateur Visuel de Ménisque (en % du diamètre du contre-pivot : 20% à 92%)
+  const [comparatorMode, setComparatorMode] = useState<'incabloc' | 'palette'>('incabloc');
   const [dropPercent, setDropPercent] = useState<number>(60);
   const [loupeMeniscus, setLoupeMeniscus] = useState<boolean>(false);
   const [loupeOrgan, setLoupeOrgan] = useState<boolean>(false);
@@ -246,27 +247,52 @@ export default function HuilagePage() {
           <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
             <div>
               <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase text-amber-600 dark:text-amber-400">
-                <Sliders className="w-4 h-4" /> Simulateur Optique sous Binoculaire · Amortisseur Incabloc (Code 730)
+                <Sliders className="w-4 h-4" /> Simulateur Optique sous Binoculaire 40x · Codes Ebauches SA 730 &amp; 710
               </div>
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1">
-                Comparateur Visuel SVG du Ménisque d’Huile (Moebius 9010)
+              <h2 className="text-2xl sm:text-3xl font-serif font-extrabold text-slate-900 dark:text-white mt-1">
+                Comparateur Visuel SVG du Ménisque (9010) &amp; des Palettes d’Ancre (9415)
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
-                Variez le volume de la goutte déposée sur le contre-pivot épilamé pour observer son comportement capillaire en <strong>coupe axiale</strong> et en <strong>vue de dessus à travers le rubis</strong>.
+                Basculez entre le <strong>contre-pivot Incabloc (Moebius 9010)</strong> et la <strong>palette d’ancre en rubis (Moebius 9415)</strong>, puis ajustez le curseur micrométrique pour observer l’effet d’un sous-dosage ou d’un sur-dosage.
               </p>
             </div>
 
-            <button
-              onClick={() => setLoupeMeniscus(!loupeMeniscus)}
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold border transition-all ${
-                loupeMeniscus
-                  ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-amber-500'
-              }`}
-            >
-              <ZoomIn className="w-4 h-4" />
-              {loupeMeniscus ? 'Loupe 10x Active' : 'Activer Loupe 10x'}
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex rounded-xl p-1 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <button
+                  onClick={() => setComparatorMode('incabloc')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    comparatorMode === 'incabloc'
+                      ? 'bg-amber-500 text-slate-950 shadow-sm'
+                      : 'text-slate-600 dark:text-slate-300 hover:text-amber-500'
+                  }`}
+                >
+                  1. Incabloc (Moebius 9010)
+                </button>
+                <button
+                  onClick={() => setComparatorMode('palette')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    comparatorMode === 'palette'
+                      ? 'bg-rose-500 text-white shadow-sm'
+                      : 'text-slate-600 dark:text-slate-300 hover:text-rose-400'
+                  }`}
+                >
+                  2. Palette d’Ancre (Moebius 9415)
+                </button>
+              </div>
+
+              <button
+                onClick={() => setLoupeMeniscus(!loupeMeniscus)}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold border transition-all ${
+                  loupeMeniscus
+                    ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-amber-500'
+                }`}
+              >
+                <ZoomIn className="w-4 h-4" />
+                {loupeMeniscus ? 'Loupe 10x Active' : 'Activer Loupe 10x'}
+              </button>
+            </div>
           </div>
 
           {/* Boutons de pré-réglages + Curseur micrométrique */}
@@ -281,7 +307,9 @@ export default function HuilagePage() {
                 }`}
               >
                 <div className="text-[10px] font-mono uppercase text-amber-600 dark:text-amber-400">État 01 · &lt; 40 %</div>
-                <div className="text-xs font-extrabold mt-0.5">Sous-Dosé (Sec)</div>
+                <div className="text-xs font-extrabold mt-0.5">
+                  {comparatorMode === 'incabloc' ? 'Sous-Dosé (Sec)' : 'Palette Sèche (Usure)'}
+                </div>
               </button>
 
               <button
@@ -293,7 +321,9 @@ export default function HuilagePage() {
                 }`}
               >
                 <div className="text-[10px] font-mono uppercase text-emerald-600 dark:text-emerald-400">État 02 · 50–66 %</div>
-                <div className="text-xs font-extrabold mt-0.5">Dosage Parfait (2/3)</div>
+                <div className="text-xs font-extrabold mt-0.5">
+                  {comparatorMode === 'incabloc' ? 'Dosage Parfait (2/3)' : 'Bourrelet 9415 Parfait'}
+                </div>
               </button>
 
               <button
@@ -305,14 +335,18 @@ export default function HuilagePage() {
                 }`}
               >
                 <div className="text-[10px] font-mono uppercase text-rose-600 dark:text-rose-400">État 03 · &gt; 75 %</div>
-                <div className="text-xs font-extrabold mt-0.5">Sur-Dosé (Fuite)</div>
+                <div className="text-xs font-extrabold mt-0.5">
+                  {comparatorMode === 'incabloc' ? 'Sur-Dosé (Fuite)' : 'Bavure sur Repos (Collage)'}
+                </div>
               </button>
             </div>
 
             <div className="lg:col-span-6 space-y-2">
               <div className="flex items-center justify-between text-xs font-mono">
                 <span className="text-slate-600 dark:text-slate-400">
-                  Ratio Diamètre Goutte / Contre-Pivot (d / D) :
+                  {comparatorMode === 'incabloc'
+                    ? 'Ratio Diamètre Goutte / Contre-Pivot (d / D) :'
+                    : 'Couverture du Plan d’Impulsion de Palette (Moebius 9415) :'}
                 </span>
                 <span
                   className={`px-2.5 py-0.5 rounded-full font-black ${
@@ -335,172 +369,310 @@ export default function HuilagePage() {
                 className="w-full accent-amber-500 cursor-pointer"
               />
               <div className="flex justify-between text-[10px] font-mono text-slate-400">
-                <span>20 % (Micro-trace)</span>
-                <span className="text-emerald-500 font-bold">Zone Idéale : 50 % – 66 % (2/3)</span>
-                <span>90 % (Touche le chaton)</span>
+                <span>20 % (Frottement sec)</span>
+                <span className="text-emerald-500 font-bold">Zone Idéale : 50 % – 66 %</span>
+                <span>90 % (Débordement critique)</span>
               </div>
             </div>
           </div>
 
-          {/* Double Schéma SVG : Coupe Axiale + Vue Binoculaire de Dessus */}
+          {/* Double Schéma SVG : Incabloc 9010 OU Palette d'Ancre 9415 */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
             <div className="lg:col-span-8 rounded-2xl bg-[#070B14] border border-slate-800 p-4 overflow-hidden">
-              <svg
-                viewBox={loupeMeniscus ? '60 40 600 220' : '0 0 740 310'}
-                className="w-full h-auto transition-all duration-500"
-              >
-                <defs>
-                  <pattern id="gridMeniscus" width="20" height="20" patternUnits="userSpaceOnUse">
-                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" strokeWidth="0.6" />
-                  </pattern>
-                </defs>
-                <rect width="740" height="310" fill="url(#gridMeniscus)" />
+              {comparatorMode === 'incabloc' ? (
+                <svg
+                  viewBox={loupeMeniscus ? '60 40 600 220' : '0 0 740 310'}
+                  className="w-full h-auto transition-all duration-500"
+                >
+                  <defs>
+                    <pattern id="gridMeniscus" width="20" height="20" patternUnits="userSpaceOnUse">
+                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" strokeWidth="0.6" />
+                    </pattern>
+                  </defs>
+                  <rect width="740" height="310" fill="url(#gridMeniscus)" />
 
-                {/* ================= GAUCHE : COUPE AXIALE INCABLOC ================= */}
-                <g transform="translate(210, 155)">
-                  <text x="0" y="-125" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold" fontFamily="monospace">
-                    1. COUPE AXIALE MICRO-MÉCANIQUE (INCABLOC)
-                  </text>
+                  {/* ================= GAUCHE : COUPE AXIALE INCABLOC ================= */}
+                  <g transform="translate(210, 155)">
+                    <text x="0" y="-125" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold" fontFamily="monospace">
+                      1. COUPE AXIALE MICRO-MÉCANIQUE (INCABLOC)
+                    </text>
 
-                  {/* Chaton Laiton (Sertissure) */}
-                  <path
-                    d="M -115 -65 L -75 -65 L -75 -20 L -95 -20 L -95 45 L -115 45 Z"
-                    fill="#b45309"
-                    stroke="#f59e0b"
-                    strokeWidth="1.5"
-                  />
-                  <path
-                    d="M 115 -65 L 75 -65 L 75 -20 L 95 -20 L 95 45 L 115 45 Z"
-                    fill="#b45309"
-                    stroke="#f59e0b"
-                    strokeWidth="1.5"
-                  />
+                    {/* Chaton Laiton (Sertissure) */}
+                    <path
+                      d="M -115 -65 L -75 -65 L -75 -20 L -95 -20 L -95 45 L -115 45 Z"
+                      fill="#b45309"
+                      stroke="#f59e0b"
+                      strokeWidth="1.5"
+                    />
+                    <path
+                      d="M 115 -65 L 75 -65 L 75 -20 L 95 -20 L 95 45 L 115 45 Z"
+                      fill="#b45309"
+                      stroke="#f59e0b"
+                      strokeWidth="1.5"
+                    />
 
-                  {/* Ressort-Lyre Incabloc */}
-                  <rect x="-105" y="-78" width="35" height="10" rx="3" fill="#38bdf8" />
-                  <rect x="70" y="-78" width="35" height="10" rx="3" fill="#38bdf8" />
+                    {/* Ressort-Lyre Incabloc */}
+                    <rect x="-105" y="-78" width="35" height="10" rx="3" fill="#38bdf8" />
+                    <rect x="70" y="-78" width="35" height="10" rx="3" fill="#38bdf8" />
 
-                  {/* Pierre Contre-Pivot (Rubis supérieur plat) */}
-                  <rect
-                    x="-74"
-                    y="-58"
-                    width="148"
-                    height="32"
-                    rx="4"
-                    fill="#be123c"
-                    fillOpacity="0.78"
-                    stroke="#fda4af"
-                    strokeWidth="1.8"
-                  />
-                  <text x="0" y="-38" textAnchor="middle" fill="#ffe4e6" fontSize="9.5" fontWeight="bold" fontFamily="monospace">
-                    CONTRE-PIVOT RUBIS (ÉPILAMÉ FIXODROP)
-                  </text>
+                    {/* Pierre Contre-Pivot (Rubis supérieur plat) */}
+                    <rect
+                      x="-74"
+                      y="-58"
+                      width="148"
+                      height="32"
+                      rx="4"
+                      fill="#be123c"
+                      fillOpacity="0.78"
+                      stroke="#fda4af"
+                      strokeWidth="1.8"
+                    />
+                    <text x="0" y="-38" textAnchor="middle" fill="#ffe4e6" fontSize="9.5" fontWeight="bold" fontFamily="monospace">
+                      CONTRE-PIVOT RUBIS (ÉPILAMÉ FIXODROP)
+                    </text>
 
-                  {/* Pierre Percée (Rubis inférieur à trou olivé) */}
-                  <path
-                    d="M -92 -10 L -16 -10 L -16 32 L -55 32 L -92 15 Z"
-                    fill="#9f1239"
-                    fillOpacity="0.82"
-                    stroke="#fb7185"
-                    strokeWidth="1.5"
-                  />
-                  <path
-                    d="M 92 -10 L 16 -10 L 16 32 L 55 32 L 92 15 Z"
-                    fill="#9f1239"
-                    fillOpacity="0.82"
-                    stroke="#fb7185"
-                    strokeWidth="1.5"
-                  />
+                    {/* Pierre Percée (Rubis inférieur à trou olivé) */}
+                    <path
+                      d="M -92 -10 L -16 -10 L -16 32 L -55 32 L -92 15 Z"
+                      fill="#9f1239"
+                      fillOpacity="0.82"
+                      stroke="#fb7185"
+                      strokeWidth="1.5"
+                    />
+                    <path
+                      d="M 92 -10 L 16 -10 L 16 32 L 55 32 L 92 15 Z"
+                      fill="#9f1239"
+                      fillOpacity="0.82"
+                      stroke="#fb7185"
+                      strokeWidth="1.5"
+                    />
 
-                  {/* Ménisque d'huile Moebius 9010 dans l'entrefer capillaire */}
-                  <path
-                    d={`M ${-oilWidthCross / 2} -26 C ${-oilWidthCross / 2 + 8} -18, ${-oilWidthCross / 2 + 8} -14, ${-oilWidthCross / 2} -10 L ${oilWidthCross / 2} -10 C ${oilWidthCross / 2 - 8} -14, ${oilWidthCross / 2 - 8} -18, ${oilWidthCross / 2} -26 Z`}
-                    fill={meniscusState === 'over' ? '#f43f5e' : '#fbbf24'}
-                    fillOpacity="0.9"
-                    stroke={meniscusState === 'over' ? '#fda4af' : '#fef08a'}
-                    strokeWidth="1.5"
-                  />
+                    {/* Ménisque d'huile Moebius 9010 dans l'entrefer capillaire */}
+                    <path
+                      d={`M ${-oilWidthCross / 2} -26 C ${-oilWidthCross / 2 + 8} -18, ${-oilWidthCross / 2 + 8} -14, ${-oilWidthCross / 2} -10 L ${oilWidthCross / 2} -10 C ${oilWidthCross / 2 - 8} -14, ${oilWidthCross / 2 - 8} -18, ${oilWidthCross / 2} -26 Z`}
+                      fill={meniscusState === 'over' ? '#f43f5e' : '#fbbf24'}
+                      fillOpacity="0.9"
+                      stroke={meniscusState === 'over' ? '#fda4af' : '#fef08a'}
+                      strokeWidth="1.5"
+                    />
 
-                  {/* Alerte fuite capillaire sur le chaton si sur-dosé */}
-                  {meniscusState === 'over' && (
-                    <g>
-                      <path
-                        d="M -74 -26 Q -85 -35, -90 -55"
-                        fill="none"
-                        stroke="#f43f5e"
-                        strokeWidth="3"
-                        strokeDasharray="3 2"
-                      />
-                      <path
-                        d="M 74 -26 Q 85 -35, 90 -55"
-                        fill="none"
-                        stroke="#f43f5e"
-                        strokeWidth="3"
-                        strokeDasharray="3 2"
-                      />
-                      <text x="0" y="-88" textAnchor="middle" fill="#fda4af" fontSize="10" fontWeight="bold" fontFamily="monospace">
-                        ✗ FUITE CAPILLAIRE VERS LE CHATON LAITON !
-                      </text>
-                    </g>
-                  )}
+                    {/* Alerte fuite capillaire sur le chaton si sur-dosé */}
+                    {meniscusState === 'over' && (
+                      <g>
+                        <path
+                          d="M -74 -26 Q -85 -35, -90 -55"
+                          fill="none"
+                          stroke="#f43f5e"
+                          strokeWidth="3"
+                          strokeDasharray="3 2"
+                        />
+                        <path
+                          d="M 74 -26 Q 85 -35, 90 -55"
+                          fill="none"
+                          stroke="#f43f5e"
+                          strokeWidth="3"
+                          strokeDasharray="3 2"
+                        />
+                        <text x="0" y="-88" textAnchor="middle" fill="#fda4af" fontSize="10" fontWeight="bold" fontFamily="monospace">
+                          ✗ FUITE CAPILLAIRE VERS LE CHATON LAITON !
+                        </text>
+                      </g>
+                    )}
 
-                  {/* Pivot conique du balancier (Ø 0.08 mm) */}
-                  <path
-                    d="M -13 105 L -13 22 L -11 -25 C -5 -26, 5 -26, 11 -25 L 13 22 L 13 105 Z"
-                    fill="#cbd5e1"
-                    stroke="#f8fafc"
-                    strokeWidth="1.5"
-                  />
-                  <text x="0" y="92" textAnchor="middle" fill="#0f172a" fontSize="8.5" fontWeight="bold" fontFamily="monospace">
-                    PIVOT
-                  </text>
+                    {/* Pivot conique du balancier (Ø 0.08 mm) */}
+                    <path
+                      d="M -13 105 L -13 22 L -11 -25 C -5 -26, 5 -26, 11 -25 L 13 22 L 13 105 Z"
+                      fill="#cbd5e1"
+                      stroke="#f8fafc"
+                      strokeWidth="1.5"
+                    />
+                    <text x="0" y="92" textAnchor="middle" fill="#0f172a" fontSize="8.5" fontWeight="bold" fontFamily="monospace">
+                      PIVOT
+                    </text>
 
-                  {/* Cotation diamètre ménisque */}
-                  <line x1={-oilWidthCross / 2} y1="62" x2={oilWidthCross / 2} y2="62" stroke="#fbbf24" strokeWidth="1.5" />
-                  <text x="0" y="78" textAnchor="middle" fill="#fbbf24" fontSize="9.5" fontWeight="bold" fontFamily="monospace">
-                    Ménisque = {dropPercent}% de la pierre
-                  </text>
-                </g>
+                    {/* Cotation diamètre ménisque */}
+                    <line x1={-oilWidthCross / 2} y1="62" x2={oilWidthCross / 2} y2="62" stroke="#fbbf24" strokeWidth="1.5" />
+                    <text x="0" y="78" textAnchor="middle" fill="#fbbf24" fontSize="9.5" fontWeight="bold" fontFamily="monospace">
+                      Ménisque = {dropPercent}% de la pierre
+                    </text>
+                  </g>
 
-                {/* ================= DROITE : VUE DE DESSUS AU BINOCULAIRE ================= */}
-                <g transform="translate(555, 155)">
-                  <text x="0" y="-125" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold" fontFamily="monospace">
-                    2. VUE DE DESSUS (TRANSPARENCE RUBIS)
-                  </text>
+                  {/* ================= DROITE : VUE DE DESSUS AU BINOCULAIRE ================= */}
+                  <g transform="translate(555, 155)">
+                    <text x="0" y="-125" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold" fontFamily="monospace">
+                      2. VUE DE DESSUS (TRANSPARENCE RUBIS)
+                    </text>
 
-                  {/* Anneau extérieur du Chaton en laiton */}
-                  <circle r="92" fill="#78350f" stroke="#f59e0b" strokeWidth="2.5" />
+                    {/* Anneau extérieur du Chaton en laiton */}
+                    <circle r="92" fill="#78350f" stroke="#f59e0b" strokeWidth="2.5" />
 
-                  {/* Pierre Contre-Pivot Rubis */}
-                  <circle r={capRadius} fill="#4c0519" stroke="#fb7185" strokeWidth="2" />
+                    {/* Pierre Contre-Pivot Rubis */}
+                    <circle r={capRadius} fill="#4c0519" stroke="#fb7185" strokeWidth="2" />
 
-                  {/* Cercle de référence idéal 2/3 (66%) en pointillés verts */}
-                  <circle
-                    r={Math.round(capRadius * 0.62)}
-                    fill="none"
-                    stroke="#10b981"
-                    strokeWidth="1.5"
-                    strokeDasharray="4 3"
-                  />
+                    {/* Cercle de référence idéal 2/3 (66%) en pointillés verts */}
+                    <circle
+                      r={Math.round(capRadius * 0.62)}
+                      fill="none"
+                      stroke="#10b981"
+                      strokeWidth="1.5"
+                      strokeDasharray="4 3"
+                    />
 
-                  {/* Goutte d'huile Moebius 9010 vue par transparence */}
-                  <circle
-                    r={oilRadiusTop}
-                    fill={meniscusState === 'over' ? '#f43f5e' : '#f59e0b'}
-                    fillOpacity="0.65"
-                    stroke={meniscusState === 'over' ? '#fda4af' : '#fef08a'}
-                    strokeWidth="2.5"
-                  />
+                    {/* Goutte d'huile Moebius 9010 vue par transparence */}
+                    <circle
+                      r={oilRadiusTop}
+                      fill={meniscusState === 'over' ? '#f43f5e' : '#f59e0b'}
+                      fillOpacity="0.65"
+                      stroke={meniscusState === 'over' ? '#fda4af' : '#fef08a'}
+                      strokeWidth="2.5"
+                    />
 
-                  {/* Trou de la pierre percée et bout du pivot au centre */}
-                  <circle r="15" fill="#881337" stroke="#fda4af" strokeWidth="1.2" />
-                  <circle r="10" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="1.5" />
+                    {/* Trou de la pierre percée et bout du pivot au centre */}
+                    <circle r="15" fill="#881337" stroke="#fda4af" strokeWidth="1.2" />
+                    <circle r="10" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="1.5" />
 
-                  <text x="0" y="114" textAnchor="middle" fill="#6ee7b7" fontSize="9.5" fontFamily="monospace">
-                    Cercle vert pointillé = Cible idéale 2/3 (60–66%)
-                  </text>
-                </g>
-              </svg>
+                    <text x="0" y="114" textAnchor="middle" fill="#6ee7b7" fontSize="9.5" fontFamily="monospace">
+                      Cercle vert pointillé = Cible idéale 2/3 (60–66%)
+                    </text>
+                  </g>
+                </svg>
+              ) : (
+                <svg
+                  viewBox={loupeMeniscus ? '55 35 610 230' : '0 0 740 310'}
+                  className="w-full h-auto transition-all duration-500"
+                >
+                  <defs>
+                    <pattern id="gridPalette" width="20" height="20" patternUnits="userSpaceOnUse">
+                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" strokeWidth="0.6" />
+                    </pattern>
+                  </defs>
+                  <rect width="740" height="310" fill="url(#gridPalette)" />
+
+                  {/* ================= GAUCHE : COUPE PROFIL PALETTE & DENT 705 ================= */}
+                  <g transform="translate(215, 155)">
+                    <text x="0" y="-125" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold" fontFamily="monospace">
+                      1. PROFIL PALETTE D’ANCRE (710) &amp; DENT (705)
+                    </text>
+
+                    {/* Bras d'ancre en acier (logement de la palette) */}
+                    <path
+                      d="M -95 -105 L 45 -105 L 45 -45 L -95 -45 Z"
+                      fill="#334155"
+                      stroke="#94a3b8"
+                      strokeWidth="1.5"
+                    />
+                    <text x="-25" y="-72" textAnchor="middle" fill="#cbd5e1" fontSize="9" fontFamily="monospace">
+                      CORPS D’ANCRE (ÉPILAMÉ)
+                    </text>
+
+                    {/* Palette en rubis synthétique (Plan de repos à gauche, Plan d'impulsion en bas) */}
+                    <polygon
+                      points="-65,-85 25,-85 25,10 -65,-25"
+                      fill="#9f1239"
+                      fillOpacity="0.88"
+                      stroke="#fda4af"
+                      strokeWidth="2"
+                    />
+                    <text x="-20" y="-42" textAnchor="middle" fill="#ffe4e6" fontSize="9.5" fontWeight="bold" fontFamily="monospace">
+                      PALETTE RUBIS
+                    </text>
+
+                    {/* Indication Plan de repos (doit éviter la bavure) */}
+                    <line x1="-68" y1="-85" x2="-68" y2="-25" stroke="#38bdf8" strokeWidth="3" />
+                    <text x="-118" y="-50" textAnchor="middle" fill="#7dd3fc" fontSize="8.5" fontFamily="monospace">
+                      Plan de Repos
+                    </text>
+
+                    {/* Bourrelet de graisse thixotrope Moebius 9415 sur le Plan d'Impulsion */}
+                    <ellipse
+                      cx="-18"
+                      cy="-5"
+                      rx={Math.round(dropPercent * 0.55)}
+                      ry={Math.round(dropPercent * 0.16)}
+                      transform="rotate(21 -18 -5)"
+                      fill={meniscusState === 'over' ? '#f43f5e' : '#fb7185'}
+                      stroke="#fef08a"
+                      strokeWidth="2"
+                    />
+
+                    {/* Si sur-dosé : bavure sur le bec de repos et le long de la dent */}
+                    {meniscusState === 'over' && (
+                      <g>
+                        <circle cx="-66" cy="-26" r="14" fill="#f43f5e" fillOpacity="0.85" stroke="#fef08a" strokeWidth="1.5" />
+                        <text x="0" y="-108" textAnchor="middle" fill="#fda4af" fontSize="10" fontWeight="bold" fontFamily="monospace">
+                          ✗ BAVURE SUR LE BEC DE REPOS → COLLAGE DE L’ANCRE !
+                        </text>
+                      </g>
+                    )}
+
+                    {/* Dent de la roue d'échappement (Code 705) */}
+                    <polygon
+                      points="15,22 65,15 110,95 45,95"
+                      fill="#475569"
+                      stroke="#e2e8f0"
+                      strokeWidth="2"
+                    />
+                    <text x="65" y="75" textAnchor="middle" fill="#f8fafc" fontSize="9" fontWeight="bold" fontFamily="monospace">
+                      DENT 705
+                    </text>
+
+                    <text x="0" y="114" textAnchor="middle" fill="#fef08a" fontSize="9.5" fontWeight="bold" fontFamily="monospace">
+                      Plan d’impulsion : Moebius 9415 ({dropPercent}%)
+                    </text>
+                  </g>
+
+                  {/* ================= DROITE : VUE FACE PLAN D'IMPULSION ================= */}
+                  <g transform="translate(555, 155)">
+                    <text x="0" y="-125" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold" fontFamily="monospace">
+                      2. VUE DE FACE DU PLAN D’IMPULSION
+                    </text>
+
+                    {/* Rectangle de la face d'impulsion de la palette */}
+                    <rect
+                      x="-90"
+                      y="-65"
+                      width="180"
+                      height="130"
+                      rx="6"
+                      fill="#4c0519"
+                      stroke="#fb7185"
+                      strokeWidth="2.5"
+                    />
+
+                    {/* Zone cible idéale au centre du plan d'impulsion */}
+                    <rect
+                      x="-58"
+                      y="-36"
+                      width="116"
+                      height="72"
+                      rx="18"
+                      fill="none"
+                      stroke="#10b981"
+                      strokeWidth="1.8"
+                      strokeDasharray="5 3"
+                    />
+
+                    {/* Touche de Moebius 9415 */}
+                    <ellipse
+                      cx="0"
+                      cy="0"
+                      rx={Math.round(dropPercent * 0.95)}
+                      ry={Math.round(dropPercent * 0.58)}
+                      fill={meniscusState === 'over' ? '#f43f5e' : '#fb7185'}
+                      fillOpacity="0.78"
+                      stroke="#fef08a"
+                      strokeWidth="2.5"
+                    />
+
+                    <text x="0" y="92" textAnchor="middle" fill="#6ee7b7" fontSize="9.5" fontFamily="monospace">
+                      Cadre vert = Réserve thixotrope idéale sur le rubis
+                    </text>
+                    <text x="0" y="112" textAnchor="middle" fill="#fca5a5" fontSize="9" fontWeight="bold" fontFamily="monospace">
+                      Pivots d’ancre, dard &amp; fourchette : 100 % SECS
+                    </text>
+                  </g>
+                </svg>
+              )}
             </div>
 
             {/* Diagnostic en direct de l'état sélectionné */}
@@ -508,7 +680,7 @@ export default function HuilagePage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono uppercase font-bold text-slate-500 dark:text-slate-400">
-                    Diagnostic Sous Binoculaire
+                    {comparatorMode === 'incabloc' ? 'Diagnostic Incabloc (9010)' : 'Diagnostic Palette (9415)'}
                   </span>
                   <span
                     className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
@@ -523,58 +695,113 @@ export default function HuilagePage() {
                       ? 'Dosage Nominal'
                       : meniscusState === 'under'
                       ? 'Sous-Lubrification'
-                      : 'Danger Capillaire'}
+                      : 'Excès Critique'}
                   </span>
                 </div>
 
-                {meniscusState === 'optimal' && (
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-black text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
-                      <CheckCircle2 className="w-5 h-5 shrink-0" />
-                      Ménisque Parfaitement Centré ({dropPercent} %)
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                      La goutte de <strong>Moebius 9010</strong> couvre entre <strong>1/2 et 2/3</strong> de la surface du contre-pivot. Grâce au traitement d’épilamage (Fixodrop), l’angle de contact maintient un dôme sphérique fermé autour du pivot de balancier (Ø 0.08 mm).
-                    </p>
-                    <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-900 dark:text-emerald-200">
-                      <strong>Résultat au Witschi :</strong> Amplitude maximale (290°–310° à plat), écart vertical minimal et tenue de l’huile garantie sur 5 à 7 ans.
-                    </div>
-                  </div>
-                )}
+                {comparatorMode === 'incabloc' ? (
+                  <>
+                    {meniscusState === 'optimal' && (
+                      <div className="space-y-3">
+                        <h3 className="text-lg font-black text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+                          <CheckCircle2 className="w-5 h-5 shrink-0" />
+                          Ménisque Parfaitement Centré ({dropPercent} %)
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                          La goutte de <strong>Moebius 9010</strong> couvre entre <strong>1/2 et 2/3</strong> de la surface du contre-pivot. Grâce au traitement d’épilamage (Fixodrop), l’angle de contact maintient un dôme sphérique fermé autour du pivot de balancier (Ø 0.08 mm).
+                        </p>
+                        <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-900 dark:text-emerald-200">
+                          <strong>Résultat au Witschi :</strong> Amplitude maximale (290°–310° à plat), écart vertical minimal et tenue de l’huile garantie sur 5 à 7 ans.
+                        </div>
+                      </div>
+                    )}
 
-                {meniscusState === 'under' && (
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-black text-amber-600 dark:text-amber-400 flex items-center gap-2">
-                      <AlertTriangle className="w-5 h-5 shrink-0" />
-                      Goutte Trop Petite ({dropPercent} %)
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                      En dessous de 40 % du diamètre du contre-pivot, la réserve capillaire est insuffisante. Dès que la montre passe en position verticale (6H, 9H, 3H), le ménisque se rompt d’un côté du tenon.
-                    </p>
-                    <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 text-xs text-amber-900 dark:text-amber-200">
-                      <strong>Conséquence d’atelier :</strong> Oxydation rapide du pivot par frottement limite et dessèchement complet en moins de 18 mois.
-                    </div>
-                  </div>
-                )}
+                    {meniscusState === 'under' && (
+                      <div className="space-y-3">
+                        <h3 className="text-lg font-black text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                          <AlertTriangle className="w-5 h-5 shrink-0" />
+                          Goutte Trop Petite ({dropPercent} %)
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                          En dessous de 40 % du diamètre du contre-pivot, la réserve capillaire est insuffisante. Dès que la montre passe en position verticale (6H, 9H, 3H), le ménisque se rompt d’un côté du tenon.
+                        </p>
+                        <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 text-xs text-amber-900 dark:text-amber-200">
+                          <strong>Conséquence d’atelier :</strong> Oxydation rapide du pivot par frottement limite et dessèchement complet en moins de 18 mois.
+                        </div>
+                      </div>
+                    )}
 
-                {meniscusState === 'over' && (
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-black text-rose-600 dark:text-rose-400 flex items-center gap-2">
-                      <Ban className="w-5 h-5 shrink-0" />
-                      Débordement sur le Chaton ({dropPercent} %)
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                      Dès que le ménisque dépasse 75 % et touche la paroi en laiton non épilamée du chaton, la tension superficielle aspire instantanément toute la goutte hors du rubis vers le ressort-lyre.
-                    </p>
-                    <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-xs text-rose-900 dark:text-rose-200">
-                      <strong>Action corrective immédiate :</strong> Déposer l’Incabloc, rincer le chaton et le contre-pivot dans deux bains de benzine rectifiée, sécher et recommencer le huilage.
-                    </div>
-                  </div>
+                    {meniscusState === 'over' && (
+                      <div className="space-y-3">
+                        <h3 className="text-lg font-black text-rose-600 dark:text-rose-400 flex items-center gap-2">
+                          <Ban className="w-5 h-5 shrink-0" />
+                          Débordement sur le Chaton ({dropPercent} %)
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                          Dès que le ménisque dépasse 75 % et touche la paroi en laiton non épilamée du chaton, la tension superficielle aspire instantanément toute la goutte hors du rubis vers le ressort-lyre.
+                        </p>
+                        <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-xs text-rose-900 dark:text-rose-200">
+                          <strong>Action corrective immédiate :</strong> Déposer l’Incabloc, rincer le chaton et le contre-pivot dans deux bains de benzine rectifiée, sécher et recommencer le huilage.
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {meniscusState === 'optimal' && (
+                      <div className="space-y-3">
+                        <h3 className="text-lg font-black text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+                          <CheckCircle2 className="w-5 h-5 shrink-0" />
+                          Bourrelet Thixotrope Optimal ({dropPercent} %)
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                          La graisse <strong>Moebius 9415</strong> se liquéfie instantanément sous le cisaillement rapide de la dent d’échappement (Code 705) puis se refige en bourrelet au repos grâce à sa propriété thixotrope et à l’épilamage Fixodrop.
+                        </p>
+                        <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-900 dark:text-emerald-200">
+                          <strong>Protocole d’atelier :</strong> 1 micro-dépôt sur la palette de sortie toutes les 5 dents (soit 3 touches pour 15 dents).
+                        </div>
+                      </div>
+                    )}
+
+                    {meniscusState === 'under' && (
+                      <div className="space-y-3">
+                        <h3 className="text-lg font-black text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                          <AlertTriangle className="w-5 h-5 shrink-0" />
+                          Plan d’Impulsion Sec ({dropPercent} %)
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                          À 28&apos;800 A/h, les dents en acier de la roue d’échappement frappent les palettes 691&apos;200 fois par jour. Un sous-dosage provoque rapidement un sillon d’usure sur le rubis et une poussière d’oxyde rouge.
+                        </p>
+                        <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 text-xs text-amber-900 dark:text-amber-200">
+                          <strong>Symptôme au Witschi :</strong> Bruit d’impulsion sourd et baisse progressive d’amplitude de 25° à 40°.
+                        </div>
+                      </div>
+                    )}
+
+                    {meniscusState === 'over' && (
+                      <div className="space-y-3">
+                        <h3 className="text-lg font-black text-rose-600 dark:text-rose-400 flex items-center gap-2">
+                          <Ban className="w-5 h-5 shrink-0" />
+                          Bavure sur le Bec de Repos ({dropPercent} %)
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                          Un excès de <strong>Moebius 9415</strong> déborde sur le plan de repos et forme un pont visqueux qui colle la dent d’échappement lors du dégagement par le balancier.
+                        </p>
+                        <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-xs text-rose-900 dark:text-rose-200">
+                          <strong>Conséquence :</strong> Trace Witschi « en neige » (dispersée) et risque de migration vers la fourchette.
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
 
               <div className="pt-4 border-t border-slate-200 dark:border-slate-800 text-[11px] font-mono text-slate-500 dark:text-slate-400">
-                Pique-huile prescrit : <strong>Noir Ø 0.06 mm</strong> · Huile : <strong>Moebius 9010</strong>
+                {comparatorMode === 'incabloc' ? (
+                  <>Pique-huile prescrit : <strong>Noir Ø 0.06 mm</strong> · Huile : <strong>Moebius 9010</strong></>
+                ) : (
+                  <>Pique-huile prescrit : <strong>Rouge Ø 0.15 mm</strong> · Graisse : <strong>Moebius 9415</strong></>
+                )}
               </div>
             </div>
           </div>
