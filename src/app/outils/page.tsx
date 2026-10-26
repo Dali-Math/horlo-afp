@@ -53,7 +53,7 @@ interface TorqueItem {
 
 export default function OutilsPage() {
   const [activeTab, setActiveTab] = useState<
-    'diagnostic' | 'couples' | 'amplitude' | 'calculateurs' | 'cosc' | 'brucelles' | 'calibres' | 'traces' | 'equivalences'
+    'diagnostic' | 'couples' | 'amplitude' | 'calculateurs' | 'cosc' | 'brucelles' | 'calibres' | 'traces' | 'equivalences' | 'shazam' | 'clones' | 'ressort'
   >('diagnostic');
 
   // =========================================================================
@@ -652,6 +652,140 @@ export default function OutilsPage() {
     { calibre: 'Seiko NH35A / 4R35', heures: 'Ø 1.50 mm', minutes: 'Ø 0.89 mm', secondes: 'Ø 0.21 mm', tige: '351-200 (Filetage Ø 0.90 mm)' }
   ];
 
+
+  // =========================================================================
+  // 10. IDENTIFICATEUR VISUEL DE CALIBRES ("SHAZAM DES MOUVEMENTS")
+  // =========================================================================
+  const [idType, setIdType] = useState<'all' | 'manuel' | 'auto' | 'chrono'>('all');
+  const [idSec, setIdSec] = useState<'all' | 'centrale' | '6h' | '9h'>('all');
+
+  const FINGERPRINT_CALIBERS = [
+    {
+      ref: 'ETA 2824-2 / Sellita SW200-1',
+      type: 'auto',
+      sec: 'centrale',
+      lignes: '11½ lignes (25.60 mm) • H 4.60 mm',
+      coq: 'Coq asymétrique à raquette Etachron, antichoc Incabloc ou Novodiac',
+      tirette: 'Tirette à poussoir rond côté cadran (à déposer uniquement en position mise à l’heure !)',
+      cliquet: 'Pas de cliquet visible côté ponts (intégré sous le pont d’automatique à 2 roues inverseuses)',
+      freq: '28 800 A/h (4 Hz) • Levée 50°'
+    },
+    {
+      ref: 'ETA 2892-A2 / Sellita SW300-1',
+      type: 'auto',
+      sec: 'centrale',
+      lignes: '11½ lignes (25.60 mm) • H 3.60 mm (Extra-plat)',
+      coq: 'Pont de balancier traversant ou semi-encastré ultra-plat, réglage excentrique',
+      tirette: 'Vis de tirette accessible, pont d’automatique recouvrant les 2 inverseurs et le roulement à 7 billes',
+      cliquet: 'Cliquet caché sous le pont d’automatique retenu par 3 vis',
+      freq: '28 800 A/h (4 Hz) • Levée 51°/52°'
+    },
+    {
+      ref: 'ETA Unitas 6497-1',
+      type: 'manuel',
+      sec: '9h',
+      lignes: '16½ lignes (36.60 mm) • H 4.50 mm',
+      coq: 'Grand coq arqué classique à flèche de raquette longue (Lépine : tige à 12h, seconde à 9h en montre-bracelet)',
+      tirette: 'Vis de tirette classique + grand ressort de tirette à deux bras côté cadran',
+      cliquet: 'Grand cliquet apparent maintenu par un ressort-fil logé sous le rochet',
+      freq: '18 000 A/h (2.5 Hz) • Levée 44°/52°'
+    },
+    {
+      ref: 'ETA Unitas 6498-1 (Savonnette)',
+      type: 'manuel',
+      sec: '6h',
+      lignes: '16½ lignes (36.60 mm) • H 4.50 mm',
+      coq: 'Architecture Savonnette : petite seconde à 6h lorsque la tige de remontoir est à 3h',
+      tirette: 'Identique au 6497 mais train de rouage disposé à 90° pour seconde à 6h',
+      cliquet: 'Cliquet recul apparent entre le rochet et la roue de couronne',
+      freq: '18 000 A/h (2.5 Hz) • Levée 44°/52°'
+    },
+    {
+      ref: 'ETA / Peseux 7001',
+      type: 'manuel',
+      sec: '6h',
+      lignes: '10½ lignes (23.30 mm) • H 2.50 mm (Extra-plat)',
+      coq: 'Petit coq fin en goutte, pont de rouage découpé laissant apparaître la roue de moyenne et de seconde',
+      tirette: 'Vis de tirette fine, architecture ultra-plate d’école et de montre habillée',
+      cliquet: 'Ressort de cliquet en épingle visible entre rochet et roue de couronne',
+      freq: '21 600 A/h (3.0 Hz) • Levée 50°'
+    },
+    {
+      ref: 'ETA / Valjoux 7750',
+      type: 'chrono',
+      sec: '9h',
+      lignes: '13¼ lignes (30.00 mm) • H 7.90 mm',
+      coq: 'Coq sous le grand pont de chronographe, came navette en plastique/acier, pignon oscillant à 10h',
+      tirette: 'Compteurs 12h / 6h / petite seconde à 9h + guichet Jour/Date à 3h',
+      cliquet: 'Remontage automatique unidirectionnel (le rotor tourne librement dans le sens anti-horaire)',
+      freq: '28 800 A/h (4 Hz) • Levée 52°'
+    }
+  ];
+
+  const matchedFingerprints = useMemo(() => {
+    return FINGERPRINT_CALIBERS.filter((f) => {
+      const mType = idType === 'all' || f.type === idType;
+      const mSec = idSec === 'all' || f.sec === idSec;
+      return mType && mSec;
+    });
+  }, [idType, idSec]);
+
+  // =========================================================================
+  // 11. COMPARATEUR D'INTERCHANGEABILITÉ ETA VS SELLITA (PIÈCES COMPATIBLES VS PIÈGES)
+  // =========================================================================
+  const [clonePair, setClonePair] = useState<'2824_sw200' | '7750_sw500' | '6497_1_2'>('2824_sw200');
+
+  const CLONE_COMPARISON = {
+    '2824_sw200': [
+      { code: '401', part: 'Tige de remontoir', status: 'COMPATIBLE', ok: true, note: '100% interchangeable entre ETA 2824-2 et Sellita SW200-1.' },
+      { code: '180 / 770', part: 'Barillet complet & Ressort-moteur', status: 'COMPATIBLE', ok: true, note: 'Mêmes dimensions de tambour et d’arbre.' },
+      { code: '415 / 407', part: 'Rochet & Pignon de remontoir', status: 'NON COMPATIBLE (PIÈGE)', ok: false, note: 'Denture modifiée par Sellita ! Ne jamais mélanger un rochet ETA 2824 avec une roue de couronne SW200.' },
+      { code: '200 / 210 / 220', part: 'Rouage de finissage (Centre, Moyenne, Seconde)', status: 'NON COMPATIBLE (PIÈGE)', ok: false, note: 'Modules de denture et profils d’engrenage différents : bloque le rouage si mélangé.' },
+      { code: '705 / 710', part: 'Roue d’échappement & Ancre', status: 'NON COMPATIBLE', ok: false, note: 'Rubis supplémentaire (26 rubis sur SW200 contre 25 sur ETA 2824) et géométrie d’ancre spécifique.' },
+      { code: 'Aiguilles', part: 'Canons Heures / Minutes / Secondes', status: 'COMPATIBLE', ok: true, note: 'Mêmes diamètres H 1.50 mm / M 0.90 mm / S 0.25 mm.' }
+    ],
+    '7750_sw500': [
+      { code: '401', part: 'Tige de remontoir (401-7750)', status: 'COMPATIBLE', ok: true, note: 'Interchangeable entre Valjoux 7750 et Sellita SW500.' },
+      { code: '8139 / 8200', part: 'Came navette & Marteau de chronographe', status: 'COMPATIBLE', ok: true, note: 'Cotes fonctionnelles identiques.' },
+      { code: '1143', part: 'Masse oscillante (Rotor sur roulement)', status: 'COMPATIBLE', ok: true, note: 'Fixation par vis centrale Ø 1.60 mm identique.' },
+      { code: '2557', part: 'Disques de Quantième et Jour', status: 'COMPATIBLE', ok: true, note: 'Entraînement et diamètre identiques.' }
+    ],
+    '6497_1_2': [
+      { code: '721 / 705', part: 'Balancier-spiral & Roue d’échappement', status: 'NON COMPATIBLE (PIÈGE)', ok: false, note: 'ETA 6497-1 bat à 18 000 A/h (levée 44°), alors que l’ETA 6497-2 bat à 21 600 A/h (levée 49°) !' },
+      { code: '180', part: 'Ressort de barillet', status: 'NON COMPATIBLE (PIÈGE)', ok: false, note: 'Le 6497-2 exige un couple plus élevé (épaisseur de lame supérieure) pour maintenir l’amplitude à 3 Hz.' },
+      { code: '401 / 443 / 445', part: 'Tigerie (Tige, Tirette, Bascule)', status: 'COMPATIBLE', ok: true, note: 'Même mécanisme de remontoir et de mise à l’heure.' }
+    ]
+  };
+
+  // =========================================================================
+  // 12. CALCULATEUR DE RESSORT DE BARILLET (LOI HORLOGÈRE SUISSE DES TIERS)
+  // =========================================================================
+  const [drumInnerDia, setDrumInnerDia] = useState<number>(11.5);
+  const [drumFreeHeight, setDrumFreeHeight] = useState<number>(1.30);
+
+  const mainspringCalc = useMemo(() => {
+    // Règle des tiers d'établi : Bonde d = D / 3 ; Épaisseur e ≈ D / 92 (classique) à D / 88 (automatique)
+    const arborDia = Number((drumInnerDia / 3).toFixed(2));
+    const thicknessClassic = Number((drumInnerDia / 90).toFixed(3));
+    const thicknessHighTorque = Number((drumInnerDia / 84).toFixed(3));
+    // Longueur théorique L = π * (D^2 - (d + (D-d)/2)^2) / (4 * e) ≈ Règle suisse des aires égales
+    const rDrum = drumInnerDia / 2;
+    const rArbor = arborDia / 2;
+    const areaAvailable = Math.PI * (rDrum * rDrum - rArbor * rArbor);
+    // Le ressort occupe exactement 50% de la surface annulaire disponible entre la bonde et la paroi
+    const springArea = areaAvailable * 0.5;
+    const lengthMm = Math.round(springArea / thicknessClassic);
+    const bladeHeight = Number((drumFreeHeight - 0.10).toFixed(2)); // Jeu axial de sécurité de 0.10 mm
+
+    return {
+      arborDia,
+      thicknessClassic,
+      thicknessHighTorque,
+      lengthMm,
+      bladeHeight
+    };
+  }, [drumInnerDia, drumFreeHeight]);
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#070A10] text-slate-900 dark:text-slate-100 transition-colors duration-200">
       
@@ -715,7 +849,10 @@ export default function OutilsPage() {
               { id: 'brucelles', label: '6. Brucelles Dumont', sub: 'N° 1 à 5 & Laiton' },
               { id: 'calibres', label: '7. Base 130+ Calibres', sub: 'Angles de Levée & A/h' },
               { id: 'traces', label: '8. Tracés Witschi SVG', sub: 'Atlas Visuel des Pannes' },
-              { id: 'equivalences', label: '9. Équivalences d\'Établi', sub: 'Piles Renata & Aiguilles' }
+              { id: 'equivalences', label: '9. Équivalences d\'Établi', sub: 'Piles Renata & Aiguilles' },
+              { id: 'shazam', label: '10. Identifier un Calibre', sub: 'Empreinte Visuelle' },
+              { id: 'clones', label: '11. ETA vs Sellita', sub: 'Compatibilité & Pièges' },
+              { id: 'ressort', label: '12. Calcul Ressort Barillet', sub: 'Loi Suisse des Tiers' }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -1985,6 +2122,266 @@ export default function OutilsPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+
+        {/* ========================================================================= */}
+        {/* POSTE 10 : IDENTIFICATEUR VISUEL DE CALIBRES ("SHAZAM DES MOUVEMENTS") */}
+        {/* ========================================================================= */}
+        {activeTab === 'shazam' && (
+          <div className="bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-200 dark:border-white/10 p-6 shadow-sm space-y-6">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 dark:border-white/10 pb-5">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-amber-500 font-bold">
+                  Reconnaissance Visuelle d&apos;Atelier • Côté Ponts &amp; Côté Cadran
+                </span>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Identificateur de Calibres par Empreinte Mécanique (« Fingerprint »)
+                </h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  Filtrez par type d&apos;armage et par position de la trotteuse pour identifier un calibre sans marquage.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2 text-xs font-mono">
+                <select
+                  value={idType}
+                  onChange={(e) => setIdType(e.target.value as any)}
+                  className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 font-bold text-amber-600 dark:text-amber-400"
+                >
+                  <option value="all">Tous types d&apos;armage</option>
+                  <option value="manuel">Remontage Manuel</option>
+                  <option value="auto">Remontage Automatique</option>
+                  <option value="chrono">Chronographe Intégré</option>
+                </select>
+
+                <select
+                  value={idSec}
+                  onChange={(e) => setIdSec(e.target.value as any)}
+                  className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 font-bold text-emerald-600 dark:text-emerald-400"
+                >
+                  <option value="all">Toutes secondes</option>
+                  <option value="centrale">Seconde Centrale</option>
+                  <option value="6h">Petite Seconde à 6h</option>
+                  <option value="9h">Petite Seconde à 9h</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {matchedFingerprints.map((cal, i) => (
+                <div
+                  key={i}
+                  className="p-5 rounded-2xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 space-y-3"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white">{cal.ref}</h3>
+                    <span className="px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 text-[10px] font-mono font-bold">
+                      {cal.lignes}
+                    </span>
+                  </div>
+
+                  <div className="space-y-1.5 text-xs font-mono text-slate-600 dark:text-slate-300">
+                    <div><strong className="text-amber-500">Coq &amp; Raquette :</strong> {cal.coq}</div>
+                    <div><strong className="text-sky-500">Signature Tirette :</strong> {cal.tirette}</div>
+                    <div><strong className="text-emerald-500">Cliquet &amp; Armage :</strong> {cal.cliquet}</div>
+                    <div className="pt-2 border-t border-slate-200 dark:border-white/10 text-slate-500">
+                      Chronométrie : <strong className="text-slate-900 dark:text-white">{cal.freq}</strong>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* POSTE 11 : COMPARATEUR D'INTERCHANGEABILITÉ ETA VS SELLITA */}
+        {/* ========================================================================= */}
+        {activeTab === 'clones' && (
+          <div className="bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-200 dark:border-white/10 p-6 shadow-sm space-y-6">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 dark:border-white/10 pb-5">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-red-500 font-bold">
+                  Alerte d&apos;Atelier • Fournitures Interchangeables vs Pièces Pièges
+                </span>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Comparateur d&apos;Interchangeabilité : Ébauches ETA vs Clones Sellita
+                </h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  Évitez le blocage de rouage en vérifiant quelles fournitures peuvent être échangées entre ETA et Sellita.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2 text-xs font-mono">
+                {[
+                  { id: '2824_sw200', label: 'ETA 2824-2 ↔ Sellita SW200-1' },
+                  { id: '7750_sw500', label: 'Valjoux 7750 ↔ Sellita SW500' },
+                  { id: '6497_1_2', label: 'Unitas 6497-1 ↔ 6497-2' }
+                ].map((pair) => (
+                  <button
+                    key={pair.id}
+                    onClick={() => setClonePair(pair.id as any)}
+                    className={`px-3.5 py-2 rounded-xl font-bold transition-all ${
+                      clonePair === pair.id
+                        ? 'bg-amber-500 text-slate-950 shadow-sm'
+                        : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300'
+                    }`}
+                  >
+                    {pair.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs font-mono">
+                <thead>
+                  <tr className="border-b border-slate-200 dark:border-white/10 text-slate-400 uppercase text-[10px]">
+                    <th className="py-3 px-3">Code Ebauches</th>
+                    <th className="py-3 px-3">Organe / Fourniture</th>
+                    <th className="py-3 px-3">Compatibilité</th>
+                    <th className="py-3 px-3">Explication Technique d&apos;Atelier</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-white/5">
+                  {CLONE_COMPARISON[clonePair].map((item, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-white/5">
+                      <td className="py-3 px-3 font-bold text-amber-500">N° {item.code}</td>
+                      <td className="py-3 px-3 font-bold text-slate-900 dark:text-white">{item.part}</td>
+                      <td className="py-3 px-3">
+                        <span
+                          className={`px-2.5 py-1 rounded-lg text-[10px] font-bold ${
+                            item.ok
+                              ? 'bg-emerald-500/15 text-emerald-500 border border-emerald-500/30'
+                              : 'bg-red-500/15 text-red-500 border border-red-500/30'
+                          }`}
+                        >
+                          {item.status}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3 text-slate-600 dark:text-slate-300">{item.note}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* POSTE 12 : CALCULATEUR DE RESSORT DE BARILLET (LOI SUISSE DES TIERS) */}
+        {/* ========================================================================= */}
+        {activeTab === 'ressort' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div className="lg:col-span-5 bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-200 dark:border-white/10 p-6 shadow-sm space-y-5">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-amber-500 font-bold">
+                  Restauration &amp; Force Motrice • Règle des Aires Égales
+                </span>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white mt-0.5">
+                  Calculateur de Ressort de Barillet
+                </h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  Mesurez le diamètre intérieur du tambour ($D$) et la hauteur libre sous couvercle ($h$) au pied à coulisse pour obtenir les cotes exactes du ressort.
+                </p>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-xs font-mono mb-1">
+                  <span className="text-slate-500">Diamètre Intérieur du Tambour (D) :</span>
+                  <strong className="text-amber-500">{drumInnerDia.toFixed(2)} mm</strong>
+                </div>
+                <input
+                  type="range"
+                  min="7.0"
+                  max="18.0"
+                  step="0.25"
+                  value={drumInnerDia}
+                  onChange={(e) => setDrumInnerDia(parseFloat(e.target.value))}
+                  className="w-full accent-amber-500"
+                />
+              </div>
+
+              <div>
+                <div className="flex justify-between text-xs font-mono mb-1">
+                  <span className="text-slate-500">Hauteur Intérieure Libre (h) :</span>
+                  <strong className="text-emerald-500">{drumFreeHeight.toFixed(2)} mm</strong>
+                </div>
+                <input
+                  type="range"
+                  min="0.60"
+                  max="2.50"
+                  step="0.05"
+                  value={drumFreeHeight}
+                  onChange={(e) => setDrumFreeHeight(parseFloat(e.target.value))}
+                  className="w-full accent-emerald-500"
+                />
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 space-y-2 text-xs font-mono">
+                <div className="flex justify-between">
+                  <span className="text-slate-500">1. Hauteur de Lame Recommandée :</span>
+                  <strong className="text-emerald-500">{mainspringCalc.bladeHeight} mm</strong>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">2. Épaisseur de Lame (e) Standard :</span>
+                  <strong className="text-amber-500">{mainspringCalc.thicknessClassic} mm</strong>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">3. Épaisseur Haute Fréquence (4 Hz) :</span>
+                  <strong className="text-sky-500">{mainspringCalc.thicknessHighTorque} mm</strong>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">4. Longueur Totale du Ressort (L) :</span>
+                  <strong className="text-slate-900 dark:text-white">{mainspringCalc.lengthMm} mm</strong>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">5. Diamètre de Bonde d&apos;Arbre (D/3) :</span>
+                  <strong className="text-slate-900 dark:text-white">Ø {mainspringCalc.arborDia} mm</strong>
+                </div>
+              </div>
+            </div>
+
+            {/* Schéma Vectoriel SVG de la Loi Horlogère des Tiers dans le Tambour */}
+            <div className="lg:col-span-7 bg-white dark:bg-[#0D121F] rounded-2xl border border-slate-200 dark:border-white/10 p-6 shadow-sm flex flex-col justify-between space-y-4">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-amber-500 font-bold">
+                  Coupe Géométrique du Barillet (N° 180) • Loi Horlogère des Tiers (1/3 · 1/3 · 1/3)
+                </span>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Répartition des Volumes : Bonde Centrale, Spires Armées et Zone de Développement
+                </h3>
+              </div>
+
+              <div className="w-full rounded-2xl border border-amber-500/30 p-4" style={{ background: '#060B16' }}>
+                <svg viewBox="0 0 540 240" className="w-full h-56 block select-none">
+                  {/* Paroi extérieure du Tambour (R = 96) */}
+                  <circle cx="170" cy="120" r="96" fill="#0F172A" stroke="#D4AF37" strokeWidth="4" strokeDasharray="6 3" />
+                  {/* Couronne occupée par le ressort désarmé contre la paroi */}
+                  <circle cx="170" cy="120" r="92" fill="none" stroke="#38BDF8" strokeWidth="22" strokeOpacity="0.35" />
+                  {/* Espace libre médian de développement */}
+                  <circle cx="170" cy="120" r="64" fill="none" stroke="#10B981" strokeWidth="1.5" strokeDasharray="4 4" />
+                  {/* Bonde de l'Arbre de Barillet au centre (r = 32 = R/3) */}
+                  <circle cx="170" cy="120" r="32" fill="#1E293B" stroke="#F59E0B" strokeWidth="2.5" />
+                  <circle cx="170" cy="120" r="9" fill="#060B16" stroke="#94A3B8" strokeWidth="1.5" />
+
+                  {/* Cotes à droite */}
+                  <g transform="translate(300, 32)" fontFamily="monospace" fontSize="11">
+                    <text x="0" y="18" fill="#FBBF24" fontWeight="bold">FORMULE OFFICIELLE D&apos;ATELIER :</text>
+                    <text x="0" y="44" fill="#F8FAFC">• Ø Tambour (D) = {drumInnerDia.toFixed(2)} mm</text>
+                    <text x="0" y="68" fill="#F59E0B">• Ø Bonde (d = D/3) = {mainspringCalc.arborDia} mm</text>
+                    <text x="0" y="92" fill="#38BDF8">• Épaisseur lame (e) = {mainspringCalc.thicknessClassic} mm</text>
+                    <text x="0" y="116" fill="#10B981">• Longueur (L) = {mainspringCalc.lengthMm} mm</text>
+                    <text x="0" y="140" fill="#A855F7">• Hauteur utile = {mainspringCalc.bladeHeight} mm</text>
+                    <text x="0" y="172" fill="#94A3B8" fontSize="9.5">
+                      Le ressort occupe 50% de la surface annulaire
+                    </text>
+                  </g>
+                </svg>
               </div>
             </div>
           </div>
