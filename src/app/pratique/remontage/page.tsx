@@ -186,8 +186,8 @@ export default function RemontagePage() {
         </div>
 
         <header className="mb-10 bg-white dark:bg-slate-900/90 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-sm">
-          <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white mb-3">
-            Remontage Méthodique — <span className="text-amber-600 dark:text-amber-400">Calibre ETA 6497</span>
+          <h1 className="font-serif text-3xl sm:text-5xl font-black text-slate-900 dark:text-white mb-3">
+            Remontage Méthodique — <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-200 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent">Calibre ETA 6497</span>
           </h1>
           <p className="text-slate-600 dark:text-slate-300 max-w-3xl text-base leading-relaxed">
             Suivez le séquenceur d&apos;assemblage en <strong>6 étapes illustrées</strong> avec les couples de serrage en cNm, les contrôles d&apos;ébats axiaux (0.02 – 0.04 mm) et les 5 lubrifiants certifiés Moebius (<strong>9010, HP-1300, 9415, 9504, 8217</strong>).

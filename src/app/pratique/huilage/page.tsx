@@ -219,8 +219,11 @@ export default function HuilagePage() {
                 <span>Normes Suisses NIHS · 5 Lubrifiants Certifiés Moebius</span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-                Huilage, Ménisque &amp; Lubrification d’Établi
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-extrabold tracking-tight leading-tight text-slate-900 dark:text-white">
+                Huilage &amp; Ménisque <br />
+                <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-200 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent">
+                  Lubrification d’Établi
+                </span>
               </h1>
 
               <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">

@@ -211,8 +211,8 @@ export default function FAQPage() {
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-bold uppercase tracking-wider mb-3">
             <HelpCircle className="w-4 h-4" /> Réponses Techniques d&apos;Établi · Normes Suisses NIHS &amp; ISO 3159
           </div>
-          <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white mb-4">
-            FAQ Technique <span className="text-amber-600 dark:text-amber-400">HorloLearn</span>
+          <h1 className="font-serif text-3xl sm:text-5xl font-black text-slate-900 dark:text-white mb-4">
+            FAQ Technique <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-200 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent">HorloLearn</span>
           </h1>
           <p className="text-slate-600 dark:text-slate-300 max-w-3xl mx-auto text-base leading-relaxed">
             Les <strong>20 questions techniques les plus fréquentes à l&apos;établi</strong> : diagnostic d&apos;échappement au vibrographe Witschi, dosage des 5 lubrifiants certifiés Moebius, pièges d&apos;interchangeabilité ETA/Sellita et tolérances chronométriques officielles COSC ISO 3159.

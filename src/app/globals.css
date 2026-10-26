@@ -366,6 +366,8 @@ html.dark .hl-site-content div[class*="max-w-5xl"][class*="bg-slate-900"][class*
   letter-spacing: -0.025em;
 }
 
+.hl-site-content h1,
+.hl-site-content h2,
 .hl-site-content h1.font-serif,
 .hl-site-content h2.font-serif,
 .hl-site-content h3.font-serif {

@@ -289,8 +289,8 @@ export default function Eta6497Page() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-bold uppercase tracking-wider mb-3">
             <BookOpen className="w-3.5 h-3.5" /> Communication Technique &amp; Plateau de Fournitures Réelles
           </div>
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-3">
-            ETA / Unitas <span className="text-amber-600 dark:text-amber-400">6497-1</span>
+          <h1 className="font-serif text-3xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-3">
+            ETA / Unitas <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-200 dark:via-amber-400 dark:to-amber-500 bg-clip-text text-transparent">6497-1</span>
           </h1>
           <p className="text-slate-600 dark:text-slate-300 max-w-3xl text-base leading-relaxed mb-6">
             Calibre mécanique à remontage manuel de gousset/poignet (16½ lignes — 36.60 mm), architecture de référence des établis suisses. Inspectez ci-dessous les <strong>vraies fournitures détourées</strong> à la loupe 10x avec leurs codes Ebauches SA, couples de serrage en cNm et lubrifiants certifiés Moebius, ainsi que la communication technique officielle ETA.

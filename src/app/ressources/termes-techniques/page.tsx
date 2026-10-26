@@ -387,7 +387,7 @@ export default function TermesTechniquesPage() {
                 <BookOpen className="w-3.5 h-3.5 text-amber-500" />
                 <span>🇨🇭 Codification Universelle Suisse Ebauches SA • Trilingue FR / DE / EN</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+              <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                 Dictionnaire Officiel des Fournitures &amp; Codes Ebauches SA
               </h1>
               <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
