@@ -85,24 +85,21 @@ const Timeline: React.FC = () => {
 
   return (
     <section id="timeline" className="py-20 relative">
-
-      {/* --- Bouton retour fixe visible au-dessus du header --- */}
-<motion.div
-  initial={{ opacity: 0, y: -10 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.6, delay: 0.3 }}
-  className="fixed top-24 left-8 z-[9999]"  // ← top augmenté + z-index très haut
->
-  <Link
-    href="/theorie"
-    aria-label="Retour à la section Théorie"
-    className="group inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white/90 px-4 py-2 text-sm font-medium text-gray-800 backdrop-blur-md shadow-lg hover:bg-white hover:shadow-xl transition dark:border-white/10 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
-  >
-    <ChevronLeft className="h-4 w-4 transition group-hover:-translate-x-0.5" />
-    <span>Retour à <span className="font-semibold">Théorie</span></span>
-  </Link>
-</motion.div>
-
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, delay: 0.2 }}
+        className="fixed top-[78px] left-4 sm:left-6 z-[9999]"
+      >
+        <Link
+          href="/theorie"
+          aria-label="Retour à la section Théorie"
+          className="group inline-flex items-center gap-1.5 border border-gray-300 bg-white/90 px-2.5 py-1.5 text-[12px] font-medium text-gray-800 backdrop-blur-md shadow-sm hover:bg-white transition dark:border-white/10 dark:bg-black/30 dark:text-white dark:hover:bg-black/45"
+        >
+          <ChevronLeft className="h-3.5 w-3.5 transition group-hover:-translate-x-0.5" />
+          <span>Retour à Théorie</span>
+        </Link>
+      </motion.div>
 
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
