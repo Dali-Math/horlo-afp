@@ -8,21 +8,37 @@ interface ProgressTrackerProps {
 const ProgressTracker: React.FC<ProgressTrackerProps> = ({ progress }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: -20 }}
+      initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="fixed top-20 left-6 z-40"
+      className="fixed top-[122px] left-4 sm:left-6 z-40"
     >
-      <div className="bg-black/20 backdrop-blur-lg rounded-xl p-4 border border-white/10">
-        <div className="text-white/80 text-sm mb-2">Progrès d'apprentissage</div>
-        <div className="w-48 h-2 bg-white/10 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          />
+      <div
+        className="backdrop-blur-md border px-2.5 py-2"
+        style={{
+          background: 'color-mix(in srgb, var(--hl-surface-strong) 88%, transparent)',
+          borderColor: 'var(--hl-line)',
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <div
+            className="w-24 h-[3px] overflow-hidden"
+            style={{ background: 'var(--hl-line)' }}
+          >
+            <motion.div
+              className="h-full"
+              style={{ background: 'var(--hl-metal)' }}
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+            />
+          </div>
+          <div
+            className="text-[10px] leading-none whitespace-nowrap"
+            style={{ color: 'var(--hl-muted)' }}
+          >
+            {progress}%
+          </div>
         </div>
-        <div className="text-white/60 text-xs mt-1">{progress}% complété</div>
       </div>
     </motion.div>
   );
