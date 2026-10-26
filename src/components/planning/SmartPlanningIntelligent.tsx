@@ -5,8 +5,8 @@ import { Calendar, Table, Upload, FileText, Download, Trash2 } from 'lucide-reac
 import { PlanningData, PlanningState, ViewMode } from '@/types/planning';
 import PlanningCalendar from './PlanningCalendar';
 import * as pdfjsLib from 'pdfjs-dist';
-// Configure pdf.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+// Configure pdf.js worker (protocole HTTPS explicite)
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface SmartPlanningIntelligentProps {
   onPlanningLoad?: (planning: PlanningData) => void;
