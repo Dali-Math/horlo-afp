@@ -1,24 +1,28 @@
-// public/sw.js - HorloLearn Service Worker pour l'Établi Hors-Ligne
-const CACHE_NAME = 'horlolearn-etabli-v1';
+const CACHE_NAME = 'horlolearn-v1';
 
-const STATIC_ASSETS = [
+// Les pages et ressources clés pré-chargées dès la première visite
+const PRECACHE_URLS = [
   '/',
-  '/manifest.json',
-  '/site.webmanifest',
-  '/og-image.svg',
+  '/theorie',
   '/pratique',
   '/pratique/laboratoire',
   '/pratique/inspection-loupe',
   '/pratique/defi-chronometre',
-  '/theorie',
-  '/outils'
+  '/outils',
+  '/quiz',
+  '/ressources',
+  '/culture',
+  '/logos/Logo.jpg',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png',
+  '/manifest.json'
 ];
 
-// Install: Pre-cache essential workbench routes
+// 1. Installation : mise en cache des pages principales
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS).catch((err) => {
+      return cache.addAll(PRECACHE_URLS).catch((err) => {
         console.warn('[SW] Pré-cache partiel :', err);
       });
     })
@@ -26,88 +30,40 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Activate: Clean old caches
+// 2. Nettoyage des anciens caches lors d'une mise à jour
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        })
-      );
-    })
+    caches.keys().then((keys) =>
+      Promise.all(keys.map((key) => key !== CACHE_NAME && caches.delete(key)))
+    )
   );
   self.clients.claim();
 });
 
-// Fetch: Network First with Cache Fallback for Pages, Cache First for Static Assets
+// 3. Interception réseau : Réseau d'abord, sinon Cache Hors-Ligne
 self.addEventListener('fetch', (event) => {
-  const request = event.request;
-  const url = new URL(request.url);
+  if (event.request.method !== 'GET') return;
 
-  // Ignore non-GET or cross-origin requests
-  if (request.method !== 'GET' || url.origin !== self.location.origin) {
-    return;
-  }
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return;
 
-  // Static assets (CSS, JS, images, fonts): Cache-first
-  if (
-    url.pathname.startsWith('/_next/static/') ||
-    url.pathname.startsWith('/images/') ||
-    url.pathname.startsWith('/icons/') ||
-    url.pathname.endsWith('.svg') ||
-    url.pathname.endsWith('.png') ||
-    url.pathname.endsWith('.woff2')
-  ) {
-    event.respondWith(
-      caches.match(request).then((cached) => {
-        if (cached) return cached;
-        return fetch(request).then((response) => {
-          if (response.status === 200) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          }
-          return response;
-        });
-      })
-    );
-    return;
-  }
-
-  // HTML Navigation requests: Network-first, fall back to cached version
-  if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request)
-        .then((response) => {
-          if (response.status === 200) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          }
-          return response;
-        })
-        .catch(() => {
-          return caches.match(request).then((cached) => {
-            if (cached) return cached;
-            // Return root cached page as general fallback if available
-            return caches.match('/');
-          });
-        })
-    );
-    return;
-  }
-
-  // Default fetch handler
   event.respondWith(
-    caches.match(request).then((cached) => {
-      return cached || fetch(request).then((response) => {
-        if (response.status === 200) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+    fetch(event.request)
+      .then((response) => {
+        // Si la requête réussit, on met à jour une copie dans le cache
+        if (response && response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
         }
         return response;
-      });
-    })
+      })
+      .catch(() => {
+        // Si pas d'Internet, on sert la page depuis le cache local
+        return caches.match(event.request).then((cachedResponse) => {
+          return cachedResponse || caches.match('/');
+        });
+      })
   );
 });

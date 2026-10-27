@@ -59,6 +59,7 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: SITE.domain },
   manifest: "/manifest.json",
+  themeColor: "#d4af37",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -130,6 +131,17 @@ export default function RootLayout({
           <Analytics />
           <JsonLd data={org} />
           <JsonLd data={siteSearch} />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                if ('serviceWorker' in navigator) {
+                  window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/sw.js');
+                  });
+                }
+              `,
+            }}
+          />
         </ThemeProvider>
       </body>
     </html>

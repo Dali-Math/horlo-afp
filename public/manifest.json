@@ -1,33 +1,30 @@
 {
-  "name": "HorloLearn - Établi & Haute Horlogerie Suisse",
+  "name": "HorloLearn – Encyclopédie & Atelier Horloger Suisse",
   "short_name": "HorloLearn",
-  "description": "Plateforme suisse indépendante d'apprentissage et de pratique horlogère à l'établi : métrologie Witschi, calibres ETA, lubrification Moebius et micromécanique.",
+  "description": "70 modules de formation, simulateurs d'établi, normes NIHS et culture horlogère suisse.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "theme_color": "#D4AF37",
-  "background_color": "#07090E",
-  "orientation": "any",
-  "categories": ["education", "utilities", "productivity"],
-  "lang": "fr-CH",
-  "dir": "ltr",
+  "background_color": "#090b10",
+  "theme_color": "#d4af37",
+  "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/og-image.svg",
-      "type": "image/svg+xml",
-      "sizes": "any",
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/images/icon-192.png",
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "sizes": "192x192",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "/images/icon-512.png",
-      "type": "image/png",
+      "src": "/logos/Logo.jpg",
       "sizes": "512x512",
+      "type": "image/jpeg",
       "purpose": "any"
     }
   ],
@@ -37,28 +34,28 @@
       "short_name": "Laboratoire",
       "description": "Accéder aux 11 bancs d'essais métrologiques et cinématiques",
       "url": "/pratique/laboratoire",
-      "icons": [{ "src": "/og-image.svg", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Inspection Loupe 20x",
       "short_name": "Loupe 20x",
       "description": "Inspection microscopique des défauts réels d'atelier",
       "url": "/pratique/inspection-loupe",
-      "icons": [{ "src": "/og-image.svg", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Défi Chronométré",
       "short_name": "Duel Établi",
-      "description": "Relever le défi chronométré d'atelier et défier ses confrères",
+      "description": "Relever le défi chronométré d'atelier",
       "url": "/pratique/defi-chronometre",
-      "icons": [{ "src": "/og-image.svg", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Théorie Horlogère",
       "short_name": "Théorie",
       "description": "Calibres, échappements et complications",
       "url": "/theorie",
-      "icons": [{ "src": "/og-image.svg", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }
