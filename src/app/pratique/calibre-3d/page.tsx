@@ -9,7 +9,6 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import {
   ArrowLeft,
   Camera,
@@ -55,8 +54,8 @@ import {
 
 type HudState = { mode: 'frozen' | 'live'; idx: number };
 
-const CREAM_CARD = 'bg-[#FAF7F1] dark:bg-[#111419] dark:bg-[#111419] border border-[#D7D0C4] dark:border-[#2a2f36] dark:border-[#2a2f36] text-[#171717] dark:text-[#f1ede5] dark:text-[#f1ede5]';
-const SUB_CARD = 'bg-[#F3EFE7] dark:bg-[#171b21] dark:bg-[#171b21] border border-[#D7D0C4] dark:border-[#2a2f36] dark:border-[#2a2f36] text-[#171717] dark:text-[#f1ede5] dark:text-[#f1ede5]';
+const CREAM_CARD = 'bg-[#FAF7F1] dark:bg-[#111419] border border-[#D7D0C4] dark:border-[#2a2f36] text-[#171717] dark:text-[#f1ede5]';
+const SUB_CARD = 'bg-[#F3EFE7] dark:bg-[#171b21] dark:bg-[#171b21] border border-[#D7D0C4] dark:border-[#2a2f36] text-[#171717] dark:text-[#f1ede5]';
 
 export default function CalibreEcorchePage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -138,10 +137,10 @@ export default function CalibreEcorchePage() {
   const amplitude = Math.round(185 + (mainspringPct / 100) * 125);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F3EFE7] dark:bg-[#171b21] dark:bg-[#090b0e] text-[#171717] dark:text-[#f1ede5] dark:text-[#f1ede5] font-body transition-colors duration-200 select-none selection:bg-[#B08D57] selection:text-white">
-      {/* ================= EN-TÊTE : MARQUE & TÉLÉMÉTRIE ================= */}
-      <header className="border-b border-[#D7D0C4] dark:border-[#2a2f36] dark:border-[#2a2f36] bg-[#FAF7F1] dark:bg-[#111419]/95 dark:bg-[#111419]/95 backdrop-blur sticky top-0 z-50 transition-colors">
-        <div className="max-w-[1600px] mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+    <div className="min-h-screen flex flex-col bg-[#F3EFE7] dark:bg-[#090b0e] text-[#171717] dark:text-[#f1ede5] font-body transition-colors duration-200 select-none selection:bg-[#B08D57] selection:text-white">
+      {/* ================= EN-TÊTE : ATELIER & TÉLÉMÉTRIE ================= */}
+      <header className="sticky top-16 sm:top-20 z-40 border border-[#D7D0C4] dark:border-[#2a2f36] bg-[#FAF7F1]/95 dark:bg-[#111419]/95 backdrop-blur-md max-w-[1600px] w-[calc(100%-1.5rem)] sm:w-[calc(100%-2.5rem)] mx-auto mt-4 sm:mt-6 rounded-2xl shadow-sm transition-all px-4 py-2.5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <Link
               href="/pratique"
@@ -195,7 +194,7 @@ export default function CalibreEcorchePage() {
               className={`px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 border ${
                 audioOn
                   ? 'bg-[#9C7A43] text-white border-[#9C7A43] font-bold'
-                  : `${CREAM_CARD} text-[#57534E] dark:text-[#aaa49a] dark:text-[#aaa49a] hover:text-[#9C7A43]`
+                  : `${CREAM_CARD} text-[#57534E] dark:text-[#aaa49a] hover:text-[#9C7A43]`
               }`}
               title="Tic-tac mécanique 5 Hz"
             >
@@ -203,9 +202,7 @@ export default function CalibreEcorchePage() {
               <span>Son 5 Hz : {audioOn ? 'ON' : 'OFF'}</span>
             </button>
 
-            <div className="rounded-xl overflow-hidden border border-[#D7D0C4] dark:border-[#2a2f36] dark:border-[#2a2f36] shadow-sm">
-              <ThemeToggle />
-            </div>
+
           </div>
         </div>
       </header>
