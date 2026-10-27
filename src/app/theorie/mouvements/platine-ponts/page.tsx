@@ -1,869 +1,846 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { ChevronLeft, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
+import React, { useState, useId } from "react";
+import Link from "next/link";
+import {
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+  Wrench,
+  Layers,
+  Sparkles,
+  RotateCcw,
+  ArrowRight,
+  Compass,
+  Cpu,
+  Eye,
+  Sliders,
+  ShieldCheck
+} from "lucide-react";
+
+// --- COMPOSANTS DE L'ARCHITECTURE D'ÉTABLI (ETA 6497 / CALIBRE MANUEL) ---
+interface MovementPart {
+  id: string;
+  name: string;
+  traditionalName: string;
+  role: string;
+  jewelsCount: number;
+  screwsCount: number;
+  torqueCnm: string;
+  finishing: string;
+  colorHex: string;
+  desc: string;
+  rules: string[];
+}
+
+const MOVEMENT_PARTS: MovementPart[] = [
+  {
+    id: "platine",
+    name: "La Platine Principale",
+    traditionalName: "Châssis / Base Plate",
+    role: "Ossature fondamentale supportant l'ensemble des mobiles, du remontoir et de l'affichage.",
+    jewelsCount: 9,
+    screwsCount: 0,
+    torqueCnm: "Support taraudé",
+    finishing: "Perlage circulaire (côté ponts) & colimaçonnage (côté cadran)",
+    colorHex: "#E2B44F",
+    desc: "C'est la pièce maîtresse du mouvement. Elle reçoit les perçages de piliers, les puits de chatons et les fraisages des poches de barillet et d'échappement.",
+    rules: [
+      "Contrôle de planéité strict inférieur à 0.001 mm (1 µm)",
+      "Taraudages fins NIHS protégés de tout résidu de limaille",
+      "Perlage régulier à 50% de chevauchement sur machine à perler"
+    ]
+  },
+  {
+    id: "pont-barillet",
+    name: "Pont de Barillet",
+    traditionalName: "Pont de Ressort Moteur",
+    role: "Maintient l'arbre de barillet et reçoit la roue de couronne et le cliquet.",
+    jewelsCount: 2,
+    screwsCount: 3,
+    torqueCnm: "2.2 à 2.5 cNm",
+    finishing: "Côtes de Genève, anglage poli et gravure de calibre",
+    colorHex: "#F59E0B",
+    desc: "Il absorbe la contrainte la plus violente du calibre : le couple de détente du ressort de barillet. Sa rigidité est cruciale pour l'alignement des dentures de rochet.",
+    rules: [
+      "Désarmage complet du barillet AVANT de desserrer ses vis",
+      "Vérification de l'ébat axial de l'arbre de barillet (0.04 à 0.08 mm)",
+      "Attention à la vis de roue de couronne à pas gauche (3 traits gravés)"
+    ]
+  },
+  {
+    id: "pont-rouage",
+    name: "Pont de Rouage",
+    traditionalName: "Pont de Finissage / Train Bridge",
+    role: "Guide les pivots supérieurs de la roue de centre, roue moyenne et roue des secondes.",
+    jewelsCount: 4,
+    screwsCount: 2,
+    torqueCnm: "1.8 cNm",
+    finishing: "Côtes de Genève circulaires, moulures de pierres polies diamant",
+    colorHex: "#3B82F6",
+    desc: "Ce pont exige un doigté d'établi absolu : il faut guider simultanément 3 pivots délicats (diamètre 0.08 à 0.12 mm) dans leurs pierres de rubis respectives sans forcer.",
+    rules: [
+      "Ne jamais visser si les pivots ne sont pas tous engagés dans leurs huiliers",
+      "Contrôle des ébats axiaux au palpeur ou à la brucelle douce",
+      "Vérification de la liberté de rouage par le recul d'échappement"
+    ]
+  },
+  {
+    id: "pont-ancre",
+    name: "Pont d'Ancre",
+    traditionalName: "Pont d'Échappement",
+    role: "Maintient l'ancre suisse et limite son ébat angulaire entre les goupilles de limitation.",
+    jewelsCount: 2,
+    screwsCount: 1,
+    torqueCnm: "1.2 cNm",
+    finishing: "Bout poli miroir, chanfrein fin",
+    colorHex: "#EC4899",
+    desc: "Minuscule pont de précision. Son pivot inférieur et son pivot supérieur doivent avoir un ébat axial minime (0.015 à 0.025 mm) pour que les palettes attaquent la roue d'échappement parfaitement à plat.",
+    rules: [
+      "Levée délicate à la brucelle Dumont n°5 sous binoculaire",
+      "Interdiction de toucher aux palettes en rubis avec du métal",
+      "Contrôle du dard et des cornes d'ancre après fixation"
+    ]
+  },
+  {
+    id: "coq",
+    name: "Le Coq (Pont de Balancier)",
+    traditionalName: "Balance Cock",
+    role: "Supporte l'organe régulateur balancier-spiral, le bloc antichoc Incabloc et la raquetterie.",
+    jewelsCount: 2,
+    screwsCount: 1,
+    torqueCnm: "1.5 cNm",
+    finishing: "Gravure d'art traditionnelle, anglage main, poli noir",
+    colorHex: "#10B981",
+    desc: "Le pont le plus prestigieux et symbolique. Sa forme sinueuse rappelle la silhouette d'un coq dressé. Il supporte le porte-piton mobile et l'index de réglage avance/retard (+ / -).",
+    rules: [
+      "Dépose strictly verticale sans vriller le spiral thermocompensé",
+      "Nettoyage du contre-pivot à la moelle de sureau et bain d'essence F",
+      "Lubrification au Moebius 9010 : goutte centrée au 2/3 du diamètre du rubis"
+    ]
+  }
+];
+
+// --- FINITIONS HAUTE HORLOGERIE SUISSE ---
+const FINISH_TYPES = [
+  {
+    id: "cotes-geneve",
+    name: "Côtes de Genève",
+    badge: "Décoration Linéaire",
+    desc: "Vagues parallèles régulières réalisées au tour avec une meule buis imprégnée d'émeri. Capture la lumière sous chaque angle d'inclinaison.",
+    typicalLocation: "Surface visible des ponts de rouage et de barillet"
+  },
+  {
+    id: "perlage",
+    name: "Perlage Circulaire",
+    badge: "Texture Satinée",
+    desc: "Cercles concentriques imbriqués créés à la cheville de bois ou caoutchouc chargée de pâte diamantée. Donne une profondeur veloutée.",
+    typicalLocation: "Platine principale (côté ponts et côté cadran)"
+  },
+  {
+    id: "anglage",
+    name: "Anglage à la Main",
+    badge: "Arêtes Vives Polies",
+    desc: "Chanfreinage des arêtes à 45° à la lime douce, suivi d'un adoucissage au bois de fusain et polissage miroir sans aucune facette parasite.",
+    typicalLocation: "Toutes les arêtes et pourtours des ponts de prestige"
+  },
+  {
+    id: "gravure",
+    name: "Gravure d'Art au Burin",
+    badge: "Savoir-Faire Cabinotier",
+    desc: "Motifs floraux ciselés au burin d'acier trempé par le maître graveur. Signature historique des coqs de balancier saxons et genevois.",
+    typicalLocation: "Le Coq et les ponts d'échappement ajourés"
+  }
+];
+
+// --- QUESTIONS DU QUIZ D'EXAMEN ---
+const QUIZ_QUESTIONS = [
+  {
+    id: 1,
+    question: "Pourquoi le pont de balancier est-il traditionnellement surnommé « Le Coq » en horlogerie suisse ?",
+    options: [
+      "Parce que son réveil matin émettait un son de chant de coq au XVIIe siècle.",
+      "En raison de sa découpe galbée historique évoquant la tête et la crête d'un coq fier.",
+      "Parce qu'il est toujours fabriqué en laiton rouge teinté dans la masse.",
+      "C'est un hommage au premier horloger officiel de la ville de Genève."
+    ],
+    correct: 1,
+    explanation: "Dès le XVIe et XVIIe siècle, les horlogers ornaient ce pont visible d'une découpe ajourée rappelant la silhouette et la crête d'un coq. Le terme est resté le terme technique officiel des fiches d'atelier."
+  },
+  {
+    id: 2,
+    question: "Dans une construction de montre à ponts séparés, quelle est la règle d'or lors du remontage du pont de rouage ?",
+    options: [
+      "Serrer immédiatement la vis à fond pour forcer les pivots dans les trous.",
+      "Guider délicatement chaque pivot dans son rubis du bout de la cheville de bois AVANT tout serrage de vis.",
+      "Huiler généreusement les portées de ponts pour faciliter le glissement.",
+      "Retirer le balancier pour créer de l'espace."
+    ],
+    correct: 1,
+    explanation: "Forcer la vis d'un pont alors qu'un pivot de rouage (Ø 0.09 mm) n'est pas engagé dans son trou de pierre entraîne la casse immédiate du pivot ou le voilage de la roue moyenne."
+  },
+  {
+    id: 3,
+    question: "Quelle est la principale caractéristique de la platine 3/4 inventée par Ferdinand Adolph Lange en 1864 ?",
+    options: [
+      "La montre n'a que 3 rubis fonctionnels.",
+      "Un unique grand pont rigide recouvre environ 75% du mouvement, seul le coq restant séparé.",
+      "La platine est ajourée pour ne laisser visible que les trois-quarts du cadran.",
+      "Le mouvement fonctionne uniquement sur 3 alternances par seconde."
+    ],
+    correct: 1,
+    explanation: "La platine 3/4 saxonne remplace la multitude de ponts séparés par un seul châssis supérieur extrêmement rigide, figeant les entraxes et protégeant le rouage contre toute déformation aux chocs."
+  },
+  {
+    id: 4,
+    question: "En quoi consiste la finition d'excellence appelée « Perlage » appliquée sur la platine ?",
+    options: [
+      "Sertir des perles de nacre dans chaque trou de vis.",
+      "Usiner une succession de cercles satinés qui se chevauchent à 50% à l'aide d'une meule ou cheville abrasive.",
+      "Baigner la platine dans du mercure pour lui donner un brillant perlé.",
+      "Frapper la platine au marteau pour durcir le laiton superficiellement."
+    ],
+    correct: 1,
+    explanation: "Le perlage (ou bouchonnage) crée un damier de cercles concentriques réguliers qui piège les micro-poussières d'atelier et confère une profondeur visuelle satinée d'une rare élégance."
+  }
+];
 
 export default function PlatinePontsPage() {
-  const [selectedParts, setSelectedParts] = useState<string[]>([]);
-  const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: string }>({});
-  const [showResults, setShowResults] = useState(false);
+  const gradientId = useId();
+  // Composant actif du mouvement éclaté
+  const [activePartId, setActivePartId] = useState<string>("platine");
+  // Finition active
+  const [activeFinishId, setActiveFinishId] = useState<string>("cotes-geneve");
 
-  const togglePart = (id: string) => {
-    setSelectedParts(prev => 
-      prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]
-    );
-  };
+  // Quiz compact stepper
+  const [currentQuizIdx, setCurrentQuizIdx] = useState<number>(0);
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [userScore, setUserScore] = useState<number>(0);
+  const [isAnswerRevealed, setIsAnswerRevealed] = useState<boolean>(false);
+  const [isQuizCompleted, setIsQuizCompleted] = useState<boolean>(false);
 
-  const materials = [
-    {
-      id: 'laiton',
-      name: 'Laiton',
-      icon: '🥇',
-      description: 'Matériau traditionnel le plus utilisé. Bon compromis entre usinabilité, stabilité et coût.',
-      badge: 'Standard',
-      badgeIcon: '⚙️'
-    },
-    {
-      id: 'maillechort',
-      name: 'Maillechort',
-      icon: '💎',
-      description: 'Alliage de cuivre, nickel et zinc. Plus résistant à la corrosion, couleur argentée naturelle.',
-      badge: 'Haute Gamme',
-      badgeIcon: '💎'
-    },
-    {
-      id: 'nobles',
-      name: 'Matériaux Nobles',
-      icon: '👑',
-      description: 'Or, platine, saphir synthétique, carbone. Utilisés en haute horlogerie.',
-      badge: 'Prestige',
-      badgeIcon: '✨'
-    },
-  ];
+  const activePart = MOVEMENT_PARTS.find((p) => p.id === activePartId) || MOVEMENT_PARTS[0];
+  const activeFinish = FINISH_TYPES.find((f) => f.id === activeFinishId) || FINISH_TYPES[0];
 
-  const treatments = [
-    {
-      name: 'Rhodiage',
-      icon: '🌟',
-      description: 'Dépôt électrolytique de rhodium. Confère une couleur blanc argenté brillant et protège de l\'oxydation.'
-    },
-    {
-      name: 'Dorage',
-      icon: '🛡️',
-      description: 'Dépôt d\'or galvanique. Donne une teinte dorée chaude et protège le laiton.'
-    },
-    {
-      name: 'PVD / DLC',
-      icon: '⚡',
-      description: 'Traitements modernes haute technologie. Offrent résistance supérieure et large gamme de couleurs (noir, bleu, etc.).'
-    },
-  ];
-
-  const finishes = [
-    {
-      name: 'Côtes de Genève',
-      description: 'Motif de vagues parallèles réalisé à la meule. Décoration emblématique de l\'horlogerie suisse, appliquée sur la surface des ponts.',
-      type: 'Décoration linéaire'
-    },
-    {
-      name: 'Perlage',
-      description: 'Motif de cercles imbriqués créé par une petite meule rotative. Appliqué sur la platine, il donne un aspect satiné régulier.',
-      type: 'Décoration circulaire'
-    },
-    {
-      name: 'Anglage',
-      description: 'Chanfreinage et polissage des arêtes des ponts à 45°. Travail manuel exigeant réalisé avec des limes et pierres à polir.',
-      type: 'Finition des angles'
-    },
-    {
-      name: 'Gravure',
-      description: 'Ornements gravés à la main ou à la machine sur le coq et les ponts. Motifs floraux, arabesques ou armoiries selon la tradition.',
-      type: 'Décoration artistique'
-    },
-  ];
-
-  const quizData = [
-    {
-      question: "Quel est le rôle principal de la platine dans un mouvement horloger ?",
-      options: [
-        "Décorer le mouvement",
-        "Servir de châssis principal supportant tous les composants",
-        "Protéger le mouvement des chocs",
-        "Faciliter le remontage"
-      ],
-      correct: 1,
-      explanation: "La platine est la plaque de base qui sert de châssis principal. Tous les composants du mouvement (barillet, rouages, échappement, balancier) sont fixés sur elle ou entre elle et les ponts."
-    },
-    {
-      question: "Quelle est la particularité de la construction allemande à platine 3/4 ?",
-      options: [
-        "Elle utilise trois ponts séparés",
-        "Un seul grand pont couvre trois-quarts du mouvement",
-        "La platine ne couvre que 75% du diamètre",
-        "Elle nécessite moins de vis"
-      ],
-      correct: 1,
-      explanation: "Développée par Ferdinand Adolph Lange en 1864, la platine 3/4 utilise un seul grand pont qui couvre environ trois-quarts de la surface du mouvement. Seul le coq de balancier reste séparé. Cette construction privilégie la stabilité maximale."
-    },
-    {
-      question: "Comment appelle-t-on le pont du balancier dans la tradition horlogère suisse ?",
-      options: [
-        "Le rotor",
-        "Le coq",
-        "L'ancre",
-        "Le barillet"
-      ],
-      correct: 1,
-      explanation: "Le coq est le nom traditionnel du pont du balancier dans l'horlogerie suisse. Cette appellation remonte au XVIe siècle, lorsque les horlogers façonnaient ce pont avec une forme élégante rappelant la silhouette d'un coq."
-    },
-  ];
-
-  const handleQuizAnswer = (questionIndex: number, optionIndex: number) => {
-    if (!showResults) {
-      setQuizAnswers(prev => ({ ...prev, [questionIndex]: optionIndex.toString() }));
+  // Gestion du quiz compact
+  const handleSelectOption = (idx: number) => {
+    if (isAnswerRevealed) return;
+    setSelectedOption(idx);
+    setIsAnswerRevealed(true);
+    if (idx === QUIZ_QUESTIONS[currentQuizIdx].correct) {
+      setUserScore((prev) => prev + 1);
     }
   };
 
-  const calculateScore = () => {
-    let correct = 0;
-    quizData.forEach((q, index) => {
-      if (parseInt(quizAnswers[index]) === q.correct) correct++;
-    });
-    return correct;
+  const handleNextQuestion = () => {
+    if (currentQuizIdx < QUIZ_QUESTIONS.length - 1) {
+      setCurrentQuizIdx((prev) => prev + 1);
+      setSelectedOption(null);
+      setIsAnswerRevealed(false);
+    } else {
+      setIsQuizCompleted(true);
+    }
+  };
+
+  const handleResetQuiz = () => {
+    setCurrentQuizIdx(0);
+    setSelectedOption(null);
+    setUserScore(0);
+    setIsAnswerRevealed(false);
+    setIsQuizCompleted(false);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
-      {/* HEADER */}
-      <header className="bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-4 py-4">
-          <Link 
-            href="/theorie/mouvements" 
-            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium"
-          >
-            <ChevronLeft className="w-5 h-5 mr-1" />
-            Retour à Architecture du Mouvement
-          </Link>
-        </div>
-      </header>
+    <main className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+      
+      {/* HALO D'AMBIANCE HAUTE HORLOGERIE */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 hidden dark:block">
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[850px] h-[500px] bg-gradient-to-b from-amber-500/10 via-amber-600/5 to-transparent blur-[140px]" />
+      </div>
 
-      {/* HERO */}
-      <section className="bg-white dark:bg-slate-900">
-        <div className="max-w-5xl mx-auto px-4 py-12 md:py-16">
-          <h1 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white leading-tight mb-6">
-            La Platine et les Ponts
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-24 relative z-10 space-y-12">
+        
+        {/* --- FIL D'ARIANE HORLOGER & NORME SUISSE --- */}
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+          <nav aria-label="Fil d'Ariane" className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-mono">
+            <Link href="/" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">HorloLearn</Link>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            <Link href="/theorie" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">Théorie</Link>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            <Link href="/theorie/mouvements" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">Architecture du Mouvement</Link>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            <span className="text-amber-700 dark:text-amber-400 font-semibold">Platine &amp; Ponts</span>
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/30 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+              🇨🇭 Châssis Horloger Suisse · Calibre Ébauches SA ETA 6497-1
+            </span>
+          </div>
+        </div>
+
+        {/* --- HERO HEADER CINÉMATIQUE --- */}
+        <div className="text-center max-w-4xl mx-auto space-y-5">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-400 text-xs font-mono tracking-widest uppercase shadow-sm">
+            <Layers className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+            Châssis, Ponts de Rouage &amp; Décorations de Haute Horlogerie
+          </div>
+
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+            La Platine Principale <br />
+            <span className="bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 dark:from-amber-400 dark:via-yellow-200 dark:to-amber-500 bg-clip-text text-transparent">
+              &amp; l&apos;Architecture des Ponts
+            </span>
           </h1>
-          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-4xl">
-            L'ossature structurelle du mouvement horloger : comprendre le bâti qui maintient toute la mécanique 
-            avec précision et stabilité.
+
+          <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg max-w-3xl mx-auto font-light leading-relaxed">
+            Véritable squelette du garde-temps, la platine et ses ponts maintiennent les axes de rouage sous des tolérances micrométriques. Explorez la vue éclatée interactive d&apos;établi : <strong className="text-slate-900 dark:text-white font-semibold">pont de barillet</strong>, <strong className="text-slate-900 dark:text-white font-semibold">pont de rouage</strong>, <strong className="text-slate-900 dark:text-white font-semibold">pont d&apos;ancre</strong> et le mythique <strong className="text-slate-900 dark:text-white font-semibold">Coq</strong>.
           </p>
+
+          {/* 4 Indicateurs Clés de Châssis */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto text-left pt-2 font-mono">
+            <div className="p-4 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+              <div className="text-[11px] text-slate-500 dark:text-slate-400">Pierres de Rubis</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">17 Rubis</div>
+              <div className="text-[11px] text-amber-600 dark:text-amber-400 mt-0.5">Calibre ETA 6497-1</div>
+            </div>
+
+            <div className="p-4 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+              <div className="text-[11px] text-slate-500 dark:text-slate-400">Planéité de Platine</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">&lt; 1 µm</div>
+              <div className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-0.5">Lappage Haute Précision</div>
+            </div>
+
+            <div className="p-4 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+              <div className="text-[11px] text-slate-500 dark:text-slate-400">Pont Évocateur</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">Le Coq</div>
+              <div className="text-[11px] text-sky-600 dark:text-sky-400 mt-0.5">Balancier &amp; Incabloc</div>
+            </div>
+
+            <div className="p-4 bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+              <div className="text-[11px] text-slate-500 dark:text-slate-400">Finitions Nobles</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">Côtes &amp; Perlage</div>
+              <div className="text-[11px] text-purple-600 dark:text-purple-400 mt-0.5">Anglage main poli 45°</div>
+            </div>
+          </div>
         </div>
-      </section>
 
-      {/* CONTENU */}
-      <article className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
-        {/* SECTION 1: LA PLATINE */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            La Platine : Le Châssis du Mouvement
-          </h2>
-
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 border border-slate-200 dark:border-slate-700">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-              Définition et Fonction
-            </h3>
-            <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
-              La <strong className="text-slate-900 dark:text-slate-100">platine</strong> est la plaque de base qui occupe 
-              généralement toute la surface du mouvement horloger. Elle constitue le châssis principal sur lequel sont 
-              fixés tous les autres composants : barillet, rouages, échappement, balancier et ponts.
-            </p>
-            <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
-              Avec les ponts qui viennent s'y fixer, la platine forme la <strong className="text-slate-900 dark:text-slate-100">cage du mouvement</strong>. 
-              C'est entre ces deux éléments que pivotent librement tous les organes mobiles, maintenus par des paliers (pierres).
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            <div className="bg-blue-50 dark:bg-blue-950/30 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
-              <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Rigidité</h4>
-              <p className="text-slate-700 dark:text-slate-300">
-                La platine doit offrir une rigidité maximale pour garantir la stabilité dimensionnelle et le maintien 
-                précis de tous les composants.
-              </p>
+        {/* ========================================================================= */}
+        {/* SECTION VEDETTE 1 : L'EXPLORATEUR VECTORIEL CAD DE L'ARCHITECTURE         */}
+        {/* ========================================================================= */}
+        <section className="rounded-3xl border-2 border-amber-500/40 bg-white dark:bg-[#0D121F] p-6 sm:p-8 shadow-xl space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+            <div>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                🔬 Schéma Vectoriel CAD d&apos;Établi · Calibre 16½ Lignes ETA 6497
+              </span>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-slate-900 dark:text-white mt-1">
+                Vue Éclatée de la Platine &amp; des Ponts
+              </h2>
             </div>
-
-            <div className="bg-green-50 dark:bg-green-950/30 rounded-xl p-6 border border-green-200 dark:border-green-800">
-              <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Stabilité Thermique</h4>
-              <p className="text-slate-700 dark:text-slate-300">
-                Faible coefficient de dilatation pour maintenir les jeux et distances critiques malgré les variations de température.
-              </p>
-            </div>
+            <span className="text-xs font-mono text-slate-500 dark:text-slate-400">Cliquez sur un pont pour isoler sa géométrie</span>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-            <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Caractéristiques Techniques</h4>
-            <ul className="space-y-3 text-slate-700 dark:text-slate-300">
-              <li className="flex items-start">
-                <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                <span><strong className="text-slate-900 dark:text-slate-100">Épaisseur :</strong> 1 à 3 mm selon le calibre</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                <span><strong className="text-slate-900 dark:text-slate-100">Diamètre :</strong> Couvre toute la surface du mouvement (sauf platines partielles)</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                <span><strong className="text-slate-900 dark:text-slate-100">Perçages :</strong> Logements pour pivots, passages pour pignons, fixations pour ponts</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                <span><strong className="text-slate-900 dark:text-slate-100">Filetages :</strong> Pas-de-vis pour la fixation des ponts et du cadran</span>
-              </li>
-            </ul>
-          </div>
-        </section>
-
-        {/* SECTION 2: LES PONTS - VERSION CORRIGÉE */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            Les Ponts : Maintien et Guidage
-          </h2>
-
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mb-6 border border-slate-200 dark:border-slate-700">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-              Rôle des Ponts
-            </h3>
-            <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed mb-4">
-              Les <strong className="text-slate-900 dark:text-slate-100">ponts</strong> sont des plaques fixées à la platine qui maintiennent 
-              les pivots supérieurs des mobiles. Chaque pivot d'une roue ou d'un pignon est ainsi guidé entre deux paliers : 
-              l'un dans la platine (côté cadran) et l'autre dans le pont (côté fond).
-            </p>
-            <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
-              Les deux extrémités du pont sont rattachées à la platine par des vis, formant ainsi une structure rigide 
-              qui maintient les axes dans leur position exacte. Cette précision est cruciale pour le bon fonctionnement 
-              de l'engrenage et la régularité de la marche.
-            </p>
+          {/* Sélecteur des 5 Composants Châssis */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+            {MOVEMENT_PARTS.map((part) => (
+              <button
+                key={part.id}
+                onClick={() => setActivePartId(part.id)}
+                className={`p-3 rounded-2xl text-left border-2 transition-all flex flex-col justify-between gap-1 font-mono text-xs ${
+                  activePartId === part.id
+                    ? "bg-amber-500/15 border-amber-500 text-slate-950 dark:text-white font-bold shadow-md ring-1 ring-amber-500/20"
+                    : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-amber-400/50"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: part.colorHex }} />
+                  <span className="text-[10px] text-slate-400">{part.jewelsCount} rubis</span>
+                </div>
+                <span className="font-serif font-bold text-sm leading-tight mt-1">{part.name}</span>
+                <span className="text-[10px] text-amber-700 dark:text-amber-400 truncate">{part.traditionalName}</span>
+              </button>
+            ))}
           </div>
 
-          {/* Accordion Interactif CORRIGÉ */}
-          <div className="mb-8">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-              Principaux Ponts d'un Mouvement
-            </h3>
-            <p className="text-slate-600 dark:text-slate-400 mb-4">
-              Cliquez sur les éléments pour les explorer :
-            </p>
+          {/* GRILLE : SCHÉMA CAD VECTORIEL (7 COLS) & DÉTAILS D'ATELIER (5 COLS) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
             
-            <div className="space-y-4">
-              {/* PLATINE */}
-              <div>
-                <div
-                  onClick={() => togglePart('platine')}
-                  className={`bg-white dark:bg-slate-800 rounded-xl border-2 p-5 cursor-pointer transition-all ${
-                    selectedParts.includes('platine')
-                      ? 'border-blue-600 dark:border-blue-400 shadow-lg'
-                      : 'border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-blue-400'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
-                        Platine
-                      </h4>
-                      {!selectedParts.includes('platine') && (
-                        <p className="text-slate-700 dark:text-slate-300 text-sm">
-                          Plaque de base supportant tous les composants
-                        </p>
-                      )}
-                    </div>
-                    <ChevronLeft 
-                      className={`w-6 h-6 text-slate-400 transition-transform ${
-                        selectedParts.includes('platine') ? '-rotate-90' : 'rotate-180'
-                      }`} 
-                    />
-                  </div>
-                </div>
-                
-                {selectedParts.includes('platine') && (
-                  <div className="mt-3 bg-blue-50 dark:bg-blue-950/30 rounded-xl p-6 border-l-4 border-blue-600 dark:border-blue-400">
-                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-3">
-                      La <strong>platine</strong> est la plaque de base du mouvement horloger. Elle porte tous les composants 
-                      mécaniques et sert de référence dimensionnelle pour l'ensemble du calibre.
-                    </p>
-                    <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
-                      <li className="flex items-start">
-                        <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                        <span>Support structurel principal</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                        <span>Paliers côté cadran pour tous les pivots</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                        <span>Filetages pour fixation des ponts</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-blue-600 dark:text-blue-400 mr-2">•</span>
-                        <span>Épaisseur 1,5-3mm selon calibre</span>
-                      </li>
-                    </ul>
-                  </div>
-                )}
+            {/* DESSIN TECHNIQUE VECTORIEL SVG (7 COLS) */}
+            <div className="lg:col-span-7 bg-slate-100 dark:bg-slate-950 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 flex flex-col justify-between shadow-inner">
+              <div className="flex items-center justify-between text-xs font-mono text-slate-500 dark:text-slate-400 mb-2">
+                <span className="font-bold">VUE CAD D&apos;ASSEMBLAGE HORLOGER</span>
+                <span className="text-amber-600 dark:text-amber-400 font-bold">{activePart.finishing}</span>
               </div>
 
-              {/* PONT DE BARILLET */}
-              <div>
-                <div
-                  onClick={() => togglePart('pont-barillet')}
-                  className={`bg-white dark:bg-slate-800 rounded-xl border-2 p-5 cursor-pointer transition-all ${
-                    selectedParts.includes('pont-barillet')
-                      ? 'border-green-600 dark:border-green-400 shadow-lg'
-                      : 'border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-green-400'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
-                        Pont de barillet
-                      </h4>
-                      {!selectedParts.includes('pont-barillet') && (
-                        <p className="text-slate-700 dark:text-slate-300 text-sm">
-                          Maintient l'axe du barillet
-                        </p>
-                      )}
-                    </div>
-                    <ChevronLeft 
-                      className={`w-6 h-6 text-slate-400 transition-transform ${
-                        selectedParts.includes('pont-barillet') ? '-rotate-90' : 'rotate-180'
-                      }`} 
+              {/* Rendu SVG Haute Définition du Mouvement */}
+              <div className="w-full overflow-hidden flex items-center justify-center py-4">
+                <svg viewBox="0 0 540 440" className="w-full h-auto select-none font-mono">
+                  <defs>
+                    <pattern id="chassis-perlage" width="16" height="16" patternUnits="userSpaceOnUse">
+                      <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" className="text-slate-300/60 dark:text-slate-800/80" strokeWidth="0.8" />
+                    </pattern>
+                    <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#E2B44F" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="#B45309" stopOpacity="0.5" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* 1. PLATINE PRINCIPALE (DISQUE ROND Ø 36.60 mm) */}
+                  <g opacity={activePartId === "platine" ? 1 : 0.45} className="transition-opacity duration-300">
+                    <circle cx="270" cy="220" r="185" className="fill-amber-500/10 dark:fill-amber-950/20 stroke-amber-500/60" strokeWidth="2.5" />
+                    <circle cx="270" cy="220" r="180" fill="url(#chassis-perlage)" />
+                    {/* Logement Barillet découpé */}
+                    <circle cx="200" cy="150" r="75" fill="none" stroke="#E2B44F" strokeWidth="1.5" strokeDasharray="4 2" />
+                    {/* Axe de centre */}
+                    <circle cx="270" cy="220" r="8" fill="#F43F5E" stroke="#881337" strokeWidth="1.5" />
+                    <text x="270" y="390" className="fill-slate-500 dark:fill-slate-400" fontSize="10" textAnchor="middle">Platine de base Ø 36.60 mm (16½ lignes)</text>
+                  </g>
+
+                  {/* 2. PONT DE BARILLET (Haut gauche) */}
+                  <g
+                    transform="translate(195, 140)"
+                    opacity={activePartId === "pont-barillet" ? 1 : activePartId === "platine" ? 0.8 : 0.3}
+                    className="cursor-pointer transition-opacity duration-300"
+                    onClick={() => setActivePartId("pont-barillet")}
+                  >
+                    <path
+                      d="M -75 -40 C -30 -75 50 -70 85 -20 C 60 40 -10 65 -70 30 Z"
+                      fill={activePartId === "pont-barillet" ? "url(#" + gradientId + ")" : "#CBD5E1"}
+                      className="dark:fill-slate-800 stroke-amber-500"
+                      strokeWidth={activePartId === "pont-barillet" ? "2.5" : "1.5"}
                     />
-                  </div>
-                </div>
-                
-                {selectedParts.includes('pont-barillet') && (
-                  <div className="mt-3 bg-green-50 dark:bg-green-950/30 rounded-xl p-6 border-l-4 border-green-600 dark:border-green-400">
-                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-3">
-                      Le <strong>pont de barillet</strong> maintient le pivot supérieur de l'axe du barillet, qui contient 
-                      le ressort moteur. Ce pont doit être particulièrement robuste car il subit la tension constante du ressort.
-                    </p>
-                    <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
-                      <li className="flex items-start">
-                        <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                        <span>Maintient le barillet en position</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                        <span>Résiste à la tension du ressort moteur</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-green-600 dark:text-green-400 mr-2">•</span>
-                        <span>Pierre ou palier renforcé</span>
-                      </li>
-                    </ul>
-                  </div>
-                )}
+                    {/* Pierre d'arbre de barillet */}
+                    <circle cx="5" cy="-5" r="14" fill="#F43F5E" stroke="#9F1239" strokeWidth="1.5" />
+                    <circle cx="5" cy="-5" r="5" fill="#0F172A" />
+                    {/* 3 Trous de vis de pont de barillet */}
+                    <circle cx="-50" cy="15" r="5" fill="#2563EB" />
+                    <circle cx="55" cy="-35" r="5" fill="#2563EB" />
+                    <circle cx="-45" cy="-35" r="5" fill="#2563EB" />
+                    <text x="5" y="45" className="fill-slate-800 dark:fill-slate-200 font-bold" fontSize="9" textAnchor="middle">Pont de Barillet</text>
+                  </g>
+
+                  {/* 3. PONT DE ROUAGE (Centre & bas droite) */}
+                  <g
+                    transform="translate(320, 240)"
+                    opacity={activePartId === "pont-rouage" ? 1 : activePartId === "platine" ? 0.8 : 0.3}
+                    className="cursor-pointer transition-opacity duration-300"
+                    onClick={() => setActivePartId("pont-rouage")}
+                  >
+                    <path
+                      d="M -50 -70 C 0 -85 70 -50 85 10 C 60 70 -10 80 -60 20 Z"
+                      fill={activePartId === "pont-rouage" ? "#60A5FA" : "#CBD5E1"}
+                      className="dark:fill-slate-800 stroke-blue-500"
+                      strokeWidth={activePartId === "pont-rouage" ? "2.5" : "1.5"}
+                    />
+                    {/* 3 Pierres de rouage (Centre, Moyenne, Seconde) */}
+                    <circle cx="-35" cy="-40" r="10" fill="#F43F5E" stroke="#9F1239" strokeWidth="1.2" />
+                    <circle cx="10" cy="-20" r="9" fill="#F43F5E" stroke="#9F1239" strokeWidth="1.2" />
+                    <circle cx="45" cy="15" r="9" fill="#F43F5E" stroke="#9F1239" strokeWidth="1.2" />
+                    {/* 2 Vis de pont */}
+                    <circle cx="-30" cy="10" r="4.5" fill="#2563EB" />
+                    <circle cx="65" cy="-30" r="4.5" fill="#2563EB" />
+                    <text x="15" y="55" className="fill-slate-800 dark:fill-slate-200 font-bold" fontSize="9" textAnchor="middle">Pont de Rouage</text>
+                  </g>
+
+                  {/* 4. PONT D'ANCRE (Minuscule, vers le centre gauche) */}
+                  <g
+                    transform="translate(225, 270)"
+                    opacity={activePartId === "pont-ancre" ? 1 : activePartId === "platine" ? 0.8 : 0.3}
+                    className="cursor-pointer transition-opacity duration-300"
+                    onClick={() => setActivePartId("pont-ancre")}
+                  >
+                    <path
+                      d="M -15 -18 L 15 -18 L 8 20 L -8 20 Z"
+                      fill={activePartId === "pont-ancre" ? "#EC4899" : "#CBD5E1"}
+                      className="dark:fill-slate-800 stroke-pink-500"
+                      strokeWidth={activePartId === "pont-ancre" ? "2" : "1"}
+                    />
+                    <circle cx="0" cy="-6" r="6" fill="#F43F5E" stroke="#9F1239" strokeWidth="1" />
+                    <circle cx="0" cy="12" r="3" fill="#2563EB" />
+                    <text x="0" y="34" className="fill-slate-800 dark:fill-slate-200 font-bold" fontSize="8" textAnchor="middle">Pont d&apos;Ancre</text>
+                  </g>
+
+                  {/* 5. LE COQ (PONT DE BALANCIER - Bas gauche, forme de coq) */}
+                  <g
+                    transform="translate(180, 290)"
+                    opacity={activePartId === "coq" ? 1 : activePartId === "platine" ? 0.8 : 0.3}
+                    className="cursor-pointer transition-opacity duration-300"
+                    onClick={() => setActivePartId("coq")}
+                  >
+                    {/* Corps galbé du coq */}
+                    <path
+                      d="M -50 -10 C -20 -40 30 -25 50 15 C 30 50 -30 45 -45 15 Z"
+                      fill={activePartId === "coq" ? "#10B981" : "#CBD5E1"}
+                      className="dark:fill-slate-800 stroke-emerald-500"
+                      strokeWidth={activePartId === "coq" ? "2.5" : "1.5"}
+                    />
+                    {/* Bloc antichoc Incabloc (Rubis + Lyre) */}
+                    <circle cx="25" cy="18" r="14" fill="#F43F5E" stroke="#9F1239" strokeWidth="1.5" />
+                    <circle cx="25" cy="18" r="7" fill="#FDE047" opacity="0.8" />
+                    {/* Raquette et porte-piton (index) */}
+                    <line x1="25" y1="18" x2="45" y2="40" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" />
+                    <line x1="25" y1="18" x2="5" y2="35" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" />
+                    {/* Vis de coq */}
+                    <circle cx="-35" cy="0" r="5" fill="#2563EB" />
+                    <text x="-5" y="-18" className="fill-slate-800 dark:fill-slate-200 font-bold" fontSize="10" textAnchor="middle">Le Coq (Balancier)</text>
+                  </g>
+                </svg>
               </div>
 
-              {/* PONT DE ROUAGE */}
-              <div>
-                <div
-                  onClick={() => togglePart('pont-rouage')}
-                  className={`bg-white dark:bg-slate-800 rounded-xl border-2 p-5 cursor-pointer transition-all ${
-                    selectedParts.includes('pont-rouage')
-                      ? 'border-purple-600 dark:border-purple-400 shadow-lg'
-                      : 'border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-purple-400'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
-                        Pont de rouage
-                      </h4>
-                      {!selectedParts.includes('pont-rouage') && (
-                        <p className="text-slate-700 dark:text-slate-300 text-sm">
-                          Supporte les roues du rouage
-                        </p>
-                      )}
-                    </div>
-                    <ChevronLeft 
-                      className={`w-6 h-6 text-slate-400 transition-transform ${
-                        selectedParts.includes('pont-rouage') ? '-rotate-90' : 'rotate-180'
-                      }`} 
-                    />
-                  </div>
-                </div>
-                
-                {selectedParts.includes('pont-rouage') && (
-                  <div className="mt-3 bg-purple-50 dark:bg-purple-950/30 rounded-xl p-6 border-l-4 border-purple-600 dark:border-purple-400">
-                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-3">
-                      Le <strong>pont de rouage</strong> (ou pont de finissage) maintient les pivots supérieurs des roues 
-                      du train d'engrenages : grande moyenne, petite moyenne, roue d'échappement. Il assure l'alignement 
-                      parfait des engrenages.
-                    </p>
-                    <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
-                      <li className="flex items-start">
-                        <span className="text-purple-600 dark:text-purple-400 mr-2">•</span>
-                        <span>Maintient grande moyenne, petite moyenne</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-purple-600 dark:text-purple-400 mr-2">•</span>
-                        <span>Supporte roue d'échappement</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-purple-600 dark:text-purple-400 mr-2">•</span>
-                        <span>Paliers rubis pour tous les pivots</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-purple-600 dark:text-purple-400 mr-2">•</span>
-                        <span>Souvent décoré côtes de Genève</span>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
-
-              {/* COQ */}
-              <div>
-                <div
-                  onClick={() => togglePart('coq')}
-                  className={`bg-white dark:bg-slate-800 rounded-xl border-2 p-5 cursor-pointer transition-all ${
-                    selectedParts.includes('coq')
-                      ? 'border-orange-600 dark:border-orange-400 shadow-lg'
-                      : 'border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-orange-400'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
-                        Coq 🐓
-                      </h4>
-                      {!selectedParts.includes('coq') && (
-                        <p className="text-slate-700 dark:text-slate-300 text-sm">
-                          Pont du balancier (terminologie suisse)
-                        </p>
-                      )}
-                    </div>
-                    <ChevronLeft 
-                      className={`w-6 h-6 text-slate-400 transition-transform ${
-                        selectedParts.includes('coq') ? '-rotate-90' : 'rotate-180'
-                      }`} 
-                    />
-                  </div>
-                </div>
-                
-                {selectedParts.includes('coq') && (
-                  <div className="mt-3 bg-orange-50 dark:bg-orange-950/30 rounded-xl p-6 border-l-4 border-orange-600 dark:border-orange-400">
-                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-3">
-                      Le <strong>coq</strong> est le nom traditionnel du pont du balancier dans l'horlogerie suisse. 
-                      Son nom vient de sa forme élégante rappelant la silhouette d'un coq (XVIe siècle). C'est souvent 
-                      le pont le plus décoré et visible.
-                    </p>
-                    <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
-                      <li className="flex items-start">
-                        <span className="text-orange-600 dark:text-orange-400 mr-2">•</span>
-                        <span>Maintient pivot supérieur balancier</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-orange-600 dark:text-orange-400 mr-2">•</span>
-                        <span>Souvent gravé et décoré artistiquement</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-orange-600 dark:text-orange-400 mr-2">•</span>
-                        <span>Visible à travers fond transparent</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-orange-600 dark:text-orange-400 mr-2">•</span>
-                        <span>Tradition suisse depuis XVIe siècle</span>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
-
-              {/* PONT D'ANCRE */}
-              <div>
-                <div
-                  onClick={() => togglePart('pont-ancre')}
-                  className={`bg-white dark:bg-slate-800 rounded-xl border-2 p-5 cursor-pointer transition-all ${
-                    selectedParts.includes('pont-ancre')
-                      ? 'border-red-600 dark:border-red-400 shadow-lg'
-                      : 'border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-red-400'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
-                        Pont d'ancre
-                      </h4>
-                      {!selectedParts.includes('pont-ancre') && (
-                        <p className="text-slate-700 dark:text-slate-300 text-sm">
-                          Maintient l'échappement
-                        </p>
-                      )}
-                    </div>
-                    <ChevronLeft 
-                      className={`w-6 h-6 text-slate-400 transition-transform ${
-                        selectedParts.includes('pont-ancre') ? '-rotate-90' : 'rotate-180'
-                      }`} 
-                    />
-                  </div>
-                </div>
-                
-                {selectedParts.includes('pont-ancre') && (
-                  <div className="mt-3 bg-red-50 dark:bg-red-950/30 rounded-xl p-6 border-l-4 border-red-600 dark:border-red-400">
-                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed mb-3">
-                      Le <strong>pont d'ancre</strong> maintient l'ancre de l'échappement, pièce cruciale qui régule 
-                      le déroulement de l'énergie. Sa position doit être extrêmement précise pour assurer le bon 
-                      fonctionnement de l'échappement.
-                    </p>
-                    <ul className="space-y-2 text-sm text-slate-700 dark:text-slate-300">
-                      <li className="flex items-start">
-                        <span className="text-red-600 dark:text-red-400 mr-2">•</span>
-                        <span>Maintient pivot ancre d'échappement</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-red-600 dark:text-red-400 mr-2">•</span>
-                        <span>Position ultra-précise requise</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-red-600 dark:text-red-400 mr-2">•</span>
-                        <span>Palier rubis pour minimiser frottements</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="text-red-600 dark:text-red-400 mr-2">•</span>
-                        <span>Régule la régularité de la marche</span>
-                      </li>
-                    </ul>
-                  </div>
-                )}
+              <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800 flex justify-between">
+                <span>Composant actif : <strong className="text-amber-600 dark:text-amber-400">{activePart.name}</strong></span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-bold">Couple : {activePart.torqueCnm}</span>
               </div>
             </div>
-          </div>
 
-          {/* Le Coq - Section spéciale */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 rounded-2xl p-8 text-white">
-            <h3 className="text-2xl font-bold mb-4">🐓 Le Coq : Une Tradition Horlogère</h3>
-            <p className="text-blue-100 dark:text-blue-200 leading-relaxed mb-4">
-              Le <strong className="text-white">coq</strong> est le nom traditionnel donné au pont du balancier dans l'horlogerie suisse. 
-              Cette appellation remonte au XVIe siècle, lorsque les horlogers façonnaient ce pont avec une forme élégante 
-              rappelant la silhouette d'un coq.
-            </p>
-            <p className="text-blue-100 dark:text-blue-200 leading-relaxed">
-              Originellement fixé par une clavette, le coq était de forme très allongée. Au fil des siècles, il est devenu 
-              un véritable élément artistique, souvent gravé et décoré avec soin, visible à travers le fond de boîte.
-            </p>
-          </div>
-        </section>
-
-        {/* SECTION 3: TYPES DE CONSTRUCTION */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            Types de Construction
-          </h2>
-
-          <div className="overflow-x-auto mb-6">
-            <table className="w-full bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
-              <thead className="bg-slate-100 dark:bg-slate-900">
-                <tr>
-                  <th className="px-6 py-3 text-left text-slate-900 dark:text-white font-bold">Type</th>
-                  <th className="px-6 py-3 text-left text-slate-900 dark:text-white font-bold">Caractéristiques</th>
-                  <th className="px-6 py-3 text-left text-slate-900 dark:text-white font-bold">Origine</th>
-                  <th className="px-6 py-3 text-left text-slate-900 dark:text-white font-bold">Avantages</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                <tr>
-                  <td className="px-6 py-4 text-slate-900 dark:text-white font-semibold">Platine 3/4</td>
-                  <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Un seul grand pont couvre trois-quarts du mouvement</td>
-                  <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Allemande (Glashütte)</td>
-                  <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Stabilité maximale, positions fixes des paliers</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 text-slate-900 dark:text-white font-semibold">Ponts Séparés</td>
-                  <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Plusieurs ponts individuels (barillet, rouage, ancre, coq)</td>
-                  <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Suisse</td>
-                  <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Finitions élaborées, accès facilité, esthétique</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 text-slate-900 dark:text-white font-semibold">Platine Partielle</td>
-                  <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Ne couvre pas tout le diamètre du mouvement</td>
-                  <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Américaine (anciennes montres de poche)</td>
-                  <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Économie de matière, visibilité du mécanisme</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 text-slate-900 dark:text-white font-semibold">Ponts Assemblés</td>
-                  <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Plusieurs ponts réunis en une seule pièce</td>
-                  <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Moderne (calibres industriels)</td>
-                  <td className="px-6 py-4 text-slate-700 dark:text-slate-300">Assemblage rapide, coûts réduits</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-blue-50 dark:bg-blue-950/30 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
-              <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Platine 3/4 (Trois-Quarts)</h4>
-              <p className="text-slate-700 dark:text-slate-300 mb-3">
-                Développée par Ferdinand Adolph Lange en 1864, cette construction révolutionnaire utilise un seul grand pont 
-                qui couvre les trois-quarts de la platine. Seul le coq de balancier reste apparent.
-              </p>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
-                <strong>Marques emblématiques :</strong> A. Lange & Söhne, Glashütte Original
-              </p>
-            </div>
-
-            <div className="bg-green-50 dark:bg-green-950/30 rounded-xl p-6 border border-green-200 dark:border-green-800">
-              <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Ponts Séparés (Tradition Suisse)</h4>
-              <p className="text-slate-700 dark:text-slate-300 mb-3">
-                Construction classique avec plusieurs ponts individuels. Permet des finitions décoratives élaborées 
-                (côtes de Genève, anglage) et facilite l'accès au rouage pour l'entretien.
-              </p>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
-                <strong>Marques emblématiques :</strong> Patek Philippe, Vacheron Constantin, Rolex
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* SECTION 4: MATÉRIAUX */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            Matériaux et Traitements
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            {materials.map((material) => (
-              <div key={material.id} className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all">
-                <div className="text-4xl mb-3">{material.icon}</div>
-                <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{material.name}</h4>
-                <p className="text-slate-700 dark:text-slate-300 text-sm mb-4">{material.description}</p>
-                <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-xs rounded-full">
-                    {material.badge}
+            {/* FICHE D'ATELIER DU COMPOSANT SÉLECTIONNÉ (5 COLS) */}
+            <div className="lg:col-span-5 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 flex flex-col justify-between space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/30">
+                    {activePart.traditionalName}
                   </span>
-                  <span className="text-lg">{material.badgeIcon}</span>
+                  <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400">
+                    {activePart.jewelsCount} Rubis · {activePart.screwsCount} Vis
+                  </span>
+                </div>
+
+                <h3 className="font-serif text-2xl font-bold text-slate-900 dark:text-white leading-snug">
+                  {activePart.name}
+                </h3>
+
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-light">
+                  {activePart.desc}
+                </p>
+
+                {/* 3 Gestes d'Or Horlogers */}
+                <div className="space-y-1.5 pt-2">
+                  <span className="text-xs font-mono font-bold uppercase text-slate-700 dark:text-slate-300 block">
+                    ⚡ Règles d&apos;Établi &amp; Précautions d&apos;Assemblage :
+                  </span>
+                  <ul className="space-y-1.5 text-xs text-slate-600 dark:text-slate-300 font-mono">
+                    {activePart.rules.map((rule, idx) => (
+                      <li key={idx} className="flex items-start gap-1.5">
+                        <span className="text-amber-600 dark:text-amber-400 font-bold">✓</span>
+                        <span>{rule}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
-            ))}
+
+              {/* Encadré Finition */}
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs font-mono space-y-1">
+                <span className="font-bold text-amber-800 dark:text-amber-400 flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                  Finition de Haute Horlogerie :
+                </span>
+                <p className="text-slate-700 dark:text-slate-300 font-sans text-xs">
+                  {activePart.finishing}
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* SECTION 2 : L'ANATOMIE DÉTAILLÉE DU COQ & DE LA RAQUETTERIE               */}
+        {/* ========================================================================= */}
+        <section className="rounded-3xl border-2 border-emerald-500/30 bg-white dark:bg-[#0D121F] p-6 sm:p-8 shadow-xl space-y-6">
+          <div className="border-b border-slate-200 dark:border-slate-800 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                🐓 Le Pont Emblématique · Tradition &amp; Organe Réglant
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 dark:text-white mt-1">
+                Le Coq : Anatomie d&apos;un Pont Mythique
+              </h2>
+            </div>
+            <span className="text-xs font-mono px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 font-bold border border-emerald-500/30">
+              Support de l&apos;Antichoc Incabloc &amp; du Spiral
+            </span>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center">
-              <span className="mr-2">✨</span>
-              Traitements de Surface
-            </h3>
-            <div className="grid md:grid-cols-3 gap-4">
-              {treatments.map((treatment, index) => (
-                <div key={index} className="bg-slate-50 dark:bg-slate-900 rounded-lg p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-2xl">{treatment.icon}</span>
-                    <h5 className="font-bold text-slate-900 dark:text-white">{treatment.name}</h5>
-                  </div>
-                  <p className="text-slate-700 dark:text-slate-300 text-sm">{treatment.description}</p>
-                </div>
-              ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold">
+                1
+              </div>
+              <h3 className="font-serif font-bold text-lg text-slate-900 dark:text-white">
+                La Raquetterie (+ / -)
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-light">
+                La raquette porte deux goupilles (clé de raquette) qui enserrent la dernière spire du spiral. En déplaçant l&apos;index, l&apos;horloger modifie la longueur active du spiral, augmentant ou ralentissant la fréquence d&apos;oscillation.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold">
+                2
+              </div>
+              <h3 className="font-serif font-bold text-lg text-slate-900 dark:text-white">
+                Le Porte-Piton Mobile
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-light">
+                Le piton fixe l&apos;extrémité extérieure du spiral. Le porte-piton mobile permet de régler le repère (beat error) au vibrographe Witschi pour annuler tout boitement et obtenir un repère sous 0.3 ms.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-sky-500/10 flex items-center justify-center text-sky-600 dark:text-sky-400 font-bold">
+                3
+              </div>
+              <h3 className="font-serif font-bold text-lg text-slate-900 dark:text-white">
+                Le Bloc Antichoc Incabloc
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-light">
+                Une lyre en ressort d&apos;acier maintient la pierre de contre-pivot. Lors d&apos;un choc violent (5&apos;000 G), le chaton glisse sur ses cônes de centrage, protégeant le pivot microscopique (Ø 0.09 mm) contre toute rupture.
+              </p>
             </div>
           </div>
         </section>
 
-        {/* SECTION 5: FINITIONS */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            Finitions et Décorations
-          </h2>
-
-          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 mb-6">
-            <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
-              En haute horlogerie, la platine et les ponts reçoivent des finitions décoratives raffinées qui témoignent du 
-              savoir-faire du manufacture. Ces décorations ne sont pas seulement esthétiques : elles facilitent également 
-              l'inspection et réduisent les frottements.
-            </p>
+        {/* ========================================================================= */}
+        {/* SECTION 3 : LES FINITIONS D'ATELIER (CÔTES DE GENÈVE, PERLAGE, ANGLAGE)   */}
+        {/* ========================================================================= */}
+        <section className="space-y-6">
+          <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+              ✨ Haute Horlogerie Suisse · Poinçon de Genève &amp; Finitions Manuelles
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 dark:text-white mt-1">
+              Les Décorations Emblématiques des Ponts &amp; Platines
+            </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {finishes.map((finish, index) => (
-              <div key={index} className="bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-950/30 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
-                <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{finish.name}</h4>
-                <p className="text-slate-700 dark:text-slate-300 mb-3">{finish.description}</p>
-                <span className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs rounded-full">
-                  {finish.type}
-                </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {FINISH_TYPES.map((finish) => (
+              <div
+                key={finish.id}
+                className="p-5 rounded-2xl bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3"
+              >
+                <div className="space-y-2">
+                  <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-800 dark:text-amber-300 font-bold">
+                    {finish.badge}
+                  </span>
+                  <h3 className="font-serif font-bold text-lg text-slate-900 dark:text-white">
+                    {finish.name}
+                  </h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-light">
+                    {finish.desc}
+                  </p>
+                </div>
+
+                <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <strong className="text-slate-700 dark:text-slate-300">Emplacement :</strong> {finish.typicalLocation}
+                </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* SECTION 6: ERREURS COMMUNES */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            Erreurs Communes à Éviter
-          </h2>
-
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            <div className="bg-red-50 dark:bg-red-950/30 rounded-xl p-6 border-l-4 border-red-600 dark:border-red-400">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Erreurs lors du Démontage</h3>
-              <ul className="space-y-3 text-slate-700 dark:text-slate-300">
-                <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2 flex-shrink-0">✗</span>
-                  <span><strong>Dévisser les ponts dans le mauvais ordre :</strong> Risque de déformation ou de blocage des mobiles. Toujours commencer par le coq, puis les ponts de finissage.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2 flex-shrink-0">✗</span>
-                  <span><strong>Forcer le retrait d'un pont :</strong> Les pivots peuvent être coincés dans les paliers. Utiliser une brucelle pour soulever délicatement.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2 flex-shrink-0">✗</span>
-                  <span><strong>Mélanger les vis des différents ponts :</strong> Chaque pont a ses propres vis avec longueur et filetage spécifiques.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-600 dark:text-red-400 mr-2 flex-shrink-0">✗</span>
-                  <span><strong>Poser la platine côté cadran :</strong> Les pivots peuvent se tordre. Toujours poser le mouvement côté fond.</span>
-                </li>
-              </ul>
+        {/* ========================================================================= */}
+        {/* SECTION 4 : LE QUIZ D'ÉTABLI COMPACT (MODE STEPPER RAFFINÉ)               */}
+        {/* ========================================================================= */}
+        <section className="rounded-3xl bg-white dark:bg-[#0D121F] border-2 border-amber-500/40 p-6 sm:p-8 shadow-xl space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+            <div>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                🎓 Évaluation d&apos;Atelier · Questions Clés de Châssis
+              </span>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-slate-900 dark:text-white mt-1">
+                Quiz Express : Maîtrise de la Platine &amp; des Ponts
+              </h2>
             </div>
-
-            <div className="bg-green-50 dark:bg-green-950/30 rounded-xl p-6 border-l-4 border-green-600 dark:border-green-400">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Bonnes Pratiques</h3>
-              <ul className="space-y-3 text-slate-700 dark:text-slate-300">
-                <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0">✓</span>
-                  <span><strong>Repérer la position des ponts :</strong> Noter ou photographier l'orientation avant démontage.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0">✓</span>
-                  <span><strong>Organiser les vis :</strong> Utiliser un plateau de démontage ou des compartiments séparés.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0">✓</span>
-                  <span><strong>Nettoyer platine et ponts :</strong> Profiter du démontage pour nettoyer avec solvants appropriés.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-green-600 dark:text-green-400 mr-2 flex-shrink-0">✓</span>
-                  <span><strong>Vérifier les paliers :</strong> Inspecter l'état des pierres et remplacer si nécessaire.</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* SECTION 7: QUIZ */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-6">
-            Testez vos Connaissances
-          </h2>
-
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-200 dark:border-slate-700">
-            <div className="mb-6">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                  Progression : {Object.keys(quizAnswers).length} / {quizData.length}
-                </span>
-                {showResults && (
-                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                    Score : {calculateScore()} / {quizData.length}
-                  </span>
-                )}
-              </div>
-              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+            
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                Question {currentQuizIdx + 1} sur {QUIZ_QUESTIONS.length}
+              </span>
+              <div className="w-24 bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
                 <div
-                  className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all"
-                  style={{ width: `${(Object.keys(quizAnswers).length / quizData.length) * 100}%` }}
+                  className="bg-amber-500 h-full transition-all duration-300"
+                  style={{ width: `${((currentQuizIdx + 1) / QUIZ_QUESTIONS.length) * 100}%` }}
                 />
               </div>
             </div>
+          </div>
 
-            {quizData.map((q, qIndex) => (
-              <div key={qIndex} className="mb-8 last:mb-0">
-                <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
-                  Question {qIndex + 1} : {q.question}
-                </h4>
-                <div className="space-y-3 mb-4">
-                  {q.options.map((option, oIndex) => {
-                    const isSelected = quizAnswers[qIndex] === oIndex.toString();
-                    const isCorrect = oIndex === q.correct;
-                    const showAnswer = showResults && isSelected;
-
-                    return (
-                      <button
-                        key={oIndex}
-                        onClick={() => handleQuizAnswer(qIndex, oIndex)}
-                        disabled={showResults}
-                        className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
-                          showAnswer && isCorrect
-                            ? 'border-green-500 dark:border-green-600 bg-green-50 dark:bg-green-950/30'
-                            : showAnswer && !isCorrect
-                            ? 'border-red-500 dark:border-red-600 bg-red-50 dark:bg-red-950/30'
-                            : isSelected
-                            ? 'border-blue-600 dark:border-blue-400 bg-blue-50 dark:bg-blue-950/30'
-                            : 'border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/30'
-                        }`}
-                      >
-                        <span className="text-slate-900 dark:text-slate-100">{option}</span>
-                        {showAnswer && isCorrect && (
-                          <CheckCircle2 className="inline-block ml-2 w-5 h-5 text-green-600 dark:text-green-400" />
-                        )}
-                        {showAnswer && !isCorrect && (
-                          <XCircle className="inline-block ml-2 w-5 h-5 text-red-600 dark:text-red-400" />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-                {showResults && quizAnswers[qIndex] !== undefined && (
-                  <div className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-600 dark:border-blue-400 p-4 rounded-r-lg">
-                    <p className="text-sm text-slate-700 dark:text-slate-300">
-                      <strong className="text-blue-900 dark:text-blue-300">Explication :</strong> {q.explanation}
-                    </p>
-                  </div>
-                )}
+          {!isQuizCompleted ? (
+            <div className="max-w-3xl mx-auto space-y-6 py-2">
+              <div className="space-y-2">
+                <span className="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/10 text-amber-800 dark:text-amber-400 border border-amber-500/30 uppercase">
+                  Défi #{QUIZ_QUESTIONS[currentQuizIdx].id}
+                </span>
+                <h3 className="font-serif text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-snug">
+                  {QUIZ_QUESTIONS[currentQuizIdx].question}
+                </h3>
               </div>
-            ))}
 
-            {Object.keys(quizAnswers).length === quizData.length && !showResults && (
-              <button
-                onClick={() => setShowResults(true)}
-                className="w-full bg-blue-600 dark:bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
-              >
-                Voir les Résultats
-              </button>
-            )}
+              {/* 4 Options en boutons radio */}
+              <div className="grid grid-cols-1 gap-2.5">
+                {QUIZ_QUESTIONS[currentQuizIdx].options.map((option, optIdx) => {
+                  const isSelected = selectedOption === optIdx;
+                  const isCorrect = optIdx === QUIZ_QUESTIONS[currentQuizIdx].correct;
 
-            {showResults && (
-              <div className="mt-6 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 rounded-xl">
-                <p className="text-center text-xl font-bold text-slate-900 dark:text-white">
-                  {calculateScore() === quizData.length
-                    ? '🎉 Parfait ! Vous maîtrisez la platine et les ponts !'
-                    : calculateScore() >= quizData.length / 2
-                    ? '👍 Bon travail ! Continuez à explorer !'
-                    : '📚 Relisez le cours pour mieux comprendre !'}
+                  let btnStyle = "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-amber-400";
+                  if (isAnswerRevealed) {
+                    if (isCorrect) {
+                      btnStyle = "bg-emerald-500/15 border-emerald-500 text-emerald-900 dark:text-emerald-200 font-bold ring-1 ring-emerald-500/30";
+                    } else if (isSelected) {
+                      btnStyle = "bg-rose-500/15 border-rose-500 text-rose-900 dark:text-rose-200 font-bold";
+                    } else {
+                      btnStyle = "bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 text-slate-400 opacity-60";
+                    }
+                  } else if (isSelected) {
+                    btnStyle = "bg-amber-500/15 border-amber-500 text-slate-950 dark:text-white font-bold";
+                  }
+
+                  return (
+                    <button
+                      key={optIdx}
+                      onClick={() => handleSelectOption(optIdx)}
+                      disabled={isAnswerRevealed}
+                      className={`p-3.5 rounded-xl border-2 text-left text-xs sm:text-sm transition-all flex items-center justify-between gap-3 ${btnStyle}`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="w-6 h-6 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono text-xs flex items-center justify-center shrink-0 font-bold">
+                          {String.fromCharCode(65 + optIdx)}
+                        </span>
+                        <span>{option}</span>
+                      </div>
+                      {isAnswerRevealed && isCorrect && (
+                        <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+                      )}
+                      {isAnswerRevealed && isSelected && !isCorrect && (
+                        <XCircle className="w-5 h-5 text-rose-500 shrink-0" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Explication & Bouton Suivant */}
+              {isAnswerRevealed && (
+                <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-300 dark:border-amber-900/40 text-xs text-slate-800 dark:text-slate-200 space-y-3 font-mono">
+                  <div className="flex items-start gap-2">
+                    <span className="font-bold text-amber-700 dark:text-amber-400">💡 Conseil d&apos;Établi :</span>
+                    <p className="leading-relaxed font-sans">{QUIZ_QUESTIONS[currentQuizIdx].explanation}</p>
+                  </div>
+
+                  <div className="flex justify-end pt-2 border-t border-amber-200 dark:border-amber-900/40">
+                    <button
+                      onClick={handleNextQuestion}
+                      className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold font-mono text-xs shadow transition flex items-center gap-1.5"
+                    >
+                      <span>{currentQuizIdx < QUIZ_QUESTIONS.length - 1 ? "Question Suivante" : "Consulter mon Bilan"}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="max-w-xl mx-auto py-8 text-center space-y-5">
+              <div className="w-16 h-16 rounded-3xl bg-amber-500/10 border border-amber-500/30 text-amber-500 flex items-center justify-center mx-auto text-2xl font-bold">
+                🏆
+              </div>
+              <div className="space-y-1">
+                <h3 className="font-serif text-2xl font-bold text-slate-900 dark:text-white">
+                  Bilan d&apos;Établi : Platine &amp; Ponts
+                </h3>
+                <p className="text-sm font-mono text-amber-700 dark:text-amber-400 font-bold">
+                  Score Final : {userScore} / {QUIZ_QUESTIONS.length} ({Math.round((userScore / QUIZ_QUESTIONS.length) * 100)}%)
                 </p>
               </div>
-            )}
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-light">
+                {userScore === QUIZ_QUESTIONS.length
+                  ? "Félicitations ! Vous maîtrisez parfaitement l'agencement des ponts, le rôle du Coq et les finitions de Haute Horlogerie."
+                  : "Bonnes connaissances d'ensemble. Révisez le guidage délicat des pivots sous le pont de rouage pour parfaire votre pratique."}
+              </p>
+              <button
+                onClick={handleResetQuiz}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs font-mono shadow hover:bg-amber-400 transition"
+              >
+                <RotateCcw className="w-4 h-4" />
+                <span>Recommencer le Test</span>
+              </button>
+            </div>
+          )}
+        </section>
+
+        {/* ========================================================================= */}
+        {/* SECTION 5 : QUESTIONS FRÉQUENTES DE L'ÉTABLI (ACCORDÉON RAFFINÉ)        */}
+        {/* ========================================================================= */}
+        <section className="space-y-6">
+          <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+              💬 Pratique d&apos;Atelier &amp; Savoir-Faire d&apos;Établi
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-slate-900 dark:text-white mt-1">
+              Foire Aux Questions de l&apos;Artisan Horloger
+            </h2>
+          </div>
+
+          <div className="space-y-3 max-w-4xl mx-auto">
+            <details className="group rounded-2xl bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+              <summary className="font-serif font-bold text-base text-slate-900 dark:text-white cursor-pointer list-none flex items-center justify-between">
+                <span>Comment nettoyer une platine perlée sans rayer ses cercles microscopiques ?</span>
+                <span className="text-amber-500 font-mono transition-transform group-open:rotate-90">→</span>
+              </summary>
+              <p className="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-light pt-3 border-t border-slate-100 dark:border-slate-800">
+                La platine doit être nettoyée dans une machine à laver horlogère par bains successifs (solution de nettoyage Rubisol puis deux rinçages à l&apos;essence F). Pour sécher ou retirer une poussière ponctuelle, n&apos;utilisez jamais de chiffon, mais uniquement une poire soufflante et du Rodico propre tamponné doucement sans frotter.
+              </p>
+            </details>
+
+            <details className="group rounded-2xl bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+              <summary className="font-serif font-bold text-base text-slate-900 dark:text-white cursor-pointer list-none flex items-center justify-between">
+                <span>Pourquoi le pont d&apos;ancre possède-t-il souvent une seule vis de fixation ?</span>
+                <span className="text-amber-500 font-mono transition-transform group-open:rotate-90">→</span>
+              </summary>
+              <p className="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-light pt-3 border-t border-slate-100 dark:border-slate-800">
+                L&apos;ancre subit des efforts mécaniques très faibles comparés au barillet. Un seul pilier de centrage calibré H6/p6 et une seule vis centrale suffisent amplement à immobiliser le pont, tout en libérant un espace précieux à proximité immédiate du balancier.
+              </p>
+            </details>
+
+            <details className="group rounded-2xl bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+              <summary className="font-serif font-bold text-base text-slate-900 dark:text-white cursor-pointer list-none flex items-center justify-between">
+                <span>Quelle est la différence fondamentale entre le laiton horloger et le maillechort pour la platine ?</span>
+                <span className="text-amber-500 font-mono transition-transform group-open:rotate-90">→</span>
+              </summary>
+              <p className="mt-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-light pt-3 border-t border-slate-100 dark:border-slate-800">
+                Le laiton s&apos;oxyde naturellement et doit être recouvert d&apos;une couche galvanique protectrice (rhodiage ou dorage). Le maillechort (alliage cuivre-nickel-zinc sans plomb) ne s&apos;oxyde pas, offre une teinte argentée chaude et se patine noblement avec le temps, signature de la Haute Horlogerie (Lange &amp; Söhne, Patek Philippe).
+              </p>
+            </details>
           </div>
         </section>
 
-        {/* NAVIGATION */}
-        <div className="mt-16 pt-8 border-t border-slate-200 dark:border-slate-700">
-          <Link 
-            href="/theorie/mouvements" 
-            className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors font-medium text-lg"
+        {/* --- NAVIGATION BAS DE PAGE --- */}
+        <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-4 font-mono text-xs">
+          <Link
+            href="/theorie/mouvements"
+            className="flex items-center gap-2 text-amber-600 dark:text-amber-400 hover:text-amber-700 transition-colors group"
           >
-            <ChevronLeft className="w-5 h-5 mr-1" />
-            Retour à Architecture du Mouvement
+            <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            <span>Architecture du Mouvement</span>
+          </Link>
+
+          <Link
+            href="/pratique/laboratoire"
+            className="flex items-center gap-2 text-amber-600 dark:text-amber-400 hover:text-amber-700 transition-colors group"
+          >
+            <span>Accéder au Master Lab d&apos;Atelier</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
-      </article>
 
-      {/* FOOTER */}
-      <footer className="bg-slate-900 dark:bg-slate-950 text-slate-300 py-8 mt-16">
-        <div className="max-w-5xl mx-auto px-4 text-center">
-          <p className="text-sm">
-            © 2025 HorloLearn - Formation en Horlogerie Suisse
-          </p>
-        </div>
-      </footer>
-    </div>
+      </div>
+    </main>
   );
 }
