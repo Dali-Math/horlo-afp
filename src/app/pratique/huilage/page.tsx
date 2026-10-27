@@ -17,6 +17,7 @@ import {
   Ban,
   Sparkles,
 } from 'lucide-react';
+import Eta2824LubricationMap from './Eta2824LubricationMap';
 
 interface LubePoint {
   id: 'incabloc' | 'levees' | 'seconde' | 'centre' | 'barillet' | 'remontoir';
@@ -806,6 +807,11 @@ export default function HuilagePage() {
             </div>
           </div>
         </section>
+
+        {/* =====================================================================
+            POSTE SPÉCIALISÉ : CARTE INTERACTIVE DE HUILAGE ETA 2824-2
+           ===================================================================== */}
+        <Eta2824LubricationMap />
 
         {/* =====================================================================
             PLAN INTERACTIF PAR ORGANE + SCHÉMA TECHNIQUE SVG DYNAMIQUE
