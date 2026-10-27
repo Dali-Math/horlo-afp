@@ -1,690 +1,744 @@
-// src/app/pratique/calibre-3d/page.tsx
 'use client';
 
-import { useState, useEffect, useRef, type ChangeEvent } from 'react';
-import Link from 'next/link';
-import { useTheme } from 'next-themes';
-import { ThemeToggle } from '@/components/ThemeToggle';
+/**
+ * HorloLearn — Écorché Éclaté 3D · Calibre École ETA 6497-1 (Unitas 16 ½''')
+ * Banc visuel interactif : trackball quaternion 360°, échappement pas à pas,
+ * fiche d'établi par organe et chaîne cinématique complète.
+ * Thème & écriture : « Théorie & Académie Horlogère Suisse » (horlolearn.ch/theorie).
+ */
+
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  ArrowLeft,
+  Camera,
+  ChevronDown,
+  ChevronUp,
+  CircleHelp,
+  Clock,
+  Cog,
+  Compass,
+  Crosshair,
+  DraftingCompass,
+  Eye,
+  Hand,
+  Keyboard,
+  Layers,
+  Maximize,
+  Move,
+  Orbit,
+  Pointer,
+  RefreshCw,
+  Repeat,
+  RotateCcw,
+  RotateCw,
+  Search,
+  Star,
+  Timer,
+  TriangleAlert,
   Volume2,
   VolumeX,
-  Maximize2,
-  Minimize2,
-  RotateCcw,
-  Compass,
-  Layers,
-  Wrench,
-  Droplet,
-  Gauge,
-  Clock,
-  Sparkles,
-  Eye,
-  AlertTriangle,
-  Play,
-  Pause,
-  ChevronRight,
-  Info
+  X,
+  ZoomIn,
 } from 'lucide-react';
+import { createCalibreEngine, type CalibreEngineHandle, type SensitivityMode } from '@/lib/calibre/engine';
 import {
+  CAMERA_PRESETS,
+  ESCAPEMENT_PHASES,
+  HUD_FROZEN,
+  KINEMATIC_TABLE,
   ORGAN_DATABASE,
-  OrganData,
-  initCalibre3DEngine,
-  Calibre3DController
-} from './calibre3dEngine';
+  ORGAN_PILLS,
+  type OrganId,
+  type PresetId,
+} from '@/lib/calibre/data';
 
-export default function Calibre3DPage() {
+type HudState = { mode: 'frozen' | 'live'; idx: number };
+
+const CREAM_CARD = 'bg-[#FAF7F1] border border-[#D7D0C4]';
+
+export default function CalibreEcorchePage() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const controllerRef = useRef<Calibre3DController | null>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const engineRef = useRef<CalibreEngineHandle | null>(null);
 
-  // Next-Themes Integration
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState<boolean>(false);
+  const [selected, setSelected] = useState<OrganId>('barrel');
+  const [speed, setSpeed] = useState(1.0);
+  const [beatLabel, setBeatLabel] = useState('Cycle Actif (1×) • 90 ms');
+  const [scrubVal, setScrubVal] = useState(45);
+  const [explodePct, setExplodePct] = useState(0);
+  const [xrayPct, setXrayPct] = useState(25);
+  const [mainspringPct, setMainspringPct] = useState(85);
+  const [audioOn, setAudioOn] = useState(false);
+  const [autoRotate, setAutoRotate] = useState(true);
+  const [sensitivity, setSensitivity] = useState<SensitivityMode>('normal');
+  const [camPreset, setCamPreset] = useState<PresetId>('iso');
+  const [helpOpen, setHelpOpen] = useState(false);
+  const [hud, setHud] = useState<HudState>({ mode: 'frozen', idx: -1 });
+  const [toastState, setToastState] = useState<'shown' | 'fading' | 'gone'>('shown');
 
-  useEffect(() => {
-    setMounted(true);
+  const toggleFullscreen = useCallback(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      if (el.requestFullscreen) el.requestFullscreen();
+      else if ((el as unknown as { webkitRequestFullscreen?: () => void }).webkitRequestFullscreen)
+        (el as unknown as { webkitRequestFullscreen: () => void }).webkitRequestFullscreen();
+    } else {
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if ((document as unknown as { webkitExitFullscreen?: () => void }).webkitExitFullscreen)
+        (document as unknown as { webkitExitFullscreen: () => void }).webkitExitFullscreen();
+    }
   }, []);
 
-  const isDark = mounted ? resolvedTheme === 'dark' : true;
-
-  // Simulation State
-  const [selectedOrgan, setSelectedOrgan] = useState<OrganData>(ORGAN_DATABASE.barrel);
-  const [currentPreset, setCurrentPreset] = useState<string>('iso');
-  const [speed, setSpeed] = useState<number>(1.0);
-  const [beatPhasePct, setBeatPhasePct] = useState<number>(45);
-  const [explodeVal, setExplodeVal] = useState<number>(0);
-  const [xrayVal, setXrayVal] = useState<number>(25);
-  const [mainspringVal, setMainspringVal] = useState<number>(85);
-  const [amplitude, setAmplitude] = useState<number>(291);
-  const [torque, setTorque] = useState<number>(9.2);
-  const [isDialShown, setIsDialShown] = useState<boolean>(false);
-  const [audioEnabled, setAudioEnabled] = useState<boolean>(false);
-  const [phaseTag, setPhaseTag] = useState<string>("Phase 3 : Impulsion (44°)");
-  const [phaseDesc, setPhaseDesc] = useState<string>(
-    "La dent club glisse sur le plan d'impulsion de la palette rubis (Moebius 9415) et relance le double plateau du balancier."
-  );
-  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-
+  // Bootstrap moteur 3D (client uniquement, compatible StrictMode via dispose)
   useEffect(() => {
-    if (!containerRef.current) return;
-
-    const controller = initCalibre3DEngine(containerRef.current, {
-      onOrganSelect: (organ) => {
-        setSelectedOrgan(organ);
-      },
-      onPhaseChange: (tag, desc) => {
-        setPhaseTag(tag);
-        setPhaseDesc(desc);
-      },
-      onBeatUpdate: (pct) => {
-        setBeatPhasePct(pct);
-      },
-      onDialSideToggle: (dial) => {
-        setIsDialShown(dial);
-      },
-      onAmplitudeChange: (amp, tq) => {
-        setAmplitude(amp);
-        setTorque(tq);
-      }
+    const el = containerRef.current;
+    if (!el) return;
+    const engine = createCalibreEngine(el, {
+      onOrgan: (id) => setSelected(id),
+      onHud: (mode, idx) => setHud({ mode, idx }),
+      onBeatLabel: (t) => setBeatLabel(t),
+      onScrub: (p) => setScrubVal(p),
+      onSpeed: (m) => setSpeed(m),
+      onExplode: (p) => setExplodePct(p),
+      onXray: (p) => setXrayPct(p),
+      onMainspring: (p) => setMainspringPct(p),
+      onAudio: (on) => setAudioOn(on),
+      onAutoRotate: (on) => setAutoRotate(on),
+      onHelp: () => setHelpOpen((o) => !o),
+      onFullscreenKey: () => toggleFullscreen(),
+      onPreset: (id) => setCamPreset(id),
     });
-
-    controllerRef.current = controller;
-
+    engineRef.current = engine;
     return () => {
-      controller.dispose();
-      controllerRef.current = null;
+      engine.dispose();
+      engineRef.current = null;
+    };
+  }, [toggleFullscreen]);
+
+  // Toast de première visite : fondu automatique après 9 s
+  useEffect(() => {
+    const t1 = setTimeout(() => setToastState('fading'), 9000);
+    const t2 = setTimeout(() => setToastState('gone'), 10400);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
     };
   }, []);
 
-  // Sync 3D engine lighting with light/dark theme
-  useEffect(() => {
-    if (controllerRef.current && mounted) {
-      controllerRef.current.setTheme?.(isDark ? 'dark' : 'light');
-    }
-  }, [isDark, mounted]);
-
-  // Handlers
-  const handlePreset = (preset: 'iso' | 'topBridges' | 'dial' | 'escapement' | 'balanceMacro' | 'profile') => {
-    setCurrentPreset(preset);
-    controllerRef.current?.setCameraPreset(preset);
-    if (preset === 'dial') setIsDialShown(true);
-    else if (preset === 'iso' || preset === 'topBridges' || preset === 'profile') setIsDialShown(false);
-  };
-
-  const handleOrganSelect = (organId: string) => {
-    controllerRef.current?.selectOrgan(organId);
-    if (ORGAN_DATABASE[organId]) {
-      setSelectedOrgan(ORGAN_DATABASE[organId]);
-    }
-  };
-
-  const handleFlipCalibre = () => {
-    if (controllerRef.current) {
-      const nextDial = controllerRef.current.flipCalibre180();
-      setIsDialShown(nextDial);
-    }
-  };
-
-  const handleSpeed = (s: number) => {
-    setSpeed(s);
-    controllerRef.current?.setSimSpeed(s);
-  };
-
-  const handleScrubBeat = (e: ChangeEvent<HTMLInputElement>) => {
-    const val = Number(e.target.value);
-    setBeatPhasePct(val);
-    setSpeed(0);
-    controllerRef.current?.scrubBeat(val);
-  };
-
-  const handleExplode = (e: ChangeEvent<HTMLInputElement>) => {
-    const val = Number(e.target.value);
-    setExplodeVal(val);
-    controllerRef.current?.setExplode(val);
-  };
-
-  const handleXray = (e: ChangeEvent<HTMLInputElement>) => {
-    const val = Number(e.target.value);
-    setXrayVal(val);
-    controllerRef.current?.setXray(val);
-  };
-
-  const handleMainspring = (e: ChangeEvent<HTMLInputElement>) => {
-    const val = Number(e.target.value);
-    setMainspringVal(val);
-    controllerRef.current?.setMainspring(val);
-  };
-
-  const handleWindStep = () => {
-    controllerRef.current?.windCrownStep();
-    const nextVal = Math.min(100, mainspringVal + 15);
-    setMainspringVal(nextVal);
-  };
-
-  const handleAudioToggle = () => {
-    if (controllerRef.current) {
-      const enabled = controllerRef.current.toggleAudio();
-      setAudioEnabled(enabled);
-    }
-  };
-
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {});
-    } else {
-      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
-    }
-  };
-
-  const msElapsed = Math.round((beatPhasePct / 100) * 200);
+  const e = () => engineRef.current;
+  const data = ORGAN_DATABASE[selected];
+  const hudLive = hud.mode === 'live';
+  const hudPhase = hudLive && hud.idx >= 0 ? ESCAPEMENT_PHASES[hud.idx] : null;
+  const hudTag = hudPhase ? hudPhase.tag : HUD_FROZEN.tag;
+  const hudDesc = hudPhase ? hudPhase.desc : HUD_FROZEN.desc;
+  const hudPrefix = hudPhase ? 'Phase Active :' : 'Échappement :';
+  const amplitude = Math.round(185 + (mainspringPct / 100) * 125);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-slate-900 dark:text-slate-100 flex flex-col font-sans select-none transition-colors duration-300">
-      
-      {/* 1. Header Horloger & Barre de Télémétrie Cinématique */}
-      <header className="border-b border-slate-200 dark:border-amber-500/20 bg-white/95 dark:bg-[#0B0F19]/95 backdrop-blur-md sticky top-0 z-40 px-3 sm:px-6 py-2.5 shadow-sm transition-colors duration-200">
-        <div className="max-w-[1700px] mx-auto flex flex-wrap items-center justify-between gap-3">
-          
-          {/* Fil d'Ariane & Titre */}
+    <div className="min-h-screen flex flex-col bg-[#F3EFE7] text-[#171717] font-body selection:bg-[#B08D57] selection:text-white">
+      {/* ================= EN-TÊTE : MARQUE & TÉLÉMÉTRIE ================= */}
+      <header className="border-b border-[#D7D0C4] bg-[#FAF7F1]/95 backdrop-blur sticky top-0 z-50">
+        <div className="max-w-[1600px] mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <Link
-              href="/pratique"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/90 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 text-xs font-mono transition"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Atelier</span>
-            </Link>
-
-            <span className="w-px h-4 bg-slate-200 dark:bg-slate-800 hidden sm:inline" />
-
+            <div className="w-10 h-10 rounded-full bg-[#171717] border border-[#9C7A43]/60 flex items-center justify-center text-[#E3B95F] shadow-sm">
+              <DraftingCompass className="w-5 h-5" />
+            </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-serif font-bold text-base sm:text-lg text-slate-900 dark:text-white tracking-wide">
-                  Master Calibre 3D
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-display font-semibold text-xl sm:text-2xl tracking-tight text-[#171717]">
+                  Horlo<span className="text-[#C08A2D]">Learn</span>
                 </span>
-                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-800 dark:text-amber-400 border border-amber-500/30">
-                  ETA 6497-1 (Unitas 16 ½&apos;&apos;&apos;)
+                <span className="text-[9px] font-label tracking-[0.22em] text-[#9C7A43] uppercase hidden sm:block">
+                  Culture &amp; Savoir-Faire
+                </span>
+                <span className="text-[10px] font-label px-2.5 py-0.5 rounded-full bg-[#9C7A43]/10 text-[#9C7A43] border border-[#9C7A43]/30 font-semibold">
+                  ÉCORCHÉ 3D · STANDARDS NIHS &amp; ISO 3159
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono hidden md:block">
-                Porte-Mouvement 360° sans blocage d&apos;axe • Écorché cinématique des 7 couches • Échappement suisse
+              <p className="text-xs text-[#57534E] font-body">
+                Calibre École <strong className="font-label text-[#171717]">ETA 6497-1 (Unitas 16 ½&apos;&apos;&apos;)</strong> — Porte-Mouvement Universel 360° (Côté Ponts &amp; Côté Cadran)
               </p>
             </div>
           </div>
 
-          {/* Télémétrie en Direct, ThemeToggle & Actions d'Établi */}
-          <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
-            <div className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hidden sm:flex items-center gap-1.5 shadow-sm">
-              <span className="text-slate-500 dark:text-slate-400">Ø :</span>
-              <strong className="text-slate-900 dark:text-white">36.60 mm (16 ½&apos;&apos;&apos;)</strong>
+          {/* Télémétrie mécanique live */}
+          <div className="flex flex-wrap items-center gap-2 font-label text-xs">
+            <div className={`px-3 py-1.5 rounded-xl ${CREAM_CARD} flex items-center gap-2`}>
+              <span className="text-[#57534E]">Ø :</span>
+              <strong className="text-[#171717]">36.60 mm (16 ½&apos;&apos;&apos;)</strong>
             </div>
-
-            <div className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hidden md:flex items-center gap-1.5 shadow-sm">
-              <span className="text-slate-500 dark:text-slate-400">Fréquence :</span>
-              <strong className="text-amber-600 dark:text-amber-400">18&apos;000 A/h (2.5 Hz)</strong>
+            <div className={`px-3 py-1.5 rounded-xl ${CREAM_CARD} flex items-center gap-2`}>
+              <span className="text-[#57534E]">Fréquence :</span>
+              <strong className="text-[#9C7A43]">18&apos;000 A/h (2.5 Hz)</strong>
             </div>
-
-            <div className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hidden lg:flex items-center gap-1.5 shadow-sm">
-              <span className="text-slate-500 dark:text-slate-400">Levée :</span>
-              <strong className="text-emerald-600 dark:text-emerald-400">44°</strong>
+            <div className={`px-3 py-1.5 rounded-xl ${CREAM_CARD} flex items-center gap-2`}>
+              <span className="text-[#57534E]">Levée :</span>
+              <strong className="text-emerald-700">44°</strong>
             </div>
-
-            <div className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 flex items-center gap-1.5 shadow-sm">
-              <span className="text-slate-500 dark:text-slate-400">Amplitude :</span>
-              <strong className="text-cyan-600 dark:text-cyan-400">{amplitude}°</strong>
+            <div className={`px-3 py-1.5 rounded-xl ${CREAM_CARD} flex items-center gap-2`}>
+              <span className="text-[#57534E]">Amplitude :</span>
+              <strong className="text-sky-700">{amplitude}°</strong>
             </div>
-
             <button
-              onClick={handleFlipCalibre}
-              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-bold transition flex items-center gap-1.5 shadow-md shadow-amber-500/10 active:scale-95"
-              title="Bascule instantanée 180° entre le côté ponts perlés et le cadran"
+              onClick={() => e()?.setPreset(camPreset === 'dial' ? 'iso' : 'dial')}
+              className="px-3 py-1.5 rounded-xl bg-[#9C7A43] text-white font-bold hover:bg-[#B08D57] transition flex items-center gap-1.5 shadow-sm"
+              title="Basculer entre côté ponts et côté cadran"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>{isDialShown ? 'Vue Ponts (180°)' : 'Vue Cadran (180°)'}</span>
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Retourner Calibre</span>
             </button>
-
             <button
-              onClick={handleAudioToggle}
-              className={`px-3 py-1.5 rounded-xl border transition flex items-center gap-1.5 active:scale-95 ${
-                audioEnabled
-                  ? 'bg-amber-500/20 text-amber-800 dark:text-amber-300 border-amber-500/40 shadow-sm'
-                  : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/90 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800'
+              onClick={() => e()?.toggleAudio()}
+              className={`px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 border ${
+                audioOn
+                  ? 'bg-[#9C7A43] text-white border-[#9C7A43] font-bold'
+                  : `${CREAM_CARD} text-[#57534E] hover:text-[#9C7A43]`
               }`}
-              title="Son acoustique des micro-chocs de l'échappement suisse (5 Hz)"
+              title="Tic-tac mécanique 5 Hz"
             >
-              {audioEnabled ? <Volume2 className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" /> : <VolumeX className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />}
-              <span>Son 5 Hz : {audioEnabled ? 'ON' : 'OFF'}</span>
-            </button>
-
-            {/* Sélecteur de Thème Clair / Sombre */}
-            <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm">
-              <ThemeToggle />
-            </div>
-
-            <button
-              onClick={toggleFullscreen}
-              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900/90 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 transition shadow-sm"
-              title="Basculer en Plein Écran"
-            >
-              {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+              {audioOn ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+              <span>Son 5 Hz : {audioOn ? 'ON' : 'OFF'}</span>
             </button>
           </div>
-
         </div>
       </header>
 
-      {/* 2. Espace de Travail Studio : 3D WebGL (Gauche) + Inspecteur Technique d'Atelier (Droite) */}
-      <main className="flex-1 max-w-[1700px] w-full mx-auto p-3 sm:p-5 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        
-        {/* COLONNE GAUCHE (8 colonnes) : Viewport 3D WebGL + Curseurs de Contrôle */}
+      {/* ================= INTRO TRAITÉ (style /theorie) ================= */}
+      <section className="max-w-[1600px] w-full mx-auto px-4 sm:px-5 pt-8 pb-2 text-center">
+        <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#9C7A43]/10 border border-[#9C7A43]/40 font-label text-[10px] tracking-[0.2em] text-[#7C5F33] uppercase">
+          <Star className="w-3 h-3 text-[#C08A2D]" />
+          Laboratoire 3D &amp; Cinématique · Référentiels AFP / CFC
+        </span>
+        <h1 className="font-display text-4xl sm:text-5xl lg:text-[56px] leading-[1.08] mt-4 text-[#171717] font-medium">
+          Écorché Éclaté &amp;{' '}
+          <span className="bg-gradient-to-r from-amber-500 via-amber-600 to-orange-600 bg-clip-text text-transparent">
+            Cinématique du 6497-1
+          </span>
+        </h1>
+        <p className="max-w-2xl mx-auto mt-4 text-[15px] text-[#57534E] leading-relaxed">
+          De la chaîne cinématique complète à l&apos;échappement à ancre suisse : désossez le calibre
+          école suisse en vue éclatée, tournez-le librement à 360° et déroulez chaque phase du battement
+          — fiches d&apos;établi, lubrifiants Moebius et tolérances d&apos;ébats conformes aux référentiels suisses.
+        </p>
+      </section>
+
+      {/* ================= ATELIER : VIEWPORT 3D + INSPECTEUR ================= */}
+      <main className="flex-1 max-w-[1600px] w-full mx-auto px-3 sm:px-5 py-4 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+        {/* -------- COLONNE PRINCIPALE : VIEWPORT WEBGL -------- */}
         <div className="lg:col-span-8 flex flex-col gap-4">
 
-          {/* Barre des Vues et Angles de Caméra */}
-          <div className="bg-white/95 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-2 sm:p-2.5 flex flex-wrap items-center justify-between gap-2 shadow-sm dark:shadow-lg backdrop-blur-md transition-colors">
+          {/* Banc de vues & manipulation */}
+          <div className={`${CREAM_CARD} rounded-2xl p-2.5 flex flex-col gap-2 shadow-sm`}>
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-[11px] font-mono uppercase text-amber-600 dark:text-amber-400 px-2 flex items-center gap-1 font-bold">
-                <Compass className="w-3.5 h-3.5" />
-                <span>Vues 3D :</span>
+              <span className="text-[11px] font-label uppercase tracking-wider text-[#9C7A43] px-2 flex items-center gap-1.5">
+                <Compass className="w-3.5 h-3.5" /> Vues &amp; Angles 3D :
               </span>
-
-              {[
-                { id: 'iso', label: '1. Côté Ponts (3D)' },
-                { id: 'topBridges', label: '2. Ponts à Plat (90°)' },
-                { id: 'dial', label: '3. Côté Cadran & Date' },
-                { id: 'escapement', label: '4. Macro Échappement' },
-                { id: 'balanceMacro', label: '5. Macro Balancier & Coq' },
-                { id: 'profile', label: '6. Profil Éclaté Z' },
-              ].map((btn) => (
+              {CAMERA_PRESETS.map((p, i) => (
                 <button
-                  key={btn.id}
-                  onClick={() => handlePreset(btn.id as any)}
-                  className={`px-2.5 py-1.5 rounded-lg text-xs font-mono font-semibold transition ${
-                    currentPreset === btn.id
-                      ? 'bg-amber-500 text-slate-950 shadow-sm'
-                      : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-950/70 dark:hover:bg-slate-800 text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white border border-slate-200 dark:border-slate-800'
+                  key={p.id}
+                  onClick={() => e()?.setPreset(p.id)}
+                  className={`px-2.5 py-1.5 rounded-lg text-xs font-label transition border ${
+                    camPreset === p.id
+                      ? 'bg-[#9C7A43] text-white border-[#9C7A43] font-semibold shadow-sm'
+                      : 'bg-[#F3EFE7] text-[#57534E] hover:text-[#171717] border-[#D7D0C4]'
                   }`}
                 >
-                  {btn.label}
+                  {i === 2 ? <Clock className="w-3 h-3 inline mr-1 -mt-0.5 text-[#C08A2D]" /> : null}
+                  {i === 3 ? <ZoomIn className="w-3 h-3 inline mr-1 -mt-0.5 text-rose-600" /> : null}
+                  {p.label}
                 </button>
               ))}
             </div>
+            <div className="flex flex-wrap items-center gap-1.5 border-t border-[#D7D0C4]/60 pt-2">
+              <span className="text-[11px] font-label uppercase tracking-wider text-sky-700 px-2 flex items-center gap-1.5">
+                <Hand className="w-3.5 h-3.5" /> Manipulation :
+              </span>
+              <button
+                onClick={() => e()?.setAutoRotate(!autoRotate)}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-label transition flex items-center gap-1.5 border ${
+                  autoRotate
+                    ? 'bg-[#9C7A43] text-white border-[#9C7A43] font-semibold shadow-sm'
+                    : 'bg-[#F3EFE7] text-[#57534E] border-[#D7D0C4] hover:text-[#171717]'
+                }`}
+                title="Rotation automatique du plateau (touche R)"
+              >
+                <Orbit className="w-3.5 h-3.5" />
+                <span>Rotation Auto</span>
+              </button>
+              <span className="text-[10px] font-label text-[#57534E] ml-1">Sensibilité :</span>
+              {(['doux', 'normal', 'precis'] as SensitivityMode[]).map((m) => (
+                <button
+                  key={m}
+                  onClick={() => {
+                    e()?.setSensitivity(m);
+                    setSensitivity(m);
+                  }}
+                  className={`px-2 py-1 rounded-lg text-[11px] font-label transition border ${
+                    sensitivity === m
+                      ? 'bg-[#9C7A43] text-white border-[#9C7A43] font-semibold'
+                      : 'bg-[#F3EFE7] text-[#57534E] border-[#D7D0C4] hover:text-[#171717]'
+                  }`}
+                  title={m === 'doux' ? 'Rotation lente et cinématique' : m === 'precis' ? 'Ultra-précise pour macro' : 'Équilibrée'}
+                >
+                  {m === 'doux' ? 'Douce' : m === 'normal' ? 'Normale' : 'Précise'}
+                </button>
+              ))}
+              <span className="flex-1" />
+              <button
+                onClick={() => e()?.screenshot()}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-label ${CREAM_CARD} text-[#57534E] hover:text-[#9C7A43] transition flex items-center gap-1.5`}
+                title="Exporter une photo PNG du calibre (touche P)"
+              >
+                <Camera className="w-3.5 h-3.5 text-sky-700" />
+                <span>Photo PNG</span>
+              </button>
+              <button
+                onClick={toggleFullscreen}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-label ${CREAM_CARD} text-[#57534E] hover:text-[#9C7A43] transition flex items-center gap-1.5`}
+                title="Plein écran immersif (touche F)"
+              >
+                <Maximize className="w-3.5 h-3.5 text-emerald-700" />
+                <span>Plein Écran</span>
+              </button>
+              <button
+                onClick={() => setHelpOpen(!helpOpen)}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-label ${CREAM_CARD} text-[#57534E] hover:text-[#9C7A43] transition flex items-center gap-1.5`}
+                title="Guide de manipulation (touche H)"
+              >
+                <CircleHelp className="w-3.5 h-3.5 text-[#C08A2D]" />
+                <span>Aide</span>
+              </button>
+            </div>
           </div>
 
-          {/* CONTENEUR DU CANVAS THREE.JS (Full 3D) */}
-          <div className="relative w-full h-[520px] sm:h-[620px] rounded-2xl border border-slate-300 dark:border-amber-500/25 bg-gradient-to-b from-[#EAEFF5] via-[#DEE5EE] to-[#D2DCE8] dark:from-[#090D15] dark:via-[#070A10] dark:to-[#040609] overflow-hidden shadow-md dark:shadow-2xl select-none transition-colors duration-300">
-            
-            {/* Overlay Titre Organe Actif (Haut Gauche) */}
-            <div className="absolute top-3 left-3 z-10 pointer-events-none flex flex-col gap-1.5">
-              <div className="px-3 py-1.5 rounded-xl bg-white/90 dark:bg-slate-950/85 backdrop-blur-md border border-slate-200 dark:border-slate-800 text-xs font-mono flex items-center gap-2 shadow-sm">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping" />
-                <span className="text-slate-900 dark:text-white font-semibold">Organe sélectionné : {selectedOrgan.title}</span>
+          {/* Viewport WebGL */}
+          <div
+            id="viewportCard"
+            ref={viewportRef}
+            className="relative w-full h-[540px] sm:h-[620px] xl:h-[680px] rounded-2xl border border-[#D7D0C4] bg-atelier-canvas overflow-hidden shadow-xl select-none"
+          >
+            {/* Overlay statut (haut-gauche) */}
+            <div className="absolute top-3 left-3 z-10 pointer-events-none flex flex-col gap-1.5 max-w-[62%]">
+              <div className="px-3 py-1.5 rounded-xl bg-black/45 backdrop-blur-md border border-white/10 text-xs font-label flex items-center gap-2 w-fit">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#E3B95F] animate-pulse" />
+                <span id="viewportActiveOrganTitle" className="text-[#F3E5AB] font-semibold">
+                  {`Organe sélectionné : ${data.title}`}
+                </span>
               </div>
-              <div className="px-3 py-1 rounded-lg bg-white/85 dark:bg-slate-950/75 backdrop-blur-sm border border-slate-200 dark:border-slate-800/60 text-[11px] font-mono text-slate-600 dark:text-slate-400 shadow-sm">
-                Glisser Gauche : 360° Libre • Glisser Droit / Maj : Déplacer • Molette : Zoom • Double-clic : Recentre
+              <div className="px-3 py-1 rounded-lg bg-black/35 backdrop-blur-sm border border-white/10 text-[11px] font-label text-[#B7C1D0] w-fit">
+                Glisser : Tourner dans tous les sens (360° libre) • Maj / Clic droit : Déplacer • Molette / Pincer : Zoom • Double-clic : Recentrer • 2 doigts : Pivoter + Zoom
               </div>
             </div>
 
-            {/* Overlay Télémétrie Échappement + Gimbal Pad Virtuel (Haut Droite) */}
-            <div className="absolute top-3 right-3 z-10 flex flex-col items-end gap-2">
-              <div className="pointer-events-none px-3 py-1.5 rounded-xl bg-white/95 dark:bg-slate-950/90 backdrop-blur-md border border-amber-500/40 text-[11px] font-mono text-amber-800 dark:text-amber-200 shadow-md flex items-center gap-2">
-                <span className="text-slate-500 dark:text-slate-400">Phase Active :</span>
-                <strong className="text-amber-600 dark:text-amber-400">{phaseTag}</strong>
+            {/* Télémétrie phases + pad de rotation (haut-droite) */}
+            <div className="absolute top-3 right-3 z-10 flex flex-col items-end gap-2 max-w-[36%]">
+              <div className="pointer-events-none px-3 py-1.5 rounded-xl bg-black/50 backdrop-blur-md border border-[#E3B95F]/40 text-[11px] font-label text-[#F3E5AB] shadow-lg flex items-center gap-2">
+                <span className="text-[#B7C1D0]">{hudPrefix}</span>
+                <strong className="text-[#E3B95F]">{hudTag}</strong>
               </div>
-
-              {/* Pad de rotation 360° au clic rapide */}
-              <div className="pointer-events-auto bg-white/90 dark:bg-slate-950/85 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-xl p-1.5 flex items-center gap-1 shadow-md text-xs font-mono">
+              <div className="pointer-events-none px-3 py-1.5 rounded-lg bg-black/45 backdrop-blur-md border border-white/10 text-[10px] font-label text-[#B7C1D0] leading-snug shadow">
+                {hudDesc}
+              </div>
+              <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-xl p-1.5 flex items-center gap-1 shadow-lg text-xs font-label">
                 <button
-                  onClick={() => controllerRef.current?.nudgeTrackball(0, 0.35)}
+                  onClick={() => e()?.nudge(0, 0.35)}
                   title="Tourner à Gauche"
-                  className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-amber-500 hover:text-black dark:bg-slate-900 text-slate-700 dark:text-slate-300 flex items-center justify-center transition"
+                  className="w-7 h-7 rounded-lg bg-white/10 hover:bg-[#E3B95F] hover:text-black text-[#D7DEE8] flex items-center justify-center transition"
                 >
-                  ↺
+                  <RotateCcw className="w-3.5 h-3.5" />
                 </button>
                 <button
-                  onClick={() => controllerRef.current?.nudgeTrackball(-0.35, 0)}
+                  onClick={() => e()?.nudge(-0.35, 0)}
                   title="Basculer vers le Haut"
-                  className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-amber-500 hover:text-black dark:bg-slate-900 text-slate-700 dark:text-slate-300 flex items-center justify-center transition"
+                  className="w-7 h-7 rounded-lg bg-white/10 hover:bg-[#E3B95F] hover:text-black text-[#D7DEE8] flex items-center justify-center transition"
                 >
-                  ▲
+                  <ChevronUp className="w-3.5 h-3.5" />
                 </button>
                 <button
-                  onClick={() => controllerRef.current?.nudgeTrackball(0.35, 0)}
+                  onClick={() => e()?.nudge(0.35, 0)}
                   title="Basculer vers le Bas"
-                  className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-amber-500 hover:text-black dark:bg-slate-900 text-slate-700 dark:text-slate-300 flex items-center justify-center transition"
+                  className="w-7 h-7 rounded-lg bg-white/10 hover:bg-[#E3B95F] hover:text-black text-[#D7DEE8] flex items-center justify-center transition"
                 >
-                  ▼
+                  <ChevronDown className="w-3.5 h-3.5" />
                 </button>
                 <button
-                  onClick={() => controllerRef.current?.nudgeTrackball(0, -0.35)}
+                  onClick={() => e()?.nudge(0, -0.35)}
                   title="Tourner à Droite"
-                  className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-amber-500 hover:text-black dark:bg-slate-900 text-slate-700 dark:text-slate-300 flex items-center justify-center transition"
+                  className="w-7 h-7 rounded-lg bg-white/10 hover:bg-[#E3B95F] hover:text-black text-[#D7DEE8] flex items-center justify-center transition"
                 >
-                  ↻
+                  <RotateCw className="w-3.5 h-3.5" />
                 </button>
                 <button
-                  onClick={handleFlipCalibre}
-                  title="Retourner à 180° (Ponts ↔ Cadran)"
-                  className="px-2 h-7 rounded-lg bg-amber-500/20 hover:bg-amber-500 hover:text-black text-amber-800 dark:text-amber-300 border border-amber-500/40 flex items-center gap-1 transition font-semibold"
+                  onClick={() => e()?.flip180()}
+                  title="Retourner à 180° (Ponts ↔ Cadran) — touche B"
+                  className="px-2 h-7 rounded-lg bg-[#E3B95F]/20 hover:bg-[#E3B95F] hover:text-black text-[#E3B95F] border border-[#E3B95F]/40 flex items-center gap-1 transition font-semibold"
                 >
+                  <Repeat className="w-3.5 h-3.5" />
                   <span>180°</span>
                 </button>
               </div>
             </div>
 
-            {/* THREE.JS RENDER TARGET CANVAS */}
-            <div
-              ref={containerRef}
-              className="w-full h-full cursor-grab active:cursor-grabbing touch-none"
-            />
+            {/* Rendu Three.js */}
+            <div ref={containerRef} className="w-full h-full cursor-grab active:cursor-grabbing touch-none" />
 
-            {/* Barre de sélection d'organe rapide (Bas du Viewport) */}
-            <div className="absolute bottom-3 left-3 right-3 z-10 flex flex-wrap justify-between items-center gap-2 pointer-events-none">
+            {/* Sélecteur rapide d'organes (bas) */}
+            <div className="absolute bottom-3 left-3 right-3 z-10 flex flex-wrap justify-between items-end gap-2 pointer-events-none">
               <button
-                onClick={() => handlePreset('escapement')}
-                className="pointer-events-auto px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/30 border border-rose-500/40 text-rose-800 dark:text-rose-200 text-xs font-mono font-semibold transition flex items-center gap-2 shadow-sm backdrop-blur-sm"
+                onClick={() => e()?.setPreset('escapement')}
+                className="pointer-events-auto px-3 py-1.5 rounded-xl bg-rose-900/40 hover:bg-rose-800/50 border border-rose-400/40 text-rose-100 text-xs font-label font-semibold transition flex items-center gap-2 shadow-lg backdrop-blur-sm"
               >
-                <Sparkles className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
+                <Crosshair className="w-3.5 h-3.5 text-rose-400" />
                 <span>Plonger sur l&apos;Échappement &amp; l&apos;Ancre</span>
               </button>
 
-              <div className="pointer-events-auto flex flex-wrap justify-end gap-1">
-                {[
-                  { id: 'barrel', label: '01. Barillet (Z=84)' },
-                  { id: 'centerWheel', label: '02. Centre (Z=64)' },
-                  { id: 'thirdWheel', label: '03. Moyenne (Z=60)' },
-                  { id: 'fourthWheel', label: '04. Seconde 9h' },
-                  { id: 'escapeWheel', label: '05. Échappement' },
-                  { id: 'palletFork', label: '06. Ancre Suisse' },
-                  { id: 'balance', label: '07. Balancier 2.5Hz' },
-                  { id: 'winding', label: '08. Remontoir 3h' },
-                  { id: 'dial', label: '09. Cadran & Date' },
-                ].map((chip) => (
+              <div className="pointer-events-auto flex flex-wrap justify-end gap-1 max-w-[70%]">
+                {ORGAN_PILLS.map((o) => (
                   <button
-                    key={chip.id}
-                    onClick={() => handleOrganSelect(chip.id)}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-mono transition border ${
-                      selectedOrgan.id === chip.id
-                        ? 'bg-amber-500 text-slate-950 font-bold border-amber-500 shadow-sm'
-                        : 'bg-white/90 hover:bg-amber-500 hover:text-slate-950 dark:bg-slate-950/90 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 backdrop-blur-sm'
+                    key={o.id}
+                    onClick={() => setSelected(o.id)}
+                    className={`px-2.5 py-1 rounded-lg border text-[11px] font-label transition ${
+                      selected === o.id
+                        ? 'bg-[#E3B95F] text-black font-bold border-[#E3B95F] shadow'
+                        : 'bg-black/55 hover:bg-[#E3B95F] hover:text-black text-[#D7DEE8] border-white/10'
                     }`}
                   >
-                    {chip.label}
+                    {o.label}
                   </button>
                 ))}
               </div>
             </div>
 
+            {/* Toast de prise en main (fondu auto) */}
+            {toastState !== 'gone' && (
+              <div
+                className={`absolute bottom-16 left-1/2 -translate-x-1/2 z-20 pointer-events-none px-4 py-2 rounded-xl bg-black/60 backdrop-blur-md border border-[#E3B95F]/40 text-[11px] font-label text-[#F3E5AB] shadow-xl transition-opacity duration-1000 flex items-center gap-2 whitespace-nowrap ${
+                  toastState === 'fading' ? 'opacity-0' : 'opacity-100'
+                }`}
+              >
+                <Pointer className="w-3.5 h-3.5 text-[#E3B95F]" />
+                <span>Glissez dans n&apos;importe quelle direction : le calibre tourne librement à 360°, sans butée ni blocage.</span>
+              </div>
+            )}
           </div>
 
-          {/* DOCK DES 4 CURSEURS CINÉMATIQUES (Style Ciechanowski) */}
-          <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm dark:shadow-xl grid grid-cols-1 md:grid-cols-2 gap-4 transition-colors">
-
-            {/* CURSEUR 1 : TEMPS / ALTERNANCE DE L'ÉCHAPPEMENT (0 à 100%) */}
-            <div className="bg-slate-50 dark:bg-slate-950/90 border border-slate-200/80 dark:border-slate-800/80 rounded-xl p-3.5 space-y-2">
-              <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5" />
-                  <span>1. Curseur Temporel d&apos;Alternance (200 ms)</span>
+          {/* -------- DOCK DES 4 CURSEURS INTERACTIFS -------- */}
+          <div className={`${CREAM_CARD} rounded-2xl p-4 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-4`}>
+            {/* 1 · Curseur temporel d'alternance */}
+            <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-3.5 space-y-2">
+              <div className="flex items-center justify-between text-xs font-label">
+                <span className="text-[#9C7A43] font-bold flex items-center gap-1.5">
+                  <Timer className="w-3.5 h-3.5" />
+                  <span>01 · Curseur Temporel d&apos;Alternance (200 ms)</span>
                 </span>
-                <span className="text-slate-900 dark:text-white font-bold">
-                  {speed === 0 ? `${beatPhasePct.toFixed(0)}% (${msElapsed} / 200 ms)` : `Cycle (${speed}×) • ${msElapsed} ms`}
-                </span>
+                <span className="text-[#171717] font-bold">{beatLabel}</span>
               </div>
               <input
+                id="sliderBeatScrub"
                 type="range"
-                min="0"
-                max="100"
-                step="0.5"
-                value={beatPhasePct}
-                onChange={handleScrubBeat}
-                className="w-full accent-amber-500 cursor-pointer"
+                min={0}
+                max={100}
+                step={0.5}
+                value={scrubVal}
+                onInput={(ev) => {
+                  e()?.scrubBeat(parseFloat((ev.target as HTMLInputElement).value));
+                }}
+                onChange={() => {}}
+                className="hl-slider w-full"
               />
-              <div className="flex items-center justify-between gap-1 pt-1 font-mono text-[11px]">
-                <button
-                  onClick={() => handleSpeed(1.0)}
-                  className={`flex-1 py-1 rounded font-bold transition ${speed === 1.0 ? 'bg-amber-500 text-slate-950' : 'bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'}`}
-                >
-                  1× Réel
-                </button>
-                <button
-                  onClick={() => handleSpeed(0.12)}
-                  className={`flex-1 py-1 rounded font-bold transition ${speed === 0.12 ? 'bg-amber-500 text-slate-950' : 'bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'}`}
-                >
-                  0.1× Ralenti
-                </button>
-                <button
-                  onClick={() => handleSpeed(0.025)}
-                  className={`flex-1 py-1 rounded font-bold transition ${speed === 0.025 ? 'bg-amber-500 text-slate-950' : 'bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'}`}
-                >
-                  Micro-Pas
-                </button>
-                <button
-                  onClick={() => handleSpeed(0)}
-                  className={`flex-1 py-1 rounded font-bold transition ${speed === 0 ? 'bg-amber-500 text-slate-950' : 'bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'}`}
-                >
-                  Pause
-                </button>
+              <div className="flex items-center justify-between gap-1 pt-1 font-label text-[11px]">
+                {[
+                  { v: 1.0, l: '1× Temps Réel' },
+                  { v: 0.12, l: '0.1× Ralenti' },
+                  { v: 0.025, l: 'Micro-Pas' },
+                  { v: 0, l: 'Pause / Manuel' },
+                ].map((s) => (
+                  <button
+                    key={s.l}
+                    onClick={() => e()?.setSpeed(s.v)}
+                    className={`flex-1 py-1 rounded border transition ${
+                      speed === s.v
+                        ? 'bg-[#9C7A43] text-white border-[#9C7A43] font-bold'
+                        : 'bg-[#FAF7F1] text-[#57534E] border-[#D7D0C4] hover:text-[#171717]'
+                    }`}
+                  >
+                    {s.l}
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* CURSEUR 2 : VUE ÉCLATÉE VERTICALE Z */}
-            <div className="bg-slate-50 dark:bg-slate-950/90 border border-slate-200/80 dark:border-slate-800/80 rounded-xl p-3.5 space-y-2">
-              <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-cyan-600 dark:text-cyan-400 font-bold flex items-center gap-1.5">
+            {/* 2 · Vue éclatée verticale */}
+            <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-3.5 space-y-2">
+              <div className="flex items-center justify-between text-xs font-label">
+                <span className="text-sky-700 font-bold flex items-center gap-1.5">
                   <Layers className="w-3.5 h-3.5" />
-                  <span>2. Vue Éclatée Verticale Z (7 Couches)</span>
+                  <span>02 · Vue Éclatée Verticale (Axe Z — 7 Niveaux)</span>
                 </span>
-                <span className="text-slate-900 dark:text-white font-bold">{explodeVal} % {explodeVal === 0 ? '(Assemblé)' : '(Écorché Z)'}</span>
+                <span className="text-sky-700 font-bold">{`${explodePct} % ${explodePct === 0 ? '(Assemblé)' : '(Écorché Z)'}`}</span>
               </div>
               <input
+                id="sliderExplodeZ"
                 type="range"
-                min="0"
-                max="100"
-                value={explodeVal}
-                onChange={handleExplode}
-                className="w-full accent-cyan-500 cursor-pointer"
+                min={0}
+                max={100}
+                step={1}
+                value={explodePct}
+                onInput={(ev) => e()?.setExplode(parseInt((ev.target as HTMLInputElement).value, 10))}
+                onChange={() => {}}
+                className="hl-slider w-full"
               />
-              <div className="flex items-center justify-between gap-1 pt-1 font-mono text-[11px]">
-                <button
-                  onClick={() => { setExplodeVal(0); controllerRef.current?.setExplode(0); }}
-                  className={`flex-1 py-1 rounded transition border ${explodeVal === 0 ? 'bg-cyan-500 text-slate-950 font-bold border-cyan-500' : 'bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'}`}
-                >
-                  Assemblé (0%)
-                </button>
-                <button
-                  onClick={() => { setExplodeVal(50); controllerRef.current?.setExplode(50); }}
-                  className={`flex-1 py-1 rounded transition border ${explodeVal === 50 ? 'bg-cyan-500 text-slate-950 font-bold border-cyan-500' : 'bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'}`}
-                >
-                  Écart 50%
-                </button>
-                <button
-                  onClick={() => { setExplodeVal(100); controllerRef.current?.setExplode(100); }}
-                  className={`flex-1 py-1 rounded transition border ${explodeVal === 100 ? 'bg-cyan-500 text-slate-950 font-bold border-cyan-500' : 'bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'}`}
-                >
-                  Éclaté Max (100%)
-                </button>
+              <div className="flex justify-between text-[10px] font-label text-[#57534E] pt-1">
+                <span>0% Calibre emboîté</span>
+                <button onClick={() => e()?.setExplode(45)} className="text-[#9C7A43] hover:underline">45% Étagement Rouage</button>
+                <button onClick={() => e()?.setExplode(100)} className="text-sky-700 hover:underline">100% Écorché Total</button>
               </div>
             </div>
 
-            {/* CURSEUR 3 : TRANSPARENCE RAYON-X DES PONTS */}
-            <div className="bg-slate-50 dark:bg-slate-950/90 border border-slate-200/80 dark:border-slate-800/80 rounded-xl p-3.5 space-y-2">
-              <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
+            {/* 3 · Rayon-X des ponts */}
+            <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-3.5 space-y-2">
+              <div className="flex items-center justify-between text-xs font-label">
+                <span className="text-violet-700 font-bold flex items-center gap-1.5">
                   <Eye className="w-3.5 h-3.5" />
-                  <span>3. Transparence Rayon-X des Ponts</span>
+                  <span>03 · Transparence Rayon-X des Ponts &amp; Coq</span>
                 </span>
-                <span className="text-slate-900 dark:text-white font-bold">{xrayVal} %</span>
+                <span className="text-violet-700 font-bold">{`${xrayPct} %`}</span>
               </div>
               <input
+                id="sliderXrayBridges"
                 type="range"
-                min="0"
-                max="94"
-                value={xrayVal}
-                onChange={handleXray}
-                className="w-full accent-emerald-500 cursor-pointer"
+                min={0}
+                max={100}
+                step={1}
+                value={xrayPct}
+                onInput={(ev) => e()?.setXray(parseInt((ev.target as HTMLInputElement).value, 10))}
+                onChange={() => {}}
+                className="hl-slider w-full"
               />
-              <div className="flex items-center justify-between gap-1 pt-1 font-mono text-[11px]">
-                <button
-                  onClick={() => { setXrayVal(0); controllerRef.current?.setXray(0); }}
-                  className={`flex-1 py-1 rounded transition border ${xrayVal === 0 ? 'bg-emerald-500 text-slate-950 font-bold border-emerald-500' : 'bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'}`}
-                >
-                  Opaques (0%)
-                </button>
-                <button
-                  onClick={() => { setXrayVal(45); controllerRef.current?.setXray(45); }}
-                  className={`flex-1 py-1 rounded transition border ${xrayVal === 45 ? 'bg-emerald-500 text-slate-950 font-bold border-emerald-500' : 'bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'}`}
-                >
-                  Semi-Transparent
-                </button>
-                <button
-                  onClick={() => { setXrayVal(90); controllerRef.current?.setXray(90); }}
-                  className={`flex-1 py-1 rounded transition border ${xrayVal === 90 ? 'bg-emerald-500 text-slate-950 font-bold border-emerald-500' : 'bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'}`}
-                >
-                  Invisible (Nu)
-                </button>
+              <div className="flex justify-between text-[10px] font-label text-[#57534E] pt-1">
+                <button onClick={() => e()?.setXray(0)} className="hover:text-[#171717]">0% Ponts Opaques</button>
+                <button onClick={() => e()?.setXray(55)} className="text-violet-700 hover:underline">55% Rayon-X Atelier</button>
+                <button onClick={() => e()?.setXray(95)} className="hover:text-[#171717]">95% Rouage Nu</button>
               </div>
             </div>
 
-            {/* CURSEUR 4 : ARMAGE DU RESSORT DE BARILLET */}
-            <div className="bg-slate-50 dark:bg-slate-950/90 border border-slate-200/80 dark:border-slate-800/80 rounded-xl p-3.5 space-y-2">
-              <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-purple-600 dark:text-purple-400 font-bold flex items-center gap-1.5">
-                  <Gauge className="w-3.5 h-3.5" />
-                  <span>4. Armage du Barillet &amp; Couple Nivaflex</span>
+            {/* 4 · Armage du barillet */}
+            <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-3.5 space-y-2">
+              <div className="flex items-center justify-between text-xs font-label">
+                <span className="text-emerald-700 font-bold flex items-center gap-1.5">
+                  <RotateCw className="w-3.5 h-3.5" />
+                  <span>04 · Armage du Barillet (Couronne 3h &amp; Cliquet)</span>
                 </span>
-                <span className="text-slate-900 dark:text-white font-bold">{mainspringVal} % (Couple {torque} mN·m)</span>
+                <span className="text-emerald-700 font-bold">{`${mainspringPct} % (Couple ${(1.8 + (mainspringPct / 100) * 8.7).toFixed(1)} mN·m)`}</span>
               </div>
               <input
+                id="sliderMainspring"
                 type="range"
-                min="0"
-                max="100"
-                value={mainspringVal}
-                onChange={handleMainspring}
-                className="w-full accent-purple-500 cursor-pointer"
+                min={10}
+                max={100}
+                step={1}
+                value={mainspringPct}
+                onInput={(ev) => e()?.setMainspring(parseInt((ev.target as HTMLInputElement).value, 10))}
+                onChange={() => {}}
+                className="hl-slider w-full"
               />
-              <div className="flex items-center justify-between gap-1 pt-1 font-mono text-[11px]">
-                <button
-                  onClick={() => { setMainspringVal(0); controllerRef.current?.setMainspring(0); }}
-                  className={`flex-1 py-1 rounded transition border ${mainspringVal === 0 ? 'bg-purple-500 text-white font-bold border-purple-500' : 'bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'}`}
-                >
-                  Désarmé (0%)
-                </button>
-                <button
-                  onClick={() => { setMainspringVal(50); controllerRef.current?.setMainspring(50); }}
-                  className={`flex-1 py-1 rounded transition border ${mainspringVal === 50 ? 'bg-purple-500 text-white font-bold border-purple-500' : 'bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'}`}
-                >
-                  Demi-Charge
-                </button>
-                <button
-                  onClick={handleWindStep}
-                  className="flex-1 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition flex items-center justify-center gap-1 shadow-sm active:scale-95"
-                  title="Faire tourner la couronne et remonter le ressort Nivaflex (+15%)"
-                >
-                  <span>Remonter (+15%)</span>
-                </button>
+              <div className="flex justify-between text-[10px] font-label text-[#57534E] pt-1">
+                <span>10% Désarmé (Amp. 195°)</span>
+                <button onClick={() => e()?.windStep()} className="text-emerald-700 font-semibold hover:underline">+1 Tour de Couronne (Clic !)</button>
+                <span>100% Plein Armage (46h)</span>
               </div>
             </div>
-
           </div>
-
         </div>
 
-        {/* COLONNE DROITE (4 colonnes) : Fiche d'Atelier & Métrologie Suisse de l'Organe */}
+        {/* -------- COLONNE INSPECTEUR : FICHE D'ÉTABLI + ROUAGE -------- */}
         <div className="lg:col-span-4 flex flex-col gap-4">
 
-          {/* FICHE TECHNIQUE D'ÉTABLI DE L'ORGANE SÉLECTIONNÉ */}
-          <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-amber-500/30 rounded-2xl p-5 shadow-sm dark:shadow-2xl flex flex-col gap-4 transition-colors">
-            
-            <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400 px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">
-                  {selectedOrgan.category}
+          {/* Fiche d'établi de l'organe sélectionné */}
+          <div className={`${CREAM_CARD} rounded-2xl p-5 shadow-sm relative overflow-hidden`}>
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#9C7A43]" />
+
+            <div className="flex items-start justify-between gap-2 mb-3">
+              <div>
+                <span className="text-[11px] font-label uppercase tracking-[0.14em] text-[#9C7A43] block">
+                  {data.category}
                 </span>
-                <span className="text-xs font-mono text-cyan-700 dark:text-cyan-400 font-semibold px-2 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/20">
-                  {selectedOrgan.gearBadge}
+                <h2 className="font-display text-xl text-[#171717] leading-snug mt-1 font-medium">
+                  {data.title}
+                </h2>
+                <span className="inline-block mt-2 px-2.5 py-0.5 rounded-full bg-[#9C7A43]/10 border border-[#9C7A43]/40 text-[#7C5F33] font-label text-[10px] tracking-[0.16em]">
+                  {data.level}
                 </span>
               </div>
-              <h2 className="text-lg font-serif font-bold text-slate-900 dark:text-white mt-2">
-                {selectedOrgan.title}
-              </h2>
+              <span className="px-2.5 py-1 rounded-lg font-label text-xs font-bold bg-[#F3EFE7] border border-[#9C7A43]/40 text-[#9C7A43] shrink-0">
+                {data.gearBadge}
+              </span>
             </div>
 
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-light">
-              {selectedOrgan.description}
+            <p className="text-[13px] text-[#44403C] leading-relaxed mb-4">
+              {data.description}
             </p>
 
-            {/* Spécifications Métrologiques & Lubrification NIHS */}
-            <div className="grid grid-cols-2 gap-2 font-mono text-xs pt-1">
-              <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-1">
-                <span className="text-[10px] uppercase text-slate-500 dark:text-slate-400 block">Vitesse &amp; Rapport</span>
-                <strong className="text-slate-900 dark:text-white text-xs block truncate">{selectedOrgan.speed}</strong>
+            {/* Grille technique (specs d'établi) */}
+            <div className="grid grid-cols-2 gap-2.5 mb-4 font-label text-xs">
+              <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-2.5">
+                <span className="text-[10px] text-[#79716B] block uppercase tracking-wider">Vitesse &amp; Rapport</span>
+                <strong className="text-[#171717]">{data.speed}</strong>
               </div>
-
-              <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-1">
-                <span className="text-[10px] uppercase text-amber-700 dark:text-amber-400 block">Lubrifiant Moebius</span>
-                <strong className="text-cyan-700 dark:text-cyan-400 text-xs block truncate">{selectedOrgan.oil}</strong>
+              <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-2.5">
+                <span className="text-[10px] text-[#79716B] block uppercase tracking-wider">Lubrifiant Moebius</span>
+                <strong className="text-sky-700">{data.oil}</strong>
               </div>
-
-              <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-1">
-                <span className="text-[10px] uppercase text-slate-500 dark:text-slate-400 block">Pique-Huile Bergeon</span>
-                <strong className="text-slate-700 dark:text-slate-200 text-xs block truncate">{selectedOrgan.oiler}</strong>
+              <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-2.5">
+                <span className="text-[10px] text-[#79716B] block uppercase tracking-wider">Pique-Huile Bergeon</span>
+                <strong className="text-[#7C5F33]">{data.oiler}</strong>
               </div>
-
-              <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-1">
-                <span className="text-[10px] uppercase text-emerald-700 dark:text-emerald-400 block">Jeu Axial (Ébat NIHS)</span>
-                <strong className="text-emerald-700 dark:text-emerald-400 text-xs block truncate">{selectedOrgan.endshake}</strong>
+              <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-2.5">
+                <span className="text-[10px] text-[#79716B] block uppercase tracking-wider">Jeu Axial (Ébat NIHS)</span>
+                <strong className="text-emerald-700">{data.endshake}</strong>
               </div>
             </div>
 
-            {/* ALERTE PIÈGE D'EXAMEN D'ATELIER (AFP / CFC) */}
-            <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-800 dark:text-rose-200 space-y-1 text-xs">
-              <div className="font-bold flex items-center gap-1.5 text-rose-600 dark:text-rose-400 font-mono text-[11px] uppercase tracking-wider">
-                <AlertTriangle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
+            {/* Point critique examen pratique (AFP / CFC) */}
+            <div className="bg-rose-50 border border-rose-200 rounded-xl p-3.5 mb-4">
+              <div className="text-[11px] font-label uppercase tracking-wider text-rose-700 font-bold mb-1 flex items-center gap-1.5">
+                <TriangleAlert className="w-3.5 h-3.5" />
                 <span>Point Critique Examen Pratique (AFP / CFC)</span>
               </div>
-              <p className="text-[11px] leading-relaxed text-slate-700 dark:text-slate-300 font-light">
-                {selectedOrgan.examTrap}
-              </p>
+              <p className="text-xs text-rose-900/90 leading-relaxed">{data.examTrap}</p>
             </div>
 
-            {/* Boutons d'Action Caméra Organe */}
-            <div className="flex items-center gap-2 pt-1 font-mono text-xs">
+            {/* Actions caméra */}
+            <div className="flex flex-wrap gap-2">
               <button
-                onClick={() => controllerRef.current?.focusSelectedOrganCamera()}
-                className="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition flex items-center justify-center gap-1.5 shadow active:scale-95"
+                onClick={() => e()?.focusOrgan(selected)}
+                className="flex-1 py-2 px-3 rounded-xl bg-[#9C7A43] hover:bg-[#B08D57] text-white font-label text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm"
               >
-                <Compass className="w-3.5 h-3.5" />
-                <span>Centrer Caméra 3D</span>
+                <Crosshair className="w-3.5 h-3.5" />
+                <span>Centrer la Caméra 3D</span>
               </button>
               <button
-                onClick={() => handlePreset('iso')}
-                className="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-950 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition"
+                onClick={() => e()?.setPreset('iso')}
+                className="py-2 px-3 rounded-xl bg-[#F3EFE7] hover:bg-white text-[#57534E] border border-[#D7D0C4] font-label text-xs transition"
               >
                 Vue Globale
               </button>
             </div>
-
           </div>
 
-          {/* DÉCOMPOSITION CINÉMATIQUE DE L'ÉCHAPPEMENT EN DIRECT */}
-          <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm dark:shadow-xl space-y-2 transition-colors">
-            <div className="flex items-center justify-between font-mono text-xs">
-              <span className="text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Cinématique de l&apos;Échappement</span>
-              </span>
-              <span className="text-slate-500 dark:text-slate-400 text-[11px]">{msElapsed} ms / 200 ms</span>
+          {/* Chaîne cinématique interactive */}
+          <div className={`${CREAM_CARD} rounded-2xl p-4 shadow-sm`}>
+            <div className="flex items-center justify-between border-b border-[#D7D0C4] pb-2.5 mb-3">
+              <h3 className="text-xs font-label uppercase tracking-[0.14em] text-[#9C7A43] font-bold flex items-center gap-2">
+                <Cog className="w-4 h-4" />
+                <span>Chaîne Cinématique Interactive (ETA 6497-1)</span>
+              </h3>
+              <span className="text-[10px] font-label text-[#79716B]">Cliquez une ligne</span>
             </div>
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-xs space-y-1">
-              <div className="font-bold text-amber-700 dark:text-amber-300 font-mono text-xs">{phaseTag}</div>
-              <p className="text-[11px] text-slate-600 dark:text-slate-400 font-light leading-relaxed">{phaseDesc}</p>
+
+            <div className="space-y-1.5 font-label text-xs">
+              {KINEMATIC_TABLE.map((row) => (
+                <button
+                  key={row.organ}
+                  onClick={() => setSelected(row.organ)}
+                  className={`w-full p-2 rounded-xl border flex items-center justify-between text-left transition ${
+                    selected === row.organ ? 'bg-white border-[#9C7A43]/60' : 'bg-[#F3EFE7] border-[#D7D0C4]/70 hover:bg-white'
+                  }`}
+                >
+                  <div>
+                    <span className={`font-bold ${row.accent === 'ruby' ? 'text-rose-700' : row.accent === 'sky' ? 'text-sky-700' : 'text-[#9C7A43]'}`}>
+                      {row.num} {row.name}
+                    </span>
+                    <span className="text-[10px] text-[#79716B] block">{row.detail}</span>
+                  </div>
+                  <span className={`px-2 py-0.5 rounded bg-white border border-[#D7D0C4] ${
+                    row.accent === 'ruby' ? 'text-rose-700' : row.accent === 'sky' ? 'text-sky-700' : 'text-[#171717]'
+                  }`}>
+                    {row.badge}
+                  </span>
+                </button>
+              ))}
             </div>
           </div>
-
         </div>
-
       </main>
 
+      {/* ================= PIED DE PAGE ================= */}
+      <footer className="border-t border-[#D7D0C4] bg-[#FAF7F1] py-3.5 px-5 mt-auto">
+        <div className="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-4 text-xs text-[#79716B]">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#9C7A43]" />
+            <span>
+              <strong className="text-[#171717]">HorloLearn.ch</strong> — Projet indépendant créé par un passionné d&apos;horlogerie • Écorché Éclaté 3D du Calibre ETA 6497-1.
+            </span>
+          </div>
+          <div className="font-label text-[11px]">
+            Modélisation WebGL Three.js procédurale • Engrenages épicycloïdaux, Échappement à ancre suisse &amp; Lubrification Moebius.
+          </div>
+        </div>
+      </footer>
+
+      {/* ================= MODALE D'AIDE (TOUCHE H) ================= */}
+      {helpOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className={`${CREAM_CARD} rounded-2xl max-w-xl w-full p-6 shadow-2xl`}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-display text-2xl font-medium text-[#171717]">
+                Prise en main <span className="text-[#C08A2D]">360°</span> du calibre
+              </h3>
+              <button
+                onClick={() => setHelpOpen(false)}
+                className={`w-9 h-9 rounded-lg ${CREAM_CARD} text-[#57534E] hover:text-[#171717] flex items-center justify-center transition`}
+                aria-label="Fermer l'aide"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="space-y-2.5 font-label text-xs">
+              {[
+                {
+                  icon: <Move className="w-4 h-4 text-[#9C7A43] mt-0.5" />,
+                  title: 'Rotation libre 360°',
+                  body: 'Glissez avec le clic gauche (ou 1 doigt) dans n\'importe quelle direction : aucune butée, aucun blocage aux pôles grâce au trackball quaternion.',
+                },
+                {
+                  icon: <Hand className="w-4 h-4 text-sky-700 mt-0.5" />,
+                  title: 'Déplacer (Pan)',
+                  body: 'Maj + glisser, clic droit, clic molette ou glisser à 2 doigts.',
+                },
+                {
+                  icon: <Search className="w-4 h-4 text-emerald-700 mt-0.5" />,
+                  title: 'Zoom',
+                  body: 'Molette (ou pincer à 2 doigts). De 5 (macro palettes) à 45 (vue d\'ensemble) avec zoom exponentiel progressif.',
+                },
+                {
+                  icon: <RotateCw className="w-4 h-4 text-rose-700 mt-0.5" />,
+                  title: 'Pivot écran à 2 doigts',
+                  body: 'Tournez deux doigts sur l\'écran : le calibre pivote sur lui-même (rotation en roulis 360°).',
+                },
+                {
+                  icon: <Crosshair className="w-4 h-4 text-[#7C5F33] mt-0.5" />,
+                  title: 'Sélection directe',
+                  body: 'Un simple clic (ou tap) sur n\'importe quel organe 3D ouvre sa fiche d\'établi. Double-clic : recentrer la vue.',
+                },
+                {
+                  icon: <Keyboard className="w-4 h-4 text-[#9C7A43] mt-0.5" />,
+                  title: 'Clavier',
+                  body: 'Flèches : rotation fine • + / − : zoom • R : rotation auto • B : retourner 180° • F : plein écran • P : photo PNG • H : cette aide.',
+                },
+              ].map((row) => (
+                <div key={row.title} className="flex items-start gap-3 p-2.5 rounded-xl bg-[#F3EFE7] border border-[#D7D0C4]/70">
+                  {row.icon}
+                  <div className="text-[#44403C] leading-relaxed">
+                    <strong className="text-[#171717]">{row.title}</strong> — {row.body}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
