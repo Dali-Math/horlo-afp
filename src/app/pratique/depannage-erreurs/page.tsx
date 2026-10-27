@@ -158,7 +158,7 @@ const CASES: CaseData[] = [
     cause: "Perte de friction de la chaussée sur la tige de roue de centre. Lanterner directement sans pige intérieure écrase le tube de façon ovale et fêle le métal.",
     geste: "Insérer impérativement une <strong>pige de calibrage cylindrique</strong> dans l'alésage avant d'utiliser la <strong>pince à lanterner Bergeon 6827</strong>. Couple visé : 15 à 25 cNm avec Moebius HP-1300.",
     tool: "Outil : Pince à lanterner Bergeon 6827 • Lubrifiant : Moebius HP-1300"
-  }}
+  }
 ];
 
 export default function DepannageErreursPage() {
