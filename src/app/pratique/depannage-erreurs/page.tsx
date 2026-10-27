@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 
 interface QuizOption {
@@ -59,8 +59,109 @@ const QUIZ_DATA: QuizQuestion[] = [
   }
 ];
 
+interface CaseData {
+  id: string;
+  num: string;
+  category: string;
+  title: string;
+  badImg: string;
+  goodImg: string;
+  badCaption: string;
+  goodCaption: string;
+  symptome: string;
+  cause: string;
+  geste: string;
+  tool: string;
+}
+
+const CASES: CaseData[] = [
+  {
+    id: "c1",
+    num: "01",
+    category: "Barillet & Énergie",
+    title: "Le ressort de barillet qui saute à l'insertion",
+    badImg: "/images/depannage/cas-01-error.jpg",
+    goodImg: "/images/depannage/cas-01-good.jpg",
+    badCaption: "⚠️ Éjection incontrôlée : Spire vrillée et feuillard hors plan",
+    goodCaption: "✅ Bon geste : remonte-ressort adapté, maintien sous protection et bride engagée.",
+    symptome: "Le ressort échappe violemment des doigts ou des brucelles, claque, se vrille en hélice ou raye le tambour de barillet.",
+    cause: "Tentative d'enroulement manuel sans outil adapté. La tension élastique exponentielle libère un couple de torsion incontrôlé.",
+    geste: "Toujours utiliser un <strong>remonte-ressort (estrapade Bergeon 2729)</strong> de calibre adéquat sous film protecteur Mylar. Redressement délicat à la pince plate à mors polis doux.",
+    tool: "Outil : Estrapade Bergeon • Lubrifiant : Moebius 8217 (3 touches à 120°)"
+  },
+  {
+    id: "c2",
+    num: "02",
+    category: "Rouage & Ébats",
+    title: "Le pont de rouage forcé & le pivot écrasé",
+    badImg: "/images/depannage/cas-02-error.jpg",
+    goodImg: "/images/depannage/cas-02-good.jpg",
+    badCaption: "⚠️ Forçage de pont : Pivot écrasé hors du trou de rubis",
+    goodCaption: "✅ Bon geste : le pont descend sans forcer, chaque pivot est centré et l'ébat est vérifié.",
+    symptome: "Après serrage des vis de pont, le rouage refuse de tourner. Au démontage, le pivot supérieur de la roue moyenne ou de seconde est tordu à 45° ou rompu.",
+    cause: "Le pivot n'était pas engagé dans la creusure du rubis. Serrer la vis applique une pression axiale destructrice sur un acier trempé de 0.08 mm de diamètre.",
+    geste: "<strong>Ne jamais forcer sur une vis de pont.</strong> Palper doucement chaque mobile à la brucelle douce en laiton ou buis : on doit voir et sentir le mobile flotter librement de haut en bas.",
+    tool: "Contrôle : Brucelle buis / laiton • Huilage : Moebius 9010 (1/2 de creusure)"
+  },
+  {
+    id: "c3",
+    num: "03",
+    category: "Échappement & Sécurité",
+    title: "L'ancre rebelle & le dard frottant sur le plateau",
+    badImg: "/images/depannage/cas-03-error.jpg",
+    goodImg: "/images/depannage/cas-03-good.jpg",
+    badCaption: "⚠️ Sécurité faussée : Le dard frotte contre le petit plateau",
+    goodCaption: "✅ Bon geste : garde au dard calibrée, passage libre de la cheville et ébats symétriques.",
+    symptome: "Le balancier s'arrête net sans cause apparente, avance de façon erratique ou produit un son de tic-tac dissymétrique au vibrographe.",
+    cause: "Le dard est faussé ou la cheville de plateau vient buter contre l'encoche de l'ancre. L'ébattement de sécurité n'est plus garanti.",
+    geste: "Contrôler la <strong>garde au dard</strong> sous binoculaire 10x : au repos, l'ancre poussée vers la touche ne doit jamais toucher le petit plateau sans dégagement par la cheville.",
+    tool: "Contrôle : Loupe 10x & Witschi • Lubrification : Moebius 9415 (levées uniquement)"
+  },
+  {
+    id: "c4",
+    num: "04",
+    category: "Organe Réglant",
+    title: "Le spiral en cône ou les spires collées",
+    badImg: "/images/depannage/cas-04-error.jpg",
+    goodImg: "/images/depannage/cas-04-good.jpg",
+    badCaption: "⚠️ Perte de planéité : Spires collées ou frottant sous le coq",
+    goodCaption: "✅ Bon geste : spiral parfaitement plan, spires concentriques et dégagement sous coq.",
+    symptome: "Le balancier bat avec une amplitude ridicule (< 160°) ou avance de 2 heures par jour. Les spires semblent emmêlées ou frottent le coq.",
+    cause: "Mauvaise manipulation avec la brucelle lors de la pose du coq, projection d'huile lors du huilage du contre-pivot, ou magnétisme intense.",
+    geste: "Dégraisser au <strong>bain One-Dip</strong> si les spires sont grasses, puis passer au <strong>démagnétiseur d'établi</strong>. Règle absolue : le spiral doit rester rigoureusement sec.",
+    tool: "Outils : Brucelles n°5 Dumont • Bain One-Dip • Démagnétiseur Elma"
+  },
+  {
+    id: "c5",
+    num: "05",
+    category: "Remontoir & Minuterie",
+    title: "Le coulant déboîté & la vis de rochet cisaillée",
+    badImg: "/images/depannage/cas-05-error.jpg",
+    goodImg: "/images/depannage/cas-05-good.jpg",
+    badCaption: "⚠️ Vis de tirette trop desserrée : Ergot échappé de la gorge du coulant",
+    goodCaption: "✅ Bon geste : vis repérée, déblocage mesuré et coulant maintenu dans son logement.",
+    symptome: "La couronne tourne dans le vide sans enclencher la mise à l'heure, ou la vis de couronne casse net au ras du pont lors d'une tentative de démontage.",
+    cause: "1) Vis de tirette trop desserrée lors du retrait de tige. 2) Ignorance du pas à gauche : forcer dans le sens anti-horaire sur une vis à filetage inversé.",
+    geste: "Toute vis horlogère portant <strong>3 traits sur sa tête se dévisse dans le sens horaire ↻</strong>. Ne desserrer la vis de tirette que d'un tour et demi maximum.",
+    tool: "Sens : Pas à gauche (3 traits) • Lubrification : Moebius 9504 / Klüber P125"
+  },
+  {
+    id: "c6",
+    num: "06",
+    category: "Aiguillage & Friction",
+    title: "La chaussée lâche & le lanternage délicat",
+    badImg: "/images/depannage/cas-06-error.jpg",
+    goodImg: "/images/depannage/cas-06-good.jpg",
+    badCaption: "⚠️ Chaussée mal positionnée : Friction altérée et risque d'écrasement",
+    goodCaption: "✅ Bon geste : pige de calibrage cylindrique insérée et lanternage équilibré.",
+    symptome: "Le rouage tourne parfaitement mais les aiguilles s'arrêtent au passage de la date à minuit. À la couronne, la mise à l'heure tourne trop facilement, sans résistance.",
+    cause: "Perte de friction de la chaussée sur la tige de roue de centre. Lanterner directement sans pige intérieure écrase le tube de façon ovale et fêle le métal.",
+    geste: "Insérer impérativement une <strong>pige de calibrage cylindrique</strong> dans l'alésage avant d'utiliser la <strong>pince à lanterner Bergeon 6827</strong>. Couple visé : 15 à 25 cNm avec Moebius HP-1300.",
+    tool: "Outil : Pince à lanterner Bergeon 6827 • Lubrifiant : Moebius HP-1300"
+  }}
+];
+
 export default function DepannageErreursPage() {
-  const [isDark, setIsDark] = useState<boolean>(false);
   const [views, setViews] = useState<Record<string, "bad" | "good">>({
     c1: "bad",
     c2: "bad",
@@ -75,29 +176,6 @@ export default function DepannageErreursPage() {
   const [selectedOpt, setSelectedOpt] = useState<number | null>(null);
   const [showHint, setShowHint] = useState<boolean>(false);
   const [feedback, setFeedback] = useState<{ isCorrect: boolean; text: string } | null>(null);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("horlo_theme");
-    if (saved === "dark") {
-      setIsDark(true);
-      document.documentElement.classList.add("dark");
-    } else {
-      setIsDark(false);
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    if (isDark) {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("horlo_theme", "light");
-      setIsDark(false);
-    } else {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("horlo_theme", "dark");
-      setIsDark(true);
-    }
-  };
 
   const setCaseView = (caseId: string, view: "bad" | "good") => {
     setViews((prev) => ({ ...prev, [caseId]: view }));
@@ -137,7 +215,7 @@ export default function DepannageErreursPage() {
   const q = QUIZ_DATA[currentQ];
 
   return (
-    <>
+    <div className="depannage-page-root">
       <style dangerouslySetInnerHTML={{ __html: `
 :root {
   --paper: #f6f1e8;
@@ -167,90 +245,44 @@ html.dark {
   --green: #10b981;
 }
 
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-
 .depannage-page-root {
   background: var(--paper);
   color: var(--ink);
   font-family: Inter, -apple-system, sans-serif;
   min-height: 100vh;
+  padding-top: 88px;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: Inter, -apple-system, sans-serif;
-  transition: background-color 0.25s ease, color 0.25s ease;
+.container {
+  width: min(1480px, calc(100% - 40px));
+  margin: 0 auto;
 }
-a { color: inherit; text-decoration: none; }
-button { font: inherit; cursor: pointer; }
-.container { width: min(1480px, calc(100% - 40px)); margin: 0 auto; }
 
-/* HEADER */
-header {
-  height: 72px;
-  background: var(--paper-2);
-  border-bottom: 1px solid var(--line);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  backdrop-filter: blur(14px);
-}
-.header-inner {
-  height: 100%;
+/* BREADCRUMB */
+.depannage-breadcrumb {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 32px;
-}
-.logo {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  white-space: nowrap;
-}
-.logo strong {
-  font: 500 32px Georgia, 'Times New Roman', serif;
-  letter-spacing: -0.03em;
-}
-.logo span {
-  color: var(--muted);
-  font-size: 13px;
-  padding-left: 14px;
-  border-left: 1px solid var(--line);
-  font-family: Inter, sans-serif;
-}
-nav { display: flex; gap: 32px; font-size: 13px; font-weight: 500; }
-nav a { padding: 26px 0 22px; position: relative; color: var(--muted); transition: color 0.2s; }
-nav a:hover, nav a.active { color: var(--ink); }
-nav a.active::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 16px;
-  height: 2px;
-  background: var(--gold);
-}
-.actions { display: flex; align-items: center; gap: 14px; font-size: 14px; }
-.theme-btn {
-  background: var(--paper);
-  border: 1px solid var(--line);
-  color: var(--ink);
-  padding: 6px 14px;
-  border-radius: 6px;
+  gap: 8px;
   font-size: 12px;
-  font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.2s;
+  font-family: ui-monospace, 'JetBrains Mono', monospace;
+  color: var(--muted);
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
 }
-.theme-btn:hover {
-  border-color: var(--gold);
+.depannage-breadcrumb a {
+  color: var(--muted);
+  transition: color 0.2s;
+}
+.depannage-breadcrumb a:hover {
+  color: var(--gold);
+}
+.depannage-breadcrumb .sep {
+  opacity: 0.5;
+}
+.depannage-breadcrumb .current {
+  color: var(--gold);
+  font-weight: 600;
 }
 
 /* HERO */
@@ -274,12 +306,12 @@ nav a.active::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(9,11,13,0.98) 0%, rgba(9,11,13,0.94) 34%, rgba(9,11,13,0.60) 60%, rgba(9,11,13,0.12) 100%);
+  background: linear-gradient(90deg, rgba(9,11,13,0.98) 0%, rgba(9,11,13,0.92) 40%, rgba(9,11,13,0.50) 65%, rgba(9,11,13,0.05) 100%);
 }
 .hero-content {
   position: relative;
   z-index: 2;
-  padding: 70px 0 64px;
+  padding: 64px 0;
   max-width: 720px;
 }
 .eyebrow {
@@ -297,14 +329,12 @@ nav a.active::after {
   height: 1px;
   background: var(--gold);
 }
-h1, h2, h3, h4 {
+.hero h1 {
   font-family: Georgia, 'Times New Roman', serif;
   font-weight: 500;
-}
-h1 {
-  font-size: clamp(48px, 6.5vw, 92px);
-  line-height: 0.92;
-  letter-spacing: -0.05em;
+  font-size: clamp(40px, 5.5vw, 76px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
   margin: 20px 0 18px;
 }
 .hero-lead {
@@ -332,27 +362,11 @@ h1 {
   font-family: Georgia, serif;
   font-size: 15px;
   transition: transform 0.2s, background-color 0.2s;
+  cursor: pointer;
 }
 .hero-btn:hover {
   background: var(--gold-dark);
   transform: translateY(-1px);
-}
-.hero-quote {
-  position: absolute;
-  right: 48px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
-  font: italic 19px/1.6 Georgia, serif;
-  color: #f2ece2;
-}
-.hero-quote::after {
-  content: "";
-  display: block;
-  width: 34px;
-  height: 1px;
-  background: var(--gold);
-  margin-top: 12px;
 }
 
 /* PILLARS */
@@ -376,6 +390,8 @@ h1 {
   padding: 10px 14px 10px 10px;
   min-height: 106px;
   transition: all 0.2s ease;
+  text-decoration: none;
+  color: inherit;
 }
 .pillar:hover {
   border-color: var(--gold);
@@ -390,7 +406,9 @@ h1 {
 }
 .pillar h3 {
   margin: 0 0 4px;
-  font-size: 19px;
+  font-size: 18px;
+  font-family: Georgia, serif;
+  font-weight: 500;
   color: var(--ink);
 }
 .pillar p {
@@ -402,11 +420,11 @@ h1 {
 .arrow {
   display: block;
   color: var(--gold);
-  font-size: 20px;
-  margin-top: 5px;
+  font-size: 18px;
+  margin-top: 4px;
 }
 
-/* SECTION TITLE */
+/* SECTION */
 .section {
   padding: 56px 0 24px;
 }
@@ -433,13 +451,14 @@ h1 {
   margin: 12px 0 28px;
 }
 .section-title-row h2 {
-  font-size: clamp(38px, 4.2vw, 64px);
+  font-family: Georgia, serif;
+  font-size: clamp(32px, 3.8vw, 56px);
   line-height: 1.02;
   margin: 0;
   letter-spacing: -0.04em;
 }
 .section-note {
-  max-width: 260px;
+  max-width: 300px;
   font: italic 13px/1.55 Georgia, serif;
   color: var(--muted);
   padding-left: 36px;
@@ -479,6 +498,7 @@ h1 {
   justify-content: space-between;
   padding: 12px 14px;
   border-bottom: 1px solid var(--line);
+  background: var(--paper);
 }
 .case-head-left {
   display: flex;
@@ -497,10 +517,11 @@ h1 {
   text-transform: uppercase;
   color: var(--muted);
 }
+
 /* Toggle Erreur vs Bon geste */
 .view-toggle {
   display: inline-flex;
-  background: var(--paper);
+  background: var(--paper-2);
   border: 1px solid var(--line);
   border-radius: 4px;
   padding: 2px;
@@ -511,24 +532,25 @@ h1 {
   color: var(--muted);
   font-size: 11px;
   font-family: ui-monospace, 'JetBrains Mono', monospace;
-  padding: 3px 8px;
+  padding: 4px 9px;
   border-radius: 3px;
+  cursor: pointer;
   transition: all 0.2s;
 }
 .vt-btn.active.bad {
-  background: rgba(185, 28, 28, 0.12);
+  background: rgba(185, 28, 28, 0.15);
   color: var(--bad-red);
-  font-weight: 600;
+  font-weight: 700;
 }
 .vt-btn.active.good {
-  background: rgba(21, 128, 61, 0.12);
+  background: rgba(21, 128, 61, 0.15);
   color: var(--good-green);
-  font-weight: 600;
+  font-weight: 700;
 }
 
-/* Image / SVG Container */
+/* Image Container */
 .case-image {
-  height: 290px;
+  height: 280px;
   background: #0d1117;
   overflow: hidden;
   position: relative;
@@ -542,153 +564,42 @@ h1 {
   object-fit: cover;
   display: block;
 }
-.case-svg {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.case-image .caption-badge {
-  position: absolute;
-  bottom: 10px;
-  left: 12px;
-  right: 12px;
-  background: rgba(13, 17, 23, 0.88);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #e2e8f0;
-  padding: 6px 10px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-family: ui-monospace, 'JetBrains Mono', monospace;
-  backdrop-filter: blur(4px);
-}
 
-.case-image .caption-badge.good {
-  background: rgba(7, 22, 16, 0.88);
-  border-color: rgba(21, 128, 61, 0.34);
-  color: #ecfdf5;
-}
-.case-image .caption-badge.bad {
-  background: rgba(36, 7, 7, 0.88);
-  border-color: rgba(185, 28, 28, 0.30);
-  color: #fef2f2;
-}
-.case-good-view,
-.case-bad-photo-view {
-  position: relative;
-  width: 100%;
-  height: 100%;
+/* DEDICATED STATUS BAR UNDER IMAGE (NO OVERLAP WITH PHOTO TEXT) */
+.case-status-bar {
+  padding: 8px 14px;
+  font-size: 11px;
+  line-height: 1.4;
+  font-family: ui-monospace, 'JetBrains Mono', monospace;
+  border-bottom: 1px solid var(--line);
   display: flex;
   align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: #0d1117;
+  gap: 8px;
 }
-.case-good-view > img,
-.case-bad-photo-view > img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+.case-status-bar.bad {
+  background: #240707;
+  color: #fef2f2;
+  border-color: rgba(185, 28, 28, 0.35);
 }
-.case-good-view > img {
-  filter: saturate(0.94) contrast(1.05) brightness(1.02);
-}
-.case-bad-photo-view > img {
-  filter: saturate(0.84) contrast(1.05) brightness(0.92);
-}
-.case-good-view::after,
-.case-bad-photo-view::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-.case-good-view::after {
-  background: linear-gradient(180deg, rgba(3,8,12,0.08) 0%, rgba(3,8,12,0.24) 45%, rgba(3,8,12,0.46) 100%);
-}
-.case-bad-photo-view::after {
-  background: linear-gradient(180deg, rgba(22,4,4,0.10) 0%, rgba(22,4,4,0.28) 45%, rgba(22,4,4,0.58) 100%);
-}
-.case-good-meta,
-.case-bad-meta {
-  position: absolute;
-  top: 10px;
-  left: 12px;
-  right: 12px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-  z-index: 2;
-}
-.case-good-tag,
-.case-good-note,
-.case-bad-tag,
-.case-bad-note {
-  background: rgba(255,255,255,0.92);
-  color: #0f172a;
-  border: 1px solid rgba(255,255,255,0.66);
-  border-radius: 4px;
-  padding: 6px 9px;
-  font-size: 10px;
-  line-height: 1.35;
-  font-family: ui-monospace, 'JetBrains Mono', monospace;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.18);
-}
-.case-good-tag { color: var(--good-green); font-weight: 700; white-space: nowrap; }
-.case-bad-tag { color: var(--bad-red); font-weight: 700; white-space: nowrap; }
-.case-good-note,
-.case-bad-note { max-width: 70%; }
-.case-good-focus,
-.case-bad-focus {
-  position: absolute;
-  border-radius: 10px;
-  z-index: 2;
-  pointer-events: none;
-}
-.case-good-focus {
-  border: 2px solid rgba(16, 185, 129, 0.95);
-  box-shadow: 0 0 0 2px rgba(255,255,255,0.18), 0 0 24px rgba(16,185,129,0.28);
-}
-.case-bad-focus {
-  border: 2px solid rgba(239, 68, 68, 0.95);
-  box-shadow: 0 0 0 2px rgba(255,255,255,0.12), 0 0 24px rgba(239,68,68,0.22);
-}
-.focus-c1 { left: 31%; top: 17%; width: 36%; height: 47%; }
-.focus-c2 { left: 41%; top: 15%; width: 18%; height: 58%; }
-.focus-c3 { left: 47%; top: 24%; width: 27%; height: 31%; }
-.focus-c4 { left: 30%; top: 16%; width: 40%; height: 43%; }
-.focus-c5 { left: 50%; top: 24%; width: 22%; height: 24%; }
-.focus-c6 { left: 40%; top: 26%; width: 24%; height: 30%; }
-@media(max-width: 720px) {
-  .case-good-meta,
-  .case-bad-meta { flex-direction: column; align-items: flex-start; }
-  .case-good-note,
-  .case-bad-note { max-width: 100%; }
+.case-status-bar.good {
+  background: #071610;
+  color: #ecfdf5;
+  border-color: rgba(21, 128, 61, 0.35);
 }
 
 /* Body */
-.case-
-.depannage-page-root {
-  background: var(--paper);
-  color: var(--ink);
-  font-family: Inter, -apple-system, sans-serif;
-  min-height: 100vh;
-  transition: background-color 0.25s ease, color 0.25s ease;
-}
-
-body {
+.case-body {
   padding: 20px 18px 24px;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 .case-body h3 {
-  font-size: 24px;
-  line-height: 1.1;
-  margin: 0 0 18px;
+  font-family: Georgia, serif;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.15;
+  margin: 0 0 16px;
   letter-spacing: -0.02em;
   color: var(--ink);
 }
@@ -732,7 +643,7 @@ body {
   color: var(--muted);
   background: var(--paper);
   border: 1px solid var(--line);
-  padding: 5px 10px;
+  padding: 6px 10px;
   border-radius: 4px;
 }
 
@@ -750,9 +661,13 @@ body {
 }
 .quiz-copy {
   padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .quiz-copy h2 {
-  font-size: 38px;
+  font-family: Georgia, serif;
+  font-size: 34px;
   line-height: 1.05;
   margin: 14px 0 12px;
   letter-spacing: -0.03em;
@@ -772,6 +687,7 @@ body {
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.2s;
+  align-self: flex-start;
 }
 .quiz-btn:hover {
   background: var(--gold-dark);
@@ -783,6 +699,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
 }
 .quiz-photo img {
   width: 100%;
@@ -792,7 +710,6 @@ body {
 }
 .quiz-options {
   padding: 32px 28px;
-  border-left: 1px solid var(--line);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -817,7 +734,7 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  width: 33%;
+  width: var(--progress-width, 33%);
   height: 2px;
   background: var(--gold);
   transition: width 0.3s;
@@ -830,6 +747,12 @@ body {
   font: 14px Georgia, serif;
   color: var(--ink);
   cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: background-color 0.15s;
+}
+.option:hover {
+  background: rgba(169, 134, 77, 0.08);
 }
 .option input {
   appearance: none;
@@ -840,6 +763,7 @@ body {
   position: relative;
   outline: none;
   cursor: pointer;
+  flex-shrink: 0;
 }
 .option input:checked {
   border-color: var(--gold);
@@ -873,21 +797,6 @@ body {
   font-family: Inter, sans-serif;
 }
 
-/* FOOTER */
-footer {
-  padding: 36px 0 56px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 12px;
-  background: var(--paper-2);
-}
-footer .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-}
-
 /* RESPONSIVE */
 @media (max-width: 1200px) {
   .case-grid { grid-template-columns: repeat(2, 1fr); }
@@ -896,44 +805,29 @@ footer .container {
   .quiz-options { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); }
 }
 @media (max-width: 768px) {
-  nav { display: none; }
-  .hero-quote { display: none; }
+  .depannage-page-root { padding-top: 76px; }
   .case-grid { grid-template-columns: 1fr; }
   .pillar-grid { grid-template-columns: 1fr; }
   .quiz-box { grid-template-columns: 1fr; }
+  .quiz-photo { border-left: 0; border-right: 0; border-top: 1px solid var(--line); }
   .section-title-row { flex-direction: column; align-items: flex-start; }
   .section-note { padding-left: 0; max-width: none; }
   .section-note::before { display: none; }
-  footer .container { flex-direction: column; text-align: center; }
 }
 ` }} />
 
-      <div className="depannage-page-root">
-      {/* HEADER */}
-      <header>
-        <div className="container header-inner">
-          <Link href="/" className="logo">
-            <strong>HorloLearn</strong>
-            <span>Dépannage &amp; Erreurs courantes d'établi</span>
-          </Link>
-
-          <nav>
-            <Link href="/theorie">Théorie</Link>
-            <Link href="/pratique" className="active">Pratique &amp; Atelier</Link>
-            <Link href="/quiz">Quiz &amp; Défis</Link>
-            <Link href="/outils">Outils &amp; Fiches</Link>
-          </nav>
-
-          <div className="actions">
-            <button className="theme-btn" onClick={toggleTheme}>
-              <span id="themeIcon">{isDark ? "🌙" : "☀️"}</span>
-              <span id="themeLabel">{isDark ? "Mode Nuit" : "Mode Clair"}</span>
-            </button>
-          </div>
+      {/* FIL D'ARIANE PROPRE (PAS DE DOUBLE EN-TÊTE) */}
+      <div className="container">
+        <div className="depannage-breadcrumb">
+          <Link href="/">HorloLearn</Link>
+          <span className="sep">/</span>
+          <Link href="/pratique">Pratique &amp; Atelier</Link>
+          <span className="sep">/</span>
+          <span className="current">Dépannage &amp; Erreurs courantes d'établi</span>
         </div>
-      </header>
+      </div>
 
-      {/* HERO */}
+      {/* ==================== HERO ==================== */}
       <div className="hero">
         <div className="hero-photo"></div>
         <div className="container">
@@ -949,12 +843,9 @@ footer .container {
             <a href="#cases" className="hero-btn">Explorer les 6 cas d'atelier ↓</a>
           </div>
         </div>
-        <div className="hero-quote">
-          « Dans l'artisanat horloger, un pivot ne casse pas par fatalité<br />mais par précipitation. Le bon geste ne s'improvise jamais. »
-        </div>
       </div>
 
-      {/* 4 PILIERS */}
+      {/* ==================== 4 PILIERS ==================== */}
       <section className="pillars">
         <div className="container">
           <div className="pillar-grid">
@@ -994,7 +885,7 @@ footer .container {
         </div>
       </section>
 
-      {/* SECTION 6 CAS */}
+      {/* ==================== SECTION 6 CAS ==================== */}
       <section className="section" id="cases">
         <div className="container">
           <div className="section-kicker">Diagnostic sous loupe</div>
@@ -1006,454 +897,99 @@ footer .container {
           </div>
 
           <div className="case-grid">
-
-            {/* CAS 01 */}
-            <article className="case" id="case1">
-              <div className="case-head">
-                <div className="case-head-left">
-                  <span className="case-no">01</span>
-                  <span className="case-cat">Barillet &amp; Énergie</span>
-                </div>
-                <div className="view-toggle">
-                  <button
-                    className={`vt-btn ${views.c1 === "bad" ? "active bad" : ""}`}
-                    onClick={() => setCaseView("c1", "bad")}
-                  >
-                    ❌ Erreur
-                  </button>
-                  <button
-                    className={`vt-btn ${views.c1 === "good" ? "active good" : ""}`}
-                    onClick={() => setCaseView("c1", "good")}
-                  >
-                    ✅ Bon geste
-                  </button>
-                </div>
-              </div>
-
-              <div className="case-image">
-                {views.c1 === "bad" ? (
-                  <div id="img-c1-bad" style={{ width: "100%", height: "100%" }}>
-                    <img src="/images/depannage/cas-01-error.jpg" alt="Ressort de barillet éjecté" />
-                    <div className="caption-badge">⚠️ Éjection incontrôlée : Spire vrillée et feuillard hors plan</div>
-                  </div>
-                ) : (
-                  <div id="img-c1-good" className="case-svg case-good-view">
-                    <img src="/images/depannage/cas-01-good.jpg" alt="Bon geste pour l'insertion du ressort de barillet" />
-                    <div className="case-good-meta">
-                      <div className="case-good-tag">BON GESTE · VISUEL</div>
-                      <div className="case-good-note">Insertion guidée du ressort avec maintien maîtrisé et contrôle du sens d'enroulement.</div>
+            {CASES.map((c) => {
+              const isBad = views[c.id] === "bad";
+              return (
+                <article key={c.id} className="case" id={`case${c.num.replace(/^0+/, "")}`}>
+                  <div className="case-head">
+                    <div className="case-head-left">
+                      <span className="case-no">{c.num}</span>
+                      <span className="case-cat">{c.category}</span>
                     </div>
-                    <div className="case-good-focus focus-c1"></div>
-                    <div className="caption-badge good">✅ Bon geste : remonte-ressort adapté, maintien sous protection et bride correctement engagée.</div>
-                  </div>
-                )}
-              </div>
-
-              <div className="case-body">
-                <h3>Le ressort de barillet qui saute à l'insertion</h3>
-                <div className="fact">
-                  <div className="fact-icon">⚡</div>
-                  <div>
-                    <strong>Symptôme d'établi</strong>
-                    <p>Le ressort échappe violemment des doigts ou des brucelles, claque, se vrille en hélice ou raye le tambour de barillet.</p>
-                  </div>
-                </div>
-                <div className="fact">
-                  <div className="fact-icon">⚙</div>
-                  <div>
-                    <strong>Cause mécanique</strong>
-                    <p>Tentative d'enroulement manuel sans outil adapté. La tension élastique exponentielle libère un couple de torsion incontrôlé.</p>
-                  </div>
-                </div>
-                <div className="fact rescue">
-                  <div className="fact-icon">✓</div>
-                  <div>
-                    <strong>Geste d'atelier &amp; Règle d'or</strong>
-                    <p>Toujours utiliser un <strong>remonte-ressort (estrapade Bergeon 2729)</strong> de calibre adéquat sous film protecteur Mylar. Redressement délicat à la pince plate à mors polis doux.</p>
-                  </div>
-                </div>
-                <div className="tool-tag">Outil : Estrapade Bergeon • Lubrifiant : Moebius 8217 (3 touches à 120°)</div>
-              </div>
-            </article>
-
-            {/* CAS 02 */}
-            <article className="case" id="case2">
-              <div className="case-head">
-                <div className="case-head-left">
-                  <span className="case-no">02</span>
-                  <span className="case-cat">Rouage &amp; Ébats</span>
-                </div>
-                <div className="view-toggle">
-                  <button
-                    className={`vt-btn ${views.c2 === "bad" ? "active bad" : ""}`}
-                    onClick={() => setCaseView("c2", "bad")}
-                  >
-                    ❌ Erreur
-                  </button>
-                  <button
-                    className={`vt-btn ${views.c2 === "good" ? "active good" : ""}`}
-                    onClick={() => setCaseView("c2", "good")}
-                  >
-                    ✅ Bon geste
-                  </button>
-                </div>
-              </div>
-
-              <div className="case-image">
-                {views.c2 === "bad" ? (
-                  <div id="img-c2-bad" style={{ width: "100%", height: "100%" }}>
-                    <img src="/images/depannage/cas-02-error.jpg" alt="Pivot tordu sous le pont" />
-                    <div className="caption-badge">⚠️ Forçage de pont : Pivot écrasé hors du trou de rubis</div>
-                  </div>
-                ) : (
-                  <div id="img-c2-good" className="case-svg case-good-view">
-                    <img src="/images/depannage/cas-02-good.jpg" alt="Bon geste pour poser un pont de rouage sans écraser les pivots" />
-                    <div className="case-good-meta">
-                      <div className="case-good-tag">BON GESTE · VISUEL</div>
-                      <div className="case-good-note">Tous les pivots sont présentés à la verticale avant la descente libre du pont.</div>
+                    <div className="view-toggle">
+                      <button
+                        className={`vt-btn ${isBad ? "active bad" : ""}`}
+                        onClick={() => setCaseView(c.id, "bad")}
+                      >
+                        ❌ Erreur
+                      </button>
+                      <button
+                        className={`vt-btn ${!isBad ? "active good" : ""}`}
+                        onClick={() => setCaseView(c.id, "good")}
+                      >
+                        ✅ Bon geste
+                      </button>
                     </div>
-                    <div className="case-good-focus focus-c2"></div>
-                    <div className="caption-badge good">✅ Bon geste : le pont descend sans forcer, chaque pivot est centré et l'ébat est vérifié.</div>
                   </div>
-                )}
-              </div>
 
-              <div className="case-body">
-                <h3>Le pont de rouage forcé &amp; le pivot écrasé</h3>
-                <div className="fact">
-                  <div className="fact-icon">⚡</div>
-                  <div>
-                    <strong>Symptôme d'établi</strong>
-                    <p>Après serrage des vis de pont, le rouage refuse de tourner. Au démontage, le pivot supérieur de la roue moyenne ou de seconde est tordu à 45° ou rompu.</p>
+                  {/* Photo pure sans texte ou boîte qui superpose */}
+                  <div className="case-image">
+                    <img
+                      src={isBad ? c.badImg : c.goodImg}
+                      alt={isBad ? c.title : c.goodCaption}
+                    />
                   </div>
-                </div>
-                <div className="fact">
-                  <div className="fact-icon">⚙</div>
-                  <div>
-                    <strong>Cause mécanique</strong>
-                    <p>Le pivot n'était pas engagé dans la creusure du rubis. Serrer la vis applique une pression axiale destructrice sur un acier trempé de 0.08 mm de diamètre.</p>
-                  </div>
-                </div>
-                <div className="fact rescue">
-                  <div className="fact-icon">✓</div>
-                  <div>
-                    <strong>Geste d'atelier &amp; Règle d'or</strong>
-                    <p><strong>Ne jamais forcer sur une vis de pont.</strong> Palper doucement chaque mobile à la brucelle douce en laiton ou buis : on doit voir et sentir le mobile flotter librement de haut en bas.</p>
-                  </div>
-                </div>
-                <div className="tool-tag">Contrôle : Brucelle buis / laiton • Huilage : Moebius 9010 (1/2 de creusure)</div>
-              </div>
-            </article>
 
-            {/* CAS 03 */}
-            <article className="case" id="case3">
-              <div className="case-head">
-                <div className="case-head-left">
-                  <span className="case-no">03</span>
-                  <span className="case-cat">Échappement &amp; Sécurité</span>
-                </div>
-                <div className="view-toggle">
-                  <button
-                    className={`vt-btn ${views.c3 === "bad" ? "active bad" : ""}`}
-                    onClick={() => setCaseView("c3", "bad")}
-                  >
-                    ❌ Erreur
-                  </button>
-                  <button
-                    className={`vt-btn ${views.c3 === "good" ? "active good" : ""}`}
-                    onClick={() => setCaseView("c3", "good")}
-                  >
-                    ✅ Bon geste
-                  </button>
-                </div>
-              </div>
-
-              <div className="case-image">
-                {views.c3 === "bad" ? (
-                  <div id="img-c3-bad" style={{ width: "100%", height: "100%" }}>
-                    <img src="/images/depannage/cas-03-error.jpg" alt="Dard et fourchette d'ancre" />
-                    <div className="caption-badge">⚠️ Sécurité faussée : Le dard frotte contre le petit plateau</div>
+                  {/* Barre de statut dédiée, propre et nette sous la photo */}
+                  <div className={`case-status-bar ${isBad ? "bad" : "good"}`}>
+                    <span>{isBad ? c.badCaption : c.goodCaption}</span>
                   </div>
-                ) : (
-                  <div id="img-c3-good" className="case-svg case-good-view">
-                    <img src="/images/depannage/cas-03-good.jpg" alt="Bon geste pour contrôler l'ancre et le dard" />
-                    <div className="case-good-meta">
-                      <div className="case-good-tag">BON GESTE · VISUEL</div>
-                      <div className="case-good-note">Passage libre de la cheville, garde au dard régulière et contrôle sous fort grossissement.</div>
+
+                  <div className="case-body">
+                    <h3>{c.title}</h3>
+                    <div className="fact">
+                      <div className="fact-icon">⚡</div>
+                      <div>
+                        <strong>Symptôme d'établi</strong>
+                        <p>{c.symptome}</p>
+                      </div>
                     </div>
-                    <div className="case-good-focus focus-c3"></div>
-                    <div className="caption-badge good">✅ Bon geste : ancre correctement réglée avec sécurité et dégagement conformes.</div>
-                  </div>
-                )}
-              </div>
-
-              <div className="case-body">
-                <h3>L'ancre rebelle &amp; le dard frottant sur le plateau</h3>
-                <div className="fact">
-                  <div className="fact-icon">⚡</div>
-                  <div>
-                    <strong>Symptôme d'établi</strong>
-                    <p>Le balancier s'arrête net sans cause apparente, avance de façon erratique ou produit un son de tic-tac complètement dissymétrique au vibrographe.</p>
-                  </div>
-                </div>
-                <div className="fact">
-                  <div className="fact-icon">⚙</div>
-                  <div>
-                    <strong>Cause mécanique</strong>
-                    <p>Le dard est faussé ou la cheville de plateau vient buter contre l'encoche de l'ancre. L'ébattement de sécurité n'est plus garanti.</p>
-                  </div>
-                </div>
-                <div className="fact rescue">
-                  <div className="fact-icon">✓</div>
-                  <div>
-                    <strong>Geste d'atelier &amp; Règle d'or</strong>
-                    <p>Contrôler la <strong>garde au dard</strong> sous binoculaire 10x : au repos, l'ancre poussée vers la touche ne doit jamais toucher le petit plateau sans dégagement par la cheville.</p>
-                  </div>
-                </div>
-                <div className="tool-tag">Contrôle : Loupe 10x &amp; Witschi • Lubrification : Moebius 9415 (levées uniquement)</div>
-              </div>
-            </article>
-
-            {/* CAS 04 */}
-            <article className="case" id="case4">
-              <div className="case-head">
-                <div className="case-head-left">
-                  <span className="case-no">04</span>
-                  <span className="case-cat">Organe Réglant</span>
-                </div>
-                <div className="view-toggle">
-                  <button
-                    className={`vt-btn ${views.c4 === "bad" ? "active bad" : ""}`}
-                    onClick={() => setCaseView("c4", "bad")}
-                  >
-                    ❌ Erreur
-                  </button>
-                  <button
-                    className={`vt-btn ${views.c4 === "good" ? "active good" : ""}`}
-                    onClick={() => setCaseView("c4", "good")}
-                  >
-                    ✅ Bon geste
-                  </button>
-                </div>
-              </div>
-
-              <div className="case-image">
-                {views.c4 === "bad" ? (
-                  <div id="img-c4-bad" style={{ width: "100%", height: "100%" }}>
-                    <img src="/images/depannage/cas-04-error.jpg" alt="Spiral en cône et coq" />
-                    <div className="caption-badge">⚠️ Perte de planéité : Spires collées ou frottant sous le coq</div>
-                  </div>
-                ) : (
-                  <div id="img-c4-good" className="case-svg case-good-view">
-                    <img src="/images/depannage/cas-04-good.jpg" alt="Bon geste pour contrôler un balancier spiral" />
-                    <div className="case-good-meta">
-                      <div className="case-good-tag">BON GESTE · VISUEL</div>
-                      <div className="case-good-note">Spiral plat, concentrique, propre et bien dégagé du coq et de la raquette.</div>
+                    <div className="fact">
+                      <div className="fact-icon">⚙</div>
+                      <div>
+                        <strong>Cause mécanique</strong>
+                        <p>{c.cause}</p>
+                      </div>
                     </div>
-                    <div className="case-good-focus focus-c4"></div>
-                    <div className="caption-badge good">✅ Bon geste : contrôle de la planéité, démagnétisation si besoin et spiral parfaitement libre.</div>
-                  </div>
-                )}
-              </div>
-
-              <div className="case-body">
-                <h3>Le spiral en cône ou les spires collées</h3>
-                <div className="fact">
-                  <div className="fact-icon">⚡</div>
-                  <div>
-                    <strong>Symptôme d'établi</strong>
-                    <p>Le balancier bat avec une amplitude ridicule (&lt; 160°) ou avance de 2 heures par jour. Les spires semblent emmêlées ou frottent le coq.</p>
-                  </div>
-                </div>
-                <div className="fact">
-                  <div className="fact-icon">⚙</div>
-                  <div>
-                    <strong>Cause mécanique</strong>
-                    <p>Mauvaise manipulation avec la brucelle lors de la pose du coq, projection d'huile lors du lubrification du contre-pivot, ou magnétisme intense.</p>
-                  </div>
-                </div>
-                <div className="fact rescue">
-                  <div className="fact-icon">✓</div>
-                  <div>
-                    <strong>Geste d'atelier &amp; Règle d'or</strong>
-                    <p>Dégraisser au <strong>bain One-Dip</strong> si les spires sont grasses, puis passer au <strong>démagnétiseur d'établi</strong>. Règle absolue : le spiral doit rester rigoureusement sec.</p>
-                  </div>
-                </div>
-                <div className="tool-tag">Outils : Brucelles n°5 Dumont • Bain One-Dip • Démagnétiseur Elma</div>
-              </div>
-            </article>
-
-            {/* CAS 05 */}
-            <article className="case" id="case5">
-              <div className="case-head">
-                <div className="case-head-left">
-                  <span className="case-no">05</span>
-                  <span className="case-cat">Remontoir &amp; Minuterie</span>
-                </div>
-                <div className="view-toggle">
-                  <button
-                    className={`vt-btn ${views.c5 === "bad" ? "active bad" : ""}`}
-                    onClick={() => setCaseView("c5", "bad")}
-                  >
-                    ❌ Erreur
-                  </button>
-                  <button
-                    className={`vt-btn ${views.c5 === "good" ? "active good" : ""}`}
-                    onClick={() => setCaseView("c5", "good")}
-                  >
-                    ✅ Bon geste
-                  </button>
-                </div>
-              </div>
-
-              <div className="case-image">
-                {views.c5 === "bad" ? (
-                  <div id="img-c5-bad" className="case-svg case-bad-photo-view">
-                    <img src="/images/depannage/cas-05-error.jpg" alt="Erreur sur le remontoir et la tirette" />
-                    <div className="case-bad-meta">
-                      <div className="case-bad-tag">ERREUR · VISUEL</div>
-                      <div className="case-bad-note">Repère du défaut : desserrage excessif, sens de dévissage erroné ou organe sorti de son logement.</div>
+                    <div className="fact rescue">
+                      <div className="fact-icon">✓</div>
+                      <div>
+                        <strong>Geste d'atelier &amp; Règle d'or</strong>
+                        <p dangerouslySetInnerHTML={{ __html: c.geste }} />
+                      </div>
                     </div>
-                    <div className="case-bad-focus focus-c5"></div>
-                    <div className="caption-badge bad">❌ Erreur illustrée : intervention mal repérée sur le remontoir, avec risque de coulant déboîté ou de vis cisaillée.</div>
+                    <div className="tool-tag">{c.tool}</div>
                   </div>
-                ) : (
-                  <div id="img-c5-good" className="case-svg case-good-view">
-                    <img src="/images/depannage/cas-05-good.jpg" alt="Bon geste pour intervenir sur le remontoir et le coulant" />
-                    <div className="case-good-meta">
-                      <div className="case-good-tag">BON GESTE · VISUEL</div>
-                      <div className="case-good-note">Desserrage limité, maintien de la tirette et extraction de tige sans effort parasite.</div>
-                    </div>
-                    <div className="case-good-focus focus-c5"></div>
-                    <div className="caption-badge good">✅ Bon geste : vis repérée, déblocage mesuré et coulant maintenu dans son logement.</div>
-                  </div>
-                )}
-              </div>
-
-              <div className="case-body">
-                <h3>Le coulant déboîté &amp; la vis de rochet cisaillée</h3>
-                <div className="fact">
-                  <div className="fact-icon">⚡</div>
-                  <div>
-                    <strong>Symptôme d'établi</strong>
-                    <p>La couronne tourne dans le vide sans enclencher la mise à l'heure, ou la vis de couronne casse net au ras du pont lors d'une tentative de démontage.</p>
-                  </div>
-                </div>
-                <div className="fact">
-                  <div className="fact-icon">⚙</div>
-                  <div>
-                    <strong>Cause mécanique</strong>
-                    <p>1) Vis de tirette trop desserrée lors du retrait de tige. 2) Ignorance du pas à gauche : forcer dans le sens anti-horaire sur une vis à filetage inversé.</p>
-                  </div>
-                </div>
-                <div className="fact rescue">
-                  <div className="fact-icon">✓</div>
-                  <div>
-                    <strong>Geste d'atelier &amp; Règle d'or</strong>
-                    <p>Toute vis horlogère portant <strong>3 traits sur sa tête se dévisse dans le sens horaire ↻</strong>. Ne desserrer la vis de tirette que d'un tour et demi maximum.</p>
-                  </div>
-                </div>
-                <div className="tool-tag">Sens : Pas à gauche (3 traits) • Lubrification : Moebius 9504 / Klüber P125</div>
-              </div>
-            </article>
-
-            {/* CAS 06 */}
-            <article className="case" id="case6">
-              <div className="case-head">
-                <div className="case-head-left">
-                  <span className="case-no">06</span>
-                  <span className="case-cat">Aiguillage &amp; Friction</span>
-                </div>
-                <div className="view-toggle">
-                  <button
-                    className={`vt-btn ${views.c6 === "bad" ? "active bad" : ""}`}
-                    onClick={() => setCaseView("c6", "bad")}
-                  >
-                    ❌ Erreur
-                  </button>
-                  <button
-                    className={`vt-btn ${views.c6 === "good" ? "active good" : ""}`}
-                    onClick={() => setCaseView("c6", "good")}
-                  >
-                    ✅ Bon geste
-                  </button>
-                </div>
-              </div>
-
-              <div className="case-image">
-                {views.c6 === "bad" ? (
-                  <div id="img-c6-bad" className="case-svg case-bad-photo-view">
-                    <img src="/images/depannage/cas-06-error.jpg" alt="Erreur de lanternage et de friction sur la chaussée" />
-                    <div className="case-bad-meta">
-                      <div className="case-bad-tag">ERREUR · VISUEL</div>
-                      <div className="case-bad-note">Repère du défaut : appui mal réparti et lanternage sans soutien interne, avec écrasement possible.</div>
-                    </div>
-                    <div className="case-bad-focus focus-c6"></div>
-                    <div className="caption-badge bad">❌ Erreur illustrée : chaussée ou tube pris de travers, friction altérée et risque d'ovalisation.</div>
-                  </div>
-                ) : (
-                  <div id="img-c6-good" className="case-svg case-good-view">
-                    <img src="/images/depannage/cas-06-good.jpg" alt="Bon geste pour le lanternage et la pose de chaussée" />
-                    <div className="case-good-meta">
-                      <div className="case-good-tag">BON GESTE · VISUEL</div>
-                      <div className="case-good-note">Axe soutenu par pige de calibrage avant lanternage pour éviter toute ovalisation.</div>
-                    </div>
-                    <div className="case-good-focus focus-c6"></div>
-                    <div className="caption-badge good">✅ Bon geste : chaussée calibrée, friction contrôlée et pose régulière sans déformation.</div>
-                  </div>
-                )}
-              </div>
-
-              <div className="case-body">
-                <h3>La chaussée lâche &amp; le lanternage délicat</h3>
-                <div className="fact">
-                  <div className="fact-icon">⚡</div>
-                  <div>
-                    <strong>Symptôme d'établi</strong>
-                    <p>Le rouage tourne parfaitement mais les aiguilles s'arrêtent au passage de la date à minuit. À la couronne, la mise à l'heure tourne trop facilement, sans résistance.</p>
-                  </div>
-                </div>
-                <div className="fact">
-                  <div className="fact-icon">⚙</div>
-                  <div>
-                    <strong>Cause mécanique</strong>
-                    <p>Perte de friction de la chaussée sur la tige de roue de centre. Lanterner directement sans pige intérieure écrase le tube de façon ovale et fêle le métal.</p>
-                  </div>
-                </div>
-                <div className="fact rescue">
-                  <div className="fact-icon">✓</div>
-                  <div>
-                    <strong>Geste d'atelier &amp; Règle d'or</strong>
-                    <p>Insérer impérativement une <strong>pige de calibrage cylindrique</strong> dans l'alésage avant d'utiliser la <strong>pince à lanterner Bergeon 6827</strong>. Couple visé : 15 à 25 cNm avec Moebius HP-1300.</p>
-                  </div>
-                </div>
-                <div className="tool-tag">Outil : Pince à lanterner Bergeon 6827 • Lubrifiant : Moebius HP-1300</div>
-              </div>
-            </article>
-
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* TEST D'ATELIER (QUIZ 3 COLONNES) */}
+      {/* ==================== TEST D'ATELIER (QUIZ 3 COLONNES) ==================== */}
       <section className="quiz" id="test-etabli">
         <div className="container">
           <div className="quiz-box">
             {/* Col 1 : Explications et boutons */}
             <div className="quiz-copy">
-              <div className="section-kicker">Diagnostic sous binoculaire</div>
-              <h2>{q.title}</h2>
-              <p>{q.desc}</p>
+              <div>
+                <div className="section-kicker">Diagnostic sous binoculaire</div>
+                <h2>{q.title}</h2>
+                <p>{q.desc}</p>
+              </div>
 
-              {!showHint ? (
-                <button className="quiz-btn" onClick={() => setShowHint(true)}>
-                  Afficher l’indice d'artisan →
-                </button>
-              ) : (
-                <div id="hint" className="result" style={{ color: "var(--gold)" }}>
-                  {q.hint}
-                </div>
-              )}
+              <div>
+                {!showHint ? (
+                  <button className="quiz-btn" onClick={() => setShowHint(true)}>
+                    Afficher l’indice d'artisan →
+                  </button>
+                ) : (
+                  <div id="hint" className="result" style={{ color: "var(--gold)" }}>
+                    {q.hint}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Col 2 : Photo d'inspection HD */}
@@ -1505,15 +1041,6 @@ footer .container {
           </div>
         </div>
       </section>
-
-      {/* FOOTER */}
-      <footer>
-        <div className="container">
-          <span>HorloLearn · Savoir d’établi horloger indépendant</span>
-          <span>Normes suisses officielles NIHS &amp; ISO 3159 (COSC) — Lubrifiants certifiés Moebius</span>
-        </div>
-      </footer>
-      </div>
-    </>
+    </div>
   );
 }
