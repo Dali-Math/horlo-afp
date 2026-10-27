@@ -548,13 +548,13 @@ export default function IntroductionMontreMecaniquePage() {
             </p>
           </div>
 
-          <div className="p-6 rounded-3xl border border-neutral-700/60 bg-[#15171D] text-[#E0E2E6] space-y-4">
-            <div className="flex flex-wrap items-center justify-between text-xs font-mono border-b border-neutral-800 pb-3">
-              <span className="text-neutral-400 flex items-center gap-2">
+          <div className="p-6 rounded-3xl border border-neutral-200 dark:border-neutral-700/60 bg-white dark:bg-[#15171D] text-neutral-900 dark:text-[#E0E2E6] space-y-4 shadow-xl transition-colors">
+            <div className="flex flex-wrap items-center justify-between text-xs font-mono border-b border-neutral-200 dark:border-neutral-800 pb-3">
+              <span className="text-neutral-600 dark:text-neutral-400 flex items-center gap-2 font-bold">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#B08D57] animate-pulse"></span>
                 DIAGRAMME CINÉMATIQUE SYNOPTIQUE DE TRANSMISSION
               </span>
-              <span className="text-neutral-400">CLIQUEZ SUR UN ÉLÉMENT POUR L&apos;EXPLORER</span>
+              <span className="text-neutral-500 dark:text-neutral-400 font-medium">CLIQUEZ SUR UN ÉLÉMENT POUR L&apos;EXPLORER</span>
             </div>
 
             <div className="w-full overflow-x-auto py-6">
@@ -572,71 +572,71 @@ export default function IntroductionMontreMecaniquePage() {
                 <path d="M 60 110 L 860 110" stroke="url(#flow-gradient)" strokeWidth="3" strokeDasharray="6 4" />
 
                 {/* 1. Barillet Moteur */}
-                <g transform="translate(60, 110)" className="cursor-pointer" onClick={() => setSelectedOrgan(0)}>
-                  <circle cx="0" cy="0" r="38" fill="#1C1F26" stroke="#E2B44F" strokeWidth="2.5" />
+                <g transform="translate(60, 110)" className="cursor-pointer group" onClick={() => setSelectedOrgan(0)}>
+                  <circle cx="0" cy="0" r="38" className="fill-amber-50/90 dark:fill-[#1C1F26] transition-colors" stroke="#E2B44F" strokeWidth="2.5" />
                   <path d="M -15 0 A 15 15 0 0 1 15 0 A 22 22 0 0 1 -20 0 A 28 28 0 0 1 25 0" fill="none" stroke="#E2B44F" strokeWidth="1.5" />
                   <circle cx="0" cy="0" r="6" fill="#E2B44F" />
-                  <text x="0" y="55" fill="#E2B44F" fontSize="11" fontWeight="bold" textAnchor="middle">1. BARILLET</text>
-                  <text x="0" y="70" fill="#94A3B8" fontSize="9" textAnchor="middle">Couple Moteur</text>
+                  <text x="0" y="55" className="fill-amber-700 dark:fill-[#E2B44F] font-bold" fontSize="11" textAnchor="middle">1. BARILLET</text>
+                  <text x="0" y="70" className="fill-slate-600 dark:fill-[#94A3B8]" fontSize="9" textAnchor="middle">Couple Moteur</text>
                 </g>
 
-                <polygon points="135,110 125,105 125,115" fill="#60A5FA" />
+                <polygon points="135,110 125,105 125,115" fill="#3B82F6" />
 
                 {/* 2. Roue de Centre */}
-                <g transform="translate(190, 110)" className="cursor-pointer" onClick={() => setSelectedOrgan(1)}>
-                  <circle cx="0" cy="0" r="30" fill="#1C1F26" stroke="#60A5FA" strokeWidth="2" />
-                  <circle cx="0" cy="0" r="4" fill="#60A5FA" />
-                  <line x1="-25" y1="0" x2="25" y2="0" stroke="#60A5FA" strokeWidth="1" />
-                  <line x1="0" y1="-25" x2="0" y2="25" stroke="#60A5FA" strokeWidth="1" />
-                  <text x="0" y="50" fill="#60A5FA" fontSize="10" fontWeight="bold" textAnchor="middle">R. CENTRE</text>
-                  <text x="0" y="65" fill="#94A3B8" fontSize="9" textAnchor="middle">1 tr / heure</text>
+                <g transform="translate(190, 110)" className="cursor-pointer group" onClick={() => setSelectedOrgan(1)}>
+                  <circle cx="0" cy="0" r="30" className="fill-blue-50/90 dark:fill-[#1C1F26] transition-colors" stroke="#3B82F6" strokeWidth="2" />
+                  <circle cx="0" cy="0" r="4" fill="#3B82F6" />
+                  <line x1="-25" y1="0" x2="25" y2="0" stroke="#3B82F6" strokeWidth="1" />
+                  <line x1="0" y1="-25" x2="0" y2="25" stroke="#3B82F6" strokeWidth="1" />
+                  <text x="0" y="50" className="fill-blue-700 dark:fill-[#60A5FA] font-bold" fontSize="10" textAnchor="middle">R. CENTRE</text>
+                  <text x="0" y="65" className="fill-slate-600 dark:fill-[#94A3B8]" fontSize="9" textAnchor="middle">1 tr / heure</text>
                 </g>
 
                 {/* 3. Roue Moyenne */}
-                <g transform="translate(310, 110)" className="cursor-pointer" onClick={() => setSelectedOrgan(1)}>
-                  <circle cx="0" cy="0" r="24" fill="#1C1F26" stroke="#60A5FA" strokeWidth="2" />
-                  <circle cx="0" cy="0" r="4" fill="#60A5FA" />
-                  <line x1="-20" y1="0" x2="20" y2="0" stroke="#60A5FA" strokeWidth="1" />
-                  <line x1="0" y1="-20" x2="0" y2="20" stroke="#60A5FA" strokeWidth="1" />
-                  <text x="0" y="45" fill="#60A5FA" fontSize="10" fontWeight="bold" textAnchor="middle">R. MOYENNE</text>
-                  <text x="0" y="60" fill="#94A3B8" fontSize="9" textAnchor="middle">Démultiplication</text>
+                <g transform="translate(310, 110)" className="cursor-pointer group" onClick={() => setSelectedOrgan(1)}>
+                  <circle cx="0" cy="0" r="24" className="fill-blue-50/90 dark:fill-[#1C1F26] transition-colors" stroke="#3B82F6" strokeWidth="2" />
+                  <circle cx="0" cy="0" r="4" fill="#3B82F6" />
+                  <line x1="-20" y1="0" x2="20" y2="0" stroke="#3B82F6" strokeWidth="1" />
+                  <line x1="0" y1="-20" x2="0" y2="20" stroke="#3B82F6" strokeWidth="1" />
+                  <text x="0" y="45" className="fill-blue-700 dark:fill-[#60A5FA] font-bold" fontSize="10" textAnchor="middle">R. MOYENNE</text>
+                  <text x="0" y="60" className="fill-slate-600 dark:fill-[#94A3B8]" fontSize="9" textAnchor="middle">Démultiplication</text>
                 </g>
 
                 {/* 4. Roue de Seconde */}
-                <g transform="translate(430, 110)" className="cursor-pointer" onClick={() => setSelectedOrgan(1)}>
-                  <circle cx="0" cy="0" r="26" fill="#1C1F26" stroke="#60A5FA" strokeWidth="2" />
-                  <circle cx="0" cy="0" r="4" fill="#60A5FA" />
-                  <line x1="-22" y1="0" x2="22" y2="0" stroke="#60A5FA" strokeWidth="1" />
-                  <line x1="0" y1="-22" x2="0" y2="22" stroke="#60A5FA" strokeWidth="1" />
-                  <text x="0" y="48" fill="#60A5FA" fontSize="10" fontWeight="bold" textAnchor="middle">R. SECONDE</text>
-                  <text x="0" y="63" fill="#94A3B8" fontSize="9" textAnchor="middle">1 tr / minute</text>
+                <g transform="translate(430, 110)" className="cursor-pointer group" onClick={() => setSelectedOrgan(1)}>
+                  <circle cx="0" cy="0" r="26" className="fill-blue-50/90 dark:fill-[#1C1F26] transition-colors" stroke="#3B82F6" strokeWidth="2" />
+                  <circle cx="0" cy="0" r="4" fill="#3B82F6" />
+                  <line x1="-22" y1="0" x2="22" y2="0" stroke="#3B82F6" strokeWidth="1" />
+                  <line x1="0" y1="-22" x2="0" y2="22" stroke="#3B82F6" strokeWidth="1" />
+                  <text x="0" y="48" className="fill-blue-700 dark:fill-[#60A5FA] font-bold" fontSize="10" textAnchor="middle">R. SECONDE</text>
+                  <text x="0" y="63" className="fill-slate-600 dark:fill-[#94A3B8]" fontSize="9" textAnchor="middle">1 tr / minute</text>
                 </g>
 
                 <polygon points="495,110 485,105 485,115" fill="#F43F5E" />
 
                 {/* 5. Échappement (Roue & Ancre) */}
-                <g transform="translate(560, 110)" className="cursor-pointer" onClick={() => setSelectedOrgan(2)}>
-                  <circle cx="0" cy="0" r="25" fill="#1C1F26" stroke="#F43F5E" strokeWidth="2" />
+                <g transform="translate(560, 110)" className="cursor-pointer group" onClick={() => setSelectedOrgan(2)}>
+                  <circle cx="0" cy="0" r="25" className="fill-rose-50/90 dark:fill-[#1C1F26] transition-colors" stroke="#F43F5E" strokeWidth="2" />
                   <path d="M 0 -22 L 4 -16 L -2 -14 Z M 22 0 L 16 4 L 14 -2 Z M 0 22 L -4 16 L 2 14 Z M -22 0 L -16 -4 L -14 2 Z" fill="#F43F5E" />
                   <circle cx="0" cy="0" r="4" fill="#F43F5E" />
-                  <text x="0" y="48" fill="#F43F5E" fontSize="10" fontWeight="bold" textAnchor="middle">ÉCHAPPEMENT</text>
-                  <text x="0" y="63" fill="#94A3B8" fontSize="9" textAnchor="middle">Ancre &amp; Dents</text>
+                  <text x="0" y="48" className="fill-rose-700 dark:fill-[#F43F5E] font-bold" fontSize="10" textAnchor="middle">ÉCHAPPEMENT</text>
+                  <text x="0" y="63" className="fill-slate-600 dark:fill-[#94A3B8]" fontSize="9" textAnchor="middle">Ancre &amp; Dents</text>
                 </g>
 
                 <polygon points="620,105 630,110 620,115" fill="#10B981" />
                 <polygon points="635,115 625,110 635,105" fill="#F43F5E" />
 
                 {/* 6. Balancier-Spiral */}
-                <g transform="translate(700, 110)" className="cursor-pointer" onClick={() => setSelectedOrgan(3)}>
-                  <circle cx="0" cy="0" r="36" fill="#1C1F26" stroke="#10B981" strokeWidth="2.5" />
+                <g transform="translate(700, 110)" className="cursor-pointer group" onClick={() => setSelectedOrgan(3)}>
+                  <circle cx="0" cy="0" r="36" className="fill-emerald-50/90 dark:fill-[#1C1F26] transition-colors" stroke="#10B981" strokeWidth="2.5" />
                   <path d="M 0 0 A 6 6 0 0 1 6 0 A 12 12 0 0 1 -12 0 A 18 18 0 0 1 18 0 A 24 24 0 0 1 -24 0" fill="none" stroke="#10B981" strokeWidth="1.2" />
                   <circle cx="0" cy="0" r="4" fill="#10B981" />
-                  <circle cx="-34" cy="0" r="2" fill="#E2E8F0" />
-                  <circle cx="34" cy="0" r="2" fill="#E2E8F0" />
-                  <circle cx="0" cy="-34" r="2" fill="#E2E8F0" />
-                  <circle cx="0" cy="34" r="2" fill="#E2E8F0" />
-                  <text x="0" y="55" fill="#10B981" fontSize="10" fontWeight="bold" textAnchor="middle">BALANCIER</text>
-                  <text x="0" y="70" fill="#94A3B8" fontSize="9" textAnchor="middle">Cadence 4 Hz</text>
+                  <circle cx="-34" cy="0" r="2" className="fill-slate-400 dark:fill-[#E2E8F0]" />
+                  <circle cx="34" cy="0" r="2" className="fill-slate-400 dark:fill-[#E2E8F0]" />
+                  <circle cx="0" cy="-34" r="2" className="fill-slate-400 dark:fill-[#E2E8F0]" />
+                  <circle cx="0" cy="34" r="2" className="fill-slate-400 dark:fill-[#E2E8F0]" />
+                  <text x="0" y="55" className="fill-emerald-700 dark:fill-[#10B981] font-bold" fontSize="10" textAnchor="middle">BALANCIER</text>
+                  <text x="0" y="70" className="fill-slate-600 dark:fill-[#94A3B8]" fontSize="9" textAnchor="middle">Cadence 4 Hz</text>
                 </g>
 
                 {/* Branching to Affichage */}
@@ -644,22 +644,22 @@ export default function IntroductionMontreMecaniquePage() {
                 <polygon points="830,85 825,75 835,75" fill="#A855F7" />
 
                 {/* 7. Affichage & Minuterie */}
-                <g transform="translate(830, 110)" className="cursor-pointer" onClick={() => setSelectedOrgan(4)}>
-                  <circle cx="0" cy="0" r="28" fill="#1C1F26" stroke="#A855F7" strokeWidth="2" />
-                  <line x1="0" y1="0" x2="0" y2="-18" stroke="#E2E8F0" strokeWidth="2.5" strokeLinecap="round" />
+                <g transform="translate(830, 110)" className="cursor-pointer group" onClick={() => setSelectedOrgan(4)}>
+                  <circle cx="0" cy="0" r="28" className="fill-purple-50/90 dark:fill-[#1C1F26] transition-colors" stroke="#A855F7" strokeWidth="2" />
+                  <line x1="0" y1="0" x2="0" y2="-18" className="stroke-slate-800 dark:stroke-[#E2E8F0]" strokeWidth="2.5" strokeLinecap="round" />
                   <line x1="0" y1="0" x2="12" y2="0" stroke="#A855F7" strokeWidth="2" strokeLinecap="round" />
                   <line x1="0" y1="0" x2="-8" y2="14" stroke="#F43F5E" strokeWidth="1" />
                   <circle cx="0" cy="0" r="3" fill="#E2B44F" />
-                  <text x="0" y="50" fill="#A855F7" fontSize="10" fontWeight="bold" textAnchor="middle">AFFICHAGE</text>
-                  <text x="0" y="65" fill="#94A3B8" fontSize="9" textAnchor="middle">Minuterie 1:12</text>
+                  <text x="0" y="50" className="fill-purple-700 dark:fill-[#A855F7] font-bold" fontSize="10" textAnchor="middle">AFFICHAGE</text>
+                  <text x="0" y="65" className="fill-slate-600 dark:fill-[#94A3B8]" fontSize="9" textAnchor="middle">Minuterie 1:12</text>
                 </g>
               </svg>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between text-xs text-neutral-400 pt-2 border-t border-neutral-800">
-              <span>🔵 Le couple décroît du Barillet vers l&apos;Échappement</span>
-              <span>⚡ La vitesse de rotation est multipliée par ~3&apos;600</span>
-              <span>🟢 Le Balancier impose sa loi temporelle à l&apos;ensemble</span>
+            <div className="flex flex-wrap items-center justify-between text-xs text-neutral-600 dark:text-neutral-400 pt-3 border-t border-neutral-200 dark:border-neutral-800 font-mono">
+              <span className="flex items-center gap-1.5 font-medium"><span className="w-2 h-2 rounded-full bg-blue-500"></span> Le couple décroît du Barillet vers l&apos;Échappement</span>
+              <span className="flex items-center gap-1.5 font-medium"><span className="w-2 h-2 rounded-full bg-amber-500"></span> ⚡ La vitesse de rotation est multipliée par ~3&apos;600</span>
+              <span className="flex items-center gap-1.5 font-medium"><span className="w-2 h-2 rounded-full bg-emerald-500"></span> Le Balancier impose sa loi temporelle à l&apos;ensemble</span>
             </div>
           </div>
         </section>
