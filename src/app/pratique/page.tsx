@@ -458,6 +458,35 @@ export default function PratiquePage() {
             <span className="text-xs font-mono text-slate-500">Cliquez pour ouvrir un banc visuel</span>
           </div>
 
+          {/* Master Lab Spotlight Card */}
+          <Link
+            href="/pratique/laboratoire"
+            className="block p-6 rounded-2xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-slate-900 border-2 border-amber-500 hover:border-amber-400 transition-all shadow-xl group"
+          >
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500 text-slate-950 uppercase shadow-sm">
+                    ⭐ Master Lab d’Établi
+                  </span>
+                  <span className="text-xs font-mono text-amber-400">
+                    Chronométrie · Cinématique · Emboîtage
+                  </span>
+                </div>
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-white group-hover:text-amber-400 transition-colors">
+                  Laboratoire de Chronométrie Witschi, Échappement (5 Phases) &amp; Emboîtage
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
+                  Simulateur acoustique en direct Witschi Watch Expert avec son réel, 6 scénarios de pannes, correction Etachron, cinématique des 5 phases de l’échappement suisse et calculateur de mise à tige.
+                </p>
+              </div>
+              <div className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs shadow group-hover:bg-amber-400 transition">
+                <span>Accéder au Master Lab</span>
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </div>
+          </Link>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Link
               href="/pratique/huilage"

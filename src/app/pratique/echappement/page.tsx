@@ -18,6 +18,7 @@ import {
   AlertTriangle,
   CheckCircle2,
   Lightbulb,
+  ArrowRight,
 } from "lucide-react";
 
 function AnatomySVG(): React.JSX.Element {
@@ -1700,6 +1701,35 @@ export default function EchappementPage(): React.JSX.Element {
         </aside>
 
         <main className="editorial-main">
+          {/* ⭐ Master Lab Echappement 5 Phases Banner */}
+          <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-slate-950 border-2 border-amber-500/50 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0 text-amber-400 font-bold text-lg">
+                ⚙️
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[10px] font-mono font-bold uppercase">
+                    ⭐ Master Lab d’Établi
+                  </span>
+                  <span className="text-[11px] font-mono text-amber-400">Style Ciechanow.ski pas-à-pas</span>
+                </div>
+                <h3 className="text-base font-bold text-white mt-0.5">
+                  Simulateur Cinématique des 5 Phases de l’Échappement Suisse
+                </h3>
+                <p className="text-xs text-slate-300">
+                  Manipulez l’alternance pas-à-pas (Repos, Dégagement, Impulsion 9415, Chute et Arc libre) avec le Master Lab.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/pratique/laboratoire"
+              className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase font-mono transition shrink-0 inline-flex items-center gap-1.5"
+            >
+              <span>Ouvrir dans le Master Lab</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
           {STEPS.map((step, index) => {
             const Svg = step.Svg;
             const isFeature = step.id === 2 || step.id === 6;

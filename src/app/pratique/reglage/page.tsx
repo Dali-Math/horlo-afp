@@ -268,6 +268,36 @@ export default function ReglagePage() {
       {/* --- SECTION PRINCIPALE : LE CHRONOCOMPARATEUR INTERACTIF --- */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
 
+        {/* ⭐ Master Lab Witschi & Échappement */}
+        <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-slate-950 border-2 border-amber-500/50 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0 text-amber-400">
+              <Activity className="w-6 h-6 animate-pulse" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[10px] font-mono font-bold uppercase tracking-wider">
+                  ⭐ Master Lab d’Établi
+                </span>
+                <span className="text-xs font-mono text-amber-400">Watch Expert IV · Etachron · 5 Phases</span>
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-white mt-1">
+                Laboratoire Complet : Chronométrie Witschi, Échappement &amp; Emboîtage
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 font-light mt-0.5">
+                Simulateur acoustique temps réel, 6 scénarios de pannes COSC, régulateur Etachron interactif et calcul de mise à tige.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/pratique/laboratoire"
+            className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs font-mono uppercase transition shadow-lg shrink-0 inline-flex items-center gap-2"
+          >
+            <span>Ouvrir le Master Lab</span>
+            <Compass className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
         {/* ⭐ Bannière d'accès direct au Chronocomparateur Acoustique Réel */}
         <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-emerald-950/70 via-slate-900 to-slate-950 border-2 border-emerald-500/40 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
