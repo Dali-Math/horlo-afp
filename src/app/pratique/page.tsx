@@ -137,6 +137,23 @@ interface PracticalModule {
 
 const PRACTICAL_MODULES: PracticalModule[] = [
   {
+    step: 'Innovation 3D · Porte-Mouvement 360°',
+    badge: 'ETA 6497-1 3D',
+    title: 'Calibre École 3D Interactif',
+    description: 'Porte-mouvement 360° sans blocage d\'axe, écorché vertical Z des 7 couches, transparence Rayon-X des ponts, échappement cinématique et cadran soleillé 12 appliques.',
+    icon: '⚙️',
+    iconBg: 'bg-amber-500/10',
+    iconBorder: 'border-amber-500/30',
+    iconColor: 'text-amber-500 dark:text-amber-400',
+    stepColor: 'text-amber-600 dark:text-amber-400',
+    hoverBorder: 'hover:border-amber-400 dark:hover:border-amber-400',
+    hoverText: 'group-hover:text-amber-600 dark:group-hover:text-amber-400',
+    hoverShadow: 'hover:shadow-amber-500/10',
+    btnHover: 'group-hover:bg-amber-400 group-hover:text-slate-950 group-hover:border-amber-400',
+    tools: ['WebGL Three.js', 'Trackball 360°', 'Écorché Z'],
+    href: '/pratique/calibre-3d'
+  },
+  {
     step: 'Étape 00 · Micromécanique',
     badge: 'Schaublin 70',
     title: 'Tournage & Micromécanique',
@@ -806,6 +823,16 @@ export default function PratiquePage() {
                   <span>{activeStation.ctaText}</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
+
+                {activeStation.id === 1 && (
+                  <Link
+                    href="/pratique/calibre-3d"
+                    className="mt-2.5 w-full py-3 px-6 rounded-xl bg-slate-900 border border-amber-500/40 hover:border-amber-400 text-amber-400 hover:text-white font-mono text-xs font-semibold tracking-wide transition flex items-center justify-center gap-2"
+                  >
+                    <span>⚙️ Manipuler le Calibre en 3D 360° (Porte-Mouvement)</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                )}
               </div>
 
             </div>
@@ -937,7 +964,36 @@ export default function PratiquePage() {
             </p>
           </div>
 
-          <div className="rounded-2xl overflow-hidden">
+          {/* Bannière d'accès direct au Calibre 3D Interactif */}
+          <Link
+            href="/pratique/calibre-3d"
+            className="flex flex-col sm:flex-row items-center justify-between p-6 rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-amber-500/5 border-2 border-amber-500/50 hover:border-amber-400 transition group shadow-xl shadow-amber-500/10 gap-4"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center font-bold text-2xl shrink-0 group-hover:scale-105 transition-transform">
+                ⚙️
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-amber-400 transition-colors">
+                    Lancer le Calibre École 3D Temps Réel (ETA 6497-1)
+                  </h3>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 font-bold font-mono uppercase tracking-wider">
+                    Interactif 360°
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-300 font-light leading-relaxed">
+                  Porte-mouvement universel sans blocage, écorché vertical Z des 7 couches, transparence Rayon-X des ponts, cadran et aiguilles modernes.
+                </p>
+              </div>
+            </div>
+            <div className="shrink-0 flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold font-mono text-xs transition shadow-md">
+              <span>Ouvrir l&apos;Établi 3D</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+                    <div className="rounded-2xl overflow-hidden">
             <Flashcards6497 />
           </div>
         </section>

@@ -1,0 +1,2261 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HorloLearn.ch — Master Calibre ETA 6497-1 (Unitas 16 ½''') • Écorché 3D & Cinématique</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js r128 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        horlo: {
+                            bg: '#080A0F',
+                            card: '#11151F',
+                            cardHover: '#171D2B',
+                            border: '#222B3D',
+                            gold: '#D4AF37',
+                            goldLight: '#F3E5AB',
+                            goldDark: '#997A15',
+                            ruby: '#E63946',
+                            blued: '#3B82F6',
+                            cyan: '#38BDF8',
+                            emerald: '#10B981',
+                            steel: '#8E9BAE',
+                            rhodium: '#CBD5E1'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        serif: ['Cormorant Garamond', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #080A0F;
+            color: #F1F5F9;
+            overflow-x: hidden;
+        }
+
+        /* Custom Range Sliders (Ciechanowski Interactive Scrubbers) */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #1A2232;
+            height: 7px;
+            border-radius: 999px;
+            outline: none;
+            border: 1px solid #2A364F;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 60%, #997A15 100%);
+            border: 2px solid #080A0F;
+            cursor: grab;
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.75);
+            transition: transform 0.15s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb:active {
+            cursor: grabbing;
+            transform: scale(1.22);
+        }
+
+        /* Subtle Blueprint & Atelier Grid */
+        .bg-atelier-canvas {
+            background: radial-gradient(circle at 50% 45%, #161E2E 0%, #090C12 75%, #05070B 100%);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080A0F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #222B3D;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans selection:bg-horlo-gold selection:text-black">
+
+    <!-- ============================================================================
+         TOP HEADER : HORLOLEARN BRANDING & CALIBRE TELEMETRY BAR
+         ============================================================================ -->
+    <header class="border-b border-horlo-border bg-horlo-bg/95 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-[1600px] mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+            <!-- Brand & Title -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-horlo-gold via-horlo-goldLight to-horlo-goldDark flex items-center justify-center text-black font-bold shadow-lg shadow-horlo-gold/20">
+                    <i class="fa-solid fa-compass-drafting text-lg"></i>
+                </div>
+                <div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="font-serif font-bold text-xl sm:text-2xl tracking-wide text-white">HORLO<span class="text-horlo-gold">LEARN</span>.CH</span>
+                        <span class="text-[10px] sm:text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-horlo-gold/15 text-horlo-gold border border-horlo-gold/30 font-semibold">
+                            Master Calibre 3D Trackball 360° • Sans Blocage
+                        </span>
+                    </div>
+                    <h1 class="text-xs text-horlo-steel">
+                        Calibre École <strong class="text-white font-mono">ETA 6497-1 (Unitas 16 ½''')</strong> — Porte-Mouvement Universel 360° (Côté Ponts & Côté Cadran)
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Live Mechanical Telemetry Pills -->
+            <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
+                <div class="px-3 py-1.5 rounded-xl bg-horlo-card border border-horlo-border flex items-center gap-2">
+                    <span class="text-horlo-steel">Ø :</span>
+                    <strong class="text-white">36.60 mm (16 ½''')</strong>
+                </div>
+                <div class="px-3 py-1.5 rounded-xl bg-horlo-card border border-horlo-border flex items-center gap-2">
+                    <span class="text-horlo-steel">Fréquence :</span>
+                    <strong class="text-horlo-gold">18'000 A/h (2.5 Hz)</strong>
+                </div>
+                <div class="px-3 py-1.5 rounded-xl bg-horlo-card border border-horlo-border flex items-center gap-2">
+                    <span class="text-horlo-steel">Angle de levée :</span>
+                    <strong class="text-horlo-emerald">44°</strong>
+                </div>
+                <div class="px-3 py-1.5 rounded-xl bg-horlo-card border border-horlo-border flex items-center gap-2">
+                    <span class="text-horlo-steel">Amplitude :</span>
+                    <strong id="topAmplitudeReadout" class="text-horlo-cyan">295°</strong>
+                </div>
+                <button id="btnToggleFace" onclick="toggleDialFace()" class="px-3 py-1.5 rounded-xl bg-horlo-gold text-black font-bold hover:bg-horlo-goldLight transition flex items-center gap-1.5 shadow-md">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    <span>Retourner Calibre (Cadran / Ponts)</span>
+                </button>
+                <button id="btnAudioTick" onclick="toggleAudioTick()" class="px-3 py-1.5 rounded-xl bg-horlo-card hover:bg-horlo-cardHover border border-horlo-border text-horlo-rhodium hover:text-horlo-gold transition flex items-center gap-1.5">
+                    <i id="iconAudioTick" class="fa-solid fa-volume-xmark"></i>
+                    <span id="labelAudioTick">Son 5 Hz : OFF</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================================
+         MAIN WORKSPACE : 3D WEBGL VIEWPORT (LEFT 68%) + CONTROL & INSPECTOR (RIGHT 32%)
+         ============================================================================ -->
+    <main class="flex-1 max-w-[1600px] w-full mx-auto px-3 sm:px-5 py-4 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+        <!-- ========================================================================
+             LEFT / MAIN COLUMN (8 cols on lg) : 3D WEBGL VIEWPORT
+             ======================================================================== -->
+        <div class="lg:col-span-8 flex flex-col gap-4">
+
+            <!-- Camera Preset & Organ Quick-Select Toolbar -->
+            <div class="bg-horlo-card border border-horlo-border rounded-2xl p-2.5 flex flex-wrap items-center justify-between gap-2 shadow-lg">
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <span class="text-[11px] font-mono uppercase text-horlo-gold px-2 flex items-center gap-1">
+                        <i class="fa-solid fa-compass"></i> Vues & Angles 3D :
+                    </span>
+                    <button onclick="setCameraPreset('iso')" id="camBtn_iso" class="px-2.5 py-1.5 rounded-lg text-xs font-mono font-semibold bg-horlo-gold text-black transition">
+                        1. Côté Ponts (3D)
+                    </button>
+                    <button onclick="setCameraPreset('topBridges')" id="camBtn_topBridges" class="px-2.5 py-1.5 rounded-lg text-xs font-mono text-horlo-rhodium hover:text-white bg-horlo-bg border border-horlo-border transition">
+                        2. Ponts à Plat (90°)
+                    </button>
+                    <button onclick="setCameraPreset('dial')" id="camBtn_dial" class="px-2.5 py-1.5 rounded-lg text-xs font-mono text-horlo-rhodium hover:text-white bg-horlo-bg border border-horlo-border transition flex items-center gap-1.5">
+                        <i class="fa-regular fa-clock text-horlo-gold"></i>
+                        <span>3. Côté Cadran & Date</span>
+                    </button>
+                    <button onclick="setCameraPreset('escapement')" id="camBtn_escapement" class="px-2.5 py-1.5 rounded-lg text-xs font-mono text-horlo-rhodium hover:text-white bg-horlo-bg border border-horlo-border transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-magnifying-glass-plus text-horlo-ruby"></i>
+                        <span>4. Macro Échappement</span>
+                    </button>
+                    <button onclick="setCameraPreset('balanceMacro')" id="camBtn_balanceMacro" class="px-2.5 py-1.5 rounded-lg text-xs font-mono text-horlo-rhodium hover:text-white bg-horlo-bg border border-horlo-border transition">
+                        5. Macro Balancier & Coq
+                    </button>
+                    <button onclick="setCameraPreset('profile')" id="camBtn_profile" class="px-2.5 py-1.5 rounded-lg text-xs font-mono text-horlo-rhodium hover:text-white bg-horlo-bg border border-horlo-border transition">
+                        6. Profil Éclaté Z
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3D WEBGL CANVAS CONTAINER -->
+            <div class="relative w-full h-[540px] sm:h-[620px] rounded-2xl border border-horlo-border bg-atelier-canvas overflow-hidden shadow-2xl select-none">
+                
+                <!-- Top-Left Floating Status Overlay inside 3D Viewport -->
+                <div class="absolute top-3 left-3 z-10 pointer-events-none flex flex-col gap-1.5">
+                    <div class="px-3 py-1.5 rounded-xl bg-horlo-bg/85 backdrop-blur-md border border-horlo-border text-xs font-mono flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-horlo-gold animate-ping"></span>
+                        <span id="viewportActiveOrganTitle" class="text-white font-semibold">Calibre ETA 6497-1 Complet (Rotation Trackball 360° Libre)</span>
+                    </div>
+                    <div class="px-3 py-1 rounded-lg bg-horlo-bg/75 backdrop-blur-sm border border-horlo-border/60 text-[11px] font-mono text-horlo-steel">
+                        Glisser Gauche : Tourner dans tous les sens (360° libre) • Glisser Droit : Déplacer • Molette : Zoom • Double-clic : Recentre
+                    </div>
+                </div>
+
+                <!-- Top-Right Live 3D Escapement Phase Telemetry + On-Screen Quick Gimbal Pad -->
+                <div class="absolute top-3 right-3 z-10 flex flex-col items-end gap-2">
+                    <div class="pointer-events-none px-3 py-1.5 rounded-xl bg-horlo-bg/90 backdrop-blur-md border border-horlo-gold/40 text-[11px] font-mono text-horlo-goldLight shadow-lg flex items-center gap-2">
+                        <span class="text-horlo-steel">Phase Active :</span>
+                        <strong id="hudPhaseBadge" class="text-horlo-gold">Phase 3 : Impulsion (44°)</strong>
+                    </div>
+                    <!-- Interactive 360° On-Screen Rotation Pad for effortless 1-click flipping/turning -->
+                    <div class="pointer-events-auto bg-horlo-bg/85 backdrop-blur-md border border-horlo-border rounded-xl p-1.5 flex items-center gap-1 shadow-lg text-xs font-mono">
+                        <button onclick="nudgeTrackball(0, 0.35)" title="Tourner à Gauche" class="w-7 h-7 rounded-lg bg-horlo-card hover:bg-horlo-gold hover:text-black text-horlo-rhodium flex items-center justify-center transition">
+                            <i class="fa-solid fa-arrow-rotate-left"></i>
+                        </button>
+                        <button onclick="nudgeTrackball(-0.35, 0)" title="Basculer vers le Haut" class="w-7 h-7 rounded-lg bg-horlo-card hover:bg-horlo-gold hover:text-black text-horlo-rhodium flex items-center justify-center transition">
+                            <i class="fa-solid fa-angle-up"></i>
+                        </button>
+                        <button onclick="nudgeTrackball(0.35, 0)" title="Basculer vers le Bas" class="w-7 h-7 rounded-lg bg-horlo-card hover:bg-horlo-gold hover:text-black text-horlo-rhodium flex items-center justify-center transition">
+                            <i class="fa-solid fa-angle-down"></i>
+                        </button>
+                        <button onclick="nudgeTrackball(0, -0.35)" title="Tourner à Droite" class="w-7 h-7 rounded-lg bg-horlo-card hover:bg-horlo-gold hover:text-black text-horlo-rhodium flex items-center justify-center transition">
+                            <i class="fa-solid fa-arrow-rotate-right"></i>
+                        </button>
+                        <button onclick="flipCalibre180()" title="Retourner à 180° (Ponts ↔ Cadran)" class="px-2 h-7 rounded-lg bg-horlo-gold/20 hover:bg-horlo-gold hover:text-black text-horlo-gold border border-horlo-gold/40 flex items-center gap-1 transition font-semibold">
+                            <i class="fa-solid fa-Repeat"></i>
+                            <span>180°</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- THREE.JS RENDER TARGET -->
+                <div id="threeCanvasWrapper" class="w-full h-full cursor-grab active:cursor-grabbing touch-none"></div>
+
+                <!-- Bottom-Right Quick Organ Selector Bar inside 3D Viewport -->
+                <div class="absolute bottom-3 left-3 right-3 z-10 flex flex-wrap justify-between items-center gap-2 pointer-events-none">
+                    <button onclick="setCameraPreset('escapement')" class="pointer-events-auto px-3 py-1.5 rounded-xl bg-horlo-ruby/20 hover:bg-horlo-ruby/35 border border-horlo-ruby/50 text-rose-200 text-xs font-mono font-semibold transition flex items-center gap-2 shadow-lg">
+                        <i class="fa-solid fa-crosshairs text-horlo-ruby"></i>
+                        <span>Plonger sur l'Échappement & l'Ancre</span>
+                    </button>
+
+                    <div class="pointer-events-auto flex flex-wrap justify-end gap-1">
+                        <button onclick="selectOrgan('barrel')" id="pill_barrel" class="px-2.5 py-1 rounded-lg bg-horlo-bg/90 hover:bg-horlo-gold hover:text-black text-horlo-rhodium border border-horlo-border text-[11px] font-mono transition">
+                            01. Barillet (Z=84)
+                        </button>
+                        <button onclick="selectOrgan('centerWheel')" id="pill_centerWheel" class="px-2.5 py-1 rounded-lg bg-horlo-bg/90 hover:bg-horlo-gold hover:text-black text-horlo-rhodium border border-horlo-border text-[11px] font-mono transition">
+                            02. Centre (Z=64)
+                        </button>
+                        <button onclick="selectOrgan('thirdWheel')" id="pill_thirdWheel" class="px-2.5 py-1 rounded-lg bg-horlo-bg/90 hover:bg-horlo-gold hover:text-black text-horlo-rhodium border border-horlo-border text-[11px] font-mono transition">
+                            03. Moyenne (Z=60)
+                        </button>
+                        <button onclick="selectOrgan('fourthWheel')" id="pill_fourthWheel" class="px-2.5 py-1 rounded-lg bg-horlo-bg/90 hover:bg-horlo-gold hover:text-black text-horlo-rhodium border border-horlo-border text-[11px] font-mono transition">
+                            04. Seconde 9h (Z=60)
+                        </button>
+                        <button onclick="selectOrgan('escapeWheel')" id="pill_escapeWheel" class="px-2.5 py-1 rounded-lg bg-horlo-bg/90 hover:bg-horlo-gold hover:text-black text-horlo-rhodium border border-horlo-border text-[11px] font-mono transition">
+                            05. Échappement (Z=15)
+                        </button>
+                        <button onclick="selectOrgan('palletFork')" id="pill_palletFork" class="px-2.5 py-1 rounded-lg bg-horlo-bg/90 hover:bg-horlo-gold hover:text-black text-horlo-rhodium border border-horlo-border text-[11px] font-mono transition">
+                            06. Ancre Suisse
+                        </button>
+                        <button onclick="selectOrgan('balance')" id="pill_balance" class="px-2.5 py-1 rounded-lg bg-horlo-bg/90 hover:bg-horlo-gold hover:text-black text-horlo-rhodium border border-horlo-border text-[11px] font-mono transition">
+                            07. Balancier 2.5Hz
+                        </button>
+                        <button onclick="selectOrgan('winding')" id="pill_winding" class="px-2.5 py-1 rounded-lg bg-horlo-bg/90 hover:bg-horlo-gold hover:text-black text-horlo-rhodium border border-horlo-border text-[11px] font-mono transition">
+                            08. Remontoir 3h
+                        </button>
+                        <button onclick="selectOrgan('dial')" id="pill_dial" class="px-2.5 py-1 rounded-lg bg-horlo-bg/90 hover:bg-horlo-gold hover:text-black text-horlo-rhodium border border-horlo-border text-[11px] font-mono transition">
+                            09. Cadran & Date
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====================================================================
+                 CIECHANOWSKI-STYLE INTERACTIVE SCRUBBERS DOCK (4 MASTER SLIDERS)
+                 ==================================================================== -->
+            <div class="bg-horlo-card border border-horlo-border rounded-2xl p-4 shadow-xl grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <!-- SLIDER 1 : TIME / ESCAPEMENT MICRO-STEP SCRUBBER (0 to 100% of a 200ms Beat) -->
+                <div class="bg-horlo-bg border border-horlo-border rounded-xl p-3.5 space-y-2">
+                    <div class="flex items-center justify-between text-xs font-mono">
+                        <span class="text-horlo-gold font-bold flex items-center gap-1.5">
+                            <i class="fa-solid fa-stopwatch"></i>
+                            <span>1. Curseur Temporel d'Alternance (200 ms)</span>
+                        </span>
+                        <span id="lblBeatProgress" class="text-white font-bold">En marche (1.0×)</span>
+                    </div>
+                    <input id="sliderBeatScrub" type="range" min="0" max="100" step="0.5" value="45" oninput="onScrubBeatSlider(this.value)" class="w-full">
+                    <div class="flex items-center justify-between gap-1 pt-1 font-mono text-[11px]">
+                        <button onclick="setSimSpeed(1.0)" id="spdBtn_1" class="flex-1 py-1 rounded bg-horlo-gold text-black font-bold transition">1× Temps Réel</button>
+                        <button onclick="setSimSpeed(0.12)" id="spdBtn_slow" class="flex-1 py-1 rounded bg-horlo-card text-horlo-rhodium border border-horlo-border hover:text-white transition">0.1× Ralenti</button>
+                        <button onclick="setSimSpeed(0.025)" id="spdBtn_micro" class="flex-1 py-1 rounded bg-horlo-card text-horlo-rhodium border border-horlo-border hover:text-white transition">Micro-Pas</button>
+                        <button onclick="setSimSpeed(0)" id="spdBtn_pause" class="flex-1 py-1 rounded bg-horlo-card text-horlo-rhodium border border-horlo-border hover:text-white transition">Pause / Manuel</button>
+                    </div>
+                </div>
+
+                <!-- SLIDER 2 : EXPLODED VIEW Z-AXIS (ÉCLATEMENT DES 7 COUCHES) -->
+                <div class="bg-horlo-bg border border-horlo-border rounded-xl p-3.5 space-y-2">
+                    <div class="flex items-center justify-between text-xs font-mono">
+                        <span class="text-horlo-cyan font-bold flex items-center gap-1.5">
+                            <i class="fa-solid fa-layer-group"></i>
+                            <span>2. Vue Éclatée Verticale (Axe Z — 7 Niveaux)</span>
+                        </span>
+                        <span id="lblExplodeVal" class="text-horlo-cyan font-bold">0 % (Assemblé)</span>
+                    </div>
+                    <input id="sliderExplodeZ" type="range" min="0" max="100" step="1" value="0" oninput="onExplodeSlider(this.value)" class="w-full">
+                    <div class="flex justify-between text-[10px] font-mono text-horlo-steel pt-1">
+                        <span>0% Calibre emboîté</span>
+                        <button onclick="quickSetExplode(45)" class="text-horlo-gold hover:underline">45% Étagement Rouage</button>
+                        <button onclick="quickSetExplode(100)" class="text-horlo-cyan hover:underline">100% Écorché Total</button>
+                    </div>
+                </div>
+
+                <!-- SLIDER 3 : X-RAY BRIDGES TRANSPARENCY (RAYON-X DES PONTS CÔTES DE GENÈVE) -->
+                <div class="bg-horlo-bg border border-horlo-border rounded-xl p-3.5 space-y-2">
+                    <div class="flex items-center justify-between text-xs font-mono">
+                        <span class="text-purple-400 font-bold flex items-center gap-1.5">
+                            <i class="fa-solid fa-eye"></i>
+                            <span>3. Transparence Rayon-X des Ponts & Coq</span>
+                        </span>
+                        <span id="lblXrayVal" class="text-purple-300 font-bold">25 % (Semi-visible)</span>
+                    </div>
+                    <input id="sliderXrayBridges" type="range" min="0" max="100" step="1" value="25" oninput="onXraySlider(this.value)" class="w-full">
+                    <div class="flex justify-between text-[10px] font-mono text-horlo-steel pt-1">
+                        <button onclick="quickSetXray(0)" class="hover:text-white">0% Ponts Opaques</button>
+                        <button onclick="quickSetXray(55)" class="text-purple-300 hover:underline">55% Rayon-X Atelier</button>
+                        <button onclick="quickSetXray(95)" class="hover:text-white">95% Rouage Nu</button>
+                    </div>
+                </div>
+
+                <!-- SLIDER 4 : MAINSPRING WINDING AT 3H (ARMAGE DU RESSORT NIVAFLEX) -->
+                <div class="bg-horlo-bg border border-horlo-border rounded-xl p-3.5 space-y-2">
+                    <div class="flex items-center justify-between text-xs font-mono">
+                        <span class="text-horlo-emerald font-bold flex items-center gap-1.5">
+                            <i class="fa-solid fa-rotate-right"></i>
+                            <span>4. Armage du Barillet (Couronne 3h & Cliquet)</span>
+                        </span>
+                        <span id="lblMainspringVal" class="text-horlo-emerald font-bold">85 % (Couple 9.2 mN·m)</span>
+                    </div>
+                    <input id="sliderMainspring" type="range" min="10" max="100" step="1" value="85" oninput="onMainspringSlider(this.value)" class="w-full">
+                    <div class="flex justify-between text-[10px] font-mono text-horlo-steel pt-1">
+                        <span>10% Désarmé (Amp. 195°)</span>
+                        <button onclick="windCrownStep()" class="text-horlo-emerald font-semibold hover:underline">+1 Tour de Couronne (Clic !)</button>
+                        <span>100% Plein Armage (46h)</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ========================================================================
+             RIGHT COLUMN (4 cols on lg) : WORKBENCH TECHNICAL INSPECTOR & LUBRICATION
+             ======================================================================== -->
+        <div class="lg:col-span-4 flex flex-col gap-4">
+
+            <!-- SELECTED COMPONENT TECHNICAL CARD (FICHE D'ÉTABLI ETA 6497-1) -->
+            <div class="bg-horlo-card border border-horlo-border rounded-2xl p-5 shadow-xl relative overflow-hidden">
+                <div id="inspectorTopBar" class="absolute top-0 left-0 right-0 h-1.5 bg-horlo-gold"></div>
+
+                <div class="flex items-start justify-between gap-2 mb-3">
+                    <div>
+                        <span id="inspCategory" class="text-[11px] font-mono uppercase tracking-wider text-horlo-gold block">
+                            ORGANE MOTEUR • CALIBRE ETA 6497-1
+                        </span>
+                        <h2 id="inspTitle" class="text-lg font-bold text-white leading-snug mt-0.5">
+                            01. Barillet, Ressort Nivaflex & Rochet
+                        </h2>
+                    </div>
+                    <span id="inspGearBadge" class="px-2.5 py-1 rounded-lg font-mono text-xs font-bold bg-horlo-bg border border-horlo-gold/40 text-horlo-gold shrink-0">
+                        Z = 80 dents
+                    </span>
+                </div>
+
+                <p id="inspDescription" class="text-xs sm:text-sm text-horlo-rhodium leading-relaxed mb-4">
+                    Tambour denté contenant le ressort-moteur en alliage Nivaflex. Sur l'ETA 6497-1 à remontage manuel, le crochet extérieur du ressort s'accroche directement dans une encoche de la paroi du tambour (pas de bride glissante).
+                </p>
+
+                <!-- Technical Specs Grid -->
+                <div class="grid grid-cols-2 gap-2.5 mb-4 font-mono text-xs">
+                    <div class="bg-horlo-bg border border-horlo-border rounded-xl p-2.5">
+                        <span class="text-[10px] text-horlo-steel block uppercase">Vitesse & Rapport</span>
+                        <strong id="inspSpeed" class="text-white">1 tour / 6 h 40 min</strong>
+                    </div>
+                    <div class="bg-horlo-bg border border-horlo-border rounded-xl p-2.5">
+                        <span class="text-[10px] text-horlo-steel block uppercase">Lubrifiant Moebius</span>
+                        <strong id="inspOil" class="text-horlo-cyan">Moebius HP-1300 / D5</strong>
+                    </div>
+                    <div class="bg-horlo-bg border border-horlo-border rounded-xl p-2.5">
+                        <span class="text-[10px] text-horlo-steel block uppercase">Pique-Huile Bergeon</span>
+                        <strong id="inspOiler" class="text-horlo-goldLight">Huilier Bleu (Ø 0.18 mm)</strong>
+                    </div>
+                    <div class="bg-horlo-bg border border-horlo-border rounded-xl p-2.5">
+                        <span class="text-[10px] text-horlo-steel block uppercase">Jeu Axial (Ébat NIHS)</span>
+                        <strong id="inspEndshake" class="text-horlo-emerald">0.025 à 0.045 mm</strong>
+                    </div>
+                </div>
+
+                <!-- AFP / CFC Practical Exam Trap Alert -->
+                <div class="bg-rose-950/35 border border-rose-500/40 rounded-xl p-3.5 mb-4">
+                    <div class="text-[11px] font-mono uppercase text-rose-300 font-bold mb-1 flex items-center gap-1.5">
+                        <i class="fa-solid fa-triangle-exclamation text-rose-400"></i>
+                        <span>Point Critique Examen Pratique (AFP / CFC)</span>
+                    </div>
+                    <p id="inspExamTrap" class="text-xs text-rose-100/90 leading-relaxed">
+                        Toujours désarmer le barillet en retenant la couronne avant de soulever le cliquet ! Ne jamais ouvrir ni sortir le ressort à la main : utiliser exclusivement l'estrapade Bergeon.
+                    </p>
+                </div>
+
+                <!-- Interactive Action Buttons for Selected Organ -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="focusSelectedOrganCamera()" class="flex-1 py-2 px-3 rounded-xl bg-horlo-gold hover:bg-horlo-goldLight text-black font-mono text-xs font-bold transition flex items-center justify-center gap-1.5 shadow">
+                        <i class="fa-solid fa-crosshairs"></i>
+                        <span>Centrer la Caméra 3D</span>
+                    </button>
+                    <button onclick="resetCameraAndView()" class="py-2 px-3 rounded-xl bg-horlo-bg hover:bg-horlo-cardHover text-horlo-rhodium border border-horlo-border font-mono text-xs transition">
+                        Vue Globale
+                    </button>
+                </div>
+            </div>
+
+            <!-- KINEMATIC GEAR TRAIN TABLE (TABLEAU DU ROUAGE ETA 6497-1) -->
+            <div class="bg-horlo-card border border-horlo-border rounded-2xl p-4 shadow-xl">
+                <div class="flex items-center justify-between border-b border-horlo-border pb-2.5 mb-3">
+                    <h3 class="text-xs font-mono uppercase tracking-wider text-horlo-gold font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-gears"></i>
+                        <span>Chaîne Cinématique Interactive (ETA 6497-1)</span>
+                    </h3>
+                    <span class="text-[10px] font-mono text-horlo-steel">Cliquez une ligne</span>
+                </div>
+
+                <div class="space-y-1.5 font-mono text-xs">
+                    <button onclick="selectOrgan('barrel')" class="w-full p-2 rounded-xl bg-horlo-bg/70 hover:bg-horlo-cardHover border border-horlo-border/70 flex items-center justify-between text-left transition">
+                        <div>
+                            <span class="text-horlo-gold font-bold">01. Tambour Barillet</span>
+                            <span class="text-[10px] text-horlo-steel block">Engrène sur pignon de centre (z=12)</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-horlo-card text-white">Z = 84</span>
+                    </button>
+
+                    <button onclick="selectOrgan('centerWheel')" class="w-full p-2 rounded-xl bg-horlo-bg/70 hover:bg-horlo-cardHover border border-horlo-border/70 flex items-center justify-between text-left transition">
+                        <div>
+                            <span class="text-horlo-gold font-bold">02. Roue de Centre</span>
+                            <span class="text-[10px] text-horlo-steel block">1.00 tr/h • Porte la chaussée (Minutes)</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-horlo-card text-white">Z = 64 / z = 12</span>
+                    </button>
+
+                    <button onclick="selectOrgan('thirdWheel')" class="w-full p-2 rounded-xl bg-horlo-bg/70 hover:bg-horlo-cardHover border border-horlo-border/70 flex items-center justify-between text-left transition">
+                        <div>
+                            <span class="text-horlo-gold font-bold">03. Roue de Moyenne</span>
+                            <span class="text-[10px] text-horlo-steel block">8.00 tr/h • Transmission à 11h</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-horlo-card text-white">Z = 60 / z = 8</span>
+                    </button>
+
+                    <button onclick="selectOrgan('fourthWheel')" class="w-full p-2 rounded-xl bg-horlo-bg/70 hover:bg-horlo-cardHover border border-horlo-border/70 flex items-center justify-between text-left transition">
+                        <div>
+                            <span class="text-horlo-gold font-bold">04. Roue de Seconde (9h)</span>
+                            <span class="text-[10px] text-horlo-steel block">60 tr/h (1 tr/min) • Trotteuse à 9h</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-horlo-card text-white">Z = 60 / z = 8</span>
+                    </button>
+
+                    <button onclick="selectOrgan('escapeWheel')" class="w-full p-2 rounded-xl bg-horlo-bg/70 hover:bg-horlo-cardHover border border-horlo-border/70 flex items-center justify-between text-left transition">
+                        <div>
+                            <span class="text-horlo-ruby font-bold">05. Roue d'Échappement</span>
+                            <span class="text-[10px] text-horlo-steel block">600 tr/h (1 tr / 6 s) • Acier 15 dents club</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-horlo-card text-horlo-ruby">Z = 15 / z = 6</span>
+                    </button>
+
+                    <button onclick="selectOrgan('balance')" class="w-full p-2 rounded-xl bg-horlo-bg/70 hover:bg-horlo-cardHover border border-horlo-border/70 flex items-center justify-between text-left transition">
+                        <div>
+                            <span class="text-horlo-cyan font-bold">07. Balancier-Spiral Glucydur</span>
+                            <span class="text-[10px] text-horlo-steel block">5 alternances/s • Double plateau & Ellipse</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-horlo-card text-horlo-cyan">18'000 A/h</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- ============================================================================
+         FOOTER
+         ============================================================================ -->
+    <footer class="border-t border-horlo-border bg-horlo-bg py-3.5 px-5 mt-auto">
+        <div class="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-4 text-xs text-horlo-steel">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-horlo-gold"></span>
+                <span><strong class="text-white">HorloLearn.ch</strong> — Projet indépendant créé par un passionné d'horlogerie • Master Calibre ETA 6497-1 3D.</span>
+            </div>
+            <div class="font-mono text-[11px]">
+                Modélisation WebGL Three.js procédurale • Engrenages épicycloïdaux, Échappement à ancre suisse & Lubrification Moebius.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================================
+         JAVASCRIPT ENGINE : PROCEDURAL 3D ETA 6497-1 MOVEMENT + KINEMATICS + AUDIO
+         ============================================================================ -->
+    <script>
+        /**
+         * 1. TECHNICAL DATABASE FOR ALL 9 INTERACTIVE ORGANS OF THE ETA 6497-1
+         */
+        const ORGAN_DATABASE = {
+            barrel: {
+                id: 'barrel',
+                category: '01. ORGANE MOTEUR • ACCUMULATEUR D\'ÉNERGIE',
+                title: '01. Barillet, Ressort Nivaflex & Rochet (à 1h30)',
+                gearBadge: 'Z = 84 dents',
+                description: 'Tambour denté (Z=84) contenant le ressort-moteur en alliage Nivaflex. Sur le calibre à remontage manuel ETA 6497-1, l\'extrémité externe du ressort se termine par un crochet rivé qui s\'ancre dans une encoche franche du tambour (pas de bride glissante).',
+                speed: '0.143 tr/h (1 tr / 7h)',
+                oil: 'Moebius HP-1300 (Arbre)',
+                oiler: 'Huilier Bleu (Ø 0.18 mm)',
+                endshake: '0.025 à 0.045 mm',
+                examTrap: 'PIÈGE ÉLIMINATOIRE : Toujours désarmer le ressort de barillet (en tenant la couronne et en écartant le cliquet) avant de dévisser le pont de barillet ! Vis de roue de couronne à PAS GAUCHE (fente double/repérée).',
+                focusOffset: { x: -4.5, y: -0.5, z: 3.2 },
+                zoomDist: 12.5
+            },
+            centerWheel: {
+                id: 'centerWheel',
+                category: '02. ROUAGE DE TRANSMISSION • 1er MOBILE',
+                title: '02. Roue de Centre & Chaussée (Centre 0,0)',
+                gearBadge: 'Z = 64 / z = 12',
+                description: 'Placée exactement au centre géométrique de la platine, son pignon (z = 12 ailes) est entraîné par les 84 dents du barillet. Son axe traverse la platine pour recevoir la chaussée à friction qui porte l\'aiguille des minutes.',
+                speed: '1.00 tour / heure exact',
+                oil: 'Moebius HP-1300 / D5',
+                oiler: 'Huilier Rouge / Bleu',
+                endshake: '0.020 à 0.035 mm',
+                examTrap: 'Lubrifier les paliers rubis à la HP-1300. Vérifier le couple de friction de la chaussée : ni trop lâche (décalage des aiguilles), ni trop dur (risque de bris de denture de minuterie).',
+                focusOffset: { x: 0, y: -0.4, z: 0 },
+                zoomDist: 12.0
+            },
+            thirdWheel: {
+                id: 'thirdWheel',
+                category: '03. ROUAGE DE TRANSMISSION • 2e MOBILE',
+                title: '03. Roue de Moyenne (Positionnée à 11h)',
+                gearBadge: 'Z = 60 / z = 8',
+                description: 'Mobile intermédiaire en laiton doré à 5 bras reliant la roue de centre (64 dents → pignon 8 ailes, rapport 8:1) au pignon de la roue de seconde située à 9h.',
+                speed: '8.00 tours / heure',
+                oil: 'Moebius HP-1300',
+                oiler: 'Huilier Rouge (Ø 0.12 mm)',
+                endshake: '0.020 à 0.035 mm',
+                examTrap: 'Lors de la pose du grand pont de rouage du 6497-1, engager délicatement le pivot de moyenne sans forcer avec la brucelle : un pivot faussé bloque toute la chaîne cinématique.',
+                focusOffset: { x: 3.2, y: -0.6, z: 2.8 },
+                zoomDist: 11.5
+            },
+            fourthWheel: {
+                id: 'fourthWheel',
+                category: '04. ROUAGE DE FINISSAGE • PETITE SECONDE 9H',
+                title: '04. Roue de Seconde à 9h (Signature Unitas 6497-1)',
+                gearBadge: 'Z = 60 / z = 8',
+                description: 'Caractéristique des calibres de poche Lépine (tige à 3h, petite seconde à 9h). Elle effectue exactement 1 tour par minute et possède un long pivot inférieur traversant le cadran à 9h pour porter la trotteuse.',
+                speed: '60 tours / heure (1 tr/min)',
+                oil: 'Moebius 9010 (Huile fine)',
+                oiler: 'Huilier Noir (Ø 0.08 mm)',
+                endshake: '0.015 à 0.030 mm',
+                examTrap: 'Transition de viscosité : à partir de la roue de seconde, la vitesse augmente et le couple diminue → on passe impérativement de la HP-1300 à l\'huile synthétique fine Moebius 9010 !',
+                focusOffset: { x: 5.4, y: -0.5, z: -0.2 },
+                zoomDist: 11.5
+            },
+            escapeWheel: {
+                id: 'escapeWheel',
+                category: '05. DISTRIBUTEUR D\'ÉNERGIE • ROUAGE RAPIDE',
+                title: '05. Mobile d\'Échappement en Acier (15 Dents en Club)',
+                gearBadge: 'Z = 15 / z = 6',
+                description: 'Roue en acier poli à 15 dents asymétriques à profil « club » (talon dégagé, plan de repos et plan d\'impulsion partagé avec les palettes d\'ancre). Son pignon à 6 ailes est entraîné par les 60 dents de la roue de seconde (rapport 10:1 → 1 tour en 6 secondes).',
+                speed: '600 tr/h (1 tour / 6 sec)',
+                oil: 'Pivots: 9010 | Dents: 9415',
+                oiler: 'Huilier Noir (Ø 0.08 mm)',
+                endshake: '0.015 à 0.025 mm',
+                examTrap: 'Ne jamais toucher les dents traitées à l\'épilame (Fixodrop) avec des brucelles grasses. Une infime trace de doigt détruit la tension superficielle et fait fuir la Moebius 9415.',
+                focusOffset: { x: 2.8, y: -0.4, z: -3.9 },
+                zoomDist: 8.5
+            },
+            palletFork: {
+                id: 'palletFork',
+                category: '06. ÉCHAPPEMENT À ANCRE SUISSE • 5 PHASES',
+                title: '06. Ancre Suisse 3D, Palettes Rubis, Fourchette & Dard',
+                gearBadge: 'Tirage 12° • 2 Palettes',
+                description: 'Ancre suisse usinée avec bras coudés, palettes d\'entrée et de sortie en rubis corindon synthétique, baguette, cornes de fourchette, dard de sécurité et goupilles de limitation.',
+                speed: '18\'000 basculements / heure',
+                oil: 'Palettes : Moebius 9415 SEULE',
+                oiler: 'Pique-huile Rouge (Palettes)',
+                endshake: '0.015 à 0.025 mm',
+                examTrap: 'INTERDICTION ABSOLUE (Zéro tolérance) : Les pivots d\'ancre, la fourchette et le dard ne doivent JAMAIS être huilés ! Seuls les plans d\'impulsion des palettes reçoivent de la Moebius 9415.',
+                focusOffset: { x: 0.6, y: -0.4, z: -4.2 },
+                zoomDist: 7.8
+            },
+            balance: {
+                id: 'balance',
+                category: '07. ORGANE RÉGULATEUR • OSCILLATEUR 2.5 HZ',
+                title: '07. Balancier Glucydur, Double Plateau, Ellipse & Coq',
+                gearBadge: '18\'000 A/h (44°)',
+                description: 'Cœur chronométrique du calibre 6497-1 battant à 18\'000 alternances/heure (200 ms). Doté d\'un balancier annulaire à 16 vis d\'équilibrage, d\'un double plateau (ellipse rubis + petit plateau à encoche face au dard) et d\'un coq sculpté avec raquette et Incabloc.',
+                speed: '5 alternances / sec (2.5 Hz)',
+                oil: 'Contre-pivots : Moebius 9010',
+                oiler: 'Huilier Noir (Ø 0.08 mm)',
+                endshake: '0.015 à 0.025 mm',
+                examTrap: 'Sur le chrono-comparateur Witschi, toujours paramétrer l\'angle de levée du 6497-1 sur 44° (et non 50° ou 52° !), sinon l\'amplitude affichée sera faussée de +35°.',
+                focusOffset: { x: -2.8, y: -0.6, z: -3.6 },
+                zoomDist: 9.8
+            },
+            winding: {
+                id: 'winding',
+                category: '08. REMONTOIR & MISE À L\'HEURE • TIGE À 3H',
+                title: '08. Tige de Remontoir, Pignon Coulant, Tirette & Bascule',
+                gearBadge: 'Denture Breguet',
+                description: 'Mécanisme commandé par la couronne à 3h. En position 1 (poussée), le pignon coulant engrène par sa denture loup (Breguet) avec le pignon de remontoir pour armer la roue de couronne et le rochet. En position 2 (tirée), il règle l\'heure.',
+                speed: 'Actionné manuellement',
+                oil: 'Graisse Moebius 8200 / DX',
+                oiler: 'Huilier Vert (Ø 0.25 mm)',
+                endshake: 'Jeu de tige : 0.15 mm',
+                examTrap: 'La vis de la roue de couronne (2 fentes) possède un FILETAGE À GAUCHE : on la dévisse dans le sens horaire ! Forcer en sens anti-horaire brise la tête de vis dans le pont de barillet.',
+                focusOffset: { x: -6.8, y: -0.3, z: 0 },
+                zoomDist: 11.5
+            },
+            dial: {
+                id: 'dial',
+                category: '09. AFFICHAGE & HABILLAGE • CADRAN LÉPINE',
+                title: '09. Cadran Soleillé Anthracite, Petite Seconde 9h & Quantième',
+                gearBadge: 'Minuterie 12:1',
+                description: 'Côté cadran du calibre 6497-1 Lépine (tige à 3h et petite seconde à 9h alignées). La chaussée (sur la roue de centre) entraîne la roue de minuterie et la roue des heures (démultiplication 12:1) sous des aiguilles facettées Dauphine.',
+                speed: 'Heures : 2 tr/j • Min : 24 tr/j',
+                oil: 'Chaussée : Graisse Moebius 8200',
+                oiler: 'Huilier Vert (Ø 0.25 mm)',
+                endshake: 'Liberté des aiguilles : ~0.15 mm',
+                examTrap: 'Toujours poser une feuille de protection plastique avant d\'utiliser les leviers aux aiguilles. Vérifier le parallélisme des aiguilles en vue de profil sur 360°.',
+                focusOffset: { x: 0, y: 0.6, z: 0 },
+                zoomDist: 19.5
+            }
+        };
+
+        /**
+         * 2. GLOBAL SIMULATION STATE
+         */
+        const simState = {
+            speedMultiplier: 1.0,
+            beatPhasePct: 45,
+            beatDirection: 1,
+            totalEscapeTeethPassed: 0,
+            explodeFactor: 0,
+            xrayFactor: 0.25,
+            mainspringCharge: 85,
+            selectedOrgan: 'barrel',
+            audioEnabled: false,
+            isDialSideShown: false
+        };
+
+        /**
+         * 3. WEB AUDIO API MECHANICAL TICK-TOCK SYNTHESIZER (5 Hz = 18'000 A/h)
+         */
+        let audioCtx = null;
+
+        function toggleAudioTick() {
+            simState.audioEnabled = !simState.audioEnabled;
+            if (simState.audioEnabled && !audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContextClass();
+            }
+            const btn = document.getElementById('btnAudioTick');
+            const icon = document.getElementById('iconAudioTick');
+            const lbl = document.getElementById('labelAudioTick');
+            if (simState.audioEnabled) {
+                btn.className = "px-3 py-1.5 rounded-xl bg-horlo-gold text-black font-bold transition flex items-center gap-1.5 shadow";
+                icon.className = "fa-solid fa-volume-high";
+                lbl.textContent = "Son 5 Hz : ON";
+            } else {
+                btn.className = "px-3 py-1.5 rounded-xl bg-horlo-card hover:bg-horlo-cardHover border border-horlo-border text-horlo-rhodium hover:text-horlo-gold transition flex items-center gap-1.5";
+                icon.className = "fa-solid fa-volume-xmark";
+                lbl.textContent = "Son 5 Hz : OFF";
+            }
+        }
+
+        function playMechanicalAcousticImpulse(type) {
+            if (!simState.audioEnabled || !audioCtx) return;
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type === 'chute' ? 'triangle' : 'sine';
+                osc.frequency.setValueAtTime(type === 'chute' ? 3900 : 2800, now);
+                osc.frequency.exponentialRampToValueAtTime(650, now + 0.012);
+
+                gain.gain.setValueAtTime(0.14, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.014);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.015);
+            } catch (e) {}
+        }
+
+        /**
+         * 4. THREE.JS 3D PROCEDURAL CALIBRE ETA 6497-1 ENGINE + QUATERNION TRACKBALL
+         */
+        let scene, camera, renderer;
+        let calibreWorld, calibrePivot; // Quaternion Trackball Root + Focus Offset Pivot
+        const layerGroups = [];
+        const organMeshes = {};
+        const bridgeMaterials = [];
+
+        // Animated 3D references
+        let meshBarrel, meshMainspringSpiral, meshRatchetWheel, meshCrownWheel;
+        let meshCenterWheel, meshThirdWheel, meshFourthWheel, meshEscapeWheel;
+        let meshPalletFork, meshBalanceWheel, meshHairspring, meshWindingCrown;
+        let meshHourHand, meshMinuteHand, meshSmallSecondsHand;
+
+        /**
+         * GIMBAL-LOCK-FREE QUATERNION TRACKBALL CONTROLLER
+         * Allows turning the watch movement effortlessly in ANY 360° direction without pole lock or flip!
+         */
+        const trackball = {
+            currentQuat: new THREE.Quaternion(),
+            targetQuat: new THREE.Quaternion(),
+            currentPivot: new THREE.Vector3(0, 0, 0),
+            targetPivot: new THREE.Vector3(0, 0, 0),
+            currentZoom: 21.0,
+            targetZoom: 21.0,
+            isDragging: false,
+            isPanning: false,
+            prevX: 0,
+            prevY: 0,
+            velX: 0,
+            velY: 0,
+            pinchStartDist: 0
+        };
+
+        function setTrackballEuler(rx, ry, rz = 0) {
+            trackball.velX = 0;
+            trackball.velY = 0;
+            trackball.targetQuat.setFromEuler(new THREE.Euler(rx, ry, rz, 'XYZ'));
+        }
+
+        function nudgeTrackball(deltaPitchX, deltaYawY) {
+            trackball.velX = 0;
+            trackball.velY = 0;
+            const qx = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), deltaPitchX);
+            const qy = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), deltaYawY);
+            trackball.targetQuat.premultiply(qy).premultiply(qx).normalize();
+        }
+
+        function flipCalibre180() {
+            const qFlip = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI);
+            trackball.targetQuat.premultiply(qFlip).normalize();
+            simState.isDialSideShown = !simState.isDialSideShown;
+        }
+
+        /**
+         * Procedural 3D Spoked Gear Generator with Beveled Rims & Authentic Club Teeth
+         */
+        function createProceduralGearMesh(outerRadius, innerRadius, teethCount, thickness, material, spokeCount = 5, clubTeeth = false) {
+            const shape = new THREE.Shape();
+            const step = (Math.PI * 2) / teethCount;
+
+            if (clubTeeth) {
+                const rootRadius = outerRadius * 0.72;
+                const midStalkRadius = outerRadius * 0.91;
+                for (let i = 0; i < teethCount; i++) {
+                    const a0 = i * step;
+                    const agullet = a0 + step * 0.18;
+                    const aLock = a0 + step * 0.34;
+                    const aImpulse = a0 + step * 0.56;
+                    const aHeel = a0 + step * 0.46;
+
+                    if (i === 0) {
+                        shape.moveTo(Math.cos(a0) * rootRadius, Math.sin(a0) * rootRadius);
+                    } else {
+                        shape.lineTo(Math.cos(a0) * rootRadius, Math.sin(a0) * rootRadius);
+                    }
+                    shape.lineTo(Math.cos(agullet) * rootRadius, Math.sin(agullet) * rootRadius);
+                    shape.lineTo(Math.cos(aLock) * midStalkRadius, Math.sin(aLock) * midStalkRadius);
+                    shape.lineTo(Math.cos(aImpulse) * outerRadius, Math.sin(aImpulse) * outerRadius);
+                    shape.lineTo(Math.cos(aHeel) * (outerRadius * 0.86), Math.sin(aHeel) * (outerRadius * 0.86));
+                }
+            } else {
+                const toothHeight = outerRadius * 0.082;
+                const rootRadius = outerRadius - toothHeight;
+
+                for (let i = 0; i < teethCount; i++) {
+                    const a0 = i * step;
+                    const a1 = a0 + step * 0.22;
+                    const a2 = a0 + step * 0.48;
+                    const a3 = a0 + step * 0.68;
+                    const a4 = (i + 1) * step;
+
+                    if (i === 0) {
+                        shape.moveTo(Math.cos(a0) * rootRadius, Math.sin(a0) * rootRadius);
+                    } else {
+                        shape.lineTo(Math.cos(a0) * rootRadius, Math.sin(a0) * rootRadius);
+                    }
+                    shape.lineTo(Math.cos(a1) * outerRadius, Math.sin(a1) * outerRadius);
+                    shape.lineTo(Math.cos(a2) * outerRadius, Math.sin(a2) * outerRadius);
+                    shape.lineTo(Math.cos(a3) * rootRadius, Math.sin(a3) * rootRadius);
+                    shape.lineTo(Math.cos(a4) * rootRadius, Math.sin(a4) * rootRadius);
+                }
+            }
+
+            if (spokeCount > 0 && innerRadius > 0.35) {
+                const hubRadius = innerRadius * 0.34;
+                const windowOuter = outerRadius * (clubTeeth ? 0.63 : 0.76);
+                const spokeAngle = (Math.PI * 2) / spokeCount;
+                const gapMargin = 0.16;
+
+                for (let s = 0; s < spokeCount; s++) {
+                    const sa0 = s * spokeAngle + gapMargin;
+                    const sa1 = (s + 1) * spokeAngle - gapMargin;
+                    if (sa1 > sa0) {
+                        const hole = new THREE.Path();
+                        hole.moveTo(Math.cos(sa0) * hubRadius, Math.sin(sa0) * hubRadius);
+                        hole.lineTo(Math.cos(sa0) * windowOuter, Math.sin(sa0) * windowOuter);
+                        hole.absarc(0, 0, windowOuter, sa0, sa1, false);
+                        hole.lineTo(Math.cos(sa1) * hubRadius, Math.sin(sa1) * hubRadius);
+                        hole.absarc(0, 0, hubRadius, sa1, sa0, true);
+                        shape.holes.push(hole);
+                    }
+                }
+            }
+
+            const extrudeSettings = {
+                depth: thickness,
+                bevelEnabled: true,
+                bevelSegments: 2,
+                steps: 1,
+                bevelSize: 0.02,
+                bevelThickness: 0.02
+            };
+
+            const geom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            geom.rotateX(Math.PI / 2);
+            geom.translate(0, thickness / 2, 0);
+            return new THREE.Mesh(geom, material);
+        }
+
+        function createRubyJewelUnit(radius = 0.34, withIncabloc = false, matRuby, matGold) {
+            const group = new THREE.Group();
+            const chaton = new THREE.Mesh(new THREE.CylinderGeometry(radius * 1.25, radius * 1.25, 0.14, 24), matGold);
+            const ruby = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, 0.18, 24), matRuby);
+            group.add(chaton, ruby);
+
+            if (withIncabloc) {
+                const lyreRing = new THREE.Mesh(new THREE.TorusGeometry(radius * 1.15, 0.045, 8, 24), matGold);
+                lyreRing.rotation.x = Math.PI / 2;
+                lyreRing.position.y = 0.1;
+                group.add(lyreRing);
+            }
+            return group;
+        }
+
+        function createBluedScrew(x, y, z, matBlued, leftHandSlot = false) {
+            const grp = new THREE.Group();
+            grp.position.set(x, y, z);
+            const head = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.12, 20), matBlued);
+            const slotMat = new THREE.MeshBasicMaterial({ color: 0x05070B });
+            const slot1 = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.05, 0.05), slotMat);
+            slot1.position.y = 0.05;
+            grp.add(head, slot1);
+
+            if (leftHandSlot) {
+                const slot2 = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.05, 0.05), slotMat);
+                slot2.position.set(0, 0.05, 0.1);
+                grp.add(slot2);
+            }
+            return grp;
+        }
+
+        /**
+         * Procedural Dial, Date Disc, Faceted Hands & Côtes de Genève Generators
+         */
+        function createModernDialTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024;
+            canvas.height = 1024;
+            const ctx = canvas.getContext('2d');
+            const cx = 512, cy = 512;
+
+            const dialGrad = ctx.createRadialGradient(cx, cy, 30, cx, cy, 510);
+            dialGrad.addColorStop(0, '#222936');
+            dialGrad.addColorStop(0.5, '#141822');
+            dialGrad.addColorStop(0.85, '#0D1017');
+            dialGrad.addColorStop(1, '#06080C');
+            ctx.fillStyle = dialGrad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 510, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 360; i += 1.5) {
+                const rad = (i * Math.PI) / 180;
+                const alpha = 0.025 + (Math.sin(rad * 8) * 0.5 + 0.5) * 0.035;
+                ctx.strokeStyle = `rgba(225, 238, 255, ${alpha.toFixed(3)})`;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx + Math.cos(rad) * 505, cy + Math.sin(rad) * 505);
+                ctx.stroke();
+            }
+
+            const rTrack = 476;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(cx, cy, rTrack, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(cx, cy, rTrack - 16, 0, Math.PI * 2);
+            ctx.stroke();
+
+            for (let m = 0; m < 60; m++) {
+                const angle = (m / 60) * Math.PI * 2 - Math.PI / 2;
+                const is5 = m % 5 === 0;
+                const l = is5 ? 16 : 8;
+                const rOuter = rTrack;
+                const rInner = rTrack - l;
+
+                ctx.strokeStyle = is5 ? '#FFFFFF' : 'rgba(203, 213, 225, 0.65)';
+                ctx.lineWidth = is5 ? 2.5 : 1.2;
+                ctx.beginPath();
+                ctx.moveTo(cx + Math.cos(angle) * rInner, cy + Math.sin(angle) * rInner);
+                ctx.lineTo(cx + Math.cos(angle) * rOuter, cy + Math.sin(angle) * rOuter);
+                ctx.stroke();
+            }
+
+            const subX = 189, subY = 524, subR = 125;
+            const subGrad = ctx.createRadialGradient(subX, subY, 5, subX, subY, subR);
+            subGrad.addColorStop(0, '#1C222E');
+            subGrad.addColorStop(1, '#0A0C12');
+            ctx.fillStyle = subGrad;
+            ctx.beginPath();
+            ctx.arc(subX, subY, subR, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.lineWidth = 1;
+            for (let r = 16; r < subR - 4; r += 7) {
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+                ctx.beginPath();
+                ctx.arc(subX, subY, r, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            ctx.strokeStyle = '#D4AF37';
+            ctx.lineWidth = 1.6;
+            ctx.beginPath();
+            ctx.arc(subX, subY, subR, 0, Math.PI * 2);
+            ctx.stroke();
+
+            for (let s = 0; s < 60; s += 5) {
+                const rad = (s / 60) * Math.PI * 2 - Math.PI / 2;
+                const isMajor = s % 15 === 0;
+                const tickL = isMajor ? 11 : 6;
+                ctx.strokeStyle = isMajor ? '#FFFFFF' : 'rgba(226, 232, 240, 0.65)';
+                ctx.lineWidth = isMajor ? 2.2 : 1.2;
+                ctx.beginPath();
+                ctx.moveTo(subX + Math.cos(rad) * (subR - tickL), subY + Math.sin(rad) * (subR - tickL));
+                ctx.lineTo(subX + Math.cos(rad) * subR, subY + Math.sin(rad) * subR);
+                ctx.stroke();
+            }
+
+            ctx.fillStyle = '#E2E8F0';
+            ctx.font = '600 17px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('60', subX, subY - subR + 22);
+            ctx.fillText('30', subX, subY + subR - 22);
+            ctx.fillText('15', subX + subR - 22, subY);
+            ctx.fillText('45', subX - subR + 22, subY);
+
+            ctx.fillStyle = '#F8FAFC';
+            ctx.font = '700 23px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+            ctx.fillText('HORLOLEARN', cx, cy - 215);
+
+            ctx.fillStyle = '#94A3B8';
+            ctx.font = '500 13px "Courier New", monospace';
+            ctx.fillText("UNITAS 6497-1 · 18'000 A/h", cx, cy - 188);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.font = '600 13px sans-serif';
+            ctx.fillText('SWISS  ·  MADE', cx, cy + 448);
+
+            ctx.fillStyle = '#030508';
+            ctx.fillRect(823 - 42, 512 - 30, 84, 60);
+
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.wrapS = THREE.ClampToEdgeWrapping;
+            tex.wrapT = THREE.ClampToEdgeWrapping;
+            return tex;
+        }
+
+        function createDateDiscTexture(dayNumber) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+
+            const g = ctx.createLinearGradient(0, 0, 0, 256);
+            g.addColorStop(0, '#FFFFFF');
+            g.addColorStop(0.7, '#F8FAFC');
+            g.addColorStop(1, '#E2E8F0');
+            ctx.fillStyle = g;
+            ctx.fillRect(0, 0, 256, 256);
+
+            ctx.strokeStyle = 'rgba(15, 23, 42, 0.18)';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(5, 5, 246, 246);
+
+            ctx.fillStyle = '#0F172A';
+            ctx.font = '700 132px "Helvetica Neue", Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(String(dayNumber).padStart(2, '0'), 128, 134);
+
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        function createFacetedHandGeom(length, baseW, tipW, ridgeH) {
+            const geom = new THREE.BufferGeometry();
+            const verts = new Float32Array([
+                0, -ridgeH, 0,
+                -baseW / 2, 0, 0,
+                -tipW / 2, 0, length,
+                0, -ridgeH * 0.35, length + 0.22,
+                0, -ridgeH, 0,
+                0, -ridgeH * 0.35, length + 0.22,
+                tipW / 2, 0, length,
+                baseW / 2, 0, 0
+            ]);
+            const indices = [
+                0, 2, 1,   0, 3, 2,
+                4, 6, 5,   4, 7, 6
+            ];
+            geom.setAttribute('position', new THREE.BufferAttribute(verts, 3));
+            geom.setIndex(indices);
+            geom.computeVertexNormals();
+            return geom;
+        }
+
+        function createCotesDeGeneveTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024;
+            canvas.height = 1024;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = '#CBD5E1';
+            ctx.fillRect(0, 0, 1024, 1024);
+
+            const stripeW = 56;
+            for (let x = 0; x < 1024; x += stripeW) {
+                const isOdd = Math.floor(x / stripeW) % 2 === 1;
+                const g = ctx.createLinearGradient(x, 0, x + stripeW, 0);
+                if (isOdd) {
+                    g.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
+                    g.addColorStop(0.5, 'rgba(235, 242, 250, 0.18)');
+                    g.addColorStop(1, 'rgba(130, 145, 165, 0.35)');
+                } else {
+                    g.addColorStop(0, 'rgba(120, 135, 155, 0.32)');
+                    g.addColorStop(0.5, 'rgba(255, 255, 255, 0.42)');
+                    g.addColorStop(1, 'rgba(195, 210, 225, 0.15)');
+                }
+                ctx.fillStyle = g;
+                ctx.fillRect(x, 0, stripeW, 1024);
+
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
+                ctx.lineWidth = 1;
+                for (let y = 0; y < 1024; y += 8) {
+                    ctx.beginPath();
+                    ctx.arc(x + stripeW / 2, y + 28, stripeW * 0.88, Math.PI * 0.82, Math.PI * 0.18, true);
+                    ctx.stroke();
+                }
+            }
+
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.wrapS = THREE.RepeatWrapping;
+            tex.wrapT = THREE.RepeatWrapping;
+            tex.repeat.set(1.4, 1.4);
+            return tex;
+        }
+
+        function createBridgeChaton(x, z, rChaton = 0.58, rRuby = 0.30, matBrightGold, matRuby) {
+            const chatonGrp = new THREE.Group();
+            chatonGrp.position.set(x, 0.25, z);
+
+            const chatonGeom = new THREE.CylinderGeometry(rChaton, rChaton * 0.92, 0.09, 32);
+            const chatonMesh = new THREE.Mesh(chatonGeom, matBrightGold);
+
+            const rubyGeom = new THREE.CylinderGeometry(rRuby, rRuby, 0.11, 24);
+            const rubyMesh = new THREE.Mesh(rubyGeom, matRuby);
+            rubyMesh.position.y = 0.01;
+
+            const oilSinkGeom = new THREE.CylinderGeometry(rRuby * 0.38, rRuby * 0.18, 0.06, 16);
+            const oilSinkMesh = new THREE.Mesh(oilSinkGeom, new THREE.MeshBasicMaterial({ color: 0x2A050A }));
+            oilSinkMesh.position.y = 0.045;
+
+            chatonGrp.add(chatonMesh, rubyMesh, oilSinkMesh);
+            return chatonGrp;
+        }
+
+        function initThreeCalibre6497() {
+            const container = document.getElementById('threeCanvasWrapper');
+            const w = container.clientWidth || 800;
+            const h = container.clientHeight || 560;
+
+            scene = new THREE.Scene();
+
+            camera = new THREE.PerspectiveCamera(36, w / h, 0.1, 200);
+            camera.position.set(0, 0, trackball.currentZoom);
+            camera.lookAt(0, 0, 0);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(w, h);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            container.innerHTML = '';
+            container.appendChild(renderer.domElement);
+
+            // Studio Horological Lighting (Balanced top & bottom for seamless 360° flipping)
+            const ambient = new THREE.AmbientLight(0xD8E2F2, 0.78);
+            scene.add(ambient);
+
+            const keyLight = new THREE.DirectionalLight(0xFFF6E0, 1.35);
+            keyLight.position.set(14, 22, 18);
+            scene.add(keyLight);
+
+            const rimLight = new THREE.DirectionalLight(0x38BDF8, 0.65);
+            rimLight.position.set(-16, 12, 14);
+            scene.add(rimLight);
+
+            const dialSideLight = new THREE.DirectionalLight(0xFFFBEB, 0.75);
+            dialSideLight.position.set(8, -18, 16);
+            scene.add(dialSideLight);
+
+            // Horological Materials
+            const matPlatine = new THREE.MeshStandardMaterial({ color: 0x64748B, metalness: 0.78, roughness: 0.32 });
+            const matBrassGold = new THREE.MeshStandardMaterial({ color: 0xD4AF37, metalness: 0.86, roughness: 0.22 });
+            const matBrightGold = new THREE.MeshStandardMaterial({ color: 0xF3E5AB, metalness: 0.9, roughness: 0.18 });
+            const matPolishedSteel = new THREE.MeshStandardMaterial({ color: 0xE2E8F0, metalness: 0.92, roughness: 0.15 });
+            const matDarkSteel = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.85, roughness: 0.28 });
+            const matBluedSteel = new THREE.MeshStandardMaterial({ color: 0x2563EB, metalness: 0.85, roughness: 0.2 });
+            const matNivaflex = new THREE.MeshStandardMaterial({ color: 0x38BDF8, metalness: 0.8, roughness: 0.25 });
+            const matRuby = new THREE.MeshStandardMaterial({
+                color: 0xE11D48,
+                emissive: 0x4C0519,
+                metalness: 0.2,
+                roughness: 0.1,
+                transparent: true,
+                opacity: 0.92
+            });
+
+            const cotesTexture = createCotesDeGeneveTexture();
+            const createBridgeMat = (hexColor = 0xD8E0E8) => {
+                const m = new THREE.MeshStandardMaterial({
+                    color: hexColor,
+                    map: cotesTexture,
+                    bumpMap: cotesTexture,
+                    bumpScale: 0.016,
+                    metalness: 0.86,
+                    roughness: 0.24,
+                    transparent: true,
+                    opacity: 1 - simState.xrayFactor
+                });
+                bridgeMaterials.push(m);
+                return m;
+            };
+
+            // Initialize Quaternion Trackball Hierarchy:
+            // scene -> calibreWorld (rotates 360° via Quaternion) -> calibrePivot (centers zoomed organ) -> 7 layerGroups
+            calibreWorld = new THREE.Group();
+            calibrePivot = new THREE.Group();
+            calibreWorld.add(calibrePivot);
+            scene.add(calibreWorld);
+
+            // Default Isometric 3D Tilt on Movement Bridges
+            setTrackballEuler(0.88, -0.38, 0);
+            trackball.currentQuat.copy(trackball.targetQuat);
+            calibreWorld.quaternion.copy(trackball.currentQuat);
+
+            for (let i = 0; i < 7; i++) {
+                const lg = new THREE.Group();
+                lg.userData.layerIndex = i;
+                calibrePivot.add(lg);
+                layerGroups.push(lg);
+            }
+
+            // =========================================================================
+            // LAYER 0 : PLATINE, CADRAN MODERNE SOLEILLÉ, GUICHET DATE & AIGUILLES
+            // =========================================================================
+            const platineGrp = new THREE.Group();
+
+            // 1. Platine Principale (Mainplate with Perlage Rim)
+            const mainPlate = new THREE.Mesh(new THREE.CylinderGeometry(8.6, 8.6, 0.35, 64), matPlatine);
+            mainPlate.position.y = -0.35;
+            platineGrp.add(mainPlate);
+
+            // Case Clamps & Screws (Brides d'emboîtage à 5h et 11h)
+            [-2.4, 0.7].forEach(ang => {
+                const clamp = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.12, 0.35), matPolishedSteel);
+                clamp.position.set(Math.cos(ang) * 8.55, -0.15, Math.sin(ang) * 8.55);
+                clamp.rotation.y = -ang;
+                platineGrp.add(clamp);
+            });
+
+            // Outer Gold Bezel Reference Ring
+            const bezelRing = new THREE.Mesh(new THREE.TorusGeometry(8.65, 0.08, 12, 64), matBrassGold);
+            bezelRing.rotation.x = Math.PI / 2;
+            bezelRing.position.y = -0.18;
+            platineGrp.add(bezelRing);
+
+            // 2. Cadran Moderne Soleillé (Y = -0.53)
+            const dialTexture = createModernDialTexture();
+            const matDial = new THREE.MeshStandardMaterial({
+                map: dialTexture,
+                roughness: 0.35,
+                metalness: 0.65
+            });
+            const dialMesh = new THREE.Mesh(new THREE.CircleGeometry(8.55, 64), matDial);
+            dialMesh.position.y = -0.53;
+            dialMesh.rotation.x = Math.PI / 2;
+            dialMesh.userData.organId = 'dial';
+            organMeshes.dial = platineGrp;
+            platineGrp.add(dialMesh);
+
+            // 3. Guichet de Date 3D et Disque de Quantième (à 3h : X = +5.2, Z = 0.0)
+            const dateGrp = new THREE.Group();
+            dateGrp.position.set(5.2, -0.54, 0.0);
+
+            const todayDay = new Date().getDate();
+            const dateDiscMat = new THREE.MeshBasicMaterial({ map: createDateDiscTexture(todayDay) });
+            const dateDiscMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.24, 0.88), dateDiscMat);
+            dateDiscMesh.rotation.x = Math.PI / 2;
+            dateDiscMesh.position.y = 0.005;
+            dateGrp.add(dateDiscMesh);
+
+            const dateFrameShape = new THREE.Shape();
+            const fw = 0.80, fh = 0.60;
+            dateFrameShape.moveTo(-fw, -fh);
+            dateFrameShape.lineTo(fw, -fh);
+            dateFrameShape.lineTo(fw, fh);
+            dateFrameShape.lineTo(-fw, fh);
+            dateFrameShape.closePath();
+
+            const dateHole = new THREE.Path();
+            const hw = 0.58, hh = 0.40;
+            dateHole.moveTo(-hw, -hh);
+            dateHole.lineTo(hw, -hh);
+            dateHole.lineTo(hw, hh);
+            dateHole.lineTo(-hw, hh);
+            dateHole.closePath();
+            dateFrameShape.holes.push(dateHole);
+
+            const dateFrameGeom = new THREE.ExtrudeGeometry(dateFrameShape, {
+                depth: 0.06,
+                bevelEnabled: true,
+                bevelSize: 0.02,
+                bevelThickness: 0.02,
+                bevelSegments: 3
+            });
+            dateFrameGeom.rotateX(-Math.PI / 2);
+            const dateFrameMesh = new THREE.Mesh(dateFrameGeom, matPolishedSteel);
+            dateFrameMesh.position.y = -0.02;
+            dateGrp.add(dateFrameMesh);
+            dateGrp.userData.organId = 'dial';
+            platineGrp.add(dateGrp);
+
+            // 4. Index Bâtons Appliqués Facettés Modernes (12 Appliques)
+            const indicesGrp = new THREE.Group();
+            const matLumi = new THREE.MeshStandardMaterial({
+                color: 0xEEFFF4,
+                emissive: 0x1A4428,
+                emissiveIntensity: 0.45,
+                roughness: 0.5
+            });
+
+            for (let h = 1; h <= 12; h++) {
+                const alpha = (h / 12) * Math.PI * 2;
+                const rIdx = 7.1;
+                const ix = Math.sin(alpha) * rIdx;
+                const iz = Math.cos(alpha) * rIdx;
+
+                if (h === 12) {
+                    [-0.18, 0.18].forEach(offset => {
+                        const baton = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.07, 1.15), matPolishedSteel);
+                        baton.position.set(offset, -0.56, 7.1);
+                        const lumi = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.02, 0.82), matLumi);
+                        lumi.position.set(offset, -0.596, 7.1);
+                        indicesGrp.add(baton, lumi);
+                    });
+                } else if (h === 3) {
+                    const batonGrp = new THREE.Group();
+                    batonGrp.position.set(7.05, -0.56, 0.0);
+                    batonGrp.rotation.y = Math.PI / 2;
+                    const baton = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.07, 0.65), matPolishedSteel);
+                    const lumi = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.02, 0.42), matLumi);
+                    lumi.position.y = -0.036;
+                    batonGrp.add(baton, lumi);
+                    indicesGrp.add(batonGrp);
+                } else if (h === 9) {
+                    const batonGrp = new THREE.Group();
+                    batonGrp.position.set(-7.4, -0.56, 0.0);
+                    batonGrp.rotation.y = Math.PI / 2;
+                    const baton = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.07, 0.55), matPolishedSteel);
+                    const lumi = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.02, 0.35), matLumi);
+                    lumi.position.y = -0.036;
+                    batonGrp.add(baton, lumi);
+                    indicesGrp.add(batonGrp);
+                } else {
+                    const batonGrp = new THREE.Group();
+                    batonGrp.position.set(ix, -0.56, iz);
+                    batonGrp.rotation.y = alpha;
+
+                    const baton = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.07, 1.15), matPolishedSteel);
+                    const lumi = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.02, 0.80), matLumi);
+                    lumi.position.y = -0.036;
+                    batonGrp.add(baton, lumi);
+                    indicesGrp.add(batonGrp);
+                }
+            }
+            platineGrp.add(indicesGrp);
+
+            // 5. Aiguilles Modernes Facettées Dauphine-Bâton (Heures & Minutes)
+            const handsCenterGrp = new THREE.Group();
+            handsCenterGrp.position.set(0, 0, 0);
+
+            meshHourHand = new THREE.Group();
+            meshHourHand.position.set(0, -0.63, 0);
+            const hourBladeGeom = createFacetedHandGeom(4.4, 0.48, 0.16, 0.08);
+            const hourBladeMesh = new THREE.Mesh(hourBladeGeom, matPolishedSteel);
+            const hourCollar = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.06, 24), matPolishedSteel);
+            const hourLumi = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.02, 2.8), matLumi);
+            hourLumi.position.set(0, -0.045, 2.2);
+            meshHourHand.add(hourBladeMesh, hourCollar, hourLumi);
+            handsCenterGrp.add(meshHourHand);
+
+            meshMinuteHand = new THREE.Group();
+            meshMinuteHand.position.set(0, -0.71, 0);
+            const minBladeGeom = createFacetedHandGeom(6.85, 0.42, 0.12, 0.08);
+            const minBladeMesh = new THREE.Mesh(minBladeGeom, matPolishedSteel);
+            const minCollar = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.06, 24), matPolishedSteel);
+            const minLumi = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.02, 4.6), matLumi);
+            minLumi.position.set(0, -0.045, 3.5);
+            meshMinuteHand.add(minBladeMesh, minCollar, minLumi);
+            handsCenterGrp.add(meshMinuteHand);
+
+            const centerCap = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.10, 24), matPolishedSteel);
+            centerCap.position.set(0, -0.76, 0);
+            const centerCapDome = new THREE.Mesh(new THREE.SphereGeometry(0.24, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2), matPolishedSteel);
+            centerCapDome.rotation.x = Math.PI;
+            centerCapDome.position.set(0, -0.81, 0);
+            handsCenterGrp.add(centerCap, centerCapDome);
+            platineGrp.add(handsCenterGrp);
+
+            // 6. Aiguille de Petite Seconde à 9h
+            meshSmallSecondsHand = new THREE.Group();
+            meshSmallSecondsHand.position.set(-5.4, -0.62, 0.0);
+            const secLance = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.03, 1.65), matPolishedSteel);
+            secLance.position.set(0, 0, 0.825);
+            const secCenter = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.05, 16), matPolishedSteel);
+            const secCounterweight = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.04, 8, 24), matPolishedSteel);
+            secCounterweight.rotation.x = Math.PI / 2;
+            secCounterweight.position.set(0, 0, -0.32);
+            meshSmallSecondsHand.add(secLance, secCenter, secCounterweight);
+            platineGrp.add(meshSmallSecondsHand);
+
+            layerGroups[0].add(platineGrp);
+
+            // =========================================================================
+            // LAYER 1 : SYSTÈME DE REMONTOIR & MISE À L'HEURE (À 3H : X = +6.8, Z = 0)
+            // =========================================================================
+            const windingGrp = new THREE.Group();
+            windingGrp.userData.organId = 'winding';
+            organMeshes.winding = windingGrp;
+
+            const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 5.2, 16), matPolishedSteel);
+            stem.rotation.z = Math.PI / 2;
+            stem.position.set(7.2, 0.2, 0);
+            windingGrp.add(stem);
+
+            meshWindingCrown = createProceduralGearMesh(1.15, 0.2, 24, 0.65, matBrassGold, 0);
+            meshWindingCrown.rotation.z = Math.PI / 2;
+            meshWindingCrown.position.set(9.8, 0.2, 0);
+            windingGrp.add(meshWindingCrown);
+
+            const slidingPinion = createProceduralGearMesh(0.58, 0.2, 12, 0.55, matPolishedSteel, 0);
+            slidingPinion.rotation.z = Math.PI / 2;
+            slidingPinion.position.set(6.2, 0.2, 0);
+            windingGrp.add(slidingPinion);
+
+            const windingPinion = createProceduralGearMesh(0.66, 0.2, 14, 0.45, matDarkSteel, 0);
+            windingPinion.rotation.z = Math.PI / 2;
+            windingPinion.position.set(7.5, 0.2, 0);
+            windingGrp.add(windingPinion);
+
+            const yokeMesh = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.12, 0.45), matPolishedSteel);
+            yokeMesh.position.set(6.4, -0.05, 0.9);
+            yokeMesh.rotation.y = 0.35;
+            windingGrp.add(yokeMesh);
+
+            layerGroups[1].add(windingGrp);
+
+            // =========================================================================
+            // LAYER 2 : BARILLET, RESSORT NIVAFLEX & ROCHET (À 1H30 : X = +4.5, Z = -3.2)
+            // =========================================================================
+            const barrelOrganGrp = new THREE.Group();
+            barrelOrganGrp.position.set(4.5, 0.25, -3.2);
+            barrelOrganGrp.userData.organId = 'barrel';
+            organMeshes.barrel = barrelOrganGrp;
+
+            meshBarrel = new THREE.Group();
+            const barrelDrumGear = createProceduralGearMesh(3.35, 2.85, 84, 0.45, matBrassGold, 6);
+            meshBarrel.add(barrelDrumGear);
+
+            const barrelArbor = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.65, 1.4, 24), matPolishedSteel);
+            barrelArbor.position.y = 0.5;
+            meshBarrel.add(barrelArbor);
+
+            meshMainspringSpiral = new THREE.Group();
+            meshMainspringSpiral.position.y = 0.28;
+            rebuildMainspringSpiralGeometry(matNivaflex);
+            meshBarrel.add(meshMainspringSpiral);
+
+            barrelOrganGrp.add(meshBarrel);
+            layerGroups[2].add(barrelOrganGrp);
+
+            // =========================================================================
+            // LAYER 3 : LA CHAÎNE CINÉMATIQUE (CENTRE Z=64, MOYENNE Z=60, SECONDE 9H Z=60)
+            // =========================================================================
+            const centerGrp = new THREE.Group();
+            centerGrp.position.set(0, 0.42, 0);
+            centerGrp.userData.organId = 'centerWheel';
+            organMeshes.centerWheel = centerGrp;
+
+            meshCenterWheel = new THREE.Group();
+            const cwGear = createProceduralGearMesh(2.55, 2.1, 64, 0.16, matBrassGold, 5);
+            const cwPinion = createProceduralGearMesh(0.48, 0.15, 12, 0.75, matPolishedSteel, 0);
+            cwPinion.position.y = -0.35;
+            const cwArbor = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 1.9, 16), matPolishedSteel);
+            meshCenterWheel.add(cwGear, cwPinion, cwArbor);
+            centerGrp.add(meshCenterWheel);
+            centerGrp.add(createRubyJewelUnit(0.38, false, matRuby, matBrassGold));
+            layerGroups[3].add(centerGrp);
+
+            const thirdGrp = new THREE.Group();
+            thirdGrp.position.set(-3.2, 0.68, -2.8);
+            thirdGrp.userData.organId = 'thirdWheel';
+            organMeshes.thirdWheel = thirdGrp;
+
+            meshThirdWheel = new THREE.Group();
+            const twGear = createProceduralGearMesh(2.15, 1.75, 60, 0.15, matBrassGold, 5);
+            const twPinion = createProceduralGearMesh(0.42, 0.12, 8, 0.65, matPolishedSteel, 0);
+            twPinion.position.y = -0.32;
+            const twArbor = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 1.4, 16), matPolishedSteel);
+            meshThirdWheel.add(twGear, twPinion, twArbor);
+            thirdGrp.add(meshThirdWheel);
+            thirdGrp.add(createRubyJewelUnit(0.32, false, matRuby, matBrassGold));
+            layerGroups[3].add(thirdGrp);
+
+            const fourthGrp = new THREE.Group();
+            fourthGrp.position.set(-5.4, 0.48, 0.2);
+            fourthGrp.userData.organId = 'fourthWheel';
+            organMeshes.fourthWheel = fourthGrp;
+
+            meshFourthWheel = new THREE.Group();
+            const fwGear = createProceduralGearMesh(2.1, 1.72, 60, 0.15, matBrightGold, 5);
+            const fwPinion = createProceduralGearMesh(0.4, 0.12, 8, 0.65, matPolishedSteel, 0);
+            fwPinion.position.y = 0.05;
+            const fwArbor = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 1.85, 16), matPolishedSteel);
+            meshFourthWheel.add(fwGear, fwPinion, fwArbor);
+            fourthGrp.add(meshFourthWheel);
+            fourthGrp.add(createRubyJewelUnit(0.32, false, matRuby, matBrassGold));
+            layerGroups[3].add(fourthGrp);
+
+            // =========================================================================
+            // LAYER 4 : ÉCHAPPEMENT À ANCRE SUISSE HAUTE HORLOGERIE 3D (ROUE CLUB & ANCRE)
+            // =========================================================================
+            const escapeGrp = new THREE.Group();
+            escapeGrp.position.set(-2.8, 0.35, 3.9);
+            escapeGrp.userData.organId = 'escapeWheel';
+            organMeshes.escapeWheel = escapeGrp;
+
+            meshEscapeWheel = new THREE.Group();
+            const ewGear = createProceduralGearMesh(1.52, 1.08, 15, 0.14, matPolishedSteel, 4, true);
+            const ewPinion = createProceduralGearMesh(0.32, 0.1, 6, 0.55, matDarkSteel, 0);
+            ewPinion.position.y = 0.05;
+            const ewArbor = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 1.35, 16), matPolishedSteel);
+            meshEscapeWheel.add(ewGear, ewPinion, ewArbor);
+            escapeGrp.add(meshEscapeWheel);
+            escapeGrp.add(createRubyJewelUnit(0.28, false, matRuby, matBrassGold));
+            layerGroups[4].add(escapeGrp);
+
+            const palletGrp = new THREE.Group();
+            palletGrp.position.set(-0.6, 0.40, 4.2);
+            palletGrp.userData.organId = 'palletFork';
+            organMeshes.palletFork = palletGrp;
+
+            meshPalletFork = new THREE.Group();
+            const anchorShape = new THREE.Shape();
+            anchorShape.moveTo(-0.2, 0.15);
+            anchorShape.lineTo(-1.35, 0.85);
+            anchorShape.lineTo(-1.55, 0.65);
+            anchorShape.lineTo(-0.35, -0.05);
+            anchorShape.lineTo(-1.15, -1.05);
+            anchorShape.lineTo(-0.92, -1.22);
+            anchorShape.lineTo(0.15, -0.15);
+            anchorShape.lineTo(2.15, -0.42);
+            anchorShape.lineTo(2.58, -0.22);
+            anchorShape.lineTo(2.48, -0.10);
+            anchorShape.lineTo(2.22, -0.26);
+            anchorShape.lineTo(2.28, -0.58);
+            anchorShape.lineTo(2.58, -0.64);
+            anchorShape.lineTo(2.62, -0.50);
+            anchorShape.lineTo(2.18, -0.60);
+            anchorShape.lineTo(0.05, 0.15);
+            anchorShape.closePath();
+
+            const anchorExtrude = new THREE.ExtrudeGeometry(anchorShape, {
+                depth: 0.11,
+                bevelEnabled: true,
+                bevelSegments: 2,
+                steps: 1,
+                bevelSize: 0.015,
+                bevelThickness: 0.015
+            });
+            anchorExtrude.rotateX(Math.PI / 2);
+            const anchorBodyMesh = new THREE.Mesh(anchorExtrude, matPolishedSteel);
+            meshPalletFork.add(anchorBodyMesh);
+
+            const guardPinDard = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.035, 0.55, 12), matBrassGold);
+            guardPinDard.rotation.z = Math.PI / 2;
+            guardPinDard.rotation.y = 0.18;
+            guardPinDard.position.set(2.42, -0.08, 0.42);
+            meshPalletFork.add(guardPinDard);
+
+            const entryRuby = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.18, 0.16), matRuby);
+            entryRuby.position.set(-1.45, -0.02, -0.72);
+            entryRuby.rotation.y = -0.52;
+
+            const exitRuby = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.18, 0.16), matRuby);
+            exitRuby.position.set(-1.08, -0.02, 1.05);
+            exitRuby.rotation.y = 0.65;
+
+            const matMoebius9415 = new THREE.MeshStandardMaterial({ color: 0x38BDF8, emissive: 0x0284C7, transparent: true, opacity: 0.85 });
+            const oilFilmEntry = new THREE.Mesh(new THREE.SphereGeometry(0.065, 12, 12), matMoebius9415);
+            oilFilmEntry.position.set(-1.62, -0.02, -0.62);
+            const oilFilmExit = new THREE.Mesh(new THREE.SphereGeometry(0.065, 12, 12), matMoebius9415);
+            oilFilmExit.position.set(-1.26, -0.02, 1.12);
+
+            const palletArbor = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.05, 16), matPolishedSteel);
+            meshPalletFork.add(entryRuby, exitRuby, oilFilmEntry, oilFilmExit, palletArbor);
+
+            const bankingPin1 = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.45, 12), matBrassGold);
+            bankingPin1.position.set(1.55, -0.05, 0.08);
+            const bankingPin2 = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.45, 12), matBrassGold);
+            bankingPin2.position.set(1.45, -0.05, 0.62);
+            palletGrp.add(bankingPin1, bankingPin2);
+
+            palletGrp.add(meshPalletFork);
+            palletGrp.add(createRubyJewelUnit(0.26, false, matRuby, matBrassGold));
+            layerGroups[4].add(palletGrp);
+
+            // =========================================================================
+            // LAYER 5 : BALANCIER GLUCYDUR, DOUBLE PLATEAU, ELLIPSE RUBIS & SPIRAL (À 5H)
+            // =========================================================================
+            const balanceGrp = new THREE.Group();
+            balanceGrp.position.set(2.8, 0.65, 3.6);
+            balanceGrp.userData.organId = 'balance';
+            organMeshes.balance = balanceGrp;
+
+            meshBalanceWheel = new THREE.Group();
+            const balRim = new THREE.Mesh(new THREE.TorusGeometry(2.85, 0.16, 16, 48), matBrassGold);
+            balRim.rotation.x = Math.PI / 2;
+            meshBalanceWheel.add(balRim);
+
+            const balArm1 = new THREE.Mesh(new THREE.BoxGeometry(5.6, 0.09, 0.24), matBrassGold);
+            const balArm2 = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.09, 5.6), matBrassGold);
+            meshBalanceWheel.add(balArm1, balArm2);
+
+            for (let s = 0; s < 16; s++) {
+                const ang = (s / 16) * Math.PI * 2;
+                const screw = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.28, 8), matBrightGold);
+                screw.rotation.z = Math.PI / 2;
+                screw.rotation.y = -ang;
+                screw.position.set(Math.cos(ang) * 3.0, 0, Math.sin(ang) * 3.0);
+                meshBalanceWheel.add(screw);
+            }
+
+            const largeRoller = new THREE.Mesh(new THREE.CylinderGeometry(0.76, 0.76, 0.10, 32), matPolishedSteel);
+            largeRoller.position.y = -0.20;
+
+            const safetyRoller = new THREE.Mesh(new THREE.CylinderGeometry(0.46, 0.46, 0.14, 28), matDarkSteel);
+            safetyRoller.position.y = -0.32;
+
+            const impulseRubyPin = new THREE.Mesh(new THREE.CylinderGeometry(0.095, 0.095, 0.28, 16), matRuby);
+            impulseRubyPin.position.set(-0.62, -0.28, 0.18);
+
+            const balArbor = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 1.45, 16), matPolishedSteel);
+            meshBalanceWheel.add(largeRoller, safetyRoller, impulseRubyPin, balArbor);
+            balanceGrp.add(meshBalanceWheel);
+
+            meshHairspring = new THREE.Group();
+            meshHairspring.position.y = 0.26;
+            const hsPoints = [];
+            const hsTurns = 6.5;
+            for (let i = 0; i <= 160; i++) {
+                const t = i / 160;
+                const ang = t * hsTurns * Math.PI * 2;
+                const r = 0.25 + t * 1.45;
+                hsPoints.push(new THREE.Vector3(Math.cos(ang) * r, 0, Math.sin(ang) * r));
+            }
+            const hsCurve = new THREE.CatmullRomCurve3(hsPoints);
+            const hsGeom = new THREE.TubeGeometry(hsCurve, 120, 0.025, 6, false);
+            meshHairspring.add(new THREE.Mesh(hsGeom, matNivaflex));
+            balanceGrp.add(meshHairspring);
+
+            const incablocUnit = createRubyJewelUnit(0.38, true, matRuby, matBrassGold);
+            incablocUnit.position.y = 0.55;
+            balanceGrp.add(incablocUnit);
+            layerGroups[5].add(balanceGrp);
+
+            // =========================================================================
+            // LAYER 6 : PONTS SUPÉRIEURS CÔTES DE GENÈVE, ROCHET, COURONNE & COQ SCULPTÉ
+            // =========================================================================
+            const bridgesTopGrp = new THREE.Group();
+            bridgesTopGrp.position.y = 1.05;
+
+            // 1. Pont de Barillet Sculpté avec Côtes de Genève
+            const matBarrelBridge = createBridgeMat(0xE2E8F0);
+            const barrelBridgeShape = new THREE.Shape();
+            barrelBridgeShape.moveTo(8.5, 0.05);
+            barrelBridgeShape.absarc(0, 0, 8.5, 0.05, -1.64, true);
+            barrelBridgeShape.quadraticCurveTo(0.6, -5.2, 1.1, -1.8);
+            barrelBridgeShape.quadraticCurveTo(1.4, -0.6, 2.2, 0.1);
+            barrelBridgeShape.quadraticCurveTo(5.5, 0.2, 8.5, 0.05);
+            barrelBridgeShape.closePath();
+
+            const barrelBridgeGeom = new THREE.ExtrudeGeometry(barrelBridgeShape, {
+                depth: 0.28,
+                bevelEnabled: true,
+                bevelSize: 0.075,
+                bevelThickness: 0.075,
+                bevelSegments: 4
+            });
+            barrelBridgeGeom.rotateX(Math.PI / 2);
+            const barrelBridgeMesh = new THREE.Mesh(barrelBridgeGeom, matBarrelBridge);
+            barrelBridgeMesh.position.y = 0.12;
+            barrelBridgeMesh.userData.organId = 'barrel';
+            bridgesTopGrp.add(barrelBridgeMesh);
+
+            meshRatchetWheel = createProceduralGearMesh(2.55, 0.55, 48, 0.20, matPolishedSteel, 0);
+            meshRatchetWheel.position.set(4.5, 0.25, -3.2);
+            meshRatchetWheel.userData.organId = 'barrel';
+            meshRatchetWheel.add(createBluedScrew(0, 0.14, 0, matPolishedSteel, false));
+            bridgesTopGrp.add(meshRatchetWheel);
+
+            meshCrownWheel = createProceduralGearMesh(1.52, 0.45, 34, 0.20, matPolishedSteel, 0);
+            meshCrownWheel.position.set(6.4, 0.25, -0.8);
+            meshCrownWheel.userData.organId = 'winding';
+            meshCrownWheel.add(createBluedScrew(0, 0.16, 0, matBluedSteel, true));
+            bridgesTopGrp.add(meshCrownWheel);
+
+            const clickBody = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.18, 16), matPolishedSteel);
+            clickBody.position.set(2.1, 0.24, -4.8);
+            const clickBeak = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.16, 0.24), matPolishedSteel);
+            clickBeak.position.set(2.4, 0.24, -4.4);
+            bridgesTopGrp.add(clickBody, clickBeak);
+
+            bridgesTopGrp.add(
+                createBluedScrew(6.6, 0.24, -4.5, matBluedSteel),
+                createBluedScrew(2.5, 0.24, -6.8, matBluedSteel),
+                createBluedScrew(5.4, 0.24, -0.4, matBluedSteel)
+            );
+
+            // 2. Grand Pont de Rouage avec 4 Châtons Or & Rubis
+            const matTrainBridge = createBridgeMat(0xE2E8F0);
+            const trainBridgeShape = new THREE.Shape();
+            trainBridgeShape.moveTo(-0.8, -8.45);
+            trainBridgeShape.quadraticCurveTo(0.4, -5.2, 0.9, -2.0);
+            trainBridgeShape.quadraticCurveTo(1.4, -0.6, 1.8, 0.4);
+            trainBridgeShape.quadraticCurveTo(0.8, 1.2, 0.0, 2.0);
+            trainBridgeShape.quadraticCurveTo(-1.2, 2.8, -1.8, 4.4);
+            trainBridgeShape.quadraticCurveTo(-3.2, 5.4, -4.5, 7.2);
+            trainBridgeShape.absarc(0, 0, 8.5, 2.13, 4.62, false);
+            trainBridgeShape.closePath();
+
+            const trainBridgeGeom = new THREE.ExtrudeGeometry(trainBridgeShape, {
+                depth: 0.28,
+                bevelEnabled: true,
+                bevelSize: 0.075,
+                bevelThickness: 0.075,
+                bevelSegments: 4
+            });
+            trainBridgeGeom.rotateX(Math.PI / 2);
+            const trainBridgeMesh = new THREE.Mesh(trainBridgeGeom, matTrainBridge);
+            trainBridgeMesh.position.y = 0.12;
+            trainBridgeMesh.userData.organId = 'centerWheel';
+            bridgesTopGrp.add(trainBridgeMesh);
+
+            bridgesTopGrp.add(
+                createBridgeChaton(0.0, 0.0, 0.65, 0.32, matBrightGold, matRuby),
+                createBridgeChaton(-3.2, -2.8, 0.58, 0.28, matBrightGold, matRuby),
+                createBridgeChaton(-5.4, 0.2, 0.58, 0.28, matBrightGold, matRuby),
+                createBridgeChaton(-2.8, 3.9, 0.52, 0.25, matBrightGold, matRuby)
+            );
+
+            bridgesTopGrp.add(
+                createBluedScrew(-7.2, 0.24, -1.8, matBluedSteel),
+                createBluedScrew(-4.8, 0.24, 5.2, matBluedSteel),
+                createBluedScrew(-2.4, 0.24, -6.8, matBluedSteel),
+                createBluedScrew(-1.6, 0.24, -1.6, matBluedSteel)
+            );
+
+            // 3. Coq de Balancier Sculpté ETA 6497-1 (avec bras élancé, porte-piton et raquette A/R)
+            const matBalanceCock = createBridgeMat(0xE2E8F0);
+            const cockShape = new THREE.Shape();
+            // Note: ExtrudeGeometry rotated +PI/2 around X maps shape (x, y) to world (x, -z), so y is negative for +Z
+            cockShape.moveTo(6.9, -4.5);
+            cockShape.quadraticCurveTo(7.4, -5.6, 5.6, -6.4);
+            cockShape.quadraticCurveTo(4.0, -5.1, 2.8, -4.35);
+            cockShape.absarc(2.8, -3.6, 0.78, -Math.PI / 2, Math.PI / 2, true);
+            cockShape.quadraticCurveTo(4.6, -3.4, 6.9, -4.5);
+            cockShape.closePath();
+
+            const cockGeom = new THREE.ExtrudeGeometry(cockShape, {
+                depth: 0.26,
+                bevelEnabled: true,
+                bevelSize: 0.06,
+                bevelThickness: 0.06,
+                bevelSegments: 3
+            });
+            cockGeom.rotateX(Math.PI / 2);
+            const cockMesh = new THREE.Mesh(cockGeom, matBalanceCock);
+            cockMesh.position.y = 0.14;
+            cockMesh.userData.organId = 'balance';
+            bridgesTopGrp.add(cockMesh);
+
+            bridgesTopGrp.add(createBluedScrew(6.1, 0.26, 5.4, matBluedSteel));
+
+            // Regulator Index Pointer & Etachron Stud Holder on Balance Cock
+            const regulatorRing = new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.07, 10, 24), matPolishedSteel);
+            regulatorRing.rotation.x = Math.PI / 2;
+            regulatorRing.position.set(2.8, 0.26, 3.6);
+            const regulatorPointer = new THREE.Mesh(new THREE.BoxGeometry(1.35, 0.07, 0.15), matBrassGold);
+            regulatorPointer.position.set(3.2, 0.28, 3.8);
+            regulatorPointer.rotation.y = 0.45;
+            bridgesTopGrp.add(regulatorRing, regulatorPointer);
+
+            layerGroups[6].add(bridgesTopGrp);
+
+            setupViewportInteractions(renderer.domElement);
+
+            window.addEventListener('resize', () => {
+                const cw = container.clientWidth;
+                const ch = container.clientHeight;
+                if (cw && ch) {
+                    camera.aspect = cw / ch;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(cw, ch);
+                }
+            });
+        }
+
+        function rebuildMainspringSpiralGeometry(matNivaflex) {
+            if (!meshMainspringSpiral) return;
+            while (meshMainspringSpiral.children.length > 0) {
+                const old = meshMainspringSpiral.children[0];
+                old.geometry.dispose();
+                meshMainspringSpiral.remove(old);
+            }
+
+            const chargeRatio = simState.mainspringCharge / 100;
+            const turns = 5.5 + chargeRatio * 3.5;
+            const pts = [];
+            const maxR = 2.85 - chargeRatio * 0.55;
+            const minR = 0.72;
+
+            for (let i = 0; i <= 180; i++) {
+                const t = i / 180;
+                const ang = t * turns * Math.PI * 2;
+                const r = minR + Math.pow(t, 0.85 + chargeRatio * 0.4) * (maxR - minR);
+                pts.push(new THREE.Vector3(Math.cos(ang) * r, 0, Math.sin(ang) * r));
+            }
+
+            const curve = new THREE.CatmullRomCurve3(pts);
+            const tubeGeom = new THREE.TubeGeometry(curve, 150, 0.055, 6, false);
+            const mat = matNivaflex || new THREE.MeshStandardMaterial({ color: 0x38BDF8, metalness: 0.8, roughness: 0.25 });
+            meshMainspringSpiral.add(new THREE.Mesh(tubeGeom, mat));
+        }
+
+        /**
+         * 5. EFFORTLESS 360° QUATERNION TRACKBALL + PAN + TOUCH PINCH + RAYCASTING
+         */
+        function setupViewportInteractions(domElem) {
+            const raycaster = new THREE.Raycaster();
+            const mouse = new THREE.Vector2();
+            let downTime = 0;
+            let downPos = { x: 0, y: 0 };
+
+            domElem.addEventListener('contextmenu', (e) => e.preventDefault());
+
+            // Double-click anywhere to smoothly re-center pivot
+            domElem.addEventListener('dblclick', () => {
+                trackball.targetPivot.set(0, 0, 0);
+                trackball.targetZoom = 20.5;
+            });
+
+            domElem.addEventListener('pointerdown', (e) => {
+                trackball.isDragging = true;
+                trackball.isPanning = (e.button === 2 || e.shiftKey);
+                trackball.prevX = e.clientX;
+                trackball.prevY = e.clientY;
+                trackball.velX = 0;
+                trackball.velY = 0;
+                downTime = performance.now();
+                downPos = { x: e.clientX, y: e.clientY };
+                domElem.style.cursor = 'grabbing';
+            });
+
+            window.addEventListener('pointermove', (e) => {
+                if (!trackball.isDragging) return;
+                const dx = e.clientX - trackball.prevX;
+                const dy = e.clientY - trackball.prevY;
+                trackball.prevX = e.clientX;
+                trackball.prevY = e.clientY;
+
+                if (trackball.isPanning) {
+                    // Smooth X/Y screen-space panning
+                    const panSpeed = trackball.currentZoom * 0.0012;
+                    trackball.targetPivot.x += dx * panSpeed;
+                    trackball.targetPivot.y -= dy * panSpeed;
+                } else {
+                    // Pure 360° Quaternion Trackball around Screen X and Screen Y axes (ZERO Gimbal Lock!)
+                    const rotSpeed = 0.0075;
+                    const qYaw = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), dx * rotSpeed);
+                    const qPitch = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), dy * rotSpeed);
+
+                    trackball.targetQuat.premultiply(qYaw).premultiply(qPitch).normalize();
+                    trackball.velX = dx * rotSpeed * 0.45;
+                    trackball.velY = dy * rotSpeed * 0.45;
+                }
+            });
+
+            window.addEventListener('pointerup', (e) => {
+                if (!trackball.isDragging) return;
+                trackball.isDragging = false;
+                domElem.style.cursor = 'grab';
+
+                const moveDist = Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y);
+                if (performance.now() - downTime < 260 && moveDist < 6) {
+                    const rect = domElem.getBoundingClientRect();
+                    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+                    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+                    raycaster.setFromCamera(mouse, camera);
+                    const clickableRoots = Object.values(organMeshes);
+                    const intersects = raycaster.intersectObjects(clickableRoots, true);
+
+                    if (intersects.length > 0) {
+                        let obj = intersects[0].object;
+                        while (obj && !obj.userData.organId && obj.parent) {
+                            obj = obj.parent;
+                        }
+                        if (obj && obj.userData.organId) {
+                            selectOrgan(obj.userData.organId);
+                        }
+                    }
+                }
+            });
+
+            // Smooth Wheel Zoom
+            domElem.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                trackball.targetZoom = Math.max(5.5, Math.min(35.0, trackball.targetZoom + e.deltaY * 0.014));
+            }, { passive: false });
+
+            // Mobile Pinch-to-Zoom Support
+            domElem.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 2) {
+                    trackball.isDragging = false;
+                    trackball.pinchStartDist = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                }
+            }, { passive: true });
+
+            domElem.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 2 && trackball.pinchStartDist > 0) {
+                    const dist = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                    const delta = trackball.pinchStartDist - dist;
+                    trackball.targetZoom = Math.max(5.5, Math.min(35.0, trackball.targetZoom + delta * 0.04));
+                    trackball.pinchStartDist = dist;
+                }
+            }, { passive: true });
+
+            // Keyboard Arrow Controls
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') nudgeTrackball(0, -0.12);
+                else if (e.key === 'ArrowRight') nudgeTrackball(0, 0.12);
+                else if (e.key === 'ArrowUp') nudgeTrackball(-0.12, 0);
+                else if (e.key === 'ArrowDown') nudgeTrackball(0.12, 0);
+            });
+        }
+
+        /**
+         * 6. CAMERA PRESETS & ORGAN SELECTION INSPECTOR
+         */
+        function toggleDialFace() {
+            simState.isDialSideShown = !simState.isDialSideShown;
+            if (simState.isDialSideShown) {
+                setCameraPreset('dial');
+            } else {
+                setCameraPreset('iso');
+            }
+        }
+
+        function setCameraPreset(preset) {
+            ['iso', 'topBridges', 'dial', 'escapement', 'balanceMacro', 'profile'].forEach(id => {
+                const btn = document.getElementById(`camBtn_${id}`);
+                if (btn) {
+                    btn.className = (id === preset)
+                        ? "px-2.5 py-1.5 rounded-lg text-xs font-mono font-semibold bg-horlo-gold text-black transition flex items-center gap-1.5 shadow"
+                        : "px-2.5 py-1.5 rounded-lg text-xs font-mono text-horlo-rhodium hover:text-white bg-horlo-bg border border-horlo-border transition flex items-center gap-1.5";
+                }
+            });
+
+            if (preset === 'iso') {
+                simState.isDialSideShown = false;
+                setTrackballEuler(0.88, -0.38, 0);
+                trackball.targetPivot.set(0, 0, 0);
+                trackball.targetZoom = 20.5;
+            } else if (preset === 'topBridges') {
+                simState.isDialSideShown = false;
+                setTrackballEuler(Math.PI / 2, 0, 0);
+                trackball.targetPivot.set(0, 0, 0);
+                trackball.targetZoom = 20.0;
+            } else if (preset === 'dial') {
+                simState.isDialSideShown = true;
+                // Flip cleanly to view the Dial upright (12h at top, 3h crown on right, 9h seconds on left)
+                setTrackballEuler(-Math.PI / 2, 0, 0);
+                trackball.targetPivot.set(0, 0.4, 0);
+                trackball.targetZoom = 20.0;
+                selectOrgan('dial');
+            } else if (preset === 'escapement') {
+                simState.isDialSideShown = false;
+                setTrackballEuler(1.18, 0.15, 0);
+                trackball.targetPivot.set(1.2, -0.4, -4.0);
+                trackball.targetZoom = 7.8;
+                if (simState.xrayFactor < 0.65) quickSetXray(75);
+                selectOrgan('palletFork');
+            } else if (preset === 'balanceMacro') {
+                simState.isDialSideShown = false;
+                setTrackballEuler(1.05, -0.32, 0);
+                trackball.targetPivot.set(-2.8, -0.6, -3.6);
+                trackball.targetZoom = 9.5;
+                selectOrgan('balance');
+            } else if (preset === 'profile') {
+                simState.isDialSideShown = false;
+                setTrackballEuler(0.12, -0.65, 0);
+                trackball.targetPivot.set(0, -0.3, 0);
+                trackball.targetZoom = 23.0;
+                if (simState.explodeFactor < 0.45) quickSetExplode(65);
+            }
+        }
+
+        function selectOrgan(organId) {
+            const data = ORGAN_DATABASE[organId];
+            if (!data) return;
+            simState.selectedOrgan = organId;
+
+            document.getElementById('inspCategory').textContent = data.category;
+            document.getElementById('inspTitle').textContent = data.title;
+            document.getElementById('inspGearBadge').textContent = data.gearBadge;
+            document.getElementById('inspDescription').textContent = data.description;
+            document.getElementById('inspSpeed').textContent = data.speed;
+            document.getElementById('inspOil').textContent = data.oil;
+            document.getElementById('inspOiler').textContent = data.oiler;
+            document.getElementById('inspEndshake').textContent = data.endshake;
+            document.getElementById('inspExamTrap').textContent = data.examTrap;
+            document.getElementById('viewportActiveOrganTitle').textContent = `Organe sélectionné : ${data.title}`;
+
+            Object.keys(ORGAN_DATABASE).forEach(k => {
+                const pill = document.getElementById(`pill_${k}`);
+                if (pill) {
+                    pill.className = (k === organId)
+                        ? "px-2.5 py-1 rounded-lg bg-horlo-gold text-black font-bold border border-horlo-gold text-[11px] font-mono transition shadow"
+                        : "px-2.5 py-1 rounded-lg bg-horlo-bg/90 hover:bg-horlo-gold hover:text-black text-horlo-rhodium border border-horlo-border text-[11px] font-mono transition";
+                }
+            });
+        }
+
+        function focusSelectedOrganCamera() {
+            const data = ORGAN_DATABASE[simState.selectedOrgan];
+            if (!data) return;
+            if (simState.selectedOrgan === 'dial') {
+                setCameraPreset('dial');
+                return;
+            }
+            setTrackballEuler(1.12, -0.22, 0);
+            trackball.targetPivot.set(data.focusOffset.x, data.focusOffset.y, data.focusOffset.z);
+            trackball.targetZoom = data.zoomDist || 11.0;
+        }
+
+        function resetCameraAndView() {
+            setCameraPreset('iso');
+        }
+
+        /**
+         * 7. CIECHANOWSKI INTERACTIVE SLIDER HANDLERS
+         */
+        function setSimSpeed(spd) {
+            simState.speedMultiplier = spd;
+            const map = { 1: 'spdBtn_1', 0.12: 'spdBtn_slow', 0.025: 'spdBtn_micro', 0: 'spdBtn_pause' };
+            Object.entries(map).forEach(([k, btnId]) => {
+                const el = document.getElementById(btnId);
+                if (el) {
+                    el.className = (parseFloat(k) === spd)
+                        ? "flex-1 py-1 rounded bg-horlo-gold text-black font-bold transition"
+                        : "flex-1 py-1 rounded bg-horlo-card text-horlo-rhodium border border-horlo-border hover:text-white transition";
+                }
+            });
+            updateBeatLabel();
+        }
+
+        function onScrubBeatSlider(val) {
+            // Switch to manual scrub mode so user has full frame-by-frame control
+            setSimSpeed(0);
+            simState.beatPhasePct = parseFloat(val);
+            updateBeatLabel();
+        }
+
+        function updateBeatLabel() {
+            const ms = Math.round((simState.beatPhasePct / 100) * 200);
+            const lbl = document.getElementById('lblBeatProgress');
+            if (simState.speedMultiplier === 0) {
+                lbl.textContent = `${simState.beatPhasePct.toFixed(0)}% (${ms} / 200 ms)`;
+            } else {
+                lbl.textContent = `Cycle Actif (${simState.speedMultiplier}×) • ${ms} ms`;
+            }
+        }
+
+        function onExplodeSlider(val) {
+            const pct = parseInt(val, 10);
+            simState.explodeFactor = pct / 100;
+            document.getElementById('lblExplodeVal').textContent = `${pct} % ${pct === 0 ? '(Assemblé)' : '(Écorché Z)'}`;
+            document.getElementById('sliderExplodeZ').value = pct;
+        }
+
+        function quickSetExplode(pct) {
+            onExplodeSlider(pct);
+        }
+
+        function onXraySlider(val) {
+            const pct = parseInt(val, 10);
+            simState.xrayFactor = pct / 100;
+            document.getElementById('lblXrayVal').textContent = `${pct} %`;
+            document.getElementById('sliderXrayBridges').value = pct;
+            bridgeMaterials.forEach(m => {
+                m.opacity = Math.max(0.06, 1 - simState.xrayFactor);
+            });
+        }
+
+        function quickSetXray(pct) {
+            onXraySlider(pct);
+        }
+
+        function onMainspringSlider(val) {
+            const pct = parseInt(val, 10);
+            simState.mainspringCharge = pct;
+            document.getElementById('sliderMainspring').value = pct;
+
+            const torque = (1.8 + (pct / 100) * 8.7).toFixed(1);
+            const amp = Math.round(185 + (pct / 100) * 125);
+            document.getElementById('lblMainspringVal').textContent = `${pct} % (Couple ${torque} mN·m)`;
+            document.getElementById('topAmplitudeReadout').textContent = `${amp}°`;
+
+            rebuildMainspringSpiralGeometry();
+
+            // Rotate Crown, Crown Wheel & Ratchet Wheel visually when winding
+            if (meshWindingCrown && meshCrownWheel && meshRatchetWheel) {
+                const windRot = (pct / 100) * Math.PI * 8;
+                meshWindingCrown.rotation.x = windRot;
+                meshCrownWheel.rotation.y = -windRot * 0.5;
+                meshRatchetWheel.rotation.y = windRot * 0.25;
+            }
+        }
+
+        function windCrownStep() {
+            const nextVal = Math.min(100, simState.mainspringCharge + 15);
+            onMainspringSlider(nextVal);
+            playMechanicalAcousticImpulse('chute');
+        }
+
+        /**
+         * 8. REAL-TIME KINEMATIC LOOP (QUATERNION TRACKBALL + 3D GEARS + HANDS)
+         */
+        let lastFrameTime = performance.now();
+
+        function animateMasterCalibre(now) {
+            requestAnimationFrame(animateMasterCalibre);
+
+            const dt = Math.min(0.05, (now - lastFrameTime) / 1000);
+            lastFrameTime = now;
+
+            // 1. Apply Inertia & Quaternion Spherical Interpolation (Slerp) for silky 360° rotation
+            if (!trackball.isDragging && (Math.abs(trackball.velX) > 0.0001 || Math.abs(trackball.velY) > 0.0001)) {
+                const qYaw = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), trackball.velX);
+                const qPitch = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), trackball.velY);
+                trackball.targetQuat.premultiply(qYaw).premultiply(qPitch).normalize();
+                trackball.velX *= 0.92;
+                trackball.velY *= 0.92;
+            }
+
+            trackball.currentQuat.slerp(trackball.targetQuat, 0.16);
+            calibreWorld.quaternion.copy(trackball.currentQuat);
+
+            trackball.currentPivot.lerp(trackball.targetPivot, 0.14);
+            calibrePivot.position.copy(trackball.currentPivot);
+
+            trackball.currentZoom += (trackball.targetZoom - trackball.currentZoom) * 0.14;
+            camera.position.set(0, 0, trackball.currentZoom);
+            camera.lookAt(0, 0, 0);
+
+            // 2. Smooth Vertical Layer Separation (Exploded View Z-Axis)
+            layerGroups.forEach((grp, idx) => {
+                const targetY = (idx - 1.5) * simState.explodeFactor * 1.65;
+                grp.position.y += (targetY - grp.position.y) * 0.12;
+            });
+
+            // 3. Advance Beat Progress if speedMultiplier > 0 (1 beat = 200 ms at 18'000 A/h = 5 beats/sec)
+            if (simState.speedMultiplier > 0) {
+                const beatsPerSec = 5.0 * simState.speedMultiplier;
+                simState.beatPhasePct += dt * beatsPerSec * 100;
+
+                if (simState.beatPhasePct >= 100) {
+                    simState.beatPhasePct -= 100;
+                    simState.beatDirection *= -1;
+                    simState.totalEscapeTeethPassed += 0.5;
+                    playMechanicalAcousticImpulse('chute');
+                }
+                if (simState.speedMultiplier <= 0.15) {
+                    document.getElementById('sliderBeatScrub').value = simState.beatPhasePct;
+                    updateBeatLabel();
+                }
+            }
+
+            // 4. Compute Exact Swiss Lever Escapement Kinematics from beatPhasePct (0..100%)
+            const p = simState.beatPhasePct / 100;
+            const ampRad = ((185 + (simState.mainspringCharge / 100) * 125) * Math.PI) / 180;
+
+            const balanceAngle = -Math.cos(p * Math.PI) * ampRad * simState.beatDirection;
+
+            let forkNormalized = -1;
+            if (p < 0.32) {
+                forkNormalized = -1;
+            } else if (p <= 0.68) {
+                const tImp = (p - 0.32) / 0.36;
+                forkNormalized = -1 + tImp * 2;
+            } else {
+                forkNormalized = 1;
+            }
+            const palletAngleRad = forkNormalized * 0.14 * simState.beatDirection;
+
+            let toothStepProgress = 0;
+            if (p > 0.34 && p <= 0.72) {
+                toothStepProgress = (p - 0.34) / 0.38;
+            } else if (p > 0.72) {
+                toothStepProgress = 1.0;
+            }
+            const totalHalfSteps = (simState.totalEscapeTeethPassed * 2) + toothStepProgress;
+            const escapeWheelAngle = totalHalfSteps * ((Math.PI * 2) / 30);
+
+            // 5. Apply Rotations to 3D Calibre Meshes
+            if (meshBalanceWheel && meshHairspring) {
+                meshBalanceWheel.rotation.y = balanceAngle;
+                const breatheScale = 1.0 + Math.sin(balanceAngle) * 0.065;
+                meshHairspring.scale.set(breatheScale, 1, breatheScale);
+            }
+
+            if (meshPalletFork) {
+                meshPalletFork.rotation.y = palletAngleRad;
+            }
+
+            if (meshEscapeWheel) {
+                meshEscapeWheel.rotation.y = -escapeWheelAngle;
+            }
+            if (meshFourthWheel) {
+                meshFourthWheel.rotation.y = escapeWheelAngle / 10;
+            }
+            if (meshThirdWheel) {
+                meshThirdWheel.rotation.y = -escapeWheelAngle / 75;
+            }
+            if (meshCenterWheel) {
+                meshCenterWheel.rotation.y = escapeWheelAngle / 600;
+            }
+            if (meshBarrel) {
+                meshBarrel.rotation.y = -escapeWheelAngle / 4200;
+            }
+
+            // Synchronized Hands on Dial Side
+            if (meshHourHand) {
+                meshHourHand.rotation.y = (escapeWheelAngle / 7200);
+            }
+            if (meshMinuteHand) {
+                meshMinuteHand.rotation.y = (escapeWheelAngle / 600);
+            }
+            if (meshSmallSecondsHand) {
+                meshSmallSecondsHand.rotation.y = (escapeWheelAngle / 10);
+            }
+
+            updateEscapementHudTelemetry(p);
+
+            renderer.render(scene, camera);
+        }
+
+        function updateEscapementHudTelemetry(p) {
+            const phaseTag = document.getElementById('hudPhaseBadge');
+            const phaseDesc = document.getElementById('hudPhaseText');
+            if (!phaseTag || !phaseDesc) return;
+
+            if (p < 0.22) {
+                phaseTag.textContent = "1. Repos & Tirage (12°)";
+                phaseDesc.textContent = "La dent club de la roue d'échappement 3D s'appuie sur le plan de repos de la palette rubis pendant que le balancier descend son arc.";
+            } else if (p < 0.36) {
+                phaseTag.textContent = "2. Dégagement par l'Ellipse";
+                phaseDesc.textContent = "L'ellipse en rubis du double plateau 3D entre dans les cornes de la fourchette et dégage la palette du plan de repos.";
+            } else if (p < 0.68) {
+                phaseTag.textContent = "3. Impulsion sur Palette (44°)";
+                phaseDesc.textContent = "La dent club glisse sur le plan d'impulsion de la palette rubis (Moebius 9415) et relance le double plateau du balancier.";
+            } else if (p < 0.78) {
+                phaseTag.textContent = "4. Chute & Verrouillage";
+                phaseDesc.textContent = "La dent quitte la palette de sortie et la roue 3D parcourt sa chute libre (~1.5°) avant le choc acoustique sur la palette opposée.";
+            } else {
+                phaseTag.textContent = "5. Arc Supplémentaire";
+                phaseDesc.textContent = "L'ancre est maintenue contre sa goupille de limitation par le tirage de 12° pendant que le balancier achève son oscillation libre.";
+            }
+        }
+
+        /**
+         * INITIALIZE ON WINDOW LOAD
+         */
+        window.onload = function () {
+            initThreeCalibre6497();
+            selectOrgan('barrel');
+            onMainspringSlider(85);
+            requestAnimationFrame(animateMasterCalibre);
+        };
+    </script>
+</body>
+</html>

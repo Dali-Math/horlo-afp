@@ -23,7 +23,8 @@ import {
   Calendar,
   Newspaper,
   Award,
-  AlertTriangle
+  AlertTriangle,
+  Layers
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import LanguageSelector from "@/components/LanguageSelector";
@@ -68,6 +69,7 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
     {
       title: "Atelier & Métrologie",
       links: [
+        { href: "/pratique/calibre-3d", label: "⚙️ Calibre École 3D (ETA 6497)" },
         { href: "/pratique/depannage-erreurs", label: "🚨 Dépannage & Erreurs" },
         { href: "/pratique/laboratoire", label: "Laboratoire (11 Bancs)" },
         { href: "/pratique/inspection-loupe", label: "Loupe Macro 20x" },
@@ -181,7 +183,7 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
             >
               <button
                 className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1 transition-all ${
-                  activeDropdown === "atelier" || pathname.startsWith("/pratique/inspection-loupe") || pathname.startsWith("/pratique/defi-chronometre") || pathname === "/outils"
+                  activeDropdown === "atelier" || pathname.startsWith("/pratique/calibre-3d") || pathname.startsWith("/pratique/inspection-loupe") || pathname.startsWith("/pratique/defi-chronometre") || pathname === "/outils"
                     ? "text-amber-700 dark:text-amber-300 font-bold bg-amber-500/15 border border-amber-500/30"
                     : "text-slate-700 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50"
                 }`}
@@ -192,6 +194,22 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
 
               {activeDropdown === "atelier" && (
                 <div className="absolute top-full left-0 mt-2 w-72 p-2 rounded-2xl bg-white/95 dark:bg-[#0c121e]/95 border border-slate-200 dark:border-amber-500/30 shadow-2xl backdrop-blur-xl space-y-1 font-mono text-xs animate-in fade-in slide-in-from-top-2 duration-150 z-50">
+                  <Link
+                    href="/pratique/calibre-3d"
+                    className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-amber-500/10 dark:hover:bg-amber-500/15 transition group border border-amber-500/30 bg-amber-500/10 mb-1"
+                  >
+                    <Layers className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
+                    <div>
+                      <strong className="block text-slate-900 dark:text-white group-hover:text-amber-400 font-sans text-xs flex items-center gap-1.5">
+                        <span>Calibre École 3D (ETA 6497)</span>
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-gradient-to-r from-amber-600 to-amber-500 text-slate-950 font-mono font-bold">360° 3D</span>
+                      </strong>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                        Porte-mouvement 360°, écorché Z &amp; cadran
+                      </span>
+                    </div>
+                  </Link>
+
                   <Link
                     href="/pratique/depannage-erreurs"
                     className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-rose-500/10 dark:hover:bg-rose-500/15 transition group border border-rose-500/20 bg-rose-500/5 mb-1"
