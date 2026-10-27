@@ -10,15 +10,22 @@ import {
   Sparkles,
   Eye,
   ZoomIn,
-  Sliders
+  Sliders,
+  ChevronRight,
+  ChevronLeft,
+  RotateCcw,
+  Award,
+  HelpCircle,
+  Compass
 } from 'lucide-react';
 
 export default function FinitionsDecorativesPage() {
   const [selectedTechnique, setSelectedTechnique] = useState<string>('anglage');
   const [finishingLevel, setFinishingLevel] = useState<number>(88);
   const [loupe10x, setLoupe10x] = useState<boolean>(false);
-  const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: string }>({});
-  const [showResults, setShowResults] = useState(false);
+  const [quizCurrentStep, setQuizCurrentStep] = useState<number>(0);
+  const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: number }>({});
+  const [quizFinished, setQuizFinished] = useState<boolean>(false);
 
   const getAnglageState = (val: number) => {
     if (val < 35) {
@@ -205,18 +212,23 @@ export default function FinitionsDecorativesPage() {
     }
   ];
 
-  const handleQuizAnswer = (questionIndex: number, optionIndex: number) => {
-    if (!showResults) {
-      setQuizAnswers((prev) => ({ ...prev, [questionIndex]: optionIndex.toString() }));
-    }
+  const handleSelectQuizOption = (qIdx: number, optIdx: number) => {
+    if (quizAnswers[qIdx] !== undefined) return;
+    setQuizAnswers((prev) => ({ ...prev, [qIdx]: optIdx }));
   };
 
   const calculateScore = () => {
-    let correct = 0;
+    let score = 0;
     quizData.forEach((q, index) => {
-      if (parseInt(quizAnswers[index]) === q.correct) correct++;
+      if (quizAnswers[index] === q.correct) score++;
     });
-    return correct;
+    return score;
+  };
+
+  const restartQuiz = () => {
+    setQuizAnswers({});
+    setQuizCurrentStep(0);
+    setQuizFinished(false);
   };
 
   return (
@@ -622,66 +634,233 @@ export default function FinitionsDecorativesPage() {
           </div>
         </section>
 
-        <section className="space-y-6">
-          <h2 className="font-serif text-3xl font-bold text-slate-900 dark:text-white">
-            Quiz : Contrôle Qualité des Finitions Horlogères
-          </h2>
-
-          <div className="bg-white dark:bg-[#0c101b] rounded-3xl shadow-xl p-6 sm:p-8 border-2 border-slate-200 dark:border-slate-800 space-y-6">
-            {quizData.map((q, qIndex) => (
-              <div key={qIndex} className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 space-y-3">
-                <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
-                  {qIndex + 1}. {q.question}
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {q.options.map((option, oIndex) => {
-                    const isSelected = quizAnswers[qIndex] === oIndex.toString();
-                    const isCorrect = oIndex === q.correct;
-                    const showAnswer = showResults && isSelected;
-
-                    return (
-                      <button
-                        key={oIndex}
-                        onClick={() => handleQuizAnswer(qIndex, oIndex)}
-                        disabled={showResults}
-                        className={`w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm transition-all ${
-                          showAnswer && isCorrect
-                            ? 'border-emerald-500 bg-emerald-500/15 font-bold text-emerald-700 dark:text-emerald-300'
-                            : showAnswer && !isCorrect
-                            ? 'border-rose-500 bg-rose-500/15 font-bold text-rose-700 dark:text-rose-300'
-                            : isSelected
-                            ? 'border-amber-500 bg-amber-500/15 font-bold text-amber-800 dark:text-amber-300'
-                            : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-amber-500'
-                        }`}
-                      >
-                        <span>{option}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-                {showResults && quizAnswers[qIndex] !== undefined && (
-                  <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-800 dark:text-amber-300">
-                    <strong>Explication :</strong> {q.explanation}
-                  </div>
-                )}
+        {/* SECTION QUIZ COMPACT INTERACTIF */}
+        <section className="space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+                <Award className="w-4 h-4" />
+                <span>Contrôle Qualité &amp; Métrologie Visuelle</span>
               </div>
-            ))}
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mt-1">
+                Quiz d’Atelier : Finitions Horlogères
+              </h2>
+            </div>
 
-            {Object.keys(quizAnswers).length === quizData.length && !showResults && (
-              <button
-                onClick={() => setShowResults(true)}
-                className="w-full bg-amber-500 text-slate-950 font-extrabold py-3.5 px-6 rounded-xl hover:bg-amber-400 transition-colors text-sm"
-              >
-                Vérifier mes Réponses ({Object.keys(quizAnswers).length}/{quizData.length})
-              </button>
-            )}
-
-            {showResults && (
-              <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-center font-bold text-sm text-emerald-700 dark:text-emerald-300">
-                Score obtenu : {calculateScore()} / {quizData.length}
+            {!quizFinished && (
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+                  Question {quizCurrentStep + 1} / {quizData.length}
+                </span>
               </div>
             )}
           </div>
+
+          <div className="bg-white dark:bg-[#0c101b] rounded-3xl shadow-xl border-2 border-slate-200 dark:border-slate-800 p-5 sm:p-7 relative overflow-hidden transition-all">
+            {!quizFinished ? (
+              <div className="space-y-5">
+                {/* Barre de progression dorée */}
+                <div className="space-y-2">
+                  <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-amber-500 to-amber-400 transition-all duration-300 rounded-full"
+                      style={{ width: `${((quizCurrentStep + 1) / quizData.length) * 100}%` }}
+                    />
+                  </div>
+
+                  {/* Boutons d'accès direct aux questions */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex gap-1.5">
+                      {quizData.map((_, idx) => {
+                        const isAnswered = quizAnswers[idx] !== undefined;
+                        const isCurrent = idx === quizCurrentStep;
+                        return (
+                          <button
+                            key={idx}
+                            onClick={() => setQuizCurrentStep(idx)}
+                            className={`w-7 h-7 rounded-lg text-xs font-bold font-mono transition-all flex items-center justify-center ${
+                              isCurrent
+                                ? 'bg-amber-500 text-slate-950 shadow-sm font-extrabold ring-2 ring-amber-500/30'
+                                : isAnswered
+                                ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/40'
+                                : 'bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700'
+                            }`}
+                          >
+                            {idx + 1}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <span className="text-[11px] font-mono text-slate-500">
+                      {Object.keys(quizAnswers).length}/{quizData.length} complétée(s)
+                    </span>
+                  </div>
+                </div>
+
+                {/* Question active */}
+                <div className="space-y-3">
+                  <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug">
+                    {quizCurrentStep + 1}. {quizData[quizCurrentStep].question}
+                  </h4>
+
+                  {/* Liste des 4 options en grille compacte */}
+                  <div className="grid grid-cols-1 gap-2">
+                    {quizData[quizCurrentStep].options.map((option, oIdx) => {
+                      const isAnswered = quizAnswers[quizCurrentStep] !== undefined;
+                      const isSelected = quizAnswers[quizCurrentStep] === oIdx;
+                      const isCorrect = oIdx === quizData[quizCurrentStep].correct;
+
+                      let btnStyle = 'border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 text-slate-800 dark:text-slate-200 hover:border-amber-500/50 hover:bg-amber-500/5';
+                      let badgeStyle = 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400';
+
+                      if (isAnswered) {
+                        if (isSelected && isCorrect) {
+                          btnStyle = 'border-emerald-500 bg-emerald-500/15 text-emerald-900 dark:text-emerald-200 font-medium';
+                          badgeStyle = 'bg-emerald-500 text-white';
+                        } else if (isSelected && !isCorrect) {
+                          btnStyle = 'border-rose-500 bg-rose-500/15 text-rose-900 dark:text-rose-200 font-medium';
+                          badgeStyle = 'bg-rose-500 text-white';
+                        } else if (isCorrect) {
+                          btnStyle = 'border-emerald-500/60 bg-emerald-500/10 text-emerald-900 dark:text-emerald-200';
+                          badgeStyle = 'bg-emerald-500/30 text-emerald-700 dark:text-emerald-300';
+                        } else {
+                          btnStyle = 'opacity-50 border-slate-200 dark:border-slate-800 text-slate-400';
+                        }
+                      }
+
+                      return (
+                        <button
+                          key={oIdx}
+                          onClick={() => handleSelectQuizOption(quizCurrentStep, oIdx)}
+                          disabled={isAnswered}
+                          className={`w-full text-left p-3 rounded-xl border transition-all flex items-center justify-between text-xs sm:text-sm ${btnStyle}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className={`w-6 h-6 rounded-lg text-xs font-mono font-bold flex items-center justify-center flex-shrink-0 ${badgeStyle}`}>
+                              {String.fromCharCode(65 + oIdx)}
+                            </span>
+                            <span>{option}</span>
+                          </div>
+                          {isAnswered && isSelected && isCorrect && (
+                            <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 ml-2" />
+                          )}
+                          {isAnswered && isSelected && !isCorrect && (
+                            <XCircle className="w-4 h-4 text-rose-500 flex-shrink-0 ml-2" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Explication d'établi immédiate */}
+                  {quizAnswers[quizCurrentStep] !== undefined && (
+                    <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-800 dark:text-amber-300 animate-fadeIn space-y-1">
+                      <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[10px] text-amber-700 dark:text-amber-400">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>Règle d’Atelier &amp; Critère de Contrôle</span>
+                      </div>
+                      <p className="leading-relaxed">
+                        {quizData[quizCurrentStep].explanation}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Contrôles de navigation */}
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <button
+                    onClick={() => setQuizCurrentStep(prev => Math.max(0, prev - 1))}
+                    disabled={quizCurrentStep === 0}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>Précédente</span>
+                  </button>
+
+                  {quizCurrentStep < quizData.length - 1 ? (
+                    <button
+                      onClick={() => setQuizCurrentStep(prev => Math.min(quizData.length - 1, prev + 1))}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-sm transition-all"
+                    >
+                      <span>Question Suivante</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setQuizFinished(true)}
+                      disabled={Object.keys(quizAnswers).length < quizData.length}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    >
+                      <Award className="w-4 h-4" />
+                      <span>Voir mon Bilan ({Object.keys(quizAnswers).length}/{quizData.length})</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            ) : (
+              /* Score & Bilan d'Excellence */
+              <div className="py-6 px-4 text-center space-y-4 animate-fadeIn">
+                <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-500/10 border-2 border-amber-500/40 flex items-center justify-center text-amber-500">
+                  <Award className="w-8 h-8" />
+                </div>
+
+                <div className="space-y-1">
+                  <span className="text-xs font-mono font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+                    Bilan du Contrôle des Finitions
+                  </span>
+                  <h3 className="font-serif text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+                    Score : {calculateScore()} / {quizData.length} ({Math.round((calculateScore() / quizData.length) * 100)}%)
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto">
+                    {calculateScore() === quizData.length
+                      ? "Excellence Poinçon de Genève ! Vous maîtrisez parfaitement l’angle rentrant à la gentiane, le poli noir et l'ébavurage."
+                      : calculateScore() >= 3
+                      ? "Très bon niveau d'atelier. La géométrie des finitions manuelles et industrielles est bien comprise."
+                      : "Continuez à observer les coupes sous microscope et les fiches d'outillage ci-dessus pour affiner votre œil."}
+                  </p>
+                </div>
+
+                <div className="pt-2 flex justify-center gap-3">
+                  <button
+                    onClick={restartQuiz}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md transition-all"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                    <span>Recommencer le Quiz</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Navigation entre modules */}
+        <section className="pt-8 border-t border-slate-200 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Link
+            href="/theorie/mouvements/platine-ponts"
+            className="group p-5 rounded-2xl bg-white dark:bg-[#0c101b] border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between"
+          >
+            <div>
+              <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Module Précédent</span>
+              <h4 className="font-serif font-bold text-slate-900 dark:text-white group-hover:text-amber-500 transition-colors">
+                ← Platine &amp; Ponts (Bâti)
+              </h4>
+            </div>
+            <span className="text-2xl group-hover:-translate-x-1 transition-transform">⚙️</span>
+          </Link>
+
+          <Link
+            href="/theorie/mouvements/stabilite-dimensionnelle"
+            className="group p-5 rounded-2xl bg-white dark:bg-[#0c101b] border-2 border-slate-200 dark:border-slate-800 hover:border-amber-500/50 transition-all flex items-center justify-between"
+          >
+            <div>
+              <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Module Suivant</span>
+              <h4 className="font-serif font-bold text-slate-900 dark:text-white group-hover:text-amber-500 transition-colors">
+                Stabilité Dimensionnelle &amp; Dilatation →
+              </h4>
+            </div>
+            <span className="text-2xl group-hover:translate-x-1 transition-transform">🌡️</span>
+          </Link>
         </section>
       </article>
     </div>
