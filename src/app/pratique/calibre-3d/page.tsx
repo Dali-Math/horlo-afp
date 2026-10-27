@@ -146,7 +146,7 @@ export default function CalibreEcorchePage() {
           <div className="flex items-center gap-3">
             <Link
               href="/pratique"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF7F1] dark:bg-[#111419] dark:bg-[#111419] border border-[#D7D0C4] dark:border-[#2a2f36] dark:border-[#2a2f36] hover:border-[#9C7A43] text-[#57534E] dark:text-[#aaa49a] dark:text-[#aaa49a] hover:text-[#9C7A43] text-xs font-label transition shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF7F1] dark:bg-[#111419] border border-[#D7D0C4] dark:border-[#2a2f36] hover:border-[#9C7A43] text-[#57534E] dark:text-[#aaa49a] hover:text-[#9C7A43] text-xs font-label transition shadow-sm"
               title="Retour à l'Atelier Pratique"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
@@ -155,24 +155,13 @@ export default function CalibreEcorchePage() {
 
             <span className="w-px h-5 bg-[#D7D0C4] dark:bg-[#2a2f36] hidden sm:inline" />
 
-            <div className="w-10 h-10 rounded-full bg-[#171717] dark:bg-[#171b21] border border-[#9C7A43]/60 flex items-center justify-center text-[#E3B95F] shadow-sm">
-              <DraftingCompass className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="font-display font-semibold text-xl sm:text-2xl tracking-tight text-[#171717] dark:text-[#f1ede5]">
-                  Horlo<span className="text-[#C08A2D]">Learn</span>
-                </span>
-                <span className="text-[9px] font-label tracking-[0.22em] text-[#9C7A43] uppercase hidden sm:block">
-                  Culture &amp; Savoir-Faire
-                </span>
-                <span className="text-[10px] font-label px-2.5 py-0.5 rounded-full bg-[#9C7A43]/10 text-[#9C7A43] border border-[#9C7A43]/30 font-semibold">
-                  ÉCORCHÉ 3D · STANDARDS NIHS &amp; ISO 3159
-                </span>
-              </div>
-              <p className="text-xs text-[#57534E] dark:text-[#aaa49a] font-body">
-                Calibre École <strong className="font-label text-[#171717] dark:text-[#f1ede5]">ETA 6497-1 (Unitas 16 ½&apos;&apos;&apos;)</strong> — Porte-Mouvement Universel 360° (Côté Ponts &amp; Côté Cadran)
-              </p>
+            <div className="flex items-center gap-2">
+              <span className="font-serif font-bold text-base sm:text-lg text-[#171717] dark:text-[#f1ede5] tracking-wide">
+                Master Calibre 3D
+              </span>
+              <span className="text-[10px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-[#9C7A43]/15 text-[#9C7A43] border border-[#9C7A43]/30">
+                ETA 6497-1
+              </span>
             </div>
           </div>
 
