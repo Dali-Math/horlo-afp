@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Metadata } from "next";
+import ChronoKinematicsSimulator from "./ChronoKinematicsSimulator";
 
 export const metadata: Metadata = {
   title: "Le Chronographe - Complication Sportive | HorloLearn",
@@ -125,6 +126,13 @@ export default function ChronographePage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Atelier Cinématique Interactif */}
+      <section className="py-6 bg-slate-900/60 dark:bg-black/60 border-y border-amber-500/20">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <ChronoKinematicsSimulator />
         </div>
       </section>
 

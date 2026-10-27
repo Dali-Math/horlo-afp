@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import TappingBenchSimulator from './TappingBenchSimulator';
+import PolishingBenchSimulator from './PolishingBenchSimulator';
 import Link from 'next/link';
 import {
   Compass,
@@ -1641,6 +1643,16 @@ export default function MicromecaniqueModulePage() {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* Section 03B : Taraudage NIHS & Affûtage Tournevis */}
+        <section id="taraudage-nihs" className="scroll-mt-28 space-y-6">
+          <TappingBenchSimulator />
+        </section>
+
+        {/* Section 03C : Polissage Boîtier & Contrôle Optique à la Mire */}
+        <section id="polissage-mire" className="scroll-mt-28 space-y-6">
+          <PolishingBenchSimulator />
         </section>
 
         {/* Section 04 : Les 5 Projets d'Usinage d'Atelier */}

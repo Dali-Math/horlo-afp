@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import QuartzBenchSimulator from "./QuartzBenchSimulator";
 import {
   ArrowLeft,
   Zap,
@@ -394,6 +395,11 @@ export default function MouvementsQuartzPage() {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* BANC DE CONTRÔLE QUARTZ & DIAGNOSTIC HOROTEST */}
+        <section className="mb-14">
+          <QuartzBenchSimulator />
         </section>
 
         {/* SECTION 1 : QU'EST-CE QU'UN MOUVEMENT À QUARTZ ? */}
