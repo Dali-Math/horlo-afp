@@ -269,26 +269,34 @@ export default function VoiceWorkbenchAssistant() {
 
   return (
     <>
-      {/* Floating Workbench Mic Button (Bottom-Right, beside search) */}
-      <div className="fixed bottom-6 right-6 z-40 flex items-center gap-2">
+      {/* Floating Workbench Mic Button (Bottom-Left, distinct and compact) */}
+      <div className="fixed bottom-6 left-6 z-40">
         <button
           onClick={toggleListening}
-          className={`group flex items-center gap-2.5 px-4 py-3 rounded-full font-mono text-xs font-bold shadow-2xl transition-all duration-300 backdrop-blur-md border ${
+          className={`relative group w-13 h-13 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 backdrop-blur-md border-2 ${
             isListening
-              ? "bg-rose-500 text-white border-rose-400 ring-4 ring-rose-500/40 animate-pulse scale-105"
-              : "bg-slate-900/90 dark:bg-black/90 text-amber-400 border-amber-500/50 hover:border-amber-400 hover:scale-105 shadow-amber-950/20"
+              ? "bg-rose-600 text-white border-rose-400 ring-4 ring-rose-500/40 animate-pulse scale-105"
+              : "bg-slate-900/95 dark:bg-[#0c121e]/95 text-amber-400 border-amber-500/60 hover:border-amber-300 hover:scale-110 shadow-amber-950/30"
           }`}
-          title="Mode Établi Mains Prises (Assistant Vocal)"
+          aria-label="Mode Établi Mains Prises (Assistant Vocal)"
+          title="Mode Établi Mains Prises"
         >
           {isListening ? (
-            <Mic className="w-4 h-4 text-white animate-bounce" />
+            <Mic className="w-5 h-5 text-white animate-bounce" />
           ) : (
-            <Mic className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
+            <Mic className="w-5 h-5 text-amber-400 group-hover:scale-110 transition-transform" />
           )}
-          <span className="hidden sm:inline">
-            {isListening ? "Écoute en cours..." : "Mode Mains Prises"}
+
+          {/* Active emerald dot */}
+          <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
           </span>
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+
+          {/* Compact Tooltip on Hover to the right */}
+          <span className="absolute left-full ml-3 px-3 py-1.5 rounded-xl bg-slate-900/95 dark:bg-black/95 border border-amber-500/40 text-slate-200 text-xs font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-2xl backdrop-blur-md">
+            🎙️ Assistant Vocal Établi (Mains Prises)
+          </span>
         </button>
       </div>
 
