@@ -1,7 +1,7 @@
 // src/app/pratique/calibre-3d/page.tsx
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type ChangeEvent } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -111,26 +111,26 @@ export default function Calibre3DPage() {
     controllerRef.current?.setSimSpeed(s);
   };
 
-  const handleScrubBeat = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleScrubBeat = (e: ChangeEvent<HTMLInputElement>) => {
     const val = parseFloat(e.target.value);
     setBeatPhasePct(val);
     setSpeed(0);
     controllerRef.current?.scrubBeat(val);
   };
 
-  const handleExplode = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleExplode = (e: ChangeEvent<HTMLInputElement>) => {
     const val = parseInt(e.target.value, 10);
     setExplodeVal(val);
     controllerRef.current?.setExplode(val);
   };
 
-  const handleXray = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleXray = (e: ChangeEvent<HTMLInputElement>) => {
     const val = parseInt(e.target.value, 10);
     setXrayVal(val);
     controllerRef.current?.setXray(val);
   };
 
-  const handleMainspring = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMainspring = (e: ChangeEvent<HTMLInputElement>) => {
     const val = parseInt(e.target.value, 10);
     setMainspringVal(val);
     controllerRef.current?.setMainspring(val);

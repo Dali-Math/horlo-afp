@@ -244,21 +244,21 @@ export function initCalibre3DEngine(container: HTMLElement, callbacks: Calibre3D
         const bridgeMaterials: THREE.MeshStandardMaterial[] = [];
 
         // Animated 3D references
-        let meshBarrel: THREE.Mesh | undefined;
-        let meshMainspringSpiral: THREE.Line | undefined;
-        let meshRatchetWheel: THREE.Mesh | undefined;
-        let meshCrownWheel: THREE.Mesh | undefined;
-        let meshCenterWheel: THREE.Mesh | undefined;
-        let meshThirdWheel: THREE.Mesh | undefined;
-        let meshFourthWheel: THREE.Mesh | undefined;
-        let meshEscapeWheel: THREE.Mesh | undefined;
-        let meshPalletFork: THREE.Mesh | undefined;
-        let meshBalanceWheel: THREE.Mesh | undefined;
-        let meshHairspring: THREE.Line | undefined;
-        let meshWindingCrown: THREE.Mesh | undefined;
-        let meshHourHand: THREE.Mesh | undefined;
-        let meshMinuteHand: THREE.Mesh | undefined;
-        let meshSmallSecondsHand: THREE.Mesh | undefined;
+        let meshBarrel: any;
+        let meshMainspringSpiral: any;
+        let meshRatchetWheel: any;
+        let meshCrownWheel: any;
+        let meshCenterWheel: any;
+        let meshThirdWheel: any;
+        let meshFourthWheel: any;
+        let meshEscapeWheel: any;
+        let meshPalletFork: any;
+        let meshBalanceWheel: any;
+        let meshHairspring: any;
+        let meshWindingCrown: any;
+        let meshHourHand: any;
+        let meshMinuteHand: any;
+        let meshSmallSecondsHand: any;
 
         /**
          * GIMBAL-LOCK-FREE QUATERNION TRACKBALL CONTROLLER
@@ -401,7 +401,7 @@ export function initCalibre3DEngine(container: HTMLElement, callbacks: Calibre3D
             return group;
         }
 
-        function createBluedScrew(x: number, y: number, z: number, matBlued: THREE.Material, leftHandSlot: boolean = false): THREE.Mesh {
+        function createBluedScrew(x: number, y: number, z: number, matBlued: THREE.Material, leftHandSlot: boolean = false): THREE.Group {
             const grp = new THREE.Group();
             grp.position.set(x, y, z);
             const head = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.12, 20), matBlued);
@@ -425,7 +425,7 @@ export function initCalibre3DEngine(container: HTMLElement, callbacks: Calibre3D
             const canvas = document.createElement('canvas');
             canvas.width = 1024;
             canvas.height = 1024;
-            const ctx = canvas.getContext('2d');
+            const ctx = canvas.getContext('2d')!;
             const cx = 512, cy = 512;
 
             const dialGrad = ctx.createRadialGradient(cx, cy, 30, cx, cy, 510);
@@ -543,7 +543,7 @@ export function initCalibre3DEngine(container: HTMLElement, callbacks: Calibre3D
             const canvas = document.createElement('canvas');
             canvas.width = 256;
             canvas.height = 256;
-            const ctx = canvas.getContext('2d');
+            const ctx = canvas.getContext('2d')!;
 
             const g = ctx.createLinearGradient(0, 0, 0, 256);
             g.addColorStop(0, '#FFFFFF');
@@ -591,7 +591,7 @@ export function initCalibre3DEngine(container: HTMLElement, callbacks: Calibre3D
             const canvas = document.createElement('canvas');
             canvas.width = 1024;
             canvas.height = 1024;
-            const ctx = canvas.getContext('2d');
+            const ctx = canvas.getContext('2d')!;
 
             ctx.fillStyle = '#CBD5E1';
             ctx.fillRect(0, 0, 1024, 1024);
@@ -1312,8 +1312,8 @@ export function initCalibre3DEngine(container: HTMLElement, callbacks: Calibre3D
         function rebuildMainspringSpiralGeometry(matNivaflex?: THREE.Material) {
             if (!meshMainspringSpiral) return;
             while (meshMainspringSpiral.children.length > 0) {
-                const old = meshMainspringSpiral.children[0];
-                old.geometry.dispose();
+                const old = meshMainspringSpiral.children[0] as any;
+                if (old && old.geometry) old.geometry.dispose();
                 meshMainspringSpiral.remove(old);
             }
 
