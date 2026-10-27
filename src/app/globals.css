@@ -874,3 +874,66 @@ input[type="range"].hl-slider::-moz-range-thumb {
   border-radius: 0;
   border: none;
 }
+
+/* ==========================================================================
+   HorloLearn  Thme Atelier Embotage & Acadmie Horlogre Suisse
+   ========================================================================== */
+:root {
+  --color-cream: #f3efe7;
+  --color-cream-card: #faf7f1;
+  --color-cream-tile: #f7f3ea;
+  --color-cream-border: #d7d0c4;
+  --color-cream-track: #e7e0d2;
+  --color-bronze: #9c7a43;
+  --color-bronze-light: #b08d57;
+  --color-bronze-dark: #7c5f33;
+  --color-ink: #171717;
+  --color-ink-soft: #57534e;
+}
+
+.dark {
+  --color-cream: #090c10;
+  --color-cream-card: #12161f;
+  --color-cream-tile: #181d28;
+  --color-cream-border: #262f3f;
+  --color-cream-track: #1f2735;
+  --color-bronze: #d4af37;
+  --color-bronze-light: #e6c55b;
+  --color-bronze-dark: #e3b95f;
+  --color-ink: #f3efe7;
+  --color-ink-soft: #9aa5b5;
+}
+
+/* Flashcards mmo (retournement 3D) */
+.hl-flip {
+  perspective: 1200px;
+}
+.hl-flip-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.hl-flipped {
+  transform: rotateY(180deg);
+}
+.hl-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.hl-back {
+  transform: rotateY(180deg);
+}
+
+/* Apparition douce du contenu d'onglet */
+.hl-fade {
+  animation: hlFade 0.35s ease both;
+}
+@keyframes hlFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

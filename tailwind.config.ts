@@ -10,6 +10,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        cream: {
+          DEFAULT: "var(--color-cream, #f3efe7)",
+          card: "var(--color-cream-card, #faf7f1)",
+          tile: "var(--color-cream-tile, #f7f3ea)",
+          border: "var(--color-cream-border, #d7d0c4)",
+          track: "var(--color-cream-track, #e7e0d2)",
+        },
+        bronze: {
+          DEFAULT: "var(--color-bronze, #9c7a43)",
+          light: "var(--color-bronze-light, #b08d57)",
+          dark: "var(--color-bronze-dark, #7c5f33)",
+        },
+        ink: {
+          DEFAULT: "var(--color-ink, #171717)",
+          soft: "var(--color-ink-soft, #57534e)",
+        },
+
         background: "var(--background)",
         foreground: "var(--foreground)",
         // Palette "atelier horloger" sombre et doré
@@ -30,6 +47,10 @@ const config: Config = {
         },
       },
       fontFamily: {
+        display: ['var(--font-playfair)', 'Georgia', 'Times New Roman', 'serif'],
+        body: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        label: ['var(--font-jbmono)', 'ui-monospace', 'monospace'],
+
         bebas: ['Bebas Neue', 'Oswald', 'sans-serif'],
         oswald: ['Oswald', 'sans-serif'],
         inter: ['Inter', 'sans-serif'],
