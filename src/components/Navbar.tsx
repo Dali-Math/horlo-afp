@@ -22,7 +22,8 @@ import {
   Users,
   Calendar,
   Newspaper,
-  Award
+  Award,
+  AlertTriangle
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import LanguageSelector from "@/components/LanguageSelector";
@@ -67,6 +68,7 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
     {
       title: "Atelier & Métrologie",
       links: [
+        { href: "/pratique/depannage-erreurs", label: "🚨 Dépannage & Erreurs" },
         { href: "/pratique/laboratoire", label: "Laboratoire (11 Bancs)" },
         { href: "/pratique/inspection-loupe", label: "Loupe Macro 20x" },
         { href: "/pratique/defi-chronometre", label: "⚔️ Défi Chrono" },
@@ -190,6 +192,22 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
 
               {activeDropdown === "atelier" && (
                 <div className="absolute top-full left-0 mt-2 w-72 p-2 rounded-2xl bg-white/95 dark:bg-[#0c121e]/95 border border-slate-200 dark:border-amber-500/30 shadow-2xl backdrop-blur-xl space-y-1 font-mono text-xs animate-in fade-in slide-in-from-top-2 duration-150 z-50">
+                  <Link
+                    href="/pratique/depannage-erreurs"
+                    className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-rose-500/10 dark:hover:bg-rose-500/15 transition group border border-rose-500/20 bg-rose-500/5 mb-1"
+                  >
+                    <AlertTriangle className="w-4 h-4 text-rose-500 mt-0.5 shrink-0" />
+                    <div>
+                      <strong className="block text-slate-900 dark:text-white group-hover:text-rose-400 font-sans text-xs flex items-center gap-1.5">
+                        <span>Dépannage &amp; Erreurs</span>
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-rose-500 text-white font-mono font-bold">Nouveau</span>
+                      </strong>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                        Guide de survie de l&apos;apprenti &amp; 6 erreurs d&apos;établi
+                      </span>
+                    </div>
+                  </Link>
+
                   <Link
                     href="/pratique/laboratoire"
                     className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-amber-500/10 dark:hover:bg-amber-500/15 transition group"
