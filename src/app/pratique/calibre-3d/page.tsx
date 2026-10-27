@@ -417,7 +417,7 @@ export default function CalibreEcorchePage() {
             {/* Toast de prise en main (fondu auto) */}
             {toastState !== 'gone' && (
               <div
-                className={`absolute bottom-16 left-1/2 -translate-x-1/2 z-20 pointer-events-none px-4 py-2 rounded-xl bg-black/60 backdrop-blur-md border border-[#E3B95F]/40 text-[11px] font-label text-[#F3E5AB] shadow-xl transition-opacity duration-1000 flex items-center gap-2 whitespace-nowrap ${
+                className={`absolute bottom-16 left-1/2 -translate-x-1/2 z-20 pointer-events-none px-3.5 py-2 rounded-xl bg-black/75 backdrop-blur-md border border-[#E3B95F]/40 text-[10px] sm:text-[11px] font-label text-[#F3E5AB] shadow-xl transition-opacity duration-1000 flex items-center gap-2 max-w-[calc(100%-2rem)] text-center whitespace-normal sm:whitespace-nowrap leading-tight ${
                   toastState === 'fading' ? 'opacity-0' : 'opacity-100'
                 }`}
               >

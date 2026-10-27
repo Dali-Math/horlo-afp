@@ -106,7 +106,7 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
   return (
     <header className="sticky top-3 sm:top-4 z-50 px-3 sm:px-5 lg:px-8 max-w-[1720px] mx-auto w-full transition-all duration-300">
       <nav className="w-full bg-white/95 dark:bg-[#07090E]/95 text-slate-900 dark:text-white border border-gray-200/90 dark:border-amber-500/25 rounded-2xl backdrop-blur-xl shadow-xl dark:shadow-[0_10px_35px_rgba(0,0,0,0.7)] transition-colors duration-300">
-        <div className="px-3 sm:px-5 lg:px-7 py-2 sm:py-2.5 flex items-center justify-between gap-3 xl:gap-6">
+        <div className="px-2 sm:px-5 lg:px-7 py-2 sm:py-2.5 flex items-center justify-between gap-1 sm:gap-3 xl:gap-6">
           
           {/* Logo HorloLearn Officiel */}
           <Link
@@ -491,11 +491,11 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
           </div>
 
           {/* Actions Droite Mobile/Tablette (Recherche + Langue + Thème + Menu) */}
-          <div className="lg:hidden flex items-center gap-1.5 sm:gap-2">
+          <div className="lg:hidden flex items-center gap-1 sm:gap-2">
             {onSearchClick && (
               <button
                 onClick={onSearchClick}
-                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-gray-700 dark:text-gray-300 hover:text-[#E2B44F] border border-slate-200 dark:border-slate-800 cursor-pointer"
+                className="p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-gray-700 dark:text-gray-300 hover:text-[#E2B44F] border border-slate-200 dark:border-slate-800 cursor-pointer"
                 aria-label="Rechercher"
               >
                 <Search className="w-4 h-4" />
@@ -507,7 +507,7 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-slate-900 dark:text-white hover:text-[#E2B44F] transition-colors rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 cursor-pointer"
+              className="p-1.5 sm:p-2 text-slate-900 dark:text-white hover:text-[#E2B44F] transition-colors rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 cursor-pointer"
               aria-label="Menu Principal"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
