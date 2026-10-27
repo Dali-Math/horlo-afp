@@ -55,6 +55,13 @@
 html {
   scroll-behavior: smooth;
   background: var(--hl-bg);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+button, a, input, select, textarea {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html,

@@ -2,7 +2,7 @@
 import "./globals.css";
 import "./guide-complet-fixes.css";
 import "./guide-complet-final-fixes.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { SITE } from "@/lib/seo";
 import dynamic from "next/dynamic";
 import { Playfair_Display, Inter } from "next/font/google";
@@ -26,6 +26,16 @@ const inter = Inter({
   variable: "--font-sans",
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#faf7f1" },
+    { media: "(prefers-color-scheme: dark)", color: "#090b0e" },
+  ],
+};
 
 export const metadata: Metadata = {
   title: "HorloLearn – Passion & Découverte Horlogère Suisse",
@@ -59,7 +69,6 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: SITE.domain },
   manifest: "/manifest.json",
-  themeColor: "#d4af37",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
