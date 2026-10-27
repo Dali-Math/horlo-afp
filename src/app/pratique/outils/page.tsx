@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import BenchPressSimulator from '../laboratoire/BenchPressSimulator';
 import {
   ArrowLeft,
   Wrench,
@@ -102,7 +103,7 @@ const PRACTICAL_TOOLS: PracticalTool[] = [
 
 export default function PratiqueOutilsPage() {
   const [selectedToolId, setSelectedToolId] = useState<string>('brucelles');
-  const [comparatorTab, setComparatorTab] = useState<'screwdriver' | 'tweezers'>('screwdriver');
+  const [comparatorTab, setComparatorTab] = useState<'screwdriver' | 'tweezers' | 'press'>('screwdriver');
   const [bladeProfileValue, setBladeProfileValue] = useState<number>(55);
   const [tweezerProfileValue, setTweezerProfileValue] = useState<number>(85);
   const [loupe10x, setLoupe10x] = useState<boolean>(false);
@@ -303,6 +304,16 @@ export default function PratiqueOutilsPage() {
                 }`}
               >
                 2. Becs de Brucelles Dumont N° 5
+              </button>
+              <button
+                onClick={() => setComparatorTab('press')}
+                className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                  comparatorTab === 'press'
+                    ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                }`}
+              >
+                3. Alésage Équarrissoir &amp; Potence Robur
               </button>
               <button
                 onClick={() => setLoupe10x(!loupe10x)}
@@ -562,7 +573,7 @@ export default function PratiqueOutilsPage() {
                 </div>
               </div>
             </div>
-          ) : (
+          ) : comparatorTab === 'tweezers' ? (
             <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-7 bg-slate-950 rounded-2xl border border-slate-800 p-4 sm:p-6 relative overflow-hidden">
                 <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-3">
@@ -733,6 +744,10 @@ export default function PratiqueOutilsPage() {
                   VERDICT ATELIER : {tweezerInfo.verdict}
                 </div>
               </div>
+            </div>
+          ) : (
+            <div className="p-6 sm:p-8">
+              <BenchPressSimulator />
             </div>
           )}
         </section>

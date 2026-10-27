@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import NihsToleranceCalculator from "../../../pratique/laboratoire/NihsToleranceCalculator";
 import { useState } from "react";
 import {
   ArrowLeft,
@@ -1008,6 +1009,11 @@ export default function CotesEtTolerancesPage() {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* CALCULATEUR DYNAMIQUE D'AJUSTEMENTS ISO 286 / NIHS */}
+        <section className="mb-14">
+          <NihsToleranceCalculator />
         </section>
 
         {/* NAVIGATION PRO PAR ONGLETS FLUIDES */}

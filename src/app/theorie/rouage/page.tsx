@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import GearTrainKinematics from "../../pratique/laboratoire/GearTrainKinematics";
 import {
   Cog,
   Clock,
@@ -656,6 +657,13 @@ export default function RouagePage() {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* =================================================================== */}
+        {/* BANC D'ESSAI CINÉMATIQUE DYNAMIQUE SVG (FORMULE SUISSE A/h)        */}
+        {/* =================================================================== */}
+        <section className="space-y-6">
+          <GearTrainKinematics />
         </section>
 
         {/* =================================================================== */}

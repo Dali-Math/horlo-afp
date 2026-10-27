@@ -15,6 +15,7 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import FlipBookViewer from "@/components/FlipBookViewer";
+import KeylessSimulator from "../laboratoire/KeylessSimulator";
 
 interface AssemblyStep {
   step: number;
@@ -113,7 +114,7 @@ const ASSEMBLY_STEPS: AssemblyStep[] = [
 export default function RemontagePage() {
   const [activeStepIdx, setActiveStepIdx] = useState(0);
   const [loupe, setLoupe] = useState(false);
-  const [svgTab, setSvgTab] = useState<"ebat" | "moebius">("ebat");
+  const [svgTab, setSvgTab] = useState<"ebat" | "moebius" | "keyless">("ebat");
   const [ebatMode, setEbatMode] = useState<"bride" | "nominal" | "excessif">("nominal");
   const [selectedOil, setSelectedOil] = useState<"9010" | "HP-1300" | "9415" | "9504" | "8217">("9010");
   const [loupeSvg, setLoupeSvg] = useState(false);
@@ -369,6 +370,16 @@ export default function RemontagePage() {
                 2. Carte des 5 Lubrifiants Certifiés Moebius
               </button>
               <button
+                onClick={() => setSvgTab("keyless")}
+                className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                  svgTab === "keyless"
+                    ? "bg-amber-500 text-slate-950 shadow-sm"
+                    : "bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                }`}
+              >
+                3. Mécanisme Remontoir ETA 2824-2
+              </button>
+              <button
                 onClick={() => setLoupeSvg(!loupeSvg)}
                 className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-mono font-bold border transition-all ${
                   loupeSvg
@@ -511,7 +522,7 @@ export default function RemontagePage() {
                 </div>
               </div>
             </div>
-          ) : (
+          ) : svgTab === "moebius" ? (
             <div className="p-6 sm:p-8 space-y-6">
               <div className="flex flex-wrap gap-2">
                 {(["9010", "HP-1300", "9415", "9504", "8217"] as const).map((oil) => (
@@ -609,6 +620,10 @@ export default function RemontagePage() {
                   </div>
                 </div>
               </div>
+            </div>
+          ) : (
+            <div className="p-6 sm:p-8">
+              <KeylessSimulator />
             </div>
           )}
         </div>

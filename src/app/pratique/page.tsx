@@ -470,14 +470,14 @@ export default function PratiquePage() {
                     ⭐ Master Lab d’Établi
                   </span>
                   <span className="text-xs font-mono text-amber-400">
-                    Chronométrie · Cinématique · Emboîtage
+                    7 Bacs d&apos;Essai Interactifs · Normes NIHS &amp; ISO
                   </span>
                 </div>
                 <h3 className="font-serif text-xl sm:text-2xl font-bold text-white group-hover:text-amber-400 transition-colors">
-                  Laboratoire de Chronométrie Witschi, Échappement (5 Phases) &amp; Emboîtage
+                  Grand Laboratoire Horloger : Witschi, Remontoir 2824, Équarrissoir, Rouage &amp; Ajustements
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
-                  Simulateur acoustique en direct Witschi Watch Expert avec son réel, 6 scénarios de pannes, correction Etachron, cinématique des 5 phases de l’échappement suisse et calculateur de mise à tige.
+                  Chrono-comparateur Witschi Watch Expert avec son réel, échappement suisse en 5 phases, simulateur de tirette &amp; stop-seconde ETA 2824-2, alésage du canon à l&apos;équarrissoir, fermeture à la potence Robur, chaîne du rouage et tolérances ISO 286.
                 </p>
               </div>
               <div className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs shadow group-hover:bg-amber-400 transition">
