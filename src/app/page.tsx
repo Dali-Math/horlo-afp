@@ -32,6 +32,10 @@ const LuxuryHeroClock = dynamic(() => import('@/components/LuxuryHeroClock'), {
   ),
 });
 
+const SwissWatchAtlas = dynamic(() => import('@/components/SwissWatchAtlas'), {
+  ssr: false,
+});
+
 /* 👑 Section Héros avec la Montre Haute Horlogerie Suisse */
 function Hero() {
   return (
@@ -112,9 +116,8 @@ function Carousel() {
     { name: "Fuseaux Horaires Cottier", href: "/fuseaux-horaires" },
     { name: "Manufactures Suisses", href: "/theorie/manufactures" },
     { name: "Écorchés Calibres 3D", href: "/theorie/galerie-3d" },
-    { name: "Chronocomparateur Witschi", href: "/outils/chronocomparateur" },
+    { name: "Quiz & Certifications", href: "/quiz" },
     { name: "Outils & Calculateurs", href: "/outils" },
-    { name: "Quiz d'Établi & Défis", href: "/quiz" },
     { name: "Histoire de l'Horlogerie", href: "/theorie/histoire-horlogerie-suisse" }
   ];
 
@@ -407,20 +410,6 @@ function GuidedPathwaysSection() {
                   <div className="text-[11px] text-slate-500">Calibre ETA 6497 pas à pas</div>
                 </div>
                 <ChevronRight className="w-4 h-4 text-cyan-500" />
-              </Link>
-
-              <Link
-                href="/pratique/calibre-3d"
-                className="p-3 rounded-xl bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-transparent border border-amber-500/40 hover:border-amber-400 transition flex items-center justify-between text-xs group"
-              >
-                <div>
-                  <div className="font-bold text-slate-900 dark:text-white group-hover:text-amber-400 flex items-center gap-1.5">
-                    <span>4. Calibre École 3D (ETA 6497)</span>
-                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500 text-slate-950 font-mono font-bold">360° 3D</span>
-                  </div>
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400">Porte-mouvement 360°, écorché Z &amp; cadran</div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-amber-500 group-hover:translate-x-1 transition" />
               </Link>
             </div>
           </div>
@@ -441,57 +430,9 @@ function GuidedPathwaysSection() {
   );
 }
 
-/* ✅ Grille Explore */
+/* ✅ Atlas suisse — remplace l’ancienne grille de 9 cases */
 function ExploreGrid() {
-  const cards = [
-    { name: "Théorie Fondamentale", href: "/theorie", icon: BookOpen, desc: "17 traités d'établi conformes aux référentiels suisses CP / CFC" },
-    { name: "Pratique d'Atelier", href: "/pratique", icon: Wrench, desc: "Simulateurs de démontage, huilage Moebius et réglage de marche" },
-    { name: "Technologies & Quartz", href: "/theorie/technologies", icon: Zap, desc: "Fréquence 32'768 Hz, silicium DRIE et montres connectées" },
-    { name: "Fuseaux Horaires Cottier", href: "/fuseaux-horaires", icon: Globe, desc: "Cartographie solaire en temps réel et mécanisme universel 1931" },
-    { name: "Grandes Manufactures", href: "/theorie/manufactures", icon: Award, desc: "Monographies des 15 maisons légendaires de Haute Horlogerie" },
-    { name: "Écorché Éclaté 3D", href: "/theorie/galerie-3d", icon: Layers, desc: "Désossez les calibres ETA 6497-1 et 2824-2 en 3D interactive" },
-    { name: "Quiz & Certifications", href: "/quiz", icon: Brain, desc: "Évaluez vos compétences d'établi et validez vos acquis" },
-    { name: "Outils & Chronocomparateur", href: "/outils", icon: Clock, desc: "Chronocomparateur Witschi acoustique en direct, calculs de rouage et tables Bergeon" },
-    { name: "Communauté & Entraide", href: "/communaute", icon: Users, desc: "Échangez entre passionnés, apprentis et maîtres horlogers" }
-  ];
-
-  return (
-    <section className="max-w-7xl mx-auto px-4 md:px-6 py-14 md:py-20 border-t border-slate-200 dark:border-slate-800/80">
-      <div className="text-center mb-10 space-y-2">
-        <h2 className="text-3xl md:text-5xl font-extrabold font-serif text-slate-900 dark:text-white">
-          Explorer Tout le Corpus HorloLearn
-        </h2>
-        <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 font-light">
-          Accédez directement aux 9 grandes rubriques de l&apos;Académie
-        </p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {cards.map((c) => (
-          <Link
-            key={c.href}
-            href={c.href}
-            className="group relative rounded-2xl bg-white dark:bg-[#0D121F] border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-amber-500/60 dark:hover:border-amber-400/80 transition-all overflow-hidden flex flex-col justify-between"
-          >
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 shadow-sm">
-                  {c.icon ? <c.icon className="w-6 h-6" /> : null}
-                </div>
-                <ArrowRight className="w-5 h-5 text-amber-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-              </div>
-              <h3 className="text-xl font-bold font-serif text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
-                {c.name}
-              </h3>
-              <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-light leading-relaxed">
-                {c.desc}
-              </p>
-            </div>
-            <div className="h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
+  return <SwissWatchAtlas />;
 }
 
 /* ✅ Section Partenaires */
