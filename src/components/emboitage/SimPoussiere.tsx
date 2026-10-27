@@ -7,7 +7,7 @@
  */
 
 import { useState } from 'react';
-import { Lightbulb, RotateCcw, Sparkles, Sun } from 'lucide-react';
+import { Lightbulb, RotateCcw, CheckCircle2, Sun } from 'lucide-react';
 
 type LightMode = 'zenithal' | 'grazing';
 type Tool = 'blower' | 'rodico';
@@ -207,7 +207,7 @@ export default function SimPoussiere() {
             <p className="text-xs font-label text-ink-soft flex items-center justify-center gap-1.5">
               {done ? (
                 <>
-                  <Sparkles className="w-4 h-4 text-bronze" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   PURETÉ ABSOLUE 100 % — ZÉRO DÉFAUT GLACE
                 </>
               ) : (

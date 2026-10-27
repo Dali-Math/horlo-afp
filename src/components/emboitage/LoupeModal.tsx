@@ -7,7 +7,7 @@
  */
 
 import { useEffect } from 'react';
-import { Search, Sparkles, X } from 'lucide-react';
+import { Search, Eye, X } from 'lucide-react';
 import { renderSchemaComponent } from '@/lib/emboitage/schemas';
 import type { SchemaType } from '@/lib/emboitage/data';
 
@@ -143,7 +143,7 @@ export default function LoupeModal({ loupe, setLoupe, onClose }: LoupeModalProps
         {/* Pied */}
         <div className="px-6 py-4 bg-cream-card border-t border-cream-border flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-xs font-label text-ink-soft">
-            <Sparkles className="w-4 h-4 text-bronze shrink-0" />
+            <Eye className="w-4 h-4 text-bronze shrink-0" />
             <span>Examen micro-mécanique officiel : chaque trait, tolérance et cote respecte la norme suisse.</span>
           </div>
           <button

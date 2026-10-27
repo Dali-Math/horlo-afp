@@ -14,6 +14,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
   BadgeCheck,
+  Award,
   Wrench,
   ClipboardCheck,
   Droplets,
@@ -22,7 +23,6 @@ import {
   Layers,
   Compass,
   Ruler,
-  Sparkles,
   ZoomIn,
 } from 'lucide-react';
 import { STEPS_DATA, type StepData } from '@/lib/emboitage/data';
@@ -202,7 +202,7 @@ export default function EmboitageAcademy() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-label font-medium bg-bronze/10 text-bronze-dark border border-bronze/30">
-                <Sparkles className="w-3.5 h-3.5" />
+                <Award className="w-3.5 h-3.5 text-bronze" />
                 Formation horloger praticien AFP &amp; CFC
               </div>
 
