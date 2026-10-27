@@ -8,32 +8,35 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import {
+  ArrowLeft,
   Camera,
   ChevronDown,
   ChevronUp,
-  CircleHelp,
+  HelpCircle as CircleHelp,
   Clock,
   Cog,
   Compass,
   Crosshair,
-  DraftingCompass,
+  Compass as DraftingCompass,
   Eye,
   Hand,
   Keyboard,
   Layers,
   Maximize,
   Move,
-  Orbit,
-  Pointer,
+  RefreshCw as Orbit,
+  MousePointer as Pointer,
   RefreshCw,
   Repeat,
   RotateCcw,
   RotateCw,
   Search,
   Star,
-  Timer,
-  TriangleAlert,
+  Clock as Timer,
+  AlertTriangle as TriangleAlert,
   Volume2,
   VolumeX,
   X,
@@ -53,7 +56,8 @@ import {
 
 type HudState = { mode: 'frozen' | 'live'; idx: number };
 
-const CREAM_CARD = 'bg-[#FAF7F1] border border-[#D7D0C4]';
+const CREAM_CARD = 'bg-[#FAF7F1] dark:bg-[#111419] dark:bg-[#111419] border border-[#D7D0C4] dark:border-[#2a2f36] dark:border-[#2a2f36] text-[#171717] dark:text-[#f1ede5] dark:text-[#f1ede5]';
+const SUB_CARD = 'bg-[#F3EFE7] dark:bg-[#171b21] dark:bg-[#171b21] border border-[#D7D0C4] dark:border-[#2a2f36] dark:border-[#2a2f36] text-[#171717] dark:text-[#f1ede5] dark:text-[#f1ede5]';
 
 export default function CalibreEcorchePage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -78,7 +82,7 @@ export default function CalibreEcorchePage() {
   const toggleFullscreen = useCallback(() => {
     const el = viewportRef.current;
     if (!el) return;
-    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    if (!document.fullscreenElement && !(document as any).webkitFullscreenElement) {
       if (el.requestFullscreen) el.requestFullscreen();
       else if ((el as unknown as { webkitRequestFullscreen?: () => void }).webkitRequestFullscreen)
         (el as unknown as { webkitRequestFullscreen: () => void }).webkitRequestFullscreen();
@@ -94,19 +98,19 @@ export default function CalibreEcorchePage() {
     const el = containerRef.current;
     if (!el) return;
     const engine = createCalibreEngine(el, {
-      onOrgan: (id) => setSelected(id),
-      onHud: (mode, idx) => setHud({ mode, idx }),
-      onBeatLabel: (t) => setBeatLabel(t),
-      onScrub: (p) => setScrubVal(p),
-      onSpeed: (m) => setSpeed(m),
-      onExplode: (p) => setExplodePct(p),
-      onXray: (p) => setXrayPct(p),
-      onMainspring: (p) => setMainspringPct(p),
-      onAudio: (on) => setAudioOn(on),
-      onAutoRotate: (on) => setAutoRotate(on),
-      onHelp: () => setHelpOpen((o) => !o),
+      onOrgan: (id: OrganId) => setSelected(id),
+      onHud: (mode: 'frozen' | 'live', idx: number) => setHud({ mode, idx }),
+      onBeatLabel: (t: string) => setBeatLabel(t),
+      onScrub: (p: number) => setScrubVal(p),
+      onSpeed: (m: number) => setSpeed(m),
+      onExplode: (p: number) => setExplodePct(p),
+      onXray: (p: number) => setXrayPct(p),
+      onMainspring: (p: number) => setMainspringPct(p),
+      onAudio: (on: boolean) => setAudioOn(on),
+      onAutoRotate: (on: boolean) => setAutoRotate(on),
+      onHelp: () => setHelpOpen((o: boolean) => !o),
       onFullscreenKey: () => toggleFullscreen(),
-      onPreset: (id) => setCamPreset(id),
+      onPreset: (id: PresetId) => setCamPreset(id),
     });
     engineRef.current = engine;
     return () => {
@@ -135,17 +139,28 @@ export default function CalibreEcorchePage() {
   const amplitude = Math.round(185 + (mainspringPct / 100) * 125);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F3EFE7] text-[#171717] font-body selection:bg-[#B08D57] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#F3EFE7] dark:bg-[#171b21] dark:bg-[#090b0e] text-[#171717] dark:text-[#f1ede5] dark:text-[#f1ede5] font-body transition-colors duration-200 select-none selection:bg-[#B08D57] selection:text-white">
       {/* ================= EN-TÊTE : MARQUE & TÉLÉMÉTRIE ================= */}
-      <header className="border-b border-[#D7D0C4] bg-[#FAF7F1]/95 backdrop-blur sticky top-0 z-50">
+      <header className="border-b border-[#D7D0C4] dark:border-[#2a2f36] dark:border-[#2a2f36] bg-[#FAF7F1] dark:bg-[#111419]/95 dark:bg-[#111419]/95 backdrop-blur sticky top-0 z-50 transition-colors">
         <div className="max-w-[1600px] mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#171717] border border-[#9C7A43]/60 flex items-center justify-center text-[#E3B95F] shadow-sm">
+            <Link
+              href="/pratique"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAF7F1] dark:bg-[#111419] dark:bg-[#111419] border border-[#D7D0C4] dark:border-[#2a2f36] dark:border-[#2a2f36] hover:border-[#9C7A43] text-[#57534E] dark:text-[#aaa49a] dark:text-[#aaa49a] hover:text-[#9C7A43] text-xs font-label transition shadow-sm"
+              title="Retour à l'Atelier Pratique"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Atelier</span>
+            </Link>
+
+            <span className="w-px h-5 bg-[#D7D0C4] dark:bg-[#2a2f36] hidden sm:inline" />
+
+            <div className="w-10 h-10 rounded-full bg-[#171717] dark:bg-[#171b21] border border-[#9C7A43]/60 flex items-center justify-center text-[#E3B95F] shadow-sm">
               <DraftingCompass className="w-5 h-5" />
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-display font-semibold text-xl sm:text-2xl tracking-tight text-[#171717]">
+                <span className="font-display font-semibold text-xl sm:text-2xl tracking-tight text-[#171717] dark:text-[#f1ede5]">
                   Horlo<span className="text-[#C08A2D]">Learn</span>
                 </span>
                 <span className="text-[9px] font-label tracking-[0.22em] text-[#9C7A43] uppercase hidden sm:block">
@@ -155,8 +170,8 @@ export default function CalibreEcorchePage() {
                   ÉCORCHÉ 3D · STANDARDS NIHS &amp; ISO 3159
                 </span>
               </div>
-              <p className="text-xs text-[#57534E] font-body">
-                Calibre École <strong className="font-label text-[#171717]">ETA 6497-1 (Unitas 16 ½&apos;&apos;&apos;)</strong> — Porte-Mouvement Universel 360° (Côté Ponts &amp; Côté Cadran)
+              <p className="text-xs text-[#57534E] dark:text-[#aaa49a] font-body">
+                Calibre École <strong className="font-label text-[#171717] dark:text-[#f1ede5]">ETA 6497-1 (Unitas 16 ½&apos;&apos;&apos;)</strong> — Porte-Mouvement Universel 360° (Côté Ponts &amp; Côté Cadran)
               </p>
             </div>
           </div>
@@ -164,19 +179,19 @@ export default function CalibreEcorchePage() {
           {/* Télémétrie mécanique live */}
           <div className="flex flex-wrap items-center gap-2 font-label text-xs">
             <div className={`px-3 py-1.5 rounded-xl ${CREAM_CARD} flex items-center gap-2`}>
-              <span className="text-[#57534E]">Ø :</span>
-              <strong className="text-[#171717]">36.60 mm (16 ½&apos;&apos;&apos;)</strong>
+              <span className="text-[#57534E] dark:text-[#aaa49a]">Ø :</span>
+              <strong className="text-[#171717] dark:text-[#f1ede5]">36.60 mm (16 ½&apos;&apos;&apos;)</strong>
             </div>
             <div className={`px-3 py-1.5 rounded-xl ${CREAM_CARD} flex items-center gap-2`}>
-              <span className="text-[#57534E]">Fréquence :</span>
+              <span className="text-[#57534E] dark:text-[#aaa49a]">Fréquence :</span>
               <strong className="text-[#9C7A43]">18&apos;000 A/h (2.5 Hz)</strong>
             </div>
             <div className={`px-3 py-1.5 rounded-xl ${CREAM_CARD} flex items-center gap-2`}>
-              <span className="text-[#57534E]">Levée :</span>
+              <span className="text-[#57534E] dark:text-[#aaa49a]">Levée :</span>
               <strong className="text-emerald-700">44°</strong>
             </div>
             <div className={`px-3 py-1.5 rounded-xl ${CREAM_CARD} flex items-center gap-2`}>
-              <span className="text-[#57534E]">Amplitude :</span>
+              <span className="text-[#57534E] dark:text-[#aaa49a]">Amplitude :</span>
               <strong className="text-sky-700">{amplitude}°</strong>
             </div>
             <button
@@ -192,13 +207,17 @@ export default function CalibreEcorchePage() {
               className={`px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 border ${
                 audioOn
                   ? 'bg-[#9C7A43] text-white border-[#9C7A43] font-bold'
-                  : `${CREAM_CARD} text-[#57534E] hover:text-[#9C7A43]`
+                  : `${CREAM_CARD} text-[#57534E] dark:text-[#aaa49a] dark:text-[#aaa49a] hover:text-[#9C7A43]`
               }`}
               title="Tic-tac mécanique 5 Hz"
             >
               {audioOn ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
               <span>Son 5 Hz : {audioOn ? 'ON' : 'OFF'}</span>
             </button>
+
+            <div className="rounded-xl overflow-hidden border border-[#D7D0C4] dark:border-[#2a2f36] dark:border-[#2a2f36] shadow-sm">
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </header>
@@ -209,13 +228,13 @@ export default function CalibreEcorchePage() {
           <Star className="w-3 h-3 text-[#C08A2D]" />
           Laboratoire 3D &amp; Cinématique · Référentiels AFP / CFC
         </span>
-        <h1 className="font-display text-4xl sm:text-5xl lg:text-[56px] leading-[1.08] mt-4 text-[#171717] font-medium">
+        <h1 className="font-display text-4xl sm:text-5xl lg:text-[56px] leading-[1.08] mt-4 text-[#171717] dark:text-[#f1ede5] font-medium">
           Écorché Éclaté &amp;{' '}
           <span className="bg-gradient-to-r from-amber-500 via-amber-600 to-orange-600 bg-clip-text text-transparent">
             Cinématique du 6497-1
           </span>
         </h1>
-        <p className="max-w-2xl mx-auto mt-4 text-[15px] text-[#57534E] leading-relaxed">
+        <p className="max-w-2xl mx-auto mt-4 text-[15px] text-[#57534E] dark:text-[#aaa49a] leading-relaxed">
           De la chaîne cinématique complète à l&apos;échappement à ancre suisse : désossez le calibre
           école suisse en vue éclatée, tournez-le librement à 360° et déroulez chaque phase du battement
           — fiches d&apos;établi, lubrifiants Moebius et tolérances d&apos;ébats conformes aux référentiels suisses.
@@ -234,14 +253,14 @@ export default function CalibreEcorchePage() {
               <span className="text-[11px] font-label uppercase tracking-wider text-[#9C7A43] px-2 flex items-center gap-1.5">
                 <Compass className="w-3.5 h-3.5" /> Vues &amp; Angles 3D :
               </span>
-              {CAMERA_PRESETS.map((p, i) => (
+              {CAMERA_PRESETS.map((p: any, i: number) => (
                 <button
                   key={p.id}
                   onClick={() => e()?.setPreset(p.id)}
                   className={`px-2.5 py-1.5 rounded-lg text-xs font-label transition border ${
                     camPreset === p.id
                       ? 'bg-[#9C7A43] text-white border-[#9C7A43] font-semibold shadow-sm'
-                      : 'bg-[#F3EFE7] text-[#57534E] hover:text-[#171717] border-[#D7D0C4]'
+                      : 'bg-[#F3EFE7] dark:bg-[#171b21] text-[#57534E] dark:text-[#aaa49a] hover:text-[#171717] dark:text-[#f1ede5] border-[#D7D0C4] dark:border-[#2a2f36]'
                   }`}
                 >
                   {i === 2 ? <Clock className="w-3 h-3 inline mr-1 -mt-0.5 text-[#C08A2D]" /> : null}
@@ -250,7 +269,7 @@ export default function CalibreEcorchePage() {
                 </button>
               ))}
             </div>
-            <div className="flex flex-wrap items-center gap-1.5 border-t border-[#D7D0C4]/60 pt-2">
+            <div className="flex flex-wrap items-center gap-1.5 border-t border-[#D7D0C4] dark:border-[#2a2f36]/60 pt-2">
               <span className="text-[11px] font-label uppercase tracking-wider text-sky-700 px-2 flex items-center gap-1.5">
                 <Hand className="w-3.5 h-3.5" /> Manipulation :
               </span>
@@ -259,14 +278,14 @@ export default function CalibreEcorchePage() {
                 className={`px-2.5 py-1.5 rounded-lg text-xs font-label transition flex items-center gap-1.5 border ${
                   autoRotate
                     ? 'bg-[#9C7A43] text-white border-[#9C7A43] font-semibold shadow-sm'
-                    : 'bg-[#F3EFE7] text-[#57534E] border-[#D7D0C4] hover:text-[#171717]'
+                    : 'bg-[#F3EFE7] dark:bg-[#171b21] text-[#57534E] dark:text-[#aaa49a] border-[#D7D0C4] dark:border-[#2a2f36] hover:text-[#171717] dark:text-[#f1ede5]'
                 }`}
                 title="Rotation automatique du plateau (touche R)"
               >
                 <Orbit className="w-3.5 h-3.5" />
                 <span>Rotation Auto</span>
               </button>
-              <span className="text-[10px] font-label text-[#57534E] ml-1">Sensibilité :</span>
+              <span className="text-[10px] font-label text-[#57534E] dark:text-[#aaa49a] ml-1">Sensibilité :</span>
               {(['doux', 'normal', 'precis'] as SensitivityMode[]).map((m) => (
                 <button
                   key={m}
@@ -277,7 +296,7 @@ export default function CalibreEcorchePage() {
                   className={`px-2 py-1 rounded-lg text-[11px] font-label transition border ${
                     sensitivity === m
                       ? 'bg-[#9C7A43] text-white border-[#9C7A43] font-semibold'
-                      : 'bg-[#F3EFE7] text-[#57534E] border-[#D7D0C4] hover:text-[#171717]'
+                      : 'bg-[#F3EFE7] dark:bg-[#171b21] text-[#57534E] dark:text-[#aaa49a] border-[#D7D0C4] dark:border-[#2a2f36] hover:text-[#171717] dark:text-[#f1ede5]'
                   }`}
                   title={m === 'doux' ? 'Rotation lente et cinématique' : m === 'precis' ? 'Ultra-précise pour macro' : 'Équilibrée'}
                 >
@@ -287,7 +306,7 @@ export default function CalibreEcorchePage() {
               <span className="flex-1" />
               <button
                 onClick={() => e()?.screenshot()}
-                className={`px-2.5 py-1.5 rounded-lg text-xs font-label ${CREAM_CARD} text-[#57534E] hover:text-[#9C7A43] transition flex items-center gap-1.5`}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-label ${CREAM_CARD} text-[#57534E] dark:text-[#aaa49a] hover:text-[#9C7A43] transition flex items-center gap-1.5`}
                 title="Exporter une photo PNG du calibre (touche P)"
               >
                 <Camera className="w-3.5 h-3.5 text-sky-700" />
@@ -295,7 +314,7 @@ export default function CalibreEcorchePage() {
               </button>
               <button
                 onClick={toggleFullscreen}
-                className={`px-2.5 py-1.5 rounded-lg text-xs font-label ${CREAM_CARD} text-[#57534E] hover:text-[#9C7A43] transition flex items-center gap-1.5`}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-label ${CREAM_CARD} text-[#57534E] dark:text-[#aaa49a] hover:text-[#9C7A43] transition flex items-center gap-1.5`}
                 title="Plein écran immersif (touche F)"
               >
                 <Maximize className="w-3.5 h-3.5 text-emerald-700" />
@@ -303,7 +322,7 @@ export default function CalibreEcorchePage() {
               </button>
               <button
                 onClick={() => setHelpOpen(!helpOpen)}
-                className={`px-2.5 py-1.5 rounded-lg text-xs font-label ${CREAM_CARD} text-[#57534E] hover:text-[#9C7A43] transition flex items-center gap-1.5`}
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-label ${CREAM_CARD} text-[#57534E] dark:text-[#aaa49a] hover:text-[#9C7A43] transition flex items-center gap-1.5`}
                 title="Guide de manipulation (touche H)"
               >
                 <CircleHelp className="w-3.5 h-3.5 text-[#C08A2D]" />
@@ -316,7 +335,7 @@ export default function CalibreEcorchePage() {
           <div
             id="viewportCard"
             ref={viewportRef}
-            className="relative w-full h-[540px] sm:h-[620px] xl:h-[680px] rounded-2xl border border-[#D7D0C4] bg-atelier-canvas overflow-hidden shadow-xl select-none"
+            className="relative w-full h-[540px] sm:h-[620px] xl:h-[680px] rounded-2xl border border-[#D7D0C4] dark:border-[#2a2f36] bg-atelier-canvas overflow-hidden shadow-xl select-none"
           >
             {/* Overlay statut (haut-gauche) */}
             <div className="absolute top-3 left-3 z-10 pointer-events-none flex flex-col gap-1.5 max-w-[62%]">
@@ -394,7 +413,7 @@ export default function CalibreEcorchePage() {
               </button>
 
               <div className="pointer-events-auto flex flex-wrap justify-end gap-1 max-w-[70%]">
-                {ORGAN_PILLS.map((o) => (
+                {ORGAN_PILLS.map((o: any) => (
                   <button
                     key={o.id}
                     onClick={() => setSelected(o.id)}
@@ -426,13 +445,13 @@ export default function CalibreEcorchePage() {
           {/* -------- DOCK DES 4 CURSEURS INTERACTIFS -------- */}
           <div className={`${CREAM_CARD} rounded-2xl p-4 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-4`}>
             {/* 1 · Curseur temporel d'alternance */}
-            <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-3.5 space-y-2">
+            <div className="bg-[#F3EFE7] dark:bg-[#171b21] border border-[#D7D0C4] dark:border-[#2a2f36] rounded-xl p-3.5 space-y-2">
               <div className="flex items-center justify-between text-xs font-label">
                 <span className="text-[#9C7A43] font-bold flex items-center gap-1.5">
                   <Timer className="w-3.5 h-3.5" />
                   <span>01 · Curseur Temporel d&apos;Alternance (200 ms)</span>
                 </span>
-                <span className="text-[#171717] font-bold">{beatLabel}</span>
+                <span className="text-[#171717] dark:text-[#f1ede5] font-bold">{beatLabel}</span>
               </div>
               <input
                 id="sliderBeatScrub"
@@ -460,7 +479,7 @@ export default function CalibreEcorchePage() {
                     className={`flex-1 py-1 rounded border transition ${
                       speed === s.v
                         ? 'bg-[#9C7A43] text-white border-[#9C7A43] font-bold'
-                        : 'bg-[#FAF7F1] text-[#57534E] border-[#D7D0C4] hover:text-[#171717]'
+                        : 'bg-[#FAF7F1] dark:bg-[#111419] text-[#57534E] dark:text-[#aaa49a] border-[#D7D0C4] dark:border-[#2a2f36] hover:text-[#171717] dark:text-[#f1ede5]'
                     }`}
                   >
                     {s.l}
@@ -470,7 +489,7 @@ export default function CalibreEcorchePage() {
             </div>
 
             {/* 2 · Vue éclatée verticale */}
-            <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-3.5 space-y-2">
+            <div className="bg-[#F3EFE7] dark:bg-[#171b21] border border-[#D7D0C4] dark:border-[#2a2f36] rounded-xl p-3.5 space-y-2">
               <div className="flex items-center justify-between text-xs font-label">
                 <span className="text-sky-700 font-bold flex items-center gap-1.5">
                   <Layers className="w-3.5 h-3.5" />
@@ -489,7 +508,7 @@ export default function CalibreEcorchePage() {
                 onChange={() => {}}
                 className="hl-slider w-full"
               />
-              <div className="flex justify-between text-[10px] font-label text-[#57534E] pt-1">
+              <div className="flex justify-between text-[10px] font-label text-[#57534E] dark:text-[#aaa49a] pt-1">
                 <span>0% Calibre emboîté</span>
                 <button onClick={() => e()?.setExplode(45)} className="text-[#9C7A43] hover:underline">45% Étagement Rouage</button>
                 <button onClick={() => e()?.setExplode(100)} className="text-sky-700 hover:underline">100% Écorché Total</button>
@@ -497,7 +516,7 @@ export default function CalibreEcorchePage() {
             </div>
 
             {/* 3 · Rayon-X des ponts */}
-            <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-3.5 space-y-2">
+            <div className="bg-[#F3EFE7] dark:bg-[#171b21] border border-[#D7D0C4] dark:border-[#2a2f36] rounded-xl p-3.5 space-y-2">
               <div className="flex items-center justify-between text-xs font-label">
                 <span className="text-violet-700 font-bold flex items-center gap-1.5">
                   <Eye className="w-3.5 h-3.5" />
@@ -516,15 +535,15 @@ export default function CalibreEcorchePage() {
                 onChange={() => {}}
                 className="hl-slider w-full"
               />
-              <div className="flex justify-between text-[10px] font-label text-[#57534E] pt-1">
-                <button onClick={() => e()?.setXray(0)} className="hover:text-[#171717]">0% Ponts Opaques</button>
+              <div className="flex justify-between text-[10px] font-label text-[#57534E] dark:text-[#aaa49a] pt-1">
+                <button onClick={() => e()?.setXray(0)} className="hover:text-[#171717] dark:text-[#f1ede5]">0% Ponts Opaques</button>
                 <button onClick={() => e()?.setXray(55)} className="text-violet-700 hover:underline">55% Rayon-X Atelier</button>
-                <button onClick={() => e()?.setXray(95)} className="hover:text-[#171717]">95% Rouage Nu</button>
+                <button onClick={() => e()?.setXray(95)} className="hover:text-[#171717] dark:text-[#f1ede5]">95% Rouage Nu</button>
               </div>
             </div>
 
             {/* 4 · Armage du barillet */}
-            <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-3.5 space-y-2">
+            <div className="bg-[#F3EFE7] dark:bg-[#171b21] border border-[#D7D0C4] dark:border-[#2a2f36] rounded-xl p-3.5 space-y-2">
               <div className="flex items-center justify-between text-xs font-label">
                 <span className="text-emerald-700 font-bold flex items-center gap-1.5">
                   <RotateCw className="w-3.5 h-3.5" />
@@ -543,7 +562,7 @@ export default function CalibreEcorchePage() {
                 onChange={() => {}}
                 className="hl-slider w-full"
               />
-              <div className="flex justify-between text-[10px] font-label text-[#57534E] pt-1">
+              <div className="flex justify-between text-[10px] font-label text-[#57534E] dark:text-[#aaa49a] pt-1">
                 <span>10% Désarmé (Amp. 195°)</span>
                 <button onClick={() => e()?.windStep()} className="text-emerald-700 font-semibold hover:underline">+1 Tour de Couronne (Clic !)</button>
                 <span>100% Plein Armage (46h)</span>
@@ -564,38 +583,38 @@ export default function CalibreEcorchePage() {
                 <span className="text-[11px] font-label uppercase tracking-[0.14em] text-[#9C7A43] block">
                   {data.category}
                 </span>
-                <h2 className="font-display text-xl text-[#171717] leading-snug mt-1 font-medium">
+                <h2 className="font-display text-xl text-[#171717] dark:text-[#f1ede5] leading-snug mt-1 font-medium">
                   {data.title}
                 </h2>
                 <span className="inline-block mt-2 px-2.5 py-0.5 rounded-full bg-[#9C7A43]/10 border border-[#9C7A43]/40 text-[#7C5F33] font-label text-[10px] tracking-[0.16em]">
                   {data.level}
                 </span>
               </div>
-              <span className="px-2.5 py-1 rounded-lg font-label text-xs font-bold bg-[#F3EFE7] border border-[#9C7A43]/40 text-[#9C7A43] shrink-0">
+              <span className="px-2.5 py-1 rounded-lg font-label text-xs font-bold bg-[#F3EFE7] dark:bg-[#171b21] border border-[#9C7A43]/40 text-[#9C7A43] shrink-0">
                 {data.gearBadge}
               </span>
             </div>
 
-            <p className="text-[13px] text-[#44403C] leading-relaxed mb-4">
+            <p className="text-[13px] text-[#44403C] dark:text-[#d1cbc1] leading-relaxed mb-4">
               {data.description}
             </p>
 
             {/* Grille technique (specs d'établi) */}
             <div className="grid grid-cols-2 gap-2.5 mb-4 font-label text-xs">
-              <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-2.5">
-                <span className="text-[10px] text-[#79716B] block uppercase tracking-wider">Vitesse &amp; Rapport</span>
-                <strong className="text-[#171717]">{data.speed}</strong>
+              <div className="bg-[#F3EFE7] dark:bg-[#171b21] border border-[#D7D0C4] dark:border-[#2a2f36] rounded-xl p-2.5">
+                <span className="text-[10px] text-[#79716B] dark:text-[#aaa49a] block uppercase tracking-wider">Vitesse &amp; Rapport</span>
+                <strong className="text-[#171717] dark:text-[#f1ede5]">{data.speed}</strong>
               </div>
-              <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-2.5">
-                <span className="text-[10px] text-[#79716B] block uppercase tracking-wider">Lubrifiant Moebius</span>
+              <div className="bg-[#F3EFE7] dark:bg-[#171b21] border border-[#D7D0C4] dark:border-[#2a2f36] rounded-xl p-2.5">
+                <span className="text-[10px] text-[#79716B] dark:text-[#aaa49a] block uppercase tracking-wider">Lubrifiant Moebius</span>
                 <strong className="text-sky-700">{data.oil}</strong>
               </div>
-              <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-2.5">
-                <span className="text-[10px] text-[#79716B] block uppercase tracking-wider">Pique-Huile Bergeon</span>
+              <div className="bg-[#F3EFE7] dark:bg-[#171b21] border border-[#D7D0C4] dark:border-[#2a2f36] rounded-xl p-2.5">
+                <span className="text-[10px] text-[#79716B] dark:text-[#aaa49a] block uppercase tracking-wider">Pique-Huile Bergeon</span>
                 <strong className="text-[#7C5F33]">{data.oiler}</strong>
               </div>
-              <div className="bg-[#F3EFE7] border border-[#D7D0C4] rounded-xl p-2.5">
-                <span className="text-[10px] text-[#79716B] block uppercase tracking-wider">Jeu Axial (Ébat NIHS)</span>
+              <div className="bg-[#F3EFE7] dark:bg-[#171b21] border border-[#D7D0C4] dark:border-[#2a2f36] rounded-xl p-2.5">
+                <span className="text-[10px] text-[#79716B] dark:text-[#aaa49a] block uppercase tracking-wider">Jeu Axial (Ébat NIHS)</span>
                 <strong className="text-emerald-700">{data.endshake}</strong>
               </div>
             </div>
@@ -620,7 +639,7 @@ export default function CalibreEcorchePage() {
               </button>
               <button
                 onClick={() => e()?.setPreset('iso')}
-                className="py-2 px-3 rounded-xl bg-[#F3EFE7] hover:bg-white text-[#57534E] border border-[#D7D0C4] font-label text-xs transition"
+                className="py-2 px-3 rounded-xl bg-[#F3EFE7] dark:bg-[#171b21] hover:bg-white text-[#57534E] dark:text-[#aaa49a] border border-[#D7D0C4] dark:border-[#2a2f36] font-label text-xs transition"
               >
                 Vue Globale
               </button>
@@ -629,31 +648,31 @@ export default function CalibreEcorchePage() {
 
           {/* Chaîne cinématique interactive */}
           <div className={`${CREAM_CARD} rounded-2xl p-4 shadow-sm`}>
-            <div className="flex items-center justify-between border-b border-[#D7D0C4] pb-2.5 mb-3">
+            <div className="flex items-center justify-between border-b border-[#D7D0C4] dark:border-[#2a2f36] pb-2.5 mb-3">
               <h3 className="text-xs font-label uppercase tracking-[0.14em] text-[#9C7A43] font-bold flex items-center gap-2">
                 <Cog className="w-4 h-4" />
                 <span>Chaîne Cinématique Interactive (ETA 6497-1)</span>
               </h3>
-              <span className="text-[10px] font-label text-[#79716B]">Cliquez une ligne</span>
+              <span className="text-[10px] font-label text-[#79716B] dark:text-[#aaa49a]">Cliquez une ligne</span>
             </div>
 
             <div className="space-y-1.5 font-label text-xs">
-              {KINEMATIC_TABLE.map((row) => (
+              {KINEMATIC_TABLE.map((row: any) => (
                 <button
                   key={row.organ}
                   onClick={() => setSelected(row.organ)}
                   className={`w-full p-2 rounded-xl border flex items-center justify-between text-left transition ${
-                    selected === row.organ ? 'bg-white border-[#9C7A43]/60' : 'bg-[#F3EFE7] border-[#D7D0C4]/70 hover:bg-white'
+                    selected === row.organ ? 'bg-white border-[#9C7A43]/60' : 'bg-[#F3EFE7] dark:bg-[#171b21] border-[#D7D0C4] dark:border-[#2a2f36]/70 hover:bg-white'
                   }`}
                 >
                   <div>
                     <span className={`font-bold ${row.accent === 'ruby' ? 'text-rose-700' : row.accent === 'sky' ? 'text-sky-700' : 'text-[#9C7A43]'}`}>
                       {row.num} {row.name}
                     </span>
-                    <span className="text-[10px] text-[#79716B] block">{row.detail}</span>
+                    <span className="text-[10px] text-[#79716B] dark:text-[#aaa49a] block">{row.detail}</span>
                   </div>
-                  <span className={`px-2 py-0.5 rounded bg-white border border-[#D7D0C4] ${
-                    row.accent === 'ruby' ? 'text-rose-700' : row.accent === 'sky' ? 'text-sky-700' : 'text-[#171717]'
+                  <span className={`px-2 py-0.5 rounded bg-white border border-[#D7D0C4] dark:border-[#2a2f36] ${
+                    row.accent === 'ruby' ? 'text-rose-700' : row.accent === 'sky' ? 'text-sky-700' : 'text-[#171717] dark:text-[#f1ede5]'
                   }`}>
                     {row.badge}
                   </span>
@@ -665,12 +684,12 @@ export default function CalibreEcorchePage() {
       </main>
 
       {/* ================= PIED DE PAGE ================= */}
-      <footer className="border-t border-[#D7D0C4] bg-[#FAF7F1] py-3.5 px-5 mt-auto">
-        <div className="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-4 text-xs text-[#79716B]">
+      <footer className="border-t border-[#D7D0C4] dark:border-[#2a2f36] bg-[#FAF7F1] dark:bg-[#111419] py-3.5 px-5 mt-auto">
+        <div className="max-w-[1600px] mx-auto flex flex-wrap items-center justify-between gap-4 text-xs text-[#79716B] dark:text-[#aaa49a]">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#9C7A43]" />
             <span>
-              <strong className="text-[#171717]">HorloLearn.ch</strong> — Projet indépendant créé par un passionné d&apos;horlogerie • Écorché Éclaté 3D du Calibre ETA 6497-1.
+              <strong className="text-[#171717] dark:text-[#f1ede5]">HorloLearn.ch</strong> — Projet indépendant créé par un passionné d&apos;horlogerie • Écorché Éclaté 3D du Calibre ETA 6497-1.
             </span>
           </div>
           <div className="font-label text-[11px]">
@@ -684,12 +703,12 @@ export default function CalibreEcorchePage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className={`${CREAM_CARD} rounded-2xl max-w-xl w-full p-6 shadow-2xl`}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-display text-2xl font-medium text-[#171717]">
+              <h3 className="font-display text-2xl font-medium text-[#171717] dark:text-[#f1ede5]">
                 Prise en main <span className="text-[#C08A2D]">360°</span> du calibre
               </h3>
               <button
                 onClick={() => setHelpOpen(false)}
-                className={`w-9 h-9 rounded-lg ${CREAM_CARD} text-[#57534E] hover:text-[#171717] flex items-center justify-center transition`}
+                className={`w-9 h-9 rounded-lg ${CREAM_CARD} text-[#57534E] dark:text-[#aaa49a] hover:text-[#171717] dark:text-[#f1ede5] flex items-center justify-center transition`}
                 aria-label="Fermer l'aide"
               >
                 <X className="w-4 h-4" />
@@ -728,10 +747,10 @@ export default function CalibreEcorchePage() {
                   body: 'Flèches : rotation fine • + / − : zoom • R : rotation auto • B : retourner 180° • F : plein écran • P : photo PNG • H : cette aide.',
                 },
               ].map((row) => (
-                <div key={row.title} className="flex items-start gap-3 p-2.5 rounded-xl bg-[#F3EFE7] border border-[#D7D0C4]/70">
+                <div key={row.title} className="flex items-start gap-3 p-2.5 rounded-xl bg-[#F3EFE7] dark:bg-[#171b21] border border-[#D7D0C4] dark:border-[#2a2f36]/70">
                   {row.icon}
-                  <div className="text-[#44403C] leading-relaxed">
-                    <strong className="text-[#171717]">{row.title}</strong> — {row.body}
+                  <div className="text-[#44403C] dark:text-[#d1cbc1] leading-relaxed">
+                    <strong className="text-[#171717] dark:text-[#f1ede5]">{row.title}</strong> — {row.body}
                   </div>
                 </div>
               ))}
