@@ -10,7 +10,10 @@ import {
   Check,
   ShieldCheck,
   Sparkles,
+  ShieldAlert,
+  Info,
 } from 'lucide-react';
+import StemCuttingSimulator from './StemCuttingSimulator';
 
 interface ChecklistItem {
   id: string;
@@ -22,7 +25,7 @@ const CHECKLIST_ITEMS: ChecklistItem[] = [
   {
     id: 'chk1',
     title: 'Ajustement de la tige de remontoir',
-    desc: 'Jeu d’armage contrôlé (0.10 à 0.20 mm), passage net des 3 crans (Remontage, Correction rapide de quantième, Mise à l’heure avec stop-seconde).',
+    desc: 'Jeu d’armage contrôlé (0.15 mm poussée / 0.40 mm vissée), passage net des 3 crans (Remontage, Correction rapide de quantième, Mise à l’heure avec stop-seconde).',
   },
   {
     id: 'chk2',
@@ -42,7 +45,7 @@ const CHECKLIST_ITEMS: ChecklistItem[] = [
   {
     id: 'chk5',
     title: 'Brides et vis de fixation de la carrure',
-    desc: 'Deux brides ETA 2824-2 convenablement engagées dans la gorge de carrure et vis serrées au couple prescrit.',
+    desc: 'Deux brides ETA 2824-2 convenablement engagées dans la gorge de carrure et vis serrées au couple prescrit (1.8 cNm).',
   },
   {
     id: 'chk6',
@@ -62,19 +65,14 @@ const CHECKLIST_ITEMS: ChecklistItem[] = [
 ];
 
 export default function CasingAssistant() {
-  // 1. Calculateur de Mise à Tige
-  const [rawLength, setRawLength] = useState<number>(18.5);
-  const [gapA, setGapA] = useState<number>(1.85);
-  const [clearanceJ, setClearanceJ] = useState<number>(0.15);
-
-  const toRemove = Math.max(0, gapA - clearanceJ);
-  const finalLength = Math.max(0, rawLength - toRemove);
-
-  // 2. Simulateur de Profil d'Aiguilles
+  // Simulateur de Profil d'Aiguilles
   const [minTilt, setMinTilt] = useState<number>(0);
   const [secTilt, setSecTilt] = useState<number>(0);
 
-  // 3. Checklist
+  // Extraction de tige Pos 3 simulation
+  const [extractPos, setExtractPos] = useState<'pos1' | 'pos2' | 'pos3'>('pos3');
+
+  // Checklist
   const [checkedIds, setCheckedIds] = useState<Set<string>>(
     new Set(['chk1', 'chk2', 'chk3'])
   );
@@ -91,200 +89,86 @@ export default function CasingAssistant() {
   const isMinuteHittingIndex = minTilt >= 2.5 || secTilt - minTilt >= 3.0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* ===================================================================
+          1. SIMULATEUR COMPLET DE COUPE DE TIGE ETA 2824-2
+         =================================================================== */}
+      <StemCuttingSimulator />
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* ===================================================================
-            1. CALCULATEUR & SIMULATEUR DE MISE À TIGE (6 cols)
+            2. SIMULATEUR DE PROFIL D'AIGUILLES & ÉTAGEMENT SOUS LOUPE (7 cols)
            =================================================================== */}
-        <div className="lg:col-span-6 p-5 rounded-2xl bg-white dark:bg-[#131822] border-2 border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
-          <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
-            <div className="text-[11px] font-mono uppercase text-amber-600 dark:text-amber-400 font-bold">
-              Atelier Pratique · Calibre ETA 2824-2
-            </div>
-            <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 mt-0.5">
-              <Scissors className="w-4 h-4 text-amber-500" />
-              <span>Calculateur de Mise à Tige (Coupe au Roule-Goupilles)</span>
-            </h3>
-          </div>
-
-          {/* Schéma vectoriel SVG de la Carrure, Tube, Tige & Couronne */}
-          <div className="bg-[#0B0F17] border border-slate-800 rounded-xl p-3">
-            <svg viewBox="0 0 460 155" className="w-full h-auto select-none">
-              {/* Carrure & Mouvement */}
-              <rect x="20" y="25" width="160" height="105" rx="8" fill="#1E293B" stroke="#64748B" strokeWidth="2" />
-              <text x="100" y="82" textAnchor="middle" fill="#94A3B8" fontFamily="monospace" fontSize="11">
-                MOUVEMENT + BOÎTE
-              </text>
-
-              {/* Tube de boîte */}
-              <rect x="180" y="58" width="55" height="38" fill="#334155" stroke="#94A3B8" strokeWidth="1.5" />
-              <text x="207" y="50" textAnchor="middle" fill="#64748B" fontFamily="monospace" fontSize="9">
-                TUBE
-              </text>
-
-              {/* Tige de remontoir (Ø 0.90 mm / Filetage) */}
-              <rect x="140" y="70" width="195" height="14" fill="#CBD5E1" stroke="#475569" strokeWidth="1.5" />
-              <line x1="235" y1="70" x2="335" y2="70" stroke="#D4AF37" strokeWidth="3" strokeDasharray="3 3" />
-              <line x1="235" y1="84" x2="335" y2="84" stroke="#D4AF37" strokeWidth="3" strokeDasharray="3 3" />
-
-              {/* Couronne positionnée selon l'écart A */}
-              <g transform={`translate(${240 + Math.min(45, Math.max(2, gapA * 12))}, 43)`}>
-                <rect x="0" y="0" width="75" height="68" rx="6" fill="#D4AF37" fillOpacity="0.25" stroke="#D4AF37" strokeWidth="2" />
-                <rect x="0" y="18" width="48" height="32" fill="#0B0E14" stroke="#D4AF37" strokeWidth="1" strokeDasharray="3 2" />
-                <text x="38" y="13" textAnchor="middle" fill="#FDE047" fontFamily="monospace" fontSize="9" fontWeight="bold">
-                  COURONNE
-                </text>
-              </g>
-
-              {/* Cotation de l'Écart A */}
-              <line x1="235" y1="125" x2="295" y2="125" stroke="#38BDF8" strokeWidth="2" />
-              <line x1="235" y1="115" x2="235" y2="132" stroke="#38BDF8" strokeWidth="1.5" />
-              <line x1="295" y1="115" x2="295" y2="132" stroke="#38BDF8" strokeWidth="1.5" />
-              <text x="265" y="144" textAnchor="middle" fill="#38BDF8" fontFamily="monospace" fontSize="10" fontWeight="bold">
-                ÉCART A = {gapA.toFixed(2)} mm
-              </text>
-            </svg>
-          </div>
-
-          {/* Saisies au pied à coulisse */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0B0F17] border border-slate-200 dark:border-slate-800 space-y-1">
-              <label className="block text-[10px] font-mono uppercase text-slate-500">
-                1. Tige Brute (L1)
-              </label>
-              <input
-                type="number"
-                step="0.05"
-                value={rawLength}
-                onChange={(e) => setRawLength(parseFloat(e.target.value) || 0)}
-                className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 font-mono text-sm font-bold text-slate-900 dark:text-white"
-              />
-              <span className="text-[10px] text-slate-400">en mm</span>
-            </div>
-
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0B0F17] border border-slate-200 dark:border-slate-800 space-y-1">
-              <label className="block text-[10px] font-mono uppercase text-sky-600 dark:text-sky-300">
-                2. Écart Pos. 1 (A)
-              </label>
-              <input
-                type="number"
-                step="0.05"
-                value={gapA}
-                onChange={(e) => setGapA(parseFloat(e.target.value) || 0)}
-                className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 font-mono text-sm font-bold text-sky-600 dark:text-sky-300"
-              />
-              <span className="text-[10px] text-slate-400">Couronne vissée à fond</span>
-            </div>
-
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0B0F17] border border-slate-200 dark:border-slate-800 space-y-1">
-              <label className="block text-[10px] font-mono uppercase text-amber-600 dark:text-amber-400">
-                3. Jeu Armage (J)
-              </label>
-              <input
-                type="number"
-                step="0.05"
-                value={clearanceJ}
-                onChange={(e) => setClearanceJ(parseFloat(e.target.value) || 0)}
-                className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 font-mono text-sm font-bold text-amber-600 dark:text-amber-400"
-              />
-              <span className="text-[10px] text-slate-400">0.10 à 0.20 mm</span>
-            </div>
-          </div>
-
-          {/* Résultat du calcul de coupe */}
-          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/40 flex flex-wrap items-center justify-between gap-3">
+        <div className="lg:col-span-7 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4 transition-colors">
+          <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex items-center justify-between">
             <div>
-              <div className="text-[11px] font-mono uppercase text-slate-500 dark:text-slate-400 font-bold">
-                Longueur finale théorique après coupe :
+              <div className="text-[11px] font-mono uppercase text-amber-600 dark:text-amber-400 font-bold">
+                Contrôle Optique Loupe 10x
               </div>
-              <div className="text-2xl font-mono font-black text-amber-600 dark:text-amber-400 mt-0.5">
-                {finalLength.toFixed(2)} mm
-              </div>
-              <div className="text-xs font-mono text-sky-600 dark:text-sky-300 mt-0.5">
-                Matière à retirer : -{toRemove.toFixed(2)} mm (Couper par passes de 0.3 mm)
-              </div>
+              <h3 className="text-base sm:text-lg font-serif font-bold text-slate-900 dark:text-white flex items-center gap-2 mt-0.5">
+                <Layers className="w-4 h-4 text-amber-500" />
+                <span>Profil d’Étagement des Aiguilles &amp; Dégagement Glace</span>
+              </h3>
             </div>
-
-            <div className="text-xs text-slate-600 dark:text-slate-300 max-w-xs border-l border-amber-500/30 pl-3 space-y-1">
-              <div>
-                <strong>Conseil d’établi :</strong> Toujours couper <strong>0.20 mm plus long</strong> au roule-goupilles, puis ajuster au cabron d’émeri.
-              </div>
-              <div>
-                Sécuriser le filetage à la <strong>Loctite 243 (Bleue)</strong> lors du serrage final.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ===================================================================
-            2. SIMULATEUR DE POSE D'AIGUILLES & PARTAGE DES HAUTEURS (6 cols)
-           =================================================================== */}
-        <div className="lg:col-span-6 p-5 rounded-2xl bg-white dark:bg-[#131822] border-2 border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
-          <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
-            <div className="text-[11px] font-mono uppercase text-amber-600 dark:text-amber-400 font-bold">
-              Contrôle de Profil &amp; Saut de Date · ETA 2824-2
-            </div>
-            <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 mt-0.5">
-              <Layers className="w-4 h-4 text-amber-500" />
-              <span>Simulateur de Pose d’Aiguilles (Parallélisme &amp; Hauteurs)</span>
-            </h3>
+            <span className="text-xs font-mono px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">
+              Vue de Profil ×20
+            </span>
           </div>
 
-          {/* Schéma vectoriel SVG de profil : Glace, Trotteuse, Minute, Heure, Cadran & Index */}
-          <div className="bg-[#0B0F17] border border-slate-800 rounded-xl p-3">
-            <svg viewBox="0 0 460 175" className="w-full h-auto select-none">
-              {/* Intrados Glace Saphir */}
-              <path d="M 20 25 Q 230 15 440 25" fill="none" stroke="#38BDF8" strokeWidth="4" strokeOpacity="0.6" />
-              <text x="430" y="18" textAnchor="end" fill="#38BDF8" fontFamily="monospace" fontSize="9">
-                GLACE SAPHIR (INTRADOS)
+          {/* SVG Profil d'aiguilles */}
+          <div className="bg-slate-950 border border-slate-800 rounded-xl p-3">
+            <svg viewBox="0 0 460 170" className="w-full h-auto select-none">
+              {/* Glace Saphir supérieure */}
+              <line x1="20" y1="26" x2="440" y2="26" stroke="#38BDF8" strokeWidth="2.5" strokeDasharray="5 3" />
+              <text x="35" y="20" fill="#38BDF8" fontFamily="monospace" fontSize="8.5" fontWeight="bold">
+                INTRADOS GLACE SAPHIR
               </text>
 
-              {/* Cadran & Index appliqués */}
-              <rect x="20" y="142" width="420" height="14" fill="#334155" stroke="#94A3B8" strokeWidth="1.5" />
-              <rect x="355" y="128" width="38" height="14" fill="#D4AF37" stroke="#FEF08A" strokeWidth="1" />
-              <text x="374" y="123" textAnchor="middle" fill="#D4AF37" fontFamily="monospace" fontSize="8">
-                INDEX
+              {/* Canon central de minuterie & tenon trotteuse */}
+              <rect x="35" y="45" width="22" height="105" fill="#475569" stroke="#94A3B8" strokeWidth="1" />
+              <rect x="42" y="32" width="8" height="25" fill="#CBD5E1" stroke="#E2E8F0" strokeWidth="1" />
+
+              {/* Trotteuse de seconde */}
+              <g transform={`rotate(${secTilt} 46 36)`} style={{ transition: 'transform 0.2s ease-out' }}>
+                <rect x="46" y="34" width="370" height="4" fill="#F43F5E" />
+                <polygon points="416,33 425,36 416,39" fill="#F43F5E" />
+                <text x="210" y="31" fill="#FB7185" fontFamily="monospace" fontSize="8" fontWeight="bold">
+                  SECONDE (0.30 mm au-dessus minutes)
+                </text>
+              </g>
+
+              {/* Aiguille des minutes */}
+              <g transform={`rotate(${minTilt} 46 72)`} style={{ transition: 'transform 0.2s ease-out' }}>
+                <rect x="46" y="70" width="340" height="7" rx="1.5" fill="#CBD5E1" stroke="#64748B" strokeWidth="1" />
+                <text x="200" y="66" fill="#CBD5E1" fontFamily="monospace" fontSize="8" fontWeight="bold">
+                  MINUTES (0.25 mm au-dessus heures)
+                </text>
+              </g>
+
+              {/* Aiguille des heures */}
+              <rect x="46" y="105" width="240" height="8" rx="2" fill="#D4AF37" stroke="#854D0E" strokeWidth="1" />
+              <text x="140" y="101" fill="#D4AF37" fontFamily="monospace" fontSize="8" fontWeight="bold">
+                HEURES (0.20 mm au-dessus cadran)
               </text>
 
-              {/* Canons centraux */}
-              <rect x="55" y="110" width="36" height="32" fill="#94A3B8" />
-              <rect x="61" y="82" width="24" height="28" fill="#CBD5E1" />
-              <rect x="69" y="48" width="8" height="34" fill="#FDE047" />
-
-              {/* Aiguille des heures (Ø 1.50) */}
-              <g transform="translate(73, 112) rotate(0)">
-                <rect x="0" y="-4" width="215" height="7" rx="2" fill="#CBD5E1" stroke="#0F172A" strokeWidth="1" />
-                <text x="225" y="3" fill="#CBD5E1" fontFamily="monospace" fontSize="9">
-                  HEURE (Ø 1.50)
-                </text>
-              </g>
-
-              {/* Aiguille des minutes (Ø 0.90) avec assiette */}
-              <g transform={`translate(73, 84) rotate(${minTilt})`}>
-                <rect x="0" y="-3.5" width="305" height="6" rx="2" fill="#D4AF37" stroke="#0F172A" strokeWidth="1" />
-                <text x="315" y="3" fill="#D4AF37" fontFamily="monospace" fontSize="9">
-                  MINUTE (Ø 0.90)
-                </text>
-              </g>
-
-              {/* Trotteuse de seconde (Ø 0.25) avec assiette */}
-              <g transform={`translate(73, 52) rotate(${secTilt})`}>
-                <rect x="-25" y="-2" width="345" height="3.5" rx="1.5" fill="#F43F5E" />
-                <text x="330" y="3" fill="#FB7185" fontFamily="monospace" fontSize="9">
-                  SECONDE (Ø 0.25)
-                </text>
-              </g>
+              {/* Cadran et index appliqués */}
+              <line x1="20" y1="145" x2="440" y2="145" stroke="#94A3B8" strokeWidth="3" />
+              <rect x="350" y="125" width="24" height="20" rx="2" fill="#F59E0B" stroke="#D4AF37" strokeWidth="1" />
+              <rect x="180" y="130" width="16" height="15" rx="1" fill="#64748B" stroke="#94A3B8" strokeWidth="1" />
+              <text x="35" y="160" fill="#94A3B8" fontFamily="monospace" fontSize="9">
+                CADRAN &amp; INDEX APPLIQUÉS
+              </text>
             </svg>
           </div>
 
           {/* Curseurs d'assiette */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0B0F17] border border-slate-200 dark:border-slate-800 space-y-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1">
               <div className="flex justify-between">
-                <span className="font-semibold text-amber-600 dark:text-amber-400">
-                  Assiette Aiguille Minute
+                <span className="font-semibold text-slate-800 dark:text-slate-200">
+                  Assiette Aiguille Minutes
                 </span>
-                <span className="font-mono font-bold text-slate-700 dark:text-slate-300">
+                <span className="font-bold text-amber-600 dark:text-amber-400">
                   {minTilt > 0 ? `+${minTilt}` : minTilt}°
                 </span>
               </div>
@@ -299,12 +183,12 @@ export default function CasingAssistant() {
               />
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#0B0F17] border border-slate-200 dark:border-slate-800 space-y-1">
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1">
               <div className="flex justify-between">
-                <span className="font-semibold text-rose-600 dark:text-rose-400">
+                <span className="font-semibold text-slate-800 dark:text-slate-200">
                   Assiette Trotteuse Seconde
                 </span>
-                <span className="font-mono font-bold text-slate-700 dark:text-slate-300">
+                <span className="font-bold text-rose-500">
                   {secTilt > 0 ? `+${secTilt}` : secTilt}°
                 </span>
               </div>
@@ -320,14 +204,14 @@ export default function CasingAssistant() {
             </div>
           </div>
 
-          {/* Diagnostic de jeu de profil */}
+          {/* Diagnostic de profil */}
           <div
-            className={`p-3.5 rounded-xl border text-xs flex items-center justify-between gap-2 ${
+            className={`p-3.5 rounded-xl border text-xs flex items-center justify-between gap-2 leading-relaxed ${
               isSecondHittingCrystal
-                ? 'bg-rose-500/15 border-rose-500/40 text-rose-800 dark:text-rose-200'
+                ? 'bg-rose-500/10 border-rose-500/40 text-rose-800 dark:text-rose-200'
                 : isMinuteHittingIndex
-                ? 'bg-amber-500/15 border-amber-500/40 text-amber-800 dark:text-amber-200'
-                : 'bg-emerald-500/15 border-emerald-500/40 text-emerald-800 dark:text-emerald-200'
+                ? 'bg-amber-500/10 border-amber-500/40 text-amber-800 dark:text-amber-200'
+                : 'bg-emerald-500/10 border-emerald-500/40 text-emerald-800 dark:text-emerald-200'
             }`}
           >
             <span className="flex items-center gap-2">
@@ -338,24 +222,111 @@ export default function CasingAssistant() {
               )}
               <strong>
                 {isSecondHittingCrystal
-                  ? 'ALERTE : La trotteuse touche la glace saphir (Arrêt de la montre) !'
+                  ? 'ALERTE : La trotteuse touche la glace saphir (Arrêt immédiat de la montre) !'
                   : isMinuteHittingIndex
                   ? 'ATTENTION : L’aiguille des minutes pique vers les index ou croise la trotteuse !'
-                  : 'Partage des hauteurs conforme : Parallélisme parfait sans friction.'}
+                  : 'Partage des hauteurs conforme : Parallélisme parfait sans frottement.'}
               </strong>
             </span>
-            <span className="font-mono text-[11px] shrink-0">Saut date : 00h00 ± 3 min</span>
+            <span className="font-mono text-[11px] shrink-0 font-bold">Saut date : 00h00 ± 3 min</span>
+          </div>
+        </div>
+
+        {/* ===================================================================
+            3. RÈGLE CRITIQUE D'EXTRACTION DE TIGE ETA 2824-2 (5 cols)
+           =================================================================== */}
+        <div className="lg:col-span-5 p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4 transition-colors">
+          <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+            <span className="text-[11px] font-mono uppercase text-rose-600 dark:text-rose-400 font-bold flex items-center gap-1.5">
+              <ShieldAlert className="w-3.5 h-3.5" />
+              Règle d&apos;Atelier Vitale
+            </span>
+            <h3 className="text-base font-serif font-bold text-slate-900 dark:text-white mt-0.5">
+              Extraction de Tige sur Plot ETA 2824-2
+            </h3>
+          </div>
+
+          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            Contrairement aux calibres à vis de tirette (ETA 6497), le calibre ETA 2824-2 utilise un <strong className="text-slate-900 dark:text-white">plot de tirette à pression axiale</strong>.
+          </p>
+
+          <div className="space-y-2 text-xs font-mono">
+            <label className="block text-slate-500 dark:text-slate-400 font-bold">
+              Position de la tige avant pression :
+            </label>
+            <div className="grid grid-cols-3 gap-1.5">
+              <button
+                onClick={() => setExtractPos('pos1')}
+                className={`p-2 rounded-xl border text-center transition ${
+                  extractPos === 'pos1'
+                    ? 'border-rose-500 bg-rose-500 text-white font-bold'
+                    : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                Pos. 1 (Erreur)
+              </button>
+              <button
+                onClick={() => setExtractPos('pos2')}
+                className={`p-2 rounded-xl border text-center transition ${
+                  extractPos === 'pos2'
+                    ? 'border-amber-500 bg-amber-500 text-slate-950 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                Pos. 2 (Risque)
+              </button>
+              <button
+                onClick={() => setExtractPos('pos3')}
+                className={`p-2 rounded-xl border text-center transition ${
+                  extractPos === 'pos3'
+                    ? 'border-emerald-500 bg-emerald-500 text-slate-950 font-bold'
+                    : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                Pos. 3 (Obligatoire)
+              </button>
+            </div>
+          </div>
+
+          <div
+            className={`p-3.5 rounded-xl border text-xs leading-relaxed ${
+              extractPos === 'pos3'
+                ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-900 dark:text-emerald-200'
+                : 'bg-rose-500/10 border-rose-500/40 text-rose-900 dark:text-rose-200'
+            }`}
+          >
+            {extractPos === 'pos3' ? (
+              <div className="space-y-1">
+                <div className="font-bold flex items-center gap-1.5 font-mono text-emerald-700 dark:text-emerald-300">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                  <span>GESTION CONFORME : Tige tirée en Position 3 (Mise à l&apos;heure)</span>
+                </div>
+                <p>
+                  Le talon de la tirette est engagé au maximum dans la bascule. La pression d&apos;une pointe fine (Ø 0.80 mm, max 0.8 mm de course) libère la tige sans faire sauter la bascule ni déloger le sautoir.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-1">
+                <div className="font-bold flex items-center gap-1.5 font-mono text-rose-700 dark:text-rose-300">
+                  <ShieldAlert className="w-4 h-4 text-rose-500 shrink-0" />
+                  <span>PIÈGE D&apos;ÉTABLI : Risque majeur de décrochement de la bascule !</span>
+                </div>
+                <p>
+                  En appuyant sur le plot alors que la tige est en Position 1 ou 2, la tirette ripe sous la bascule. Le ressort pousse la bascule vers le centre : la tige ne rentre plus, obligeant à déposer le cadran et les aiguilles !
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
       {/* ===================================================================
-          3. CHECKLIST OFFICIELLE D'ÉTABLI AVANT LIVRAISON
+          4. CHECKLIST OFFICIELLE D'ÉTABLI AVANT LIVRAISON
          =================================================================== */}
-      <div className="p-5 rounded-2xl bg-white dark:bg-[#131822] border-2 border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+      <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4 transition-colors">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-3">
           <div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h3 className="text-base font-serif font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <ClipboardCheck className="w-4 h-4 text-amber-500" />
               <span>Protocole d’Établi Avant Rendu Client (ETA 2824-2)</span>
             </h3>
@@ -382,7 +353,7 @@ export default function CasingAssistant() {
                 className={`p-3.5 rounded-xl border text-left transition flex items-start gap-3 ${
                   isDone
                     ? 'bg-emerald-500/10 border-emerald-500/40 text-slate-900 dark:text-white'
-                    : 'bg-slate-50 dark:bg-[#0B0F17] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-amber-500/50'
+                    : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-amber-500/50'
                 }`}
               >
                 <div

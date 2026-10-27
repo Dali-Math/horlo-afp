@@ -2,6 +2,7 @@
 
 import React, { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
+import StemCuttingSimulator from "../laboratoire/StemCuttingSimulator";
 import {
   ArrowLeft,
   Wrench,
@@ -1257,6 +1258,11 @@ export default function PosageEmboitagePage() {
 
         {/* -------------------- VIEW 2: STEM CUTTING SIMULATOR -------------------- */}
         {activeTab === "stem" && (
+          <div className="space-y-8">
+            <StemCuttingSimulator />
+          </div>
+        )}
+        {false && activeTab === "stem" && (
           <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 sm:p-10 shadow-xl space-y-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-800 gap-4">
               <div>
