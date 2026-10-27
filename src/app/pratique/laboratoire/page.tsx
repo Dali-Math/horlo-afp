@@ -69,8 +69,25 @@ export default function LaboratoirePage() {
               </h1>
 
               <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
-                Plateforme expérimentale complète de l&apos;artisan horloger : simulation acoustique en temps réel du <strong>Chrono-Comparateur Witschi Watch Expert</strong>, cinématique de l&apos;<strong>échappement suisse en 5 phases</strong>, mécanisme de <strong>remontoir &amp; tirette ETA 2824-2</strong>, banc d&apos;<strong>alésage à l&apos;équarrissoir &amp; potence Robur</strong>, chaîne dynamique du <strong>rouage</strong> et <strong>calculateur d&apos;ajustements ISO 286 / NIHS</strong>.
+                Plateforme expérimentale complète de l&apos;artisan horloger : <strong>11 bancs d&apos;essais opérationnels</strong> couvrant la métrologie Witschi, l&apos;échappement suisse, le remontoir 2824-2, la potence Robur, le rouage, les tolérances ISO 286, la cinématique du chronographe Valjoux 7750, le taraudage NIHS, le touret de polissage &amp; mire optique, et le banc de test quartz &amp; moteur Lavet.
               </p>
+
+              <div className="flex flex-wrap items-center gap-2 pt-2">
+                <Link
+                  href="/pratique/inspection-loupe"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-mono font-bold text-amber-600 dark:text-amber-400 hover:border-amber-400 transition"
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>Loupe Macro d&apos;Atelier ×20</span>
+                </Link>
+                <Link
+                  href="/pratique/defi-chronometre"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-mono font-bold text-cyan-600 dark:text-cyan-400 hover:border-cyan-400 transition"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Défi Chronométré WhatsApp</span>
+                </Link>
+              </div>
             </div>
 
             <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-800 dark:text-amber-300 max-w-xs font-medium">

@@ -30,9 +30,10 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
     {
       title: "Atelier",
       links: [
+        { href: "/pratique/laboratoire", label: "Laboratoire" },
+        { href: "/pratique/inspection-loupe", label: "Loupe 20x" },
+        { href: "/pratique/defi-chronometre", label: "⚔️ Duel" },
         { href: "/outils", label: "Outils" },
-        { href: "/ressources", label: "Ressources" },
-        { href: "/fuseaux-horaires", label: "Fuseaux" },
       ],
     },
     {

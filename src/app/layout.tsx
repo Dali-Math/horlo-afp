@@ -58,6 +58,12 @@ export const metadata: Metadata = {
     type: "website",
   },
   alternates: { canonical: SITE.domain },
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "HorloLearn",
+  },
   other: {
     "ai:summary":
       "HorloLearn partage la culture et les savoir-faire de l'horlogerie suisse, à travers des ressources accessibles aux passionnés et curieux.",

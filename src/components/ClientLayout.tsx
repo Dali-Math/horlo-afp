@@ -7,6 +7,8 @@ import Footer from "@/components/Footer";
 
 const FloatingSearchButton = dynamic(() => import("./FloatingSearchButton"), { ssr: false });
 const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
+const PwaRegistrar = dynamic(() => import("./PwaRegistrar"), { ssr: false });
+const VoiceWorkbenchAssistant = dynamic(() => import("./VoiceWorkbenchAssistant"), { ssr: false });
 
 interface ClientLayoutProps {
   children: React.ReactNode;
@@ -34,6 +36,8 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       <Footer />
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       <FloatingSearchButton onClick={() => setIsSearchOpen(true)} />
+      <VoiceWorkbenchAssistant />
+      <PwaRegistrar />
     </>
   );
 }

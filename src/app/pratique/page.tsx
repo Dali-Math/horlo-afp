@@ -487,6 +487,51 @@ export default function PratiquePage() {
             </div>
           </Link>
 
+          {/* Nouveautés Majeures : Loupe 20x, Défi Duel & Mode Mains-Libres */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-2">
+            <Link
+              href="/pratique/inspection-loupe"
+              className="p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-slate-900 to-slate-900 border-2 border-amber-500/60 hover:border-amber-400 transition-all group flex items-center justify-between gap-4 shadow-lg"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-500 text-slate-950 mb-2">
+                  🔬 Inédit Atelier
+                </span>
+                <h3 className="font-serif text-lg sm:text-xl font-bold text-white group-hover:text-amber-400 transition-colors">
+                  Loupe Macro d&apos;Établi ×20 : Inspection de Défauts Réels
+                </h3>
+                <p className="text-xs text-slate-300 mt-1 max-w-md">
+                  Examinez sous binoculaire 20x une pierre de contre-pivot fêlée, un pivot marqué, un spiral noyé d&apos;huile ou une dent d&apos;échappement ébréchée.
+                </p>
+              </div>
+              <div className="shrink-0 p-3 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1 group-hover:bg-amber-400 transition">
+                <span>Inspecter</span>
+                <ChevronRight className="w-4 h-4" />
+              </div>
+            </Link>
+
+            <Link
+              href="/pratique/defi-chronometre"
+              className="p-5 rounded-2xl bg-gradient-to-r from-cyan-500/10 via-slate-900 to-slate-900 border-2 border-cyan-500/60 hover:border-cyan-400 transition-all group flex items-center justify-between gap-4 shadow-lg"
+            >
+              <div>
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-cyan-500 text-slate-950 mb-2">
+                  ⚔️ Duel &amp; Partage WhatsApp
+                </span>
+                <h3 className="font-serif text-lg sm:text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
+                  Défi Chronométré de l&apos;Artisan Horloger
+                </h3>
+                <p className="text-xs text-slate-300 mt-1 max-w-md">
+                  10 questions sous pression au 1/10e de seconde. Générez un lien direct pour défier vos camarades et confrères à l&apos;établi !
+                </p>
+              </div>
+              <div className="shrink-0 p-3 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs flex items-center gap-1 group-hover:bg-cyan-400 transition">
+                <span>Défier</span>
+                <ChevronRight className="w-4 h-4" />
+              </div>
+            </Link>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Link
               href="/pratique/huilage"
