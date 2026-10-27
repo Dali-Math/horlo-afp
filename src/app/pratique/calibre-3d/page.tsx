@@ -20,7 +20,6 @@ import {
   Cog,
   Compass,
   Crosshair,
-  Compass as DraftingCompass,
   Eye,
   Hand,
   Keyboard,
