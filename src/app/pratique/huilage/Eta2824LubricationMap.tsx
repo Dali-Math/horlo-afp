@@ -61,7 +61,7 @@ const LUBRICANTS: Record<LubricantKey, LubricantMeta> = {
     fullName: 'Moebius Synt-A-Lube 9010 (Synthétique fluide)',
     oiler: 'Pique-huile Noir (Ø 0.08 mm)',
     hex: '#38BDF8',
-    badgeClass: 'bg-sky-500/20 text-sky-300 border-sky-500/40',
+    badgeClass: 'bg-sky-500/15 text-sky-800 dark:text-sky-300 border-sky-500/40',
     viscosity: '150 cSt à 20°C',
   },
   MOEBIUS_HP1300: {
@@ -70,7 +70,7 @@ const LUBRICANTS: Record<LubricantKey, LubricantMeta> = {
     fullName: 'Moebius Synt-HP-1300 (Haute Pression)',
     oiler: 'Pique-huile Rouge / Bleu (Ø 0.12–0.18 mm)',
     hex: '#F59E0B',
-    badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+    badgeClass: 'bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-500/40',
     viscosity: '1300 cSt à 20°C',
   },
   MOEBIUS_9415: {
@@ -79,7 +79,7 @@ const LUBRICANTS: Record<LubricantKey, LubricantMeta> = {
     fullName: 'Moebius 9415 (Graisse thixotrope échappement 4 Hz)',
     oiler: 'Pique-huile Rouge (Ø 0.12 mm)',
     hex: '#F43F5E',
-    badgeClass: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+    badgeClass: 'bg-rose-500/15 text-rose-800 dark:text-rose-300 border-rose-500/40',
     viscosity: 'Thixotrope 28’800 A/h',
   },
   MOEBIUS_9504_8217: {
@@ -88,7 +88,7 @@ const LUBRICANTS: Record<LubricantKey, LubricantMeta> = {
     fullName: 'Moebius 9504 (Remontoir) & Moebius 8217 (Bride barillet)',
     oiler: 'Pique-huile Vert (Ø 0.25 mm)',
     hex: '#10B981',
-    badgeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+    badgeClass: 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border-emerald-500/40',
     viscosity: 'Graisse haute pression / freinage',
   },
   LUBETA_V105: {
@@ -97,7 +97,7 @@ const LUBRICANTS: Record<LubricantKey, LubricantMeta> = {
     fullName: 'Lubeta V105 (Fluide film sec pour roues d’inversion)',
     oiler: 'Applicateur / Bain V105',
     hex: '#A855F7',
-    badgeClass: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+    badgeClass: 'bg-purple-500/15 text-purple-800 dark:text-purple-300 border-purple-500/40',
     viscosity: 'Film autolubrifiant',
   },
   NO_OIL: {
@@ -106,7 +106,7 @@ const LUBRICANTS: Record<LubricantKey, LubricantMeta> = {
     fullName: 'Aucun lubrifiant — Organe fonctionnant strictement à sec',
     oiler: 'Aucun huilier (Zone sèche)',
     hex: '#EF4444',
-    badgeClass: 'bg-red-500/25 text-red-300 border-red-500/50',
+    badgeClass: 'bg-red-500/15 text-red-800 dark:text-red-300 border-red-500/50',
     viscosity: '0 cSt (Sec)',
   },
 };
@@ -498,28 +498,28 @@ export default function Eta2824LubricationMap() {
       </div>
 
       {/* --- BANDEAU CARACTÉRISTIQUES TECHNIQUES DU CALIBRE ETA 2824-2 --- */}
-      <div className="rounded-2xl bg-slate-900 dark:bg-[#0F1521] border border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-300">
+      <div className="rounded-2xl bg-slate-100 dark:bg-[#0F1521] border border-slate-200 dark:border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-700 dark:text-slate-300">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <span>
-            <strong className="text-amber-400">CALIBRE :</strong> ETA 2824-2 (Seconde centrale, Stop-seconde)
+            <strong className="text-amber-700 dark:text-amber-400">CALIBRE :</strong> ETA 2824-2 (Seconde centrale, Stop-seconde)
           </span>
-          <span className="text-slate-600">|</span>
+          <span className="text-slate-300 dark:text-slate-600">|</span>
           <span>
-            <strong className="text-white">Ø :</strong> 25.60 mm (11 ½&apos;&apos;&apos;)
+            <strong className="text-slate-900 dark:text-white">Ø :</strong> 25.60 mm (11 ½&apos;&apos;&apos;)
           </span>
-          <span className="text-slate-600">|</span>
+          <span className="text-slate-300 dark:text-slate-600">|</span>
           <span>
-            <strong className="text-white">Hauteur :</strong> 4.60 mm
+            <strong className="text-slate-900 dark:text-white">Hauteur :</strong> 4.60 mm
           </span>
-          <span className="text-slate-600">|</span>
+          <span className="text-slate-300 dark:text-slate-600">|</span>
           <span>
-            <strong className="text-white">Fréquence :</strong> 28&apos;800 A/h (4 Hz)
+            <strong className="text-slate-900 dark:text-white">Fréquence :</strong> 28&apos;800 A/h (4 Hz)
           </span>
-          <span className="text-slate-600">|</span>
+          <span className="text-slate-300 dark:text-slate-600">|</span>
           <span>
             <strong className="text-emerald-400">Angle de levée :</strong> 50°
           </span>
-          <span className="text-slate-600">|</span>
+          <span className="text-slate-300 dark:text-slate-600">|</span>
           <span>
             <strong className="text-rose-400">Empierrage :</strong> 25 Rubis
           </span>
@@ -536,8 +536,7 @@ export default function Eta2824LubricationMap() {
               <button
                 onClick={() => handleLayerChange('bridges')}
                 className={`py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all ${
-                  layer === 'bridges'
-                    ? 'bg-slate-900 text-amber-400 border border-amber-500/40 shadow'
+                  layer === 'bridges' ? 'bg-amber-500 text-slate-950 shadow font-extrabold'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
@@ -547,8 +546,7 @@ export default function Eta2824LubricationMap() {
               <button
                 onClick={() => handleLayerChange('dial')}
                 className={`py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all ${
-                  layer === 'dial'
-                    ? 'bg-slate-900 text-amber-400 border border-amber-500/40 shadow'
+                  layer === 'dial' ? 'bg-amber-500 text-slate-950 shadow font-extrabold'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
@@ -558,8 +556,7 @@ export default function Eta2824LubricationMap() {
               <button
                 onClick={() => handleLayerChange('auto')}
                 className={`py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all ${
-                  layer === 'auto'
-                    ? 'bg-slate-900 text-amber-400 border border-amber-500/40 shadow'
+                  layer === 'auto' ? 'bg-amber-500 text-slate-950 shadow font-extrabold'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
@@ -594,7 +591,7 @@ export default function Eta2824LubricationMap() {
                   </div>
                   <button
                     onClick={pickRandomQuizPoint}
-                    className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-200 border border-slate-700 transition"
+                    className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-mono text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 transition shadow-sm"
                   >
                     Suivant →
                   </button>
@@ -603,11 +600,11 @@ export default function Eta2824LubricationMap() {
             )}
 
             {/* Carte du Schéma SVG ETA 2824-2 */}
-            <div className="rounded-2xl bg-[#0B0F17] border border-slate-800 overflow-hidden shadow-2xl">
-              <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 bg-[#0E1420] border-b border-slate-800 text-xs">
+            <div className="rounded-2xl bg-white dark:bg-[#0B0F17] border-2 border-slate-200 dark:border-slate-800 overflow-hidden shadow-xl">
+              <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 bg-slate-100 dark:bg-[#0E1420] border-b border-slate-200 dark:border-slate-800 text-xs">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
-                  <span className="font-mono font-bold text-slate-200">
+                  <span className="font-mono font-bold text-slate-900 dark:text-slate-200">
                     {layer === 'bridges' && 'VUE 1 : PLATINE & CÔTÉ PONTS (MOUVEMENT DE BASE)'}
                     {layer === 'dial' && 'VUE 2 : CÔTÉ CADRAN (REMONTOIR, MISE À L’HEURE & DATE)'}
                     {layer === 'auto' && 'VUE 3 : BLOC AUTOMATIQUE (MASSE OSCILLANTE & INVERSEURS)'}
@@ -615,7 +612,7 @@ export default function Eta2824LubricationMap() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <label className="flex items-center gap-1.5 cursor-pointer text-slate-300 select-none">
+                  <label className="flex items-center gap-1.5 cursor-pointer text-slate-700 dark:text-slate-300 select-none">
                     <input
                       type="checkbox"
                       checked={showNumbers}
@@ -629,8 +626,8 @@ export default function Eta2824LubricationMap() {
                     onClick={() => setLoupe10x(!loupe10x)}
                     className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold border transition ${
                       loupe10x
-                        ? 'bg-amber-500 text-slate-950 border-amber-400'
-                        : 'bg-slate-900 text-slate-300 border-slate-700 hover:border-amber-500'
+                        ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-sm'
+                        : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-amber-500'
                     }`}
                   >
                     <ZoomIn className="w-3.5 h-3.5" />
@@ -640,21 +637,21 @@ export default function Eta2824LubricationMap() {
               </div>
 
               {/* Canvas SVG 600x600 */}
-              <div className="p-3 sm:p-5 flex items-center justify-center bg-[#090D15]">
+              <div className="p-3 sm:p-5 flex items-center justify-center bg-slate-50 dark:bg-[#090D15]">
                 <svg
                   viewBox={svgViewBox}
                   className="w-full max-w-[500px] aspect-square transition-all duration-500 select-none"
                 >
                   <defs>
                     <radialGradient id="etaPlatineGrad" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stopColor="#1E293B" />
-                      <stop offset="85%" stopColor="#0F172A" />
-                      <stop offset="100%" stopColor="#090D16" />
+                      <stop offset="0%" stopColor="#E2E8F0" className="dark:stop-color-[#1E293B]" />
+                      <stop offset="85%" stopColor="#CBD5E1" className="dark:stop-color-[#0F172A]" />
+                      <stop offset="100%" stopColor="#94A3B8" className="dark:stop-color-[#090D16]" />
                     </radialGradient>
                     <linearGradient id="etaRhodiumBridge" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#334155" />
-                      <stop offset="50%" stopColor="#1E293B" />
-                      <stop offset="100%" stopColor="#0F172A" />
+                      <stop offset="0%" stopColor="#FFFFFF" className="dark:stop-color-[#334155]" />
+                      <stop offset="50%" stopColor="#F1F5F9" className="dark:stop-color-[#1E293B]" />
+                      <stop offset="100%" stopColor="#E2E8F0" className="dark:stop-color-[#0F172A]" />
                     </linearGradient>
                     <linearGradient id="etaGoldWheel" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stopColor="#FDE047" stopOpacity="0.35" />
@@ -1175,9 +1172,9 @@ export default function Eta2824LubricationMap() {
               </div>
 
               {/* Porte-Huiliers Bergeon & Filtres de Lubrifiants Moebius */}
-              <div className="bg-[#0E1420] border-t border-slate-800 p-4 space-y-2.5">
+              <div className="bg-slate-100 dark:bg-[#0E1420] border-t border-slate-200 dark:border-slate-800 p-4 space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
                     <Droplet className="w-3.5 h-3.5 text-amber-400" />
                     {mode === 'quiz' ? (
                       <strong className="text-amber-400">
@@ -1214,8 +1211,8 @@ export default function Eta2824LubricationMap() {
                         }}
                         className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between gap-1 ${
                           active
-                            ? 'bg-slate-800 border-amber-400 ring-2 ring-amber-400/30 shadow-lg'
-                            : 'bg-[#131926] border-slate-800 hover:border-slate-600'
+                            ? 'bg-amber-500/15 border-amber-500 ring-2 ring-amber-400/30 shadow-md text-slate-900 dark:text-white'
+                            : 'bg-white dark:bg-[#131926] border-slate-200 dark:border-slate-800 hover:border-amber-400 text-slate-700 dark:text-slate-300'
                         }`}
                       >
                         <div className="flex items-center justify-between gap-1">
@@ -1226,14 +1223,14 @@ export default function Eta2824LubricationMap() {
                               boxShadow: `0 0 8px ${lub.hex}`,
                             }}
                           />
-                          <span className="text-[10px] font-mono text-slate-400 truncate">
+                          <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 truncate">
                             {lub.id === 'NO_OIL' ? 'Zone sèche' : 'Moebius'}
                           </span>
                         </div>
-                        <div className="text-xs font-bold text-white leading-tight mt-0.5">
+                        <div className="text-xs font-bold text-slate-900 dark:text-white leading-tight mt-0.5">
                           {lub.shortName}
                         </div>
-                        <div className="text-[10px] text-slate-400 truncate">
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
                           {lub.oiler.split('(')[0]}
                         </div>
                       </button>
@@ -1267,7 +1264,7 @@ export default function Eta2824LubricationMap() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-slate-900 text-amber-400">
+                        <span className="px-2 py-0.5 rounded text-xs font-mono font-bold bg-amber-500/15 text-amber-800 dark:bg-slate-900 dark:text-amber-400 border border-amber-500/30">
                           POINT #{selectedPoint.code}
                         </span>
                         <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
@@ -1435,7 +1432,7 @@ export default function Eta2824LubricationMap() {
                       }`}
                     >
                       <div className="flex items-center gap-2 truncate">
-                        <span className="w-5 h-5 rounded-full bg-slate-900 text-amber-400 font-mono text-[10px] flex items-center justify-center shrink-0">
+                        <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-800 dark:bg-slate-900 dark:text-amber-400 font-mono text-[10px] flex items-center justify-center shrink-0 border border-amber-500/30">
                           {pt.code}
                         </span>
                         <span className="truncate">{pt.organ}</span>

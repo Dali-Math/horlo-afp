@@ -379,7 +379,7 @@ export default function HuilagePage() {
 
           {/* Double Schéma SVG : Incabloc 9010 OU Palette d'Ancre 9415 */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            <div className="lg:col-span-8 rounded-2xl bg-[#070B14] border border-slate-800 p-4 overflow-hidden">
+            <div className="lg:col-span-8 rounded-2xl bg-slate-100 dark:bg-[#070B14] border-2 border-slate-200 dark:border-slate-800 p-4 overflow-hidden shadow-sm">
               {comparatorMode === 'incabloc' ? (
                 <svg
                   viewBox={loupeMeniscus ? '60 40 600 220' : '0 0 740 310'}
@@ -387,14 +387,15 @@ export default function HuilagePage() {
                 >
                   <defs>
                     <pattern id="gridMeniscus" width="20" height="20" patternUnits="userSpaceOnUse">
-                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" strokeWidth="0.6" />
+                      <path d="M 20 0 L 0 0 0 20" fill="none" className="stroke-slate-300 dark:stroke-slate-800" strokeWidth="0.6" />
                     </pattern>
                   </defs>
+                  <rect width="740" height="310" className="fill-slate-50 dark:fill-[#070B14]" />
                   <rect width="740" height="310" fill="url(#gridMeniscus)" />
 
                   {/* ================= GAUCHE : COUPE AXIALE INCABLOC ================= */}
                   <g transform="translate(210, 155)">
-                    <text x="0" y="-125" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold" fontFamily="monospace">
+                    <text x="0" y="-125" textAnchor="middle" className="fill-slate-900 dark:fill-[#f8fafc]" fontSize="11" fontWeight="bold" fontFamily="monospace">
                       1. COUPE AXIALE MICRO-MÉCANIQUE (INCABLOC)
                     </text>
 
@@ -500,7 +501,7 @@ export default function HuilagePage() {
 
                   {/* ================= DROITE : VUE DE DESSUS AU BINOCULAIRE ================= */}
                   <g transform="translate(555, 155)">
-                    <text x="0" y="-125" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold" fontFamily="monospace">
+                    <text x="0" y="-125" textAnchor="middle" className="fill-slate-900 dark:fill-[#f8fafc]" fontSize="11" fontWeight="bold" fontFamily="monospace">
                       2. VUE DE DESSUS (TRANSPARENCE RUBIS)
                     </text>
 
@@ -544,14 +545,15 @@ export default function HuilagePage() {
                 >
                   <defs>
                     <pattern id="gridPalette" width="20" height="20" patternUnits="userSpaceOnUse">
-                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" strokeWidth="0.6" />
+                      <path d="M 20 0 L 0 0 0 20" fill="none" className="stroke-slate-300 dark:stroke-slate-800" strokeWidth="0.6" />
                     </pattern>
                   </defs>
+                  <rect width="740" height="310" className="fill-slate-50 dark:fill-[#070B14]" />
                   <rect width="740" height="310" fill="url(#gridPalette)" />
 
                   {/* ================= GAUCHE : COUPE PROFIL PALETTE & DENT 705 ================= */}
                   <g transform="translate(215, 155)">
-                    <text x="0" y="-125" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold" fontFamily="monospace">
+                    <text x="0" y="-125" textAnchor="middle" className="fill-slate-900 dark:fill-[#f8fafc]" fontSize="11" fontWeight="bold" fontFamily="monospace">
                       1. PROFIL PALETTE D’ANCRE (710) &amp; DENT (705)
                     </text>
 
@@ -613,7 +615,7 @@ export default function HuilagePage() {
                       stroke="#e2e8f0"
                       strokeWidth="2"
                     />
-                    <text x="65" y="75" textAnchor="middle" fill="#f8fafc" fontSize="9" fontWeight="bold" fontFamily="monospace">
+                    <text x="65" y="75" textAnchor="middle" className="fill-slate-900 dark:fill-[#f8fafc]" fontSize="9" fontWeight="bold" fontFamily="monospace">
                       DENT 705
                     </text>
 
@@ -624,7 +626,7 @@ export default function HuilagePage() {
 
                   {/* ================= DROITE : VUE FACE PLAN D'IMPULSION ================= */}
                   <g transform="translate(555, 155)">
-                    <text x="0" y="-125" textAnchor="middle" fill="#f8fafc" fontSize="11" fontWeight="bold" fontFamily="monospace">
+                    <text x="0" y="-125" textAnchor="middle" className="fill-slate-900 dark:fill-[#f8fafc]" fontSize="11" fontWeight="bold" fontFamily="monospace">
                       2. VUE DE FACE DU PLAN D’IMPULSION
                     </text>
 
@@ -869,7 +871,7 @@ export default function HuilagePage() {
                   >
                     <div className="space-y-1 pr-3">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-900 text-amber-400 dark:bg-amber-500/20 dark:text-amber-300">
+                        <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/15 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300 border border-amber-500/30">
                           {pt.codeEbauches}
                         </span>
                         <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
@@ -910,17 +912,17 @@ export default function HuilagePage() {
               </div>
 
               {/* Schéma SVG Dynamique de l'organe avec Loupe 10x */}
-              <div className="rounded-2xl bg-[#070B14] border border-slate-800 p-4 overflow-hidden">
+              <div className="rounded-2xl bg-slate-100 dark:bg-[#070B14] border-2 border-slate-200 dark:border-slate-800 p-4 overflow-hidden shadow-sm">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-mono font-bold text-amber-400 uppercase">
+                  <span className="text-[11px] font-mono font-bold text-amber-600 dark:text-amber-400 uppercase">
                     Schéma Technique Vectoriel : Point de Dépôt vs Zone Sèche Interdite
                   </span>
                   <button
                     onClick={() => setLoupeOrgan(!loupeOrgan)}
                     className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold border transition ${
                       loupeOrgan
-                        ? 'bg-amber-500 text-slate-950 border-amber-400'
-                        : 'bg-slate-900 text-slate-300 border-slate-700'
+                        ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-sm'
+                        : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-amber-500'
                     }`}
                   >
                     <ZoomIn className="w-3 h-3" /> {loupeOrgan ? 'Loupe 10x Active' : 'Loupe 10x'}
@@ -931,7 +933,7 @@ export default function HuilagePage() {
                   viewBox={loupeOrgan ? '110 35 300 150' : '0 0 520 220'}
                   className="w-full h-52 transition-all duration-500"
                 >
-                  <rect width="520" height="220" fill="#070B14" />
+                  <rect width="520" height="220" className="fill-slate-50 dark:fill-[#070B14]" />
 
                   {selectedPoint.id === 'levees' && (
                     <g>
