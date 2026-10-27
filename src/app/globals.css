@@ -817,3 +817,60 @@ html {
   border: none !important;
   box-shadow: none !important;
 }
+
+
+/* ==========================================================================
+   HorloLearn — Calibre 3D Studio Sliders & Viewport
+   ========================================================================== */
+input[type="range"].hl-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--hl-line);
+  height: 7px;
+  border-radius: 999px;
+  outline: none;
+  border: 1px solid var(--hl-line-strong);
+  cursor: pointer;
+}
+input[type="range"].hl-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 60%, #9c7a43 100%);
+  border: 2px solid var(--hl-surface);
+  cursor: grab;
+  box-shadow: 0 1px 6px rgba(124, 95, 51, 0.45);
+  transition: transform 0.15s ease;
+}
+input[type="range"].hl-slider::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.22);
+}
+input[type="range"].hl-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 60%, #9c7a43 100%);
+  border: 2px solid var(--hl-surface);
+  cursor: grab;
+  box-shadow: 0 1px 6px rgba(124, 95, 51, 0.45);
+}
+
+.bg-atelier-canvas {
+  background: radial-gradient(circle at 50% 45%, #161e2e 0%, #090c12 75%, #05070b 100%);
+}
+
+#viewportCard:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  border: none;
+}
+#viewportCard:-webkit-full-screen {
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  border: none;
+}
