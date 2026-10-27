@@ -257,20 +257,20 @@ function DefiChronometreContent() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-8">
         {/* DUEL CHALLENGE BANNER (If link received from a friend) */}
         {isDuel && gameState === "intro" && (
-          <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-amber-500/20 via-slate-900 to-amber-500/10 border-2 border-amber-500 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 font-mono">
+          <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-amber-500/15 via-amber-100/60 to-white dark:from-amber-500/20 dark:via-slate-900 dark:to-amber-500/10 border-2 border-amber-500 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 font-mono">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center shrink-0 shadow-lg">
                 <Swords className="w-6 h-6" />
               </div>
               <div>
-                <span className="text-xs uppercase font-bold text-amber-400 block tracking-wider">
+                <span className="text-xs uppercase font-bold text-amber-700 dark:text-amber-400 block tracking-wider">
                   ⚔️ Défi Reçu d&apos;un Confrère !
                 </span>
-                <h2 className="text-base sm:text-lg font-bold text-white">
+                <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
                   <strong>{challengerName}</strong> vous défie à l&apos;établi
                 </h2>
-                <p className="text-xs text-slate-300 mt-0.5">
-                  Objectif à battre : <strong className="text-amber-400">{targetScore}/10</strong> en moins de <strong className="text-cyan-400">{targetTime}s</strong> !
+                <p className="text-xs text-slate-700 dark:text-slate-300 mt-0.5">
+                  Objectif à battre : <strong className="text-amber-700 dark:text-amber-400">{targetScore}/10</strong> en moins de <strong className="text-cyan-700 dark:text-cyan-400">{targetTime}s</strong> !
                 </p>
               </div>
             </div>

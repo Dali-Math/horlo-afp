@@ -461,7 +461,7 @@ export default function PratiquePage() {
           {/* Master Lab Spotlight Card */}
           <Link
             href="/pratique/laboratoire"
-            className="block p-6 rounded-2xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-slate-900 border-2 border-amber-500 hover:border-amber-400 transition-all shadow-xl group"
+            className="block p-6 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-100/50 to-white dark:from-amber-950/70 dark:via-slate-900 dark:to-slate-900 border-2 border-amber-500/70 dark:border-amber-500 hover:border-amber-600 dark:hover:border-amber-400 transition-all shadow-lg hover:shadow-xl group"
           >
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1.5">
@@ -469,18 +469,18 @@ export default function PratiquePage() {
                   <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500 text-slate-950 uppercase shadow-sm">
                     ⭐ Master Lab d’Établi
                   </span>
-                  <span className="text-xs font-mono text-amber-400">
+                  <span className="text-xs font-mono font-bold text-amber-700 dark:text-amber-400">
                     7 Bacs d&apos;Essai Interactifs · Normes NIHS &amp; ISO
                   </span>
                 </div>
-                <h3 className="font-serif text-xl sm:text-2xl font-bold text-white group-hover:text-amber-400 transition-colors">
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                   Grand Laboratoire Horloger : Witschi, Remontoir 2824, Équarrissoir, Rouage &amp; Ajustements
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 max-w-3xl leading-relaxed">
                   Chrono-comparateur Witschi Watch Expert avec son réel, échappement suisse en 5 phases, simulateur de tirette &amp; stop-seconde ETA 2824-2, alésage du canon à l&apos;équarrissoir, fermeture à la potence Robur, chaîne du rouage et tolérances ISO 286.
                 </p>
               </div>
-              <div className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs shadow group-hover:bg-amber-400 transition">
+              <div className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs shadow-md group-hover:bg-amber-400 transition">
                 <span>Accéder au Master Lab</span>
                 <ArrowRight className="w-4 h-4" />
               </div>
@@ -491,20 +491,20 @@ export default function PratiquePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-2">
             <Link
               href="/pratique/inspection-loupe"
-              className="p-5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-slate-900 to-slate-900 border-2 border-amber-500/60 hover:border-amber-400 transition-all group flex items-center justify-between gap-4 shadow-lg"
+              className="p-5 rounded-2xl bg-gradient-to-br from-amber-500/10 via-amber-50/40 to-white dark:from-amber-950/40 dark:via-slate-900 dark:to-slate-900 border-2 border-amber-400/70 dark:border-amber-500/60 hover:border-amber-500 transition-all group flex items-center justify-between gap-4 shadow-md hover:shadow-lg"
             >
               <div>
-                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-500 text-slate-950 mb-2">
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-500 text-slate-950 mb-2 shadow-sm">
                   🔬 Inédit Atelier
                 </span>
-                <h3 className="font-serif text-lg sm:text-xl font-bold text-white group-hover:text-amber-400 transition-colors">
+                <h3 className="font-serif text-lg sm:text-xl font-bold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                   Loupe Macro d&apos;Établi ×20 : Inspection de Défauts Réels
                 </h3>
-                <p className="text-xs text-slate-300 mt-1 max-w-md">
+                <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 max-w-md">
                   Examinez sous binoculaire 20x une pierre de contre-pivot fêlée, un pivot marqué, un spiral noyé d&apos;huile ou une dent d&apos;échappement ébréchée.
                 </p>
               </div>
-              <div className="shrink-0 p-3 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1 group-hover:bg-amber-400 transition">
+              <div className="shrink-0 p-3 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1 group-hover:bg-amber-400 transition shadow">
                 <span>Inspecter</span>
                 <ChevronRight className="w-4 h-4" />
               </div>
@@ -512,20 +512,20 @@ export default function PratiquePage() {
 
             <Link
               href="/pratique/defi-chronometre"
-              className="p-5 rounded-2xl bg-gradient-to-r from-cyan-500/10 via-slate-900 to-slate-900 border-2 border-cyan-500/60 hover:border-cyan-400 transition-all group flex items-center justify-between gap-4 shadow-lg"
+              className="p-5 rounded-2xl bg-gradient-to-br from-cyan-500/10 via-cyan-50/40 to-white dark:from-cyan-950/40 dark:via-slate-900 dark:to-slate-900 border-2 border-cyan-400/70 dark:border-cyan-500/60 hover:border-cyan-500 transition-all group flex items-center justify-between gap-4 shadow-md hover:shadow-lg"
             >
               <div>
-                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-cyan-500 text-slate-950 mb-2">
+                <span className="inline-block text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-cyan-600 dark:bg-cyan-500 text-white dark:text-slate-950 mb-2 shadow-sm">
                   ⚔️ Duel &amp; Partage WhatsApp
                 </span>
-                <h3 className="font-serif text-lg sm:text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
+                <h3 className="font-serif text-lg sm:text-xl font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
                   Défi Chronométré de l&apos;Artisan Horloger
                 </h3>
-                <p className="text-xs text-slate-300 mt-1 max-w-md">
+                <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 max-w-md">
                   10 questions sous pression au 1/10e de seconde. Générez un lien direct pour défier vos camarades et confrères à l&apos;établi !
                 </p>
               </div>
-              <div className="shrink-0 p-3 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs flex items-center gap-1 group-hover:bg-cyan-400 transition">
+              <div className="shrink-0 p-3 rounded-xl bg-cyan-600 dark:bg-cyan-500 text-white dark:text-slate-950 font-bold text-xs flex items-center gap-1 group-hover:bg-cyan-500 dark:group-hover:bg-cyan-400 transition shadow">
                 <span>Défier</span>
                 <ChevronRight className="w-4 h-4" />
               </div>
