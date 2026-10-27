@@ -535,14 +535,14 @@ export default function PratiquePage() {
         {/* ========================================================================= */}
         {/* SECTION VEDETTE : L'ÉTABLI VIRTUEL DU MAÎTRE HORLOGER (INTERACTIF)        */}
         {/* ========================================================================= */}
-        <section className="rounded-3xl border-2 border-amber-500/30 bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+        <section className="rounded-3xl border-2 border-amber-500/30 bg-white/90 dark:bg-slate-900/60 backdrop-blur-xl p-6 sm:p-10 shadow-xl dark:shadow-2xl relative overflow-hidden transition-colors">
           
           {/* En-tête du Banc d'Établi */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-5 border-b border-slate-200 dark:border-slate-800">
             <div>
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#E2B44F]">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-800 dark:text-[#E2B44F]">
                   Banc de Démonstration d&apos;Atelier Interactif
                 </span>
               </div>
@@ -550,9 +550,9 @@ export default function PratiquePage() {
                 Sélectionnez un Poste de Travail sur l&apos;Établi
               </h2>
             </div>
-            <div className="flex items-center gap-2 font-mono text-xs text-slate-500 dark:text-slate-400">
+            <div className="flex items-center gap-2 font-mono text-xs text-slate-600 dark:text-slate-400">
               <span>Poste Actif :</span>
-              <span className="px-2.5 py-1 rounded-md bg-[#E2B44F]/20 text-amber-800 dark:text-[#E2B44F] font-bold border border-[#E2B44F]/40">
+              <span className="px-2.5 py-1 rounded-md bg-[#E2B44F]/20 text-amber-900 dark:text-[#E2B44F] font-bold border border-[#E2B44F]/40 shadow-sm">
                 {activeStation.badge}
               </span>
             </div>
@@ -562,11 +562,11 @@ export default function PratiquePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
             
             {/* TAPIS D'ÉTABLI HORLOGER (7 COLS) */}
-            <div className="lg:col-span-7 bg-slate-900 rounded-2xl p-6 border border-slate-800 relative flex flex-col justify-between min-h-[460px] shadow-inner text-white">
+            <div className="lg:col-span-7 bg-slate-100/90 dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 relative flex flex-col justify-between min-h-[460px] shadow-sm dark:shadow-inner text-slate-900 dark:text-white transition-colors">
               
-              <div className="text-[11px] font-mono text-slate-400 flex items-center justify-between mb-4">
+              <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 flex items-center justify-between mb-4">
                 <span>TAPIS D&apos;ÉTABLI BERGEON · CH-2400 LE LOCLE</span>
-                <span className="text-emerald-400">● Température régulée 21°C</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-semibold">● Température régulée 21°C</span>
               </div>
 
               {/* 4 Postes interactifs disposés sur l'établi */}
@@ -576,25 +576,25 @@ export default function PratiquePage() {
                 <button
                   type="button"
                   onClick={() => setSelectedStationId(1)}
-                  className={`p-5 rounded-2xl text-left transition-all hover:scale-[1.02] shadow-xl group ${
+                  className={`p-5 rounded-2xl text-left transition-all hover:scale-[1.02] shadow-sm hover:shadow-md group ${
                     selectedStationId === 1
-                      ? 'bg-slate-950 border-2 border-[#E2B44F]'
-                      : 'bg-slate-950/70 border border-slate-800 hover:border-slate-700'
+                      ? 'bg-white dark:bg-slate-950 border-2 border-amber-500 dark:border-[#E2B44F] shadow-amber-500/10'
+                      : 'bg-white/80 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-2xl">⚙️</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/40 font-bold">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-400/40 font-bold">
                       ETA 6497
                     </span>
                   </div>
-                  <h3 className="text-sm sm:text-base font-serif font-bold text-white group-hover:text-[#E2B44F] transition-colors">
+                  <h3 className="text-sm sm:text-base font-serif font-bold text-slate-900 dark:text-white group-hover:text-amber-700 dark:group-hover:text-[#E2B44F] transition-colors">
                     Rhabillage &amp; Montage
                   </h3>
-                  <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
                     Démontage ordonné, contrôle des ébats et dépose délicate du balancier.
                   </p>
-                  <div className="mt-3 text-[10px] font-mono text-[#E2B44F] flex items-center gap-1 font-bold">
+                  <div className="mt-3 text-[10px] font-mono text-amber-700 dark:text-[#E2B44F] flex items-center gap-1 font-bold">
                     <span>Examiner le poste</span> <span>→</span>
                   </div>
                 </button>
@@ -603,25 +603,25 @@ export default function PratiquePage() {
                 <button
                   type="button"
                   onClick={() => setSelectedStationId(2)}
-                  className={`p-5 rounded-2xl text-left transition-all hover:scale-[1.02] shadow-xl group ${
+                  className={`p-5 rounded-2xl text-left transition-all hover:scale-[1.02] shadow-sm hover:shadow-md group ${
                     selectedStationId === 2
-                      ? 'bg-slate-950 border-2 border-cyan-400'
-                      : 'bg-slate-950/70 border border-slate-800 hover:border-slate-700'
+                      ? 'bg-white dark:bg-slate-950 border-2 border-cyan-500 dark:border-cyan-400 shadow-cyan-500/10'
+                      : 'bg-white/80 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-2xl">💧</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 font-bold">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-100 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-400/40 font-bold">
                       Moebius 4G
                     </span>
                   </div>
-                  <h3 className="text-sm sm:text-base font-serif font-bold text-white group-hover:text-cyan-400 transition-colors">
+                  <h3 className="text-sm sm:text-base font-serif font-bold text-slate-900 dark:text-white group-hover:text-cyan-700 dark:group-hover:text-cyan-400 transition-colors">
                     Micro-Lubrification
                   </h3>
-                  <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
                     Cartographie des 25 points : 9010 (rapide), HP-1300 (force) et 9415 (ancre).
                   </p>
-                  <div className="mt-3 text-[10px] font-mono text-cyan-400 flex items-center gap-1 font-bold">
+                  <div className="mt-3 text-[10px] font-mono text-cyan-700 dark:text-cyan-400 flex items-center gap-1 font-bold">
                     <span>Examiner le poste</span> <span>→</span>
                   </div>
                 </button>
@@ -630,25 +630,25 @@ export default function PratiquePage() {
                 <button
                   type="button"
                   onClick={() => setSelectedStationId(3)}
-                  className={`p-5 rounded-2xl text-left transition-all hover:scale-[1.02] shadow-xl group ${
+                  className={`p-5 rounded-2xl text-left transition-all hover:scale-[1.02] shadow-sm hover:shadow-md group ${
                     selectedStationId === 3
-                      ? 'bg-slate-950 border-2 border-emerald-400'
-                      : 'bg-slate-950/70 border border-slate-800 hover:border-slate-700'
+                      ? 'bg-white dark:bg-slate-950 border-2 border-emerald-500 dark:border-emerald-400 shadow-emerald-500/10'
+                      : 'bg-white/80 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-2xl">⏱️</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 font-bold">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-400/40 font-bold">
                       Witschi COSC
                     </span>
                   </div>
-                  <h3 className="text-sm sm:text-base font-serif font-bold text-white group-hover:text-emerald-400 transition-colors">
+                  <h3 className="text-sm sm:text-base font-serif font-bold text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
                     Diagnostic &amp; Réglage
                   </h3>
-                  <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
                     Analyse acoustique en 5 positions : marche, repère (&lt;0.6ms) et amplitude.
                   </p>
-                  <div className="mt-3 text-[10px] font-mono text-emerald-400 flex items-center gap-1 font-bold">
+                  <div className="mt-3 text-[10px] font-mono text-emerald-700 dark:text-emerald-400 flex items-center gap-1 font-bold">
                     <span>Examiner le poste</span> <span>→</span>
                   </div>
                 </button>
@@ -657,95 +657,95 @@ export default function PratiquePage() {
                 <button
                   type="button"
                   onClick={() => setSelectedStationId(4)}
-                  className={`p-5 rounded-2xl text-left transition-all hover:scale-[1.02] shadow-xl group ${
+                  className={`p-5 rounded-2xl text-left transition-all hover:scale-[1.02] shadow-sm hover:shadow-md group ${
                     selectedStationId === 4
-                      ? 'bg-slate-950 border-2 border-purple-400'
-                      : 'bg-slate-950/70 border border-slate-800 hover:border-slate-700'
+                      ? 'bg-white dark:bg-slate-950 border-2 border-purple-500 dark:border-purple-400 shadow-purple-500/10'
+                      : 'bg-white/80 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-2xl">📐</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-400/40 font-bold">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-100 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300 border border-purple-300 dark:border-purple-400/40 font-bold">
                       Schaublin 70
                     </span>
                   </div>
-                  <h3 className="text-sm sm:text-base font-serif font-bold text-white group-hover:text-purple-400 transition-colors">
+                  <h3 className="text-sm sm:text-base font-serif font-bold text-slate-900 dark:text-white group-hover:text-purple-700 dark:group-hover:text-purple-400 transition-colors">
                     Micromécanique &amp; Outils
                   </h3>
-                  <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
                     Tournage au centième, affûtage Arkansas des pannes et acier Böhler K720.
                   </p>
-                  <div className="mt-3 text-[10px] font-mono text-purple-400 flex items-center gap-1 font-bold">
+                  <div className="mt-3 text-[10px] font-mono text-purple-700 dark:text-purple-400 flex items-center gap-1 font-bold">
                     <span>Examiner le poste</span> <span>→</span>
                   </div>
                 </button>
 
               </div>
 
-              <div className="text-[10px] font-mono text-slate-400 text-center mt-4">
+              <div className="text-[10px] font-mono text-slate-500 dark:text-slate-400 text-center mt-4">
                 ✦ Cliquez sur l&apos;un des 4 postes pour charger sa fiche technique officielle ✦
               </div>
             </div>
 
             {/* PANNEAU TECHNIQUE DE DÉTAIL DYNAMIQUE (5 COLS) */}
-            <div className="lg:col-span-5 rounded-2xl bg-slate-950 text-white p-6 sm:p-7 border border-[#E2B44F]/30 flex flex-col justify-between shadow-2xl relative">
+            <div className="lg:col-span-5 rounded-2xl bg-white dark:bg-slate-950 text-slate-900 dark:text-white p-6 sm:p-7 border border-amber-500/40 dark:border-[#E2B44F]/30 flex flex-col justify-between shadow-xl dark:shadow-2xl relative transition-colors">
               
               <div>
-                <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
-                  <span className="text-xs font-mono font-bold uppercase text-[#E2B44F] tracking-wider">
+                <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-200 dark:border-slate-800">
+                  <span className="text-xs font-mono font-bold uppercase text-amber-800 dark:text-[#E2B44F] tracking-wider">
                     {activeStation.category}
                   </span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-500/10 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-500/30 font-semibold">
                     {activeStation.difficulty}
                   </span>
                 </div>
 
-                <h3 className="font-serif text-2xl font-bold text-white mb-2">
+                <h3 className="font-serif text-2xl font-bold text-slate-900 dark:text-white mb-2">
                   {activeStation.title}
                 </h3>
 
-                <p className="text-xs text-slate-300 leading-relaxed font-light mb-5">
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal dark:font-light mb-5">
                   {activeStation.desc}
                 </p>
 
                 {/* WIDGET TECHNIQUE SPÉCIFIQUE AU POSTE ACTIF */}
-                <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 mb-5 font-mono text-xs">
+                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 mb-5 font-mono text-xs transition-colors">
                   {selectedStationId === 1 && (
                     <>
-                      <div className="flex justify-between items-center text-[11px] text-amber-300 pb-2 border-b border-slate-800">
+                      <div className="flex justify-between items-center text-[11px] text-amber-800 dark:text-amber-300 pb-2 border-b border-slate-200 dark:border-slate-800 font-semibold">
                         <span>Ordre de dépose chronologique :</span>
                         <span className="font-bold">6 Organes</span>
                       </div>
                       <div className="grid grid-cols-3 gap-1.5 pt-2 text-[10px] text-center">
-                        <div className="p-1.5 rounded bg-slate-950 border border-slate-800 text-slate-300">1. Balancier</div>
-                        <div className="p-1.5 rounded bg-slate-950 border border-slate-800 text-slate-300">2. Ancre</div>
-                        <div className="p-1.5 rounded bg-slate-950 border border-slate-800 text-slate-300">3. Rouage</div>
-                        <div className="p-1.5 rounded bg-slate-950 border border-slate-800 text-slate-300">4. Barillet</div>
-                        <div className="p-1.5 rounded bg-slate-950 border border-slate-800 text-slate-300">5. Remontoir</div>
-                        <div className="p-1.5 rounded bg-slate-950 border border-slate-800 text-slate-300">6. Platine</div>
+                        <div className="p-1.5 rounded bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-300 font-medium">1. Balancier</div>
+                        <div className="p-1.5 rounded bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-300 font-medium">2. Ancre</div>
+                        <div className="p-1.5 rounded bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-300 font-medium">3. Rouage</div>
+                        <div className="p-1.5 rounded bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-300 font-medium">4. Barillet</div>
+                        <div className="p-1.5 rounded bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-300 font-medium">5. Remontoir</div>
+                        <div className="p-1.5 rounded bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-300 font-medium">6. Platine</div>
                       </div>
                     </>
                   )}
 
                   {selectedStationId === 2 && (
                     <div className="grid grid-cols-3 gap-2 text-center text-[10px]">
-                      <div className="p-2 rounded bg-slate-950 border border-rose-500/40 text-rose-300">
+                      <div className="p-2 rounded bg-white dark:bg-slate-950 border border-rose-300 dark:border-rose-500/40 text-rose-700 dark:text-rose-300 shadow-sm">
                         <span className="font-bold block">Moebius 9010</span>
-                        <span className="text-[9px] text-slate-400">Pivots rapides (4 Hz)</span>
+                        <span className="text-[9px] text-slate-500 dark:text-slate-400">Pivots rapides (4 Hz)</span>
                       </div>
-                      <div className="p-2 rounded bg-slate-950 border border-blue-500/40 text-blue-300">
+                      <div className="p-2 rounded bg-white dark:bg-slate-950 border border-blue-300 dark:border-blue-500/40 text-blue-700 dark:text-blue-300 shadow-sm">
                         <span className="font-bold block">Moebius HP-1300</span>
-                        <span className="text-[9px] text-slate-400">Barillet &amp; Roue centre</span>
+                        <span className="text-[9px] text-slate-500 dark:text-slate-400">Barillet &amp; Roue centre</span>
                       </div>
-                      <div className="p-2 rounded bg-slate-950 border border-amber-500/40 text-amber-300">
+                      <div className="p-2 rounded bg-white dark:bg-slate-950 border border-amber-300 dark:border-amber-500/40 text-amber-800 dark:text-amber-300 shadow-sm">
                         <span className="font-bold block">Moebius 9415</span>
-                        <span className="text-[9px] text-slate-400">Palettes d&apos;ancre</span>
+                        <span className="text-[9px] text-slate-500 dark:text-slate-400">Palettes d&apos;ancre</span>
                       </div>
                     </div>
                   )}
 
                   {selectedStationId === 3 && (
-                    <div className="rounded-lg p-3 font-mono text-emerald-400 border border-emerald-500/40 bg-[#021208]">
+                    <div className="rounded-lg p-3 font-mono text-emerald-400 border border-emerald-500/40 bg-[#021208] shadow-inner">
                       <div className="flex justify-between items-center text-[10px] border-b border-emerald-500/30 pb-1 mb-2">
                         <span>WITSCHI CHRONOSCOPE S1</span>
                         <span>CAL: 18&apos;000 A/h</span>
@@ -769,13 +769,13 @@ export default function PratiquePage() {
 
                   {selectedStationId === 4 && (
                     <div className="grid grid-cols-2 gap-2 text-center text-[10px]">
-                      <div className="p-2 rounded bg-slate-950 border border-purple-500/30 text-purple-300 text-left">
-                        <span className="font-bold block text-white">Tour Schaublin 70</span>
-                        <span className="text-[9px] text-slate-400">Pinces W-12 · Précision 0.01 mm</span>
+                      <div className="p-2 rounded bg-white dark:bg-slate-950 border border-purple-300 dark:border-purple-500/30 text-purple-800 dark:text-purple-300 text-left shadow-sm">
+                        <span className="font-bold block text-slate-900 dark:text-white">Tour Schaublin 70</span>
+                        <span className="text-[9px] text-slate-500 dark:text-slate-400">Pinces W-12 · Précision 0.01 mm</span>
                       </div>
-                      <div className="p-2 rounded bg-slate-950 border border-purple-500/30 text-purple-300 text-left">
-                        <span className="font-bold block text-white">Affûtage Arkansas</span>
-                        <span className="text-[9px] text-slate-400">Pannes biseautées sans jeu</span>
+                      <div className="p-2 rounded bg-white dark:bg-slate-950 border border-purple-300 dark:border-purple-500/30 text-purple-800 dark:text-purple-300 text-left shadow-sm">
+                        <span className="font-bold block text-slate-900 dark:text-white">Affûtage Arkansas</span>
+                        <span className="text-[9px] text-slate-500 dark:text-slate-400">Pannes biseautées sans jeu</span>
                       </div>
                     </div>
                   )}
@@ -783,14 +783,14 @@ export default function PratiquePage() {
 
                 {/* 3 Gestes d'Or du Maître */}
                 <div className="space-y-2 mb-6">
-                  <span className="text-[11px] font-mono font-bold text-[#E2B44F] uppercase tracking-wider block">
+                  <span className="text-[11px] font-mono font-bold text-amber-800 dark:text-[#E2B44F] uppercase tracking-wider block">
                     ⚡ Gestes d&apos;Or &amp; Tolérances d&apos;Examen :
                   </span>
-                  <ul className="text-xs text-slate-300 space-y-1.5 font-mono">
+                  <ul className="text-xs text-slate-700 dark:text-slate-300 space-y-1.5 font-mono">
                     {activeStation.rules.map((rule, idx) => (
-                      <li key={idx} className="flex items-start gap-1.5 text-emerald-400">
+                      <li key={idx} className="flex items-start gap-1.5 text-emerald-600 dark:text-emerald-400">
                         <span>✓</span>
-                        <span className="text-slate-300">{rule}</span>
+                        <span className="text-slate-700 dark:text-slate-300">{rule}</span>
                       </li>
                     ))}
                   </ul>
@@ -798,7 +798,7 @@ export default function PratiquePage() {
               </div>
 
               {/* Bouton CTA vers la page dédiée */}
-              <div className="pt-4 border-t border-slate-800">
+              <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
                 <Link
                   href={activeStation.ctaHref}
                   className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 hover:from-amber-400 hover:to-yellow-200 text-slate-950 font-bold font-serif text-xs tracking-wider uppercase transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2"
