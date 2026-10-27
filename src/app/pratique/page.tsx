@@ -484,26 +484,26 @@ export default function PratiquePage() {
         {/* ========================================================================= */}
         {/* BANNIÈRE VEDETTE : DÉPANNAGE & ERREURS COURANTES (LE GUIDE DE SURVIE)     */}
         {/* ========================================================================= */}
-        <section className="relative overflow-hidden rounded-3xl border-2 border-rose-500/40 bg-gradient-to-r from-rose-950/30 via-[#18110e] to-slate-900 p-6 sm:p-9 shadow-2xl backdrop-blur-xl">
+        <section className="relative overflow-hidden rounded-3xl border-2 border-rose-300/80 dark:border-rose-500/40 bg-gradient-to-r from-[#FFF5F5] via-[#FFF9F2] to-white dark:from-[#1b0b10] dark:via-[#16100d] dark:to-slate-900 p-6 sm:p-9 shadow-xl dark:shadow-2xl transition-colors duration-300">
           <div className="absolute top-0 right-0 -mr-16 -mt-16 w-72 h-72 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             <div className="space-y-3.5 max-w-3xl">
               <div className="flex flex-wrap items-center gap-2.5">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
-                  <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-500/40 shadow-sm">
+                  <AlertTriangle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
                   NOUVEAU MODULE CLINIQUE
                 </span>
-                <span className="text-xs font-mono text-slate-400">
+                <span className="text-xs font-mono text-slate-600 dark:text-slate-400 font-medium">
                   Guide de Survie de l&apos;Apprenti Horloger
                 </span>
               </div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-white tracking-tight">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900 dark:text-white tracking-tight">
                 Dépannage &amp; Erreurs courantes d&apos;établi
               </h2>
-              <p className="text-sm sm:text-base text-slate-300 font-light leading-relaxed">
+              <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 font-normal dark:font-light leading-relaxed">
                 Ressort qui saute du barillet, pivot écrasé sous le pont, dard frottant sur le plateau, spiral conique ou spires collées, vis à pas à gauche cisaillée ou chaussée lâche : diagnostiquez immédiatement l&apos;anomalie sous binoculaire 10x et appliquez le geste certifié par les normes suisses.
               </p>
-              <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[#E2B44F] pt-1">
+              <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-amber-800 dark:text-[#E2B44F] font-semibold pt-1">
                 <span>⚡ 4 Piliers de diagnostic</span>
                 <span>•</span>
                 <span>🔍 6 Cas Erreur vs Bon Geste</span>
@@ -515,7 +515,7 @@ export default function PratiquePage() {
             <div className="shrink-0 flex flex-col sm:flex-row lg:flex-col gap-3">
               <Link
                 href="/pratique/depannage-erreurs"
-                className="inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-2xl bg-gradient-to-r from-rose-600 via-amber-600 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-bold font-serif text-sm tracking-wide uppercase transition-all shadow-xl shadow-rose-950/50 hover:scale-[1.02]"
+                className="inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-2xl bg-gradient-to-r from-rose-600 via-amber-600 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-bold font-serif text-sm tracking-wide uppercase transition-all shadow-xl shadow-rose-900/20 dark:shadow-rose-950/50 hover:scale-[1.02]"
               >
                 <span>Accéder au Guide Dépannage</span>
                 <ArrowRight className="w-4 h-4" />
@@ -524,7 +524,7 @@ export default function PratiquePage() {
                 href="/depannage-erreurs.html"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 font-mono text-xs border border-white/20 transition text-center"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-950 border border-slate-300 shadow-sm dark:bg-white/10 dark:hover:bg-white/15 dark:text-slate-200 dark:border-white/20 transition text-center font-mono text-xs font-medium"
               >
                 <span>Ouvrir en plein écran ↗</span>
               </a>
