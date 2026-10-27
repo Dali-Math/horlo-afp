@@ -171,6 +171,7 @@ export interface Calibre3DController {
     windCrownStep: () => void;
     nudgeTrackball: (deltaPitchX: number, deltaYawY: number) => void;
     toggleAudio: () => boolean;
+    setTheme?: (theme: 'light' | 'dark') => void;
     dispose: () => void;
 }
 
@@ -239,6 +240,10 @@ export function initCalibre3DEngine(container: HTMLElement, callbacks: Calibre3D
         let renderer: THREE.WebGLRenderer;
         let calibreWorld: THREE.Group;
         let calibrePivot: THREE.Group;
+        let ambientLight: THREE.AmbientLight;
+        let keyLight: THREE.DirectionalLight;
+        let rimLight: THREE.DirectionalLight;
+        let dialSideLight: THREE.DirectionalLight;
         const layerGroups: THREE.Group[] = [];
         const organMeshes: Record<string, THREE.Object3D> = {};
         const bridgeMaterials: THREE.MeshStandardMaterial[] = [];
@@ -666,18 +671,18 @@ export function initCalibre3DEngine(container: HTMLElement, callbacks: Calibre3D
             container.appendChild(renderer.domElement);
 
             // Studio Horological Lighting (Balanced top & bottom for seamless 360° flipping)
-            const ambient = new THREE.AmbientLight(0xD8E2F2, 0.78);
-            scene.add(ambient);
+            ambientLight = new THREE.AmbientLight(0xD8E2F2, 0.78);
+            scene.add(ambientLight);
 
-            const keyLight = new THREE.DirectionalLight(0xFFF6E0, 1.35);
+            keyLight = new THREE.DirectionalLight(0xFFF6E0, 1.35);
             keyLight.position.set(14, 22, 18);
             scene.add(keyLight);
 
-            const rimLight = new THREE.DirectionalLight(0x38BDF8, 0.65);
+            rimLight = new THREE.DirectionalLight(0x38BDF8, 0.65);
             rimLight.position.set(-16, 12, 14);
             scene.add(rimLight);
 
-            const dialSideLight = new THREE.DirectionalLight(0xFFFBEB, 0.75);
+            dialSideLight = new THREE.DirectionalLight(0xFFFBEB, 0.75);
             dialSideLight.position.set(8, -18, 16);
             scene.add(dialSideLight);
 
@@ -1542,6 +1547,26 @@ callbacks.onOrganSelect?.(data);
         /**
          * 7. CIECHANOWSKI INTERACTIVE SLIDER HANDLERS
          */
+        
+        function updateThemeMode(mode: 'light' | 'dark') {
+            if (!ambientLight || !keyLight) return;
+            if (mode === 'light') {
+                ambientLight.intensity = 0.95;
+                ambientLight.color.setHex(0xF8FAFC);
+                keyLight.intensity = 1.45;
+                keyLight.color.setHex(0xFFFFFF);
+                if (rimLight) rimLight.intensity = 0.45;
+                if (dialSideLight) dialSideLight.intensity = 0.85;
+            } else {
+                ambientLight.intensity = 0.78;
+                ambientLight.color.setHex(0xD8E2F2);
+                keyLight.intensity = 1.35;
+                keyLight.color.setHex(0xFFF6E0);
+                if (rimLight) rimLight.intensity = 0.65;
+                if (dialSideLight) dialSideLight.intensity = 0.75;
+            }
+        }
+
         function setSimSpeed(spd: number) {
             simState.speedMultiplier = spd;
 // speed UI handled by React
@@ -1812,6 +1837,9 @@ callbacks.onOrganSelect?.(data);
         },
         toggleAudio: () => {
             return toggleAudioTick();
+        },
+        setTheme: (theme: 'light' | 'dark') => {
+            updateThemeMode(theme);
         },
         dispose: () => {
             isDisposed = true;
