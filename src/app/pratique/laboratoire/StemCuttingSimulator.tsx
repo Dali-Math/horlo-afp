@@ -163,15 +163,14 @@ export default function StemCuttingSimulator() {
                 width="145"
                 height="180"
                 rx="6"
-                fill="#161F30"
-                stroke="#475569"
+                className="fill-slate-200 dark:fill-[#161F30] stroke-slate-400 dark:stroke-[#475569]"
                 strokeWidth="2"
               />
               <text
                 x="92"
                 y="82"
                 textAnchor="middle"
-                fill="#D4AF37"
+                className="fill-amber-700 dark:fill-[#D4AF37]"
                 fontFamily="JetBrains Mono, monospace"
                 fontSize="11"
                 fontWeight="bold"
@@ -182,7 +181,7 @@ export default function StemCuttingSimulator() {
                 x="92"
                 y="98"
                 textAnchor="middle"
-                fill="#94A3B8"
+                className="fill-slate-600 dark:fill-[#94A3B8]"
                 fontFamily="JetBrains Mono, monospace"
                 fontSize="9"
               >
@@ -204,21 +203,19 @@ export default function StemCuttingSimulator() {
               {/* 2. Case Middle (Carrure Acier 316L) */}
               <path
                 d="M 165 35 L 255 35 L 255 108 L 165 108 Z"
-                fill="#1E293B"
-                stroke="#64748B"
+                className="fill-slate-300 dark:fill-[#1E293B] stroke-slate-400 dark:stroke-[#64748B]"
                 strokeWidth="2"
               />
               <path
                 d="M 165 182 L 255 182 L 255 255 L 165 255 Z"
-                fill="#1E293B"
-                stroke="#64748B"
+                className="fill-slate-300 dark:fill-[#1E293B] stroke-slate-400 dark:stroke-[#64748B]"
                 strokeWidth="2"
               />
               <text
                 x="210"
                 y="65"
                 textAnchor="middle"
-                fill="#CBD5E1"
+                className="fill-slate-800 dark:fill-[#CBD5E1]"
                 fontFamily="JetBrains Mono, monospace"
                 fontSize="10"
                 fontWeight="bold"
@@ -229,7 +226,7 @@ export default function StemCuttingSimulator() {
                 x="210"
                 y="80"
                 textAnchor="middle"
-                fill="#64748B"
+                className="fill-slate-600 dark:fill-[#64748B]"
                 fontFamily="JetBrains Mono, monospace"
                 fontSize="8"
               >
@@ -242,8 +239,7 @@ export default function StemCuttingSimulator() {
                 y="108"
                 width="85"
                 height="18"
-                fill="#334155"
-                stroke="#94A3B8"
+                className="fill-slate-200 dark:fill-[#334155] stroke-slate-400 dark:stroke-[#94A3B8]"
                 strokeWidth="1.5"
               />
               <rect
@@ -251,7 +247,7 @@ export default function StemCuttingSimulator() {
                 y="164"
                 width="85"
                 height="18"
-                fill="#334155"
+                className="fill-slate-200 dark:fill-[#334155] stroke-slate-400 dark:stroke-[#94A3B8]"
                 stroke="#94A3B8"
                 strokeWidth="1.5"
               />
@@ -262,7 +258,7 @@ export default function StemCuttingSimulator() {
                 x="295"
                 y="98"
                 textAnchor="middle"
-                fill="#94A3B8"
+                className="fill-slate-600 dark:fill-[#94A3B8]"
                 fontFamily="JetBrains Mono, monospace"
                 fontSize="8.5"
               >
@@ -290,7 +286,7 @@ export default function StemCuttingSimulator() {
                   width={Math.max(120, 290 - actualCut * 28)}
                   height="24"
                   fill="url(#stemSteelGrad)"
-                  stroke="#1E293B"
+                  className="stroke-slate-400 dark:stroke-[#1E293B]"
                   strokeWidth="1"
                 />
                 {/* Thread serrations hint */}
@@ -343,8 +339,7 @@ export default function StemCuttingSimulator() {
                   width="95"
                   height="40"
                   rx="4"
-                  fill="#1E293B"
-                  stroke="#D4AF37"
+                  className="fill-slate-200 dark:fill-[#1E293B] stroke-amber-500"
                   strokeWidth="1.8"
                 />
                 {/* Crown flat gasket */}
@@ -407,15 +402,14 @@ export default function StemCuttingSimulator() {
                   width="90"
                   height="24"
                   rx="5"
-                  fill="#0A0D12"
-                  stroke="#38BDF8"
+                  className="fill-white dark:fill-[#0A0D12] stroke-sky-500"
                   strokeWidth="1.5"
                 />
                 <text
                   x={midX}
                   y="42"
                   textAnchor="middle"
-                  fill="#38BDF8"
+                  className="fill-sky-700 dark:fill-[#38BDF8]"
                   fontFamily="JetBrains Mono, monospace"
                   fontSize="10"
                   fontWeight="bold"
@@ -435,7 +429,7 @@ export default function StemCuttingSimulator() {
               className={`p-2.5 rounded-xl border text-xs font-mono flex items-center justify-center gap-2 transition ${
                 stemState.chamfered
                   ? 'border-sky-400 bg-sky-500/20 text-sky-300 font-bold'
-                  : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-amber-500'
+                  : 'border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-amber-500'
               }`}
             >
               <Scissors className="w-3.5 h-3.5 text-sky-400" />
@@ -449,7 +443,7 @@ export default function StemCuttingSimulator() {
               className={`p-2.5 rounded-xl border text-xs font-mono flex items-center justify-center gap-2 transition ${
                 stemState.loctited
                   ? 'border-sky-400 bg-sky-500/20 text-sky-300 font-bold'
-                  : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-amber-500'
+                  : 'border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-amber-500'
               }`}
             >
               <Droplets className="w-3.5 h-3.5 text-sky-400" />
@@ -466,7 +460,7 @@ export default function StemCuttingSimulator() {
 
             <button
               onClick={handleReset}
-              className="p-2.5 rounded-xl border border-slate-800 bg-slate-900 hover:bg-slate-800 text-xs font-mono text-slate-400 flex items-center justify-center gap-2 transition"
+              className="p-2.5 rounded-xl border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-mono text-slate-700 dark:text-slate-400 flex items-center justify-center gap-2 transition"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Nouvelle Tige Brute</span>

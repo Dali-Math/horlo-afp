@@ -262,7 +262,7 @@ export default function ChronoKinematicsSimulator() {
                 style={{ transition: 'transform 0.25s ease-out' }}
               >
                 <path d="M 175 210 L 255 185" stroke="#CBD5E1" strokeWidth="8" strokeLinecap="round" />
-                <circle cx="255" cy="185" r="24" fill="#1E293B" stroke="#D4AF37" strokeWidth="2" />
+                <circle cx="255" cy="185" r="24" className="fill-slate-100 dark:fill-[#1E293B] stroke-amber-500" strokeWidth="2" />
                 <g transform={`rotate(${status === 'RUNNING' ? -wheelAngle * 2 : 0} 255 185)`}>
                   <circle cx="255" cy="185" r="5" fill="#D4AF37" />
                   <line x1="240" y1="185" x2="270" y2="185" stroke="#D4AF37" strokeWidth="1.5" />
@@ -274,7 +274,7 @@ export default function ChronoKinematicsSimulator() {
 
               {/* 4. CHRONOGRAPH SECONDS WHEEL & HEART-PIECE (Center) */}
               <g transform="translate(320, 240)">
-                <circle cx="0" cy="0" r="54" fill="#161F30" stroke="#38BDF8" strokeWidth="2.5" />
+                <circle cx="0" cy="0" r="54" className="fill-slate-100 dark:fill-[#161F30] stroke-sky-500" strokeWidth="2.5" />
                 <g transform={`rotate(${wheelAngle})`}>
                   {/* Heart piece for Reset */}
                   <path

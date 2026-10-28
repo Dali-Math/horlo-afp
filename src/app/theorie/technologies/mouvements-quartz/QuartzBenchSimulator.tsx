@@ -209,8 +209,8 @@ export default function QuartzBenchSimulator() {
 
               {/* 4. Permalloy Stator & Lavet Stepping Rotor */}
               <g id="svgLavetMotor">
-                <path d="M 510 75 L 615 75 A 65 65 0 0 1 615 245 L 365 245 L 365 165 L 510 165 Z" fill="url(#qStatorGrad)" stroke="#94A3B8" strokeWidth="2" />
-                <text x="455" y="232" textAnchor="middle" fill="#CBD5E1" fontFamily="monospace" fontSize="9">STATOR PERMALLOY (ASSOUPISSEMENT)</text>
+                <path d="M 510 75 L 615 75 A 65 65 0 0 1 615 245 L 365 245 L 365 165 L 510 165 Z" className="fill-slate-200 dark:fill-[#1E293B] stroke-slate-400 dark:stroke-[#94A3B8]" strokeWidth="2" />
+                <text x="455" y="232" textAnchor="middle" className="fill-slate-600 dark:fill-[#CBD5E1]" fontFamily="monospace" fontSize="9">STATOR PERMALLOY (ASSOUPISSEMENT)</text>
 
                 {/* Stator Poles */}
                 <text
@@ -238,9 +238,9 @@ export default function QuartzBenchSimulator() {
 
                 {/* Stator Bore + Asymmetric Notches */}
                 <circle cx="565" cy="160" r="46" className="fill-slate-100 dark:fill-[#070A0F]" stroke="#475569" strokeWidth="2" />
-                <circle cx="532" cy="127" r="7" fill="#1E293B" stroke="#D4AF37" strokeWidth="1.5" />
-                <circle cx="598" cy="193" r="7" fill="#1E293B" stroke="#D4AF37" strokeWidth="1.5" />
-                <text x="615" y="122" fill="#D4AF37" fontFamily="monospace" fontSize="8">Encoches 35°</text>
+                <circle cx="532" cy="127" r="7" className="fill-slate-100 dark:fill-[#1E293B] stroke-amber-500" strokeWidth="1.5" />
+                <circle cx="598" cy="193" r="7" className="fill-slate-100 dark:fill-[#1E293B] stroke-amber-500" strokeWidth="1.5" />
+                <text x="615" y="122" className="fill-amber-700 dark:fill-[#D4AF37]" fontFamily="monospace" fontSize="8">Encoches 35°</text>
 
                 {/* Bipolar Magnet Rotor */}
                 <g
@@ -258,8 +258,8 @@ export default function QuartzBenchSimulator() {
 
               {/* 5. Analog Seconds Hand */}
               <g transform="translate(85, 245)">
-                <circle cx="0" cy="0" r="46" fill="#111827" stroke="#D4AF37" strokeWidth="2" />
-                <text x="0" y="-28" textAnchor="middle" fill="#94A3B8" fontFamily="monospace" fontSize="8">TROTTEUSE</text>
+                <circle cx="0" cy="0" r="46" className="fill-slate-100 dark:fill-[#111827] stroke-amber-500" strokeWidth="2" />
+                <text x="0" y="-28" textAnchor="middle" className="fill-slate-600 dark:fill-[#94A3B8]" fontFamily="monospace" fontSize="8">TROTTEUSE</text>
                 <g
                   transform={`rotate(${secHandAngle} 0 0)`}
                   style={{ transition: "transform 0.15s ease-out" }}
@@ -308,7 +308,7 @@ export default function QuartzBenchSimulator() {
               className={`p-2.5 rounded-xl border font-mono text-xs font-semibold flex items-center justify-center gap-2 transition-all ${
                 isRunning
                   ? "bg-rose-500/20 border-rose-500/50 text-rose-300 hover:bg-rose-500/30"
-                  : "bg-slate-900 border-slate-700 text-slate-200 hover:border-amber-500"
+                  : "bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-amber-500"
               }`}
             >
               {isRunning ? <Square className="w-4 h-4 text-rose-400" /> : <Play className="w-4 h-4 text-emerald-400" />}
@@ -389,9 +389,9 @@ export default function QuartzBenchSimulator() {
               </button>
             </div>
 
-            {/* LCD Readout */}
-            <div className="bg-[#08100C] border-2 border-emerald-500/40 rounded-2xl p-4 font-mono shadow-inner text-emerald-400">
-              <div className="flex justify-between text-[10px] text-emerald-400/80 uppercase mb-1">
+            {/* LCD Readout Adaptatif Horotest */}
+            <div className="bg-emerald-50/80 dark:bg-[#08100C] border-2 border-emerald-500/40 rounded-2xl p-4 font-mono shadow-sm text-emerald-800 dark:text-emerald-400">
+              <div className="flex justify-between text-[10px] text-emerald-700 dark:text-emerald-400/80 uppercase mb-1 font-bold">
                 <span>
                   {testMode === "voltage" && "MODE 1 : TENSION PILE SOUS CHARGE (R = 2 kΩ)"}
                   {testMode === "coil" && "MODE 2 : RÉSISTANCE OHMIQUE BOBINE (Ω)"}
@@ -402,7 +402,7 @@ export default function QuartzBenchSimulator() {
               </div>
 
               <div className="flex items-baseline justify-between my-1">
-                <span className="text-3xl sm:text-4xl font-bold tracking-wider">
+                <span className="text-3xl sm:text-4xl font-bold tracking-wider text-emerald-950 dark:text-emerald-300">
                   {testMode === "voltage" && `${voltage.toFixed(2)} V`}
                   {testMode === "coil" && (coilState === "ok" ? "2.10 kΩ" : coilState === "open" ? "O.L (∞ MΩ)" : "0.35 kΩ")}
                   {testMode === "consumption" && `${consumptionUa.toFixed(2)} µA`}
@@ -411,8 +411,8 @@ export default function QuartzBenchSimulator() {
 
                 <span className={`px-2.5 py-0.5 rounded text-xs font-bold ${
                   (testMode === "voltage" && voltage >= 1.50) || (testMode === "coil" && coilState === "ok") || (testMode === "consumption" && trainState === "clean")
-                    ? "bg-emerald-500/20 text-emerald-300"
-                    : "bg-rose-500/20 text-rose-300"
+                    ? "bg-emerald-500/20 text-emerald-800 dark:text-emerald-300"
+                    : "bg-rose-500/20 text-rose-800 dark:text-rose-300"
                 }`}>
                   {testMode === "voltage" && (voltage >= 1.50 ? "PILE NEUVE" : voltage >= 1.35 ? "FAIBLE" : "EOL < 1.35V")}
                   {testMode === "coil" && (coilState === "ok" ? "BOBINE SAINE" : coilState === "open" ? "COUPÉE" : "COURT-CIRCUIT")}
@@ -421,7 +421,7 @@ export default function QuartzBenchSimulator() {
                 </span>
               </div>
 
-              <div className="text-[11px] text-emerald-200/80 border-t border-emerald-500/20 pt-2 mt-2">
+              <div className="text-[11px] text-emerald-800/90 dark:text-emerald-200/80 border-t border-emerald-300 dark:border-emerald-500/20 pt-2 mt-2">
                 {testMode === "voltage" && (
                   voltage >= 1.35
                     ? "Courbe de décharge plate Ag₂O (1.55 V). Marche normale à 1 Hz."

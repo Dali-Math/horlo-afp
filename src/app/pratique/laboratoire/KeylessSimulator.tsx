@@ -276,8 +276,7 @@ export default function KeylessSimulator() {
                   cx="0"
                   cy="0"
                   r="32"
-                  fill="#1E293B"
-                  stroke="#94A3B8"
+                  className="fill-slate-200 dark:fill-[#1E293B] stroke-slate-400 dark:stroke-[#94A3B8]"
                   strokeWidth="2"
                 />
                 {/* Hands indicator */}
@@ -318,8 +317,7 @@ export default function KeylessSimulator() {
                   cx="0"
                   cy="0"
                   r="24"
-                  fill="#1E293B"
-                  stroke="#38BDF8"
+                  className="fill-slate-200 dark:fill-[#1E293B] stroke-sky-500"
                   strokeWidth="2"
                   strokeDasharray="5 3"
                 />
@@ -335,8 +333,7 @@ export default function KeylessSimulator() {
                   cx="0"
                   cy="0"
                   r="22"
-                  fill="#1E293B"
-                  stroke="#10B981"
+                  className="fill-slate-200 dark:fill-[#1E293B] stroke-emerald-500"
                   strokeWidth="2"
                   strokeDasharray="6 4"
                 />
@@ -394,8 +391,7 @@ export default function KeylessSimulator() {
                   width="30"
                   height="50"
                   rx="4"
-                  fill="#1E293B"
-                  stroke="#D4AF37"
+                  className="fill-slate-200 dark:fill-[#1E293B] stroke-amber-500"
                   strokeWidth="2.5"
                 />
                 {/* Central groove for Yoke beak */}
@@ -405,8 +401,7 @@ export default function KeylessSimulator() {
                   width="10"
                   height="56"
                   rx="2"
-                  fill="#0B0E14"
-                  stroke="#38BDF8"
+                  className="fill-slate-300 dark:fill-[#0B0E14] stroke-sky-500"
                   strokeWidth="1.2"
                 />
                 <text
@@ -437,8 +432,7 @@ export default function KeylessSimulator() {
                   cx="0"
                   cy="0"
                   r="10"
-                  fill="#1E293B"
-                  stroke="#38BDF8"
+                  className="fill-slate-200 dark:fill-[#1E293B] stroke-sky-500"
                   strokeWidth="2.5"
                 />
                 <circle cx="-10" cy="-85" r="6" fill="#38BDF8" />
@@ -495,8 +489,7 @@ export default function KeylessSimulator() {
                   width="10"
                   height="22"
                   rx="2"
-                  fill="#0B0E14"
-                  stroke="#D4AF37"
+                  className="fill-slate-300 dark:fill-[#0B0E14] stroke-amber-500"
                   strokeWidth="1.5"
                 />
                 {/* Exterior Crown */}
@@ -541,8 +534,7 @@ export default function KeylessSimulator() {
                   cx="0"
                   cy="0"
                   r="11"
-                  fill="#334155"
-                  stroke="#D4AF37"
+                  className="fill-slate-300 dark:fill-[#334155] stroke-amber-500"
                   strokeWidth="2.5"
                 />
                 <line

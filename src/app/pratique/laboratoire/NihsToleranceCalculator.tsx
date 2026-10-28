@@ -378,7 +378,7 @@ export default function NihsToleranceCalculator() {
               <Compass className="w-3.5 h-3.5" />
               DIAGRAMME DES ÉCARTS PAR RAPPORT À LA LIGNE ZÉRO
             </span>
-            <span className="px-2.5 py-0.5 rounded bg-slate-900 border border-amber-500/40 text-amber-400 font-bold text-xs">
+            <span className="px-2.5 py-0.5 rounded bg-white dark:bg-slate-900 border border-amber-500/40 text-amber-700 dark:text-amber-400 font-bold text-xs">
               Ø {nominal.toFixed(2)} {holeClass}/{shaftClass}
             </span>
           </div>
@@ -503,8 +503,7 @@ export default function NihsToleranceCalculator() {
                   cx="0"
                   cy="0"
                   r="66"
-                  fill="#0B0F19"
-                  stroke="#38BDF8"
+                  className="fill-white dark:fill-[#0B0F19] stroke-sky-500"
                   strokeWidth="3.5"
                 />
                 {/* Shaft Circle */}

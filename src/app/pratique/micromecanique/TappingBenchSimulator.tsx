@@ -140,16 +140,16 @@ export default function TappingBenchSimulator() {
           </div>
 
           {/* Interactive 3-Tap Pass Selector & SVG */}
-          <div className="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-3">
+          <div className="bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-4 space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
-              <span className="text-slate-300">Jeu de 3 Tarauds à Main :</span>
+              <span className="text-slate-700 dark:text-slate-300 font-bold">Jeu de 3 Tarauds à Main :</span>
               <div className="flex gap-1.5">
                 <button
                   onClick={() => setTapPass(1)}
                   className={`px-2.5 py-1 rounded text-[11px] font-bold transition-all ${
                     tapPass === 1
                       ? "bg-amber-500 text-slate-950"
-                      : "bg-slate-800 text-slate-300 border border-slate-700 hover:text-white"
+                      : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:text-slate-950 dark:hover:text-white"
                   }`}
                 >
                   1. Ébaucheur (1 trait)
@@ -159,7 +159,7 @@ export default function TappingBenchSimulator() {
                   className={`px-2.5 py-1 rounded text-[11px] font-bold transition-all ${
                     tapPass === 2
                       ? "bg-amber-500 text-slate-950"
-                      : "bg-slate-800 text-slate-300 border border-slate-700 hover:text-white"
+                      : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:text-slate-950 dark:hover:text-white"
                   }`}
                 >
                   2. Intermédiaire
@@ -169,7 +169,7 @@ export default function TappingBenchSimulator() {
                   className={`px-2.5 py-1 rounded text-[11px] font-bold transition-all ${
                     tapPass === 3
                       ? "bg-amber-500 text-slate-950"
-                      : "bg-slate-800 text-slate-300 border border-slate-700 hover:text-white"
+                      : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:text-slate-950 dark:hover:text-white"
                   }`}
                 >
                   3. Finisseur
@@ -194,21 +194,20 @@ export default function TappingBenchSimulator() {
                     ? "192,15 248,15 238,145 202,145"
                     : "190,15 250,15 246,145 194,145"
                 }
-                fill="#94A3B8"
-                stroke="#F8FAFC"
+                className="fill-slate-300 dark:fill-[#94A3B8] stroke-slate-500 dark:stroke-[#F8FAFC]"
                 strokeWidth="1.8"
               />
-              <text x="220" y="42" textAnchor="middle" fill="#0F172A" fontFamily="monospace" fontSize="9.5" fontWeight="bold">
+              <text x="220" y="42" textAnchor="middle" className="fill-slate-900 dark:fill-[#0F172A]" fontFamily="monospace" fontSize="9.5" fontWeight="bold">
                 {tapPass === 1 && "1. ÉBAUCHEUR (55%)"}
                 {tapPass === 2 && "2. INTERMÉDIAIRE (80%)"}
                 {tapPass === 3 && "3. FINISSEUR (100%)"}
               </text>
 
               {/* Chip-Breaking Indicator */}
-              <text x="395" y="38" textAnchor="end" fill="#38BDF8" fontFamily="monospace" fontSize="9.5" fontWeight="bold">
+              <text x="395" y="38" textAnchor="end" className="fill-sky-700 dark:fill-[#38BDF8]" fontFamily="monospace" fontSize="9.5" fontWeight="bold">
                 +1/2 tr Avant
               </text>
-              <text x="395" y="54" textAnchor="end" fill="#10B981" fontFamily="monospace" fontSize="9">
+              <text x="395" y="54" textAnchor="end" className="fill-emerald-700 dark:fill-[#10B981]" fontFamily="monospace" fontSize="9">
                 −1/4 tr Brise-copeau
               </text>
             </svg>
