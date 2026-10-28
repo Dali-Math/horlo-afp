@@ -320,7 +320,7 @@ export default function MicromecaniqueModulePage() {
   const isCurAnswered = userAnswers[currentQuestionIdx] !== undefined;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#080C15] text-slate-800 dark:text-slate-200 antialiased selection:bg-amber-500/30 selection:text-amber-800 dark:selection:text-amber-200 transition-colors duration-300 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#080C15] text-slate-800 dark:text-slate-200 antialiased selection:bg-amber-500/30 selection:text-amber-800 dark:selection:text-amber-200 transition-colors duration-300 pt-24 sm:pt-28 pb-16 px-4 sm:px-6 lg:px-8">
       
       {/* Blueprint Grid Styles */}
       <style jsx global>{`
